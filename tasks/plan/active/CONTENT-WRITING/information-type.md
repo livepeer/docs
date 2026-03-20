@@ -11,7 +11,7 @@
 2. **Domain**: Content Strategy / Information Architecture
 3. **Definition**: The category of information a page must source, synthesise, and deliver to serve its purpose
 4. **Description**: Information type is a sub-taxonomy of purpose. It tells a writer or AI agent what kind of content to look for, generate, and prioritise. It governs the structure, layout, and style components appropriate for the page — because different information types have fundamentally different structural needs. A page's information type is determined by its purpose and cannot be independently assigned.
-5. **Scope**: Sub-type of `purpose` — not a standalone frontmatter field
+5. **Scope**: Section-level, determined at runtime by the agent per section. Not a frontmatter field. Not tagged in content. The agent reads each section, identifies its information type, and applies the appropriate standard. The purpose → information type mapping defines what types are expected and permitted for a given purpose — not that every section is the same type. A single page will typically contain multiple information types across its sections.
 
 ---
 
@@ -147,10 +147,12 @@
 
 ---
 
-## Notes
+## Key Decisions
 
-1. Information type is derived from purpose — it is not assigned independently
-2. A page can have multiple information types; order reflects priority
-3. Information type governs structure and component selection — see Step 11 (page structure rules per pageType)
-4. The `technical` type will intersect with the `field` category (terminology/jargon governance) — to be defined in Step 6
-5. Sources registry (what to verify against per type) — to be defined in veracity.md
+1. **Section-level, not page-level** — information type applies per section, not per page. A single page will typically contain multiple information types across its sections (e.g. a `build` page has a `narrative` intro, `factual` prerequisites, `procedural` steps, `technical` code blocks).
+2. **Not a frontmatter field** — information type is identified by the agent at runtime as it reads each section. Writers do not set or tag it. Never appears in frontmatter.
+3. **Purpose mapping defines permitted types** — the purpose → information type mapping defines what types are expected and allowed for a given purpose. It does not mean every section is the same type.
+4. **Veracity is applied per section** — each section is assessed against the veracity standard of its identified information type. The page-level `veracityStatus` reflects the worst-case section result.
+5. **`veracityStatus` is the only frontmatter field** from this entire information layer — see veracity.md for full definition.
+6. **`technical` type intersects with `field`** (terminology/jargon governance) — to be defined in Step 6 (domain + niche).
+7. **Sources registry** — what to verify against per type — defined in veracity.md.

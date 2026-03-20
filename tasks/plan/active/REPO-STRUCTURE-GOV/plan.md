@@ -124,15 +124,51 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ### Phase 1 — Root consolidation (coordinate with SCRIPT-GOVERNANCE)
 
-> Prerequisite: SCRIPT-GOVERNANCE Task 14 merged. Naming conflict resolved.
+> Prerequisite: SCRIPT-GOVERNANCE Task 14 merged + scripts thread agent completes `workspace/` rename.
+> This plan does NOT execute those moves — it verifies them (see verification checklists below).
 
-- [ ] **1.1** Confirm `operations/` structure is live and AGENTS.md updated
-- [ ] **1.2** Move `contribute/` → `docs-guide/contributing/` (merge with existing `contributing/` subdir)
+- [ ] **1.1** Run `/operations` verification checklist (below) after SCRIPT-GOVERNANCE Task 14 merges
+- [ ] **1.2** Run `workspace/` verification checklist (below) after scripts thread agent completes rename
+- [ ] **1.3** Move `contribute/` → `docs-guide/contributing/` (merge with existing `contributing/` subdir)
   - Update all inbound links in docs.json, v2 pages, AGENTS.md
   - Update `.mintignore` path if applicable
-- [ ] **1.3** Add `/_dep-docs/` deletion to post-Phase-0 30-day TTL (set calendar reminder)
-- [ ] **1.4** Confirm `ai-tools/` final placement post AI-TOOLS-GOVERNANCE
-- [ ] **1.5** Update `root-allowlist-governance.mdx` to reflect new root (add `operations/`, remove `tests/`, update `contribute/`)
+- [ ] **1.4** Add `/_dep-docs/` deletion to post-Phase-0 30-day TTL (set calendar reminder)
+- [ ] **1.5** Confirm `ai-tools/` final placement post AI-TOOLS-GOVERNANCE
+- [ ] **1.6** Update `root-allowlist-governance.mdx` to reflect new root (add `operations/`, remove `tests/`, update `contribute/`)
+
+---
+
+### Verify: `/operations` migration (owned by SCRIPT-GOVERNANCE + scripts agent)
+
+> Run this checklist after SCRIPT-GOVERNANCE Task 14 is merged. Do not action — verify only.
+
+- [ ] **V-OP.1** `operations/scripts/` exists and contains expected subdirs (`audits/`, `generators/`, `validators/`, `remediators/`, `dispatch/`, `automations/`, `archive/`, `x-archive/`)
+- [ ] **V-OP.2** `operations/tests/` exists and contains `unit/`, `integration/`, `config/`, `fixtures/`
+- [ ] **V-OP.3** `tools/scripts/` no longer exists at root (or is an empty shell)
+- [ ] **V-OP.4** `tests/` no longer exists at root
+- [ ] **V-OP.5** All `.githooks/` scripts resolve: `pre-commit`, `pre-push`, `post-merge` — run `bash .githooks/pre-commit --dry-run` or equivalent
+- [ ] **V-OP.6** `npm run` targets in `tools/package.json` that reference `tools/scripts/` paths are updated to `operations/scripts/`
+- [ ] **V-OP.7** `AGENTS.md` script path references updated
+- [ ] **V-OP.8** `docs-guide/policies/root-allowlist-governance.mdx` reflects `operations/` as an allowed root entry
+- [ ] **V-OP.9** `docs-guide/catalog/scripts-catalog.mdx` regenerated (paths reflect new location)
+- [ ] **V-OP.10** Spot-check 3 scripts via `node operations/scripts/<path>/<script>.js --help` — confirm they run without module-not-found errors
+
+---
+
+### Verify: `tasks/` → `workspace/` rename (owned by scripts thread agent)
+
+> Run this checklist after the scripts thread agent completes the rename. Do not action — verify only.
+
+- [ ] **V-WS.1** `workspace/` exists at root with correct internal structure (`plan/`, `reports/`, `research/`, `staging/`, `scripts/`, `errors/`)
+- [ ] **V-WS.2** `tasks/` no longer exists at root
+- [ ] **V-WS.3** `workspace/plan/active/` contains all currently active plan folders (spot-check: REPO-STRUCTURE-GOV, SCRIPT-GOVERNANCE, CONTENT-WRITING)
+- [ ] **V-WS.4** `workspace/plan/complete/` TTL workflow still triggers correctly — check `.github/workflows/` or hook config
+- [ ] **V-WS.5** No broken refs in AGENTS.md — grep for `tasks/` and confirm zero hits
+- [ ] **V-WS.6** No broken refs in AI adapter files — check `.claude/`, `.codex/`, `.cursor/`, `.windsurf/` for `tasks/` hits
+- [ ] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/`
+- [ ] **V-WS.8** Scripts referencing `tasks/` paths (`audit-tasks-folders.js`, `task-cleanup.js`, `task-preflight.js`, `cross-agent-packager.js`) updated and confirmed runnable
+- [ ] **V-WS.9** `lpd` CLI any task-related commands (e.g. `lpd task`) resolve correctly post-rename
+- [ ] **V-WS.10** `.mintignore` entry `/tasks/**` updated to `/workspace/**`
 
 ---
 
@@ -159,18 +195,87 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] **2B.8** Delete `snippets/composables/` (empty directory)
 - [ ] **2B.9** Write `snippets/assets/` governance rule: no asset may be added without a verified reference in v1/, v2/, or snippets/; size limit per file (recommend 2 MB for images)
 
-#### 2C — `v2/` folder governance
+#### 2C — `v2/` folder governance *(audit complete — pending human approval of recommendations)*
 
 > **Rule:** Each top-level folder in `v2/` may only contain:
-> - Folders that are actual navigation paths (appear in docs.json)
+> - Folders that appear as navigation paths in docs.json
 > - `_workspace/` (scratch, planning, review artifacts — 30-day TTL)
-> - Nothing else at the top level (no loose `.md`, `todo.txt`, `notes.txt`, `review.md` etc.)
+> - Files that are themselves navigation entries (e.g. `index.mdx`, `portal.mdx`, `navigator.mdx`)
+> - Nothing else (no loose `.md`, `todo.txt`, `notes.txt`, `review.md`, `x-archived/`, `_contextData/`, `_move_me/`)
 
-- [ ] **2C.1** Audit all v2/ top-level folders for loose files not matching the above rule
-- [ ] **2C.2** Move any `todo.txt`, `notes.txt`, `review.md` files → sibling `_workspace/` or delete
-- [ ] **2C.3** Confirm all `_workspace/` dirs in v2/ are in `.mintignore` (already covered by `/v2/**/_workspace/**`)
-- [ ] **2C.4** Add v2/ folder governance rule to `docs-guide/policies/v2-folder-governance.mdx`
-- [ ] **2C.5** Add enforcement: `.allowlist` or pre-commit check that blocks new files at `v2/<top-folder>/*.{md,mdx,txt}` unless they appear in docs.json nav
+**Audit findings — violations already identified:**
+
+| Location | Issue | Recommended action |
+|----------|-------|--------------------|
+| `v2/restructure.mdx` | Loose file at v2/ root | → `v2/_workspace/restructure/` |
+| `v2/about/todo.txt` | Loose planning file | → `v2/about/_workspace/notes/` |
+| `v2/about/resources/` | Non-nav folder (check docs.json) | Confirm nav status; if not nav → `_workspace/` |
+| `v2/community/_contextData_/` | Non-standard prefix folder | → `v2/community/_workspace/context-data/` |
+| `v2/community/_move_me/` | Non-standard staging folder | → `v2/community/_workspace/staging/` then action or delete |
+| `v2/developers/_archive/` | Non-standard archive folder | → `v2/developers/_workspace/archive/` |
+| `v2/developers/_contextData/` | Non-standard prefix folder | → `v2/developers/_workspace/context-data/` |
+| `v2/gateways/concepts-restructure.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
+| `v2/gateways/personas.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
+| `v2/gateways/plan.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
+| `v2/gateways/x-archived/` | Non-standard archive folder | → `v2/gateways/_workspace/archive/` |
+| `v2/home/todo.txt` | Loose planning file | → `v2/home/_workspace/notes/` |
+| `v2/internal/ally-notes.mdx` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
+| `v2/internal/marketing-posts.md` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
+| `v2/internal/marketing-posts-v2.md` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
+| `v2/internal/layout-components-scripts-styling/` | Non-nav folder | → `v2/internal/_workspace/` or delete |
+| `v2/lpt/todo.txt` | Loose planning file | → `v2/lpt/_workspace/notes/` |
+| `v2/orchestrators/x-archived/` | Non-standard archive folder | → `v2/orchestrators/_workspace/archive/` |
+| `v2/resources/todo.txt` | Loose planning file | → `v2/resources/_workspace/notes/` |
+| `v2/solutions/todo.txt` | Loose planning file | → `v2/solutions/_workspace/notes/` |
+| `v2/solutions/x-deprecated/` | Non-standard deprecated folder | → `v2/solutions/_workspace/archive/` |
+
+**Special cases (not violations — need explicit governance decision):**
+
+| Folder | Status | Decision needed |
+|--------|--------|-----------------|
+| `v2/cn/`, `v2/es/`, `v2/fr/` | i18n mirror trees | Own governance doc; not subject to same rule as content sections |
+| `v2/templates/` | Shared MDX templates | Not a nav section; confirm it stays at root or moves to `snippets/templates/` |
+| `v2/x-archived/` | Top-level archive | → `v2/_workspace/archive/` or keep as-is with explicit allowlist entry |
+| `v2/internal/` | Internal docs | Special case; looser rules acceptable; needs own policy |
+
+**Recommended `_workspace/` subdirectory structure — content sections**
+*(about, community, gateways, developers, home, lpt, orchestrators, resources, solutions):*
+
+```
+_workspace/
+├── research/     ← source research, veracity notes, background reading
+├── drafts/       ← content in-progress, not nav-ready
+├── notes/        ← planning notes, decisions, todo lists (replaces todo.txt etc.)
+├── archive/      ← deprecated/removed content (replaces x-archived, x-deprecated)
+└── reviews/      ← review packets, audit outputs
+```
+
+**Recommended `_workspace/` for `v2/internal/`:**
+```
+_workspace/
+├── drafts/
+├── notes/        ← ally-notes, marketing notes, etc.
+└── archive/
+```
+
+**Recommended `_workspace/` for `v2/` root:**
+```
+_workspace/        ← already exists with research/ and references/; add:
+├── research/      (exists ✓)
+├── references/    (exists ✓)
+├── restructure/   ← for restructure.mdx and planning docs
+└── archive/       ← top-level retired v2 content
+```
+
+> ⛔ **GATE: human approval of recommendations required before 2C implementation steps run.**
+
+- [ ] **2C.1** *(pending approval)* Create `_workspace/` with correct subdirs in all v2/ sections that lack it: `about`, `community` (expand existing), `developers` (expand existing), `gateways`, `home`, `lpt`, `resources`, `solutions`, `internal`
+- [ ] **2C.2** *(pending approval)* Move all violations listed above to their recommended `_workspace/` locations
+- [ ] **2C.3** *(pending approval)* Consolidate `x-archived/`, `x-deprecated/`, `_archive/`, `_contextData_/`, `_move_me/` variants → unified `_workspace/archive/` or `_workspace/staging/` pattern across all v2/ sections
+- [ ] **2C.4** Confirm all `_workspace/` dirs are covered by `.mintignore` (pattern `/v2/**/_workspace/**` already exists — verify it catches new subdirs)
+- [ ] **2C.5** Resolve special cases (i18n, templates, x-archived, internal) — document decisions in v2-folder-governance.mdx
+- [ ] **2C.6** Add v2/ `_workspace/` subdir standard to `docs-guide/policies/v2-folder-governance.mdx`
+- [ ] **2C.7** Add pre-commit enforcement: block new files at `v2/<section>/*.{md,mdx,txt}` unless filename appears in docs.json nav entries
 
 #### 2D — `api/` cleanup
 
@@ -197,13 +302,74 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ---
 
-### Phase 3 — Governance docs update
+### Phase 3 — `_workspace/` standardisation across all root folders
 
-- [ ] **3.1** Update `docs-guide/policies/root-allowlist-governance.mdx` — reflect final root
-- [ ] **3.2** Update `AGENTS.md` — all path references after moves
-- [ ] **3.3** Update `.mintignore` — add `/_dep-docs/`, update `contribute/` path if moved
-- [ ] **3.4** Write `_workspace/` lifecycle policy for docs-guide (empty index.mds, 30-day TTL for branch workspace files)
-- [ ] **3.5** Add `snippets/assets/` governance section to root-allowlist-governance.mdx (reference check required before adding; no unbounded growth)
+> Sequenced after Phase 2. Three sub-phases: audit → approve → implement for each level.
+> v2/ section `_workspace/` is handled in Phase 2C above.
+
+#### 3A — Root folder `_workspace/` audit + recommendations
+
+> **Rule:** Every named root folder (not dot-dirs, not v1/v2 content) should have a `_workspace/`
+> subdirectory with subfolders appropriate to that folder's function.
+> The subfolders will vary — this audit determines the right shape for each.
+
+**Audit findings and recommendations:**
+
+| Root folder | Has `_workspace/`? | Recommended subdirs | Notes |
+|------------|-------------------|---------------------|-------|
+| `ai-tools/` | No (ai-skills/ has one internally) | `skill-research/`, `rule-drafts/`, `archive/` | Top-level _workspace for cross-cutting AI tooling research |
+| `api/` | No | `spec-drafts/`, `research/`, `archive/` | Draft specs before they're authoritative |
+| `docs-guide/` | Yes (02_Design-Specification tree) | Add `archive/` at top level if missing | Already well-structured |
+| `operations/` | No (future folder) | `script-drafts/`, `test-fixtures/`, `archive/` | For scripts in dev before promotion to a tier |
+| `snippets/` | No | `component-drafts/`, `asset-staging/`, `archive/` | Asset staging = holding area pending ref verification |
+| `tools/` | No | `experiments/`, `archive/` | Prototype tooling, deprecated extensions |
+| `workspace/` | N/A — is the workspace | No `_workspace/` needed; folder is the workspace itself | |
+
+> ⛔ **GATE: human approval of per-folder subdirectory recommendations before 3A implementation.**
+
+- [ ] **3A.1** *(pending approval)* Create `_workspace/` with approved subdirs in: `ai-tools/`, `api/`, `snippets/`, `tools/`
+- [ ] **3A.2** *(pending approval)* Create `_workspace/` template for `operations/` (future folder — scaffold when SCRIPT-GOVERNANCE Task 14 lands)
+- [ ] **3A.3** Confirm `docs-guide/_workspace/` has `archive/` subdir; add if missing
+- [ ] **3A.4** Add `_workspace/` to each folder's `.mintignore` pattern (or confirm covered by existing `**/_workspace/**` glob)
+- [ ] **3A.5** Document root folder `_workspace/` standard in `docs-guide/policies/root-allowlist-governance.mdx`
+
+---
+
+#### 3B — Subfolder depth audit
+
+> Some root folders have deep subdirectory structures. This step audits whether any of those
+> subdirs also need their own `_workspace/` (a second level down).
+> Only audit the folders from 3A that have complex internal structure — not all subfolders.
+
+**Candidates for second-level `_workspace/` audit:**
+
+| Subfolder | Rationale | Likely verdict |
+|-----------|-----------|----------------|
+| `ai-tools/agent-packs/` | 45+ skill definitions; skills in development need staging | Likely yes → `_workspace/skills-in-dev/` |
+| `ai-tools/ai-rules/` | Rule files are relatively stable governance | Likely no |
+| `snippets/components/` | Each category (elements, wrappers, etc.) may have components in design | Possible → per-category `_workspace/` |
+| `snippets/automations/` | Each automation (blog, discord, luma) may have draft state | Possible → per-service `_workspace/` |
+| `tools/vscode/` | Extensions in development need staging before packaging | Likely yes → per-extension `_workspace/` |
+| `tools/notion/` | Sync scripts are stable | Likely no |
+| `docs-guide/policies/` | Policy drafts exist in active plan but not in folder | Possible → `_workspace/drafts/` |
+| `docs-guide/features/` | Feature doc stubs (ai-features.mdx is 43 lines) | Possible → `_workspace/drafts/` |
+
+> ⛔ **GATE: human approval of second-level audit scope before 3B executes.**
+
+- [ ] **3B.1** *(pending approval)* Confirm which subfolders from the table above get a `_workspace/`
+- [ ] **3B.2** *(pending approval)* Create approved second-level `_workspace/` dirs with appropriate subdirs
+- [ ] **3B.3** Add second-level `_workspace/` dirs to `.mintignore` patterns
+- [ ] **3B.4** Document second-level `_workspace/` policy — when a subfolder warrants its own workspace vs. using the parent's
+
+---
+
+### Phase 4 — Governance docs update
+
+- [ ] **4.1** Update `docs-guide/policies/root-allowlist-governance.mdx` — reflect final root structure including `operations/`, `workspace/`, all `_workspace/` additions
+- [ ] **4.2** Update `AGENTS.md` — all path references after moves
+- [ ] **4.3** Update `.mintignore` — add `/_dep-docs/`, update `contribute/` path, confirm all `_workspace/` patterns are covered
+- [ ] **4.4** Write unified `_workspace/` lifecycle policy: 30-day TTL on scratch files, empty nav-stub index.mds are exempt, archive/ subdirs have 90-day TTL
+- [ ] **4.5** Add `snippets/assets/` governance section to root-allowlist-governance.mdx (reference check required before adding; no unbounded growth)
 
 ---
 
@@ -228,5 +394,9 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] `snippets/assets/` reduced from 65 MB → ~35 MB
 - [ ] All git hooks resolve to valid script paths (done ✓)
 - [ ] `docs-guide/` has no empty stub files
-- [ ] `v2/` top-level folders contain only nav-path folders + `_workspace/`; no loose files
+- [ ] `v2/` top-level folders contain only nav-path folders + `_workspace/`; no loose files, no `x-archived/`, no `_contextData/` variants
+- [ ] All `v2/` sections have `_workspace/` with standard subdirs (research, drafts, notes, archive, reviews)
+- [ ] All named root folders have `_workspace/` with appropriate subdirs (3A complete)
+- [ ] Second-level `_workspace/` decisions documented and implemented (3B complete)
 - [ ] `snippets/assets/` has a written governance rule (no unref'd assets)
+- [ ] Unified `_workspace/` lifecycle policy written and referenced from root-allowlist-governance.mdx

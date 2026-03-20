@@ -1,3 +1,5 @@
+> **Legacy reference only.** Core safety policy has migrated to [AGENTS.md](../../AGENTS.md). This file is retained for historical context.
+
 # 🛡️ AI SAFETY PROTOCOL: GIT WRITE OPERATIONS
 
 ## 1. MANDATORY SAFETY HOOKS

@@ -64,7 +64,7 @@ function updatePreview(panel, document) {
   const text = document.getText();
   const segments = parse(text);
   const dark = isDarkTheme();
-  const bodyHtml = renderSegments(segments);
+  const { html: bodyHtml, hasMermaid } = renderSegments(segments);
 
   const mediaPath = path.join(__dirname, 'media');
   const cssUri = panel.webview.asWebviewUri(
@@ -89,6 +89,7 @@ function updatePreview(panel, document) {
     markdownItUri: markdownItUri.toString(),
     mermaidUri: mermaidUri.toString(),
     dark,
+    hasMermaid,
     workspaceRoot,
     webview: panel.webview
   });
@@ -127,6 +128,17 @@ function activate(context) {
     }),
 
     vscode.window.onDidChangeActiveColorTheme(() => {
+      for (const [uri, panel] of panels) {
+        const doc = vscode.workspace.textDocuments.find(
+          (d) => d.uri.toString() === uri
+        );
+        if (doc) updatePreview(panel, doc);
+      }
+    }),
+
+    // Re-render all open previews when a .jsx component file is saved
+    vscode.workspace.onDidSaveTextDocument((saved) => {
+      if (!saved.uri.fsPath.endsWith('.jsx')) return;
       for (const [uri, panel] of panels) {
         const doc = vscode.workspace.textDocuments.find(
           (d) => d.uri.toString() === uri

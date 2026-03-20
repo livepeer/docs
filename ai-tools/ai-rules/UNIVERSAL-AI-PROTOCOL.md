@@ -1,3 +1,5 @@
+> **Legacy reference only.** Core safety policy has migrated to [AGENTS.md](../../AGENTS.md). This file is retained for historical context.
+
 # Universal AI Operations Protocol
 
 ## For ANY AI Assistant Working on This Repository

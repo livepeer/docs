@@ -1020,6 +1020,33 @@ To promote a component from Tier 3 to Tier 2, add a renderer function to `lib/co
 
 <CustomDivider />
 
+## Future Features
+
+<AccordionGroup>
+  <Accordion title="Lazy-load Mermaid.js ✓ Implemented">
+    `renderSegments()` returns `{ html, hasMermaid }`. The webview template conditionally injects `<script src="${mermaidUri}">` only when `hasMermaid` is `true`. Pages without Mermaid diagrams skip the 2.45 MB bundle entirely.
+  </Accordion>
+  <Accordion title="Promote Tier 3 components on demand">
+    Any component that falls through to the placeholder renderer can be promoted to Tier 2 by adding a renderer function to `lib/component-map.js` under `livepeerComponents`. The function signature is `(props, childrenHtml) => htmlString`.
+
+    Priority candidates based on usage frequency in the repo:
+    - `Tree` / `Folder` / `File` (used in source-of-truth pages)
+    - `ParamField` (used in API reference pages)
+    - `Snippet` (used in composable page patterns)
+  </Accordion>
+  <Accordion title="Syntax highlighting for code blocks">
+    Code blocks are currently rendered as plain `<pre><code>` without syntax colouring. Adding `highlight.js` (vendored, ~50 KB minified) as a third media asset and calling `hljs.highlightAll()` in `preview.js` would add language-aware colouring for all fenced blocks.
+  </Accordion>
+  <Accordion title="Live scroll sync">
+    Sync the scroll position of the preview panel to the cursor position in the editor. VS Code's built-in Markdown preview uses `editor/scroll` messages via the webview messaging API. The same pattern can be applied here: on `onDidChangeTextEditorVisibleRanges`, post a message to the webview to scroll to the corresponding rendered element.
+  </Accordion>
+  <Accordion title="Custom component hot-reload ✓ Implemented">
+    `onDidSaveTextDocument` watches for any `.jsx` save in the workspace and re-renders all open preview panels. Component source changes are reflected immediately without touching the `.mdx` file.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
 ## References
 
 <CardGroup cols={3}>

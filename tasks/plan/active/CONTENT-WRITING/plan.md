@@ -145,9 +145,28 @@ Domain+niche governs: section naming (domain-anchor rule becomes enforceable), v
 
 ---
 
+### Step 8a. Define IA per tab — section structure, audience journey, page groups
+
+**Input**: `docs.json` (actual nav structure), tab research files (`v2/orchestrators/_workspace/research/orchestrator-tab-review-v3.md`, `v2/gateways/` structure), audience → tab mapping from Step 3.
+
+Every tab has a specific audience, purpose, and internal IA. The pipeline needs to know what sections and page groups exist within each tab, what the reader journey is through that tab, and how pages relate to each other. Without this, the context pack skill has no structural context for a page — it only knows the page itself, not what section it belongs to or what comes before/after.
+
+- [ ] 🔄 Inventory all tabs + their primary audience + their stated purpose
+  - ⏸ CHECKPOINT: human confirms tab inventory is complete and accurate
+- [ ] 🔄 For each tab: define section groups, page types expected, reader journey (entry → depth → exit)
+  - ⏸ CHECKPOINT: human approves per-tab IA
+- [ ] 🔄 Map audience → tab → section — formalise which audiences land where and why
+  - ⏸ CHECKPOINT: human approves audience → tab → section mapping
+- [ ] 🔄 Identify structural gaps — tabs or sections that are missing expected pages
+  - ⏸ CHECKPOINT: human reviews gap list
+
+**Output**: Approved per-tab IA — section structure, audience journey, page group definitions. Input to generation contract and context pack skill.
+
+---
+
 ### Step 8. Define how the fields combine — the generation contract
 
-**Input**: Approved outputs from steps 2-7.
+**Input**: Approved outputs from steps 2-8a.
 
 This is the core of the framework: how do pageType + audience + persona + purpose + domain + niche + complexity + lifecycleStage combine to determine page structure, section naming, voice, component selection, CTA style?
 
@@ -398,11 +417,15 @@ Update this section as each step completes. Current step is marked with ▶.
 | 2 | Define pageType enum + governance | ✅ Done — 7 types + pageVariant |
 | 3 | Define audience enum + governance | ✅ Done — 7 audiences (was 10, consolidated) |
 | 4 | Define persona per audience | ✅ Done — all 7 audiences have personas |
-| 5 | Define purpose enum + deep definitions | ✅ Done — 15 values, full definitions in pagePurpose.md, information-type.md baseline created |
-| 5a | Define information type taxonomy | ▶ In progress — layer 1 done; layers 2 (category) + 4 (veracity) to define |
-| 6 | Define domain + niche | ⬜ Not started |
+| 5 | Define purpose enum + deep definitions | ✅ Done — pagePurpose.md |
+| 5a | Information type taxonomy (layer 1 — purpose fit) | ✅ Done — information-type.md |
+| 5b | Information category (layer 2 — format/layout) | ⏳ Deferred to Phase 2 — layout decisions happen during pipeline build |
+| 5c | Veracity framework + sources registry | ✅ Framework done — veracity.md. Sources library template created — veracity-library.md (agent handoff) |
+| 5d | Governance index | ✅ Done — index.md |
+| ▶ 6 | Define domain + niche (layer 3 — voice/terminology) | ⬜ Not started |
 | 7 | Define complexity + lifecycleStage | ⬜ Not started |
-| 8 | Define generation contract (how fields combine) | ⬜ Not started |
+| 8a | Define IA per tab — section structure, audience journey, page groups | ⬜ Not started |
+| 8 | Define generation contract (how all fields combine) | ⬜ Not started |
 | 9 | Define voice rules per audience | ⬜ Not started |
 | 10 | Define section naming rules | ⬜ Not started |
 | 11 | Define page structure rules per pageType | ⬜ Not started |
@@ -464,6 +487,10 @@ Step 20 (wire) ──► Step 21 (pilot) ──► Step 22 (scale)
 | 2026-03-19 | Add `domain` + `niche` to frontmatter schema | Naming rubric requires domain-native terminology but domain wasn't declared — AI had to guess. Now enforceable. Also governs voice register and example selection. |
 | 2026-03-19 | All tasks checkpointed + interactive markers | Every task gets human review. Definitions are co-authored. |
 | 2026-03-19 | Insert framework definition phase (steps 2-11) | Can't build good skills without first agreeing what each field means, what its enums are, and how they combine. |
+| 2026-03-20 | Information type is section-level, not page-level | A single page contains multiple sections with different information types. Agent identifies type per section at runtime, applies the appropriate veracity standard per section. `veracityStatus` stays page-level (rolls up from worst-case section). |
+| 2026-03-20 | Information type is NOT a frontmatter field | Derived at runtime from purpose → information type mapping. Not tagged in content. Writers never set it. See information-type.md. |
+| 2026-03-20 | `veracityStatus` is the only new frontmatter field from the information layer | `verified` / `unverified` / `stale`. Everything else (information type, veracity standard, sources) is pipeline reference material loaded at runtime. |
+| 2026-03-20 | Purpose → information type mapping defines permitted types per purpose | Not every section matches — it defines what types are expected/allowed. A build page will have narrative intro, factual prereqs, procedural steps, technical code. All are valid because build permits procedural + technical. |
 
 ---
 

@@ -1,6 +1,6 @@
 'use strict';
 
-function buildWebviewHtml({ bodyHtml, cssUri, jsUri, markdownItUri, mermaidUri, dark }) {
+function buildWebviewHtml({ bodyHtml, cssUri, jsUri, markdownItUri, mermaidUri, dark, hasMermaid }) {
   const themeClass = dark ? 'dark' : 'light';
 
   return `<!DOCTYPE html>
@@ -23,7 +23,7 @@ function buildWebviewHtml({ bodyHtml, cssUri, jsUri, markdownItUri, mermaidUri, 
     ${bodyHtml}
   </div>
   <script src="${markdownItUri}"></script>
-  <script src="${mermaidUri}"></script>
+  ${hasMermaid ? `<script src="${mermaidUri}"></script>` : ''}
   <script src="${jsUri}"></script>
 </body>
 </html>`;

@@ -1,3 +1,5 @@
+> **Legacy reference only.** Core safety policy has migrated to [AGENTS.md](../../AGENTS.md). This file is retained for historical context.
+
 # Emergency Rollback Guide
 
 ## Quick Rollback (Last 5 minutes)

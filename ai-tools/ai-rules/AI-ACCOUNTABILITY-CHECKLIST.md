@@ -1,3 +1,5 @@
+> **Legacy reference only.** Core safety policy has migrated to [AGENTS.md](../../AGENTS.md). This file is retained for historical context.
+
 # AI Assistant Accountability Checklist
 
 Use this for EVERY interaction with ANY AI on this repo.

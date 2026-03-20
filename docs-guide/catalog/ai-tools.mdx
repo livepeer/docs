@@ -22,14 +22,14 @@ keywords:
 - Canonical inventory + lifecycle + lane source: `ai-tools/registry/ai-tools-registry.json`
 - Registry schema: `ai-tools/registry/ai-tools-registry.schema.json`
 - Generated inventory report: `ai-tools/registry/ai-tools-inventory.md`
-- Validator CLI: `tools/scripts/validate-ai-tools-registry.js`
+- Validator CLI: `tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js`
 
 Primary commands:
 
 ```bash icon="terminal"
-node tools/scripts/validate-ai-tools-registry.js --check --coverage
-node tools/scripts/validate-ai-tools-registry.js --check --lanes
-node tools/scripts/validate-ai-tools-registry.js --write-report
+node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --coverage
+node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --lanes
+node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --write-report
 ```
 
 The registry is now the canonical source for what exists under `ai-tools/**`, how each artifact is classified, and which lane it belongs to.
@@ -71,7 +71,7 @@ The generated aggregate AI-tools catalog is deferred to Wave 2. Until then, use 
 ## One-Command Audit
 
 ```bash icon="terminal"
-node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
+node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
 ```
 
 ## Cross-Agent Installation Path
@@ -79,7 +79,7 @@ node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
 Generate packs:
 
 ```bash icon="terminal"
-node tools/scripts/cross-agent-packager.js --agent-pack all
+node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all
 ```
 
 Produced assets:
@@ -121,8 +121,8 @@ Shared local-preview rule across active agent-governance surfaces:
 
 1. Read `docs-guide/policies/agent-governance-framework.mdx` and `docs-guide/policies/root-allowlist-governance.mdx` first.
 2. Use the approved runtime target for the chosen agent family.
-3. Optionally run `node tools/scripts/cross-agent-packager.js --agent-pack all` to generate supplemental reference packs under `ai-tools/agent-packs/`.
-4. Run `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full` as the first verification run.
+3. Optionally run `node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all` to generate supplemental reference packs under `ai-tools/agent-packs/`.
+4. Run `node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full` as the first verification run.
 
 ## Codex Skill Portability
 
@@ -135,10 +135,10 @@ Runbook:
 
 ```bash icon="terminal"
 bash lpd setup --yes
-node tools/scripts/sync-codex-skills.js --skills agentic-project-management-orchestrator
-node tools/scripts/sync-codex-skills.js --check
-node tools/scripts/sync-codex-skills.js
-node tools/scripts/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
+node tools/scripts/automations/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
+node tools/scripts/automations/ai/agents/sync-codex-skills.js --check
+node tools/scripts/automations/ai/agents/sync-codex-skills.js
+node tools/scripts/automations/ai/agents/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
 ```
 
 Generated metadata:
@@ -166,10 +166,10 @@ Canonical operator references:
 Primary entrypoints:
 
 ```bash icon="terminal"
-node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
-node tools/scripts/docs-page-research.js --page v2/orchestrators/guides/deployment-details/setup-options.mdx --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json
-node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
-node tools/scripts/docs-research-packet.js --nav tools/config/scoped-navigation/docs-gate-work.json --version v2 --language en --tab Orchestrators --group Guides --out tasks/reports/orchestrator-guides-review/research-guides-review
+node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims
+node tools/scripts/audits/content/veracity/docs-page-research.js --page v2/orchestrators/guides/deployment-details/setup-options.mdx --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json
+node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
+node tools/scripts/dispatch/content/veracity/docs-research-packet.js --nav tools/config/scoped-navigation/docs-gate-work.json --version v2 --language en --tab Orchestrators --group Guides --out tasks/reports/orchestrator-guides-review/research-guides-review
 ```
 
 The workflow is experimental and advisory-first. Use it for factual verification, contradiction review, claim-family propagation, and research packets, not generic MDX or link hygiene.
