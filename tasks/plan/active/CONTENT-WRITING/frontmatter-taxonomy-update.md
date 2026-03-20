@@ -120,21 +120,23 @@ Maps all old/informal type names to new canonical types. Old types that have bee
 ```js
 const DEPRECATED_PAGE_TYPE_ALIASES = Object.freeze({
   // Old primary types → new canonical types
-  landing:        'navigation',   // renamed to navigation
-  overview:       'concept',      // demoted to variant; map to concept as default
-  quickstart:     'instruction',  // demoted to instruction variant
-  how_to:         'instruction',  // renamed to instruction
-  faq:            'reference',    // demoted to reference/compendium
-  troubleshooting: 'reference',   // demoted to reference/compendium
-  changelog:      'reference',    // demoted to reference variant
-  glossary:       'reference',    // demoted to reference/compendium
+  landing:         'navigation',   // renamed to navigation
+  // overview: NOT aliased — pages must be explicitly migrated to correct new type
+  quickstart:      'instruction',  // demoted to instruction variant
+  how_to:          'instruction',  // renamed to instruction
+  faq:             'reference',    // demoted to reference/compendium
+  troubleshooting: 'reference',    // demoted to reference/compendium
+  changelog:       'reference',    // demoted to reference variant
+  glossary:        'reference',    // demoted to reference/compendium
   // Informal aliases (existed before, updated targets)
-  portal:         'navigation',   // was portal→landing; landing→navigation
-  api:            'reference',    // unchanged
-  index:          'navigation',   // was index→overview; routing pages → navigation
-  conceptual:     'concept'       // unchanged
+  portal:          'navigation',   // was portal→landing; landing→navigation
+  api:             'reference',    // unchanged
+  index:           'navigation',   // was index→overview; routing pages → navigation
+  conceptual:      'concept'       // unchanged
 });
 ```
+
+> **Decision (2026-03-21)**: `overview` is intentionally NOT a deprecated alias. It is immediately invalid. Existing `pageType: overview` pages must be explicitly updated to the correct new type during the page migration tasks — the correct type varies per page (could be `concept`, `guide`, `navigation`, etc.) and cannot be inferred automatically.
 
 ---
 
@@ -293,6 +295,7 @@ getPurposeAdvisory('orientation')→ matches /Deprecated purpose alias "orientat
 ### Test: invalid rejection
 ```js
 isValidPageType('not-real')   → false
+isValidPageType('overview')   → false   // no alias — must be explicitly migrated
 isValidPurpose('not-real')    → false
 isValidPageType('concept')    → true   (kept as canonical)
 isValidPageType('tutorial')   → true   (kept as canonical)
@@ -386,6 +389,6 @@ These are old type names — needs update to new types after this change. But si
 
 | # | Question | Default |
 |---|---|---|
-| Q1 | `overview` as deprecated alias → `concept` or `navigation`? Current plan: `concept`. Is that right for all existing `pageType: overview` pages? | Map to `concept` |
+| ~~Q1~~ | ~~`overview` as deprecated alias → `concept` or `navigation`?~~ | ✅ Resolved 2026-03-21 — `overview` is NOT aliased. Invalid immediately. Explicit migration per page required. |
 | Q2 | Should `purposeToRubricPurpose` rubric labels be updated to new vocabulary too, or stay as old names for scoring continuity? | Stay as old rubric labels (no rubric change needed now) |
 | Q3 | Add `CANONICAL_AUDIENCES` and `CANONICAL_PAGE_VARIANTS` to this file now, or separate task? | Separate task (not blocking) |

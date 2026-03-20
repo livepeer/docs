@@ -11,37 +11,35 @@
  * @usage             const taxonomy = require('../lib/frontmatter-taxonomy');
  */
 
+// Phase 1 canonical values — source of truth: tasks/plan/active/CONTENT-WRITING/framework.md
+// Decision 1 (2026-03-19): 12 types → 7
 const CANONICAL_PAGE_TYPES = Object.freeze([
-  'landing',
-  'overview',
-  'tutorial',
-  'quickstart',
-  'how_to',
+  'navigation',
   'concept',
+  'tutorial',
+  'guide',
+  'instruction',
   'reference',
-  'faq',
-  'troubleshooting',
-  'changelog',
-  'glossary',
-  'guide'
+  'resource'
 ]);
 
+// Decision 2 (2026-03-20): 15 intent-based purpose values
 const CANONICAL_PURPOSES = Object.freeze([
-  'landing',
-  'overview',
-  'orientation',
-  'concept',
-  'evaluation',
-  'tutorial',
-  'setup',
-  'how_to',
-  'operations',
-  'decision',
+  'orient',
+  'explain',
+  'choose',
+  'start',
+  'build',
+  'configure',
+  'operate',
+  'troubleshoot',
+  'optimise',
+  'integrate',
+  'verify',
+  'evaluate',
   'reference',
-  'faq',
-  'glossary',
-  'changelog',
-  'troubleshooting'
+  'learn',
+  'update'
 ]);
 
 const CANONICAL_PAGE_STATUSES = Object.freeze([
@@ -63,64 +61,74 @@ const LAST_VERIFIED_REQUIRED_STATUSES = Object.freeze([
   'verified_2026'
 ]);
 
+// Old primary types → new canonical types.
+// 'overview' is intentionally NOT aliased — pages must be explicitly migrated
+// to the correct new type (concept/guide/navigation/etc.) during page migration tasks.
 const DEPRECATED_PAGE_TYPE_ALIASES = Object.freeze({
-  portal: 'landing',
-  api: 'reference',
-  index: 'overview',
-  conceptual: 'concept'
+  // Old primary types demoted or renamed (Decision 1, 2026-03-19)
+  landing:         'navigation',   // renamed to navigation
+  quickstart:      'instruction',  // demoted to instruction variant
+  how_to:          'instruction',  // renamed to instruction
+  faq:             'reference',    // demoted to reference/compendium
+  troubleshooting: 'reference',    // demoted to reference/compendium
+  changelog:       'reference',    // demoted to reference variant
+  glossary:        'reference',    // demoted to reference/compendium
+  // Informal aliases (pre-existing, updated to new targets)
+  portal:          'navigation',   // was portal→landing; landing→navigation
+  api:             'reference',    // unchanged
+  index:           'navigation',   // was index→overview; routing pages → navigation
+  conceptual:      'concept'       // unchanged
 });
 
-const DEPRECATED_PURPOSE_ALIASES = Object.freeze({
-  guide: 'operations',
-  guides: 'operations',
-  operational: 'operations',
-  concepts: 'concept',
-  verification: 'operations',
-  task: 'operations',
-  navigation: 'landing',
-  configuration: 'reference',
-  'concept-and-operational': 'concept'
+// Old canonical purposes + informal aliases → new canonical purposes (Decision 2, 2026-03-20)
+const DEPRECATED_PURPOSE_ALIASES_FINAL = Object.freeze({
+  // Old canonical purposes (now deprecated)
+  landing:         'orient',
+  overview:        'orient',
+  orientation:     'orient',
+  concept:         'explain',
+  evaluation:      'choose',
+  tutorial:        'learn',
+  setup:           'configure',
+  how_to:          'build',
+  operations:      'operate',
+  decision:        'choose',
+  // 'reference' stays canonical — no alias needed
+  faq:             'reference',
+  glossary:        'reference',
+  changelog:       'update',
+  troubleshooting: 'troubleshoot',
+  // Informal aliases (pre-existing, updated to new targets)
+  guide:           'operate',       // was guide→operations; operations→operate
+  guides:          'operate',
+  operational:     'operate',
+  concepts:        'explain',       // was concepts→concept; concept→explain
+  verification:    'verify',        // was verification→operations; now more accurate
+  task:            'build',         // was task→operations; now more accurate
+  navigation:      'orient',        // was navigation→landing; landing→orient
+  configuration:   'configure',     // was configuration→reference; now more accurate
+  'concept-and-operational': 'explain'
 });
 
 const PAGE_TYPE_TO_PURPOSE = Object.freeze({
-  landing: 'landing',
-  overview: 'overview',
-  tutorial: 'tutorial',
-  quickstart: 'tutorial',
-  how_to: 'how_to',
-  concept: 'concept',
-  reference: 'reference',
-  faq: 'faq',
-  troubleshooting: 'troubleshooting',
-  changelog: 'changelog',
-  glossary: 'glossary',
-  guide: 'operations'
+  navigation:  'orient',
+  concept:     'explain',
+  tutorial:    'learn',
+  guide:       'operate',
+  instruction: 'build',
+  reference:   'reference',
+  resource:    'orient'
 });
 
 const PAGE_TYPE_ALLOWED_PURPOSES = Object.freeze({
-  landing: Object.freeze(['landing', 'overview', 'orientation']),
-  overview: Object.freeze(['overview', 'orientation', 'concept', 'evaluation', 'landing']),
-  tutorial: Object.freeze(['tutorial', 'setup']),
-  quickstart: Object.freeze(['tutorial', 'setup']),
-  how_to: Object.freeze(['how_to', 'setup', 'operations', 'decision', 'tutorial', 'reference']),
-  concept: Object.freeze(['concept', 'overview', 'orientation', 'evaluation', 'decision']),
-  reference: Object.freeze(['reference']),
-  faq: Object.freeze(['faq']),
-  troubleshooting: Object.freeze(['troubleshooting', 'operations']),
-  changelog: Object.freeze(['changelog']),
-  glossary: Object.freeze(['glossary']),
-  guide: Object.freeze([
-    'overview',
-    'orientation',
-    'evaluation',
-    'tutorial',
-    'setup',
-    'how_to',
-    'operations',
-    'decision',
-    'reference',
-    'troubleshooting'
-  ])
+  navigation:  Object.freeze(['orient']),
+  concept:     Object.freeze(['explain', 'orient', 'choose', 'evaluate']),
+  tutorial:    Object.freeze(['learn', 'build', 'configure', 'start']),
+  guide:       Object.freeze(['operate', 'build', 'configure', 'integrate',
+                               'troubleshoot', 'optimise', 'orient', 'explain']),
+  instruction: Object.freeze(['build', 'configure', 'start', 'integrate', 'verify']),
+  reference:   Object.freeze(['reference', 'learn']),
+  resource:    Object.freeze(['orient', 'evaluate', 'choose'])
 });
 
 function normalizeRawToken(value) {
@@ -197,7 +205,7 @@ function normalizePurpose(value) {
     };
   }
 
-  const canonical = DEPRECATED_PURPOSE_ALIASES[lookup] || '';
+  const canonical = DEPRECATED_PURPOSE_ALIASES_FINAL[lookup] || '';
   if (canonical) {
     return {
       raw,
@@ -265,6 +273,10 @@ function pageTypeToPurpose(value) {
   return PAGE_TYPE_TO_PURPOSE[result.canonical] || '';
 }
 
+// Maps canonical purpose values to rubric scoring labels.
+// Rubric labels (overview, concept, tutorial, how_to, troubleshooting, reference,
+// changelog) are internal to the scoring system and intentionally kept stable.
+// Deprecated purpose aliases resolve to new canonicals before reaching this function.
 function purposeToRubricPurpose(purpose, pageType = '') {
   const purposeResult = normalizePurpose(purpose);
   if (!purposeResult.valid) return '';
@@ -273,18 +285,25 @@ function purposeToRubricPurpose(purpose, pageType = '') {
   const pageTypeCanonical = pageTypeResult.valid ? pageTypeResult.canonical : '';
 
   switch (purposeResult.canonical) {
-    case 'orientation':
-      return 'overview';
-    case 'evaluation':
-      return 'concept';
-    case 'setup':
-      return pageTypeCanonical === 'tutorial' || pageTypeCanonical === 'quickstart' ? 'tutorial' : 'how_to';
-    case 'operations':
-      return pageTypeCanonical === 'troubleshooting' ? 'troubleshooting' : 'how_to';
-    case 'decision':
-      return 'concept';
-    default:
-      return purposeResult.canonical;
+    case 'orient':      return 'overview';
+    case 'explain':     return 'concept';
+    case 'choose':      return 'concept';
+    case 'evaluate':    return 'concept';
+    case 'learn':       return 'tutorial';
+    case 'start':       return 'tutorial';
+    case 'build':       return 'how_to';
+    case 'configure':
+      return pageTypeCanonical === 'tutorial' ? 'tutorial' : 'how_to';
+    case 'operate':
+      return pageTypeCanonical === 'reference' ? 'reference' : 'how_to';
+    case 'troubleshoot': return 'troubleshooting';
+    case 'optimise':    return 'how_to';
+    case 'integrate':   return 'how_to';
+    case 'verify':
+      return pageTypeCanonical === 'tutorial' ? 'tutorial' : 'how_to';
+    case 'reference':   return 'reference';
+    case 'update':      return 'changelog';
+    default:            return purposeResult.canonical;
   }
 }
 
@@ -342,7 +361,7 @@ module.exports = {
   CANONICAL_PAGE_STATUSES,
   LAST_VERIFIED_REQUIRED_STATUSES,
   DEPRECATED_PAGE_TYPE_ALIASES,
-  DEPRECATED_PURPOSE_ALIASES,
+  DEPRECATED_PURPOSE_ALIASES: DEPRECATED_PURPOSE_ALIASES_FINAL,
   PAGE_TYPE_TO_PURPOSE,
   PAGE_TYPE_ALLOWED_PURPOSES,
   normalizePageType,

@@ -186,18 +186,22 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] **2A-I.5** Approve new file: `docs-guide/policies/docs-guide-structure-policy.mdx`
 
 **2A-II — Fix upstream script problems** *(safe after 2A-I approval; no nav impact)*
-- [ ] **2A-II.1** Fix `.codex/locks-local/` legacy `/indexes/` paths → `/catalog/`
-- [ ] **2A-II.2** Add `generate-docs-guide-indexes.js` to hook pipeline on `.github/` changes
-- [ ] **2A-II.3** Add `generate-docs-guide-pages-index.js` to pipeline on `docs.json`/`v2/index.mdx` changes
-- [ ] **2A-II.4** Trace and document `component-usage-map.json` generator in `generated-artifact-and-hook-governance.mdx`
+- [ ] **2A-II.1** Delete 3 stale `.codex/locks-local/` files — all from completed tasks (Mar 8, 9, 17); all lock paths (`docs-guide/indexes/`) no longer exist → zero risk
+  - `789-phase2b-component-migration-2026-03-08T03-08-50-208Z.json`
+  - `808-governance-replay-2026-03-09T17-46-57-724Z.json`
+  - `20260317-merge-readiness-style-root-cause-2026-03-16T16-43-42-131Z.json`
+- [ ] **2A-II.2** Add `generate-docs-guide-indexes.js` to post-commit hook triggered by `.github/workflows/*.yml` or `.github/ISSUE_TEMPLATE/*` changes
+- [ ] **2A-II.3** Add `generate-docs-guide-pages-index.js` to pre-commit hook triggered by `docs.json` or `v2/index.mdx` changes (docs.json already has hook coverage — add here)
+- [ ] **2A-II.4** `component-usage-map.json` generator → **hand off to COMPONENT-GOVERNANCE thread** to trace and document
 
-**2A-III — Add missing templates** *(no nav impact; can run in parallel with 2A-II)*
-- [ ] **2A-III.1** Create `snippets/templates/docs-guide/policy-page.mdx`
-- [ ] **2A-III.2** Create `snippets/templates/docs-guide/framework-page.mdx`
-- [ ] **2A-III.3** Create `snippets/templates/docs-guide/catalog-page.mdx`
-- [ ] **2A-III.4** Create `snippets/templates/docs-guide/feature-map-page.mdx`
-- [ ] **2A-III.5** Create `snippets/templates/docs-guide/tooling-reference-page.mdx`
-- [ ] **2A-III.6** Regenerate `docs-guide/catalog/ui-templates.mdx` after templates added
+**2A-III — Add missing templates** *(handoff — see `handoff-snippets-templates.md`)*
+- [ ] **2A-III.0** Handoff delivered to snippets/templates owner → see `handoff-snippets-templates.md`
+- [ ] **2A-III.1** *(handoff recipient)* Create `snippets/templates/docs-guide/policy-page.mdx`
+- [ ] **2A-III.2** *(handoff recipient)* Create `snippets/templates/docs-guide/framework-page.mdx`
+- [ ] **2A-III.3** *(handoff recipient)* Create `snippets/templates/docs-guide/catalog-page.mdx`
+- [ ] **2A-III.4** *(handoff recipient)* Create `snippets/templates/docs-guide/feature-map-page.mdx`
+- [ ] **2A-III.5** *(handoff recipient)* Create `snippets/templates/docs-guide/tooling-reference-page.mdx`
+- [ ] **2A-III.6** *(handoff recipient)* Regenerate `docs-guide/catalog/ui-templates.mdx` after templates added
 
 **2A-IV — Structural cleanup** *(requires docs.json + AGENTS.md updates; careful coord)*
 - [ ] **2A-IV.1** Delete 5 empty `source-of-truth.md` stubs (catalog, contributing, features, frameworks, policies)
@@ -211,6 +215,7 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] **2A-V.1** Write `docs-guide/policies/docs-guide-structure-policy.mdx`
 - [ ] **2A-V.2** Write `_workspace/` lifecycle policy (30-day scratch TTL, 90-day archive TTL, nav-stub index.mds exempt)
 - [ ] **2A-V.3** Expand `contributing/contributing.mdx` — defer until `contribute/` root folder merge lands (Phase 1.3)
+- [ ] **2A-V.4** AI-TOOLS-GOVERNANCE adapter file updates → see `AI-TOOLS-GOVERNANCE/handoff-docs-guide-path-updates.md` (must land same PR as 2A-IV)
 
 ---
 
