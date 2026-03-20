@@ -1,6 +1,6 @@
 # Component Governance Restructuring Plan
 
-> **Status**: Active — Tasks 1–15, 17, 18 complete. Remaining: T16, T19 (partial), T20, T21.
+> **Status**: Active — Tasks 1–15, 17, 18, 19 complete. Remaining: T16 (test pass in progress), T20, T21.
 > **Branch**: `docs-v2-dev-components` — **merged into `docs-v2-dev`** (commit `be1e2d55`)
 > **Last updated**: 2026-03-21
 
@@ -551,39 +551,21 @@ snippets/
 - 18.6 Commit + merge back to `docs-v2-dev`
 - 18.7 ~~Strikethrough~~
 
-### Task 19 — Composable templates ⚠️ PARTIAL
-> Research complete: [composables-research.md](./composables-research.md)
-> `snippets/composables/` folder exists (stub only — no content)
+### ~~Task 19 — Composable templates~~ COMPLETED (2026-03-21)
 
-**Platform constraint**: Composables MUST be `.mdx` files (not JSX). Mintlify does not support cross-JSX imports (Decision D4). Only MDX can compose JSX components.
+> Commits: `9ef6277f` (composables), `346bb6a0` (documentation)
 
-**Sub-tasks (execution order):**
+**Delivered:**
+- 8 composable MDX section blocks in `snippets/composables/` (Tier 1+2)
+- `snippets/composables/README.md` — governance, naming, promotion lifecycle
+- `component-governance.mdx` Section 12 — three-layer architecture, `@contentAffinity` spec
+- `structure.md` composables folder tree updated
+- Accordion composables split into separate files per type (FAQ / glossary / troubleshooting)
+- Each composable includes `@composable` governance header + inline `{/* optional */}` blocks
 
-#### 19.1 — CHECKPOINT: Lock composable shortlist (interactive)
-Review [composables-research.md](./composables-research.md) Tier 1–2 candidates and confirm scope:
-- Tier 1 candidates: `related-resources-section`, `steps-section`, `prerequisites-section`, `accordion-content-section`
-- Tier 2 candidates: `overview-intro-section`, `validation-section`
-- Confirm naming convention, prop patterns, and which templates each replaces
-
-#### 19.2 — Build Tier 1 composables
-For each approved composable:
-- Write `.mdx` file in `snippets/composables/`
-- Include governance comment header (name, purpose, page types it serves, prop/variable docs)
-- Test in at least one existing page template
-
-#### 19.3 — Build Tier 2 composables
-Same process as 19.2 for Tier 2 candidates.
-
-#### 19.4 — Documentation ← **WAS MISSING, RE-ADDED**
-- Write `snippets/composables/README.md` — what composables are, how to use, naming convention, local→shared promotion rule
-- Update `docs-guide/frameworks/component-governance.mdx` — add composables section (MDX layer of 3-layer architecture)
-- Update `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md` — replace `(TBD)` composables entry with actual folder tree
-- Generate composables catalog entry in `docs-guide/catalog/`
-- Update `docs-guide/policies/component-layout-decisions.mdx` — unblocked by T10; map page types to composable section choices (was deferred, now actionable)
-- Add `@contentAffinity` concept note to component-governance.mdx — was deferred, now that page taxonomy is locked (unblocks purpose→component lookup)
-
-#### 19.5 — CHECKPOINT: Human reviews all composables + docs
-#### 19.6 — Commit
+**Deferred (explicitly out of scope for T19):**
+- `component-layout-decisions.mdx` update → CONTENT-STRUCTURE Phase 5.1
+- `@contentAffinity` enforcement → add to `--strict` in CONTENT-STRUCTURE Phase 5.1
 
 ### Task 20 — Final testing & cleanup
 - 20.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
