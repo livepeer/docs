@@ -34,13 +34,18 @@ Required fields for every governed skill artifact:
 | `description` | Yes | Plain-English description between 20 and 100 words. State what the skill does and when to use it. |
 | `invoke_when` | Yes | Non-empty array of trigger phrases. Exact duplicate trigger sets across governed skills are warned. |
 
+Optional operational fields (local skills + templates):
+
+| Field | Required on | Rules |
+| --- | --- | --- |
+| `tier` | Optional on both | `1` = single-command skill; `2` = multi-step workflow skill. Use when the execution complexity is worth signalling. |
+
 Template-only operational fields:
 
 | Field | Applies To | Rules |
 | --- | --- | --- |
-| `tier` | Templates only | Repository-defined execution tier used by sync and export tooling. |
-| `primary_paths` | Templates only | Non-empty array of canonical repo paths used by the workflow. |
-| `primary_commands` | Templates only | Non-empty array of repository-backed commands for the workflow. |
+| `primary_paths` | Templates only | Non-empty array of canonical repo paths used by the workflow. Not valid on local `SKILL.md` files. |
+| `primary_commands` | Templates only | Non-empty array of repository-backed commands for the workflow. Not valid on local `SKILL.md` files. |
 
 Cross-reference policy:
 
