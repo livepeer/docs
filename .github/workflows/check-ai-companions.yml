@@ -1,0 +1,30 @@
+name: Check AI Companion Files
+
+on:
+  pull_request:
+    branches:
+      - docs-v2
+      - main
+  push:
+    branches:
+      - docs-v2
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-ai-companions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify glossary companion JSONs are current
+        run: node tools/scripts/generators/content/reference/generate-glossary-companions.js --check

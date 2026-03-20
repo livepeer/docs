@@ -28,7 +28,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes [page-slug]-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -42,6 +42,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the **Category** and **Tab** filters to narrow by domain or section
 </Tip>
+
+<Note>
+  Machine-readable term index: [livepeer-glossary-data.json](./livepeer-glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 
@@ -138,6 +142,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "CRF (Constant Rate Factor)", Category: "video:encoding", Tabs: "solutions", Definition: "Encoding quality control parameter that targets consistent perceptual quality by adjusting quantization per frame; scale runs 0–51 with lower values producing higher quality." },
     { Term: "Cryptoeconomic Primitives", Category: "web3:concept", Tabs: "about", Definition: "Fundamental building blocks that combine cryptography and economic incentives to enable secure, decentralized protocols." },
     { Term: "CUDA (Compute Unified Device Architecture)", Category: "ai:framework", Tabs: "orchestrators", Definition: "NVIDIA's parallel computing platform and programming API enabling GPUs to be used for general-purpose processing and deep learning." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Tabs: "gateways, orchestrators, developers, about", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "DAO (Decentralized Autonomous Organization)", Category: "web3:concept", Tabs: "community, resources", Definition: "An organization governed by smart contracts, with rules encoded in code rather than legal structures, and members vote on proposals via a decentralized ledger." },
     { Term: "DASH (Dynamic Adaptive Streaming over HTTP)", Category: "video:protocol", Tabs: "resources", Definition: "An adaptive bitrate streaming protocol that breaks content into small HTTP-served segments at multiple bitrate levels, allowing clients to switch quality dynamically." },
     { Term: "Dashboard", Category: "video:studio", Tabs: "solutions", Definition: "Web-based management interface in Livepeer Studio for creating and managing streams, assets, API keys, and viewing analytics." },
@@ -188,12 +193,14 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "FrameProcessor", Category: "livepeer:sdk", Tabs: "developers", Definition: "Pattern in PyTrickle for building real-time video processing applications with custom per-frame processing logic." },
     { Term: "Frameworks", Category: "livepeer:product", Tabs: "solutions", Definition: "Product by the MistServer team bridging Livepeer's transcoding infrastructure and real-world applications; provides libraries and integration tools for embedding Livepeer services." },
     { Term: "Gas", Category: "web3:concept", Tabs: "resources", Definition: "The unit measuring computational effort required to execute operations on Ethereum or Arbitrum; users pay gas fees in ETH to cover execution costs." },
+    { Term: "GB (Gigabyte)", Category: "technical:hardware", Tabs: "gateways, orchestrators, developers", Definition: "A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements." },
     { Term: "Gateway", Category: "livepeer:role", Tabs: "home, about, solutions, developers, gateways, orchestrators, community, lpt, resources", Definition: "A node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface between applications and the Livepeer Network." },
     { Term: "Gateway-as-a-Service", Category: "livepeer:deployment", Tabs: "gateways", Definition: "A hosted deployment model allowing users to access gateway functionality without managing their own infrastructure." },
     { Term: "Gateway Middleware", Category: "livepeer:protocol", Tabs: "gateways", Definition: "A pluggable logic layer inserted into the gateway request pipeline for custom processing such as authentication, rate-limiting, or request transformation." },
     { Term: "Gateway operator", Category: "livepeer:role", Tabs: "community", Definition: "Person or organisation running and maintaining gateway nodes for network access." },
     { Term: "Generative Video", Category: "ai:application", Tabs: "home", Definition: "AI-produced video created by models that synthesize novel temporal frame sequences from text prompts or conditioning signals." },
     { Term: "Genesis Supply", Category: "economic:reward", Tabs: "lpt", Definition: "The initial 10 million LPT tokens created at protocol launch and distributed via the Merkle Mine mechanism." },
+    { Term: "GeForce", Category: "technical:hardware", Tabs: "gateways, orchestrators", Definition: "NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators." },
     { Term: "go-livepeer", Category: "livepeer:sdk", Tabs: "developers, orchestrators", Definition: "Official Go implementation of the Livepeer protocol containing the Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary." },
     { Term: "Governance", Category: "operational:governance", Tabs: "home, community, lpt, resources", Definition: "System of rules and processes for protocol decision-making including on-chain voting via LPT stake weight and the LivepeerGovernor contract." },
     { Term: "Governance Forum", Category: "operational:community", Tabs: "community, lpt", Definition: "The Livepeer Forum's governance category for LIPs, pre-proposals, and protocol governance discussions before on-chain votes." },
@@ -206,10 +213,12 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "GPU (Graphics Processing Unit)", Category: "technical:infra", Tabs: "home, community, orchestrators, resources", Definition: "Specialized processor for parallel computation used in rendering, video encoding, and AI inference workloads." },
     { Term: "GPU Operator", Category: "livepeer:role", Tabs: "home, developers", Definition: "An orchestrator operator contributing GPU hardware and AI model capacity to the Livepeer network for transcoding or AI inference workloads." },
     { Term: "GPU Worker", Category: "technical:infra", Tabs: "gateways, orchestrators", Definition: "A Livepeer node with GPU hardware that performs transcoding or AI inference tasks for an orchestrator." },
+    { Term: "GTX (NVIDIA GTX)", Category: "technical:hardware", Tabs: "gateways, orchestrators", Definition: "NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference." },
     { Term: "GWID (Gateway Wizard)", Category: "livepeer:entity", Tabs: "community", Definition: "Gateway Wizard SPE building a managed DevOps tool for running and managing gateway infrastructure." },
     { Term: "Hard Gate", Category: "livepeer:config", Tabs: "orchestrators", Definition: "Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold." },
     { Term: "HLS (HTTP Live Streaming)", Category: "video:protocol", Tabs: "about, solutions, developers, gateways, orchestrators, resources", Definition: "Apple's HTTP Live Streaming protocol that encodes video into multiple quality levels segmented into small files, delivered with an index playlist (.m3u8) for adaptive bitrate playback." },
     { Term: "HTTP Ingest", Category: "video:processing", Tabs: "gateways", Definition: "Receiving a live video stream via HTTP push (rather than RTMP) for transcoding or AI processing." },
+    { Term: "HuggingFace", Category: "ai:platform", Tabs: "gateways, orchestrators, developers, community", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "ICO (Initial Coin Offering)", Category: "web3:concept", Tabs: "resources", Definition: "A fundraising mechanism where a blockchain project sells newly created tokens to the public in exchange for established cryptocurrencies." },
     { Term: "Image-to-Image", Category: "ai:pipeline", Tabs: "developers, orchestrators", Definition: "AI pipeline transforming an input image into a modified output image guided by a text prompt or conditioning signal." },
     { Term: "Image-to-Text", Category: "ai:pipeline", Tabs: "developers, orchestrators", Definition: "AI pipeline generating a textual description from an input image, encompassing captioning and optical character recognition." },
@@ -227,6 +236,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "Job", Category: "livepeer:protocol", Tabs: "home", Definition: "A unit of work submitted to the Livepeer network specifying stream ID, transcoding options or AI pipeline, and price." },
     { Term: "Job Lifecycle", Category: "livepeer:protocol", Tabs: "about", Definition: "The sequence of stages from job submission through orchestrator selection, work execution, verification, and payment settlement." },
     { Term: "JSON (JavaScript Object Notation)", Category: "technical:protocol", Tabs: "solutions", Definition: "Lightweight, human-readable data interchange format using key-value pairs and ordered lists, widely used for API request and response bodies." },
+    { Term: "JavaScript", Category: "technical:language", Tabs: "developers, community", Definition: "A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs." },
     { Term: "JWT (JSON Web Token)", Category: "technical:security", Tabs: "solutions, developers", Definition: "Compact, URL-safe token format carrying signed claims used for stateless authentication; in video access control, a signed JWT proves viewer entitlement without a server round-trip for every request." },
     { Term: "Keyframe Interval", Category: "video:encoding", Tabs: "solutions", Definition: "Distance in frames or seconds between consecutive keyframes (I-frames); a shorter interval improves seeking accuracy while a longer interval improves compression efficiency." },
     { Term: "KYC (Know Your Customer)", Category: "operational:process", Tabs: "developers", Definition: "Know Your Customer — identity verification process for regulatory compliance, requiring users to provide identifying information before accessing certain features." },
@@ -249,6 +259,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "livepeer-ai-python", Category: "livepeer:sdk", Tabs: "community", Definition: "Python library for the Livepeer AI API providing programmatic access to AI inference pipelines." },
     { Term: "livepeer-go", Category: "livepeer:sdk", Tabs: "community", Definition: "Go server-side SDK for the Livepeer Studio API." },
     { Term: "livepeer-js", Category: "livepeer:sdk", Tabs: "community", Definition: "JavaScript library for the Livepeer Studio API providing programmatic access to stream and asset management." },
+    { Term: "livepeer-python-gateway", Category: "livepeer:sdk", Tabs: "gateways, developers", Definition: "An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications." },
     { Term: "Livepeer Actor", Category: "livepeer:role", Tabs: "resources", Definition: "A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system." },
     { Term: "Livepeer Cloud", Category: "livepeer:product", Tabs: "developers", Definition: "Platform by the Livepeer Cloud SPE increasing network accessibility with a free community AI gateway and managed developer services." },
     { Term: "Livepeer Ecosystem", Category: "livepeer:entity", Tabs: "resources", Definition: "The full set of projects, tools, participants, and organizations building on or contributing to the Livepeer network." },
@@ -265,6 +276,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "LLM (Large Language Model)", Category: "ai:concept", Tabs: "developers, orchestrators", Definition: "Large language model — neural network trained on massive text corpora to understand and generate natural language." },
     { Term: "Loki", Category: "operational:monitoring", Tabs: "orchestrators", Definition: "Horizontally scalable log aggregation system by Grafana Labs, used in Livepeer orchestrator monitoring stacks." },
     { Term: "LoRA (Low-Rank Adaptation)", Category: "ai:model", Tabs: "developers", Definition: "Low-Rank Adaptation — parameter-efficient fine-tuning technique injecting trainable low-rank matrices into transformer layers to specialise a model without full retraining." },
+    { Term: "Low-Latency", Category: "video:streaming", Tabs: "solutions, about, developers", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "LPT (Livepeer Token)", Category: "livepeer:protocol", Tabs: "home, about, developers, orchestrators, community, lpt, resources", Definition: "The ERC-20 governance and staking token used to coordinate, incentivize, and secure the Livepeer Network." },
     { Term: "LPT emissions", Category: "economic:reward", Tabs: "community", Definition: "New LPT tokens minted each protocol round via inflation, distributed to active orchestrators and their delegators." },
     { Term: "LPMS (Livepeer Media Server)", Category: "livepeer:sdk", Tabs: "resources", Definition: "An open-source media server library providing live video functionality including RTMP ingest and HLS output, used as the foundation for Livepeer transcoding nodes." },
@@ -316,8 +328,10 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "Payment Channel", Category: "economic:payment", Tabs: "about", Definition: "An off-chain mechanism where two parties conduct multiple transactions and only settle the final state on-chain, reducing per-transaction gas costs." },
     { Term: "Payment Ticket", Category: "economic:payment", Tabs: "about, lpt, resources", Definition: "Signed off-chain data structure issued by a gateway to an orchestrator representing a probabilistic payment; only winning tickets are redeemable on-chain for their ETH face value." },
     { Term: "Pending Rewards", Category: "economic:reward", Tabs: "lpt", Definition: "Inflationary LPT and ETH fees that have been earned through staking but not yet claimed by calling the claim earnings function." },
+    { Term: "Per Pixel (Price Per Pixel)", Category: "livepeer:economics", Tabs: "about, gateways, orchestrators", Definition: "Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job." },
     { Term: "Per-Pixel Pricing", Category: "economic:pricing", Tabs: "gateways", Definition: "A cost model charging for transcoding work based on the total number of pixels processed (width × height × frame count), enabling standardized comparison across resolutions." },
     { Term: "Per-Request Pricing", Category: "economic:pricing", Tabs: "gateways", Definition: "A cost model charging per individual AI inference request rather than per pixel, used for AI pipeline jobs where pixel count is not a meaningful unit." },
+    { Term: "Per Round", Category: "livepeer:economics", Tabs: "about, lpt, orchestrators", Definition: "The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis." },
     { Term: "Performance Score", Category: "livepeer:protocol", Tabs: "orchestrators", Definition: "Composite metric rating an orchestrator's reliability and speed, calculated as latency score multiplied by success rate, used by gateways in orchestrator selection." },
     { Term: "Permissionless", Category: "web3:concept", Tabs: "home", Definition: "Property where anyone can participate without requiring approval from a central authority." },
     { Term: "Pixel", Category: "video:encoding", Tabs: "orchestrators", Definition: "Single point in a video frame used as the fundamental pricing unit for transcoding work on the Livepeer network." },
@@ -373,6 +387,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "RPC (Remote Procedure Call)", Category: "technical:protocol", Tabs: "community", Definition: "Protocol allowing a program to execute a procedure on a remote server; in blockchain contexts, the mechanism for querying and submitting transactions to a node." },
     { Term: "RTMP (Real-Time Messaging Protocol)", Category: "video:protocol", Tabs: "about, solutions, developers, gateways, orchestrators, resources", Definition: "TCP-based protocol for streaming audio, video, and data over a network, operating on port 1935; the dominant ingest protocol for live broadcasting software." },
     { Term: "RTMPS", Category: "video:protocol", Tabs: "solutions", Definition: "RTMP transported over a TLS/SSL connection, adding encryption to protect live video streams and metadata during ingest." },
+    { Term: "RTX (NVIDIA RTX)", Category: "technical:hardware", Tabs: "gateways, orchestrators, developers", Definition: "NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks." },
     { Term: "SAM 2", Category: "ai:model", Tabs: "developers", Definition: "Meta's unified foundation model for promptable segmentation in images and videos with streaming memory, enabling interactive region selection." },
     { Term: "Sampler", Category: "ai:concept", Tabs: "developers", Definition: "Algorithm controlling the denoising process in diffusion models by defining the noise schedule and update rule for each generation step." },
     { Term: "Scalability", Category: "technical:infra", Tabs: "home", Definition: "Ability to handle increasing workload by adding resources without degradation in performance or reliability." },
@@ -381,6 +396,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "SDK (Software Development Kit)", Category: "technical:dev", Tabs: "solutions", Definition: "Collection of tools, libraries, and documentation enabling developers to build applications that integrate with a platform's APIs." },
     { Term: "Segment", Category: "livepeer:protocol", Tabs: "about, solutions, gateways, orchestrators, resources", Definition: "A time-sliced chunk of multiplexed audio and video data that is independently transcoded for parallel processing in Livepeer's pipeline; typically 2–10 seconds for HLS delivery." },
     { Term: "Segmentation", Category: "video:processing", Tabs: "solutions, developers, orchestrators", Definition: "(1) Video: the process of dividing a continuous video stream into short discrete chunks for HTTP-based delivery. (2) AI: task partitioning a digital image into regions by assigning a semantic label to every pixel." },
+    { Term: "Self-Hosted", Category: "technical:deployment", Tabs: "developers, gateways", Definition: "A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware." },
     { Term: "Service Margin", Category: "economic:pricing", Tabs: "gateways", Definition: "A markup that gateway operators add on top of orchestrator costs when reselling gateway access to end users." },
     { Term: "Service URI", Category: "livepeer:config", Tabs: "about, orchestrators", Definition: "The on-chain registered endpoint URL that gateways use to discover and establish a connection with an orchestrator node." },
     { Term: "ServiceRegistry", Category: "livepeer:contract", Tabs: "gateways, orchestrators", Definition: "A smart contract on Arbitrum where orchestrators register their service URI so that on-chain gateways can discover and contact them." },
@@ -389,6 +405,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "Signing Key", Category: "video:studio", Tabs: "solutions", Definition: "Public/private cryptographic keypair used to sign and verify JWTs that gate access to access-controlled streams and assets in Livepeer Studio." },
     { Term: "Signer", Category: "technical:security", Tabs: "gateways", Definition: "The cryptographic key holder or process that authorizes payment tickets and Ethereum transactions on behalf of a gateway node." },
     { Term: "Siphon", Category: "livepeer:deployment", Tabs: "orchestrators", Definition: "Lightweight component directing incoming work to the correct processing path within an orchestrator, or routing a subset of network traffic to specific orchestrators for staged rollout." },
+    { Term: "SLA (Service Level Agreement)", Category: "technical:operations", Tabs: "developers, gateways", Definition: "A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations." },
     { Term: "SLAM (Simultaneous Localization and Mapping)", Category: "ai:application", Tabs: "home", Definition: "Computational method constructing a map of an unknown environment while simultaneously tracking an agent's location within it." },
     { Term: "Slashing", Category: "livepeer:protocol", Tabs: "about, orchestrators, community, lpt, resources", Definition: "A penalty mechanism that destroys a portion of an orchestrator's bonded LPT for protocol violations such as failing verification, skipping verifications, or underperformance." },
     { Term: "Slashing Conditions", Category: "livepeer:protocol", Tabs: "resources", Definition: "The network-defined rules specifying exactly when and how LPT is slashed: failing verification checks, skipping assigned verifications, or sustained underperformance." },
@@ -403,6 +420,7 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "Stake", Category: "web3:tokenomics", Tabs: "lpt, resources", Definition: "LPT bonded to an orchestrator through the protocol, representing a commitment that secures the network and determines the holder's proportional share of rewards, governance power, and work allocation." },
     { Term: "Stake Weight", Category: "economic:reward", Tabs: "orchestrators", Definition: "An orchestrator's proportional influence in the network, determined by total bonded LPT (self-stake plus delegated stake), affecting active set rank, reward share, and governance vote weight." },
     { Term: "Stake-for-Access", Category: "livepeer:protocol", Tabs: "resources", Definition: "A model where staking the protocol's native token is required to perform work or access network services, converting participation into token buying pressure." },
+    { Term: "Stake-Weighted", Category: "livepeer:governance", Tabs: "about, lpt", Definition: "A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant." },
     { Term: "Stake-Weighted Voting", Category: "livepeer:protocol", Tabs: "about, community, lpt", Definition: "A governance voting system where each participant's vote weight is proportional to their bonded LPT stake." },
     { Term: "Staking", Category: "economic:reward", Tabs: "home, community, lpt, resources", Definition: "Locking LPT tokens in a proof-of-stake protocol to participate in network security, governance, and earn inflationary rewards and fee income." },
     { Term: "Stream", Category: "video:studio", Tabs: "solutions", Definition: "Top-level Livepeer Studio object representing a live broadcast channel, configured with a stream key, playback ID, transcoding profiles, and optional recording and multistream settings." },
@@ -450,11 +468,14 @@ Complete reference of terms used across all Livepeer documentation — covering 
     { Term: "Unbonding", Category: "web3:tokenomics", Tabs: "about, lpt", Definition: "The process of initiating withdrawal of bonded LPT from an orchestrator, which triggers a 7-round waiting period (thawing period) before tokens become liquid and withdrawable." },
     { Term: "Unbonding period", Category: "web3:tokenomics", Tabs: "community", Definition: "Waiting period during which tokens are locked after initiating unbonding before becoming withdrawable (7 rounds in Livepeer)." },
     { Term: "Upscaling", Category: "ai:pipeline", Tabs: "home, orchestrators", Definition: "Increasing image or video resolution using AI models that predict high-frequency detail not present in the source." },
+    { Term: "USD (United States Dollar)", Category: "economic:currency", Tabs: "lpt, community, about", Definition: "The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data." },
     { Term: "USD Pricing", Category: "economic:pricing", Tabs: "gateways, orchestrators", Definition: "A pricing configuration where work costs are denominated in US dollars, with automatic dynamic conversion to wei as the ETH/USD exchange rate fluctuates." },
+    { Term: "USDT (Tether)", Category: "web3:token", Tabs: "lpt", Definition: "A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT." },
     { Term: "veLPT (Voting Escrow LPT)", Category: "web3:governance", Tabs: "community, lpt", Definition: "A proposed mechanism that would allow LPT holders to lock tokens for an extended period in exchange for enhanced governance voting power." },
     { Term: "Verification Mechanisms", Category: "livepeer:protocol", Tabs: "about", Definition: "Protocol-level processes that confirm orchestrators performed transcoding or AI work correctly, including Truebit-style verification and probabilistic spot-checking approaches." },
     { Term: "Verifier", Category: "livepeer:protocol", Tabs: "resources", Definition: "A network component responsible for validating work performed by orchestrators, confirming that transcoded or AI-processed output matches expected results." },
     { Term: "Vesting", Category: "web3:tokenomics", Tabs: "lpt", Definition: "A schedule controlling when token allocations — such as founder or team grants — become available over time, often with an initial cliff period followed by pro-rata release." },
+    { Term: "Video on Demand (VOD)", Category: "video:delivery", Tabs: "developers, solutions", Definition: "A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming." },
     { Term: "Viewership", Category: "video:studio", Tabs: "solutions", Definition: "Audience metrics including view counts, watch time, unique viewers, and geographic distribution tracked for streams and assets." },
     { Term: "VOD (Video on Demand)", Category: "video:playback", Tabs: "home, solutions", Definition: "Video on demand — system allowing users to access pre-recorded content at any time, contrasting with live streaming." },
     { Term: "Vote detachment", Category: "web3:governance", Tabs: "community, lpt", Definition: "Delegators overriding their orchestrator's governance vote with their own independent stake-weighted vote on a specific proposal." },
@@ -1633,6 +1654,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `solutions/api`, `solutions/player`
   </Accordion>
 
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **Tags**: `technical:hardware`
+
+    **Tabs**: gateways, orchestrators, developers, about
+
+    **External**: [Central processing unit (Wikipedia)](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`, `orchestrators/run-an-orchestrator/requirements`
+  </Accordion>
+
   <Accordion title="CRF (Constant Rate Factor)" icon="book-open">
     **Definition**: Encoding quality control parameter that targets consistent perceptual quality by adjusting quantization per frame; scale runs 0–51 with lower values producing higher quality.
 
@@ -2409,6 +2444,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `resources/glossary`, `resources/protocol`
   </Accordion>
 
+  <Accordion title="GB (Gigabyte)" icon="book-open">
+    **Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+
+    **Tags**: `technical:hardware`
+
+    **Tabs**: gateways, orchestrators, developers
+
+    **External**: [Gigabyte (Wikipedia)](https://en.wikipedia.org/wiki/Gigabyte)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`, `orchestrators/run-an-orchestrator/requirements`
+  </Accordion>
+
   <Accordion title="Gateway" icon="book-open">
     **Definition**: A node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface between applications and the Livepeer Network; gateways do not perform compute themselves and replaced the older "Broadcaster" role.
 
@@ -2491,6 +2540,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `lpt/tokenomics`, `lpt/history`
+  </Accordion>
+
+  <Accordion title="GeForce" icon="book-open">
+    **Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+
+    **Tags**: `technical:hardware`
+
+    **Tabs**: gateways, orchestrators
+
+    **External**: [NVIDIA GeForce](https://www.nvidia.com/en-us/geforce/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`, `orchestrators/run-an-orchestrator/requirements`
   </Accordion>
 
   <Accordion title="go-livepeer" icon="book-open">
@@ -2667,6 +2730,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `orchestrators/ai`, `orchestrators/architecture`
   </Accordion>
 
+  <Accordion title="GTX (NVIDIA GTX)" icon="book-open">
+    **Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+
+    **Tags**: `technical:hardware`
+
+    **Tabs**: gateways, orchestrators
+
+    **Also known as**: GeForce GTX
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`, `orchestrators/run-an-orchestrator/requirements`
+  </Accordion>
+
   <Accordion title="GWID (Gateway Wizard)" icon="book-open">
     **Definition**: Gateway Wizard SPE building a managed DevOps tool for running and managing gateway infrastructure.
 
@@ -2727,6 +2806,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `gateways/ingest`, `gateways/streaming`
+  </Accordion>
+
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Tags**: `ai:platform`
+
+    **Tabs**: gateways, orchestrators, developers, community
+
+    **Also known as**: Hugging Face, HF
+
+    **External**: [HuggingFace](https://huggingface.co/)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/ai-models`, `developers/ai-pipelines/overview`
   </Accordion>
 </AccordionGroup>
 
@@ -2937,6 +3032,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
 ## J
 
 <AccordionGroup>
+  <Accordion title="JavaScript" icon="book-open">
+    **Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+
+    **Tags**: `technical:language`
+
+    **Tabs**: developers, community
+
+    **Also known as**: JS
+
+    **External**: [JavaScript (MDN Web Docs)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+    **Status**: current
+
+    **Pages**: `developers/sdks/overview`, `community/sdks`
+  </Accordion>
+
   <Accordion title="Job" icon="book-open">
     **Definition**: A unit of work submitted to the Livepeer network specifying stream ID, transcoding options or AI pipeline, and price.
 
@@ -3299,6 +3410,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `community/sdks`, `community/tools`
   </Accordion>
 
+  <Accordion title="livepeer-python-gateway" icon="book-open">
+    **Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+
+    **Tags**: `livepeer:sdk`
+
+    **Tabs**: gateways, developers
+
+    **Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations with the Livepeer network.
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/overview`, `developers/sdks/overview`
+  </Accordion>
+
   <Accordion title="Livepeer Actor" icon="book-open">
     **Definition**: A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system.
 
@@ -3523,6 +3648,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `developers/pipelines`, `developers/ai-gateway`
+  </Accordion>
+
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Tags**: `video:streaming`
+
+    **Tabs**: solutions, about, developers
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `solutions/ai-video`, `about/ai-video`, `developers/ai-pipelines/overview`
   </Accordion>
 
   <Accordion title="LPT (Livepeer Token)" icon="book-open">
@@ -4271,6 +4410,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `lpt/staking`, `lpt/delegation`
   </Accordion>
 
+  <Accordion title="Per Pixel (Price Per Pixel)" icon="book-open">
+    **Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+
+    **Tags**: `livepeer:economics`
+
+    **Tabs**: about, gateways, orchestrators
+
+    **Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+
+    **Status**: current
+
+    **Pages**: `about/economics`, `gateways/pricing`, `orchestrators/pricing`
+  </Accordion>
+
   <Accordion title="Per-Pixel Pricing" icon="book-open">
     **Definition**: A cost model charging for transcoding work based on the total number of pixels processed (width × height × frame count), enabling standardized comparison across resolutions.
 
@@ -4297,6 +4450,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `gateways/pricing`, `gateways/pipelines`
+  </Accordion>
+
+  <Accordion title="Per Round" icon="book-open">
+    **Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+
+    **Tags**: `livepeer:economics`
+
+    **Tabs**: about, lpt, orchestrators
+
+    **Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+
+    **Status**: current
+
+    **Pages**: `about/protocol`, `lpt/staking`, `orchestrators/staking`
   </Accordion>
 
   <Accordion title="Performance Score" icon="book-open">
@@ -5086,6 +5253,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
 
     **Pages**: `solutions/livestreaming`, `solutions/ingest`
   </Accordion>
+
+  <Accordion title="RTX (NVIDIA RTX)" icon="book-open">
+    **Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+
+    **Tags**: `technical:hardware`
+
+    **Tabs**: gateways, orchestrators, developers
+
+    **Also known as**: GeForce RTX
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`, `orchestrators/run-an-orchestrator/requirements`
+  </Accordion>
 </AccordionGroup>
 
 ## S
@@ -5207,6 +5390,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `solutions/transcoding`, `developers/pipelines`, `orchestrators/pipelines`
   </Accordion>
 
+  <Accordion title="Self-Hosted" icon="book-open">
+    **Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+
+    **Tags**: `technical:deployment`
+
+    **Tabs**: developers, gateways
+
+    **External**: [Self-hosting (Wikipedia)](https://en.wikipedia.org/wiki/Self-hosting_(web_services))
+
+    **Status**: current
+
+    **Pages**: `developers/self-hosted`, `gateways/run-a-gateway/overview`
+  </Accordion>
+
   <Accordion title="Service Margin" icon="book-open">
     **Definition**: A markup that gateway operators add on top of orchestrator costs when reselling gateway access to end users.
 
@@ -5317,6 +5514,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `orchestrators/architecture`, `orchestrators/routing`
+  </Accordion>
+
+  <Accordion title="SLA (Service Level Agreement)" icon="book-open">
+    **Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+
+    **Tags**: `technical:operations`
+
+    **Tabs**: developers, gateways
+
+    **External**: [Service-level agreement (Wikipedia)](https://en.wikipedia.org/wiki/Service-level_agreement)
+
+    **Status**: current
+
+    **Pages**: `developers/ai-gateway/overview`, `gateways/run-a-gateway/overview`
   </Accordion>
 
   <Accordion title="SLAM (Simultaneous Localization and Mapping)" icon="book-open">
@@ -5519,6 +5730,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `resources/glossary`, `resources/protocol`
+  </Accordion>
+
+  <Accordion title="Stake-Weighted" icon="book-open">
+    **Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+
+    **Tags**: `livepeer:governance`
+
+    **Tabs**: about, lpt
+
+    **Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+
+    **Status**: current
+
+    **Pages**: `about/governance`, `lpt/governance`
   </Accordion>
 
   <Accordion title="Stake-Weighted Voting" icon="book-open">
@@ -6199,6 +6424,20 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Pages**: `home/ai-video`, `orchestrators/pipelines`
   </Accordion>
 
+  <Accordion title="USD (United States Dollar)" icon="book-open">
+    **Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+
+    **Tags**: `economic:currency`
+
+    **Tabs**: lpt, community, about
+
+    **External**: [United States dollar (Wikipedia)](https://en.wikipedia.org/wiki/United_States_dollar)
+
+    **Status**: current
+
+    **Pages**: `lpt/economics`, `community/treasury`, `about/economics`
+  </Accordion>
+
   <Accordion title="USD Pricing" icon="book-open">
     **Definition**: A pricing configuration where work costs are denominated in US dollars, with automatic dynamic conversion to wei as the ETH/USD exchange rate fluctuates.
 
@@ -6211,6 +6450,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `gateways/pricing`, `orchestrators/pricing`
+  </Accordion>
+
+  <Accordion title="USDT (Tether)" icon="book-open">
+    **Definition**: A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT.
+
+    **Tags**: `web3:token`
+
+    **Tabs**: lpt
+
+    **Also known as**: Tether
+
+    **External**: [Tether](https://tether.to/)
+
+    **Status**: current
+
+    **Pages**: `lpt/buying-lpt`
   </Accordion>
 </AccordionGroup>
 
@@ -6287,6 +6542,22 @@ Complete reference of terms used across all Livepeer documentation — covering 
     **Status**: current
 
     **Pages**: `solutions/analytics`, `solutions/api`
+  </Accordion>
+
+  <Accordion title="Video on Demand (VOD)" icon="book-open">
+    **Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+
+    **Tags**: `video:delivery`
+
+    **Tabs**: developers, solutions
+
+    **Also known as**: VOD, on-demand video
+
+    **External**: [Video on demand (Wikipedia)](https://en.wikipedia.org/wiki/Video_on_demand)
+
+    **Status**: current
+
+    **Pages**: `solutions/vod`, `developers/video-on-demand`
   </Accordion>
 
   <Accordion title="VOD (Video on Demand)" icon="book-open">

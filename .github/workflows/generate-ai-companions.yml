@@ -1,0 +1,45 @@
+# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
+
+name: Generate AI Companion Files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'v2/**/*.mdx'
+  workflow_dispatch:
+
+jobs:
+  generate-ai-companions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate glossary companion JSONs
+        run: node tools/scripts/generators/content/reference/generate-glossary-companions.js
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code v2/ \
+          || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add v2/**/*-data.json
+          git commit -m "chore(ai-companions): regenerate glossary companion JSONs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          git push

@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment flows, monitoring, and protocol roles for operators running Livepeer orchestrator nodes.
@@ -70,6 +74,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     { Term: "Cascade", Category: "livepeer:upgrade", Definition: "Strategic vision for Livepeer to become the leading platform for real-time AI video pipelines, representing the current phase of protocol development." },
     { Term: "Clearinghouse", Category: "livepeer:contract", Definition: "Contract or system handling settlement of payments between gateways and orchestrators." },
     { Term: "CLI (Command-Line Interface)", Category: "technical:dev", Definition: "Text-based interface for interacting with software by typing commands; in Livepeer, the primary method for configuring and running go-livepeer nodes." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "Cold Model / Cold Start", Category: "ai:concept", Definition: "Latency incurred when an AI model must be loaded from storage into GPU memory before the first request can be processed, typically adding 5 to 90 seconds of delay." },
     { Term: "ComfyStream", Category: "livepeer:product", Definition: "Livepeer project running ComfyUI workflows as a real-time media processing backend for live streams." },
     { Term: "ComfyUI", Category: "ai:framework", Definition: "Open-source node-based graphical interface for building and executing AI image and video generation workflows." },
@@ -84,12 +89,16 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     { Term: "Fee Cut", Category: "economic:reward", Definition: "The percentage of ETH service fees that an orchestrator retains before distributing the remainder to delegators." },
     { Term: "Fee Pool", Category: "economic:reward", Definition: "Accumulated ETH fees awaiting distribution between an orchestrator and its delegators." },
     { Term: "Gateway", Category: "livepeer:role", Definition: "Node that submits jobs to the network, routes work to orchestrators, manages payment flows, and provides a protocol interface for applications." },
+    { Term: "GB (Gigabyte)", Category: "technical:hardware", Definition: "A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements." },
+    { Term: "GeForce", Category: "technical:hardware", Definition: "NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators." },
     { Term: "go-livepeer", Category: "livepeer:sdk", Definition: "Official Go implementation of the Livepeer protocol containing the Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary." },
     { Term: "GPU (Graphics Processing Unit)", Category: "technical:infra", Definition: "Specialised processor designed for parallel computation, used in Livepeer for both video transcoding and AI model inference." },
     { Term: "GPU Worker", Category: "livepeer:deployment", Definition: "Subprocess running AI inference on a dedicated GPU, managed by the go-livepeer orchestrator process." },
+    { Term: "GTX (NVIDIA GTX)", Category: "technical:hardware", Definition: "NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference." },
     { Term: "gRPC", Category: "technical:protocol", Definition: "High-performance remote procedure call framework using HTTP/2 and Protocol Buffers for efficient binary communication between services." },
     { Term: "Hard Gate", Category: "livepeer:config", Definition: "Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold." },
     { Term: "HLS (HTTP Live Streaming)", Category: "video:protocol", Definition: "Streaming protocol by Apple that encodes video into multiple quality levels and delivers them via standard HTTP with an M3U8 index playlist." },
+    { Term: "HuggingFace", Category: "ai:platform", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "Image-to-Image", Category: "ai:pipeline", Definition: "AI pipeline transforming an input image into a modified output image, guided by a text prompt or conditioning signal." },
     { Term: "Image-to-Text", Category: "ai:pipeline", Definition: "AI pipeline generating a textual description from an input image, encompassing captioning and OCR tasks." },
     { Term: "Image-to-Video", Category: "ai:pipeline", Definition: "AI pipeline generating a short video clip conditioned on a single input image, animating a still frame into motion." },
@@ -114,6 +123,8 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     { Term: "orchSecret", Category: "livepeer:config", Definition: "Shared secret used to authenticate communication between an orchestrator process and its standalone transcoder or worker nodes in an O-T split deployment." },
     { Term: "Output Profile", Category: "video:encoding", Definition: "Predefined set of encoding parameters (resolution, bitrate, codec, frame rate) defining a single rendition of a transcoded video." },
     { Term: "Overhead", Category: "economic:pricing", Definition: "Additional operational costs beyond direct computation, including gas fees for ticket redemption, bandwidth, and administrative costs." },
+    { Term: "Per Pixel (Price Per Pixel)", Category: "livepeer:economics", Definition: "Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job." },
+    { Term: "Per Round", Category: "livepeer:economics", Definition: "The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis." },
     { Term: "Performance Score", Category: "livepeer:protocol", Definition: "Composite metric rating an orchestrator's reliability and speed, calculated as latency score multiplied by success rate, used by gateways in orchestrator selection." },
     { Term: "Pixel", Category: "video:encoding", Definition: "Single point in a video frame used as the fundamental pricing unit for transcoding work on the Livepeer network." },
     { Term: "pixelsPerUnit", Category: "livepeer:config", Definition: "CLI parameter defining the number of pixels constituting one billable work unit, allowing granular pricing control." },
@@ -130,6 +141,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     { Term: "Remote Signer", Category: "technical:security", Definition: "External service that holds private keys securely and signs Ethereum transactions on behalf of a node, allowing the node to operate without direct access to the signing key." },
     { Term: "Rendition", Category: "video:processing", Definition: "Single encoded version of a source video at a specific resolution, bitrate, and codec configuration produced by a transcoding job." },
     { Term: "RTMP (Real-Time Messaging Protocol)", Category: "video:protocol", Definition: "Protocol for streaming audio, video, and data over TCP on port 1935, used as the primary ingest protocol for live video submitted to Livepeer orchestrators." },
+    { Term: "RTX (NVIDIA RTX)", Category: "technical:hardware", Definition: "NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks." },
     { Term: "Reward Call", Category: "livepeer:protocol", Definition: "On-chain transaction (Reward()) that an active orchestrator submits once per round to mint and distribute new LPT inflation rewards." },
     { Term: "Reward Cut", Category: "economic:reward", Definition: "The percentage of inflationary LPT rewards that an orchestrator keeps before distributing the remainder to delegators." },
     { Term: "RoundsManager", Category: "livepeer:contract", Definition: "Smart contract tracking round progression and coordinating round-based protocol state including round initialisation and block counting." },
@@ -765,6 +777,18 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     **Pages**: `orchestrators/pipelines`, `orchestrators/ai`
   </Accordion>
 
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Also known as**: Hugging Face, HF
+
+    **External**: [HuggingFace](https://huggingface.co/)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/ai`, `orchestrators/run-an-orchestrator/requirements/setup`
+  </Accordion>
+
   <Accordion title="Image-to-Image" icon="book-open">
     **Definition**: AI pipeline transforming an input image into a modified output image, guided by a text prompt or conditioning signal.
 
@@ -991,6 +1015,26 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     **Pages**: `orchestrators/performance`, `orchestrators/economics`
   </Accordion>
 
+  <Accordion title="Per Pixel (Price Per Pixel)" icon="book-open">
+    **Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+
+    **Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+
+    **Status**: current
+
+    **Pages**: `orchestrators/pricing`, `orchestrators/transcoding`
+  </Accordion>
+
+  <Accordion title="Per Round" icon="book-open">
+    **Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+
+    **Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+
+    **Status**: current
+
+    **Pages**: `orchestrators/staking`, `orchestrators/protocol`
+  </Accordion>
+
   <Accordion title="PM (Probabilistic Micropayment)" icon="book-open">
     **Definition**: Lottery-based payment scheme where gateways send signed tickets to orchestrators and only winning tickets are redeemed on-chain, amortising transaction costs across many payments.
 
@@ -1191,6 +1235,76 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     **Status**: current
 
     **Pages**: `orchestrators/pricing`, `orchestrators/payments`
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Hardware Terms
+
+<AccordionGroup>
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GB (Gigabyte)" icon="book-open">
+    **Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Gigabyte)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GeForce" icon="book-open">
+    **Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce](https://www.nvidia.com/en-us/geforce/)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GTX (NVIDIA GTX)" icon="book-open">
+    **Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+
+    **Also known as**: GeForce GTX
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/requirements/setup`
+  </Accordion>
+
+  <Accordion title="RTX (NVIDIA RTX)" icon="book-open">
+    **Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+
+    **Also known as**: GeForce RTX
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `orchestrators/run-an-orchestrator/requirements/setup`
   </Accordion>
 </AccordionGroup>
 

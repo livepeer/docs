@@ -9,7 +9,7 @@
  *              and writes adjacent [page-slug]-data.json files for crawler/AI agent indexing.
  *              Satisfies the @aiDiscoverability tier-2 mechanism on all glossary pages.
  * @mode        generate
- * @pipeline    pre-commit | manual
+ * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual
  * @scope       tools/scripts
  * @usage       node tools/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]
  * @flags

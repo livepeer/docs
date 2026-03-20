@@ -76,6 +76,8 @@ export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <
  * @description Embeds a Twitter/X timeline feed widget via iframe.
  * @dataSource feed.mikle.com widget
  * @accepts {string} className, {object} style, ...rest
+ * @aiDiscoverability none
+ * @aiDiscoverabilityNote 3rd-party iframe widget (mikle.com) — no static data in HTML, no API access for snapshot. Twitter feed content is not crawlable. No companion file possible.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  */

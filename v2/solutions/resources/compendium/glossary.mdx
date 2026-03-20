@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 
@@ -86,6 +90,7 @@ Terms used across Livepeer Solutions — covering video infrastructure, Studio p
     { Term: "Livepeer Network", Category: "livepeer:protocol", Definition: "The live operational decentralized system of orchestrators, workers, gateways, and broadcasters performing video transcoding and AI inference work." },
     { Term: "Livepeer Studio", Category: "livepeer:product", Definition: "Hosted developer platform providing APIs, SDKs, and a dashboard for adding live and on-demand video experiences to applications, backed by the Livepeer Network." },
     { Term: "Livestream", Category: "video:playback", Definition: "Real-time or near-real-time transmission of video and audio over a network to viewers as it is captured, without pre-recording." },
+    { Term: "Low-Latency", Category: "video:streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "MistServer", Category: "technical:infra", Definition: "Open-source media server providing live video ingest, transcoding, and delivery capabilities, used within Livepeer's infrastructure to handle protocol translation and stream routing." },
     { Term: "MP4", Category: "video:playback", Definition: "MPEG-4 Part 14 digital multimedia container format for storing video, audio, subtitles, and still images in a single file." },
     { Term: "Multistream", Category: "video:studio", Definition: "Simultaneous restreaming of a single live input to multiple external destination platforms (e.g., YouTube, Twitch) in a single broadcast session." },
@@ -119,6 +124,7 @@ Terms used across Livepeer Solutions — covering video infrastructure, Studio p
     { Term: "Transcoding", Category: "video:processing", Definition: "Direct digital-to-digital conversion of video from one encoding configuration to another, producing multiple adaptive renditions at different resolutions and bitrates for cross-device delivery." },
     { Term: "TTFF (Time to First Frame)", Category: "video:playback", Definition: "Duration from the moment a viewer presses play to the first video frame rendered on screen; a key quality-of-experience metric for streaming performance." },
     { Term: "TUS Upload", Category: "technical:security", Definition: "Resumable file upload protocol over HTTP that allows interrupted large file uploads to resume from where they stopped rather than restarting from the beginning." },
+    { Term: "Video on Demand (VOD)", Category: "video:delivery", Definition: "A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming." },
     { Term: "Viewership", Category: "video:studio", Definition: "Audience metrics including view counts, watch time, unique viewers, and geographic distribution tracked for streams and assets." },
     { Term: "VOD (Video on Demand)", Category: "video:playback", Definition: "Video delivery model allowing users to access pre-recorded content at any time of their choosing, as opposed to a scheduled live broadcast." },
     { Term: "Webhook", Category: "technical:dev", Definition: "HTTP callback mechanism where a server sends an automated POST request to a configured URL when a specified platform event occurs." },
@@ -569,6 +575,16 @@ Terms used across Livepeer Solutions — covering video infrastructure, Studio p
     **Pages**: `solutions/livestreaming`, `solutions/index`
   </Accordion>
 
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `solutions/livestreaming`, `solutions/webrtc`
+  </Accordion>
+
   <Accordion title="MP4" icon="book-open">
     **Definition**: MPEG-4 Part 14 digital multimedia container format for storing video, audio, subtitles, and still images in a single file.
 
@@ -627,6 +643,18 @@ Terms used across Livepeer Solutions — covering video infrastructure, Studio p
     **Status**: current
 
     **Pages**: `solutions/analytics`, `solutions/playback`
+  </Accordion>
+
+  <Accordion title="Video on Demand (VOD)" icon="book-open">
+    **Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+
+    **Also known as**: VOD, on-demand video
+
+    **External**: [Video on demand — Wikipedia](https://en.wikipedia.org/wiki/Video_on_demand)
+
+    **Status**: current
+
+    **Pages**: `solutions/vod`, `solutions/index`
   </Accordion>
 
   <Accordion title="VOD (Video on Demand)" icon="book-open">

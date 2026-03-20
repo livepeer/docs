@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 
@@ -63,6 +67,7 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     { Term: "ComfyStream", Category: "livepeer:product / ai:framework", Definition: "A Livepeer project running ComfyUI workflows as a real-time media processing backend for live streams, enabling AI-powered video generation pipelines." },
     { Term: "Confluence", Category: "livepeer:upgrade", Definition: "The production protocol upgrade (LIP-73) that migrated Livepeer's core protocol contracts from Ethereum L1 to Arbitrum One." },
     { Term: "Controller", Category: "livepeer:contract", Definition: "The registry smart contract that manages all protocol contract addresses and coordinates protocol upgrades on Arbitrum." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "Cryptoeconomic Primitives", Category: "web3:concept", Definition: "Fundamental building blocks that combine cryptography and economic incentives to enable secure, decentralized protocols." },
     { Term: "Daydream", Category: "livepeer:product", Definition: "Livepeer's hosted real-time AI video platform that turns live camera input into AI-transformed visuals with sub-second latency." },
     { Term: "Delegator", Category: "livepeer:role / web3:tokenomics", Definition: "A token holder who stakes LPT to an orchestrator to secure the network, participate in governance, and earn a share of rewards." },
@@ -82,14 +87,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     { Term: "Layer 1", Category: "web3:chain", Definition: "The base blockchain network (e.g. Ethereum) that validates and finalizes transactions without reliance on another network." },
     { Term: "Layer 2", Category: "web3:chain", Definition: "A separate blockchain that extends a Layer 1 by handling transactions off-chain while inheriting security guarantees from the underlying chain." },
     { Term: "LIP (Livepeer Improvement Proposal)", Category: "livepeer:protocol / operational:governance", Definition: "A formal design document proposing a protocol change, new feature, or governance parameter adjustment for the Livepeer network." },
+    { Term: "Low-Latency", Category: "video:streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "LPT (Livepeer Token)", Category: "livepeer:protocol / web3:token", Definition: "The ERC-20 governance and staking token of the Livepeer protocol, used for orchestrator selection via delegation, reward distribution, and network security." },
     { Term: "Minter Contract", Category: "livepeer:contract", Definition: "The smart contract responsible for minting new LPT tokens during orchestrator reward calls and holding ETH collected from winning payment tickets." },
     { Term: "Off-chain", Category: "web3:concept", Definition: "Activities occurring outside the main blockchain, typically for scalability, speed, or cost reasons, with results optionally settled on-chain." },
     { Term: "On-chain", Category: "web3:concept", Definition: "Activities directly recorded and executed on the blockchain with full transparency and security guarantees." },
+    { Term: "Open Source", Category: "technical:concept", Definition: "Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source." },
     { Term: "Orchestrator", Category: "livepeer:role", Definition: "A supply-side operator contributing GPU resources, receiving transcoding or AI inference jobs, and earning ETH fees and inflationary LPT rewards." },
     { Term: "OSI Model", Category: "technical:infra", Definition: "The Open Systems Interconnection reference model that defines seven network layers (physical through application) as a conceptual framework for understanding protocol design." },
     { Term: "Pay-per-Pixel", Category: "economic:pricing", Definition: "Livepeer's pricing model where orchestrators are paid based on the total number of pixels transcoded, enabling granular and standardized cost comparison across different video resolutions and durations." },
     { Term: "Payment Channel", Category: "economic:payment", Definition: "An off-chain mechanism where two parties conduct multiple transactions and only settle the final state on-chain, reducing per-transaction gas costs." },
+    { Term: "Per Pixel (Price Per Pixel)", Category: "livepeer:economics", Definition: "Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job." },
+    { Term: "Per Round", Category: "livepeer:economics", Definition: "The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis." },
     { Term: "Payment Tickets", Category: "economic:payment / livepeer:protocol", Definition: "Signed data structures issued by a gateway to an orchestrator representing a probabilistic payment; only winning tickets are redeemable on-chain for their ETH face value." },
     { Term: "Probabilistic Micropayments", Category: "economic:payment", Definition: "A lottery-based payment scheme where only winning tickets are redeemed on-chain, amortizing transaction costs across many small payments without requiring per-payment gas." },
     { Term: "Proof-of-Stake", Category: "web3:concept", Definition: "A blockchain consensus mechanism where validators stake cryptocurrency as collateral to propose and validate blocks, replacing computation-intensive proof-of-work." },
@@ -104,10 +113,12 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     { Term: "Session", Category: "livepeer:protocol", Definition: "An active connection between a gateway and an orchestrator during which one or more jobs are processed within a continuous work period." },
     { Term: "Slashing", Category: "livepeer:protocol / web3:tokenomics", Definition: "A penalty mechanism that destroys a portion of an orchestrator's bonded LPT for protocol violations such as failing verification, skipping verifications, or underperformance." },
     { Term: "SPE (Special Purpose Entity)", Category: "livepeer:entity / operational:governance", Definition: "A treasury-funded organizational unit with a defined scope, budget, deliverables, and accountability mechanism for executing specific ecosystem initiatives." },
+    { Term: "Stake-Weighted", Category: "livepeer:governance", Definition: "A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant." },
     { Term: "Stake-Weighted Voting", Category: "livepeer:protocol / web3:governance", Definition: "A governance voting system where each participant's vote weight is proportional to their bonded LPT stake." },
     { Term: "Ticket Broker", Category: "livepeer:contract / economic:payment", Definition: "The TicketBroker smart contract that manages Livepeer's probabilistic micropayment system, holding gateway deposits and processing winning ticket redemptions." },
     { Term: "Treasury", Category: "economic:treasury / livepeer:protocol", Definition: "The on-chain pool of LPT governed by token holders via the LivepeerGovernor contract, funded by a percentage of per-round inflation and used for community-approved ecosystem grants and development." },
     { Term: "Unbonding", Category: "web3:tokenomics", Definition: "The process of initiating withdrawal of bonded LPT from an orchestrator, which triggers a 7-round waiting period (thawing period) before tokens become liquid and withdrawable." },
+    { Term: "USD (United States Dollar)", Category: "economic:currency", Definition: "The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data." },
     { Term: "Verification Mechanisms", Category: "livepeer:protocol", Definition: "Protocol-level processes that confirm orchestrators performed transcoding or AI work correctly, including Truebit-style verification and probabilistic spot-checking approaches." },
     { Term: "Warm Model", Category: "livepeer:config / ai:concept", Definition: "An AI model that is already loaded into GPU memory and ready to serve inference requests immediately, without the cold-start latency of loading from storage." },
     { Term: "Winning Ticket", Category: "economic:payment", Definition: "A probabilistic payment ticket whose random outcome meets the configured win probability threshold, entitling the orchestrator to redeem it on-chain for its ETH face value." },
@@ -323,6 +334,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Pages**: `about/payments`, `about/protocol`
   </Accordion>
 
+  <Accordion title="Per Round" icon="book-open">
+    **Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+
+    **Tags**: `livepeer:economics`
+
+    **Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+
+    **Status**: current
+
+    **Pages**: `about/protocol`, `about/staking`
+  </Accordion>
+
   <Accordion title="Quorum" icon="book-open">
     **Definition**: The minimum amount of participating stake required for a governance vote to be considered binding and valid.
 
@@ -399,6 +422,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Status**: current
 
     **Pages**: `about/governance`, `about/protocol`
+  </Accordion>
+
+  <Accordion title="Stake-Weighted" icon="book-open">
+    **Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+
+    **Tags**: `livepeer:governance`
+
+    **Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+
+    **Status**: current
+
+    **Pages**: `about/governance`, `about/staking`
   </Accordion>
 
   <Accordion title="Stake-Weighted Voting" icon="book-open">
@@ -491,6 +526,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Pages**: `about/economics`
   </Accordion>
 
+  <Accordion title="Per Pixel (Price Per Pixel)" icon="book-open">
+    **Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+
+    **Tags**: `livepeer:economics`
+
+    **Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+
+    **Status**: current
+
+    **Pages**: `about/economics`, `about/transcoding`
+  </Accordion>
+
   <Accordion title="Payment Channel" icon="book-open">
     **Definition**: An off-chain mechanism where two parties conduct multiple transactions and only settle the final state on-chain, reducing per-transaction gas costs.
 
@@ -519,6 +566,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Status**: current
 
     **Pages**: `about/staking`, `about/economics`
+  </Accordion>
+
+  <Accordion title="USD (United States Dollar)" icon="book-open">
+    **Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+
+    **Tags**: `economic:currency`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/United_States_dollar)
+
+    **Status**: current
+
+    **Pages**: `about/economics`, `about/governance`
   </Accordion>
 
   <Accordion title="Winning Ticket" icon="book-open">
@@ -693,6 +752,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Pages**: `about/transcoding`, `about/streaming`
   </Accordion>
 
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Tags**: `video:streaming`
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `about/ai`, `about/streaming`
+  </Accordion>
+
   <Accordion title="RTMP (Real-Time Messaging Protocol)" icon="book-open">
     **Definition**: Real-Time Messaging Protocol for streaming audio, video, and data over TCP, commonly used on port 1935 for live video ingest from broadcast software.
 
@@ -713,6 +784,18 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
 ## Technical Terms
 
 <AccordionGroup>
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `about/architecture`, `about/ai`
+  </Accordion>
+
   <Accordion title="Ephemeral Compute" icon="book-open">
     **Definition**: Short-lived GPU resource allocation provisioned on-demand for a single AI inference task, released when the task completes.
 
@@ -721,6 +804,20 @@ Core vocabulary for understanding Livepeer's protocol architecture, network role
     **Status**: draft
 
     **Pages**: `about/ai`, `about/architecture`
+  </Accordion>
+
+  <Accordion title="Open Source" icon="book-open">
+    **Definition**: Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source.
+
+    **Tags**: `technical:concept`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Open-source_software)
+
+    **Also known as**: open-source, FOSS
+
+    **Status**: current
+
+    **Pages**: `about/protocol`, `about/architecture`
   </Accordion>
 
   <Accordion title="OSI Model" icon="book-open">

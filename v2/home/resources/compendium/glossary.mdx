@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 
@@ -84,6 +88,7 @@ Essential vocabulary for understanding Livepeer's network architecture, protocol
     { Term: "Interactive Media", Category: "ai:application", Definition: "Digital content dynamically responding to user input in real time, combining text, images, audio, and video." },
     { Term: "Job", Category: "livepeer:protocol", Definition: "A unit of work submitted to the Livepeer network specifying stream ID, transcoding options or AI pipeline, and price." },
     { Term: "Latency", Category: "video:playback", Definition: "Delay between capture at source and display on the viewer's device, accumulating at every pipeline stage." },
+    { Term: "Low-Latency", Category: "video:streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "Layer-2", Category: "web3:chain", Definition: "A separate blockchain extending a Layer 1 by handling transactions off-chain while inheriting the security guarantees of the base chain." },
     { Term: "LIP (Livepeer Improvement Proposal)", Category: "operational:governance", Definition: "Formal design document proposing changes to the Livepeer protocol, governance parameters, or ecosystem standards." },
     { Term: "Livepeer Inc", Category: "livepeer:entity", Definition: "Original company that built Livepeer's initial protocol architecture and core software." },
@@ -94,6 +99,7 @@ Essential vocabulary for understanding Livepeer's network architecture, protocol
     { Term: "Node", Category: "technical:infra", Definition: "Computing device connected to a network participating in protocol operations such as transcoding, routing, or staking." },
     { Term: "NPC (Non-Player Character)", Category: "ai:application", Definition: "Non-player character not controlled by a human, increasingly powered by AI for dynamic, real-time interactions." },
     { Term: "Orchestrator", Category: "livepeer:role", Definition: "Supply-side operator contributing GPU resources, receiving jobs, performing transcoding or AI inference, and earning rewards." },
+    { Term: "Open Source", Category: "technical:concept", Definition: "Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source." },
     { Term: "Permissionless", Category: "web3:concept", Definition: "Property where anyone can participate without requiring approval from a central authority." },
     { Term: "Probabilistic Micropayments", Category: "economic:payment", Definition: "Lottery-based payment model where only winning tickets are redeemed on-chain, amortizing transaction costs across many small payments." },
     { Term: "Proof of Utility", Category: "livepeer:protocol", Definition: "Model where participants prove they performed useful work for the network rather than just staking capital." },
@@ -576,6 +582,20 @@ Essential vocabulary for understanding Livepeer's network architecture, protocol
     **Pages**: `home/network`, `home/index`
   </Accordion>
 
+  <Accordion title="Open Source" icon="book-open">
+    **Definition**: Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source.
+
+    **Tags**: `technical:concept`
+
+    **External**: [Open-source software (Wikipedia)](https://en.wikipedia.org/wiki/Open-source_software)
+
+    **Also known as**: open-source, FOSS
+
+    **Status**: current
+
+    **Pages**: `home/index`, `home/network`
+  </Accordion>
+
   <Accordion title="Permissionless" icon="book-open">
     **Definition**: Property where anyone can participate without requiring approval from a central authority.
 
@@ -686,6 +706,18 @@ Essential vocabulary for understanding Livepeer's network architecture, protocol
     **Status**: current
 
     **Pages**: `home/streaming`
+  </Accordion>
+
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Tags**: `video:streaming`
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `home/streaming`, `home/ai-video`
   </Accordion>
 
   <Accordion title="Real-time" icon="book-open">

@@ -30,7 +30,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -44,6 +44,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 Definitions for LPT token holders and stakers — covering staking, delegation, inflation, governance, treasury, and the smart contracts that power the Livepeer protocol.
@@ -114,6 +118,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     { Term: "Orchestrator", Category: "livepeer:role", Definition: "A supply-side operator that contributes GPU resources, receives jobs from gateways, performs transcoding or AI inference, earns ETH fees, and distributes inflationary LPT rewards to their delegators." },
     { Term: "Payment Ticket", Category: "livepeer:protocol, economic:payment", Definition: "A signed off-chain data structure sent from a gateway to an orchestrator representing a probabilistic payment redeemable on-chain for ETH if it is a winning ticket." },
     { Term: "Pending Rewards", Category: "economic:reward", Definition: "Inflationary LPT and ETH fees that have been earned through staking but not yet claimed by calling the claim earnings function." },
+    { Term: "Per Round", Category: "livepeer:economics", Definition: "The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis." },
     { Term: "Price Per Pixel", Category: "economic:pricing", Definition: "The fundamental pricing unit for Livepeer transcoding work, expressed as the cost in wei for processing one pixel of video." },
     { Term: "Proof-of-Stake", Category: "web3:concept", Definition: "A blockchain consensus mechanism where validators stake cryptocurrency as collateral to propose and validate blocks, replacing the energy-intensive Proof-of-Work model." },
     { Term: "Proposer Bond", Category: "web3:governance, economic:treasury", Definition: "The minimum bonded LPT balance (100 LPT) required to submit a formal on-chain governance proposal." },
@@ -129,6 +134,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     { Term: "Slashing", Category: "livepeer:protocol, economic:reward, web3:tokenomics", Definition: "A penalty mechanism that destroys a portion of an orchestrator's bonded LPT stake as punishment for protocol violations such as failing verification or underperforming." },
     { Term: "SPE (Special Purpose Entity)", Category: "livepeer:entity, operational:governance", Definition: "A treasury-funded organizational unit with a defined scope, budget, and accountability period, used to execute specific ecosystem development tasks." },
     { Term: "Stake", Category: "web3:tokenomics", Definition: "LPT bonded to an orchestrator through the protocol, representing a commitment that secures the network and determines the holder's proportional share of rewards and governance power." },
+    { Term: "Stake-Weighted", Category: "livepeer:governance", Definition: "A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant." },
     { Term: "Stake-Weighted Voting", Category: "web3:governance", Definition: "A governance voting system in which each participant's vote counts in proportion to their total bonded LPT stake rather than one-address-one-vote." },
     { Term: "Staking", Category: "web3:tokenomics, economic:reward", Definition: "The act of locking tokens in a proof-of-stake protocol to participate in network security, governance, and earn inflationary rewards and fee income." },
     { Term: "Supply", Category: "web3:tokenomics", Definition: "The total number of LPT tokens in existence at any given time, starting from a genesis supply of 10 million and growing continuously through inflationary issuance." },
@@ -143,6 +149,8 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     { Term: "Treasury Governance", Category: "economic:treasury, web3:governance", Definition: "The on-chain process by which LPT stakeholders propose, vote on, and execute allocation of community treasury funds for ecosystem development." },
     { Term: "Treasury Reward Cut Rate", Category: "economic:treasury", Definition: "The governable percentage of per-round inflationary LPT that is diverted to the community treasury instead of being distributed directly to orchestrators and delegators." },
     { Term: "Unbonding", Category: "web3:tokenomics", Definition: "The process by which a delegator or orchestrator initiates withdrawal of bonded LPT from the protocol, triggering the mandatory thawing period before tokens become liquid." },
+    { Term: "USD (United States Dollar)", Category: "economic:currency", Definition: "The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data." },
+    { Term: "USDT (Tether)", Category: "web3:token", Definition: "A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT." },
     { Term: "veLPT (Vote-Escrowed LPT)", Category: "economic:treasury, web3:governance", Definition: "A proposed mechanism that would allow LPT holders to lock tokens for an extended period in exchange for enhanced governance voting power, aligning long-term incentives." },
     { Term: "Vesting", Category: "web3:tokenomics, economic:reward", Definition: "A schedule controlling when token allocations — such as founder or team grants — become available over time, often with an initial cliff period followed by pro-rata release." },
     { Term: "Vote Detachment", Category: "web3:governance, operational:governance", Definition: "The ability for a delegator to override their orchestrator's governance vote with their own individual stake-weighted vote on a specific proposal." },
@@ -273,6 +281,18 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     **Status**: current
 
     **Pages**: `lpt/payments`, `lpt/protocol`
+  </Accordion>
+
+  <Accordion title="Per Round" icon="book-open">
+    **Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+
+    **Tags**: `livepeer:economics`
+
+    **Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+
+    **Status**: current
+
+    **Pages**: `lpt/protocol`, `lpt/staking`
   </Accordion>
 
   <Accordion title="Quorum" icon="book-open">
@@ -887,6 +907,18 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     **Pages**: `lpt/staking`, `lpt/economics`
   </Accordion>
 
+  <Accordion title="USD (United States Dollar)" icon="book-open">
+    **Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+
+    **Tags**: `economic:currency`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/United_States_dollar)
+
+    **Status**: current
+
+    **Pages**: `lpt/economics`, `lpt/governance`
+  </Accordion>
+
   <Accordion title="Yield" icon="book-open">
     **Definition**: The annualized return on staked LPT expressed as a percentage, combining inflationary LPT rewards and any ETH fee share earned through the bonded orchestrator.
 
@@ -1039,6 +1071,18 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     **Pages**: `lpt/governance`
   </Accordion>
 
+  <Accordion title="Stake-Weighted" icon="book-open">
+    **Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+
+    **Tags**: `livepeer:governance`
+
+    **Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+
+    **Status**: current
+
+    **Pages**: `lpt/governance`, `lpt/staking`
+  </Accordion>
+
   <Accordion title="Stake-Weighted Voting" icon="book-open">
     **Definition**: A governance voting system in which each participant's vote counts in proportion to their total bonded LPT stake rather than one-address-one-vote.
 
@@ -1123,6 +1167,20 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     **Status**: current
 
     **Pages**: `lpt/protocol`
+  </Accordion>
+
+  <Accordion title="USDT (Tether)" icon="book-open">
+    **Definition**: A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT.
+
+    **Tags**: `web3:token`
+
+    **External**: [Tether](https://tether.to/)
+
+    **Also known as**: Tether
+
+    **Status**: current
+
+    **Pages**: `lpt/economics`, `lpt/token-portal`
   </Accordion>
 
   <Accordion title="Wei" icon="book-open">

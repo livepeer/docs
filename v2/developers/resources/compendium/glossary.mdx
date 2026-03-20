@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming protocols, and protocol integration layer.
@@ -58,6 +62,7 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     { Term: "BYOC (Bring Your Own Container)", Category: "livepeer:deployment", Definition: "Deployment pattern where teams supply custom Docker containers for AI workloads, enabling arbitrary Python-based models to run on the Livepeer network." },
     { Term: "Cascade", Category: "livepeer:upgrade", Definition: "Strategic vision for Livepeer to become the leading platform for real-time AI video pipelines, and the associated protocol upgrade enabling the AI inference subnet." },
     { Term: "Cold Start", Category: "ai:concept", Definition: "Latency incurred when a model must be loaded from storage into GPU memory before the first inference request, often ranging from 5 to 90 seconds." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "ComfyStream", Category: "livepeer:product", Definition: "Livepeer project running ComfyUI workflows as a real-time media processing backend for live streams." },
     { Term: "ComfyUI", Category: "ai:framework", Definition: "Open-source node-based graphical interface for building and executing AI image and video generation workflows." },
     { Term: "Daydream", Category: "livepeer:product", Definition: "Livepeer's hosted real-time AI video platform turning live camera input into AI-transformed visuals with sub-second latency." },
@@ -69,14 +74,17 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     { Term: "Endpoint", Category: "technical:dev", Definition: "Specific URL path where an API receives and processes requests." },
     { Term: "Ethereum", Category: "web3:chain", Definition: "A decentralised, open-source blockchain with smart contract functionality; native cryptocurrency is Ether (ETH)." },
     { Term: "FrameProcessor", Category: "livepeer:sdk", Definition: "Pattern in PyTrickle for building real-time video processing applications with custom per-frame processing logic." },
+    { Term: "GB (Gigabyte)", Category: "technical:hardware", Definition: "A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements." },
     { Term: "Gateway", Category: "livepeer:role", Definition: "Node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface for developers." },
     { Term: "go-livepeer", Category: "livepeer:sdk", Definition: "Official Go implementation of the Livepeer protocol containing Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary." },
     { Term: "GPU Operator", Category: "livepeer:role", Definition: "An orchestrator operator contributing GPU hardware and AI model capacity to the Livepeer network for inference workloads." },
     { Term: "HLS (HTTP Live Streaming)", Category: "video:protocol", Definition: "HTTP Live Streaming protocol by Apple that encodes video into multiple quality levels with an index playlist for adaptive bitrate delivery." },
+    { Term: "HuggingFace", Category: "ai:platform", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "Image-to-Image", Category: "ai:pipeline", Definition: "AI pipeline transforming an input image into a modified output image guided by a text prompt or conditioning signal." },
     { Term: "Image-to-Text", Category: "ai:pipeline", Definition: "AI pipeline generating a textual description from an input image, encompassing captioning and optical character recognition." },
     { Term: "Image-to-Video", Category: "ai:pipeline", Definition: "AI pipeline generating a short video clip conditioned on a single input image, animating a still frame." },
     { Term: "Inference", Category: "ai:concept", Definition: "Running a trained model on new input data to produce predictions or generated output, as opposed to training the model." },
+    { Term: "JavaScript", Category: "technical:language", Definition: "A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs." },
     { Term: "JWT (JSON Web Token)", Category: "technical:security", Definition: "JSON Web Token — a compact, URL-safe signed token used to authenticate and authorise requests between parties." },
     { Term: "KYC (Know Your Customer)", Category: "operational:process", Definition: "Know Your Customer — identity verification process for regulatory compliance, requiring users to provide identifying information before accessing certain features." },
     { Term: "LIP (Livepeer Improvement Proposal)", Category: "livepeer:protocol", Definition: "Livepeer Improvement Proposal — formal design document describing a proposed change to the protocol, governance process, or ecosystem standard." },
@@ -84,9 +92,11 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     { Term: "Livepeer Cloud", Category: "livepeer:product", Definition: "Platform by the Livepeer Cloud SPE increasing network accessibility with a free community AI gateway and managed developer services." },
     { Term: "Livepeer Studio", Category: "livepeer:product", Definition: "Developer platform for adding live and on-demand video experiences to applications, providing stream management, asset storage, analytics, and billing." },
     { Term: "Livepeer.js", Category: "livepeer:sdk", Definition: "JavaScript library for the Livepeer API providing programmatic access to Studio features including stream and asset management." },
+    { Term: "livepeer-python-gateway", Category: "livepeer:sdk", Definition: "An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications." },
     { Term: "LLM (Large Language Model)", Category: "ai:concept", Definition: "Large language model — neural network trained on massive text corpora to understand and generate natural language." },
     { Term: "LoRA (Low-Rank Adaptation)", Category: "ai:model", Definition: "Low-Rank Adaptation — parameter-efficient fine-tuning technique injecting trainable low-rank matrices into transformer layers to specialise a model without full retraining." },
     { Term: "LPT (Livepeer Token)", Category: "livepeer:protocol", Definition: "ERC-20 governance and staking token used for orchestrator selection, delegation, reward distribution, and network security." },
+    { Term: "Low-Latency", Category: "video:streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "Model", Category: "ai:concept", Definition: "Mathematical structure (neural network with learned weights) enabling predictions or generation for new inputs, identified by a model ID and pipeline type." },
     { Term: "Model Card", Category: "ai:concept", Definition: "Standardised documentation describing a model's intended use, training data, evaluation metrics, and known limitations." },
     { Term: "Model ID", Category: "ai:concept", Definition: "Unique string identifier specifying which AI model to invoke on a repository hub, for example `stabilityai/stable-diffusion-xl-base-1.0`." },
@@ -100,11 +110,14 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     { Term: "Real-time AI", Category: "ai:concept", Definition: "Running AI models on live streaming input with latency low enough for interactive speeds, typically under 100 milliseconds." },
     { Term: "Reward Call", Category: "livepeer:protocol", Definition: "On-chain transaction an active orchestrator submits each protocol round to mint and distribute new LPT inflation rewards to itself and its delegators." },
     { Term: "RTMP (Real-Time Messaging Protocol)", Category: "video:protocol", Definition: "Real-Time Messaging Protocol for streaming audio, video, and data over TCP on port 1935, the standard ingest protocol for live broadcasting." },
+    { Term: "RTX (NVIDIA RTX)", Category: "technical:hardware", Definition: "NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks." },
     { Term: "SAM 2", Category: "ai:model", Definition: "Meta's unified foundation model for promptable segmentation in images and videos with streaming memory, enabling interactive region selection." },
     { Term: "Sampler", Category: "ai:concept", Definition: "Algorithm controlling the denoising process in diffusion models by defining the noise schedule and update rule for each generation step." },
     { Term: "SDXL (Stable Diffusion XL)", Category: "ai:model", Definition: "Stable Diffusion XL — advanced text-to-image model with a 3× larger UNet and dual text encoders, generating images at 1024×1024 resolution." },
     { Term: "Segmentation", Category: "ai:pipeline", Definition: "AI task partitioning a digital image into regions by assigning a semantic label to every pixel, identifying and outlining objects." },
+    { Term: "Self-Hosted", Category: "technical:deployment", Definition: "A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware." },
     { Term: "Smart Contract", Category: "web3:concept", Definition: "Self-executing program deployed on a blockchain that automatically enforces agreement terms without intermediaries." },
+    { Term: "SLA (Service Level Agreement)", Category: "technical:operations", Definition: "A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations." },
     { Term: "Solidity", Category: "technical:dev", Definition: "Statically-typed, contract-oriented programming language for writing smart contracts on Ethereum and EVM-compatible chains." },
     { Term: "SPE (Special Purpose Entity)", Category: "livepeer:entity", Definition: "Special Purpose Entity — a treasury-funded organisational unit with a defined scope, fixed budget, and accountability structure for executing ecosystem workstreams." },
     { Term: "StreamDiffusion", Category: "ai:model", Definition: "Optimised real-time diffusion pipeline using stream batching and stochastic similarity filtering to reduce latency for live video transforms." },
@@ -118,6 +131,7 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     { Term: "Transcoding", Category: "video:processing", Definition: "Direct digital-to-digital conversion of video from one encoding format, resolution, or bitrate to another, producing multiple adaptive renditions." },
     { Term: "Treasury", Category: "livepeer:protocol", Definition: "On-chain pool of LPT and ETH governed by token holders via the LivepeerGovernor contract, used to fund public goods and ecosystem development." },
     { Term: "Trickle Streaming Protocol", Category: "livepeer:sdk", Definition: "Low-latency HTTP-based streaming protocol for real-time media transport between Livepeer nodes, enabling frame-level AI processing on live streams." },
+    { Term: "Video on Demand (VOD)", Category: "video:delivery", Definition: "A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming." },
     { Term: "VRAM (Video RAM)", Category: "technical:infra", Definition: "Video RAM — dedicated GPU memory used for storing graphics data, model weights, and intermediate tensors during AI inference." },
     { Term: "Warm Model", Category: "ai:concept", Definition: "AI model already loaded into GPU memory and ready to serve inference requests immediately, without cold-start delay." },
     { Term: "Webhook", Category: "technical:dev", Definition: "HTTP callback mechanism that sends a POST request to a configured URL when a specific platform event occurs, enabling event-driven integrations." },
@@ -285,6 +299,16 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Pages**: `developers/sdks`, `developers/api`
   </Accordion>
 
+  <Accordion title="livepeer-python-gateway" icon="book-open">
+    **Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+
+    **Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations with the Livepeer network.
+
+    **Status**: current
+
+    **Pages**: `developers/sdks`, `developers/ai-gateway`
+  </Accordion>
+
   <Accordion title="LPT (Livepeer Token)" icon="book-open">
     **Definition**: ERC-20 governance and staking token used for orchestrator selection, delegation, reward distribution, and network security.
 
@@ -447,6 +471,18 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Definition**: Learned numerical vector representation in continuous space where similar items map to nearby points, enabling semantic search and cross-modal reasoning.
 
     **External**: [Wikipedia — Word embedding](https://en.wikipedia.org/wiki/Word_embedding)
+
+    **Status**: current
+
+    **Pages**: `developers/pipelines`, `developers/ai-gateway`
+  </Accordion>
+
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Also known as**: Hugging Face, HF
+
+    **External**: [HuggingFace](https://huggingface.co/)
 
     **Status**: current
 
@@ -745,6 +781,16 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Pages**: `developers/streaming`, `developers/playback`
   </Accordion>
 
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `developers/ai-video`, `developers/streaming`
+  </Accordion>
+
   <Accordion title="RTMP (Real-Time Messaging Protocol)" icon="book-open">
     **Definition**: Real-Time Messaging Protocol for streaming audio, video, and data over TCP on port 1935, the standard ingest protocol for live broadcasting.
 
@@ -773,6 +819,18 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Status**: current
 
     **Pages**: `developers/streaming`, `developers/protocol`
+  </Accordion>
+
+  <Accordion title="Video on Demand (VOD)" icon="book-open">
+    **Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+
+    **Also known as**: VOD, on-demand video
+
+    **External**: [Video on demand — Wikipedia](https://en.wikipedia.org/wiki/Video_on_demand)
+
+    **Status**: current
+
+    **Pages**: `developers/streaming`, `developers/api`
   </Accordion>
 
   <Accordion title="WebRTC" icon="book-open">
@@ -837,6 +895,16 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
 ## Technical Terms
 
 <AccordionGroup>
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **External**: [Central processing unit — Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `developers/compute`, `developers/node`
+  </Accordion>
+
   <Accordion title="Endpoint" icon="book-open">
     **Definition**: Specific URL path where an API receives and processes requests.
 
@@ -847,6 +915,28 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Pages**: `developers/api`
   </Accordion>
 
+  <Accordion title="GB (Gigabyte)" icon="book-open">
+    **Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+
+    **External**: [Gigabyte — Wikipedia](https://en.wikipedia.org/wiki/Gigabyte)
+
+    **Status**: current
+
+    **Pages**: `developers/compute`, `developers/node`
+  </Accordion>
+
+  <Accordion title="JavaScript" icon="book-open">
+    **Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+
+    **Also known as**: JS
+
+    **External**: [JavaScript — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+    **Status**: current
+
+    **Pages**: `developers/sdks`, `developers/api`
+  </Accordion>
+
   <Accordion title="JWT (JSON Web Token)" icon="book-open">
     **Definition**: JSON Web Token — a compact, URL-safe signed token used to authenticate and authorise requests between parties.
 
@@ -855,6 +945,28 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Status**: draft
 
     **Pages**: `developers/access-control`, `developers/api`
+  </Accordion>
+
+  <Accordion title="RTX (NVIDIA RTX)" icon="book-open">
+    **Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+
+    **Also known as**: GeForce RTX
+
+    **External**: [NVIDIA GeForce RTX](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `developers/compute`, `developers/node`
+  </Accordion>
+
+  <Accordion title="Self-Hosted" icon="book-open">
+    **Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+
+    **External**: [Self-hosting — Wikipedia](https://en.wikipedia.org/wiki/Self-hosting_(web_services))
+
+    **Status**: current
+
+    **Pages**: `developers/node`, `developers/compute`
   </Accordion>
 
   <Accordion title="Solidity" icon="book-open">
@@ -901,6 +1013,16 @@ Terms developers encounter across Livepeer's SDKs, AI Gateway API, streaming pro
     **Status**: current
 
     **Pages**: `developers/access-control`
+  </Accordion>
+
+  <Accordion title="SLA (Service Level Agreement)" icon="book-open">
+    **Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+
+    **External**: [Service-level agreement — Wikipedia](https://en.wikipedia.org/wiki/Service-level_agreement)
+
+    **Status**: current
+
+    **Pages**: `developers/architecture`, `developers/api`
   </Accordion>
 </AccordionGroup>
 

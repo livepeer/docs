@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 
@@ -63,6 +67,7 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     { Term: "Clearinghouse", Category: "economic:payment", Definition: "A contract or system handling settlement of payments between gateways and orchestrators, including multi-user support, API key authentication, usage accounting, and fiat/stablecoin billing." },
     { Term: "Codec", Category: "video:encoding", Definition: "Software or hardware that compresses and decompresses digital video, typically using lossy compression." },
     { Term: "Cold Start", Category: "ai:concept", Definition: "The latency incurred when an AI model must be loaded from storage into GPU memory before it can serve its first inference request, typically ranging from 5 to 90 seconds." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "Demand Aggregation", Category: "operational:process", Definition: "Consolidating requests from multiple users or applications for efficient routing to the orchestrator network." },
     { Term: "Deposit", Category: "economic:payment", Definition: "Funds (ETH) locked by a gateway into the TicketBroker smart contract to pay orchestrators via probabilistic micropayments." },
     { Term: "Dispersal", Category: "video:processing", Definition: "Distribution of encoded video segments across multiple orchestrator nodes for redundancy and parallel processing." },
@@ -70,18 +75,23 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     { Term: "Encoding Ladder", Category: "video:encoding", Definition: "A structured set of video renditions at varying resolutions and bitrates for optimal cross-device adaptive bitrate viewing." },
     { Term: "ETH", Category: "web3:token", Definition: "The native cryptocurrency of Ethereum, used to pay transaction fees (gas) and to fund gateway payment deposits on Arbitrum." },
     { Term: "Failover", Category: "operational:monitoring", Definition: "Automatic switching to a backup orchestrator when the primary fails or becomes unresponsive during a session." },
+    { Term: "GB (Gigabyte)", Category: "technical:hardware", Definition: "A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements." },
     { Term: "Gateway", Category: "livepeer:role", Definition: "A node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface between applications and the Livepeer network." },
     { Term: "Gateway-as-a-Service", Category: "livepeer:deployment", Definition: "A hosted deployment model allowing users to access gateway functionality without managing their own infrastructure." },
     { Term: "Gateway Middleware", Category: "livepeer:protocol", Definition: "A pluggable logic layer inserted into the gateway request pipeline for custom processing such as authentication, rate-limiting, or request transformation." },
+    { Term: "GeForce", Category: "technical:hardware", Definition: "NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators." },
     { Term: "Group of Pictures (GOP)", Category: "video:encoding", Definition: "An ordered arrangement of I-frames and inter-frames within a coded video stream; the set of frames between keyframes." },
     { Term: "GPU Worker", Category: "technical:infra", Definition: "A Livepeer node with GPU hardware that performs transcoding or AI inference tasks for an orchestrator." },
+    { Term: "GTX (NVIDIA GTX)", Category: "technical:hardware", Definition: "NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference." },
     { Term: "HTTP Live Streaming (HLS)", Category: "video:protocol", Definition: "An HTTP-based streaming protocol by Apple that encodes video into multiple quality levels with an index playlist for adaptive delivery." },
     { Term: "HTTP Ingest", Category: "video:processing", Definition: "Receiving a live video stream via HTTP push (rather than RTMP) for transcoding or AI processing." },
+    { Term: "HuggingFace", Category: "ai:platform", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "Inference", Category: "ai:concept", Definition: "Running a trained AI model on new input data to produce predictions or generated output, as opposed to training the model." },
     { Term: "Interval-Based Payment", Category: "economic:payment", Definition: "A compensation model where payment tickets are sent at regular time intervals rather than per segment or per request." },
     { Term: "Latency", Category: "technical:infra", Definition: "The delay between a request being made (e.g., a frame captured or a segment submitted) and the response or output being received." },
     { Term: "Live AI", Category: "ai:concept", Definition: "Real-time AI processing applied to live video streams, typically using pipelines such as live-video-to-video running at interactive frame rates." },
     { Term: "LivepeerNode", Category: "livepeer:protocol", Definition: "The core Go struct in go-livepeer representing a running Livepeer node instance, encapsulating configuration, session state, and network connections." },
+    { Term: "livepeer-python-gateway", Category: "livepeer:sdk", Definition: "An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications." },
     { Term: "Marketplace", Category: "livepeer:product", Definition: "The decentralized market on the Livepeer network matching gateway demand with orchestrator supply, governed by capability, price, and performance." },
     { Term: "MaxPricePerCapability", Category: "livepeer:config", Definition: "A CLI configuration flag setting the maximum price a gateway will pay for a specific AI pipeline/model pair (capability), overriding the general MaxPricePerUnit for that task type." },
     { Term: "MaxPricePerUnit", Category: "livepeer:config", Definition: "A CLI configuration flag setting the maximum price per pixelsPerUnit that a gateway will accept from orchestrators; orchestrators priced above this threshold are excluded." },
@@ -93,6 +103,7 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     { Term: "Operational Mode", Category: "livepeer:config", Definition: "The deployment configuration that determines how a gateway connects to the Livepeer network: on-chain (Arbitrum-based payments, protocol discovery) or off-chain (remote signer, manual orchestrator addresses)." },
     { Term: "Orchestrator", Category: "livepeer:role", Definition: "A supply-side node contributing GPU resources, receiving jobs from gateways, performing video transcoding or AI inference, and earning ETH and LPT rewards." },
     { Term: "Orchestrator Discovery", Category: "livepeer:protocol", Definition: "The process by which a gateway finds and evaluates available orchestrators — either automatically via the on-chain ServiceRegistry or manually via configured -orchAddr flags." },
+    { Term: "Per Pixel (Price Per Pixel)", Category: "livepeer:economics", Definition: "Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job." },
     { Term: "Per-Pixel Pricing", Category: "economic:pricing", Definition: "A cost model charging for transcoding work based on the total number of pixels processed (width × height × frame count), enabling standardized comparison across resolutions." },
     { Term: "Per-Request Pricing", Category: "economic:pricing", Definition: "A cost model charging per individual AI inference request rather than per pixel, used for AI pipeline jobs where pixel count is not a meaningful unit." },
     { Term: "Pipeline", Category: "livepeer:protocol", Definition: "A configured end-to-end AI processing workflow defining input type, model, and output, routed by the gateway to capable orchestrators." },
@@ -104,13 +115,16 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     { Term: "Remote Signer", Category: "technical:security", Definition: "A separate service that holds an Ethereum private key and signs payment tickets on behalf of an off-chain gateway, so the gateway itself holds no ETH." },
     { Term: "Rendition", Category: "video:processing", Definition: "A single encoded version of a source video at a specific resolution, bitrate, and codec configuration, produced by an orchestrator." },
     { Term: "Reserve", Category: "economic:payment", Definition: "ETH held as collateral in the TicketBroker contract backing outstanding probabilistic payment tickets; used if the gateway's deposit is depleted." },
+    { Term: "RTX (NVIDIA RTX)", Category: "technical:hardware", Definition: "NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks." },
     { Term: "Scaling", Category: "operational:process", Definition: "Increasing gateway capacity to handle more concurrent requests, either horizontally (deploying additional gateway nodes) or vertically (adding resources to an existing node)." },
     { Term: "Segment", Category: "video:processing", Definition: "A time-sliced chunk of multiplexed audio and video independently submitted to an orchestrator for transcoding in parallel with other segments." },
+    { Term: "Self-Hosted", Category: "technical:deployment", Definition: "A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware." },
     { Term: "Service Margin", Category: "economic:pricing", Definition: "A markup that gateway operators add on top of orchestrator costs when reselling gateway access to end users." },
     { Term: "ServiceRegistry", Category: "livepeer:contract", Definition: "A smart contract on Arbitrum where orchestrators register their service URI so that on-chain gateways can discover and contact them." },
     { Term: "Session", Category: "livepeer:protocol", Definition: "An active, persistent connection between a gateway and an orchestrator during which one or more jobs (segments or AI requests) are processed." },
     { Term: "Settlement", Category: "economic:payment", Definition: "The on-chain finalization of off-chain payment obligations via ticket redemption through the TicketBroker contract." },
     { Term: "Signer", Category: "technical:security", Definition: "The cryptographic key holder or process that authorizes payment tickets and Ethereum transactions on behalf of a gateway node." },
+    { Term: "SLA (Service Level Agreement)", Category: "technical:operations", Definition: "A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations." },
     { Term: "TicketBroker", Category: "livepeer:contract", Definition: "The smart contract on Arbitrum that manages the probabilistic micropayment system — holding gateway deposits and reserves, and processing winning ticket redemptions." },
     { Term: "Transcoding", Category: "video:processing", Definition: "Direct digital-to-digital conversion of a video stream from one encoding format, resolution, or bitrate to one or more output renditions for adaptive delivery." },
     { Term: "USD Pricing", Category: "economic:pricing", Definition: "A pricing configuration where work costs are denominated in US dollars, with automatic dynamic conversion to wei as the ETH/USD exchange rate fluctuates." },
@@ -242,6 +256,16 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     **Status**: current
 
     **Pages**: `gateways/code`, `gateways/architecture`
+  </Accordion>
+
+  <Accordion title="livepeer-python-gateway" icon="book-open">
+    **Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+
+    **Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations.
+
+    **Status**: current
+
+    **Pages**: `gateways/sdks`, `gateways/architecture`
   </Accordion>
 
   <Accordion title="Marketplace" icon="book-open">
@@ -444,6 +468,16 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     **Status**: current
 
     **Pages**: `gateways/payments`, `gateways/protocol`
+  </Accordion>
+
+  <Accordion title="Per Pixel (Price Per Pixel)" icon="book-open">
+    **Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+
+    **Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+
+    **Status**: current
+
+    **Pages**: `gateways/pricing`, `gateways/transcoding`
   </Accordion>
 
   <Accordion title="Per-Pixel Pricing" icon="book-open">
@@ -666,6 +700,18 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     **Pages**: `gateways/pipelines`, `gateways/routing`
   </Accordion>
 
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Also known as**: Hugging Face, HF
+
+    **External**: [HuggingFace](https://huggingface.co/)
+
+    **Status**: current
+
+    **Pages**: `gateways/pipelines`, `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
   <Accordion title="Inference" icon="book-open">
     **Definition**: Running a trained AI model on new input data to produce predictions or generated output, as opposed to training the model.
 
@@ -796,6 +842,100 @@ Terms used across gateway deployment, payment configuration, orchestrator routin
     **Status**: current
 
     **Pages**: `gateways/events`, `gateways/config`
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Hardware Terms
+
+<AccordionGroup>
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GB (Gigabyte)" icon="book-open">
+    **Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Gigabyte)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GeForce" icon="book-open">
+    **Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce](https://www.nvidia.com/en-us/geforce/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="GTX (NVIDIA GTX)" icon="book-open">
+    **Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+
+    **Also known as**: GeForce GTX
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="RTX (NVIDIA RTX)" icon="book-open">
+    **Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+
+    **Also known as**: GeForce RTX
+
+    **Tags**: `technical:hardware`
+
+    **External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="Self-Hosted" icon="book-open">
+    **Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+
+    **Tags**: `technical:deployment`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Self-hosting_(web_services))
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
+  </Accordion>
+
+  <Accordion title="SLA (Service Level Agreement)" icon="book-open">
+    **Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+
+    **Tags**: `technical:operations`
+
+    **External**: [Wikipedia](https://en.wikipedia.org/wiki/Service-level_agreement)
+
+    **Status**: current
+
+    **Pages**: `gateways/run-a-gateway/requirements/setup`
   </Accordion>
 </AccordionGroup>
 

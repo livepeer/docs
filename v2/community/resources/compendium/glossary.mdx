@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 Terms covering Livepeer governance, treasury, staking, delegation, community programmes, SDKs, and ecosystem tooling — for anyone participating in or building on the Livepeer network.
@@ -81,6 +85,7 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     { Term: "Gateway", Category: "livepeer:role", Definition: "Node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface for applications." },
     { Term: "Gateway operator", Category: "livepeer:role", Definition: "Person or organisation running and maintaining gateway nodes for network access." },
     { Term: "Governance", Category: "operational:governance", Definition: "System of rules and processes for protocol decision-making, including on-chain voting via LivepeerGovernor." },
+    { Term: "HuggingFace", Category: "ai:platform", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "Governance Forum", Category: "operational:community", Definition: "The Livepeer Forum's governance category for LIPs, pre-proposals, and protocol governance discussions." },
     { Term: "GovWorks", Category: "livepeer:entity", Definition: "Meta-governance SPE ensuring transparent management of Livepeer governance and treasury allocation." },
     { Term: "Grafana", Category: "operational:monitoring", Definition: "Open-source visualization and dashboarding platform for metrics and logs." },
@@ -89,6 +94,7 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     { Term: "GWID (Gateway Wizard)", Category: "livepeer:entity", Definition: "Gateway Wizard SPE building a managed DevOps tool for running and managing gateway infrastructure." },
     { Term: "Inflation Rate", Category: "economic:reward", Definition: "Per-round rate of new LPT issuance, adjusting dynamically around the 50% target bonding rate." },
     { Term: "Inflationary Rewards", Category: "economic:reward", Definition: "Newly minted LPT distributed each protocol round proportional to stake." },
+    { Term: "JavaScript", Category: "technical:language", Definition: "A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs." },
     { Term: "KYO (Know Your Orchestrator)", Category: "operational:community", Definition: "Know Your Orchestrator — Live Pioneers interview series profiling active orchestrators on the network." },
     { Term: "LIP (Livepeer Improvement Proposal)", Category: "operational:governance", Definition: "Livepeer Improvement Proposal — formal design document for protocol changes." },
     { Term: "LIP-89", Category: "operational:governance", Definition: "LIP introducing the on-chain LivepeerGovernor contract and community treasury mechanism." },
@@ -108,6 +114,7 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     { Term: "Milestone-based Grants", Category: "economic:treasury", Definition: "Funding released incrementally upon achievement of predefined deliverables rather than in a lump sum." },
     { Term: "MistServer", Category: "technical:infra", Definition: "Open-source media server providing RTMP ingest, HLS output, and multi-protocol streaming support." },
     { Term: "On-chain Treasury", Category: "livepeer:protocol", Definition: "Protocol-governed pool of LPT funded by inflation for community-approved ecosystem development." },
+    { Term: "Open Source", Category: "technical:concept", Definition: "Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source." },
     { Term: "Orchestrator", Category: "livepeer:role", Definition: "Supply-side operator contributing GPU resources, receiving jobs, performing transcoding or AI inference, and earning rewards." },
     { Term: "Passing threshold", Category: "operational:governance", Definition: "Minimum \"for\" vote percentage (excluding abstentions) required for a governance proposal to pass." },
     { Term: "Pre-Proposal", Category: "operational:governance", Definition: "Informal governance discussion document posted on the Forum before a formal LIP or treasury proposal." },
@@ -141,6 +148,7 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     { Term: "Treasury Reward Cut Rate", Category: "economic:treasury", Definition: "Governable percentage of per-round LPT inflation diverted to the community treasury (currently 10%)." },
     { Term: "Treasury Talk", Category: "operational:community", Definition: "Recurring community call focused on treasury discussions and SPE updates." },
     { Term: "Unbonding period", Category: "web3:tokenomics", Definition: "Waiting period during which tokens are locked after initiating unbonding before becoming withdrawable (7 rounds in Livepeer)." },
+    { Term: "USD (United States Dollar)", Category: "economic:currency", Definition: "The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data." },
     { Term: "veLPT (Voting Escrow LPT)", Category: "web3:governance", Definition: "Proposed mechanism locking LPT for enhanced voting power, aligning long-term incentive structures." },
     { Term: "Vote detachment", Category: "operational:governance", Definition: "Delegators overriding their orchestrator's governance vote with their own independent stake-weighted vote." },
     { Term: "Voting delay", Category: "operational:governance", Definition: "Number of rounds (1) between governance proposal creation and the start of the voting period." },
@@ -736,6 +744,18 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
 
     **Pages**: `community/treasury`
   </Accordion>
+
+  <Accordion title="USD (United States Dollar)" icon="book-open">
+    **Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+
+    **Tags**: `economic:currency`
+
+    **External**: [United States dollar (Wikipedia)](https://en.wikipedia.org/wiki/United_States_dollar)
+
+    **Status**: current
+
+    **Pages**: `community/treasury`, `community/economics`
+  </Accordion>
 </AccordionGroup>
 
 <CustomDivider />
@@ -1121,6 +1141,20 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     **Pages**: `community/ai`, `community/projects`
   </Accordion>
 
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Tags**: `ai:platform`
+
+    **External**: [HuggingFace](https://huggingface.co/)
+
+    **Also known as**: Hugging Face, HF
+
+    **Status**: current
+
+    **Pages**: `community/ai`, `community/tools`
+  </Accordion>
+
   <Accordion title="Real-time video AI" icon="book-open">
     **Definition**: Running AI models on live streaming input with latency low enough for interactive speeds, typically under 100ms.
 
@@ -1157,6 +1191,20 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     **Pages**: `community/network`, `community/ai`
   </Accordion>
 
+  <Accordion title="JavaScript" icon="book-open">
+    **Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+
+    **Tags**: `technical:language`
+
+    **External**: [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+    **Also known as**: JS
+
+    **Status**: current
+
+    **Pages**: `community/sdks`, `community/tools`
+  </Accordion>
+
   <Accordion title="MistServer" icon="book-open">
     **Definition**: Open-source media server providing RTMP ingest, HLS output, and multi-protocol streaming support.
 
@@ -1165,6 +1213,20 @@ Terms covering Livepeer governance, treasury, staking, delegation, community pro
     **Status**: current
 
     **Pages**: `community/tools`, `community/network`
+  </Accordion>
+
+  <Accordion title="Open Source" icon="book-open">
+    **Definition**: Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source.
+
+    **Tags**: `technical:concept`
+
+    **External**: [Open-source software (Wikipedia)](https://en.wikipedia.org/wiki/Open-source_software)
+
+    **Also known as**: open-source, FOSS
+
+    **Status**: current
+
+    **Pages**: `community/index`, `community/tools`
   </Accordion>
 
   <Accordion title="RPC (Remote Procedure Call)" icon="book-open">

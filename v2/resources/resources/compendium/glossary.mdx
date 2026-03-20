@@ -27,7 +27,7 @@ lastVerified: '2026-03'
     Tier 2 — Pre-commit script parses SearchTable itemsList props, extracts term data,
     writes glossary-data.json adjacent to this MDX for crawler/AI agent indexing.
     Tier 1 (snapshot) — Not applicable here; see snippets/data/snapshots/ for deploy-time API snapshots.
-  Pre-commit: Will fail if companion JSON is missing or stale.
+  CI check: Will fail if companion JSON is missing or stale (check-ai-companions.yml).
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
@@ -41,6 +41,10 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 - **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
 - Use the category filter below to narrow by topic
 </Tip>
+
+<Note>
+  Machine-readable term index: [glossary-data.json](./glossary-data.json)
+</Note>
 
 {/* ==========================SECTION: INTRO========================= */}
 Key terms used across the Livepeer Resources section — spanning protocol mechanics, smart contracts, AI infrastructure, video encoding, web3 economics, and external tooling.
@@ -65,6 +69,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "BYOC", Category: "livepeer:deployment", Definition: "A deployment pattern allowing teams to supply custom Docker containers running Python workloads for Livepeer AI streaming pipelines." },
     { Term: "Capability", Category: "livepeer:protocol", Definition: "An AI service or job type — defined as a pipeline and model pair — that an orchestrator advertises as available to gateways." },
     { Term: "CDN", Category: "technical:infra", Definition: "A geographically distributed network of servers caching and delivering content with high availability and low latency to end users." },
+    { Term: "CPU (Central Processing Unit)", Category: "technical:hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "CLI", Category: "technical:dev", Definition: "A text-based interface for interacting with software by typing commands, used to configure and operate Livepeer gateway and orchestrator nodes." },
     { Term: "Codec", Category: "video:encoding", Definition: "Software or hardware that compresses and decompresses digital video using a defined algorithm, typically employing lossy compression." },
     { Term: "Cold Start", Category: "ai:concept", Definition: "The latency incurred when an AI model must be loaded from storage into GPU memory before it can serve its first inference request, typically 5–90 seconds." },
@@ -92,11 +97,14 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Governor", Category: "livepeer:contract", Definition: "The Livepeer on-chain governance contract that authorizes protocol upgrades and parameter changes via token-weighted delegated voting." },
     { Term: "GPU", Category: "technical:infra", Definition: "A specialized parallel processor originally designed for rendering graphics, now the primary hardware for video transcoding and AI inference." },
     { Term: "HLS", Category: "video:protocol", Definition: "An adaptive bitrate streaming protocol developed by Apple that encodes video into multiple quality levels and serves them as segmented playlists over HTTP." },
+    { Term: "HuggingFace", Category: "ai:platform", Definition: "An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes." },
     { Term: "ICO", Category: "web3:concept", Definition: "A fundraising mechanism where a blockchain project sells newly created tokens to the public in exchange for established cryptocurrencies." },
     { Term: "Inflation", Category: "livepeer:protocol", Definition: "The dynamic issuance of new LPT each round, distributed to orchestrators and delegators based on their participation, designed to incentivize staking toward a 50% target bonding rate." },
     { Term: "Inference", Category: "ai:concept", Definition: "Running a trained machine learning model on new input data to produce predictions, classifications, or generated outputs." },
     { Term: "Ingest", Category: "video:processing", Definition: "The process of receiving a live video stream from a broadcaster's encoder into a media server, typically via RTMP, SRT, or WebRTC." },
+    { Term: "JavaScript", Category: "technical:language", Definition: "A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs." },
     { Term: "Latency", Category: "video:playback", Definition: "The delay between video capture at the source and display on the viewer's device, accumulating at every stage of the pipeline." },
+    { Term: "Low-Latency", Category: "video:streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "Layer 2", Category: "web3:chain", Definition: "A separate blockchain built on top of a Layer-1 base chain (such as Ethereum) that handles transactions off-chain while inheriting the security guarantees of the base layer." },
     { Term: "Livepeer Actor", Category: "livepeer:role", Definition: "A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system." },
     { Term: "Livepeer Ecosystem", Category: "livepeer:entity", Definition: "The full set of projects, tools, participants, and organizations building on or contributing to the Livepeer network, including SPEs, community tools, integrated applications, and partner services." },
@@ -148,6 +156,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Warm Model", Category: "ai:concept", Definition: "An AI model already loaded into GPU memory and ready to serve inference requests immediately without cold-start delay." },
     { Term: "WebRTC", Category: "video:protocol", Definition: "An open-source project and W3C standard providing browsers and mobile apps with real-time peer-to-peer audio, video, and data exchange without plugins." },
     { Term: "WHEP", Category: "video:protocol", Definition: "A protocol enabling viewers to receive WebRTC streams from servers via SDP offer/answer exchange over standard HTTP, used for browser-based sub-second latency playback." },
+    { Term: "Video on Demand (VOD)", Category: "video:delivery", Definition: "A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming." },
     { Term: "Worker", Category: "livepeer:role", Definition: "A Livepeer node running Docker containers for AI models or transcoding processes, executing compute tasks delegated by an orchestrator." },
     { Term: "World Model", Category: "ai:application", Definition: "A neural network that represents and predicts environment dynamics, enabling an agent to plan future actions by simulating outcomes without interacting with the real environment." },
   ]}
@@ -614,6 +623,20 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     **Pages**: `resources/glossary`, `resources/ai`
   </Accordion>
 
+  <Accordion title="HuggingFace" icon="book-open">
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+    **Tags**: `ai:platform`
+
+    **External**: [HuggingFace](https://huggingface.co/)
+
+    **Also known as**: Hugging Face, HF
+
+    **Status**: current
+
+    **Pages**: `resources/glossary`, `resources/ai`
+  </Accordion>
+
   <Accordion title="Inference" icon="book-open">
     **Definition**: Running a trained machine learning model on new input data to produce predictions, classifications, or generated outputs.
 
@@ -786,6 +809,18 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     **Pages**: `resources/glossary`, `resources/streaming`
   </Accordion>
 
+  <Accordion title="Low-Latency" icon="book-open">
+    **Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+    **Tags**: `video:streaming`
+
+    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+
+    **Status**: current
+
+    **Pages**: `resources/glossary`, `resources/streaming`
+  </Accordion>
+
   <Accordion title="Quality Ladder" icon="book-open">
     **Definition**: An ordered set of encoding profiles from lowest to highest quality used for adaptive bitrate rendition selection in video delivery.
 
@@ -846,6 +881,20 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     **Status**: current
 
     **Pages**: `resources/glossary`, `resources/protocol`
+  </Accordion>
+
+  <Accordion title="Video on Demand (VOD)" icon="book-open">
+    **Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+
+    **Tags**: `video:delivery`
+
+    **External**: [Video on demand (Wikipedia)](https://en.wikipedia.org/wiki/Video_on_demand)
+
+    **Also known as**: VOD, on-demand video
+
+    **Status**: current
+
+    **Pages**: `resources/glossary`, `resources/streaming`
   </Accordion>
 
   <Accordion title="WebRTC" icon="book-open">
@@ -1192,6 +1241,18 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     **Pages**: `resources/glossary`, `resources/tools`
   </Accordion>
 
+  <Accordion title="CPU (Central Processing Unit)" icon="book-open">
+    **Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+    **Tags**: `technical:hardware`
+
+    **External**: [Central processing unit (Wikipedia)](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+    **Status**: current
+
+    **Pages**: `resources/glossary`, `resources/network`
+  </Accordion>
+
   <Accordion title="GPU (Graphics Processing Unit)" icon="book-open">
     **Definition**: A specialized parallel processor originally designed for rendering graphics, now the primary hardware for video transcoding and AI inference.
 
@@ -1202,6 +1263,20 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     **Status**: current
 
     **Pages**: `resources/glossary`, `resources/network`
+  </Accordion>
+
+  <Accordion title="JavaScript" icon="book-open">
+    **Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+
+    **Tags**: `technical:language`
+
+    **External**: [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+    **Also known as**: JS
+
+    **Status**: current
+
+    **Pages**: `resources/glossary`, `resources/tools`
   </Accordion>
 
   <Accordion title="Node" icon="book-open">
