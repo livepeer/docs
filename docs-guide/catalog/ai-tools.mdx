@@ -104,15 +104,32 @@ Canonical policy pages:
 - Agent governance: `docs-guide/policies/agent-governance-framework.mdx`
 - Root and allowlist governance: `docs-guide/policies/root-allowlist-governance.mdx`
 
-Approved runtime targets:
+## Agent Adapter Surface Map
 
-- `AGENTS.md`
-- `.github/copilot-instructions.md`
-- `.claude/CLAUDE.md`
-- `.cursor/rules/*.mdc`
-- `.windsurf/rules/*.md`
+All active native adapter files and their owning tools. Each adapter should be a thin pointer back to `AGENTS.md`; policy must not drift between surfaces.
 
-Shared local-preview rule across active agent-governance surfaces:
+| Agent family | Canonical adapter path | Notes |
+|---|---|---|
+| Cross-agent baseline | `AGENTS.md` | Primary source of truth for all repo-wide rules |
+| GitHub Copilot | `.github/copilot-instructions.md` | GitHub-native path |
+| Claude Code | `.claude/CLAUDE.md` | Claude Code native path |
+| Cursor (modern) | `.cursor/rules/repo-governance.mdc` + `.cursor/rules/no-deletions.mdc` | Active; replaces `.cursorrules` |
+| Cursor (legacy) | `.cursorrules` | Backward-compat stub pointing to `.cursor/rules/` |
+| Windsurf | `.windsurf/rules/repo-governance.md` | Windsurf native path |
+| Augment Code | `.augment/rules/repo-governance.md` + `.augment/rules/git-safety.md` + `.augment/rules/no-deletions.md` | Added Phase 9 |
+| Mintlify Assistant | `.mintlify/Assistant.md` | Chat widget context for the docs site |
+| Codex (task layer) | `.github/AGENTS.md` | Codex-specific HitL + checkpoint rules on top of root `AGENTS.md` |
+
+Supplemental cross-agent packs (generated, not canonical):
+
+| Output | Path | Generator |
+|---|---|---|
+| Codex skills manifest | `ai-tools/agent-packs/codex/skills-manifest.json` | `cross-agent-packager.js --agent-pack all` |
+| Cursor rules pack | `ai-tools/agent-packs/cursor/rules.md` | same |
+| Claude Code pack | `ai-tools/agent-packs/claude/CLAUDE.md` | same |
+| Windsurf rules pack | `ai-tools/agent-packs/windsurf/rules.md` | same |
+
+Shared local-preview rule across all active agent-governance surfaces:
 
 - agents must not use port `3000` for local Mintlify, preview, or browser-validation sessions
 - choose a non-3000 port explicitly when running local preview commands

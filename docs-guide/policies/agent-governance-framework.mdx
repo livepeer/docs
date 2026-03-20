@@ -42,8 +42,11 @@ Approved target locations:
 | OpenAI Codex / repo-wide baseline | `AGENTS.md` | Cross-agent baseline and the primary repo-wide rules file. |
 | GitHub Copilot | `.github/copilot-instructions.md` | Native Copilot adapter. Path-scoped `.github/instructions/*.instructions.md` remains optional. |
 | Claude Code | `.claude/CLAUDE.md` | Native Claude adapter under a dedicated root directory. |
-| Cursor | `.cursor/rules/*.mdc` | Native Cursor rules location. |
+| Cursor | `.cursor/rules/*.mdc` | Native Cursor rules location. Legacy `.cursorrules` kept as thin backward-compat stub. |
 | Windsurf | `.windsurf/rules/*.md` | Native Windsurf rules location. |
+| Augment Code | `.augment/rules/*.md` | Native Augment adapter directory added in Phase 9. |
+| Mintlify Assistant | `.mintlify/Assistant.md` | Chat widget context for the docs site. Not an AI coding assistant adapter. |
+| Codex task layer | `.github/AGENTS.md` | Codex-specific HitL, checkpoint, and lock rules — extends root `AGENTS.md` via directory-walk. |
 
 Current implementation state:
 
@@ -53,7 +56,11 @@ Current implementation state:
 | `.github/copilot-instructions.md` | implemented thin native adapter |
 | `.claude/CLAUDE.md` | implemented thin native adapter |
 | `.cursor/rules/*.mdc` | implemented thin native adapter |
+| `.cursorrules` | thin legacy stub pointing to `.cursor/rules/` |
 | `.windsurf/rules/*.md` | implemented thin native adapter |
+| `.augment/rules/*.md` | implemented thin native adapter (Phase 9) |
+| `.mintlify/Assistant.md` | implemented chat widget context (Phase 9) |
+| `.github/AGENTS.md` | implemented Codex task-layer extension |
 
 ## Governance Taxonomy
 
@@ -116,7 +123,14 @@ Every supported agent must be grounded in the same repo knowledge set:
 | `.github/copilot-instructions.md` | GitHub Copilot adapter with only GitHub-specific path guidance | native adapter | keep thin |
 | `.claude/CLAUDE.md` | Claude Code adapter | native adapter | keep thin |
 | `.cursor/rules/repo-governance.mdc` | Cursor adapter | native adapter | keep thin |
+| `.cursor/rules/no-deletions.mdc` | Cursor no-deletions rule | native adapter | keep thin |
+| `.cursorrules` | Cursor legacy backward-compat stub pointing to `.cursor/rules/` | legacy stub | keep as thin redirect |
 | `.windsurf/rules/repo-governance.md` | Windsurf adapter | native adapter | keep thin |
+| `.augment/rules/repo-governance.md` | Augment Code adapter (Phase 9) | native adapter | keep thin |
+| `.augment/rules/git-safety.md` | Augment Code git safety rules (Phase 9) | native adapter | keep thin |
+| `.augment/rules/no-deletions.md` | Augment Code no-deletions rule (Phase 9) | native adapter | keep thin |
+| `.mintlify/Assistant.md` | Mintlify chat widget context (Phase 9) | chat assistant context | not an AI coding adapter |
+| `.github/AGENTS.md` | Codex task-layer HitL / checkpoint extension | Codex task layer | keep as Codex-only extension |
 | `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | human-facing contributor workflow doc | recommended supplemental | keep as contributor-facing summary with links to canonical policies |
 | `ai-tools/agent-packs/*` | generated cross-agent adapter outputs | recommended supplemental | keep generated; never treat as canonical source |
 | `.codex/README.md` | Codex local lock guidance | recommended supplemental | keep as operational documentation |
@@ -130,17 +144,25 @@ These files were intentionally retired during the approved governance rollout an
 
 | Legacy surface | Retirement status | Replacement |
 |---|---|---|
-| `.github/AGENTS.md` | retired | `AGENTS.md` |
-| `.cursorrules` | retired | `.cursor/rules/repo-governance.mdc` |
-| `ASSISTANT.md` | retired | `AGENTS.md` |
-| `.github/augment-instructions.md` | retired | none; Augment is not in the current supported matrix |
+| `.github/AGENTS.md` | repurposed as Codex task-layer extension (Phase 9) | disambiguating comment added; Codex reads both files via directory-walk |
+| `.cursorrules` | demoted to thin backward-compat stub (Phase 9) | `.cursor/rules/repo-governance.mdc` |
+| `ASSISTANT.md` | repurposed as redirect stub (Phase 9) | `.mintlify/Assistant.md` (chat widget) |
+| `.github/augment-instructions.md` | retired; added archived-reference header (Phase 9) | `.augment/rules/` (correct Augment path) |
+| `ai-tools/ai-rules/.augment-guidelines` | retired to `ai-tools/ai-rules/_retired/` (Phase 9) | `.augment/rules/git-safety.md` |
+| `ai-tools/ai-rules/.cursor/rules/no-deletions.mdc` | moved to `.cursor/rules/no-deletions.mdc` (Phase 9) | project-root Cursor path |
 
 ### Overlap clusters
 
-Current duplication clusters:
+Resolved in Phase 9:
 
-- `.github/AGENTS.md`, `.github/copilot-instructions.md`, `.github/augment-instructions.md`, `.cursorrules`, and `ASSISTANT.md` all duplicate repo structure and safety guidance
-- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` duplicates contributor-facing parts of the same policy set
+- `.github/AGENTS.md` now carries disambiguating HTML comment; no longer a duplicate of root `AGENTS.md`
+- `.cursorrules` is a thin stub with a pointer to `.cursor/rules/`; content no longer duplicates AGENTS.md
+- `ASSISTANT.md` is a redirect stub; canonical content at `.mintlify/Assistant.md`
+- `.github/augment-instructions.md` is archived; replaced by `.augment/rules/`
+
+Remaining:
+
+- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` still contains contributor-facing parts of the policy set; reduce to a link to AGENTS.md in a future pass
 - `ai-tools/agent-packs/*` are generated from separate sources and must remain outputs, not canonical rule inputs
 
 ## Approved Migration Map
@@ -149,10 +171,10 @@ The current governance contract maps legacy surfaces to the following destinatio
 
 | Legacy surface | Approved destination |
 |---|---|
-| `.github/AGENTS.md` | merged into root `AGENTS.md` |
-| `.cursorrules` | replaced by `.cursor/rules/repo-governance.mdc` |
-| `ASSISTANT.md` | merged into root `AGENTS.md`; no `.mintlify/ASSISTANT.md` adoption in the current contract |
-| `.github/augment-instructions.md` | retired from the supported matrix |
+| `.github/AGENTS.md` | repurposed as Codex task-layer extension; disambiguating comment added |
+| `.cursorrules` | demoted to thin backward-compat stub pointing to `.cursor/rules/` |
+| `ASSISTANT.md` | redirect stub; canonical content moved to `.mintlify/Assistant.md` |
+| `.github/augment-instructions.md` | archived; replaced by `.augment/rules/` (correct canonical Augment path) |
 | duplicated repo-policy blocks inside `.github/copilot-instructions.md` | reduced to a thin adapter that references `AGENTS.md` |
 
 ## Prior Reports Incorporated
@@ -178,15 +200,20 @@ AGENTS.md
 .claude/CLAUDE.md
 .cursor/rules/
 .windsurf/rules/
+.augment/rules/          ← added Phase 9
+.mintlify/Assistant.md   ← added Phase 9 (chat widget only)
+.github/AGENTS.md        ← Codex task-layer extension only
 ```
 
-Supporting notes preserved from the prior report:
+Supporting notes preserved from the prior report, updated for Phase 9:
 
-- Codex should use `AGENTS.md` as the cross-repo baseline
+- Codex should use `AGENTS.md` as the cross-repo baseline; `.github/AGENTS.md` adds Codex-specific task-isolation rules
 - GitHub Copilot should use `.github/copilot-instructions.md`
 - Claude Code should use `.claude/CLAUDE.md`
-- Cursor should use `.cursor/rules/*.mdc`
+- Cursor should use `.cursor/rules/*.mdc`; `.cursorrules` is a backward-compat stub
 - Windsurf should use `.windsurf/rules/*.md`
+- Augment Code should use `.augment/rules/*.md`
+- Mintlify chat widget reads `.mintlify/Assistant.md` — this is not an AI coding assistant adapter
 
 ## Report Sources
 
