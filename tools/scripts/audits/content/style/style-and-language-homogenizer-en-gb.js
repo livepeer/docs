@@ -19,7 +19,7 @@ const { execSync } = require('child_process');
 
 const STAGE_ID = 'style-and-language-homogenizer-en-gb';
 const REPO_ROOT = process.cwd();
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 const DEFAULT_PROFILE_PATH = 'tools/config/style-language-profile-en-gb.json';
 
 function toPosix(value) {

@@ -8,7 +8,7 @@
  * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @mode        read-only
  * @pipeline    manual — experimental research system
- * @scope       tools/scripts, tasks/research/claims, tests/unit/docs-page-research.test.js, tasks/reports/repo-ops
+ * @scope       tools/scripts, workspace/research/claims, tests/unit/docs-page-research.test.js, workspace/reports/repo-ops
  * @usage       node tools/scripts/audits/content/veracity/docs-page-research.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -19,7 +19,7 @@ const { spawnSync } = require('child_process');
 const crypto = require('crypto');
 const { loadRegistry, flattenClaimFamilies } = require('../../../validators/content/veracity/docs-fact-registry');
 
-const DEFAULT_REGISTRY = 'tasks/research/claims';
+const DEFAULT_REGISTRY = 'workspace/research/claims';
 const GENERIC_PATH_TOKENS = new Set([
   'and',
   'mdx',
@@ -163,7 +163,7 @@ function usage() {
       'Usage: node tools/scripts/docs-page-research.js [options]',
       '',
       'Options:',
-      '  --registry <path>       Registry file or directory (default: tasks/research/claims)',
+      '  --registry <path>       Registry file or directory (default: workspace/research/claims)',
       '  --page <path>           Single page path',
       '  --files <a,b,c>         Explicit file list',
       '  --report-md <path>      Write markdown report',

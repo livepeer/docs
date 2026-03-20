@@ -3,7 +3,7 @@
  * @script            audit-v1-to-v2-mapping
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             tools/scripts, v1, v2, docs.json, tasks/reports
+ * @scope             tools/scripts, v1, v2, docs.json, workspace/reports
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Diagnostic — maps v1 page URLs to v2 equivalents for migration tracking
@@ -17,7 +17,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { extractFrontmatter } = require('../../tests/utils/mdx-parser');
 
-const DEFAULT_OUT_DIR = 'tasks/reports/v1-v2-mapping-audit';
+const DEFAULT_OUT_DIR = 'workspace/reports/v1-v2-mapping-audit';
 const DEFAULT_CANDIDATE_COUNT = 8;
 const DEFAULT_ADJUDICATE_THRESHOLD = 0.8;
 const DEFAULT_SEED =

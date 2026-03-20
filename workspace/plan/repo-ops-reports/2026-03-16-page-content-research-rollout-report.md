@@ -14,7 +14,7 @@ The research-skill stack was installed into the clean merge-ready `docs-v2-dev` 
   - `docs-source-verification`
   - `docs-change-review`
   - `docs-impact-propagation`
-- repo-native fact registries under `tasks/research/claims/`
+- repo-native fact registries under `workspace/research/claims/`
 - active validator and runner scripts:
   - `tools/scripts/docs-fact-registry.js`
   - `tools/scripts/docs-page-research.js`
@@ -23,21 +23,21 @@ The research-skill stack was installed into the clean merge-ready `docs-v2-dev` 
 
 Exploratory predecessor artifacts were preserved under:
 
-- `tasks/plan/repo-ops-reports/page-content-research-history/`
+- `workspace/plan/repo-ops-reports/page-content-research-history/`
 
-They were not reintroduced into `tasks/reports/`, which would violate current tasks governance for manual research dumps.
+They were not reintroduced into `workspace/reports/`, which would violate current tasks governance for manual research dumps.
 
 ## Repo-Conventions Review
 
 Root-cause convention fixes required during install:
 
-1. `tasks/plan/future/**` and `tasks/plan/repo-ops-reports/**` had to be explicitly unignored in `.gitignore` so roadmap and rollout artifacts can be tracked without forced adds.
+1. `workspace/plan/future/**` and `workspace/plan/repo-ops-reports/**` had to be explicitly unignored in `.gitignore` so roadmap and rollout artifacts can be tracked without forced adds.
 2. The installed skill templates had to satisfy the current Codex template contract, including valid `primary_commands` metadata.
 3. Script governance surfaces required current-branch regeneration instead of copying stale generated files from the source worktree:
    - `tools/script-index.md`
    - `tests/script-index.md`
    - `docs-guide/catalog/scripts-catalog.mdx`
-4. `tasks/reports/script-classifications.json` needed targeted classification-row updates for the newly introduced research scripts and related managed helpers.
+4. `workspace/reports/script-classifications.json` needed targeted classification-row updates for the newly introduced research scripts and related managed helpers.
 5. The imported orchestrator claim registry had to be reconciled to the current `docs-v2-dev` IA because several source-branch paths had been renamed or absorbed.
 
 No `.allowlist` change was required. Existing root allowlist coverage already includes the needed top-level directories.
@@ -71,9 +71,9 @@ Current portability blockers:
 
 Saved install-validation artifacts:
 
-- `tasks/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-orchestrators.md`
-- `tasks/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-gateways.md`
-- `tasks/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-pr-advisory.md`
+- `workspace/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-orchestrators.md`
+- `workspace/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-gateways.md`
+- `workspace/plan/repo-ops-reports/install-validation/2026-03-16-page-content-research-install-validation-pr-advisory.md`
 
 Validation summary:
 

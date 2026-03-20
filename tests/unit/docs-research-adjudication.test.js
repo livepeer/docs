@@ -3,7 +3,7 @@
  * @script            docs-research-adjudication.test
  * @category          validator
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/docs-research-adjudication.js, tasks/research/adjudication, tools/scripts/docs-page-research.js, tools/scripts/docs-page-research-pr-report.js
+ * @scope             tests/unit, tools/scripts/docs-research-adjudication.js, workspace/research/adjudication, tools/scripts/docs-page-research.js, tools/scripts/docs-page-research-pr-report.js
  * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests docs-research-adjudication.js — validates adjudication-ledger schema, report-aware outcome recording, and trust-tier summary rules for measured research-skill review outcomes.

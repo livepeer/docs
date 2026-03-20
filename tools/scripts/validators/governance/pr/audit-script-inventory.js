@@ -46,7 +46,7 @@ const {
 } = require('../../../../lib/script-header-utils');
 
 const REPO_ROOT = process.cwd();
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 const DEFAULT_MD_PATH = 'SCRIPT_INVENTORY_FULL.md';
 const DEFAULT_JSON_PATH = 'SCRIPT_INVENTORY_FULL.json';
 const REPO_ROOT_POSIX = normalizeRepoPath(REPO_ROOT);
@@ -486,7 +486,7 @@ function isDirectHookTarget(targetPath) {
     targetPath === 'tests/run-all.js' ||
     targetPath === 'tests/run-pr-checks.js' ||
     targetPath.startsWith('tools/scripts/') ||
-    targetPath.startsWith('tasks/scripts/')
+    targetPath.startsWith('workspace/scripts/')
   );
 }
 
@@ -737,7 +737,7 @@ function buildConstantMap(scriptPath, content) {
 function classifyOutputType(outputPath) {
   const baseName = path.basename(String(outputPath || '')).toLowerCase();
   if (!outputPath || outputPath === 'stdout') return 'stdout';
-  if (outputPath.startsWith('tasks/reports/')) return 'report';
+  if (outputPath.startsWith('workspace/reports/')) return 'report';
   if (
     baseName === 'script-index.md' ||
     baseName === 'scripts-catalog.mdx' ||

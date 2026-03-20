@@ -101,7 +101,7 @@ function createFixtureRepo() {
   );
   writeFile(
     repoDir,
-    'tasks/reports/media-audit/media-audit-manifest.json',
+    'workspace/reports/media-audit/media-audit-manifest.json',
     `${JSON.stringify({
       assets: [
         {
@@ -206,7 +206,7 @@ function runTests() {
         [
           SCRIPT_PATH,
           '--manifest',
-          'tasks/reports/media-audit/media-audit-manifest.json',
+          'workspace/reports/media-audit/media-audit-manifest.json',
           '--file',
           'snippets/assets/media/videos/HeroBackground.mp4',
           '--write'

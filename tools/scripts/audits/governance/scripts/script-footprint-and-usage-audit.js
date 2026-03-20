@@ -8,7 +8,7 @@
  * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tests, tasks/reports, ai-tools/ai-skills
+ * @scope       tools/scripts, tests, workspace/reports, ai-tools/ai-skills
  * @usage       node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]
  * @policy      E-C1, R-R14
  */
@@ -19,7 +19,7 @@ const path = require('path');
 const STAGE_ID = 'script-footprint-and-usage-audit';
 const REPO_ROOT = process.cwd();
 const SCRIPTS_ROOT = 'tools/scripts';
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 
 function toPosix(value) {
   return String(value || '').split(path.sep).join('/');
@@ -244,7 +244,7 @@ function detectReportBloat(issues) {
   const highBytes = policy?.size_thresholds?.high_bytes || 2097152;
   const criticalBytes = policy?.size_thresholds?.critical_bytes || 10485760;
 
-  const reportRoot = path.join(REPO_ROOT, 'tasks/reports');
+  const reportRoot = path.join(REPO_ROOT, 'workspace/reports');
   if (!fs.existsSync(reportRoot)) return;
 
   walkFiles(reportRoot)
@@ -269,13 +269,13 @@ function detectReportBloat(issues) {
 }
 
 function detectScriptAuditSignals(issues) {
-  const reportPath = path.join(REPO_ROOT, 'tasks/reports/repo-ops/SCRIPT_AUDIT.json');
+  const reportPath = path.join(REPO_ROOT, 'workspace/reports/repo-ops/SCRIPT_AUDIT.json');
   if (!fs.existsSync(reportPath)) {
     addIssue(issues, {
       id: 'missing-script-audit-baseline',
       title: 'SCRIPT_AUDIT baseline report missing',
       severity: 'low',
-      path: 'tasks/reports/repo-ops/SCRIPT_AUDIT.json',
+      path: 'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
       evidence: 'Baseline script report could not be found.',
       recommendation: 'Generate with `node tools/scripts/audit-scripts.js --format both`.'
     });
@@ -292,7 +292,7 @@ function detectScriptAuditSignals(issues) {
         id: 'script-overlap-clusters',
         title: 'Existing script overlap clusters require consolidation',
         severity: 'medium',
-        path: 'tasks/reports/repo-ops/SCRIPT_AUDIT.json',
+        path: 'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
         evidence: `${exactOverlap} exact overlap cluster(s) are currently reported.`,
         recommendation: 'Prioritize overlap recommendations and consolidate duplicate script trees.'
       });
@@ -303,7 +303,7 @@ function detectScriptAuditSignals(issues) {
         id: 'script-template-noncompliant',
         title: 'Script metadata/template compliance gaps detected',
         severity: 'low',
-        path: 'tasks/reports/repo-ops/SCRIPT_AUDIT.json',
+        path: 'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
         evidence: `${templateNonCompliant} script(s) are marked template non-compliant.`,
         recommendation: 'Backfill required script headers for discoverability and maintainability.'
       });
@@ -313,7 +313,7 @@ function detectScriptAuditSignals(issues) {
       id: 'script-audit-parse-error',
       title: 'Unable to parse SCRIPT_AUDIT baseline report',
       severity: 'low',
-      path: 'tasks/reports/repo-ops/SCRIPT_AUDIT.json',
+      path: 'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
       evidence: 'JSON parse failed for existing script baseline report.',
       recommendation: 'Regenerate the baseline report to restore machine-readable status.'
     });
@@ -328,7 +328,7 @@ function main() {
   const files = [
     ...walkFiles(path.join(REPO_ROOT, SCRIPTS_ROOT)),
     ...walkFiles(path.join(REPO_ROOT, 'tests')),
-    ...walkFiles(path.join(REPO_ROOT, 'tasks/reports'))
+    ...walkFiles(path.join(REPO_ROOT, 'workspace/reports'))
   ];
 
   const issues = [];

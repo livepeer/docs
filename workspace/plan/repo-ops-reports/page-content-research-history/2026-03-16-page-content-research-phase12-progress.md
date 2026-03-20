@@ -12,7 +12,7 @@ This checkpoint executed three goals together:
 
 ### Broader claim coverage
 
-Added three new orchestrator claim families in `tasks/research/claims/orchestrators.json`:
+Added three new orchestrator claim families in `workspace/research/claims/orchestrators.json`:
 
 - `orch-bandwidth-per-stream-planning`
 - `orch-session-limit-default`

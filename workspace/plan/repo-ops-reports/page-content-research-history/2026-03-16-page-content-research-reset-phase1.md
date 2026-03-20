@@ -6,8 +6,8 @@ This tranche resets the research skill from a route-warning system to a fact-che
 
 Implemented surfaces:
 
-- `tasks/research/claims/orchestrators.json`
-- `tasks/research/claims/gateways.json`
+- `workspace/research/claims/orchestrators.json`
+- `workspace/research/claims/gateways.json`
 - `tools/scripts/docs-fact-registry.js`
 - `tools/scripts/docs-page-research.js`
 - updated research-skill templates and references
@@ -23,7 +23,7 @@ Implemented surfaces:
 
 ### Fact registry
 
-- Facts now live in repo-native claim-family registries under `tasks/research/claims/`.
+- Facts now live in repo-native claim-family registries under `workspace/research/claims/`.
 - Registry records track canonical owner, evidence date, freshness class, dependent pages, and related claim families.
 - Registry validation is deterministic and tested.
 
@@ -54,8 +54,8 @@ Pilot files:
 
 Output:
 
-- report: `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.md`
-- JSON: `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.json`
+- report: `workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.md`
+- JSON: `workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.json`
 
 Observed signal:
 
@@ -82,8 +82,8 @@ Pilot files:
 
 Output:
 
-- report: `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.md`
-- JSON: `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.json`
+- report: `workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.md`
+- JSON: `workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.json`
 
 Observed signal:
 

@@ -56,10 +56,10 @@ async function runTests() {
 
   cases.push(async () => {
     const forbidden = getForbiddenEphemeralFiles([
-      'tasks/reports/_local/navigation-links/navigation-report.md',
+      'workspace/reports/_local/navigation-links/navigation-report.md',
       'docs.json'
     ]);
-    assert.deepStrictEqual(forbidden, ['tasks/reports/_local/navigation-links/navigation-report.md']);
+    assert.deepStrictEqual(forbidden, ['workspace/reports/_local/navigation-links/navigation-report.md']);
   });
 
   for (let i = 0; i < cases.length; i += 1) {

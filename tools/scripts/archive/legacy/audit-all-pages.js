@@ -3,7 +3,7 @@
  * @script            audit-all-pages
  * @category          validator
  * @purpose           qa:content-quality
- * @scope             tasks/scripts
+ * @scope             workspace/scripts
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Full page auditor — comprehensive check of all pages including content quality metrics

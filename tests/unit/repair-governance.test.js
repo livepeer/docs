@@ -23,9 +23,9 @@ const {
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const AUDIT_SCRIPT_PATH = 'tools/scripts/validators/governance/audit-script-inventory.js';
 const SCRIPT_DOCS_TEST_PATH = 'tests/unit/script-docs.test.js';
-const INVENTORY_JSON_PATH = 'tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
-const REPORT_JSON_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json';
-const REPORT_MD_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md';
+const INVENTORY_JSON_PATH = 'workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
+const REPORT_JSON_PATH = 'workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json';
+const REPORT_MD_PATH = 'workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md';
 const WORKFLOW_PATH = path.join(REPO_ROOT, '.github/workflows/repair-governance.yml');
 
 function writeFile(absPath, content) {
@@ -39,7 +39,7 @@ function writeJson(absPath, value) {
 
 function mkRepo(prefix) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-  writeJson(path.join(dir, 'tasks/reports/script-classifications.json'), []);
+  writeJson(path.join(dir, 'workspace/reports/script-classifications.json'), []);
   return dir;
 }
 
@@ -191,7 +191,7 @@ async function runTests() {
           headers_usage_added: 1,
           indexes_regenerated: true,
           total_fixes: 5,
-          planned_files: [targetPath, 'tasks/reports/script-classifications.json']
+          planned_files: [targetPath, 'workspace/reports/script-classifications.json']
         },
         projected_summary: buildSummary({
           grade_distribution: { A: 7, B: 3, C: 1, F: 1 },
@@ -211,7 +211,7 @@ async function runTests() {
           headers_usage_added: 1,
           indexes_regenerated: true,
           total_fixes: 5,
-          files_modified: [targetPath, 'tasks/reports/script-classifications.json']
+          files_modified: [targetPath, 'workspace/reports/script-classifications.json']
         },
         needs_human: []
       }
@@ -244,14 +244,14 @@ async function runTests() {
     assert.strictEqual(result.report.verification, 'PASS');
     assert.ok(runner.state.auditArgs.every((args) => args.includes('--staged')));
     assert.deepStrictEqual(runner.state.scriptDocsArgs, [[SCRIPT_DOCS_TEST_PATH, '--check', '--staged']]);
-    assert.deepStrictEqual(runner.state.gitAddArgs, [['tasks/reports/script-classifications.json', targetPath]]);
+    assert.deepStrictEqual(runner.state.gitAddArgs, [['workspace/reports/script-classifications.json', targetPath]]);
     assert.deepStrictEqual(runner.state.gitCommitArgs, []);
     assert.strictEqual(fs.existsSync(path.join(repoRoot, REPORT_MD_PATH)), true);
 
     const report = readReport(repoRoot);
     assert.strictEqual(report.repairs_applied.total_fixes, 5);
     assert.strictEqual(report.repairs_applied.headers_domain_added, 1);
-    assert.deepStrictEqual(report.repairs_applied.files_modified, ['tasks/reports/script-classifications.json', targetPath]);
+    assert.deepStrictEqual(report.repairs_applied.files_modified, ['workspace/reports/script-classifications.json', targetPath]);
   });
 
   cases.push(async () => {

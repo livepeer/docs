@@ -8,7 +8,7 @@
  * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @mode        read-only
  * @pipeline    manual — experimental research system
- * @scope       tools/scripts, tasks/research, tests/unit/docs-research-adjudication.test.js, tasks/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
+ * @scope       tools/scripts, workspace/research, tests/unit/docs-research-adjudication.test.js, workspace/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
  * @usage       node tools/scripts/audits/content/veracity/docs-research-adjudication.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const DEFAULT_LEDGER = 'tasks/research/adjudication/page-content-research-outcomes.json';
+const DEFAULT_LEDGER = 'workspace/research/adjudication/page-content-research-outcomes.json';
 const VALID_OUTCOME_CLASSES = new Set([
   'true_positive',
   'false_positive',

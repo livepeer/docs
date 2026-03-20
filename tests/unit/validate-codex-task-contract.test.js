@@ -391,7 +391,7 @@ async function runTests() {
       ],
       {
         ...baseEnv,
-        CODEX_MOCK_WORKTREE_STATUS: ' M docs.json\n?? tasks/generated-report.md'
+        CODEX_MOCK_WORKTREE_STATUS: ' M docs.json\n?? workspace/generated-report.md'
       }
     );
     assertFailedWith(cleanTreeFail, /working tree is not clean/i, 'expected dirty worktree to fail');

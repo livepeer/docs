@@ -256,7 +256,7 @@ async function main() {
   }
   
   // Save detailed report
-  const reportPath = path.join(REPO_ROOT, 'tasks/reports/page-audits/v2-page-test-report.json');
+  const reportPath = path.join(REPO_ROOT, 'workspace/reports/page-audits/v2-page-test-report.json');
   fs.writeFileSync(reportPath, JSON.stringify({
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL,

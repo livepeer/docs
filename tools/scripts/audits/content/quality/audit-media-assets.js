@@ -8,7 +8,7 @@
  * @description Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts, tasks/reports/media-audit
+ * @scope       tools/scripts, workspace/reports/media-audit
  * @usage       node tools/scripts/audits/content/quality/audit-media-assets.js [flags]
  * @policy      R-R14
  */
@@ -18,8 +18,8 @@ const path = require('path')
 const { execSync, spawnSync } = require('child_process')
 
 const REPO_ROOT = process.cwd()
-const DEFAULT_MANIFEST_PATH = 'tasks/reports/media-audit/media-audit-manifest.json'
-const DEFAULT_SUMMARY_PATH = 'tasks/reports/media-audit/media-audit-summary.md'
+const DEFAULT_MANIFEST_PATH = 'workspace/reports/media-audit/media-audit-manifest.json'
+const DEFAULT_SUMMARY_PATH = 'workspace/reports/media-audit/media-audit-summary.md'
 const DEFAULT_ASSETS_BRANCH_REF = 'origin/docs-v2-assets'
 const ONE_MB = 1024 * 1024
 const FIVE_MB = 5 * ONE_MB

@@ -3,7 +3,7 @@
  * @script            docs-page-research-pr-report.test
  * @category          orchestrator
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/docs-page-research-pr-report.js, tools/scripts/docs-page-research.js, tasks/research/claims
+ * @scope             tests/unit, tools/scripts/docs-page-research-pr-report.js, tools/scripts/docs-page-research.js, workspace/research/claims
  * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests docs-page-research-pr-report.js — validates changed-file advisory reporting for the fact-check research runner.

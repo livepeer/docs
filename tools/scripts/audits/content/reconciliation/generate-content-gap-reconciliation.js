@@ -8,7 +8,7 @@
  * @description Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
+ * @scope       tools/scripts, tools/config, tools/lib, v2, workspace/reports/content-gap
  * @usage       node tools/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]
  * @policy      R-R16, R-R17
  */
@@ -28,7 +28,7 @@ const DEFAULTS = {
   blueprintPagesPath: 'tools/config/blueprint-pages.json',
   blueprintMappingPath: 'tools/config/blueprint-mapping.json',
   v2Root: 'v2',
-  outDir: 'tasks/reports/content-gap'
+  outDir: 'workspace/reports/content-gap'
 };
 
 const CSV_COLUMNS = [

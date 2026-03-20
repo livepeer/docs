@@ -19,8 +19,8 @@ const { execSync } = require('child_process');
 const { listMintIgnoredRepoPaths } = require('../utils/mintignore');
 const { isExcludedV2ExperimentalPath } = require('../../tools/lib/docs-publishability');
 
-const REPORT_MD_REL = 'tasks/reports/navigation-links/navigation-report.md';
-const REPORT_JSON_REL = 'tasks/reports/navigation-links/navigation-report.json';
+const REPORT_MD_REL = 'workspace/reports/navigation-links/navigation-report.md';
+const REPORT_JSON_REL = 'workspace/reports/navigation-links/navigation-report.json';
 const I18N_CONFIG_REL = 'tools/i18n/config.json';
 const DEFAULT_REMAP_THRESHOLD = 0.85;
 const RESOURCE_HUB_REDIRECT_ROUTE = 'v2/resources/redirect';

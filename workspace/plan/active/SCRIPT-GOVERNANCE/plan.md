@@ -553,7 +553,9 @@ files stay in `x-archive/` via `git mv` to preserve history.
 
 ---
 
-## Task 13b — Auto-generated file governance
+## Task 13b — Auto-generated file governance ⏸ DEFERRED
+
+> **Status**: Deferred — docs-guide governance work is being handled in a separate thread. Execute after that thread completes.
 
 **Goal**: Every auto-generated file in the repo carries a standardized, machine-readable banner.
 No file that is produced by a script should be editable by hand or by an AI agent without
@@ -728,10 +730,10 @@ documentation. Produce a recommendation report — do NOT execute changes in thi
 | **12** | Enforce best practices (per-script) | Before/after changes |
 | **12c** | Testing (post-best-practices) | Before merge |
 | **13** | Script documentation consolidation | Before changes |
-| **13b** | Auto-generated file governance (non-MDX banners + AI callout) | Before merge |
+| **13b** | Auto-generated file governance (non-MDX banners + AI callout) ⏸ DEFERRED | Before merge |
 | **13c** | tasks/ → workspace/ rename (sub-plan) | Before move + after tests |
-| **13d** | lpd-cli audit + governance + documentation recommendations | Report to human |
 | **14** | Root restructure to `/operations` | Before merge |
+| **13d** | lpd-cli audit + governance + documentation recommendations | Report to human |
 | **15** | Full cleanup (x-archive reconciliation) | Before merge |
 | **16** | Final merge to docs-v2-dev | Before merge |
 | **17** | Close out | Final review |

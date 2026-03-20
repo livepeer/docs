@@ -10,7 +10,7 @@ Completed in this branch:
 
 - real Codex install into `~/.codex/skills`
 - zero-drift install verification through the canonical sync command
-- two pilot workflows with saved outputs under `tasks/reports/repo-ops/`
+- two pilot workflows with saved outputs under `workspace/reports/repo-ops/`
 - first deterministic claim ledger contract
 - first deterministic propagation helper and test coverage
 
@@ -49,7 +49,7 @@ No extra portability changes were required beyond the canonical bundle-aware syn
 
 Saved output:
 
-- `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-operator-support.md`
+- `workspace/reports/repo-ops/2026-03-15-page-content-research-pilot-operator-support.md`
 
 Page reviewed:
 
@@ -70,8 +70,8 @@ Main weaknesses found:
 
 Saved outputs:
 
-- `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.md`
-- `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.json`
+- `workspace/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.md`
+- `workspace/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.json`
 
 Entity used:
 
@@ -91,7 +91,7 @@ Main weakness found:
 
 The first repo-native claim contract now exists in:
 
-- `tasks/reports/repo-ops/page-content-claim-ledger.json`
+- `workspace/reports/repo-ops/page-content-claim-ledger.json`
 
 Minimum implemented record fields:
 

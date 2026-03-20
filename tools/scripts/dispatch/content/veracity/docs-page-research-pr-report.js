@@ -8,7 +8,7 @@
  * @description Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
  * @mode        read-only
  * @pipeline    manual — experimental advisory PR integration, non-blocking
- * @scope       tools/scripts, tasks/research/claims, tasks/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
+ * @scope       tools/scripts, workspace/research/claims, workspace/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
  * @usage       node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -18,7 +18,7 @@ const path = require('path');
 const { spawnSync, execSync } = require('child_process');
 const crypto = require('crypto');
 
-const DEFAULT_REGISTRY = 'tasks/research/claims';
+const DEFAULT_REGISTRY = 'workspace/research/claims';
 
 function repoRoot() {
   const result = spawnSync('git', ['rev-parse', '--show-toplevel'], {
@@ -43,7 +43,7 @@ function usage() {
       'Usage: node tools/scripts/docs-page-research-pr-report.js [options]',
       '',
       'Options:',
-      '  --registry <path>       Registry path (default: tasks/research/claims)',
+      '  --registry <path>       Registry path (default: workspace/research/claims)',
       '  --base-ref <branch>     Compute changed files from origin/<branch>...HEAD',
       '  --files <a,b,c>         Explicit changed-file list',
       '  --staged                Use staged files instead of git range',

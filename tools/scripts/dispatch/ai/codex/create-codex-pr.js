@@ -26,7 +26,7 @@ const DEFAULT_BASE_BRANCH = 'docs-v2-dev';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-([a-z0-9][a-z0-9-]*)$/;
 const PR_GENERATOR_MARKER_PREFIX = 'codex-pr-body-generated';
 const RESEARCH_SCRIPT_REL = 'tools/scripts/docs-page-research-pr-report.js';
-const RESEARCH_REGISTRY_REL = 'tasks/research/claims';
+const RESEARCH_REGISTRY_REL = 'workspace/research/claims';
 
 const REPO_ROOT = getRepoRoot();
 

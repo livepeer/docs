@@ -8,7 +8,7 @@
  * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @mode        generate
  * @pipeline    manual
- * @scope       tools/scripts, tools/lib, tasks/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
+ * @scope       tools/scripts, tools/lib, workspace/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
  * @usage       node tools/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
  * @policy      E-C1, R-R14
  */
@@ -18,8 +18,8 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { isExcludedV2ExperimentalPath } = require('../../../../lib/docs-publishability');
 
-const DEFAULT_REPORT_MD = 'tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.md';
-const DEFAULT_REPORT_JSON = 'tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.json';
+const DEFAULT_REPORT_MD = 'workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md';
+const DEFAULT_REPORT_JSON = 'workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json';
 const LOCALE_CODES = new Set(['cn', 'es', 'fr']);
 const LEGACY_BUCKET_SEGMENTS = new Set([
   '_contextdata',

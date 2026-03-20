@@ -8,7 +8,7 @@
  * @description Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
  * @mode        edit
  * @pipeline    manual
- * @scope       tools/scripts, tasks/reports/repo-ops, tasks/quarantine
+ * @scope       tools/scripts, workspace/reports/repo-ops, workspace/quarantine
  * @usage       node tools/scripts/remediators/content/repair/quarantine-manager.js [flags]
  * @policy      E-C1, R-R14
  */
@@ -18,8 +18,8 @@ const path = require('path');
 
 const STAGE_ID = 'cleanup-quarantine-manager';
 const REPO_ROOT = process.cwd();
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
-const DEFAULT_QUARANTINE_ROOT = 'tasks/quarantine/repo-audit';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
+const DEFAULT_QUARANTINE_ROOT = 'workspace/quarantine/repo-audit';
 const RETENTION_POLICY_PATH = 'tools/config/report-retention-policy.json';
 
 const STAGE_REPORT_FILES = [
@@ -194,7 +194,7 @@ function classifyFromScriptIssues(issues, entryBag) {
 function classifyFromRetentionPolicy(entryBag, policy) {
   const rules = Array.isArray(policy.rules) ? policy.rules : [];
   const quarantineRule = rules.find((rule) =>
-    String(rule.pattern || '').includes('tasks/quarantine/repo-audit')
+    String(rule.pattern || '').includes('workspace/quarantine/repo-audit')
   );
   if (!quarantineRule) return;
 

@@ -41,4 +41,4 @@
 
 ## Validation
 
-- `node tools/scripts/docs-claim-ledger.js --ledger tasks/reports/repo-ops/page-content-claim-ledger.json --entity gateway-discoverability --report-md tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.md --report-json tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.json`
+- `node tools/scripts/docs-claim-ledger.js --ledger workspace/reports/repo-ops/page-content-claim-ledger.json --entity gateway-discoverability --report-md workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.md --report-json workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.json`

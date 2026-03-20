@@ -139,6 +139,6 @@ If the goal is to operationalize this skill family beyond prompt guidance, the n
 
 1. add a repo-native claim ledger or traceability data source
 2. connect `docs-impact-propagation` to that dataset
-3. emit a standard report under `tasks/reports/repo-ops/` for unresolved propagation work
+3. emit a standard report under `workspace/reports/repo-ops/` for unresolved propagation work
 
 That would move the repo from guided research/review to semi-deterministic cross-page maintenance.

@@ -518,7 +518,7 @@ function resolveInternalPath(raw, currentFileAbs) {
 
   if (normalized.startsWith('/')) {
     const rooted = normalized.replace(/^\/+/, '');
-    if (rooted.startsWith('v2/') || rooted.startsWith('v1/') || rooted.startsWith('snippets/') || rooted.startsWith('tests/') || rooted.startsWith('tasks/')) {
+    if (rooted.startsWith('v2/') || rooted.startsWith('v1/') || rooted.startsWith('snippets/') || rooted.startsWith('tests/') || rooted.startsWith('workspace/')) {
       return path.join(REPO_ROOT, rooted);
     }
     const asModernV2 = path.join(REPO_ROOT, 'v2', rooted);

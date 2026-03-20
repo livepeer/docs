@@ -6,10 +6,10 @@ This directory preserves exploratory research-skill pilot artifacts imported fro
 These files are historical review evidence, not active generated report targets.
 
 Active rollout/runtime surfaces live in:
-- `tasks/research/claims/`
-- `tasks/plan/future/page-content-research-trust-roadmap.md`
+- `workspace/research/claims/`
+- `workspace/plan/future/page-content-research-trust-roadmap.md`
 - the installed scripts under `tools/scripts/`
 
-Do not add new manual research dumps under `tasks/reports/`. Keep future historical rollout
-evidence under this `tasks/plan/repo-ops-reports/` subtree unless a generator-backed report path
+Do not add new manual research dumps under `workspace/reports/`. Keep future historical rollout
+evidence under this `workspace/plan/repo-ops-reports/` subtree unless a generator-backed report path
 is explicitly approved.

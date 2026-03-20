@@ -2,7 +2,7 @@
 
 ## migrate-assets-to-branch.js
 
-Manifest-driven remediator. Reads `tasks/reports/media-audit/media-audit-manifest.json`,
+Manifest-driven remediator. Reads `workspace/reports/media-audit/media-audit-manifest.json`,
 copies flagged assets to `docs-v2-assets`, rewrites MDX/JSX references to raw GitHub URLs,
 and removes local files once copy and reference phases succeed.
 
@@ -13,7 +13,7 @@ review the output, then run this script.
 # 1. Audit (read-only)
 node tools/scripts/audit-media-assets.js
 
-# 2. Review tasks/reports/media-audit/media-audit-summary.md
+# 2. Review workspace/reports/media-audit/media-audit-summary.md
 
 # 3. Dry-run the repair
 node tools/scripts/remediators/assets/migrate-assets-to-branch.js --dry-run

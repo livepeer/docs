@@ -8,7 +8,7 @@
  * @description Report publisher — publishes v2 internal audit reports to configured output locations
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tools/config, v2/internal, docs.json, tasks/reports, tests/reports
+ * @scope       tools/scripts, tools/config, v2/internal, docs.json, workspace/reports, tests/reports
  * @usage       node tools/scripts/automations/governance/pipelines/publish-v2-internal-reports.js [flags]
  * @policy      E-C1, R-R14
  */

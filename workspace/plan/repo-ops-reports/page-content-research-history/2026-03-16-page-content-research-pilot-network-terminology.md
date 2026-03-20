@@ -40,4 +40,4 @@
 
 ## Validation
 
-- `node tools/scripts/docs-claim-ledger.js --ledger tasks/reports/repo-ops/page-content-claim-ledger.json --entity network-role-terminology --report-md tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.md --report-json tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.json`
+- `node tools/scripts/docs-claim-ledger.js --ledger workspace/reports/repo-ops/page-content-claim-ledger.json --entity network-role-terminology --report-md workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.md --report-json workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.json`

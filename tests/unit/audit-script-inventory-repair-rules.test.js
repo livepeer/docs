@@ -173,7 +173,7 @@ function main() {
     assert.ok(row);
     assert.strictEqual(row.pipeline, 'manual');
     assert.strictEqual(plan.fixes.json_entries_updated, 1);
-    assert.ok(plan.planned_files.includes('tasks/reports/script-classifications.json'));
+    assert.ok(plan.planned_files.includes('workspace/reports/script-classifications.json'));
   });
 
   runCase('accepts path-scoped governance values as valid scope', () => {

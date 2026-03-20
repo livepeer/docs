@@ -8,7 +8,7 @@
  * @description Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @mode        read-only
  * @pipeline    manual — experimental research system
- * @scope       tools/scripts, tasks/research/claims, tests/unit/docs-fact-registry.test.js
+ * @scope       tools/scripts, workspace/research/claims, tests/unit/docs-fact-registry.test.js
  * @usage       node tools/scripts/audits/content/veracity/docs-fact-registry.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const DEFAULT_REGISTRY = 'tasks/research/claims';
+const DEFAULT_REGISTRY = 'workspace/research/claims';
 const VALID_STATUSES = new Set([
   'verified',
   'conflicted',
@@ -75,7 +75,7 @@ function usage() {
       'Usage: node tools/scripts/docs-fact-registry.js [options]',
       '',
       'Options:',
-      '  --registry <path>       Registry file or directory (default: tasks/research/claims)',
+      '  --registry <path>       Registry file or directory (default: workspace/research/claims)',
       '  --validate              Validate only',
       '  --domain <name>         Print normalized claim families for a single domain',
       '  --report-json <path>    Write normalized output to json',

@@ -5,7 +5,7 @@
  * @concern     governance
  * @niche       repo
  * @purpose     qa:repo-health
- * @description Tasks folder auditor — checks tasks/ structure, normalises report locations, applies recommendations with conflict-safe moves
+ * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tasks
@@ -21,11 +21,11 @@ const REPO_ROOT = process.cwd();
 const TASKS_ROOT = path.join(REPO_ROOT, 'tasks');
 const TOOL_SCRIPTS_ROOT = path.join(REPO_ROOT, 'tools', 'scripts');
 const AUDIT_FILE_SUFFIX = '_audit.md';
-const DEFAULT_AUDIT_OUTPUT_DIR = 'tasks/reports/repo-ops';
-const RECOMMENDATION_SUMMARY_PATH = 'tasks/reports/repo-ops/recommendation-apply-summary.json';
-const RECOMMENDATION_CONFLICTS_PATH = 'tasks/reports/repo-ops/recommendation-conflicts.md';
+const DEFAULT_AUDIT_OUTPUT_DIR = 'workspace/reports/repo-ops';
+const RECOMMENDATION_SUMMARY_PATH = 'workspace/reports/repo-ops/recommendation-apply-summary.json';
+const RECOMMENDATION_CONFLICTS_PATH = 'workspace/reports/repo-ops/recommendation-conflicts.md';
 
-const PATH_EXCLUSIONS = ['/tasks/context_data/', '/_contextData_/'];
+const PATH_EXCLUSIONS = ['/workspace/context_data/', '/_contextData_/'];
 const BINARY_EXTENSIONS = new Set([
   '.png',
   '.jpg',
@@ -43,48 +43,48 @@ const BINARY_EXTENSIONS = new Set([
 ]);
 
 const AUTOGEN_FORCE_TRUE = new Set([
-  'tasks/reports/repo-ops/SCRIPT_AUDIT.json',
-  'tasks/reports/page-audits/browser-test-report.json',
-  'tasks/reports/repo-ops/component-usage-audit.json',
-  'tasks/reports/comprehensive-v2-pages-browser-audit.json',
-  'tasks/reports/page-audit-1771297377437.json'
+  'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
+  'workspace/reports/page-audits/browser-test-report.json',
+  'workspace/reports/repo-ops/component-usage-audit.json',
+  'workspace/reports/comprehensive-v2-pages-browser-audit.json',
+  'workspace/reports/page-audit-1771297377437.json'
 ]);
 
 const AUTOGEN_FORCE_FALSE = new Set([
-  'tasks/reports/readme-refactor-plan.md',
-  'tasks/reports/non-technical-contribution-proposal.md',
-  'tasks/reports/livepeer-docs-v2-retrospective-submission-draft.md',
-  'tasks/reports/pr-754-summary.md',
-  'tasks/reports/upstream-merge-plan.md',
-  'tasks/reports/repository-ruleset.md',
-  'tasks/reports/repository-structure-audit.md',
-  'tasks/reports/repository-audit-summary.md',
-  'tasks/reports/retrospective-claims-verification-2026-02-18.md'
+  'workspace/reports/readme-refactor-plan.md',
+  'workspace/reports/non-technical-contribution-proposal.md',
+  'workspace/reports/livepeer-docs-v2-retrospective-submission-draft.md',
+  'workspace/reports/pr-754-summary.md',
+  'workspace/reports/upstream-merge-plan.md',
+  'workspace/reports/repository-ruleset.md',
+  'workspace/reports/repository-structure-audit.md',
+  'workspace/reports/repository-audit-summary.md',
+  'workspace/reports/retrospective-claims-verification-2026-02-18.md'
 ]);
 
 const USEFUL_FORCE_FALSE = new Set([
-  'tasks/test-delete-me.md',
-  'tasks/plan/NEW-LIST.md',
-  'tasks/plan/create-github-issue-templates.md',
-  'tasks/reports/COMPONENT_USAGE_AUDIT_REPORT'
+  'workspace/test-delete-me.md',
+  'workspace/plan/NEW-LIST.md',
+  'workspace/plan/create-github-issue-templates.md',
+  'workspace/reports/COMPONENT_USAGE_AUDIT_REPORT'
 ]);
 
 const USEFUL_FORCE_TRUE = new Set([
-  'tasks/errors/component-bugs.md',
-  'tasks/errors/component-verification-report.md',
-  'tasks/errors/component-recommendations.md',
-  'tasks/errors/testing-methodology.md'
+  'workspace/errors/component-bugs.md',
+  'workspace/errors/component-verification-report.md',
+  'workspace/errors/component-recommendations.md',
+  'workspace/errors/testing-methodology.md'
 ]);
 
 const ROOT_DESTINATION_OVERRIDES = new Map([
-  ['tasks/DRY-and-cleaner-recommendations.md', 'tasks/plan/rfp/DRY-and-cleaner-recommendations.md'],
-  ['tasks/DRY-tasks-feasibility-report.md', 'tasks/plan/rfp/DRY-tasks-feasibility-report.md'],
-  ['tasks/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md', 'tasks/plan/rfp/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md'],
-  ['tasks/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md', 'tasks/plan/rfp/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md'],
-  ['tasks/docs-v2-rfp-task-list-and-plan.md', 'tasks/plan/rfp/docs-v2-rfp-task-list-and-plan.md'],
-  ['tasks/non-essential-tasks-audit-for-ai-and-community.md', 'tasks/plan/rfp/non-essential-tasks-audit-for-ai-and-community.md'],
-  ['tasks/MDX-ERRORS-AND-FIXES-REPORT.md', 'tasks/errors/MDX-ERRORS-AND-FIXES-REPORT.md'],
-  ['tasks/test-delete-me.md', 'tasks/plan/archived/test-delete-me.md']
+  ['workspace/DRY-and-cleaner-recommendations.md', 'workspace/plan/rfp/DRY-and-cleaner-recommendations.md'],
+  ['workspace/DRY-tasks-feasibility-report.md', 'workspace/plan/rfp/DRY-tasks-feasibility-report.md'],
+  ['workspace/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md', 'workspace/plan/rfp/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md'],
+  ['workspace/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md', 'workspace/plan/rfp/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md'],
+  ['workspace/docs-v2-rfp-task-list-and-plan.md', 'workspace/plan/rfp/docs-v2-rfp-task-list-and-plan.md'],
+  ['workspace/non-essential-tasks-audit-for-ai-and-community.md', 'workspace/plan/rfp/non-essential-tasks-audit-for-ai-and-community.md'],
+  ['workspace/MDX-ERRORS-AND-FIXES-REPORT.md', 'workspace/errors/MDX-ERRORS-AND-FIXES-REPORT.md'],
+  ['workspace/test-delete-me.md', 'workspace/plan/archived/test-delete-me.md']
 ]);
 
 function usage() {
@@ -219,7 +219,7 @@ function normalizeAuditOutputDir(inputPath) {
   const repoPath = normalizeCliRepoPath(inputPath || DEFAULT_AUDIT_OUTPUT_DIR);
   if (!repoPath) return DEFAULT_AUDIT_OUTPUT_DIR;
   if (!repoPath.startsWith('tasks')) {
-    throw new Error(`--audit-output-dir must resolve under tasks/: ${repoPath}`);
+    throw new Error(`--audit-output-dir must resolve under workspace/: ${repoPath}`);
   }
   return repoPath;
 }
@@ -239,7 +239,7 @@ function isExcludedPath(repoPath) {
 
 function isGeneratedAuditFile(repoPath) {
   const normalized = normalizeRepoPath(repoPath);
-  return normalized.startsWith('tasks/') && path.basename(normalized).endsWith(AUDIT_FILE_SUFFIX);
+  return normalized.startsWith('workspace/') && path.basename(normalized).endsWith(AUDIT_FILE_SUFFIX);
 }
 
 function safeReadFileBuffer(absPath) {
@@ -377,11 +377,11 @@ function buildDuplicateIndexes(files) {
 
 function canonicalPathScore(repoPath) {
   const p = normalizeRepoPath(repoPath);
-  if (p.startsWith('tasks/reports/')) return 10;
-  if (p.startsWith('tasks/errors/')) return 20;
-  if (p.startsWith('tasks/plan/complete/')) return 30;
-  if (p.startsWith('tasks/plan/')) return 40;
-  if (p.startsWith('tasks/report/')) return 50;
+  if (p.startsWith('workspace/reports/')) return 10;
+  if (p.startsWith('workspace/errors/')) return 20;
+  if (p.startsWith('workspace/plan/complete/')) return 30;
+  if (p.startsWith('workspace/plan/')) return 40;
+  if (p.startsWith('workspace/report/')) return 50;
   return 60;
 }
 
@@ -410,7 +410,7 @@ function buildContext() {
 
   const planCompleteBasenames = new Set(
     tree.files
-      .filter((file) => file.dirRepoPath === 'tasks/plan/complete')
+      .filter((file) => file.dirRepoPath === 'workspace/plan/complete')
       .map((file) => file.basename)
   );
 
@@ -473,9 +473,9 @@ function shouldClassifyAsAutogenerated(file) {
     reasons.push('very high line count');
   }
 
-  if (file.repoPath.startsWith('tasks/reports/') && file.ext === '.json') {
+  if (file.repoPath.startsWith('workspace/reports/') && file.ext === '.json') {
     score += 2;
-    reasons.push('json report in tasks/reports');
+    reasons.push('json report in workspace/reports');
   }
 
   if (name.includes('plan') && !name.includes('audit')) {
@@ -520,9 +520,9 @@ function shouldClassifyAsUseful(file, context, autogenerated) {
     reasons.push(`duplicate of ${canonical}`);
   }
 
-  if (file.repoPath.startsWith('tasks/scripts/') && stalePathRef) {
+  if (file.repoPath.startsWith('workspace/scripts/') && stalePathRef) {
     useful = false;
-    reasons.push('stale tasks/PLAN path in script');
+    reasons.push('stale workspace/PLAN path in script');
   }
 
   if (autogenerated.value && file.sizeBytes > 12 * 1024 * 1024) {
@@ -530,15 +530,15 @@ function shouldClassifyAsUseful(file, context, autogenerated) {
     reasons.push('large generated artifact');
   }
 
-  if (stalePathRef) reasons.push('stale tasks/PLAN or docs/PLAN reference');
+  if (stalePathRef) reasons.push('stale workspace/PLAN or docs/PLAN reference');
 
   if (reasons.length === 0) reasons.push('no high-risk signals detected');
   return { value: useful, stalePathRef, reasons };
 }
 
 function shouldLiveInErrors(file) {
-  if (file.repoPath.startsWith('tasks/errors/')) {
-    return { value: true, reasons: ['already in tasks/errors'] };
+  if (file.repoPath.startsWith('workspace/errors/')) {
+    return { value: true, reasons: ['already in workspace/errors'] };
   }
 
   const scoreSignals = [
@@ -567,73 +567,73 @@ function shouldLiveInErrors(file) {
 }
 
 function classifyPlanBucket(file, context, usefulness) {
-  if (!file.repoPath.startsWith('tasks/plan/')) {
+  if (!file.repoPath.startsWith('workspace/plan/')) {
     return {
       bucket: 'archive',
-      destination: 'tasks/plan/archived',
+      destination: 'workspace/plan/archived',
       reason: 'non-plan file fallback'
     };
   }
 
-  if (file.repoPath.startsWith('tasks/plan/archived/')) {
-    return { bucket: 'archive', destination: 'tasks/plan/archived', reason: 'already archived' };
+  if (file.repoPath.startsWith('workspace/plan/archived/')) {
+    return { bucket: 'archive', destination: 'workspace/plan/archived', reason: 'already archived' };
   }
-  if (file.repoPath.startsWith('tasks/plan/complete/')) {
-    return { bucket: 'complete', destination: 'tasks/plan/complete', reason: 'already complete' };
+  if (file.repoPath.startsWith('workspace/plan/complete/')) {
+    return { bucket: 'complete', destination: 'workspace/plan/complete', reason: 'already complete' };
   }
-  if (file.repoPath.startsWith('tasks/plan/migration/')) {
-    return { bucket: 'migration', destination: 'tasks/plan/migration', reason: 'already migration' };
+  if (file.repoPath.startsWith('workspace/plan/migration/')) {
+    return { bucket: 'migration', destination: 'workspace/plan/migration', reason: 'already migration' };
   }
-  if (file.repoPath.startsWith('tasks/plan/rfp/')) {
-    return { bucket: 'rfp', destination: 'tasks/plan/rfp', reason: 'already rfp' };
+  if (file.repoPath.startsWith('workspace/plan/rfp/')) {
+    return { bucket: 'rfp', destination: 'workspace/plan/rfp', reason: 'already rfp' };
   }
 
   const basename = file.basename;
 
-  if (file.repoPath.startsWith('tasks/plan/errors/')) {
-    const canonicalTarget = `tasks/errors/${basename}`;
+  if (file.repoPath.startsWith('workspace/plan/errors/')) {
+    const canonicalTarget = `workspace/errors/${basename}`;
     const canonicalFile = context.fileByRepoPath.get(canonicalTarget);
     if (usefulness.value && canonicalFile && canonicalFile.sha256 !== file.sha256) {
       return {
         bucket: 'archive',
         destination: canonicalTarget,
-        reason: 'useful but conflicts with existing tasks/errors file (manual review)'
+        reason: 'useful but conflicts with existing workspace/errors file (manual review)'
       };
     }
     if (usefulness.value && !canonicalFile) {
       return {
         bucket: 'archive',
         destination: canonicalTarget,
-        reason: 'plan/errors folder invalid; move useful file to tasks/errors'
+        reason: 'plan/errors folder invalid; move useful file to workspace/errors'
       };
     }
     return {
       bucket: 'archive',
-      destination: `tasks/plan/archived/${basename}`,
+      destination: `workspace/plan/archived/${basename}`,
       reason: 'not useful or duplicate canonical errors file'
     };
   }
 
-  if (file.repoPath.startsWith('tasks/plan/reports/')) {
-    const canonicalTarget = `tasks/reports/${basename}`;
+  if (file.repoPath.startsWith('workspace/plan/reports/')) {
+    const canonicalTarget = `workspace/reports/${basename}`;
     const canonicalFile = context.fileByRepoPath.get(canonicalTarget);
     if (usefulness.value && canonicalFile && canonicalFile.sha256 !== file.sha256) {
       return {
         bucket: 'archive',
         destination: canonicalTarget,
-        reason: 'useful but conflicts with existing tasks/reports file (manual review)'
+        reason: 'useful but conflicts with existing workspace/reports file (manual review)'
       };
     }
     if (usefulness.value && !canonicalFile) {
       return {
         bucket: 'archive',
         destination: canonicalTarget,
-        reason: 'plan/reports folder invalid; move useful file to tasks/reports'
+        reason: 'plan/reports folder invalid; move useful file to workspace/reports'
       };
     }
     return {
       bucket: 'archive',
-      destination: `tasks/plan/archived/${basename}`,
+      destination: `workspace/plan/archived/${basename}`,
       reason: 'not useful or duplicate canonical report file'
     };
   }
@@ -641,7 +641,7 @@ function classifyPlanBucket(file, context, usefulness) {
   if (context.planCompleteBasenames.has(basename)) {
     return {
       bucket: 'complete',
-      destination: `tasks/plan/complete/${basename}`,
+      destination: `workspace/plan/complete/${basename}`,
       reason: 'duplicate task already present in complete'
     };
   }
@@ -649,7 +649,7 @@ function classifyPlanBucket(file, context, usefulness) {
   if (!usefulness.value) {
     return {
       bucket: 'archive',
-      destination: `tasks/plan/archived/${basename}`,
+      destination: `workspace/plan/archived/${basename}`,
       reason: 'empty/corrupt/obsolete signal'
     };
   }
@@ -657,7 +657,7 @@ function classifyPlanBucket(file, context, usefulness) {
   if (/(migration|reorg|structure|cleanup|validation|phase)/i.test(basename) || /migration/i.test(file.sample)) {
     return {
       bucket: 'migration',
-      destination: `tasks/plan/migration/${basename}`,
+      destination: `workspace/plan/migration/${basename}`,
       reason: 'migration/structure signal'
     };
   }
@@ -665,14 +665,14 @@ function classifyPlanBucket(file, context, usefulness) {
   if (/(rfp|stakeholder|forum|ownership|goals|contribution|task-\d+|README|TEMPLATE)/i.test(basename)) {
     return {
       bucket: 'rfp',
-      destination: `tasks/plan/rfp/${basename}`,
+      destination: `workspace/plan/rfp/${basename}`,
       reason: 'rfp/strategy signal'
     };
   }
 
   return {
     bucket: 'rfp',
-    destination: `tasks/plan/rfp/${basename}`,
+    destination: `workspace/plan/rfp/${basename}`,
     reason: 'default planning bucket'
   };
 }
@@ -772,26 +772,26 @@ function analyzeTaskScript(file, context, toolDescriptors) {
   const dedupedExact = [...new Set(exactDuplicates)].sort();
   const dedupedOverlap = [...new Set(purposeOverlap)].sort();
 
-  let recommendation = 'keep in tasks/scripts';
+  let recommendation = 'keep in workspace/scripts';
   const reasons = [];
 
   if (file.basename.toLowerCase() === 'readme.md') {
-    recommendation = 'keep in tasks/scripts';
+    recommendation = 'keep in workspace/scripts';
     reasons.push('folder-level README');
   } else if (dedupedExact.length > 0) {
     recommendation = 'archive';
     reasons.push('exact duplicate by hash/basename in tools/scripts');
   } else if (stalePlanPaths && dedupedOverlap.length > 0) {
     recommendation = 'archive';
-    reasons.push('stale tasks/PLAN reference and overlapping tools/scripts purpose');
+    reasons.push('stale workspace/PLAN reference and overlapping tools/scripts purpose');
   } else if (dedupedOverlap.length > 0) {
     recommendation = 'move to tools/scripts';
     reasons.push('purpose overlap with tools/scripts family');
   } else if (stalePlanPaths) {
     recommendation = 'archive';
-    reasons.push('stale tasks/PLAN reference');
+    reasons.push('stale workspace/PLAN reference');
   } else {
-    recommendation = 'keep in tasks/scripts';
+    recommendation = 'keep in workspace/scripts';
     reasons.push('no overlap or deprecation signal');
   }
 
@@ -809,23 +809,23 @@ function determineRootDestination(file, shouldErrors, usefulness) {
   if (ROOT_DESTINATION_OVERRIDES.has(file.repoPath)) {
     return ROOT_DESTINATION_OVERRIDES.get(file.repoPath);
   }
-  if (!usefulness.value) return `tasks/plan/archived/${file.basename}`;
-  if (shouldErrors.value) return `tasks/errors/${file.basename}`;
+  if (!usefulness.value) return `workspace/plan/archived/${file.basename}`;
+  if (shouldErrors.value) return `workspace/errors/${file.basename}`;
 
   const lower = file.basename.toLowerCase();
   if (/(rfp|plan|inventory|feasibility|recommendations|gaps|studio|non-essential|dry)/.test(lower)) {
-    return `tasks/plan/rfp/${file.basename}`;
+    return `workspace/plan/rfp/${file.basename}`;
   }
   if (/(report|audit|summary|verification|analysis)/.test(lower)) {
-    return 'manual relocation required (outside tasks/reports)';
+    return 'manual relocation required (outside workspace/reports)';
   }
   if (lower.includes('error')) {
-    return `tasks/errors/${file.basename}`;
+    return `workspace/errors/${file.basename}`;
   }
   if (lower.includes('script')) {
-    return `tasks/scripts/${file.basename}`;
+    return `workspace/scripts/${file.basename}`;
   }
-  return `tasks/plan/archived/${file.basename}`;
+  return `workspace/plan/archived/${file.basename}`;
 }
 
 function toMarkdownBool(value) {
@@ -967,16 +967,16 @@ function planReportsNormalizationActions(context) {
   const virtual = new Map();
 
   for (const file of context.files) {
-    if (file.repoPath.startsWith('tasks/reports/') || file.repoPath.startsWith('tasks/report/')) {
+    if (file.repoPath.startsWith('workspace/reports/') || file.repoPath.startsWith('workspace/report/')) {
       virtual.set(file.repoPath, file.sha256);
     }
   }
 
   const reportsRootFiles = context.files
-    .filter((file) => file.dirRepoPath === 'tasks/reports')
+    .filter((file) => file.dirRepoPath === 'workspace/reports')
     .sort((a, b) => a.repoPath.localeCompare(b.repoPath));
   const reportLegacyFiles = context.files
-    .filter((file) => file.dirRepoPath === 'tasks/report')
+    .filter((file) => file.dirRepoPath === 'workspace/report')
     .sort((a, b) => a.repoPath.localeCompare(b.repoPath));
 
   for (const file of reportsRootFiles) {
@@ -988,7 +988,7 @@ function planReportsNormalizationActions(context) {
     const autogenerated = shouldClassifyAsAutogenerated(file);
     if (!autogenerated.value) continue;
 
-    const targetDir = 'tasks/reports';
+    const targetDir = 'workspace/reports';
     const targetBase = `${targetDir}/${file.basename}`;
     const sourceHash = virtual.get(file.repoPath);
     const targetHash = virtual.get(targetBase);
@@ -998,7 +998,7 @@ function planReportsNormalizationActions(context) {
         kind: 'move',
         source: file.repoPath,
         target: targetBase,
-        note: 'legacy tasks/report normalization'
+        note: 'legacy workspace/report normalization'
       });
       virtual.delete(file.repoPath);
       virtual.set(targetBase, sourceHash);
@@ -1091,7 +1091,7 @@ function normalizeRecommendationDestination(sourceRepoPath, destinationRepoPath)
   let destination = normalizeRecommendationRepoPath(destinationRepoPath);
   if (!source || !destination) return '';
 
-  const folderOnlyBuckets = new Set(['tasks/plan/complete', 'tasks/plan/rfp', 'tasks/plan/migration', 'tasks/plan/archived']);
+  const folderOnlyBuckets = new Set(['workspace/plan/complete', 'workspace/plan/rfp', 'workspace/plan/migration', 'workspace/plan/archived']);
   if (destination.endsWith('/')) {
     const targetDir = destination.replace(/\/+$/, '');
     if (source === targetDir || source.startsWith(`${targetDir}/`)) {
@@ -1256,7 +1256,7 @@ function extractScriptRecommendationCandidates(phaseId, phaseLabel, reportRepoPa
     if (recommendation.startsWith('move to tools/scripts')) {
       destination = normalizeRecommendationRepoPath(`tools/scripts/${path.basename(source)}`);
     } else if (recommendation.startsWith('archive')) {
-      destination = normalizeRecommendationRepoPath(`tasks/plan/archived/scripts/${path.basename(source)}`);
+      destination = normalizeRecommendationRepoPath(`workspace/plan/archived/scripts/${path.basename(source)}`);
     } else {
       continue;
     }
@@ -1283,25 +1283,25 @@ function collectRecommendationCandidates(recommendationScope, auditOutputDirRepo
     {
       id: 'phase-1-root',
       label: 'Root file recommendations',
-      report: 'tasks/tasks_root_audit.md',
+      report: 'workspace/tasks_root_audit.md',
       extractor: extractPathRecommendationCandidates
     },
     {
       id: 'phase-2-scripts',
       label: 'Scripts recommendations',
-      report: 'tasks/scripts_audit.md',
+      report: 'workspace/scripts_audit.md',
       extractor: extractScriptRecommendationCandidates
     },
     {
       id: 'phase-3-plan-errors',
       label: 'Plan/errors cleanup',
-      report: 'tasks/plan_errors_audit.md',
+      report: 'workspace/plan_errors_audit.md',
       extractor: extractPathRecommendationCandidates
     },
     {
       id: 'phase-4-plan-reports',
       label: 'Plan/reports cleanup',
-      report: 'tasks/plan_reports_audit.md',
+      report: 'workspace/plan_reports_audit.md',
       extractor: extractPathRecommendationCandidates
     }
   ];
@@ -1310,7 +1310,7 @@ function collectRecommendationCandidates(recommendationScope, auditOutputDirRepo
     phases.push({
       id: 'phase-5-plan-bucketing',
       label: 'Full plan bucketing',
-      report: 'tasks/plan_audit.md',
+      report: 'workspace/plan_audit.md',
       extractor: extractPathRecommendationCandidates
     });
   }
@@ -1357,8 +1357,8 @@ function collectRecommendationCandidates(recommendationScope, auditOutputDirRepo
   reportStates.push({
     phaseId: phase6Id,
     phaseLabel: phase6Label,
-    requestedReport: 'tasks/*_audit.md',
-    resolvedReport: 'tasks/*_audit.md',
+    requestedReport: 'workspace/*_audit.md',
+    resolvedReport: 'workspace/*_audit.md',
     exists: rootAuditFiles.length > 0,
     rowCount: rootAuditFiles.length
   });
@@ -1707,10 +1707,10 @@ function buildFolderRows(folderRepoPath, context, toolDescriptors) {
   const headers = [];
   const rows = [];
 
-  const isPlanFolder = folderRepoPath.startsWith('tasks/plan');
-  const isErrorsFolder = folderRepoPath === 'tasks/errors';
-  const isReportsFolder = folderRepoPath === 'tasks/reports' || folderRepoPath === 'tasks/report';
-  const isScriptsFolder = folderRepoPath === 'tasks/scripts';
+  const isPlanFolder = folderRepoPath.startsWith('workspace/plan');
+  const isErrorsFolder = folderRepoPath === 'workspace/errors';
+  const isReportsFolder = folderRepoPath === 'workspace/reports' || folderRepoPath === 'workspace/report';
+  const isScriptsFolder = folderRepoPath === 'workspace/scripts';
 
   if (isScriptsFolder) {
     headers.push('File', 'Used For', 'Stale PLAN Paths', 'Exact Duplicates in tools/scripts', 'Purpose Overlap in tools/scripts', 'Recommendation', 'Notes');
@@ -1734,7 +1734,7 @@ function buildFolderRows(folderRepoPath, context, toolDescriptors) {
     for (const file of filesInScope) {
       const autogenerated = shouldClassifyAsAutogenerated(file);
       const useful = shouldClassifyAsUseful(file, context, autogenerated);
-      const destination = useful.value ? `tasks/errors/${file.basename}` : `tasks/plan/archived/${file.basename}`;
+      const destination = useful.value ? `workspace/errors/${file.basename}` : `workspace/plan/archived/${file.basename}`;
       rows.push([
         file.repoPath,
         toMarkdownBool(autogenerated.value),
@@ -1753,8 +1753,8 @@ function buildFolderRows(folderRepoPath, context, toolDescriptors) {
       const useful = shouldClassifyAsUseful(file, context, autogenerated);
       const errorsFit = shouldLiveInErrors(file);
       const normalizedDestination = autogenerated.value
-        ? `tasks/reports/${file.basename}`
-        : 'manual relocation required (outside tasks/reports)';
+        ? `workspace/reports/${file.basename}`
+        : 'manual relocation required (outside workspace/reports)';
       rows.push([
         file.repoPath,
         toMarkdownBool(autogenerated.value),
@@ -1872,8 +1872,8 @@ function normalizeFolderToken(token) {
   const trimmed = String(token || '').trim();
   if (!trimmed) return '';
   if (trimmed === 'root') return 'root';
-  if (trimmed.startsWith('tasks/')) return normalizeRepoPath(trimmed);
-  return normalizeRepoPath(`tasks/${trimmed}`);
+  if (trimmed.startsWith('workspace/')) return normalizeRepoPath(trimmed);
+  return normalizeRepoPath(`workspace/${trimmed}`);
 }
 
 function selectFolders(allFolders, foldersArg) {
@@ -1922,10 +1922,10 @@ function runAuditReports(options, auditOutputDirRepoPath, skipApplyNormalization
   for (const folderRepoPath of selected) {
     const reportAbsPath = folderAuditFilePath(folderRepoPath, auditOutputDirRepoPath);
     const { headers, rows } = buildFolderRows(folderRepoPath, finalContext, toolDescriptors);
-    const title = `${folderRepoPath.replace(/^tasks\//, 'tasks/')} Audit`;
+    const title = `${folderRepoPath.replace(/^tasks\//, 'workspace/')} Audit`;
 
     const extraSections = [];
-    if (folderRepoPath === 'tasks/reports' || folderRepoPath === 'tasks/report') {
+    if (folderRepoPath === 'workspace/reports' || folderRepoPath === 'workspace/report') {
       extraSections.push({
         title: 'Normalization Actions',
         body: formatNormalizationSection(normalizationResults)

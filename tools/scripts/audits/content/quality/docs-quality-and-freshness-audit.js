@@ -8,7 +8,7 @@
  * @description Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts, v2, tasks/reports/quality-accessibility
+ * @scope       tools/scripts, v2, workspace/reports/quality-accessibility
  * @usage       node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]
  * @policy      E-R1, R-R11
  */
@@ -19,7 +19,7 @@ const { execSync } = require('child_process');
 
 const STAGE_ID = 'docs-quality-and-freshness-audit';
 const REPO_ROOT = process.cwd();
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 
 function toPosix(value) {
   return String(value || '').split(path.sep).join('/');
@@ -161,7 +161,7 @@ function countWords(content) {
 function loadUsefulnessSignal(issues) {
   const metadataPath = path.join(
     REPO_ROOT,
-    'tasks/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json'
+    'workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json'
   );
 
   if (!fs.existsSync(metadataPath)) {
@@ -169,7 +169,7 @@ function loadUsefulnessSignal(issues) {
       id: 'usefulness-metadata-missing',
       title: 'Docs usefulness metadata not found',
       severity: 'low',
-      path: 'tasks/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
+      path: 'workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
       evidence: 'No usefulness metadata snapshot found for cross-check.',
       recommendation: 'Run `node tools/scripts/audit-v2-usefulness.js --mode full` for a fresh baseline.'
     });
@@ -184,7 +184,7 @@ function loadUsefulnessSignal(issues) {
         id: 'usefulness-empty-run',
         title: 'Usefulness metadata reports zero processed pages',
         severity: 'low',
-        path: 'tasks/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
+        path: 'workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
         evidence: 'Processed pages count is zero in latest usefulness metadata.',
         recommendation: 'Verify usefulness run mode and regenerate metadata with a full run.'
       });
@@ -194,7 +194,7 @@ function loadUsefulnessSignal(issues) {
       id: 'usefulness-metadata-parse-failed',
       title: 'Unable to parse usefulness metadata',
       severity: 'low',
-      path: 'tasks/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
+      path: 'workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
       evidence: 'Metadata JSON could not be parsed.',
       recommendation: 'Regenerate usefulness outputs to restore machine-readable state.'
     });

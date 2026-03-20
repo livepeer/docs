@@ -44,7 +44,7 @@ Every script must include a JSDoc header with these tags:
 | `@usage` | CLI invocation |
 | `@policy` | Governance/requirement IDs (if applicable) |
 
-Full spec: `tasks/plan/active/SCRIPT-GOVERNANCE/structure.md`
+Full spec: `workspace/plan/active/SCRIPT-GOVERNANCE/structure.md`
 
 ## Creating a new script
 
@@ -54,5 +54,5 @@ node tools/scripts/generators/governance/scaffold/new-script.js --path tools/scr
 
 ## Full catalog
 
-See `tasks/plan/active/SCRIPT-GOVERNANCE/catalog.md` for a complete list of all
+See `workspace/plan/active/SCRIPT-GOVERNANCE/catalog.md` for a complete list of all
 138 scripts with descriptions.

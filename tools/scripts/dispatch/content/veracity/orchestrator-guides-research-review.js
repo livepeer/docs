@@ -8,7 +8,7 @@
  * @description Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.
  * @mode        read-only
  * @pipeline    manual — packet generator compatibility wrapper
- * @scope       tools/scripts, tasks/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, tasks/research, tests/unit/orchestrator-guides-research-review.test.js
+ * @scope       tools/scripts, workspace/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, workspace/research, tests/unit/orchestrator-guides-research-review.test.js
  * @usage       node tools/scripts/audits/content/veracity/orchestrator-guides-research-review.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -16,9 +16,9 @@
 const packet = require('./docs-research-packet');
 
 const DEFAULT_NAV = 'tools/config/scoped-navigation/docs-gate-work.json';
-const DEFAULT_OUTPUT_ROOT = 'tasks/reports/orchestrator-guides-review/research-guides-review';
-const DEFAULT_REGISTRY = 'tasks/research/claims';
-const DEFAULT_LEDGER = 'tasks/research/adjudication/page-content-research-outcomes.json';
+const DEFAULT_OUTPUT_ROOT = 'workspace/reports/orchestrator-guides-review/research-guides-review';
+const DEFAULT_REGISTRY = 'workspace/research/claims';
+const DEFAULT_LEDGER = 'workspace/research/adjudication/page-content-research-outcomes.json';
 
 function usage() {
   console.log(

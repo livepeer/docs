@@ -17,7 +17,7 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DISCOVERY_ROOTS = [
   '.githooks',
   '.github/scripts',
-  'tasks/scripts',
+  'workspace/scripts',
   'tests/unit',
   'tests/integration',
   'tests/utils',
@@ -37,7 +37,7 @@ const GOVERNED_ROOTS = [
   'tools/lib',
   'tools/notion',
   'tools/config',
-  'tasks/scripts',
+  'workspace/scripts',
   'snippets/automations'
 ];
 
@@ -49,7 +49,7 @@ const INDEXED_ROOTS = [
   'tools/lib',
   'tools/notion',
   'tools/config',
-  'tasks/scripts',
+  'workspace/scripts',
   'snippets/automations'
 ];
 
@@ -61,7 +61,7 @@ const GROUP_INDEX_MAP = [
   { root: 'tools/lib', index: 'tools/lib/script-index.md' },
   { root: 'tools/notion', index: 'tools/notion/script-index.md' },
   { root: 'tools/config', index: 'tools/config/script-index.md' },
-  { root: 'tasks/scripts', index: 'tasks/scripts/script-index.md' },
+  { root: 'workspace/scripts', index: 'workspace/scripts/script-index.md' },
   { root: 'snippets/automations', index: 'snippets/automations/script-index.md' }
 ];
 const GROUP_INDEX_PATHS = GROUP_INDEX_MAP.map((entry) => entry.index);
@@ -70,7 +70,7 @@ const AGGREGATE_INDEX_PATH = 'docs-guide/catalog/scripts-catalog.mdx';
 const LEGACY_AGGREGATE_INDEX_PATH = AGGREGATE_INDEX_PATH
   .replace('/catalog/', '/indexes/')
   .replace(/-catalog\.mdx$/i, () => ['-', 'index', '.mdx'].join(''));
-const CLASSIFICATION_DATA_PATH = 'tasks/reports/script-classifications.json';
+const CLASSIFICATION_DATA_PATH = 'workspace/reports/script-classifications.json';
 
 const SCRIPT_EXTENSIONS = ['.js', '.sh', '.py'];
 const SCRIPT_EXTENSIONS_SET = new Set(SCRIPT_EXTENSIONS);
