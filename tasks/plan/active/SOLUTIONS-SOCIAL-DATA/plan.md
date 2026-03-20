@@ -3,7 +3,7 @@
 **Created:** 2026-03-21
 **Updated:** 2026-03-21
 **Branch:** docs-v2-dev
-**Status:** APPROVED — Phase 1 executing
+**Status:** Phase 1 COMPLETE — awaiting approval for Phase 2
 
 ---
 
@@ -205,11 +205,11 @@ From scanning `snippets/templates/pages/`:
 > (a) what was done, (b) full plan status (all phases, checked/unchecked), (c) any blockers.
 > Commit at end of each phase. Do not proceed to next phase without approval.
 
-### Phase 1: Research & Config ← EXECUTING
-- [ ] Web search to complete `socials-research.md` (verify all product socials, GitHub Discussions, Releases, public blog APIs)
-- [ ] Source hero videos for each product
-- [ ] Create `tools/scripts/config/product-social-config.json` mapping product → social channels
-- [ ] **CHECKPOINT:** Report findings inline. Commit. Await approval before Phase 2.
+### Phase 1: Research & Config ← COMPLETE
+- [x] Web search to complete `socials-research.md` (verify all product socials, GitHub Discussions, Releases, public blog APIs)
+- [x] Source hero videos for each product (candidates identified — see config; some gaps flagged)
+- [x] Create `tools/scripts/config/product-social-config.json` mapping product → social channels
+- [x] **CHECKPOINT:** Findings reported inline. Committed. Awaiting approval for Phase 2.
 
 ### Phase 2: Pipeline Extensions
 - [ ] Parameterise `fetch-youtube-data.js` for multi-channel output
