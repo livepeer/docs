@@ -124,11 +124,50 @@ All removals via `git mv` to `x-archive/` — no deletions.
 
 ---
 
+## MDX-in-MDX Opportunity (from component governance analogue)
+
+The taxonomy decision tree, JSDoc template, and "how to write a script" checklist currently live **only** in `script-framework.md` (a planning task file, not on nav). They should also appear in the public-facing spec page.
+
+Instead of duplicating content across the internal spec and any public library pages that need it:
+
+**Option:** Move shared governance blocks to importable snippets:
+```
+snippets/scripts/docs-snippets/
+  decision-tree.mdx       ← type/concern/niche classification Q&A
+  jsdoc-template.mdx      ← full 11-tag JSDoc block example
+  script-checklist.mdx    ← how-to-write-a-new-script checklist
+```
+
+Both `docs-guide/policies/script-governance.mdx` (internal spec) and any public-facing pages can `<Snippet>` these in. One place, multiple consumers. This is the same MDX-in-MDX pattern used for content reuse across the rest of the docs.
+
+---
+
+## Spec Accuracy
+
+`script-governance-config.js` enforces 6 `@type` values. `script-framework.md` defines 11 tags as the full standard. The spec page should distinguish clearly:
+- **Required minimum**: @type, @concern, @niche, @purpose, @description, @mode (6 tags — enforced by `--strict`)
+- **Full standard**: all 11 tags — @pipeline, @scope, @usage, @policy, @status as additional optional/expected
+
+Do not present the full 11 as equally enforced — this creates false confidence that all 11 are validated. Update the spec page to match what is actually enforced vs what is convention.
+
+---
+
+## Locale Mirrors
+
+`docs-guide/catalog/scripts-catalog.mdx` has 3 locale mirrors:
+- `v2/cn/docs-guide/catalog/scripts-catalog.mdx`
+- `v2/es/docs-guide/catalog/scripts-catalog.mdx`
+- `v2/fr/docs-guide/catalog/scripts-catalog.mdx`
+
+**Recommendation: EN-first.** Regenerate and verify the EN catalog after schema migration before propagating to locale mirrors. 3 files is manageable but locale mirrors should confirm correct output first — same pattern as component governance recommendation.
+
+---
+
 ## What to Fix Before Execution
 
 **Must happen before JSON migration:**
 
-1. **27 mistyped `@type` values** — listed in `audit-report.md`. Examples: `docs-fact-registry.js` (typed audit, is validator), `docs-research-packet.js` (typed audit, is dispatch), `generate-seo.js` (typed generator, is remediator). If migrated with wrong types, the registry starts wrong.
+1. **1 remaining mistyped `@type` value** — `update-jsdoc-headers.js` had `@type ${type}` (template literal artifact). Fixed in current session by adding proper 11-tag JSDoc header with `@type remediator`. The 26 others from `audit-report.md` were addressed by waves 1–4.
 
 2. **`docs-guide/component-registry.json` missing** — run `generate-component-registry.js` to regenerate. Unblocks the test suite crash in `docs-guide-sot.test.js`.
 
@@ -136,7 +175,7 @@ All removals via `git mv` to `x-archive/` — no deletions.
 
 ## Execution Order (Task 13)
 
-1. Fix 27 mistyped `@type` values
+1. ~~Fix 27 mistyped `@type` values~~ — 26 fixed in waves 1–4; 1 remaining fixed (update-jsdoc-headers.js). Done.
 2. Regenerate `docs-guide/component-registry.json`
 3. Write one-time migration script → `tools/config/script-registry.json` (reads JSDoc headers + old JSON → new schema)
 4. Update `tools/lib/script-governance-config.js` — point `CLASSIFICATION_DATA_PATH` to new registry
@@ -171,3 +210,19 @@ All removals via `git mv` to `x-archive/` — no deletions.
 > It is currently blocking the test suite. It is a one-command fix (`generate-component-registry.js`).
 >
 > **Recommendation: Fix in Task 13 step 2.** The blocker is trivial to resolve and enabling clean tests is worth it.
+
+---
+
+> **Q4: MDX-in-MDX shared snippets — yes or no?**
+>
+> Decision tree, JSDoc template, and script checklist as importable `<Snippet>` blocks.
+>
+> **Recommendation: Yes**, but defer to after core JSON migration. Creates `snippets/scripts/docs-snippets/` — a new convention. Worth doing but not a blocker for the registry work.
+
+---
+
+> **Q5: Locale mirrors — regenerate in Task 13 or defer?**
+>
+> `scripts-catalog.mdx` has 3 locale mirrors (cn, es, fr).
+>
+> **Recommendation: Defer EN-first.** Verify correct EN output after schema migration before propagating to locale mirrors.

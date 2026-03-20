@@ -112,10 +112,10 @@ No code changes. Just naming decisions.
 
 ### Tasks
 
-- [ ] **1.1** Review and approve Layer 1 type folders
-- [ ] **1.2** Review and approve Layer 2 concern folders (content, components, governance, ai)
-- [ ] **1.3** Review and approve niche folders per type × concern (see [`structure.md`](structure.md))
-- [ ] **1.4** Lock the taxonomy — mark all items as APPROVED in structure.md
+- [x] ~~**1.1** Review and approve Layer 1 type folders~~
+- [x] ~~**1.2** Review and approve Layer 2 concern folders (content, components, governance, ai)~~
+- [x] ~~**1.3** Review and approve niche folders per type × concern (see [`structure.md`](structure.md))~~
+- [x] ~~**1.4** Lock the taxonomy — mark all items as APPROVED in structure.md~~
 
 ---
 
@@ -366,13 +366,13 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **11.2** Audit each script for: clear single purpose, dead code paths, unreachable branches, incorrect assumptions about file structure, race conditions in file I/O, missing null/undefined guards, incorrect regex patterns
-- [ ] **11.3** **CHECKPOINT** — present findings to human
-- [ ] **11.4** Execute approved fixes
-- [ ] **11.5** **CHECKPOINT** — show results to human
-- [ ] **11.6** Commit + merge back to `docs-v2-dev`
-- [ ] **11.7** Strikethrough completed tasks in this plan
+- [x] ~~**11.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**11.2** Audit each script for: clear single purpose, dead code paths, unreachable branches, incorrect assumptions about file structure, race conditions in file I/O, missing null/undefined guards, incorrect regex patterns~~
+- [x] ~~**11.3** **CHECKPOINT** — present findings to human~~
+- [x] ~~**11.4** Execute approved fixes~~
+- [x] ~~**11.5** **CHECKPOINT** — show results to human~~
+- [x] ~~**11.6** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**11.7** Strikethrough completed tasks in this plan~~
 
 ---
 
@@ -382,13 +382,13 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11a.1** `git mv` 8 dispatch→automation scripts + 2 dispatch→validator + 1 automation→validator
-- [ ] **11a.2** Update all path references (package.json, workflows, hooks, tests, imports)
-- [ ] **11a.3** Update `@type` in each script's JSDoc header
-- [ ] **11a.4** Run broken-require checker
-- [ ] **11a.5** Run `npm test --prefix tests`
-- [ ] **11a.6** **CHECKPOINT** — show diff to human
-- [ ] **11a.7** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11a.1** `git mv` 8 dispatch→automation scripts + 2 dispatch→validator + 1 automation→validator~~
+- [x] ~~**11a.2** Update all path references (package.json, workflows, hooks, tests, imports)~~
+- [x] ~~**11a.3** Update `@type` in each script's JSDoc header~~
+- [x] ~~**11a.4** Run broken-require checker~~
+- [x] ~~**11a.5** Run `npm test --prefix tests`~~
+- [x] ~~**11a.6** **CHECKPOINT** — show diff to human~~
+- [x] ~~**11a.7** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -396,12 +396,12 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11b.1** `git mv` 5 generator scripts to audits/
-- [ ] **11b.2** Update all path references
-- [ ] **11b.3** Update `@type` in headers
-- [ ] **11b.4** Run broken-require checker + test suite
-- [ ] **11b.5** **CHECKPOINT** — show diff to human
-- [ ] **11b.6** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11b.1** `git mv` 5 generator scripts to audits/~~
+- [x] ~~**11b.2** Update all path references~~
+- [x] ~~**11b.3** Update `@type` in headers~~
+- [x] ~~**11b.4** Run broken-require checker + test suite~~
+- [x] ~~**11b.5** **CHECKPOINT** — show diff to human~~
+- [x] ~~**11b.6** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -409,12 +409,12 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11c.1** `git mv` 3 generator scripts to remediators/ + 1 remediator to audits/
-- [ ] **11c.2** Update all path references
-- [ ] **11c.3** Update `@type` in headers
-- [ ] **11c.4** Run broken-require checker + test suite
-- [ ] **11c.5** **CHECKPOINT** — show diff to human
-- [ ] **11c.6** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11c.1** `git mv` 3 generator scripts to remediators/ + 1 remediator to audits/~~
+- [x] ~~**11c.2** Update all path references~~
+- [x] ~~**11c.3** Update `@type` in headers~~
+- [x] ~~**11c.4** Run broken-require checker + test suite~~
+- [x] ~~**11c.5** **CHECKPOINT** — show diff to human~~
+- [x] ~~**11c.6** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -424,14 +424,14 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11d.1** `git mv` 3 audit scripts to dispatch/ + 1 to validators/ + 1 concern fix (audit-python.py)
-- [ ] **11d.2** Discuss `docs-research-adjudication.js` — split 3 modes or keep + document?
-- [ ] **11d.3** Update all path references
-- [ ] **11d.4** Update `@type` in headers
-- [ ] **11d.5** Run broken-require checker + full test suite
-- [ ] **11d.6** Verify veracity pipeline scripts still chain correctly
-- [ ] **11d.7** **CHECKPOINT** — show diff to human
-- [ ] **11d.8** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11d.1** `git mv` 3 audit scripts to dispatch/ + 1 to validators/ + 1 concern fix (audit-python.py)~~
+- [x] ~~**11d.2** Discuss `docs-research-adjudication.js` — split 3 modes or keep + document?~~
+- [x] ~~**11d.3** Update all path references~~
+- [x] ~~**11d.4** Update `@type` in headers~~
+- [x] ~~**11d.5** Run broken-require checker + full test suite~~
+- [x] ~~**11d.6** Verify veracity pipeline scripts still chain correctly~~
+- [x] ~~**11d.7** **CHECKPOINT** — show diff to human~~
+- [x] ~~**11d.8** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -441,13 +441,13 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11e.1** **INTERACTIVE** — discuss approach for each of the 8 dual-purpose validators (split vs document)
-- [ ] **11e.2** **INTERACTIVE** — discuss overlap pairs (lint-copy/lint-patterns, glossary/terminology, header writers, backfill unification)
-- [ ] **11e.3** Resolve `.vscode/components.code-snippets` output conflict
-- [ ] **11e.4** Execute approved splits/consolidations
-- [ ] **11e.5** Run full test suite
-- [ ] **11e.6** **CHECKPOINT** — show final state to human
-- [ ] **11e.7** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11e.1** **INTERACTIVE** — discuss approach for each of the 8 dual-purpose validators (split vs document)~~
+- [x] ~~**11e.2** **INTERACTIVE** — discuss overlap pairs (lint-copy/lint-patterns, glossary/terminology, header writers, backfill unification)~~
+- [x] ~~**11e.3** Resolve `.vscode/components.code-snippets` output conflict~~
+- [x] ~~**11e.4** Execute approved splits/consolidations~~
+- [x] ~~**11e.5** Run full test suite~~
+- [x] ~~**11e.6** **CHECKPOINT** — show final state to human~~
+- [x] ~~**11e.7** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -455,12 +455,12 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11f.1** Run broken-require checker across entire repo
-- [ ] **11f.2** Run `npm test --prefix tests`
-- [ ] **11f.3** Verify all `@type` tags match their folder location
-- [ ] **11f.4** Update `catalog.md` and `structure.md` to reflect final state
-- [ ] **11f.5** **CHECKPOINT** — confirm clean state
-- [ ] **11f.6** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11f.1** Run broken-require checker across entire repo~~
+- [x] ~~**11f.2** Run `npm test --prefix tests`~~
+- [x] ~~**11f.3** Verify all `@type` tags match their folder location~~
+- [x] ~~**11f.4** Update `catalog.md` and `structure.md` to reflect final state~~
+- [x] ~~**11f.5** **CHECKPOINT** — confirm clean state~~
+- [x] ~~**11f.6** Commit + merge back to `docs-v2-dev`~~
 
 ---
 
@@ -471,13 +471,13 @@ Config params at top, no magic strings, consistent error handling, clear exit co
 
 ### Tasks
 
-- [ ] **12.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **12.2** Enforce: config/constants at top of file, magic strings/numbers extracted, consistent error handling, missing usage/help output, hardcoded repo paths vs `process.cwd()`
-- [ ] **12.3** **CHECKPOINT** — present findings to human
-- [ ] **12.4** Execute approved fixes
-- [ ] **12.5** **CHECKPOINT** — show results to human
-- [ ] **12.6** Commit + merge back to `docs-v2-dev`
-- [ ] **12.7** Strikethrough completed tasks in this plan
+- [x] ~~**12.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**12.2** Enforce: config/constants at top of file, magic strings/numbers extracted, consistent error handling, missing usage/help output, hardcoded repo paths vs `process.cwd()`~~
+- [x] ~~**12.3** **CHECKPOINT** — present findings to human~~
+- [x] ~~**12.4** Execute approved fixes~~
+- [x] ~~**12.5** **CHECKPOINT** — show results to human~~
+- [x] ~~**12.6** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**12.7** Strikethrough completed tasks in this plan~~
 
 ---
 
@@ -487,13 +487,13 @@ Config params at top, no magic strings, consistent error handling, clear exit co
 
 ### Tasks
 
-- [ ] **12c.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **12c.2** Run full test suite: `npm test --prefix tests`
-- [ ] **12c.3** Run broken-require path checker
-- [ ] **12c.4** **CHECKPOINT** — present results to human
-- [ ] **12c.5** Fix any failures
-- [ ] **12c.6** Commit + merge back to `docs-v2-dev`
-- [ ] **12c.7** Strikethrough completed tasks in this plan
+- [x] ~~**12c.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**12c.2** Run full test suite: `npm test --prefix tests`~~
+- [x] ~~**12c.3** Run broken-require path checker~~
+- [x] ~~**12c.4** **CHECKPOINT** — present results to human~~
+- [x] ~~**12c.5** Fix any failures~~
+- [x] ~~**12c.6** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**12c.7** Strikethrough completed tasks in this plan~~
 
 ---
 
@@ -559,10 +559,10 @@ files stay in `x-archive/` via `git mv` to preserve history.
 
 ### Tasks
 
-- [ ] **13.1** Inventory all current script documentation surfaces (catalog.mdx, script-indexes, docs-guide pages, AGENTS.md references, README.md, scripts-library.mdx, script-framework.md, structure.md, plan.md)
-- [ ] **13.2** Identify consolidation opportunities — what can be generated vs authored, what is duplicated, what belongs in one MDX page vs many
-- [ ] **13.3** Define proposed single source of truth (JSON config? MDX? hybrid?) and derivation plan for docs-guide and internal nav pages
-- [ ] **13.4** Write findings to `tasks/plan/active/SCRIPT-GOVERNANCE/script-docs.md`
+- [x] ~~**13.1** Inventory all current script documentation surfaces (catalog.mdx, script-indexes, docs-guide pages, AGENTS.md references, README.md, scripts-library.mdx, script-framework.md, structure.md, plan.md)~~
+- [x] ~~**13.2** Identify consolidation opportunities — what can be generated vs authored, what is duplicated, what belongs in one MDX page vs many~~
+- [x] ~~**13.3** Define proposed single source of truth (JSON config? MDX? hybrid?) and derivation plan for docs-guide and internal nav pages~~
+- [x] ~~**13.4** Write findings to `tasks/plan/active/SCRIPT-GOVERNANCE/script-docs.md`~~
 - [ ] **13.5** **CHECKPOINT** — present to human for approval before any changes
 
 ---
