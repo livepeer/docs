@@ -58,12 +58,12 @@ function runTests() {
     const suggestions = getMdxImportSuggestions(
       REPO_ROOT,
       'v2/about/resources/blockchain-contracts.mdx',
-      '/snippets/components/content/q'
+      '/snippets/components/displays/quotes/Q'
     );
 
     assert(
-      suggestions.snippetSuggestions.includes('/snippets/components/content/quote.jsx'),
-      'expected /snippets/components/content/quote.jsx in snippet suggestions'
+      suggestions.snippetSuggestions.includes('/snippets/components/displays/quotes/Quote.jsx'),
+      'expected /snippets/components/displays/quotes/Quote.jsx in snippet suggestions'
     );
     assert(
       suggestions.snippetSuggestions.every((entry) => entry.startsWith('/snippets/')),
@@ -73,7 +73,7 @@ function runTests() {
 
   runCase('flags relative snippet imports in MDX', () => {
     const findings = validateSnippetImports(
-      "import { Quote } from '../snippets/components/content/quote.jsx'\n",
+      "import { Quote } from '../snippets/components/displays/quotes/Quote.jsx'\n",
       'v2/example.mdx'
     );
     assert.strictEqual(findings.length, 1);

@@ -17,6 +17,7 @@
 | `tests/run-pr-checks.js` | PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff. | `node tests/run-pr-checks.js [flags]` | docs |
 | `tests/unit/ai-tools-registry.test.js` | Validates the AI-tools registry contract, full tracked ai-tools coverage, and the Wave 1 inventory source-of-truth boundary. | `node tests/unit/ai-tools-registry.test.js [--staged\|--files path[,path]]` | docs |
 | `tests/unit/audit-script-inventory-repair-rules.test.js` | Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety. | `node tests/unit/audit-script-inventory-repair-rules.test.js` | docs |
+| `tests/unit/authoring-tools.test.js` | Unit tests for repo-owned authoring tools — verifies MDX formatting and real-path completion/validation helpers. | `node tests/unit/authoring-tools.test.js` | docs |
 | `tests/unit/check-agent-docs-freshness.test.js` | Tests the agent governance freshness validator against the canonical runtime file set. | `node tests/unit/check-agent-docs-freshness.test.js` | docs |
 | `tests/unit/codex-commit.test.js` | Tests codex-commit.js — validates commit message generation and contract compliance | `node tests/unit/codex-commit.test.js [flags]` | docs |
 | `tests/unit/codex-safe-merge-with-stash.test.js` | Tests codex-safe-merge-with-stash.js — asserts the deprecated stash helper hard-fails and points callers to the supported Codex lifecycle | `node tests/unit/codex-safe-merge-with-stash.test.js [flags]` | docs |

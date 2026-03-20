@@ -19,7 +19,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const EXPORT_SCRIPT = path.join(REPO_ROOT, 'tools/scripts/export-portable-skills.js');
+const EXPORT_SCRIPT = path.join(REPO_ROOT, 'tools/scripts/automations/ai/agents/export-portable-skills.js');
 
 let errors = [];
 
