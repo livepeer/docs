@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+/**
+ * @script      repair-script-inventory
+ * @type        remediator
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     governance:script-header-repair
+ * @description Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
+ * @mode        edit
+ * @pipeline    manual
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files <path,...>] [--json] [--md] [--output <dir>]
+ * @policy      R-R16
+ */
+
+const { spawnSync } = require('child_process');
+const REPO_ROOT = process.cwd();
+
+function main() {
+  const passthrough = process.argv.slice(2);
+
+  // Always add --fix; strip it if user passed it redundantly
+  const args = passthrough.filter(a => a !== '--fix');
+  args.unshift('--fix');
+
+  const result = spawnSync('node', [
+    'tools/scripts/validators/governance/pr/audit-script-inventory.js',
+    ...args
+  ], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+    stdio: 'inherit'
+  });
+
+  process.exit(result.status || 0);
+}
+
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main };
