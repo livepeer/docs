@@ -361,7 +361,7 @@ This is for the TITLE (1-2 words only) of a documentation page - from a product 
 
 ## Journeys
 
-{/\*
+{/*
 LEARNING FROM BELOW PROMPT
 
 hmmm fundamental miscalculation here - the full context of the docs.
@@ -382,7 +382,7 @@ Then create a new .md file 05 file - now with this context of the full docs site
 - 1-2 sentence introduction -> descriptive ->[value proposition forward, outcome-focussed, voice appropriate, no qualifiers or conditionals, questions, literal prose ["what this does" "this page is", "three options for" ], tabloid, verbose, long or empty/poor information delivery]
 - The the required information category sections (named 1-3 words) - and 1-3 short-sentence outline / value prop / outcome for the section - to be delivered by this page - which flows in context with the previous pages and upcoming pages and matches the voice and journey of the user to achieve their aim.
 
-\*/}
+*/}
 
 This project has a lot of information on livepeer and the community already.
 

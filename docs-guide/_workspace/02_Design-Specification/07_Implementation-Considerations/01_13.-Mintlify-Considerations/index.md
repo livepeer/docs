@@ -54,7 +54,7 @@ Relative imports are officially supported (added early 2025). Both absolute (fro
 | {variable} in fenced code blocks | Variables render literally inside ``` blocks | Use a custom code component with placeholder substitution props |
 | Global components stored in JS variables | const C = Card; <C /> → ReferenceError | Use conditional rendering with direct JSX |
 | JSX comments preventing MDX parsing | {/* <Component /> */} — MDX still parses the component | Remove code entirely; don't "comment it out" |
-| External CSS imports in components | No CSS file imports in .jsx | Use inline styles or <style> tags within the component |
+| External CSS imports in components | No CSS file imports in .jsx | Use inline styles or `<style>` tags within the component |
 
 ### **The Golden Rule**
 
@@ -173,7 +173,7 @@ Each theme provides layout structure, navigation patterns, typography, spacing, 
 | --- | --- | --- |
 | CSS Custom Properties (via style.css) | Root style.css | Theme-aware values (colours, spacing) — :root {} and .dark {} |
 | Inline style objects | In JSX components | Simple layout (flex, padding, margin) |
-| <style> tags in components | In JSX components | Pseudo-classes, animations, media queries |
+| `<style>` tags in components | In JSX components | Pseudo-classes, animations, media queries |
 
 Mintlify automatically adds `.dark` class to `<html>` in dark mode. CSS variables switch automatically.
 

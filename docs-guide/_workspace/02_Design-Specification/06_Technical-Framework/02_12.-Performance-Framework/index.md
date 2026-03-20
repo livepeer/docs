@@ -17,11 +17,11 @@ How to measure whether the documentation system is fast, healthy, and maintainab
 
 | **Metric** | **How to Measure** | **Baseline (Current)** | **Target** |
 | --- | --- | --- | --- |
-| Pre-commit time | Time from git commit to hook completion | ~10-30s (varies by staged files) | <30s |
-| PR CI time | Time from push to all checks passing | Measure from workflow logs | <5 min |
-| Mintlify preview build | Time from push to preview URL live | Measure from Mintlify dashboard | <3 min |
-| Production deploy | Time from merge to live site updated | Measure from Mintlify dashboard | <5 min |
-| Git clone time | Time for Mintlify to clone the repo | f(repo size) — currently 431 MB | <60s |
+| Pre-commit time | Time from git commit to hook completion | ~10-30s (varies by staged files) | &lt;30s |
+| PR CI time | Time from push to all checks passing | Measure from workflow logs | &lt;5 min |
+| Mintlify preview build | Time from push to preview URL live | Measure from Mintlify dashboard | &lt;3 min |
+| Production deploy | Time from merge to live site updated | Measure from Mintlify dashboard | &lt;5 min |
+| Git clone time | Time for Mintlify to clone the repo | f(repo size) — currently 431 MB | &lt;60s |
 
 ### **Known Bottlenecks**
 
@@ -37,11 +37,11 @@ How to measure whether the documentation system is fast, healthy, and maintainab
 
 | **Metric** | **How to Measure** | **Baseline** | **Target** |
 | --- | --- | --- | --- |
-| Largest Contentful Paint (LCP) | Lighthouse or WebPageTest | Measure | <2.5s |
-| First Input Delay (FID) | Lighthouse | Measure | <100ms |
-| Cumulative Layout Shift (CLS) | Lighthouse | Measure | <0.1 |
-| Total page weight | DevTools Network tab | Measure per page type | <500 KB (doc page) |
-| Asset weight per page | Count images + their sizes | Measure | <200 KB images per page |
+| Largest Contentful Paint (LCP) | Lighthouse or WebPageTest | Measure | &lt;2.5s |
+| First Input Delay (FID) | Lighthouse | Measure | &lt;100ms |
+| Cumulative Layout Shift (CLS) | Lighthouse | Measure | &lt;0.1 |
+| Total page weight | DevTools Network tab | Measure per page type | &lt;500 KB (doc page) |
+| Asset weight per page | Count images + their sizes | Measure | &lt;200 KB images per page |
 | JavaScript bundle size | DevTools Network tab | Measure | Mintlify-controlled |
 | Time to Interactive (TTI) | Lighthouse | Measure | <3.5s |
 

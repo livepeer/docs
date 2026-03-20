@@ -129,10 +129,10 @@ For navigation, quotes, and enhanced displays, prefer custom components from `sn
 
 | **Need** | **Use** | **Not** |
 | --- | --- | --- |
-| Navigation link | <GotoLink>, <GotoCard> | Plain [text](url) |
-| Quote with attribution | <Quote>, <FrameQuote> | > blockquote |
-| External link | <DoubleIconLink> | Plain markdown link |
-| Tip with arrow | <TipWithArrow> | <Tip> |
+| Navigation link | `<GotoLink>`, `<GotoCard>` | Plain [text](url) |
+| Quote with attribution | `<Quote>`, `<FrameQuote>` | > blockquote |
+| External link | `<DoubleIconLink>` | Plain markdown link |
+| Tip with arrow | `<TipWithArrow>` | `<Tip>` |
 
 Plain markdown links remain fine for inline references within prose.
 

@@ -17,7 +17,7 @@ The repo already has a script governance framework with three layers: local pre-
 
 | **Script** | **What It Checks** | **Config** | **Output** |
 | --- | --- | --- | --- |
-| style-and-language-homogenizer-en-gb.js | UK English spelling, forbidden US terms, forbidden patterns (/v2/pages/, style={{, ThemeData) | style-language-profile-en-gb.json | Report: tasks/reports/repo-ops/ |
+| style-and-language-homogenizer-en-gb.js | UK English spelling, forbidden US terms, forbidden patterns (`/v2/pages/`, `style={{`, ThemeData) | style-language-profile-en-gb.json | Report: tasks/reports/repo-ops/ |
 | component-layout-governance.js | Page type → required sections + allowed components. Validates landing pages have Overview section, how_to pages have Prerequisites + Steps, etc. | component-layout-profile.json | Report: tasks/reports/repo-ops/ |
 | audit-v2-usefulness.js | Page-level usefulness matrix with source-weighted accuracy verification. Rules-only or hybrid scoring. | accuracy-source-registry.json, accuracy-source-weights.json | JSONL + CSV + JSON + MD in tasks/reports/quality-accessibility/ |
 | docs-quality-and-freshness-audit.js | TODO/TBD/Coming Soon markers, placeholders, thin content detection | — | Report: tasks/reports/repo-ops/ |

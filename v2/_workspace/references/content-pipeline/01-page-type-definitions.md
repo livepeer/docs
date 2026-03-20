@@ -25,7 +25,7 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 ### 1. `navigation`
 
 **Job**: Route the reader to the right place.
-**UX pattern**: Scan and click — reader spends <30 seconds, clicks through.
+**UX pattern**: Scan and click — reader spends &lt;30 seconds, clicks through.
 **Content**: Value proposition (1 sentence), navigation cards, optional shortcuts for returning users.
 **Forbidden**: Long prose, steps, deep technical content.
 **Success metric**: Click-through rate to child pages; low bounce.

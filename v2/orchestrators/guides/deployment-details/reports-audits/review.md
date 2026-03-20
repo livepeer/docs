@@ -28,7 +28,12 @@ Journey Analysis
 Section coherence
 The Deployment Details section forms a clean linear flow once inside: Setup Options (which path?) → Requirements (what do I need?) → Benchmarking (how does it perform?) → Session Limits (how many jobs?) → Join a Pool (lowest-barrier path). The dependency chain between Benchmarking and Session Limits is explicit and enforced with cross-references in both directions.
 Journey gaps identified
-GapSeverityResolutionSiphon setup has no page in this sectionHighReferenced in setup-options with a note; the dep-siphon-setup.mdx should be published under advanced-operations/orchestrator-transcoder-setup. The IA review had it absorbed but the content is too substantial to fit in setup-options as an accordion. Flagged in REVIEW comments.Enterprise path links to livepeer.org/contact - no confirmation this URL existsMediumAdded REVIEW flag; path also updated to reference large-scale-operations guideNo section landing page / introLowsetup-options serves this function adequately with the tag: start hereAI benchmarking is absentMediumFlagged in benchmarking.mdx - livepeer_bench only covers video transcoding. No AI inference benchmark tool currently exists. Noted in the page scope note.
+| Gap | Severity | Resolution |
+|---|---|---|
+| Siphon setup has no page in this section | High | Referenced in setup-options with a note; the dep-siphon-setup.mdx should be published under advanced-operations/orchestrator-transcoder-setup. The IA review had it absorbed but the content is too substantial to fit in setup-options as an accordion. Flagged in REVIEW comments. |
+| Enterprise path links to livepeer.org/contact - no confirmation this URL exists | Medium | Added REVIEW flag; path also updated to reference large-scale-operations guide |
+| No section landing page / intro | Low | setup-options serves this function adequately with the tag: start here |
+| AI benchmarking is absent | Medium | Flagged in benchmarking.mdx - livepeer_bench only covers video transcoding. No AI inference benchmark tool currently exists. Noted in the page scope note. |
 Persona coverage
 
 Persona A (Miner with GPU, no LPT): setup-options routes to join-a-pool immediately; join-a-pool delivers a full step-by-step path
@@ -39,7 +44,24 @@ Persona E (AI Native): requirements VRAM tiers, session-limits AI capacity field
 
 
 Systematic Fixes Applied Across All Five Pages
-IssueFiles affectedFixStyledTable missing <thead><tbody>All fiveAdded throughoutCard in CardGroup missing arrow horizontalAll fiveAdded to every card"Related" heading → "Related Pages"requirements, benchmarking, session-limitsRenamedOld section paths (setup-paths/, feasibility-and-hardware/, monitoring-and-troubleshooting/)All fiveUpdated to new deployment-details/, operator-considerations/, monitoring-and-tools/circle-question accordion iconssetup-options, join-a-poolReplaced with sliders, coins, gauge, calculator, calendar, list-check, clock-rotate-left, link, server, chart-lineSecond-person voice ("You have a GPU")setup-optionsRewritten as entity-ledsidebarTitle: Navigator conflictsetup-optionsChanged to Setup OptionsOrphan single <Card> outside <CardGroup>setup-optionsAbsorbed into the CardGroupMissing LinkArrow importsetup-options, requirements, benchmarking, session-limits, join-a-poolAddedMissing ScrollableDiagram importsetup-optionsAddedScript code block using icon="terminal"benchmarkingChanged to icon="code" for bash scriptsJSON code block using icon="terminal"session-limitsChanged to icon="code" for JSONstatus: published (premature for several pages)setup-options, requirements, benchmarking, session-limits, join-a-poolAll changed to currentIntro "This page covers..." self-descriptionbenchmarkingRewritten to narrative openingCardGroup cols={3} on Cards without enough contentjoin-a-pool (pool choice section)Changed to cols={2} with proper arrowsIntro text of benchmarking was second-person ("you")benchmarkingEntity-led rewrite
+| Issue | Files affected | Fix |
+|---|---|---|
+| StyledTable missing `<thead>` `<tbody>` | All five | Added throughout |
+| Card in CardGroup missing arrow horizontal | All five | Added to every card |
+| "Related" heading → "Related Pages" | requirements, benchmarking, session-limits | Renamed |
+| Old section paths (setup-paths/, feasibility-and-hardware/, monitoring-and-troubleshooting/) | All five | Updated to new deployment-details/, operator-considerations/, monitoring-and-tools/ |
+| circle-question accordion icons | setup-options, join-a-pool | Replaced with sliders, coins, gauge, calculator, calendar, list-check, clock-rotate-left, link, server, chart-line |
+| Second-person voice ("You have a GPU") | setup-options | Rewritten as entity-led |
+| sidebarTitle: Navigator conflict | setup-options | Changed to Setup Options |
+| Orphan single `<Card>` outside `<CardGroup>` | setup-options | Absorbed into the CardGroup |
+| Missing LinkArrow import | setup-options, requirements, benchmarking, session-limits, join-a-pool | Added |
+| Missing ScrollableDiagram import | setup-options | Added |
+| Script code block using icon="terminal" | benchmarking | Changed to icon="code" for bash scripts |
+| JSON code block using icon="terminal" | session-limits | Changed to icon="code" for JSON |
+| status: published (premature for several pages) | setup-options, requirements, benchmarking, session-limits, join-a-pool | All changed to current |
+| Intro "This page covers..." self-description | benchmarking | Rewritten to narrative opening |
+| CardGroup cols=3 on Cards without enough content | join-a-pool (pool choice section) | Changed to cols=2 with proper arrows |
+| Intro text of benchmarking was second-person ("you") | benchmarking | Entity-led rewrite |
 
 ---
 
