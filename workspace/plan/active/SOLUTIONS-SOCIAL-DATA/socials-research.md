@@ -42,7 +42,7 @@
 | Instagram | https://www.instagram.com/daydreamlive_ | VERIFIED | Active |
 | TikTok | https://www.tiktok.com/@daydreamlive | VERIFIED | Active, AI video demos |
 
-**Blog API assessment:** Ghost 6.22 with RSS. Ghost Content API exists at `blog.daydream.live/ghost/api/content/` but requires API key. **RSS is the public option.**
+**Blog API assessment:** Ghost 6.22 with RSS. Ghost Content API exists but requires API key. **RSS is the public option.**
 
 **Hero video candidates:**
 1. Self-hosted `daydream.live/hero-demo.mp4` (current homepage hero)
@@ -64,7 +64,6 @@
 | Channel | URL | Status | Details |
 |---------|-----|--------|---------|
 | Website | https://embody.zone | VERIFIED | AI avatar platform. Has agent-readable index. |
-| Website (alt) | https://embody.live | NOT RELATED | Redirects to unrelated Eventbrite wellness event |
 | Docs | None | — | No standalone docs. Uses Livepeer docs + GitHub READMEs |
 | Blog | None | — | Uses Livepeer Forum for updates |
 | X/Twitter | None found | — | No account found for Embody/Atumera/DeFine in Livepeer context |
@@ -75,14 +74,12 @@
 | Discord | DISBOARD listing (server 1332360907031842930) | PARTIALLY VERIFIED | Needs manual confirmation — team primarily uses Livepeer Discord |
 | Forum | forum.livepeer.org | VERIFIED | Very active. Key threads: WEAVE v5 pre-proposal, Retrospective, UE Updates |
 | Forum user | webRTCisCool (DeFine) | VERIFIED | |
-| Twitch | https://www.twitch.tv/livi_embody | PARTIALLY VERIFIED | "Livi Embody -- Autonomous VTuber" |
+| Twitch | https://www.twitch.tv/livi_embody | PARTIALLY VERIFIED | "Livi Embody — Autonomous VTuber" |
 | Financial audit | https://github.com/its-DeFine/embody-financial-audit-pack | VERIFIED | Public on-chain audit (Arbitrum) |
 
 **Blog API assessment:** No blog. Forum is the primary update channel.
 
 **GitHub Releases:** Active on Unreal_Vtuber repo (latest: 2026.3.1-alpha.1).
-
-**GitHub Discussions:** Not checked on its-DeFine repos — need to verify.
 
 **Hero video candidates:**
 1. Current: "Are Aliens Real" demo MP4 (hosted on GitHub raw, used in overview.mdx)
@@ -105,29 +102,23 @@
 | Channel | URL | Status | Details |
 |---------|-----|--------|---------|
 | Website | https://frameworks.network | VERIFIED | Landing page |
-| Docs | https://docs.frameworks.network | VERIFIED | **Coming Soon** holding page only — NOT live docs |
+| Docs | https://docs.frameworks.network | VERIFIED | **Coming Soon** holding page only — NOT live docs. Keeping reference. |
 | App | https://app.frameworks.network | VERIFIED | **Coming Soon** page with countdown |
 | X/Twitter | https://x.com/GetFrames | PARTIALLY VERIFIED | Referenced on GitHub org + docs holding page. Cannot scrape content. |
 | YouTube | None | — | No dedicated channel |
 | GitHub Org | https://github.com/livepeer-frameworks | VERIFIED | 7 repos, 3 followers |
-| GitHub Main | https://github.com/livepeer-frameworks/monorepo | VERIFIED | 2 stars, Go/Svelte, MIT-like (Unlicense) |
+| GitHub Main | https://github.com/livepeer-frameworks/monorepo | VERIFIED | 2 stars, Go/Svelte, Unlicense |
 | GitHub Discussions | monorepo | VERIFIED | Enabled, 0 posts (categories configured) |
 | GitHub Releases | monorepo | VERIFIED | 8 releases (latest v0.2.0-rc2, 2026-03-16). Actively maintained. |
 | Discord | https://discord.gg/9J6haUjdAq | VERIFIED | Dedicated Frameworks server (separate from Livepeer Discord) |
 | Forum (own) | https://forum.frameworks.network | VERIFIED | Discourse instance, very low activity (1 welcome post) |
 | Forum (Livepeer) | https://forum.livepeer.org/t/pre-proposal-livepeer-frameworks-spe-pilot-phase/2773 | VERIFIED | SPE proposal thread by Stronk |
 | Blog | None | — | No blog found. Uses forum for updates. |
-| Logbook | https://logbook.frameworks.network | UNVERIFIED | Referenced in monorepo README but ECONNREFUSED |
 
 **Blog API assessment:** No blog. No RSS.
 
 **Hero video candidates:**
-1. `youtube.com/watch?v=DKBRp0U-RKw` — "Frameworks - sovereign video infrastructure" (already in use on overview.mdx). Only known video.
-
-**FLAG:** `docs.frameworks.network` and `app.frameworks.network` are NOT functional — they are holding pages. The Livepeer docs reference them as if live. This should be flagged/noted in the solutions pages.
-
-**Items needing manual verification:**
-- [ ] Verify @GetFrames X account is active (needs JS browser)
+1. `youtube.com/watch?v=DKBRp0U-RKw` — "Frameworks — sovereign video infrastructure" (already in use on overview.mdx). Only known video.
 
 ---
 
@@ -138,41 +129,34 @@
 | Channel | URL | Status | Details |
 |---------|-----|--------|---------|
 | Website | https://livepeer.studio | VERIFIED | Marketing + dashboard |
-| Docs | https://docs.livepeer.org | VERIFIED | Mintlify. **NOT** livepeer.studio/docs (404) |
+| Docs | https://docs.livepeer.org | VERIFIED | Mintlify. **Pages also exist in our repo at `/solutions/livepeer-studio/` — use relative links.** |
 | Blog | https://blog.livepeer.org | VERIFIED | Ghost 6.22. Active. |
-| Blog (broken) | https://blog.livepeer.studio | BROKEN | TLS cert error. Footer still links here. |
 | Blog RSS | https://blog.livepeer.org/rss/ | VERIFIED | |
 | X/Twitter (protocol) | https://x.com/Livepeer | VERIFIED | Main account |
-| X/Twitter (product) | https://x.com/livepeerstudio | VERIFIED | Separate Studio-specific account (linked from livepeer.studio footer) |
-| YouTube | https://www.youtube.com/@livepeer | PARTIALLY VERIFIED | Channel ID UCzfHtZnmUzMbJDxGCwIgY2g is in codebase. Fetch timed out. |
+| X/Twitter (product) | https://x.com/livepeerstudio | VERIFIED | Separate Studio-specific account |
+| YouTube | https://www.youtube.com/@livepeer | PARTIALLY VERIFIED | Channel ID UCzfHtZnmUzMbJDxGCwIgY2g in codebase |
 | GitHub Org | https://github.com/livepeer | VERIFIED | 170 repos |
 | GitHub Studio | https://github.com/livepeer/studio | VERIFIED | 85 stars, 231 issues. Latest: v0.19.0 |
 | GitHub go-livepeer | https://github.com/livepeer/go-livepeer | VERIFIED | 580 stars. Latest: v0.8.10 (2026-03-10) |
 | GitHub Discussions | livepeer/studio | VERIFIED | Enabled, minimal activity |
 | GitHub Discussions | livepeer/ui-kit | VERIFIED | Enabled, moderate activity (~12 discussions) |
-| GitHub Releases | livepeer/studio | VERIFIED | Active (v0.19.0) |
-| GitHub Releases | livepeer/go-livepeer | VERIFIED | Very active (v0.8.10) |
 | Discord | https://discord.gg/livepeer | VERIFIED | Primary community hub |
 | Forum | https://forum.livepeer.org | VERIFIED | Discourse. Active. |
-| Forum RSS | https://forum.livepeer.org/latest.rss | VERIFIED | |
 | Telegram | https://t.me/LivepeerOrg | VERIFIED | 4,009 members |
 | LinkedIn (protocol) | https://linkedin.com/company/livepeer | VERIFIED | 3,697 followers |
 | LinkedIn (product) | https://linkedin.com/company/livepeer-studio | VERIFIED | Separate page |
 | Reddit | https://reddit.com/r/livepeer | VERIFIED | ~2,964 subscribers, low activity |
-| Farcaster | warpcast.com/livepeer | PARTIALLY VERIFIED | Redirect confirmed, content unverified |
+| Farcaster | warpcast.com/livepeer | PARTIALLY VERIFIED | Redirect confirmed |
 | Medium (legacy) | https://medium.com/livepeer-blog | VERIFIED | Pre-Ghost migration posts |
 | npm | livepeer, @livepeer/react, @livepeer/sdk | VERIFIED | Actively maintained |
-| Status page | https://status.livepeer.studio | UNVERIFIED | Timeout on fetch |
 
-**Blog API assessment:** Ghost CMS with RSS at `/rss/`. Ghost Content API at `livepeer-studio.ghost.io` requires API key. **Existing fetch script already uses this** — no change needed.
+**Blog API assessment:** Ghost CMS with RSS at `/rss/`. Existing fetch script already handles this.
 
 **Hero video candidates:**
-- No strong YouTube-hosted Studio-specific intro/demo video found
-- `livepeer.studio/demo` has an embedded video (platform undetermined)
-- ComfyStream demo (5:05) on blog — MP4 on Livepeer CDN, not YouTube
-- **Gap: needs a dedicated product overview video**
-
-**FLAG:** `blog.livepeer.studio` has broken TLS — footer link is stale. Working URL is `blog.livepeer.org`.
+1. **Placeholder needed** — no strong YouTube-hosted Studio-specific intro/demo video found via search
+2. `livepeer.studio/demo` has an embedded video (platform undetermined)
+3. Fallback: use Livepeer YouTube channel video featuring Studio, or blog hero image/gif
+4. **TODO:** Manual search of youtube.com/@livepeer for Studio-specific content
 
 ---
 
@@ -185,35 +169,27 @@
 | Channel | URL | Status | Details |
 |---------|-----|--------|---------|
 | Website | https://stream.place | VERIFIED | JS SPA |
-| Docs | https://stream.place/docs | VERIFIED | Starlight (Astro). Full docs: streaming guides, dev setup, API ref, Lex reference |
-| Docs (alt) | https://docs.stream.place | VERIFIED | Redirects to stream.place/docs |
+| Docs | https://stream.place/docs | VERIFIED | Starlight (Astro). Full docs. |
 | Blog | https://blog.stream.place | VERIFIED | Leaflet (AT Protocol native publishing) |
 | Blog RSS | https://blog.stream.place/rss.xml | VERIFIED | Also: /feed.xml |
-| X/Twitter | https://x.com/streamplace | VERIFIED | **Exists but DORMANT.** Founder publicly left X for Bluesky. |
+| X/Twitter | https://x.com/streamplace | VERIFIED | **Exists but DORMANT.** Founder on Bluesky. |
 | YouTube | None | — | No channel, no videos |
 | GitHub Org | https://github.com/streamplace | VERIFIED | 67 public repos |
 | GitHub Main | https://github.com/streamplace/streamplace | VERIFIED | 207 stars, 26 forks, MIT. Default branch: `next` |
-| GitHub "overview" | https://github.com/streamplace/overview | **404** | **Does not exist.** Link in existing docs is wrong. |
-| GitHub Discussions | streamplace/streamplace | VERIFIED | Enabled (at least 1 discussion) |
-| GitHub Releases | streamplace/streamplace | PARTIALLY | No formal releases. Tags exist (v0.10.2–v0.10.6) |
+| GitHub Discussions | streamplace/streamplace | VERIFIED | Enabled |
 | Discord | https://discord.com/invite/EdtZv4UTMU | VERIFIED | |
-| Forum | forum.livepeer.org | VERIFIED | Treasury proposal thread (100k LPT funding) |
-| Bluesky | https://bsky.app/profile/stream.place | VERIFIED | **PRIMARY social platform.** 2,704 followers, 71 posts |
-| Bluesky (founder) | https://bsky.app/profile/iame.li | VERIFIED | 2,865 followers. Livestreams dev daily. |
+| Forum | forum.livepeer.org | VERIFIED | Treasury proposal thread |
+| Bluesky | https://bsky.app/profile/stream.place | VERIFIED | **PRIMARY social.** 2,704 followers |
 | iOS App | https://apps.apple.com/us/app/streamplace/id6535653195 | VERIFIED | v0.7.2 |
-| Android App | https://play.google.com/store/apps/details?id=tv.aquareum | VERIFIED | Publisher: Aquareum Inc. |
-| Self-hosted Git | https://git.stream.place | VERIFIED | Gitea/Forgejo instance |
-| Press | TechCrunch (2025-06-13), Livepeer Blog (2025-08-14) | VERIFIED | |
+| Android App | https://play.google.com/store/apps/details?id=tv.aquareum | VERIFIED | |
 
 **Blog API assessment:** Leaflet platform with RSS at `/rss.xml`. Public, no API key needed.
 
 **Hero video candidates:**
-- No polished intro/overview video exists anywhere
-- ATmosphere Conference livestream recordings may exist on stream.place
-- Eli's daily dev streams could provide clips
-- **Gap: needs a dedicated video or we use Livepeer blog coverage video if exists**
+- No polished video exists. Best candidates: ATmosphere Conference livestream or Eli's daily dev streams.
+- **Gap: needs a dedicated video or fallback to blog hero image/gif**
 
-**FLAG:** `github.com/streamplace/overview` (referenced in existing docs) returns 404. Correct repo is `github.com/streamplace/streamplace`.
+**NOTE:** `github.com/streamplace/overview` referenced in existing docs returned 404 — **FIXED** to `github.com/streamplace/streamplace`.
 
 ---
 
@@ -258,17 +234,16 @@
 | Daydream | YouTube channel videos or `daydream.live/hero-demo.mp4` | Own channel / self-hosted | Needs manual selection |
 | Embody | "Are Aliens Real" MP4 or `youtu.be/_MAM5ZPsTdM` | GitHub raw / YouTube | Current hero exists |
 | Frameworks | `youtube.com/watch?v=DKBRp0U-RKw` | YouTube (already in use) | Only option |
-| Livepeer Studio | `livepeer.studio/demo` embedded video | livepeer.studio | Gap — no YouTube hero |
-| Streamplace | None found | — | Gap — no video exists |
+| Livepeer Studio | **Placeholder** — search Livepeer YT or use blog image/gif | youtube.com/@livepeer or blog | Gap — TODO manual search |
+| Streamplace | None — use blog hero image/gif or ATmosphere recording | blog.stream.place or stream.place | Gap — no video |
 
 ---
 
 ## Flags & Issues Discovered
 
-1. **`blog.livepeer.studio`** — Broken TLS cert. Working URL is `blog.livepeer.org`. Footer link on livepeer.studio is stale.
-2. **`livepeer.studio/docs`** — Returns 404. Real docs are at `docs.livepeer.org`.
-3. **`docs.frameworks.network`** — Is a "Coming Soon" holding page, not live documentation.
-4. **`app.frameworks.network`** — Is a "Coming Soon" holding page, not a functional app.
-5. **`github.com/streamplace/overview`** — Returns 404. Correct repo is `github.com/streamplace/streamplace`. Existing docs reference the wrong URL.
-6. **`embody.live`** — Not owned by the Livepeer Embody project (redirects to unrelated Eventbrite event).
-7. **Streamplace X/Twitter** — Account exists but is dormant. Primary social is Bluesky.
+1. ~~`blog.livepeer.studio`~~ — Broken TLS cert. Not our concern (external site issue).
+2. **`livepeer.studio/docs`** — Returns 404. These pages exist in our repo at `/solutions/livepeer-studio/`. **Use relative links** in all templates and new pages. ~35 existing external links in solutions/ need updating (separate cleanup task).
+3. **`docs.frameworks.network`** — "Coming Soon" holding page. Keeping reference anyway.
+4. ~~`github.com/streamplace/overview`~~ — **FIXED** to `github.com/streamplace/streamplace` in `v2/solutions/streamplace/overview.mdx`.
+5. **`embody.live`** — Not related to this project. Correct domain is `embody.zone`.
+6. **Streamplace X/Twitter** — Account exists but is dormant. Primary social is Bluesky.

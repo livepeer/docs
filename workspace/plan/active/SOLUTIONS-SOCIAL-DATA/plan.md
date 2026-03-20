@@ -78,23 +78,15 @@ The page uses **5 data pipelines**, each following the same pattern:
 
 ## 3. Social & Documentation Research (→ socials-research.md)
 
-### Known from solutions/ folder (to be verified via web search)
+### Known from solutions/ folder (verified via web search — see socials-research.md for full details)
 
 | Product | Website | Docs | YouTube | X/Twitter | Discord | GitHub | Blog | Forum / Discussions |
 |---------|---------|------|---------|-----------|---------|--------|------|---------------------|
-| **Daydream** | daydream.live | docs.daydream.live | ? (uses Livepeer YT) | ? | discord.com/invite/mnfGR4Fjhp | github.com/daydreamlive/scope | blog.daydream.live | ? |
-| **Embody** | embody.zone | ? | has YouTube | ? | has Discord | ? | ? | active on Livepeer forum |
-| **Frameworks** | frameworks.network | docs.frameworks.network | ? | ? | ? | github.com/livepeer-frameworks/monorepo | ? | ? |
-| **Livepeer Studio** | livepeer.studio | livepeer.studio/docs | @livepeer | @Livepeer | discord.gg/livepeer | github.com/livepeer | blog.livepeer.org | forum.livepeer.org |
-| **Streamplace** | stream.place | stream.place/docs | ? | ? | discord.com/invite/EdtZv4UTMU | github.com/streamplace/overview | ? | ? |
-
-**Task:** Web search each product to:
-1. Fill `?` cells
-2. Verify all existing links still resolve
-3. Check for GitHub Discussions availability on each repo
-4. Check for GitHub Releases/Changelog on each repo
-5. Identify public blog API availability (Ghost Content API, RSS feeds, etc.)
-6. Output to `socials-research.md`
+| **Daydream** | daydream.live | docs.daydream.live (Mintlify) | Own channel (UCviyh_-8H2vkYq9ROHMBffQ) | @daydreamlive | discord.gg/pF2Akym5bV | github.com/daydreamlive (27 repos) | blog.daydream.live (Ghost, RSS) | — |
+| **Embody** | embody.zone | None | No channel (scattered videos) | None | Needs manual verify | github.com/its-DeFine (52 repos) | None | forum.livepeer.org (very active) |
+| **Frameworks** | frameworks.network | docs.frameworks.network (Coming Soon!) | No channel | @GetFrames | discord.gg/9J6haUjdAq | github.com/livepeer-frameworks (7 repos) | None | forum.frameworks.network (low) + forum.livepeer.org |
+| **Livepeer Studio** | livepeer.studio | docs.livepeer.org (Mintlify) | youtube.com/@livepeer | @Livepeer + @LivepeerStudio | discord.gg/livepeer | github.com/livepeer (170 repos) | blog.livepeer.org (Ghost, RSS) | forum.livepeer.org |
+| **Streamplace** | stream.place | stream.place/docs (Starlight) | None | @streamplace (dormant) | discord.com/invite/EdtZv4UTMU | github.com/streamplace (67 repos) | blog.stream.place (Leaflet, RSS) | forum.livepeer.org |
 
 ---
 
@@ -174,6 +166,8 @@ lastVerified: YYYY-MM-DD
   LinkArrow → Product events page
 ```
 
+**IMPORTANT:** All internal links to docs pages MUST use relative paths (e.g. `/solutions/livepeer-studio/reference/api`), NOT external URLs. These pages exist in our repo under the solutions anchor.
+
 ### 4c. Existing Template Patterns to Follow
 
 From scanning `snippets/templates/pages/`:
@@ -205,7 +199,7 @@ From scanning `snippets/templates/pages/`:
 > (a) what was done, (b) full plan status (all phases, checked/unchecked), (c) any blockers.
 > Commit at end of each phase. Do not proceed to next phase without approval.
 
-### Phase 1: Research & Config ← COMPLETE
+### Phase 1: Research & Config — COMPLETE
 - [x] Web search to complete `socials-research.md` (verify all product socials, GitHub Discussions, Releases, public blog APIs)
 - [x] Source hero videos for each product (candidates identified — see config; some gaps flagged)
 - [x] Create `tools/scripts/config/product-social-config.json` mapping product → social channels
@@ -224,6 +218,7 @@ From scanning `snippets/templates/pages/`:
 - [ ] Create `snippets/templates/pages/data-imports/social-data-page.mdx` template
 - [ ] Create per-product data files in `snippets/automations/{product}/`
 - [ ] Create social/community pages for each product in `v2/solutions/{product}/`
+- [ ] Add related pages section to `v2/community/livepeer-community/trending-topics.mdx` — CardGroup cols={2} linking to each product's community/socials page
 - [ ] Wire into `docs.json` navigation
 - [ ] **CHECKPOINT:** Report pages created inline. Commit. Await approval before Phase 4.
 
@@ -249,13 +244,14 @@ From scanning `snippets/templates/pages/`:
 | Discord n8n → GH Actions migration | Test thoroughly against existing community page data before deploying to products. Keep n8n as fallback during transition. |
 | GitHub Discussions API rate limits | Public API has generous limits for read-only. Use conditional fetch + caching. |
 | Products with no GitHub Discussions enabled | Omit section. Fall back to GitHub Issues or static link to repo. |
+| ~35 existing external links to livepeer.studio/docs | Separate cleanup task — convert to relative links pointing to our own solutions pages. |
 
 ---
 
 ## 7. Files to Create/Modify
 
 ### New Files
-- `tasks/plan/active/SOLUTIONS-SOCIAL-DATA/socials-research.md` — Product socials inventory
+- `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/socials-research.md` — Product socials inventory
 - `snippets/templates/pages/data-imports/social-data-page.mdx` — Reusable template
 - `tools/scripts/config/product-social-config.json` — Central config registry
 - `.github/scripts/fetch-discord-announcements.js` — Discord GH Actions script (replaces n8n)
@@ -274,7 +270,7 @@ From scanning `snippets/templates/pages/`:
 - `docs.json` — Add community pages to solutions navigation
 
 ### Governance Compliance
-- All new files in `tasks/plan/active/` follow existing SOLUTIONS-SOCIAL-DATA folder structure
+- All new files in `workspace/plan/active/` follow existing SOLUTIONS-SOCIAL-DATA folder structure
 - All new scripts include JSDoc headers per SCRIPT-GOVERNANCE framework (11 required tags)
 - All new `.mdx` pages include Phase 1 frontmatter schema
 - All new GH Actions workflows follow existing naming/structure conventions
