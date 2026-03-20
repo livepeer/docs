@@ -195,7 +195,7 @@ Q5: Default → ELEMENTS
 | Pattern | Governed by |
 |---------|-------------|
 | Mintlify globals (Card, Tabs, Accordion, etc.) | Mintlify platform |
-| Content snippets (`snippets/*.mdx` outside `components/`) | Composable Content Structure |
+| MDX composables (`snippets/composables/`) | Composable Content Structure — see [Section 12](#12-composable-content-layer) |
 | Data snippets (`snippets/data/`, `snippets/automations/`) | Data integration layer |
 
 Mintlify enforces that all importable JSX lives under `/snippets/`. No "section-local components" are possible outside this path.
@@ -632,4 +632,58 @@ The following were open items at framework inception and are now complete as of 
 - ✅ Duplicate components resolved and archived
 
 **Remaining (deferred to CONTENT-STRUCTURE Phase 5.1):**
-- `component-layout-decisions.mdx` update — dependent on composable section system definition
+- `component-layout-decisions.mdx` update — see [Section 12.3](#123-contentaffinity) below; unblocked as of 2026-03-21
+
+<CustomDivider />
+
+## 12. Composable Content Layer
+
+### 12.1 Three-Layer Architecture
+
+Components (`snippets/components/`) are the middle layer of a three-layer content architecture:
+
+| Layer | Location | What it is | Governed by |
+|-------|----------|------------|-------------|
+| **Data** | `snippets/data/`, `v2/[section]/[page-slug]-data.json` | Structured data consumed by components | AI Discoverability framework |
+| **Components** | `snippets/components/` | JSX rendering units | This document |
+| **Composables** | `snippets/composables/` | Portable MDX section blocks | Composable Content Structure |
+
+**Platform constraint (Decision D4):** JSX files cannot cross-import other JSX files in Mintlify. Composables must therefore be `.mdx` files. MDX can freely import JSX components; JSX cannot import JSX.
+
+### 12.2 Composable Section Library
+
+As of 2026-03-21, `snippets/composables/` contains 8 composable section blocks:
+
+| Composable | Tier | Page types |
+|---|---|---|
+| `related-resources-section.mdx` | 1 | All — mandatory footer |
+| `steps-section.mdx` | 1 | instruction, tutorial, start, build |
+| `prerequisites-section.mdx` | 1 | instruction, tutorial, start |
+| `accordion-faq-section.mdx` | 1 | reference (compendium), concept |
+| `accordion-glossary-section.mdx` | 1 | reference (compendium), concept |
+| `accordion-troubleshooting-section.mdx` | 1 | reference (compendium), instruction |
+| `overview-intro-section.mdx` | 2 | All — optional opening block |
+| `validation-section.mdx` | 2 | instruction, tutorial, start |
+
+Each composable includes a `@composable` governance header (purpose, pageTypes, variables, notes) and uses `{/* */}` comments to show optional sub-elements inline at point of use.
+
+**Lifecycle rule:** Content starts local to a page. Promote to `snippets/composables/` only when a concrete second consumer appears.
+
+### 12.3 @contentAffinity
+
+`@contentAffinity` is a deferred JSDoc field (field #8 on the aspirational schema, deferred in prior sessions) that declares which page types a component is appropriate for.
+
+**Status:** Not yet enforced. Page taxonomy is now locked (15 `purpose` values, 10 `pageType` values), making this field unblocked.
+
+**Proposed syntax:**
+
+```jsx icon="terminal"
+/**
+ * @contentAffinity  start, build, instruction
+ */
+export const StepsWizard = () => ...
+```
+
+**When to add it:** When a component's appropriate page types are non-obvious from its name and category. Not required on universal components (CustomDivider, CardGroup equivalents). Required on scaffolding/, integrators/, and page-specific displays/.
+
+**Enforcement:** Add to `--strict` mode in `generate-component-registry.js` as part of CONTENT-STRUCTURE Phase 5.1.

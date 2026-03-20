@@ -184,8 +184,15 @@ snippets/
 │                                        # (CI-regenerated; one file per API source)
 │                                        # Naming: coingecko-[coinId].json, embed-[url-hash].json
 │
-└── composables/                         # Future: MDX-defined composable snippets (TBD)
-    └── (ApiBaseUrlsTable.mdx — to be moved here from layout/)
+└── composables/                         # Portable MDX section blocks — authored content, not JSX
+    ├── related-resources-section.mdx    # Footer navigation cards — mandatory on all pages
+    ├── steps-section.mdx                # Ordered procedural steps (instruction/tutorial/start/build)
+    ├── prerequisites-section.mdx        # Upfront requirements list (pairs with steps-section)
+    ├── accordion-faq-section.mdx        # Frequently Asked Questions block (reference/compendium)
+    ├── accordion-glossary-section.mdx   # Alphabetical per-term definitions (reference/compendium)
+    ├── accordion-troubleshooting-section.mdx  # Symptom/cause/fix/verify (troubleshooting pages)
+    ├── overview-intro-section.mdx       # Page opening block with optional media slot (all pages)
+    └── validation-section.mdx           # Post-task validation (instruction/tutorial/start)
 ```
 
 > **Tier 2 companion files** (props-extracted components) live adjacent to their MDX pages, not here:
