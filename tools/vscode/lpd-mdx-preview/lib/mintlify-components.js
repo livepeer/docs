@@ -15,7 +15,7 @@ function escapeHtml(str) {
 
 function iconBadge(name) {
   if (!name) return '';
-  return `<span class="icon-badge">[${escapeHtml(name)}]</span>`;
+  return `<i class="fa-solid fa-${escapeHtml(name)} icon-badge"></i>`;
 }
 
 // ─── Callouts ─── //
