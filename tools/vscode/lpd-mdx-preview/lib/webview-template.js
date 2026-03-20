@@ -15,6 +15,7 @@ function buildWebviewHtml({ bodyHtml, cssUri, jsUri, markdownItUri, mermaidUri, 
              script-src vscode-resource: 'unsafe-inline';
              font-src vscode-resource: https:;">
   <link rel="stylesheet" href="${cssUri}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <title>MDX Preview</title>
 </head>
 <body class="${themeClass}">
