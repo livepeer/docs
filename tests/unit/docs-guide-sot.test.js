@@ -3,7 +3,7 @@
  * @script            docs-guide-sot.test
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             tests, docs-guide, README.md, tools/scripts/generate-docs-guide-indexes.js, tools/scripts/generate-docs-guide-pages-index.js, tools/scripts/generate-docs-guide-components-index.js
+ * @scope             tests, docs-guide, README.md, tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js, tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js, tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js
  * @domain            docs
  * @needs             E-C1, R-R14
  * @purpose-statement Validates docs-guide source-of-truth coverage, README pointers, and generated index freshness
@@ -156,22 +156,22 @@ function checkReadmeReferences(errors, warnings) {
 function checkGeneratedIndexFreshness(errors) {
   const checks = [
     {
-      args: ['tools/scripts/generate-docs-guide-indexes.js', '--check'],
+      args: ['tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js', '--check'],
       file: 'docs-guide/catalog/workflows-catalog.mdx',
       message: 'Generated docs-guide template/workflow indexes are out of date. Run generator script.'
     },
     {
-      args: ['tools/scripts/generate-docs-guide-pages-index.js', '--check'],
+      args: ['tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js', '--check'],
       file: 'docs-guide/catalog/pages-catalog.mdx',
       message: 'Generated docs-guide pages catalog is out of date. Run pages catalog generator script.'
     },
     {
-      args: ['tools/scripts/generate-docs-guide-components-index.js', '--check'],
+      args: ['tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js', '--check'],
       file: 'docs-guide/catalog/components-catalog.mdx',
       message: 'Generated docs-guide components catalog is out of date. Run components catalog generator script.'
     },
     {
-      args: ['tools/scripts/generate-ui-templates.js', '--check'],
+      args: ['tools/scripts/generators/components/library/generate-ui-templates.js', '--check'],
       file: 'docs-guide/catalog/ui-templates.mdx',
       message: 'Generated UI template artifacts are out of date. Run the UI template generator script.'
     },
@@ -196,7 +196,7 @@ function checkGeneratedIndexFreshness(errors) {
       return;
     }
 
-    if (check.args[0] === 'tools/scripts/generate-ui-templates.js') {
+    if (check.args[0] === 'tools/scripts/generators/components/library/generate-ui-templates.js') {
       const uiTemplates = uiTemplateGenerator.run({ write: false });
       if (!uiTemplates.passed) {
         errors.push({
