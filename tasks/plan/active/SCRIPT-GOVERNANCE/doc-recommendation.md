@@ -195,13 +195,14 @@ Do not present the full 11 as equally enforced — this creates false confidence
 > `policies/` sits alongside agent-governance-framework, root-allowlist-governance, audit-system-overview — all governance rules.
 > `tooling/` sits alongside lpd-cli, dev-tools — practical how-to tools.
 >
-> **Recommendation: `docs-guide/policies/`** — writing scripts follows governance rules, not just tooling preferences.
+> **Decision: `docs-guide/policies/`** ✅ — approved 2026-03-21.
+> **Open note**: Consider whether a `docs-guide/references/` section is needed for this type of content — flag for REPO-STRUCTURE-GOV review.
 
 ---
 
 > **Q2: Who owns the JSON?** — Is `script-registry.json` generated from JSDoc headers, or are JSDoc headers generated from the JSON?
 >
-> **Recommendation: JSDoc headers are authoritative.** They live with the code, version with the code, and are the per-script ground truth. The JSON is a derived index — regenerated from JSDoc headers by a generator script whenever scripts change. Do not invert this.
+> **Decision: JSDoc headers are authoritative.** ✅ — approved 2026-03-21. They live with the code, version with the code, and are the per-script ground truth. The JSON is a derived index — regenerated from JSDoc headers by a generator script whenever scripts change. Do not invert this.
 
 ---
 
@@ -209,7 +210,7 @@ Do not present the full 11 as equally enforced — this creates false confidence
 >
 > It is currently blocking the test suite. It is a one-command fix (`generate-component-registry.js`).
 >
-> **Recommendation: Fix in Task 13 step 2.** The blocker is trivial to resolve and enabling clean tests is worth it.
+> **Decision: Fix in Task 13 step 2.** ✅ — approved 2026-03-21.
 
 ---
 
@@ -217,7 +218,7 @@ Do not present the full 11 as equally enforced — this creates false confidence
 >
 > Decision tree, JSDoc template, and script checklist as importable `<Snippet>` blocks.
 >
-> **Recommendation: Yes**, but defer to after core JSON migration. Creates `snippets/scripts/docs-snippets/` — a new convention. Worth doing but not a blocker for the registry work.
+> **Decision: Defer.** ✅ — approved 2026-03-21. Execute after core JSON migration is complete.
 
 ---
 
@@ -225,4 +226,4 @@ Do not present the full 11 as equally enforced — this creates false confidence
 >
 > `scripts-catalog.mdx` has 3 locale mirrors (cn, es, fr).
 >
-> **Recommendation: Defer EN-first.** Verify correct EN output after schema migration before propagating to locale mirrors.
+> **Decision: EN-first, mirrors in follow-up.** ✅ — approved 2026-03-21.
