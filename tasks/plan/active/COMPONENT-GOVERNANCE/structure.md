@@ -169,9 +169,28 @@ snippets/
 │   │
 │   └── _archive/                        # Existing legacy archive (untouched until cleanup)
 │
+├── data/                                # Page data, variables, and AI companion snapshots
+│   ├── about/
+│   ├── community/
+│   ├── developers/
+│   ├── gateways/
+│   ├── home/
+│   ├── lpt/
+│   ├── orchestrators/
+│   ├── references/
+│   ├── resources/
+│   ├── solutions/
+│   └── snapshots/                       # External API data snapshots — AI companion files, Tier 1
+│                                        # (CI-regenerated; one file per API source)
+│                                        # Naming: coingecko-[coinId].json, embed-[url-hash].json
+│
 └── composables/                         # Future: MDX-defined composable snippets (TBD)
     └── (ApiBaseUrlsTable.mdx — to be moved here from layout/)
 ```
+
+> **Tier 2 companion files** (props-extracted components) live adjacent to their MDX pages, not here:
+> `v2/[section]/[page-slug]-data.json` — same slug as the page, with `-data` suffix.
+> Written at page-authoring time; see `@aiDiscoverability` section below and `tasks/plan/active/AI-DISCOVERABILITY/plan.md`.
 
 ## Decision Rules
 
@@ -200,7 +219,8 @@ snippets/
 
 ## Component JSDoc header standard
 
-Every exported component must include a JSDoc header block with these 7 tags.
+Every exported component must include a JSDoc header block with these 7 core tags.
+Hook-using components additionally require `@aiDiscoverability`.
 No other governance tags should be used — removed tags (`@owner`, `@category`,
 `@tier`, `@contentAffinity`, `@decision`, `@duplicates`, `@lastMeaningfulChange`,
 `@breakingChangeRisk`, `@dependencies`, `@usedIn`) must not appear.
@@ -216,6 +236,7 @@ No other governance tags should be used — removed tags (`@owner`, `@category`,
 | `@description` | Yes | One-line human-readable description | Plain English sentence — what it renders and when to use it |
 | `@dataSource` | If integrator | Where external data comes from | `none`, `prop`, `CoinGecko API`, `fetch(url)`, `automation/blog`, etc. |
 | `@accepts` | Yes | Extensibility declaration — what the consumer can customise | Comma-separated: `children`, `style`, `className`, `...rest` |
+| `@aiDiscoverability` | If hook-using | Companion file requirement for AI/crawler access | `snapshot`, `props-extracted`, `none` |
 
 After the header block, each prop gets a standard `@param`:
 
@@ -261,6 +282,21 @@ List which extensibility props the component supports:
 | `className` | Accepts a `className` prop on the outermost element |
 | `...rest` | Spreads remaining props onto the outermost element (id, data-*, aria-*) |
 
+### @aiDiscoverability values
+
+Required on any component that uses React hooks (`useState`, `useEffect`, `useRef`, etc.).
+Not required on pure/presentational components.
+
+| Value | Meaning | Companion file location |
+|---|---|---|
+| `snapshot` | Fetches external data at runtime — content invisible to crawlers/AI without a static counterpart | `snippets/data/snapshots/[source-id].json` (central, API-scoped, CI-regenerated) |
+| `props-extracted` | Renders props-driven data through interactive/paginated UI — full data set not in static HTML | `v2/[section]/[page-slug]-data.json` (adjacent to the MDX page) |
+| `none` | Uses hooks for UI state only (zoom, scroll hint, lazy visibility) — no content hidden from crawlers | No companion needed |
+
+**How it works in Mintlify**: `.json` files placed alongside `.mdx` pages in `v2/` are served as static assets at their URL path. A file at `v2/developers/glossary-data.json` is accessible at `https://[domain]/v2/developers/glossary-data.json` and readable by AI crawlers, agents, and LLM pipelines without any build config.
+
+**Write-time obligation**: any author or agent writing a page that uses a `props-extracted` component must create the companion `.json` alongside the MDX. The automation to generate this from MDX props is tracked in `tasks/plan/active/AI-DISCOVERABILITY/plan.md` (CDA-5).
+
 ### Example headers
 
 **Element:**
@@ -298,7 +334,7 @@ List which extensibility props the component supports:
  */
 ```
 
-**Integrator:**
+**Integrator (snapshot — external fetch):**
 ```js
 /**
  * @component   CoinGeckoExchanges
@@ -308,10 +344,29 @@ List which extensibility props the component supports:
  * @description Fetches and renders a sortable table of exchanges listing a token from CoinGecko API.
  * @dataSource  CoinGecko API (GET /coins/{coinId}/tickers)
  * @accepts     style, className, ...rest
+ * @aiDiscoverability snapshot
  *
  * @param {string} [coinId="arbitrum"] - CoinGecko coin identifier
  * @param {Object} [style={}] - Override/merge styles on outermost element
  * @param {string} [className=""] - CSS class on outermost element
+ */
+```
+
+**Hook-using wrapper (props-extracted — interactive UI hides data):**
+```js
+/**
+ * @component   SearchTable
+ * @type        wrappers
+ * @subniche    tables
+ * @status      stable
+ * @description Filterable table wrapper with search input and category dropdown.
+ * @accepts     className, style, ...rest
+ * @aiDiscoverability props-extracted
+ *
+ * @param {Array} [headerList=[]] - Column header definitions
+ * @param {Array} [itemsList=[]] - Row data to render and filter
+ * @param {Array} [searchColumns=[]] - Columns to include in text search
+ * @param {string} [categoryColumn='Category'] - Column used to build the category dropdown
  */
 ```
 

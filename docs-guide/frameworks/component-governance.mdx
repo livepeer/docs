@@ -92,7 +92,7 @@ Follow the decision tree (first match wins):
 
 1. Create your `.jsx` file in the correct category folder.
 2. Use arrow function syntax (`export const X = () => ...`).
-3. Add the full JSDoc block (7 governance fields + `@param` per prop + `@example`).
+3. Add the full JSDoc block (7 governance fields + `@aiDiscoverability` if hook-using + `@param` per prop + `@example`).
 4. Use `var(--lp-*)` CSS tokens for all colours. No hardcoded hex. No ThemeData.
 5. Add defensive rendering — guard all props, never throw. A crash kills the entire page.
 6. Create an example in `{category}/examples/{file}-examples.mdx`.
@@ -104,7 +104,7 @@ Follow the decision tree (first match wins):
 
 ``` icon="terminal"
 JSDoc
-  □ All 7 governance fields present
+  □ All 7 governance fields present (+ @aiDiscoverability if hook-using)
   □ @param for every prop
   □ @example with primary usage
 
@@ -401,7 +401,7 @@ Every exported component carries this block:
 
 `@dataSource` is additionally required for all components in `integrators/`. All other fields are required for every export.
 
-### 5.2 Metadata Schema (7 Fields, Enforced)
+### 5.2 Metadata Schema (7 Fields + 1 Conditional, Enforced)
 
 | # | Tag | Type | Values |
 |---|-----|------|--------|
@@ -412,6 +412,12 @@ Every exported component carries this block:
 | 5 | `@description` | string | One-line purpose |
 | 6 | `@accepts` | string | Prop surface description |
 | 7 | `@dataSource` | string | External pipeline/API (integrators only; `none` for others) |
+| 8 | `@aiDiscoverability` | enum | `snapshot` · `props-extracted` · `none` — **required on any hook-using component** (`useState`, `useEffect`, etc.); omit on pure/presentational components |
+
+`@aiDiscoverability` declares whether a component hides content from crawlers and AI pipelines at runtime, and where its static companion file lives:
+- `snapshot` → external-fetch component; companion at `snippets/data/snapshots/[source-id].json` (CI-regenerated)
+- `props-extracted` → interactive/paginated UI; companion at `v2/[section]/[page-slug]-data.json` (author obligation, adjacent to MDX)
+- `none` → hooks used for UI state only; no content hidden; no companion needed
 
 ### 5.3 Props Table Format (Published Docs)
 

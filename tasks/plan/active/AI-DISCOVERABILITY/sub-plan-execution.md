@@ -1,9 +1,11 @@
 # AI Discoverability — Execution Sub-Plan (Items 1–3)
 
-> **Status**: AWAITING APPROVAL — no execution until human confirms
+> **Status**: EXECUTED — all items complete as of 2026-03-21
 > **Parent plan**: [plan.md](./plan.md)
 > **Raised**: 2026-03-21
 > **Covers**: CDA-1 (structure.md update), CDA-2 (companion file schema + folder), CDA-5 (script folder)
+>
+> **Mintlify JSON serving**: CONFIRMED — `.json` files in `v2/` are served as static assets at their URL path. No build config needed. Verified via docs.
 
 ---
 
@@ -209,13 +211,14 @@ Item 3 first — structure.md update (governance doc, no code impact, pure docum
 
 ---
 
-## Files this sub-plan will touch (no execution yet)
+## Files touched (executed)
 
-| File | Change |
-|---|---|
-| `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md` | Add `@aiDiscoverability` tag row, values table, example header, folder tree entries |
-| `snippets/data/snapshots/` (new folder) | Create stub `.gitkeep` — marks the location |
-| `tools/scripts/generators/ai/` (new folder) | Create stub `.gitkeep` + `README.md` noting future script |
-| `docs-guide/frameworks/component-governance.mdx` | Add `@aiDiscoverability` to Section 5.2 metadata table |
+| File | Change | Status |
+|---|---|---|
+| `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md` | `@aiDiscoverability` tag row, values table + 2 example headers, folder tree entries for `data/snapshots/` + Tier 2 note | ✅ Done |
+| `snippets/data/snapshots/` (new folder) | Stub `.gitkeep` — marks the location | ✅ Done |
+| `tools/scripts/generators/ai/` (new folder) | Stub `.gitkeep` + `README.md` noting CDA-5 script | ✅ Done |
+| `docs-guide/frameworks/component-governance.mdx` | Section 5.2: `@aiDiscoverability` row + companion file explanation paragraph | ✅ Done |
+| 9 hook-using JSX files | `@aiDiscoverability` tag added (`snapshot`/`props-extracted`/`none`) | ✅ Done (prior step) |
 
 **Not in scope for this sub-plan**: Actual JSON companion files, the generation script, the manifest, governance enforcement (CDA-5, CDA-6, CDA-7).

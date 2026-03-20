@@ -6,6 +6,7 @@
  * @description Fetches and renders remote markdown content.
  * @dataSource fetch(url)
  * @accepts {string} url, {string} className, {object} style, ...rest
+ * @aiDiscoverability snapshot
  * @param {string} url - Destination URL used by the component.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
