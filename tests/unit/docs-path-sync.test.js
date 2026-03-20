@@ -22,8 +22,8 @@ const syncLib = require('../../tools/scripts/config/docs-path-sync');
 const remediator = require('../../tools/scripts/remediators/content/repair/sync-docs-paths');
 const validator = require('../../tools/scripts/validators/content/structure/check-docs-path-sync');
 
-const REMEDIATOR_PATH = path.join(__dirname, '..', '..', 'tools', 'scripts', 'remediators', 'content', 'sync-docs-paths.js');
-const VALIDATOR_PATH = path.join(__dirname, '..', '..', 'tools', 'scripts', 'validators', 'content', 'check-docs-path-sync.js');
+const REMEDIATOR_PATH = path.join(__dirname, '..', '..', 'tools', 'scripts', 'remediators', 'content', 'repair', 'sync-docs-paths.js');
+const VALIDATOR_PATH = path.join(__dirname, '..', '..', 'tools', 'scripts', 'validators', 'content', 'structure', 'check-docs-path-sync.js');
 const REPO_ROOT = path.join(__dirname, '..', '..');
 const STATIC_GIT_ENV_VARS = [
   'GIT_ALTERNATE_OBJECT_DIRECTORIES',
