@@ -66,7 +66,7 @@ Call out conflicts explicitly instead of guessing.
 Run the smallest relevant validation set before handing work back:
 
 - `lpd test --staged`
-- `node tools/scripts/validators/governance/check-agent-docs-freshness.js --json`
+- `node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json`
 - `node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check`
 - task-specific generators or validators when routing, governance, or generated artifacts changed
 

@@ -65,10 +65,9 @@ All decisions are logged in [plan.md → Decision Log](plan.md). Critical ones s
 `concept`, `tutorial`, `guide`, `instruction`, `navigation`, `reference`, `resource`
 
 ### pageVariant (locked)
-`overview` (cross-type), `specification`, `compendium`, `changelog` — see [framework.md](framework.md)
+`overview` (cross-type), `specification`, `compendium`, `changelog`, `knowledge-hub` — see [framework.md](framework.md)
 
-### pageVariant (open — resource sub-type)
-`resource` needs one variant for curated external/public content (tools, directories, showcases, community channels). `library` rejected. Candidates: `catalog`, `directory`, `collection`, `registry`, `index` — see [framework.md](framework.md) Open Question O3
+`knowledge-hub` = `resource` variant — curated external/public content: tools, directories, showcases, community channels, ecosystem link collections
 
 ### audience (7)
 `founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`
@@ -104,9 +103,9 @@ See [framework.md](framework.md) for full per-audience persona lists
 | Step | Task | File |
 |---|---|---|
 | 5b | Information category (format/layout) | Deferred to Phase 2 |
-| 6 | Industry + niche (field taxonomy — terminology + voice register) | [industry.md](industry.md) — DRAFT, pending lock |
+| 6 | Industry + niche (field taxonomy — terminology + voice register) | ✅ [industry.md](industry.md) |
 | 7 | Complexity + lifecycleStage | ✅ [complexity.md](complexity.md) |
-| 8a | IA per tab — section structure, audience journey, page groups | TBD |
+| ▶ 8a | IA per tab — section structure, audience journey, page groups | 🔄 [08a-ia-per-tab.md](../../v2/_workspace/references/content-pipeline/08a-ia-per-tab.md) — DRAFT, awaiting checkpoint |
 | 8 | Generation contract (how all fields combine) | TBD |
 | 9 | Voice rules per audience | TBD |
 | 10 | Section naming rules | TBD |

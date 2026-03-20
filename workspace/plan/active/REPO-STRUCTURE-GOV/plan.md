@@ -111,14 +111,15 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ### Phase 0 — Safe cleanup (no coord required)
 
-- [ ] **0.1** Rename `docs/` → `_dep-docs/` (zero references, zero risk)
-- [ ] **0.2** Add `/_dep-docs/**` to `.mintignore`
-- [ ] **0.3** Extract todo.txt notes from `_dep-docs/` into a task (7 files, section restructure notes)
-- [ ] **0.4** Delete `docs.json.bak` from root
-- [ ] **0.5** Delete `api/openapi.yaml.backup`
-- [ ] **0.6** Delete all `.DS_Store` files across repo
-- [ ] **0.7** Move `tasks/plan/active/dep-COPYWRITING FRAMEWORK` → `tasks/plan/complete/` or archive
-- [ ] **0.8** Move 4 loose `.md` files in `tasks/plan/active/` into appropriate plan folders or delete
+- [x] **0.1** Rename `docs/` → `_dep-docs/` (zero references, zero risk) *(done — pre-2026-03-21)*
+- [x] **0.2** Add `/_dep-docs/**` to `.mintignore` *(done — pre-2026-03-21; `_dep-docs` added to `.allowlist` 2026-03-21)*
+- [x] **0.3** Extract todo.txt notes from `_dep-docs/` into a task — see `_dep-docs-todo-notes.md` (30-day TTL: 2026-04-21)
+- [x] **0.4** Delete `docs.json.bak` from root *(already gone)*
+- [x] **0.5** Delete `api/openapi.yaml.backup` *(already gone)*
+- [x] **0.6** Delete all `.DS_Store` files across repo *(2026-03-21)*
+- [x] **0.7** Move `tasks/plan/active/dep-COPYWRITING FRAMEWORK` → `workspace/plan/complete/` *(already in complete/)*
+- [x] **0.8** Move loose `.md` files in `workspace/plan/active/` — only `index.md` remains (correct)
+- [x] **0.9** Fix stale `/tasks` → `/workspace` in `.mintignore` *(2026-03-21)*
 
 ---
 
@@ -168,7 +169,7 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/`
 - [ ] **V-WS.8** Scripts referencing `tasks/` paths (`audit-tasks-folders.js`, `task-cleanup.js`, `task-preflight.js`, `cross-agent-packager.js`) updated and confirmed runnable
 - [ ] **V-WS.9** `lpd` CLI any task-related commands (e.g. `lpd task`) resolve correctly post-rename
-- [ ] **V-WS.10** `.mintignore` entry `/tasks/**` updated to `/workspace/**`
+- [x] **V-WS.10** `.mintignore` entry `/tasks/**` updated to `/workspace/**` *(2026-03-21)*
 
 ---
 

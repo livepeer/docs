@@ -140,20 +140,55 @@ Industry+niche governs: section naming (domain-anchor rule becomes enforceable),
 
 ### Step 8a. Define IA per tab — section structure, audience journey, page groups
 
-**Input**: `docs.json` (actual nav structure), tab research files (`v2/orchestrators/_workspace/research/orchestrator-tab-review-v3.md`, `v2/gateways/` structure), audience → tab mapping from Step 3.
+**Input**:
+- `docs.json` (actual nav structure)
+- `docs-guide/policies/v2-folder-governance.mdx` — canonical v2/ folder lane definitions: what's publishable, what belongs in `_workspace/`, legacy naming rules. **Required before locking section vocabulary.**
+- `docs-guide/_workspace/02_Design-Specification/03_IA-Framework/01_03-IA-Structure-and-Purpose/index.md` — 6-position structural pattern (landing → concepts → quickstart → setup/how_to → guides → reference/resources), per-tab purpose skeletons, purpose × journey stage matrices
+- Tab research files: `v2/orchestrators/_workspace/research/orchestrator-tab-review-v3.md`, gateways structure
+- Audience → tab mapping from Step 3
 
 Every tab has a specific audience, purpose, and internal IA. The pipeline needs to know what sections and page groups exist within each tab, what the reader journey is through that tab, and how pages relate to each other. Without this, the context pack skill has no structural context for a page — it only knows the page itself, not what section it belongs to or what comes before/after.
 
-- [ ] 🔄 Inventory all tabs + their primary audience + their stated purpose
-  - ⏸ CHECKPOINT: human confirms tab inventory is complete and accurate
-- [ ] 🔄 For each tab: define section groups, page types expected, reader journey (entry → depth → exit)
-  - ⏸ CHECKPOINT: human approves per-tab IA
-- [ ] 🔄 Map audience → tab → section — formalise which audiences land where and why
-  - ⏸ CHECKPOINT: human approves audience → tab → section mapping
-- [ ] 🔄 Identify structural gaps — tabs or sections that are missing expected pages
-  - ⏸ CHECKPOINT: human reviews gap list
+**Subplan — 6 tasks:**
 
-**Output**: Approved per-tab IA — section structure, audience journey, page group definitions. Input to generation contract and context pack skill.
+**8a-1. Lock standard section vocabulary**
+- Derive canonical section names per pageType from the 6-position IA pattern + v2-folder-governance.mdx publishable subtree contract
+- Standard vocabulary (draft): `concepts/` | `guides/` | `setup/` (or `how-to/`) | `reference/` | `resources/` — confirm against actual tab structures
+- Lock: what section names are canonical, what aliases are acceptable, what names are prohibited
+- ⏸ CHECKPOINT: human approves section vocabulary
+
+**8a-2. Flag folder divergence**
+- Inventory actual v2/ tab folders against the canonical model
+- Flag: missing sections, non-standard names, legacy buckets still in publishable tree
+- Separate publishable-tree gaps (content missing) from workspace-lane violations (wrong folder type)
+- ⏸ CHECKPOINT: human reviews divergence report
+
+**8a-3. Site ownership map**
+- For each tab: identify primary owner (Foundation, core team, SPE, community, etc.)
+- Relevant for: who approves content in that tab, whose voice rules apply, what veracity standard applies
+- ⏸ CHECKPOINT: human approves ownership map
+
+**8a-4. Primary audience + reader journey per tab**
+- For each tab: primary audience (from Step 3) + arriving question + linear journey (entry → depth → exit)
+- Cross-tab journeys: `founder → builder → developer → gateway` graduation path, delegator entry points
+- ⏸ CHECKPOINT: human approves per-tab audience + journey
+
+**8a-5. IA per section (within each tab)**
+- For each tab's section groups: expected page types, expected page count, section purpose, how sections relate
+- Pipeline scope first: gateways + orchestrators only — other tabs are post-pipeline
+- ⏸ CHECKPOINT: human approves per-section IA for gateways and orchestrators
+
+**8a-6. Per-page definitions**
+- For each page group in gateways/guides + orchestrators: expected pageType, expected audience, expected purpose
+- This becomes the context pack's structural context layer
+- ⏸ CHECKPOINT: human approves per-page definitions
+
+**Output**: Approved per-tab IA — section vocabulary, audience journey, page group definitions. Input to generation contract and context pack skill.
+
+**Cross-references (folder map review, 2026-03-21)**:
+- `catalog/` in the published folder map validates `knowledge-hub` naming logic — curated external content directories are already a recognised pattern
+- `v2-folder-governance.mdx` is a required input for 8a-1 (section vocabulary lock) — the publishable subtree contract defines what section names are permitted
+- `_workspace/` being absent from the published map is correct — IA framework files are working documents, not routed pages
 
 ---
 
@@ -415,9 +450,9 @@ Update this section as each step completes. Current step is marked with ▶.
 | 5b | Information category (layer 2 — format/layout) | ⏳ Deferred to Phase 2 — layout decisions happen during pipeline build |
 | 5c | Veracity framework + sources registry | ✅ Framework done — veracity.md. Sources library complete — veracity-library.md (45 entries). Priority table complete — TERMINOLOGY-COLLATE/consolidated/veracity-sources.md |
 | 5d | Governance index | ✅ Done — index.md |
-| ▶ 6 | Define industry + niche (layer 3 — voice/terminology) | 🔄 DRAFT — industry.md created, awaiting user lock |
+| 6 | Define industry + niche (layer 3 — voice/terminology) | ✅ Done — industry.md (9 industry tokens + 8 niche tokens, locked) |
 | 7 | Define complexity + lifecycleStage | ✅ Done — complexity.md |
-| 8a | Define IA per tab — section structure, audience journey, page groups | ⬜ Not started |
+| ▶ 8a | Define IA per tab — section structure, audience journey, page groups | 🔄 DRAFT — 08a-ia-per-tab.md, awaiting checkpoint |
 | 8 | Define generation contract (how all fields combine) | ⬜ Not started |
 | 9 | Define voice rules per audience | ⬜ Not started |
 | 10 | Define section naming rules | ⬜ Not started |
@@ -512,4 +547,4 @@ Until CDA-5 is complete, this is a **manual write-time step** and must be noted 
 3. **Checkpoint UX**: File-based or conversational? Decided in step 20.
 4. **Context pack freshness**: Per-session? Weekly? On docs.json change? Decided in step 17.
 5. ~~**Pages spanning audiences**~~: Resolved — persona model handles this.
-6. **Domain niche granularity**: Is niche an enum or a free-text tag? Decided in step 6.
+6. ~~**Domain niche granularity**~~: Resolved — both `industry` and `niche` are enums. Locked in industry.md.

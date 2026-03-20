@@ -314,10 +314,10 @@ How pageType + pageVariant + audience + persona + purpose + domain + niche + com
 |---|---|---|---|
 | O1 | Instruction variants — are `quickstart`, `setup` sufficient? Need `migration`, `configuration`, `deployment`? | Step 2 | Under review |
 | O2 | Guide variants — should `decision` be a variant for choice-oriented pages? | Step 2 | Under review |
-| O3 | Resource variant name — `library` rejected. Covers: external tools, directories, showcases, community channels, curated link collections. Candidates: `catalog` (preferred), `directory`, `collection`, `registry`, `index` | Step 2 | Naming decision pending |
+| ~~O3~~ | ~~Resource variant name~~ | ~~Step 2~~ | ✅ Resolved — `knowledge-hub`. Curated external/public content: tools, directories, showcases, community channels, ecosystem link collections |
 | ~~O4~~ | ~~Purpose enum reconciliation~~ | ~~Step 5~~ | ✅ Resolved — intent-based set wins, validator values become deprecated aliases |
 | ~~O5~~ | ~~Persona format~~ | ~~Step 4~~ | ✅ Resolved — controlled enum per audience, array field for builders |
-| O6 | Domain/niche granularity — enum or free-text? | Step 6 | Not started |
+| ~~O6~~ | ~~Domain/niche granularity — enum or free-text?~~ | ~~Step 6~~ | ✅ Resolved — both enum. `industry` (9 tokens) + `niche` (8 tokens). See industry.md. |
 
 ---
 
@@ -331,6 +331,7 @@ How pageType + pageVariant + audience + persona + purpose + domain + niche + com
 | `v2/_workspace/references/content-pipeline/04-purpose-definitions.md` | purpose definitions | Not started |
 | `v2/_workspace/references/content-pipeline/05a-domain-niche-definitions.md` | domain + niche definitions | Not started |
 | `v2/_workspace/references/content-pipeline/05b-complexity-lifecycle-definitions.md` | complexity + lifecycleStage | Not started |
+| `v2/_workspace/references/content-pipeline/08a-ia-per-tab.md` | IA per tab — section vocabulary, audience journey, page groups (pilot scope) | DRAFT — awaiting checkpoint |
 | `v2/_workspace/references/content-pipeline/06-generation-contract.md` | field combination rules | Not started |
 | `v2/_workspace/references/content-pipeline/07-voice-rules.md` | voice rules per audience | Not started |
 | `v2/_workspace/references/content-pipeline/08-section-naming-rules.md` | naming rubric | Not started |

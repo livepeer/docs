@@ -1,6 +1,7 @@
 # AI-Tools / AI-Skills Governance Plan
 
-> **Status**: Active
+> **Status**: Complete — 2026-03-21. Phases 1–9 executed and committed.
+> Remaining items: see [`plan2.md`](plan2.md)
 > **Created**: 2026-03-20
 > **Source of truth**: This file for tasks. [`audit.md`](audit.md) for findings.
 > **Branch**: `docs-v2-dev` (work directly — no separate worktree needed for metadata-only changes)

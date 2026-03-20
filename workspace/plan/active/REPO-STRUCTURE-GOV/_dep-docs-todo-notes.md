@@ -3,6 +3,9 @@
 Source: `_dep-docs/*/todo.txt` — per-section restructuring notes from the March 11 "move languages temporarily" staging commit.
 These are relevant input for CONTENT-WRITING plan when those sections are tackled.
 
+> **TTL:** `_dep-docs/` directory should be deleted by **2026-04-21** (30-day window from 2026-03-21).
+> At that point, confirm no outstanding references remain, then delete with `allow-deletions=true` trailer.
+
 ---
 
 ## home

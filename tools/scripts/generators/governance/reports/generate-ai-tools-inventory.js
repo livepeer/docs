@@ -15,7 +15,7 @@
 
 const path = require('path');
 const {
-  validateFullRegistry,
+  validateRegistry,
   writeInventoryReport
 } = require('../../../../lib/ai-tools-registry');
 
@@ -26,7 +26,7 @@ function main() {
     ? process.argv[process.argv.indexOf('--output') + 1]
     : 'ai-tools/registry/ai-tools-inventory.md';
 
-  const validation = validateFullRegistry(REPO_ROOT);
+  const validation = validateRegistry({ repoRoot: REPO_ROOT });
 
   if (!validation.registry) {
     console.error('❌ Cannot generate inventory: registry failed to load.');
