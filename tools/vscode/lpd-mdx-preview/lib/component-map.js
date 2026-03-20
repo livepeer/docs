@@ -427,6 +427,7 @@ function renderPlaceholder(tag, props, childrenHtml) {
 
 function renderSegments(segments) {
   const parts = [];
+  let hasMermaid = false;
 
   for (const seg of segments) {
     switch (seg.type) {
@@ -444,6 +445,7 @@ function renderSegments(segments) {
         break;
 
       case 'mermaid':
+        hasMermaid = true;
         parts.push(`<div class="mermaid">${escapeHtml(seg.content)}</div>`);
         break;
 
@@ -466,12 +468,12 @@ function renderSegments(segments) {
     }
   }
 
-  return parts.join('\n');
+  return { html: parts.join('\n'), hasMermaid };
 }
 
 function renderJsx(seg) {
   const childrenHtml = seg.children && seg.children.length > 0
-    ? renderSegments(seg.children)
+    ? renderSegments(seg.children).html
     : '';
 
   const renderer = COMPONENT_MAP[seg.tag];
