@@ -416,7 +416,7 @@ Update this section as each step completes. Current step is marked with ▶.
 | 5c | Veracity framework + sources registry | ✅ Framework done — veracity.md. Sources library complete — veracity-library.md (45 entries). Priority table complete — TERMINOLOGY-COLLATE/consolidated/veracity-sources.md |
 | 5d | Governance index | ✅ Done — index.md |
 | ▶ 6 | Define industry + niche (layer 3 — voice/terminology) | 🔄 DRAFT — industry.md created, awaiting user lock |
-| 7 | Define complexity + lifecycleStage | ⬜ Not started |
+| 7 | Define complexity + lifecycleStage | ✅ Done — complexity.md |
 | 8a | Define IA per tab — section structure, audience journey, page groups | ⬜ Not started |
 | 8 | Define generation contract (how all fields combine) | ⬜ Not started |
 | 9 | Define voice rules per audience | ⬜ Not started |
@@ -484,6 +484,24 @@ Step 20 (wire) ──► Step 21 (pilot) ──► Step 22 (scale)
 | 2026-03-20 | Information type is NOT a frontmatter field | Derived at runtime from purpose → information type mapping. Not tagged in content. Writers never set it. See information-type.md. |
 | 2026-03-20 | `veracityStatus` is the only new frontmatter field from the information layer | `verified` / `unverified` / `stale`. Everything else (information type, veracity standard, sources) is pipeline reference material loaded at runtime. |
 | 2026-03-20 | Purpose → information type mapping defines permitted types per purpose | Not every section matches — it defines what types are expected/allowed. A build page will have narrative intro, factual prereqs, procedural steps, technical code. All are valid because build permits procedural + technical. |
+
+---
+
+## Cross-Plan Flags
+
+### ⚠️ AI Discoverability: client-side components require companion `.json` files
+**Raised**: 2026-03-21 during glossary/SearchTable design discussion.
+
+Any page authored using `SearchTable`, `ShowcaseCards`, or `CardCarousel` renders data **client-side only**. The content is invisible to AI agents, crawlers, and LLM training pipelines. This is a write-time obligation on every page that uses these components.
+
+**Rule for writers/agents building any page using these components:**
+- `SearchTable` on a page → write a companion `[page-slug]-data.json` alongside the MDX containing the full unfiltered data array
+- `ShowcaseCards` on a page → write a companion `[page-slug]-data.json` with the full items array
+- Link the companion file from the page (visible `<Note>` block recommended)
+
+The automation to auto-generate companion files from MDX props is tracked in: [`tasks/plan/active/AI-DISCOVERABILITY/plan.md`](../AI-DISCOVERABILITY/plan.md) — Task CDA-4 (manual) / CDA-5 (automated).
+
+Until CDA-5 is complete, this is a **manual write-time step** and must be noted in any page template or skill that uses these components.
 
 ---
 

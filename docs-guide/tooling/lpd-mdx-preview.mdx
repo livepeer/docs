@@ -854,15 +854,22 @@ Custom components (your own project `.jsx` files) fall into Tier 3 — they rend
     ```
   </Accordion>
   <Accordion title="SearchTable">
-    **Purpose:** Table with search-enabled header note. Interactive in Mintlify; static in preview.
+    **Purpose:** Filterable table — live text search and category dropdown. Fully interactive in deployed Mintlify (uses `useState`). Renders as a static mock in the preview: non-functional search bar + category dropdown chrome + full table body. An `⚡ interactive — static in preview` badge is shown to set expectations.
 
     ```mdx
-    <SearchTable>
+    <SearchTable searchPlaceholder="Search terms…" categoryLabel="All categories">
       <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td>Example</td><td>Description</td></tr>
     </SearchTable>
     ```
 
-    No props.
+    | Prop | Type | Default | Purpose |
+    |---|---|---|---|
+    | `searchPlaceholder` | string | `Search…` | Placeholder text in the search input |
+    | `categoryLabel` | string | `All categories` | Label for the category dropdown |
+    | `searchColumns` | array | — | Columns to include in search (passed to SearchTable.jsx) |
+
+    **SEO note:** Custom components render client-side only — table rows are not in the initial HTML. Acceptable trade-off for reference/glossary pages.
   </Accordion>
 </AccordionGroup>
 
@@ -981,6 +988,16 @@ Any component not in Tier 1 or Tier 2 renders as:
 Props are shown truncated to 40 characters. Children render inside so content remains readable.
 
 To promote a component from Tier 3 to Tier 2, add a renderer function to `lib/component-map.js` under the `livepeerComponents` object.
+
+### Interactive components
+
+Some Tier 2 components use React hooks (`useState`, `useEffect`) and are fully interactive in deployed Mintlify but cannot run in the VS Code webview (Node.js environment, no React runtime). These render as **static mocks** — they show the correct UI chrome but do not respond to input.
+
+Currently affected: `SearchTable`, `SocialLinks`, `MarkdownEmbed`.
+
+These components display an `⚡ interactive — static in preview` badge so authors know to verify their behaviour in a Mintlify dev session, not just the local preview.
+
+Data-feed integrators (`ShowcaseCards`, `CoinGeckoExchanges`, `LumaEvents`, `DiscordAnnouncements`, `TwitterTimeline`) fall to Tier 3 placeholders for the same reason — they fetch live data and cannot be meaningfully mocked offline.
 
 <CustomDivider />
 

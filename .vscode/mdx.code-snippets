@@ -3,17 +3,41 @@
     "scope": "mdx,markdown",
     "prefix": "pageType",
     "body": [
-      "pageType: ${1|landing,overview,tutorial,quickstart,how_to,concept,reference,faq,troubleshooting,changelog,glossary,guide|}"
+      "pageType: ${1|navigation,concept,tutorial,guide,instruction,reference,resource|}"
     ],
-    "description": "Canonical pageType values from tools/lib/frontmatter-taxonomy.js"
+    "description": "Canonical pageType (7 values). Source of truth: docs-guide/frameworks/page-taxonomy-framework.mdx"
+  },
+  "Frontmatter: pageVariant": {
+    "scope": "mdx,markdown",
+    "prefix": "pageVariant",
+    "body": [
+      "pageVariant: ${1|portal,landing,overview,quickstart,setup,specification,compendium,changelog|}"
+    ],
+    "description": "Optional refinement within pageType. navigation→portal/landing; instruction→quickstart/setup; reference→specification/compendium/changelog; all others→overview"
   },
   "Frontmatter: audience": {
     "scope": "mdx,markdown",
     "prefix": "audience",
     "body": [
-      "audience: ${1|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}"
+      "audience: ${1|founder,builder,developer,gateway,orchestrator,delegator,community|}"
     ],
-    "description": "Canonical audience values from tools/config/usefulness-audience-normalization.json"
+    "description": "Canonical audience (7 tokens). Source of truth: docs-guide/frameworks/page-taxonomy-framework.mdx"
+  },
+  "Frontmatter: purpose": {
+    "scope": "mdx,markdown",
+    "prefix": "purpose",
+    "body": [
+      "purpose: ${1|orient,explain,choose,start,build,configure,operate,troubleshoot,optimise,integrate,verify,evaluate,reference,learn,update|}"
+    ],
+    "description": "Canonical purpose (15 intent-based values). Source of truth: docs-guide/frameworks/page-taxonomy-framework.mdx"
+  },
+  "Frontmatter: persona": {
+    "scope": "mdx,markdown",
+    "prefix": "persona",
+    "body": [
+      "persona: ${1:ai}"
+    ],
+    "description": "Optional reader persona slice. Values are audience-scoped — see page-taxonomy-framework.mdx. builder: ai/video/realtime/agent. community: ambassador/engager/explorer/researcher/internal. founder: technical/business/partner"
   },
   "Frontmatter: status": {
     "scope": "mdx,markdown",
@@ -22,14 +46,6 @@
       "status: ${1|draft,review,current,published,deprecated,coming-soon,production,provisional,verified_2026|}"
     ],
     "description": "Canonical status values from tools/lib/frontmatter-taxonomy.js"
-  },
-  "Frontmatter: purpose": {
-    "scope": "mdx,markdown",
-    "prefix": "purpose",
-    "body": [
-      "purpose: ${1|landing,overview,concept,how_to,tutorial,reference,faq,glossary,changelog,troubleshooting|}"
-    ],
-    "description": "Canonical purpose values used by the usefulness rubric"
   },
   "Frontmatter: lastVerified": {
     "scope": "mdx,markdown",
@@ -47,13 +63,14 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe ${TM_FILENAME_BASE}}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: ${5|landing,overview,tutorial,quickstart,how_to,concept,reference,faq,troubleshooting,changelog,glossary,guide|}",
-      "purpose: ${6|landing,overview,concept,how_to,tutorial,reference,faq,glossary,changelog,troubleshooting|}",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: ${5|navigation,concept,tutorial,guide,instruction,reference,resource|}",
+      "pageVariant: ${6|portal,landing,overview,quickstart,setup,specification,compendium,changelog|}",
+      "purpose: ${7|orient,explain,choose,start,build,configure,operate,troubleshoot,optimise,integrate,verify,evaluate,reference,learn,update|}",
       "status: draft",
       "keywords:",
       "  - livepeer",
-      "  - ${7:keyword}",
+      "  - ${8:keyword}",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
       "'og:image:type': image/png",
@@ -63,7 +80,7 @@
       "",
       "$0"
     ],
-    "description": "Complete frontmatter block with fallback OG metadata. Draft scaffolds omit lastVerified."
+    "description": "Complete frontmatter block with canonical enums and OG metadata. Add persona and lastVerified manually when needed."
   },
   "Frontmatter: minimal": {
     "scope": "mdx,markdown",
@@ -72,9 +89,9 @@
       "---",
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "description: '${2:Describe ${TM_FILENAME_BASE}}'",
-      "audience: ${3|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: ${4|landing,overview,tutorial,quickstart,how_to,concept,reference,faq,troubleshooting,changelog,glossary,guide|}",
-      "purpose: ${5|landing,overview,concept,how_to,tutorial,reference,faq,glossary,changelog,troubleshooting|}",
+      "audience: ${3|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: ${4|navigation,concept,tutorial,guide,instruction,reference,resource|}",
+      "purpose: ${5|orient,explain,choose,start,build,configure,operate,troubleshoot,optimise,integrate,verify,evaluate,reference,learn,update|}",
       "status: draft",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
@@ -85,23 +102,24 @@
       "",
       "$0"
     ],
-    "description": "Minimal frontmatter block with canonical OG metadata and draft status"
+    "description": "Minimal frontmatter block with canonical enums and draft status"
   },
-  "Page Scaffold: overview": {
+  "Page Scaffold: concept overview": {
     "scope": "mdx,markdown",
     "prefix": "lp-overview",
     "body": [
       "---",
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
-      "description: '${3:Explain what this overview covers.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: overview",
-      "purpose: overview",
+      "description: '${3:Explain what this section covers.}'",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: concept",
+      "pageVariant: overview",
+      "purpose: orient",
       "status: draft",
       "keywords:",
       "  - livepeer",
-      "  - ${5:overview}",
+      "  - ${5:keyword}",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
       "'og:image:type': image/png",
@@ -111,11 +129,11 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${6:Start with a short explanation of what this page covers and why it matters.}",
+      "${6:Short orientation: what this section covers and why it matters to the reader.}",
       "",
       "## Overview",
       "",
-      "${7:Summarize the system, capability, or workflow.}",
+      "${7:Summarize the system, capability, or workflow in plain language.}",
       "",
       "## Key Concepts",
       "",
@@ -136,23 +154,23 @@
       "",
       "$0"
     ],
-    "description": "Overview page scaffold with canonical frontmatter and next-step cards"
+    "description": "Concept overview scaffold — orients reader to a section (pageType: concept, pageVariant: overview, purpose: orient)"
   },
-  "Page Scaffold: how-to": {
+  "Page Scaffold: guide": {
     "scope": "mdx,markdown",
-    "prefix": "lp-howto",
+    "prefix": "lp-guide",
     "body": [
       "---",
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
-      "description: '${3:Describe the task this guide helps readers complete.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: how_to",
-      "purpose: how_to",
+      "description: '${3:Explain what readers will understand and be able to apply.}'",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: guide",
+      "purpose: ${5|explain,operate,configure,build,integrate,optimise|}",
       "status: draft",
       "keywords:",
       "  - livepeer",
-      "  - ${5:how-to}",
+      "  - ${6:keyword}",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
       "'og:image:type': image/png",
@@ -162,35 +180,91 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${6:Use one sentence to state the desired outcome.}",
+      "${7:One sentence stating what this system does and what the reader will be able to do.}",
+      "",
+      "## How it works",
+      "",
+      "${8:Explain the mechanism, flow, or system in plain language. Diagrams encouraged.}",
+      "",
+      "## Using it in practice",
+      "",
+      "${9:Practical guidance — how to apply this knowledge effectively. Not step-by-step commands.}",
+      "",
+      "## What to watch out for",
+      "",
+      "<Note>",
+      "  ${10:Highlight the most common pitfall, limit, or misunderstanding.}",
+      "</Note>",
+      "",
+      "## Related",
+      "",
+      "<CardGroup cols={2}>",
+      "  <Card title=\"${11:Instruction}\" icon=\"terminal\" href=\"${12:/path/to/instruction}\" arrow>",
+      "    ${13:Link to the step-by-step procedure.}",
+      "  </Card>",
+      "  <Card title=\"${14:Reference}\" icon=\"square-terminal\" href=\"${15:/path/to/reference}\" arrow>",
+      "    ${16:Link to the detailed reference.}",
+      "  </Card>",
+      "</CardGroup>",
+      "",
+      "$0"
+    ],
+    "description": "Guide scaffold — explains a system and how to use it well (pageType: guide, purpose: explain/operate/configure/build)"
+  },
+  "Page Scaffold: instruction": {
+    "scope": "mdx,markdown",
+    "prefix": "lp-howto",
+    "body": [
+      "---",
+      "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
+      "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
+      "description: '${3:Describe the task this instruction helps readers complete.}'",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: instruction",
+      "pageVariant: ${5|setup,quickstart,overview|}",
+      "purpose: ${6|build,configure,operate,integrate,verify|}",
+      "status: draft",
+      "keywords:",
+      "  - livepeer",
+      "  - ${7:keyword}",
+      "'og:image': /snippets/assets/site/og-image/fallback.png",
+      "'og:image:alt': Livepeer Docs social preview image",
+      "'og:image:type': image/png",
+      "'og:image:width': 1200",
+      "'og:image:height': 630",
+      "---",
+      "",
+      "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
+      "",
+      "${8:One sentence stating the desired outcome.}",
       "",
       "## Prerequisites",
       "",
-      "- ${7:Required account, environment, or dependency}",
-      "- ${8:Permission, token, or service dependency}",
+      "- ${9:Required account, environment, or dependency}",
+      "- ${10:Permission, token, or service dependency}",
       "",
       "## Steps",
       "",
       "<Steps>",
-      "  <Step title=\"${9:First step}\">",
-      "    ${10:Explain the first action clearly.}",
+      "  <Step title=\"${11:First step}\">",
+      "    ${12:Explain the first action clearly.}",
       "  </Step>",
-      "  <Step title=\"${11:Second step}\">",
-      "    ${12:Explain the second action clearly.}",
+      "  <Step title=\"${13:Second step}\">",
+      "    ${14:Explain the second action clearly.}",
       "  </Step>",
-      "  <Step title=\"${13:Third step}\">",
-      "    ${14:Explain the final action or validation step.}",
+      "  <Step title=\"${15:Third step}\">",
+      "    ${16:Explain the final action or validation step.}",
       "  </Step>",
       "</Steps>",
       "",
       "## Verify",
       "",
-      "- ${15:What should readers see when the workflow succeeds?}",
-      "- ${16:What should they check next?}",
+      "- ${17:What should readers see when the workflow succeeds?}",
+      "- ${18:What should they check next?}",
       "",
       "$0"
     ],
-    "description": "How-to page scaffold with prerequisites, steps, and verification"
+    "description": "Instruction scaffold — step-by-step procedure (pageType: instruction, pageVariant: setup/quickstart, purpose: build/configure)"
   },
   "Page Scaffold: tutorial": {
     "scope": "mdx,markdown",
@@ -200,9 +274,9 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe what readers will learn by the end.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
       "pageType: tutorial",
-      "purpose: tutorial",
+      "purpose: learn",
       "status: draft",
       "keywords:",
       "  - livepeer",
@@ -216,7 +290,7 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${6:State the learning goal and expected output.}",
+      "${6:State the learning goal and what the reader will build.}",
       "",
       "## Prerequisites",
       "",
@@ -233,7 +307,7 @@
       "    ${12:Explain the main tutorial step.}",
       "  </Step>",
       "  <Step title=\"${13:Inspect the result}\">",
-      "    ${14:Explain how to validate the result.}",
+      "    ${14:Explain how to validate the result and what was learned.}",
       "  </Step>",
       "</Steps>",
       "",
@@ -244,7 +318,7 @@
       "",
       "$0"
     ],
-    "description": "Tutorial scaffold with prerequisites, guided steps, and next steps"
+    "description": "Tutorial scaffold — teaches through building (pageType: tutorial, purpose: learn)"
   },
   "Page Scaffold: reference": {
     "scope": "mdx,markdown",
@@ -254,13 +328,14 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe the system, API, or command being referenced.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
       "pageType: reference",
+      "pageVariant: ${5|specification,compendium,changelog,overview|}",
       "purpose: reference",
       "status: draft",
       "keywords:",
       "  - livepeer",
-      "  - ${5:reference}",
+      "  - ${6:reference}",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
       "'og:image:type': image/png",
@@ -270,29 +345,29 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${6:Use a short lead sentence to define scope and audience.}",
+      "${7:One sentence defining the scope and what readers can look up here.}",
       "",
       "## Reference",
       "",
-      "### ${7:Inputs}",
+      "### ${8:Inputs}",
       "",
-      "- `${8:key}`: ${9:What this value controls}",
+      "- `${9:key}`: ${10:What this value controls}",
       "",
-      "### ${10:Behavior}",
+      "### ${11:Behavior}",
       "",
-      "${11:Explain the important rules, limits, or defaults.}",
+      "${12:Explain the important rules, limits, or defaults.}",
       "",
-      "### ${12:Examples}",
+      "### ${13:Examples}",
       "",
       "```bash",
-      "${13:command --flag value}",
+      "${14:command --flag value}",
       "```",
       "",
       "$0"
     ],
-    "description": "Reference scaffold with sections for inputs, behavior, and examples"
+    "description": "Reference scaffold — structured lookup (pageType: reference, pageVariant: specification/compendium/changelog, purpose: reference)"
   },
-  "Page Scaffold: landing frame": {
+  "Page Scaffold: navigation portal": {
     "scope": "mdx,markdown",
     "prefix": "lp-landing-frame",
     "body": [
@@ -300,14 +375,15 @@
       "mode: frame",
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
-      "description: '${3:Describe the entry point this landing page creates.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: landing",
-      "purpose: landing",
+      "description: '${3:Describe the entry point this portal creates.}'",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: navigation",
+      "pageVariant: portal",
+      "purpose: orient",
       "status: draft",
       "keywords:",
       "  - livepeer",
-      "  - ${5:landing}",
+      "  - ${5:keyword}",
       "'og:image': /snippets/assets/site/og-image/fallback.png",
       "'og:image:alt': Livepeer Docs social preview image",
       "'og:image:type': image/png",
@@ -315,8 +391,8 @@
       "'og:image:height': 630",
       "---",
       "",
-      "import { HeroContentContainer, HeroImageBackgroundComponent, HeroSectionContainer, PortalContentContainer, PortalHeroContent } from \"/snippets/components/page-structure/portals.jsx\";",
-      "import { Starfield } from \"/snippets/components/page-structure/heroGif.jsx\";",
+      "import { HeroContentContainer, HeroImageBackgroundComponent, HeroSectionContainer, PortalContentContainer, PortalHeroContent } from \"/snippets/components/scaffolding/portals/Portals.jsx\";",
+      "import { Starfield } from \"/snippets/components/scaffolding/heroes/HeroGif.jsx\";",
       "",
       "<HeroSectionContainer>",
       "  <HeroImageBackgroundComponent>",
@@ -328,7 +404,7 @@
       "      subtitle=\"${6:One-line positioning statement}\"",
       "      overview={",
       "        <>",
-      "          ${7:Explain what readers can do from this landing page and where to start.}",
+      "          ${7:Explain what readers can do from this portal and where to start.}",
       "        </>",
       "      }",
       "    />",
@@ -352,7 +428,7 @@
       "",
       "$0"
     ],
-    "description": "Frame-mode landing scaffold using the existing portal components"
+    "description": "Frame-mode portal scaffold using portal components (pageType: navigation, pageVariant: portal, purpose: orient)"
   },
   "Page Scaffold: FAQ": {
     "scope": "mdx,markdown",
@@ -362,9 +438,10 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe the questions this page answers.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: faq",
-      "purpose: faq",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: reference",
+      "pageVariant: compendium",
+      "purpose: reference",
       "status: draft",
       "keywords:",
       "  - livepeer",
@@ -378,25 +455,25 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${5:Use one sentence to frame the FAQ and its intended audience.}",
+      "${5:One sentence framing the FAQ and its intended audience.}",
       "",
       "## Frequently Asked Questions",
       "",
       "<AccordionGroup>",
       "  <Accordion title=\"${6:What is the first common question?}\" icon=\"circle-question\">",
-      "    ${7:Answer the question directly, then add only the necessary detail.}",
+      "    ${7:Answer directly, then add only the necessary detail.}",
       "  </Accordion>",
       "  <Accordion title=\"${8:What is the second common question?}\" icon=\"circle-question\">",
-      "    ${9:Answer the question directly, then add only the necessary detail.}",
+      "    ${9:Answer directly, then add only the necessary detail.}",
       "  </Accordion>",
       "  <Accordion title=\"${10:What is the third common question?}\" icon=\"circle-question\">",
-      "    ${11:Answer the question directly, then add only the necessary detail.}",
+      "    ${11:Answer directly, then add only the necessary detail.}",
       "  </Accordion>",
       "</AccordionGroup>",
       "",
       "$0"
     ],
-    "description": "FAQ page scaffold with AccordionGroup"
+    "description": "FAQ scaffold — lookup reference (pageType: reference, pageVariant: compendium, purpose: reference)"
   },
   "Page Scaffold: troubleshooting": {
     "scope": "mdx,markdown",
@@ -406,9 +483,10 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe the failure modes or operational issues this page covers.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
-      "pageType: troubleshooting",
-      "purpose: troubleshooting",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
+      "pageType: reference",
+      "pageVariant: compendium",
+      "purpose: troubleshoot",
       "status: draft",
       "keywords:",
       "  - livepeer",
@@ -422,7 +500,7 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${5:Explain when readers should use this troubleshooting page.}",
+      "${5:Explain when readers should use this troubleshooting reference.}",
       "",
       "## Troubleshooting",
       "",
@@ -457,7 +535,7 @@
       "",
       "$0"
     ],
-    "description": "Troubleshooting page scaffold with Symptom, Cause, Fix, and Verify sections"
+    "description": "Troubleshooting scaffold — symptom/cause/fix lookup (pageType: reference, pageVariant: compendium, purpose: troubleshoot)"
   },
   "Page Scaffold: OpenAPI endpoint": {
     "scope": "mdx,markdown",
@@ -467,8 +545,9 @@
       "title: '${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}'",
       "sidebarTitle: ${2:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "description: '${3:Describe what this endpoint does.}'",
-      "audience: ${4|developer,gateway-operator,orchestrator,delegator,platform-builder,community,internal,general,everyone|}",
+      "audience: ${4|founder,builder,developer,gateway,orchestrator,delegator,community|}",
       "pageType: reference",
+      "pageVariant: specification",
       "purpose: reference",
       "status: draft",
       "keywords:",
@@ -484,13 +563,13 @@
       "",
       "# ${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}",
       "",
-      "${6:Use one sentence to explain when to call this endpoint and what it returns.}",
+      "${6:One sentence explaining when to call this endpoint and what it returns.}",
       "",
       "<OpenAPI path=\"${5:POST /resource}\" />",
       "",
       "$0"
     ],
-    "description": "OpenAPI endpoint page scaffold for pages that use openapi frontmatter"
+    "description": "OpenAPI endpoint scaffold (pageType: reference, pageVariant: specification, purpose: reference)"
   },
   "Block Scaffold: related pages": {
     "scope": "mdx,markdown",
@@ -528,5 +607,53 @@
       "$0"
     ],
     "description": "Comparison and decision matrix for product or architecture choice pages"
+  },
+  "Component JSDoc: header": {
+    "scope": "javascript,javascriptreact",
+    "prefix": "lp-component-header",
+    "body": [
+      "/**",
+      " * @type        ${1|elements,wrappers,displays,scaffolding,config|}",
+      " * @subniche    $2",
+      " * @status      ${3|stable,deprecated,broken,experimental|}",
+      " * @description $4",
+      " * @accepts     $5",
+      " */$0"
+    ],
+    "description": "Standard Livepeer component JSDoc header (5 tags). Use lp-integrator-header for integrators components."
+  },
+  "Component JSDoc: integrator header": {
+    "scope": "javascript,javascriptreact",
+    "prefix": "lp-integrator-header",
+    "body": [
+      "/**",
+      " * @type        integrators",
+      " * @subniche    ${1|blog,embeds,feeds,video-data|}",
+      " * @status      ${2|stable,deprecated,broken,experimental|}",
+      " * @description $3",
+      " * @accepts     $4",
+      " * @dataSource  $5",
+      " */$0"
+    ],
+    "description": "Livepeer integrator component JSDoc header — includes required @dataSource tag"
+  },
+  "Script JSDoc: header": {
+    "scope": "javascript",
+    "prefix": "lp-script-header",
+    "body": [
+      "/**",
+      " * @script      $1",
+      " * @type        ${2|audit,generator,validator,remediator,dispatch,automation|}",
+      " * @concern     ${3|content,components,governance,ai|}",
+      " * @niche       ${4|quality,veracity,copy,structure,grammar,library,documentation,compliance,pr,codex,agents,pipelines,seo,catalogs,reference,reconciliation,repair,style,classification,data,language-translation,llm,scaffold,reports,repo,scripts|}",
+      " * @purpose     $5",
+      " * @description $6",
+      " * @mode        ${7|read-only,write,edit,generate,execute|}",
+      " * @pipeline    $8",
+      " * @scope       ${9|staged,changed,full-repo,v2-content,single-file|}",
+      " * @usage       $10",
+      " */$0"
+    ],
+    "description": "Standard Livepeer script JSDoc header (10 tags). Add @policy manually for governance traceability (e.g. E-R1, R-R11)."
   }
 }

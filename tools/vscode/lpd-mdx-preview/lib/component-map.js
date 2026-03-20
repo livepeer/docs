@@ -204,8 +204,14 @@ const livepeerComponents = {
   },
 
   SearchTable(props, children) {
-    return `<div style="margin: 1em 0;">
-      <div style="margin-bottom: 8px; color: var(--muted-text); font-size: 0.85em;">[Search table — interactive in Mintlify]</div>
+    const searchPlaceholder = props.searchPlaceholder || 'Search…';
+    const categoryLabel = props.categoryLabel || 'All categories';
+    return `<div class="lpd-search-table">
+      <div class="lpd-interactive-badge">⚡ interactive — static in preview</div>
+      <div class="lpd-search-table-controls">
+        <div class="lpd-search-input-mock">🔍 ${escapeHtml(searchPlaceholder)}</div>
+        <div class="lpd-search-select-mock">▾ ${escapeHtml(categoryLabel)}</div>
+      </div>
       <div style="overflow-x: auto;">${children}</div>
     </div>`;
   },
@@ -355,14 +361,19 @@ const livepeerComponents = {
 
   // Social
   SocialLinks(props) {
-    return `<div style="display: flex; gap: 12px; margin: 0.5em 0; color: var(--muted-text);">
-      [Social links — rendered in Mintlify]
+    return `<div style="display: flex; gap: 12px; margin: 0.5em 0; align-items: center;">
+      <span class="lpd-interactive-badge">⚡ interactive — static in preview</span>
+      <span style="color: var(--muted-text); font-size: 0.875em;">Social links</span>
     </div>`;
   },
 
   // Embeds
-  MarkdownEmbed(props, children) {
-    return `<div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 1em 0;">${children}</div>`;
+  MarkdownEmbed(props) {
+    const src = props.src || props.url || '';
+    return `<div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 1em 0;">
+      <div class="lpd-interactive-badge">⚡ interactive — static in preview</div>
+      <div style="color: var(--muted-text); font-size: 0.875em;">MarkdownEmbed${src ? `: ${escapeHtml(src)}` : ''}</div>
+    </div>`;
   },
 
   ExternalContent(props, children) {

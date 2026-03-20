@@ -296,6 +296,211 @@ Both must pass. This is the final gate before marking the plan complete.
 
 ---
 
+## Phase 9 — AI Adapter Consolidation and Repair
+
+> **Context:** Audit of all AI agent adapter/rule files revealed 5 actionable issues:
+> (1) Augment Code has zero working rules — its instructions are at wrong paths;
+> (2) the Cursor no-deletions rule is invisible because it's in the wrong directory;
+> (3) the legacy `.cursorrules` file has stale, contradictory content;
+> (4) `.github/AGENTS.md` naming creates ambiguity;
+> (5) `ASSISTANT.md` is a ghost file no tool reads.
+>
+> Full findings in `audit-ai-adapters.md`.
+
+---
+
+### Task 9.1: Fix Cursor no-deletions rule location
+CHECKPOINT after this task.
+
+**Problem:** `ai-tools/ai-rules/.cursor/rules/no-deletions.mdc` is buried at a path Cursor never reads. The no-deletions rule is completely invisible.
+
+**Action:**
+```bash
+git mv ai-tools/ai-rules/.cursor/rules/no-deletions.mdc .cursor/rules/no-deletions.mdc
+```
+
+Also remove the now-empty `.cursor/` dir inside `ai-rules/`:
+```bash
+rmdir ai-tools/ai-rules/.cursor/rules ai-tools/ai-rules/.cursor
+```
+(These are untracked dirs after the `git mv`, safe to remove.)
+
+**Verify:** `.cursor/rules/` now contains both `repo-governance.mdc` and `no-deletions.mdc`.
+
+---
+
+### Task 9.2: Gut `.cursorrules` to canonical adapter pattern
+CHECKPOINT after this task.
+
+**Problem:** `.cursorrules` (45 lines, root) has its own independent ruleset — ThemeData, CSS custom properties, component library refs — none pointing to `AGENTS.md`. Contradicts the canonical thin-adapter pattern all other tool files follow.
+
+**Action:** Replace content with a canonical thin adapter that matches `.cursor/rules/repo-governance.mdc`:
+
+```markdown
+# Livepeer Docs — Cursor Legacy Adapter
+
+> This file exists for backward compatibility with Cursor versions that read
+> `.cursorrules`. The active rules are in `.cursor/rules/`.
+
+Read `AGENTS.md` first for repo-wide rules.
+
+Use `.cursor/rules/*.mdc` for Cursor-specific adapter behavior. Keep shared
+policy in:
+
+- `AGENTS.md`
+- `docs-guide/policies/agent-governance-framework.mdx`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+- Do not use port `3000` for local Mintlify or preview sessions; choose a
+  non-3000 port explicitly.
+```
+
+**Note:** Do not delete `.cursorrules` — it serves as a legacy adapter for older Cursor versions. Gutting it to match the canonical pattern removes the contradiction without losing backward compatibility.
+
+**Verify:** `grep -i "ThemeData\|hardcode\|style-guide.mdx\|component-library" .cursorrules` returns empty.
+
+---
+
+### Task 9.3: Create working Augment adapter
+CHECKPOINT after this task.
+
+**Problem:** Augment Code has zero working rules. The `.github/augment-instructions.md` file (203 lines) is at a path Augment never reads. `ai-tools/ai-rules/.augment-guidelines` (17 lines) is also at a path Augment never reads.
+
+**Augment's canonical paths:**
+- Modern: `.augment/rules/*.md` (multiple files, with `type: always_apply | manual | auto` frontmatter)
+- Legacy: `.augment-guidelines` at project root
+
+**Action — create `.augment/rules/` at root:**
+
+1. Create `.augment/rules/` directory.
+2. Split `.github/augment-instructions.md` into scoped rule files:
+
+| New file | Content from augment-instructions.md |
+|---|---|
+| `.augment/rules/git-safety.md` | Critical git rules, pre-write announcement, HitL verification |
+| `.augment/rules/repo-governance.md` | Pointer to AGENTS.md + canonical governance links |
+| `.augment/rules/no-deletions.md` | No-deletion rule (aligns with `.cursor/rules/no-deletions.mdc`) |
+
+3. Each file gets Augment frontmatter:
+```markdown
+---
+type: always_apply
+---
+```
+
+4. The `ai-tools/ai-rules/.augment-guidelines` file should be retired to `ai-tools/ai-rules/_retired/` — it was never being consumed.
+
+**Verify:** `.augment/rules/` exists at root and contains at least 2 `.md` files with valid frontmatter.
+
+Note: `.github/augment-instructions.md` should be kept as a reference but add a header note that the active rules are in `.augment/rules/`. Do not delete per repo no-deletion policy.
+
+---
+
+### Task 9.4: Resolve `.github/AGENTS.md` naming ambiguity
+CHECKPOINT after this task.
+
+**Problem:** `.github/AGENTS.md` (92 lines, Codex-specific task isolation rules) is named identically to the root `AGENTS.md`, creating confusion about its role. It looks like a Copilot artifact or a duplicate of the root baseline.
+
+**Action — Option A (preferred):** Add a clear header to `.github/AGENTS.md`:
+
+```markdown
+<!-- Codex layer extension. This file adds Codex-specific task isolation rules
+     on top of the repo-wide baseline in root AGENTS.md. It is not a duplicate.
+     Codex reads both via its directory-walk mechanism. -->
+```
+
+Also add a cross-reference in root `AGENTS.md`:
+```markdown
+## Codex-specific extension
+For OpenAI Codex task isolation rules (HitL verification, checkpoint branches,
+lock lifecycle), see `.github/AGENTS.md`.
+```
+
+**Action — Option B (alternative):** Rename to `.github/CODEX.md` and update any internal cross-references.
+
+Decision: Option A is lower risk (no rename needed, Codex dir-walk still works naturally).
+
+**Verify:** Someone reading root `AGENTS.md` can understand that `.github/AGENTS.md` exists and why.
+
+---
+
+### Task 9.5: Relocate and update `ASSISTANT.md` → `.mintlify/Assistant.md`
+CHECKPOINT after this task.
+
+**Clarification:** `ASSISTANT.md` is NOT a ghost file — it is the Mintlify AI chat assistant context file. Mintlify reads it from `.mintlify/Assistant.md` (note: canonical path uses `.mintlify/` dir, `Assistant.md` capitalization). The current file at root `ASSISTANT.md` is simply in the wrong place and has stale paths.
+
+**What the file does:** Provides custom instructions to the Mintlify chat widget for every user query on the docs site. This shapes how the embedded AI assistant responds — tone, routing, versioning rules, domain disambiguation, guardrails.
+
+**What's stale in the current content:**
+- `tools/ai-rules/**` → stale path; content is now in `ai-tools/ai-rules/`
+- `contribute/**` → check if this dir exists and is current
+- `v2/pages/**` path pattern → repo uses `v2/**` (the `pages/` subdir may not match)
+- Architecture section (Gateway/Orchestrator roles) → verify still accurate
+- Some guardrail sections overlap with what `AGENTS.md` now covers for AI agents (not the chat assistant)
+
+**What to extract to `AGENTS.md` before moving:**
+These sections are useful for AI coding agents, not just the chat widget, and belong in `AGENTS.md`:
+- "Source-Of-Truth Priority" — `docs.json` > `v2/` > `README.md` > `v1/`
+- "Versioning Rules" — default to v2, treat v1 as legacy
+
+**Actions:**
+1. Add "Source-Of-Truth Priority" and "Versioning Rules" to `AGENTS.md` as a `## Docs content priority` section.
+2. Create `.mintlify/` directory.
+3. Update the content for current repo state:
+   - Fix `tools/ai-rules/**` → `ai-tools/ai-rules/`
+   - Fix `v2/pages/07_resources/...` → correct current paths
+   - Remove sections already covered by `AGENTS.md` (git safety, editing behavior for AI agents)
+   - Keep/refine: mission, routing map, domain disambiguation, answer contract, response style, high-risk guardrails, fallback behavior
+4. Write the cleaned content to `.mintlify/Assistant.md`
+5. `git mv ASSISTANT.md ai-tools/ai-rules/_retired/ASSISTANT.md` (keep per no-deletion policy)
+6. Add `.mintlify/` to the root allowlist (`.allowlist` file — Mintlify pre-commit hook may block unlisted root dirs).
+
+**Verify:** `.mintlify/Assistant.md` exists. `cat .allowlist | grep mintlify` returns a result. Root `ASSISTANT.md` is gone (moved).
+
+**Verify:** `ls ASSISTANT.md` returns "not found". Content in AGENTS.md covers what was unique.
+
+---
+
+### Task 9.6: Update docs-guide/catalog/ai-tools.mdx with adapter surface map
+No checkpoint — editorial update.
+
+The catalog page describes agent onboarding but doesn't list all the adapter files and their canonical locations. Add a small section "Adapter file surface" with the table from `audit-ai-adapters.md` mapping each tool to its canonical path and current status.
+
+This makes the catalog page the single human-readable reference for "where does each tool get its rules from."
+
+---
+
+### Task 9.7: Add adapter surface to agent-governance-framework.mdx
+No checkpoint — editorial update.
+
+The canonical governance policy page (`docs-guide/policies/agent-governance-framework.mdx`) should reference the new `.augment/rules/` surface and confirm the full list of active adapter targets. Update the "Approved runtime targets" list to include `.augment/rules/*.md`.
+
+---
+
+## Phase 9 Verification
+
+```bash
+# 1. no-deletions.mdc is now in the right place
+ls .cursor/rules/no-deletions.mdc
+# → exists
+
+# 2. cursorrules no longer has stale content
+grep -i "ThemeData\|hardcode\|style-guide.mdx\|component-library" .cursorrules
+# → empty
+
+# 3. Augment rules exist at root
+ls .augment/rules/
+# → at least 2 .md files
+
+# 4. All active adapter paths in registry registry
+# (manual check — confirm all paths are in ai-tools-registry.json under manual-doc lane)
+
+# 5. Skill validator still passes
+node tests/unit/skill-docs.test.js
+# → ✅ 59/59
+```
+
+---
+
 ## Future work — flagged for later plans
 
 - **Skill count reduction**: 42 skills for a docs repo may be more than needed. After Phase 5 consolidation review, consider retiring low-value skills.

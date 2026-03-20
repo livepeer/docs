@@ -1,0 +1,159 @@
+---
+title: '[Tab] Glossary'
+sidebarTitle: Glossary
+description: 'Key terms and definitions for the Livepeer [tab] section — [one sentence scope].'
+keywords:
+  - livepeer
+  - glossary
+  - [tab]
+  - terminology
+audience: [tab-audience]
+pageType: glossary
+purpose: reference
+status: draft
+lastVerified: 'YYYY-MM'
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/*
+  TEMPLATE: Per-Tab Glossary
+  USE FOR: One glossary page per docs tab (home, about, solutions, developers,
+           gateways, orchestrators, lpt, community, resources).
+  SOURCE DATA: tasks/plan/active/TERMINOLOGY-COLLATE/per-tab/glossary-[tab].md
+  OUTPUT PATH: v2/resources/glossary/[tab].mdx
+
+  ⚠️  AI DISCOVERABILITY NOTE:
+  SearchTable renders CLIENT-SIDE ONLY — glossary terms are NOT in the initial HTML.
+  This page MUST have a companion JSON file at the same path:
+    v2/resources/glossary/[tab].json
+  Format: { "terms": [{ "term": "", "definition": "", "tags": [], "external": "" }] }
+  Without this, AI agents and crawlers cannot index the glossary content.
+  See Task 13 in the TERMINOLOGY-COLLATE plan for the auto-generation script.
+*/}
+
+import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+{/* ==========================SECTION: SEARCH TIP========================= */}
+{/*
+  SEARCH TIP BLOCK — always include on glossary pages.
+  Instructs users how to navigate this page before scrolling.
+  Do not remove or move below the fold.
+*/}
+<Tip>
+**Finding terms quickly**
+- **Cmd+K** (Mac) / **Ctrl+K** (Windows) — search all Livepeer docs
+- **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
+- Use the category filter below to narrow by topic
+</Tip>
+
+{/* ==========================SECTION: INTRO========================= */}
+{/*
+  INTRO — one sentence max. State what tab this covers and who it is for.
+  Do: audience-specific scope ("terms used across gateway setup and operation")
+  Don't: restate the page title, use "this page", generic filler
+*/}
+[One sentence: what terms this glossary covers and who needs it.]
+
+<CustomDivider />
+
+{/* ==========================SECTION: SEARCHABLE TABLE========================= */}
+{/*
+  SEARCHTABLE — filterable term list.
+  Props:
+    headerList   [REQ] Column labels. Always: ["Term", "Category", "Definition"]
+    itemsList    [REQ] Array of term objects. Keys must match headerList exactly.
+    searchColumns [OPT] Columns to search across. Default: all. Recommended: [0, 2]
+    TableComponent [OPT] Underlying table renderer. Default: DynamicTable.
+
+  DATA FORMAT per item:
+    { Term: "term name", Category: "domain:subcategory", Definition: "one sentence" }
+
+  SOURCE: Pull from tasks/plan/active/TERMINOLOGY-COLLATE/per-tab/glossary-[tab].md
+  SCOPE: Include all terms for this tab. One row per unique term.
+  ORDER: Alphabetical by Term.
+
+  ⚠️  Mirror this data in the companion [tab].json file (see AI discoverability note above).
+*/}
+<SearchTable
+  headerList={["Term", "Category", "Definition"]}
+  searchColumns={[0, 2]}
+  itemsList={[
+    { Term: "Example Term", Category: "livepeer:role", Definition: "Replace with actual term data from glossary-[tab].md" },
+  ]}
+/>
+
+<CustomDivider />
+
+{/* ==========================SECTION: FULL DEFINITIONS========================= */}
+{/*
+  FULL DEFINITIONS — AccordionGroup sections by domain.
+  One AccordionGroup per domain (livepeer, video, ai, web3, economic, technical, operational).
+  Only include domains that have terms in this tab — omit empty domains.
+
+  Per-term Accordion format:
+    title  = Term name (expand abbreviation if applicable: "HLS (HTTP Live Streaming)")
+    icon   = "book-open" for definitions
+    content:
+      - Definition (required)
+      - Context (Livepeer-specific terms only — how Livepeer uses this specifically)
+      - External (industry terms only — Wikipedia/HuggingFace/ethereum.org link)
+      - Also known as (if term has aliases or deprecated names)
+      - Pages: where in this tab this term appears
+
+  Rules:
+    - Livepeer-specific terms (livepeer:* tags): include Context, omit External
+    - Industry/video/ai/web3/technical terms: include External, omit Context
+    - Status: current | deprecated | draft — always include
+    - Deprecated terms: note what replaced them
+*/}
+
+## [Domain Name] Terms
+
+{/*
+  DOMAIN SECTION HEADING RULES:
+  - Use the domain name as a plain section heading (## Livepeer Protocol, ## Video, ## AI, etc.)
+  - Do not number sections
+  - Only include sections that have terms in this tab
+*/}
+
+<AccordionGroup>
+  <Accordion title="Term Name" icon="book-open">
+    **Definition**: One clear sentence.
+
+    **Context**: How Livepeer uses this specifically. _(Livepeer terms only — remove line for industry terms)_
+
+    **External**: [Source Name](url) _(Industry terms only — remove line for Livepeer terms)_
+
+    **Also known as**: Alias or deprecated name _(remove if none)_
+
+    **Status**: current
+
+    **Pages**: `[tab]/path/to/page`
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+{/* ==========================SECTION: FOOTER========================= */}
+{/*
+  FOOTER — related pages cards.
+  Use 2-3 cards max. Link to: tab's main landing page, related glossary, troubleshooting/FAQ.
+  Card title: 1-3 words. Description: one sentence, max 10 words.
+  Do not repeat the title in the description.
+*/}
+<CardGroup cols={3}>
+  <Card title="[Tab] Overview" icon="house" href="/v2/[tab]">
+    [One sentence description — not a restatement of the title]
+  </Card>
+  <Card title="Full Glossary" icon="book" href="/v2/resources/livepeer-glossary">
+    All terms across every Livepeer tab
+  </Card>
+  <Card title="[Related Page]" icon="[icon]" href="/v2/[tab]/[path]">
+    [One sentence description]
+  </Card>
+</CardGroup>

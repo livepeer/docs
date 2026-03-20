@@ -571,6 +571,16 @@ snippets/
 
 <CustomDivider />
 
+## Sub-Plans & Cross-Plan Dependencies
+
+### AI Discoverability Sub-Plan
+**File**: [`../AI-DISCOVERABILITY/plan.md`](../AI-DISCOVERABILITY/plan.md)
+**Status**: Planning — raised 2026-03-21
+**Origin**: T10 audit discovered that 5 components (SearchTable, ShowcaseCards, CardCarousel, CoinGeckoExchanges, MarkdownEmbed) render entirely client-side, making their content invisible to AI agents and crawlers.
+**Blocking**: CDA-1 (schema update) should complete before T21 closes this plan — it touches the component registry schema. CDA-5 (automation script) is a handoff candidate.
+
+---
+
 ## Reference
 
 - **Target folder structure**: [structure.md](./structure.md) — canonical reference for all categories, sub-niches, and per-component file layout

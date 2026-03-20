@@ -1,5 +1,9 @@
 # Augment Instructions for Livepeer Docs
 
+> **Archived reference only.** Active Augment rules have moved to `.augment/rules/` at the
+> project root — that is the canonical location Augment reads. This file is kept for
+> historical reference and is no longer consumed by Augment automatically.
+
 ## ⛔ CRITICAL RULES - VIOLATION = CATASTROPHIC FAILURE ⛔
 
 ### NEVER PERFORM GIT OPERATIONS WITHOUT EXPLICIT PERMISSION

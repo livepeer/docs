@@ -283,11 +283,13 @@ See [industry.md](industry.md) for full definitions.
 
 ## Decision 6: complexity + lifecycleStage
 
-**Status**: Pending Step 7
-**Date**: TBD
+**Status**: ✅ Agreed
+**Date**: 2026-03-20
 
-- `complexity`: beginner, intermediate, advanced
-- `lifecycleStage`: discover, evaluate, setup, build, operate, troubleshoot, optimize
+- `complexity`: `beginner` | `intermediate` | `advanced` — single value; calibrates assumed knowledge
+- `lifecycleStage`: `discover` | `evaluate` | `setup` | `build` | `operate` | `troubleshoot` | `optimise` — single value; calibrates reader motivation and journey position
+
+See [complexity.md](complexity.md) for full definitions.
 
 ---
 

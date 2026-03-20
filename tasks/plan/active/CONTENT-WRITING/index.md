@@ -76,6 +76,12 @@ See [framework.md](framework.md) for full per-audience persona lists
 ### information type (9)
 `factual`, `conceptual`, `procedural`, `analytical`, `evaluative`, `structural`, `change`, `narrative`, `technical`
 
+### complexity (3)
+`beginner`, `intermediate`, `advanced`
+
+### lifecycleStage (7)
+`discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise`
+
 ### veracityStatus (3)
 `verified`, `unverified`, `stale`
 
@@ -93,7 +99,7 @@ See [framework.md](framework.md) for full per-audience persona lists
 |---|---|---|
 | 5b | Information category (format/layout) | Deferred to Phase 2 |
 | 6 | Industry + niche (field taxonomy — terminology + voice register) | [industry.md](industry.md) — DRAFT, pending lock |
-| 7 | Complexity + lifecycleStage | TBD |
+| 7 | Complexity + lifecycleStage | ✅ [complexity.md](complexity.md) |
 | 8a | IA per tab — section structure, audience journey, page groups | TBD |
 | 8 | Generation contract (how all fields combine) | TBD |
 | 9 | Voice rules per audience | TBD |

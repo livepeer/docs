@@ -6,8 +6,13 @@ Native adapters:
 
 - GitHub Copilot: `.github/copilot-instructions.md`
 - Claude Code: `.claude/CLAUDE.md`
-- Cursor: `.cursor/rules/repo-governance.mdc`
+- Cursor: `.cursor/rules/repo-governance.mdc` + `.cursor/rules/no-deletions.mdc`
 - Windsurf: `.windsurf/rules/repo-governance.md`
+- Augment Code: `.augment/rules/` (repo-governance.md, git-safety.md, no-deletions.md)
+
+Codex layer extension (task isolation rules — HitL, checkpoints, locks):
+
+- `.github/AGENTS.md` — Codex reads this in addition to root AGENTS.md via directory-walk
 
 Canonical governance docs:
 
