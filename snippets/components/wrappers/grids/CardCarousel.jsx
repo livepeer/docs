@@ -1,34 +1,24 @@
 /**
  * @component CardCarousel
  * @type wrappers
- * @tier pattern
+ * @subniche grids
  * @status stable
- * @description Renders a simple carousel that paginates through a fixed number of cards
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-08
- *
+ * @description Paginated horizontal carousel with prev/next navigation and dot indicators.
+ * @accepts children, className, ...rest
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {number} [visibleCount=3] - Visible count used by the component.
  * @param {string} [gap="1.5rem"] - Gap used by the component.
  * @param {boolean} [showDots=true] - Boolean flag that controls component behaviour.
  * @param {object} style - Style used by the component.
- *
- * @example
- * <CardCarousel style={{}} />
  */
 export const CardCarousel = ({
   children,
   visibleCount = 3,
   gap = "1.5rem",
   showDots = true,
-  style,
+  style = {},
+  className = "",
+  ...rest
 }) => {
   const cards = useMemo(() => {
     if (children == null || children === false) return [];
@@ -57,6 +47,7 @@ export const CardCarousel = ({
 
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -64,6 +55,7 @@ export const CardCarousel = ({
         width: "100%",
         ...style,
       }}
+      {...rest}
     >
       <div
         style={{

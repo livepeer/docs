@@ -1,25 +1,15 @@
 /**
  * @component StyledSteps
  * @type wrappers
- * @tier composite
+ * @subniche steps
  * @status stable
- * @description Styled Steps layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies StyledStep
- * @usedIn v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/connect/discover-offerings.mdx, v2/gateways/run-a-gateway/install/docker-install.mdx, v2/gateways/run-a-gateway/install/linux-install.mdx, v2/gateways/run-a-gateway/install/windows-install.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/fund-gateway.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/quickstart/quickstart.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx, v2/orchestrators/v2-dev/get-started/quickstart.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Wrapper around Mintlify Steps with custom icon styling via injected CSS.
+ * @accepts children, className, style, ...rest
  * @param {any} children - children prop.
  * @param {any} iconColor - icon Color prop.
  * @param {any} titleColor - title Color prop.
  * @param {any} lineColor - line Color prop.
  * @param {string} [iconSize="24px"] - icon Size prop.
- * @example
- * <StyledSteps iconColor="example" titleColor="example">Example content</StyledSteps>
  */
 export const StyledSteps = ({
   children,
@@ -27,6 +17,9 @@ export const StyledSteps = ({
   titleColor,
   lineColor,
   iconSize = "24px",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const stepsId = `styled-steps-${Math.random().toString(36).substr(2, 9)}`;
   const resolvedIconColor = iconColor || "var(--accent-dark, #18794E)";
@@ -34,7 +27,7 @@ export const StyledSteps = ({
   const resolvedLineColor = lineColor || "var(--accent)";
 
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       <style>{`
         #${stepsId} .steps > div > div.absolute > div {
           background-color: ${resolvedIconColor};
@@ -49,35 +42,25 @@ export const StyledSteps = ({
       <div id={stepsId}>
         <Steps>{children}</Steps>
       </div>
-    </>
+    </div>
   );
 };
 
 /**
  * @component StyledStep
  * @type wrappers
- * @tier composite
+ * @subniche steps
  * @status stable
- * @description Styled Step layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies StyledSteps
- * @usedIn v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/connect/discover-offerings.mdx, v2/gateways/run-a-gateway/install/docker-install.mdx, v2/gateways/run-a-gateway/install/linux-install.mdx, v2/gateways/run-a-gateway/install/windows-install.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/fund-gateway.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/quickstart/quickstart.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx, v2/orchestrators/v2-dev/get-started/quickstart.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Single step with configurable icon, size, and colour.
+ * @accepts children, className, style, ...rest
  * @param {any} title - title prop.
  * @param {any} icon - icon prop.
  * @param {string} [titleSize="h3"] - title Size prop.
  * @param {any} children - children prop.
- * @example
- * <StyledStep title="example" icon="example">Example content</StyledStep>
  */
-export const StyledStep = ({ title, icon, titleSize = "h3", children }) => {
+export const StyledStep = ({ title, icon, titleSize = "h3", children, className = "", style = {}, ...rest }) => {
   return (
-    <Step title={title} icon={icon} titleSize={titleSize}>
+    <Step title={title} icon={icon} titleSize={titleSize} className={className} style={style} {...rest}>
       {children}
     </Step>
   );

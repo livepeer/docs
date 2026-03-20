@@ -2,23 +2,14 @@
 /**
  * @component CoinGeckoExchanges
  * @type integrators
- * @tier composite
+ * @subniche feeds
  * @status stable
- * @description Fetches and displays exchange availability for a token from the CoinGecko API.
- * @contentAffinity overview, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/gateways/references/arbitrum-exchanges.mdx, v2/gateways/references/livepeer-exchanges.mdx
- * @breakingChangeRisk low
- * @decision KEEP
+ * @description Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
  * @dataSource CoinGecko API
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @accepts {string} coinId, {string} className, {object} style, ...rest
  * @param {string} [coinId="arbitrum"] - coin Id prop.
- * @example
- * <CoinGeckoExchanges />
  */
-export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
+export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style = {}, ...rest }) => {
   const [exchanges, setExchanges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -129,7 +120,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
   };
 
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div className={className} style={{ overflowX: "auto", ...style }} {...rest}>
         <table
           style={{
             width: "100%",
@@ -156,6 +147,10 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   color: "var(--lp-color-on-accent)",
                 }}
                 onClick={() => handleSort("name")}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort("name"); }}}
+                tabIndex={0}
+                role="columnheader"
+                aria-sort={sortBy === "name" ? (sortOrder === "asc" ? "ascending" : "descending") : "none"}
                 title="Click to sort by name"
               >
                 Exchange{" "}
@@ -172,6 +167,10 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   color: "var(--lp-color-on-accent)",
                 }}
                 onClick={() => handleSort("type")}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort("type"); }}}
+                tabIndex={0}
+                role="columnheader"
+                aria-sort={sortBy === "type" ? (sortOrder === "asc" ? "ascending" : "descending") : "none"}
                 title="Click to sort by type"
               >
                 Type {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}

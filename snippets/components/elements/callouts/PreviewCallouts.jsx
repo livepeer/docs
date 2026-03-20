@@ -3,24 +3,16 @@
 /**
  * @component ComingSoonCallout
  * @type elements
- * @tier primitive
+ * @subniche callouts
  * @status stable
- * @description Renders the coming soon callout component
- * @contentAffinity changelog
- * @owner @livepeer/docs-team
- * @dependencies PreviewCallout, ReviewCallout
- * @usedIn v2/resources/changelog/migration-guide.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating a feature or page is coming soon, with links to related resources.
+ * @accepts style, className, ...rest
  * @param {string} [type="page"] - Type used by the component.
  *
  * @example
  * <ComingSoonCallout />
  */
-const ComingSoonCallout = ({ type = "page" }) => {
+const ComingSoonCallout = ({ type = "page", className = "", style = {}, ...rest }) => {
   const rowStyle = {
     display: "flex",
     flexDirection: "row",
@@ -51,7 +43,7 @@ const ComingSoonCallout = ({ type = "page" }) => {
   };
 
   return (
-    <Callout icon="" color="var(--lp-color-callout-coming-soon)">
+    <Callout icon="" color="var(--lp-color-callout-coming-soon)" className={className} style={style} {...rest}>
       <div style={rowStyle}>
         <div style={{ flexShrink: 0 }}>
           <Icon
@@ -99,22 +91,14 @@ const ComingSoonCallout = ({ type = "page" }) => {
 /**
  * @component PreviewCallout
  * @type elements
- * @tier primitive
+ * @subniche callouts
  * @status stable
- * @description Renders the preview callout component
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies ComingSoonCallout, ReviewCallout
- * @usedIn v2/developers/ai-inference-on-livepeer/overview.mdx, v2/developers/ai-inference-on-livepeer/workload-fit.mdx, v2/developers/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/quickstart/video/video-streaming-101.mdx, v2/orchestrators/setup/publish-offerings.mdx, v2/resources/concepts/brief-history-of-video.mdx, v2/resources/references/contract-addresses.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating content is in preview/draft state with feedback links.
+ * @accepts style, className, ...rest
  * @example
  * <PreviewCallout />
  */
-const PreviewCallout = () => {
+const PreviewCallout = ({ className = "", style = {}, ...rest }) => {
   const rowStyle = {
     display: "flex",
     flexDirection: "row",
@@ -144,7 +128,7 @@ const PreviewCallout = () => {
     color: "var(--lp-color-callout-review)",
   };
   return (
-    <Callout icon="" color="var(--lp-color-callout-review)">
+    <Callout icon="" color="var(--lp-color-callout-review)" className={className} style={style} {...rest}>
       <div style={rowStyle}>
         <div style={{ flexShrink: 0 }}>
           <Icon icon="tools" size={30} color="var(--lp-color-callout-review)" />
@@ -182,24 +166,16 @@ const PreviewCallout = () => {
 /**
  * @component ReviewCallout
  * @type elements
- * @tier primitive
+ * @subniche callouts
  * @status stable
- * @description Renders the review callout component
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies ComingSoonCallout, PreviewCallout
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating content is under review with status links.
+ * @accepts style, className, ...rest
  * @example
  * <ReviewCallout />
  */
-const ReviewCallout = () => {
+const ReviewCallout = ({ className = "", style = {}, ...rest }) => {
   return (
-    <Callout icon="help" color="var(--lp-color-callout-review)">
+    <Callout icon="help" color="var(--lp-color-callout-review)" className={className} style={style} {...rest}>
       <div style={{ fontSize: "1.0rem" }}>
         Technical Review Needed! <br />
         Get in touch if you can help

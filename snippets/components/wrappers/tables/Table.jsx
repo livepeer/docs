@@ -1,25 +1,15 @@
 /**
  * @component DynamicTable
  * @type wrappers
- * @tier composite
+ * @subniche tables
  * @status stable
- * @description Dynamic Table layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/job-lifecycle.mdx, v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/ai-pipelines-comfystream-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/developers/build/workload-fit.mdx, v2/gateways/guides-and-resources/gateway-job-pipelines/overview.mdx, v2/gateways/run-a-gateway/configure/pricing-configuration.mdx, v2/gateways/run-a-gateway/configure/video-configuration-view.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/old/setting-up-an-orchestrator/hardware-requirements.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx, v2/orchestrators/v2-dev/setup/hardware-requirements.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Renders structured data as a scrollable table with section separators and accessible region.
+ * @accepts className, style, ...rest
  * @param {any} [tableTitle=null] - table Title prop.
  * @param {Array} [headerList=[]] - header List prop.
  * @param {Array} [itemsList=[]] - items List prop.
  * @param {Array} [monospaceColumns=[]] - monospace Columns prop.
  * @param {any} margin - margin prop.
- * @example
- * <DynamicTable margin="example" />
  */
 export const DynamicTable = ({
   tableTitle = null,
@@ -27,13 +17,16 @@ export const DynamicTable = ({
   itemsList = [],
   monospaceColumns = [],
   margin,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   if (!headerList.length) {
     return <div>No headers provided</div>;
   }
 
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       {tableTitle && (
         <div style={{ fontStyle: "italic", margin: 0 }}>
           <strong>{tableTitle}</strong>
@@ -127,6 +120,6 @@ export const DynamicTable = ({
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,27 +1,15 @@
 /**
  * @component ScrollableDiagram
  * @type displays
- * @tier composite
+ * @subniche diagrams
  * @status stable
- * @description ──────────────────────────────────────────────────────────────
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/gateways/about/architecture.mdx, v2/gateways/references/technical-architecture.mdx, v2/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/gateways/run-a-gateway/configure/video-configuration-view.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx, v2/gateways/run-a-gateway/connect/connect-with-offerings.mdx, v2/gateways/run-a-gateway/connect/lp-marketplace.mdx, v2/gateways/run-a-gateway/monitor/monitor-and-optimise.mdx, v2/gateways/run-a-gateway/publish/connect-with-offerings.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-08
- *
+ * @description Pannable, zoomable diagram container with zoom controls and accessible buttons.
+ * @accepts children, className, style, ...rest
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {string} [title=""] - Title text rendered by the component.
  * @param {string} [maxHeight="500px"] - Max height used by the component.
  * @param {string} [minWidth="100%"] - Min width used by the component.
  * @param {boolean} [showControls=false] - Boolean flag that controls component behaviour.
- *
- * @example
- * <ScrollableDiagram>Example</ScrollableDiagram>
  */
 export const ScrollableDiagram = ({
   children,
@@ -29,6 +17,9 @@ export const ScrollableDiagram = ({
   maxHeight = "500px",
   minWidth = "100%",
   showControls = false,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const [zoom, setZoom] = useState(100);
 
@@ -60,7 +51,7 @@ export const ScrollableDiagram = ({
 
   return (
     <>
-      <div style={{ position: "relative", marginBottom: "1rem" }}>
+      <div className={className} style={{ position: "relative", marginBottom: "1rem", ...style }} {...rest}>
         {title && (
           <p
             style={{
@@ -104,7 +95,7 @@ export const ScrollableDiagram = ({
             >
               Scroll to pan
             </span>
-            <button style={buttonStyle} onClick={zoomOut} title="Zoom out">
+            <button style={buttonStyle} onClick={zoomOut} title="Zoom out" aria-label="Zoom out">
               −
             </button>
             <span
@@ -117,13 +108,14 @@ export const ScrollableDiagram = ({
             >
               {zoom}%
             </span>
-            <button style={buttonStyle} onClick={zoomIn} title="Zoom in">
+            <button style={buttonStyle} onClick={zoomIn} title="Zoom in" aria-label="Zoom in">
               +
             </button>
             <button
               style={{ ...buttonStyle, background: "var(--border)" }}
               onClick={resetZoom}
               title="Reset zoom"
+              aria-label="Reset zoom to 100%"
             >
               100%
             </button>

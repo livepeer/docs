@@ -1,26 +1,15 @@
 /**
  * @component DisplayCard
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description --------
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies InlineImageCard, WidthCard
- * @usedIn v2/community/livepeer-community/community-guidelines.mdx, v2/developers/opportunities/bug-bounties.mdx, v2/developers/opportunities/grants-and-programmes.mdx, v2/developers/opportunities/oss-contributions.mdx, v2/developers/opportunities/overview.mdx, v2/developers/opportunities/rfps-and-proposals.mdx, v2/home/about-livepeer/vision.mdx, v2/home/get-started.mdx, v2/home/solutions/applications.mdx, v2/internal/rfp/problem-statements.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Card with icon, custom title row, and body content.
+ * @accepts children, className, ...rest
  * @param {string} icon - Icon configuration used by the component.
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {object} style - Style used by the component.
  * @param {string} [background='var(--card-background)'] - Background used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
- *
- * @example
- * <DisplayCard icon="sparkles" title="Example" style={{}} />
  */
 export const DisplayCard = ({
   icon,
@@ -28,6 +17,8 @@ export const DisplayCard = ({
   style,
   background = 'var(--card-background)',
   children,
+  className = "",
+  ...rest
 }) => {
   if (!title) {
     console.warn("[DisplayCard] Missing required prop: title");
@@ -65,7 +56,7 @@ export const DisplayCard = ({
     margin: 0,
   }
   return (
-    <div style={cardStyle}>
+    <div className={className} style={cardStyle} {...rest}>
       <div style={titleStyle}>
         <Icon icon={icon} size={20} color="var(--accent)" />
         {title}
@@ -78,33 +69,25 @@ export const DisplayCard = ({
 /**
  * @component WidthCard
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description Renders the width card component
- * @contentAffinity landing
- * @owner @livepeer/docs-team
- * @dependencies InlineImageCard
- * @usedIn v2/gateways/quickstart/gateway-setup.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/roadmap.mdx, v2/resources/media-kit.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Width-constrained card wrapper with configurable percentage width.
+ * @accepts children, className, style, ...rest
  * @param {string} [width='80%'] - Width used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {object} [cardProps] - Forwarded Card props.
- *
- * @example
- * <WidthCard>Example</WidthCard>
  */
-export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
+export const WidthCard = ({ width = '80%', children, cardProps, className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         display: 'flex',
         justifyContent: 'center',
         minWidth: 'fit-content',
+        ...style,
       }}
+      {...rest}
     >
       <div style={{ width: width }}>
         <Card {...cardProps}>{children}</Card>
@@ -116,26 +99,15 @@ export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
 /**
  * @component InlineImageCard
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description Renders the inline image card component
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/resources/media-kit.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Card with inline image alongside content, using negative margin breakout.
+ * @accepts children, className, ...rest
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {object} imgProps - Img props used by the component.
  * @param {object} imgStyle - Img style used by the component.
  * @param {object} cardProps - Card props used by the component.
  * @param {object} style - Style used by the component.
- *
- * @example
- * <InlineImageCard imgProps={{}} imgStyle={{}} cardProps={{}} />
  */
 export const InlineImageCard = ({
   children,
@@ -143,6 +115,8 @@ export const InlineImageCard = ({
   imgStyle,
   cardProps,
   style,
+  className = "",
+  ...rest
 }) => {
   if (!imgProps?.src) {
     console.warn("[InlineImageCard] Missing required prop: imgProps.src");
@@ -150,7 +124,7 @@ export const InlineImageCard = ({
   }
 
   return (
-    <Card {...cardProps}>
+    <Card className={className} {...cardProps} {...rest}>
       <div
         style={{
           display: 'flex',

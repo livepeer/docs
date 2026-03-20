@@ -1,24 +1,14 @@
 /**
  * @component AccordionGroupList
  * @type wrappers
- * @tier composite
+ * @subniche accordions
  * @status stable
- * @description Renders a configurable number of empty accordion sections for scaffold examples.
- * @contentAffinity tutorial, reference
- * @owner docs
- * @dependencies AccordionGroup, Accordion
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-11
+ * @description Generates N numbered accordion sections inside an AccordionGroup.
+ * @accepts className, style, ...rest
  * @param {number} [num=1] - Number of placeholder accordion sections to render.
- * @example
- * <AccordionGroupList num={3} />
  */
-export const AccordionGroupList = ({ num = 1 }) => (
-  <AccordionGroup>
+export const AccordionGroupList = ({ num = 1, className = "", style = {}, ...rest }) => (
+  <AccordionGroup className={className} style={style} {...rest}>
     {Array.from({ length: num }, (_, i) => (
       <Accordion key={i} title={`Section ${i + 1}`}></Accordion>
     ))}

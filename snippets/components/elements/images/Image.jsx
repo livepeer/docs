@@ -1,18 +1,10 @@
 /**
  * @component Image
  * @type elements
- * @tier primitive
+ * @subniche images
  * @status stable
- * @description Image primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies LinkImage
- * @usedIn v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/resources/blockchain-contracts.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Framed image with optional caption and full-width toggle.
+ * @accepts style, className, ...rest
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.
@@ -22,10 +14,10 @@
  * @example
  * <Image src="example" alt="example" />
  */
-export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true }) => {
+export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
-    <Frame caption={caption} hint={hint}>
+    <Frame caption={caption} hint={hint} className={className} style={style} {...rest}>
       <img
         src={src}
         alt={alt}
@@ -38,18 +30,10 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true }) 
 /**
  * @component LinkImage
  * @type elements
- * @tier primitive
+ * @subniche images
  * @status stable
- * @description Link Image primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies Image
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Clickable framed image that opens a URL in a new tab.
+ * @accepts style, className, ...rest
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.
@@ -59,10 +43,10 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true }) 
  * @example
  * <LinkImage src="example" alt="example" />
  */
-export const LinkImage = ({ src, alt = "", caption, icon, hint, href }) => {
+export const LinkImage = ({ src, alt = "", caption, icon, hint, href, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...rest}>
       <Frame caption={caption} hint={hint}>
         <img src={src} alt={alt} style={{ width: "100%" }} />
       </Frame>

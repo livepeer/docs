@@ -42,21 +42,6 @@ Template-only operational fields:
 | `primary_paths` | Templates only | Non-empty array of canonical repo paths used by the workflow. |
 | `primary_commands` | Templates only | Non-empty array of repository-backed commands for the workflow. |
 
-Layer requirements:
-
-Every skill must have:
-
-- A **canonical template** (`ai-tools/ai-skills/templates/*.template.md`) — the source of truth.
-- An **agent-pack export** (`ai-tools/agent-packs/skills/*/SKILL.md`) — the portable copy.
-
-A **local SKILL.md** (`ai-tools/ai-skills/*/SKILL.md`) is required when any of:
-
-- The skill has a `references/` subdirectory with supporting operational files.
-- The skill appears in `ai-tools/ai-skills/catalog/skill-catalog.json`.
-- The skill needs local-only content that differs from or extends the template (e.g., repo-specific guardrails not suitable for cross-agent export).
-
-Skills that do not meet any of these criteria are template-only + export. They do not need a local SKILL.md.
-
 Cross-reference policy:
 
 - Only repo-root or relative markdown paths under `ai-tools/ai-skills/` are treated as governed references.
@@ -77,9 +62,6 @@ Blocking failures:
 - Governed reference path does not exist.
 - Self-reference to the current governed skill artifact.
 - Circular reference graph across governed skill artifacts.
-- `node tools/scripts/...` command path does not resolve to an existing file.
-- Template-only field (`tier`, `primary_paths`, `primary_commands`) present in a local SKILL.md.
-- Catalog skill `run` command references a non-existent script.
 
 Warnings:
 

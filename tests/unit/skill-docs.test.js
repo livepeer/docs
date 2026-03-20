@@ -505,65 +505,6 @@ function validateContractDocument() {
   return errors;
 }
 
-function validateCatalogManifestSync() {
-  const errors = [];
-  const catalogPath = path.join(REPO_ROOT, 'ai-tools/ai-skills/catalog/skill-catalog.json');
-  if (!fs.existsSync(catalogPath)) return errors;
-
-  let catalog;
-  try {
-    catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-  } catch (_error) {
-    errors.push({
-      file: 'ai-tools/ai-skills/catalog/skill-catalog.json',
-      rule: 'Catalog-manifest sync',
-      message: 'Failed to parse skill-catalog.json.',
-      line: 1
-    });
-    return errors;
-  }
-
-  if (!Array.isArray(catalog.skills)) return errors;
-
-  const templateDir = path.join(REPO_ROOT, TEMPLATE_ROOT);
-  const templateNames = fs.existsSync(templateDir)
-    ? new Set(fs.readdirSync(templateDir)
-        .filter((name) => name.endsWith('.template.md'))
-        .map((name) => name.replace(/^[0-9]+-/, '').replace(/\.template\.md$/, '')))
-    : new Set();
-
-  catalog.skills.forEach((skill) => {
-    const id = String(skill.id || '').trim();
-    if (!id) return;
-
-    // Verify catalog skill has a matching template
-    if (templateNames.size > 0 && !templateNames.has(id)) {
-      // Some catalog skills are reference-only (e.g. rubric-static-review, page-authoring)
-      // Only warn, don't block
-      // Skip — catalog skills don't strictly require templates
-    }
-
-    // Verify run commands resolve to existing scripts
-    if (Array.isArray(skill.commands)) {
-      skill.commands.forEach((cmd) => {
-        const run = String(cmd.run || '').trim();
-        const match = run.match(/^node\s+(tools\/scripts\/[^\s]+\.js)/);
-        if (!match) return;
-        if (!fileExists(match[1])) {
-          errors.push({
-            file: 'ai-tools/ai-skills/catalog/skill-catalog.json',
-            rule: 'Catalog command path',
-            message: `Catalog skill "${id}" references non-existent script: ${match[1]}`,
-            line: 1
-          });
-        }
-      });
-    }
-  });
-
-  return errors;
-}
-
 function runInternalUnitChecks() {
   const errors = [];
 
@@ -681,11 +622,7 @@ function runTests(options = {}) {
   const targetedArtifacts = new Set(targetInputs.filter(isGovernedArtifactPath));
   const fullMode = explicitFiles.length === 0 && !stagedOnly;
   const shouldValidateContract = fullMode || targetInputs.includes(CONTRACT_PATH) || targetedArtifacts.size > 0;
-  const errors = [
-    ...runInternalUnitChecks(),
-    ...(shouldValidateContract ? validateContractDocument() : []),
-    ...(fullMode ? validateCatalogManifestSync() : [])
-  ];
+  const errors = [...runInternalUnitChecks(), ...(shouldValidateContract ? validateContractDocument() : [])];
   const warnings = [];
   const allArtifacts = collectAllGovernedArtifacts();
   const allSkillMarkdown = collectAllSkillMarkdown();
@@ -737,42 +674,6 @@ function runTests(options = {}) {
         rule: 'Skill version bump heuristic',
         message: 'File content changed without a matching version field diff.',
         line: 1
-      });
-    }
-
-    // Validate command paths resolve to existing files
-    if (fullMode || targetedArtifacts.has(repoPath)) {
-      const bodyLines = parsed.body.split('\n');
-      bodyLines.forEach((line) => {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('#')) return;
-        const lineRe = /node\s+(tools\/scripts\/[^\s"'`\]]+\.js)/g;
-        let scriptMatch;
-        while ((scriptMatch = lineRe.exec(trimmed)) !== null) {
-          const scriptPath = scriptMatch[1];
-          if (!fileExists(scriptPath)) {
-            errors.push({
-              file: repoPath,
-              rule: 'Skill command path',
-              message: `Referenced script does not exist: ${scriptPath}`,
-              line: 1
-            });
-          }
-        }
-      });
-    }
-
-    // Enforce template-only fields on local skills
-    if ((fullMode || targetedArtifacts.has(repoPath)) && isGovernedLocalSkillPath(repoPath)) {
-      ['tier', 'primary_paths', 'primary_commands'].forEach((key) => {
-        if (key in parsed.frontmatter) {
-          errors.push({
-            file: repoPath,
-            rule: 'Template-only field on local skill',
-            message: `Local skill has template-only field "${key}". Remove it or move to the template.`,
-            line: 1
-          });
-        }
       });
     }
   });

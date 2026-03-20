@@ -14,8 +14,7 @@ primary_paths:
   - "snippets/generated/docs-structure-diagram.mdx"
   - "snippets/docs-status-data.json"
 primary_commands:
-  - "# Script not yet implemented
-# node tools/scripts/snippets/generate-docs-status.js"
+  - "node tools/scripts/snippets/generate-docs-status.js"
   - "rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx"
 ---
 
@@ -37,8 +36,7 @@ Workflow
 
 Command examples
 ```bash
-# Script not yet implemented
-# node tools/scripts/snippets/generate-docs-status.js
+node tools/scripts/snippets/generate-docs-status.js
 rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx
 ```
 

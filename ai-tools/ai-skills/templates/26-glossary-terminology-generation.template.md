@@ -9,13 +9,13 @@ invoke_when:
   - "discover missing terminology in docs"
   - "regenerate terminology data files"
 primary_paths:
-  - "tools/scripts/audits/content/reference/terminology-search.js"
-  - "tools/scripts/generators/content/reference/generate-glossary.js"
+  - "tools/scripts/snippets/generate-data/scripts/terminology-search.js"
+  - "tools/scripts/snippets/generate-data/scripts/generate-glossary.js"
   - "tools/scripts/snippets/generate-data/data"
   - "tasks/plan/23-glossary-maintenance.md"
 primary_commands:
-  - "node tools/scripts/audits/content/reference/terminology-search.js"
-  - "node tools/scripts/generators/content/reference/generate-glossary.js"
+  - "node tools/scripts/snippets/generate-data/scripts/terminology-search.js"
+  - "node tools/scripts/snippets/generate-data/scripts/generate-glossary.js"
 ---
 
 SKILL: Glossary Terminology Generation
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/audits/content/reference/terminology-search.js
-node tools/scripts/generators/content/reference/generate-glossary.js
+node tools/scripts/snippets/generate-data/scripts/terminology-search.js
+node tools/scripts/snippets/generate-data/scripts/generate-glossary.js
 ```
 
 Deliverable Format

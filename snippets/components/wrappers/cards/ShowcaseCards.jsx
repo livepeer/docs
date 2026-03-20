@@ -3,18 +3,10 @@
 /**
  * @component InteractiveCard
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description Interactive Card layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Single interactive card with hover effects.
+ * @accepts style, className, ...cardProps
  * @param {string} [mediaSrc=""] - media Src prop.
  * @param {string} [logo=""] - logo prop.
  * @param {string} [title="Untitled project"] - title prop.
@@ -26,8 +18,6 @@
  * @param {Array} [links=[]] - links prop.
  * @param {any} style - style prop.
  * @param {any} cardProps - card Props prop.
- * @example
- * <InteractiveCard />
  */
 export const InteractiveCard = ({
   mediaSrc = "",
@@ -40,6 +30,7 @@ export const InteractiveCard = ({
   productTags = [],
   links = [],
   style = {},
+  className = "",
   ...cardProps
 }) => {
   const previewSrc = mediaSrc || logo || "";
@@ -48,7 +39,7 @@ export const InteractiveCard = ({
   const safeLinks = Array.isArray(links) ? links : [];
 
   return (
-    <Card href={href} arrow={false} {...cardProps}>
+    <Card href={href} arrow={false} className={className} {...cardProps}>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", ...style }}>
         {previewSrc ? (
           <img
@@ -112,23 +103,13 @@ export const InteractiveCard = ({
 /**
  * @component InteractiveCards
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description Interactive Cards layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies InteractiveCard
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Multi-column layout of interactive cards.
+ * @accepts className, style, ...rest
  * @param {Array} [items=[]] - items prop.
- * @example
- * <InteractiveCards />
  */
-export const InteractiveCards = ({ items = [] }) => {
+export const InteractiveCards = ({ items = [], className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(items) && items.length > 0
     ? items
     : [
@@ -149,7 +130,7 @@ export const InteractiveCards = ({ items = [] }) => {
       ];
 
   return (
-    <Columns cols={2}>
+    <Columns cols={2} className={className} style={style} {...rest}>
       {safeItems.map((item, index) => (
         <InteractiveCard key={item.title || `interactive-card-${index}`} {...item} />
       ))}
@@ -160,25 +141,15 @@ export const InteractiveCards = ({ items = [] }) => {
 /**
  * @component ShowcaseCards
  * @type wrappers
- * @tier composite
+ * @subniche cards
  * @status stable
- * @description Showcase Cards layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies InteractiveCard
- * @usedIn v2/home/solutions/showcase.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Paginated card layout with search, category, and product filtering.
+ * @accepts className, style, ...rest
  * @param {Array} [items=[]] - items prop.
  * @param {any} [limit=null] - limit prop.
  * @param {number} [pageSize=10] - page Size prop.
- * @example
- * <ShowcaseCards />
  */
-export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
+export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [productFilter, setProductFilter] = useState("All");
@@ -647,7 +618,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
   });
 
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       <div style={filterBarStyle}>
         <input
           type="text"
