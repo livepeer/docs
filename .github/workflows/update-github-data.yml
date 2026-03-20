@@ -1,0 +1,51 @@
+name: Update GitHub Discussions & Releases Data
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Daily at 02:00 UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-github-data:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch GitHub Discussions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/fetch-github-discussions.js
+
+      - name: Fetch GitHub Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/fetch-github-releases.js
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code snippets/automations/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add snippets/automations/*/githubDiscussionsData.jsx snippets/automations/*/githubReleasesData.jsx
+          git commit -m "chore: update GitHub discussions & releases data [skip ci]"
+          git push

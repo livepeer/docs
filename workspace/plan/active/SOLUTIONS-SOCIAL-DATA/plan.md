@@ -3,7 +3,7 @@
 **Created:** 2026-03-21
 **Updated:** 2026-03-21
 **Branch:** docs-v2-dev
-**Status:** Phase 1 COMPLETE — awaiting approval for Phase 2
+**Status:** Phase 2 COMPLETE + Phase 3 template DRAFTED — awaiting approval
 
 ---
 
@@ -205,17 +205,17 @@ From scanning `snippets/templates/pages/`:
 - [x] Create `tools/scripts/config/product-social-config.json` mapping product → social channels
 - [x] **CHECKPOINT:** Findings reported inline. Committed. Awaiting approval for Phase 2.
 
-### Phase 2: Pipeline Extensions
-- [ ] Parameterise `fetch-youtube-data.js` for multi-channel output
-- [ ] Build `.github/scripts/fetch-discord-announcements.js` (GH Actions replacement for n8n Discord workflow)
-- [ ] Investigate & build generic blog fetch (PUBLIC APIs / RSS only — no API keys we don't own)
-- [ ] Build `.github/scripts/fetch-github-discussions.js` (for products using GH Discussions)
-- [ ] Build `.github/scripts/fetch-github-releases.js` (changelog data from public GitHub Releases API)
-- [ ] Add GH Actions workflows for all new data feeds
-- [ ] **CHECKPOINT:** Report pipeline status inline. Commit. Await approval before Phase 3.
+### Phase 2: Pipeline Extensions — COMPLETE
+- [x] Parameterise `fetch-youtube-data.js` for multi-channel output (PRODUCT_KEY env, config-driven, backward-compatible)
+- [x] Build `.github/scripts/fetch-discord-announcements.js` (GH Actions replacement for n8n Discord workflow)
+- [x] Investigate & build generic blog fetch → `.github/scripts/fetch-rss-blog-data.js` (RSS parser, skips Ghost API products)
+- [x] Build `.github/scripts/fetch-github-discussions.js` (GraphQL API, config-driven)
+- [x] Build `.github/scripts/fetch-github-releases.js` (REST API, config-driven)
+- [x] Add GH Actions workflows: `update-discord-data.yml`, `update-github-data.yml`, `update-rss-blog-data.yml`
+- [x] **CHECKPOINT:** Pipeline status reported inline. Committed. Awaiting approval for Phase 3.
 
-### Phase 3: Template & Pages
-- [ ] Create `snippets/templates/pages/data-imports/social-data-page.mdx` template
+### Phase 3: Template & Pages — TEMPLATE DRAFTED
+- [x] Create `snippets/templates/pages/data-imports/social-data-page.mdx` template (DRAFT)
 - [ ] Create per-product data files in `snippets/automations/{product}/`
 - [ ] Create social/community pages for each product in `v2/solutions/{product}/`
 - [ ] Add related pages section to `v2/community/livepeer-community/trending-topics.mdx` — CardGroup cols={2} linking to each product's community/socials page
