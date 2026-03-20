@@ -90,11 +90,11 @@ function hasStagedComponentGovernanceChanges() {
     'docs-guide/component-registry.json',
     'docs-guide/component-usage-map.json',
     'tools/lib/component-governance-utils.js',
-    'tools/scripts/audit-component-usage.js',
+    'tools/scripts/audits/components/documentation/audit-component-usage.js',
     'tools/scripts/generators/components/library/generate-component-registry.js',
     'tools/scripts/audits/components/library/scan-component-imports.js',
-    'tools/scripts/generate-component-docs.js',
-    'tools/scripts/generate-docs-guide-components-index.js',
+    'tools/scripts/generators/components/documentation/generate-component-docs.js',
+    'tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js',
     'tools/scripts/remediators/components/library/repair-component-metadata.js',
     'tests/unit/component-governance-generators.test.js'
   ]);
@@ -114,8 +114,8 @@ function hasStagedDocsGuideSotChanges() {
       filePath === 'README.md' ||
       filePath.startsWith('docs-guide/') ||
       filePath === 'tests/unit/docs-guide-sot.test.js' ||
-      filePath.startsWith('tools/scripts/generate-docs-guide-') ||
-      filePath === 'tools/scripts/generate-ui-templates.js' ||
+      filePath.startsWith('tools/scripts/generators/governance/catalogs/generate-docs-guide-') ||
+      filePath === 'tools/scripts/generators/components/library/generate-ui-templates.js' ||
       filePath === 'tests/unit/script-docs.test.js'
   );
 }
@@ -133,7 +133,7 @@ function hasStagedUiTemplateChanges() {
       filePath === 'docs-guide/catalog/ui-templates.mdx' ||
       filePath === 'docs-guide/features/ui-system.mdx' ||
       filePath === 'docs-guide/component-registry.json' ||
-      filePath === 'tools/scripts/generate-ui-templates.js' ||
+      filePath === 'tools/scripts/generators/components/library/generate-ui-templates.js' ||
       filePath === 'tests/unit/ui-template-generator.test.js'
   );
 }
