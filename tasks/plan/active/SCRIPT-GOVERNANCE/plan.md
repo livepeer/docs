@@ -553,6 +553,82 @@ files stay in `x-archive/` via `git mv` to preserve history.
 
 ---
 
+## Task 13b — Auto-generated file governance
+
+**Goal**: Every auto-generated file in the repo carries a standardized, machine-readable banner.
+No file that is produced by a script should be editable by hand or by an AI agent without
+that being made explicit and detectable.
+
+### Current state
+
+| File type | Governance | Gap |
+|-----------|-----------|-----|
+| Generated `.mdx` files | ✅ `enforce-generated-file-banners.js` — hidden comment + visible `<Note>` block | None for MDX |
+| Generated `.md` indexes (`tools/script-index.md`, `tests/script-index.md`) | ❌ No banner | Completely unprotected |
+| Generated `.json` registries (`component-registry.json`, `script-registry.json`) | ❌ No banner | No machine-readable signal |
+| AI callout | ❌ `<Note>` tells humans; no explicit AI-agent instruction | Agents can clobber generated files without knowing |
+
+### What "AI callout" means
+
+Every auto-generated file must contain a comment in the first ~10 lines that any AI agent
+scanning the file can read, in a format consistent with existing tooling:
+
+```
+<!-- GENERATED FILE — DO NOT EDIT
+Generator: <script path>
+Regenerate: <exact command>
+Docs: <link to governance page when it exists>
+Any edits to this file will be overwritten on next generation run.
+-->
+```
+
+For `.json` files (no comments): add a `"_generated"` key to the root object:
+```json
+"_generated": {
+  "by": "tools/scripts/generators/...",
+  "command": "node tools/scripts/... --write",
+  "doNotEdit": true
+}
+```
+
+### Tasks
+
+- [ ] **13b.1** Audit all generated non-MDX files: list every `.md` and `.json` that is
+  produced by a generator script (cross-reference `generated-artifacts.json` + script outputs)
+- [ ] **13b.2** Extend `generated-artifacts.json` to include all missing non-MDX generated files
+- [ ] **13b.3** Add HTML/Markdown comment banner to all generated `.md` files
+- [ ] **13b.4** Add `_generated` key to all generated `.json` files (where format allows)
+- [ ] **13b.5** Extend `enforce-generated-file-banners.js` (or write a companion validator)
+  to check non-MDX generated files for their respective banner format
+- [ ] **13b.6** Run full test suite
+- [ ] **13b.7** **CHECKPOINT** — show results to human
+- [ ] **13b.8** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 13c — tasks/ → workspace/ rename (before Task 14)
+
+**Goal**: Rename `tasks/` → `workspace/` on this branch before the root restructure (Task 14)
+so all script paths, plan files, and AI agent configs reference the new location.
+This derisks Task 14 by handling the rename separately.
+
+> See sub-plan: [`task-13c-workspace-rename-subplan.md`](task-13c-workspace-rename-subplan.md)
+
+### Tasks
+
+- [ ] **13c.1** Run full reference audit: all `tasks/` path references across scripts, workflows,
+  hooks, config, AI adapter files (.claude/, .codex/, .cursor/, .windsurf/), AGENTS.md
+- [ ] **13c.2** **CHECKPOINT** — present count + list to human before any moves
+- [ ] **13c.3** `git mv tasks/ workspace/`
+- [ ] **13c.4** Update all path references (scripts, workflows, hooks, config, AI adapters)
+- [ ] **13c.5** Update AGENTS.md
+- [ ] **13c.6** Verify pre-commit hook resolves correctly after rename
+- [ ] **13c.7** Run full test suite
+- [ ] **13c.8** **CHECKPOINT** — confirm clean state
+- [ ] **13c.9** Commit + merge back to `docs-v2-dev`
+
+---
+
 ## Task 13 — Script documentation consolidation
 
 **Goal**: Audit all script documentation surfaces, identify what exists vs what's needed, define one source of truth (likely JSON config), and plan human-readable MDX derivations. No code changes — analysis and report only.
@@ -564,6 +640,39 @@ files stay in `x-archive/` via `git mv` to preserve history.
 - [x] ~~**13.3** Define proposed single source of truth (JSON config? MDX? hybrid?) and derivation plan for docs-guide and internal nav pages~~
 - [x] ~~**13.4** Write findings to `tasks/plan/active/SCRIPT-GOVERNANCE/script-docs.md`~~
 - [ ] **13.5** **CHECKPOINT** — present to human for approval before any changes
+
+---
+
+## Task 13d — lpd-cli audit + governance + documentation
+
+**Goal**: Audit the lpd-cli tool's current function, usefulness, governance alignment, and
+documentation. Produce a recommendation report — do NOT execute changes in this task.
+
+> This task runs AFTER the script restructure is complete (Tasks 1–13c) so the audit reflects
+> the final state of the scripts the CLI wraps.
+
+### What to audit
+
+1. **Current function**: What does lpd-cli actually do? What commands exist, what scripts do
+   they wrap, are they still the right scripts post-restructure?
+2. **Usefulness**: Are the wrapped scripts still the most common/useful? Are there new
+   high-value scripts from the restructure that should be CLI-accessible?
+3. **Governance alignment**: Does lpd-cli follow the same patterns as scripts (JSDoc headers,
+   classification, registry entry)? Is it in `generated-artifacts.json`?
+4. **Documentation**: Is `docs-guide/tooling/lpd-cli.mdx` current? Does it reflect the
+   post-restructure command paths? Are there missing commands documented?
+5. **AI agent integration**: Can agents invoke lpd-cli? Should they? What's the approved
+   invocation path?
+
+### Tasks
+
+- [ ] **13d.1** Read `tools/lib/lpd-cli.js` (or equivalent) + `docs-guide/tooling/lpd-cli.mdx`
+- [ ] **13d.2** Cross-reference CLI commands against post-restructure script paths — flag stale
+- [ ] **13d.3** Identify gaps: high-value scripts missing from CLI
+- [ ] **13d.4** Check governance alignment: JSDoc header, registry entry, classification
+- [ ] **13d.5** Check documentation currency: paths, commands, examples
+- [ ] **13d.6** Write recommendation report to `tasks/plan/active/SCRIPT-GOVERNANCE/lpd-cli-audit.md`
+- [ ] **13d.7** **CHECKPOINT** — present recommendations to human for approval
 
 ---
 
@@ -618,6 +727,10 @@ files stay in `x-archive/` via `git mv` to preserve history.
 | **11f** | Post-reclassification testing | Before merge |
 | **12** | Enforce best practices (per-script) | Before/after changes |
 | **12c** | Testing (post-best-practices) | Before merge |
+| **13** | Script documentation consolidation | Before changes |
+| **13b** | Auto-generated file governance (non-MDX banners + AI callout) | Before merge |
+| **13c** | tasks/ → workspace/ rename (sub-plan) | Before move + after tests |
+| **13d** | lpd-cli audit + governance + documentation recommendations | Report to human |
 | **14** | Root restructure to `/operations` | Before merge |
 | **15** | Full cleanup (x-archive reconciliation) | Before merge |
 | **16** | Final merge to docs-v2-dev | Before merge |
