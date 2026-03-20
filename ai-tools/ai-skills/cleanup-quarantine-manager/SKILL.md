@@ -1,6 +1,7 @@
 ---
 name: cleanup-quarantine-manager
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Classify likely obsolete repository artifacts, quarantine them with reversible manifests, and guide safe cleanup review before any deletion or irreversible repository pruning.
 invoke_when:

@@ -1,6 +1,7 @@
 ---
 name: page-content-research-review
-version: "1.0"
+version: "1.1"
+category: audit
 description: Route high-rigor Livepeer Docs fact-checking across claim extraction, source verification, contradiction analysis, claim-family propagation, and final research reporting workflows consistently.
 tier: 2
 invoke_when:

@@ -1,6 +1,7 @@
 ---
 name: agentic-project-management-orchestrator
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Plan Livepeer Docs repo changes through gated discovery, phased scoping, validation mapping, and handover-ready artifacts; not for direct execution or cross-agent packaging.
 tier: 3

@@ -1,6 +1,7 @@
 ---
 name: v2-link-audit-runbook
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Run and interpret the comprehensive v2 link/import audit in full, staged, or file-targeted modes. Use when tasks include run strict link audit, find broken internal links in v2, audit mdx imports and hrefs.
 tier: 1

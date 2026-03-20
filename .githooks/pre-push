@@ -74,23 +74,23 @@ fi
 
 echo -e "${YELLOW}🔍 Running codex pre-push enforcement for ${CURRENT_BRANCH}${NC}"
 
-if ! node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --require-committed-work --quiet; then
+if ! node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --require-committed-work --quiet; then
   echo -e "${RED}❌ Codex task contract validation failed. Push blocked.${NC}"
   exit 1
 fi
 
-if [ -f "tools/scripts/codex/validate-locks.js" ]; then
-  if ! node tools/scripts/codex/validate-locks.js --branch "$CURRENT_BRANCH" --quiet; then
+if [ -f "tools/scripts/validators/ai/codex/validate-locks.js" ]; then
+  if ! node tools/scripts/validators/ai/codex/validate-locks.js --branch "$CURRENT_BRANCH" --quiet; then
     echo -e "${RED}❌ Codex local lock validation failed. Push blocked.${NC}"
     exit 1
   fi
 else
-  echo -e "${RED}❌ Missing codex lock validator: tools/scripts/codex/validate-locks.js${NC}"
+  echo -e "${RED}❌ Missing codex lock validator: tools/scripts/validators/ai/codex/validate-locks.js${NC}"
   exit 1
 fi
 
-if [ -x "tools/scripts/check-no-ai-stash.sh" ]; then
-  if ! bash tools/scripts/check-no-ai-stash.sh --branch "$CURRENT_BRANCH" --quiet; then
+if [ -x "tools/scripts/validators/ai/codex/check-no-ai-stash.sh" ]; then
+  if ! bash tools/scripts/validators/ai/codex/check-no-ai-stash.sh --branch "$CURRENT_BRANCH" --quiet; then
     echo -e "${RED}❌ AI stash policy violation detected. Push blocked.${NC}"
     exit 1
   fi

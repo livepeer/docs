@@ -1,6 +1,7 @@
 ---
 name: repo-audit-orchestrator
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Run the docs-as-infrastructure audit pipeline, aggregate stage results, and emit one prioritized scorecard that maintainers can use to sequence repository fixes.
 invoke_when:

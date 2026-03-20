@@ -1,6 +1,7 @@
 ---
 name: docs-research-packet-generation
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: >-
   Generate report-only research packets from live nav scope, manifests, or
   explicit files and folders so section-level fact-check findings can be

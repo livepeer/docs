@@ -33,14 +33,30 @@ Required fields for every governed skill artifact:
 | `version` | Yes | Semver-like string matching `^[0-9]+\.[0-9]+(?:\.[0-9]+)?$`. |
 | `description` | Yes | Plain-English description between 20 and 100 words. State what the skill does and when to use it. |
 | `invoke_when` | Yes | Non-empty array of trigger phrases. Exact duplicate trigger sets across governed skills are warned. |
+| `category` | Yes | One of: `audit`, `authoring`, `governance`, `review-pipeline`, `meta`. See category taxonomy below. |
+
+Category taxonomy:
+
+| Value | Meaning | Skills |
+| --- | --- | --- |
+| `audit` | Read-only scan, measure, report | `script-footprint-and-usage-audit`, `docs-quality-and-freshness-audit`, `docs-coverage-and-route-integrity-audit`, `rubric-static-review` |
+| `authoring` | Content creation and editing guidance | `page-authoring`, `docs-copy`, `product-thinking` |
+| `governance` | Enforce rules, apply standards, manage artifacts | `component-layout-governance`, `generated-mdx-banners-governance`, `style-and-language-homogenizer-en-gb`, `cleanup-quarantine-manager` |
+| `review-pipeline` | Multi-step review and fix workflows | `docs-review-packet-generation`, `docs-review-fix-execution` |
+| `meta` | Orchestration, packaging, skill self-governance | `repo-audit-orchestrator`, `cross-agent-packager`, `skill-docs` |
+
+Optional operational fields (local skills + templates):
+
+| Field | Required on | Rules |
+| --- | --- | --- |
+| `tier` | Optional on both | `1` = single-command skill; `2` = multi-step workflow skill. Use when the execution complexity is worth signalling. |
 
 Template-only operational fields:
 
 | Field | Applies To | Rules |
 | --- | --- | --- |
-| `tier` | Templates only | Repository-defined execution tier used by sync and export tooling. |
-| `primary_paths` | Templates only | Non-empty array of canonical repo paths used by the workflow. |
-| `primary_commands` | Templates only | Non-empty array of repository-backed commands for the workflow. |
+| `primary_paths` | Templates only | Non-empty array of canonical repo paths used by the workflow. Not valid on local `SKILL.md` files. |
+| `primary_commands` | Templates only | Non-empty array of repository-backed commands for the workflow. Not valid on local `SKILL.md` files. |
 
 Cross-reference policy:
 
@@ -54,10 +70,11 @@ Cross-reference policy:
 
 Blocking failures:
 
-- Missing `name`, `version`, `description`, or `invoke_when`.
+- Missing `name`, `version`, `description`, `invoke_when`, or `category`.
 - Invalid `name` or `version` format.
 - `description` under 20 words.
 - Empty `invoke_when`.
+- `category` value not in the allowed enum (`audit`, `authoring`, `governance`, `review-pipeline`, `meta`).
 - Missing required sections in this contract document.
 - Governed reference path does not exist.
 - Self-reference to the current governed skill artifact.

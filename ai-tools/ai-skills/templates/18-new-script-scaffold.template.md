@@ -1,6 +1,7 @@
 ---
 name: new-script-scaffold
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Create new repository scripts with compliant header template and expected metadata tags. Use when tasks include create a new repo script, script header template required, bootstrap test or tooling script.
 tier: 2

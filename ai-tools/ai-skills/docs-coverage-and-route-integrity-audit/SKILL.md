@@ -1,6 +1,7 @@
 ---
 name: docs-coverage-and-route-integrity-audit
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Audit docs navigation coverage, route integrity, and orphaned documentation files so route drift is visible before it becomes broken documentation behavior.
 invoke_when:
@@ -16,7 +17,8 @@ Surface navigation and route correctness gaps before they become broken-doc regr
 
 Command
 ```bash
-node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full
+# Script not yet implemented. Planned path:
+# node tools/scripts/audits/content/coverage/docs-coverage-and-route-integrity-audit.js --scope full
 ```
 
 Outputs

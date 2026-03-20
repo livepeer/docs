@@ -1,6 +1,7 @@
 ---
 name: style-mdx-quality-fix-playbook
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Systematically fix style, MDX, and quality test failures with smallest-risk edits. Use when tasks include quality tests failing on docs pages, fix mdx and style errors together, frontmatter and content quality cleanup.
 tier: 1

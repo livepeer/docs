@@ -1,6 +1,7 @@
 ---
 name: spelling-and-cspell-maintenance
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Maintain spelling quality with repo dictionaries and staged spell checks. Use when tasks include spelling test failed, add accepted term to dictionary, fix cspell issues in docs.
 tier: 1

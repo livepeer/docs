@@ -1,6 +1,7 @@
 ---
 name: rubric-static-review
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Static-only rubric-based code review scored 0-100 by category with concrete code evidence and prioritized recommendations. Use when asked to review a repository without running build, test, or runtime commands.
 invoke_when:

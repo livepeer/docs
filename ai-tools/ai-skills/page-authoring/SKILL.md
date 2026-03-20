@@ -1,6 +1,7 @@
 ---
 name: page-authoring
-version: "1.1"
+version: "1.2"
+category: authoring
 description: >-
   Canonical guidance for authoring new v2 documentation pages. Covers frontmatter, page-type and purpose alignment, MDX/component constraints, and repo-backed validation without collapsing copy quality into rigid templates.
 invoke_when:

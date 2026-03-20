@@ -1,6 +1,7 @@
 ---
 name: docs-copy
-version: "1.0"
+version: "1.3"
+category: authoring
 description: >-
   Route documentation copy planning, rewriting, review, and claim-sensitive updates through the correct Livepeer Docs skills so wording changes stay accurate, scoped, and ready for handoff.
 tier: 2
@@ -10,18 +11,6 @@ invoke_when:
   - "plan a docs copy pass for this page"
   - "review and tighten this docs copy"
   - "update docs copy after facts changed"
-primary_paths:
-  - "v2"
-  - "docs-guide/frameworks/content-system.mdx"
-  - "docs-guide/policies/source-of-truth-policy.mdx"
-  - "docs-guide/policies/quality-gates.mdx"
-  - "ai-tools/ai-skills/page-authoring/SKILL.md"
-  - "ai-tools/ai-skills/product-thinking/SKILL.md"
-  - "ai-tools/ai-skills/templates"
-primary_commands:
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
-  - "node tests/run-all.js --staged --skip-browser"
-  - "node tests/run-pr-checks.js --base-ref docs-v2-dev"
 ---
 
 SKILL: Docs Copy

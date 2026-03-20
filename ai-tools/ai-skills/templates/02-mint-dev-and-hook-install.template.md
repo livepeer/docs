@@ -1,6 +1,7 @@
 ---
 name: mint-dev-and-hook-install
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Start local Mintlify development with automatic hook installation and verify hook state. Use when tasks include start local docs server, install hooks before dev, mint dev not working in this repo.
 tier: 1

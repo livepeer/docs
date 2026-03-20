@@ -1,6 +1,7 @@
 ---
 name: docs-impact-propagation
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: Map changed claim families to every dependent page, glossary, example, comparison, and reference surface that should be verified or updated.
 tier: 2
 invoke_when:

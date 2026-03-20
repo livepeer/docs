@@ -1,6 +1,7 @@
 ---
 name: staged-test-suite-runner
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Run staged-scope validation flow to check only changed docs and scripts before commit. Use when tasks include run only staged tests, quick pre-commit checks locally, validate changed files only.
 tier: 1

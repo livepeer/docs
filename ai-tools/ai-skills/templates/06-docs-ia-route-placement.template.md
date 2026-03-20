@@ -1,6 +1,7 @@
 ---
 name: docs-ia-route-placement
-version: "1.0"
+version: "1.1"
+category: authoring
 description: >-
   Place new or moved content in the correct v2 section hierarchy and route context. Use when tasks include where should this page live in v2, move docs page to correct section, fix information architecture placement.
 tier: 1

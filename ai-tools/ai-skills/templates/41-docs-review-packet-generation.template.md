@@ -1,6 +1,7 @@
 ---
 name: docs-review-packet-generation
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: >-
   Generate dated, report-only docs review packets from live navigation scope so
   copy-framework, authoring-style, and research findings land in reusable
@@ -16,7 +17,7 @@ primary_paths:
   - "tasks/reports"
   - "ai-tools/ai-skills/docs-copy/SKILL.md"
   - "ai-tools/ai-skills/page-authoring/SKILL.md"
-  - "ai-tools/ai-skills/templates/32-page-content-research-review.template.md"
+  - "ai-tools/ai-skills/templates/39-page-content-research-review.template.md"
   - "docs-guide/tooling/review-packet-plan-template.md"
 primary_commands:
   - "node tests/unit/copy-lint.test.js --files [csv]"
@@ -37,7 +38,7 @@ Constraints
 - Keep the run report-only. Do not edit page files while generating the packet.
 - Derive page membership from the declared nav source first, not from folder guesses.
 - Include only live pages and exclude deprecated docs, helper notes, review files, and non-nav artifacts.
-- Use `ai-tools/ai-skills/docs-copy/SKILL.md` for copy-framework expectations, `ai-tools/ai-skills/page-authoring/SKILL.md` for authoring-style expectations, and `ai-tools/ai-skills/templates/32-page-content-research-review.template.md` for research routing.
+- Use `ai-tools/ai-skills/docs-copy/SKILL.md` for copy-framework expectations, `ai-tools/ai-skills/page-authoring/SKILL.md` for authoring-style expectations, and `ai-tools/ai-skills/templates/39-page-content-research-review.template.md` for research routing.
 - Preserve raw `authoring-style-findings.json` alongside `02-authoring-style.md`; the raw JSON stays equal source-of-truth when the markdown summary is incomplete.
 - The tracker must start in execution form with exactly one `[copy-framework]` bullet and one `[authoring-style]` bullet per live page, and no per-page research bullets.
 
