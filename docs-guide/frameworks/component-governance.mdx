@@ -23,7 +23,7 @@ owner: '@livepeer/docs-team'
 status: active
 version: '1.0'
 created: 2026-03-07T00:00:00.000Z
-lastUpdated: 2026-03-07T00:00:00.000Z
+lastUpdated: 2026-03-20T00:00:00.000Z
 sourceDeliverables: 'D1, D2, D3, D4, D5, D6'
 decisions: 33
 scope: snippets/components/
@@ -82,17 +82,17 @@ Mintlify requires full paths with file extensions. No barrel imports. If you nee
 
 Follow the decision tree (first match wins):
 
-1. **Bound to an external data source or pipeline?** → `data/`
-2. **Only makes sense on frame-mode or portal pages?** → `page-structure/`
-3. **Accepts children and arranges them spatially?** → `layout/`
-4. **Formats or renders content for the reader?** → `content/`
-5. **Otherwise** → `primitives/`
+1. **Fetches, embeds, or binds to external/third-party data?** → `integrators/`
+2. **Part of the page's outer structure, typically used once?** → `scaffolding/`
+3. **Takes content and presents it in a formatted way?** → `displays/`
+4. **Exists to hold, group, or arrange other things?** → `wrappers/`
+5. **Single visual piece — no wrapping, no arranging, no fetching?** → `elements/`
 
 ### Build a new component
 
 1. Create your `.jsx` file in the correct category folder.
 2. Use arrow function syntax (`export const X = () => ...`).
-3. Add the full JSDoc block (14 governance fields + `@param` per prop + `@example`).
+3. Add the full JSDoc block (7 governance fields + `@param` per prop + `@example`).
 4. Use `var(--lp-*)` CSS tokens for all colours. No hardcoded hex. No ThemeData.
 5. Add defensive rendering — guard all props, never throw. A crash kills the entire page.
 6. Create an example in `{category}/examples/{file}-examples.mdx`.
@@ -104,7 +104,7 @@ Follow the decision tree (first match wins):
 
 ``` icon="terminal"
 JSDoc
-  □ All 14 governance fields present
+  □ All 7 governance fields present
   □ @param for every prop
   □ @example with primary usage
 
@@ -153,51 +153,42 @@ Testing
 
 ### 1.1 Category Taxonomy
 
-Five categories. Every component belongs to exactly one.
+Six categories. Every component belongs to exactly one.
 
-| Category | Folder | Count | Purpose |
-|----------|--------|-------|---------|
-| **Primitives** | `primitives/` | 29 | Standalone visual atoms — icons, text, callouts, links, images, math, dividers, a11y |
-| **Layout** | `layout/` | 23 | Spatial arrangement — containers, grids, steps, lists, tables, carousels |
-| **Content** | `content/` | 25 | Content formatting and media — code blocks, quotes, video, embeds, API fields, diagrams |
-| **Data** | `data/` | 13 | Pipeline/API-bound display — blog, forum, Discord, Luma, CoinGecko, showcase |
-| **Page Structure** | `page-structure/` | 23 | Frame-mode and portal scaffolding — headers, sections, enhanced cards |
+| Category | Folder | Purpose |
+|----------|--------|---------|
+| **Elements** | `elements/` | Standalone visual atoms — icons, text, callouts, links, images, math, dividers, a11y |
+| **Wrappers** | `wrappers/` | Containers that hold, group, or spatially arrange other components |
+| **Displays** | `displays/` | Renderers for authored content — code, video, diagrams, quotes, response fields |
+| **Scaffolding** | `scaffolding/` | One-per-page structural skeleton — heroes, portals, frame-mode overrides |
+| **Integrators** | `integrators/` | Fetches, embeds, or binds to external data — feeds, embeds, video, APIs |
+| **Config** | `config/` | Non-component configuration objects (e.g. theme, colour maps) |
 
 ### 1.2 Decision Tree
 
 Classify by answering in order. First match wins.
 
 ``` icon="terminal"
-Q1: Bound to an external data source or automation pipeline?
-    YES → DATA
+Q1: Fetches, embeds, or binds to external/third-party data?
+    YES → INTEGRATORS
 
-Q2: Only makes sense on frame-mode or portal pages?
-    YES → PAGE STRUCTURE
+Q2: Part of the page's outer structure, typically used once?
+    YES → SCAFFOLDING
 
-Q3: Accepts children and arranges them spatially?
-    YES → LAYOUT
+Q3: Takes content and presents it in a formatted way?
+    YES → DISPLAYS
 
-Q4: Formats or renders content for the reader?
-    YES → CONTENT
+Q4: Exists to hold, group, or arrange other things?
+    YES → WRAPPERS
 
-Q5: Default → PRIMITIVES
+Q5: Default → ELEMENTS
 ```
 
-**Order rationale:** Data and Page Structure are checked first because they're the most constrained (fewest false positives). Layout's "accepts children spatially" test is concrete and binary. Content catches everything that formats reader-facing material. Primitives is the default.
+**Order rationale:** Integrators and Scaffolding are checked first because they're the most constrained (fewest false positives). Displays catches formatting/rendering components. Wrappers catches spatial arrangement. Elements is the default atom.
 
-### 1.3 Compositional Tiers
+### 1.3 Library Boundary
 
-Every component carries a `@tier` tag. Tiers describe the component's role in MDX-level composition (not internal dependencies — Mintlify forbids cross-file imports between JSX files).
-
-| Tier | Meaning |
-|------|---------|
-| `primitive` | Standalone — used independently, solves one visual need |
-| `composite` | Designed to work alongside other components at the MDX page level |
-| `pattern` | Orchestrates a page section — backbone of a major page area |
-
-### 1.4 Library Boundary
-
-**Inside:** `snippets/components/` and its five category subdirectories. Every exported component here is governed.
+**Inside:** `snippets/components/` and its six category subdirectories. Every exported component here is governed.
 
 **Outside (not governed by this framework):**
 
@@ -209,11 +200,9 @@ Every component carries a `@tier` tag. Tiers describe the component's role in MD
 
 Mintlify enforces that all importable JSX lives under `/snippets/`. No "section-local components" are possible outside this path.
 
-### 1.5 Content Affinity
+### 1.5 Data & Props Surface
 
-The `@contentAffinity` field connects components to page types from the Page Taxonomy: `landing`, `overview`, `tutorial`, `how_to`, `concept`, `reference`, `faq`, `troubleshooting`, `changelog`, `glossary`, `universal`.
-
-This is an affinity signal, not a hard restriction. `universal` means the component works on any page type.
+The `@accepts` field describes what prop inputs a component accepts. For integrators, `@dataSource` identifies the external pipeline or API. Both are enforced JSDoc fields — see Section 5.2 for the full 7-field schema.
 
 <CustomDivider />
 
@@ -223,49 +212,43 @@ This is an affinity signal, not a hard restriction. `universal` means the compon
 
 ``` icon="terminal"
 snippets/components/
-├── primitives/
-│   ├── divider.jsx
-│   ├── icons.jsx
-│   ├── ...
-│   └── examples/
-│       ├── divider-examples.mdx
-│       └── ...
-├── layout/
-│   ├── containers.jsx
-│   ├── ...
-│   └── examples/
-├── content/
-│   ├── code.jsx
-│   ├── video.jsx
-│   ├── ...
-│   └── examples/
-├── data/
-│   ├── data.jsx
-│   ├── ...
-│   └── examples/
-├── display/
-│   ├── frame-mode.jsx
-│   ├── ...
-│   └── examples/
-└── page-structure/
-    ├── heroGif.jsx
-    ├── portals.jsx
-    └── ...
+├── elements/          # Visual atoms — icons, text, links, callouts, math, spacing
+│   ├── icons/
+│   ├── links/
+│   ├── spacing/
+│   └── ...
+├── wrappers/          # Containers that group or arrange other components
+│   ├── cards/
+│   ├── grids/
+│   ├── tables/
+│   └── ...
+├── displays/          # Content renderers — code, video, diagrams, quotes
+│   ├── code/
+│   ├── media/
+│   └── ...
+├── scaffolding/       # One-per-page structure — heroes, portals, frame-mode
+│   ├── frame-mode/
+│   └── ...
+├── integrators/       # External data — feeds, embeds, APIs
+│   ├── embeds/
+│   └── ...
+├── config/            # Non-component configuration objects
+└── x-archive/         # Superseded files (retained until final cleanup)
 ```
 
-Six category folders. Flat within each (no tier subfolders). One `examples/` subdirectory per category where the category uses runnable examples.
+Sub-niche folders within each category. One `examples/` subdirectory per category where the category uses runnable examples.
 
 ### 2.2 Naming Conventions
 
 | Element | Convention | Example |
 |---------|-----------|---------|
-| Files | Canonical camelCase `.jsx` outside `display/`; `display/` keeps kebab-case | `frameMode.jsx`, `heroGif.jsx` |
+| Files | PascalCase `.jsx` (canonical) | `FrameMode.jsx`, `HeroGif.jsx` |
 | Exports | PascalCase, named, arrow function | `export const PageHeader = () => ...` |
 | Example files | kebab-case `-examples.mdx` | `frame-mode-examples.mdx` |
 
 ### 2.3 File Granularity
 
-Grouped files with per-export JSDoc. Related components share a file. Each export gets its own 14-field JSDoc block. Non-exported helpers are implementation details.
+Grouped files with per-export JSDoc. Related components share a file. Each export gets its own 7-field JSDoc block. Non-exported helpers are implementation details.
 
 ### 2.4 Import Paths
 
@@ -290,7 +273,7 @@ Per-folder READMEs are deprecated. The registry and published pages are the two 
 
 ### 2.6 Registry
 
-Single JSON at `docs-guide/component-registry.json`. Generated by pre-commit hook when files in `snippets/components/` are staged. Contains all 14 governance fields per component plus derived fields (`file`, `importPath`).
+Single JSON at `docs-guide/component-registry.json`. Generated by pre-commit hook when files in `snippets/components/` are staged. Contains all 7 enforced governance fields per component plus derived fields (`file`, `importPath`). Script: `tools/scripts/generators/components/library/generate-component-registry.js`.
 
 <CustomDivider />
 
@@ -401,19 +384,11 @@ Every exported component carries this block:
 ```jsx icon="terminal"
 /**
  * @component ComponentName
- * @category primitives
- * @tier primitive
+ * @type elements
+ * @subniche icons
  * @status stable
  * @description One-line purpose statement.
- * @contentAffinity landing, overview, tutorial
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/developers/index.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-07
+ * @accepts propName, propName2
  *
  * @param {string} [variant='default'] - Visual variant. One of: 'default', 'compact'.
  * @param {boolean} [isCompact=false] - Compact rendering mode.
@@ -424,24 +399,19 @@ Every exported component carries this block:
  */
 ```
 
-### 5.2 Metadata Schema (14 Fields, All Required)
+`@dataSource` is additionally required for all components in `integrators/`. All other fields are required for every export.
+
+### 5.2 Metadata Schema (7 Fields, Enforced)
 
 | # | Tag | Type | Values |
 |---|-----|------|--------|
 | 1 | `@component` | string | PascalCase export name |
-| 2 | `@category` | enum | `primitives` · `layout` · `content` · `data` · `page-structure` |
-| 3 | `@tier` | enum | `primitive` · `composite` · `pattern` |
+| 2 | `@type` | enum | `elements` · `wrappers` · `displays` · `scaffolding` · `integrators` · `config` |
+| 3 | `@subniche` | string | Sub-folder name within the category |
 | 4 | `@status` | enum | `stable` · `experimental` · `deprecated` · `broken` · `placeholder` |
 | 5 | `@description` | string | One-line purpose |
-| 6 | `@contentAffinity` | enum[] | Page types from taxonomy + `universal` |
-| 7 | `@owner` | string | GitHub handle or team |
-| 8 | `@dependencies` | string[] | Same-file co-dependencies or `none` |
-| 9 | `@usedIn` | string[] | MDX page paths |
-| 10 | `@breakingChangeRisk` | enum | `low` · `medium` · `high` |
-| 11 | `@decision` | enum | `KEEP` · `MOVE` · `SPLIT` · `MERGE` · `REMOVE` |
-| 12 | `@dataSource` | string | Pipeline/API source or `none` |
-| 13 | `@duplicates` | string[] | Overlapping components or `none` |
-| 14 | `@lastMeaningfulChange` | date | ISO 8601 |
+| 6 | `@accepts` | string | Prop surface description |
+| 7 | `@dataSource` | string | External pipeline/API (integrators only; `none` for others) |
 
 ### 5.3 Props Table Format (Published Docs)
 
@@ -516,9 +486,9 @@ What's enforced, where, and how.
 
 | What | Enforced by | Blocks commit? |
 |------|------------|---------------|
-| 14 JSDoc governance fields present | Pre-commit validation | Yes |
+| 7 JSDoc governance fields present | Pre-commit validation (`generate-component-registry.js --strict`) | Yes |
 | `@param` coverage matches props | Pre-commit validation | Yes |
-| `@category` matches folder | Pre-commit validation | Yes |
+| `@type` matches folder | Pre-commit validation | Yes |
 | `@status` is valid enum | Pre-commit validation | Yes |
 | `@deprecated` present when status=deprecated | Pre-commit validation | Yes |
 | No ThemeData | Pre-commit regex scan | Yes |
@@ -541,7 +511,7 @@ What's enforced, where, and how.
 
 ``` icon="terminal"
 Trigger:  pre-commit (staged files in snippets/components/)
-Script:   tools/scripts/generate-component-registry.js
+Script:   tools/scripts/generators/components/library/generate-component-registry.js
 Input:    all JSDoc blocks in snippets/components/**/*.jsx
 Output:   docs-guide/component-registry.json (auto-staged)
 Errors:   missing/invalid fields → commit blocked
@@ -551,10 +521,10 @@ Errors:   missing/invalid fields → commit blocked
 
 ``` icon="terminal"
 Trigger:  manual or chained after registry update
-Script:   tools/scripts/generate-component-docs.js
+Script:   tools/scripts/generators/components/documentation/generate-component-docs.js
 Input:    registry + @param + @example + examples/ MDX files
 Process:  OpenRouter LLM for editorial prose, template fallback on failure
-Output:   6 published MDX pages (overview + per-category)
+Output:   7 published MDX pages per locale (overview + per-category) across 4 locales
 Caching:  LLM output cached per component hash
 ```
 
@@ -566,10 +536,10 @@ Caching:  LLM output cached per component hash
 
 | # | Decision | Choice |
 |---|----------|--------|
-| 1 | Category taxonomy | Five: Primitives, Layout, Content (absorbs Media), Data, Page Structure |
-| 2 | Compositional model | Metadata only — flat files, tier as JSDoc tag |
+| 1 | Category taxonomy | Six: Elements, Wrappers, Displays, Scaffolding, Integrators, Config |
+| 2 | Compositional model | Metadata only — sub-niche folders, no compositional tier tag |
 | 3a | Metadata location | JSDoc block in each JSX file |
-| 3b | Metadata schema | Full 14 fields, all required |
+| 3b | Metadata schema | 7 enforced fields (down from aspirational 14) |
 | 4 | Decision mechanism | Decision tree — ordered yes/no, first match wins |
 | 5 | Library boundary | `snippets/components/` only |
 
@@ -610,7 +580,7 @@ Caching:  LLM output cached per component hash
 
 | # | Decision | Choice |
 |---|----------|--------|
-| 1 | JSDoc scope | Governance + `@param` + `@example` |
+| 1 | JSDoc scope | 7 governance fields + `@param` + `@example` |
 | 2 | Props table format | Standard 5-column |
 | 3 | Example requirements | Minimal — one per component, copy-paste ready |
 | 4 | Published docs | LLM-generated (OpenRouter) + template fallback, zero maintenance |
@@ -641,27 +611,19 @@ This framework consumes but does not redefine:
 
 <CustomDivider />
 
-## 11. Open Items (D8 Audit + D9 Migration)
+## 11. Completed Work (D8 + D9)
 
-| Item | Deliverable |
-|------|-------------|
-| Classify every component (status, category, tier) | D8 |
-| Populate all 14 JSDoc fields on every export | D8 |
-| Add `@param` tags for every prop | D8 |
-| Add `@example` for every stable component | D8 |
-| Create example MDX files | D8/D9 |
-| Write unit tests for all components | D8/D9 |
-| Audit `style.css` tokens → rationalise to `--lp-*` | D8 |
-| Populate Mintlify override registry | D8 |
-| Visual verify all components in both themes | D8 |
-| Create `generate-component-registry.js` | D9 |
-| Create `generate-component-docs.js` + OpenRouter integration | D9 |
-| Extend pre-commit hook | D9 |
-| Create unit test infrastructure | D9 |
-| Retire legacy GitHub review mapping | D9 |
-| Update `components.instructions.md` | D9 |
-| Migrate file locations to target folder structure | D9 |
-| Rename tokens to `--lp-*` namespace | D9 |
-| Remove ThemeData from all components | D9 |
-| Update all import paths across MDX pages | D9 |
-| Create import scanner for `@usedIn` population | D9 |
+The following were open items at framework inception and are now complete as of 2026-03-20:
+
+- ✅ All components classified and migrated to new taxonomy (elements/wrappers/displays/scaffolding/integrators/config)
+- ✅ All JSDoc governance fields populated on every governed export (7-field schema enforced by `--strict`)
+- ✅ `generate-component-registry.js` operational — generates `docs-guide/component-registry.json`
+- ✅ `generate-component-docs.js` operational — generates published MDX pages per locale
+- ✅ Pre-commit hook enforces JSDoc fields and auto-stages registry
+- ✅ Published component library pages regenerated for all 4 locales
+- ✅ Import paths updated across all MDX pages after folder restructure
+- ✅ ThemeData removed from all components
+- ✅ Duplicate components resolved and archived
+
+**Remaining (deferred to CONTENT-STRUCTURE Phase 5.1):**
+- `component-layout-decisions.mdx` update — dependent on composable section system definition

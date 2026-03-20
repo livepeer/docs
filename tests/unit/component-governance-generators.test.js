@@ -35,8 +35,8 @@ function runTests() {
     const { registry, issues } = buildRegistry();
     assert.equal(issues.length, 0);
     assert(registry._meta.componentCount > 0);
-    assert.equal(registry.categories.data.count > 0, true);
-    assert.equal(registry.categories['page-structure'].count > 0, true);
+    assert.equal(registry.categories.elements.count > 0, true);
+    assert.equal(registry.categories.wrappers.count > 0, true);
   } catch (error) {
     errors.push(`buildRegistry failed: ${error.message}`);
   }
@@ -63,8 +63,8 @@ function runTests() {
   }
 
   try {
-    const args = parseDocsArgs(['--fix', '--template-only', '--category', 'data']);
-    assert.equal(args.category, 'data');
+    const args = parseDocsArgs(['--fix', '--template-only', '--category', 'elements']);
+    assert.equal(args.category, 'elements');
     assert.equal(args.templateOnly, true);
     assert.equal(args.mode, 'fix');
   } catch (error) {
@@ -83,23 +83,24 @@ function runTests() {
     const englishFiles = [
       'v2/resources/documentation-guide/component-library/component-library.mdx',
       'v2/resources/documentation-guide/component-library/overview.mdx',
-      'v2/resources/documentation-guide/component-library/primitives.mdx',
-      'v2/resources/documentation-guide/component-library/layout.mdx',
-      'v2/resources/documentation-guide/component-library/content.mdx',
-      'v2/resources/documentation-guide/component-library/data.mdx',
-      'v2/resources/documentation-guide/component-library/page-structure.mdx'
+      'v2/resources/documentation-guide/component-library/elements.mdx',
+      'v2/resources/documentation-guide/component-library/wrappers.mdx',
+      'v2/resources/documentation-guide/component-library/displays.mdx',
+      'v2/resources/documentation-guide/component-library/scaffolding.mdx',
+      'v2/resources/documentation-guide/component-library/integrators.mdx',
+      'v2/resources/documentation-guide/component-library/config.mdx'
     ];
     englishFiles.forEach((filePath) => {
       assert(fs.existsSync(path.join(REPO_ROOT, filePath)), `${filePath} should exist`);
     });
-    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/display.mdx')));
-    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/domain.mdx')));
-    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/integrations.mdx')));
+    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/primitives.mdx')));
+    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/data.mdx')));
+    assert(!fs.existsSync(path.join(REPO_ROOT, 'v2/resources/documentation-guide/component-library/page-structure.mdx')));
     assert.deepEqual(getComponentLibraryAuditFiles(), englishFiles);
 
     const landingContent = readFile('v2/resources/documentation-guide/component-library/component-library.mdx');
-    assert(landingContent.includes('./data'));
-    assert(landingContent.includes('./page-structure'));
+    assert(landingContent.includes('./integrators'));
+    assert(landingContent.includes('./scaffolding'));
   } catch (error) {
     errors.push(`generated docs output validation failed: ${error.message}`);
   }
@@ -110,7 +111,7 @@ function runTests() {
     assert(!catalog.includes(',## Orphaned Components'));
     assert(
       catalog.includes(
-        '| MermaidColours | `page-structure` | `/snippets/components/page-structure/mermaidColours.jsx` | `stable` | Centralised colour definitions for Mermaid diagrams. Mermaid requires literal colour values and does not support CSS custom properties. |'
+        '| MermaidColours | `config` | `/snippets/components/config/MermaidColours.jsx` | `stable` |'
       )
     );
   } catch (error) {
@@ -137,7 +138,7 @@ function runTests() {
   try {
     execFileSync(
       process.execPath,
-      ['tools/scripts/generate-component-docs.js', '--check', '--template-only'],
+      ['tools/scripts/generators/components/documentation/generate-component-docs.js', '--check', '--template-only'],
       {
         cwd: REPO_ROOT,
         stdio: 'pipe'

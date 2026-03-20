@@ -34,7 +34,7 @@ function getRepoRoot() {
 const REPO_ROOT = getRepoRoot();
 
 const REQUIRED_MANUAL_FILES = [
-  'docs-guide/overview.mdx',
+  'docs-guide/source-of-truth-guide.mdx',
   'docs-guide/policies/source-of-truth-policy.mdx',
   'docs-guide/policies/generated-artifact-and-hook-governance.mdx',
   'docs-guide/policies/v2-folder-governance.mdx',
@@ -68,7 +68,7 @@ const REQUIRED_GENERATED_FILES = [
 ];
 
 const REQUIRED_README_REFERENCES = [
-  'docs-guide/overview.mdx',
+  'docs-guide/source-of-truth-guide.mdx',
   'docs-guide/features/feature-map.mdx',
   'docs-guide/policies/source-of-truth-policy.mdx',
   'docs-guide/policies/generated-artifact-and-hook-governance.mdx',

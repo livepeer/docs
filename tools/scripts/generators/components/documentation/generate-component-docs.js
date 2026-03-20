@@ -208,11 +208,11 @@ function formatGeneratedPreamble(meta) {
 
 function renderDecisionTree() {
   return [
-    '1. Bound to an external data source or automation pipeline? `data/`',
-    '2. Only makes sense on frame-mode or portal pages? `page-structure/`',
-    '3. Accepts children and arranges them spatially? `layout/`',
-    '4. Formats or renders content for the reader? `content/`',
-    '5. Otherwise: `primitives/`'
+    '1. Fetches, embeds, or binds to external/third-party data? → `integrators/`',
+    '2. Part of the page\'s outer structure, typically used once? → `scaffolding/`',
+    '3. Takes content and presents it in a formatted way? → `displays/`',
+    '4. Exists to hold, group, or arrange other things? → `wrappers/`',
+    '5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`'
   ].join('\n');
 }
 
@@ -244,10 +244,8 @@ function renderExample(example) {
 
 function buildTemplateEditorial(component) {
   const description = stripLeadingComponentName(component.description, component.name);
-  const affinity = component.contentAffinity.length > 0
-    ? component.contentAffinity.join(', ')
-    : 'general-purpose';
-  return `Use **${component.name}** when you need ${description}. Best suited for ${affinity} page types.`;
+  const accepts = component.accepts ? ` Accepts: ${component.accepts}.` : '';
+  return `Use **${component.name}** when you need ${description}.${accepts}`;
 }
 
 async function requestOpenRouterEditorial(component) {
@@ -255,10 +253,9 @@ async function requestOpenRouterEditorial(component) {
     'Write 2 concise sentences for a documentation component reference entry.',
     `Component: ${component.name}`,
     `Description: ${component.description}`,
-    `Tier: ${component.tier}`,
     `Status: ${component.status}`,
-    `Content affinity: ${component.contentAffinity.join(', ') || 'none'}`,
-    `Dependencies: ${component.dependencies.join(', ') || 'none'}`,
+    `Accepts: ${component.accepts || 'none'}`,
+    `Data source: ${component.dataSource || 'none'}`,
     'Avoid hype, avoid headings, and keep it factual.'
   ].join('\n');
 
@@ -293,10 +290,9 @@ async function getEditorialProse(component, args, cache, warnings) {
     JSON.stringify({
       name: component.name,
       description: component.description,
-      tier: component.tier,
       status: component.status,
-      contentAffinity: component.contentAffinity,
-      dependencies: component.dependencies
+      accepts: component.accepts,
+      dataSource: component.dataSource
     })
   );
 
@@ -319,34 +315,15 @@ async function getEditorialProse(component, args, cache, warnings) {
   }
 }
 
-function renderUsageSummary(component) {
-  if (!component.usedIn.length) {
-    return '`@usedIn`: none';
-  }
-
-  const preview = component.usedIn.slice(0, 6).map((page) => `\`${page}\``).join(', ');
-  if (component.usedIn.length <= 6) {
-    return `\`@usedIn\`: ${preview}`;
-  }
-  return `\`@usedIn\`: ${preview}, and ${component.usedIn.length - 6} more page(s)`;
+function renderUsageSummary(_component) {
+  return '';
 }
 
 function renderMetadataList(component) {
   return [
-    `- Content affinity: ${
-      component.contentAffinity.length ? component.contentAffinity.map((value) => `\`${value}\``).join(', ') : '`none`'
-    }`,
-    `- Dependencies: ${
-      component.dependencies.length ? component.dependencies.map((value) => `\`${value}\``).join(', ') : '`none`'
-    }`,
-    `- Data source: \`${component.dataSource || 'none'}\``,
-    `- Last meaningful change: \`${component.lastMeaningfulChange}\``,
-    `- Breaking change risk: \`${component.breakingChangeRisk}\``,
-    `- Owner: \`${component.owner}\``,
-    `- Decision: \`${component.decision}\``,
     `- Status: \`${component.status}\``,
-    `- Tier: \`${component.tier}\``,
-    `- ${renderUsageSummary(component)}`
+    `- Accepts: \`${component.accepts || 'none'}\``,
+    `- Data source: \`${component.dataSource || 'none'}\``
   ].join('\n');
 }
 
@@ -386,13 +363,13 @@ async function renderCategoryPage(category, components, args, cache, warnings) {
   const label = CATEGORY_LABELS[category];
   const description = CATEGORY_DESCRIPTIONS[category];
   const summaryRows = [
-    '| Component | Tier | Status | Import path | Description |',
-    '| --- | --- | --- | --- | --- |'
+    '| Component | Status | Import path | Description |',
+    '| --- | --- | --- | --- |'
   ];
 
   components.forEach((component) => {
     summaryRows.push(
-      `| ${component.name} | \`${component.tier}\` | \`${component.status}\` | \`/${component.file}\` | ${escapePipes(component.description)} |`
+      `| ${component.name} | \`${component.status}\` | \`/${component.file}\` | ${escapePipes(component.description)} |`
     );
   });
 
@@ -612,21 +589,23 @@ function renderLocaleScaffold(locale, slug, registry) {
   const titleMap = {
     overview: 'Component Library Overview',
     'component-library': 'Component Library',
-    primitives: 'Primitives',
-    layout: 'Layout',
-    content: 'Content',
-    data: 'Data',
-    'page-structure': 'Page Structure'
+    elements: 'Elements',
+    wrappers: 'Wrappers',
+    displays: 'Displays',
+    scaffolding: 'Scaffolding',
+    integrators: 'Integrators',
+    config: 'Config'
   };
 
   const descriptionMap = {
     overview: 'Localized route-safe overview.',
     'component-library': 'Localized route-safe landing page.',
-    primitives: CATEGORY_DESCRIPTIONS.primitives,
-    layout: CATEGORY_DESCRIPTIONS.layout,
-    content: CATEGORY_DESCRIPTIONS.content,
-    data: CATEGORY_DESCRIPTIONS.data,
-    'page-structure': CATEGORY_DESCRIPTIONS['page-structure']
+    elements: CATEGORY_DESCRIPTIONS.elements,
+    wrappers: CATEGORY_DESCRIPTIONS.wrappers,
+    displays: CATEGORY_DESCRIPTIONS.displays,
+    scaffolding: CATEGORY_DESCRIPTIONS.scaffolding,
+    integrators: CATEGORY_DESCRIPTIONS.integrators,
+    config: CATEGORY_DESCRIPTIONS.config
   };
 
   const meta = {
@@ -688,11 +667,11 @@ function renderLocaleScaffold(locale, slug, registry) {
       '  Return to the localized component-library landing page.',
       '</Card>',
       '',
-      '| Component | Status | Tier | Source file |',
-      '| --- | --- | --- | --- |',
+      '| Component | Status | Source file |',
+      '| --- | --- | --- |',
       ...components.map(
         (component) =>
-          `| ${component.name} | \`${component.status}\` | \`${component.tier}\` | \`/${component.file}\` |`
+          `| ${component.name} | \`${component.status}\` | \`/${component.file}\` |`
       ),
       ''
     ].join('\n')

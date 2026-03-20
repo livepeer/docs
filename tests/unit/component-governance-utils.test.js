@@ -63,7 +63,7 @@ function runTests() {
   }
 
   try {
-    const exportsList = extractExports('snippets/components/content/responseField.jsx');
+    const exportsList = extractExports('snippets/components/displays/response-fields/ResponseField.jsx');
     const responseFieldGroup = exportsList.find((entry) => entry.name === 'ResponseFieldGroup');
     assert(responseFieldGroup, 'ResponseFieldGroup export should be discovered');
     assert(responseFieldGroup.jsDocBlock, 'ResponseFieldGroup should have an attached JSDoc block');
@@ -77,7 +77,7 @@ function runTests() {
     const codeComponent = importMap.get('CodeComponent');
     assert(codeComponent, 'CodeComponent should be present in the MDX usage map');
     assert(
-      !codeComponent.pages.includes('v2/resources/documentation-guide/component-library/content.mdx'),
+      !codeComponent.pages.includes('v2/resources/documentation-guide/component-library/displays.mdx'),
       'fenced code samples must not be treated as live MDX imports'
     );
   } catch (error) {
@@ -122,20 +122,22 @@ function runTests() {
     assert.deepEqual(getEnglishComponentLibraryDocPaths(), [
       'v2/resources/documentation-guide/component-library/component-library.mdx',
       'v2/resources/documentation-guide/component-library/overview.mdx',
-      'v2/resources/documentation-guide/component-library/primitives.mdx',
-      'v2/resources/documentation-guide/component-library/layout.mdx',
-      'v2/resources/documentation-guide/component-library/content.mdx',
-      'v2/resources/documentation-guide/component-library/data.mdx',
-      'v2/resources/documentation-guide/component-library/page-structure.mdx'
+      'v2/resources/documentation-guide/component-library/elements.mdx',
+      'v2/resources/documentation-guide/component-library/wrappers.mdx',
+      'v2/resources/documentation-guide/component-library/displays.mdx',
+      'v2/resources/documentation-guide/component-library/scaffolding.mdx',
+      'v2/resources/documentation-guide/component-library/integrators.mdx',
+      'v2/resources/documentation-guide/component-library/config.mdx'
     ]);
     assert.deepEqual(getEnglishComponentLibraryRoutes(), [
       '/v2/resources/documentation-guide/component-library/component-library',
       '/v2/resources/documentation-guide/component-library/overview',
-      '/v2/resources/documentation-guide/component-library/primitives',
-      '/v2/resources/documentation-guide/component-library/layout',
-      '/v2/resources/documentation-guide/component-library/content',
-      '/v2/resources/documentation-guide/component-library/data',
-      '/v2/resources/documentation-guide/component-library/page-structure'
+      '/v2/resources/documentation-guide/component-library/elements',
+      '/v2/resources/documentation-guide/component-library/wrappers',
+      '/v2/resources/documentation-guide/component-library/displays',
+      '/v2/resources/documentation-guide/component-library/scaffolding',
+      '/v2/resources/documentation-guide/component-library/integrators',
+      '/v2/resources/documentation-guide/component-library/config'
     ]);
   } catch (error) {
     errors.push(`component-library discovery helpers failed: ${error.message}`);

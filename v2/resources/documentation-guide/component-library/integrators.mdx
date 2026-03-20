@@ -1,0 +1,209 @@
+---
+title: 'Integrators'
+sidebarTitle: 'Integrators'
+description: 'Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.'
+pageType: reference
+---
+
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or published component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category integrators
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category integrators`. <br/>
+</Note>
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the generated component library landing page.
+</Card>
+
+## Integrators
+
+Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.
+
+This category currently contains **7** governed export(s).
+
+### Decision Tree Excerpt
+
+1. Fetches, embeds, or binds to external/third-party data? → `integrators/`
+2. Part of the page's outer structure, typically used once? → `scaffolding/`
+3. Takes content and presents it in a formatted way? → `displays/`
+4. Exists to hold, group, or arrange other things? → `wrappers/`
+5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`
+
+### Summary Table
+
+| Component | Status | Import path | Description |
+| --- | --- | --- | --- |
+| EmbedMarkdown | `deprecated` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Alias for MarkdownEmbed — use MarkdownEmbed instead. |
+| ExternalContent | `stable` | `/snippets/components/integrators/embeds/ExternalContent.jsx` | Fetches and renders external markdown with scrollable container and source link. |
+| MarkdownEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Fetches and renders remote markdown content. |
+| PdfEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a PDF in a framed iframe with caption. |
+| ShowcaseCards | `experimental` | `/snippets/components/integrators/feeds/ShowcaseCards.jsx` | Paginated project showcase with search, filtering, and media cards. |
+| TwitterTimeline | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a Twitter/X timeline feed widget via iframe. |
+| YouTubeVideoData | `stable` | `/snippets/components/integrators/video-data/VideoData.jsx` | Renders YouTube video data with video embed and metadata columns. |
+
+## Component Reference
+
+### EmbedMarkdown
+Use **EmbedMarkdown** when you need alias for MarkdownEmbed — use MarkdownEmbed instead.. Accepts: {string} url, {string} className, {object} style, ...rest.
+Source description: Alias for MarkdownEmbed — use MarkdownEmbed instead.
+**Import path**
+```jsx
+import { EmbedMarkdown } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+```
+**Metadata**
+- Status: `deprecated`
+- Accepts: `{string} url, {string} className, {object} style, ...rest`
+- Data source: `fetch(url)`
+
+Deprecation note: Use MarkdownEmbed. Kept for backwards-compat — see tasks/reports/archived-components-review.md See `MarkdownEmbed`.
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `string` | `` | Yes | Destination URL used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### ExternalContent
+Use **ExternalContent** when you need fetches and renders external markdown with scrollable container and source link.. Accepts: {string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest.
+Source description: Fetches and renders external markdown with scrollable container and source link.
+**Import path**
+```jsx
+import { ExternalContent } from '/snippets/components/integrators/embeds/ExternalContent.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest`
+- Data source: `fetch(url)`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `repoName` | `string` | `` | Yes | Repo name used by the component. |
+| `githubUrl` | `string` | `` | Yes | Github url used by the component. |
+| `maxHeight` | `string` | `"1000px"` | No | Max height used by the component. |
+| `icon` | `string` | `"github"` | No | Icon configuration used by the component. |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### MarkdownEmbed
+Use **MarkdownEmbed** when you need fetches and renders remote markdown content.. Accepts: {string} url, {string} className, {object} style, ...rest.
+Source description: Fetches and renders remote markdown content.
+**Import path**
+```jsx
+import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{string} url, {string} className, {object} style, ...rest`
+- Data source: `fetch(url)`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `string` | `` | Yes | Destination URL used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### PdfEmbed
+Use **PdfEmbed** when you need embeds a PDF in a framed iframe with caption.. Accepts: {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest.
+Source description: Embeds a PDF in a framed iframe with caption.
+**Import path**
+```jsx
+import { PdfEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest`
+- Data source: `iframe(src)`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `React.ReactNode` | `` | Yes | Title text rendered by the component. |
+| `src` | `string` | `` | Yes | Asset or embed source used by the component. |
+| `height` | `string` | `'700px'` | No | Height used by the component. |
+| `width` | `string` | `'100%'` | No | Width used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### ShowcaseCards
+Use **ShowcaseCards** when you need paginated project showcase with search, filtering, and media cards.. Accepts: {Array} items, {number} limit, {number} pageSize, {string} className, {object} style, ...rest.
+Source description: Paginated project showcase with search, filtering, and media cards.
+**Import path**
+```jsx
+import { ShowcaseCards } from '/snippets/components/integrators/feeds/ShowcaseCards.jsx'
+```
+**Metadata**
+- Status: `experimental`
+- Accepts: `{Array} items, {number} limit, {number} pageSize, {string} className, {object} style, ...rest`
+- Data source: `prop (items)`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - Collection data rendered by the component. |
+| `limit` | `number` | `null` | No | Limit used by the component. |
+| `pageSize` | `number` | `10` | No | Page size used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### TwitterTimeline
+Use **TwitterTimeline** when you need embeds a Twitter/X timeline feed widget via iframe.. Accepts: {string} className, {object} style, ...rest.
+Source description: Embeds a Twitter/X timeline feed widget via iframe.
+**Import path**
+```jsx
+import { TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{string} className, {object} style, ...rest`
+- Data source: `feed.mikle.com widget`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### YouTubeVideoData
+Use **YouTubeVideoData** when you need renders YouTube video data with video embed and metadata columns.. Accepts: {Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest.
+Source description: Renders YouTube video data with video embed and metadata columns.
+**Import path**
+```jsx
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest`
+- Data source: `automation/youtube`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - Collection data rendered by the component. |
+| `limit` | `number` | `` | Yes | Limit used by the component. |
+| `cols` | `number` | `2` | No | Cols used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |

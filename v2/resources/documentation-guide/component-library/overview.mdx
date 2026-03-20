@@ -22,25 +22,26 @@ Run command: node tools/scripts/generate-component-docs.js --fix --template-only
 
 ## Governance Snapshot
 
-The governed component library currently exposes **127** named export(s) across five active categories.
+The governed component library currently exposes **42** named export(s) across five active categories.
 
 ### Category Matrix
 
 | Category | Purpose | Exports |
 | --- | --- | --- |
-| [Primitives](./primitives) | Standalone visual atoms | 30 |
-| [Layout](./layout) | Spatial arrangement containers | 31 |
-| [Content](./content) | Content formatting and rendering | 24 |
-| [Data](./data) | Data-bound feed renderers | 17 |
-| [Page Structure](./page-structure) | Frame-mode and portal scaffolding | 25 |
+| [Elements](./elements) | Smallest visual atoms — no children, no fetching, no arrangement | 5 |
+| [Wrappers](./wrappers) | Holds, groups, or spatially arranges other components | 13 |
+| [Displays](./displays) | Renders authored content into a specific visual format | 6 |
+| [Scaffolding](./scaffolding) | One-per-page structural skeleton — heroes, portals, frame-mode | 10 |
+| [Integrators](./integrators) | Fetches, embeds, or binds to external/third-party data | 7 |
+| [Config](./config) | Non-component config objects | 1 |
 
 ### Classification Decision Tree
 
-1. Bound to an external data source or automation pipeline? `data/`
-2. Only makes sense on frame-mode or portal pages? `page-structure/`
-3. Accepts children and arranges them spatially? `layout/`
-4. Formats or renders content for the reader? `content/`
-5. Otherwise: `primitives/`
+1. Fetches, embeds, or binds to external/third-party data? → `integrators/`
+2. Part of the page's outer structure, typically used once? → `scaffolding/`
+3. Takes content and presents it in a formatted way? → `displays/`
+4. Exists to hold, group, or arrange other things? → `wrappers/`
+5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`
 
 ### Canonical Sources
 

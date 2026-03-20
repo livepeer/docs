@@ -105,7 +105,7 @@ Recovery:
 
 | Need | Canonical doc |
 |---|---|
-| Start here + update rules | [`docs-guide/overview.mdx`](docs-guide/overview.mdx) |
+| Start here + update rules | [`docs-guide/source-of-truth-guide.mdx`](docs-guide/source-of-truth-guide.mdx) |
 | Source-of-truth boundaries | [`docs-guide/policies/source-of-truth-policy.mdx`](docs-guide/policies/source-of-truth-policy.mdx) |
 | Generated artifact and hook policy | [`docs-guide/policies/generated-artifact-and-hook-governance.mdx`](docs-guide/policies/generated-artifact-and-hook-governance.mdx) |
 | V2 publishability and workspace lanes | [`docs-guide/policies/v2-folder-governance.mdx`](docs-guide/policies/v2-folder-governance.mdx) |

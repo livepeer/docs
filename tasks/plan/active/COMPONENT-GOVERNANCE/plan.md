@@ -415,18 +415,22 @@ snippets/
 - 9.12 ~~Strikethrough~~
 
 ### Task 10 — Documentation & single source of truth
-- 10.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
-- 10.2 Audit where component docs currently live (README.md, catalog.md, docs-guide pages, registry JSON, script-generated docs)
-- 10.3 CHECKPOINT — interactive chat to agree on single source of truth strategy
-- 10.4 Update `snippets/components/README.md` with final structure and component reference tables
-- 10.5 Update `component-registry.json` to reflect all changes
-- 10.6 Create/update component governance documentation in `docs-guide/`
-- 10.7 Ensure auto-generation scripts produce correct output and point to correct paths
-- 10.8 `git mv` `catalog.md` to `x-archive/`
-- 10.9 Remove/consolidate any redundant documentation surfaces
+- ~~10.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`~~
+- ~~10.2 Audit where component docs currently live — reported in `component-docs.md` and `doc-recommendation.md`~~
+- ~~10.3 CHECKPOINT — agreed 4 decisions: 7-field schema, defer MDX snippets, EN first (locale auto-handled), include config.mdx~~
+- ~~10.4 Update `snippets/components/README.md` — fixed JSDoc field names (`@type` not `@category`) and script paths~~
+- ~~10.5 Fix `generate-component-docs.js` — CATEGORY_LABELS, CATEGORY_DESCRIPTIONS, LEGACY files, renderDecisionTree, renderLocaleScaffold maps~~
+- ~~10.5b Regenerate `component-registry.json` — new taxonomy, 42 governed components~~
+- ~~10.5c Regenerate published component-library MDX pages — 32 new files, 32 old removed, all 4 locales~~
+- ~~10.6 Update `docs-guide/frameworks/component-governance.mdx` — 7-field schema, new taxonomy, correct script paths~~
+- ~~10.7 Update `docs.json` nav — new taxonomy slugs~~
+- ~~10.7b Regenerate `docs-guide/catalog/components-catalog.mdx`~~
+- ~~10.7c Fix `docs-guide/source-of-truth-guide.mdx` — removed TODO banner, updated script paths~~
+- ~~10.7d Fix test fixtures — `component-governance-generators.test.js` and `component-governance-utils.test.js`~~
+- 10.8 `git mv` `CATALOG.md` to `x-archive/` — **DEFERRED to Task 13 (cleanup)**
+- **DEFERRED**: `docs-guide/policies/component-layout-decisions.mdx` update — belongs to CONTENT-STRUCTURE Phase 5.1 (composable section system definition)
 - 10.10 CHECKPOINT — human reviews all docs
 - 10.11 Commit + merge back to `docs-v2-dev`
-- 10.12 ~~Strikethrough~~
 
 ### Task 11 — Trim governance overhead
 - 11.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`

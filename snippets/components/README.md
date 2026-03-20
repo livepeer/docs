@@ -134,6 +134,6 @@ primitives globally — do not import them.
 ## Governance
 
 - **Naming**: PascalCase for all `.jsx`/`.mdx` component files
-- **JSDoc**: Every export requires `@category`, `@subniche`, `@component`, `@status`, `@description`
-- **Validation**: `node tools/scripts/generate-component-registry.js --strict`
-- **Import scanning**: `node tools/scripts/scan-component-imports.js --verify`
+- **JSDoc**: Every export requires `@type`, `@subniche`, `@component`, `@status`, `@description`, `@accepts` (plus `@dataSource` for integrators)
+- **Validation**: `node tools/scripts/generators/components/library/generate-component-registry.js --strict`
+- **Import scanning**: `node tools/scripts/audits/components/library/scan-component-imports.js --verify`
