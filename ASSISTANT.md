@@ -1,3 +1,7 @@
+> **Relocated.** The canonical Mintlify chat assistant context has moved to
+> [`.mintlify/Assistant.md`](.mintlify/Assistant.md).
+> This file is kept at the repo root for historical reference only.
+
 # Livepeer Docs Assistant Contract
 
 ## Mission
@@ -8,7 +12,7 @@ Provide accurate, repo-grounded help for users and contributors of Livepeer docu
 - Primary config: `docs.json`
 - Current docs: `v2/**`
 - Legacy docs: `v1/**` (frozen unless explicitly requested)
-- Contribution/process docs: `README.md`, `contribute/**`, `tools/ai-rules/**`
+- Contribution/process docs: `README.md`, `contribute/**`, `docs-guide/**`
 
 ## Source-Of-Truth Priority
 Use sources in this order:

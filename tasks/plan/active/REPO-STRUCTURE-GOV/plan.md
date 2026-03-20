@@ -174,14 +174,51 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ### Phase 2 — Per-folder cleanup (priority order)
 
-#### 2A — `docs-guide/` structural cleanup ⭐ first
+#### 2A — `docs-guide/` restructure ⭐ first
+> Full research complete. See `docs-guide-restructure-draft.md` for all findings.
+> **No execution until draft is approved. Every sub-phase has an explicit gate.**
 
-- [ ] **2A.1** Delete 5 empty `source-of-truth.md` stubs (catalog, contributing, features, frameworks, policies)
-- [ ] **2A.2** Delete deprecated `docs-guide/frameworks/component-framework.mdx` (explicit redirect; grep agent files first)
-- [ ] **2A.3** Move `docs-guide/catalog/scripts-catalog-archive.mdx` + `visual-explainer-workflows-archive.mdx` → `docs-guide/_workspace/archive/`
-- [ ] **2A.4** Refresh `docs-guide/source-of-truth-guide.mdx` — marked `# TODO: NEEDS UPDATING`
-- [ ] **2A.5** Expand or remove `docs-guide/contributing/contributing.mdx` (51 lines — stub) after `contribute/` merge lands
-- [ ] **2A.6** Write `_workspace/` lifecycle policy: empty index.md stubs are nav placeholders (allowed); scratch files expire 30 days after last edit
+**2A-I — Approve structure + naming framework** *(gate — human review required)*
+- [ ] **2A-I.1** Review `docs-guide-restructure-draft.md` — confirm canonical folder structure (Section 1)
+- [ ] **2A-I.2** Confirm naming framework: `-catalog.mdx` suffix, no `-index.mdx`, no 0-byte stubs, 6 sections + `_workspace/`
+- [ ] **2A-I.3** Decide: move `ai-tools.mdx` to `features/` (recommendation) or keep in `catalog/` as manual exception
+- [ ] **2A-I.4** Confirm 5 missing template types for `snippets/templates/docs-guide/`
+- [ ] **2A-I.5** Approve new file: `docs-guide/policies/docs-guide-structure-policy.mdx`
+
+**2A-II — Fix upstream script problems** *(safe after 2A-I approval; no nav impact)*
+- [ ] **2A-II.1** Fix `.codex/locks-local/` legacy `/indexes/` paths → `/catalog/`
+- [ ] **2A-II.2** Add `generate-docs-guide-indexes.js` to hook pipeline on `.github/` changes
+- [ ] **2A-II.3** Add `generate-docs-guide-pages-index.js` to pipeline on `docs.json`/`v2/index.mdx` changes
+- [ ] **2A-II.4** Trace and document `component-usage-map.json` generator in `generated-artifact-and-hook-governance.mdx`
+
+**2A-III — Add missing templates** *(no nav impact; can run in parallel with 2A-II)*
+- [ ] **2A-III.1** Create `snippets/templates/docs-guide/policy-page.mdx`
+- [ ] **2A-III.2** Create `snippets/templates/docs-guide/framework-page.mdx`
+- [ ] **2A-III.3** Create `snippets/templates/docs-guide/catalog-page.mdx`
+- [ ] **2A-III.4** Create `snippets/templates/docs-guide/feature-map-page.mdx`
+- [ ] **2A-III.5** Create `snippets/templates/docs-guide/tooling-reference-page.mdx`
+- [ ] **2A-III.6** Regenerate `docs-guide/catalog/ui-templates.mdx` after templates added
+
+**2A-IV — Structural cleanup** *(requires docs.json + AGENTS.md updates; careful coord)*
+- [ ] **2A-IV.1** Delete 5 empty `source-of-truth.md` stubs (catalog, contributing, features, frameworks, policies)
+- [ ] **2A-IV.2** Delete `frameworks/component-framework.mdx` — grep all refs in AGENTS.md, .codex/, scripts first
+- [ ] **2A-IV.3** Move `catalog/scripts-catalog-archive.mdx` + `catalog/visual-explainer-workflows-archive.mdx` → `_workspace/archive/`; update docs.json
+- [ ] **2A-IV.4** Move `catalog/ai-tools.mdx` → `features/ai-tools.mdx`; update docs.json nav entry
+- [ ] **2A-IV.5** Migrate `tooling/source-of-truth.md` partial content → `tooling/dev-tools.mdx`; delete stub
+- [ ] **2A-IV.6** Refresh `source-of-truth-guide.mdx` — remove TODO comment; verify all generator commands current
+
+**2A-V — Write governance docs** *(final; do last)*
+- [ ] **2A-V.1** Write `docs-guide/policies/docs-guide-structure-policy.mdx`
+- [ ] **2A-V.2** Write `_workspace/` lifecycle policy (30-day scratch TTL, 90-day archive TTL, nav-stub index.mds exempt)
+- [ ] **2A-V.3** Expand `contributing/contributing.mdx` — defer until `contribute/` root folder merge lands (Phase 1.3)
+
+---
+
+> ⚠️ **THIS PROCESS APPLIES TO EVERY ROOT FOLDER.**
+> Before restructuring any root folder: write a `<folder>-restructure-draft.md` covering
+> structure audit, script output map, dependents, naming framework, missing templates, and subplan.
+> Recommended order: `snippets/`, `ai-tools/`, `tools/`, `api/`, `contribute/`, `operations/`, `workspace/`.
+> See `docs-guide-restructure-draft.md` Section 6 for details.
 
 #### 2B — `snippets/assets/` cleanup ⭐ second
 

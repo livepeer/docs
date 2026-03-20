@@ -19,6 +19,7 @@ export const BasicBtn = ({ className = "", style = {}, ...rest }) => {
  * @status stable
  * @description Lazy-loaded download button with icon that renders on viewport intersection.
  * @accepts style, className, ...rest
+ * @aiDiscoverability none
  * @param {string} [label='Download'] - label prop.
  * @param {string} [icon='download'] - icon prop.
  * @param {any} downloadLink - download Link prop.

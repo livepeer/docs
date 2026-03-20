@@ -5,6 +5,7 @@
  * @status stable
  * @description Makes scroll regions keyboard-focusable by adding tabindex to matching selectors.
  * @accepts selectors
+ * @aiDiscoverability none
  * @param {any} selectors - selectors prop.
  * @example
  * <FocusableScrollRegions selectors="example" />

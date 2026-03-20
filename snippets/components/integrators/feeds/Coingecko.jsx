@@ -7,6 +7,7 @@
  * @description Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
  * @dataSource CoinGecko API
  * @accepts {string} coinId, {string} className, {object} style, ...rest
+ * @aiDiscoverability snapshot
  * @param {string} [coinId="arbitrum"] - coin Id prop.
  */
 export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style = {}, ...rest }) => {

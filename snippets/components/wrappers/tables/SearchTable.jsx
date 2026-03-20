@@ -5,6 +5,7 @@
  * @status stable
  * @description Filterable table wrapper with search input and category dropdown.
  * @accepts className, style, ...rest
+ * @aiDiscoverability props-extracted
  * @param {string} [TableComponent=null] - Table component used by the component.
  * @param {React.ReactNode} [tableTitle=null] - Table title used by the component.
  * @param {Array} [headerList=[]] - Collection data rendered by the component.
