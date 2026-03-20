@@ -1,8 +1,18 @@
 #!/usr/bin/env node
 /**
- * One-time migration script: rewrites JSDoc headers to the new 11-tag standard.
- * Run from repo root: node tools/scripts/generators/governance/scaffold/update-jsdoc-headers.js [--write]
- * Without --write, prints what would change (dry-run).
+ * @script   update-jsdoc-headers.js
+ * @type      remediator
+ * @concern   governance
+ * @niche     scaffold
+ * @purpose   Rewrite JSDoc headers in all scripts to the 11-tag standard
+ * @description One-time migration script that reads JSDoc headers across all
+ *   type folders, derives @type/@concern/@niche from folder path, and writes
+ *   the new 11-tag header format. Dry-run by default.
+ * @mode      edit
+ * @pipeline  governance-pipeline
+ * @scope     all
+ * @usage     node tools/scripts/remediators/governance/scaffold/update-jsdoc-headers.js [--write]
+ * @policy    dry-run by default; --write to apply changes
  */
 
 const fs = require('fs');

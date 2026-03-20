@@ -1,0 +1,432 @@
+---
+title: Script Library
+sidebarTitle: Script Library
+description: 'Complete reference of all pipeline scripts organised by type. Each script follows the <type>/<concern>/<niche> taxonomy.'
+purpose: reference
+pageType: reference
+audience: contributor
+---
+
+# Script Library
+
+This repo uses a structured script taxonomy: `<type>/<concern>/<niche>`. All scripts live under `tools/scripts/`.
+
+**Types:** audits (read-only scan/report), generators (produce artefacts), validators (pass/fail checks), remediators (bulk fix/repair), dispatch (orchestrate other scripts), automations (automated pipelines)
+
+**Concerns:** content, components, governance, ai
+
+---
+
+## Audits
+
+Read-only scripts that scan, measure, and report. No side effects on source files.
+
+<AccordionGroup>
+<Accordion title="content/quality — Content quality and freshness">
+
+| Script | Description | Usage |
+|---|---|---|
+| `audit-copy-patterns` | Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report. | `node tools/scripts/audits/content/quality/audit-copy-patterns.js --tab <name> \| --all` |
+| `audit-media-assets` | Audits repo media assets, references, ignore leakage, and externalised asset branch inventory. | `node tools/scripts/audits/content/quality/audit-media-assets.js` |
+| `audit-python` | Python audit utility — runs Python-based audit checks (alternative to Node auditors). | `python3 tools/scripts/audits/content/quality/audit-python.py` |
+| `audit-v2-usefulness` | Scores v2 MDX pages on human and agent usefulness with source-weighted accuracy verification. | `node tools/scripts/audits/content/quality/audit-v2-usefulness.js` |
+| `docs-quality-and-freshness-audit` | Checks for TODO/TBD/Coming Soon markers, thin pages, stale content. | `node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` |
+
+</Accordion>
+<Accordion title="content/veracity — Fact-checking and research">
+
+| Script | Description | Usage |
+|---|---|---|
+| `docs-page-research` | Extracts factual claims from docs pages, checks evidence sources, detects contradictions. | `node tools/scripts/audits/content/veracity/docs-page-research.js` |
+| `docs-research-adjudication` | Validates, records, and summarises measured review outcomes for the research workflow. | `node tools/scripts/audits/content/veracity/docs-research-adjudication.js` |
+
+</Accordion>
+<Accordion title="content/reconciliation — Gap analysis">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-content-gap-reconciliation` | Compares blueprint coverage against v2 MDX and writes reconciliation artefacts. | `node tools/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js` |
+
+</Accordion>
+<Accordion title="content/reference — Terminology">
+
+| Script | Description | Usage |
+|---|---|---|
+| `terminology-search` | Discovers candidate terminology via heuristic patterns and optional LLM evaluation. | `node tools/scripts/audits/content/reference/terminology-search.js` |
+
+</Accordion>
+<Accordion title="content/style — Language style">
+
+| Script | Description | Usage |
+|---|---|---|
+| `style-and-language-homogenizer-en-gb` | Finds American English spellings, style guide violations, and formatting inconsistencies. | `node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js` |
+
+</Accordion>
+<Accordion title="components — Component audits">
+
+| Script | Description | Usage |
+|---|---|---|
+| `audit-component-usage` | Scans pages for component usage patterns and reports statistics. | `node tools/scripts/audits/components/documentation/audit-component-usage.js` |
+| `scan-component-imports` | Scans MDX imports to produce component-usage-map.json and detect @usedIn drift. | `node tools/scripts/audits/components/library/scan-component-imports.js` |
+
+</Accordion>
+<Accordion title="governance — Repo and script audits">
+
+| Script | Description | Usage |
+|---|---|---|
+| `audit-tasks-folders` | Checks tasks/ structure, normalises report locations, applies recommendations. | `node tools/scripts/audits/governance/repo/audit-tasks-folders.js` |
+| `generate-v2-folder-governance-cleanup-matrix` | Inventories non-publishable v2 artefacts and emits cleanup recommendations. | `node tools/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js` |
+| `audit-script-categories` | Analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports. | `node tools/scripts/audits/governance/scripts/audit-script-categories.js` |
+| `script-footprint-and-usage-audit` | Analyses script file sizes, dependencies, and usage patterns. | `node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Generators
+
+Scripts that produce artefacts (JSON, MDX, indexes, sitemaps) from source data.
+
+<AccordionGroup>
+<Accordion title="content/catalogs — Doc indexes">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-docs-index` | Produces docs-index.json from v2 frontmatter and docs.json. Most-called script in the repo. | `node tools/scripts/generators/content/catalogs/generate-docs-index.js` |
+| `generate-pages-index` | Generates section-style index.mdx files for v2 docs folders plus root aggregate. | `node tools/scripts/generators/content/catalogs/generate-pages-index.js` |
+
+</Accordion>
+<Accordion title="content/seo — SEO artefacts">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-ai-sitemap` | Produces AI-optimised sitemap-ai.xml. Dual-mode: --check / --write. | `node tools/scripts/generators/content/seo/generate-ai-sitemap.js` |
+| `generate-og-images` | Renders Open Graph PNG preview images via Puppeteer. | `node tools/scripts/generators/content/seo/generate-og-images.js` |
+
+</Accordion>
+<Accordion title="content/reference — API and glossary">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-api-docs` | Generates API reference MDX pages from OpenAPI specs. | `bash tools/scripts/generators/content/reference/generate-api-docs.sh` |
+| `generate-glossary` | Produces glossary data file from terminology sources. | `node tools/scripts/generators/content/reference/generate-glossary.js` |
+
+</Accordion>
+<Accordion title="components — Component artefacts">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-component-docs` | Generates published component library MDX pages from the registry. | `node tools/scripts/generators/components/documentation/generate-component-docs.js` |
+| `generate-component-registry` | Parses JSDoc from all component exports and produces component-registry.json. | `node tools/scripts/generators/components/library/generate-component-registry.js` |
+| `generate-ui-templates` | Generates UI template catalog, preview routes, and VS Code snippets. | `node tools/scripts/generators/components/library/generate-ui-templates.js` |
+
+</Accordion>
+<Accordion title="governance/catalogs — Docs-guide catalogs">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-ai-skills-indexes` | Generates ai-tools/ai-skills inventory.json and content-map.md. | `node tools/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js` |
+| `generate-docs-guide-components-index` | Generates components-catalog.mdx from registry and usage map. | `node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js` |
+| `generate-docs-guide-indexes` | Generates workflow/template catalogs for docs-guide. | `node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js` |
+| `generate-docs-guide-pages-index` | Generates the docs-guide pages catalog. | `node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js` |
+
+</Accordion>
+<Accordion title="governance/reports — Inventory reports">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-ai-tools-inventory` | Generates the AI tools inventory report from the registry. | `node tools/scripts/generators/governance/reports/generate-ai-tools-inventory.js` |
+
+</Accordion>
+<Accordion title="governance/scaffold — Script scaffolding">
+
+| Script | Description | Usage |
+|---|---|---|
+| `new-script` | Scaffolds a new script file with pre-populated JSDoc header template. | `node tools/scripts/generators/governance/scaffold/new-script.js` |
+
+</Accordion>
+<Accordion title="ai/llm — LLM artefacts">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-llms-files` | Produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write. | `node tools/scripts/generators/ai/llm/generate-llms-files.js` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Validators
+
+Pass/fail checks that enforce rules. Read-only unless noted.
+
+<AccordionGroup>
+<Accordion title="content/copy — Banned words and patterns">
+
+| Script | Description | Usage |
+|---|---|---|
+| `lint-copy` | Enforces banned word and phrase rules on MDX content files. | `node tools/scripts/validators/content/copy/lint-copy.js [file]` |
+| `lint-patterns` | Enforces Tier 2 copy pattern rules on MDX content files. | `node tools/scripts/validators/content/copy/lint-patterns.js [file]` |
+
+</Accordion>
+<Accordion title="content/grammar — Language rules">
+
+| Script | Description | Dual-mode | Usage |
+|---|---|---|---|
+| `check-grammar-en-gb` | UK English grammar checker with optional conservative autofix. | --fix | `node tools/scripts/validators/content/grammar/check-grammar-en-gb.js` |
+| `check-proper-nouns` | Detects and fixes incorrect proper noun capitalisation. | --fix | `node tools/scripts/validators/content/grammar/check-proper-nouns.js` |
+
+</Accordion>
+<Accordion title="content/structure — MDX structure and integrity">
+
+| Script | Description | Dual-mode | Usage |
+|---|---|---|---|
+| `check-anchor-usage` | Validates same-page anchor links against heading IDs. | | `node tools/scripts/validators/content/structure/check-anchor-usage.js` |
+| `check-description-quality` | Validates frontmatter descriptions for SEO length and boilerplate. | | `node tools/scripts/validators/content/structure/check-description-quality.js` |
+| `check-docs-path-sync` | Detects staged page moves that require docs.json rewrites. | | `node tools/scripts/validators/content/structure/check-docs-path-sync.js --staged` |
+| `check-double-headers` | Detects duplicate H1s and opening paragraphs repeating frontmatter. | --fix | `node tools/scripts/validators/content/structure/check-double-headers.js` |
+| `check-mdx-safe-markdown` | Validates MDX content for parse failures and unsafe patterns. | | `node tools/scripts/validators/content/structure/check-mdx-safe-markdown.js` |
+| `check-page-endings` | Validates pages end with approved navigational elements. | --fix | `node tools/scripts/validators/content/structure/check-page-endings.js` |
+| `enforce-generated-file-banners` | Validates "do not edit" banners and i18n parity on generated files. | | `node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check` |
+| `lint-structure` | Enforces structural rules: required frontmatter, stale dates, REVIEW flags. | | `node tools/scripts/validators/content/structure/lint-structure.js` |
+| `test-v2-pages` | Launches Puppeteer, visits every v2 page, reports console errors/404s. | | `node tools/scripts/validators/content/structure/test-v2-pages.js` |
+| `verify-all-pages` | Loads component-library routes in headless browser, checks for render issues. | | `node tools/scripts/validators/content/structure/verify-all-pages.js` |
+
+</Accordion>
+<Accordion title="content/veracity — Fact registry validation">
+
+| Script | Description | Usage |
+|---|---|---|
+| `docs-fact-registry` | Validates repo-native research claim registries and provides normalised claim-family data. | `node tools/scripts/validators/content/veracity/docs-fact-registry.js` |
+
+</Accordion>
+<Accordion title="content/language-translation — Translation validation">
+
+| Script | Description | Usage |
+|---|---|---|
+| `test-mintlify-version-language-toggle` | End-to-end Puppeteer test of Mintlify language toggle UI. | `node tools/scripts/validators/content/language-translation/test-mintlify-version-language-toggle.js` |
+
+</Accordion>
+<Accordion title="components — Component validation">
+
+| Script | Description | Dual-mode | Usage |
+|---|---|---|---|
+| `check-component-docs` | Validates JSDoc coverage, prop documentation, and governance metadata. | | `node tools/scripts/validators/components/documentation/check-component-docs.js` |
+| `check-component-css` | Validates component files against styling governance rules. | --fix | `node tools/scripts/validators/components/library/check-component-css.js` |
+| `check-mdx-component-scope` | Validates MDX components don't depend on private file-scope bindings. | | `node tools/scripts/validators/components/library/check-mdx-component-scope.js` |
+| `check-naming-conventions` | Validates component filenames and PascalCase exports. | | `node tools/scripts/validators/components/library/check-naming-conventions.js` |
+| `component-layout-governance` | Checks v2 page layouts against approved component contracts. | | `node tools/scripts/validators/components/library/component-layout-governance.js` |
+
+</Accordion>
+<Accordion title="governance — Compliance and PR gates">
+
+| Script | Description | Usage |
+|---|---|---|
+| `check-agent-docs-freshness` | Validates canonical agent governance docs exist and are fresh. | `node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js` |
+| `review-governance-repair-checklist` | Generates review checklist for dry-run governance repair proposals. | `node tools/scripts/validators/governance/compliance/review-governance-repair-checklist.js` |
+| `validate-ai-tools-registry` | Validates AI-tools registry coverage, lifecycle, and lane alignment. | `node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js` |
+| `validate-codex-task-contract` | Validates branch naming, task files, PR body, and issue state for codex branches. | `node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js` |
+| `verify-pay-orc-gate-finalize` | Checks payment and orchestrator documentation gate conditions. | `bash tools/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh` |
+| `audit-script-inventory` | Deep inventory audit of every script. Traces triggers, outputs, and downstream chains. | `node tools/scripts/validators/governance/pr/audit-script-inventory.js` |
+| `check-component-immutability` | Flags modifications to existing component files in PR context. | `node tools/scripts/validators/governance/pr/check-component-immutability.js` |
+| `check-pr-template` | Enforces PR descriptions include required change and rationale sections. | `node tools/scripts/validators/governance/pr/check-pr-template.js` |
+
+</Accordion>
+<Accordion title="ai/codex — Codex validation">
+
+| Script | Description | Usage |
+|---|---|---|
+| `check-no-ai-stash` | Blocks push if AI temporary/stash files are present. | `bash tools/scripts/validators/ai/codex/check-no-ai-stash.sh` |
+| `validate-locks` | Checks for stale or conflicting codex lock files before push. | `node tools/scripts/validators/ai/codex/validate-locks.js` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Remediators
+
+Scripts that bulk fix/repair content. Use `--dry-run` to preview changes.
+
+<AccordionGroup>
+<Accordion title="content/repair — Content fixes">
+
+| Script | Description | Usage |
+|---|---|---|
+| `migrate-assets-to-branch` | Migrates flagged assets to docs-v2-assets branch and rewrites MDX references. | `node tools/scripts/remediators/content/repair/migrate-assets-to-branch.js --dry-run` |
+| `quarantine-manager` | Classifies files for quarantine or applies quarantine moves. | `node tools/scripts/remediators/content/repair/quarantine-manager.js` |
+| `repair-mdx-safe-markdown` | Auto-repairs deterministic MDX-unsafe markdown patterns. | `node tools/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run` |
+| `repair-spelling` | Auto-corrects spelling errors using shared cspell configuration. | `node tools/scripts/remediators/content/repair/repair-spelling.js --dry-run` |
+| `sync-docs-paths` | Applies deterministic docs.json and governed reference rewrites for moved pages. | `node tools/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run` |
+
+</Accordion>
+<Accordion title="content/style — Style and accessibility">
+
+| Script | Description | Usage |
+|---|---|---|
+| `repair-ownerless-language` | Applies deterministic wording repairs removing human-owner dependency. | `node tools/scripts/remediators/content/style/repair-ownerless-language.js --check` |
+| `wcag-repair-common` | Applies conservative WCAG source autofixes. | `node tools/scripts/remediators/content/style/wcag-repair-common.js` |
+
+</Accordion>
+<Accordion title="content/classification — Frontmatter and metadata">
+
+| Script | Description | Usage |
+|---|---|---|
+| `add-framework-headers` | Inserts or extends framework headers on repo scripts from classification data. | `node tools/scripts/remediators/content/classification/add-framework-headers.js --dry-run` |
+| `add-pagetype-mechanical` | Mechanically assigns pageType frontmatter to eligible v2 MDX pages. | `node tools/scripts/remediators/content/classification/add-pagetype-mechanical.js` |
+| `assign-purpose-metadata` | Fills purpose and audience frontmatter for routable v2 pages. | `node tools/scripts/remediators/content/classification/assign-purpose-metadata.js` |
+
+</Accordion>
+<Accordion title="content/seo — SEO metadata">
+
+| Script | Description | Usage |
+|---|---|---|
+| `generate-seo` | Backfills missing SEO metadata (keywords, og:image, description) into MDX frontmatter. | `node tools/scripts/remediators/content/seo/generate-seo.js` |
+
+</Accordion>
+<Accordion title="components — Component metadata">
+
+| Script | Description | Usage |
+|---|---|---|
+| `repair-component-metadata` | Auto-repairs derived JSDoc metadata fields from repo state. | `node tools/scripts/remediators/components/library/repair-component-metadata.js --dry-run` |
+
+</Accordion>
+<Accordion title="governance — Script headers and scaffolding">
+
+| Script | Description | Usage |
+|---|---|---|
+| `fix-usage-paths` | Fixes stale @usage paths and deduplicates @pipeline values. | `node tools/scripts/remediators/governance/scaffold/fix-usage-paths.js` |
+| `update-jsdoc-headers` | Rewrites JSDoc headers to the standardised 11-tag format. | `node tools/scripts/remediators/governance/scaffold/update-jsdoc-headers.js` |
+| `repair-script-inventory` | Repairs script headers and classification data (wraps audit-script-inventory --fix). | `node tools/scripts/remediators/governance/scripts/repair-script-inventory.js --dry-run` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Dispatch
+
+Scripts that orchestrate other scripts — spawning child processes and aggregating results.
+
+<AccordionGroup>
+<Accordion title="content/veracity — Research pipeline">
+
+| Script | Description | Usage |
+|---|---|---|
+| `docs-page-research-pr-report` | Runs fact-check research on changed docs pages and emits PR advisory. | `node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js` |
+| `docs-research-packet` | Derives scope, runs research stack tranche-by-tranche, writes master rollup. | `node tools/scripts/dispatch/content/veracity/docs-research-packet.js` |
+| `orchestrator-guides-research-review` | Convenience wrapper for research packet scoped to Orchestrators/Guides. | `node tools/scripts/dispatch/content/veracity/orchestrator-guides-research-review.js` |
+
+</Accordion>
+<Accordion title="governance/pipelines — Governance automation">
+
+| Script | Description | Usage |
+|---|---|---|
+| `governance-pipeline` | Chains audit, safe repair, verification, and reporting into a self-healing pipeline. | `node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js` |
+| `sync-generated-files` | Dispatches generator scripts to sync catalog/index files, then validates banners. | `node tools/scripts/dispatch/governance/pipelines/sync-generated-files.js --write` |
+
+</Accordion>
+<Accordion title="governance/repo — Repo-wide orchestration">
+
+| Script | Description | Usage |
+|---|---|---|
+| `repo-audit-orchestrator` | Dispatches all static analysis validators in sequence and aggregates health score. | `node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js` |
+
+</Accordion>
+<Accordion title="ai/codex — Codex task lifecycle">
+
+| Script | Description | Usage |
+|---|---|---|
+| `check-codex-pr-overlap` | Checks for conflicting codex PRs targeting the same files/branches. | `node tools/scripts/dispatch/ai/codex/check-codex-pr-overlap.js` |
+| `codex-commit` | Audits codex branch state and generates compliant commit messages. | `node tools/scripts/dispatch/ai/codex/codex-commit.js` |
+| `create-codex-pr` | Generates codex PR with correct branch naming, labels, and body template. | `node tools/scripts/dispatch/ai/codex/create-codex-pr.js` |
+| `task-finalise` | Enforces task completion requirements before closing. | `node tools/scripts/dispatch/ai/codex/task-finalise.js` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Automations
+
+Automated pipelines that fetch, transform, sync, or manage data.
+
+<AccordionGroup>
+<Accordion title="content/data — External data fetching and transforms">
+
+| Script | Description | Usage |
+|---|---|---|
+| `fetch-external-docs` | Pulls doc fragments from external GitHub repos into snippets/data/. | `bash tools/scripts/automations/content/data/fetching/fetch-external-docs.sh` |
+| `fetch-lpt-exchanges` | Pulls exchange listing data for LPT token pages. | `bash tools/scripts/automations/content/data/fetching/fetch-lpt-exchanges.sh` |
+| `fetch-openapi-specs` | Pulls latest OpenAPI specs from Livepeer services. | `bash tools/scripts/automations/content/data/fetching/fetch-openapi-specs.sh` |
+| `convert-rss-to-mdx` | Imports RSS feed items and converts to MDX page format. | `node tools/scripts/automations/content/data/transforms/convert-rss-to-mdx.js` |
+
+</Accordion>
+<Accordion title="content/language-translation — Translation pipeline">
+
+| Script | Description | Usage |
+|---|---|---|
+| `translate-docs` | Translates v2 MDX pages to target languages via OpenRouter API. | `node tools/scripts/automations/content/language-translation/translate-docs.js` |
+| `generate-localized-docs-json` | Produces localised docs.json variants from route-map and source. | `node tools/scripts/automations/content/language-translation/generate-localized-docs-json.js` |
+| `validate-generated` | Checks generated translated MDX files for integrity. | `node tools/scripts/automations/content/language-translation/validate-generated.js` |
+
+</Accordion>
+<Accordion title="ai — Agent pack management">
+
+| Script | Description | Usage |
+|---|---|---|
+| `cross-agent-packager` | Bundles audit reports and repo state into agent-consumable packages. | `node tools/scripts/automations/ai/agents/cross-agent-packager.js` |
+| `export-portable-skills` | Copies canonical template skills into cross-agent pack folders. | `node tools/scripts/automations/ai/agents/export-portable-skills.js --write` |
+| `sync-codex-skills` | Synchronises skill definitions between canonical templates and local Codex installs. | `node tools/scripts/automations/ai/agents/sync-codex-skills.js` |
+
+</Accordion>
+<Accordion title="ai/codex — Codex lifecycle">
+
+| Script | Description | Usage |
+|---|---|---|
+| `lock-release` | Releases stale codex lock files after merge verification. | `node tools/scripts/automations/ai/codex/lock-release.js` |
+| `task-cleanup` | Reports and prunes merged worktrees plus stale local codex branches. | `node tools/scripts/automations/ai/codex/task-cleanup.js` |
+| `task-preflight` | Generates task setup files and validates preconditions. | `node tools/scripts/automations/ai/codex/task-preflight.js` |
+
+</Accordion>
+<Accordion title="governance/pipelines — Report publishing">
+
+| Script | Description | Usage |
+|---|---|---|
+| `publish-v2-internal-reports` | Publishes v2 internal audit reports to configured output locations. | `node tools/scripts/automations/governance/pipelines/publish-v2-internal-reports.js` |
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Git Hooks
+
+Scripts that run as git lifecycle hooks (`.githooks/`).
+
+| Script | Purpose | Trigger |
+|---|---|---|
+| `pre-commit` | Hard gates only: codex branch isolation, file deletion guard, .allowlist protection, docs.json redirect check, v1 freeze + root structure | `git commit` |
+| `install.sh` | Installs git hooks into the repo | Manual |
+| `verify.sh` | Verifies hook installation | Manual |
+| `verify-browser.js` | Checks Puppeteer/browser availability | Manual |
+| `server-manager.js` | Manages local Mintlify dev server for browser tests | Test infrastructure |
+
+---
+
+## Dev Tools
+
+Developer utilities in `/tools/dev/` (not pipeline scripts).
+
+| Script | Purpose |
+|---|---|
+| `mint-dev.sh` | Launches Mintlify dev server |
+| `debug-mint-dev.js` | Troubleshoots dev server issues |
+| `generate-mint-dev-scope.js` | Creates scoped docs.json for partial preview |
+| `mint-custom-loader.sh` | Launches with alternate nav config |
+| `ensure-mint-watcher-patch.sh` | Patches file watcher bugs |
+| `add-callouts.js` | Adds Note/Tip/Warning components |
+| `format-mdx.js` | MDX formatter for VS Code |
+| `install-authoring-tools-extension.js` | Installs VS Code authoring extension |
+| `rename-vscode-codex-chat.js` | Renames VS Code Codex chat files |

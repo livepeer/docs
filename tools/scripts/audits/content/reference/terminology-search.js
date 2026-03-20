@@ -43,7 +43,7 @@ const { execSync } = require('child_process');
 
 // Load .env file from the scripts directory (optional in local dry-run use)
 try {
-  require('dotenv').config({ path: path.join(__dirname, '.env') });
+  require('dotenv').config({ path: path.join(process.cwd(), 'tools/scripts/audits/content/reference/.env') });
 } catch (_error) {
   // Optional dependency for local dry-run usage.
 }
@@ -69,7 +69,7 @@ const V2_PAGES_DIRS = [
 ]
   .map((dir) => path.join(REPO_ROOT, dir))
   .filter((dir) => fs.existsSync(dir));
-const OUTPUT_DIR = path.join(__dirname, '..', 'data');
+const OUTPUT_DIR = path.join(REPO_ROOT, 'tools/scripts/audits/content/data');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'discovered-terms.json');
 
 const args = process.argv.slice(2);

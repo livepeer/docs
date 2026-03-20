@@ -24,6 +24,23 @@ const {
 
 const REPORT_PATH = path.join(REPO_ROOT, 'tasks', 'reports', 'repo-ops', 'component-usage-audit.json');
 
+const V2_DOC_ROOTS = [
+  'v2/pages',
+  'v2/home',
+  'v2/solutions',
+  'v2/about',
+  'v2/community',
+  'v2/developers',
+  'v2/gateways',
+  'v2/orchestrators',
+  'v2/lpt',
+  'v2/resources',
+  'v2/internal',
+  'v2/deprecated',
+  'v2/experimental',
+  'v2/notes'
+].filter((root) => fs.existsSync(root));
+
 function resolveFirstExistingPath(candidates) {
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) return candidate;

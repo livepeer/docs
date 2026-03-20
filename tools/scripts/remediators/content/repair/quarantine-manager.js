@@ -20,6 +20,7 @@ const STAGE_ID = 'cleanup-quarantine-manager';
 const REPO_ROOT = process.cwd();
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
 const DEFAULT_QUARANTINE_ROOT = 'tasks/quarantine/repo-audit';
+const RETENTION_POLICY_PATH = 'tools/config/report-retention-policy.json';
 
 const STAGE_REPORT_FILES = [
   'script-footprint-and-usage-audit.json',
@@ -114,7 +115,7 @@ function walkFiles(dirPath, out = []) {
 }
 
 function loadRetentionPolicy() {
-  const policyPath = path.join(REPO_ROOT, 'tools/config/report-retention-policy.json');
+  const policyPath = path.join(REPO_ROOT, RETENTION_POLICY_PATH);
   return readJsonFile(policyPath, {
     rules: [],
     default_action: 'keep_latest',

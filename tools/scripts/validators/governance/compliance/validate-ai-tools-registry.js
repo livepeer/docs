@@ -126,14 +126,7 @@ function main() {
   printIssues('Warnings', validation.warnings, console.warn);
   printIssues('Errors', validation.errors, console.error);
 
-  if (args.writeReport && validation.registry) {
-    const changed = writeInventoryReport(repoRoot, validation.registry, validation, args.reportPath);
-    console.log(
-      changed
-        ? `Updated generated inventory report: ${args.reportPath}`
-        : `Generated inventory report already up to date: ${args.reportPath}`
-    );
-  }
+  // --write-report split to generators/governance/reports/generate-ai-tools-inventory.js
 
   console.log(
     `AI-tools registry check complete: ${validation.summary.totalArtifacts || 0} artifacts, ${validation.errors.length} errors, ${validation.warnings.length} warnings`

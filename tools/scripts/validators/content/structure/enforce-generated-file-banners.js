@@ -5,17 +5,17 @@
  * @concern     content
  * @niche       structure
  * @purpose     governance:index-management
- * @description Generated file banner enforcer — checks (--check) or writes (default) "do not edit" banners on generated files.
+ * @description Validates "do not edit" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js.
  * @mode        read-only
- * @pipeline    manual
- * @scope       tools/scripts, tools/lib, docs-guide/catalog, v2, tests/unit/docs-guide-sot.test.js
- * @usage       node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check | --write [--staged]
+ * @pipeline    manual | pre-commit --staged
+ * @scope       docs-guide/catalog, v2
+ * @usage       node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]
  * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawnSync } = require('child_process'); // retained for getStagedFiles
 const { loadI18nConfig } = require('../../../automations/content/language-translation/lib/config');
 const { parseProvenanceComment } = require('../../../automations/content/language-translation/lib/provenance');
 const {
@@ -33,23 +33,7 @@ const {
 const REPO_ROOT = process.cwd();
 const STAGED_SNAPSHOT_ENV = 'LPD_STAGED_FILES_SNAPSHOT';
 
-const CHECK_COMMANDS = [
-  ['tools/scripts/generate-docs-guide-indexes.js', '--check'],
-  ['tools/scripts/generate-docs-guide-pages-index.js', '--check'],
-  ['tools/scripts/generate-docs-guide-components-index.js', '--check'],
-  ['tools/scripts/generate-component-docs.js', '--check', '--template-only'],
-  ['tests/unit/script-docs.test.js', '--check-indexes'],
-  ['tools/scripts/generate-pages-index.js']
-];
-
-const WRITE_COMMANDS = [
-  ['tools/scripts/generate-docs-guide-indexes.js', '--write'],
-  ['tools/scripts/generate-docs-guide-pages-index.js', '--write'],
-  ['tools/scripts/generate-docs-guide-components-index.js', '--write'],
-  ['tools/scripts/generate-component-docs.js', '--fix', '--template-only'],
-  ['tests/unit/script-docs.test.js', '--write', '--rebuild-indexes'],
-  ['tools/scripts/generate-pages-index.js', '--write', '--rebuild-indexes']
-];
+// Generator dispatch commands moved to dispatch/governance/pipelines/sync-generated-files.js
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/');
@@ -109,15 +93,7 @@ function getExpectedNonI18nGeneratedFiles() {
   return [...new Set([...getManifestManagedGeneratedFiles(), ...listGeneratedV2IndexFiles()])].sort();
 }
 
-function runNodeCommand(args) {
-  const result = spawnSync('node', args, {
-    cwd: REPO_ROOT,
-    encoding: 'utf8'
-  });
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
-  return result.status === 0;
-}
+// runNodeCommand moved to dispatch/governance/pipelines/sync-generated-files.js
 
 function getStagedFiles() {
   const snapshot = String(process.env[STAGED_SNAPSHOT_ENV] || '')
@@ -155,81 +131,7 @@ function getBannerRelevantStagedFiles(stagedFiles) {
   });
 }
 
-function runGeneratorSet(writeMode, violations, options = {}) {
-  const commands = writeMode ? WRITE_COMMANDS : CHECK_COMMANDS;
-  const staged = Boolean(options.staged);
-  const relevantFiles = new Set(options.relevantFiles || []);
-
-  if (staged) {
-    if (!writeMode) {
-      return;
-    }
-
-    const stagedCommands = [];
-
-    const hasV2Index = [...relevantFiles].some((repoPath) => repoPath === 'v2/index.mdx' || /^v2\/[^/]+\/index\.mdx$/.test(repoPath));
-    if (hasV2Index) {
-      stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-pages-index.js', '--staged', '--write', '--stage']
-        : ['tools/scripts/generate-pages-index.js', '--staged']);
-    }
-
-    if (relevantFiles.has('docs-guide/catalog/pages-catalog.mdx')) {
-      stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-docs-guide-pages-index.js', '--write']
-        : ['tools/scripts/generate-docs-guide-pages-index.js', '--check']);
-    }
-
-    const hasDocsGuideIndex = [...relevantFiles].some((repoPath) =>
-      [
-        'docs-guide/catalog/components-catalog.mdx',
-        'docs-guide/catalog/scripts-catalog.mdx',
-        'docs-guide/catalog/templates-catalog.mdx',
-        'docs-guide/catalog/workflows-catalog.mdx'
-      ].includes(repoPath)
-    );
-    if (hasDocsGuideIndex) {
-      stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-docs-guide-indexes.js', '--write']
-        : ['tools/scripts/generate-docs-guide-indexes.js', '--check']);
-      stagedCommands.push(writeMode
-        ? ['tests/unit/script-docs.test.js', '--write', '--rebuild-indexes']
-        : ['tests/unit/script-docs.test.js', '--check-indexes']);
-    }
-
-    const hasComponentDocs = [...relevantFiles].some((repoPath) =>
-      repoPath.startsWith('v2/resources/documentation-guide/component-library/')
-    );
-    if (hasComponentDocs) {
-      stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-component-docs.js', '--fix', '--template-only']
-        : ['tools/scripts/generate-component-docs.js', '--check', '--template-only']);
-    }
-
-    stagedCommands.forEach((args) => {
-      const ok = runNodeCommand(args);
-      if (!ok) {
-        violations.push({
-          rule: 'GENERATOR_SYNC',
-          file: args[0],
-          message: `Generator command failed: node ${args.join(' ')}`
-        });
-      }
-    });
-    return;
-  }
-
-  commands.forEach((args) => {
-    const ok = runNodeCommand(args);
-    if (!ok) {
-      violations.push({
-        rule: 'GENERATOR_SYNC',
-        file: args[0],
-        message: `Generator command failed: node ${args.join(' ')}`
-      });
-    }
-  });
-}
+// runGeneratorSet moved to dispatch/governance/pipelines/sync-generated-files.js
 
 function addViolation(violations, rule, file, message) {
   violations.push({
@@ -409,13 +311,7 @@ function main(argv = process.argv.slice(2)) {
     return;
   }
 
-  if (args.write) {
-    runGeneratorSet(true, violations, { staged: args.staged, relevantFiles: bannerRelevantStagedFiles });
-  }
-  if (args.check || args.write) {
-    runGeneratorSet(false, violations, { staged: args.staged, relevantFiles: bannerRelevantStagedFiles });
-  }
-
+  // Banner validation only — generator dispatch moved to sync-generated-files.js
   const nonI18nFilesToValidate = args.staged
     ? bannerRelevantStagedFiles.filter((repoPath) => !repoPath.startsWith('v2/cn/') && !repoPath.startsWith('v2/es/') && !repoPath.startsWith('v2/fr/'))
     : getExpectedNonI18nGeneratedFiles();
