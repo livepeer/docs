@@ -11,6 +11,8 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} limit - Limit used by the component.
  * @param {number} [cols=2] - Cols used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;

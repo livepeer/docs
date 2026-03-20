@@ -7,7 +7,8 @@
  * @accepts style, className, ...rest
  * @param {string} icon - Icon configuration used by the component.
  * @param {React.ReactNode} title - Title text rendered by the component.
- * @param {object} style - Style used by the component.
+ * @param {object} [style={}] - Inline style overrides.
+ * @param {string} [className=""] - CSS class name.
  *
  * @example
  * <CustomCardTitle icon="sparkles" title="Example" style={{}} />

@@ -6,6 +6,8 @@
  * @description Generates N numbered accordion sections inside an AccordionGroup.
  * @accepts className, style, ...rest
  * @param {number} [num=1] - Number of placeholder accordion sections to render.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const AccordionGroupList = ({ num = 1, className = "", style = {}, ...rest }) => (
   <AccordionGroup className={className} style={style} {...rest}>

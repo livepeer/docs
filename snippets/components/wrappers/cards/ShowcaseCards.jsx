@@ -17,6 +17,7 @@
  * @param {Array} [productTags=[]] - product Tags prop.
  * @param {Array} [links=[]] - links prop.
  * @param {any} style - style prop.
+ * @param {string} [className=""] - CSS class name.
  * @param {any} cardProps - card Props prop.
  */
 export const InteractiveCard = ({
@@ -108,6 +109,8 @@ export const InteractiveCard = ({
  * @description Multi-column layout of interactive cards.
  * @accepts className, style, ...rest
  * @param {Array} [items=[]] - items prop.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const InteractiveCards = ({ items = [], className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(items) && items.length > 0
@@ -148,6 +151,8 @@ export const InteractiveCards = ({ items = [], className = "", style = {}, ...re
  * @param {Array} [items=[]] - items prop.
  * @param {any} [limit=null] - limit prop.
  * @param {number} [pageSize=10] - page Size prop.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");

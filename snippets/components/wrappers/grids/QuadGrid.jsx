@@ -12,6 +12,8 @@
  * @param {number} [iconSize=50] - Icon configuration used by the component.
  * @param {string} [iconColor="var(--accent)"] - Icon configuration used by the component.
  * @param {string} [spinDuration="10s"] - Spin duration used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const QuadGrid = ({
   children,

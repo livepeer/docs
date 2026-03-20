@@ -7,6 +7,8 @@
  * @accepts className, style, ...rest
  * @param {Array} listItems - Collection data rendered by the component.
  * @param {object} [stepsConfig={}] - Steps config used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const ListSteps = ({ listItems, stepsConfig = {}, className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(listItems) ? listItems : [];

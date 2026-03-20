@@ -232,6 +232,25 @@ function getStagedComponentFiles(baseDir = 'snippets/components') {
     .sort((a, b) => a.displayPath.localeCompare(b.displayPath, 'en', { sensitivity: 'base' }));
 }
 
+function getChangedMdxFilesSince(since) {
+  const ref = String(since || '').trim();
+  if (!ref) throw new Error('getChangedMdxFilesSince: requires a commit ref');
+  try {
+    runGit(['rev-parse', '--verify', ref]);
+  } catch (_err) {
+    throw new Error(`getChangedMdxFilesSince: invalid commit ref "${ref}"`);
+  }
+  const output = runGit(['diff', '--name-only', `${ref}..HEAD`]);
+  if (!output) return [];
+  return output
+    .split('\n')
+    .map((line) => toPosix(line.trim()))
+    .filter(Boolean)
+    .filter((repoPath) => repoPath.endsWith('.mdx'))
+    .filter((repoPath) => fs.existsSync(path.join(REPO_ROOT, repoPath)))
+    .map((repoPath) => path.join(REPO_ROOT, repoPath));
+}
+
 function sortStrings(values) {
   return [...new Set(
     (Array.isArray(values) ? values : [values])
@@ -657,6 +676,9 @@ function parseJSDocBlock(sourceText) {
   GOVERNANCE_FIELDS.forEach((field) => {
     parsed[field] = compactWhitespace(tags[field] || '');
   });
+  OPTIONAL_GOVERNANCE_FIELDS.forEach((field) => {
+    parsed[field] = compactWhitespace(tags[field] || '');
+  });
   return parsed;
 }
 
@@ -950,12 +972,17 @@ function scanMDXImports(globPattern = 'v2/**/*.mdx', options = {}) {
   const pattern = typeof globPattern === 'string' ? globPattern : 'v2/**/*.mdx';
   const opts = typeof globPattern === 'string' ? options : globPattern || {};
   const publishedOnly = opts.publishedOnly !== false;
-  const base = resolveMdxBaseDir(pattern);
-  const absoluteBase = path.join(REPO_ROOT, base);
-  const mdxFiles = listTrackedFiles(absoluteBase, '.mdx');
-  const candidateFiles = mdxFiles.length
-    ? mdxFiles
-    : walkFiles(absoluteBase, (filePath) => filePath.endsWith('.mdx'));
+  let candidateFiles;
+  if (Array.isArray(opts.files) && opts.files.length > 0) {
+    candidateFiles = opts.files.filter((f) => fs.existsSync(f));
+  } else {
+    const base = resolveMdxBaseDir(pattern);
+    const absoluteBase = path.join(REPO_ROOT, base);
+    const mdxFiles = listTrackedFiles(absoluteBase, '.mdx');
+    candidateFiles = mdxFiles.length
+      ? mdxFiles
+      : walkFiles(absoluteBase, (filePath) => filePath.endsWith('.mdx'));
+  }
   const results = new Map();
 
   candidateFiles.forEach((absolutePath) => {
@@ -1145,5 +1172,6 @@ module.exports = {
   isArchivePath,
   isPublishedDocsPath,
   getComponentFiles,
-  getStagedComponentFiles
+  getStagedComponentFiles,
+  getChangedMdxFilesSince
 };

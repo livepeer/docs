@@ -11,6 +11,8 @@
  * @param {string} [maxHeight="1000px"] - Max height used by the component.
  * @param {string} [icon="github"] - Icon configuration used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const ExternalContent = ({
   repoName,

@@ -11,6 +11,8 @@
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} [limit=null] - Limit used by the component.
  * @param {number} [pageSize=10] - Page size used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");

@@ -10,6 +10,7 @@
  * @param {object} style - Style used by the component.
  * @param {string} [background='var(--card-background)'] - Background used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} [className=""] - CSS class name.
  */
 export const DisplayCard = ({
   icon,
@@ -76,6 +77,8 @@ export const DisplayCard = ({
  * @param {string} [width='80%'] - Width used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {object} [cardProps] - Forwarded Card props.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const WidthCard = ({ width = '80%', children, cardProps, className = "", style = {}, ...rest }) => {
   return (
@@ -108,6 +111,7 @@ export const WidthCard = ({ width = '80%', children, cardProps, className = "", 
  * @param {object} imgStyle - Img style used by the component.
  * @param {object} cardProps - Card props used by the component.
  * @param {object} style - Style used by the component.
+ * @param {string} [className=""] - CSS class name.
  */
 export const InlineImageCard = ({
   children,

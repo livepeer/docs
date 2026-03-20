@@ -11,6 +11,8 @@
  * @param {boolean} [line=true] - Boolean flag that controls component behaviour.
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const ValueResponseField = ({
   description,
@@ -75,6 +77,8 @@ const expandableCode = () => {
  * @accepts className, style, ...props
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const CustomResponseField = ({ description, className = "", style = {}, ...props }) => {
   const uniqueId = `custom-rf-${Math.random().toString(36).substring(2, 11)}`;
@@ -101,6 +105,8 @@ const CustomResponseField = ({ description, className = "", style = {}, ...props
  * @accepts className, style, ...props
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Expandable.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
@@ -126,6 +132,8 @@ const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...p
  * @accepts className, style, ...props
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Accordion.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
@@ -154,6 +162,8 @@ const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...pr
  * @param {string} [component="accordion"] - Component used by the component.
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to the selected wrapper component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const ResponseFieldGroup = ({
   component = "accordion",
