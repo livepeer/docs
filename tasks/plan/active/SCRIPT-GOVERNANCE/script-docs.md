@@ -1,119 +1,231 @@
-# Script Documentation Consolidation Analysis
+# Script Documentation Consolidation — Full Audit & Recommendations
 
 > **Status**: Analysis only — no changes. See Task 13 in plan.md for execution tasks.
-> **Date**: 2026-03-20
+> **Date**: 2026-03-20 (full audit)
+> **Scope**: All script documentation surfaces across the repo
 
 ---
 
-## 1. Current Documentation Surfaces Inventory
+## 1. Complete Documentation Surfaces Inventory
 
-The following surfaces currently document scripts in some way:
+### 1A. Machine-Generated Catalogs (auto-written by `tests/unit/script-docs.test.js`)
 
-### A. Machine-generated catalogs (auto-written by scripts)
+| File | Generator trigger | Audience | On nav |
+|------|------------------|----------|--------|
+| `docs-guide/catalog/scripts-catalog.mdx` | `--write --rebuild-indexes` | Docs contributors | YES |
+| `.githooks/script-index.md` | Same | Developers | No |
+| `.github/script-index.md` | Same | Developers | No |
+| `tests/script-index.md` | Same | Developers | No |
+| `tools/script-index.md` | Same | Developers | No |
+| `tools/lib/script-index.md` | Same | Developers | No |
+| `tools/notion/script-index.md` | Same | Developers | No |
+| `tools/config/script-index.md` | Same | Developers | No |
+| `tasks/scripts/script-index.md` | Same | Developers | No |
+| `snippets/automations/script-index.md` | Same | Developers | No |
 
-| File | Generator | Content |
-|------|-----------|---------|
-| `docs-guide/catalog/scripts-catalog.mdx` | `tests/unit/script-docs.test.js --write --rebuild-indexes` | Aggregate index of all scripts grouped by type/concern/niche, with JSDoc fields rendered |
-| `.githooks/script-index.md` | Same | Index of scripts scoped to `.githooks` |
-| `tests/script-index.md` | Same | Index of scripts scoped to `tests/` |
-| `tools/script-index.md` | Same | Index of scripts scoped to `tools/scripts/` |
-| `tasks/scripts/script-index.md` | Same | Index of scripts scoped to `tasks/scripts/` |
-| `tasks/reports/script-classifications.json` | Maintained manually + auto-path-fixed | Classification data: path, script name, category, purpose, scope, needs, purpose_statement, pipeline |
-
-### B. Human-authored specification docs (in this folder)
-
-| File | Content |
-|------|---------|
-| `tasks/plan/active/SCRIPT-GOVERNANCE/script-framework.md` | **Canonical spec** — 1,357 lines. Full taxonomy, JSDoc 11-tag standard, script structure standard, best practices, governance rules, pipeline integration, templates for all 6 types |
-| `tasks/plan/active/SCRIPT-GOVERNANCE/structure.md` | Folder taxonomy tree + JSDoc tag spec (earlier version, partly superseded by script-framework.md) |
-| `tasks/plan/active/SCRIPT-GOVERNANCE/catalog.md` | Human-readable script catalog (120 scripts, generated 2026-03-19, stale after reclassifications) |
-| `tasks/plan/active/SCRIPT-GOVERNANCE/audit-report.md` | Deep audit findings from 4 parallel agents — implementation detail, violations, best practices scan |
-| `tasks/plan/active/SCRIPT-GOVERNANCE/plan.md` | Task plan with completion tracking |
-| `tasks/plan/active/SCRIPT-GOVERNANCE/reclassification-plan.md` | Reclassification waves plan (now complete) |
-
-### C. Docs-guide human-readable pages (in docs navigation)
-
-| File | Content |
-|------|---------|
-| `docs-guide/tooling/` (various) | Tooling documentation for contributors — some scripts referenced but not a catalog |
-| `docs-guide/policies/agent-governance-framework.mdx` | References script governance rules and pipeline policy |
-| `docs-guide/policies/root-allowlist-governance.mdx` | Allowlist policy — references enforcement scripts |
-| `tools/scripts/README.md` | Markdown README with taxonomy overview and JSDoc standard link |
-
-### D. Tool config / code-level references
-
-| File | Content |
-|------|---------|
-| `tools/lib/script-governance-config.js` | Runtime config: governed roots, group index map, classification data path, aggregate index path |
-| `tools/config/generated-artifacts.json` | Catalog of all generated files and their generators |
-| `AGENTS.md` | Agent instructions referencing key script paths and lifecycle commands |
-| `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | Agent-facing script lifecycle instructions |
-
-### E. Scripts-library MDX (recent addition)
-
-| File | Content |
-|------|---------|
-| `docs-guide/catalog/scripts-library.mdx` | Full script inventory — manually written during this task, partially overlaps with scripts-catalog.mdx |
+**Total auto-generated: 10 files.** One on nav. Nine developer quick-refs scoped by folder.
 
 ---
 
-## 2. Problems Identified
+### 1B. Human-Authored Specification Docs (all in `tasks/plan/active/SCRIPT-GOVERNANCE/`)
 
-### 2.1 No single source of truth
+| File | Size | What it contains | Status |
+|------|------|-----------------|--------|
+| `script-framework.md` | ~50KB | Canonical spec — full taxonomy, JSDoc 11-tag standard, script structure, best practices, governance rules, pipeline integration, templates for all 6 types | **Active canonical** |
+| `structure.md` | ~25KB | Folder taxonomy + JSDoc tag spec — earlier iteration, partially superseded by script-framework.md | **Partially superseded** |
+| `catalog.md` | ~14KB | Hand-generated script catalog (snapshot 2026-03-19, pre-reclassification) | **Stale** |
+| `audit-report.md` | ~18KB | Deep audit findings — 120 scripts audited, 27 mistyped, ~44 multi-purpose, 6 overlap pairs | **Historical, complete** |
+| `plan.md` | ~29KB | Task tracking plan with completion status | **Active** |
+| `reclassification-plan.md` | ~8KB | Wave 1–4 reclassification history | **Complete, historical** |
+| `script-docs.md` | This file | Documentation consolidation analysis | **Active** |
+| `notes.md` | ~3KB | Working notes | **Working doc** |
+| `scripts-library.mdx` | ~25KB | Manual full-script-library MDX (written during this task) | **Will drift — consolidate** |
 
-There are **three overlapping sources** for script metadata:
-
-1. **JSDoc headers in each script** — the authoritative per-script record
-2. **`tasks/reports/script-classifications.json`** — flat JSON with category/purpose/scope/pipeline per script
-3. **`docs-guide/catalog/scripts-catalog.mdx`** — auto-generated from (1) + (2)
-
-These are not fully in sync. `script-classifications.json` uses an older field schema (category, not type/concern/niche). The JSDoc headers use the new 11-tag schema. The catalog combines both but the combination is inconsistent.
-
-### 2.2 Duplication between specification documents
-
-`structure.md` and `script-framework.md` overlap significantly:
-- Both define the taxonomy
-- Both document the JSDoc tag standard
-- `structure.md` predates `script-framework.md` and is partially superseded
-- Neither references the other explicitly
-
-`catalog.md` (tasks folder) and `scripts-catalog.mdx` (docs-guide) both attempt to list all scripts. One is stale, one is auto-generated but imperfect.
-
-### 2.3 `scripts-library.mdx` vs `scripts-catalog.mdx`
-
-Two MDX files in `docs-guide/catalog/` serve similar purposes:
-- `scripts-catalog.mdx` — auto-generated, comprehensive, hard to read
-- `scripts-library.mdx` — manually written during this task, human-readable, but will drift
-
-### 2.4 `script-classifications.json` schema mismatch
-
-The JSON uses `category` (old taxonomy: utility, orchestrator, validator, generator, remediator, enforcer) while scripts now use `type` (audit, generator, validator, remediator, dispatch, automation). The generator that builds the catalog handles both schemas via duck-typing, creating silent inconsistency.
-
-### 2.5 Specification docs not on the docs nav
-
-`script-framework.md` and `structure.md` live in `tasks/plan/active/SCRIPT-GOVERNANCE/` — accessible to developers who know where to look, but not discoverable via docs navigation. They should be surfaced in `docs-guide/tooling/` or `docs-guide/policies/`.
-
-### 2.6 `catalog.md` is stale and redundant
-
-`tasks/plan/active/SCRIPT-GOVERNANCE/catalog.md` was hand-generated in March 2026 from the pre-reclassification state. It is now stale. Since `scripts-catalog.mdx` is auto-generated, `catalog.md` has no ongoing value and should be either deprecated or used only as a snapshot artifact.
+**None of these are on the docs nav.** All live in `tasks/plan/`.
 
 ---
 
-## 3. Proposed Architecture — One Source of Truth
+### 1C. Docs-Guide Pages That Reference Scripts (all on nav)
 
-### 3.1 JSON as canonical source
+| File | How it references scripts |
+|------|--------------------------|
+| `docs-guide/tooling/dev-tools.mdx` | References VS Code snippets (autogenerated by script), helper tools |
+| `docs-guide/tooling/lpd-cli.mdx` | References `lpd` commands that invoke scripts |
+| `docs-guide/policies/agent-governance-framework.mdx` | References `check-agent-docs-freshness.js`, Codex dispatch scripts explicitly by path |
+| `docs-guide/policies/root-allowlist-governance.mdx` | References `.githooks/pre-commit` as enforcement |
+| `docs-guide/policies/audit-system-overview.mdx` | References audit scripts and their roles |
+| `docs-guide/policies/source-of-truth-policy.mdx` | References generators and validators |
+| `docs-guide/policies/skill-pipeline-map.mdx` | References Codex dispatch scripts |
+| `docs-guide/features/data-integrations.mdx` | References fetch scripts |
+| `docs-guide/features/automations.mdx` | References automation scripts |
+| `docs-guide/frameworks/component-governance.mdx` | References component scripts |
+| `docs-guide/source-of-truth-guide.mdx` | References generators / governance |
 
-A single `tools/config/script-registry.json` should be the **one source of truth** for all script metadata. Structure per entry:
+**These pages are well-placed and appropriate.** They reference scripts in context, not as a catalog. Keep as-is.
+
+---
+
+### 1D. Runtime Config / Metadata Files
+
+| File | Content | Consumed by |
+|------|---------|-------------|
+| `tools/lib/script-governance-config.js` | Governed roots (13 paths), group index map, classification data path, aggregate index path, schema definitions, old `category` enum, scope enum, purpose enum | Test runner, catalog generators, validators |
+| `tasks/reports/script-classifications.json` | Flat metadata for 273 scripts — **old schema** (`category` not `type/concern/niche`) | Catalog generator, test runner |
+| `tools/config/generated-artifacts.json` | Registry of all auto-generated files and their generators | Sync validator, freshness checks |
+
+---
+
+### 1E. README and Agent Baselines
+
+| File | Script content | On nav |
+|------|----------------|--------|
+| `tools/scripts/README.md` | Brief taxonomy overview; links to `structure.md` (stale) and `catalog.md` (stale); JSDoc summary | No |
+| `AGENTS.md` | Explicit paths for key validators, generators, Codex dispatch scripts | No |
+| `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | Full Codex lifecycle with script invocation examples | No |
+| `.claude/CLAUDE.md` | Adapter — defers to AGENTS.md | No |
+| `.cursor/rules/repo-governance.mdc` | Adapter — defers to AGENTS.md | No |
+| `.windsurf/rules/repo-governance.md` | Adapter — defers to AGENTS.md | No |
+| `.github/copilot-instructions.md` | Adapter — defers to AGENTS.md | No |
+
+---
+
+### 1F. GitHub Workflows That Run Scripts (~14 of 20)
+
+| Workflow | Scripts invoked |
+|----------|-----------------|
+| `generate-ai-sitemap.yml` | `generate-ai-sitemap.js` |
+| `test-v2-pages.yml` | validator scripts |
+| `translate-docs.yml` | `translate-docs.js`, `generate-localized-docs-json.js` |
+| `content-health.yml` | audit scripts |
+| `style-homogenise.yml` | `style-and-language-homogenizer-en-gb.js` |
+| `seo-refresh.yml` | `generate-seo.js`, `generate-og-images.js` |
+| `check-docs-index.yml` | `generate-docs-index.js --check` |
+| `freshness-monitor.yml` | `check-agent-docs-freshness.js` |
+| `codex-governance.yml` | Codex validators |
+| `repair-governance.yml` | `governance-pipeline.js` |
+| `generate-docs-index.yml` | `generate-docs-index.js --write` |
+| `verify-ai-sitemap.yml` | `validate-ai-sitemap.js` |
+| `verify-llms-files.yml` | `validate-llms-files.js` |
+| Data fetch workflows | `fetch-external-docs.sh`, `fetch-lpt-exchanges.sh`, `fetch-openapi-specs.sh` |
+
+---
+
+## 2. Total Surface Count
+
+| Category | File count | On nav |
+|----------|-----------|--------|
+| Auto-generated catalogs | 10 | 1 |
+| Spec/planning docs (tasks/) | 9 | 0 |
+| Docs-guide contextual pages | 11 | 11 |
+| Runtime config / metadata | 3 | 0 |
+| README / agent baselines | 7 | 0 |
+| GitHub workflows | 14 | 0 |
+| **TOTAL** | **54** | **12** |
+
+---
+
+## 3. Problems Identified
+
+### Problem 1: Three overlapping metadata sources — no single source of truth
+
+| Source | Schema | Status |
+|--------|--------|--------|
+| JSDoc headers in each script | 11 tags: `@type`, `@concern`, `@niche`, `@purpose`, `@description`, `@mode`, `@pipeline`, `@scope`, `@usage`, `@policy` | New schema — correct |
+| `tasks/reports/script-classifications.json` | 7 fields: `category`, `purpose`, `scope`, `needs`, `purpose_statement`, `pipeline`, `path` | **Old schema — `category` not `type/concern/niche`** |
+| `docs-guide/catalog/scripts-catalog.mdx` | Renders both schemas via duck-typing | Auto-generated, schema-inconsistent |
+
+The generator handles the schema mismatch silently. A script with `@type: audit` in JSDoc may have `category: validator` in the JSON. These are not equivalent — the old 7-value taxonomy does not map cleanly to the new 6-value one. Fields missing from JSON entirely: `concern`, `niche`, `mode`, `description`.
+
+**Old `category` enum (7):** utility, orchestrator, validator, generator, remediator, enforcer, automation
+**New `type` enum (6):** audit, generator, validator, remediator, dispatch, automation
+
+---
+
+### Problem 2: Two overlapping specification documents
+
+`structure.md` (25KB) and `script-framework.md` (50KB) both define the 3-tier taxonomy, full folder structure, JSDoc tag standard, @mode values, and @pipeline notation. `script-framework.md` is newer and more complete. `structure.md` predates it and has not been formally superseded or cross-linked. `tools/scripts/README.md` links to `structure.md` — a contributor following that link will miss the canonical spec entirely.
+
+---
+
+### Problem 3: Three overlapping catalogs
+
+| Catalog | How produced | Freshness | On nav |
+|---------|-------------|-----------|--------|
+| `tasks/SCRIPT-GOVERNANCE/catalog.md` | Hand-generated snapshot (March 2026) | **Stale — pre-reclassification** | No |
+| `docs-guide/catalog/scripts-catalog.mdx` | Auto-generated | Current | YES |
+| `tasks/SCRIPT-GOVERNANCE/scripts-library.mdx` | Manual MDX (written during this task) | **Will drift** | No |
+
+Three files doing the same job. One is stale, one will drift, one is authoritative but hard to read.
+
+---
+
+### Problem 4: The canonical spec is not on the nav
+
+`script-framework.md` lives in `tasks/plan/active/SCRIPT-GOVERNANCE/`. Not on `docs.json` nav, not linked from `docs-guide/tooling/`, not linked from `docs-guide/policies/`. Not discoverable. A contributor only finds `structure.md` (partial, stale link from README).
+
+---
+
+### Problem 5: `tools/scripts/README.md` has stale links
+
+- Links to `structure.md` — should point to the spec MDX page (once created)
+- Links to `catalog.md` — stale snapshot; should point to `docs-guide/catalog/scripts-catalog.mdx`
+
+---
+
+### Problem 6: `docs-guide/component-registry.json` is missing — blocking test
+
+`generate-ui-templates.js` expects `docs-guide/component-registry.json`. It does not exist. Causes `docs-guide-sot.test.js` to crash:
+
+```
+Error: Missing component registry: docs-guide/component-registry.json
+```
+
+This is a component governance issue but blocks clean test suite completion. Must be resolved — regenerating it via `generate-component-registry.js` is the fix.
+
+---
+
+### Problem 7: 27 scripts have incorrect `@type` in JSDoc
+
+From `audit-report.md`: 27 scripts are mistyped. Key examples:
+- `docs-fact-registry.js` — typed `audit`, functions as `validator`
+- `docs-research-packet.js` — typed `audit`, functions as `dispatch`
+- `generate-seo.js` — typed `generator` (in remediators/), should be `remediator`
+
+These must be corrected before any JSON migration — otherwise the registry inherits the errors.
+
+---
+
+## 4. What Is Actually Needed Per Audience
+
+### Machine consumers (test runner, generators, CI workflows)
+Currently get: `script-classifications.json` (old schema) + JSDoc headers (new schema), reconciled via duck-typing.
+Need: One JSON in the new schema. JSDoc headers remain per-script authoritative record.
+
+### Developers writing or running scripts
+Currently get: 9 scattered `script-index.md` files, hard-to-read MDX catalog, very brief README.
+Need: One readable catalog on nav + README pointing to it correctly.
+
+### Agents and contributors following governance
+Currently get: `script-framework.md` hidden in tasks/, overlapping `structure.md`, stale README link.
+Need: Single spec page on the docs nav.
+
+---
+
+## 5. Proposed Architecture
+
+### 5.1 Single source of truth: `tools/config/script-registry.json`
+
+Replace `tasks/reports/script-classifications.json` with a new file at `tools/config/script-registry.json` using the new schema:
 
 ```json
 {
   "path": "tools/scripts/audits/governance/scripts/audit-script-categories.js",
-  "script": "audit-scripts",
+  "script": "audit-script-categories",
   "type": "audit",
   "concern": "governance",
   "niche": "scripts",
   "purpose": "qa:repo-health",
-  "description": "Script auditor — analyses all repo scripts...",
+  "description": "Analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports",
   "mode": "read-only",
   "pipeline": "manual",
   "scope": "tools/scripts, tasks/reports",
@@ -122,57 +234,144 @@ A single `tools/config/script-registry.json` should be the **one source of truth
 }
 ```
 
-This replaces `tasks/reports/script-classifications.json` (which has schema drift) and becomes the input for all generated outputs.
+**Why `tools/config/`**: Configuration that drives generators — not a report output. Config lives with config.
 
-### 3.2 What gets generated FROM the JSON
+**Migration**: The 273 entries can be migrated via a one-time script that reads each script's JSDoc header for `@type`, `@concern`, `@niche`, `@mode`, `@description` and writes the new JSON entry. The 27 incorrect `@type` values (Problem 7) must be fixed FIRST — otherwise the registry inherits those errors.
 
-| Output | Generator | Audience |
-|--------|-----------|----------|
-| `docs-guide/catalog/scripts-catalog.mdx` | `generate-docs-guide-components-index`-style generator | Docs contributors reading the docs guide nav |
-| `tools/script-index.md` | Existing group index generators | Developers running scripts |
-| `.githooks/script-index.md`, `tests/script-index.md`, `tasks/scripts/script-index.md` | Same | Scope-scoped quick refs |
-
-### 3.3 What stays human-authored (MDX in docs nav)
-
-One single MDX page in `docs-guide/tooling/scripts.mdx` (or `docs-guide/tooling/script-library.mdx`) that:
-- Is **not** auto-generated
-- Explains the taxonomy and how to use scripts
-- Embeds or links the generated catalog for the full list
-- References `script-framework.md` content (either inlined or linked)
-
-This replaces both `scripts-library.mdx` and the current inline narrative in `scripts-catalog.mdx`.
-
-### 3.4 Specification consolidation
-
-| Keep | Deprecate/Archive |
-|------|-------------------|
-| `script-framework.md` — rename to `SPEC.md`, move to `docs-guide/tooling/` as MDX | `structure.md` — fold unique content into `script-framework.md` |
-| One page in docs-guide nav for the spec | `catalog.md` in tasks/ — replace with link to generated catalog |
-
-### 3.5 `scripts-library.mdx` fate
-
-Merge useful narrative content into the single `docs-guide/tooling/scripts.mdx` page. Delete `scripts-library.mdx` (or archive). The auto-generated `scripts-catalog.mdx` handles the full listing.
+**Ongoing maintenance**: JSDoc headers remain the per-script authoritative record (they live with the code, version with the code). The JSON is derived from them — a migration script regenerates it from JSDoc whenever scripts are added or modified. This avoids dual-maintenance of two sources.
 
 ---
 
-## 4. What Needs to Happen (for Task 13 execution)
+### 5.2 Generated outputs from the JSON
 
-1. **Migrate `script-classifications.json` schema** — update all entries from `category` to `type/concern/niche`, rename file to `script-registry.json`, update `script-governance-config.js` path reference
-2. **Update `generate-scripts-catalog` generator** — read from new JSON schema, produce clean MDX output
-3. **Consolidate `structure.md` into `script-framework.md`** — one spec document
-4. **Move `script-framework.md` to `docs-guide/tooling/`** as proper MDX with frontmatter, on the nav
-5. **Delete or archive `catalog.md`** (tasks folder) — stale, replaced by generated catalog
-6. **Merge `scripts-library.mdx` narrative into `docs-guide/tooling/scripts.mdx`** and delete the library file
-7. **Add `docs-guide/tooling/scripts.mdx`** to `docs.json` nav
+```
+tools/config/script-registry.json
+    │
+    ├── docs-guide/catalog/scripts-catalog.mdx    (readable MDX, grouped by type → concern)
+    ├── .githooks/script-index.md                  (scoped quick-ref)
+    ├── tests/script-index.md                      (scoped quick-ref)
+    ├── tools/script-index.md                      (scoped quick-ref)
+    └── [6 other scope indexes]
+```
+
+The generated MDX catalog should be **readable, not a wall of tables**. Recommended format: sections by type, within each type grouped by concern, columns: script name, description, usage. Not all 11 JSDoc fields rendered inline.
 
 ---
 
-## 5. Decision Needed
+### 5.3 Human-authored MDX on the nav — two pages, distinct roles
 
-> Should `script-registry.json` live in `tools/config/` (runtime config, alongside `paths.js`) or in `tasks/reports/` (data artifact)?
->
-> Recommendation: `tools/config/script-registry.json` — it is config that drives generators, not a report output.
+**Page 1: Script governance spec**
+- Proposed path: `docs-guide/policies/script-governance.mdx`
+- Content: 3-tier taxonomy, JSDoc standard, @mode values, @pipeline notation, best practices, how to create a new script
+- Source material: `script-framework.md` promoted and reformatted as MDX with proper frontmatter
+- Does NOT contain the full script listing — links to the catalog page for that
+- Human-authored, stable, never generated
 
-> Should the generated catalog MDX embed the full table inline, or render from a JSON data source at build time?
->
-> Recommendation: Generate static MDX at commit time (current pattern) — Mintlify doesn't support dynamic data loading at build time without custom loaders.
+**Page 2: Generated catalog** (already exists)
+- Path: `docs-guide/catalog/scripts-catalog.mdx` (already on nav)
+- Content: Full listing of all scripts, auto-generated from `script-registry.json`
+- Improved readability — grouped, trimmed columns
+- Never hand-edited
+
+---
+
+### 5.4 The JSON → MDX aggregation pattern (applies to both scripts and components)
+
+The user asked: *should we have an overall config for the components in a json and then aggregate out?*
+
+**Yes. This is the correct pattern for both scripts and components:**
+
+```
+Source of truth (JSON in tools/config/)
+    └── Generator script
+            ├── Catalog MDX (auto-generated, on nav)
+            ├── Group indexes (auto-generated, developer quick-refs)
+            └── Any other derived outputs
+
+Human-authored MDX pages (on nav)
+    └── Explain governance / taxonomy / how-to
+    └── Link to catalog for full listing
+    └── NEVER auto-generated
+```
+
+**For components**, the same architecture applies:
+- `docs-guide/component-registry.json` — needs to be created (currently MISSING, blocking test)
+- Generated from: `generate-component-registry.js`
+- Drives: `docs-guide/catalog/components-catalog.mdx`
+- Human spec page: `docs-guide/frameworks/component-governance.mdx` already exists and is on nav — keep it
+
+**The user's point about "one place"**: docs-guide and internal nav pages that use human MDX should each live in **one place** and be included as MDX-in-MDX where other nav pages need them — not duplicated. The generated catalog is separate from the human spec page. If a policy page needs to reference the script spec, it links to it — it does not copy the content.
+
+---
+
+### 5.5 Consolidation decisions
+
+| Current file | Action | Reason |
+|-------------|--------|--------|
+| `tasks/plan/active/SCRIPT-GOVERNANCE/script-framework.md` | **Promote → `docs-guide/policies/script-governance.mdx`** | Canonical spec — must be on nav |
+| `tasks/plan/active/SCRIPT-GOVERNANCE/structure.md` | Diff → fold unique content into script-governance.mdx → **archive** | Superseded |
+| `tasks/plan/active/SCRIPT-GOVERNANCE/catalog.md` | **Archive** | Stale, replaced by generated catalog |
+| `tasks/plan/active/SCRIPT-GOVERNANCE/scripts-library.mdx` | Merge narrative into script-governance.mdx → **archive** | Manual, will drift |
+| `tasks/plan/active/SCRIPT-GOVERNANCE/audit-report.md` | **Keep** (historical record) | Not a live surface |
+| `tasks/plan/active/SCRIPT-GOVERNANCE/reclassification-plan.md` | **Keep** (historical record) | Not a live surface |
+| `tasks/reports/script-classifications.json` | **Migrate → `tools/config/script-registry.json`** new schema | Schema migration + relocation |
+| `tools/lib/script-governance-config.js` | **Update** `CLASSIFICATION_DATA_PATH` to new registry path | Path change only |
+| `tools/scripts/README.md` | **Fix links** → spec MDX page + generated catalog | Stale links |
+| `docs-guide/catalog/scripts-catalog.mdx` | **Keep, improve readability** | Already on nav, keep it |
+| 9× `script-index.md` group indexes | **Keep as-is** | Working, appropriate |
+| `docs-guide/component-registry.json` | **Create** (regenerate via `generate-component-registry.js`) | Missing, blocks test |
+
+---
+
+## 6. What Does NOT Need to Exist
+
+1. `catalog.md` — manual snapshot, superseded by generated catalog
+2. `structure.md` — superseded by script-framework.md; diff first, then archive
+3. `scripts-library.mdx` — manual MDX that will drift; narrative belongs in spec MDX page
+4. A second spec document overlapping script-framework.md
+5. `script-classifications.json` with old schema — replaced by `script-registry.json`
+
+---
+
+## 7. Pre-Execution Verification
+
+Before any Task 13 execution:
+
+1. **Fix 27 mistyped `@type` values** — listed in `audit-report.md`; must be done before JSON migration
+2. **Diff `structure.md` vs `script-framework.md`** — confirm nothing unique in structure.md before archiving
+3. **Confirm `scripts-library.mdx` is NOT on `docs.json` nav** (lives in tasks/, should be safe)
+4. **Confirm only `script-governance-config.js` reads `script-classifications.json`** — no other runtime consumers
+5. **Confirm `generate-component-registry.js` can regenerate `component-registry.json` cleanly**
+
+---
+
+## 8. Execution Plan (Task 13)
+
+**Prerequisite**: Fix 27 mistyped `@type` values (from audit-report.md).
+
+1. **T13.1** Regenerate `docs-guide/component-registry.json` via `generate-component-registry.js` (unblocks test)
+2. **T13.2** Write one-time migration script → `tools/config/script-registry.json` from JSDoc headers + `script-classifications.json` (new schema)
+3. **T13.3** Update `tools/lib/script-governance-config.js` — `CLASSIFICATION_DATA_PATH` → `tools/config/script-registry.json`
+4. **T13.4** Update catalog generator to read new schema, produce cleaner grouped MDX output
+5. **T13.5** Create `docs-guide/policies/script-governance.mdx` — promote `script-framework.md` with proper frontmatter; register in `docs.json`
+6. **T13.6** Diff `structure.md` → fold any unique content into script-governance.mdx → archive
+7. **T13.7** Archive `catalog.md` and `scripts-library.mdx`
+8. **T13.8** Fix stale links in `tools/scripts/README.md`
+9. **T13.9** Run full test suite — confirm clean pass on script-docs.test.js and docs-guide-sot.test.js
+10. **T13.10** Commit + update plan.md task status
+
+---
+
+## 9. Open Questions for Human Approval
+
+> **Q1**: Should the script spec land in `docs-guide/policies/` or `docs-guide/tooling/`?
+> `policies/` groups it with agent-governance-framework, root-allowlist-governance, audit-system-overview.
+> `tooling/` groups it with lpd-cli, dev-tools.
+> **Recommendation**: `docs-guide/policies/` — it is a governance rule, not a tool.
+
+> **Q2**: Should `docs-guide/component-registry.json` be regenerated as part of Task 13 (T13.1), or deferred to the component work track?
+> It is blocking `docs-guide-sot.test.js`. Fixing it here enables clean test runs.
+> **Recommendation**: Fix in T13.1.
+
+> **Q3**: Should JSDoc headers remain the per-script authoritative record (JSON derived from them), or should JSON be the authoritative record (JSDoc derived from it)?
+> **Recommendation**: JSDoc headers are authoritative — they live with the code and version with it. JSON is a derived index, regenerated on demand. Do not invert this.
