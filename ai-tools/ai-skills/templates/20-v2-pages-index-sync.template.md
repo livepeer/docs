@@ -1,6 +1,7 @@
 ---
 name: v2-pages-index-sync
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Generate, verify, and stage section/root index.mdx files for v2 pages. Use when tasks include v2 index.mdx out of date, sync top-level page indexes, remove nested index files.
 tier: 2

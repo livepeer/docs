@@ -1,6 +1,7 @@
 ---
 name: mdx-parent-child-scope-patterns
-version: "1.0"
+version: "1.1"
+category: authoring
 description: >-
   Implement MDX-in-MDX imports and variable scope patterns that align with Mintlify behavior constraints. Use when tasks include mdx child file cannot access variable, fix mdx-in-mdx import issues, duplicate import errors in snippets pages.
 tier: 1

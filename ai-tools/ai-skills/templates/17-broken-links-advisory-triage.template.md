@@ -1,6 +1,7 @@
 ---
 name: broken-links-advisory-triage
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Triage advisory broken-links workflow output and convert findings into actionable fix queues. Use when tasks include broken-links workflow reported issues, advisory link cleanup planning, mintlify broken-links triage.
 tier: 2

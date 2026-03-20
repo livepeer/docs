@@ -1,6 +1,7 @@
 ---
 name: component-layout-governance
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Validate page-type layout contracts, enforce allowed component patterns, and surface structural composition problems before inconsistent documentation pages reach readers or reviewers.
 invoke_when:

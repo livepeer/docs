@@ -1,6 +1,7 @@
 ---
 name: style-and-language-homogenizer-en-gb
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Enforce UK English usage and shared style conventions across English v2 docs so language drift is corrected before review and publication.
 invoke_when:

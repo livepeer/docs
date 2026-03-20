@@ -23,6 +23,7 @@ const TEMPLATE_ROOT = 'ai-tools/ai-skills/templates';
 const CONTRACT_PATH = 'ai-tools/ai-skills/skill-spec-contract.md';
 const NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
 const VERSION_RE = /^[0-9]+\.[0-9]+(?:\.[0-9]+)?$/;
+const VALID_CATEGORIES = ['audit', 'authoring', 'governance', 'review-pipeline', 'meta'];
 const REQUIRED_CONTRACT_SECTIONS = [
   { heading: '## Purpose', rule: 'Skill contract sections' },
   { heading: '## Layer Map', rule: 'Skill contract sections' },
@@ -167,7 +168,7 @@ function normalizeInvokeWhen(values) {
 function validateFrontmatter(repoPath, frontmatter, options = {}) {
   const errors = [];
   const warnings = [];
-  const requiredKeys = ['name', 'version', 'description', 'invoke_when'];
+  const requiredKeys = ['name', 'version', 'description', 'invoke_when', 'category'];
   const isTemplate = Boolean(options.isTemplate);
 
   requiredKeys.forEach((key) => {
@@ -233,6 +234,18 @@ function validateFrontmatter(repoPath, frontmatter, options = {}) {
     });
   }
 
+  if ('category' in frontmatter) {
+    const category = String(frontmatter.category || '').trim();
+    if (!VALID_CATEGORIES.includes(category)) {
+      errors.push({
+        file: repoPath,
+        rule: 'Skill category',
+        message: `Invalid category "${category}". Must be one of: ${VALID_CATEGORIES.join(', ')}.`,
+        line: 1
+      });
+    }
+  }
+
   if (isTemplate) {
     ['tier', 'primary_paths', 'primary_commands'].forEach((key) => {
       if (!(key in frontmatter)) {
@@ -240,6 +253,17 @@ function validateFrontmatter(repoPath, frontmatter, options = {}) {
           file: repoPath,
           rule: 'Template operational metadata',
           message: `Template is missing required operational field "${key}".`,
+          line: 1
+        });
+      }
+    });
+  } else {
+    ['primary_paths', 'primary_commands'].forEach((key) => {
+      if (key in frontmatter) {
+        errors.push({
+          file: repoPath,
+          rule: 'Template-only field on local skill',
+          message: `Local skill has template-only field "${key}". Move it to the canonical template instead.`,
           line: 1
         });
       }
@@ -609,6 +633,69 @@ function runInternalUnitChecks() {
   return errors;
 }
 
+function validateFolderStructure() {
+  const errors = [];
+  const ALLOWED_ROOT_FILES = ['content-map.md', 'inventory.json', 'skill-spec-contract.md'];
+  const AGENT_PACKS_SKILLS = 'ai-tools/agent-packs/skills';
+
+  // Check A — root loose-file guard
+  const skillsRootAbs = path.join(REPO_ROOT, SKILLS_ROOT);
+  if (fs.existsSync(skillsRootAbs)) {
+    fs.readdirSync(skillsRootAbs).forEach((name) => {
+      if (!name.endsWith('.md') && !name.endsWith('.json')) return;
+      if (ALLOWED_ROOT_FILES.includes(name)) return;
+      errors.push({
+        file: toPosix(path.join(SKILLS_ROOT, name)),
+        rule: 'Skill folder structure',
+        message: `Stray file at ai-tools/ai-skills/ root: "${name}". Only ${ALLOWED_ROOT_FILES.join(', ')} are allowed.`,
+        line: 1
+      });
+    });
+  }
+
+  // Check B — template prefix uniqueness
+  const templateRootAbs = path.join(REPO_ROOT, TEMPLATE_ROOT);
+  if (fs.existsSync(templateRootAbs)) {
+    const prefixes = fs.readdirSync(templateRootAbs)
+      .filter((name) => name.endsWith('.template.md'))
+      .map((name) => (name.match(/^(\d+)-/) || [])[1])
+      .filter(Boolean);
+    const seen = new Set();
+    const dupes = new Set();
+    prefixes.forEach((p) => {
+      if (seen.has(p)) dupes.add(p);
+      seen.add(p);
+    });
+    dupes.forEach((p) => {
+      errors.push({
+        file: TEMPLATE_ROOT,
+        rule: 'Template prefix uniqueness',
+        message: `Duplicate template prefix "${p}". Each template must have a unique numeric prefix.`,
+        line: 1
+      });
+    });
+  }
+
+  // Check C — template / agent-pack parity
+  const packSkillsAbs = path.join(REPO_ROOT, AGENT_PACKS_SKILLS);
+  if (fs.existsSync(templateRootAbs) && fs.existsSync(packSkillsAbs)) {
+    const templateCount = fs.readdirSync(templateRootAbs)
+      .filter((name) => name.endsWith('.template.md')).length;
+    const packCount = fs.readdirSync(packSkillsAbs, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory()).length;
+    if (templateCount !== packCount) {
+      errors.push({
+        file: AGENT_PACKS_SKILLS,
+        rule: 'Template/agent-pack parity',
+        message: `${templateCount} templates but ${packCount} agent-pack skill exports. Run the cross-agent-packager to sync.`,
+        line: 1
+      });
+    }
+  }
+
+  return errors;
+}
+
 function runTests(options = {}) {
   const stagedOnly = Boolean(options.stagedOnly);
   const explicitFiles = Array.isArray(options.files)
@@ -622,7 +709,7 @@ function runTests(options = {}) {
   const targetedArtifacts = new Set(targetInputs.filter(isGovernedArtifactPath));
   const fullMode = explicitFiles.length === 0 && !stagedOnly;
   const shouldValidateContract = fullMode || targetInputs.includes(CONTRACT_PATH) || targetedArtifacts.size > 0;
-  const errors = [...runInternalUnitChecks(), ...(shouldValidateContract ? validateContractDocument() : [])];
+  const errors = [...runInternalUnitChecks(), ...(shouldValidateContract ? validateContractDocument() : []), ...(fullMode ? validateFolderStructure() : [])];
   const warnings = [];
   const allArtifacts = collectAllGovernedArtifacts();
   const allSkillMarkdown = collectAllSkillMarkdown();

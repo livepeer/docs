@@ -1,6 +1,7 @@
 ---
 name: github-actions-data-pipeline-maintenance
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Maintain forum/ghost/youtube data update workflows and associated fetch scripts. Use when tasks include forum or blog data workflow failing, youtube automation not updating snippets data, maintain github actions data fetch scripts.
 tier: 3

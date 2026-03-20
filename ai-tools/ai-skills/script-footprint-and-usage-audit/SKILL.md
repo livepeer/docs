@@ -1,6 +1,7 @@
 ---
 name: script-footprint-and-usage-audit
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Audit script sprawl, duplicate automation, placeholder fixtures, and run-context drift so maintainers can reduce repository complexity without losing governance coverage.
 invoke_when:

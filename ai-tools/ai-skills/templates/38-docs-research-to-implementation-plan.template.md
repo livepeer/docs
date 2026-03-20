@@ -1,6 +1,7 @@
 ---
 name: docs-research-to-implementation-plan
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: >-
   Turn docs research outputs into a decision-complete implementation plan so
   factual findings become ordered repo work without re-deciding scope, risks,

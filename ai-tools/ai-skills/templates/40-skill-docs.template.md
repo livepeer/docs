@@ -1,6 +1,7 @@
 ---
 name: skill-docs
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Govern governed skill documentation structure, central contract alignment, and validator readiness so new or edited skills pass enforcement on the first commit.
 tier: 2

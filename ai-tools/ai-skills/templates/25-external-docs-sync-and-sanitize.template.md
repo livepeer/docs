@@ -1,6 +1,7 @@
 ---
 name: external-docs-sync-and-sanitize
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Fetch external markdown docs and sanitize them for MDX-safe inclusion in this repository. Use when tasks include refresh external docs content, import upstream markdown into snippets/external, sanitize html-heavy markdown for mdx.
 tier: 3

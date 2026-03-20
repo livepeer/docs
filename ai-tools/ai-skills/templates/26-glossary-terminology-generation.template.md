@@ -1,6 +1,7 @@
 ---
 name: glossary-terminology-generation
-version: "1.0"
+version: "1.1"
+category: authoring
 description: >-
   Generate discovered terminology and glossary datasets from repository content signals. Use when tasks include update glossary terms, discover missing terminology in docs, regenerate terminology data files.
 tier: 3

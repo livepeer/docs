@@ -1,6 +1,7 @@
 ---
 name: lpd-bootstrap-and-doctor
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Bootstrap local docs environment and verify readiness using lpd setup and doctor workflows. Use when tasks include set up this repo locally, run doctor for docs environment, bootstrap lpd tooling.
 tier: 1

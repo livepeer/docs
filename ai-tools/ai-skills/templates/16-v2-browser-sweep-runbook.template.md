@@ -1,6 +1,7 @@
 ---
 name: v2-browser-sweep-runbook
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Execute full v2 browser sweep against docs.json routes and analyze console/render failures. Use when tasks include run full browser sweep for v2 pages, console errors across docs pages, validate all docs.json routes render.
 tier: 1
@@ -9,12 +10,12 @@ invoke_when:
   - "console errors across docs pages"
   - "validate all docs.json routes render"
 primary_paths:
-  - "tools/scripts/test-v2-pages.js"
+  - "tools/scripts/validators/content/structure/test-v2-pages.js"
   - ".github/workflows/test-v2-pages.yml"
   - "tools/v2-page-test-report.json"
   - "docs.json"
 primary_commands:
-  - "node tools/scripts/test-v2-pages.js"
+  - "node tools/scripts/validators/content/structure/test-v2-pages.js"
   - "npm --prefix tools run test:v2-pages"
 ---
 
@@ -36,7 +37,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/test-v2-pages.js
+node tools/scripts/validators/content/structure/test-v2-pages.js
 npm --prefix tools run test:v2-pages
 ```
 

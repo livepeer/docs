@@ -1,6 +1,7 @@
 ---
 name: docs-review-fix-execution
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: >-
   Execute approved docs review packet fixes section by section so copy and
   style tasks close in tracker order, validations rerun, and completion state

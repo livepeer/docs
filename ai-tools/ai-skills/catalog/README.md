@@ -6,4 +6,4 @@ This catalog is the single source of truth for the docs infrastructure audit pip
 - `skill-catalog.json`: concrete skill metadata and command mappings.
 - `execution-manifest.json`: ordered pipeline execution plan used by the orchestrator.
 
-Use `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full` to run the pipeline.
+Use `node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full` to run the pipeline.
