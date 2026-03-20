@@ -85,9 +85,10 @@ See [framework.md](framework.md) for full per-audience persona lists
 
 | Step | Task | File |
 |---|---|---|
-| 5b | Information category (format/layout — structured, prose, code, visual, data) | TBD |
-| 6 | Domain + niche (field taxonomy — governs terminology and voice register) | TBD |
+| 5b | Information category (format/layout) | Deferred to Phase 2 |
+| 6 | Domain + niche (field taxonomy — terminology + voice register) | TBD |
 | 7 | Complexity + lifecycleStage | TBD |
+| 8a | IA per tab — section structure, audience journey, page groups | TBD |
 | 8 | Generation contract (how all fields combine) | TBD |
 | 9 | Voice rules per audience | TBD |
 | 10 | Section naming rules | TBD |

@@ -16,15 +16,16 @@ This document records the structural decisions made during Phase 1 (Define the F
 ## Frontmatter Schema (agreed)
 
 ```yaml
-pageType:        # container — 7 primary types
-pageVariant:     # slice — optional refinement within the type
-audience:        # category — broad reader class
-persona:         # slice — narrow situational variant within audience (optional)
-purpose:         # job — reader outcome (15 intent-based values)
-domain:          # field — broad industry/knowledge field
-niche:           # context — specific subject area within domain
-complexity:      # depth — beginner | intermediate | advanced
-lifecycleStage:  # timing — where reader is in their journey
+pageType:          # container — 7 primary types
+pageVariant:       # slice — optional refinement within the type
+audience:          # category — broad reader class
+persona:           # slice — narrow situational variant within audience (optional)
+purpose:           # job — reader outcome (15 intent-based values)
+domain:            # field — broad industry/knowledge field
+niche:             # context — specific subject area within domain
+complexity:        # depth — beginner | intermediate | advanced
+lifecycleStage:    # timing — where reader is in their journey
+veracityStatus:    # quality — verified | unverified | stale (see veracity.md)
 ```
 
 ---
