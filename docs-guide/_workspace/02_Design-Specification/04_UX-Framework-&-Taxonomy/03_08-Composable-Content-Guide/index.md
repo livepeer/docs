@@ -103,9 +103,9 @@ When a page imports child MDX content (views, groups), the Mintlify scope inheri
 
 | **Pattern** | **Works?** | **Notes** |
 | --- | --- | --- |
-| Parent imports data, child uses as props | ✅ | <CodeBlock {...PARENT_DATA} /> |
-| Parent imports component, child uses directly | ✅ | <GatewayWarning /> without child import |
-| Parent imports variable, child interpolates {var} | ⚠️ Unreliable | Child should re-import for interpolation |
+| Parent imports data, child uses as props | ✅ | `<CodeBlock {...PARENT_DATA} />` |
+| Parent imports component, child uses directly | ✅ | `<GatewayWarning />` without child import |
+| Parent imports variable, child interpolates `{var}` | ⚠️ Unreliable | Child should re-import for interpolation |
 | Child imports something parent doesn't have | ✅ | Child-specific dependencies |
 | Child re-imports same binding parent already has | ❌ Error | Don't duplicate |
 
@@ -186,6 +186,6 @@ No component imports another component. The hierarchy is flat by necessity — M
 
 | **Mechanism** | **Count** | **For** |
 | --- | --- | --- |
-| Inline style={{}} | 32 files | Simple layout |
-| <style> tag | 7 files | Pseudo-classes, animations, media queries |
+| Inline `style={{}}` | 32 files | Simple layout |
+| `<style>` tag | 7 files | Pseudo-classes, animations, media queries |
 | CSS variables | All | Theme-aware values via var(--name) |

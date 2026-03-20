@@ -23,7 +23,7 @@ Purpose Steps:
 - Output: (Decision, Finding, Determination)
 
 Desired Page / Business Outcome): Decision) <- What the page wants the user to do (business need / goal)
-Desired Page Outcome: Give the <audience> the contextual information, practical knowledge, and core understandings (incl. data, facts, definitions, terminology, skills..?) they need to reach the desired <purpose> outcome.
+Desired Page Outcome: Give the `<audience>` the contextual information, practical knowledge, and core understandings (incl. data, facts, definitions, terminology, skills..?) they need to reach the desired `<purpose>` outcome.
 
 ---
 
