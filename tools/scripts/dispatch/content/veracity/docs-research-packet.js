@@ -8,7 +8,7 @@
  * @description Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.
  * @mode        read-only
  * @pipeline    manual — packet generator for research review tranches
- * @scope       tools/scripts, tasks/reports, tools/config/scoped-navigation, tasks/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
+ * @scope       tools/scripts, workspace/reports, tools/config/scoped-navigation, workspace/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
  * @usage       node tools/scripts/dispatch/content/veracity/docs-research-packet.js [flags]
  * @policy      R-R27, R-R30
  */
@@ -20,8 +20,8 @@ const { spawnSync } = require('child_process');
 const DEFAULT_NAV = 'tools/config/scoped-navigation/docs-gate-work.json';
 const DEFAULT_VERSION = 'v2';
 const DEFAULT_LANGUAGE = 'en';
-const DEFAULT_REGISTRY = 'tasks/research/claims';
-const DEFAULT_LEDGER = 'tasks/research/adjudication/page-content-research-outcomes.json';
+const DEFAULT_REGISTRY = 'workspace/research/claims';
+const DEFAULT_LEDGER = 'workspace/research/adjudication/page-content-research-outcomes.json';
 const DEFAULT_EXCLUDE_PATTERNS = ['dep-*.mdx', '**/x-deprecated/**', '**/.DS_Store'];
 const DEFAULT_EXCLUDED_BASENAMES = new Set([
   'review.md',

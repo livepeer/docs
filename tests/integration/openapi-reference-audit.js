@@ -28,8 +28,8 @@ const FINDING_TYPES = {
 
 const HTTP_METHODS = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE']);
 
-const DEFAULT_REPORT = 'tasks/reports/openapi-reference/openapi-reference-audit.md';
-const DEFAULT_REPORT_JSON = 'tasks/reports/openapi-reference/openapi-reference-audit.json';
+const DEFAULT_REPORT = 'workspace/reports/openapi-reference/openapi-reference-audit.md';
+const DEFAULT_REPORT_JSON = 'workspace/reports/openapi-reference/openapi-reference-audit.json';
 
 const SPEC_BY_KEY = {
   studio: 'api/studio.yaml',

@@ -3,7 +3,7 @@
  * @script            docs-page-research.test
  * @category          validator
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/docs-page-research.js, tools/scripts/docs-fact-registry.js, tasks/research/claims
+ * @scope             tests/unit, tools/scripts/docs-page-research.js, tools/scripts/docs-fact-registry.js, workspace/research/claims
  * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests docs-page-research.js — validates claim extraction, contradiction detection, and evidence-source adapters for the experimental research runner.
@@ -664,7 +664,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
   await runCase('Research runner reports contradictions on real value drift', async () => {
     const root = mkTmpDir('docs-page-research-runner-');
     const repoDir = path.join(root, 'repo');
-    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const registryDir = path.join(repoDir, 'workspace/research/claims');
     const guideA = 'v2/orchestrators/a.mdx';
     const guideB = 'v2/orchestrators/b.mdx';
     writeFile(path.join(repoDir, guideA), 'Batch AI inference needs 16 GB for basic workloads.');
@@ -713,7 +713,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
     try {
       const reportPath = path.join(root, 'report.json');
       await research.run({
-        registry: 'tasks/research/claims',
+        registry: 'workspace/research/claims',
         page: guideA,
         files: [],
         reportMd: '',
@@ -737,7 +737,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
   await runCase('Markdown report escapes raw braces in extracted claims', async () => {
     const root = mkTmpDir('docs-page-research-markdown-');
     const repoDir = path.join(root, 'repo');
-    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const registryDir = path.join(repoDir, 'workspace/research/claims');
     const guideA = 'v2/gateways/a.mdx';
     writeFile(path.join(repoDir, guideA), '{/* TODO: test */}\nThe public clearinghouse is not at general availability yet.');
     writeFile(
@@ -784,7 +784,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
     try {
       const reportPath = path.join(root, 'report.md');
       await research.run({
-        registry: 'tasks/research/claims',
+        registry: 'workspace/research/claims',
         page: guideA,
         files: [],
         reportMd: reportPath,
@@ -802,7 +802,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
   await runCase('Runner falls back to inferred target pages when canonical owner is missing', async () => {
     const root = mkTmpDir('docs-page-research-fallback-');
     const repoDir = path.join(root, 'repo');
-    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const registryDir = path.join(repoDir, 'workspace/research/claims');
     const livePage = 'v2/gateways/guides/payments-and-pricing/remote-signers.mdx';
     writeFile(
       path.join(repoDir, livePage),
@@ -856,7 +856,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
     try {
       const reportPath = path.join(root, 'report.json');
       await research.run({
-        registry: 'tasks/research/claims',
+        registry: 'workspace/research/claims',
         page: livePage,
         files: [],
         reportMd: '',
@@ -878,7 +878,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
   await runCase('Runner annotates primary evidence and weaker-source reasons', async () => {
     const root = mkTmpDir('docs-page-research-primary-');
     const repoDir = path.join(root, 'repo');
-    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const registryDir = path.join(repoDir, 'workspace/research/claims');
     const guideA = 'v2/gateways/a.mdx';
     writeFile(path.join(repoDir, guideA), 'The support programme is currently active.');
     writeFile(
@@ -948,7 +948,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
       try {
         const reportPath = path.join(root, 'report.json');
         await research.run({
-          registry: 'tasks/research/claims',
+          registry: 'workspace/research/claims',
           page: guideA,
           files: [],
           reportMd: '',
@@ -1200,7 +1200,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
   await runCase('Runner records discovered source metadata in report outputs', async () => {
     const root = mkTmpDir('docs-page-research-discovered-report-');
     const repoDir = path.join(root, 'repo');
-    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const registryDir = path.join(repoDir, 'workspace/research/claims');
     const guideA = 'v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx';
     writeFile(
       path.join(repoDir, guideA),
@@ -1315,7 +1315,7 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
       try {
         const reportPath = path.join(root, 'report.json');
         await research.run({
-          registry: 'tasks/research/claims',
+          registry: 'workspace/research/claims',
           page: guideA,
           files: [],
           reportMd: '',

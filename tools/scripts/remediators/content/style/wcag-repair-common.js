@@ -8,7 +8,7 @@
  * @description WCAG repair shared logic — common repair functions used by WCAG audit fix mode
  * @mode        edit
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tests/integration, tasks/reports, v2
+ * @scope       tools/scripts, tests/integration, workspace/reports, v2
  * @usage       node tools/scripts/remediators/content/style/wcag-repair-common.js [flags]
  * @policy      E-R1, R-R11
  */

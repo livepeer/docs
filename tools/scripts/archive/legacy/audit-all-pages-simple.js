@@ -3,7 +3,7 @@
  * @script            audit-all-pages-simple
  * @category          validator
  * @purpose           qa:content-quality
- * @scope             tasks/scripts
+ * @scope             workspace/scripts
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Lightweight page auditor — quick pass over all pages checking basic frontmatter and structure

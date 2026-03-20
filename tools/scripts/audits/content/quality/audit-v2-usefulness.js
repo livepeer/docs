@@ -8,7 +8,7 @@
  * @description Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts, v2, tasks/reports, tools/config
+ * @scope       tools/scripts, v2, workspace/reports, tools/config
  * @usage       node tools/scripts/audits/content/quality/audit-v2-usefulness.js [flags]
  * @policy      E-R1, R-R11
  */

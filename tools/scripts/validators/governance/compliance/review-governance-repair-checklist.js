@@ -19,7 +19,7 @@ const { buildRepairPlan, runAudit } = require('../pr/audit-script-inventory.js')
 const { parseDeclaredPipelines } = require('../../../../lib/script-governance-config');
 
 const REPO_ROOT = process.cwd();
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 const DEFAULT_JSON_PATH = 'REPAIR_REVIEW_CHECKLIST_LATEST.json';
 const DEFAULT_MD_PATH = 'REPAIR_REVIEW_CHECKLIST_LATEST.md';
 const JUDGEMENT_FIELDS = ['category', 'purpose', 'needs', 'purpose_statement'];

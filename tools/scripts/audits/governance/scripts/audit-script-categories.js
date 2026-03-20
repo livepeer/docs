@@ -8,7 +8,7 @@
  * @description Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
+ * @scope       tools/scripts, workspace/README.md, workspace/reports, tests/unit/script-docs.test.js, tests/README.md
  * @usage       node tools/scripts/audits/governance/scripts/audit-script-categories.js [flags]
  * @policy      E-C1, R-R14
  */
@@ -34,7 +34,7 @@ try {
 
 const REPO_ROOT = process.cwd()
 const DEFAULT_FORMAT = 'both'
-const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops'
+const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops'
 const REPORTS_INDEX_PATH = path.join('tasks', 'reports', 'INDEX.md')
 
 const RULES_SOURCE = ['tests/unit/script-docs.test.js', 'tests/README.md']
@@ -1182,7 +1182,7 @@ function chooseCanonicalScript(paths) {
     let value = 0
     if (repoPath.includes('.bak')) value += 100
     if (repoPath.includes('/test/')) value += 40
-    if (repoPath.startsWith('tasks/scripts/')) value += 25
+    if (repoPath.startsWith('workspace/scripts/')) value += 25
     if (repoPath.startsWith('tests/')) value += 20
     if (repoPath.startsWith('.github/scripts/')) value += 10
     if (repoPath.startsWith('tools/scripts/')) value -= 10
@@ -1581,7 +1581,7 @@ function parseApprovedGeneratorRows() {
 function buildReportsIndex() {
   const rows = parseApprovedGeneratorRows()
   const lines = [
-    '# tasks/reports Index',
+    '# workspace/reports Index',
     '',
     `Generated: ${new Date().toISOString()}`,
     'Generator: `tools/scripts/audit-scripts.js`',
@@ -1592,7 +1592,7 @@ function buildReportsIndex() {
   ]
 
   if (rows.length === 0) {
-    lines.push('| _No approved generators found_ | _Check `tasks/README.md`_ |')
+    lines.push('| _No approved generators found_ | _Check `workspace/README.md`_ |')
   } else {
     for (const row of rows) {
       lines.push(`| ${row.generator} | ${row.outputs} |`)

@@ -3,7 +3,7 @@
  * @script            docs-fact-registry.test
  * @category          validator
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/docs-fact-registry.js, tasks/research/claims
+ * @scope             tests/unit, tools/scripts/docs-fact-registry.js, workspace/research/claims
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests docs-fact-registry.js — validates claim-family registry schema checks and normalized loading by domain.

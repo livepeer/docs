@@ -53,7 +53,7 @@ async function runTests() {
   cases.push(async () => {
     const manifest = {
       name: 'Synthetic packet',
-      outputRoot: 'tasks/reports/synthetic-review/research',
+      outputRoot: 'workspace/reports/synthetic-review/research',
       excludePatterns: ['**/review.md'],
       tranches: [
         {
@@ -140,17 +140,17 @@ async function runTests() {
           },
           prReport: { summary: {} },
           artifacts: {
-            summaryMd: 'tasks/reports/synthetic/01-synthetic/03-research.md',
-            summaryJson: 'tasks/reports/synthetic/01-synthetic/research-summary.json'
+            summaryMd: 'workspace/reports/synthetic/01-synthetic/03-research.md',
+            summaryJson: 'workspace/reports/synthetic/01-synthetic/research-summary.json'
           }
         }
       ],
       {
         title: 'Synthetic Packet',
         mode: 'manifest',
-        outputRoot: 'tasks/reports/synthetic',
+        outputRoot: 'workspace/reports/synthetic',
         navSource: '',
-        manifestPath: 'tasks/reports/synthetic-manifest.json',
+        manifestPath: 'workspace/reports/synthetic-manifest.json',
         scopeStatement: 'manifest-defined route groups',
         explicitFiles: [],
         explicitFolders: []
@@ -160,7 +160,7 @@ async function runTests() {
     assert.strictEqual(summary.totals.verified_claims, 1);
     assert.strictEqual(summary.totals.conflicted_claims, 2);
     assert.strictEqual(summary.tranches[0].counts.evidence_sources, 4);
-    assert.strictEqual(summary.tranches[0].artifacts.summaryMd, 'tasks/reports/synthetic/01-synthetic/03-research.md');
+    assert.strictEqual(summary.tranches[0].artifacts.summaryMd, 'workspace/reports/synthetic/01-synthetic/03-research.md');
   });
 
   for (let index = 0; index < cases.length; index += 1) {

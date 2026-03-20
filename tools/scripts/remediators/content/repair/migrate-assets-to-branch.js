@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest tasks/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
+ * @usage       node tools/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
  * @policy      R-R14
  */
 
@@ -26,7 +26,7 @@ const DEFAULT_MANIFEST_PATH = auditMediaAssets.DEFAULT_MANIFEST_PATH;
 const DEFAULT_ASSETS_BRANCH = 'docs-v2-assets';
 const DEFAULT_ASSETS_BRANCH_REF = `origin/${DEFAULT_ASSETS_BRANCH}`;
 const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/livepeer/docs/${DEFAULT_ASSETS_BRANCH}`;
-const LOG_DIR = 'tasks/reports/media-audit';
+const LOG_DIR = 'workspace/reports/media-audit';
 
 function printHelp() {
   console.log(

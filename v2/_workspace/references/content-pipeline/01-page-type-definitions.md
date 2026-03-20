@@ -68,6 +68,8 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 
 **Distinction from instruction**: Tutorial teaches (reader learns); instruction accomplishes (reader completes a task). Tutorial can take longer and explain more.
 
+**Placement rule**: Tab-specific tutorials (purpose-built for this tab's audience) → `/guides` section. Community or externally-sourced tutorials worth surfacing → `/resources` section.
+
 ---
 
 ### 4. `guide`
@@ -185,4 +187,4 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 
 1. **Instruction variants**: Currently `quickstart`, `setup`, and (none). Are more needed based on the audit? Candidates: `migration`, `configuration`, `deployment`.
 2. **Guide variants**: Currently only `overview`. Should `decision` be a variant for pages like setup-options.mdx and payment-guide.mdx? Or does `purpose: choose` handle it?
-3. **Resource variants**: Currently only `overview`. Should there be sub-types like `library`, `directory`, `showcase`, `aggregation`?
+3. **Resource variant name**: One sub-type needed for curated external/public content (tools, directories, showcases, community channels, ecosystem link collections). `library` rejected. Candidates: `catalog` (preferred), `directory`, `collection`, `registry`, `index`. Decision pending.

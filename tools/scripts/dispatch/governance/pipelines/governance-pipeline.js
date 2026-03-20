@@ -23,11 +23,11 @@ const {
 const REPO_ROOT = process.cwd();
 const AUDIT_SCRIPT_PATH = 'tools/scripts/validators/governance/audit-script-inventory.js';
 const SCRIPT_DOCS_TEST_PATH = 'tests/unit/script-docs.test.js';
-const INVENTORY_JSON_PATH = 'tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
-const INVENTORY_MD_PATH = 'tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md';
-const REPAIR_REPORT_JSON_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json';
-const REPAIR_REPORT_MD_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md';
-const PYTHON_VALIDATE_COMMAND = ['-c', "import json; json.load(open('tasks/reports/script-classifications.json'))"];
+const INVENTORY_JSON_PATH = 'workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
+const INVENTORY_MD_PATH = 'workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md';
+const REPAIR_REPORT_JSON_PATH = 'workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json';
+const REPAIR_REPORT_MD_PATH = 'workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md';
+const PYTHON_VALIDATE_COMMAND = ['-c', "import json; json.load(open('workspace/reports/script-classifications.json'))"];
 const FIX_SCOPE_REQUIRED_MESSAGE =
   'Script-governance fix mode requires explicit scope during the @owner -> @domain migration. Use --staged or --files.';
 const FULL_REPAIR_DISABLED_MESSAGE =

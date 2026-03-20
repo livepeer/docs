@@ -62,7 +62,7 @@ module.exports = {
       description:
         'Generated docs.json route validation report from tests/unit/docs-navigation.test.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/navigation-links/navigation-report.md',
+      sourcePath: 'workspace/reports/navigation-links/navigation-report.md',
       targetSlug: 'docs-navigation',
     },
     {
@@ -76,7 +76,7 @@ module.exports = {
       description:
         'Generated V2 MDX link audit report from tests/integration/v2-link-audit.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/navigation-links/LINK_TEST_REPORT.md',
+      sourcePath: 'workspace/reports/navigation-links/LINK_TEST_REPORT.md',
       targetSlug: 'v2-link-audit',
     },
     {
@@ -90,7 +90,7 @@ module.exports = {
       description:
         'Generated WCAG audit report from tests/integration/v2-wcag-audit.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/quality-accessibility/v2-wcag-audit-report.md',
+      sourcePath: 'workspace/reports/quality-accessibility/v2-wcag-audit-report.md',
       targetSlug: 'v2-wcag-audit',
     },
     {
@@ -103,7 +103,7 @@ module.exports = {
       description:
         'Generated WCAG repair report from tools/scripts/wcag-repair-common.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/quality-accessibility/v2-wcag-repair-common-report.md',
+      sourcePath: 'workspace/reports/quality-accessibility/v2-wcag-repair-common-report.md',
       targetSlug: 'wcag-repair-common',
     },
     {
@@ -116,9 +116,9 @@ module.exports = {
       description:
         'Generated usefulness audit summary from tools/scripts/audit-v2-usefulness.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/quality-accessibility/docs-usefulness/latest/summary.md',
+      sourcePath: 'workspace/reports/quality-accessibility/docs-usefulness/latest/summary.md',
       sourceFallbackGlobs: [
-        'tasks/reports/quality-accessibility/docs-usefulness/*/summary.md',
+        'workspace/reports/quality-accessibility/docs-usefulness/*/summary.md',
       ],
       targetSlug: 'audit-v2-usefulness',
     },
@@ -132,7 +132,7 @@ module.exports = {
       description:
         'Generated browser report from tools/scripts/archive/legacy/test-all-pages-comprehensive.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/page-audits/browser-test-report.md',
+      sourcePath: 'workspace/reports/page-audits/browser-test-report.md',
       targetSlug: 'test-all-pages-comprehensive',
     },
     {
@@ -145,7 +145,7 @@ module.exports = {
       description:
         'Generated audit report from tools/scripts/archive/legacy/audit-all-pages.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/page-audits/page-audit-latest.md',
+      sourcePath: 'workspace/reports/page-audits/page-audit-latest.md',
       targetSlug: 'audit-all-pages',
     },
     {
@@ -158,20 +158,20 @@ module.exports = {
       description:
         'Generated file-check audit report from tools/scripts/archive/legacy/audit-all-pages-simple.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/page-audits/page-audit-simple-latest.md',
+      sourcePath: 'workspace/reports/page-audits/page-audit-simple-latest.md',
       targetSlug: 'audit-all-pages-simple',
     },
     {
       publish: true,
       categorySlug: 'page-audits',
       scriptId: 'audit-python',
-      scriptPath: 'tasks/scripts/audit-python.py',
+      scriptPath: 'workspace/scripts/audit-python.py',
       title: 'All Pages Audit (Python)',
       sidebarTitle: 'Audit Python',
       description:
-        'Generated Python audit report from tasks/scripts/audit-python.py.',
+        'Generated Python audit report from workspace/scripts/audit-python.py.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/page-audits/page-audit-python-latest.md',
+      sourcePath: 'workspace/reports/page-audits/page-audit-python-latest.md',
       targetSlug: 'audit-python',
     },
     {
@@ -198,7 +198,7 @@ module.exports = {
       description:
         'Generated script inventory audit report from tools/scripts/audit-scripts.js.',
       sourceType: 'file',
-      sourcePath: 'tasks/reports/repo-ops/SCRIPT_AUDIT.md',
+      sourcePath: 'workspace/reports/repo-ops/SCRIPT_AUDIT.md',
       targetSlug: 'audit-scripts',
     },
     {
@@ -211,7 +211,7 @@ module.exports = {
       description:
         'Generated tasks folder audit reports from tools/scripts/audit-tasks-folders.js.',
       sourceType: 'glob',
-      sourceGlob: 'tasks/reports/repo-ops/*_audit.md',
+      sourceGlob: 'workspace/reports/repo-ops/*_audit.md',
       sourceBasenameAllowList: [
         'errors_audit.md',
         'reports_navigation-links_audit.md',
@@ -234,7 +234,7 @@ module.exports = {
         'Generated recommendation conflicts report from tools/scripts/audit-tasks-folders.js.',
       optionalWhenMissing: true,
       sourceType: 'file',
-      sourcePath: 'tasks/reports/repo-ops/recommendation-conflicts.md',
+      sourcePath: 'workspace/reports/repo-ops/recommendation-conflicts.md',
       targetSlug: 'recommendation-conflicts',
       legacyTargetSlugs: ['audit-tasks-folders--recommendation-conflicts'],
     },

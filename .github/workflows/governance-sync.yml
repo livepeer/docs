@@ -16,9 +16,9 @@ on:
       - '.githooks/**'
       - '.github/scripts/**'
       - '.github/workflows/**'
-      - 'tasks/scripts/**'
+      - 'workspace/scripts/**'
       - 'snippets/automations/**'
-      - 'tasks/reports/script-classifications.json'
+      - 'workspace/reports/script-classifications.json'
 
 permissions:
   contents: write
@@ -46,7 +46,7 @@ jobs:
           node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js 2>&1 | tee /tmp/repair.log
           FIXES=$(python3 -c "
           import json
-          d = json.load(open('tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json'))
+          d = json.load(open('workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json'))
           print(d.get('repairs_applied', {}).get('total_fixes', 0))
           " 2>/dev/null || echo "0")
           echo "fixes=$FIXES" >> $GITHUB_OUTPUT
@@ -59,7 +59,7 @@ jobs:
           title: 'chore(governance): post-merge sync -- ${{ steps.repair.outputs.fixes }} fixes'
           body: |
             Automated post-merge governance sync triggered by ${{ github.sha }}.
-            See `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md` for details.
+            See `workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md` for details.
           base: docs-v2
           delete-branch: true
           labels: governance, automated

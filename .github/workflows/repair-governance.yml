@@ -80,7 +80,7 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('fs');
-          const reportPath = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json';
+          const reportPath = 'workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json';
           const outputPath = process.env.GITHUB_OUTPUT;
           const summaryPath = process.env.GITHUB_STEP_SUMMARY;
           const runUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
@@ -138,10 +138,10 @@ jobs:
         with:
           name: governance-repair-${{ github.run_id }}
           path: |
-            tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json
-            tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md
-            tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
-            tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
+            workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json
+            workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md
+            workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
+            workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
           if-no-files-found: warn
           retention-days: 7
 
@@ -164,8 +164,8 @@ jobs:
             - Changed files: ${{ steps.summary.outputs.files_modified_count }}
 
             Reports:
-            - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json`
-            - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md`
+            - `workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json`
+            - `workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md`
 
       - name: Fail on blocking repair error
         if: steps.repair.outputs.exit_code == '1'
