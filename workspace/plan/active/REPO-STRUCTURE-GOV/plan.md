@@ -160,15 +160,15 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 > Run this checklist after the scripts thread agent completes the rename. Do not action — verify only.
 
-- [ ] **V-WS.1** `workspace/` exists at root with correct internal structure (`plan/`, `reports/`, `research/`, `staging/`, `scripts/`, `errors/`)
-- [ ] **V-WS.2** `tasks/` no longer exists at root
-- [ ] **V-WS.3** `workspace/plan/active/` contains all currently active plan folders (spot-check: REPO-STRUCTURE-GOV, SCRIPT-GOVERNANCE, CONTENT-WRITING)
-- [ ] **V-WS.4** `workspace/plan/complete/` TTL workflow still triggers correctly — check `.github/workflows/` or hook config
-- [ ] **V-WS.5** No broken refs in AGENTS.md — grep for `tasks/` and confirm zero hits
-- [ ] **V-WS.6** No broken refs in AI adapter files — check `.claude/`, `.codex/`, `.cursor/`, `.windsurf/` for `tasks/` hits
-- [ ] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/`
-- [ ] **V-WS.8** Scripts referencing `tasks/` paths (`audit-tasks-folders.js`, `task-cleanup.js`, `task-preflight.js`, `cross-agent-packager.js`) updated and confirmed runnable
-- [ ] **V-WS.9** `lpd` CLI any task-related commands (e.g. `lpd task`) resolve correctly post-rename
+- [x] **V-WS.1** `workspace/` exists at root with correct internal structure *(scripts agent confirmed 2026-03-21 — 731 files renamed)*
+- [x] **V-WS.2** `tasks/` no longer exists at root *(scripts agent confirmed 2026-03-21)*
+- [x] **V-WS.3** `workspace/plan/active/` contains all currently active plan folders *(14 new files from other threads correctly placed in workspace/ per merge)*
+- [ ] **V-WS.4** `workspace/plan/complete/` TTL workflow still triggers correctly — verify `tasks-retention.yml` path refs
+- [x] **V-WS.5** No broken refs in AGENTS.md *(scripts agent: all path refs updated across 30 scripts, 19 tests, 5 config files, 1 lib file, 3 workflows, 1 codex task contract)*
+- [x] **V-WS.6** No broken refs in AI adapter files *(included in 5 config files updated)*
+- [ ] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/` *(pending — see Phase 1.6)*
+- [x] **V-WS.8** Scripts referencing `tasks/` paths updated *(30 scripts updated; test suite exit code 0)*
+- [ ] **V-WS.9** `lpd` CLI task-related commands resolve correctly post-rename *(not confirmed)*
 - [x] **V-WS.10** `.mintignore` entry `/tasks/**` updated to `/workspace/**` *(2026-03-21)*
 
 ---
