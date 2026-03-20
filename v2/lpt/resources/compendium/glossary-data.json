@@ -1,0 +1,914 @@
+{
+  "terms": [
+    {
+      "term": "Active Set",
+      "definition": "The top 100 orchestrators ranked by total bonded stake that are eligible to receive work and earn rewards each round.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Active Set Election",
+      "definition": "The process at the start of each round that selects the top 100 orchestrators by total bonded stake to form the Active Set eligible to receive work.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "AI Inference",
+      "definition": "Running a trained machine learning model on new input data to produce predictions or generated outputs, as opposed to the training phase.",
+      "category": "ai:concept",
+      "tags": [
+        "ai",
+        "concept"
+      ]
+    },
+    {
+      "term": "AI Inference (Network Work Type)",
+      "definition": "Running trained AI models as the newer category of on-network compute work alongside transcoding, with orchestrators earning ETH fees for completed inference jobs.",
+      "category": "ai:concept, livepeer:protocol",
+      "tags": [
+        "ai",
+        "concept",
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Arbitrum One",
+      "definition": "A Layer 2 Optimistic Rollup that settles to Ethereum, processing transactions off-chain while inheriting Ethereum-grade security guarantees.",
+      "category": "web3:chain",
+      "tags": [
+        "web3",
+        "chain"
+      ]
+    },
+    {
+      "term": "Atomic Execution",
+      "definition": "A guarantee that a set of on-chain operations either all succeed or none execute, preventing partial state changes.",
+      "category": "web3:governance",
+      "tags": [
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Bonding",
+      "definition": "The act of locking (staking) LPT tokens to an orchestrator in Livepeer's delegated proof-of-stake system.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Bonded Stake",
+      "definition": "The total amount of LPT currently locked across the network through active bonding relationships between delegators and orchestrators.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Bonding Rate (beta)",
+      "definition": "The ratio of total bonded LPT to total token supply; Livepeer targets a 50% participation rate.",
+      "category": "economic:reward, web3:tokenomics",
+      "tags": [
+        "economic",
+        "reward",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Bonding Rate Target",
+      "definition": "The 50% threshold used by the inflation model as the reference point to determine whether per-round issuance should increase or decrease.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "BondingManager",
+      "definition": "The core Livepeer smart contract managing all bonding, delegation, stake accounting, and fund ownership logic.",
+      "category": "livepeer:contract",
+      "tags": [
+        "livepeer",
+        "contract"
+      ]
+    },
+    {
+      "term": "BondingVotes",
+      "definition": "The Livepeer smart contract that tracks historical stake snapshots for governance, enabling stake-weighted voting power to be calculated at any past checkpoint.",
+      "category": "livepeer:contract, web3:governance",
+      "tags": [
+        "livepeer",
+        "contract",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Bridge",
+      "definition": "Infrastructure connecting two blockchain ecosystems that enables token and information transfer between them.",
+      "category": "web3:concept",
+      "tags": [
+        "web3",
+        "concept"
+      ]
+    },
+    {
+      "term": "Bridging",
+      "definition": "The process of moving LPT tokens between Ethereum L1 and Arbitrum L2 using the canonical bridge contracts.",
+      "category": "web3:concept",
+      "tags": [
+        "web3",
+        "concept"
+      ]
+    },
+    {
+      "term": "Capital-backed Sybil Resistance",
+      "definition": "A security mechanism where staking capital is required to participate, making Sybil attacks economically costly because each fake identity must fund real stake.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Capital Efficiency",
+      "definition": "The degree to which staked capital generates productive returns through protocol inflation rewards, ETH fees, or work allocation.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Checkpoint",
+      "definition": "An on-chain snapshot of stake state recorded by the BondingVotes contract, used as the reference point for governance voting power calculations.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Claim Earnings",
+      "definition": "The on-chain action a delegator or orchestrator takes to collect accumulated inflationary LPT rewards and ETH fees that have been assigned to their stake.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Commission Rate",
+      "definition": "The combined percentage of inflationary rewards and ETH fees that an orchestrator retains before distributing the remainder to delegators.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Community Treasury",
+      "definition": "The on-chain fund governed by LPT stakeholders via LivepeerGovernor, funded by a governable percentage of per-round inflation.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Concentration Risk",
+      "definition": "The risk arising when a disproportionate share of total bonded stake is held by a small number of orchestrators, reducing network decentralization and resilience.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Delegation",
+      "definition": "The act of LPT holders staking their tokens toward orchestrators they trust, sharing proportionally in rewards without running any infrastructure themselves.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Delegation Model",
+      "definition": "Livepeer's delegated proof-of-stake system in which token holders choose orchestrators to delegate stake to, earning rewards without running infrastructure.",
+      "category": "livepeer:protocol, web3:tokenomics",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Delegator",
+      "definition": "A token holder who bonds LPT to an orchestrator in order to secure the network, earn a share of rewards and fees, and participate in on-chain governance.",
+      "category": "livepeer:role, web3:tokenomics",
+      "tags": [
+        "livepeer",
+        "role",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Dilution",
+      "definition": "The reduction in proportional ownership experienced by non-staking token holders when new LPT is minted each round through inflation.",
+      "category": "economic:reward, web3:tokenomics",
+      "tags": [
+        "economic",
+        "reward",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Dilution Protection",
+      "definition": "The benefit that active stakers receive by bonding — because inflationary rewards accrue only to bonded participants, stakers maintain their proportional ownership while non-stakers are diluted.",
+      "category": "web3:tokenomics, economic:reward",
+      "tags": [
+        "web3",
+        "tokenomics",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Economic Weight",
+      "definition": "An orchestrator's total active bonded stake, which determines their proportional share of inflationary rewards and their probability of being selected for job routing.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "ETH Fees",
+      "definition": "Ether paid by gateways to orchestrators as compensation for completed transcoding or AI inference work, distributed to delegators after the fee cut.",
+      "category": "economic:payment",
+      "tags": [
+        "economic",
+        "payment"
+      ]
+    },
+    {
+      "term": "Fee Cut",
+      "definition": "The percentage of ETH fees earned from work that an orchestrator retains before distributing the remainder to their delegators.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Fee Pool",
+      "definition": "The accumulated ETH fees earned by an orchestrator from completed work in a given round, split between the orchestrator and their delegators according to fee cut and fee share parameters.",
+      "category": "economic:payment",
+      "tags": [
+        "economic",
+        "payment"
+      ]
+    },
+    {
+      "term": "Fee Share",
+      "definition": "The portion of ETH fees earned by an orchestrator that is distributed to delegators proportionally to their bonded stake.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Fee Switch",
+      "definition": "A governance-controlled mechanism that enables or adjusts the redirection of protocol fees to the community treasury or other designated destinations.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Gateway",
+      "definition": "A protocol node that submits jobs to the network, routes work to orchestrators, manages payment flows, and serves as the interface between applications and the Livepeer Protocol.",
+      "category": "livepeer:role",
+      "tags": [
+        "livepeer",
+        "role"
+      ]
+    },
+    {
+      "term": "Genesis Supply",
+      "definition": "The initial 10 million LPT tokens created at protocol launch and distributed via the Merkle Mine mechanism.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Governance",
+      "definition": "The on-chain system of rules and processes by which LPT stakeholders make decisions about protocol changes, treasury spending, and parameter updates through token-weighted voting.",
+      "category": "web3:governance",
+      "tags": [
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Governance Forum",
+      "definition": "The Forum's governance category at forum.livepeer.org where LIPs, pre-proposals, and protocol governance discussions take place before on-chain voting.",
+      "category": "operational:governance",
+      "tags": [
+        "operational",
+        "governance"
+      ]
+    },
+    {
+      "term": "Governor",
+      "definition": "The Livepeer smart contract that executes approved governance proposals after a Timelock delay, enforcing parameter changes and treasury spending on-chain.",
+      "category": "livepeer:contract, web3:governance",
+      "tags": [
+        "livepeer",
+        "contract",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Inflation",
+      "definition": "The dynamic issuance of new LPT each round, distributed to active orchestrators and delegators proportional to their bonded stake.",
+      "category": "livepeer:protocol, economic:reward, web3:tokenomics",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "reward",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Inflation Adjustment (alpha)",
+      "definition": "The fixed per-round rate (0.00005%) by which the inflation rate increases or decreases based on whether the current Bonding Rate is below or above the Target Bonding Rate.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Inflation Model",
+      "definition": "Livepeer's algorithmic mechanism that adjusts the per-round LPT issuance rate dynamically based on the gap between the current Bonding Rate and the 50% Target Bonding Rate.",
+      "category": "web3:tokenomics, economic:reward",
+      "tags": [
+        "web3",
+        "tokenomics",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Inflation Rate",
+      "definition": "The per-round percentage of the total LPT supply that is newly minted and distributed to active orchestrators and delegators.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Inflationary Rewards",
+      "definition": "Newly minted LPT tokens distributed each round proportionally to active orchestrators and their delegators based on bonded stake.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Issuance",
+      "definition": "The minting of new LPT tokens each round as the mechanism for distributing inflationary rewards to protocol participants.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "L1 Escrow",
+      "definition": "The Ethereum mainnet contract that holds LPT in escrow during cross-chain bridging to Arbitrum, locking L1 tokens as L2 equivalents are minted on Arbitrum.",
+      "category": "livepeer:contract, web3:chain",
+      "tags": [
+        "livepeer",
+        "contract",
+        "web3",
+        "chain"
+      ]
+    },
+    {
+      "term": "L2LPTGateway",
+      "definition": "The bridge contract deployed on Arbitrum that enables LPT token transfers between Ethereum L1 and Arbitrum L2.",
+      "category": "livepeer:contract, web3:chain",
+      "tags": [
+        "livepeer",
+        "contract",
+        "web3",
+        "chain"
+      ]
+    },
+    {
+      "term": "LIP (Livepeer Improvement Proposal)",
+      "definition": "A formal design document proposing changes to the Livepeer protocol, governance, or ecosystem, analogous to Ethereum's EIP process.",
+      "category": "livepeer:protocol, operational:governance",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "operational",
+        "governance"
+      ]
+    },
+    {
+      "term": "Liquidity Risk",
+      "definition": "The risk that bonded LPT tokens cannot be quickly converted to liquid assets due to the mandatory unbonding period before withdrawal.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Livepeer Explorer",
+      "definition": "The official Livepeer protocol explorer for viewing on-chain state including orchestrator information, staking data, delegator positions, and governance proposals.",
+      "category": "livepeer:tool",
+      "tags": [
+        "livepeer",
+        "tool"
+      ]
+    },
+    {
+      "term": "Livepeer Foundation",
+      "definition": "The non-profit Cayman Islands Foundation Company that stewards Livepeer's long-term vision, ecosystem growth, grant programs, and core protocol development.",
+      "category": "livepeer:entity",
+      "tags": [
+        "livepeer",
+        "entity"
+      ]
+    },
+    {
+      "term": "LivepeerGovernor",
+      "definition": "The OpenZeppelin-based on-chain governor contract for Livepeer that enables stake-weighted voting on protocol proposals using checkpointed BondingVotes data.",
+      "category": "livepeer:contract, web3:governance",
+      "tags": [
+        "livepeer",
+        "contract",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "LPT (Livepeer Token)",
+      "definition": "The ERC-20 governance and staking token used to coordinate, incentivize, and secure the Livepeer Network; staked LPT determines orchestrator selection, work allocation, and reward distribution.",
+      "category": "livepeer:protocol, web3:token",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "web3",
+        "token"
+      ]
+    },
+    {
+      "term": "Merkle Mine",
+      "definition": "Livepeer's decentralized token distribution algorithm used at genesis, where eligible Ethereum addresses could claim LPT by submitting Merkle proofs.",
+      "category": "web3:concept",
+      "tags": [
+        "web3",
+        "concept"
+      ]
+    },
+    {
+      "term": "Minter",
+      "definition": "The Livepeer smart contract responsible for minting new LPT tokens during reward calls and for holding ETH accumulated from winning probabilistic micropayment tickets.",
+      "category": "livepeer:contract",
+      "tags": [
+        "livepeer",
+        "contract"
+      ]
+    },
+    {
+      "term": "Non-custodial",
+      "definition": "A staking model in which users retain control of their private keys and token ownership while their LPT is bonded, so they are never required to transfer custody to a third party.",
+      "category": "web3:concept",
+      "tags": [
+        "web3",
+        "concept"
+      ]
+    },
+    {
+      "term": "On-chain Treasury",
+      "definition": "A smart-contract-governed pool of LPT funded by a percentage of inflation and disbursed through community-approved governance proposals for ecosystem development.",
+      "category": "livepeer:protocol, economic:treasury",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Operator Market",
+      "definition": "The competitive ecosystem of orchestrators offering differentiated services to gateways and delegators, distinguished by price, performance, reliability, and commission rates.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Orchestrator",
+      "definition": "A supply-side operator that contributes GPU resources, receives jobs from gateways, performs transcoding or AI inference, earns ETH fees, and distributes inflationary LPT rewards to their delegators.",
+      "category": "livepeer:role",
+      "tags": [
+        "livepeer",
+        "role"
+      ]
+    },
+    {
+      "term": "Payment Ticket",
+      "definition": "A signed off-chain data structure sent from a gateway to an orchestrator representing a probabilistic payment redeemable on-chain for ETH if it is a winning ticket.",
+      "category": "livepeer:protocol, economic:payment",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "payment"
+      ]
+    },
+    {
+      "term": "Pending Rewards",
+      "definition": "Inflationary LPT and ETH fees that have been earned through staking but not yet claimed by calling the claim earnings function.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Price Per Pixel",
+      "definition": "The fundamental pricing unit for Livepeer transcoding work, expressed as the cost in wei for processing one pixel of video.",
+      "category": "economic:pricing",
+      "tags": [
+        "economic",
+        "pricing"
+      ]
+    },
+    {
+      "term": "Proof-of-Stake",
+      "definition": "A blockchain consensus mechanism where validators stake cryptocurrency as collateral to propose and validate blocks, replacing the energy-intensive Proof-of-Work model.",
+      "category": "web3:concept",
+      "tags": [
+        "web3",
+        "concept"
+      ]
+    },
+    {
+      "term": "Proposer Bond",
+      "definition": "The minimum bonded LPT balance (100 LPT) required to submit a formal on-chain governance proposal.",
+      "category": "web3:governance, economic:treasury",
+      "tags": [
+        "web3",
+        "governance",
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Quadratic Funding",
+      "definition": "A public goods funding mechanism where matching funds amplify small individual contributions so that projects with broad community support receive disproportionately larger allocations.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Quorum",
+      "definition": "The minimum percentage of total participating bonded stake required for a governance vote to produce a binding result.",
+      "category": "livepeer:protocol, web3:governance, operational:governance",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "web3",
+        "governance",
+        "operational",
+        "governance"
+      ]
+    },
+    {
+      "term": "Rebond",
+      "definition": "The action of moving bonded LPT stake from one orchestrator to a different orchestrator without going through the unbonding thawing period.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Retroactive Funding",
+      "definition": "A funding model that rewards past contributions or completed projects based on demonstrated impact, reducing speculative risk for the treasury.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Reward Call",
+      "definition": "The on-chain transaction that an active orchestrator must submit each round to mint the round's inflationary LPT allocation and distribute it to themselves and their delegators.",
+      "category": "livepeer:protocol, economic:reward",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Reward Calling",
+      "definition": "The operational practice of regularly submitting the reward transaction on-chain each round to mint and distribute inflationary LPT to an orchestrator and their delegators.",
+      "category": "livepeer:protocol, economic:reward",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Reward Cut",
+      "definition": "The percentage of inflationary LPT rewards that an orchestrator retains before distributing the remainder proportionally to their delegators.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Round",
+      "definition": "A discrete time interval measured in Ethereum/Arbitrum blocks during which staking rewards are calculated, active sets are determined, and protocol state advances.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "RoundsManager",
+      "definition": "The Livepeer smart contract that tracks round progression, stores the current round number, and coordinates round-based protocol state transitions.",
+      "category": "livepeer:contract",
+      "tags": [
+        "livepeer",
+        "contract"
+      ]
+    },
+    {
+      "term": "Slashing",
+      "definition": "A penalty mechanism that destroys a portion of an orchestrator's bonded LPT stake as punishment for protocol violations such as failing verification or underperforming.",
+      "category": "livepeer:protocol, economic:reward, web3:tokenomics",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "economic",
+        "reward",
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "SPE (Special Purpose Entity)",
+      "definition": "A treasury-funded organizational unit with a defined scope, budget, and accountability period, used to execute specific ecosystem development tasks.",
+      "category": "livepeer:entity, operational:governance",
+      "tags": [
+        "livepeer",
+        "entity",
+        "operational",
+        "governance"
+      ]
+    },
+    {
+      "term": "Stake",
+      "definition": "LPT bonded to an orchestrator through the protocol, representing a commitment that secures the network and determines the holder's proportional share of rewards and governance power.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Stake-Weighted Voting",
+      "definition": "A governance voting system in which each participant's vote counts in proportion to their total bonded LPT stake rather than one-address-one-vote.",
+      "category": "web3:governance",
+      "tags": [
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Staking",
+      "definition": "The act of locking tokens in a proof-of-stake protocol to participate in network security, governance, and earn inflationary rewards and fee income.",
+      "category": "web3:tokenomics, economic:reward",
+      "tags": [
+        "web3",
+        "tokenomics",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Supply",
+      "definition": "The total number of LPT tokens in existence at any given time, starting from a genesis supply of 10 million and growing continuously through inflationary issuance.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Target Bonding Rate",
+      "definition": "The 50% participation threshold for the ratio of bonded LPT to total supply; the inflation mechanism adjusts the per-round issuance rate to push toward this target.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Thawing Period",
+      "definition": "The mandatory waiting period of approximately 7 rounds after initiating an unbond before the freed LPT becomes withdrawable to the holder's wallet.",
+      "category": "livepeer:protocol",
+      "tags": [
+        "livepeer",
+        "protocol"
+      ]
+    },
+    {
+      "term": "Timelock",
+      "definition": "A smart contract mechanism that enforces a mandatory delay between when a governance proposal passes and when it can be executed on-chain.",
+      "category": "web3:governance",
+      "tags": [
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Token Distribution",
+      "definition": "The allocation and dispersal of LPT tokens across founders, team, investors, and the public through mechanisms including the Merkle Mine, vesting schedules, and inflationary issuance.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Tokenomics",
+      "definition": "The economic design of the LPT token system encompassing total supply, genesis distribution, inflation schedule, staking incentives, governance rights, and deflationary mechanisms.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "Transcoding",
+      "definition": "The direct digital-to-digital conversion of video from one encoding format to another, producing multiple adaptive renditions for cross-device delivery.",
+      "category": "video:processing",
+      "tags": [
+        "video",
+        "processing"
+      ]
+    },
+    {
+      "term": "Treasury",
+      "definition": "The on-chain pool of LPT and ETH held in protocol smart contracts for funding public goods, SPEs, grants, and ecosystem development through community governance.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Treasury Allocation",
+      "definition": "A governance-approved distribution of treasury funds to a specific proposal, SPE, or grant recipient.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Treasury Governance",
+      "definition": "The on-chain process by which LPT stakeholders propose, vote on, and execute allocation of community treasury funds for ecosystem development.",
+      "category": "economic:treasury, web3:governance",
+      "tags": [
+        "economic",
+        "treasury",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Treasury Reward Cut Rate",
+      "definition": "The governable percentage of per-round inflationary LPT that is diverted to the community treasury instead of being distributed directly to orchestrators and delegators.",
+      "category": "economic:treasury",
+      "tags": [
+        "economic",
+        "treasury"
+      ]
+    },
+    {
+      "term": "Unbonding",
+      "definition": "The process by which a delegator or orchestrator initiates withdrawal of bonded LPT from the protocol, triggering the mandatory thawing period before tokens become liquid.",
+      "category": "web3:tokenomics",
+      "tags": [
+        "web3",
+        "tokenomics"
+      ]
+    },
+    {
+      "term": "veLPT (Vote-Escrowed LPT)",
+      "definition": "A proposed mechanism that would allow LPT holders to lock tokens for an extended period in exchange for enhanced governance voting power, aligning long-term incentives.",
+      "category": "economic:treasury, web3:governance",
+      "tags": [
+        "economic",
+        "treasury",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Vesting",
+      "definition": "A schedule controlling when token allocations — such as founder or team grants — become available over time, often with an initial cliff period followed by pro-rata release.",
+      "category": "web3:tokenomics, economic:reward",
+      "tags": [
+        "web3",
+        "tokenomics",
+        "economic",
+        "reward"
+      ]
+    },
+    {
+      "term": "Vote Detachment",
+      "definition": "The ability for a delegator to override their orchestrator's governance vote with their own individual stake-weighted vote on a specific proposal.",
+      "category": "web3:governance, operational:governance",
+      "tags": [
+        "web3",
+        "governance",
+        "operational",
+        "governance"
+      ]
+    },
+    {
+      "term": "Voting Power",
+      "definition": "The weight of a participant's vote in Livepeer on-chain governance, determined by their total bonded LPT stake at the block when the proposal was created.",
+      "category": "livepeer:protocol, web3:governance",
+      "tags": [
+        "livepeer",
+        "protocol",
+        "web3",
+        "governance"
+      ]
+    },
+    {
+      "term": "Wei",
+      "definition": "The smallest denomination of Ether, where 1 ETH equals 10^18 Wei; used in Livepeer for precise on-chain price calculations such as price per pixel.",
+      "category": "web3:token",
+      "tags": [
+        "web3",
+        "token"
+      ]
+    },
+    {
+      "term": "Yield",
+      "definition": "The annualized return on staked LPT expressed as a percentage, combining inflationary LPT rewards and any ETH fee share earned through the bonded orchestrator.",
+      "category": "economic:reward",
+      "tags": [
+        "economic",
+        "reward"
+      ]
+    }
+  ]
+}

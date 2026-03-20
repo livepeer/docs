@@ -35,7 +35,7 @@ Constraints
 
 Canonical docs-guide source
 - `docs-guide/policies/source-of-truth-policy.mdx`
-- `docs-guide/catalog/ai-tools.mdx`
+- `docs-guide/tooling/ai-tools.mdx`
 
 When to load references
 - Load `references/workflow-router.md` at the start to choose whether the task needs verification only, review only, or full propagation.

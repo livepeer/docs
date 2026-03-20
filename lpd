@@ -90,9 +90,9 @@ Usage:
     - flags: use `list` to discover commands and `run` to execute.
     - info: List or execute managed scripts.
 
-  lpd <tools|tasks|tests|v2> <script-path tokens...> [-- script args]
+  lpd <tools|workspace|tasks|tests|v2> <script-path tokens...> [-- script args]
     - flags: script-path tokens resolve to a managed script in that group.
-    - info: Shorthand for `lpd scripts run <group> ...`.
+    - info: Shorthand for `lpd scripts run <group> ...`. `tasks` is a legacy alias for `workspace`.
 
 Examples:
   lpd dev
@@ -122,8 +122,8 @@ Examples:
   lpd tools dev test-add-callouts -- --help
     - Shows help for a managed tools/dev script via shorthand.
 
-  lpd scripts run tasks run-audit --dry-run
-    - Previews the exact task-script command without executing.
+  lpd scripts run workspace run-audit --dry-run
+    - Previews the exact workspace-script command without executing.
 
 Notes:
   - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
@@ -175,9 +175,9 @@ Command Groups:
     lpd hooks info
 
   script runner
-    lpd scripts list [--group tools|tasks|tests|v2|hooks] [--show-ignored]
+    lpd scripts list [--group tools|workspace|tasks|tests|v2|hooks] [--show-ignored]
     lpd scripts run <group> <script-path tokens...> [--yes] [--dry-run] [-- script args]
-    shorthand: lpd <tools|tasks|tests|v2> <script-path tokens...> [-- script args]
+    shorthand: lpd <tools|workspace|tasks|tests|v2> <script-path tokens...> [-- script args]
 
 Common Workflows:
   first-time setup
@@ -355,7 +355,8 @@ install_cli_link() {
 group_root() {
     case "$1" in
         tools) echo "tools/scripts" ;;
-        tasks) echo "tasks/scripts" ;;
+        workspace) echo "workspace/scripts" ;;
+        tasks) echo "workspace/scripts" ;;  # legacy alias for workspace
         tests) echo "tests" ;;
         v2) echo "tools/scripts/dev" ;;
         hooks) echo ".githooks" ;;
@@ -369,7 +370,7 @@ group_risk() {
     case "$1" in
         tests) echo "low" ;;
         tools|hooks) echo "medium" ;;
-        tasks|v2) echo "high" ;;
+        workspace|tasks|v2) echo "high" ;;
         *)
             echo "medium"
             ;;
@@ -735,7 +736,7 @@ Legacy Environment Overrides:
 
 Notes:
   - Human `.allowlist` edits require explicit human override.
-  - Human deletions outside `tasks/` require explicit human override.
+  - Human deletions outside `workspace/` require explicit human override.
   - See `.githooks/BYPASS.md` and `contribute/CONTRIBUTING/GIT-HOOKS.md` for policy and details.
 EOF
             ;;
@@ -1655,7 +1656,7 @@ EOF
             return 1
           }
           if [ "$stage_outputs" = "1" ]; then
-            git add docs-guide/catalog tests/script-index.md tools/script-index.md tools/lib/script-index.md tasks/reports/script-classifications.json || true
+            git add docs-guide/catalog tests/script-index.md tools/script-index.md tools/lib/script-index.md workspace/reports/script-classifications.json || true
           fi
         fi
         run_cli_step node tests/unit/docs-guide-sot.test.js || {
@@ -1926,7 +1927,7 @@ cmd_scripts_list() {
                 ;;
             --help|-h)
                 cat <<'EOF'
-Usage: lpd scripts list [--group tools|tasks|tests|v2|hooks] [--show-ignored] [--json]
+Usage: lpd scripts list [--group tools|workspace|tasks|tests|v2|hooks] [--show-ignored] [--json]
 EOF
                 return 0
                 ;;
@@ -1938,7 +1939,7 @@ EOF
         shift
     done
 
-    local groups="tools tasks tests v2 hooks"
+    local groups="tools workspace tasks tests v2 hooks"
     if [ -n "$group_filter" ]; then
         groups="$group_filter"
     fi

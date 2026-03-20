@@ -163,12 +163,12 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [x] **V-WS.1** `workspace/` exists at root with correct internal structure *(scripts agent confirmed 2026-03-21 — 731 files renamed)*
 - [x] **V-WS.2** `tasks/` no longer exists at root *(scripts agent confirmed 2026-03-21)*
 - [x] **V-WS.3** `workspace/plan/active/` contains all currently active plan folders *(14 new files from other threads correctly placed in workspace/ per merge)*
-- [ ] **V-WS.4** `workspace/plan/complete/` TTL workflow still triggers correctly — verify `tasks-retention.yml` path refs
+- [x] **V-WS.4** `tasks-retention.yml` verified — stub with no path refs; name already reads "workspace/ retention enforcement"; no action needed *(2026-03-21)*
 - [x] **V-WS.5** No broken refs in AGENTS.md *(scripts agent: all path refs updated across 30 scripts, 19 tests, 5 config files, 1 lib file, 3 workflows, 1 codex task contract)*
 - [x] **V-WS.6** No broken refs in AI adapter files *(included in 5 config files updated)*
-- [ ] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/` *(pending — see Phase 1.6)*
+- [x] **V-WS.7** `docs-guide/policies/root-allowlist-governance.mdx` updated: `workspace/` replaces `tasks/` *(2026-03-21 — inventory, decision matrix, move candidate note all updated)*
 - [x] **V-WS.8** Scripts referencing `tasks/` paths updated *(30 scripts updated; test suite exit code 0)*
-- [ ] **V-WS.9** `lpd` CLI task-related commands resolve correctly post-rename *(not confirmed)*
+- [x] **V-WS.9** `lpd` CLI fixed *(2026-03-21 — `group_root tasks` now maps to `workspace/scripts`; `workspace` added as new canonical group; `tasks` kept as legacy alias; `tasks/reports/` git-add path fixed to `workspace/reports/`; all help text updated)*
 - [x] **V-WS.10** `.mintignore` entry `/tasks/**` updated to `/workspace/**` *(2026-03-21)*
 
 ---
@@ -207,13 +207,13 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [x] **2A-IV.3** Move archive files → `_workspace/archive/`; docs.json updated *(2026-03-21)*
 - [x] **2A-IV.4** Move `catalog/ai-tools.mdx` → `tooling/ai-tools.mdx`; docs.json updated *(2026-03-21 — human override: tooling/ not features/)*
 - [x] **2A-IV.5** `tooling/source-of-truth.md` → `_workspace/drafts/tooling-overview-draft.md` *(2026-03-21 — had partial content; moved not deleted)*
-- [ ] **2A-IV.6** Refresh `source-of-truth-guide.mdx` — remove TODO comment; verify all generator commands current
+- [x] **2A-IV.6** Refresh `source-of-truth-guide.mdx` — no TODO found; fixed stale ai-tools path (catalog→tooling), removed deleted component-framework ref, fixed archive path (_workspace/archive), added 2 new policies to section routes, fixed 3 stale script paths in Update Rules *(2026-03-21)*
 
 **2A-V — Write governance docs** *(final; do last)*
 - [x] **2A-V.1** Write `docs-guide/policies/docs-guide-structure-policy.mdx` *(2026-03-21)*
 - [x] **2A-V.2** Write `docs-guide/policies/workspace-lifecycle-policy.mdx` *(2026-03-21 — 30-day scratch TTL, 90-day archive TTL, nav-stub index.mds exempt)*
 - [ ] **2A-V.3** Expand `contributing/contributing.mdx` — defer until `contribute/` root folder merge lands (Phase 1.3)
-- [ ] **2A-V.4** AI-TOOLS-GOVERNANCE adapter file updates → see `AI-TOOLS-GOVERNANCE/handoff-docs-guide-path-updates.md` (must land same PR as 2A-IV)
+- [x] **2A-V.4** AI-TOOLS-GOVERNANCE adapter file updates — adapter files verified clean; fixed `catalog/ai-tools`→`tooling/ai-tools` in 13 active files (README, registry lib, validator, tests, configs, skill templates, agent-packs); removed deleted `component-framework.mdx` from 3 config/test files *(2026-03-21)*
 
 ---
 

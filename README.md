@@ -38,7 +38,7 @@ bash lpd setup --yes
 lpd dev
 ```
 
-`bash lpd setup --yes` also syncs the canonical Codex planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`). For ambiguous repo-change planning, use `skill-plan` after setup. The canonical runbook lives in [`docs-guide/catalog/ai-tools.mdx`](docs-guide/catalog/ai-tools.mdx).
+`bash lpd setup --yes` also syncs the canonical Codex planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`). For ambiguous repo-change planning, use `skill-plan` after setup. The canonical runbook lives in [`docs-guide/tooling/ai-tools.mdx`](docs-guide/tooling/ai-tools.mdx).
 
 If `lpd` is not on PATH yet:
 
@@ -122,7 +122,7 @@ Recovery:
 | Content system and IA model | [`docs-guide/frameworks/content-system.mdx`](docs-guide/frameworks/content-system.mdx) |
 | APIs and data integrations | [`docs-guide/features/data-integrations.mdx`](docs-guide/features/data-integrations.mdx) |
 | UI authoring system | [`docs-guide/features/ui-system.mdx`](docs-guide/features/ui-system.mdx) |
-| AI tools catalog | [`docs-guide/catalog/ai-tools.mdx`](docs-guide/catalog/ai-tools.mdx) |
+| AI tools catalog | [`docs-guide/tooling/ai-tools.mdx`](docs-guide/tooling/ai-tools.mdx) |
 | Generated UI template inventory | [`docs-guide/catalog/ui-templates.mdx`](docs-guide/catalog/ui-templates.mdx) |
 | Generated pages tree inventory | [`docs-guide/catalog/pages-catalog.mdx`](docs-guide/catalog/pages-catalog.mdx) |
 | Generated components inventory | [`docs-guide/catalog/components-catalog.mdx`](docs-guide/catalog/components-catalog.mdx) |

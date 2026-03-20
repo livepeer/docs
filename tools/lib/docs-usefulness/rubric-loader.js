@@ -59,7 +59,21 @@ const fs = require('fs');
 const path = require('path');
 const taxonomy = require('../frontmatter-taxonomy');
 
-const PURPOSE_ENUM = taxonomy.CANONICAL_PURPOSES;
+// Rubric-internal purpose labels — intentionally uses pre-Phase-1 names that key
+// into the rubric config JSON and prompts/. New taxonomy canonicals are mapped to
+// these via taxonomy.purposeToRubricPurpose(). Do NOT derive from CANONICAL_PURPOSES.
+const PURPOSE_ENUM = Object.freeze([
+  'landing',
+  'overview',
+  'concept',
+  'how_to',
+  'tutorial',
+  'reference',
+  'faq',
+  'troubleshooting',
+  'glossary',
+  'changelog'
+]);
 
 const AUDIENCE_ENUM = [
   'developer',
@@ -211,8 +225,12 @@ function resolvePurpose(page) {
   if (frontmatterPurpose) {
     const normalized = taxonomy.normalizePurpose(frontmatterPurpose);
     if (normalized.valid) {
+      // Convert taxonomy canonical → rubric label so downstream scoring can look
+      // up the correct rubric config entry and prompt.
+      const rubricLabel =
+        taxonomy.purposeToRubricPurpose(normalized.canonical) || normalized.canonical;
       return {
-        purpose: normalized.canonical,
+        purpose: rubricLabel,
         source: 'frontmatter',
         invalid: false,
         deprecatedAlias: normalized.deprecatedAlias

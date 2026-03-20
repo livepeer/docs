@@ -66,7 +66,6 @@ const GOVERNED_TEXT_FILES = [
   '.github/ISSUE_TEMPLATE/feature_internal.yml',
   'docs-guide/catalog/templates-catalog.mdx',
   'docs-guide/features/automations.mdx',
-  'docs-guide/frameworks/component-framework.mdx',
   'docs-guide/frameworks/component-governance.mdx',
   'tests/WHEN-TESTS-RUN.md',
   'tests/utils/openapi-rolling-issue.js',

@@ -54,8 +54,7 @@ const REQUIRED_MANUAL_FILES = [
   'docs-guide/frameworks/component-governance.mdx',
   'docs-guide/features/data-integrations.mdx',
   'docs-guide/features/ui-system.mdx',
-  'docs-guide/frameworks/component-framework.mdx',
-  'docs-guide/catalog/ai-tools.mdx'
+  'docs-guide/tooling/ai-tools.mdx'
 ];
 
 const REQUIRED_GENERATED_FILES = [
@@ -82,7 +81,7 @@ const REQUIRED_README_REFERENCES = [
   'docs-guide/policies/component-layout-decisions.mdx',
   'docs-guide/features/automations.mdx',
   'docs-guide/features/ui-system.mdx',
-  'docs-guide/catalog/ai-tools.mdx',
+  'docs-guide/tooling/ai-tools.mdx',
   'docs-guide/catalog/ui-templates.mdx',
   'docs-guide/catalog/pages-catalog.mdx',
   'docs-guide/catalog/components-catalog.mdx',

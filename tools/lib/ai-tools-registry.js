@@ -2,7 +2,7 @@
  * @script            ai-tools-registry
  * @category          utility
  * @purpose           governance:agent-governance
- * @scope             tools/lib, ai-tools/registry, tools/scripts/validate-ai-tools-registry.js, tests/unit/ai-tools-registry.test.js, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, tools/config/ownerless-governance-surfaces.json
+ * @scope             tools/lib, ai-tools/registry, tools/scripts/validate-ai-tools-registry.js, tests/unit/ai-tools-registry.test.js, docs-guide/tooling/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, tools/config/ownerless-governance-surfaces.json
  * @domain            docs
  * @needs             R-R14, R-R29
  * @purpose-statement Shared loader, validator, coverage checker, and report renderer for the AI-tools registry contract and generated inventory report.
@@ -20,7 +20,7 @@ const DEFAULT_REPORT_PATH = 'ai-tools/registry/ai-tools-inventory.md';
 const REPAIR_COMMAND_RE = /^(node |bash lpd |lpd )/;
 const ARTIFACT_ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 const RELEVANT_PATHS = new Set([
-  'docs-guide/catalog/ai-tools.mdx',
+  'docs-guide/tooling/ai-tools.mdx',
   'docs-guide/policies/audit-system-overview.mdx',
   'docs-guide/policies/ownerless-governance.mdx',
   'docs-guide/policies/skill-pipeline-map.mdx',

@@ -52,4 +52,4 @@ node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.j
 
 - Agent governance policy: `docs-guide/policies/agent-governance-framework.mdx`
 - Root allowlist governance: `docs-guide/policies/root-allowlist-governance.mdx`
-- AI-tools catalog page: `docs-guide/catalog/ai-tools.mdx`
+- AI-tools catalog page: `docs-guide/tooling/ai-tools.mdx`
