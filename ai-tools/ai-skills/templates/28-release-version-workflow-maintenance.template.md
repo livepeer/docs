@@ -1,6 +1,7 @@
 ---
 name: release-version-workflow-maintenance
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Maintain the release-version updater workflow and related globals file path/value logic. Use when tasks include latest release automation is broken, globals latestVersion not updating, fix update-livepeer-release workflow.
 tier: 3

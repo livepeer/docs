@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/orchestrators/`
 **Date**: 2026-03-20
-**Terms**: 150
+**Terms**: 115
 **Source**: Agent deep-read + classified-by-tag.md + existing orchestrators glossary
 
 ---
@@ -190,7 +190,7 @@
 ### Cold Model / Cold Start
 
 **Definition**: Latency incurred when an AI model must be loaded from storage into GPU memory before the first request can be processed, typically adding 5 to 90 seconds of delay.
-**External**: [Cold-start latency — OpenMetal](https://openmetal.io/resources/blog/cold-start-latency-private-ai-inference/)
+**Context**: During the current beta, orchestrators typically support one warm model per GPU. Requests to a cold model trigger a model load before inference can begin. Warm model status is configured in `aiModels.json`.
 **Tags**: `ai:concept`, `livepeer:config`
 **Status**: current
 **Pages**: `orchestrators/ai`, `orchestrators/performance`
@@ -367,16 +367,6 @@
 
 ---
 
-### GPU Worker
-
-**Definition**: Subprocess running AI inference on a dedicated GPU, managed by the go-livepeer orchestrator process.
-**Context**: In AI or dual-mode deployments, each GPU in the system runs a dedicated AI runner subprocess (GPU worker). The orchestrator routes inference jobs to available GPU workers.
-**Tags**: `livepeer:deployment`
-**Status**: current
-**Pages**: `orchestrators/ai`, `orchestrators/architecture`
-
----
-
 ### Hard Gate
 
 **Definition**: Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold.
@@ -430,7 +420,7 @@
 ### Inflation
 
 **Definition**: Dynamic issuance of new LPT tokens each protocol round, distributed to orchestrators and delegators based on participation and stake.
-**External**: [Cryptoeconomics — Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
+**Context**: The inflation rate adjusts by 0.00005% per round based on whether total bonded LPT is above or below the 50% target bonding rate. Orchestrators claim their share of inflationary rewards each round via the reward call transaction.
 **Tags**: `economic:reward`, `livepeer:protocol`, `web3:tokenomics`
 **Status**: current
 **Pages**: `orchestrators/staking`, `orchestrators/economics`
@@ -891,7 +881,7 @@
 ### Slashing
 
 **Definition**: Penalty mechanism that destroys a portion of an orchestrator's bonded LPT stake for protocol violations such as failing verification or missing verifications.
-**External**: [Proof-of-stake — Wikipedia](https://en.wikipedia.org/wiki/Proof_of_stake)
+**Context**: Slashing conditions include failing transcoding verification, skipping required verifications, or sustained underperformance. Both the orchestrator's self-stake and delegated stake are at risk, which incentivises delegators to select reliable orchestrators.
 **Tags**: `livepeer:protocol`, `economic:reward`
 **Status**: current
 **Pages**: `orchestrators/protocol`, `orchestrators/staking`

@@ -1,6 +1,7 @@
 ---
 name: docs-json-navigation-maintenance
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Maintain docs.json navigation structures safely and consistently with route/file reality. Use when tasks include update docs navigation, add page to docs.json, fix docs.json route warnings.
 tier: 1

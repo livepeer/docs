@@ -1,6 +1,7 @@
 ---
 name: docs-quality-and-freshness-audit
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Audit content freshness signals, thin-page risks, and placeholder markers so maintainers can prioritize incomplete or stale documentation before publication decisions.
 invoke_when:

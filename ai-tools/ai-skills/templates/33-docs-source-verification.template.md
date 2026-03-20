@@ -1,6 +1,7 @@
 ---
 name: docs-source-verification
-version: "1.0"
+version: "1.1"
+category: audit
 description: Verify Livepeer Docs claims against ranked primary sources, record evidence, assess freshness risk, classify contradictions, and downgrade unsupported content before publication.
 tier: 2
 invoke_when:

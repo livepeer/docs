@@ -1,6 +1,7 @@
 ---
 name: precommit-failure-triage
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Diagnose and resolve pre-commit failures by mapping hook output to exact rule and fix path. Use when tasks include commit blocked by pre-commit hook, hook verification failed, fix pre-commit errors quickly.
 tier: 1

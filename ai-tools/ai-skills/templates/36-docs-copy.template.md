@@ -1,6 +1,7 @@
 ---
 name: docs-copy
-version: "1.0"
+version: "1.1"
+category: authoring
 description: >-
   Route documentation copy planning, rewriting, review, and claim-sensitive updates through the correct Livepeer Docs skills so wording changes stay accurate, scoped, and ready for handoff.
 tier: 2

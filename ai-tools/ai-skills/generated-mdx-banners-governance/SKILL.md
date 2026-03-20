@@ -1,6 +1,7 @@
 ---
 name: generated-mdx-banners-governance
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Standardize generated MDX artifacts with consistent frontmatter, hidden generated banners, and visible Note policy across docs-guide and v2 generators while preserving provenance and parity rules.
 invoke_when:

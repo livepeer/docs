@@ -1,6 +1,7 @@
 ---
 name: docs-change-review
-version: "1.0"
+version: "1.1"
+category: review-pipeline
 description: Review Livepeer Docs pages or diffs for factual contradictions, overstatement, ownership overlap, historical drift, unresolved evidence gaps, and reader-facing claim quality.
 tier: 2
 invoke_when:

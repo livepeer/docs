@@ -1,6 +1,7 @@
 ---
 name: n8n-workflow-maintenance
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Audit and maintain n8n automation JSON workflows and their output contracts for docs data feeds. Use when tasks include update n8n automation json, n8n workflow drift from docs outputs, audit active vs inactive n8n flows.
 tier: 3

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-14T13:24:21.828Z",
+  "generated_at": "2026-03-20T08:53:03.294Z",
   "source_catalog": "ai-tools/ai-skills/catalog/skill-catalog.json",
   "source_manifest": "ai-tools/ai-skills/catalog/execution-manifest.json",
   "pipeline": [
@@ -10,7 +10,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/script-footprint-and-usage-audit.js --scope full",
+          "run": "node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full",
           "modes": [
             "static",
             "full"
@@ -31,7 +31,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/docs-quality-and-freshness-audit.js --scope full",
+          "run": "node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full",
           "modes": [
             "static",
             "full"
@@ -52,7 +52,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full",
+          "run": "node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full",
           "modes": [
             "static",
             "full"
@@ -73,7 +73,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/component-layout-governance.js --scope full",
+          "run": "node tools/scripts/validators/components/library/component-layout-governance.js --scope full",
           "modes": [
             "static",
             "full"
@@ -94,7 +94,7 @@
       "commands": [
         {
           "name": "classify",
-          "run": "node tools/scripts/cleanup-quarantine-manager.js",
+          "run": "node tools/scripts/remediators/content/repair/quarantine-manager.js",
           "modes": [
             "static",
             "full"
@@ -102,7 +102,7 @@
         },
         {
           "name": "apply",
-          "run": "node tools/scripts/cleanup-quarantine-manager.js --apply",
+          "run": "node tools/scripts/remediators/content/repair/quarantine-manager.js --apply",
           "modes": [
             "full"
           ]
@@ -122,7 +122,7 @@
       "commands": [
         {
           "name": "package",
-          "run": "node tools/scripts/cross-agent-packager.js --agent-pack all",
+          "run": "node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all",
           "modes": [
             "static",
             "runtime",
@@ -147,7 +147,7 @@
       "commands": [
         {
           "name": "orchestrate",
-          "run": "node tools/scripts/repo-audit-orchestrator.js --mode static --scope full",
+          "run": "node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full",
           "modes": [
             "static",
             "runtime",

@@ -1,6 +1,7 @@
 ---
 name: openapi-sync-and-api-doc-generation
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Sync OpenAPI sources and generate MDX API portal/endpoint docs using repository scripts. Use when tasks include regenerate api docs from openapi, sync latest openapi specs, create mdx endpoint pages from spec.
 tier: 3

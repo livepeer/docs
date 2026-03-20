@@ -1,6 +1,7 @@
 ---
 name: discord-issue-intake-maintenance
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Maintain Discord repository_dispatch intake workflow validation, idempotency, and issue-shaping logic. Use when tasks include discord issue intake failing, fix repository_dispatch docs_page_issue schema handling, maintain correlation_id dedupe logic.
 tier: 3

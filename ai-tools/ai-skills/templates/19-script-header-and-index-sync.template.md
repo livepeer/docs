@@ -1,6 +1,7 @@
 ---
 name: script-header-and-index-sync
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Enforce script header schema and synchronize group/aggregate script indexes. Use when tasks include script-docs test failed, regenerate script index files, autofill missing script headers.
 tier: 2

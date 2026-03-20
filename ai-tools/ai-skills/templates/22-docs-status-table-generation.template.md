@@ -1,6 +1,7 @@
 ---
 name: docs-status-table-generation
-version: "1.0"
+version: "1.1"
+category: audit
 description: >-
   Generate docs status table and structure diagram artifacts from docs navigation sources. Use when tasks include regenerate docs status table, update docs structure diagram, sync status report with docs.json.
 tier: 2

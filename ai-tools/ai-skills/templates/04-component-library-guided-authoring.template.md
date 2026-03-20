@@ -1,6 +1,7 @@
 ---
 name: component-library-guided-authoring
-version: "1.0"
+version: "1.1"
+category: authoring
 description: >-
   Use existing snippets components and library patterns before introducing new presentation logic. Use when tasks include which component should I use, add docs UI using existing snippets components, avoid creating new component if possible.
 tier: 1

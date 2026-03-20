@@ -1,6 +1,7 @@
 ---
 name: codex-task-isolation-standard
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Enforce isolated Codex task execution with branch-scoped contracts, scoped validation, and clean PR evidence. Use when tasks include start codex implementation task, set up isolated codex worktree and branch, validate codex scope and pr contract.
 tier: 3

@@ -1,6 +1,7 @@
 ---
 name: cross-agent-packager
-version: "1.0"
+version: "1.1"
+category: meta
 description: >-
   Generate consistent multi-agent skill packs from one canonical catalog so Codex, Cursor, Claude Code, and Windsurf stay aligned on shared workflow definitions.
 invoke_when:

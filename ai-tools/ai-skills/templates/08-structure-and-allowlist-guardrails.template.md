@@ -1,6 +1,7 @@
 ---
 name: structure-and-allowlist-guardrails
-version: "1.0"
+version: "1.1"
+category: governance
 description: >-
   Apply repository structure rules and root allowlist constraints before committing changes. Use when tasks include pre-commit blocked unauthorized root files, where should this file be moved, allowlist or structure violation.
 tier: 1
