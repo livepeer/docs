@@ -30,9 +30,11 @@ const fs = require("fs");
 const path = require("path");
 
 // Configuration
+const REPO_ROOT = process.cwd();
+const V2_ROOT = 'v2';
 const PAGES_DIRS = [
-  path.join(__dirname, "../../v2/pages"),
-  path.join(__dirname, "../../v2"),
+  path.join(REPO_ROOT, `${V2_ROOT}/pages`),
+  path.join(REPO_ROOT, V2_ROOT),
 ].filter((candidate) => fs.existsSync(candidate));
 const DEFAULT_SOCIAL_IMAGE =
   "/snippets/assets/social/livepeer-social-preview.jpg";
@@ -243,8 +245,9 @@ function generateDescription(content) {
  */
 function getSocialImage(filePath) {
   const normalizedPath = String(filePath || "").replace(/\\/g, "/");
-  const v2Index = normalizedPath.indexOf("/v2/");
-  const relative = v2Index >= 0 ? normalizedPath.slice(v2Index + 4) : normalizedPath;
+  const v2Marker = `/${V2_ROOT}/`;
+  const v2Index = normalizedPath.indexOf(v2Marker);
+  const relative = v2Index >= 0 ? normalizedPath.slice(v2Index + v2Marker.length) : normalizedPath;
   const parts = relative.split("/").filter(Boolean);
   const domainFolder = parts[0] === "pages" ? parts[1] : parts[0];
 
@@ -338,12 +341,12 @@ function processFile(filePath) {
 
   // Use relative path for keyword generation - strip absolute path
   let relativePath = filePath;
-  if (filePath.includes("/v2/pages/")) {
-    relativePath = filePath.split("/v2/pages/")[1];
-  } else if (filePath.includes("/v2/tests/")) {
-    relativePath = filePath.split("/v2/tests/")[1];
-  } else if (filePath.includes("/v2/")) {
-    relativePath = filePath.split("/v2/")[1];
+  if (filePath.includes(`/${V2_ROOT}/pages/`)) {
+    relativePath = filePath.split(`/${V2_ROOT}/pages/`)[1];
+  } else if (filePath.includes(`/${V2_ROOT}/tests/`)) {
+    relativePath = filePath.split(`/${V2_ROOT}/tests/`)[1];
+  } else if (filePath.includes(`/${V2_ROOT}/`)) {
+    relativePath = filePath.split(`/${V2_ROOT}/`)[1];
   }
 
   const { updated, hasChanges } = updateFrontmatter(

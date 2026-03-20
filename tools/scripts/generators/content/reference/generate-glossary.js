@@ -59,7 +59,7 @@ const V2_PAGES_DIRS = [
 ]
   .map((dir) => path.join(REPO_ROOT, dir))
   .filter((dir) => fs.existsSync(dir));
-const OUTPUT_DIR = path.join(__dirname, '..', 'data');
+const OUTPUT_DIR = path.join(REPO_ROOT, 'tools/scripts/generators/content/data');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'glossary-terms.json');
 
 const isDryRun = process.argv.includes('--dry-run');

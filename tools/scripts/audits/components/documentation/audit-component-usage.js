@@ -16,7 +16,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { getEnglishComponentLibraryDocPaths } = require('../../../../lib/component-governance-utils');
 
-const REPORT_PATH = path.join(__dirname, '..', '..', 'tasks', 'reports', 'repo-ops', 'component-usage-audit.json');
+const REPO_ROOT = process.cwd();
+const REPORT_PATH = path.join(REPO_ROOT, 'tasks', 'reports', 'repo-ops', 'component-usage-audit.json');
 
 const V2_DOC_ROOTS = [
   'v2/pages',

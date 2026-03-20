@@ -18,6 +18,7 @@ const path = require('path');
 
 const STAGE_ID = 'script-footprint-and-usage-audit';
 const REPO_ROOT = process.cwd();
+const SCRIPTS_ROOT = 'tools/scripts';
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
 
 function toPosix(value) {
@@ -325,7 +326,7 @@ function main() {
   ensureDir(outputDirAbs);
 
   const files = [
-    ...walkFiles(path.join(REPO_ROOT, 'tools/scripts')),
+    ...walkFiles(path.join(REPO_ROOT, SCRIPTS_ROOT)),
     ...walkFiles(path.join(REPO_ROOT, 'tests')),
     ...walkFiles(path.join(REPO_ROOT, 'tasks/reports'))
   ];

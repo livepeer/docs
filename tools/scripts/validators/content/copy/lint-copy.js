@@ -20,7 +20,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 const matter = require('gray-matter');
 
-const COPY_GOVERNANCE_DIR = path.resolve(__dirname, '../../../../lib/copy-governance');
+const REPO_ROOT = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+const COPY_GOVERNANCE_DIR = path.join(REPO_ROOT, 'tools/lib/copy-governance');
 
 const BANNED_WORDS = fs
   .readFileSync(path.join(COPY_GOVERNANCE_DIR, 'banned-words.txt'), 'utf8')

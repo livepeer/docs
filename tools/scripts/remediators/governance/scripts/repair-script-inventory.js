@@ -15,6 +15,7 @@
 
 const { spawnSync } = require('child_process');
 const REPO_ROOT = process.cwd();
+const AUDIT_SCRIPT = 'tools/scripts/validators/governance/pr/audit-script-inventory.js';
 
 function main() {
   const passthrough = process.argv.slice(2);
@@ -24,7 +25,7 @@ function main() {
   args.unshift('--fix');
 
   const result = spawnSync('node', [
-    'tools/scripts/validators/governance/pr/audit-script-inventory.js',
+    AUDIT_SCRIPT,
     ...args
   ], {
     cwd: REPO_ROOT,

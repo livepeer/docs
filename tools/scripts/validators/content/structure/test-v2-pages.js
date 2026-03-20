@@ -20,7 +20,8 @@ const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
 
-const DOCS_JSON_PATH = path.join(__dirname, '../../', 'docs.json');
+const REPO_ROOT = process.cwd();
+const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000; // 30 seconds per page
 const BASE_ORIGIN = new URL(BASE_URL).origin;
@@ -255,7 +256,7 @@ async function main() {
   }
   
   // Save detailed report
-  const reportPath = path.join(__dirname, '..', 'v2-page-test-report.json');
+  const reportPath = path.join(REPO_ROOT, 'tasks/reports/page-audits/v2-page-test-report.json');
   fs.writeFileSync(reportPath, JSON.stringify({
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL,

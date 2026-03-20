@@ -553,6 +553,20 @@ files stay in `x-archive/` via `git mv` to preserve history.
 
 ---
 
+## Task 13 — Script documentation consolidation
+
+**Goal**: Audit all script documentation surfaces, identify what exists vs what's needed, define one source of truth (likely JSON config), and plan human-readable MDX derivations. No code changes — analysis and report only.
+
+### Tasks
+
+- [ ] **13.1** Inventory all current script documentation surfaces (catalog.mdx, script-indexes, docs-guide pages, AGENTS.md references, README.md, scripts-library.mdx, script-framework.md, structure.md, plan.md)
+- [ ] **13.2** Identify consolidation opportunities — what can be generated vs authored, what is duplicated, what belongs in one MDX page vs many
+- [ ] **13.3** Define proposed single source of truth (JSON config? MDX? hybrid?) and derivation plan for docs-guide and internal nav pages
+- [ ] **13.4** Write findings to `tasks/plan/active/SCRIPT-GOVERNANCE/script-docs.md`
+- [ ] **13.5** **CHECKPOINT** — present to human for approval before any changes
+
+---
+
 ## Task 16 — Final merge to docs-v2-dev
 
 **Goal**: Clean merge of all work back to `docs-v2-dev`. Verify branch is clean.
