@@ -14,6 +14,8 @@
  * @param {string} [searchPlaceholder='Search...'] - Search placeholder used by the component.
  * @param {Array} [searchColumns=[]] - Collection data rendered by the component.
  * @param {string} [categoryColumn='Category'] - Category column used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const SearchTable = ({
   TableComponent = null,

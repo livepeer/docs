@@ -10,6 +10,7 @@
  * @param {boolean} [showHint=true] - show Hint prop.
  * @param {string} [ariaLabel="Scrollable content"] - aria Label prop.
  * @param {any} style - style prop.
+ * @param {string} [className=""] - CSS class name.
  */
 export const ScrollBox = ({
   children,

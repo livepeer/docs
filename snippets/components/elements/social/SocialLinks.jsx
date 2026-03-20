@@ -9,6 +9,8 @@
  * @param {string} [gap="0.75rem"] - Gap used by the component.
  * @param {string} [justify="center"] - Justify used by the component.
  * @param {string} color - Color used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  *
  * @example
  * <SocialLinks color="value" />

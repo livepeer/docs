@@ -676,6 +676,9 @@ function parseJSDocBlock(sourceText) {
   GOVERNANCE_FIELDS.forEach((field) => {
     parsed[field] = compactWhitespace(tags[field] || '');
   });
+  OPTIONAL_GOVERNANCE_FIELDS.forEach((field) => {
+    parsed[field] = compactWhitespace(tags[field] || '');
+  });
   return parsed;
 }
 

@@ -28,6 +28,8 @@
  * @param {any} titleColor - title Color prop.
  * @param {any} subtitleColor - subtitle Color prop.
  * @param {any} descriptionColor - description Color prop.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 
 const PageHeader = ({
@@ -112,6 +114,8 @@ const PageHeader = ({
  * @param {any} iconColor - icon Color prop.
  * @param {string} [align="left"] - align prop.
  * @param {string} [gap="0.75rem"] - gap prop.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H1 = ({
   children,
@@ -169,6 +173,8 @@ const H1 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.75rem"] - Gap between icon and text (default: "0.75rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H2 = ({
   children,
@@ -226,6 +232,8 @@ const H2 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H3 = ({
   children,
@@ -283,6 +291,8 @@ const H3 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H4 = ({
   children,
@@ -340,6 +350,8 @@ const H4 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H5 = ({
   children,
@@ -397,6 +409,8 @@ const H5 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const H6 = ({
   children,
@@ -454,6 +468,8 @@ const H6 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const P = ({
   children,
@@ -505,6 +521,8 @@ const P = ({
  * @param {string} color - Custom color for the divider (optional, defaults to theme border color)
  * @param {string} [margin="1.5rem 0"] - Vertical margin (default: "1.5rem 0")
  * @param {string} [opacity=0.2] - Opacity of the divider (default: 0.2)
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2, className = "", style = {}, ...rest }) => {
   return (

@@ -10,6 +10,8 @@
  * @param {string} [maxHeight="500px"] - Max height used by the component.
  * @param {string} [minWidth="100%"] - Min width used by the component.
  * @param {boolean} [showControls=false] - Boolean flag that controls component behaviour.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const ScrollableDiagram = ({
   children,

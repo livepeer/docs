@@ -10,6 +10,7 @@
  * @param {string} [gap="1.5rem"] - Gap used by the component.
  * @param {boolean} [showDots=true] - Boolean flag that controls component behaviour.
  * @param {object} style - Style used by the component.
+ * @param {string} [className=""] - CSS class name.
  */
 export const CardCarousel = ({
   children,

@@ -6,6 +6,8 @@
  * @description Animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.
  * @accepts {number} density, {string} className, {object} style, ...rest
  * @param {number} [density=1.1] - Density used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }) => {
   const canvasRef = useRef(null);

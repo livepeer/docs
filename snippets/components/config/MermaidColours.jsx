@@ -1,6 +1,7 @@
 /**
  * @component MermaidColours
  * @type config
+ * @subniche none
  * @status stable
  * @description Theme colour definitions for Mermaid diagrams (light/dark/CSS variable mappings).
  * @accepts none (exported object literal)

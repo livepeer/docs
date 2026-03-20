@@ -6,6 +6,8 @@
  * @description Vertical stack layout with small gap, designed for accordion content sections.
  * @accepts children, className, style, ...rest
  * @param {any} children - children prop.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const AccordionLayout = ({ children, className = "", style = {}, ...rest }) => {
   return (

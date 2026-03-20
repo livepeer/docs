@@ -7,6 +7,8 @@
  * @dataSource fetch(url)
  * @accepts {string} url, {string} className, {object} style, ...rest
  * @param {string} url - Destination URL used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
   const [content, setContent] = useState('')
@@ -32,6 +34,8 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
  * @param {string} src - Asset or embed source used by the component.
  * @param {string} [height='700px'] - Height used by the component.
  * @param {string} [width='100%'] - Width used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const PdfEmbed = ({
   title,
@@ -53,11 +57,14 @@ export const PdfEmbed = ({
  * @subniche embeds
  * @status deprecated
  * @description Alias for MarkdownEmbed — use MarkdownEmbed instead.
+ * @deprecated Use MarkdownEmbed. Kept for backwards-compat — see tasks/reports/archived-components-review.md
+ * @see MarkdownEmbed
  * @dataSource fetch(url)
  * @accepts {string} url, {string} className, {object} style, ...rest
  * @param {string} url - Destination URL used by the component.
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
-// ARCHIVED: duplicate of MarkdownEmbed - see tasks/reports/archived-components-review.md
 export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <MarkdownEmbed url={url} className={className} style={style} {...rest} />
 
 /**
@@ -68,6 +75,8 @@ export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <
  * @description Embeds a Twitter/X timeline feed widget via iframe.
  * @dataSource feed.mikle.com widget
  * @accepts {string} className, {object} style, ...rest
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
  */
 export const TwitterTimeline = ({ className = "", style = {}, ...rest }) => {
   return (
