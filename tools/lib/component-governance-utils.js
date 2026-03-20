@@ -43,8 +43,8 @@ const GOVERNANCE_FIELDS = [
   'description',
   'accepts'
 ];
-// Optional field: 'dataSource' (required for integrators only)
-const OPTIONAL_GOVERNANCE_FIELDS = ['dataSource'];
+// Optional fields: 'dataSource' (required for integrators only), 'aiDiscoverability' (required for hook-using components)
+const OPTIONAL_GOVERNANCE_FIELDS = ['dataSource', 'aiDiscoverability'];
 const COMPONENT_IMPORT_RE = /import\s*\{([\s\S]*?)\}\s*from\s*['"]([^'"]+)['"]/g;
 const COLOR_LITERAL_RE = /#[0-9a-fA-F]{3,8}\b|\brgba?\([^)]*\)|\bhsla?\([^)]*\)/g;
 const COLOR_CONTEXT_RE = /\b(?:accentcolor|background(?:color)?|border(?:color)?|caretcolor|color|fill|floodcolor|icon|lightingcolor|outlinecolor|stopcolor|stroke|textdecorationcolor)\b/;
@@ -109,7 +109,14 @@ function isLegacyDuplicateComponentPath(filePath) {
     return false;
   }
 
-  return fs.existsSync(path.join(parsed.dir, `${canonicalName}${parsed.ext}`));
+  // Use a case-sensitive directory listing to avoid false positives on macOS (case-insensitive FS).
+  // fs.existsSync('coingecko.jsx') returns true on macOS even when only 'Coingecko.jsx' exists.
+  try {
+    const entries = fs.readdirSync(parsed.dir);
+    return entries.includes(`${canonicalName}${parsed.ext}`);
+  } catch {
+    return false;
+  }
 }
 
 function isLegacyShimComponentPath(filePath) {

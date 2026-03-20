@@ -3,6 +3,8 @@
  * @type elements
  * @subniche buttons
  * @status deprecated
+ * @deprecated Non-functional stub — do not use.
+ * @see No replacement. Remove usages.
  * @description Empty placeholder button stub — non-functional.
  * @accepts style, className, ...rest
  * @example

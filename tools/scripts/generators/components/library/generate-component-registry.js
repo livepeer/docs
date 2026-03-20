@@ -101,6 +101,7 @@ function formatValidationMessage(filePath, exportName, message) {
 
 function buildRegistry() {
   const issues = [];
+  const warnings = [];
   const components = [];
   const categoryCounts = Object.fromEntries(VALID_CATEGORIES.map((category) => [category, 0]));
 
@@ -128,7 +129,7 @@ function buildRegistry() {
         issues.push(formatValidationMessage(file.displayPath, entry.name, message));
       });
       validation.warnings.forEach((message) => {
-        issues.push(formatValidationMessage(file.displayPath, entry.name, message));
+        warnings.push(formatValidationMessage(file.displayPath, entry.name, message));
       });
 
       components.push({
@@ -140,6 +141,7 @@ function buildRegistry() {
         subniche: jsDoc.subniche,
         accepts: jsDoc.accepts,
         dataSource: jsDoc.dataSource,
+        aiDiscoverability: jsDoc.aiDiscoverability || '',
         deprecated: jsDoc.deprecated || '',
         see: jsDoc.see || '',
         params: jsDoc.params.map(serializeParam),
@@ -188,7 +190,8 @@ function buildRegistry() {
 
   return {
     registry,
-    issues
+    issues,
+    warnings
   };
 }
 
@@ -303,13 +306,21 @@ function run(argv = process.argv.slice(2)) {
     return 0;
   }
 
-  const { registry, issues } = buildRegistry();
+  const { registry, issues, warnings } = buildRegistry();
+
+  if (warnings.length > 0 && !args.validateOnly) {
+    console.warn(`⚠️  ${warnings.length} governance warning(s):`);
+    warnings.forEach((w) => console.warn(`  - ${w}`));
+  }
+
   if (issues.length > 0) {
     console.error('❌ Component registry generation failed:');
     issues.forEach((issue) => console.error(`- ${issue}`));
-    if (args.strict) {
-      console.error(`\n❌ --strict mode: ${issues.length} governance violation(s) found. Exiting non-zero.`);
-    }
+    return 1;
+  }
+
+  if (args.strict && warnings.length > 0) {
+    console.error(`\n❌ --strict mode: ${warnings.length} governance warning(s) found. Exiting non-zero.`);
     return 1;
   }
 
@@ -319,7 +330,8 @@ function run(argv = process.argv.slice(2)) {
     console.log(`Wrote ${path.relative(REPO_ROOT, REGISTRY_PATH)}`);
     console.log(`Wrote ${path.relative(REPO_ROOT, SCHEMA_PATH)}`);
   } else {
-    console.log(`✅ Validated ${registry.components.length} governed component export(s). No issues.`);
+    const warningNote = warnings.length > 0 ? ` (${warnings.length} warning(s))` : '';
+    console.log(`✅ Validated ${registry.components.length} governed component export(s). No errors${warningNote}.`);
   }
 
   return 0;

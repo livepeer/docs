@@ -36,6 +36,8 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
  * @type elements
  * @subniche icons
  * @status deprecated
+ * @deprecated Light-only SVG — replaced by LivepeerIcon which handles both themes.
+ * @see LivepeerIcon
  * @description Legacy Livepeer icon using light-only SVG path.
  * @accepts ...props
  * @param {any} props - props prop.
@@ -56,6 +58,8 @@ export const LivepeerIconOld = ({ ...props }) => {
  * @type elements
  * @subniche icons
  * @status deprecated
+ * @deprecated Flipped transform is non-standard — use LivepeerIcon directly.
+ * @see LivepeerIcon
  * @description Horizontally flipped legacy Livepeer icon.
  * @accepts ...props
  * @param {any} props - props prop.
