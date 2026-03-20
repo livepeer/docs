@@ -398,8 +398,9 @@ Update this section as each step completes. Current step is marked with ▶.
 | 2 | Define pageType enum + governance | ✅ Done — 7 types + pageVariant |
 | 3 | Define audience enum + governance | ✅ Done — 7 audiences (was 10, consolidated) |
 | 4 | Define persona per audience | ✅ Done — all 7 audiences have personas |
-| 5 | Define purpose enum (reconcile divergence) | ✅ Enum locked (15 values). Deep definitions needed (F1). |
-| ▶ 6 | Define domain + niche | ⬜ Not started |
+| 5 | Define purpose enum + deep definitions | ✅ Done — 15 values, full definitions in pagePurpose.md, information-type.md baseline created |
+| 5a | Define information type taxonomy | ▶ In progress — layer 1 done; layers 2 (category) + 4 (veracity) to define |
+| 6 | Define domain + niche | ⬜ Not started |
 | 7 | Define complexity + lifecycleStage | ⬜ Not started |
 | 8 | Define generation contract (how fields combine) | ⬜ Not started |
 | 9 | Define voice rules per audience | ⬜ Not started |
