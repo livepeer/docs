@@ -180,41 +180,38 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 > **No execution until draft is approved. Every sub-phase has an explicit gate.**
 
 **2A-I — Approve structure + naming framework** *(gate — human review required)*
-- [ ] **2A-I.1** Review `docs-guide-restructure-draft.md` — confirm canonical folder structure (Section 1)
-- [ ] **2A-I.2** Confirm naming framework: `-catalog.mdx` suffix, no `-index.mdx`, no 0-byte stubs, 6 sections + `_workspace/`
-- [ ] **2A-I.3** Decide: move `ai-tools.mdx` to `features/` (recommendation) or keep in `catalog/` as manual exception
-- [ ] **2A-I.4** Confirm 5 missing template types for `snippets/templates/docs-guide/`
-- [ ] **2A-I.5** Approve new file: `docs-guide/policies/docs-guide-structure-policy.mdx`
+- [x] **2A-I.1** Review `docs-guide-restructure-draft.md` — confirmed *(2026-03-21)*
+- [x] **2A-I.2** Confirm naming framework: `-catalog.mdx` suffix, no `-index.mdx`, no 0-byte stubs, 6 sections + `_workspace/` *(confirmed 2026-03-21)*
+- [x] **2A-I.3** `ai-tools.mdx` → `docs-guide/tooling/` (human override; `features/` was recommendation) *(2026-03-21)*
+- [x] **2A-I.4** 5 template types confirmed for `snippets/templates/docs-guide/` *(created 2026-03-21)*
+- [x] **2A-I.5** `docs-guide/policies/docs-guide-structure-policy.mdx` approved + written *(2026-03-21)*
 
 **2A-II — Fix upstream script problems** *(safe after 2A-I approval; no nav impact)*
-- [ ] **2A-II.1** Delete 3 stale `.codex/locks-local/` files — all from completed tasks (Mar 8, 9, 17); all lock paths (`docs-guide/indexes/`) no longer exist → zero risk
-  - `789-phase2b-component-migration-2026-03-08T03-08-50-208Z.json`
-  - `808-governance-replay-2026-03-09T17-46-57-724Z.json`
-  - `20260317-merge-readiness-style-root-cause-2026-03-16T16-43-42-131Z.json`
-- [ ] **2A-II.2** Add `generate-docs-guide-indexes.js` to post-commit hook triggered by `.github/workflows/*.yml` or `.github/ISSUE_TEMPLATE/*` changes
-- [ ] **2A-II.3** Add `generate-docs-guide-pages-index.js` to pre-commit hook triggered by `docs.json` or `v2/index.mdx` changes (docs.json already has hook coverage — add here)
+- [x] **2A-II.1** Delete 3 stale `.codex/locks-local/` files *(2026-03-21)*
+- [x] **2A-II.2** `generate-docs-guide-indexes.js` added to CI pipeline *(2026-03-21 — `generate-docs-guide-catalogs.yml` + `check-docs-guide-catalogs.yml`; **NOTE: went to CI workflows, NOT hooks — pre-commit is hard-gates-only**)*
+- [x] **2A-II.3** `generate-docs-guide-pages-index.js` added to CI pipeline *(2026-03-21 — same workflows as above)*
 - [ ] **2A-II.4** `component-usage-map.json` generator → **hand off to COMPONENT-GOVERNANCE thread** to trace and document
 
 **2A-III — Add missing templates** *(handoff — see `handoff-snippets-templates.md`)*
-- [ ] **2A-III.0** Handoff delivered to snippets/templates owner → see `handoff-snippets-templates.md`
-- [ ] **2A-III.1** *(handoff recipient)* Create `snippets/templates/docs-guide/policy-page.mdx`
-- [ ] **2A-III.2** *(handoff recipient)* Create `snippets/templates/docs-guide/framework-page.mdx`
-- [ ] **2A-III.3** *(handoff recipient)* Create `snippets/templates/docs-guide/catalog-page.mdx`
-- [ ] **2A-III.4** *(handoff recipient)* Create `snippets/templates/docs-guide/feature-map-page.mdx`
-- [ ] **2A-III.5** *(handoff recipient)* Create `snippets/templates/docs-guide/tooling-reference-page.mdx`
-- [ ] **2A-III.6** *(handoff recipient)* Regenerate `docs-guide/catalog/ui-templates.mdx` after templates added
+- [x] **2A-III.0** Handoff delivered to snippets/templates owner → see `handoff-snippets-templates.md`
+- [x] **2A-III.1** Create `snippets/templates/docs-guide/policy-page.mdx` *(2026-03-21)*
+- [x] **2A-III.2** Create `snippets/templates/docs-guide/framework-page.mdx` *(2026-03-21)*
+- [x] **2A-III.3** Create `snippets/templates/docs-guide/catalog-page.mdx` *(2026-03-21)*
+- [x] **2A-III.4** Create `snippets/templates/docs-guide/feature-map-page.mdx` *(2026-03-21)*
+- [x] **2A-III.5** Create `snippets/templates/docs-guide/tooling-reference-page.mdx` *(2026-03-21)*
+- [ ] **2A-III.6** Regenerate `docs-guide/catalog/ui-templates.mdx` after templates added *(deferred by user)*
 
 **2A-IV — Structural cleanup** *(requires docs.json + AGENTS.md updates; careful coord)*
-- [ ] **2A-IV.1** Delete 5 empty `source-of-truth.md` stubs (catalog, contributing, features, frameworks, policies)
-- [ ] **2A-IV.2** Delete `frameworks/component-framework.mdx` — grep all refs in AGENTS.md, .codex/, scripts first
-- [ ] **2A-IV.3** Move `catalog/scripts-catalog-archive.mdx` + `catalog/visual-explainer-workflows-archive.mdx` → `_workspace/archive/`; update docs.json
-- [ ] **2A-IV.4** Move `catalog/ai-tools.mdx` → `features/ai-tools.mdx`; update docs.json nav entry
-- [ ] **2A-IV.5** Migrate `tooling/source-of-truth.md` partial content → `tooling/dev-tools.mdx`; delete stub
+- [x] **2A-IV.1** Delete 5 empty `source-of-truth.md` stubs *(2026-03-21)*
+- [x] **2A-IV.2** Delete `frameworks/component-framework.mdx` *(2026-03-21 — zero refs confirmed)*
+- [x] **2A-IV.3** Move archive files → `_workspace/archive/`; docs.json updated *(2026-03-21)*
+- [x] **2A-IV.4** Move `catalog/ai-tools.mdx` → `tooling/ai-tools.mdx`; docs.json updated *(2026-03-21 — human override: tooling/ not features/)*
+- [x] **2A-IV.5** `tooling/source-of-truth.md` → `_workspace/drafts/tooling-overview-draft.md` *(2026-03-21 — had partial content; moved not deleted)*
 - [ ] **2A-IV.6** Refresh `source-of-truth-guide.mdx` — remove TODO comment; verify all generator commands current
 
 **2A-V — Write governance docs** *(final; do last)*
-- [ ] **2A-V.1** Write `docs-guide/policies/docs-guide-structure-policy.mdx`
-- [ ] **2A-V.2** Write `_workspace/` lifecycle policy (30-day scratch TTL, 90-day archive TTL, nav-stub index.mds exempt)
+- [x] **2A-V.1** Write `docs-guide/policies/docs-guide-structure-policy.mdx` *(2026-03-21)*
+- [x] **2A-V.2** Write `docs-guide/policies/workspace-lifecycle-policy.mdx` *(2026-03-21 — 30-day scratch TTL, 90-day archive TTL, nav-stub index.mds exempt)*
 - [ ] **2A-V.3** Expand `contributing/contributing.mdx` — defer until `contribute/` root folder merge lands (Phase 1.3)
 - [ ] **2A-V.4** AI-TOOLS-GOVERNANCE adapter file updates → see `AI-TOOLS-GOVERNANCE/handoff-docs-guide-path-updates.md` (must land same PR as 2A-IV)
 

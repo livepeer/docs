@@ -1,0 +1,36 @@
+name: Check Docs Guide Catalogs
+
+on:
+  pull_request:
+    branches:
+      - docs-v2
+      - main
+  push:
+    branches:
+      - docs-v2
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-docs-guide-catalogs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install tooling dependencies
+        run: npm --prefix tools ci
+
+      - name: Verify workflows and templates catalogs are current
+        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
+
+      - name: Verify pages catalog is current
+        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check

@@ -1,0 +1,43 @@
+{/*
+  @composable  accordion-glossary-section
+  @purpose     Alphabetical glossary block — full per-term definitions for reference and compendium pages.
+  @pageTypes   reference (compendium), concept
+  @variables
+    - Letter heading (## A, ## B…):  omit letters with no terms entirely
+    - Accordion title:               term name — expand abbreviations (e.g. "HLS (HTTP Live Streaming)")
+    - Definition (required)
+    - Tags (required):               format `domain:subcategory`
+    - Context or External (one or the other, not both):
+        Context  → Livepeer-specific usage note (use for Livepeer/protocol terms)
+        External → link to authoritative source (use for industry-standard terms)
+    - Also known as (optional):      alias or deprecated name — remove line if none
+    - Status (required):             current | deprecated | draft
+  @notes       Use icon="book-open" on every Accordion.
+               Omit empty letter sections entirely — do not include an empty ## B with no AccordionGroup.
+               For the site-wide consolidated glossary, use the SearchTable component with a companion JSON instead.
+               This composable is for section-scoped or tab-specific glossaries.
+  @promoted    2026-03-21
+*/}
+
+## A
+
+<AccordionGroup>
+  <Accordion title="Term Name" icon="book-open">
+    **Definition**: One clear, self-contained sentence.
+
+    **Tags**: `domain:subcategory`
+
+    **Context**: How Livepeer uses this specifically. _(Livepeer-specific terms only — replace with External for industry terms)_
+
+    {/*
+      OPTIONAL — for industry-standard terms, replace the Context line above with:
+      **External**: [Source Name](https://authoritative-source-url.com)
+    */}
+
+    **Also known as**: Alias or deprecated name. _(Remove this line if none)_
+
+    **Status**: current
+  </Accordion>
+</AccordionGroup>
+
+{/* Repeat ## B, ## C … ## Z sections as needed. Omit letters with no terms. */}

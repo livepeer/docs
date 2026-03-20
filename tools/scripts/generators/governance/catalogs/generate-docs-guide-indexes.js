@@ -7,7 +7,7 @@
  * @purpose     governance:index-management
  * @description Generates docs-guide workflow/template catalogs and optionally verifies freshness
  * @mode        generate
- * @pipeline    manual — not yet in pipeline
+ * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
  * @scope       tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
  * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]
  * @policy      R-R16, R-R17

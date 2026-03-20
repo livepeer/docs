@@ -141,6 +141,7 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 | Variant | Covers |
 |---|---|
 | `overview` | Entry page for a resource section — "here's what resources are available" (e.g. resources-portal.mdx) |
+| `knowledge-hub` | Curated external/public content — tools directories, showcases, community channels, ecosystem link collections. Browse to find/access, not to look up a specific fact. |
 
 **Examples**: community channel directories, tool listings, external guide collections, showcase galleries, video/blog aggregations, media kits, event calendars.
 
@@ -158,7 +159,7 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 | `guide` | `overview` |
 | `instruction` | `overview`, `quickstart`, `setup` |
 | `reference` | `overview`, `specification`, `compendium`, `changelog` |
-| `resource` | `overview` |
+| `resource` | `overview`, `knowledge-hub` |
 
 `overview` = entry/orientation page for a section of this type. Available on all types except `navigation` (which is already pure routing by definition).
 

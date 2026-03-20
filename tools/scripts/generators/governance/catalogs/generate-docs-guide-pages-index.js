@@ -7,7 +7,7 @@
  * @purpose     governance:index-management
  * @description Generates the docs-guide pages catalog
  * @mode        generate
- * @pipeline    manual — not yet in pipeline
+ * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
  * @scope       tools/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
  * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]
  * @policy      R-R16, R-R17

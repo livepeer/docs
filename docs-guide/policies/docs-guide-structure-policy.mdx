@@ -1,0 +1,94 @@
+---
+title: Docs Guide Structure Policy
+sidebarTitle: Docs Guide Structure
+description: Canonical policy for the docs-guide/ folder structure, naming conventions, and generated-file rules.
+owner: "@livepeer/docs-team"
+status: active
+version: "1.0"
+created: 2026-03-21
+lastUpdated: 2026-03-21
+---
+
+# Docs Guide Structure Policy
+
+> Defines what belongs in `docs-guide/`, how it is organised, and what rules apply to each content type.
+
+---
+
+## Scope
+
+| In scope | Out of scope |
+|----------|--------------|
+| All files and folders under `docs-guide/` | `v2/` content pages |
+| Naming conventions for catalog, policy, framework, and tooling files | `snippets/` component library |
+| Generator freshness and CI pipeline rules | AI adapter files (`.claude/`, `.cursor/`, `.windsurf/`) |
+| `_workspace/` usage within `docs-guide/` | Root-level `.allowlist` governance (see `root-allowlist-governance.mdx`) |
+
+---
+
+## Canonical Structure
+
+```
+docs-guide/
+├── catalog/          ← auto-generated catalogs only; do not edit manually
+├── contributing/     ← contributor guides and onboarding
+├── features/         ← feature and system overviews; hand-maintained
+├── frameworks/       ← decision models and taxonomies; hand-maintained
+├── policies/         ← governance policies; hand-maintained
+├── tooling/          ← tool references and AI tooling guides
+└── _workspace/       ← scratch, drafts, archive; not in nav; 30/90-day TTL
+```
+
+No other subdirectories are permitted at this level without an explicit policy update.
+
+---
+
+## Rules
+
+1. **Canonical sections only** — new top-level subdirectories under `docs-guide/` require a policy update to this document before they can be created.
+
+2. **No 0-byte stubs** — placeholder files with no content (e.g. `source-of-truth.md` stubs) are not permitted. A file at a nav path must contain real content or must not exist.
+
+3. **Generated files must not be manually edited** — all files in `docs-guide/catalog/` are auto-generated. They carry a `generated-file-banner:v1` comment block identifying their generator script. Manual edits will be overwritten on the next run.
+
+4. **Generated files must stay current** — if a generator's source input changes (workflows, templates, docs.json, v2/index.mdx), the corresponding catalog must be regenerated before the PR merges. The `check-docs-guide-catalogs.yml` CI workflow enforces this.
+
+5. **Naming conventions** — follow the suffix pattern for each section:
+   - `catalog/` files: `<subject>-catalog.mdx`
+   - `policies/` files: `<subject>-policy.mdx` or `<subject>-governance.mdx`
+   - `frameworks/` files: `<subject>-framework.mdx`
+   - `features/` files: `<subject>.mdx` (no suffix required)
+   - `tooling/` files: `<subject>.mdx` or `<subject>-reference.mdx`
+
+6. **No `-index.mdx` naming** — the `-index.mdx` suffix is retired. Use `-catalog.mdx` for generated inventories and descriptive names for hand-maintained pages.
+
+7. **Archive before delete** — files being removed from navigation must move to `_workspace/archive/` with a 90-day TTL before permanent deletion, unless they are empty stubs (0-byte files may be deleted immediately).
+
+8. **`_workspace/` is not a nav path** — `docs-guide/_workspace/` must never appear in `docs.json`. It is covered by `.mintignore`.
+
+---
+
+## Enforcement
+
+| Mechanism | Trigger | Script / Tool |
+|-----------|---------|---------------|
+| CI check — catalog freshness | PR to `docs-v2` or `main` | `.github/workflows/check-docs-guide-catalogs.yml` |
+| CI generate — catalog auto-update | Push to `main` (source paths changed) | `.github/workflows/generate-docs-guide-catalogs.yml` |
+| Pre-commit hook — file deletion guard | Staged deletion of any governed file | `.githooks/pre-commit` (deletion gate) |
+
+---
+
+## Exceptions
+
+- **`docs-guide/_workspace/`** — exempt from nav and naming rules; governed by `workspace-lifecycle-policy.mdx`.
+- **`docs-guide/catalog/ai-tools.mdx`** — migrated to `docs-guide/tooling/ai-tools.mdx`; this exception is now resolved.
+- Legacy files in `_workspace/archive/` during their 90-day TTL window are not subject to naming enforcement.
+
+---
+
+## Related
+
+- [Workspace Lifecycle Policy](workspace-lifecycle-policy)
+- [Generated Artifact and Hook Governance](generated-artifact-and-hook-governance)
+- [Root Allowlist Governance](root-allowlist-governance)
+- [V2 Folder Governance](v2-folder-governance)

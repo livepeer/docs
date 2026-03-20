@@ -1,0 +1,70 @@
+{/*
+  @composable  accordion-troubleshooting-section
+  @purpose     Structured troubleshooting block — symptom / cause / fix / verify per issue.
+  @pageTypes   reference (compendium), instruction (troubleshooting variant)
+  @variables
+    - Section heading:    use "Troubleshooting" or scope it (e.g. "Gateway Troubleshooting")
+    - Accordion title:    the failure condition as the reader would describe it — not a question, not the fix
+    - Symptom:            the observable failure (error message, missing output, unexpected state)
+    - Cause:              root cause in one sentence
+    - Fix:                corrective action; include a code block if a command is involved
+    - Verify:             specific observable state that confirms the fix worked — must be falsifiable
+  @notes       Use icon="wrench" on every Accordion.
+               Title the accordion with the symptom, not the fix.
+               "Verify" must describe a concrete output or state — "check if it works" is not valid.
+               Minimum 2 issues; for 10+ issues, consider splitting into a dedicated troubleshooting page per system.
+  @promoted    2026-03-21
+*/}
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Symptom description — what the reader observes" icon="wrench">
+    **Symptom**
+    Describe the failure condition readers will observe (error message, missing output, unexpected state).
+
+    **Cause**
+    Root cause in one sentence.
+
+    **Fix**
+    Corrective action. Include a code block if a command is required.
+
+    ```bash title="Terminal" icon="terminal"
+    # Optional: corrective command — remove block if no command is needed
+    ```
+
+    **Verify**
+    Describe the specific output, response, or UI state that confirms the fix worked.
+  </Accordion>
+  <Accordion title="Second issue — symptom description" icon="wrench">
+    **Symptom**
+    Describe the failure condition.
+
+    **Cause**
+    Root cause in one sentence.
+
+    **Fix**
+    Corrective action.
+
+    **Verify**
+    Confirmation state or output.
+  </Accordion>
+</AccordionGroup>
+
+{/*
+  OPTIONAL — add more issues by copying an <Accordion> block inside <AccordionGroup>.
+
+  <Accordion title="Third issue — symptom description" icon="wrench">
+    **Symptom**
+    …
+
+    **Cause**
+    …
+
+    **Fix**
+    …
+
+    **Verify**
+    …
+  </Accordion>
+*/}

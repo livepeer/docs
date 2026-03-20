@@ -1,0 +1,62 @@
+# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
+
+name: Generate Docs Guide Catalogs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/pull-request-template-v2.md'
+      - '.github/pull_request_template.md'
+      - 'docs.json'
+      - 'v2/index.mdx'
+  workflow_dispatch:
+
+jobs:
+  generate-docs-guide-catalogs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: cd tools && npm install
+
+      - name: Generate workflows and templates catalogs
+        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+
+      - name: Generate pages catalog
+        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code \
+            docs-guide/catalog/workflows-catalog.mdx \
+            docs-guide/catalog/templates-catalog.mdx \
+            docs-guide/catalog/pages-catalog.mdx \
+          || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add \
+            docs-guide/catalog/workflows-catalog.mdx \
+            docs-guide/catalog/templates-catalog.mdx \
+            docs-guide/catalog/pages-catalog.mdx
+          git commit -m "chore(docs-guide): regenerate catalogs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          git push
