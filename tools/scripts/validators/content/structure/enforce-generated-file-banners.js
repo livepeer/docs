@@ -34,21 +34,21 @@ const REPO_ROOT = process.cwd();
 const STAGED_SNAPSHOT_ENV = 'LPD_STAGED_FILES_SNAPSHOT';
 
 const CHECK_COMMANDS = [
-  ['tools/scripts/generate-docs-guide-indexes.js', '--check'],
-  ['tools/scripts/generate-docs-guide-pages-index.js', '--check'],
-  ['tools/scripts/generate-docs-guide-components-index.js', '--check'],
-  ['tools/scripts/generate-component-docs.js', '--check', '--template-only'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js', '--check'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js', '--check'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js', '--check'],
+  ['tools/scripts/generators/components/documentation/generate-component-docs.js', '--check', '--template-only'],
   ['tests/unit/script-docs.test.js', '--check-indexes'],
-  ['tools/scripts/generate-pages-index.js']
+  ['tools/scripts/generators/content/catalogs/generate-pages-index.js']
 ];
 
 const WRITE_COMMANDS = [
-  ['tools/scripts/generate-docs-guide-indexes.js', '--write'],
-  ['tools/scripts/generate-docs-guide-pages-index.js', '--write'],
-  ['tools/scripts/generate-docs-guide-components-index.js', '--write'],
-  ['tools/scripts/generate-component-docs.js', '--fix', '--template-only'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js', '--write'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js', '--write'],
+  ['tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js', '--write'],
+  ['tools/scripts/generators/components/documentation/generate-component-docs.js', '--fix', '--template-only'],
   ['tests/unit/script-docs.test.js', '--write', '--rebuild-indexes'],
-  ['tools/scripts/generate-pages-index.js', '--write', '--rebuild-indexes']
+  ['tools/scripts/generators/content/catalogs/generate-pages-index.js', '--write', '--rebuild-indexes']
 ];
 
 function normalizeRepoPath(value) {
@@ -170,14 +170,14 @@ function runGeneratorSet(writeMode, violations, options = {}) {
     const hasV2Index = [...relevantFiles].some((repoPath) => repoPath === 'v2/index.mdx' || /^v2\/[^/]+\/index\.mdx$/.test(repoPath));
     if (hasV2Index) {
       stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-pages-index.js', '--staged', '--write', '--stage']
-        : ['tools/scripts/generate-pages-index.js', '--staged']);
+        ? ['tools/scripts/generators/content/catalogs/generate-pages-index.js', '--staged', '--write', '--stage']
+        : ['tools/scripts/generators/content/catalogs/generate-pages-index.js', '--staged']);
     }
 
     if (relevantFiles.has('docs-guide/catalog/pages-catalog.mdx')) {
       stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-docs-guide-pages-index.js', '--write']
-        : ['tools/scripts/generate-docs-guide-pages-index.js', '--check']);
+        ? ['tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js', '--write']
+        : ['tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js', '--check']);
     }
 
     const hasDocsGuideIndex = [...relevantFiles].some((repoPath) =>
@@ -190,8 +190,8 @@ function runGeneratorSet(writeMode, violations, options = {}) {
     );
     if (hasDocsGuideIndex) {
       stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-docs-guide-indexes.js', '--write']
-        : ['tools/scripts/generate-docs-guide-indexes.js', '--check']);
+        ? ['tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js', '--write']
+        : ['tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js', '--check']);
       stagedCommands.push(writeMode
         ? ['tests/unit/script-docs.test.js', '--write', '--rebuild-indexes']
         : ['tests/unit/script-docs.test.js', '--check-indexes']);
@@ -202,8 +202,8 @@ function runGeneratorSet(writeMode, violations, options = {}) {
     );
     if (hasComponentDocs) {
       stagedCommands.push(writeMode
-        ? ['tools/scripts/generate-component-docs.js', '--fix', '--template-only']
-        : ['tools/scripts/generate-component-docs.js', '--check', '--template-only']);
+        ? ['tools/scripts/generators/components/documentation/generate-component-docs.js', '--fix', '--template-only']
+        : ['tools/scripts/generators/components/documentation/generate-component-docs.js', '--check', '--template-only']);
     }
 
     stagedCommands.forEach((args) => {
