@@ -8,7 +8,7 @@
  * @description Validates that canonical agent governance docs and native adapters exist and have been touched within a freshness threshold
  * @mode        read-only
  * @pipeline    manual, ci
- * @scope       tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, ai-tools/ai-skills, contribute
+ * @scope       tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .cursorrules, .windsurf, .augment, .mintlify, docs-guide/policies, ai-tools/ai-skills, contribute
  * @usage       node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold <days>] [--json]
  * @policy      R-R14, R-R18
  */
@@ -24,7 +24,13 @@ const REQUIRED_BASE_ENTRIES = [
   { label: 'COPILOT-ADAPTER', path: '.github/copilot-instructions.md' },
   { label: 'CLAUDE-ADAPTER', path: '.claude/CLAUDE.md' },
   { label: 'CURSOR-ADAPTER', path: '.cursor/rules/repo-governance.mdc' },
+  { label: 'CURSOR-NO-DELETIONS-ADAPTER', path: '.cursor/rules/no-deletions.mdc' },
   { label: 'WINDSURF-ADAPTER', path: '.windsurf/rules/repo-governance.md' },
+  { label: 'AUGMENT-ADAPTER', path: '.augment/rules/repo-governance.md' },
+  { label: 'AUGMENT-GIT-SAFETY-ADAPTER', path: '.augment/rules/git-safety.md' },
+  { label: 'AUGMENT-NO-DELETIONS-ADAPTER', path: '.augment/rules/no-deletions.md' },
+  { label: 'MINTLIFY-ASSISTANT', path: '.mintlify/Assistant.md' },
+  { label: 'CODEX-TASK-LAYER', path: '.github/AGENTS.md' },
   { label: 'AGENT-GOVERNANCE-POLICY', path: 'docs-guide/policies/agent-governance-framework.mdx' },
   { label: 'ROOT-ALLOWLIST-GOVERNANCE-POLICY', path: 'docs-guide/policies/root-allowlist-governance.mdx' },
   { label: 'CONTRIBUTOR-AGENT-INSTRUCTIONS', path: 'contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md' }

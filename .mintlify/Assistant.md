@@ -61,7 +61,9 @@ Use this mapping to route users to the right section before deep answers:
 | `v2/orchestrators/**` | Orchestrators |
 | `v2/lpt/**` | LP Token |
 | `v2/resources/**` | Resource HUB |
-| `v2/internal/**`, `docs-guide/**`, `ai-tools/**` | Internal Hub |
+| `v2/internal/**` | Internal Hub |
+| `docs-guide/**` | Internal Hub — internal governance and capability maps |
+| `ai-tools/claude-code`, `ai-tools/cursor`, `ai-tools/windsurf` | Internal Hub — AI coding assistant setup guides |
 
 Shared resource behavior: `v2/resources/**` is cross-linked from many tabs. When a
 `v2/resources/**` page is used, preserve the user's current domain context rather than
@@ -70,6 +72,7 @@ forcing a tab switch.
 If the user asks "where should this live?":
 1. Choose the page prefix by domain first.
 2. Use `v2/resources/**` only for shared docs standards, guides, and cross-domain references.
+3. Contributor and governance pages always go under `docs-guide/**` or `contribute/**`, not under `v2/**`.
 
 ## Answer Contract
 

@@ -2,11 +2,11 @@
 
 This document provides specific instructions for AI agents working on this repository.
 
-Canonical policy sources:
+Canonical policy sources — read these before this file:
 
-- `AGENTS.md`
-- `docs-guide/policies/root-allowlist-governance.mdx`
-- `docs-guide/policies/agent-governance-framework.mdx`
+- `AGENTS.md` — repo-wide baseline (safety, source-of-truth order, structure, validation)
+- `docs-guide/policies/agent-governance-framework.mdx` — agent adapter governance
+- `docs-guide/policies/root-allowlist-governance.mdx` — root allowlist governance
 
 ## MANDATORY: Install Git Hooks
 
@@ -62,42 +62,14 @@ Minimal contract example:
 
 ```yaml
 task_id: 1234
-base_branch: docs-v2
+base_branch: docs-v2-dev
 branch: codex/1234-fix-scope
 scope_in:
   - tests/
   - .githooks/
 acceptance_checks:
-  - node tests/run-pr-checks.js --base-ref docs-v2
+  - node tests/run-pr-checks.js --base-ref docs-v2-dev
 ```
-
-## How Hooks Work
-
-The pre-commit hook runs automatically when you attempt to commit. It:
-
-1. **Scans staged files** - Checks all `.jsx`, `.tsx`, `.js`, `.mdx` files
-2. **Runs style checks** - Validates against style guide rules
-3. **Runs verification** - Executes syntax and validation checks
-4. **Blocks commits** - Prevents commits with violations
-
-## What Gets Checked
-
-### Style Guide Violations (Blocks Commit)
-
-- `ThemeData` or `themeStyles.jsx` imports → **BLOCKED**
-- Hardcoded theme colors (`#3CB540`, `#2b9a66`, etc.) → **BLOCKED**
-- Relative imports to snippets → **WARNING**
-- `@mintlify/components` imports → **WARNING**
-- React hook imports → **WARNING**
-
-### Verification Checks (Blocks Commit)
-
-- Invalid MDX frontmatter → **BLOCKED**
-- Invalid JSON syntax → **BLOCKED**
-- Shell script syntax errors → **BLOCKED**
-- JavaScript syntax errors → **BLOCKED**
-- Invalid Mintlify config → **BLOCKED**
-- Browser render failures → **BLOCKED** (if `mint dev` is running)
 
 ## Agent Workflow
 
@@ -107,88 +79,6 @@ The pre-commit hook runs automatically when you attempt to commit. It:
 - Do not emulate a move by creating a new file and deleting the old tracked path manually.
 - If you intentionally keep both old and new paths during a compatibility window, document that the old path is an alias and keep both files staged intentionally.
 - Do not delete the old tracked path until references/imports have been validated and the deletion is covered by the existing `allow-deletions=true` trailer flow.
-
-### Before Committing
-
-1. **Check hook is installed:**
-
-   ```bash
-   ls -la .git/hooks/pre-commit
-   ```
-
-2. **Stage your changes:**
-
-   ```bash
-   git add <files>
-   ```
-
-3. **Attempt commit** (hook runs automatically):
-
-   ```bash
-   git commit -m "your message"
-   ```
-
-4. **If blocked:**
-   - Read the error messages
-   - Fix violations
-   - Try committing again
-
-### Common Violations and Fixes
-
-#### ThemeData Usage
-
-**Error:**
-
-```
-❌ file.jsx: Uses deprecated ThemeData - use CSS Custom Properties instead
-```
-
-**Fix:**
-
-```jsx
-// ❌ WRONG
-import { ThemeData } from "/snippets/styles/themeStyles.jsx";
-<div style={{ color: ThemeData.light.accent }}>
-
-// ✅ CORRECT
-<div style={{ color: "var(--accent)" }}>
-```
-
-#### Hardcoded Colors
-
-**Error:**
-
-```
-⚠️  file.mdx: Contains hardcoded theme colors - use CSS Custom Properties
-```
-
-**Fix:**
-
-```jsx
-// ❌ WRONG
-<div style={{ color: "#3CB540" }}>
-
-// ✅ CORRECT
-<div style={{ color: "var(--accent)" }}>
-```
-
-#### Relative Imports
-
-**Error:**
-
-```
-⚠️  file.jsx: Uses relative imports - use absolute paths from root
-```
-
-**Fix:**
-
-```jsx
-// ❌ WRONG
-import { Component } from '../components/Component.jsx'
-
-// ✅ CORRECT
-import { Component } from '/snippets/components/Component.jsx'
-```
 
 ## Bypassing Hooks
 
@@ -214,75 +104,9 @@ If a human explicitly needs to allow file deletions, they must commit with:
 git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
 ```
 
-## Pre-commit Runtime Profile
-
-Pre-commit is staged-scoped and balanced for speed:
-
-1. Runs staged core checks only.
-2. Runs staged link/WCAG audits only when docs pages are staged.
-3. Does not run legacy global browser verification from pre-commit.
-
-## Testing Hooks
-
-To test if hooks are working:
-
-```bash
-# Create a test file with a violation
-echo 'import { ThemeData } from "/snippets/styles/themeStyles.jsx";' > test-violation.jsx
-git add test-violation.jsx
-git commit -m "test"  # Should be blocked
-
-# Clean up
-rm test-violation.jsx
-git reset HEAD test-violation.jsx
-```
-
-### Test Browser Validation
-
-```bash
-# Start mint dev in one terminal
-mint dev --port 3001
-
-# In another terminal, create a test MDX file
-echo '---\ntitle: Test\n---\n# Test' > v2/pages/test.mdx
-git add v2/pages/test.mdx
-git commit -m "test browser validation"  # Will test in browser
-```
-
-## Troubleshooting
-
-### Hook Not Running
-
-```bash
-# Reinstall
-./.githooks/install.sh
-
-# Verify
-ls -la .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
-
-### Hook Errors
-
-If the hook itself has errors:
-
-1. Check `.githooks/pre-commit` syntax
-2. Check `.githooks/verify.sh` syntax
-3. Run manually: `bash .githooks/pre-commit`
-4. Report issues to user
-
-## For Forks
-
-When working on a fork:
-
-1. Clone the fork
-2. Install hooks: `./.githooks/install.sh`
-3. Hooks will work the same way
-
 ## Related Documentation
 
 - [Full Git Hooks Documentation](./GIT-HOOKS.md)
 - [Style Guide](../../v2/resources/documentation-guide/style-guide.mdx)
-- [Agent Prerequisites](../../PLAN/AGENT-PREREQUISITES.md)
 - [Agent Governance Framework](../../docs-guide/policies/agent-governance-framework.mdx)
 - [Root Allowlist Governance](../../docs-guide/policies/root-allowlist-governance.mdx)
