@@ -28,7 +28,7 @@ Use this as the entry point for any agent or session working on this pipeline.
 
 | File | What it contains |
 |---|---|
-| [pagePurpose.md](pagePurpose.md) | Full purpose definitions — 15 values; each with domain, definition, description, process, information type, governs (content need / outcome / voice / structure) |
+| [pagePurpose.md](pagePurpose.md) | Full purpose definitions — 15 values; each with industry, definition, description, process, information type, governs (content need / outcome / voice / structure) |
 
 ### Information Layer
 
@@ -79,6 +79,12 @@ See [framework.md](framework.md) for full per-audience persona lists
 ### veracityStatus (3)
 `verified`, `unverified`, `stale`
 
+### industry (9) — array, max 2, first dominates
+`technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer` — see [industry.md](industry.md) — DRAFT pending lock
+
+### niche (8) — array
+`web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure` — see [industry.md](industry.md)
+
 ---
 
 ## Pending Definitions (Phase 1 remaining)
@@ -86,7 +92,7 @@ See [framework.md](framework.md) for full per-audience persona lists
 | Step | Task | File |
 |---|---|---|
 | 5b | Information category (format/layout) | Deferred to Phase 2 |
-| 6 | Domain + niche (field taxonomy — terminology + voice register) | TBD |
+| 6 | Industry + niche (field taxonomy — terminology + voice register) | [industry.md](industry.md) — DRAFT, pending lock |
 | 7 | Complexity + lifecycleStage | TBD |
 | 8a | IA per tab — section structure, audience journey, page groups | TBD |
 | 8 | Generation contract (how all fields combine) | TBD |

@@ -21,8 +21,8 @@ pageVariant:       # slice — optional refinement within the type
 audience:          # category — broad reader class
 persona:           # slice — narrow situational variant within audience (optional)
 purpose:           # job — reader outcome (15 intent-based values)
-domain:            # field — broad industry/knowledge field
-niche:             # context — specific subject area within domain
+industry:          # field — established industry field (array, max 2, first dominates)
+niche:             # context — specific subject context within industry (array)
 complexity:        # depth — beginner | intermediate | advanced
 lifecycleStage:    # timing — where reader is in their journey
 veracityStatus:    # quality — verified | unverified | stale (see veracity.md)
@@ -266,16 +266,18 @@ All audience personas defined. `internal`, `general`, and `everyone` removed as 
 
 ---
 
-## Decision 5: domain + niche
+## Decision 5: industry + niche
 
-**Status**: Pending Step 6
-**Date**: TBD
+**Status**: ✅ Agreed (DRAFT — pending final user lock)
+**Date**: 2026-03-20
 
 Two layers:
-- `domain` (broad field): finance, business, technical, economics, operations, governance, etc.
-- `niche` (specific context): web3, AI, video, hardware, infrastructure, protocol, tokenomics, etc.
+- `industry` (broad field, array max 2, first dominates): `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer`
+- `niche` (specific context, array): `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure`
 
 Governs: section naming (domain-anchor rule), voice register, example selection, terminology conventions.
+
+See [industry.md](industry.md) for full definitions.
 
 ---
 

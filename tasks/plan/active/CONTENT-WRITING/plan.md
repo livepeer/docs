@@ -105,30 +105,23 @@ Everything in this phase is 🔄 INTERACTIVE. These steps define what "good" mea
 
 ---
 
-### Step 6. Define domain + niche — what field the content belongs to
+### Step 6. Define industry + niche — what field the content belongs to ✅ DRAFT
 
-**Input**: User notes in `v2/_workspace/research/ai-coauthoring.md` (lines 53-61, 95-100) and `content-naming.md` (domain-anchor rule, lines 575-595).
-
-The naming rubric already requires titles to use the domain's native terminology, but the domain isn't declared in frontmatter — the AI has to guess. Adding it explicitly tells the pipeline what terminology conventions to follow.
+**Input**: User notes in `v2/_workspace/research/ai-coauthoring.md` and `content-naming.md` (domain-anchor rule).
 
 Two layers:
-- **domain** (broad field): `finance`, `business`, `technical`, `economics`, `marketing`, `operations`, `governance`
-- **niche** (specific context): `web3`, `AI`, `video`, `hardware`, `infrastructure`, `protocol`, `tokenomics`
+- **industry** (broad field, array max 2, first dominates): 9 tokens — `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer`
+- **niche** (specific context, array): 8 tokens — `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure`
 
-Domain+niche governs: section naming (domain-anchor rule becomes enforceable), voice register, example selection, terminology conventions, information categorization.
+Industry+niche governs: section naming (domain-anchor rule becomes enforceable), voice register, example selection, terminology conventions.
 
-- [ ] 🔄 Review the domain-anchor and conditional-precision rules in content-naming.md
-  - ⏸ CHECKPOINT: human confirms these rules capture the intent
-- [ ] 🔄 Define domain enum (~7-10 values)
-  - ⏸ CHECKPOINT: human approves domain enum
-- [ ] 🔄 Define niche — controlled enum or curated string? How granular?
-  - ⏸ CHECKPOINT: human approves niche format + values
-- [ ] 🔄 For each domain: define terminology conventions, register/formality level
-  - ⏸ CHECKPOINT: human approves per-domain rules
-- [ ] Test: apply domain+niche to 5 pilot pages — does it help produce better titles and voice?
-  - ⏸ CHECKPOINT: human confirms test results
+- [x] 🔄 Field renamed `domain` → `industry` — confirmed by user
+- [x] 🔄 Array format confirmed — ordered, max 2, first dominates
+- [x] 🔄 9 industry tokens defined with native terms + reference sources
+- [x] 🔄 8 niche tokens defined
+- [ ] ⏸ CHECKPOINT: human locks industry.md
 
-**Output**: Approved domain + niche enums/format + governance rules.
+**Output**: [industry.md](industry.md) — DRAFT, pending lock
 
 ---
 
@@ -232,7 +225,7 @@ Framework is defined. Now implement it.
 
 ### Step 12. Schema migration — implement the agreed definitions in code
 
-- [ ] Add `persona`, `domain`, `niche` fields to `page-taxonomy-framework.mdx` (per step 4 + 6 decisions)
+- [ ] Add `persona`, `industry`, `niche` fields to `page-taxonomy-framework.mdx` (per step 4 + 6 decisions)
   - ⏸ CHECKPOINT: human reviews framework file
 - [ ] Update `tools/lib/frontmatter-taxonomy.js` to validate all fields against approved enums
   - ⏸ CHECKPOINT: human reviews validator
@@ -420,9 +413,9 @@ Update this section as each step completes. Current step is marked with ▶.
 | 5 | Define purpose enum + deep definitions | ✅ Done — pagePurpose.md |
 | 5a | Information type taxonomy (layer 1 — purpose fit) | ✅ Done — information-type.md |
 | 5b | Information category (layer 2 — format/layout) | ⏳ Deferred to Phase 2 — layout decisions happen during pipeline build |
-| 5c | Veracity framework + sources registry | ✅ Framework done — veracity.md. Sources library template created — veracity-library.md (agent handoff) |
+| 5c | Veracity framework + sources registry | ✅ Framework done — veracity.md. Sources library complete — veracity-library.md (45 entries). Priority table complete — TERMINOLOGY-COLLATE/consolidated/veracity-sources.md |
 | 5d | Governance index | ✅ Done — index.md |
-| ▶ 6 | Define domain + niche (layer 3 — voice/terminology) | ⬜ Not started |
+| ▶ 6 | Define industry + niche (layer 3 — voice/terminology) | 🔄 DRAFT — industry.md created, awaiting user lock |
 | 7 | Define complexity + lifecycleStage | ⬜ Not started |
 | 8a | Define IA per tab — section structure, audience journey, page groups | ⬜ Not started |
 | 8 | Define generation contract (how all fields combine) | ⬜ Not started |

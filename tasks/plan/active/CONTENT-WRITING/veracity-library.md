@@ -1,6 +1,6 @@
 # Veracity Library
 
-**Status**: TEMPLATE — to be completed by agent
+**Status**: COMPLETE — 45 sources. Priority table in `tasks/plan/active/TERMINOLOGY-COLLATE/consolidated/veracity-sources.md`
 **Purpose**: Map every significant Livepeer documentation source to its information type and veracity standard
 **Owner**: Content pipeline — used at runtime by the review skill (Step 18) to verify claims per section
 

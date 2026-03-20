@@ -41,25 +41,30 @@ const LOCALE_DIRS = {
   fr: path.join(REPO_ROOT, 'v2', 'fr', 'resources', 'documentation-guide', 'component-library'),
   cn: path.join(REPO_ROOT, 'v2', 'cn', 'resources', 'documentation-guide', 'component-library')
 };
-const LEGACY_COMPONENT_LIBRARY_FILES = ['display.mdx', 'domain.mdx', 'integrations.mdx'];
+const LEGACY_COMPONENT_LIBRARY_FILES = [
+  'display.mdx', 'domain.mdx', 'integrations.mdx',
+  'primitives.mdx', 'layout.mdx', 'content.mdx', 'data.mdx', 'page-structure.mdx'
+];
 const ARCHIVE_SOURCE_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'snippets', 'update-component-library.sh');
 const ARCHIVE_TARGET_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'archive', 'deprecated', 'update-component-library.sh');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'qwen/qwen-turbo';
 
 const CATEGORY_LABELS = {
-  primitives: 'Primitives',
-  layout: 'Layout',
-  content: 'Content',
-  data: 'Data',
-  'page-structure': 'Page Structure'
+  elements: 'Elements',
+  wrappers: 'Wrappers',
+  displays: 'Displays',
+  scaffolding: 'Scaffolding',
+  integrators: 'Integrators',
+  config: 'Config'
 };
 
 const CATEGORY_DESCRIPTIONS = {
-  primitives: 'Standalone visual atoms used across authored documentation.',
-  layout: 'Containers and arrangements that define spacing, grouping, and page flow.',
-  content: 'Renderers for reader-facing media, code, quotations, and structured content.',
-  data: 'Components that are coupled to feeds, release data, or other external sources.',
-  'page-structure': 'Portal and frame-mode scaffolding components that shape whole sections.'
+  elements: 'Standalone visual atoms — icons, text, links, callouts, math, spacing, images.',
+  wrappers: 'Containers that hold, group, or spatially arrange other components.',
+  displays: 'Renderers for authored content — code, video, diagrams, quotes, response fields.',
+  scaffolding: 'One-per-page structural skeleton — heroes, portals, frame-mode overrides.',
+  integrators: 'Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.',
+  config: 'Non-component configuration objects (e.g. theme, colour maps).'
 };
 
 function printHelp() {
