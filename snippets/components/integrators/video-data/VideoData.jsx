@@ -1,18 +1,28 @@
-import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
 
 /**
  * @component YouTubeVideoData
  * @type integrators
- * @subniche video-data
+ * @tier pattern
  * @status stable
- * @description Renders YouTube video data with video embed and metadata columns.
- * @dataSource automation/youtube
- * @accepts {Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest
+ * @description YouTubeVideoData - Renders YouTube videos from youtubeData.jsx format
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource /snippets/automations/youtube/youtubeData.jsx
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} limit - Limit used by the component.
  * @param {number} [cols=2] - Cols used by the component.
+ *
+ * @example
+ * <YouTubeVideoData limit={1} />
  */
-export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", style = {}, ...rest }) => {
+export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -31,7 +41,7 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", 
   };
 
   return (
-    <Columns cols={cols} className={className} style={style} {...rest}>
+    <Columns cols={cols}>
       {displayItems.map((item, idx) => {
         if (!item || !item.href) return null;
         return (

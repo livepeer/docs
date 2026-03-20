@@ -16,7 +16,8 @@ Surface navigation and route correctness gaps before they become broken-doc regr
 
 Command
 ```bash
-node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full
+# Script not yet implemented
+# node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full
 ```
 
 Outputs

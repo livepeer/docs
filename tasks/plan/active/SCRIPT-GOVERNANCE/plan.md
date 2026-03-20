@@ -382,13 +382,7 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11a.1** `git mv` 8 dispatch→automation scripts + 2 dispatch→validator + 1 automation→validator
-- [ ] **11a.2** Update all path references (package.json, workflows, hooks, tests, imports)
-- [ ] **11a.3** Update `@type` in each script's JSDoc header
-- [ ] **11a.4** Run broken-require checker
-- [ ] **11a.5** Run `npm test --prefix tests`
-- [ ] **11a.6** **CHECKPOINT** — show diff to human
-- [ ] **11a.7** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11a.1–11a.7** Wave 1 complete: 11 dispatch→automation/validator. All refs updated, tests pass.~~
 
 ---
 
@@ -396,12 +390,7 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11b.1** `git mv` 5 generator scripts to audits/
-- [ ] **11b.2** Update all path references
-- [ ] **11b.3** Update `@type` in headers
-- [ ] **11b.4** Run broken-require checker + test suite
-- [ ] **11b.5** **CHECKPOINT** — show diff to human
-- [ ] **11b.6** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11b.1–11b.6** Wave 2 complete: 5 generator→audit. All refs updated.~~
 
 ---
 
@@ -409,12 +398,7 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11c.1** `git mv` 3 generator scripts to remediators/ + 1 remediator to audits/
-- [ ] **11c.2** Update all path references
-- [ ] **11c.3** Update `@type` in headers
-- [ ] **11c.4** Run broken-require checker + test suite
-- [ ] **11c.5** **CHECKPOINT** — show diff to human
-- [ ] **11c.6** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11c.1–11c.6** Wave 3 complete: 3 generator→remediator + 1 remediator→audit.~~
 
 ---
 
@@ -424,14 +408,7 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11d.1** `git mv` 3 audit scripts to dispatch/ + 1 to validators/ + 1 concern fix (audit-python.py)
-- [ ] **11d.2** Discuss `docs-research-adjudication.js` — split 3 modes or keep + document?
-- [ ] **11d.3** Update all path references
-- [ ] **11d.4** Update `@type` in headers
-- [ ] **11d.5** Run broken-require checker + full test suite
-- [ ] **11d.6** Verify veracity pipeline scripts still chain correctly
-- [ ] **11d.7** **CHECKPOINT** — show diff to human
-- [ ] **11d.8** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11d.1–11d.8** Wave 4 complete: 3 audit→dispatch + 1 audit→validator + 1 concern fix + 1 cross-ref fix. Veracity pipeline intact.~~
 
 ---
 
@@ -441,13 +418,16 @@ can't standardise scripts we haven't verified are correct.
 
 ### Tasks
 
-- [ ] **11e.1** **INTERACTIVE** — discuss approach for each of the 8 dual-purpose validators (split vs document)
-- [ ] **11e.2** **INTERACTIVE** — discuss overlap pairs (lint-copy/lint-patterns, glossary/terminology, header writers, backfill unification)
-- [ ] **11e.3** Resolve `.vscode/components.code-snippets` output conflict
-- [ ] **11e.4** Execute approved splits/consolidations
-- [ ] **11e.5** Run full test suite
-- [ ] **11e.6** **CHECKPOINT** — show final state to human
-- [ ] **11e.7** Commit + merge back to `docs-v2-dev`
+- [x] ~~**11e.1** Discussed dual-purpose validators: keep 5 (document), split 3~~
+- [ ] **11e.2** Document dual-mode in @pipeline for: check-grammar-en-gb, check-proper-nouns, check-double-headers, check-page-endings, check-component-css
+- [ ] **11e.3** Split `enforce-generated-file-banners.js` — extract --write/generator mode
+- [ ] **11e.4** Split `validate-ai-tools-registry.js` — extract --write-report to generator (note: ai-tools/ restructured on Docs-v2-dev, check for conflicts)
+- [ ] **11e.5** Split `audit-script-inventory.js` — extract --fix, consolidate with add-framework-headers.js
+- [ ] **11e.6** Compose `generate-glossary.js` + `terminology-search.js` as pipeline
+- [ ] **11e.7** Resolve `.vscode/components.code-snippets` conflict — Python script owns output, remove snippet gen from generate-ui-templates.js
+- [ ] **11e.8** Keep `lint-patterns.js` — used by AI skills as separate review tool. Update stale paths in ai-tools/ skill files.
+- [ ] **11e.9** Run full test suite
+- [ ] **11e.10** Commit + merge back to `docs-v2-dev`
 
 ---
 
@@ -494,6 +474,27 @@ Config params at top, no magic strings, consistent error handling, clear exit co
 - [ ] **12c.5** Fix any failures
 - [ ] **12c.6** Commit + merge back to `docs-v2-dev`
 - [ ] **12c.7** Strikethrough completed tasks in this plan
+
+---
+
+## Task 13 — Merge component branch (Docs-v2-dev-components)
+
+**Goal**: Merge the component restructure worktree into `docs-v2-dev`. The component
+branch has significant changes to component scripts, `component-governance-utils.js`,
+VALID_CATEGORIES, GOVERNANCE_FIELDS, and component folder structure.
+
+> See `tasks/plan/active/COMPONENT-GOVERNANCE/script-thread-sync-note.md` for details.
+> `check-component-css.js` was updated on that branch — do not split it here.
+
+### Tasks
+
+- [ ] **13.1** Review component branch changes for conflicts with our script restructure
+- [ ] **13.2** Merge `Docs-v2-dev-components` into `docs-v2-dev`
+- [ ] **13.3** Resolve any merge conflicts (script paths changed on both branches)
+- [ ] **13.4** Update any component script paths that don't match our new structure
+- [ ] **13.5** Run broken-require checker + full test suite
+- [ ] **13.6** **CHECKPOINT** — show results to human
+- [ ] **13.7** Commit + merge back to `docs-v2-dev`
 
 ---
 

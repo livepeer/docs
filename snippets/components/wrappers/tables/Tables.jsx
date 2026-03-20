@@ -1,15 +1,25 @@
 /**
  * @component StyledTable
  * @type wrappers
- * @subniche tables
+ * @tier composite
  * @status stable
- * @description Full-width table with header row styling and rounded container.
- * @accepts children, className, ...rest
+ * @description Styled Table layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies TableCell, TableRow
+ * @usedIn v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/gateways/_contextData_/new/gateways-new/guides/gateway-operator-opportunities.mdx, v2/gateways/_contextData_/new/gateways-new/resources/api-reference/AI-API/ai.mdx, v2/gateways/_contextData_/new/gateways-new/setup/requirements/setup.mdx, v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/job-pipelines/all-resources/v2-dev--ai-pipelines-overview.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/business-model.mdx, v2/gateways/guides/operator-considerations/old_v1/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/gateway-requirements.mdx, v2/gateways/guides/operator-considerations/old_v1/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/setup-requirements.mdx, v2/gateways/guides/operator-considerations/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/operator-requirements.mdx, v2/gateways/guides/opportunities/all-resources/biz--ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/ctx-new--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/support-ops--spe-grant-model.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--business-case.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--ecosystem-projects.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/guides/opportunities/all-resources/v2-run--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/business-ops/ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/community-ecosystem.mdx, v2/gateways/guides/opportunities/naap-multi-tenancy.mdx, v2/gateways/guides/opportunities/overview.mdx, v2/gateways/guides/opportunities/spe-grant-model.mdx, v2/gateways/guides/opportunities/support-ops/spe-grant-model.mdx, v2/gateways/guides/setup-paths/gateway-setup-paths.mdx, v2/gateways/guides/setup-paths/path-requirements.mdx, v2/gateways/navigator.mdx, v2/gateways/references/api-reference/AI-API/ai.mdx, v2/gateways/resources/technical/api-reference/AI-API/ai.mdx, v2/gateways/run-a-gateway/gateway-operator-opportunities.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/setup/requirements/setup.mdx, v2/gateways/using-gateways/choosing-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx, v2/internal/rfp/report.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/rcs-incentives.mdx, v2/orchestrators/concepts/role.mdx
+ * @breakingChangeRisk high
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-11
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <StyledTable>Example content</StyledTable>
  */
-export const StyledTable = ({ children, variant = "default", style = {}, className = "", ...rest }) => {
+export const StyledTable = ({ children, variant = "default", style = {} }) => {
   const wrapperVariants = {
     default: {
       border: "1px solid var(--border)",
@@ -31,7 +41,6 @@ export const StyledTable = ({ children, variant = "default", style = {}, classNa
   return (
     <div
       data-docs-styled-table-shell
-      className={className}
       style={{
         width: "100%",
         padding: 0,
@@ -39,7 +48,6 @@ export const StyledTable = ({ children, variant = "default", style = {}, classNa
         ...wrapperVariants[variant],
         ...style,
       }}
-      {...rest}
     >
       <table
         data-docs-styled-table
@@ -61,22 +69,30 @@ export const StyledTable = ({ children, variant = "default", style = {}, classNa
 /**
  * @component TableRow
  * @type wrappers
- * @subniche tables
+ * @tier composite
  * @status stable
- * @description Table row with optional header styling and hover effect.
- * @accepts children, className, ...rest
+ * @description Table Row layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StyledTable, TableCell
+ * @usedIn v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/gateways/_contextData_/new/gateways-new/guides/gateway-operator-opportunities.mdx, v2/gateways/_contextData_/new/gateways-new/resources/api-reference/AI-API/ai.mdx, v2/gateways/_contextData_/new/gateways-new/setup/requirements/setup.mdx, v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/job-pipelines/all-resources/v2-dev--ai-pipelines-overview.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/business-model.mdx, v2/gateways/guides/operator-considerations/old_v1/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/gateway-requirements.mdx, v2/gateways/guides/operator-considerations/old_v1/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/setup-requirements.mdx, v2/gateways/guides/operator-considerations/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/operator-requirements.mdx, v2/gateways/guides/opportunities/all-resources/biz--ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/ctx-new--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/support-ops--spe-grant-model.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--business-case.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--ecosystem-projects.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/guides/opportunities/all-resources/v2-run--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/business-ops/ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/community-ecosystem.mdx, v2/gateways/guides/opportunities/naap-multi-tenancy.mdx, v2/gateways/guides/opportunities/overview.mdx, v2/gateways/guides/opportunities/spe-grant-model.mdx, v2/gateways/guides/opportunities/support-ops/spe-grant-model.mdx, v2/gateways/guides/setup-paths/gateway-setup-paths.mdx, v2/gateways/guides/setup-paths/path-requirements.mdx, v2/gateways/navigator.mdx, v2/gateways/references/api-reference/AI-API/ai.mdx, v2/gateways/resources/technical/api-reference/AI-API/ai.mdx, v2/gateways/run-a-gateway/gateway-operator-opportunities.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/setup/requirements/setup.mdx, v2/gateways/using-gateways/choosing-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx, v2/internal/rfp/report.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/rcs-incentives.mdx, v2/orchestrators/concepts/role.mdx
+ * @breakingChangeRisk high
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-11
  * @param {any} children - children prop.
  * @param {boolean} [header=false] - header prop.
  * @param {boolean} [hover=false] - hover prop.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <TableRow>Example content</TableRow>
  */
 export const TableRow = ({
   children,
   header = false,
   hover = false,
   style = {},
-  className = "",
-  ...rest
 }) => {
   const rowId = `table-row-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -91,7 +107,6 @@ export const TableRow = ({
       )}
       <tr
         id={rowId}
-        className={className}
         style={{
           ...(header && {
             backgroundColor: "var(--accent-dark)",
@@ -100,7 +115,6 @@ export const TableRow = ({
           }),
           ...style,
         }}
-        {...rest}
       >
         {children}
       </tr>
@@ -111,35 +125,41 @@ export const TableRow = ({
 /**
  * @component TableCell
  * @type wrappers
- * @subniche tables
+ * @tier composite
  * @status stable
- * @description Table cell that switches between th and td based on header prop.
- * @accepts children, className, ...rest
+ * @description Table Cell layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StyledTable, TableRow
+ * @usedIn v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/gateways/_contextData_/new/gateways-new/guides/gateway-operator-opportunities.mdx, v2/gateways/_contextData_/new/gateways-new/resources/api-reference/AI-API/ai.mdx, v2/gateways/_contextData_/new/gateways-new/setup/requirements/setup.mdx, v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/job-pipelines/all-resources/v2-dev--ai-pipelines-overview.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/business-model.mdx, v2/gateways/guides/operator-considerations/old_v1/ecosystem-projects.mdx, v2/gateways/guides/operator-considerations/old_v1/gateway-requirements.mdx, v2/gateways/guides/operator-considerations/old_v1/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/old/setup-requirements.mdx, v2/gateways/guides/operator-considerations/operator-opportunities.mdx, v2/gateways/guides/operator-considerations/operator-requirements.mdx, v2/gateways/guides/opportunities/all-resources/biz--ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/biz--video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/all-resources/ctx-new--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/support-ops--spe-grant-model.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--business-case.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--ecosystem-projects.mdx, v2/gateways/guides/opportunities/all-resources/v2-opcons--operator-opportunities.mdx, v2/gateways/guides/opportunities/all-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/guides/opportunities/all-resources/v2-run--gateway-operator-opportunities.mdx, v2/gateways/guides/opportunities/business-ops/ai-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/sdk-builder-opportunity.mdx, v2/gateways/guides/opportunities/business-ops/video-transcoding-opportunity.mdx, v2/gateways/guides/opportunities/community-ecosystem.mdx, v2/gateways/guides/opportunities/naap-multi-tenancy.mdx, v2/gateways/guides/opportunities/overview.mdx, v2/gateways/guides/opportunities/spe-grant-model.mdx, v2/gateways/guides/opportunities/support-ops/spe-grant-model.mdx, v2/gateways/guides/setup-paths/gateway-setup-paths.mdx, v2/gateways/guides/setup-paths/path-requirements.mdx, v2/gateways/navigator.mdx, v2/gateways/references/api-reference/AI-API/ai.mdx, v2/gateways/resources/technical/api-reference/AI-API/ai.mdx, v2/gateways/run-a-gateway/gateway-operator-opportunities.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/setup/requirements/setup.mdx, v2/gateways/using-gateways/choosing-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx, v2/internal/rfp/report.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/rcs-incentives.mdx, v2/orchestrators/concepts/role.mdx
+ * @breakingChangeRisk high
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-11
  * @param {any} children - children prop.
  * @param {string} [align="left"] - align prop.
  * @param {boolean} [header=false] - header prop.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <TableCell>Example content</TableCell>
  */
 export const TableCell = ({
   children,
   align = "left",
   header = false,
   style = {},
-  className = "",
-  ...rest
 }) => {
   const Component = header ? "th" : "td";
 
   return (
     <Component
-      className={className}
       style={{
         padding: "0.75rem 1rem",
         textAlign: align,
         border: header ? "none" : "1px solid var(--border)",
         ...style,
       }}
-      {...rest}
     >
       {children}
     </Component>

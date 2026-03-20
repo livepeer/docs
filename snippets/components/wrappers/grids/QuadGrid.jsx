@@ -3,25 +3,34 @@
 /**
  * @component QuadGrid
  * @type wrappers
- * @subniche grids
+ * @tier pattern
  * @status stable
- * @description 2x2 grid with centred rotating icon overlay. Respects prefers-reduced-motion.
- * @accepts children, className, style, ...rest
+ * @description Renders the quad grid component
+ * @contentAffinity landing
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn v2/about/livepeer-overview.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {string} [icon="arrows-spin"] - Icon configuration used by the component.
  * @param {number} [iconSize=50] - Icon configuration used by the component.
  * @param {string} [iconColor="var(--accent)"] - Icon configuration used by the component.
  * @param {string} [spinDuration="10s"] - Spin duration used by the component.
+ *
+ * @example
+ * <QuadGrid>Example</QuadGrid>
  */
-export const QuadGrid = ({
-  children,
-  icon = "arrows-spin",
-  iconSize = 50,
+export const QuadGrid = ({ 
+  children, 
+  icon = "arrows-spin", 
+  iconSize = 50, 
   iconColor = "var(--accent)",
   spinDuration = "10s",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   if (children == null) {
     console.warn("[QuadGrid] Missing children");
@@ -29,14 +38,11 @@ export const QuadGrid = ({
   }
 
   return (
-    <div className={className} style={{ position: "relative", ...style }} {...rest}>
+    <div style={{ position: "relative" }}>
       <style>{`
         @keyframes quadGridSpin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; }
         }
       `}</style>
       <Columns cols={2}>

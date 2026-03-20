@@ -1,10 +1,18 @@
 /**
  * @component LivepeerSVG
  * @type elements
- * @subniche icons
+ * @tier primitive
  * @status stable
- * @description Inline Livepeer logo as SVG with currentColor fill.
- * @accepts ...props
+ * @description Livepeer SVG primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconFlipped, LivepeerIconOld
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {number} [size=24] - size prop.
  * @param {any} props - props prop.
  * @example
@@ -17,8 +25,6 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
       width="1em"
       height="1em"
       fill="none"
-      role="img"
-      aria-label="Livepeer logo"
       {...props}
     >
       <path
@@ -34,10 +40,18 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 /**
  * @component LivepeerIconOld
  * @type elements
- * @subniche icons
- * @status deprecated
- * @description Legacy Livepeer icon using light-only SVG path.
- * @accepts ...props
+ * @tier primitive
+ * @status stable
+ * @description Livepeer Icon Old primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconFlipped, LivepeerSVG
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} props - props prop.
  * @example
  * <LivepeerIconOld props="example" />
@@ -54,10 +68,18 @@ export const LivepeerIconOld = ({ ...props }) => {
 /**
  * @component LivepeerIconFlipped
  * @type elements
- * @subniche icons
- * @status deprecated
- * @description Horizontally flipped legacy Livepeer icon.
- * @accepts ...props
+ * @tier primitive
+ * @status stable
+ * @description Livepeer Icon Flipped primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconOld, LivepeerSVG
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} props - props prop.
  * @example
  * <LivepeerIconFlipped props="example" />
@@ -76,10 +98,18 @@ export const LivepeerIconFlipped = ({ ...props }) => {
 /**
  * @component LivepeerIcon
  * @type elements
- * @subniche icons
+ * @tier primitive
  * @status stable
- * @description Theme-aware Livepeer icon with CSS custom property colour adaptation.
- * @accepts ...props
+ * @description Livepeer Icon primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIconFlipped, LivepeerIconOld, LivepeerSVG
+ * @usedIn v2/home/mission-control.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {number} [size=16] - size prop.
  * @param {any} color - color prop.
  * @param {any} props - props prop.

@@ -1,10 +1,18 @@
 /**
  * @component FocusableScrollRegions
  * @type elements
- * @subniche a11y
+ * @tier primitive
  * @status stable
- * @description Makes scroll regions keyboard-focusable by adding tabindex to matching selectors.
- * @accepts selectors
+ * @description Focusable Scroll Regions primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/resources/documentation-guide/style-guide.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} selectors - selectors prop.
  * @example
  * <FocusableScrollRegions selectors="example" />

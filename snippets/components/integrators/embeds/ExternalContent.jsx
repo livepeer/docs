@@ -1,16 +1,27 @@
 /**
  * @component ExternalContent
- * @type integrators
- * @subniche embeds
+ * @type displays
+ * @tier composite
  * @status stable
- * @description Fetches and renders external markdown with scrollable container and source link.
- * @dataSource fetch(url)
- * @accepts {string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest
+ * @description ExternalContent - A reusable component for displaying external GitHub content
+ * @contentAffinity how_to
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {string} repoName - Repo name used by the component.
  * @param {string} githubUrl - Github url used by the component.
  * @param {string} [maxHeight="1000px"] - Max height used by the component.
  * @param {string} [icon="github"] - Icon configuration used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
+ *
+ * @example
+ * <ExternalContent repoName="value" githubUrl="value" />
  */
 export const ExternalContent = ({
   repoName,
@@ -18,21 +29,15 @@ export const ExternalContent = ({
   maxHeight = "1000px",
   icon = "github",
   children,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   return (
     <div
-      className={className}
       style={{
         border: "1px solid var(--accent)",
           borderRadius: "8px",
           overflow: "hidden",
           marginTop: "1rem",
-          ...style,
         }}
-      {...rest}
       >
         <div
           style={{

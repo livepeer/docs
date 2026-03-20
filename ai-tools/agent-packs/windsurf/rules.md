@@ -8,7 +8,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: critical-high-medium-low
 - Autofix Mode: advisory
 - Commands:
-  - `node tools/scripts/script-footprint-and-usage-audit.js --scope full`
+  - `node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full`
 - Outputs:
   - `tasks/reports/repo-ops/script-footprint-and-usage-audit.md`
   - `tasks/reports/repo-ops/script-footprint-and-usage-audit.json`
@@ -19,7 +19,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: critical-high-medium-low
 - Autofix Mode: advisory
 - Commands:
-  - `node tools/scripts/docs-quality-and-freshness-audit.js --scope full`
+  - `node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full`
 - Outputs:
   - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.md`
   - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json`
@@ -30,7 +30,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: critical-high-medium-low
 - Autofix Mode: advisory
 - Commands:
-  - `node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full`
+  - `node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full`
 - Outputs:
   - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
   - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
@@ -41,7 +41,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: critical-high-medium-low
 - Autofix Mode: advisory
 - Commands:
-  - `node tools/scripts/component-layout-governance.js --scope full`
+  - `node tools/scripts/validators/components/library/component-layout-governance.js --scope full`
 - Outputs:
   - `tasks/reports/repo-ops/component-layout-governance.md`
   - `tasks/reports/repo-ops/component-layout-governance.json`
@@ -52,8 +52,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: critical-high-medium-low
 - Autofix Mode: requires-approval
 - Commands:
-  - `node tools/scripts/cleanup-quarantine-manager.js`
-  - `node tools/scripts/cleanup-quarantine-manager.js --apply`
+  - `node tools/scripts/remediators/content/repair/quarantine-manager.js`
+  - `node tools/scripts/remediators/content/repair/quarantine-manager.js --apply`
 - Outputs:
   - `tasks/reports/repo-ops/cleanup-quarantine-manifest.json`
   - `tasks/reports/repo-ops/cleanup-quarantine-manifest.md`
@@ -64,7 +64,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: info-only
 - Autofix Mode: safe
 - Commands:
-  - `node tools/scripts/cross-agent-packager.js --agent-pack all`
+  - `node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`
 - Outputs:
   - `ai-tools/agent-packs/codex/skills-manifest.json`
   - `ai-tools/agent-packs/cursor/rules.md`
@@ -81,7 +81,7 @@ These skills are not part of the audit pipeline but provide standards and guidan
 
 - Goal: Run a full docs infrastructure audit pipeline and produce a unified scorecard.
 - Access:
-  - `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full`
+  - `node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full`
 - Inputs: repo state, audit mode, scope, pipeline manifest, skill catalog
 - Outputs:
   - `tasks/reports/repo-ops/repo-audit-summary.md`

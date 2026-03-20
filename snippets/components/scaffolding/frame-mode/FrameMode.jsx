@@ -17,10 +17,18 @@
 /**
  * @component PageHeader
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Page-level header with icon, title, and subtitle for frame-mode pages.
- * @accepts {any} title, {any} subtitle, {any} description, {string} children, {any} titleColor, {any} subtitleColor, {any} descriptionColor, {string} className, {object} style, ...rest
+ * @description H1 - Custom H1 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H3, H4, H5, H6, P
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
  * @param {any} description - description prop.
@@ -28,6 +36,8 @@
  * @param {any} titleColor - title Color prop.
  * @param {any} subtitleColor - subtitle Color prop.
  * @param {any} descriptionColor - description Color prop.
+ * @example
+ * <PageHeader title="example" subtitle="example">Example content</PageHeader>
  */
 
 const PageHeader = ({
@@ -38,20 +48,14 @@ const PageHeader = ({
   titleColor,
   subtitleColor,
   descriptionColor,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   return (
     <div
-      className={className}
       style={{
         textAlign: "center",
         marginTop: "2rem",
         marginBottom: "3rem",
-        ...style,
       }}
-      {...rest}
     >
       <h1
         style={{
@@ -102,16 +106,26 @@ const PageHeader = ({
 /**
  * @component H1
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {any} children, {any} icon, {number} iconSize, {any} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H1 page-structure component for frame-mode and portal layout scaffolding.
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H2, H3, H4, H5, H6, P, PageHeader
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
  * @param {any} icon - icon prop.
  * @param {number} [iconSize=32] - icon Size prop.
  * @param {any} iconColor - icon Color prop.
  * @param {string} [align="left"] - align prop.
  * @param {string} [gap="0.75rem"] - gap prop.
+ * @example
+ * <H1 icon="example" iconColor="example">Example content</H1>
  */
 const H1 = ({
   children,
@@ -120,9 +134,6 @@ const H1 = ({
   iconColor,
   align = "left",
   gap = "0.75rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -149,7 +160,7 @@ const H1 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h1 style={headingStyle}>{children}</h1>
     </div>
@@ -159,16 +170,26 @@ const H1 = ({
 /**
  * @component H2
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H2 - Custom H2 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H3, H4, H5, H6, P, PageHeader
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=28] - Size of the icon (default: 28)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.75rem"] - Gap between icon and text (default: "0.75rem")
+ * @example
+ * <H2 icon="example" iconColor="example">Example content</H2>
  */
 const H2 = ({
   children,
@@ -177,9 +198,6 @@ const H2 = ({
   iconColor,
   align = "left",
   gap = "0.75rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -206,7 +224,7 @@ const H2 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h2 style={headingStyle}>{children}</h2>
     </div>
@@ -216,16 +234,26 @@ const H2 = ({
 /**
  * @component H3
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H3 - Custom H3 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H4, H5, H6, P, PageHeader
+ * @usedIn v2/community/community-portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=24] - Size of the icon (default: 24)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @example
+ * <H3 icon="example" iconColor="example">Example content</H3>
  */
 const H3 = ({
   children,
@@ -234,9 +262,6 @@ const H3 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -263,7 +288,7 @@ const H3 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h3 style={headingStyle}>{children}</h3>
     </div>
@@ -273,16 +298,26 @@ const H3 = ({
 /**
  * @component H4
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H4 - Custom H4 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H3, H5, H6, P, PageHeader
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=20] - Size of the icon (default: 20)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @example
+ * <H4 icon="example" iconColor="example">Example content</H4>
  */
 const H4 = ({
   children,
@@ -291,9 +326,6 @@ const H4 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -320,7 +352,7 @@ const H4 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h4 style={headingStyle}>{children}</h4>
     </div>
@@ -330,16 +362,26 @@ const H4 = ({
 /**
  * @component H5
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H5 - Custom H5 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H3, H4, H6, P, PageHeader
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=18] - Size of the icon (default: 18)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @example
+ * <H5 icon="example" iconColor="example">Example content</H5>
  */
 const H5 = ({
   children,
@@ -348,9 +390,6 @@ const H5 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -377,7 +416,7 @@ const H5 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h5 style={headingStyle}>{children}</h5>
     </div>
@@ -387,16 +426,26 @@ const H5 = ({
 /**
  * @component H6
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description H6 - Custom H6 heading component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H3, H4, H5, P, PageHeader
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=16] - Size of the icon (default: 16)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @example
+ * <H6 icon="example" iconColor="example">Example content</H6>
  */
 const H6 = ({
   children,
@@ -405,9 +454,6 @@ const H6 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -434,7 +480,7 @@ const H6 = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h6 style={headingStyle}>{children}</h6>
     </div>
@@ -444,16 +490,26 @@ const H6 = ({
 /**
  * @component P
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Paragraph override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+ * @description P - Custom paragraph component for frame mode
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies Divider, H1, H2, H3, H4, H5, H6, PageHeader
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} children - The paragraph text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=16] - Size of the icon (default: 16)
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} [align="left"] - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} [gap="0.5rem"] - Gap between icon and text (default: "0.5rem")
+ * @example
+ * <P icon="example" iconColor="example">Example content</P>
  */
 const P = ({
   children,
@@ -462,9 +518,6 @@ const P = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--p-icon-color)";
 
@@ -488,7 +541,7 @@ const P = ({
   };
 
   return (
-    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
+    <div style={containerStyle}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <p style={paragraphStyle}>{children}</p>
     </div>
@@ -498,26 +551,33 @@ const P = ({
 /**
  * @component Divider
  * @type scaffolding
- * @subniche frame-mode
+ * @tier pattern
  * @status stable
- * @description Horizontal rule divider for frame-mode pages.
- * @accepts {string} color, {string} margin, {number} opacity, {string} className, {object} style, ...rest
+ * @description Renders a horizontal rule (---) with proper styling for frame mode.
+ * @contentAffinity landing, overview
+ * @owner docs
+ * @dependencies H1, H2, H3, H4, H5, H6, P, PageHeader
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} color - Custom color for the divider (optional, defaults to theme border color)
  * @param {string} [margin="1.5rem 0"] - Vertical margin (default: "1.5rem 0")
  * @param {string} [opacity=0.2] - Opacity of the divider (default: 0.2)
+ * @example
+ * <Divider color="example" />
  */
-const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2, className = "", style = {}, ...rest }) => {
+const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2 }) => {
   return (
     <hr
-      className={className}
       style={{
         border: "none",
         borderTop: `1px solid ${color || "var(--border)"}`,
         margin: margin,
         opacity: opacity,
-        ...style,
       }}
-      {...rest}
     />
   );
 };

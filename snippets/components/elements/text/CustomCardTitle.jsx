@@ -1,10 +1,18 @@
 /**
  * @component CustomCardTitle
  * @type elements
- * @subniche text
+ * @tier primitive
  * @status stable
- * @description Card title row with icon and text, using flexbox alignment.
- * @accepts style, className, ...rest
+ * @description Renders the custom card title component
+ * @contentAffinity landing
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn v2/home/about-livepeer/benefits.mdx, v2/home/primer.mdx, v2/internal/overview/docs-philosophy.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} icon - Icon configuration used by the component.
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {object} style - Style used by the component.
@@ -12,7 +20,7 @@
  * @example
  * <CustomCardTitle icon="sparkles" title="Example" style={{}} />
  */
-export const CustomCardTitle = ({ icon, title, style = {}, className = "", ...rest }) => {
+export const CustomCardTitle = ({ icon, title, style }) => {
   const titleStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -24,7 +32,7 @@ export const CustomCardTitle = ({ icon, title, style = {}, className = "", ...re
     ...style,
   }
   return (
-    <div className={className} style={titleStyle} {...rest}>
+    <div style={titleStyle}>
       <Icon icon={icon} size={20} color="var(--accent)" />
       {title}
     </div>

@@ -1,13 +1,23 @@
-import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
+import { GotoLink } from "/snippets/components/primitives/links.jsx";
 
 /**
  * @component BasicList
  * @type wrappers
- * @subniche lists
- * @status broken
- * @description Non-functional stub — returns empty fragment.
- * @accepts none
+ * @tier composite
+ * @status stable
+ * @description Basic List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepLinkList, StepList, UpdateLinkList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <BasicList listItems={[]} />
  */
 export const BasicList = ({ listItems: array }) => {
   return <></>;
@@ -16,11 +26,21 @@ export const BasicList = ({ listItems: array }) => {
 /**
  * @component IconList
  * @type wrappers
- * @subniche lists
- * @status broken
- * @description Non-functional stub — returns empty fragment.
- * @accepts none
+ * @tier composite
+ * @status stable
+ * @description Icon List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepLinkList, StepList, UpdateLinkList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <IconList listItems={[]} />
  */
 export const IconList = ({ listItems: array }) => {
   return <></>;
@@ -29,15 +49,25 @@ export const IconList = ({ listItems: array }) => {
 /**
  * @component StepList
  * @type wrappers
- * @subniche lists
+ * @tier composite
  * @status stable
- * @description Renders listItems as Mintlify Steps with title, icon, and content.
- * @accepts className, style, ...rest
+ * @description Step List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepLinkList, UpdateLinkList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <StepList listItems={[]} />
  */
-export const StepList = ({ listItems, className = "", style = {}, ...rest }) => {
+export const StepList = ({ listItems }) => {
   return (
-    <Steps className={className} style={style} {...rest}>
+    <Steps>
       {listItems.map(({ title, icon, content }, idx) => (
         <Step key={idx} title={title} icon={icon}>
           {content}
@@ -50,15 +80,25 @@ export const StepList = ({ listItems, className = "", style = {}, ...rest }) => 
 /**
  * @component StepLinkList
  * @type wrappers
- * @subniche lists
+ * @tier composite
  * @status stable
- * @description Renders listItems as Mintlify Steps with GotoLink navigation.
- * @accepts className, style, ...rest
+ * @description Step Link List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepList, UpdateLinkList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <StepLinkList listItems={[]} />
  */
-export const StepLinkList = ({ listItems, className = "", style = {}, ...rest }) => {
+export const StepLinkList = ({ listItems }) => {
   return (
-    <Steps className={className} style={style} {...rest}>
+    <Steps>
       {listItems.map(({ title, icon, content, link }, idx) => (
         <Step key={idx} title={title} icon={icon}>
           <GotoLink label={content} relativePath={link} />
@@ -71,11 +111,21 @@ export const StepLinkList = ({ listItems, className = "", style = {}, ...rest })
 /**
  * @component UpdateList
  * @type wrappers
- * @subniche lists
- * @status broken
- * @description Non-functional — ignores props, renders hardcoded static content.
- * @accepts none
+ * @tier composite
+ * @status stable
+ * @description Update List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepLinkList, StepList, UpdateLinkList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <UpdateList listItems={[]} />
  */
 export const UpdateList = ({ listItems: array }) => {
   return (
@@ -91,11 +141,21 @@ export const UpdateList = ({ listItems: array }) => {
 /**
  * @component UpdateLinkList
  * @type wrappers
- * @subniche lists
+ * @tier composite
  * @status stable
- * @description Renders update items as linked entries inside Mintlify Update component.
- * @accepts none
+ * @description Update Link List layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies StepLinkList, StepList
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} listItems - list Items prop.
+ * @example
+ * <UpdateLinkList listItems={[]} />
  */
 export const UpdateLinkList = ({ listItems: array }) => {
   return (

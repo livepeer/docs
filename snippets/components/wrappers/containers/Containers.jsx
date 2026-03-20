@@ -1,16 +1,26 @@
 /**
  * @component BorderedBox
  * @type wrappers
- * @subniche containers
+ * @tier composite
  * @status stable
- * @description Bordered container with configurable radius and background.
- * @accepts children, className, ...rest
+ * @description Bordered Box layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies CenteredContainer, FullWidthContainer
+ * @usedIn v2/community/livepeer-community/community-guidelines.mdx, v2/developers/build/workload-fit.mdx, v2/developers/developer-journey.mdx, v2/developers/opportunities/bug-bounties.mdx, v2/developers/opportunities/grants-and-programmes.mdx, v2/developers/opportunities/oss-contributions.mdx, v2/developers/opportunities/overview.mdx, v2/developers/opportunities/rfps-and-proposals.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/payments-and-pricing/payment-guide.mdx, v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx, v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx, v2/gateways/navigator.mdx, v2/gateways/setup/requirements/on-chain setup/on-chain.mdx, v2/gateways/setup/requirements/setup.mdx, v2/lpt/delegation/getting-started.mdx, v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines.mdx, v2/orchestrators/guides/config-and-optimisation/ai-model-management.mdx, v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx, v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx, v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx, v2/orchestrators/guides/operator-considerations/operator-impact.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx, v2/orchestrators/guides/tutorials/add-ai-to-video-node.mdx, v2/orchestrators/navigator.mdx, v2/orchestrators/setup/configure.mdx, v2/orchestrators/setup/rcs-requirements.mdx
+ * @breakingChangeRisk high
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-15
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
  * @param {string} [padding="1rem"] - padding prop.
  * @param {string} [borderRadius="8px"] - border Radius prop.
  * @param {string} [accentBar=""] - Optional accent border token applied to the left edge.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <BorderedBox>Example content</BorderedBox>
  */
 export const BorderedBox = ({
   children,
@@ -19,8 +29,6 @@ export const BorderedBox = ({
   borderRadius = "8px",
   accentBar = "",
   style = {},
-  className = "",
-  ...rest
 }) => {
   const variants = {
     default: {
@@ -44,7 +52,6 @@ export const BorderedBox = ({
   return (
     <div
       data-docs-bordered-box=""
-      className={className}
       style={{
         ...variants[variant],
         padding: padding,
@@ -54,7 +61,6 @@ export const BorderedBox = ({
           : {}),
         ...style,
       }}
-      {...rest}
     >
       {children}
     </div>
@@ -64,10 +70,18 @@ export const BorderedBox = ({
 /**
  * @component CenteredContainer
  * @type wrappers
- * @subniche containers
+ * @tier composite
  * @status stable
- * @description Horizontally centred container with configurable max-width.
- * @accepts children, className, ...rest
+ * @description Centered Container layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies BorderedBox, FullWidthContainer
+ * @usedIn v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/navigator.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/concepts/role.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx, v2/orchestrators/guides/operator-considerations/operator-impact.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-15
  * @param {any} children - children prop.
  * @param {string} [maxWidth="800px"] - max Width prop.
  * @param {string} [padding="0"] - padding prop.
@@ -78,6 +92,8 @@ export const BorderedBox = ({
  * @param {string} [marginBottom=""] - Optional bottom margin override.
  * @param {string} [textAlign=""] - Optional text alignment override.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <CenteredContainer>Example content</CenteredContainer>
  */
 export const CenteredContainer = ({
   children,
@@ -90,8 +106,6 @@ export const CenteredContainer = ({
   marginBottom = "",
   textAlign = "",
   style = {},
-  className = "",
-  ...rest
 }) => {
   const presets = {
     default: {},
@@ -118,7 +132,6 @@ export const CenteredContainer = ({
 
   return (
     <div
-      className={className}
       style={{
         maxWidth: presetStyle.maxWidth || maxWidth,
         margin: "0 auto",
@@ -132,7 +145,6 @@ export const CenteredContainer = ({
         ...(textAlign ? { textAlign } : {}),
         ...style,
       }}
-      {...rest}
     >
       {children}
     </div>
@@ -142,24 +154,31 @@ export const CenteredContainer = ({
 /**
  * @component FullWidthContainer
  * @type wrappers
- * @subniche containers
+ * @tier composite
  * @status stable
- * @description Full-viewport-width container that breaks out of parent padding.
- * @accepts children, className, ...rest
+ * @description Full Width Container layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies BorderedBox, CenteredContainer
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-15
  * @param {any} children - children prop.
  * @param {any} backgroundColor - background Color prop.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <FullWidthContainer backgroundColor="example">Example content</FullWidthContainer>
  */
 export const FullWidthContainer = ({
   children,
   backgroundColor,
   style = {},
-  className = "",
-  ...rest
 }) => {
   return (
     <div
-      className={className}
       style={{
         width: "100vw",
         position: "relative",
@@ -170,7 +189,6 @@ export const FullWidthContainer = ({
         ...(backgroundColor && { backgroundColor: backgroundColor }),
         ...style,
       }}
-      {...rest}
     >
       {children}
     </div>

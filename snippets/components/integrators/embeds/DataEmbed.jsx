@@ -1,14 +1,23 @@
 /**
  * @component MarkdownEmbed
- * @type integrators
- * @subniche embeds
+ * @type displays
+ * @tier composite
  * @status stable
- * @description Fetches and renders remote markdown content.
- * @dataSource fetch(url)
- * @accepts {string} url, {string} className, {object} style, ...rest
- * @param {string} url - Destination URL used by the component.
+ * @description Markdown Embed content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies EmbedMarkdown
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} url - url prop.
+ * @example
+ * <MarkdownEmbed url="example" />
  */
-export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
+export const MarkdownEmbed = ({ url }) => {
   const [content, setContent] = useState('')
 
   useEffect(() => {
@@ -17,85 +26,125 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
       .then(setContent)
   }, [url])
 
-  return <div className={className} style={style} {...rest}><Markdown>{content}</Markdown></div>
+  return <Markdown>{content}</Markdown>
 }
 
 /**
- * @component PdfEmbed
- * @type integrators
- * @subniche embeds
- * @status stable
- * @description Embeds a PDF in a framed iframe with caption.
- * @dataSource iframe(src)
- * @accepts {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest
- * @param {React.ReactNode} title - Title text rendered by the component.
- * @param {string} src - Asset or embed source used by the component.
- * @param {string} [height='700px'] - Height used by the component.
- * @param {string} [width='100%'] - Width used by the component.
- */
-export const PdfEmbed = ({
-  title,
-  src,
-  height = '700px',
-  width = '100%',
-  className = "",
-  style = {},
-  ...rest
-}) => (
-  <Frame caption={title} className={className} style={style} {...rest}>
-    <iframe src={src} width={width} height={height} frameBorder="0" title={title}></iframe>
-  </Frame>
-)
-
-/**
  * @component EmbedMarkdown
- * @type integrators
- * @subniche embeds
- * @status deprecated
- * @description Alias for MarkdownEmbed — use MarkdownEmbed instead.
- * @dataSource fetch(url)
- * @accepts {string} url, {string} className, {object} style, ...rest
- * @param {string} url - Destination URL used by the component.
+ * @type displays
+ * @tier composite
+ * @status stable
+ * @description Embed Markdown content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies MarkdownEmbed
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates MarkdownEmbed
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} url - url prop.
+ * @example
+ * <EmbedMarkdown url="example" />
  */
-// ARCHIVED: duplicate of MarkdownEmbed - see tasks/reports/archived-components-review.md
-export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <MarkdownEmbed url={url} className={className} style={style} {...rest} />
+export const EmbedMarkdown = ({ url }) => {
+  const [content, setContent] = useState('')
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.text())
+      .then(setContent)
+  }, [url])
+
+  return <Markdown>{content}</Markdown>
+}
 
 /**
  * @component TwitterTimeline
- * @type integrators
- * @subniche embeds
+ * @type displays
+ * @tier composite
  * @status stable
- * @description Embeds a Twitter/X timeline feed widget via iframe.
- * @dataSource feed.mikle.com widget
- * @accepts {string} className, {object} style, ...rest
+ * @description Twitter Timeline content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies EmbedMarkdown, MarkdownEmbed
+ * @usedIn v2/cn/community/livepeer-community/livepeer-latest-topics.mdx, v2/cn/community/livepeer-community/trending-topics.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/es/community/livepeer-community/livepeer-latest-topics.mdx, v2/es/community/livepeer-community/trending-topics.mdx, v2/fr/community/livepeer-community/livepeer-latest-topics.mdx, v2/fr/community/livepeer-community/trending-topics.mdx, v2/x-archived/home/trending.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-09
+ * @example
+ * <TwitterTimeline />
  */
-export const TwitterTimeline = ({ className = "", style = {}, ...rest }) => {
+/**
+ * @component TwitterTimeline
+ * @type displays
+ * @tier composite
+ * @status stable
+ * @description Twitter Timeline content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies EmbedMarkdown, MarkdownEmbed
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @example
+ * <TwitterTimeline />
+ */
+export const TwitterTimeline = ({}) => {
   return (
     <div
-      className={className}
       style={{
         border: '3px solid var(--accent)',
         borderRadius: '12px',
         overflow: 'hidden',
         height: '600px',
-        ...style,
       }}
-      {...rest}
     >
       <iframe
         src="https://feed.mikle.com/widget/v2/176804/"
-        title="Livepeer Twitter Timeline"
         style={{
           border: 'none',
-          transform: 'scale(1.01)',
+          transform: 'scale(1.01)', // Shrink by 1% to hide border
           transformOrigin: 'center',
         }}
-        height="652px"
-        width="100%"
-        className="fw-iframe"
-        frameBorder="0"
+        height="652px" // Increase height by 4px (2px top + 2px bottom)
+        width="100%" // Increase width by 4px (2px left + 2px right)
+        class="fw-iframe"
+        frameborder="none"
         scrolling="no"
       ></iframe>
     </div>
   )
 }
+
+//Doesnt work
+// export const TwitterTimeline = ({}) => {
+//   return (
+//     <a href="https://twitter.com/livepeer">
+//       <div
+//         style={{
+//           overflow: "hidden",
+//           height: "600px",
+//           border: "3px solid var(--accent)",
+//           borderRadius: "12px",
+//         }}
+//       >
+//         <iframe
+//           src="https://widgets.sociablekit.com/twitter-feed/iframe/25645137"
+//           style={{
+//             border: "none",
+//             width: "100%",
+//             height: "calc(600px + 240px)", // Container height + shift amount
+//             transform: "translateY(-240px)",
+//           }}
+//         />
+//       </div>
+//     </a>
+//   );
+// };

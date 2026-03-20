@@ -1,16 +1,29 @@
 /**
  * @component ValueResponseField
  * @type displays
- * @subniche response-fields
+ * @tier composite
  * @status stable
- * @description API response field with name, type, and value display.
- * @accepts children, className, style, ...props
+ * @description CustomResponseField - ResponseField wrapper that hides the bottom divider
+ * @contentAffinity concept
+ * @owner @livepeer/docs-team
+ * @dependencies CustomResponseField, ResponseFieldAccordion, ResponseFieldExpandable,
+ *   ResponseFieldGroup
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {string} [post=null] - Post used by the component.
  * @param {string} [label="value"] - Label text rendered by the component.
  * @param {boolean} [line=true] - Boolean flag that controls component behaviour.
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
+ *
+ * @example
+ * <ValueResponseField description="Example" />
  */
 const ValueResponseField = ({
   description,
@@ -18,8 +31,6 @@ const ValueResponseField = ({
   label = "value",
   line = true,
   children,
-  className = "",
-  style = {},
   ...props
 }) => {
   const hasDescription =
@@ -40,7 +51,7 @@ const ValueResponseField = ({
     : null;
 
   return (
-    <div className={[!line ? "vrf-noline" : "", className].filter(Boolean).join(" ") || undefined} style={style}>
+    <div className={!line ? "vrf-noline" : undefined}>
       <style>{`
         .vrf-noline > .field {
           border-bottom: none;
@@ -69,18 +80,31 @@ const expandableCode = () => {
 /**
  * @component CustomResponseField
  * @type displays
- * @subniche response-fields
+ * @tier composite
  * @status stable
- * @description Custom-styled API response field with configurable margin.
- * @accepts className, style, ...props
+ * @description Renders the custom response field component
+ * @contentAffinity how_to
+ * @owner @livepeer/docs-team
+ * @dependencies ResponseFieldAccordion, ResponseFieldExpandable, ResponseFieldGroup,
+ *   ValueResponseField
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
+ *
+ * @example
+ * <CustomResponseField description="Example" />
  */
-const CustomResponseField = ({ description, className = "", style = {}, ...props }) => {
+const CustomResponseField = ({ description, ...props }) => {
   const uniqueId = `custom-rf-${Math.random().toString(36).substring(2, 11)}`;
 
   return (
-    <div className={[uniqueId, className].filter(Boolean).join(" ")} style={style}>
+    <div className={uniqueId}>
       <style>{`
         .${uniqueId} > .field {
           border-bottom: none;
@@ -95,21 +119,33 @@ const CustomResponseField = ({ description, className = "", style = {}, ...props
 /**
  * @component ResponseFieldExpandable
  * @type displays
- * @subniche response-fields
+ * @tier composite
  * @status stable
- * @description Expandable response field that reveals nested content on click.
- * @accepts className, style, ...props
+ * @description Renders the response field expandable component
+ * @contentAffinity how_to
+ * @owner @livepeer/docs-team
+ * @dependencies CustomResponseField, ResponseFieldAccordion, ResponseFieldGroup, ValueResponseField
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Expandable.
+ *
+ * @example
+ * <ResponseFieldExpandable />
  */
-const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...props }) => {
+const ResponseFieldExpandable = ({ fields = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
   if (fieldsArray.length === 0) {
     return null;
   }
 
   return (
-    <Expandable className={className} style={style} {...props}>
+    <Expandable {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}
@@ -120,14 +156,27 @@ const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...p
 /**
  * @component ResponseFieldAccordion
  * @type displays
- * @subniche response-fields
+ * @tier composite
  * @status stable
- * @description Accordion-style response field with collapsible detail section.
- * @accepts className, style, ...props
+ * @description Renders the response field accordion component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies CustomResponseField, ResponseFieldExpandable, ResponseFieldGroup,
+ *   ValueResponseField
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Accordion.
+ *
+ * @example
+ * <ResponseFieldAccordion />
  */
-const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...props }) => {
+const ResponseFieldAccordion = ({ fields = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
   if (fieldsArray.length === 0) {
     console.warn("[ResponseFieldAccordion] Missing or invalid fields");
@@ -135,7 +184,7 @@ const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...pr
   }
 
   return (
-    <Accordion className={className} style={style} {...props}>
+    <Accordion {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}
@@ -147,19 +196,30 @@ const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...pr
 /**
  * @component ResponseFieldGroup
  * @type displays
- * @subniche response-fields
+ * @tier composite
  * @status stable
- * @description Container for grouping multiple response fields with consistent spacing.
- * @accepts className, style, ...props
+ * @description Renders the response field group component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies CustomResponseField, ResponseFieldAccordion, ResponseFieldExpandable,
+ *   ValueResponseField
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {string} [component="accordion"] - Component used by the component.
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to the selected wrapper component.
+ *
+ * @example
+ * <ResponseFieldGroup />
  */
 const ResponseFieldGroup = ({
   component = "accordion",
   fields = {},
-  className = "",
-  style = {},
   ...props
 }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
@@ -174,7 +234,7 @@ const ResponseFieldGroup = ({
   };
   const Component = componentMap[component] || Accordion;
   return (
-    <Component className={className} style={style} {...props}>
+    <Component {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}

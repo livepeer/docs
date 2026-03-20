@@ -1,13 +1,23 @@
 /**
  * @component Quote
  * @type displays
- * @subniche quotes
+ * @tier composite
  * @status stable
- * @description Styled blockquote with accent border and centred italic text.
- * @accepts children, className, style, ...rest
+ * @description Quote content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/report.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
+ * @example
+ * <Quote>Example content</Quote>
  */
-export const Quote = ({ children, className = "", style = {}, ...rest }) => {
+export const Quote = ({ children }) => {
   const quoteStyle = {
     fontSize: '1rem',
     textAlign: 'center',
@@ -18,18 +28,25 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
     borderRadius: '8px',
     padding: '1rem',
     margin: '1rem 0',
-    ...style,
   }
-  return <blockquote className={className} style={quoteStyle} {...rest}>{children}</blockquote>
+  return <div style={quoteStyle}>{children}</div>
 }
 
 /**
  * @component FrameQuote
  * @type displays
- * @subniche quotes
+ * @tier composite
  * @status stable
- * @description Framed blockquote with optional author, source link, and image.
- * @accepts children, className, style, ...props
+ * @description Frame Quote content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/overview/docs-philosophy.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
  * @param {any} author - author prop.
  * @param {any} source - source prop.
@@ -40,6 +57,8 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @param {any} img - img prop.
  * @param {boolean} [spacing=true] - spacing prop.
  * @param {any} props - props prop.
+ * @example
+ * <FrameQuote author="example" source="example">Example content</FrameQuote>
  */
 export const FrameQuote = ({
   children,
@@ -51,8 +70,6 @@ export const FrameQuote = ({
   borderColor,
   img,
   spacing = true,
-  className = "",
-  style = {},
   ...props
 }) => {
   const alignmentMap = {
@@ -62,13 +79,12 @@ export const FrameQuote = ({
   }
 
   const content = (
-    <blockquote
+    <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         padding: '0.75rem 1rem 0.25rem 1rem',
         gap: '0.25rem',
-        margin: 0,
       }}
     >
       <div
@@ -127,21 +143,18 @@ export const FrameQuote = ({
           </div>
         </div>
       )}
-    </blockquote>
+    </div>
   )
 
   return frame ? (
     <div
-      className={className}
       style={{
         border: borderColor ? `1px solid ${borderColor}` : 'none',
         borderRadius: '8px',
         overflow: 'hidden',
-        ...style,
       }}
-      {...props}
     >
-      <Frame style={{ border: 'none' }}>
+      <Frame {...props} style={{ border: 'none' }}>
         {img && <img src={img.src} alt={img.alt} />}
         {content}
       </Frame>

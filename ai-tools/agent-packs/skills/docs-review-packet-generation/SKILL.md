@@ -5,11 +5,27 @@ description: >-
   Generate dated, report-only docs review packets from live navigation scope so
   copy-framework, authoring-style, and research findings land in reusable
   trackers, summaries, and section artifact sets.
+tier: 2
 invoke_when:
   - "generate a docs review packet"
   - "review this tab or section and create packet reports"
   - "build copy style and research reports for live docs pages"
   - "create a tracker and report packet for this docs section"
+primary_paths:
+  - "tools/config/scoped-navigation"
+  - "tasks/reports"
+  - "ai-tools/ai-skills/docs-copy/SKILL.md"
+  - "ai-tools/ai-skills/page-authoring/SKILL.md"
+  - "ai-tools/ai-skills/templates/39-page-content-research-review.template.md"
+  - "docs-guide/tooling/review-packet-plan-template.md"
+primary_commands:
+  - "node tests/unit/copy-lint.test.js --files [csv]"
+  - "node tools/scripts/validators/content/copy/lint-copy.js [file-or-glob]"
+  - "node tools/scripts/validators/content/structure/lint-structure.js [file]"
+  - "node tools/scripts/validators/content/copy/lint-patterns.js [file-or-glob]"
+  - "node tools/scripts/audits/content/veracity/pattern-observer.js --tab [name] --output [file]"
+  - "node tools/scripts/audits/content/veracity/docs-page-research.js --files [csv] --report-md [file] --report-json [file]"
+  - "node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js --files [csv] --report-md [file] --report-json [file]"
 ---
 
 SKILL: Docs Review Packet Generation

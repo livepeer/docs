@@ -1,24 +1,31 @@
 /**
  * @component AccordionLayout
  * @type wrappers
- * @subniche accordions
+ * @tier composite
  * @status stable
- * @description Vertical stack layout with small gap, designed for accordion content sections.
- * @accepts children, className, style, ...rest
+ * @description Accordion Layout layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/mental-model.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
+ * @example
+ * <AccordionLayout>Example content</AccordionLayout>
  */
-export const AccordionLayout = ({ children, className = "", style = {}, ...rest }) => {
+export const AccordionLayout = ({ children }) => {
   return (
     <div
-      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "0.25rem",
         marginTop: "0.25rem",
-        ...style,
       }}
-      {...rest}
     >
       {children}
     </div>

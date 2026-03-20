@@ -1,24 +1,40 @@
 /**
  * @component BasicBtn
  * @type elements
- * @subniche buttons
- * @status deprecated
- * @description Empty placeholder button stub — non-functional.
- * @accepts style, className, ...rest
+ * @tier primitive
+ * @status stable
+ * @description Basic Btn primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies DownloadButton
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @example
  * <BasicBtn />
  */
-export const BasicBtn = ({ className = "", style = {}, ...rest }) => {
-  return <div className={className} style={style} {...rest}></div>
+export const BasicBtn = () => {
+  return <div></div>
 }
 
 /**
  * @component DownloadButton
  * @type elements
- * @subniche buttons
+ * @tier primitive
  * @status stable
- * @description Lazy-loaded download button with icon that renders on viewport intersection.
- * @accepts style, className, ...rest
+ * @description Download Button primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BasicBtn
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/run-a-gateway/install/linux-install.mdx, v2/internal/overview/docs-philosophy.mdx, v2/resources/media-kit.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} [label='Download'] - label prop.
  * @param {string} [icon='download'] - icon prop.
  * @param {any} downloadLink - download Link prop.
@@ -33,9 +49,6 @@ export const DownloadButton = ({
   downloadLink,
   rightIcon = '',
   border = false,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const [isVisible, setIsVisible] = React.useState(false)
   const ref = React.useRef(null)
@@ -71,16 +84,15 @@ export const DownloadButton = ({
 
   if (!isVisible) {
     return (
-      <span ref={ref} className={className} style={{ minHeight: '20px', display: 'inline-block', ...style }} {...rest} />
+      <span ref={ref} style={{ minHeight: '20px', display: 'inline-block' }} />
     )
   }
 
   return (
     <span
       ref={ref}
-      className={className}
-      style={{
-        ...(border
+      style={
+        border
           ? {
               border: '1px solid grey',
               borderRadius: '6px',
@@ -88,10 +100,8 @@ export const DownloadButton = ({
               display: 'inline-block',
               cursor: 'pointer',
             }
-          : { cursor: 'pointer' }),
-        ...style,
-      }}
-      {...rest}
+          : { cursor: 'pointer' }
+      }
     >
       <Icon icon={icon} size={18} color="var(--accent)" />
       <button

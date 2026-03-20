@@ -1,13 +1,25 @@
 /**
  * @component Starfield
  * @type scaffolding
- * @subniche heroes
+ * @tier pattern
  * @status stable
- * @description Animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.
- * @accepts {number} density, {string} className, {object} style, ...rest
+ * @description Renders the starfield component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {number} [density=1.1] - Density used by the component.
+ *
+ * @example
+ * <Starfield />
  */
-export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }) => {
+export const Starfield = ({ density = 1.1 }) => {
   const canvasRef = useRef(null);
 
   const readThemeColor = (tokenName, fallback) => {
@@ -206,13 +218,7 @@ export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }
       if (cancelled) {
         return;
       }
-      // Respect prefers-reduced-motion: draw once but don't animate
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       resize();
-      if (prefersReducedMotion) {
-        draw(); // Single frame only
-        return;
-      }
       draw();
       window.addEventListener("resize", resize);
     };
@@ -233,8 +239,6 @@ export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }
   return (
     <canvas
       ref={canvasRef}
-      aria-hidden="true"
-      className={className}
       style={{
         position: "absolute",
         inset: 0,
@@ -242,9 +246,7 @@ export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }
         height: "100%",
         pointerEvents: "none",
         zIndex: 0,
-        ...style,
       }}
-      {...rest}
     />
   );
 };

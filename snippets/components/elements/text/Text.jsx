@@ -1,57 +1,71 @@
 /**
  * @component Subtitle
  * @type elements
- * @subniche text
+ * @tier primitive
  * @status stable
- * @description Styled subtitle text with configurable colour, size, and alignment.
- * @accepts children, style, className, ...rest
+ * @description Subtitle primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/mental-model.mdx, v2/about/resources/blockchain-contracts.mdx, v2/home/solutions/showcase.mdx, v2/home/solutions/verticals.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {object} [style={}] - style prop.
  * @param {any} text - text prop.
  * @param {any} children - children prop.
  * @example
  * <Subtitle text="example">Example content</Subtitle>
  */
-export const Subtitle = ({ style = {}, text, children, className = "", ...rest }) => {
+export const Subtitle = ({ style = {}, text, children }) => {
   return (
-    <span
-      className={className}
-      style={{
-        fontSize: style.fontSize ? style.fontSize : "1rem",
-        fontStyle: style.fontStyle ? style.fontStyle : "italic",
-        color: style.color ? style.color : "var(--accent)",
-        marginBottom: style.marginBottom ? style.marginBottom : 0,
-        ...style,
-      }}
-      {...rest}
-    >
-      {text}
-      {children}
-    </span>
+    <>
+      <span
+        style={{
+          fontSize: style.fontSize ? style.fontSize : "1rem",
+          fontStyle: style.fontStyle ? style.fontStyle : "italic",
+          color: style.color ? style.color : "var(--accent)",
+          marginBottom: style.marginBottom ? style.marginBottom : 0,
+          ...style,
+        }}
+      >
+        {text}
+        {children}
+      </span>
+    </>
   );
 };
 
 /**
  * @component CopyText
  * @type elements
- * @subniche text
+ * @tier primitive
  * @status stable
- * @description Text with a click-to-copy button that copies content to clipboard.
- * @accepts style, className, ...rest
+ * @description Copy Text primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/resources/blockchain-contracts.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} text - text prop.
  * @param {any} label - label prop.
  * @example
  * <CopyText text="example" label="example" />
  */
-export const CopyText = ({ text, label, className = "", style = {}, ...rest }) => {
+export const CopyText = ({ text, label }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
   };
 
   return (
     <span
-      className={className}
-      style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", ...style }}
-      {...rest}
+      style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
     >
       {label && <strong>{label}</strong>}
       <code
@@ -98,26 +112,32 @@ export const CopyText = ({ text, label, className = "", style = {}, ...rest }) =
 /**
  * @component CardTitleTextWithArrow
  * @type elements
- * @subniche text
+ * @tier primitive
  * @status stable
- * @description Card title with trailing arrow icon for navigation indication.
- * @accepts children, style, className, ...cardProps
+ * @description Card Title Text With Arrow primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
  * @param {any} cardProps - card Props prop.
  * @example
  * <CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
  */
-export const CardTitleTextWithArrow = ({ children, className = "", style = {}, ...cardProps }) => {
+export const CardTitleTextWithArrow = ({ children, ...cardProps }) => {
   return (
     <div
-      className={className}
       style={{
         display: "flex",
         width: "fit-content",
         alignItems: "center",
         justifyContent: "center",
         marginTop: "-1rem",
-        ...style,
       }}
     >
       <Card
@@ -161,10 +181,18 @@ export const CardTitleTextWithArrow = ({ children, className = "", style = {}, .
 /**
  * @component AccordionTitleWithArrow
  * @type elements
- * @subniche text
+ * @tier primitive
  * @status stable
- * @description Accordion header text with trailing arrow icon.
- * @accepts children, style, className, ...rest
+ * @description Accordion Title With Arrow primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} text - text prop.
  * @param {any} children - children prop.
  * @param {string} [color="var(--text)"] - color prop.
@@ -175,14 +203,10 @@ export const AccordionTitleWithArrow = ({
   text,
   children,
   color = "var(--text)",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   const label = text ?? children;
   return (
     <span
-      className={className}
       style={{
         justifyContent: "center",
         alignContent: "center",
@@ -192,9 +216,7 @@ export const AccordionTitleWithArrow = ({
         gap: "0.5rem",
         padding: "0.25rem 0",
         minHeight: 44,
-        ...style,
       }}
-      {...rest}
     >
       {label}
       <span style={{ alignSelf: "flex-end" }}>

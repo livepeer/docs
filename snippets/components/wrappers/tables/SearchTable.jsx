@@ -1,10 +1,19 @@
 /**
  * @component SearchTable
  * @type wrappers
- * @subniche tables
+ * @tier pattern
  * @status stable
- * @description Filterable table wrapper with search input and category dropdown.
- * @accepts className, style, ...rest
+ * @description Renders the search table component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
  * @param {string} [TableComponent=null] - Table component used by the component.
  * @param {React.ReactNode} [tableTitle=null] - Table title used by the component.
  * @param {Array} [headerList=[]] - Collection data rendered by the component.
@@ -14,6 +23,9 @@
  * @param {string} [searchPlaceholder='Search...'] - Search placeholder used by the component.
  * @param {Array} [searchColumns=[]] - Collection data rendered by the component.
  * @param {string} [categoryColumn='Category'] - Category column used by the component.
+ *
+ * @example
+ * <SearchTable margin="value" />
  */
 export const SearchTable = ({
   TableComponent = null,
@@ -24,10 +36,7 @@ export const SearchTable = ({
   margin,
   searchPlaceholder = 'Search...',
   searchColumns = [],
-  categoryColumn = 'Category',
-  className = "",
-  style = {},
-  ...rest
+  categoryColumn = 'Category'
 }) => {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -69,7 +78,7 @@ export const SearchTable = ({
   });
 
   return (
-    <div className={className} style={style} {...rest}>
+    <div>
       <div
         style={{
           marginBottom: '0.5rem',

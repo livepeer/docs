@@ -1,24 +1,32 @@
 /**
  * @component ScrollBox
  * @type wrappers
- * @subniche containers
+ * @tier composite
  * @status stable
- * @description Scrollable container with max-height, overflow hint, and accessible region role.
- * @accepts children, className, ...rest
+ * @description Scroll Box layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/home/solutions/showcase.mdx, v2/home/solutions/verticals.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} children - children prop.
  * @param {number} [maxHeight=300] - max Height prop.
  * @param {boolean} [showHint=true] - show Hint prop.
  * @param {string} [ariaLabel="Scrollable content"] - aria Label prop.
  * @param {any} style - style prop.
+ * @example
+ * <ScrollBox style="example">Example content</ScrollBox>
  */
 export const ScrollBox = ({
   children,
   maxHeight = 300,
   showHint = true,
   ariaLabel = "Scrollable content",
-  style = {},
-  className = "",
-  ...rest
+  style,
 }) => {
   const contentRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -40,7 +48,7 @@ export const ScrollBox = ({
   }, [maxHeight, children]);
 
   return (
-    <div className={className} style={{ position: "relative", ...style }} {...rest}>
+    <div style={{ position: "relative" }}>
       <div
         ref={contentRef}
         role="region"
@@ -51,6 +59,7 @@ export const ScrollBox = ({
             typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight,
           overflowY: "auto",
           paddingRight: 4,
+          ...style,
         }}
         onScroll={(e) => {
           const el = e.target;

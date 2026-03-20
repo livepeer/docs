@@ -1,34 +1,18 @@
 /**
- * Sanitise HTML by stripping dangerous tags/attributes while keeping safe formatting.
- * Allows: a, b, i, em, strong, p, br, ul, ol, li, code, pre, span, h1-h6, blockquote, hr, img (with alt).
- * Strips: script, iframe, object, embed, form, input, style, link, on* attributes.
- * NOTE: For production-grade sanitisation, replace with DOMPurify.
- */
-const SAFE_TAGS = new Set(['a','b','i','em','strong','p','br','ul','ol','li','code','pre','span','h1','h2','h3','h4','h5','h6','blockquote','hr','img','div']);
-const SAFE_ATTRS = new Set(['href','target','rel','alt','src','class','id','title','aria-label','role']);
-function sanitiseHTML(html) {
-  if (!html || typeof html !== 'string') return '';
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
-    .replace(/<object[\s\S]*?<\/object>/gi, '')
-    .replace(/<embed[\s\S]*?>/gi, '')
-    .replace(/<form[\s\S]*?<\/form>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<link[\s\S]*?>/gi, '')
-    .replace(/\bon\w+\s*=\s*(['"])[^'"]*\1/gi, '')
-    .replace(/\bon\w+\s*=\s*[^\s>]*/gi, '')
-    .replace(/javascript\s*:/gi, '');
-}
-
-/**
  * @component BlogCard
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Blog post card with scrollable content, metadata, and CTA.
- * @dataSource automation/blog
- * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
+ * @description Blog Card data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} title - title prop.
  * @param {any} content - content prop.
  * @param {any} href - href prop.
@@ -41,6 +25,8 @@ function sanitiseHTML(html) {
  * @param {string} [dateIcon="calendar"] - date Icon prop.
  * @param {string} [cta="Read More"] - cta prop.
  * @param {any} [img=null] - img prop.
+ * @example
+ * <BlogCard title="example" content="example" />
  */
 export const BlogCard = ({
   title,
@@ -55,9 +41,6 @@ export const BlogCard = ({
   dateIcon = "calendar",
   cta = "Read More",
   img = null,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   // Show hint if content is likely to overflow (>500 chars as proxy)
   const showScrollHint = content && content.length > 500;
@@ -125,8 +108,6 @@ export const BlogCard = ({
 
   return (
     <Card
-      className={className}
-      style={style}
       title={
         <span style={titleStyle}>
           <span style={{ alignSelf: "top" }}>
@@ -139,7 +120,6 @@ export const BlogCard = ({
       cta={cta}
       img={img}
       arrow
-      {...rest}
     >
       {/* <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}> */}
       <div style={{ flex: 1 }}>
@@ -195,7 +175,7 @@ export const BlogCard = ({
           const hint = el.nextSibling;
           if (hint) hint.style.display = atBottom ? "none" : "block";
         }}
-        dangerouslySetInnerHTML={{ __html: sanitiseHTML(content) }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
       {showScrollHint && <div style={scrollHintStyle}>Scroll for more ↓</div>}
     </Card>
@@ -205,15 +185,24 @@ export const BlogCard = ({
 /**
  * @component CardBlogDataLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Grid layout rendering BlogCards from an items array.
- * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Card Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <CardBlogDataLayout limit={1} />
  */
-export const CardBlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
+export const CardBlogDataLayout = ({ items = [], limit }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -225,7 +214,7 @@ export const CardBlogDataLayout = ({ items = [], limit, className = "", style = 
     );
   }
   return (
-    <div className={className} style={style} {...rest}>
+    <div>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -236,19 +225,28 @@ export const CardBlogDataLayout = ({ items = [], limit, className = "", style = 
 /**
  * @component ColumnsBlogCardLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Multi-column BlogCard layout using Mintlify Columns.
- * @dataSource automation/blog
- * @accepts {Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest
+ * @description Columns Blog Card Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {number} [cols=2] - cols prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <ColumnsBlogCardLayout limit={1} />
  */
-export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className = "", style = {}, ...rest }) => {
+export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
-    <Columns cols={cols} className={className} style={style} {...rest}>
+    <Columns cols={cols}>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -259,18 +257,27 @@ export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className =
 /**
  * @component BlogDataLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Single-column BlogCard stack.
- * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <BlogDataLayout limit={1} />
  */
-export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
+export const BlogDataLayout = ({ items = [], limit }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
-    <div className={className} style={style} {...rest}>
+    <div>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -281,11 +288,18 @@ export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, 
 /**
  * @component PostCard
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Post card with gradient header, scrollable content, and metadata.
- * @dataSource automation/blog
- * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
+ * @description Post Card data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} title - title prop.
  * @param {any} content - content prop.
  * @param {any} href - href prop.
@@ -297,6 +311,8 @@ export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, 
  * @param {string} [dateIcon="calendar"] - date Icon prop.
  * @param {string} [cta="Read More"] - cta prop.
  * @param {any} [img=null] - img prop.
+ * @example
+ * <PostCard title="example" content="example" />
  */
 export const PostCard = ({
   title,
@@ -310,23 +326,20 @@ export const PostCard = ({
   dateIcon = "calendar",
   cta = "Read More",
   img = null,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   // Show hint if content is likely to overflow (>500 chars as proxy)
   const showScrollHint = content && content.length > 500;
 
   // FIX STYLES
   return (
-    <Card className={className} style={style} title={title} icon={icon} href={href} cta={cta} img={img} arrow {...rest}>
+    <Card title={title} icon={icon} href={href} cta={cta} img={img} arrow>
       {author && (
         <div
           style={{
             display: "flex",
             marginTop: "12px",
             fontSize: 13,
-            color: "var(--text)",
+            color: "white",
             gap: 8,
           }}
         >
@@ -342,7 +355,7 @@ export const PostCard = ({
             display: "flex",
             marginTop: "10px",
             fontSize: 12,
-            color: "var(--text)",
+            color: "white",
             gap: 8,
           }}
         >
@@ -390,7 +403,7 @@ export const PostCard = ({
           const hint = el.nextSibling;
           if (hint) hint.style.display = atBottom ? "none" : "block";
         }}
-        dangerouslySetInnerHTML={{ __html: sanitiseHTML(content) }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
       {showScrollHint && (
         <div
@@ -412,21 +425,30 @@ export const PostCard = ({
 /**
  * @component CardColumnsPostLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Multi-column PostCard layout.
- * @dataSource automation/blog
- * @accepts {number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Card Columns Post Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/blog
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {number} [cols=2] - cols prop.
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <CardColumnsPostLayout limit={1} />
  */
-export const CardColumnsPostLayout = ({ cols = 2, items = [], limit, className = "", style = {}, ...rest }) => {
+export const CardColumnsPostLayout = ({ cols = 2, items = [], limit }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
 
   return (
     <>
-      <Columns cols={cols} className={className} style={style} {...rest}>
+      <Columns cols={cols}>
         {displayItems.map((props, idx) => (
           <PostCard key={props.href || idx} {...props} />
         ))}
@@ -438,20 +460,26 @@ export const CardColumnsPostLayout = ({ cols = 2, items = [], limit, className =
 /**
  * @component CardInCardLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description PostCards rendered inside Card wrappers.
- * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Card In Card Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <CardInCardLayout limit={1} />
  */
-export const CardInCardLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
+export const CardInCardLayout = ({ items = [], limit }) => {
   return (
     <Card
-      className={className}
-      style={style}
-      {...rest}
       img="/snippets/automations/forum/Hero_Livepeer_Forum.png"
       href="https://forum.livepeer.org"
       arrow={false}
@@ -464,18 +492,27 @@ export const CardInCardLayout = ({ items = [], limit, className = "", style = {}
 /**
  * @component ForumLatestLayout
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Latest forum topics with banner image and topic cards.
- * @dataSource automation/forum
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Forum Latest Layout data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/livepeer-latest-topics.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/forum
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <ForumLatestLayout limit={1} />
  */
-export const ForumLatestLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
+export const ForumLatestLayout = ({ items = [], limit }) => {
   return (
-    <div className={className} style={style} {...rest}>
-      <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer">
+    <>
+      <a href="https:/forum.livepeer.org" target="_blank" rel="noopener noreferrer">
         <img
           src="/snippets/automations/forum/Hero_Livepeer_Forum.png"
           alt="Livepeer Forum"
@@ -490,22 +527,31 @@ export const ForumLatestLayout = ({ items = [], limit, className = "", style = {
       </a>
 
       <CardColumnsPostLayout cols={2} items={items} limit={limit} />
-    </div>
+    </>
   );
 };
 
 /**
  * @component DiscordAnnouncements
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Discord announcement feed with parsed markdown content. Sanitised HTML.
- * @dataSource automation/discord
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+ * @description Discord Announcements data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, LumaEvents, PostCard
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/discord
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+ * @example
+ * <DiscordAnnouncements limit={1} />
  */
-export const DiscordAnnouncements = ({ items = [], limit, className = "", style = {}, ...rest }) => {
+export const DiscordAnnouncements = ({ items = [], limit }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -529,7 +575,6 @@ export const DiscordAnnouncements = ({ items = [], limit, className = "", style 
 
   return (
     <div
-      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -537,9 +582,7 @@ export const DiscordAnnouncements = ({ items = [], limit, className = "", style 
         border: "1px solid var(--accent)",
         borderRadius: "0.5rem",
         padding: "1rem",
-        ...style,
       }}
-      {...rest}
     >
       {displayItems.map((announcement, index) => (
         <div key={announcement.id} href={announcement.url} target="_blank" rel="noopener noreferrer">
@@ -583,7 +626,7 @@ export const DiscordAnnouncements = ({ items = [], limit, className = "", style 
           <div
             style={{ color: "var(--text)" }}
             dangerouslySetInnerHTML={{
-              __html: sanitiseHTML(parseContent(announcement.content)),
+              __html: parseContent(announcement.content),
             }}
           />
           {index < displayItems.length - 1 && (
@@ -606,16 +649,25 @@ export const DiscordAnnouncements = ({ items = [], limit, className = "", style 
 /**
  * @component LumaEvents
  * @type integrators
- * @subniche blog
+ * @tier composite
  * @status stable
- * @description Upcoming/past event cards from Luma calendar data.
- * @dataSource Luma API
- * @accepts {any} data, {any} limit, {string} type, {string} className, {object} style, ...rest
+ * @description Luma Events data-driven component for rendering automated or API-backed documentation content.
+ * @contentAffinity overview, reference
+ * @owner docs
+ * @dependencies BlogCard, CardBlogDataLayout, CardColumnsPostLayout, DiscordAnnouncements, PostCard
+ * @usedIn v2/community/livepeer-connect/events-and-community-streams.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource automationData/luma
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} data - data prop.
  * @param {any} limit - limit prop.
  * @param {string} [type="upcoming"] - type prop.
+ * @example
+ * <LumaEvents data="example" limit={1} />
  */
-export const LumaEvents = ({ data, limit, type = "upcoming", className = "", style = {}, ...rest }) => {
+export const LumaEvents = ({ data, limit, type = "upcoming" }) => {
   let events = [];
 
   if (type === "all") {
@@ -646,7 +698,7 @@ export const LumaEvents = ({ data, limit, type = "upcoming", className = "", sty
     //     gap: "1rem",
     //   }}
     // >
-    <Columns cols={3} className={className} style={style} {...rest}>
+    <Columns cols={3}>
       {displayEvents.map((event, index) => (
         <Card
           key={index}

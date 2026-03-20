@@ -1,16 +1,26 @@
 /**
  * @component TitledVideo
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.
- * @accepts className, style, ...rest
+ * @description Titled Video content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, Video, YouTubeVideo, YouTubeVideoData
+ * @usedIn v2/home/solutions/showcase.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} src - src prop.
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
  * @param {boolean} [arrow=false] - arrow prop.
  * @param {string} [borderRadius="12px"] - border Radius prop.
  * @param {object} [style={}] - style prop.
+ * @example
+ * <TitledVideo src="example" title="example" />
  */
 export const TitledVideo = ({
   src,
@@ -19,27 +29,23 @@ export const TitledVideo = ({
   arrow = false,
   borderRadius = "12px",
   style = {},
-  className = "",
-  ...rest
 }) => {
-  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   return (
     <div
-      className={className}
       style={{
         position: "relative",
         display: "block",
+        // width: "calc(100% + 4rem)",
         borderRadius,
         overflow: "hidden",
         isolation: "isolate",
         ...style,
       }}
-      {...rest}
     >
       <video
-        autoPlay={!prefersReducedMotion}
+        autoPlay
         muted
-        loop={!prefersReducedMotion}
+        loop
         playsInline
         src={src}
         style={{
@@ -112,19 +118,27 @@ export const TitledVideo = ({
 /**
  * @component ShowcaseVideo
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description Full-width video with negative-margin breakout and rounded frame.
- * @accepts className, style, ...rest
+ * @description Showcase Video content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, TitledVideo, Video, YouTubeVideo, YouTubeVideoData
+ * @usedIn v2/home/solutions/showcase.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} src - src prop.
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
+ * @example
+ * <ShowcaseVideo src="example" title="example" />
  */
-export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}, ...rest }) => {
+export const ShowcaseVideo = ({ src, title, subtitle }) => {
   return (
     <TitledVideo
-      className={className}
-      {...rest}
       src={src}
       title={title}
       subtitle={subtitle}
@@ -135,7 +149,6 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
         borderRadius: 0,
         maxHeight: "300px",
         width: "calc(100% + 4rem)",
-        ...style,
       }}
     />
   );
@@ -144,10 +157,18 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
 /**
  * @component Video
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description Basic framed video player with caption support.
- * @accepts children, className, style, ...rest
+ * @description Video content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, TitledVideo, YouTubeVideo, YouTubeVideoData
+ * @usedIn v2/solutions/embody/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} src - src prop.
  * @param {string} [title=""] - title prop.
  * @param {string} [author=""] - author prop.
@@ -158,6 +179,8 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
  * @param {boolean} [loop=false] - loop prop.
  * @param {boolean} [muted=false] - muted prop.
  * @param {any} children - children prop.
+ * @example
+ * <Video src="example" caption="example">Example content</Video>
  */
 export const Video = ({
   src,
@@ -170,9 +193,6 @@ export const Video = ({
   loop = false,
   muted = false,
   children,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   // Build caption from author and caption
   const buildCaption = () => {
@@ -238,7 +258,7 @@ export const Video = ({
   const captionContent = buildCaption();
 
   return (
-    <Frame className={className} style={style} {...(captionContent ? { caption: captionContent } : {})} {...rest}>
+    <Frame {...(captionContent ? { caption: captionContent } : {})}>
       <video
         controls={controls}
         autoPlay={autoPlay}
@@ -257,15 +277,25 @@ export const Video = ({
 /**
  * @component YouTubeVideo
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description YouTube embed via responsive iframe with aspect-ratio preservation.
- * @accepts className, style, ...rest
+ * @description You Tube Video content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, TitledVideo, Video, YouTubeVideoData
+ * @usedIn v2/community/community-portal.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx, v2/home/trending.mdx, v2/internal/rfp/aims.mdx, v2/solutions/daydream/overview.mdx, v2/solutions/daydream/overview1.mdx, v2/solutions/frameworks/overview.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title=""] - title prop.
  * @param {string} [author=""] - author prop.
  * @param {string} [hint=""] - hint prop.
  * @param {any} caption - caption prop.
+ * @example
+ * <YouTubeVideo embedUrl="example" caption="example" />
  */
 export const YouTubeVideo = ({
   embedUrl,
@@ -273,9 +303,6 @@ export const YouTubeVideo = ({
   author = "",
   hint = "",
   caption,
-  className = "",
-  style = {},
-  ...rest
 }) => {
   // Return null if embedUrl is missing or invalid
   if (!embedUrl || typeof embedUrl !== "string" || embedUrl.trim() === "") {
@@ -320,11 +347,8 @@ export const YouTubeVideo = ({
 
   return (
     <Frame
-      className={className}
-      style={style}
       {...(hint ? { hint } : {})}
       {...(captionContent ? { caption: captionContent } : {})}
-      {...rest}
     >
       <iframe
         className="w-full aspect-video rounded-xl"
@@ -340,13 +364,23 @@ export const YouTubeVideo = ({
 /**
  * @component YouTubeVideoData
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description Renders a columned grid of YouTubeVideo embeds from an items array.
- * @accepts none
+ * @description You Tube Video Data content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, TitledVideo, Video, YouTubeVideo
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
  * @param {number} [cols=2] - cols prop.
+ * @example
+ * <YouTubeVideoData limit={1} />
  */
 export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -387,15 +421,25 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
 /**
  * @component LinkedInEmbed
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description LinkedIn post embed via responsive iframe with compact layout.
- * @accepts none
+ * @description Linked In Embed content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, TitledVideo, Video, YouTubeVideo, YouTubeVideoData
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title="Embedded post"] - title prop.
  * @param {string} [hint=""] - hint prop.
  * @param {any} caption - caption prop.
  * @param {string} [height="399"] - height prop.
+ * @example
+ * <LinkedInEmbed embedUrl="example" caption="example" />
  */
 export const LinkedInEmbed = ({
   embedUrl,
@@ -434,35 +478,41 @@ export const LinkedInEmbed = ({
 /**
  * @component YouTubeVideoDownload
  * @type displays
- * @subniche video
- * @status stable
- * @description YouTube embed with download hint text below.
- * @accepts className, style, ...rest
+ * @tier composite
+ * @status deprecated
+ * @description You Tube Video Download content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies CardVideo, LinkedInEmbed, TitledVideo, Video, YouTubeVideo, YouTubeVideoData
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.
  * @param {any} hint - hint prop.
  * @param {string} [caption=""] - caption prop.
+ * @deprecated YouTubeVideoDownload is deprecated and should not be used for new content.
+ * @see YouTubeVideo
+ * @example
+ * <YouTubeVideoDownload embedUrl="example" title="example" />
  */
 export const YouTubeVideoDownload = ({
   embedUrl,
   title,
   hint,
   caption = "",
-  className = "",
-  style = {},
-  ...rest
 }) => {
   return (
     <div
-      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "stretch",
         width: "100%",
-        ...style,
       }}
-      {...rest}
     >
       {/* DownloadButton removed for Mintlify compatibility */}
       {/* <Frame
@@ -493,17 +543,27 @@ export const YouTubeVideoDownload = ({
 /**
  * @component CardVideo
  * @type displays
- * @subniche video
+ * @tier composite
  * @status stable
- * @description YouTube embed inside a Card wrapper with aspect-ratio iframe.
- * @accepts style, className, ...rest
+ * @description Card Video content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies LinkedInEmbed, TitledVideo, Video, YouTubeVideo, YouTubeVideoData
+ * @usedIn v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.
  * @param {any} style - style prop.
+ * @example
+ * <CardVideo embedUrl="example" title="example" />
  */
-export const CardVideo = ({ embedUrl, title, style = {}, className = "", ...rest }) => {
+export const CardVideo = ({ embedUrl, title, style }) => {
   return (
-    <Card className={className} {...rest}>
+    <Card>
       <iframe
         className="w-full aspect-video rounded-xl"
         style={{ aspectRatio: "16/9", ...style }}
