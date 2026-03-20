@@ -70,7 +70,7 @@ const AGGREGATE_INDEX_PATH = 'docs-guide/catalog/scripts-catalog.mdx';
 const LEGACY_AGGREGATE_INDEX_PATH = AGGREGATE_INDEX_PATH
   .replace('/catalog/', '/indexes/')
   .replace(/-catalog\.mdx$/i, () => ['-', 'index', '.mdx'].join(''));
-const CLASSIFICATION_DATA_PATH = 'workspace/reports/script-classifications.json';
+const CLASSIFICATION_DATA_PATH = 'tools/config/script-registry.json';
 
 const SCRIPT_EXTENSIONS = ['.js', '.sh', '.py'];
 const SCRIPT_EXTENSIONS_SET = new Set(SCRIPT_EXTENSIONS);
@@ -101,6 +101,9 @@ const CATEGORY_ENUM = [
   'utility',
   'orchestrator'
 ];
+
+// New 3-tier taxonomy type values (replaces CATEGORY_ENUM for scripts using @type)
+const VALID_TYPES = ['audit', 'generator', 'validator', 'remediator', 'dispatch', 'automation'];
 
 const PURPOSE_ENUM = [
   'qa:content-quality',
@@ -218,6 +221,7 @@ module.exports = {
   AGGREGATE_INDEX_PATH,
   CATEGORY_ENUM,
   CLASSIFICATION_DATA_PATH,
+  VALID_TYPES,
   DISCOVERY_ROOTS,
   EXCLUDED_PREFIXES,
   FRAMEWORK_FIELDS,

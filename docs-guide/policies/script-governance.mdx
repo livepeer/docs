@@ -1,0 +1,288 @@
+---
+title: Script Governance
+sidebarTitle: Script Governance
+description: Standards, taxonomy, and JSDoc requirements for all scripts in this repository — classification rules, header format, enforcement tiers, and how to write a new script.
+keywords:
+  - livepeer
+  - script governance
+  - script taxonomy
+  - JSDoc standard
+  - script classification
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Script Governance
+
+This page is the canonical governance reference for all scripts in this repository.
+It defines the three-tier taxonomy, JSDoc header standard, enforcement tiers, and
+the process for adding a new script.
+
+The full script inventory lives in the auto-generated catalog: [Scripts Catalog](/docs-guide/catalog/scripts-catalog).
+
+---
+
+## Taxonomy — the three-tier model
+
+Every script in `tools/scripts/` is placed at a path following this structure:
+
+```
+tools/scripts/<type>/<concern>/<niche>/script-name.js
+```
+
+This hierarchy is enforced — a script placed in the wrong folder will fail classification validation.
+
+### Layer 1 — Type
+
+What the script **does**.
+
+| Type folder | What it does | `@type` value | Typical `@mode` |
+|---|---|---|---|
+| `audits/` | Read-only scan, measure, report. Never modifies files. Produces reports and metrics. | `audit` | `read-only` |
+| `generators/` | Produces new files from source-of-truth data. Creates artefacts (JSON, MDX, indexes, registries). | `generator` | `write`, `generate` |
+| `validators/` | Enforces rules with a pass/fail gate. Exits 0 (pass) or non-zero (fail). | `validator` | `read-only` |
+| `remediators/` | Bulk-fixes existing files in place. Modifies source content to bring it into compliance. | `remediator` | `edit` |
+| `dispatch/` | Dispatches work to other scripts or agents. Genuine orchestrators that spawn child processes. | `dispatch` | `execute` |
+| `automations/` | End-to-end automated workflows — translation, data fetching, transforms. | `automation` | `write`, `execute` |
+
+**Key distinctions:**
+- If the script only **reads** → `audit` or `validator` (validator exits non-zero on failure; audit just reports)
+- If the script only **creates new files** → `generator`
+- If the script **edits existing files** → `remediator`
+- If the script **runs other scripts** → `dispatch`
+- A script that does NOT spawn other scripts is NOT a `dispatch`
+
+### Layer 2 — Concern
+
+What **domain** the script operates on. The same four concerns appear under every type folder.
+
+| Concern | What it covers |
+|---|---|
+| `content/` | Docs pages, copy, SEO, veracity, quality, reference, reconciliation |
+| `components/` | Component library, registry, CSS, naming, documentation |
+| `governance/` | Scripts about scripts, repo structure, agent docs, manifests, catalogs |
+| `ai/` | LLM files, agent packaging, skills sync, Codex operations |
+
+### Layer 3 — Niche
+
+The specific sub-concern within the domain. Examples: `quality`, `veracity`, `structure`, `copy`, `grammar`, `catalogs`, `compliance`, `pr`, `codex`, `repair`, `style`, `scaffold`, `llm`.
+
+Full niche reference: see [script-framework.md](../../../workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md) section 2.
+
+### Classification decision tree
+
+```
+1. Does the script SPAWN other scripts or coordinate a multi-script pipeline?
+   YES → dispatch/
+   NO  → continue
+
+2. Does the script only READ files and produce reports/metrics (no file modifications)?
+   YES → Does it enforce a pass/fail gate (exit 0/1)?
+         YES → validators/
+         NO  → audits/
+   NO  → continue
+
+3. Does the script CREATE new files from source-of-truth data?
+   YES → generators/
+   NO  → continue
+
+4. Does the script MODIFY existing files in place to fix/repair them?
+   YES → remediators/
+   NO  → continue
+
+5. Is the script an end-to-end automated workflow (translation, data fetching, transforms)?
+   YES → automations/
+```
+
+For concern:
+```
+- Operates on docs pages, MDX, copy, SEO, frontmatter? → content/
+- Operates on components, registry, CSS, naming?        → components/
+- Operates on scripts, repo structure, agent docs?      → governance/
+- Operates on LLM files, agent packs, skills, Codex?   → ai/
+```
+
+---
+
+## JSDoc Header Standard
+
+Every script MUST include a JSDoc header block as the first block comment in the file
+(or hash-comment equivalent for `.sh` and `.py` files). The pre-commit hook and CI validate
+header presence and tag format.
+
+### Required tags (enforced by `--strict`)
+
+| # | Tag | Required | What it captures | Allowed values / format |
+|---|---|---|---|---|
+| 1 | `@script` | **Yes** | Script identity | Filename without extension. Example: `lint-copy` |
+| 2 | `@type` | **Yes** | Layer 1 — what the script does | `audit` \| `generator` \| `validator` \| `remediator` \| `dispatch` \| `automation` |
+| 3 | `@concern` | **Yes** | Layer 2 — domain | `content` \| `components` \| `governance` \| `ai` |
+| 4 | `@niche` | **Yes** | Layer 3 — specific sub-concern | See niche reference in section 2 above |
+| 5 | `@purpose` | **Yes** | Functional category | Namespaced string: `qa:content-quality`, `governance:repo-health`, `tooling:dev-tools`, etc. |
+| 6 | `@description` | **Yes** | One-line human-readable description | Plain English. No line breaks. |
+| 7 | `@mode` | **Yes** | How the script affects the system | `read-only` \| `write` \| `edit` \| `generate` \| `execute` |
+| 8 | `@pipeline` | **Yes** | Flow declaration | Arrow notation: `trigger → inputs → outputs` |
+| 9 | `@scope` | **Yes** | What files/directories it operates on | Comma-separated paths, patterns, or keywords |
+| 10 | `@usage` | **Yes** | CLI invocation example | Full command with flags |
+| 11 | `@policy` | If applicable | Governance traceability | Requirement IDs: `E-R1, R-R11` |
+
+The required minimum validated by `--strict` is tags 1–10. `@policy` is expected but not blocked on by default.
+
+### `@mode` values
+
+| Value | Meaning |
+|---|---|
+| `read-only` | Inspects and reports only — no file changes. Used by audits and validators. |
+| `write` | Creates new files. Used by generators and automations. |
+| `edit` | Modifies existing files in place. Used by remediators. |
+| `generate` | Produces artefacts (JSON, MDX, indexes, registries). Used by generators. |
+| `execute` | Runs external commands, dispatches work to other scripts or agents. Used by dispatch. |
+
+### `@pipeline` format
+
+Single-line flow declaration using arrow notation:
+
+```
+@pipeline   trigger → inputs → outputs [→ dependants]
+```
+
+Examples:
+```
+@pipeline   pre-commit → staged .mdx files → stdout:report
+@pipeline   manual → docs.json, v2 frontmatter → docs-index.json → scripts-catalog
+@pipeline   cron:weekly → full v2 tree → governance-repair PR
+@pipeline   pr-workflow → changed .mdx files → exit-code, stdout:violations
+```
+
+### Example header — JavaScript
+
+```js
+/**
+ * @script      lint-copy
+ * @type        validator
+ * @concern     content
+ * @niche       copy
+ * @purpose     qa:content-quality
+ * @description Enforce banned word and phrase rules on MDX content files.
+ * @mode        read-only
+ * @pipeline    pr-workflow → staged .mdx files → exit-code, stdout:violations
+ * @scope       staged, changed, v2-content, single-file
+ * @usage       node tools/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
+ * @policy      E-R1, R-R11
+ */
+```
+
+### Example header — shell / Python (hash-comment style)
+
+```bash
+# @script            pre-commit
+# @type              dispatch
+# @concern           governance
+# @niche             pipelines
+# @purpose           infrastructure:pipeline-orchestration
+# @description       Pre-commit hook — hard gates only.
+# @mode              execute
+# @pipeline          P1 → git index → exit-code
+# @scope             .githooks
+# @usage             bash .githooks/pre-commit [flags]
+# @policy            R-R29
+```
+
+### Removed tags — MUST NOT appear
+
+These tags were used in earlier versions and must not appear in new scripts:
+
+| Removed tag | Replaced by |
+|---|---|
+| `@owner` | Removed — ownerless governance model |
+| `@category` | `@type` |
+| `@dualmode` | Not replaced — scripts should have one purpose |
+| `@purpose-statement` | `@description` |
+| `@needs` | `@policy` |
+| `@domain` | `@concern` |
+
+---
+
+## Enforcement Tiers
+
+Scripts are assigned to one of three tiers. Tier assignment belongs in `@pipeline`.
+
+| Tier | Gate type | Runs where | What it means |
+|---|---|---|---|
+| **Hard gate** | Blocks commit or merge | Pre-commit hook + required GitHub Actions status check | Must pass. Violations block the commit. |
+| **Soft gate** | Warns in PR, does not block merge | GitHub Actions check (non-required) | Violations surface in PR UI but do not prevent merge. |
+| **Self-heal** | No gate — auto-fixes on schedule | Cron workflow with auto-PR | Runs periodically and opens a PR with corrections. |
+
+---
+
+## File Structure Standard
+
+Every script MUST follow this section order:
+
+```
+1. Shebang line          #!/usr/bin/env node  (or bash, python3)
+2. JSDoc header block    All 11 tags in declared order
+3. 'use strict'          JS only — recommended
+4. Requires / imports    const fs = require('fs'); etc.
+5. Constants / config    REPO_ROOT, paths, thresholds — ALL in first ~30 lines after imports
+6. Helper functions      Small, focused utilities
+7. Main function         Primary logic
+8. Exports / execution   module.exports or main() call
+```
+
+### REPO_ROOT pattern
+
+```js
+// Correct — repo root from process.cwd()
+const REPO_ROOT = process.cwd();
+
+// Wrong — fragile, breaks if script is moved
+const REPO_ROOT = path.resolve(__dirname, '../../../../..');
+```
+
+`__dirname`-relative paths are acceptable only for reaching sibling files or shared libraries within the scripts tree (e.g., `require('../../../../lib/docs-index-utils')`).
+
+---
+
+## How to Write a New Script
+
+<Steps>
+  <Step title="Classify it first">
+    Use the decision tree above to determine `type`, `concern`, and `niche`.
+    Place the file at `tools/scripts/<type>/<concern>/<niche>/<script-name>.js`.
+  </Step>
+  <Step title="Write the JSDoc header">
+    Copy the example header above. Fill all 11 tags. Do not leave placeholder values.
+    Run `node tools/scripts/validators/governance/compliance/review-governance-repair-checklist.js --staged` to validate.
+  </Step>
+  <Step title="Follow the file structure">
+    Shebang → JSDoc header → `'use strict'` → imports → constants/config at top → helpers → main() → export/execute.
+  </Step>
+  <Step title="Use process.cwd() for REPO_ROOT">
+    Never traverse up with `__dirname` to reach the repo root. Use `process.cwd()` or a shared `getRepoRoot()` utility.
+  </Step>
+  <Step title="Support --dry-run if the script writes files">
+    Any script that writes or modifies files SHOULD support `--dry-run` to show what would change without making changes.
+  </Step>
+  <Step title="Assign an enforcement tier">
+    Set `@pipeline` to indicate where the script runs. Hard gates go in pre-commit or required CI; soft gates in non-required CI; self-heals in cron.
+  </Step>
+  <Step title="Add to the registry">
+    Run `node tools/scripts/generators/governance/catalogs/generate-script-registry.js` to update `tools/config/script-registry.json`. The catalog is regenerated automatically from the registry.
+  </Step>
+</Steps>
+
+---
+
+## Source of Truth
+
+| Resource | Where |
+|---|---|
+| This governance spec | `docs-guide/policies/script-governance.mdx` (you are here) |
+| Full technical spec | `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` |
+| Script registry (derived index) | `tools/config/script-registry.json` |
+| Script catalog (auto-generated) | [docs-guide/catalog/scripts-catalog](/docs-guide/catalog/scripts-catalog) |
+| Registry generator | `tools/scripts/generators/governance/catalogs/generate-script-registry.js` |
