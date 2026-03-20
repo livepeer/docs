@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6, manual
  * @scope       generated-output
- * @usage       node tools/scripts/audits/components/library/scan-component-imports.js [--verify]
+ * @usage       node tools/scripts/audits/components/library/scan-component-imports.js [--verify] [--since <commit>]
  * @policy      R-R10
  */
 
@@ -19,6 +19,7 @@ const {
   buildComponentUsageSummary,
   extractExports,
   getCategoryFromPath,
+  getChangedMdxFilesSince,
   getComponentFiles,
   normalizeCsvField,
   parseJSDocBlock,
@@ -31,11 +32,12 @@ const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/scan-component-imports.js [options]',
+      'Usage: node tools/scripts/audits/components/library/scan-component-imports.js [options]',
       '',
       'Options:',
-      '  --verify      Compare live imports with @usedIn declarations and fail on drift',
-      '  --help, -h    Show this help message'
+      '  --verify          Compare live imports with @usedIn declarations and fail on drift',
+      '  --since <commit>  Only scan MDX files changed since <commit> (incremental mode)',
+      '  --help, -h        Show this help message'
     ].join('\n')
   );
 }
@@ -43,20 +45,27 @@ function usage() {
 function parseArgs(argv) {
   const args = {
     verify: false,
+    since: null,
     help: false
   };
 
-  argv.forEach((token) => {
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
     if (token === '--verify') {
       args.verify = true;
-      return;
-    }
-    if (token === '--help' || token === '-h') {
+    } else if (token === '--since') {
+      const ref = argv[i + 1];
+      if (!ref || ref.startsWith('--')) {
+        throw new Error('--since requires a commit ref argument');
+      }
+      args.since = ref;
+      i += 1;
+    } else if (token === '--help' || token === '-h') {
       args.help = true;
-      return;
+    } else {
+      throw new Error(`Unknown argument: ${token}`);
     }
-    throw new Error(`Unknown argument: ${token}`);
-  });
+  }
 
   return args;
 }
@@ -90,9 +99,15 @@ function collectComponentInventory() {
   });
 }
 
-function buildUsageMap() {
+function buildUsageMap(since = null) {
   const inventory = collectComponentInventory();
-  const liveImports = scanMDXImports('v2/**/*.mdx', { publishedOnly: true });
+
+  const scanOptions = { publishedOnly: true };
+  if (since) {
+    const changedFiles = getChangedMdxFilesSince(since);
+    scanOptions.files = changedFiles;
+  }
+  const liveImports = scanMDXImports('v2/**/*.mdx', scanOptions);
 
   const components = inventory.map((component) => {
     const usage = buildComponentUsageSummary(liveImports, component.name);
@@ -151,14 +166,20 @@ function buildUsageMap() {
       staleInJsDoc: component.drift.staleInJsDoc
     }));
 
+  const meta = {
+    generated: new Date().toISOString(),
+    generator: 'tools/scripts/audits/components/library/scan-component-imports.js',
+    componentCount: inventory.length,
+    canonicalUsagePolicy: 'english-only-jsdoc'
+  };
+  if (since) {
+    meta.incremental = true;
+    meta.since = since;
+  }
+
   return {
     usageMap: {
-      _meta: {
-        generated: new Date().toISOString(),
-        generator: 'tools/scripts/scan-component-imports.js',
-        componentCount: inventory.length,
-        canonicalUsagePolicy: 'english-only-jsdoc'
-      },
+      _meta: meta,
       components,
       orphaned,
       mostImported
@@ -182,10 +203,17 @@ function run(argv = process.argv.slice(2)) {
     return 0;
   }
 
-  const { usageMap, drift } = buildUsageMap();
+  let usageMap, drift;
+  try {
+    ({ usageMap, drift } = buildUsageMap(args.since));
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    return 1;
+  }
+
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(usageMap, null, 2)}\n`, 'utf8');
-  console.log(`Wrote ${path.relative(REPO_ROOT, OUTPUT_PATH)}`);
+  console.log(`Wrote ${path.relative(REPO_ROOT, OUTPUT_PATH)}${args.since ? ` (incremental since ${args.since})` : ''}`);
 
   if (args.verify && drift.length > 0) {
     console.error('❌ English-canonical @usedIn drift detected:');

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
- * @usage       node tools/scripts/validators/content/structure/lint-structure.js [file] [flags]
+ * @usage       node tools/scripts/validators/content/structure/lint-structure.js [file] [--files path1,path2,...] [--changed-files] [--warn-only]
  * @policy      E-R1, R-R11
  */
 
@@ -53,6 +53,17 @@ function getFiles() {
   }
 
   const args = process.argv.slice(2);
+
+  const filesIdx = args.indexOf('--files');
+  if (filesIdx !== -1 && args[filesIdx + 1]) {
+    return args[filesIdx + 1]
+      .split(',')
+      .map((filePath) => filePath.trim())
+      .filter(Boolean)
+      .filter((filePath) => /\.(md|mdx)$/i.test(filePath))
+      .filter((filePath) => fs.existsSync(filePath));
+  }
+
   if (args.includes('--changed-files')) {
     const diff = execSync('git diff --cached --name-only --diff-filter=ACM', {
       encoding: 'utf8'
