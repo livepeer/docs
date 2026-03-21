@@ -8,8 +8,8 @@
  * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @mode        generate
  * @pipeline    manual
- * @scope       tools/scripts, tools/lib, workspace/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
- * @usage       node tools/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
+ * @scope       operations/scripts, tools/lib, workspace/reports/repo-ops, v2, docs.json operations/tests/unit/v2-folder-governance-cleanup-matrix.test.js
+ * @usage       node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
  * @policy      E-C1, R-R14
  */
 
@@ -126,7 +126,7 @@ function usage() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]'
+      '  node operations/scripts/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]'
     ].join('\n')
   );
 }

@@ -8,8 +8,8 @@
  * @description WCAG repair shared logic — common repair functions used by WCAG audit fix mode
  * @mode        edit
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tests/integration, workspace/reports, v2
- * @usage       node tools/scripts/remediators/content/style/wcag-repair-common.js [flags]
+ * @scope       operations/scripts, operations/tests/integration, workspace/reports, v2
+ * @usage       node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]
  * @policy      E-R1, R-R11
  */
 
@@ -90,9 +90,9 @@ function parseWrapperArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Usage: node tools/scripts/wcag-repair-common.js [--full|--staged|--files <path[,path...]>] [--fix|--no-fix] [--stage] [--fail-impact <level>] [--report <path>] [--report-json <path>]`);
+  console.log(`Usage: node operations/scripts/wcag-repair-common.js [--full|--staged|--files <path[,path...]>] [--fix|--no-fix] [--stage] [--fail-impact <level>] [--report <path>] [--report-json <path>]`);
   console.log('');
-  console.log('Applies conservative WCAG-related source autofixes only (no browser audit) using the shared tests/integration WCAG engine.');
+  console.log('Applies conservative WCAG-related source autofixes only (no browser audit) using the shared operations/tests/ntegration WCAG engine.');
   console.log('Usable via lpd script runner: lpd tools wcag-repair-common -- --staged --stage');
 }
 
@@ -104,7 +104,7 @@ async function main() {
   }
 
   process.chdir(REPO_ROOT);
-  const wcagAudit = require(path.join(REPO_ROOT, 'tests', 'integration', 'v2-wcag-audit.js'));
+  const wcagAudit = require(path.join(REPO_ROOT, 'operations', 'tests', 'integration', 'v2-wcag-audit.js'));
   const result = await wcagAudit.runAudit({ argv: parsed.argv });
   process.exit(result.exitCode || 0);
 }

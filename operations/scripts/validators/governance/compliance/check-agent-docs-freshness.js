@@ -8,8 +8,8 @@
  * @description Validates that canonical agent governance docs and native adapters exist and have been touched within a freshness threshold
  * @mode        read-only
  * @pipeline    manual, ci
- * @scope       tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .cursorrules, .windsurf, .augment, .mintlify, docs-guide/policies, ai-tools/ai-skills, contribute
- * @usage       node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold <days>] [--json]
+ * @scope       operations/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .cursorrules, .windsurf, .augment, .mintlify, docs-guide/policies, ai-tools/ai-skills, contribute
+ * @usage       node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold <days>] [--json]
  * @policy      R-R14, R-R18
  */
 
@@ -50,7 +50,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]'
+    'Usage: node operations/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]'
   );
 }
 

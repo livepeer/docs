@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual, P6, manual, manual
  * @scope       full-repo
- * @usage       node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]
+ * @usage       node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]
  * @policy      R-R14, R-R18, R-C6
  */
 
@@ -133,7 +133,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]'
+    'Usage: node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]'
   );
 }
 

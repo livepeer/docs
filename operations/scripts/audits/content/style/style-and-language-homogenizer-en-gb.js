@@ -8,8 +8,8 @@
  * @description EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
  * @mode        edit
  * @pipeline    on-demand, repair)
- * @scope       tools/scripts, v2, tools/config/style-language-profile-en-gb.json
- * @usage       node tools/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]
+ * @scope       operations/scripts, v2, tools/config/style-language-profile-en-gb.json
+ * @usage       node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]
  * @policy      E-C6, F-C1
  */
 

@@ -8,8 +8,8 @@
  * @description Codex commit helper — audits codex branch state and generates compliant commit messages
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, .githooks, ai-tools/ai-rules
- * @usage       node tools/scripts/dispatch/ai/codex/codex-commit.js [flags]
+ * @scope       operations/scripts, .githooks, ai-tools/ai-rules
+ * @usage       node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -84,7 +84,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/codex-commit.js --message <text> [--no-verify --human-override true --override-note <text>] [--trailer <k=v>]'
+    'Usage: node operations/scripts/codex-commit.js --message <text> [--no-verify --human-override true --override-note <text>] [--trailer <k=v>]'
   )
 }
 

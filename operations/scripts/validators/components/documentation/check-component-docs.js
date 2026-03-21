@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual, P3
  * @scope       single-domain
- * @usage       node tools/scripts/validators/components/documentation/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]
+ * @usage       node operations/scripts/validators/components/documentation/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]
  * @policy      R-R10
  */
 
@@ -31,7 +31,7 @@ const RULES = ['4.9', '4.10', '4.11', '4.12', '4.13', '4.14', '4.15'];
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/validators/components/check-component-docs.js [options]',
+      'Usage: node operations/scripts/validators/components/check-component-docs.js [options]',
       '',
       'Options:',
       `  --path <dir>           Component root to scan (default: ${DEFAULT_COMPONENTS_PATH})`,

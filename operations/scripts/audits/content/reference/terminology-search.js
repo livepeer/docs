@@ -8,8 +8,8 @@
  * @description Terminology search — searches glossary/terminology data for definitions
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts
- * @usage       node tools/scripts/audits/content/reference/terminology-search.js [flags]
+ * @scope       operations/scripts
+ * @usage       node operations/scripts/audits/content/reference/terminology-search.js [flags]
  * @policy      E-C6, F-C1
  */
 

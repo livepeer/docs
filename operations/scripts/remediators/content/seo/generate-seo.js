@@ -8,8 +8,8 @@
  * @description SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis
  * @mode        generate
  * @pipeline    on-demand, SEO refresh)
- * @scope       tools/scripts
- * @usage       node tools/scripts/generators/content/seo/generate-seo.js [flags]
+ * @scope       operations/scripts
+ * @usage       node operations/scripts/generators/content/seo/generate-seo.js [flags]
  * @policy      E-R19, F-R7
  */
 /**
@@ -23,7 +23,7 @@
  *
  * AEO = optimizing for AI/answer engines (structured metadata, clear summaries).
  *
- * Usage: node tools/scripts/snippets/generate-seo.js [--dry-run] [--file=path/to/file.mdx]
+ * Usage: node operations/scripts/snippets/generate-seo.js [--dry-run] [--file=path/to/file.mdx]
  */
 
 const fs = require("fs");

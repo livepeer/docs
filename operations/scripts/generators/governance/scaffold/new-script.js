@@ -26,7 +26,7 @@ function argValue(name) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/new-script.js --path <repo-relative-path> [--domain <value>] [--summary <value>] [--scope <value>]');
+  console.log('Usage: node operations/scripts/new-script.js --path <repo-relative-path> [--domain <value>] [--summary <value>] [--scope <value>]');
 }
 
 function usageDefault(filePath) {

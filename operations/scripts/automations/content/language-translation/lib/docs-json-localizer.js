@@ -2,12 +2,12 @@
  * @script            docs-json-localizer
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement docs.json localiser engine — transforms docs.json navigation for locale variants
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/docs-json-localizer.js [flags]
+ * @usage             node operations/scripts/i18n/lib/docs-json-localizer.js [flags]
  */
 const fs = require('fs');
 const path = require('path');

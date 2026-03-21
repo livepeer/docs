@@ -11,7 +11,7 @@
  * @mode      edit
  * @pipeline  governance-pipeline
  * @scope     all
- * @usage     node tools/scripts/remediators/governance/scaffold/update-jsdoc-headers.js [--write]
+ * @usage     node operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js [--write]
  * @policy    dry-run by default; --write to apply changes
  */
 

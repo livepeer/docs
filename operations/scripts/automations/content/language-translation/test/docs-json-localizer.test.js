@@ -2,12 +2,12 @@
  * @script            docs-json-localizer.test
  * @category          validator
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests docs-json-localizer — validates locale docs.json transformation logic
  * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/automations/content/language-translation/test/docs-json-localizer.test.js [flags]
+ * @usage             node operations/scripts/i18n/test/docs-json-localizer.test.js [flags]
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');

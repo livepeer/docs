@@ -8,8 +8,8 @@
  * @description LLMs file generator — produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.
  * @mode        generate
  * @pipeline    manual, P6
- * @scope       tools/scripts, docs.json, v2
- * @usage       node tools/scripts/generators/ai/llm/generate-llms-files.js [flags]
+ * @scope       operations/scripts, docs.json, v2
+ * @usage       node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -494,7 +494,7 @@ function readFile(fileName) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/generate-llms-files.js --write|--check');
+  console.log('Usage: node operations/scripts/generate-llms-files.js --write|--check');
 }
 
 async function main() {

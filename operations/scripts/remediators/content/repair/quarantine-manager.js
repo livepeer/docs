@@ -8,8 +8,8 @@
  * @description Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
  * @mode        edit
  * @pipeline    manual
- * @scope       tools/scripts, workspace/reports/repo-ops, workspace/quarantine
- * @usage       node tools/scripts/remediators/content/repair/quarantine-manager.js [flags]
+ * @scope       operations/scripts, workspace/reports/repo-ops, workspace/quarantine
+ * @usage       node operations/scripts/remediators/content/repair/quarantine-manager.js [flags]
  * @policy      E-C1, R-R14
  */
 
@@ -212,7 +212,7 @@ function classifyFromRetentionPolicy(entryBag, policy) {
 function classifyBackupFiles(entryBag) {
   const roots = [
     path.join(REPO_ROOT, 'operations/scripts'),
-    path.join(REPO_ROOT, 'tests'),
+    path.join(REPO_ROOT, 'operations/tests'),
     path.join(REPO_ROOT, 'tasks')
   ];
 

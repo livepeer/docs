@@ -8,8 +8,8 @@
  * @description Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts, v2, workspace/reports/quality-accessibility
- * @usage       node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]
+ * @scope       operations/scripts, v2, workspace/reports/quality-accessibility
+ * @usage       node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]
  * @policy      E-R1, R-R11
  */
 
@@ -171,7 +171,7 @@ function loadUsefulnessSignal(issues) {
       severity: 'low',
       path: 'workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
       evidence: 'No usefulness metadata snapshot found for cross-check.',
-      recommendation: 'Run `node tools/scripts/audit-v2-usefulness.js --mode full` for a fresh baseline.'
+      recommendation: 'Run `node operations/scripts/audit-v2-usefulness.js --mode full` for a fresh baseline.'
     });
     return;
   }

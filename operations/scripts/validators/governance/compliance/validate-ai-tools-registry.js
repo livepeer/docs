@@ -8,8 +8,8 @@
  * @description AI-tools registry validator and report writer for source-of-truth coverage, lifecycle, lane alignment, and generated inventory output.
  * @mode        read-only
  * @pipeline    manual -- bounded validator CLI
- * @scope       tools/scripts, tools/lib/ai-tools-registry.js, ai-tools/registry, tests/unit/ai-tools-registry.test.js, tools/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/tooling/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
- * @usage       node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]
+ * @scope       operations/scripts, tools/lib/ai-tools-registry.js, ai-tools/registry operations/tests/unit/ai-tools-registry.test.js, tools/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
+ * @usage       node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]
  * @policy      R-R14, R-R29
  */
 
@@ -25,7 +25,7 @@ const {
 function usage() {
   process.stdout.write(
     [
-      'Usage: node tools/scripts/validate-ai-tools-registry.js [options]',
+      'Usage: node operations/scripts/validate-ai-tools-registry.js [options]',
       '',
       'Options:',
       '  --check                 Validate the registry contract (default action)',

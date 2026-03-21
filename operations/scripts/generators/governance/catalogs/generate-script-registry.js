@@ -10,8 +10,8 @@
  *   script headers change. Output schema uses the 11-tag standard (@type, @concern, @niche, etc.).
  * @mode        write
  * @pipeline    P3
- * @scope       tools/scripts, tests, workspace/scripts, .githooks, .github/scripts
- * @usage       node tools/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]
+ * @scope       operations/scripts, operations/tests, workspace/scripts, .githooks, .github/scripts
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]
  * @policy      JSDoc headers are source of truth (doc-recommendation.md Q2). Never hand-edit output.
  */
 
@@ -92,7 +92,7 @@ const TYPE_FROM_SEGMENT = new Map([
 
 function deriveFromPath(repoPath) {
   const parts = repoPath.split('/');
-  // tools/scripts/<type>/<concern>/<niche>/...
+  // operations/scripts/<type>/<concern>/<niche>/...
   // Find the type segment after 'scripts'
   const scriptsIdx = parts.indexOf('scripts');
   if (scriptsIdx >= 0 && parts.length > scriptsIdx + 1) {

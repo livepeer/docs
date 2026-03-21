@@ -8,8 +8,8 @@
  * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @mode        read-only
  * @pipeline    manual — experimental research system
- * @scope       tools/scripts, workspace/research, tests/unit/docs-research-adjudication.test.js, workspace/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
- * @usage       node tools/scripts/audits/content/veracity/docs-research-adjudication.js [flags]
+ * @scope       operations/scripts, workspace/research operations/tests/unit/docs-research-adjudication.test.js, workspace/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
+ * @usage       node operations/scripts/audits/content/veracity/docs-research-adjudication.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -83,7 +83,7 @@ function repoRoot() {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/docs-research-adjudication.js [options]',
+      'Usage: node operations/scripts/docs-research-adjudication.js [options]',
       '',
       'Modes:',
       '  --validate                       Validate the adjudication ledger',

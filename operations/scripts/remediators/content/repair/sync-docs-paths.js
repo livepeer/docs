@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       staged
- * @usage       node tools/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run
+ * @usage       node operations/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run
  * @policy      E-C1, R-R14
  */
 

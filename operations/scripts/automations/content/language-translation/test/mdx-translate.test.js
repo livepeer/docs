@@ -2,12 +2,12 @@
  * @script            mdx-translate.test
  * @category          validator
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests MDX translation — validates content block translation logic
  * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/automations/content/language-translation/test/mdx-translate.test.js [flags]
+ * @usage             node operations/scripts/i18n/test/mdx-translate.test.js [flags]
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');

@@ -8,8 +8,8 @@
  * @description Codex task finaliser — enforces task completion requirements before closing
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh
- * @usage       node tools/scripts/dispatch/ai/codex/task-finalise.js [flags]
+ * @scope       operations/scripts/codex, operations/scripts/validate-codex-task-contract.js, operations/scripts/verify-pay-orc-gate-finalize.sh
+ * @usage       node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -91,7 +91,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/dispatch/ai/codex/task-finalise.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--profile pay-orc-gate]');
+  console.log('Usage: node operations/scripts/dispatch/ai/codex/task-finalise.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--profile pay-orc-gate]');
 }
 
 function detectBranch(explicitBranch) {
@@ -160,8 +160,8 @@ function main() {
   console.log('✅ Codex task finalize checks passed');
   console.log('ℹ️  Next steps:');
   console.log(`  1. Commit or merge ${branch} into ${args.baseRef || 'docs-v2-dev'}`);
-  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/automations/ai/codex/lock-release.js --branch ${branch}`);
-  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/automations/ai/codex/task-cleanup.js --branch ${branch} --apply`);
+  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node operations/scripts/automations/ai/codex/lock-release.js --branch ${branch}`);
+  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node operations/scripts/automations/ai/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

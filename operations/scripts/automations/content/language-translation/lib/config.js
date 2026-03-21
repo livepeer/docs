@@ -2,12 +2,12 @@
  * @script            config
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement i18n configuration — language codes, locale paths, translation settings
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/config.js [flags]
+ * @usage             node operations/scripts/i18n/lib/config.js [flags]
  */
 const fs = require('fs');
 const path = require('path');

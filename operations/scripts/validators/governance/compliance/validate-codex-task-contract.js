@@ -8,8 +8,8 @@
  * @description Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
  * @mode        read-only
  * @pipeline    commit), P2 (push), P3 (PR, Track B)
- * @scope       tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
- * @usage       node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js [flags]
+ * @scope       operations/scripts, .codex/task-contract.yaml, operations/tests/onfig/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
+ * @usage       node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -63,7 +63,7 @@ function fail(message, jsonMode) {
 function usage() {
   process.stdout.write(
     [
-      'Usage: node tools/scripts/validate-codex-task-contract.js [options]',
+      'Usage: node operations/scripts/validate-codex-task-contract.js [options]',
       '',
       'Options:',
       '  --contract <path>            Path to task contract file',

@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual
  * @scope       ai-tools/registry
- * @usage       node tools/scripts/generators/governance/reports/generate-ai-tools-inventory.js [--output <path>]
+ * @usage       node operations/scripts/generators/governance/reports/generate-ai-tools-inventory.js [--output <path>]
  * @policy      R-R16
  */
 

@@ -8,8 +8,8 @@
  * @description Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
  * @mode        read-only
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
- * @scope       v2, tools/scripts/validators/content, tests/config/spell-dict.json
- * @usage       node tools/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
+ * @scope       v2, operations/scripts/validators/content, operations/tests/onfig/spell-dict.json
+ * @usage       node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
  * @policy      E-R1, R-R11
  */
 
@@ -126,7 +126,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]');
+  console.log('Usage: node operations/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]');
 }
 
 function resolveInputPath(input) {

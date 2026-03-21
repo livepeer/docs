@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/validators/governance/compliance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]
+ * @usage       node operations/scripts/validators/governance/compliance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]
  * @policy      R-R14, R-R18
  */
 
@@ -68,7 +68,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/governance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]'
+    'Usage: node operations/scripts/validators/governance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]'
   );
 }
 

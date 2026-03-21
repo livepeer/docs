@@ -2,12 +2,12 @@
  * @script            provider-openrouter
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement OpenRouter translation provider — calls OpenRouter API for actual translations
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/provider-openrouter.js [flags]
+ * @usage             node operations/scripts/i18n/lib/provider-openrouter.js [flags]
  */
 const { chunkArray } = require('./common');
 

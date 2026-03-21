@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual, P6, manual
  * @scope       single-domain
- * @usage       node tools/scripts/remediators/components/library/repair-component-metadata.js [--dry-run] [--fix] [--staged]
+ * @usage       node operations/scripts/remediators/components/library/repair-component-metadata.js [--dry-run] [--fix] [--staged]
  * @policy      R-R10
  */
 
@@ -46,7 +46,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/remediators/components/repair-component-metadata.js [--dry-run|--fix] [--staged]',
+      '  node operations/scripts/remediators/components/repair-component-metadata.js [--dry-run|--fix] [--staged]',
       '',
       'Modes:',
       '  --dry-run   Report safe metadata repairs without writing files (default).',

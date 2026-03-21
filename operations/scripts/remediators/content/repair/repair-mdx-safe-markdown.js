@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
+ * @usage       node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
  * @policy      E-R1, R-R11
  */
 
@@ -28,7 +28,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/remediators/content/repair-mdx-safe-markdown.js [--dry-run|--write] [--staged|--files a,b] [--stage]',
+      '  node operations/scripts/remediators/content/repair-mdx-safe-markdown.js [--dry-run|--write] [--staged|--files a,b] [--stage]',
       '',
       'Modes:',
       '  --dry-run   Report deterministic MDX-safe markdown repairs without writing files (default).',

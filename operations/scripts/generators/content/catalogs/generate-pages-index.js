@@ -8,8 +8,8 @@
  * @description Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
  * @mode        generate
  * @pipeline    manual
- * @scope       tools/scripts, v2
- * @usage       node tools/scripts/generators/content/catalogs/generate-pages-index.js [flags]
+ * @scope       operations/scripts, v2
+ * @usage       node operations/scripts/generators/content/catalogs/generate-pages-index.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -53,7 +53,7 @@ const GENERATED_DETAILS = {
   script: 'operations/scripts/generate-pages-index.js',
   purpose: 'Table-of-contents index for v2 docs folders.',
   runWhen: 'v2 docs pages are added, removed, or renamed.',
-  runCommand: 'node tools/scripts/generate-pages-index.js --write'
+  runCommand: 'node operations/scripts/generate-pages-index.js --write'
 };
 
 function getRepoRoot() {

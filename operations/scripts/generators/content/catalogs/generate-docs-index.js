@@ -8,8 +8,8 @@
  * @description Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
  * @mode        generate
  * @pipeline    manual, P3, P6
- * @scope       tools/scripts, tools/lib, v2, docs.json, root
- * @usage       node tools/scripts/generators/content/catalogs/generate-docs-index.js [flags]
+ * @scope       operations/scripts, tools/lib, v2, docs.json, root
+ * @usage       node operations/scripts/generators/content/catalogs/generate-docs-index.js [flags]
  * @policy      R-R16, R-R17
  */
 

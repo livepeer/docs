@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual | pre-commit --staged
  * @scope       docs-guide/catalog, v2
- * @usage       node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]
+ * @usage       node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]
  * @policy      R-R16, R-R17
  */
 

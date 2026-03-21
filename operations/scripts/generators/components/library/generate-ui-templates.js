@@ -9,7 +9,8 @@
  *              Preview route generation has been removed — templates live in snippets/templates/ only.
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, .vscode
+ * @scope       operations/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
+ * @usage       node operations/scripts/generators/components/library/generate-ui-templates.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -40,7 +41,7 @@ const CATALOG_DETAILS = {
   script: 'operations/scripts/generators/components/library/generate-ui-templates.js',
   purpose: 'UI template catalog, preview routes, and snippet inventory derived from canonical template sources.',
   runWhen: 'Page/block templates or component registry examples change.',
-  runCommand: 'node tools/scripts/generate-ui-templates.js --write'
+  runCommand: 'node operations/scripts/generate-ui-templates.js --write'
 };
 
 const PREVIEW_DETAILS = {
@@ -579,7 +580,7 @@ if (require.main === module) {
         process.exit(0);
       }
 
-      console.error('UI template artifacts are out of date. Run `node tools/scripts/generate-ui-templates.js --write`.');
+      console.error('UI template artifacts are out of date. Run `node operations/scripts/generate-ui-templates.js --write`.');
       result.changed.forEach((repoPath) => console.error(`  - update ${repoPath}`));
       process.exit(1);
     }

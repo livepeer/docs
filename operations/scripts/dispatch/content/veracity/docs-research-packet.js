@@ -8,8 +8,8 @@
  * @description Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.
  * @mode        read-only
  * @pipeline    manual — packet generator for research review tranches
- * @scope       tools/scripts, workspace/reports, tools/config/scoped-navigation, workspace/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
- * @usage       node tools/scripts/dispatch/content/veracity/docs-research-packet.js [flags]
+ * @scope       operations/scripts, workspace/reports, tools/config/scoped-navigation, workspace/research operations/tests/unit/docs-research-packet.test.js operations/tests/unit/orchestrator-guides-research-review.test.js
+ * @usage       node operations/scripts/dispatch/content/veracity/docs-research-packet.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -113,7 +113,7 @@ function normalizeRoute(route) {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/docs-research-packet.js [options]',
+      'Usage: node operations/scripts/docs-research-packet.js [options]',
       '',
       'Scope modes:',
       '  nav mode:      --tab <name> --group <name> [--nav <path>] [--version <v>] [--language <lang>] [--section <a,b>]',

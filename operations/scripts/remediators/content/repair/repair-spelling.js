@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       v2-content
- * @usage       node tools/scripts/remediators/content/repair/repair-spelling.js --dry-run
+ * @usage       node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run
  * @policy      R-R2
  */
 
@@ -35,7 +35,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/remediators/content/repair-spelling.js [--dry-run|--write] [--staged|--files <path[,path...]>]',
+      '  node operations/scripts/remediators/content/repair-spelling.js [--dry-run|--write] [--staged|--files <path[,path...]>]',
       '',
       'Modes:',
       '  --dry-run   Show deterministic spelling repairs without modifying files (default).',

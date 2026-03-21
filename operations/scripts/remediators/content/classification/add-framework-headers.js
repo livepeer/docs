@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run
+ * @usage       node operations/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run
  * @policy      R-R14
  */
 
@@ -25,7 +25,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/add-framework-headers.js --data <path> (--dry-run | --write | --verify) [options]',
+      '  node operations/scripts/add-framework-headers.js --data <path> (--dry-run | --write | --verify) [options]',
       '',
       'Required:',
       '  --data <path>            Path to classification JSON data file.',
@@ -42,9 +42,9 @@ function printHelp() {
       '  --help                   Show this help output.',
       '',
       'Examples:',
-      '  node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run',
-      '  node tools/scripts/add-framework-headers.js --data /tmp/classifications.json --filter tools/scripts --write',
-      '  node tools/scripts/add-framework-headers.js --data script-classifications.json --filter .githooks --exclude-subdirs --verify'
+      '  node operations/scripts/add-framework-headers.js --data script-classifications.json --dry-run',
+      '  node operations/scripts/add-framework-headers.js --data /tmp/classifications.json --filter tools/scripts --write',
+      '  node operations/scripts/add-framework-headers.js --data script-classifications.json --filter .githooks --exclude-subdirs --verify'
     ].join('\n')
   );
 }

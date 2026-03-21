@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual → component .jsx files → exit-code, stdout:violations; --fix → component .jsx files → CSS token replacements, P3
  * @scope       single-domain
- * @usage       node tools/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
+ * @usage       node operations/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
  * @policy      R-R10
  */
 
@@ -41,7 +41,7 @@ const FIX_REPLACEMENTS = [
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/validators/components/check-component-css.js [options]',
+      'Usage: node operations/scripts/validators/components/check-component-css.js [options]',
       '',
       'Options:',
       `  --path <dir>        Component root to scan (default: ${DEFAULT_TARGET})`,

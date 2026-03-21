@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
+ * @usage       node operations/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
  * @policy      R-R14
  */
 
@@ -32,7 +32,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/remediators/assets/migrate-assets-to-branch.js [options]',
+      '  node operations/scripts/remediators/assets/migrate-assets-to-branch.js [options]',
       '',
       'Options:',
       `  --manifest <path>   Path to manifest (default: ${DEFAULT_MANIFEST_PATH})`,
@@ -612,7 +612,7 @@ function rewriteReferences(statusEntries, sourceContents, verifiedCopies, option
   writeUpdatedSources(sourceContents, modifiedFiles);
 
   const testResult = runCommand('npm', ['test'], {
-    cwd: path.join(REPO_ROOT, 'tests'),
+    cwd: path.join(REPO_ROOT, 'operations/tests'),
     allowFailure: true
   });
 

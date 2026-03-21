@@ -8,8 +8,8 @@
  * @description Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
  * @mode        edit
  * @pipeline    manual
- * @scope       tools/scripts
- * @usage       node tools/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files <path,...>] [--json] [--md] [--output <dir>]
+ * @scope       operations/scripts
+ * @usage       node operations/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files <path,...>] [--json] [--md] [--output <dir>]
  * @policy      R-R16
  */
 

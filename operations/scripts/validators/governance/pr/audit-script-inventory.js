@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    commit), manual
  * @scope       full-repo
- * @usage       node tools/scripts/validators/governance/pr/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]
+ * @usage       node operations/scripts/validators/governance/pr/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]
  * @policy      R-R14, R-R18, R-C6
  */
 
@@ -76,7 +76,7 @@ const AUTOMATED_PIPELINES = new Set(['P1', 'P2', 'P3', 'P5', 'P6']);
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/governance/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]'
+    'Usage: node operations/scripts/validators/governance/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]'
   );
 }
 

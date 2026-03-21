@@ -8,8 +8,8 @@
  * @description Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts, workspace/README.md, workspace/reports, tests/unit/script-docs.test.js, tests/README.md
- * @usage       node tools/scripts/audits/governance/scripts/audit-script-categories.js [flags]
+ * @scope       operations/scripts, workspace/README.md, workspace/reports operations/tests/unit/script-docs.test.js, tests/README.md
+ * @usage       node operations/scripts/audits/governance/scripts/audit-script-categories.js [flags]
  * @policy      E-C1, R-R14
  */
 
@@ -125,7 +125,7 @@ const SCRIPT_COMMAND_NAMES = new Set([
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/audit-scripts.js [--format both|md|json] [--output-dir <dir>] [--strict]'
+    'Usage: node operations/scripts/audit-scripts.js [--format both|md|json] [--output-dir <dir>] [--strict]'
   )
 }
 
@@ -1584,7 +1584,7 @@ function buildReportsIndex() {
     '# workspace/reports Index',
     '',
     `Generated: ${new Date().toISOString()}`,
-    'Generator: `tools/scripts/audit-scripts.js`',
+    'Generator: `operations/scripts/audits/governance/scripts/audit-script-categories.js`',
     `Branch: ${getCurrentBranch()}`,
     '',
     '| Generator script | Output path(s) |',

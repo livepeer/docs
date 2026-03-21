@@ -8,8 +8,8 @@
  * @description Codex lock release utility — releases stale codex lock files
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/automations/ai/codex/lock-release.js [flags]
+ * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @usage       node operations/scripts/automations/ai/codex/lock-release.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -112,7 +112,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/dispatch/ai/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>] [--base-ref <branch>]');
+  console.log('Usage: node operations/scripts/dispatch/ai/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>] [--base-ref <branch>]');
 }
 
 function detectBranch(args) {
@@ -226,7 +226,7 @@ function main() {
 
   console.log(`✅ Released ${releasedCount} lock(s) for ${args.lockId ? `lock_id=${args.lockId}` : branch}`);
   console.log(`ℹ️  Verified ${branch} is already committed to ${baseRef}.`);
-  console.log(`ℹ️  Next step: node tools/scripts/dispatch/ai/codex/task-cleanup.js --branch ${branch} --apply`);
+  console.log(`ℹ️  Next step: node operations/scripts/dispatch/ai/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

@@ -8,8 +8,8 @@
  * @description Codex task preflight — generates task setup files and validates preconditions
  * @mode        execute
  * @pipeline    manual — codex setup tool referenced by .githooks/pre-commit guidance, not auto-executed
- * @scope       tools/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
- * @usage       node tools/scripts/automations/ai/codex/task-preflight.js [flags]
+ * @scope       operations/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
+ * @usage       node operations/scripts/automations/ai/codex/task-preflight.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -190,7 +190,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/dispatch/ai/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2-dev] [--worktree <path> | --in-place] [--dry-run]');
+  console.log('Usage: node operations/scripts/dispatch/ai/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2-dev] [--worktree <path> | --in-place] [--dry-run]');
 }
 
 function readScopeFromFile(scopeFile) {
@@ -217,7 +217,7 @@ function writeYamlContract(contractAbs, data) {
     'scope_out: []',
     'allowed_generated: []',
     'acceptance_checks:',
-    `  - node tests/run-pr-checks.js --base-ref ${data.base}`,
+    `  - node operations/tests/un-pr-checks.js --base-ref ${data.base}`,
     'risk_flags:',
     '  - workflow-governance',
     'follow_up_issues: []',

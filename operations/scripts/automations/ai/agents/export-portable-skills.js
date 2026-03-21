@@ -8,8 +8,8 @@
  * @description Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
- * @usage       node tools/scripts/automations/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @scope       operations/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js operations/tests/unit/export-portable-skills.test.js
+ * @usage       node operations/scripts/automations/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
  * @policy      R-R27, R-R30
  */
 
@@ -31,7 +31,7 @@ const SUPPORTED_AGENTS = ['codex', 'cursor', 'claude', 'windsurf'];
 
 function usage() {
   const msg = [
-    'Usage: node tools/scripts/export-portable-skills.js [options]',
+    'Usage: node operations/scripts/export-portable-skills.js [options]',
     '',
     'Options:',
     '  --source-dir <path>     Canonical template directory',

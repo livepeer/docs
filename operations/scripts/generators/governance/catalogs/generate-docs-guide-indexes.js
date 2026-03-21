@@ -8,8 +8,8 @@
  * @description Generates docs-guide workflow/template catalogs and optionally verifies freshness
  * @mode        generate
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
- * @scope       tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
- * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]
+ * @scope       operations/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -203,7 +203,7 @@ function buildWorkflowsIndex() {
     script: 'operations/scripts/generate-docs-guide-indexes.js',
     purpose: 'Workflow inventory for docs-guide maintenance.',
     runWhen: 'GitHub workflows are added, removed, or changed.',
-    runCommand: 'node tools/scripts/generate-docs-guide-indexes.js --write'
+    runCommand: 'node operations/scripts/generate-docs-guide-indexes.js --write'
   };
   WORKFLOWS_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
   lines.push('');
@@ -301,7 +301,7 @@ function buildTemplatesIndex() {
     script: 'operations/scripts/generate-docs-guide-indexes.js',
     purpose: 'Issue and PR template inventory for docs-guide maintenance.',
     runWhen: 'Issue templates or PR templates are added, removed, or changed.',
-    runCommand: 'node tools/scripts/generate-docs-guide-indexes.js --write'
+    runCommand: 'node operations/scripts/generate-docs-guide-indexes.js --write'
   };
   TEMPLATES_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
   lines.push('');
@@ -378,13 +378,13 @@ function main() {
     if (legacy.existing.length > 0) {
       console.error('Legacy docs-guide generated index files detected:');
       legacy.existing.forEach((repoPath) => console.error(`  - ${repoPath}`));
-      console.error('Run: node tools/scripts/generate-docs-guide-indexes.js --write');
+      console.error('Run: node operations/scripts/generate-docs-guide-indexes.js --write');
       process.exit(1);
     }
     if (changed.length > 0) {
       console.error('Docs-guide generated catalogs are out of date:');
       changed.forEach((result) => console.error(`  - ${result.path}`));
-      console.error('Run: node tools/scripts/generate-docs-guide-indexes.js --write');
+      console.error('Run: node operations/scripts/generate-docs-guide-indexes.js --write');
       process.exit(1);
     }
     console.log('Docs-guide generated catalogs are up to date.');

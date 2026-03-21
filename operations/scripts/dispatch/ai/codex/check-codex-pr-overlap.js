@@ -8,8 +8,8 @@
  * @description PR enforcer — checks for conflicting codex PRs targeting the same files/branches
  * @mode        execute
  * @pipeline    PR, Track B)
- * @scope       tools/scripts, .github/workflows, codex PR governance
- * @usage       node tools/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]
+ * @scope       operations/scripts, .github/workflows, codex PR governance
+ * @usage       node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -126,7 +126,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/check-codex-pr-overlap.js [--base-ref docs-v2] [--repo owner/repo] [--head-branch codex/... ] [--handoff-label codex-handoff-approved]');
+  console.log('Usage: node operations/scripts/check-codex-pr-overlap.js [--base-ref docs-v2] [--repo owner/repo] [--head-branch codex/... ] [--handoff-label codex-handoff-approved]');
 }
 
 function resolveHeadBranch(args) {

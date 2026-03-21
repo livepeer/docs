@@ -7,8 +7,8 @@
  * @description Component usage auditor — scans pages for component usage patterns and reports statistics
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts
- * @usage       node tools/scripts/audits/components/documentation/audit-component-usage.js
+ * @scope       operations/scripts
+ * @usage       node operations/scripts/audits/components/documentation/audit-component-usage.js
  * @policy      E-C1, R-R14
  */
 const fs = require('fs');

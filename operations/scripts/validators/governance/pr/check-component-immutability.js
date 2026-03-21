@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       changed
- * @usage       node tools/scripts/validators/governance/pr/check-component-immutability.js --base-ref main
+ * @usage       node operations/scripts/validators/governance/pr/check-component-immutability.js --base-ref main
  * @policy      R-R10
  */
 
@@ -84,7 +84,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/enforcers/pr/check-component-immutability.js [--base-ref docs-v2]'
+    'Usage: node operations/scripts/enforcers/pr/check-component-immutability.js [--base-ref docs-v2]'
   );
 }
 

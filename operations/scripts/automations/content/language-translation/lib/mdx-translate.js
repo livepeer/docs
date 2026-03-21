@@ -2,12 +2,12 @@
  * @script            mdx-translate
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement MDX translation engine — applies translations to MDX content blocks
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/mdx-translate.js [flags]
+ * @usage             node operations/scripts/i18n/lib/mdx-translate.js [flags]
  */
 const path = require('path');
 const { parseMdx } = require('./mdx-parser');
