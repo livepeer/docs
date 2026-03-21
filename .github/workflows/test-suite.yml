@@ -150,6 +150,12 @@ jobs:
         working-directory: tools
         run: npm install
 
+      - name: Component naming conventions
+        run: node operations/scripts/validators/components/library/check-naming-conventions.js
+
+      - name: Component MDX scope isolation
+        run: node operations/scripts/validators/components/library/check-mdx-component-scope.js
+
       - name: Component CSS standards
         run: node operations/scripts/validators/components/library/check-component-css.js
         continue-on-error: true
