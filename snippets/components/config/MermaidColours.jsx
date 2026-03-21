@@ -5,6 +5,7 @@
  * @status stable
  * @description Theme colour definitions for Mermaid diagrams (light/dark/CSS variable mappings).
  * @accepts none (exported object literal)
+  * @aiDiscoverability none
  */
 export const MermaidColours = {
   font: {

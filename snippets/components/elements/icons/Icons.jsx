@@ -5,6 +5,7 @@
  * @status stable
  * @description Inline Livepeer logo as SVG with currentColor fill.
  * @accepts ...props
+  * @aiDiscoverability none
  * @param {number} [size=24] - size prop.
  * @param {any} props - props prop.
  * @example
@@ -40,6 +41,7 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
  * @see LivepeerIcon
  * @description Legacy Livepeer icon using light-only SVG path.
  * @accepts ...props
+  * @aiDiscoverability none
  * @param {any} props - props prop.
  * @example
  * <LivepeerIconOld props="example" />
@@ -62,6 +64,7 @@ export const LivepeerIconOld = ({ ...props }) => {
  * @see LivepeerIcon
  * @description Horizontally flipped legacy Livepeer icon.
  * @accepts ...props
+  * @aiDiscoverability none
  * @param {any} props - props prop.
  * @example
  * <LivepeerIconFlipped props="example" />
@@ -84,6 +87,7 @@ export const LivepeerIconFlipped = ({ ...props }) => {
  * @status stable
  * @description Theme-aware Livepeer icon with CSS custom property colour adaptation.
  * @accepts ...props
+  * @aiDiscoverability none
  * @param {number} [size=16] - size prop.
  * @param {any} color - color prop.
  * @param {any} props - props prop.

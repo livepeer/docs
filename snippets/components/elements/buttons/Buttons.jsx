@@ -7,8 +7,11 @@
  * @see No replacement. Remove usages.
  * @description Empty placeholder button stub — non-functional.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @example
  * <BasicBtn />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const BasicBtn = ({ className = "", style = {}, ...rest }) => {
   return <div className={className} style={style} {...rest}></div>
@@ -29,6 +32,8 @@ export const BasicBtn = ({ className = "", style = {}, ...rest }) => {
  * @param {boolean} [border=false] - border prop.
  * @example
  * <DownloadButton downloadLink="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const DownloadButton = ({
   label = 'Download',

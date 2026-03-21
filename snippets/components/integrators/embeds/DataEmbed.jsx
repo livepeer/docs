@@ -31,6 +31,7 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
  * @description Embeds a PDF in a framed iframe with caption.
  * @dataSource iframe(src)
  * @accepts {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {string} src - Asset or embed source used by the component.
  * @param {string} [height='700px'] - Height used by the component.
@@ -62,6 +63,7 @@ export const PdfEmbed = ({
  * @see MarkdownEmbed
  * @dataSource fetch(url)
  * @accepts {string} url, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} url - Destination URL used by the component.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.

@@ -29,6 +29,7 @@ function sanitiseHTML(html) {
  * @description Blog post card with scrollable content, metadata, and CTA.
  * @dataSource automation/blog
  * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} content - content prop.
  * @param {any} href - href prop.
@@ -41,6 +42,8 @@ function sanitiseHTML(html) {
  * @param {string} [dateIcon="calendar"] - date Icon prop.
  * @param {string} [cta="Read More"] - cta prop.
  * @param {any} [img=null] - img prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const BlogCard = ({
   title,
@@ -210,8 +213,11 @@ export const BlogCard = ({
  * @description Grid layout rendering BlogCards from an items array.
  * @dataSource automation/blog
  * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CardBlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -241,9 +247,12 @@ export const CardBlogDataLayout = ({ items = [], limit, className = "", style = 
  * @description Multi-column BlogCard layout using Mintlify Columns.
  * @dataSource automation/blog
  * @accepts {Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {number} [cols=2] - cols prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -264,8 +273,11 @@ export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className =
  * @description Single-column BlogCard stack.
  * @dataSource automation/blog
  * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -286,6 +298,7 @@ export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, 
  * @description Post card with gradient header, scrollable content, and metadata.
  * @dataSource automation/blog
  * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} content - content prop.
  * @param {any} href - href prop.
@@ -297,6 +310,8 @@ export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, 
  * @param {string} [dateIcon="calendar"] - date Icon prop.
  * @param {string} [cta="Read More"] - cta prop.
  * @param {any} [img=null] - img prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const PostCard = ({
   title,
@@ -417,9 +432,12 @@ export const PostCard = ({
  * @description Multi-column PostCard layout.
  * @dataSource automation/blog
  * @accepts {number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {number} [cols=2] - cols prop.
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CardColumnsPostLayout = ({ cols = 2, items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -443,8 +461,11 @@ export const CardColumnsPostLayout = ({ cols = 2, items = [], limit, className =
  * @description PostCards rendered inside Card wrappers.
  * @dataSource automation/blog
  * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CardInCardLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   return (
@@ -469,8 +490,11 @@ export const CardInCardLayout = ({ items = [], limit, className = "", style = {}
  * @description Latest forum topics with banner image and topic cards.
  * @dataSource automation/forum
  * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const ForumLatestLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   return (
@@ -502,8 +526,11 @@ export const ForumLatestLayout = ({ items = [], limit, className = "", style = {
  * @description Discord announcement feed with parsed markdown content. Sanitised HTML.
  * @dataSource automation/discord
  * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const DiscordAnnouncements = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
@@ -611,9 +638,12 @@ export const DiscordAnnouncements = ({ items = [], limit, className = "", style 
  * @description Upcoming/past event cards from Luma calendar data.
  * @dataSource Luma API
  * @accepts {any} data, {any} limit, {string} type, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} data - data prop.
  * @param {any} limit - limit prop.
  * @param {string} [type="upcoming"] - type prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const LumaEvents = ({ data, limit, type = "upcoming", className = "", style = {}, ...rest }) => {
   let events = [];

@@ -6,6 +6,7 @@
  * @status stable
  * @description Code block with optional pre/post notes and expandable wrapper.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} filename - filename prop.
  * @param {any} icon - icon prop.
  * @param {any} language - language prop.
@@ -109,6 +110,7 @@ export const CustomCodeBlock = ({
  * @status stable
  * @description Simple code block with title and language syntax highlighting.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {string} [filename=""] - filename prop.
  * @param {string} [icon="terminal"] - icon prop.
  * @param {string} [language=""] - language prop.
@@ -118,6 +120,8 @@ export const CustomCodeBlock = ({
  * @param {boolean} [lines=true] - lines prop.
  * @param {string} [codeString=""] - code String prop.
  * @param {string} [placeholderValue=""] - placeholder Value prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CodeComponent = ({
   filename = "",
@@ -159,6 +163,7 @@ export const CodeComponent = ({
  * @status stable
  * @description Code block with both pre-note and post-note sections.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} filename - filename prop.
  * @param {any} icon - icon prop.
  * @param {any} language - language prop.
@@ -235,7 +240,10 @@ export const ComplexCodeBlock = ({
  * @status stable
  * @description Expandable code section with title header.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {object} [fields={}] - fields prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CodeSection = ({ fields = {}, className = "", style = {}, ...rest }) => {
   return <ComplexCodeBlock {...fields} className={className} style={style} {...rest} />;

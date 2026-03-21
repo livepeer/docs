@@ -5,6 +5,7 @@
  * @status stable
  * @description Flexbox container with configurable direction, gap, and alignment.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [direction="row"] - direction prop.
  * @param {string} [gap="1rem"] - gap prop.
@@ -14,6 +15,7 @@
  * @param {string} [marginTop=""] - Optional top margin override.
  * @param {string} [marginBottom=""] - Optional bottom margin override.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const FlexContainer = ({
   children,
@@ -56,10 +58,12 @@ export const FlexContainer = ({
  * @status stable
  * @description CSS Grid container with configurable columns and gap.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} columns - columns prop.
  * @param {string} [gap="1rem"] - gap prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const GridContainer = ({
   children,
@@ -98,8 +102,11 @@ export const GridContainer = ({
  * @status stable
  * @description Spacer element with configurable size.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {string} [size="1rem"] - size prop.
  * @param {string} [direction="vertical"] - direction prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const Spacer = ({ size = "1rem", direction = "vertical", className = "", style = {}, ...rest }) => {
   return (

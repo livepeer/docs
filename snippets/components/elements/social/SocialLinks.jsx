@@ -5,6 +5,7 @@
  * @status stable
  * @description Row of icon-only social media links with tooltips and aria-labels.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {number} [size=20] - Size used by the component.
  * @param {string} [gap="0.75rem"] - Gap used by the component.
  * @param {string} [justify="center"] - Justify used by the component.

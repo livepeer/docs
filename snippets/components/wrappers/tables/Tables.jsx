@@ -5,9 +5,11 @@
  * @status stable
  * @description Full-width table with header row styling and rounded container.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const StyledTable = ({ children, variant = "default", style = {}, className = "", ...rest }) => {
   const wrapperVariants = {
@@ -65,10 +67,12 @@ export const StyledTable = ({ children, variant = "default", style = {}, classNa
  * @status stable
  * @description Table row with optional header styling and hover effect.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {boolean} [header=false] - header prop.
  * @param {boolean} [hover=false] - hover prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const TableRow = ({
   children,
@@ -115,10 +119,12 @@ export const TableRow = ({
  * @status stable
  * @description Table cell that switches between th and td based on header prop.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [align="left"] - align prop.
  * @param {boolean} [header=false] - header prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const TableCell = ({
   children,

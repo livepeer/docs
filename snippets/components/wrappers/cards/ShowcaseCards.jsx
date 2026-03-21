@@ -7,6 +7,7 @@
  * @status stable
  * @description Single interactive card with hover effects.
  * @accepts style, className, ...cardProps
+  * @aiDiscoverability none
  * @param {string} [mediaSrc=""] - media Src prop.
  * @param {string} [logo=""] - logo prop.
  * @param {string} [title="Untitled project"] - title prop.
@@ -108,6 +109,7 @@ export const InteractiveCard = ({
  * @status stable
  * @description Multi-column layout of interactive cards.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
@@ -148,6 +150,7 @@ export const InteractiveCards = ({ items = [], className = "", style = {}, ...re
  * @status stable
  * @description Paginated card layout with search, category, and product filtering.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} [limit=null] - limit prop.
  * @param {number} [pageSize=10] - page Size prop.

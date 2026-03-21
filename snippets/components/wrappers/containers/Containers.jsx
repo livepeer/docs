@@ -5,12 +5,14 @@
  * @status stable
  * @description Bordered container with configurable radius and background.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
  * @param {string} [padding="1rem"] - padding prop.
  * @param {string} [borderRadius="8px"] - border Radius prop.
  * @param {string} [accentBar=""] - Optional accent border token applied to the left edge.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const BorderedBox = ({
   children,
@@ -68,6 +70,7 @@ export const BorderedBox = ({
  * @status stable
  * @description Horizontally centred container with configurable max-width.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [maxWidth="800px"] - max Width prop.
  * @param {string} [padding="0"] - padding prop.
@@ -78,6 +81,7 @@ export const BorderedBox = ({
  * @param {string} [marginBottom=""] - Optional bottom margin override.
  * @param {string} [textAlign=""] - Optional text alignment override.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const CenteredContainer = ({
   children,
@@ -146,9 +150,11 @@ export const CenteredContainer = ({
  * @status stable
  * @description Full-viewport-width container that breaks out of parent padding.
  * @accepts children, className, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} backgroundColor - background Color prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const FullWidthContainer = ({
   children,

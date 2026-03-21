@@ -8,6 +8,7 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
  * @description Renders YouTube video data with video embed and metadata columns.
  * @dataSource automation/youtube
  * @accepts {Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} limit - Limit used by the component.
  * @param {number} [cols=2] - Cols used by the component.

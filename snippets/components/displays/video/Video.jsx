@@ -5,12 +5,14 @@
  * @status stable
  * @description Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
  * @param {boolean} [arrow=false] - arrow prop.
  * @param {string} [borderRadius="12px"] - border Radius prop.
  * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const TitledVideo = ({
   src,
@@ -116,9 +118,12 @@ export const TitledVideo = ({
  * @status stable
  * @description Full-width video with negative-margin breakout and rounded frame.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}, ...rest }) => {
   return (
@@ -148,6 +153,7 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
  * @status stable
  * @description Basic framed video player with caption support.
  * @accepts children, className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {string} [title=""] - title prop.
  * @param {string} [author=""] - author prop.
@@ -158,6 +164,8 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
  * @param {boolean} [loop=false] - loop prop.
  * @param {boolean} [muted=false] - muted prop.
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const Video = ({
   src,
@@ -261,11 +269,14 @@ export const Video = ({
  * @status stable
  * @description YouTube embed via responsive iframe with aspect-ratio preservation.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title=""] - title prop.
  * @param {string} [author=""] - author prop.
  * @param {string} [hint=""] - hint prop.
  * @param {any} caption - caption prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const YouTubeVideo = ({
   embedUrl,
@@ -344,6 +355,7 @@ export const YouTubeVideo = ({
  * @status stable
  * @description Renders a columned grid of YouTubeVideo embeds from an items array.
  * @accepts none
+  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
  * @param {number} [cols=2] - cols prop.
@@ -391,6 +403,7 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
  * @status stable
  * @description LinkedIn post embed via responsive iframe with compact layout.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title="Embedded post"] - title prop.
  * @param {string} [hint=""] - hint prop.
@@ -438,10 +451,13 @@ export const LinkedInEmbed = ({
  * @status stable
  * @description YouTube embed with download hint text below.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.
  * @param {any} hint - hint prop.
  * @param {string} [caption=""] - caption prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const YouTubeVideoDownload = ({
   embedUrl,
@@ -497,9 +513,11 @@ export const YouTubeVideoDownload = ({
  * @status stable
  * @description YouTube embed inside a Card wrapper with aspect-ratio iframe.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.
  * @param {any} style - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const CardVideo = ({ embedUrl, title, style = {}, className = "", ...rest }) => {
   return (

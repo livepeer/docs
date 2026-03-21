@@ -7,6 +7,7 @@ import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
  * @status broken
  * @description Non-functional stub — returns empty fragment.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
  */
 export const BasicList = ({ listItems: array }) => {
@@ -20,6 +21,7 @@ export const BasicList = ({ listItems: array }) => {
  * @status broken
  * @description Non-functional stub — returns empty fragment.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
  */
 export const IconList = ({ listItems: array }) => {
@@ -33,7 +35,10 @@ export const IconList = ({ listItems: array }) => {
  * @status stable
  * @description Renders listItems as Mintlify Steps with title, icon, and content.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const StepList = ({ listItems, className = "", style = {}, ...rest }) => {
   return (
@@ -54,7 +59,10 @@ export const StepList = ({ listItems, className = "", style = {}, ...rest }) => 
  * @status stable
  * @description Renders listItems as Mintlify Steps with GotoLink navigation.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const StepLinkList = ({ listItems, className = "", style = {}, ...rest }) => {
   return (
@@ -75,6 +83,7 @@ export const StepLinkList = ({ listItems, className = "", style = {}, ...rest })
  * @status broken
  * @description Non-functional — ignores props, renders hardcoded static content.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
  */
 export const UpdateList = ({ listItems: array }) => {
@@ -95,6 +104,7 @@ export const UpdateList = ({ listItems: array }) => {
  * @status stable
  * @description Renders update items as linked entries inside Mintlify Update component.
  * @accepts none
+  * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
  */
 export const UpdateLinkList = ({ listItems: array }) => {

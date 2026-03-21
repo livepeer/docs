@@ -5,6 +5,7 @@
  * @status stable
  * @description Card title row with icon and text, using flexbox alignment.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} icon - Icon configuration used by the component.
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {object} [style={}] - Inline style overrides.

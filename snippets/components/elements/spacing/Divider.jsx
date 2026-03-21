@@ -6,12 +6,14 @@
  * @status stable
  * @description Themed horizontal divider with optional centre text and Livepeer logo accents.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [color="var(--border)"] - color prop.
  * @param {string} [middleText=""] - middle Text prop.
  * @param {string} [spacing="default"] - Named spacing preset for authored page layouts.
  * @param {object} [style={}] - style prop.
  * @example
  * <CustomDivider />
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const CustomDivider = ({
   color = "var(--border)",

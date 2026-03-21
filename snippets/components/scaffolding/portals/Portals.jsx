@@ -43,8 +43,11 @@
  * @status stable
  * @description Full-width hero section wrapper with min-height and gradient background.
  * @accepts {any} children, {string} minHeight, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [minHeight="fit-content"] - min Height prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const HeroSectionContainer = ({ children, minHeight = "fit-content", className = "", style = {}, ...rest }) => {
   return (
@@ -83,7 +86,10 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
  * @status stable
  * @description Hero background with image overlay and gradient.
  * @accepts {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -127,7 +133,10 @@ const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ..
  * @status stable
  * @description Centred content container inside hero sections.
  * @accepts {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const HeroContentContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -155,7 +164,10 @@ const HeroContentContainer = ({ children, className = "", style = {}, ...rest })
  * @status stable
  * @description Hero content layout with title, icon, subtitle, and CTA slots.
  * @accepts {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -202,7 +214,10 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
  * @status stable
  * @description Outer container for portal page content below the hero.
  * @accepts {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const PortalContentContainer = ({ children, className = "", style = {}, ...rest }) => {
     return (
@@ -240,6 +255,7 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  * @status stable
  * @description Hero content with logo, title, tagline, description, and card grid.
  * @accepts {boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {boolean} [zIndex=true] - z Index prop.
  * @param {string} [title="Portal Page"] - title prop.
  * @param {string} [subtitle="Build - Explore - Create"] - subtitle prop.
@@ -252,6 +268,8 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  * @param {any} titleColor - title Color prop.
  * @param {any} subtitleColor - subtitle Color prop.
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const PortalHeroContent = ({
   zIndex = true, //Not working currently
@@ -396,8 +414,11 @@ const PortalHeroContent = ({
  * @status stable
  * @description Section header with mission label and optional subtitle.
  * @accepts {any} children, {any} title, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} title - title prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const PortalCardsHeader = ({ children, title, className = "", style = {}, ...rest }) => {
     return (
@@ -423,9 +444,12 @@ const PortalCardsHeader = ({ children, title, className = "", style = {}, ...res
  * @status stable
  * @description Section header with icon, title, and horizontal rule.
  * @accepts {any} children, {any} title, {any} icon, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} title - title prop.
  * @param {any} icon - icon prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const PortalSectionHeader = ({ children, title, icon, className = "", style = {}, ...rest }) => {
     return (
@@ -465,6 +489,7 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  * @status stable
  * @description Hero banner with centred logo image, title, and subtitle.
  * @accepts {string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} [src="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"] - src prop.
  * @param {string} [alt="Livepeer Logo"] - alt prop.
  * @param {string} [width="100%"] - width prop.
@@ -473,6 +498,8 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  * @param {string} [imgWidth="auto"] - img Width prop.
  * @param {string} [objectFit="contain"] - object Fit prop.
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const LogoHeroContainer = ({
   src = "/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg",
@@ -533,7 +560,10 @@ const LogoHeroContainer = ({
  * @status stable
  * @description Container for reference cards with configurable column count.
  * @accepts {any} children, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const RefCardContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (

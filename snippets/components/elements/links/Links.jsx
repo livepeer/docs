@@ -5,6 +5,7 @@
  * @status stable
  * @description Styled callout box with icon, custom colour, and child content.
  * @accepts children, style, className, ...rest
+  * @aiDiscoverability none
  * @param {React.ReactNode} children - Content to display in the callout
  * @param {string} [icon="lightbulb"] - Icon name to display
  * @param {string} color - Primary color for icon, border, and background (defaults to theme accent)
@@ -13,6 +14,8 @@
  * @param {string} textColor - Text color (defaults to match icon color)
  * @example
  * <CustomCallout color="example" textColor="example">Example content</CustomCallout>
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const CustomCallout = ({
   children,
@@ -79,11 +82,14 @@ const CustomCallout = ({
  * @status stable
  * @description Animated icon with pulsing opacity. Respects prefers-reduced-motion.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [icon="terminal"] - Icon name to display
  * @param {number} [size=16] - Size of the icon in pixels
  * @param {string} color - Color of the icon (defaults to theme accent)
  * @example
  * <BlinkingIcon color="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const BlinkingIcon = ({ icon = "terminal", size = 16, color, className = "", style = {}, ...rest }) => {
   const resolvedColor = color || "var(--accent)";
@@ -117,6 +123,7 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color, className = "", sty
  * @status stable
  * @description Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @example
  * <BlinkingTerminal />
  */
@@ -129,6 +136,7 @@ const BlinkingTerminal = BlinkingIcon;
  * @status stable
  * @description Inline link with icons on both sides.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [label=""] - Link text/label
  * @param {string} [href="#"] - Link URL
  * @param {string} [text=""] - Optional text to display before the link
@@ -136,6 +144,8 @@ const BlinkingTerminal = BlinkingIcon;
  * @param {string} [iconRight="arrow-up-right"] - Icon to display on the right
  * @example
  * <DoubleIconLink />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const DoubleIconLink = ({
   label = "",
@@ -175,12 +185,15 @@ const DoubleIconLink = ({
  * @status stable
  * @description Inline navigation link with icon prefix and label.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} label - Link text/label
  * @param {string} relativePath - Relative URL path
  * @param {string} [text=""] - Optional text to display before the link
  * @param {string} [icon="arrow-turn-down-right"] - Icon to display
  * @example
  * <GotoLink label="example" relativePath="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const GotoLink = ({
   label,
@@ -209,6 +222,7 @@ const GotoLink = ({
  * @status stable
  * @description Card-style navigation link wrapping Mintlify Card component.
  * @accepts style, className, ...props
+  * @aiDiscoverability none
  * @param {string} label - Card title
  * @param {string} relativePath - Relative URL path
  * @param {string} icon - Icon to display (defaults to "arrow-turn-down-right")
@@ -217,6 +231,8 @@ const GotoLink = ({
  * @param {any} props - props prop.
  * @example
  * <GotoCard label="example" relativePath="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const GotoCard = ({ label, relativePath, icon, text, cta = "", className = "", style = {}, ...props }) => {
   icon = icon ? icon : "arrow-turn-down-right";
@@ -234,6 +250,7 @@ const GotoCard = ({ label, relativePath, icon, text, cta = "", className = "", s
  * @status stable
  * @description Callout box with tip icon and corner arrow indicator.
  * @accepts children, style, className, ...rest
+  * @aiDiscoverability none
  * @param {React.ReactNode} children - Content to display in the tip
  * @param {string} [icon="lightbulb"] - Main icon to display on the left
  * @param {string} [arrowIcon="arrow-up-right"] - Arrow icon to display in top-right
@@ -242,6 +259,8 @@ const GotoCard = ({ label, relativePath, icon, text, cta = "", className = "", s
  * @param {number} [arrowSize=16] - Size of the arrow icon in pixels
  * @example
  * <TipWithArrow color="example">Example content</TipWithArrow>
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const TipWithArrow = ({
   children,
@@ -319,6 +338,7 @@ const TipWithArrow = ({
  * @status stable
  * @description External link with arrow icon, optional description, and line break control.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} href - href prop.
  * @param {any} label - label prop.
  * @param {any} description - description prop.
@@ -326,6 +346,8 @@ const TipWithArrow = ({
  * @param {any} borderColor - border Color prop.
  * @example
  * <LinkArrow href="example" label="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 const LinkArrow = ({
   href,

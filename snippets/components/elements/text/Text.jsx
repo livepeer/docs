@@ -5,11 +5,13 @@
  * @status stable
  * @description Styled subtitle text with configurable colour, size, and alignment.
  * @accepts children, style, className, ...rest
+  * @aiDiscoverability none
  * @param {object} [style={}] - style prop.
  * @param {any} text - text prop.
  * @param {any} children - children prop.
  * @example
  * <Subtitle text="example">Example content</Subtitle>
+  * @param {string} [className=''] - Optional CSS class override.
  */
 export const Subtitle = ({ style = {}, text, children, className = "", ...rest }) => {
   return (
@@ -37,10 +39,13 @@ export const Subtitle = ({ style = {}, text, children, className = "", ...rest }
  * @status stable
  * @description Text with a click-to-copy button that copies content to clipboard.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} text - text prop.
  * @param {any} label - label prop.
  * @example
  * <CopyText text="example" label="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CopyText = ({ text, label, className = "", style = {}, ...rest }) => {
   const handleCopy = () => {
@@ -102,10 +107,13 @@ export const CopyText = ({ text, label, className = "", style = {}, ...rest }) =
  * @status stable
  * @description Card title with trailing arrow icon for navigation indication.
  * @accepts children, style, className, ...cardProps
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} cardProps - card Props prop.
  * @example
  * <CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CardTitleTextWithArrow = ({ children, className = "", style = {}, ...cardProps }) => {
   return (
@@ -165,11 +173,14 @@ export const CardTitleTextWithArrow = ({ children, className = "", style = {}, .
  * @status stable
  * @description Accordion header text with trailing arrow icon.
  * @accepts children, style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} text - text prop.
  * @param {any} children - children prop.
  * @param {string} [color="var(--text)"] - color prop.
  * @example
  * <AccordionTitleWithArrow text="example">Example content</AccordionTitleWithArrow>
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const AccordionTitleWithArrow = ({
   text,

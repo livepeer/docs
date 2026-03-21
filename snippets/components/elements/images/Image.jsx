@@ -5,6 +5,7 @@
  * @status stable
  * @description Framed image with optional caption and full-width toggle.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.
@@ -13,6 +14,8 @@
  * @param {boolean} [fullwidth=true] - fullwidth prop.
  * @example
  * <Image src="example" alt="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";
@@ -34,6 +37,7 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, cl
  * @status stable
  * @description Clickable framed image that opens a URL in a new tab.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.
@@ -42,6 +46,8 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, cl
  * @param {any} href - href prop.
  * @example
  * <LinkImage src="example" alt="example" />
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const LinkImage = ({ src, alt = "", caption, icon, hint, href, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";

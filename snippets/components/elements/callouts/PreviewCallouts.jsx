@@ -7,6 +7,7 @@
  * @status stable
  * @description Banner indicating a feature or page is coming soon, with links to related resources.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [type="page"] - Type used by the component.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
@@ -97,6 +98,7 @@ const ComingSoonCallout = ({ type = "page", className = "", style = {}, ...rest 
  * @status stable
  * @description Banner indicating content is in preview/draft state with feedback links.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  * @example
@@ -174,6 +176,7 @@ const PreviewCallout = ({ className = "", style = {}, ...rest }) => {
  * @status stable
  * @description Banner indicating content is under review with status links.
  * @accepts style, className, ...rest
+  * @aiDiscoverability none
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  * @example

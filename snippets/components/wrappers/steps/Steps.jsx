@@ -5,11 +5,14 @@
  * @status stable
  * @description Wrapper around Mintlify Steps with custom icon styling via injected CSS.
  * @accepts children, className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} iconColor - icon Color prop.
  * @param {any} titleColor - title Color prop.
  * @param {any} lineColor - line Color prop.
  * @param {string} [iconSize="24px"] - icon Size prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const StyledSteps = ({
   children,
@@ -53,10 +56,13 @@ export const StyledSteps = ({
  * @status stable
  * @description Single step with configurable icon, size, and colour.
  * @accepts children, className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} icon - icon prop.
  * @param {string} [titleSize="h3"] - title Size prop.
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const StyledStep = ({ title, icon, titleSize = "h3", children, className = "", style = {}, ...rest }) => {
   return (

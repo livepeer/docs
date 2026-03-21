@@ -5,7 +5,10 @@
  * @status stable
  * @description Styled blockquote with accent border and centred italic text.
  * @accepts children, className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const Quote = ({ children, className = "", style = {}, ...rest }) => {
   const quoteStyle = {
@@ -30,6 +33,7 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @status stable
  * @description Framed blockquote with optional author, source link, and image.
  * @accepts children, className, style, ...props
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} author - author prop.
  * @param {any} source - source prop.
@@ -40,6 +44,8 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @param {any} img - img prop.
  * @param {boolean} [spacing=true] - spacing prop.
  * @param {any} props - props prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const FrameQuote = ({
   children,

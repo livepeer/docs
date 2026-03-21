@@ -21,6 +21,7 @@
  * @status stable
  * @description Page-level header with icon, title, and subtitle for frame-mode pages.
  * @accepts {any} title, {any} subtitle, {any} description, {string} children, {any} titleColor, {any} subtitleColor, {any} descriptionColor, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
  * @param {any} description - description prop.
@@ -108,6 +109,7 @@ const PageHeader = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {any} children, {any} icon, {number} iconSize, {any} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} icon - icon prop.
  * @param {number} [iconSize=32] - icon Size prop.
@@ -167,6 +169,7 @@ const H1 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=28] - Size of the icon (default: 28)
@@ -226,6 +229,7 @@ const H2 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=24] - Size of the icon (default: 24)
@@ -285,6 +289,7 @@ const H3 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=20] - Size of the icon (default: 20)
@@ -344,6 +349,7 @@ const H4 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=18] - Size of the icon (default: 18)
@@ -403,6 +409,7 @@ const H5 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=16] - Size of the icon (default: 16)
@@ -462,6 +469,7 @@ const H6 = ({
  * @status stable
  * @description Paragraph override with optional icon prefix for frame-mode pages.
  * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} children - The paragraph text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
  * @param {number} [iconSize=16] - Size of the icon (default: 16)
@@ -518,6 +526,7 @@ const P = ({
  * @status stable
  * @description Horizontal rule divider for frame-mode pages.
  * @accepts {string} color, {string} margin, {number} opacity, {string} className, {object} style, ...rest
+  * @aiDiscoverability none
  * @param {string} color - Custom color for the divider (optional, defaults to theme border color)
  * @param {string} [margin="1.5rem 0"] - Vertical margin (default: "1.5rem 0")
  * @param {string} [opacity=0.2] - Opacity of the divider (default: 0.2)

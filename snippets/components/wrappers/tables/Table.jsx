@@ -5,11 +5,14 @@
  * @status stable
  * @description Renders structured data as a scrollable table with section separators and accessible region.
  * @accepts className, style, ...rest
+  * @aiDiscoverability none
  * @param {any} [tableTitle=null] - table Title prop.
  * @param {Array} [headerList=[]] - header List prop.
  * @param {Array} [itemsList=[]] - items List prop.
  * @param {Array} [monospaceColumns=[]] - monospace Columns prop.
  * @param {any} margin - margin prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const DynamicTable = ({
   tableTitle = null,

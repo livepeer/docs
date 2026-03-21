@@ -9,6 +9,8 @@
  * @accepts {string} coinId, {string} className, {object} style, ...rest
  * @aiDiscoverability snapshot
  * @param {string} [coinId="arbitrum"] - coin Id prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
  */
 export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style = {}, ...rest }) => {
   const [exchanges, setExchanges] = useState([]);
