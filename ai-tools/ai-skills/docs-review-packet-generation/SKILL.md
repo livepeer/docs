@@ -36,7 +36,7 @@ When to load references
 Workflow
 1. Confirm the target worktree, branch, nav source, and output root, then load `docs-guide/tooling/review-packet-plan-template.md` if the run still needs a formal packet plan.
 2. Derive section order and live page membership from the declared nav source using `references/scope-derivation.md`; build one nav-ordered file list per section and explicitly exclude helper or deprecated files.
-3. Create a dated packet root under `tasks/reports/<scope>-review/` and create one section directory per nav section.
+3. Create a dated packet root under `workspace/reports/<scope>-review/` and create one section directory per nav section.
 4. Run the copy-framework phase for each section with the current lint and pattern scripts, then summarize the findings in `01-copy-framework.md`.
 5. Run the authoring-style phase for each section with the scoped authoring tests, preserve the raw findings JSON, and summarize the deduplicated page-level action families in `02-authoring-style.md`.
 6. Run the research phase for each section with the current research workflow, then summarize stale, unsupported, contradictory, or volatile claims in `03-research.md`.

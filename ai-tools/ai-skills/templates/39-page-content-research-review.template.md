@@ -11,13 +11,13 @@ invoke_when:
 primary_paths:
   - "v2"
   - "docs-guide/policies/source-of-truth-policy.mdx"
-  - "tasks/research/claims"
-  - "tasks/reports/repo-ops"
+  - "workspace/research/claims"
+  - "workspace/reports/repo-ops"
   - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
   - "tools/scripts/audits/content/veracity/docs-page-research.js"
   - "ai-tools/ai-skills/templates"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
   - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
@@ -49,7 +49,7 @@ Workflow
 5. Run `$docs-change-review` only for factual contradiction severity, overstatement, and claim-presentation quality.
 6. Save outputs in the standard report contract so evidence, contradictions, and propagation queues can be reused.
 7. If the request is to plan fixes rather than apply them immediately, hand off the artifact to `$docs-research-to-implementation-plan`.
-8. If the reviewed claim family is reusable beyond the current page, update the repo-native fact registry in `tasks/research/claims/`.
+8. If the reviewed claim family is reusable beyond the current page, update the repo-native fact registry in `workspace/research/claims/`.
 
 Deliverable Format
 - Short scope statement naming the page or diff reviewed.

@@ -19,10 +19,10 @@ primary_paths:
   - "tools/scripts/docs-research-adjudication.js"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
   - "docs-guide/tooling/research-review-packet-plan-template.md"
-  - "tasks/reports"
+  - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
-  - "node tools/scripts/docs-research-adjudication.js --validate --ledger tasks/research/adjudication/page-content-research-outcomes.json"
+  - "node tools/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node tools/scripts/docs-research-adjudication.js --validate --ledger workspace/research/adjudication/page-content-research-outcomes.json"
   - "node tools/scripts/docs-research-packet.js --tab [name] --group [name] --out [path]"
 ---
 

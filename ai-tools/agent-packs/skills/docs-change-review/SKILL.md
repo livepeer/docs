@@ -9,11 +9,11 @@ invoke_when:
   - "give a docs review verdict on these changes"
 primary_paths:
   - "v2"
-  - "tasks/research/claims"
+  - "workspace/research/claims"
   - "tools/scripts/docs-page-research.js"
   - "docs-guide/policies/quality-gates.mdx"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
   - "node tools/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 

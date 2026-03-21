@@ -22,8 +22,8 @@ node tools/scripts/remediators/content/repair/quarantine-manager.js --apply
 ```
 
 Outputs
-- `tasks/reports/repo-ops/cleanup-quarantine-manifest.json`
-- `tasks/reports/repo-ops/cleanup-quarantine-manifest.md`
+- `workspace/reports/repo-ops/cleanup-quarantine-manifest.json`
+- `workspace/reports/repo-ops/cleanup-quarantine-manifest.md`
 
 Rules
 - Default action is `quarantine` for suspicious backup/legacy artifacts.

@@ -11,7 +11,7 @@ invoke_when:
   - "audit mdx imports and hrefs"
 primary_paths:
   - "tests/integration/v2-link-audit.js"
-  - "tasks/reports/navigation-links/LINK_TEST_REPORT.md"
+  - "workspace/reports/navigation-links/LINK_TEST_REPORT.md"
   - "snippets/data"
   - "docs.json"
 primary_commands:

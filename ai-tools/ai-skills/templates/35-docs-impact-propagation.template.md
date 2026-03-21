@@ -12,10 +12,10 @@ primary_paths:
   - "v2"
   - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
   - "tools/scripts/audits/content/veracity/docs-page-research.js"
-  - "tasks/research/claims"
-  - "tasks/reports"
+  - "workspace/research/claims"
+  - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
   - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
@@ -38,7 +38,7 @@ Canonical docs-guide source
 When to load references
 - Load `references/claim-map-method.md` before searching so the impact pass is claim-family-led rather than route-led.
 - Load `references/propagation-checklist.md` while finishing the task so dependent page classes are not missed.
-- Consult `tasks/research/claims/*.json` first when the changed claim family is already tracked.
+- Consult `workspace/research/claims/*.json` first when the changed claim family is already tracked.
 
 Workflow
 1. State the changed claim in one sentence and identify its owning entity, workflow, or term.

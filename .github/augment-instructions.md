@@ -44,7 +44,7 @@
 
 **BEFORE making any styling, component, or documentation changes, you MUST read:**
 
-1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `tasks/plan/migration-plan.md` Section 4
+1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `workspace/plan/migration-plan.md` Section 4
    - Repository structure and file organization rules
    - Directory purposes and file placement guidelines
    - Enforcement mechanisms
@@ -74,7 +74,7 @@
 
 **BEFORE creating, moving, or organizing files, you MUST read:**
 - `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
-- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+- `workspace/plan/migration-plan.md` - Detailed structure documentation (Section 4)
 
 ### Critical Structure Rules
 
@@ -126,7 +126,7 @@
 - `contribute/` - Contribution documentation
 - `favicon.png` and `logo/` - Public assets in `snippets/assets/` (referenced in docs.json)
 - `ai-tools/` - AI tool setup guides
-- `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
+- `workspace/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 - `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
 
 ### Important Files

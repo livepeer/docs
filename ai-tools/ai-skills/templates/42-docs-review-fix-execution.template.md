@@ -13,7 +13,7 @@ invoke_when:
   - "apply copy and style fixes from the packet"
   - "close out review packet tasks and update the tracker"
 primary_paths:
-  - "tasks/reports"
+  - "workspace/reports"
   - "ai-tools/ai-skills/docs-copy/SKILL.md"
   - "ai-tools/ai-skills/page-authoring/SKILL.md"
   - "docs-guide/tooling/review-packet-plan-template.md"

@@ -25,7 +25,7 @@ Use one row per material claim family.
 
 ## Structured Ledger Contract
 
-Reusable claim families belong in `tasks/research/claims/*.json`.
+Reusable claim families belong in `workspace/research/claims/*.json`.
 
 Minimum fields per record:
 

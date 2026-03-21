@@ -18,7 +18,7 @@ Run all static audit stages in the defined order and produce one canonical score
 Inputs
 - `ai-tools/ai-skills/catalog/skill-catalog.json`
 - `ai-tools/ai-skills/catalog/execution-manifest.json`
-- repository source and existing reports under `tasks/reports/`
+- repository source and existing reports under `workspace/reports/`
 
 Command
 ```bash
@@ -26,8 +26,8 @@ node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode st
 ```
 
 Outputs
-- `tasks/reports/repo-ops/repo-audit-summary.md`
-- `tasks/reports/repo-ops/repo-audit-summary.json`
+- `workspace/reports/repo-ops/repo-audit-summary.md`
+- `workspace/reports/repo-ops/repo-audit-summary.json`
 
 Guardrails
 - Default to static mode for first pass.

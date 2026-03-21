@@ -21,8 +21,8 @@ node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js 
 ```
 
 Outputs
-- `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
-- `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
+- `workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
+- `workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
 
 Scope
 - Include: `v2/**/*.mdx` English routes

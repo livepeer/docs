@@ -21,8 +21,8 @@ node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --
 ```
 
 Outputs
-- `tasks/reports/repo-ops/docs-quality-and-freshness-audit.md`
-- `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json`
+- `workspace/reports/repo-ops/docs-quality-and-freshness-audit.md`
+- `workspace/reports/repo-ops/docs-quality-and-freshness-audit.json`
 
 Checks
 - `TODO`, `TBD`, `Coming Soon`, `PreviewCallout`

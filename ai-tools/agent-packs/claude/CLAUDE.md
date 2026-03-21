@@ -10,8 +10,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Commands:
   - `node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full`
 - Outputs:
-  - `tasks/reports/repo-ops/script-footprint-and-usage-audit.md`
-  - `tasks/reports/repo-ops/script-footprint-and-usage-audit.json`
+  - `workspace/reports/repo-ops/script-footprint-and-usage-audit.md`
+  - `workspace/reports/repo-ops/script-footprint-and-usage-audit.json`
 
 ## 2. docs-quality-and-freshness-audit
 
@@ -21,8 +21,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Commands:
   - `node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full`
 - Outputs:
-  - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.md`
-  - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json`
+  - `workspace/reports/repo-ops/docs-quality-and-freshness-audit.md`
+  - `workspace/reports/repo-ops/docs-quality-and-freshness-audit.json`
 
 ## 3. style-and-language-homogenizer-en-gb
 
@@ -32,8 +32,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Commands:
   - `node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full`
 - Outputs:
-  - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
-  - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
+  - `workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
+  - `workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
 
 ## 4. component-layout-governance
 
@@ -43,8 +43,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Commands:
   - `node tools/scripts/validators/components/library/component-layout-governance.js --scope full`
 - Outputs:
-  - `tasks/reports/repo-ops/component-layout-governance.md`
-  - `tasks/reports/repo-ops/component-layout-governance.json`
+  - `workspace/reports/repo-ops/component-layout-governance.md`
+  - `workspace/reports/repo-ops/component-layout-governance.json`
 
 ## 5. cleanup-quarantine-manager
 
@@ -55,8 +55,8 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `node tools/scripts/remediators/content/repair/quarantine-manager.js`
   - `node tools/scripts/remediators/content/repair/quarantine-manager.js --apply`
 - Outputs:
-  - `tasks/reports/repo-ops/cleanup-quarantine-manifest.json`
-  - `tasks/reports/repo-ops/cleanup-quarantine-manifest.md`
+  - `workspace/reports/repo-ops/cleanup-quarantine-manifest.json`
+  - `workspace/reports/repo-ops/cleanup-quarantine-manifest.md`
 
 ## 6. cross-agent-packager
 
@@ -84,8 +84,8 @@ These skills are not part of the audit pipeline but provide standards and guidan
   - `node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full`
 - Inputs: repo state, audit mode, scope, pipeline manifest, skill catalog
 - Outputs:
-  - `tasks/reports/repo-ops/repo-audit-summary.md`
-  - `tasks/reports/repo-ops/repo-audit-summary.json`
+  - `workspace/reports/repo-ops/repo-audit-summary.md`
+  - `workspace/reports/repo-ops/repo-audit-summary.json`
 
 ### rubric-static-review
 

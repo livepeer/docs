@@ -12,7 +12,7 @@ primary_paths:
   - "tools/scripts/snippets/generate-data/scripts/terminology-search.js"
   - "tools/scripts/snippets/generate-data/scripts/generate-glossary.js"
   - "tools/scripts/snippets/generate-data/data"
-  - "tasks/plan/23-glossary-maintenance.md"
+  - "workspace/plan/23-glossary-maintenance.md"
 primary_commands:
   - "node tools/scripts/snippets/generate-data/scripts/terminology-search.js"
   - "node tools/scripts/snippets/generate-data/scripts/generate-glossary.js"

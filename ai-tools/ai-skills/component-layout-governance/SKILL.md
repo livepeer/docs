@@ -21,8 +21,8 @@ node tools/scripts/validators/components/library/component-layout-governance.js 
 ```
 
 Outputs
-- `tasks/reports/repo-ops/component-layout-governance.md`
-- `tasks/reports/repo-ops/component-layout-governance.json`
+- `workspace/reports/repo-ops/component-layout-governance.md`
+- `workspace/reports/repo-ops/component-layout-governance.json`
 
 Policy Source
 - `tools/config/component-layout-profile.json`

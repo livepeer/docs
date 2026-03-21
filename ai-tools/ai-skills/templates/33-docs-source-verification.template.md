@@ -13,10 +13,10 @@ primary_paths:
   - "docs-guide/policies/source-of-truth-policy.mdx"
   - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
   - "tools/scripts/audits/content/veracity/docs-page-research.js"
-  - "tasks/research/claims"
-  - "tasks/reports"
+  - "workspace/research/claims"
+  - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
   - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 

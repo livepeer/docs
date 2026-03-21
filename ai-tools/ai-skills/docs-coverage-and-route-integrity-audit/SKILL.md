@@ -22,8 +22,8 @@ Command
 ```
 
 Outputs
-- `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.md`
-- `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.json`
+- `workspace/reports/repo-ops/docs-coverage-and-route-integrity-audit.md`
+- `workspace/reports/repo-ops/docs-coverage-and-route-integrity-audit.json`
 
 Checks
 - Missing routes from navigation reports

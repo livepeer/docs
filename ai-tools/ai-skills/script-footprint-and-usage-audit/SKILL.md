@@ -21,8 +21,8 @@ node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js
 ```
 
 Outputs
-- `tasks/reports/repo-ops/script-footprint-and-usage-audit.md`
-- `tasks/reports/repo-ops/script-footprint-and-usage-audit.json`
+- `workspace/reports/repo-ops/script-footprint-and-usage-audit.md`
+- `workspace/reports/repo-ops/script-footprint-and-usage-audit.json`
 
 Checks
 - Backup artifacts (`*.bak`, `*.bak2`)

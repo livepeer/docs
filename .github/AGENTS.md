@@ -51,7 +51,7 @@ destructive or history-altering actions.
 **BEFORE creating, moving, or organizing files, you MUST read:**
 
 - `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
-- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+- `workspace/plan/migration-plan.md` - Detailed structure documentation (Section 4)
 
 ### Critical Structure Rules
 
