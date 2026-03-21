@@ -1,7 +1,42 @@
-# Component Governance — Structure & Standards
+---
+title: Component Framework — Canonical Taxonomy
+sidebarTitle: Component Taxonomy
+description: >-
+  Canonical folder structure, categories, sub-niches, and JSDoc standard for
+  snippets/components/. Authoritative reference for all component governance decisions.
+keywords:
+  - livepeer
+  - docs guide
+  - component
+  - taxonomy
+  - governance
+  - framework
+  - canonical
+  - reference
+  - jsdoc
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+owner: '@livepeer/docs-team'
+status: active
+version: '1.0'
+created: 2026-03-21T00:00:00.000Z
+lastUpdated: 2026-03-21T00:00:00.000Z
+scope: snippets/components/
+audience: internal
+pageType: reference
+purpose: reference
+---
 
-> **Source of truth** for folder taxonomy and JSDoc standards. Referenced by [plan.md](./plan.md).
-> **Published at**: `docs-guide/frameworks/component-framework-canonical.mdx` — plan-phase section ("Alignment with script governance") excluded from published version.
+# Component Framework — Canonical Taxonomy
+
+Canonical folder structure, per-component file listing, decision rules, and JSDoc standard for `snippets/components/`. This is the primary reference for authoring and governing components in the Livepeer Docs v2 library.
+
+<CustomDivider />
+
+## Folder Taxonomy
 
 ```
 snippets/
@@ -166,9 +201,9 @@ snippets/
 │   ├── config/                          # Non-component config objects
 │   │   └── MermaidColours.jsx
 │   │
-│   ├── x-archive/                       # Staging area for superseded files (cleared in Task 13)
+│   ├── x-archive/                       # Staging area for superseded files
 │   │
-│   └── _archive/                        # Existing legacy archive (untouched until cleanup)
+│   └── _archive/                        # Legacy sources retained for review
 │
 ├── data/                                # Page data, variables, and AI companion snapshots
 │   ├── about/
@@ -198,7 +233,9 @@ snippets/
 
 > **Tier 2 companion files** (props-extracted components) live adjacent to their MDX pages, not here:
 > `v2/[section]/[page-slug]-data.json` — same slug as the page, with `-data` suffix.
-> Written at page-authoring time; see `@aiDiscoverability` section below and `tasks/plan/active/AI-DISCOVERABILITY/plan.md`.
+> Written at page-authoring time; see `@aiDiscoverability` section below.
+
+<CustomDivider middleText="Decision Rules" />
 
 ## Decision Rules
 
@@ -223,7 +260,7 @@ snippets/
 | config | 1 | — |
 | **Total** | **118** | **30** |
 
-<CustomDivider />
+<CustomDivider middleText="JSDoc Standard" />
 
 ## Component JSDoc header standard
 
@@ -303,9 +340,11 @@ Not required on pure/presentational components.
 
 **How it works in Mintlify**: `.json` files placed alongside `.mdx` pages in `v2/` are served as static assets at their URL path. A file at `v2/developers/glossary-data.json` is accessible at `https://[domain]/v2/developers/glossary-data.json` and readable by AI crawlers, agents, and LLM pipelines without any build config.
 
-**Write-time obligation**: any author or agent writing a page that uses a `props-extracted` component must create the companion `.json` alongside the MDX. The automation to generate this from MDX props is tracked in `tasks/plan/active/AI-DISCOVERABILITY/plan.md` (CDA-5).
+**Write-time obligation**: any author or agent writing a page that uses a `props-extracted` component must create the companion `.json` alongside the MDX.
 
-### Example headers
+<CustomDivider middleText="Example Headers" />
+
+## Example headers
 
 **Element:**
 ```js
@@ -393,19 +432,3 @@ Not required on pure/presentational components.
  * @param {string} [className=""] - CSS class on canvas element
  */
 ```
-
-### Alignment with script governance
-
-| Concept | Scripts | Components |
-|---|---|---|
-| Identity tag | `@script` | `@component` |
-| Layer 1 taxonomy | `@type` (audit, generator, ...) | `@type` (elements, wrappers, ...) |
-| Layer 2 taxonomy | `@concern` + `@niche` | `@subniche` |
-| Human description | `@description` | `@description` |
-| Status lifecycle | — | `@status` |
-| System behaviour | `@mode` (read-only, write, ...) | `@accepts` (children, style, ...) |
-| External data | — | `@dataSource` |
-| Pipeline/flow | `@pipeline` | — (components don't have pipelines) |
-| File scope | `@scope` | — (components don't operate on files) |
-| CLI usage | `@usage` | — (components are imported, not invoked) |
-| Policy tracing | `@policy` | — (governance enforced by scripts, not components) |
