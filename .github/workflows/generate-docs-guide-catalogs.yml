@@ -41,6 +41,9 @@ jobs:
       - name: Generate pages catalog
         run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
 
+      - name: Regenerate component docs pages
+        run: node operations/scripts/generators/components/documentation/generate-component-docs.js --write
+
       - name: Check for changes
         id: git-check
         run: |
@@ -50,14 +53,21 @@ jobs:
             docs-guide/catalog/pages-catalog.mdx \
           || echo "changed=true" >> $GITHUB_OUTPUT
 
+      - name: Check for component docs changes
+        id: git-check-component-docs
+        run: |
+          git diff --exit-code v2/ \
+          || echo "changed=true" >> $GITHUB_OUTPUT
+
       - name: Commit and push if changed
-        if: steps.git-check.outputs.changed == 'true'
+        if: steps.git-check.outputs.changed == 'true' || steps.git-check-component-docs.outputs.changed == 'true'
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add \
             docs-guide/catalog/workflows-catalog.mdx \
             docs-guide/catalog/templates-catalog.mdx \
-            docs-guide/catalog/pages-catalog.mdx
-          git commit -m "chore(docs-guide): regenerate catalogs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            docs-guide/catalog/pages-catalog.mdx \
+            v2/
+          git commit -m "chore(docs-guide): regenerate catalogs and component docs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           git push
