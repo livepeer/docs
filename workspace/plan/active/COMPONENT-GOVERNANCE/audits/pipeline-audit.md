@@ -80,28 +80,28 @@ OUT: docs-guide/catalog/ai-companion-schema.json     (static schema — no gener
 
 | Script | Path | Purpose | Mode flags | Output |
 |--------|------|---------|-----------|--------|
-| `generate-component-registry` | `tools/scripts/generators/components/library/` | Parses JSDoc → registry JSON | `--validate-only`, `--strict` | `component-registry.json`, `component-registry-schema.json` |
-| `generate-component-docs` | `tools/scripts/generators/components/documentation/` | Registry → MDX library pages (4 locales) | `--dry-run`, `--fix`, `--write`, `--check` | `v2/*/resources/documentation-guide/component-library/*.mdx` |
-| `generate-ui-templates` | `tools/scripts/generators/components/library/` | Registry → VSCode snippets + UI template MDX | `--write`, `--check` | `.vscode/components.code-snippets`, `docs-guide/catalog/ui-templates.mdx` |
-| `generate-docs-guide-components-index` | `tools/scripts/generators/governance/catalogs/` | Registry → components-catalog.mdx | `--fix` | `docs-guide/catalog/components-catalog.mdx` |
-| `generate-glossary-companions` | `tools/scripts/generators/content/reference/` | Extract glossary data from MDX → companion JSON | `--dry-run`, `--check` | `v2/*/resources/compendium/glossary-data.json` |
+| `generate-component-registry` | `operations/scripts/generators/components/library/` | Parses JSDoc → registry JSON | `--validate-only`, `--strict` | `component-registry.json`, `component-registry-schema.json` |
+| `generate-component-docs` | `operations/scripts/generators/components/documentation/` | Registry → MDX library pages (4 locales) | `--dry-run`, `--fix`, `--write`, `--check` | `v2/*/resources/documentation-guide/component-library/*.mdx` |
+| `generate-ui-templates` | `operations/scripts/generators/components/library/` | Registry → VSCode snippets + UI template MDX | `--write`, `--check` | `.vscode/components.code-snippets`, `docs-guide/catalog/ui-templates.mdx` |
+| `generate-docs-guide-components-index` | `operations/scripts/generators/governance/catalogs/` | Registry → components-catalog.mdx | `--fix` | `docs-guide/catalog/components-catalog.mdx` |
+| `generate-glossary-companions` | `operations/scripts/generators/content/reference/` | Extract glossary data from MDX → companion JSON | `--dry-run`, `--check` | `v2/*/resources/compendium/glossary-data.json` |
 
 ### 2.2 Validator scripts
 
 | Script | Path | What it checks | Trigger |
 |--------|------|---------------|---------|
-| `check-naming-conventions` | `tools/scripts/validators/components/library/` | PascalCase filenames, folder taxonomy | Manual / pre-commit |
-| `check-component-css` | `tools/scripts/validators/components/library/` | BEM class naming, responsive modifiers | Manual / pre-commit |
-| `check-mdx-component-scope` | `tools/scripts/validators/components/library/` | No cross-.jsx imports (D4) | Manual / CI |
-| `component-layout-governance` | `tools/scripts/validators/components/library/` | Page-type layout contracts | Manual only |
+| `check-naming-conventions` | `operations/scripts/validators/components/library/` | PascalCase filenames, folder taxonomy | Manual / pre-commit |
+| `check-component-css` | `operations/scripts/validators/components/library/` | BEM class naming, responsive modifiers | Manual / pre-commit |
+| `check-mdx-component-scope` | `operations/scripts/validators/components/library/` | No cross-.jsx imports (D4) | Manual / CI |
+| `component-layout-governance` | `operations/scripts/validators/components/library/` | Page-type layout contracts | Manual only |
 
 ### 2.3 Orchestration / pipeline scripts
 
 | Script | Path | Purpose | Automation |
 |--------|------|---------|-----------|
-| `governance-pipeline` | `tools/scripts/dispatch/governance/pipelines/` | Chains audit → repair → verify → report | Manual (`--auto-commit` optional) |
-| `sync-generated-files` | `tools/scripts/dispatch/governance/pipelines/` | Distributes generated outputs across branches/locales | Manual |
-| `repo-audit-orchestrator` | `tools/scripts/dispatch/governance/repo/` | Full-repo audit orchestration | Manual |
+| `governance-pipeline` | `operations/scripts/dispatch/governance/pipelines/` | Chains audit → repair → verify → report | Manual (`--auto-commit` optional) |
+| `sync-generated-files` | `operations/scripts/dispatch/governance/pipelines/` | Distributes generated outputs across branches/locales | Manual |
+| `repo-audit-orchestrator` | `operations/scripts/dispatch/governance/repo/` | Full-repo audit orchestration | Manual |
 
 ---
 
@@ -154,11 +154,11 @@ OUT: docs-guide/catalog/ai-companion-schema.json     (static schema — no gener
 
 | Step | Command | When needed |
 |------|---------|-------------|
-| Registry generation | `node tools/scripts/generators/components/library/generate-component-registry.js` | After any JSDoc change |
-| Component docs pages | `node tools/scripts/generators/components/documentation/generate-component-docs.js --write` | After registry changes |
-| Naming convention validation | `node tools/scripts/validators/components/library/check-naming-conventions.js` | When adding new components |
-| Layout governance check | `node tools/scripts/validators/components/library/component-layout-governance.js --scope full` | Periodic / on page changes |
-| Governance pipeline | `node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js` | Periodic full sweep |
+| Registry generation | `node operations/scripts/generators/components/library/generate-component-registry.js` | After any JSDoc change |
+| Component docs pages | `node operations/scripts/generators/components/documentation/generate-component-docs.js --write` | After registry changes |
+| Naming convention validation | `node operations/scripts/validators/components/library/check-naming-conventions.js` | When adding new components |
+| Layout governance check | `node operations/scripts/validators/components/library/component-layout-governance.js --scope full` | Periodic / on page changes |
+| Governance pipeline | `node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js` | Periodic full sweep |
 | Companion manifest update | Manual edit of `ai-companion-manifest.json` | When adding new companion files |
 
 ### 4.3 Automation gaps
@@ -193,8 +193,8 @@ OUT: docs-guide/catalog/ai-companion-schema.json     (static schema — no gener
 
 | Path | Status |
 |------|--------|
-| `tools/scripts/archive/` | Properly archived — legacy migration scripts |
-| `tools/scripts/x-archive/` | Properly archived |
+| `operations/scripts/archive/` | Properly archived — legacy migration scripts |
+| `operations/scripts/x-archive/` | Properly archived |
 | `v2/[locale]/docs-guide/x-deprecated/` | Properly archived |
 | No x-archive in COMPONENT-GOVERNANCE | ✅ Active governance has no dead files |
 
@@ -252,26 +252,26 @@ OUT: docs-guide/catalog/ai-companion-schema.json     (static schema — no gener
 
 ```bash
 # Regenerate registry (after JSDoc edits)
-node tools/scripts/generators/components/library/generate-component-registry.js
+node operations/scripts/generators/components/library/generate-component-registry.js
 
 # Validate only (no write)
-node tools/scripts/generators/components/library/generate-component-registry.js --validate-only
+node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
 
 # Strict: fail on warnings
-node tools/scripts/generators/components/library/generate-component-registry.js --strict
+node operations/scripts/generators/components/library/generate-component-registry.js --strict
 
 # Regenerate component docs pages
-node tools/scripts/generators/components/documentation/generate-component-docs.js --write
+node operations/scripts/generators/components/documentation/generate-component-docs.js --write
 
 # Regenerate UI templates / snippets
-node tools/scripts/generators/components/library/generate-ui-templates.js --write
+node operations/scripts/generators/components/library/generate-ui-templates.js --write
 
 # Regenerate components catalog MDX
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix
 
 # Validate naming conventions
-node tools/scripts/validators/components/library/check-naming-conventions.js
+node operations/scripts/validators/components/library/check-naming-conventions.js
 
 # Full governance pipeline
-node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js
+node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js
 ```

@@ -7,20 +7,16 @@
 
 ---
 
-## Pre-work: CI path mismatch (BLOCKER for Phase 2)
+## Pre-work: CI path mismatch — CORRECTED AND RESOLVED
 
-**Finding**: `.github/workflows/content-health.yml` and `test-suite.yml` reference `operations/scripts/…` paths, but all scripts live under `tools/scripts/…`. These CI steps silently fail or skip.
+> **Correction (2026-03-21)**: The original finding below was WRONG in its direction.
+> `operations/scripts/` IS the correct path for all scripts. The stale path was
+> `tools/scripts/` — used by `check-docs-guide-catalogs.yml`, `generate-docs-guide-catalogs.yml`,
+> `check-ai-companions.yml`, and `generate-ai-companions.yml`. These were fixed as part of P1-C
+> execution. The `operations/scripts/` references in `content-health.yml` and `test-suite.yml`
+> were already correct and did NOT need changing.
 
-**Evidence**:
-```yaml
-# content-health.yml — STALE PATH
-run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
-# CORRECT PATH
-run: node tools/scripts/generators/components/library/generate-component-registry.js --validate-only
-```
-
-**Action required before Phase 2**: Fix all stale `operations/scripts/` references in `.github/workflows/`.
-**Scope**: Audit all `.yml` files in `.github/workflows/` for `operations/scripts/` occurrences and replace with `tools/scripts/`.
+~~**Finding**: `.github/workflows/content-health.yml` and `test-suite.yml` reference `operations/scripts/…` paths, but all scripts live under `tools/scripts/…`. These CI steps silently fail or skip.~~ _(This finding was incorrect — see correction above.)_
 
 ---
 
@@ -72,24 +68,20 @@ run: node tools/scripts/generators/components/library/generate-component-registr
 
 ---
 
-### P1-C · Fix CI path mismatch (`operations/scripts/` → `tools/scripts/`)
+### P1-C · Add registry CI workflow + fix stale `tools/scripts/` paths — COMPLETED
 
-**Problem**: Multiple `.github/workflows/*.yml` files reference `operations/scripts/…` which no longer exists. These CI steps produce MODULE_NOT_FOUND errors silently (most have `continue-on-error: true`).
+> **Correction (2026-03-21)**: The original P1-C was based on a wrong finding. Corrected task:
+> Fix stale `tools/scripts/` references (not `operations/scripts/`) in 4 workflows,
+> add new `generate-component-registry.yml`, and add `--validate-only` to `check-docs-guide-catalogs.yml`.
 
-**Execution steps**:
-1. `grep -rn "operations/scripts" .github/workflows/ --include="*.yml"` — full list of stale references.
-2. For each stale path: replace `operations/scripts/` with `tools/scripts/`.
-3. Also check `operations/` root — if it exists as a legacy directory, confirm it's empty or archive it.
-4. Run the affected workflows manually via `workflow_dispatch` to verify they no longer fail.
+**Actual files fixed**:
+- `.github/workflows/check-docs-guide-catalogs.yml` — fixed paths, added registry check step
+- `.github/workflows/generate-docs-guide-catalogs.yml` — fixed paths
+- `.github/workflows/check-ai-companions.yml` — fixed paths, added npm install
+- `.github/workflows/generate-ai-companions.yml` — fixed paths, added npm install
+- `.github/workflows/generate-component-registry.yml` — NEW: auto-generates registry on main push
 
-**Files likely affected** (from audit sampling):
-- `.github/workflows/content-health.yml`
-- `.github/workflows/test-suite.yml`
-- Possibly others — grep first.
-
-**Acceptance**: Zero `operations/scripts/` references in `.github/workflows/`. Workflows pass their component governance steps.
-
-**Commit**: `fix(ci): replace stale operations/scripts/ paths with tools/scripts/`
+**Status**: DONE — committed as part of P1-C execution.
 
 ---
 
