@@ -21,7 +21,7 @@
 | `tasks/plan/active/CONTENT-WRITING/collation.md` | Inventory / scratchpad | 2026-03-19 | 4/5 | Dated repo resource inventory; identifies gaps in copy rules, personas, rewrite skills |
 | `v2/templates/pages/` (all 17 templates) | Templates | 2026-03-19 | 5/5 | All existing page templates — source for repeating section patterns |
 | `docs-guide/frameworks/component-governance.mdx` | Framework doc (live) | 2026-03-21 | 4/5 | Current component governance state; deferred items flagged; `component-layout-decisions.mdx` deferred |
-| `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md` | Taxonomy reference | 2026-03-21 | 3/5 | Component folder taxonomy; composables entry as TBD stub |
+| `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` | Taxonomy reference | 2026-03-21 | 3/5 | Component folder taxonomy; composables entry as TBD stub |
 
 ---
 
@@ -161,6 +161,6 @@ Based on research, composables need documentation in:
 1. **`snippets/composables/README.md`** — what composables are, how to use, naming convention, when to promote local→composable
 2. **`docs-guide/frameworks/component-governance.mdx`** — add composables section (MDX layer of the 3-layer architecture)
 3. **`docs-guide/catalog/`** — composables catalog (analogous to components catalog); can be generated
-4. **`tasks/plan/active/COMPONENT-GOVERNANCE/structure.md`** — flesh out the composables folder tree entry (currently just `(TBD)`)
+4. **`workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md`** — composables folder tree entry (now fully populated)
 5. **Per-composable JSDoc header** — each `.mdx` composable needs a governance comment: name, purpose, page types it serves, props/variables
 

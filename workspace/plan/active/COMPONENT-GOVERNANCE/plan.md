@@ -63,7 +63,7 @@ snippets/components/
 
 ## Finalised Taxonomy (approved)
 
-> Full folder tree with all sub-niches and per-component file listing: **[structure.md](./structure.md)**
+> Full folder tree with all sub-niches and per-component file listing: **[component-framework-canonical.md](./component-framework-canonical.md)**
 
 ### Target Structure (summary)
 ```
@@ -559,7 +559,7 @@ snippets/
 - 8 composable MDX section blocks in `snippets/composables/` (Tier 1+2)
 - `snippets/composables/README.md` — governance, naming, promotion lifecycle
 - `component-governance.mdx` Section 12 — three-layer architecture, `@contentAffinity` spec
-- `structure.md` composables folder tree updated
+- `component-framework-canonical.md` composables folder tree updated
 - Accordion composables split into separate files per type (FAQ / glossary / troubleshooting)
 - Each composable includes `@composable` governance header + inline `{/* optional */}` blocks
 
@@ -641,9 +641,9 @@ snippets/
 
 ## Reference
 
-- **Target folder structure**: [structure.md](./structure.md) — canonical reference for all categories, sub-niches, and per-component file layout
+- **Target folder structure**: [component-framework-canonical.md](./component-framework-canonical.md) — canonical reference for all categories, sub-niches, and per-component file layout
 - **Component catalog**: [catalog.md](./catalog.md) — full inventory of 44 files, 118 exports, import counts, and flags
-- **Quality audit report**: [audit-report.md](./audit-report.md) — combined responsive, WCAG, and style audit findings across all 44 files
+- **Quality audit report**: [Audits/audit-report.md](./Audits/audit-report.md) — combined responsive, WCAG, and style audit findings across all 44 files
 - **Changelog**: [changelog.md](./changelog.md) — full record of all changes, commits, and stats
 - **JSDoc reference**: [jsdoc-reference.md](./jsdoc-reference.md) — all 118 exports with target JSDoc tag values on one page
 - **Old governance doc**: https://docs.google.com/document/d/1t3eR8Ehm8H6HaUOZFMO7c5Vgka9VechosCgS06FNZ2A/edit?usp=sharing

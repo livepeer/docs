@@ -46,12 +46,15 @@ Restructures the `snippets/components/` library from legacy taxonomy (primitives
 | File | Purpose |
 |------|---------|
 | [`plan.md`](COMPONENT-GOVERNANCE/plan.md) | Master task list with status |
-| [`structure.md`](COMPONENT-GOVERNANCE/structure.md) | Folder taxonomy and component assignments |
-| [`audit-report.md`](COMPONENT-GOVERNANCE/audit-report.md) | Per-component classification findings |
-| [`jsdoc-reference.md`](COMPONENT-GOVERNANCE/jsdoc-reference.md) | 7-field JSDoc standard reference |
-| [`changelog.md`](COMPONENT-GOVERNANCE/changelog.md) | Task-by-task change log |
-| [`script-thread-sync-note.md`](COMPONENT-GOVERNANCE/script-thread-sync-note.md) | Sync note: component branch ↔ script branch |
+| [`component-framework-canonical.md`](COMPONENT-GOVERNANCE/component-framework-canonical.md) | Folder taxonomy and component assignments |
 | [`catalog.md`](COMPONENT-GOVERNANCE/catalog.md) | Component catalog snapshot |
+| [`changelog.md`](COMPONENT-GOVERNANCE/changelog.md) | Task-by-task change log |
+| [`Audits/audit-report.md`](COMPONENT-GOVERNANCE/Audits/audit-report.md) | Per-component classification findings |
+| [`Audits/component-docs.md`](COMPONENT-GOVERNANCE/Audits/component-docs.md) | Component docs architecture audit |
+| [`Frameworks/jsdoc-reference.md`](COMPONENT-GOVERNANCE/Frameworks/jsdoc-reference.md) | 7-field JSDoc standard reference |
+| [`Tasks/doc-recommendation.md`](COMPONENT-GOVERNANCE/Tasks/doc-recommendation.md) | Doc architecture recommendation |
+| [`Tasks/script-thread-sync-note.md`](COMPONENT-GOVERNANCE/Tasks/script-thread-sync-note.md) | Sync note: component branch ↔ script branch |
+| [`Research/composables-research.md`](COMPONENT-GOVERNANCE/Research/composables-research.md) | Composables design research |
 
 **Published**: [`docs-guide/frameworks/component-governance.mdx`](../../docs-guide/frameworks/component-governance.mdx)
 
