@@ -8,8 +8,8 @@
  * @description RSS-to-MDX converter — imports RSS feed items and converts to MDX page format
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, v2/internal/assets/transcripts
- * @usage       node tools/scripts/automations/content/data/transforms/convert-rss-to-mdx.js [flags]
+ * @scope       operations/scripts, v2/internal/assets/transcripts
+ * @usage       node operations/scripts/automations/content/data/transforms/convert-rss-to-mdx.js [flags]
  * @policy      F-R1
  */
 
@@ -193,7 +193,7 @@ function main() {
 
   if (args.help || !args.input || !args.output) {
     console.log(
-      'Usage: node tools/scripts/convert-rss-to-mdx.js --input <rssPath> --output <mdxPath>'
+      'Usage: node operations/scripts/convert-rss-to-mdx.js --input <rssPath> --output <mdxPath>'
     )
     process.exit(args.help ? 0 : 1)
   }

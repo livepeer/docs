@@ -125,7 +125,7 @@ function isLikelyRepoPath(value) {
     'ai-tools/',
     'docs-guide/',
     'tools/',
-    'tests/',
+    'operations/',
     'v2/',
     'snippets/',
     '.github/',

@@ -3,12 +3,12 @@
  * @script            test-mintlify-version-language-toggle
  * @category          enforcer
  * @purpose           feature:translation
- * @scope             tools/scripts/i18n, docs.json, v2
+ * @scope             operations/scripts/i18n, docs.json, v2
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Mintlify language toggle checker — validates Mintlify version supports language toggle feature
  * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/i18n/test-mintlify-version-language-toggle.js [flags]
+ * @usage             node operations/scripts/i18n/test-mintlify-version-language-toggle.js [flags]
  */
 
 const puppeteer = require('puppeteer');
@@ -34,7 +34,7 @@ function parseArgs(argv) {
     } else if (token === '--help' || token === '-h') {
       console.log(
         [
-          'Usage: node tools/scripts/i18n/test-mintlify-version-language-toggle.js [options]',
+          'Usage: node operations/scripts/i18n/test-mintlify-version-language-toggle.js [options]',
           '',
           'Options:',
           '  --base-url <url>      Mint preview base URL (default http://localhost:3000)',

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/validators/content/structure/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]
+ * @usage       node operations/scripts/validators/content/structure/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]
  * @policy      E-R1, R-R11
  */
 
@@ -26,7 +26,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/validators/content/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]',
+      '  node operations/scripts/validators/content/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]',
       '',
       'Scope:',
       '  --staged    Validate staged first-party .md/.mdx files only.',

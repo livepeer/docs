@@ -8,8 +8,8 @@
  * @description Mechanically assigns pageType frontmatter to eligible v2 MDX pages.
  * @mode        edit
  * @pipeline    manual — deterministic metadata rollout utility for v2 docs
- * @scope       tools/scripts, v2, workspace/reports
- * @usage       node tools/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]
+ * @scope       operations/scripts, v2, workspace/reports
+ * @usage       node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]
  * @policy      E-R1, R-R11
  */
 
@@ -34,7 +34,7 @@ function detectNewline(content) {
 }
 
 function printUsage() {
-  console.log('Usage: node tools/scripts/add-pagetype-mechanical.js [--dry-run]');
+  console.log('Usage: node operations/scripts/add-pagetype-mechanical.js [--dry-run]');
 }
 
 function parseArgs(argv) {

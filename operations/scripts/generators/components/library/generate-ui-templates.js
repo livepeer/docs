@@ -8,8 +8,8 @@
  * @description Generates the UI template catalog, template preview routes, and VS Code snippets from canonical template/component sources
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
- * @usage       node tools/scripts/generators/components/library/generate-ui-templates.js [flags]
+ * @scope       operations/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
+ * @usage       node operations/scripts/generators/components/library/generate-ui-templates.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -41,14 +41,14 @@ const CATALOG_DETAILS = {
   script: 'operations/scripts/generate-ui-templates.js',
   purpose: 'UI template catalog, preview routes, and snippet inventory derived from canonical template sources.',
   runWhen: 'Page/block templates or component registry examples change.',
-  runCommand: 'node tools/scripts/generate-ui-templates.js --write'
+  runCommand: 'node operations/scripts/generate-ui-templates.js --write'
 };
 
 const PREVIEW_DETAILS = {
   script: 'operations/scripts/generate-ui-templates.js',
   purpose: 'Direct-route preview pages for UI templates.',
   runWhen: 'Page/block templates change.',
-  runCommand: 'node tools/scripts/generate-ui-templates.js --write'
+  runCommand: 'node operations/scripts/generate-ui-templates.js --write'
 };
 
 const LEGACY_PAGE_PREVIEW_ALIASES = [
@@ -709,7 +709,7 @@ if (require.main === module) {
         process.exit(0);
       }
 
-      console.error('UI template artifacts are out of date. Run `node tools/scripts/generate-ui-templates.js --write`.');
+      console.error('UI template artifacts are out of date. Run `node operations/scripts/generate-ui-templates.js --write`.');
       result.changed.forEach((repoPath) => console.error(`  - update ${repoPath}`));
       result.removed.forEach((repoPath) => console.error(`  - remove stale preview ${repoPath}`));
       process.exit(1);

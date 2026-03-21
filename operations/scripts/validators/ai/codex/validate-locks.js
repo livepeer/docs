@@ -8,8 +8,8 @@
  * @description Codex lock validator — checks for stale or conflicting lock files before push
  * @mode        execute
  * @pipeline    commit), P2 (push)
- * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/validators/ai/codex/validate-locks.js [flags]
+ * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @usage       node operations/scripts/validators/ai/codex/validate-locks.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -123,7 +123,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/dispatch/ai/codex/validate-locks.js [--contract <path>] [--branch <name>] [--files <a,b,c>] [--staged] [--quiet] [--json]');
+  console.log('Usage: node operations/scripts/dispatch/ai/codex/validate-locks.js [--contract <path>] [--branch <name>] [--files <a,b,c>] [--staged] [--quiet] [--json]');
 }
 
 function detectBranch(explicitBranch) {

@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6, manual
  * @scope       generated-output
- * @usage       node tools/scripts/audits/components/library/scan-component-imports.js [--verify] [--since <commit>]
+ * @usage       node operations/scripts/audits/components/library/scan-component-imports.js [--verify] [--since <commit>]
  * @policy      R-R10
  */
 
@@ -32,7 +32,7 @@ const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/audits/components/library/scan-component-imports.js [options]',
+      'Usage: node operations/scripts/audits/components/library/scan-component-imports.js [options]',
       '',
       'Options:',
       '  --verify          Compare live imports with @usedIn declarations and fail on drift',

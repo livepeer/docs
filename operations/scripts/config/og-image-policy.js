@@ -8,8 +8,8 @@
  * @description OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata.
  * @mode        generate
  * @pipeline    manual — library module imported by generators and validators
- * @scope       tools/scripts, snippets/assets/site/og-image, docs.json
- * @usage       node tools/scripts/config/og-image-policy.js [flags]
+ * @scope       operations/scripts, snippets/assets/site/og-image, docs.json
+ * @usage       node operations/scripts/config/og-image-policy.js [flags]
  * @policy      E-R1, R-R14
  */
 

@@ -8,8 +8,8 @@
  * @description Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json
  * @mode        execute
  * @pipeline    on-demand, translation pipeline)
- * @scope       docs.json, tools/scripts/i18n
- * @usage       node tools/scripts/automations/content/language-translation/generate-localized-docs-json.js [flags]
+ * @scope       docs.json, operations/scripts/i18n
+ * @usage       node operations/scripts/automations/content/language-translation/generate-localized-docs-json.js [flags]
  * @policy      F-R6, F-R7
  */
 
@@ -24,7 +24,7 @@ const { collectExistingLocalizedRouteMapEntries } = require('./lib/docs-routes')
 function printHelp() {
   console.log(
     [
-      'Usage: node tools/scripts/i18n/generate-localized-docs-json.js [options]',
+      'Usage: node operations/scripts/i18n/generate-localized-docs-json.js [options]',
       '',
       'Options:',
       '  --languages <csv>            Target languages (default from config)',

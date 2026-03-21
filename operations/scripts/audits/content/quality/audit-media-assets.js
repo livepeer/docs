@@ -8,8 +8,8 @@
  * @description Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts, workspace/reports/media-audit
- * @usage       node tools/scripts/audits/content/quality/audit-media-assets.js [flags]
+ * @scope       operations/scripts, workspace/reports/media-audit
+ * @usage       node operations/scripts/audits/content/quality/audit-media-assets.js [flags]
  * @policy      R-R14
  */
 
@@ -39,7 +39,7 @@ const RAW_ASSET_BRANCH_NAMES = ['assets', 'docs-v2-assets']
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/audit-media-assets.js [--manifest <path>] [--summary <path>] [--assets-branch-ref <ref>] [--check-staged]'
+    'Usage: node operations/scripts/audit-media-assets.js [--manifest <path>] [--summary <path>] [--assets-branch-ref <ref>] [--check-staged]'
   )
 }
 

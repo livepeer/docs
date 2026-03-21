@@ -8,8 +8,8 @@
  * @description Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components, tests/utils
- * @usage       node tools/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]
+ * @scope       operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components, operations/tests/tils
+ * @usage       node operations/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]
  * @policy      R-R10, R-R29
  */
 
@@ -116,7 +116,7 @@ function toPosix(value) {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/validators/components/check-mdx-component-scope.js [options]',
+      'Usage: node operations/scripts/validators/components/check-mdx-component-scope.js [options]',
       '',
       'Options:',
       `  --files <path[,path]>   Limit validation to specific component files under ${DEFAULT_COMPONENT_ROOT}`,

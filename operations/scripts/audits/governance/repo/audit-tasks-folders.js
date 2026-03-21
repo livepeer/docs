@@ -8,8 +8,8 @@
  * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tasks
- * @usage       node tools/scripts/audits/governance/repo/audit-tasks-folders.js [flags]
+ * @scope       operations/scripts, tasks
+ * @usage       node operations/scripts/audits/governance/repo/audit-tasks-folders.js [flags]
  * @policy      E-C1, R-R14
  */
 
@@ -91,15 +91,15 @@ function usage() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/audit-tasks-folders.js [--dry-run] [--apply] [--apply-recommendations] [--recommendation-scope full|targeted] [--conflict-policy pause] [--audit-output-dir <path>] [--folders <comma-separated>]',
+      '  node operations/scripts/audit-tasks-folders.js [--dry-run] [--apply] [--apply-recommendations] [--recommendation-scope full|targeted] [--conflict-policy pause] [--audit-output-dir <path>] [--folders <comma-separated>]',
       '',
       'Examples:',
-      '  node tools/scripts/audit-tasks-folders.js',
-      '  node tools/scripts/audit-tasks-folders.js --dry-run',
-      '  node tools/scripts/audit-tasks-folders.js --apply',
-      '  node tools/scripts/audit-tasks-folders.js --apply-recommendations --recommendation-scope full',
-      '  node tools/scripts/audit-tasks-folders.js --apply-recommendations --dry-run --recommendation-scope full',
-      '  node tools/scripts/audit-tasks-folders.js --folders plan,reports,report'
+      '  node operations/scripts/audit-tasks-folders.js',
+      '  node operations/scripts/audit-tasks-folders.js --dry-run',
+      '  node operations/scripts/audit-tasks-folders.js --apply',
+      '  node operations/scripts/audit-tasks-folders.js --apply-recommendations --recommendation-scope full',
+      '  node operations/scripts/audit-tasks-folders.js --apply-recommendations --dry-run --recommendation-scope full',
+      '  node operations/scripts/audit-tasks-folders.js --folders plan,reports,report'
     ].join('\n')
   );
 }
@@ -780,13 +780,13 @@ function analyzeTaskScript(file, context, toolDescriptors) {
     reasons.push('folder-level README');
   } else if (dedupedExact.length > 0) {
     recommendation = 'archive';
-    reasons.push('exact duplicate by hash/basename in tools/scripts');
+    reasons.push('exact duplicate by hash/basename in operations/scripts');
   } else if (stalePlanPaths && dedupedOverlap.length > 0) {
     recommendation = 'archive';
-    reasons.push('stale workspace/PLAN reference and overlapping tools/scripts purpose');
+    reasons.push('stale workspace/PLAN reference and overlapping operations/scripts purpose');
   } else if (dedupedOverlap.length > 0) {
-    recommendation = 'move to tools/scripts';
-    reasons.push('purpose overlap with tools/scripts family');
+    recommendation = 'move to operations/scripts';
+    reasons.push('purpose overlap with operations/scripts family');
   } else if (stalePlanPaths) {
     recommendation = 'archive';
     reasons.push('stale workspace/PLAN reference');
@@ -1253,8 +1253,8 @@ function extractScriptRecommendationCandidates(phaseId, phaseLabel, reportRepoPa
     if (!source || !recommendation) continue;
 
     let destination = '';
-    if (recommendation.startsWith('move to tools/scripts')) {
-      destination = normalizeRecommendationRepoPath(`tools/scripts/${path.basename(source)}`);
+    if (recommendation.startsWith('move to operations/scripts')) {
+      destination = normalizeRecommendationRepoPath(`operations/scripts/${path.basename(source)}`);
     } else if (recommendation.startsWith('archive')) {
       destination = normalizeRecommendationRepoPath(`workspace/plan/archived/scripts/${path.basename(source)}`);
     } else {
@@ -1713,7 +1713,7 @@ function buildFolderRows(folderRepoPath, context, toolDescriptors) {
   const isScriptsFolder = folderRepoPath === 'workspace/scripts';
 
   if (isScriptsFolder) {
-    headers.push('File', 'Used For', 'Stale PLAN Paths', 'Exact Duplicates in tools/scripts', 'Purpose Overlap in tools/scripts', 'Recommendation', 'Notes');
+    headers.push('File', 'Used For', 'Stale PLAN Paths', 'Exact Duplicates in operations/scripts', 'Purpose Overlap in operations/scripts', 'Recommendation', 'Notes');
     for (const file of filesInScope) {
       const script = analyzeTaskScript(file, context, toolDescriptors);
       rows.push([

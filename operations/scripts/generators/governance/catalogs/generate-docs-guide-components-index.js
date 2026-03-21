@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    commit — auto-regenerated when components staged)
  * @scope       generated-output
- * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix|--write|--check]
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix|--write|--check]
  * @policy      R-R10, R-R16, R-R17
  */
 
@@ -50,7 +50,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/generate-docs-guide-components-index.js [--fix|--write|--check]',
+      '  node operations/scripts/generate-docs-guide-components-index.js [--fix|--write|--check]',
       '',
       'Modes:',
       '  --fix      Write the generated components catalog.',
@@ -233,7 +233,7 @@ function buildOutput(registry, usageMap) {
     script: 'operations/scripts/generate-docs-guide-components-index.js',
     purpose: 'Generated inventory of governed component exports from docs-guide/component-registry.json and docs-guide/component-usage-map.json.',
     runWhen: 'Component governance metadata, registry output, or usage-map output changes.',
-    runCommand: 'node tools/scripts/generate-docs-guide-components-index.js --fix'
+    runCommand: 'node operations/scripts/generate-docs-guide-components-index.js --fix'
   };
 
   const sections = VALID_CATEGORIES.map((category) =>
@@ -345,7 +345,7 @@ function run(argv = process.argv.slice(2)) {
     if (stale.length > 0 || legacy.length > 0) {
       stale.forEach((filePath) => console.error(`Components catalog is out of date: ${filePath}`));
       legacy.forEach((filePath) => console.error(`Legacy components index must be removed: ${filePath}`));
-      console.error('Run: node tools/scripts/generate-docs-guide-components-index.js --fix');
+      console.error('Run: node operations/scripts/generate-docs-guide-components-index.js --fix');
       return 1;
     }
     console.log('Components catalog is up to date.');

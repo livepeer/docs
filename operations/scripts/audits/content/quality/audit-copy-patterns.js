@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       single-domain, v2-content, generated-output
- * @usage       node tools/scripts/audits/content/quality/audit-copy-patterns.js --tab <name> | --all [--output <file>]
+ * @usage       node operations/scripts/audits/content/quality/audit-copy-patterns.js --tab <name> | --all [--output <file>]
  * @policy      R-R14, R-R18
  */
 

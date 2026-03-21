@@ -8,8 +8,8 @@
  * @description Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
  * @mode        read-only
  * @pipeline    manual — experimental advisory PR integration, non-blocking
- * @scope       tools/scripts, workspace/research/claims, workspace/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
- * @usage       node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]
+ * @scope       operations/scripts, workspace/research/claims, workspace/reports/repo-ops operations/tests/unit/docs-page-research-pr-report.test.js
+ * @usage       node operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -40,7 +40,7 @@ function toPosix(value) {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/docs-page-research-pr-report.js [options]',
+      'Usage: node operations/scripts/docs-page-research-pr-report.js [options]',
       '',
       'Options:',
       '  --registry <path>       Registry path (default: workspace/research/claims)',

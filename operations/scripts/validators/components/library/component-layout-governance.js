@@ -8,8 +8,8 @@
  * @description Component layout governance validator — checks v2 page layouts against approved component contracts
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts, v2, tools/config/component-layout-profile.json
- * @usage       node tools/scripts/validators/components/library/component-layout-governance.js [flags]
+ * @scope       operations/scripts, v2, tools/config/component-layout-profile.json
+ * @usage       node operations/scripts/validators/components/library/component-layout-governance.js [flags]
  * @policy      E-C1, R-R14
  */
 

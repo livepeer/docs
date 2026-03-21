@@ -8,8 +8,8 @@
  * @description Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tools/config, tools/lib, v2, workspace/reports/content-gap
- * @usage       node tools/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]
+ * @scope       operations/scripts, tools/config, tools/lib, v2, workspace/reports/content-gap
+ * @usage       node operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -157,7 +157,7 @@ function parseArgs(argv) {
 }
 
 function printUsage() {
-  console.log('Usage: node tools/scripts/generate-content-gap-reconciliation.js [options]');
+  console.log('Usage: node operations/scripts/generate-content-gap-reconciliation.js [options]');
   console.log('');
   console.log('Options:');
   console.log(`  --blueprint-pages <path>    Default: ${DEFAULTS.blueprintPagesPath}`);

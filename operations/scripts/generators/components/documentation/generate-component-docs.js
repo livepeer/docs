@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual
  * @scope       generated-output
- * @usage       node tools/scripts/generators/components/documentation/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
+ * @usage       node operations/scripts/generators/components/documentation/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
  * @policy      R-R10
  */
 
@@ -71,7 +71,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]',
+      '  node operations/scripts/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]',
       '',
       'Modes:',
       '  --dry-run       Preview generated outputs without writing files (default).',
@@ -390,7 +390,7 @@ async function renderCategoryPage(category, components, args, cache, warnings) {
       script: 'operations/scripts/generate-component-docs.js',
       purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
-      runCommand: `node tools/scripts/generate-component-docs.js --fix --template-only --category ${category}`
+      runCommand: `node operations/scripts/generate-component-docs.js --fix --template-only --category ${category}`
     }
   };
 
@@ -446,7 +446,7 @@ function renderOverviewPage(registry) {
       script: 'operations/scripts/generate-component-docs.js',
       purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
-      runCommand: 'node tools/scripts/generate-component-docs.js --fix --template-only'
+      runCommand: 'node operations/scripts/generate-component-docs.js --fix --template-only'
     }
   };
 
@@ -487,7 +487,7 @@ function renderLandingPage(registry) {
       script: 'operations/scripts/generate-component-docs.js',
       purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
-      runCommand: 'node tools/scripts/generate-component-docs.js --fix --template-only'
+      runCommand: 'node operations/scripts/generate-component-docs.js --fix --template-only'
     }
   };
 
@@ -620,8 +620,8 @@ function renderLocaleScaffold(locale, slug, registry) {
       runWhen: 'Component governance metadata, registry outputs, or component-library templates change.',
       runCommand:
         slug === 'overview' || slug === 'component-library'
-          ? 'node tools/scripts/generate-component-docs.js --fix --template-only'
-          : `node tools/scripts/generate-component-docs.js --fix --template-only --category ${slug}`
+          ? 'node operations/scripts/generate-component-docs.js --fix --template-only'
+          : `node operations/scripts/generate-component-docs.js --fix --template-only --category ${slug}`
     }
   };
 
@@ -699,7 +699,7 @@ function archiveLegacyScript(writeMode) {
   const original = fs.readFileSync(ARCHIVE_SOURCE_PATH, 'utf8');
   const note = [
     '# Archived by generate-component-docs.js',
-    '# Replaced by node tools/scripts/generate-component-docs.js --fix --template-only',
+    '# Replaced by node operations/scripts/generate-component-docs.js --fix --template-only',
     '# Legacy snippet-tree generation retained for historical reference.',
     ''
   ].join('\n');
@@ -848,7 +848,7 @@ async function run(argv = process.argv.slice(2)) {
     const stale = collectStaleOutputs(bundle);
     if (stale.length > 0) {
       stale.forEach((filePath) => console.error(`Stale component docs output: ${filePath}`));
-      console.error('Run: node tools/scripts/generate-component-docs.js --fix --template-only');
+      console.error('Run: node operations/scripts/generate-component-docs.js --fix --template-only');
       return 1;
     }
     console.log('Component library docs are up to date.');

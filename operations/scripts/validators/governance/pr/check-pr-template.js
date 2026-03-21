@@ -8,8 +8,8 @@
  * @description Enforces that PR descriptions include required change and rationale sections before merge
  * @mode        read-only
  * @pipeline    ci
- * @scope       tools/scripts/enforcers/pr, .github/pull_request_template.md, .github/pull-request-template-v2.md
- * @usage       PR_BODY="..." node tools/scripts/enforcers/pr/check-pr-template.js
+ * @scope       operations/scripts/enforcers/pr, .github/pull_request_template.md, .github/pull-request-template-v2.md
+ * @usage       PR_BODY="..." node operations/scripts/enforcers/pr/check-pr-template.js
  * @policy      R-R14, R-C6
  */
 

@@ -8,8 +8,8 @@
  * @description Translation generator — translates v2 MDX pages to target languages via OpenRouter API
  * @mode        execute
  * @pipeline    on-demand, translation pipeline)
- * @scope       tools/scripts/i18n, docs.json, v2
- * @usage       node tools/scripts/automations/content/language-translation/translate-docs.js [flags]
+ * @scope       operations/scripts/i18n, docs.json, v2
+ * @usage       node operations/scripts/automations/content/language-translation/translate-docs.js [flags]
  * @policy      F-R6, F-R7
  */
 
@@ -35,7 +35,7 @@ const { getRepoRoot, normalizeRepoRel, writeJson, writeTextIfChanged } = require
 function printHelp() {
   console.log(
     [
-      'Usage: node tools/scripts/i18n/translate-docs.js [options]',
+      'Usage: node operations/scripts/i18n/translate-docs.js [options]',
       '',
       'Options:',
       '  --languages <csv>            Target languages (default from tools/i18n/config.json)',

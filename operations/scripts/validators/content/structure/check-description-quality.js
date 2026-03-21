@@ -8,8 +8,8 @@
  * @description Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
- * @scope       tools/scripts/validators/content, v2
- * @usage       node tools/scripts/validators/content/structure/check-description-quality.js [--path <repo-path>] [--strict]
+ * @scope       operations/scripts/validators/content, v2
+ * @usage       node operations/scripts/validators/content/structure/check-description-quality.js [--path <repo-path>] [--strict]
  * @policy      E-R1, R-R11
  */
 
@@ -37,7 +37,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/content/check-description-quality.js [--path <repo-path>] [--strict]'
+    'Usage: node operations/scripts/validators/content/check-description-quality.js [--path <repo-path>] [--strict]'
   );
 }
 
@@ -214,14 +214,14 @@ function resolvePathInput(targetPath) {
 function walkDirectory(dirPath, out = []) {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
-  entries.forEach((entry) => {
-    if (entry.name === '.git' || entry.name === 'node_modules') {
+  entries.forEach((dirent) => {
+    if (dirent.name === '.git' || dirent.name === 'node_modules') {
       return;
     }
 
-    const absPath = path.join(dirPath, entry.name);
+    const absPath = path.join(dirPath, dirent.name);
 
-    if (entry.isDirectory()) {
+    if (dirent.isDirectory()) {
       walkDirectory(absPath, out);
       return;
     }

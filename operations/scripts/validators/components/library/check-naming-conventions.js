@@ -8,8 +8,8 @@
  * @description Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @mode        read-only
  * @pipeline    manual
- * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
- * @usage       node tools/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]
+ * @scope       operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components
+ * @usage       node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]
  * @policy      R-R10
  */
 
@@ -46,7 +46,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]'
+    'Usage: node operations/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]'
   );
 }
 

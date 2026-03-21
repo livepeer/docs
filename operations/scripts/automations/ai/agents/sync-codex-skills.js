@@ -8,8 +8,8 @@
  * @description Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
- * @usage       node tools/scripts/automations/ai/agents/sync-codex-skills.js [flags]
+ * @scope       operations/scripts, ai-tools/ai-skills/templates operations/tests/unit/codex-skill-sync.test.js
+ * @usage       node operations/scripts/automations/ai/agents/sync-codex-skills.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -59,7 +59,7 @@ const SMALL_WORDS = new Set(['and', 'or', 'to', 'up', 'with', 'of', 'for']);
 
 function usage() {
   const msg = [
-    'Usage: node tools/scripts/sync-codex-skills.js [options]',
+    'Usage: node operations/scripts/sync-codex-skills.js [options]',
     '',
     'Options:',
     '  --source-dir <path>     Canonical template directory',

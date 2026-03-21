@@ -2,12 +2,12 @@
  * @script            common
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement i18n shared utilities — common helper functions for translation pipeline
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/common.js [flags]
+ * @usage             node operations/scripts/i18n/lib/common.js [flags]
  */
 const fs = require('fs');
 const path = require('path');

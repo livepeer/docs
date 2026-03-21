@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P3, P5, P6, manual, manual
  * @scope       single-domain
- * @usage       node tools/scripts/generators/components/library/generate-component-registry.js [--validate-only]
+ * @usage       node operations/scripts/generators/components/library/generate-component-registry.js [--validate-only]
  * @policy      R-R10
  */
 
@@ -39,7 +39,7 @@ const CATEGORY_PURPOSES = {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/generate-component-registry.js [options]',
+      'Usage: node operations/scripts/generate-component-registry.js [options]',
       '',
       'Options:',
       '  --validate-only    Validate component governance metadata without writing files',

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
  * @scope       v2-content
- * @usage       node tools/scripts/validators/content/structure/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
+ * @usage       node operations/scripts/validators/content/structure/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
  * @policy      1.12, 1.13
  */
 
@@ -57,7 +57,7 @@ function printHelp() {
   process.stdout.write(
     [
       'Usage:',
-      '  node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>] [--files <a,b>] [--fix]',
+      '  node operations/scripts/validators/content/check-double-headers.js [--staged|--file <path>] [--files <a,b>] [--fix]',
       '',
       'Options:',
       '  --staged        Scan staged routable v2 MDX pages only.',

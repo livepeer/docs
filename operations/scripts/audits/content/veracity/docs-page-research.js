@@ -8,8 +8,8 @@
  * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @mode        read-only
  * @pipeline    manual — experimental research system
- * @scope       tools/scripts, workspace/research/claims, tests/unit/docs-page-research.test.js, workspace/reports/repo-ops
- * @usage       node tools/scripts/audits/content/veracity/docs-page-research.js [flags]
+ * @scope       operations/scripts, workspace/research/claims operations/tests/unit/docs-page-research.test.js, workspace/reports/repo-ops
+ * @usage       node operations/scripts/audits/content/veracity/docs-page-research.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -160,7 +160,7 @@ function remoteDiscoveryDisabled() {
 function usage() {
   console.log(
     [
-      'Usage: node tools/scripts/docs-page-research.js [options]',
+      'Usage: node operations/scripts/docs-page-research.js [options]',
       '',
       'Options:',
       '  --registry <path>       Registry file or directory (default: workspace/research/claims)',

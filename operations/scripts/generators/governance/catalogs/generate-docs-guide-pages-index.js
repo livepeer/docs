@@ -8,8 +8,8 @@
  * @description Generates the docs-guide pages catalog
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
- * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]
+ * @scope       operations/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -38,7 +38,7 @@ const GENERATED_DETAILS = {
   script: 'operations/scripts/generate-docs-guide-pages-index.js',
   purpose: 'Tree catalog of docs pages included in docs.json navigation, generated from v2 index data.',
   runWhen: '`v2/index.mdx` links or docs.json navigation entries change.',
-  runCommand: 'node tools/scripts/generate-docs-guide-pages-index.js --write'
+  runCommand: 'node operations/scripts/generate-docs-guide-pages-index.js --write'
 };
 
 function toLegacyCatalogRepoPath(repoPath) {
@@ -304,7 +304,7 @@ function main() {
       legacyExisting.forEach((repoPath) => {
         console.error(`Legacy docs-guide pages index must be removed: ${repoPath}`);
       });
-      console.error('Run: node tools/scripts/generate-docs-guide-pages-index.js --write');
+      console.error('Run: node operations/scripts/generate-docs-guide-pages-index.js --write');
       process.exit(1);
     }
     console.log('Docs-guide pages catalog is up to date.');

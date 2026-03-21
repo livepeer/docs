@@ -8,15 +8,15 @@
  * @description Report publisher — publishes v2 internal audit reports to configured output locations
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tools/config, v2/internal, docs.json, workspace/reports, tests/reports
- * @usage       node tools/scripts/automations/governance/pipelines/publish-v2-internal-reports.js [flags]
+ * @scope       operations/scripts, tools/config, v2/internal, docs.json, workspace/reports, operations/tests/eports
+ * @usage       node operations/scripts/automations/governance/pipelines/publish-v2-internal-reports.js [flags]
  * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const manifest = require('../../../../config/v2-internal-report-pages');
+const manifest = require('../../../../../tools/config/v2-internal-report-pages');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -39,7 +39,7 @@ const UTC_MONTHS = [
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/publish-v2-internal-reports.js [--check] [--strict] [--category <slug[,slug]>]'
+    'Usage: node operations/scripts/publish-v2-internal-reports.js [--check] [--strict] [--category <slug[,slug]>]'
   );
 }
 

@@ -8,8 +8,8 @@
  * @description Codex task cleanup utility — reports and prunes merged clean worktrees plus stale local codex branches after merge
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/automations/ai/codex/task-cleanup.js [flags]
+ * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @usage       node operations/scripts/automations/ai/codex/task-cleanup.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -155,7 +155,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/dispatch/ai/codex/task-cleanup.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--apply] [--no-sweep] [--keep-branch] [--json]'
+    'Usage: node operations/scripts/dispatch/ai/codex/task-cleanup.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--apply] [--no-sweep] [--keep-branch] [--json]'
   );
 }
 

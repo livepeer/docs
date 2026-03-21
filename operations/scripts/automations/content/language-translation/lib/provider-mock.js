@@ -2,12 +2,12 @@
  * @script            provider-mock
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Mock translation provider — returns placeholder translations for testing without API calls
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/provider-mock.js [flags]
+ * @usage             node operations/scripts/i18n/lib/provider-mock.js [flags]
  */
 function createMockTranslator() {
   return {

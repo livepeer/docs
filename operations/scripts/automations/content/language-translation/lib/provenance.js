@@ -2,12 +2,12 @@
  * @script            provenance
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Translation provenance tracker — records source, timestamp, and provider for each translated segment
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/provenance.js [flags]
+ * @usage             node operations/scripts/i18n/lib/provenance.js [flags]
  */
 const crypto = require('crypto');
 

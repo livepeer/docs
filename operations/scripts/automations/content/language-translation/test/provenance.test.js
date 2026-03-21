@@ -2,12 +2,12 @@
  * @script            provenance.test
  * @category          validator
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests provenance tracker — validates translation provenance recording
  * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/i18n/test/provenance.test.js [flags]
+ * @usage             node operations/scripts/i18n/test/provenance.test.js [flags]
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');

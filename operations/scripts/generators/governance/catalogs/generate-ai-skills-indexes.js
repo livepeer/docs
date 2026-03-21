@@ -8,8 +8,8 @@
  * @description Generates ai-tools/ai-skills inventory.json and content-map.md from the canonical agent-governance surface manifest.
  * @mode        generate
  * @pipeline    manual, ci
- * @scope       tools/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, contribute, v2
- * @usage       node tools/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]
+ * @scope       operations/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, contribute, v2
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]
  * @policy      R-R14, R-R18
  */
 
@@ -233,7 +233,7 @@ const SURFACES = [
 ];
 
 function usage() {
-  console.log('Usage: node tools/scripts/generate-ai-skills-indexes.js [--check|--write]');
+  console.log('Usage: node operations/scripts/generate-ai-skills-indexes.js [--check|--write]');
 }
 
 function parseArgs(argv) {
@@ -405,7 +405,7 @@ function run(args) {
 
   console.error('AI-skills indexes are out of date:');
   drift.forEach((repoPath) => console.error(`  - ${repoPath}`));
-  console.error('Run: node tools/scripts/generate-ai-skills-indexes.js --write');
+  console.error('Run: node operations/scripts/generate-ai-skills-indexes.js --write');
   return 1;
 }
 

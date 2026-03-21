@@ -8,8 +8,8 @@
  * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, tests, workspace/reports, ai-tools/ai-skills
- * @usage       node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]
+ * @scope       operations/scripts, operations/tests, workspace/reports, ai-tools/ai-skills
+ * @usage       node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]
  * @policy      E-C1, R-R14
  */
 
@@ -18,7 +18,7 @@ const path = require('path');
 
 const STAGE_ID = 'script-footprint-and-usage-audit';
 const REPO_ROOT = process.cwd();
-const SCRIPTS_ROOT = 'tools/scripts';
+const SCRIPTS_ROOT = 'operations/scripts';
 const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
 
 function toPosix(value) {
@@ -204,7 +204,7 @@ function detectDuplicatePairs(issues, files) {
 
   for (const root of rootScripts) {
     const base = path.basename(root.relPath);
-    const candidate = `tools/scripts/test/${base}`;
+    const candidate = `operations/scripts/test/${base}`;
     const candidateAbs = path.join(REPO_ROOT, candidate);
     if (!fs.existsSync(candidateAbs)) continue;
 
@@ -277,7 +277,7 @@ function detectScriptAuditSignals(issues) {
       severity: 'low',
       path: 'workspace/reports/repo-ops/SCRIPT_AUDIT.json',
       evidence: 'Baseline script report could not be found.',
-      recommendation: 'Generate with `node tools/scripts/audit-scripts.js --format both`.'
+      recommendation: 'Generate with `node operations/scripts/audit-scripts.js --format both`.'
     });
     return;
   }
@@ -327,7 +327,7 @@ function main() {
 
   const files = [
     ...walkFiles(path.join(REPO_ROOT, SCRIPTS_ROOT)),
-    ...walkFiles(path.join(REPO_ROOT, 'tests')),
+    ...walkFiles(path.join(REPO_ROOT, 'operations/tests')),
     ...walkFiles(path.join(REPO_ROOT, 'workspace/reports'))
   ];
 

@@ -8,8 +8,8 @@
  * @description Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity
  * @mode        execute
  * @pipeline    manual
- * @scope       tools/scripts/i18n, v2
- * @usage       node tools/scripts/automations/content/language-translation/validate-generated.js [flags]
+ * @scope       operations/scripts/i18n, v2
+ * @usage       node operations/scripts/automations/content/language-translation/validate-generated.js [flags]
  * @policy      F-R6, F-R7
  */
 
@@ -25,7 +25,7 @@ const { parseProvenanceComment, classifyLocalizedArtifactProvenance } = require(
 function printHelp() {
   console.log(
     [
-      'Usage: node tools/scripts/i18n/validate-generated.js [options]',
+      'Usage: node operations/scripts/i18n/validate-generated.js [options]',
       '',
       'Options:',
       '  --languages <csv>              Languages to validate (default from config)',

@@ -8,8 +8,8 @@
  * @description Dispatches generator scripts to sync generated catalog/index files, then validates banners.
  * @mode        execute
  * @pipeline    manual | pre-commit --staged
- * @scope       tools/scripts/generators, docs-guide/catalog, v2
- * @usage       node tools/scripts/dispatch/governance/pipelines/sync-generated-files.js --write | --check [--staged]
+ * @scope       operations/scripts/generators, docs-guide/catalog, v2
+ * @usage       node operations/scripts/dispatch/governance/pipelines/sync-generated-files.js --write | --check [--staged]
  * @policy      R-R16, R-R17
  */
 

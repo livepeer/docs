@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
- * @usage       node tools/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
+ * @usage       node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
  * @policy      E-R1, R-R11
  */
 

@@ -2,12 +2,12 @@
  * @script            mdx-parser
  * @category          utility
  * @purpose           feature:translation
- * @scope             tools/scripts
+ * @scope             operations/scripts
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement MDX parser for i18n — extracts translatable content blocks from MDX
  * @pipeline          indirect — library module
- * @usage             node tools/scripts/i18n/lib/mdx-parser.js [flags]
+ * @usage             node operations/scripts/i18n/lib/mdx-parser.js [flags]
  */
 let parserPromise = null;
 

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged
- * @usage       node tools/scripts/validators/content/structure/check-docs-path-sync.js --staged
+ * @usage       node operations/scripts/validators/content/structure/check-docs-path-sync.js --staged
  * @policy      E-C1, R-R14
  */
 
@@ -34,7 +34,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node tools/scripts/validators/content/check-docs-path-sync.js [--staged] [--json] [--from <old> --to <new>]',
+      '  node operations/scripts/validators/content/check-docs-path-sync.js [--staged] [--json] [--from <old> --to <new>]',
       '',
       'Options:',
       '  --staged         Inspect staged rename/move inventory (default).',

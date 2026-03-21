@@ -8,8 +8,8 @@
  * @description Codex PR creator — generates codex PR with correct branch naming, labels, and body template
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts, .codex/task-contract.yaml
- * @usage       node tools/scripts/dispatch/ai/codex/create-codex-pr.js [flags]
+ * @scope       operations/scripts, .codex/task-contract.yaml
+ * @usage       node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]
  * @policy      R-R27, R-R30
  */
 
@@ -49,7 +49,7 @@ function parseCsv(raw) {
 
 function usage() {
   const lines = [
-    'Usage: node tools/scripts/create-codex-pr.js [options]',
+    'Usage: node operations/scripts/create-codex-pr.js [options]',
     '',
     'Options:',
     '  --contract <path>        Task contract path (default: .codex/task-contract.yaml)',

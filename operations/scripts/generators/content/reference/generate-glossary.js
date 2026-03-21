@@ -8,8 +8,8 @@
  * @description Glossary generator — produces glossary data file from terminology sources
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
- * @scope       tools/scripts
- * @usage       node tools/scripts/generators/content/reference/generate-glossary.js [flags]
+ * @scope       operations/scripts
+ * @usage       node operations/scripts/generators/content/reference/generate-glossary.js [flags]
  * @policy      E-C6, F-C1
  */
 

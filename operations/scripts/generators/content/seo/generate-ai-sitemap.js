@@ -8,8 +8,8 @@
  * @description AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).
  * @mode        generate
  * @pipeline    manual, P6
- * @scope       tools/scripts, docs.json, v2
- * @usage       node tools/scripts/generators/content/seo/generate-ai-sitemap.js [flags]
+ * @scope       operations/scripts, docs.json, v2
+ * @usage       node operations/scripts/generators/content/seo/generate-ai-sitemap.js [flags]
  * @policy      R-R16, R-R17
  */
 
@@ -36,7 +36,7 @@ const AI_NAMESPACE = 'https://docs.livepeer.org/schemas/ai-sitemap/1.0';
 const REPO_ROOT = getRepoRoot();
 
 function usage() {
-  console.log('Usage: node tools/scripts/generate-ai-sitemap.js --write|--check');
+  console.log('Usage: node operations/scripts/generate-ai-sitemap.js --write|--check');
 }
 
 function normalizeRoute(route) {
