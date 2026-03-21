@@ -1,29 +1,38 @@
-> **Legacy reference only.** Core safety policy has migrated to [AGENTS.md](../../AGENTS.md). This file is retained for historical context.
-
 # Emergency Rollback Guide
 
-## Quick Rollback (Last 5 minutes)
+## Diagnose Before You Fix
+
+Before running any recovery command, understand what broke and why.
+
+- Run `git status` and `git log --oneline -10` to see actual state.
+- Run `git show HEAD` to see what the last commit actually changed.
+- If a pre-commit hook failed, read its output — it tells you exactly what to fix.
+- Do not retry the same failing command. Do not skip hooks with `--no-verify` to get past a failure.
+- If the state is unclear, stop and ask the user before proceeding.
+
+---
+
+## Quick Rollback
 
 ```bash
 # See recent commits
-git log --oneline -10 docs-v2-dev
+git log --oneline -10
 
-# Safe rollback - creates new commit that undoes changes
+# Safe rollback — creates a new commit that undoes changes
 git revert <commit-hash>
 
-# OR - go back to previous state without changing history
+# Or — unstage the last commit and inspect before recommitting
 git reset --soft HEAD~1
-# Then inspect and recommit if needed
 ```
 
-## View All Changes Since Date
+## View All Changes Since a Time
 
 ```bash
 # Since last hour
-git log --oneline --since="1 hour ago" docs-v2-dev
+git log --oneline --since="1 hour ago"
 
 # Since specific time
-git log --oneline --since="2026-01-06 20:00:00" docs-v2-dev
+git log --oneline --since="2026-01-06 20:00:00"
 ```
 
 ## See What Changed in Last Commit
@@ -35,62 +44,33 @@ git show HEAD
 ## Rollback to Specific Commit
 
 ```bash
-# List all commits
+# List all commits (including ones not on current branch)
 git reflog
 
-# Safe method: Create new commit that undoes changes
+# Safe method: create a new commit that undoes changes (keeps history)
 git revert <commit-hash>
 
-# Restore specific file to previous version
+# Restore a specific file to a previous version
 git restore --source=<commit-hash> <filename>
 
-# Go back one commit (keeps history)
+# Unstage the last commit, keeping the changes on disk
 git reset --soft HEAD~1
 
-# NEVER use: git reset --hard (destroys history)
-```
-
-## If You Need to Undo Last Auto-Commit
-
-```bash
-# See what's in the last commit
-git show HEAD
-
-# Create a new commit that reverts it
-git revert HEAD
-
-# OR - unstage it and inspect
-git reset --soft HEAD~1
-git diff --cached
+# NEVER use: git reset --hard (destroys working tree changes)
 ```
 
 ## See Diff Between Commits
 
 ```bash
-# What changed in last auto-commit
+# What changed in the last commit
 git diff HEAD~1 HEAD
 
 # What changed in a specific commit
 git diff <commit-hash>~1 <commit-hash>
 ```
 
-## Automatic Checkpoints
-
-Every 5 minutes a new commit is created on docs-v2-dev with timestamp. Each
-commit is a full snapshot you can revert to instantly.
-
-### View Commit Timeline
+## View Commit Timeline
 
 ```bash
-git log --oneline --graph docs-v2-dev | head -20
-```
-
-### Tag Safe Points (Optional)
-
-```bash
-# Save a checkpoint
-git tag checkpoint-before-gateway-work
-
-# Later, go back to it
-git reset --hard checkpoint-before-gateway-work
+git log --oneline --graph | head -20
 ```

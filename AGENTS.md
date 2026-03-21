@@ -41,6 +41,10 @@ Call out conflicts explicitly instead of guessing.
 - Do not delete tracked files casually. File deletions require a human-owned commit with `--trailer "allow-deletions=true"`.
 - Do not make the final `.allowlist` commit yourself. A human must commit `.allowlist` edits with `--trailer "allowlist-edit=true"`.
 - On `codex/*` branches, follow `.codex/task-contract.yaml` plus the lock/task validators under `operations/scripts/dispatch/ai/codex/`.
+- Check `git status` before staging. Never use `git add -A` or `git add .` without reviewing what would be staged — unrelated work from earlier in the session may be picked up.
+- Do not mix unrelated changes in one commit. Stage and commit by concern.
+- If a pre-commit hook fails, fix the root cause. Do not retry with `--no-verify`.
+- Commit message convention: use conventional commits (`feat:`, `fix:`, `docs:`, `chore:`) with a scope in parentheses, e.g. `fix(ai-tools): update paths`.
 
 ## Root and Structure Governance
 
@@ -50,6 +54,9 @@ Call out conflicts explicitly instead of guessing.
 - Root directory entries must be slashless: use `.claude`, not `.claude/`.
 - Prefer existing governed directories over adding new repo-root files or directories.
 - If a path migration is required, update all routing, generator, validator, and documentation dependencies in the same change.
+- `docs.json` controls all public routing and navigation. Edits to `docs.json` must be confirmed with the user before committing — a wrong path removes a page from the nav.
+- `workspace/` is the AI working directory. Reports go to `workspace/reports/<category>/`, plans to `workspace/plan/active/<PROJECT>/`. Never write to `workspace/` without a clear output path established by the task or user.
+- Read a file before editing it. Do not assume content — verify the current state, then make the minimum change needed.
 
 ## Authoring and Implementation Rules
 
@@ -65,10 +72,15 @@ Call out conflicts explicitly instead of guessing.
 
 Run the smallest relevant validation set before handing work back:
 
-- `lpd test --staged`
-- `node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json`
-- `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check`
-- task-specific generators or validators when routing, governance, or generated artifacts changed
+| Change type | Validator to run |
+|---|---|
+| Any staged change | `lpd test --staged` |
+| Routing or nav edits (`docs.json`) | `node tools/scripts/validators/governance/compliance/validate-frontmatter.js --check` |
+| Generated file changed | Run the generator with `--check` first, then without, then `--check` again to confirm |
+| Governance or agent doc edits | `node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json` |
+| Catalog or index regeneration | `node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check` |
+
+If a validator fails: read the output, fix the root cause, rerun. Do not skip.
 
 ## Response and Review Contract
 
@@ -76,3 +88,6 @@ Run the smallest relevant validation set before handing work back:
 - Separate current guidance from legacy notes when both matter.
 - Ask one concise clarifying question if the user intent is ambiguous across domains or versions.
 - Flag missing evidence instead of inventing behavior, commands, or paths.
+- When the scope of a request is unclear, do the minimum that satisfies it — do not add adjacent improvements, cleanup, or refactoring unless asked.
+- Surface a decision to the user rather than silently choosing. If two approaches are valid, name them and ask.
+- On long multi-step tasks, checkpoint with the user after each meaningful unit of work rather than running to completion.
