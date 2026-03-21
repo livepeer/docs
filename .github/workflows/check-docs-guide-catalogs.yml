@@ -29,8 +29,11 @@ jobs:
       - name: Install tooling dependencies
         run: npm --prefix tools ci
 
+      - name: Verify component registry is current
+        run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
+
       - name: Verify workflows and templates catalogs are current
-        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
+        run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
 
       - name: Verify pages catalog is current
-        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check
+        run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check

@@ -32,13 +32,14 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        run: cd tools && npm install
+        working-directory: tools
+        run: npm install
 
       - name: Generate workflows and templates catalogs
-        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+        run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
 
       - name: Generate pages catalog
-        run: node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+        run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
 
       - name: Check for changes
         id: git-check

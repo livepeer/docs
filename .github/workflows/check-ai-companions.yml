@@ -26,5 +26,8 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install tooling dependencies
+        run: npm --prefix tools ci
+
       - name: Verify glossary companion JSONs are current
-        run: node tools/scripts/generators/content/reference/generate-glossary-companions.js --check
+        run: node operations/scripts/generators/content/reference/generate-glossary-companions.js --check

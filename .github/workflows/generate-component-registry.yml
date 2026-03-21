@@ -1,17 +1,17 @@
 # NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
 
-name: Generate AI Companion Files
+name: Generate Component Registry
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'v2/**/*.mdx'
+      - 'snippets/components/**/*.jsx'
   workflow_dispatch:
 
 jobs:
-  generate-ai-companions:
+  generate-component-registry:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,13 +30,15 @@ jobs:
         working-directory: tools
         run: npm install
 
-      - name: Regenerate glossary companion JSONs
-        run: node operations/scripts/generators/content/reference/generate-glossary-companions.js
+      - name: Regenerate component registry
+        run: node operations/scripts/generators/components/library/generate-component-registry.js
 
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code v2/ \
+          git diff --exit-code \
+            docs-guide/component-registry.json \
+            docs-guide/component-registry-schema.json \
           || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changed
@@ -44,6 +46,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add v2/**/*-data.json
-          git commit -m "chore(ai-companions): regenerate glossary companion JSONs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          git add \
+            docs-guide/component-registry.json \
+            docs-guide/component-registry-schema.json
+          git commit -m "chore(components): regenerate component registry - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           git push
