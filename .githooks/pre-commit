@@ -138,7 +138,7 @@ enforce_docs_v2_codex_isolation() {
     echo "  git switch -c codex/<issue-id>-<slug>"
     echo ""
     echo -e "${YELLOW}Then initialize contract + lock:${NC}"
-    echo "  node tools/scripts/automations/ai/codex/task-preflight.js --task <issue-id> --slug <slug> --scope \"<path1,path2>\""
+    echo "  node operations/scripts/automations/ai/codex/task-preflight.js --task <issue-id> --slug <slug> --scope \"<path1,path2>\""
     echo ""
     echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
     echo "  ALLOW_MAIN_COMMIT=1 git commit -m \"...\" --trailer \"allow-main-commit=true\""
@@ -157,7 +157,7 @@ fi
 # Codex task contract check
 if [[ "$CURRENT_BRANCH" == codex/* ]]; then
     echo -e "${YELLOW}🔍 Validating codex task contract...${NC}"
-    if node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --validate-contract-only --quiet 2>/dev/null; then
+    if node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --validate-contract-only --quiet 2>/dev/null; then
         echo -e "${GREEN}✓ Codex task contract check passed${NC}"
     else
         VIOLATIONS=$((VIOLATIONS + 1))
@@ -166,7 +166,7 @@ if [[ "$CURRENT_BRANCH" == codex/* ]]; then
     fi
 
     # Codex lock check
-    local_lock_script="tools/scripts/validators/ai/codex/validate-locks.js"
+    local_lock_script="operations/scripts/validators/ai/codex/validate-locks.js"
     if [ -f "$local_lock_script" ]; then
         echo -e "${YELLOW}🔍 Validating codex local lock ownership...${NC}"
         if node "$local_lock_script" --branch "$CURRENT_BRANCH" --staged --quiet 2>/dev/null; then
@@ -179,7 +179,7 @@ if [[ "$CURRENT_BRANCH" == codex/* ]]; then
     fi
 
     # AI stash policy
-    stash_script="tools/scripts/validators/ai/codex/check-no-ai-stash.sh"
+    stash_script="operations/scripts/validators/ai/codex/check-no-ai-stash.sh"
     if [ -x "$stash_script" ]; then
         echo -e "${YELLOW}🔍 Enforcing AI stash policy...${NC}"
         if bash "$stash_script" --quiet 2>/dev/null; then

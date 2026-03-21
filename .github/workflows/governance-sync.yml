@@ -4,15 +4,15 @@ on:
   push:
     branches: [docs-v2]
     paths:
-      - 'tools/scripts/**'
+      - 'operations/scripts/**'
       - 'tools/lib/**'
       - 'tools/notion/**'
       - 'tools/config/**'
-      - 'tests/unit/**'
-      - 'tests/integration/**'
-      - 'tests/utils/**'
-      - 'tests/run-all.js'
-      - 'tests/run-pr-checks.js'
+      - 'operations/tests/unit/**'
+      - 'operations/tests/integration/**'
+      - 'operations/tests/utils/**'
+      - 'operations/tests/run-all.js'
+      - 'operations/tests/run-pr-checks.js'
       - '.githooks/**'
       - '.github/scripts/**'
       - '.github/workflows/**'
@@ -43,7 +43,7 @@ jobs:
       - name: Run governance repair
         id: repair
         run: |
-          node tools/scripts/dispatch/governance/pipelines/governance-pipeline.js 2>&1 | tee /tmp/repair.log
+          node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js 2>&1 | tee /tmp/repair.log
           FIXES=$(python3 -c "
           import json
           d = json.load(open('workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json'))

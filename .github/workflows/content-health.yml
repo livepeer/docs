@@ -15,25 +15,25 @@ jobs:
       - run: cd tools && npm ci
 
       - name: Content quality audit
-        run: node tools/scripts/docs-quality-and-freshness-audit.js --scope full
+        run: node operations/scripts/docs-quality-and-freshness-audit.js --scope full
         continue-on-error: true
 
       - name: Component usage audit
-        run: node tools/scripts/audit-component-usage.js
+        run: node operations/scripts/audit-component-usage.js
         continue-on-error: true
 
       - name: Component registry validation
-        run: node tools/scripts/generators/components/library/generate-component-registry.js --validate-only
+        run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
         continue-on-error: true
 
       - name: Component usage drift check
-        run: node tools/scripts/audits/components/library/scan-component-imports.js --verify
+        run: node operations/scripts/audits/components/library/scan-component-imports.js --verify
         continue-on-error: true
 
       - name: Component metadata drift check
-        run: node tools/scripts/remediators/components/library/repair-component-metadata.js --dry-run
+        run: node operations/scripts/remediators/components/library/repair-component-metadata.js --dry-run
         continue-on-error: true
 
       - name: Component layout governance
-        run: node tools/scripts/validators/components/library/component-layout-governance.js
+        run: node operations/scripts/validators/components/library/component-layout-governance.js
         continue-on-error: true

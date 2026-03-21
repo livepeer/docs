@@ -18,11 +18,11 @@ const DISCOVERY_ROOTS = [
   '.githooks',
   '.github/scripts',
   'workspace/scripts',
-  'tests/unit',
-  'tests/integration',
-  'tests/utils',
-  'tests',
-  'tools/scripts',
+  'operations/tests/unit',
+  'operations/tests/integration',
+  'operations/tests/utils',
+  'operations/tests',
+  'operations/scripts',
   'tools/lib',
   'tools/notion',
   'tools/config',
@@ -32,8 +32,8 @@ const DISCOVERY_ROOTS = [
 const GOVERNED_ROOTS = [
   '.githooks',
   '.github/scripts',
-  'tests',
-  'tools/scripts',
+  'operations/tests',
+  'operations/scripts',
   'tools/lib',
   'tools/notion',
   'tools/config',
@@ -44,8 +44,8 @@ const GOVERNED_ROOTS = [
 const INDEXED_ROOTS = [
   '.githooks',
   '.github/scripts',
-  'tests',
-  'tools/scripts',
+  'operations/tests',
+  'operations/scripts',
   'tools/lib',
   'tools/notion',
   'tools/config',
@@ -56,8 +56,8 @@ const INDEXED_ROOTS = [
 const GROUP_INDEX_MAP = [
   { root: '.githooks', index: '.githooks/script-index.md' },
   { root: '.github/scripts', index: '.github/script-index.md' },
-  { root: 'tests', index: 'tests/script-index.md' },
-  { root: 'tools/scripts', index: 'tools/script-index.md' },
+  { root: 'operations/tests', index: 'operations/tests/script-index.md' },
+  { root: 'operations/scripts', index: 'operations/scripts/script-index.md' },
   { root: 'tools/lib', index: 'tools/lib/script-index.md' },
   { root: 'tools/notion', index: 'tools/notion/script-index.md' },
   { root: 'tools/config', index: 'tools/config/script-index.md' },
@@ -75,7 +75,7 @@ const CLASSIFICATION_DATA_PATH = 'tools/config/script-registry.json';
 const SCRIPT_EXTENSIONS = ['.js', '.sh', '.py'];
 const SCRIPT_EXTENSIONS_SET = new Set(SCRIPT_EXTENSIONS);
 
-const EXCLUDED_PREFIXES = ['node_modules/', '.git/', 'tools/scripts/archive/'];
+const EXCLUDED_PREFIXES = ['node_modules/', '.git/', 'operations/scripts/archive/'];
 const EXCLUDED_SEGMENTS = ['node_modules', '.git'];
 
 const FRAMEWORK_FIELDS = [

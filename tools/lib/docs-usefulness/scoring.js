@@ -61,7 +61,7 @@ const {
   extractFrontmatter,
   extractImports,
   validateMdx
-} = require('../../../tests/utils/mdx-parser');
+} = require('../../../operations/tests/utils/mdx-parser');
 const {
   loadRubric,
   getRulesForPage
