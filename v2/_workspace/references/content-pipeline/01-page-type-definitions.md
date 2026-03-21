@@ -16,7 +16,45 @@ pageVariant:  # optional refinement within the type (enum per pageType)
 **pageType** = container. Determines structural format, UX pattern, success metric, template.
 **pageVariant** = slice. Refines the container for a specific sub-function.
 
-pageType does NOT govern: voice, terminology, depth, or content focus. Those are `audience`, `purpose`, and `domain`.
+---
+
+## What pageType governs
+
+| Dimension | Governed by pageType? | Governed by |
+|---|---|---|
+| Section sequence — required sections and their order | ✅ Yes | pageType |
+| Component palette — which MDX components are appropriate, required, or forbidden | ✅ Yes | pageType |
+| UX pattern — how the reader uses the page (read / follow / lookup / browse) | ✅ Yes | pageType |
+| Template mapping — which base template applies | ✅ Yes | pageType |
+| Success metric — what "this page worked" means | ✅ Yes | pageType |
+| Voice and register | ❌ No | `audience` |
+| Terminology and precision level | ❌ No | `industry` + `niche` |
+| Content depth and assumed knowledge | ❌ No | `complexity` |
+| Reader's journey position | ❌ No | `lifecycleStage` |
+| What the page is about / reader's goal | ❌ No | `purpose` |
+| Veracity standard | ❌ No | `information type` (derived from `purpose`) |
+
+pageType answers: *what kind of page is this and how should it behave?*
+It does not answer: *who is it for, how deep should it go, or what should it say?*
+
+---
+
+## Universal rule: context/purpose at top of every page
+
+Every page, regardless of pageType, must open with a brief orientation statement that answers:
+1. **What is this page** — what it delivers (not "this page covers...")
+2. **Who it is for** — the audience/persona it serves at this point in their journey
+3. **What they leave with** — one concrete outcome or action
+
+This maps to two required elements:
+- `description` frontmatter — machine-readable one-sentence version (Pass B)
+- Opening paragraph / intro — human-readable version in body copy (Pass A)
+
+The opening paragraph is written **last** — after sections are finalised. It reflects what the page actually delivers, not what was planned.
+
+**Applies to all 7 pageTypes.** Navigation pages are the only partial exception — their "intro" is implicit in the value proposition on the card grid, not a separate prose paragraph.
+
+---
 
 ---
 
@@ -112,6 +150,8 @@ pageType does NOT govern: voice, terminology, depth, or content focus. Those are
 ---
 
 ### 6. `reference`
+
+> **Naming note**: `reference` is a **pageType** (a reader behaviour pattern — lookup). It is not the same as the folder `resources/reference/`. The folder happens to contain pages whose pageType is `reference`, but the pageType can appear anywhere in the repo. The folder name and the pageType name overlap intentionally but are independent concepts. Do not conflate them.
 
 **Job**: Structured lookup content. Reader arrives with a specific question and needs a specific answer.
 **UX pattern**: Search and find — reader looks up a fact and leaves.

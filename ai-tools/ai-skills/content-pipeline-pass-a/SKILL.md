@@ -1,6 +1,6 @@
 ---
 name: content-pipeline-pass-a
-version: "1.0"
+version: '1.0'
 category: content-pipeline
 description: >-
   Level 2 Pass A — content review or write for a single Livepeer docs page.
@@ -8,12 +8,12 @@ description: >-
   types, voice rules, veracity flags, and section structure. Does not apply MDX
   formatting or component selection — that is Pass B.
 invoke_when:
-  - "review this page for the content pipeline"
-  - "Pass A for [page path]"
-  - "content review [page]"
-  - "write this page — Pass A"
-  - "audit content on [page path]"
-  - "does this page serve its audience?"
+  - 'review this page for the content pipeline'
+  - 'Pass A for [page path]'
+  - 'content review [page]'
+  - 'write this page — Pass A'
+  - 'audit content on [page path]'
+  - 'does this page serve its audience?'
 ---
 
 SKILL: Content Pipeline — Level 2 Pass A (Content)
@@ -22,6 +22,7 @@ Goal
 Produce a content review report (REVIEW mode) or an approved content draft (WRITE/REWRITE mode) for a single page. The Pass A output is the input to Pass B (layout and style). Pass A does not touch MDX structure or component selection.
 
 Constraints
+
 - Do not apply MDX components or frontmatter during this pass. Content layer only.
 - Do not rewrite content in REVIEW mode. Report issues and fixes; do not apply them unless the user explicitly confirms.
 - Do not skip the pre-flight checks. A page with no clear purpose or incoherent adjacency cannot be reviewed or written correctly.
@@ -29,6 +30,7 @@ Constraints
 - Require a tab map (`v2/[tab]/_workspace/tab-map.md`) before running. If it does not exist, prompt the user to run the tab map skill first, or manually confirm the page's journey position.
 
 When to load references
+
 - Load `workspace/plan/active/CONTENT-WRITING/Prompts/level-2-pass-a-content.md` — full prompt with phases and quality gates.
 - Load `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` — required for Phase 5 audience-specific voice check.
 - Load `workspace/plan/active/CONTENT-WRITING/framework.md` — for audience, persona, and purpose definitions.
@@ -37,6 +39,7 @@ When to load references
 - Load `v2/[tab]/_workspace/tab-map.md` if available for reader journey context.
 
 Workflow
+
 1. Collect context block values. If MODE, PAGE_TYPE, AUDIENCE, or PURPOSE are not provided, ask before proceeding.
 2. Run pre-flight: confirm purpose is statable, adjacency is coherent, scope is single.
 3. Run Phase 1 (read/confirm brief).
@@ -50,20 +53,24 @@ Workflow
 
 Deliverable Format
 REVIEW mode:
+
 - Review report with: verdict (PASS / NEEDS WORK / REWRITE REQUIRED), assessed frontmatter, prioritised issues with specific quotes and fixes, veracity flags, list of approved sections.
 
 WRITE / REWRITE mode:
+
 - Full page content as plain markdown with `##` / `###` heading structure.
 - Complete taxonomy field values identified for Pass B frontmatter.
 - All `{/* REVIEW: */}` flags for unverified claims.
 
 Failure Modes / Fallback
+
 - If the page cannot be read: ask the user to provide the file path or paste the content.
 - If purpose cannot be stated in one sentence: stop pre-flight. Return the specific field that needs clarification. Do not proceed to Phase 2.
 - If no tab map exists and journey context cannot be determined: proceed with PREV_PAGE / NEXT_PAGE fields only; note the gap in the output.
 - If the voice rules file is not loaded: run universal blocking rules from the prompt; note that audience-specific rules were not applied.
 
 Validation Checklist
+
 - [ ] Pre-flight passed (all three checks)
 - [ ] Audience fit checked with specific quotes for mismatches
 - [ ] Every section has an identified information type

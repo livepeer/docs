@@ -1,4 +1,5 @@
 # Prompt: Livepeer Docs — Tab Map
+
 ## Level 1 · Content Pipeline · Gateways or Orchestrators tab
 
 ---
@@ -13,7 +14,7 @@ The tab map is the required input to every Level 2 Pass A and Pass B operation. 
 
 ## Context block
 
-*Fill fields marked [FILL]. Fields marked [PRE-FILLED] are Livepeer constants — do not change them.*
+_Fill fields marked [FILL]. Fields marked [PRE-FILLED] are Livepeer constants — do not change them._
 
 ```
 TAB:               [FILL: gateways / orchestrators]
@@ -34,6 +35,9 @@ Position 5  guides/                     pageType: guide        Practical underst
   Position 5a  guides/tutorials/        pageType: tutorial     Tab-specific tutorials
 Position 6  resources/                  Container section only — two sub-sections:
   Position 6a  resources/reference/     pageType: reference    Structured lookup: specs, FAQ, glossary, troubleshooting
+                                                             NOTE: folder name ≠ pageType. `reference` as a pageType =
+                                                             lookup reader behaviour. `resources/reference/` = the folder
+                                                             that houses those pages. They share a name — not the same concept.
   Position 6b  resources/knowledge-hub/ pageType: resource     Curated external content: tools, directories, community
 
 [PRE-FILLED: AUDIENCES PER TAB]
@@ -77,16 +81,17 @@ no "this page covers", no passive value statements
 
 ## Phase 1 — Scan the tab
 
-*Do not write any output until all Phase 1 steps are complete.*
+_Do not write any output until all Phase 1 steps are complete._
 
 ### 1.1 Read the tab root
 
 List everything at `v2/[tab]/`. For each item, classify:
 
 | Item | Type | Classification | Notes |
-|---|---|---|---|
+| ---- | ---- | -------------- | ----- |
 
 **Classification values:**
+
 - `canonical` — matches section vocabulary position exactly
 - `stray-file` — file at root that is not portal.mdx / navigator.mdx / index.mdx
 - `divergence` — folder present but not in canonical vocabulary
@@ -97,10 +102,12 @@ List everything at `v2/[tab]/`. For each item, classify:
 Find the tab's navigation group in `docs.json`. Extract every path.
 
 Cross-reference against the file system:
+
 - Paths in docs.json with no corresponding file on disk → **broken paths**
 - Files on disk not referenced in docs.json → **orphaned files**
 
 Output three tables:
+
 1. Navigation inventory: Path · Nav group · File exists (yes/no)
 2. Broken paths list
 3. Orphaned files list
@@ -110,9 +117,10 @@ Output three tables:
 For each page currently in docs.json, read its frontmatter. Record:
 
 | Page path | pageType | audience | purpose | lifecycleStage | veracityStatus | Classification |
-|---|---|---|---|---|---|---|
+| --------- | -------- | -------- | ------- | -------------- | -------------- | -------------- |
 
 **Classification values:**
+
 - `aligned` — frontmatter matches canonical section vocabulary for its position
 - `wrong-type` — pageType doesn't match the section it's in
 - `missing-fields` — frontmatter incomplete (missing any required field)
@@ -128,21 +136,21 @@ For each page currently in docs.json, read its frontmatter. Record:
 For the tab's primary audience, map the linear path from entry to activation:
 
 | Step | Section/page | Reader arrives knowing | Reader leaves able to | Gap? |
-|---|---|---|---|---|
+| ---- | ------------ | ---------------------- | --------------------- | ---- |
 
 A **gap** is a step where no page currently exists, or the existing page fails to deliver the stated outcome for the primary persona.
 
 ### 2.2 On-demand journey (positions 4–6)
 
 | Section | Primary use case | Entry conditions | Gap? |
-|---|---|---|---|
+| ------- | ---------------- | ---------------- | ---- |
 
 ### 2.3 Cross-tab paths
 
 Identify the 3–5 most common points where readers will leave this tab for another. For each:
 
 | Journey moment | Destination tab | Cross-link exists? |
-|---|---|---|
+| -------------- | --------------- | ------------------ |
 
 ---
 
@@ -151,19 +159,19 @@ Identify the 3–5 most common points where readers will leave this tab for anot
 **Missing pages** (canonical positions with no content):
 
 | Position | What should be here | Priority |
-|---|---|---|
+| -------- | ------------------- | -------- |
 
 Priority: P0 = blocks the linear journey | P1 = on-demand section incomplete | P2 = nice-to-have
 
 **Misclassified pages** (wrong type, wrong section, or incomplete frontmatter):
 
 | Page | Current state | Should be | Action |
-|---|---|---|---|
+| ---- | ------------- | --------- | ------ |
 
 **Content gaps** (pages that exist but fail to deliver their purpose):
 
 | Page | Stated purpose | What's missing | Action |
-|---|---|---|---|
+| ---- | -------------- | -------------- | ------ |
 
 ---
 

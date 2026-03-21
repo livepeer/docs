@@ -5,11 +5,11 @@
  * @concern     components
  * @niche       library
  * @purpose     governance:index-management
- * @description Generates the UI template catalog, template preview routes, and VS Code snippets from canonical template/component sources
+ * @description Generates the UI template catalog and VS Code snippets from canonical template/component sources.
+ *              Preview route generation has been removed — templates live in snippets/templates/ only.
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
- * @usage       node tools/scripts/generators/components/library/generate-ui-templates.js [flags]
+ * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, .vscode
  * @policy      R-R16, R-R17
  */
 
@@ -31,24 +31,23 @@ const TEMPLATE_CATALOG_PATH = 'docs-guide/catalog/ui-templates.mdx';
 const UI_SYSTEM_PAGE_PATH = 'docs-guide/features/ui-system.mdx';
 const TEMPLATE_SNIPPETS_PATH = '.vscode/templates.code-snippets';
 const COMPONENT_SNIPPETS_PATH = '.vscode/components.code-snippets';
-const BLOCK_PREVIEW_PATH = 'v2/templates/blocks/block-examples.mdx';
 const COMPONENT_REGISTRY_PATH = 'docs-guide/component-registry.json';
 
 const UI_SYSTEM_SECTION_START = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:START)';
 const UI_SYSTEM_SECTION_END = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:END)';
 
 const CATALOG_DETAILS = {
-  script: 'operations/scripts/generate-ui-templates.js',
+  script: 'operations/scripts/generators/components/library/generate-ui-templates.js',
   purpose: 'UI template catalog, preview routes, and snippet inventory derived from canonical template sources.',
   runWhen: 'Page/block templates or component registry examples change.',
   runCommand: 'node tools/scripts/generate-ui-templates.js --write'
 };
 
 const PREVIEW_DETAILS = {
-  script: 'operations/scripts/generate-ui-templates.js',
+  script: 'operations/scripts/generators/components/library/generate-ui-templates.js',
   purpose: 'Direct-route preview pages for UI templates.',
   runWhen: 'Page/block templates change.',
-  runCommand: 'node tools/scripts/generate-ui-templates.js --write'
+  runCommand: 'node operations/scripts/generators/components/library/generate-ui-templates.js --write'
 };
 
 const LEGACY_PAGE_PREVIEW_ALIASES = [
@@ -63,6 +62,7 @@ const LEGACY_PAGE_PREVIEW_ALIASES = [
     baseName: 'landing-page'
   }
 ];
+
 
 function toPosix(value) {
   return String(value || '').split(path.sep).join('/');
@@ -172,14 +172,6 @@ function toImportName(value) {
   return normalized || 'TemplatePreview';
 }
 
-function repoPathToRoute(repoPath) {
-  let normalized = normalizeRepoPath(repoPath);
-  normalized = normalized.replace(/\.(md|mdx)$/i, '');
-  normalized = normalized.replace(/\/index$/i, '');
-  normalized = normalized.replace(/^v2\//, '');
-  return `/${normalized}`;
-}
-
 function buildPageSnippetLines(template) {
   const meta = template.frontmatter || {};
   const title = String(meta.pageTitle || `${template.title} Title`).trim();
@@ -248,10 +240,6 @@ function collectTemplates(rootPath, kind) {
       throw new Error(`${repoPath}: frontmatter must include title and description`);
     }
 
-    const previewRepoPath = kind === 'page'
-      ? normalizeRepoPath(path.posix.join('v2/templates/pages', relativeDir === '.' ? '' : relativeDir, `${baseName}-template.mdx`))
-      : BLOCK_PREVIEW_PATH;
-
     return {
       kind,
       repoPath,
@@ -263,9 +251,6 @@ function collectTemplates(rootPath, kind) {
       description: String(frontmatter.description).trim(),
       snippetPrefix: String(frontmatter.snippetPrefix || `template-${baseName}`).trim(),
       snippetLabel: String(frontmatter.snippetLabel || frontmatter.title).trim(),
-      previewTitle: String(frontmatter.previewTitle || frontmatter.title).trim(),
-      previewRepoPath,
-      previewRoute: repoPathToRoute(previewRepoPath),
       frontmatter,
       raw: raw.trimEnd(),
       body
@@ -325,20 +310,19 @@ function renderTemplatesTree(paths) {
   return lines;
 }
 
-function renderTemplateTable(templates, isBlockTable = false) {
+function renderTemplateTable(templates) {
   if (templates.length === 0) {
     return ['No templates are defined in this group yet.'];
   }
 
   const lines = [
-    '| Template | Source | Preview | Snippet Prefix | Description |',
-    '| --- | --- | --- | --- | --- |'
+    '| Template | Source | Snippet Prefix | Description |',
+    '| --- | --- | --- | --- |'
   ];
 
   templates.forEach((template) => {
-    const previewLabel = isBlockTable ? `[block examples](${template.previewRoute})` : `[view](${template.previewRoute})`;
     lines.push(
-      `| ${escapeMdTable(template.title)} | \`${escapeMdTable(template.repoPath)}\` | ${previewLabel} | \`${escapeMdTable(template.snippetPrefix)}\` | ${escapeMdTable(template.description)} |`
+      `| ${escapeMdTable(template.title)} | \`${escapeMdTable(template.repoPath)}\` | \`${escapeMdTable(template.snippetPrefix)}\` | ${escapeMdTable(template.description)} |`
     );
   });
 
@@ -351,7 +335,7 @@ function renderCatalogContent(pageTemplates, blockTemplates) {
     ...buildGeneratedFrontmatterLines({
       title: 'UI Templates',
       sidebarTitle: 'UI Templates',
-      description: 'Generated catalog of canonical UI page and block templates, preview routes, and authoring snippets.',
+      description: 'Generated catalog of canonical UI page and block templates, authoring snippets, and source locations.',
       keywords: ['livepeer', 'ui templates', 'templates', 'authoring', 'snippets', 'catalog'],
       keywordsStyle: 'multiline'
     }),
@@ -365,7 +349,6 @@ function renderCatalogContent(pageTemplates, blockTemplates) {
     '- Canonical page templates live in `snippets/templates/pages/**`.',
     '- Canonical block templates live in `snippets/templates/blocks/**`.',
     '- Generated VS Code snippets live in `.vscode/templates.code-snippets` and `.vscode/components.code-snippets`.',
-    '- Direct preview routes live under `v2/templates/**` and are intentionally excluded from `docs.json` navigation.',
     '',
     '## Source Tree',
     '',
@@ -373,101 +356,18 @@ function renderCatalogContent(pageTemplates, blockTemplates) {
     '',
     '## Page Templates',
     '',
-    ...renderTemplateTable(pageTemplates, false),
+    ...renderTemplateTable(pageTemplates),
     '',
     '## Block Templates',
     '',
-    ...renderTemplateTable(blockTemplates, true),
+    ...renderTemplateTable(blockTemplates),
     '',
     '## Generated Outputs',
     '',
     '- `docs-guide/catalog/ui-templates.mdx`',
-    '- `v2/templates/pages/**/<name>-template.mdx`',
-    '- `v2/templates/blocks/block-examples.mdx`',
     '- `.vscode/templates.code-snippets`',
     '- `.vscode/components.code-snippets`'
   ];
-
-  return withTrailingNewline(lines.join('\n'));
-}
-
-function renderPagePreviewContent(template) {
-  const lines = [
-    ...buildGeneratedFrontmatterLines({
-      title: `${template.previewTitle}`,
-      sidebarTitle: template.previewTitle,
-      description: `${template.description} Preview route generated from ${template.repoPath}.`,
-      pageType: 'overview',
-      keywords: ['livepeer', 'template preview', template.baseName]
-    }),
-    '',
-    ...buildGeneratedHiddenBannerLines({
-      ...PREVIEW_DETAILS,
-      purpose: `Direct-route preview page for ${template.title}.`
-    }),
-    '',
-    ...buildGeneratedNoteLines({
-      ...PREVIEW_DETAILS,
-      purpose: `Direct-route preview page for ${template.title}.`
-    }),
-    '',
-    `import Template from '${template.importPath}'`,
-    '',
-    `Source template: \`${template.repoPath}\``,
-    '',
-    `Snippet prefix: \`${template.snippetPrefix}\``,
-    '',
-    '<Template />'
-  ];
-
-  return withTrailingNewline(lines.join('\n'));
-}
-
-function renderBlockPreviewContent(blockTemplates) {
-  const lines = [
-    ...buildGeneratedFrontmatterLines({
-      title: 'Block Examples',
-      sidebarTitle: 'Block Examples',
-      description: 'Direct-route preview page that renders every canonical block template from snippets/templates/blocks.',
-      pageType: 'overview',
-      keywords: ['livepeer', 'block templates', 'template preview', 'blocks']
-    }),
-    '',
-    ...buildGeneratedHiddenBannerLines({
-      ...PREVIEW_DETAILS,
-      purpose: 'Aggregate preview page for canonical block templates.'
-    }),
-    '',
-    ...buildGeneratedNoteLines({
-      ...PREVIEW_DETAILS,
-      purpose: 'Aggregate preview page for canonical block templates.'
-    }),
-    ''
-  ];
-
-  if (blockTemplates.length === 0) {
-    lines.push('No block templates are defined yet. Add `.mdx` files under `snippets/templates/blocks/` and rerun the generator.');
-    return withTrailingNewline(lines.join('\n'));
-  }
-
-  blockTemplates.forEach((template) => {
-    const importName = `${toImportName(template.relativePath)}BlockTemplate`;
-    lines.push(`import ${importName} from '${template.importPath}'`);
-  });
-
-  lines.push('', '## Preview Surface', '');
-
-  blockTemplates.forEach((template) => {
-    const importName = `${toImportName(template.relativePath)}BlockTemplate`;
-    lines.push(`### ${template.previewTitle}`);
-    lines.push('');
-    lines.push(`Source template: \`${template.repoPath}\``);
-    lines.push('');
-    lines.push(`Snippet prefix: \`${template.snippetPrefix}\``);
-    lines.push('');
-    lines.push(`<${importName} />`);
-    lines.push('');
-  });
 
   return withTrailingNewline(lines.join('\n'));
 }
@@ -544,8 +444,8 @@ function renderUiSystemGeneratedSection(pageTemplates, blockTemplates) {
     '',
     '### Overview',
     '',
-    '- Canonical page templates live in `snippets/templates/pages/**` and generate one direct preview route each.',
-    '- Canonical block templates live in `snippets/templates/blocks/**` and render together on `/templates/blocks/block-examples`.',
+    '- Canonical page templates live in `snippets/templates/pages/**`.',
+    '- Canonical block templates live in `snippets/templates/blocks/**`.',
     '- Generated authoring snippets live in `.vscode/templates.code-snippets` and `.vscode/components.code-snippets`.',
     '',
     '### Source Tree',
@@ -554,11 +454,11 @@ function renderUiSystemGeneratedSection(pageTemplates, blockTemplates) {
     '',
     '### Page Templates',
     '',
-    ...renderTemplateTable(pageTemplates, false),
+    ...renderTemplateTable(pageTemplates),
     '',
     '### Block Templates',
     '',
-    ...renderTemplateTable(blockTemplates, true)
+    ...renderTemplateTable(blockTemplates)
   ];
 
   return lines.join('\n');
@@ -646,35 +546,8 @@ function buildExpectedOutputs() {
   outputs.set(UI_SYSTEM_PAGE_PATH, updateUiSystemPage(pageTemplates, blockTemplates));
   outputs.set(TEMPLATE_SNIPPETS_PATH, renderSnippetJson(buildTemplateSnippetsObject(pageTemplates, blockTemplates)));
   outputs.set(COMPONENT_SNIPPETS_PATH, renderSnippetJson(buildComponentSnippetsObject(registry)));
-  outputs.set(BLOCK_PREVIEW_PATH, renderBlockPreviewContent(blockTemplates));
-
-  pageTemplates.forEach((template) => {
-    outputs.set(template.previewRepoPath, renderPagePreviewContent(template));
-  });
-
-  LEGACY_PAGE_PREVIEW_ALIASES.forEach((template) => {
-    outputs.set(template.previewRepoPath, renderPagePreviewContent(template));
-  });
 
   return { outputs, pageTemplates, blockTemplates };
-}
-
-function removeStalePagePreviews(currentPageTemplates, write) {
-  const expected = new Set([
-    ...currentPageTemplates.map((template) => template.previewRepoPath),
-    ...LEGACY_PAGE_PREVIEW_ALIASES.map((template) => template.previewRepoPath)
-  ]);
-  const existing = walkMdxFiles('v2/templates/pages');
-  const removed = [];
-
-  existing.forEach((repoPath) => {
-    if (expected.has(repoPath)) return;
-    if (!write) return;
-    fs.unlinkSync(path.join(REPO_ROOT, repoPath));
-    removed.push(repoPath);
-  });
-
-  return removed;
 }
 
 function run(options = {}) {
@@ -687,14 +560,11 @@ function run(options = {}) {
     if (result.changed) changed.push(repoPath);
   });
 
-  const removed = removeStalePagePreviews(pageTemplates, write);
-
   return {
     changed,
-    removed,
     pageTemplates,
     blockTemplates,
-    passed: changed.length === 0 && removed.length === 0
+    passed: changed.length === 0
   };
 }
 
@@ -711,18 +581,16 @@ if (require.main === module) {
 
       console.error('UI template artifacts are out of date. Run `node tools/scripts/generate-ui-templates.js --write`.');
       result.changed.forEach((repoPath) => console.error(`  - update ${repoPath}`));
-      result.removed.forEach((repoPath) => console.error(`  - remove stale preview ${repoPath}`));
       process.exit(1);
     }
 
-    if (result.changed.length === 0 && result.removed.length === 0) {
+    if (result.changed.length === 0) {
       console.log('No changes. UI template artifacts already current.');
       process.exit(0);
     }
 
     console.log('Updated UI template artifacts:');
     result.changed.forEach((repoPath) => console.log(`  - ${repoPath}`));
-    result.removed.forEach((repoPath) => console.log(`  - removed ${repoPath}`));
   } catch (error) {
     console.error(error.message);
     process.exit(1);
@@ -730,7 +598,6 @@ if (require.main === module) {
 }
 
 module.exports = {
-  BLOCK_PREVIEW_PATH,
   COMPONENT_REGISTRY_PATH,
   COMPONENT_SNIPPETS_PATH,
   PAGE_TEMPLATE_ROOT,

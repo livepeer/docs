@@ -1,4 +1,5 @@
 # Voice Rules per Audience
+
 ## Livepeer Docs Content Pipeline — Step 9 Draft
 
 **Status**: DRAFT — awaiting checkpoint approval
@@ -54,6 +55,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Direct, factual, assumes competence. Earns trust through precision, not warmth.
 
 **What to do:**
+
 - Lead with what the gateway gets (output, earnings, routing performance) before how to achieve it
 - Use concrete numbers: "routes ~40 jobs/second at 4% margin" not "can handle high throughput"
 - Assume familiarity with: networking concepts, load balancing, configuration files, CLI tooling, gas/fees at a conceptual level
@@ -61,6 +63,7 @@ UK English throughout. Full correction table at the end of this file.
 - For multi-path pages: the majority operator path (standard gateway setup) is the default, described first and fully
 
 **What NOT to do:**
+
 - Do not open with risk, cost, or difficulty before value
 - Do not explain TCP/IP, Docker, Linux fundamentals — they know
 - Do not use "simply", "just", "easy", "straightforward" — implies the reader should already be past this
@@ -68,6 +71,7 @@ UK English throughout. Full correction table at the end of this file.
 - Do not use "thriving ecosystem", "powerful solution", "exciting opportunity"
 
 **Prohibited phrases (gateway-specific):**
+
 - "Don't worry, this is easy to configure"
 - "As a gateway operator, you will..."
 - "This document will guide you through"
@@ -85,6 +89,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Practical, numbers-driven, hardware-specific. Respects their investment in hardware and time. Does not condescend.
 
 **What to do:**
+
 - Lead with earnings, performance, or operational outcomes — that is why they are here
 - Use hardware-specific language freely: VRAM, CPU cores, NVLink, bandwidth, pipeline throughput
 - Quantify wherever possible: "8 GB VRAM minimum for SDXL, 24 GB for high-res inference"
@@ -93,12 +98,14 @@ UK English throughout. Full correction table at the end of this file.
 - State prerequisites as hard requirements, not suggestions
 
 **What NOT to do:**
+
 - Do not explain "what an orchestrator is" on operational pages — they know
 - Do not use generic cloud/distributed computing language when hardware-specific terms exist
 - Do not present economics in vague terms ("can earn rewards") — state the mechanism and its dependencies
 - Do not omit the hardware requirement section — it is the primary filter for this audience
 
 **Prohibited phrases (orchestrator-specific):**
+
 - "Your orchestrator will automatically..." (unless it actually does — verify first)
 - "The network rewards you for..." (too vague — state the actual reward mechanism)
 - "Easy to set up" / "Simple configuration"
@@ -115,6 +122,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Technical precision. Peer-level. No ceremony.
 
 **What to do:**
+
 - Code example first, prose explanation second — not the other way around
 - Function signatures, types, and interface definitions are primary content — not supplementary
 - Reference the actual codebase when relevant: link to GitHub, not just describe the concept
@@ -123,12 +131,14 @@ UK English throughout. Full correction table at the end of this file.
 - Error states, edge cases, and failure modes belong in the main content — not in a note at the end
 
 **What NOT to do:**
+
 - Do not write prose explanations of what the code already shows
 - Do not use marketing language adjacent to technical content ("powerful AI pipeline" adjacent to `import livepeer`)
 - Do not use `<Note>` or `<Info>` components for content that belongs in the main explanation
 - Do not omit error states or edge cases — developers specifically need the full picture
 
 **Prohibited phrases (developer-specific):**
+
 - "Easily integrated with your existing..."
 - "With just a few lines of code..."
 - "The SDK makes it simple to..."
@@ -146,6 +156,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Direct and efficient. Treats the reader as a capable engineer who wants to ship.
 
 **What to do:**
+
 - Lead with what the integration gives the builder's product or users — not what Livepeer is
 - State the exact API endpoint or SDK method first, then the context
 - Show working code in the most-likely language (JS/TS first, then Python, then Go)
@@ -153,12 +164,14 @@ UK English throughout. Full correction table at the end of this file.
 - State prerequisites explicitly: which API keys, which SDK version, which plan or tier applies
 
 **What NOT to do:**
+
 - Do not explain the Livepeer network architecture to someone who wants to transcode a video
 - Do not use node-operator or gateway terminology without translating it to integration implications
 - Do not assume knowledge of web3 mechanics (gas, transactions, on-chain interactions) without framing
 - Do not mix "how the protocol works" with "how to integrate" — these are separate pages
 
 **Prohibited phrases (builder-specific):**
+
 - "As you know, Livepeer is a decentralised..."
 - "Built on blockchain technology..."
 - Any opening that explains the network before the integration value
@@ -175,6 +188,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Clear, direct, without condescension. Treats the reader as a capable decision-maker — not a newcomer who needs everything explained from first principles every time.
 
 **What to do:**
+
 - Lead with the outcome: what does staking, delegating, or voting give them?
 - Explain protocol-specific terms (LPT, orchestrator, reward cut) on first use — then use the term freely
 - Use plain language for economics: "you receive X% of the rewards the orchestrator earns" not "you receive a proportional share of inflation-adjusted emissions"
@@ -182,12 +196,14 @@ UK English throughout. Full correction table at the end of this file.
 - For governance: explain what is at stake in a vote before describing the mechanism
 
 **What NOT to do:**
+
 - Do not use code blocks or CLI commands — not their interface
 - Do not assume knowledge of DeFi mechanics (impermanent loss, AMMs) without defining them
 - Do not use node-operator hardware terminology (VRAM, GPU pipeline) — not relevant to this audience
 - Do not write delegation or governance as "set and forget" — these change over time
 
 **Prohibited phrases (delegator-specific):**
+
 - "Simply stake your tokens to..."
 - "As a delegator, you will automatically..."
 - Any claim about earnings without stating the dependency (orchestrator performance, reward cut, protocol inflation rate)
@@ -203,6 +219,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Warm but not effusive. Concrete and actionable.
 
 **What to do:**
+
 - `explorer` persona: orient first, route second — they do not know their role yet
 - `ambassador` persona: lead with programme mechanics (how to participate, what is required) — not values
 - `engager` persona: governance process is the substance — how to participate, what the actual steps are
@@ -210,12 +227,14 @@ UK English throughout. Full correction table at the end of this file.
 - State what participation actually requires: time commitment, required skills, tools, credentials
 
 **What NOT to do:**
+
 - No "thriving community", "passionate contributors", "vibrant ecosystem" — state what the community does, not what it is
 - No aspirational prose without concrete next steps
 - Do not treat every community visitor as an ambassador — they may be a researcher or evaluator
 - Do not duplicate role-specific content (protocol mechanics, technical setup) — link to the right tab
 
 **Prohibited phrases (community-specific):**
+
 - "Join our thriving community!"
 - "Livepeer has a passionate and growing..."
 - "Together, we can..."
@@ -233,6 +252,7 @@ UK English throughout. Full correction table at the end of this file.
 **Tone:** Direct, credible. Numbers over adjectives. No hype.
 
 **What to do:**
+
 - Lead with the business outcome: what does using Livepeer give this product or company?
 - State unit economics and cost comparisons with actual numbers — "70% lower than AWS MediaConvert for 1080p" not "cost-effective"
 - Frame technical details as business implications: "sub-3-second latency → usable for live commerce"
@@ -240,12 +260,14 @@ UK English throughout. Full correction table at the end of this file.
 - `partner` persona: lead with process and programme mechanics (SPE applications, foundation contact, timeline)
 
 **What NOT to do:**
+
 - Do not open with protocol architecture ("Livepeer is a decentralised video infrastructure protocol...")
 - Do not use node/operator terminology without translating to business impact
 - Do not make unquantified comparative claims ("cost-effective", "highly reliable", "better performance")
 - Do not bury the commercial case inside technical content
 
 **Prohibited phrases (founder-specific):**
+
 - "Powered by blockchain technology..."
 - "The future of decentralised..."
 - Any sentence that requires the reader to understand web3 before they can evaluate the product
@@ -255,22 +277,22 @@ UK English throughout. Full correction table at the end of this file.
 
 ## UK English Reference
 
-| US | UK |
-|---|---|
-| optimize | optimise |
-| organize | organise |
-| customize | customise |
-| recognize | recognise |
-| analyze | analyse |
-| behavior | behaviour |
-| color | colour |
-| center | centre |
-| license (noun/verb) | licence (noun) / license (verb) |
-| practice (noun/verb) | practise (verb) / practice (noun) |
-| labeled | labelled |
-| canceled | cancelled |
-| traveling | travelling |
-| -ize endings | -ise endings (where both are standard: specialise, initialise, serialise) |
+| US                   | UK                                                                        |
+| -------------------- | ------------------------------------------------------------------------- |
+| optimize             | optimise                                                                  |
+| organize             | organise                                                                  |
+| customize            | customise                                                                 |
+| recognize            | recognise                                                                 |
+| analyze              | analyse                                                                   |
+| behavior             | behaviour                                                                 |
+| color                | colour                                                                    |
+| center               | centre                                                                    |
+| license (noun/verb)  | licence (noun) / license (verb)                                           |
+| practice (noun/verb) | practise (verb) / practice (noun)                                         |
+| labeled              | labelled                                                                  |
+| canceled             | cancelled                                                                 |
+| traveling            | travelling                                                                |
+| -ize endings         | -ise endings (where both are standard: specialise, initialise, serialise) |
 
 ---
 

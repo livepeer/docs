@@ -7,6 +7,17 @@ created: 2026-03-20
 
 # Repo Root Structure Governance Plan
 
+> Process reference: [process.md](process.md) — phases, decision gates, checkin rules, and execution rules for all restructure work.
+> Folder structure decisions: [folder-structure.md](folder-structure.md) — canonical target layout and per-folder status.
+
+## Checkin Rules
+
+Every task in this plan follows the two-checkin rule from [process.md](process.md):
+
+**Before execution:** State exactly what will be done, what is out of scope, and any risks. Wait for explicit confirmation.
+
+**After completion:** Post completed items (with paths), flags noticed, full checklist with `✅ complete / ▶ current / ⬜ not started` status, and recommended next task.
+
 ## Scope
 
 This plan governs the root folder layout and per-folder structure of this repo —
@@ -94,8 +105,8 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 | `api/`             | `openapi.yaml.backup` + `worker/` partial mirror                   |
 | `tools/`           | `script-index.md` stale; `x-archive/` + `archive/` dual strategies |
 | `snippets/assets/` | 20 MB unused community heroes; hero duplicate tree                 |
-| `docs-guide/`      | Empty stubs, deprecated `component-framework.mdx`, archive files   |
-| `tasks/` → `workspace/` | rename + `dep-COPYWRITING FRAMEWORK` loose in active/; 4 loose `.md` files |
+| `docs-guide/`      | Empty stubs, deprecated `component-framework.mdx`, archive files — see [subplan-docs-guide.md](subplan-docs-guide.md) |
+| `workspace/` (renamed from `tasks/`) | rename + `dep-COPYWRITING FRAMEWORK` loose in active/; 4 loose `.md` files |
 
 ### Root files to delete now
 
@@ -175,9 +186,11 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ### Phase 2 — Per-folder cleanup (priority order)
 
-#### 2A — `docs-guide/` restructure ⭐ first
-> Full research complete. See `docs-guide-restructure-draft.md` for all findings.
-> **No execution until draft is approved. Every sub-phase has an explicit gate.**
+#### 2A — `docs-guide/` restructure ✅ phase complete — open items in subplan
+
+> Phase 2A implementation done 2026-03-21. 7 canonical sections now in place (catalog, contributing, features, frameworks, policies, repoOps, tooling).
+> See [subplan-docs-guide.md](subplan-docs-guide.md) for remaining audit, overlap review, and root clutter tasks.
+> Work directory: [docs-guide/](docs-guide/)
 
 **2A-I — Approve structure + naming framework** *(gate — human review required)*
 - [x] **2A-I.1** Review `docs-guide-restructure-draft.md` — confirmed *(2026-03-21)*
@@ -217,11 +230,11 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 ---
 
-> ⚠️ **THIS PROCESS APPLIES TO EVERY ROOT FOLDER.**
-> Before restructuring any root folder: write a `<folder>-restructure-draft.md` covering
-> structure audit, script output map, dependents, naming framework, missing templates, and subplan.
-> Recommended order: `snippets/`, `ai-tools/`, `tools/`, `api/`, `contribute/`, `operations/`, `workspace/`.
-> See `docs-guide-restructure-draft.md` Section 6 for details.
+> **Process for all root folder restructuring:** Follow the phases in [process.md](process.md).
+> Each folder being restructured gets a work directory at `workspace/plan/active/REPO-STRUCTURE-GOV/<folder-name>/` with its own `audit.md`, `plan.md`, and artefacts.
+> Canonical folder decisions live in [folder-structure.md](folder-structure.md).
+> Active subplans: [subplan-docs-guide.md](subplan-docs-guide.md) · [subplan-v2-folders.md](subplan-v2-folders.md)
+> Recommended next order: `snippets/`, `contribute/`, `tools/`, `ai-tools/`, `operations/` (pending SCRIPT-GOVERNANCE).
 
 #### 2B — `snippets/assets/` cleanup ⭐ second
 
@@ -235,87 +248,35 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [ ] **2B.8** ⚠️ **Plan was wrong — `snippets/composables/` is NOT empty.** Contains 8 active MDX composables (prerequisites-section, steps-section, related-resources-section, etc.) documented as "Layer 3" of content architecture in README. Zero refs in pages currently but these are template-use files, not dead code. **Decision needed: integrate into pages or archive.** Do NOT delete without review.
 - [x] **2B.9** Governance rule written in `docs-guide/policies/docs-guide-structure-policy.mdx` (asset ref requirement and size limit) *(2026-03-21)*
 
-#### 2C — `v2/` folder governance *(audit complete — pending human approval of recommendations)*
+#### 2C — `v2/` folder governance ✅ phase complete — open items in subplan
 
-> **Rule:** Each top-level folder in `v2/` may only contain:
-> - Folders that appear as navigation paths in docs.json
-> - `_workspace/` (scratch, planning, review artifacts — 30-day TTL)
-> - Files that are themselves navigation entries (e.g. `index.mdx`, `portal.mdx`, `navigator.mdx`)
-> - Nothing else (no loose `.md`, `todo.txt`, `notes.txt`, `review.md`, `x-archived/`, `_contextData/`, `_move_me/`)
+> See [subplan-v2-folders.md](subplan-v2-folders.md) for remaining tasks and open decisions.
+> Work directory: [v2/](v2/)
 
-**Audit findings — violations already identified:**
+**What was done (2026-03-21):**
+- All violations from the original audit were already in `_workspace/` from a prior pass (confirmed by filesystem audit)
+- All non-standard subdir names inside `_workspace/` renamed: `_archive→archive`, `_contextData→context-data`, `_contextData_→context-data`, `_move_me→staging`, `x-archived→archive`, `x-deprecated→deprecated` across all sections
+- `v2/internal/layout-components-scripts-styling/` moved to `v2/internal/_workspace/`
+- `v2-folder-governance.mdx` updated with full `_workspace/` subdir contract
+- `_workspace/` standard applied: approved subdirs are `notes/` `plans/` `research/` `reviews/` `drafts/` `handoff/` `archive/` `deprecated/` `context-data/` `staging/`
 
-| Location | Issue | Recommended action |
-|----------|-------|--------------------|
-| `v2/restructure.mdx` | Loose file at v2/ root | → `v2/_workspace/restructure/` |
-| `v2/about/todo.txt` | Loose planning file | → `v2/about/_workspace/notes/` |
-| `v2/about/resources/` | Non-nav folder (check docs.json) | Confirm nav status; if not nav → `_workspace/` |
-| `v2/community/_contextData_/` | Non-standard prefix folder | → `v2/community/_workspace/context-data/` |
-| `v2/community/_move_me/` | Non-standard staging folder | → `v2/community/_workspace/staging/` then action or delete |
-| `v2/developers/_archive/` | Non-standard archive folder | → `v2/developers/_workspace/archive/` |
-| `v2/developers/_contextData/` | Non-standard prefix folder | → `v2/developers/_workspace/context-data/` |
-| `v2/gateways/concepts-restructure.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
-| `v2/gateways/personas.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
-| `v2/gateways/plan.md` | Loose planning file | → `v2/gateways/_workspace/notes/` |
-| `v2/gateways/x-archived/` | Non-standard archive folder | → `v2/gateways/_workspace/archive/` |
-| `v2/home/todo.txt` | Loose planning file | → `v2/home/_workspace/notes/` |
-| `v2/internal/ally-notes.mdx` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
-| `v2/internal/marketing-posts.md` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
-| `v2/internal/marketing-posts-v2.md` | Loose non-nav file | → `v2/internal/_workspace/notes/` |
-| `v2/internal/layout-components-scripts-styling/` | Non-nav folder | → `v2/internal/_workspace/` or delete |
-| `v2/lpt/todo.txt` | Loose planning file | → `v2/lpt/_workspace/notes/` |
-| `v2/orchestrators/x-archived/` | Non-standard archive folder | → `v2/orchestrators/_workspace/archive/` |
-| `v2/resources/todo.txt` | Loose planning file | → `v2/resources/_workspace/notes/` |
-| `v2/solutions/todo.txt` | Loose planning file | → `v2/solutions/_workspace/notes/` |
-| `v2/solutions/x-deprecated/` | Non-standard deprecated folder | → `v2/solutions/_workspace/archive/` |
+**Special cases — still open:**
 
-**Special cases (not violations — need explicit governance decision):**
+| Folder | Decision needed |
+|--------|----------------|
+| `v2/cn/`, `v2/es/`, `v2/fr/` | i18n governance addendum — do these have `_workspace/` or not? |
+| `v2/templates/` | Stay at `v2/templates/` or move to `snippets/templates/`? |
+| `v2/internal/` | Policy addendum needed (looser rules; what belongs, what doesn't) |
 
-| Folder | Status | Decision needed |
-|--------|--------|-----------------|
-| `v2/cn/`, `v2/es/`, `v2/fr/` | i18n mirror trees | Own governance doc; not subject to same rule as content sections |
-| `v2/templates/` | Shared MDX templates | Not a nav section; confirm it stays at root or moves to `snippets/templates/` |
-| `v2/x-archived/` | Top-level archive | → `v2/_workspace/archive/` or keep as-is with explicit allowlist entry |
-| `v2/internal/` | Internal docs | Special case; looser rules acceptable; needs own policy |
+> ~~⛔ GATE~~ — approved and implemented 2026-03-21.
 
-**Recommended `_workspace/` subdirectory structure — content sections**
-*(about, community, gateways, developers, home, lpt, orchestrators, resources, solutions):*
-
-```
-_workspace/
-├── research/     ← source research, veracity notes, background reading
-├── drafts/       ← content in-progress, not nav-ready
-├── notes/        ← planning notes, decisions, todo lists (replaces todo.txt etc.)
-├── archive/      ← deprecated/removed content (replaces x-archived, x-deprecated)
-└── reviews/      ← review packets, audit outputs
-```
-
-**Recommended `_workspace/` for `v2/internal/`:**
-```
-_workspace/
-├── drafts/
-├── notes/        ← ally-notes, marketing notes, etc.
-└── archive/
-```
-
-**Recommended `_workspace/` for `v2/` root:**
-```
-_workspace/        ← already exists with research/ and references/; add:
-├── research/      (exists ✓)
-├── references/    (exists ✓)
-├── restructure/   ← for restructure.mdx and planning docs
-└── archive/       ← top-level retired v2 content
-```
-
-> ⛔ **GATE: human approval of recommendations required before 2C implementation steps run.**
-
-- [ ] **2C.1** *(pending approval)* Create `_workspace/` with correct subdirs in all v2/ sections that lack it: `about`, `community` (expand existing), `developers` (expand existing), `gateways`, `home`, `lpt`, `resources`, `solutions`, `internal`
-- [ ] **2C.2** *(pending approval)* Move all violations listed above to their recommended `_workspace/` locations
-- [ ] **2C.3** *(pending approval)* Consolidate `x-archived/`, `x-deprecated/`, `_archive/`, `_contextData_/`, `_move_me/` variants → unified `_workspace/archive/` or `_workspace/staging/` pattern across all v2/ sections
-- [ ] **2C.4** Confirm all `_workspace/` dirs are covered by `.mintignore` (pattern `/v2/**/_workspace/**` already exists — verify it catches new subdirs)
-- [ ] **2C.5** Resolve special cases (i18n, templates, x-archived, internal) — document decisions in v2-folder-governance.mdx
-- [ ] **2C.6** Add v2/ `_workspace/` subdir standard to `docs-guide/policies/v2-folder-governance.mdx`
-- [ ] **2C.7** Add pre-commit enforcement: block new files at `v2/<section>/*.{md,mdx,txt}` unless filename appears in docs.json nav entries
+- [x] **2C.1** All `_workspace/` dirs existed from prior work; confirmed present in: about, community, developers, gateways, home, internal, lpt, orchestrators, resources, solutions, v2 root *(2026-03-21 audit)*
+- [x] **2C.2** All violations were already in `_workspace/` locations from prior pass; confirmed by audit *(2026-03-21)*
+- [x] **2C.3** Renamed all non-standard dirs inside `_workspace/`: `_archive/`→`archive/`, `_contextData/`→`context-data/`, `_contextData_/`→`context-data/`, `_move_me/`→`staging/`, `x-archived/`→`archive/`, `x-deprecated/`→`deprecated/` across all sections *(2026-03-21)*
+- [x] **2C.4** `/v2/**/_workspace/**` in `.mintignore` covers all new subdirs — verified *(2026-03-21)*
+- [ ] **2C.5** Special cases partially resolved: `v2/x-archived/` did not exist (already gone); i18n trees (`v2/cn/`, `v2/es/`, `v2/fr/`) and `v2/templates/` still need governance doc; `v2/internal/` is documented as looser-rules zone
+- [x] **2C.6** `v2-folder-governance.mdx` updated with full `_workspace/` subdir contract (notes, plans, research, reviews, drafts, handoff, archive, deprecated, context-data, staging) + naming rules *(2026-03-21)*
+- [ ] **2C.7** Pre-commit enforcement: block new files at `v2/<section>/*.{md,mdx,txt}` unless filename appears in docs.json — **deferred, needs hook design review**
 
 #### 2D — `api/` cleanup
 
@@ -367,13 +328,13 @@ _workspace/        ← already exists with research/ and references/; add:
 | `tools/` | No | `experiments/`, `archive/` | Prototype tooling, deprecated extensions |
 | `workspace/` | N/A — is the workspace | No `_workspace/` needed; folder is the workspace itself | |
 
-> ⛔ **GATE: human approval of per-folder subdirectory recommendations before 3A implementation.**
+> ~~⛔ GATE~~ — approved and implemented 2026-03-21.
 
-- [ ] **3A.1** *(pending approval)* Create `_workspace/` with approved subdirs in: `ai-tools/`, `api/`, `snippets/`, `tools/`
-- [ ] **3A.2** *(pending approval)* Create `_workspace/` template for `operations/` (future folder — scaffold when SCRIPT-GOVERNANCE Task 14 lands)
-- [ ] **3A.3** Confirm `docs-guide/_workspace/` has `archive/` subdir; add if missing
-- [ ] **3A.4** Add `_workspace/` to each folder's `.mintignore` pattern (or confirm covered by existing `**/_workspace/**` glob)
-- [ ] **3A.5** Document root folder `_workspace/` standard in `docs-guide/policies/root-allowlist-governance.mdx`
+- [x] **3A.1** Created `_workspace/` with subdirs in: `ai-tools/` (skill-research/, rule-drafts/, archive/), `api/`, `snippets/`, `tools/` *(2026-03-21)*
+- [ ] **3A.2** `operations/` is a future folder pending SCRIPT-GOVERNANCE Task 14 — scaffold `_workspace/` when folder lands
+- [x] **3A.3** `docs-guide/_workspace/archive/` confirmed present *(2026-03-21)*
+- [x] **3A.4** `.mintignore` updated: added `/ai-tools/_workspace/**`, `/api/_workspace/**`, `/snippets/_workspace/**`, `/tools/_workspace/**` *(2026-03-21)*
+- [x] **3A.5** Root folder `_workspace/` standard documented in `root-allowlist-governance.mdx` *(2026-03-21)*
 
 ---
 

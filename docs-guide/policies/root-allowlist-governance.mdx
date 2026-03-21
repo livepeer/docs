@@ -292,6 +292,29 @@ Current spec inventory:
 
 ---
 
+## `_workspace/` Standard for Root Folders
+
+Every named root folder (excluding dot-dirs, `v1/`, and `v2/`) may contain a `_workspace/` subdirectory for maintainer-only scratch, planning, and archive material.
+
+**Folders with `_workspace/` (created 2026-03-21):**
+
+| Folder | `_workspace/` subdirs |
+|--------|-----------------------|
+| `ai-tools/` | `skill-research/`, `rule-drafts/`, `archive/` |
+| `api/` | (root — use for spec-related scratch only) |
+| `docs-guide/` | `archive/`, `drafts/` |
+| `snippets/` | (root — use for component/asset scratch) |
+| `tools/` | (root — use for tooling scratch) |
+| `workspace/` | N/A — the folder is itself the workspace |
+
+**Rules:**
+1. `_workspace/` under a root folder must not appear in `docs.json` navigation.
+2. All root-folder `_workspace/` dirs are covered by `.mintignore` patterns (`/ai-tools/_workspace/**`, `/api/_workspace/**`, `/snippets/_workspace/**`, `/tools/_workspace/**`).
+3. The approved subdir names match the `v2/` section `_workspace/` contract: `notes/`, `plans/`, `research/`, `reviews/`, `drafts/`, `handoff/`, `archive/`, `deprecated/`, `context-data/`, `staging/`.
+4. Root-folder `_workspace/` content follows the same TTL rules as `docs-guide/_workspace/`: 30-day TTL for scratch (notes, drafts, research, reviews), 90-day TTL for archive.
+
+---
+
 ### Official external sources
 
 - [Mintlify settings](https://mintlify.com/docs/settings)

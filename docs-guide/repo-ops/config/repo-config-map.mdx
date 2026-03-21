@@ -1,0 +1,136 @@
+---
+title: Repo Config Map
+sidebarTitle: Config Map
+description: >-
+  Reference map of all key configuration files in the repository — root configs,
+  script configs, and environment variable sources.
+keywords:
+  - livepeer
+  - docs
+  - configuration
+  - config files
+  - paths
+  - environment variables
+  - repo ops
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: internal
+pageType: reference
+purpose: reference
+lastVerified: 2026-03-21
+---
+
+# Repo Config Map
+
+> Canonical reference of all configuration files that govern repo behaviour, routing, pipeline scripts, and environment setup.
+
+---
+
+## Root Config Files
+
+These files live at the repo root and are read by Mintlify, the pre-commit hook, CI workflows, and tooling scripts.
+
+| File | Read by | Purpose |
+|------|---------|---------|
+| `docs.json` | Mintlify | Navigation structure, version config, redirect rules, logo/favicon paths, SEO defaults, component imports |
+| `.allowlist` | Pre-commit hook | Allowlist of permitted root-level files and directories. New root entries require a human edit with `--trailer "allowlist-edit=true"`. |
+| `.mintignore` | Mintlify | Files and directories excluded from the docs build. Prevents operational scripts, workspace scratch, and draft content from becoming routable pages. |
+| `.env.example` | Local dev reference | Documents all environment variables used by local tooling and GitHub Actions secrets. Not committed with real values. |
+
+---
+
+## tools/scripts/config/
+
+Centralised configuration for fetch scripts, generators, and validators. All files in this directory are JSON.
+
+### paths.config.json
+
+```
+tools/scripts/config/paths.config.json
+```
+
+**Purpose:** Fallback path registry used when git repo root detection fails.
+
+**Read by:** `docs-path-sync.js` and other generator/validator scripts.
+
+**Key paths registered:**
+
+| Key | Value | Notes |
+|-----|-------|-------|
+| `snippets` | `snippets` | Root of the snippets library |
+| `snippetsComponents` | `snippets/components` | JSX component library |
+| `docsJson` | `docs.json` | Navigation config |
+| `v2Pages` | `v2/pages` | v2 page tree |
+| `v2Docs` | `v2` | v2 root |
+| `lptExchanges` | `v2/lpt/resources/exchanges.mdx` | Specific page reference |
+| `aiWorkerApi` | `ai/worker/api` | AI worker API directory |
+
+**When to update:** When repo directories are renamed or new canonical paths need to be registered for script use.
+
+---
+
+### product-social-config.json
+
+```
+tools/scripts/config/product-social-config.json
+```
+
+**Purpose:** Central registry mapping each solutions product to its social channels, data sources, and pipeline parameters. Used by all social data fetch scripts.
+
+**Read by:** `fetch-youtube-data.js`, `fetch-ghost-blog-data.js`, `fetch-discord-announcements.js`, `fetch-github-discussions.js`, `fetch-github-releases.js`, `fetch-rss-blog-data.js`, and page templates.
+
+**Products registered:** `daydream`, `embody`, `frameworks`, `livepeer-studio`, `streamplace`
+
+**Per-product fields:**
+
+| Field | Purpose |
+|-------|---------|
+| `youtube.channelId` | YouTube channel ID for fetch script. `null` = skip. |
+| `discord.serverId` / `announcementsChannelId` | Discord server and channel for bot fetch. `null` = skip. |
+| `blog.fetchMethod` | `"ghost-api"` (requires `GHOST_CONTENT_API_KEY`) or `"rss"` (no key) |
+| `github.org` + `mainRepo` | GitHub org/repo for discussions and releases fetch |
+| `forum` | Discourse URL and product tag for forum data |
+
+**When to update:** When a product gains/loses a social channel, changes its Discord server, or switches blog platforms. Scripts skip products where the relevant field is `null`.
+
+---
+
+## CI Workflow Trigger Files
+
+These are not config files themselves but are the source inputs that trigger CI regeneration when changed.
+
+| Changed path | Triggers workflow |
+|-------------|-------------------|
+| `docs.json` | `generate-docs-guide-catalogs.yml`, `generate-docs-index.yml`, pre-commit redirect integrity check |
+| `v2/index.mdx` | `generate-docs-guide-catalogs.yml`, `generate-docs-index.yml` |
+| `.github/workflows/**` | `generate-docs-guide-catalogs.yml` (workflows catalog) |
+| `.github/ISSUE_TEMPLATE/**` | `generate-docs-guide-catalogs.yml` (templates catalog) |
+| `tools/scripts/config/product-social-config.json` | No auto-trigger — must manually run social data fetch workflows via workflow dispatch |
+
+---
+
+## Environment Variables
+
+Runtime secrets and variables are documented in `.env.example` at the repo root.
+
+For secrets required by the solutions social data pipeline specifically, see [Solutions Secrets](solutions-secrets).
+
+| Variable | Used in | Notes |
+|----------|---------|-------|
+| `YOUTUBE_API_KEY` | `fetch-youtube-data.js` | GitHub Actions secret |
+| `GHOST_CONTENT_API_KEY` | `fetch-ghost-blog-data.js` | GitHub Actions secret |
+| `DISCORD_BOT_TOKEN` | `fetch-discord-announcements.js` | GitHub Actions secret |
+| `DOCS_V2` | Ghost blog + forum workflows | PAT with `repo` scope; needed for auto-commit cross-workflow triggers |
+| `GITHUB_TOKEN` | `fetch-github-discussions.js`, `fetch-github-releases.js` | Auto-provided by GitHub Actions |
+
+---
+
+## Related
+
+- [Solutions Secrets](solutions-secrets) — GitHub Actions secrets required by the social data pipeline
+- [Enforcement Map](enforcement-map) — pre-commit gates, CI gates, and validators
+- `docs-guide/features/data-integrations.mdx` — broader data integrations map
+- `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/plan.md` — solutions pipeline implementation plan

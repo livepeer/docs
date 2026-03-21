@@ -1,0 +1,220 @@
+---
+title: Enforcement Map
+sidebarTitle: Enforcement Map
+description: >-
+  Complete map of all enforcement points in the repository — pre-commit hard gates,
+  pre-push checks, and GitHub Actions CI gates.
+keywords:
+  - livepeer
+  - docs
+  - enforcement
+  - pre-commit
+  - pre-push
+  - github actions
+  - ci
+  - hooks
+  - gates
+  - repo ops
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: internal
+pageType: reference
+purpose: reference
+lastVerified: 2026-03-21
+---
+
+# Enforcement Map
+
+> Every gate that can block or auto-fix a commit, PR, or push — what it checks, where it lives, and how to override it.
+
+---
+
+## Design Principle
+
+Enforcement is split into two tiers:
+
+| Tier | Where | What runs |
+|------|-------|-----------|
+| **Hard gates** | Pre-commit hook + pre-push hook | Only checks that, if skipped, would cause irreversible breakage: MDX parse failures, broken redirects, unguarded deletions, protected file edits, branch isolation violations |
+| **Soft checks** | GitHub Actions (PR workflows) | Style, governance, catalog freshness, link audits, content health — everything that can be fixed in a follow-up commit |
+
+This separation keeps local commit latency low while still surfacing quality issues in PR review.
+
+---
+
+## Pre-Commit Hook
+
+**File:** `.githooks/pre-commit`
+**Pipeline stage:** P1 (commit entry point)
+**Install:** `bash .githooks/install.sh` or `lpd hooks install`
+
+### Gate 1 — Codex Branch Isolation
+
+Blocks Codex AI sessions from committing directly to `docs-v2`. Forces AI work onto isolated `codex/<issue-id>-<slug>` branches.
+
+| Trigger | Any commit on `docs-v2` from a Codex session |
+|---------|---------------------------------------------|
+| Bypass | `ALLOW_MAIN_COMMIT=1` + `--trailer "allow-main-commit=true"` (humans only) |
+| Also runs | Codex task contract validation + lock ownership check on `codex/*` branches |
+
+### Gate 2 — File Deletion Guard
+
+Blocks commits that delete files without explicit human authorisation.
+
+| Trigger | Any staged deletion (`git diff --cached --diff-filter=D`) |
+|---------|----------------------------------------------------------|
+| Exception | Deletions of files with a matching staged copy in `v2/x-archived/` (archive follow-up deletes) |
+| Bypass | `--trailer "allow-deletions=true"` (humans only) |
+
+### Gate 3 — .allowlist Protection
+
+Blocks edits to the `.allowlist` root-directory allowlist file.
+
+| Trigger | Staged changes to `.allowlist` |
+|---------|-------------------------------|
+| Bypass | `--trailer "allowlist-edit=true"` (humans only) |
+
+### Gate 4 — docs.json Redirect Integrity
+
+Blocks changes to `docs.json` that add or remove `/redirect` routes without matching the scoped navigation config.
+
+| Trigger | `git diff --cached -- docs.json` contains `/redirect` |
+|---------|------------------------------------------------------|
+| Validates against | `tools/config/scoped-navigation/docs-gate-orch.json` |
+| Bypass | None — redirect surfaces must stay aligned |
+
+Also enforces root directory allowlist: new root-level files or directories must be in `.allowlist`.
+
+| Trigger | Staged new files or directories at repo root |
+|---------|---------------------------------------------|
+| Bypass | `SKIP_STRUCTURE_CHECK=1` |
+
+### Gate 5 — v1/ Freeze
+
+Blocks all changes to `v1/`. The v1 content tree is immutable.
+
+| Trigger | Any staged change to `v1/**` |
+|---------|------------------------------|
+| Bypass | `SKIP_STRUCTURE_CHECK=1` (emergency only) |
+
+### Global Bypass
+
+`SKIP_ALL=1` — skips all pre-commit checks. Emergency use only. Emits a warning in all cases.
+
+---
+
+## Pre-Push Hook
+
+**File:** `.githooks/pre-push`
+**Pipeline stage:** Pre-push (before `git push`)
+
+Validates that no AI stash artifacts, stale Codex locks, or invalid task contracts are present before pushing to remote. Complements the pre-commit Codex isolation gate.
+
+| Check | What it validates |
+|-------|------------------|
+| AI stash policy | No stash-based isolation artifacts left in the working tree |
+| Stale Codex locks | No locks that reference inactive/closed Codex sessions |
+| Task contract | `codex/*` branches must have a valid task contract before push |
+
+---
+
+## GitHub Actions — CI Workflows
+
+All CI workflows live in `.github/workflows/`. They are the enforcement layer for quality, governance, and catalog freshness checks that are too slow or too soft to run in pre-commit.
+
+### Catalog Freshness Gates
+
+| Workflow | Trigger | What it checks |
+|----------|---------|----------------|
+| `check-docs-index.yml` | PR / push to `docs-v2`, `main` | `docs-guide/catalog/pages-catalog.mdx` freshness |
+| `check-docs-guide-catalogs.yml` | PR / push to `docs-v2`, `main` | All docs-guide catalogs (pages, components, scripts, workflows, templates, UI templates) |
+
+### Catalog Auto-Generation (Push → Main)
+
+| Workflow | Trigger | What it generates |
+|----------|---------|------------------|
+| `generate-docs-index.yml` | Push to `main` (docs.json or v2/ changed) | `docs-guide/catalog/pages-catalog.mdx` |
+| `generate-docs-guide-catalogs.yml` | Push to `main` (workflows, templates, docs.json, v2/index.mdx changed) | All docs-guide catalogs; auto-commits updated files |
+
+### Content Quality
+
+| Workflow | Trigger | What it checks |
+|----------|---------|----------------|
+| `content-health.yml` | Push / PR | Broken internal links, missing frontmatter, page health |
+| `broken-links.yml` | Scheduled + PR | External link audit |
+| `v2-external-link-audit.yml` | Scheduled | External links in v2/ pages |
+| `openapi-reference-validation.yml` | PR (api/ changed) | OpenAPI spec validity |
+| `test-suite.yml` | PR / push | Full test suite (MDX syntax, validator scripts) |
+| `test-v2-pages.yml` | PR | v2 page-level tests |
+
+### SEO and AI Artifacts
+
+| Workflow | Trigger | What it generates / validates |
+|----------|---------|-------------------------------|
+| `generate-llms-files.yml` | Push to `main` | `llms.txt`, `sitemap-ai.xml` |
+| `verify-llms-files.yml` | PR | Checks llms files are current |
+| `generate-ai-sitemap.yml` | Push to `main` | AI sitemap artifact |
+| `verify-ai-sitemap.yml` | PR | Checks AI sitemap is current |
+| `generate-ai-companions.yml` | Push to `main` | AI companion config files |
+| `check-ai-companions.yml` | PR | Checks AI companion configs are current |
+
+### Social Data Pipelines (Scheduled)
+
+| Workflow | Schedule | What it fetches |
+|----------|----------|----------------|
+| `update-youtube-data.yml` | Weekly (Sun 00:00 UTC) | YouTube channel data per product |
+| `update-ghost-blog-data.yml` | Daily (00:00 UTC) | Ghost blog posts (Livepeer Studio) |
+| `update-rss-blog-data.yml` | Daily (03:00 UTC) | RSS blog posts (Daydream, Streamplace) |
+| `update-discord-data.yml` | Daily (01:00 UTC) | Discord announcements per product |
+| `update-github-data.yml` | Daily (02:00 UTC) | GitHub discussions + releases per product |
+| `update-forum-data.yml` | Daily | Discourse forum posts |
+
+Required secrets: see [Solutions Secrets](solutions-secrets).
+
+### Governance and Repo Ops
+
+| Workflow | Trigger | What it does |
+|----------|---------|-------------|
+| `governance-sync.yml` | Push / PR | Syncs governance rules and policy compliance |
+| `repair-governance.yml` | Dispatch | Repairs known governance drift patterns |
+| `codex-governance.yml` | PR (codex/* branches) | Validates Codex task contracts on PR open/update |
+| `tasks-retention.yml` | Scheduled | Workspace/ retention enforcement (TTL enforcement — stub, not yet fully implemented) |
+| `freshness-monitor.yml` | Scheduled | Flags pages where `lastVerified` is past threshold |
+
+### Developer Experience
+
+| Workflow | Trigger | What it does |
+|----------|---------|-------------|
+| `auto-assign-docs-reviewers.yml` | PR opened | Auto-assigns reviewers based on changed paths |
+| `issue-auto-label.yml` | Issue opened | Auto-labels issues by content area |
+| `discord-issue-intake.yml` | Issue opened | Posts new issues to Discord intake channel |
+| `close-linked-issues-docs-v2.yml` | PR merged to `docs-v2` | Closes linked issues |
+| `docs-v2-issue-indexer.yml` | Issue events | Indexes issues for search |
+| `translate-docs.yml` | Push / dispatch | Translation pipeline |
+| `seo-refresh.yml` | Dispatch | Batch SEO metadata refresh |
+| `sync-large-assets.yml` | Dispatch | Syncs large binary assets from external storage |
+
+---
+
+## Override Reference
+
+| Override | How | Who |
+|----------|-----|-----|
+| Skip all pre-commit checks | `SKIP_ALL=1 git commit` | Humans only — emergency |
+| Skip structure checks | `SKIP_STRUCTURE_CHECK=1 git commit` | Humans only |
+| Allow file deletions | `git commit --trailer "allow-deletions=true"` | Humans only |
+| Allow .allowlist edit | `git commit --trailer "allowlist-edit=true"` | Humans only |
+| Allow AI commit to docs-v2 | `ALLOW_MAIN_COMMIT=1 git commit --trailer "allow-main-commit=true"` | Humans only — explicit chat instruction required |
+
+---
+
+## Related
+
+- [Repo Config Map](repo-config-map) — configuration files read by hooks and workflows
+- [Solutions Secrets](solutions-secrets) — GitHub Actions secrets for the social data pipeline
+- `docs-guide/policies/generated-artifact-and-hook-governance.mdx` — policy governing what may run in hooks vs. CI
+- `.githooks/pre-commit` — pre-commit hook implementation
+- `.githooks/pre-push` — pre-push hook implementation

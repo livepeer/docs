@@ -1,4 +1,5 @@
 # Prompt: Level 2 Pass A — Content Review / Write
+
 ## Livepeer Docs Content Pipeline
 
 ---
@@ -10,6 +11,7 @@ Use for every page after the tab map stage. This prompt handles the **content la
 Layout, MDX structure, component selection, and frontmatter are handled in **Pass B**. Do not apply MDX formatting in this pass.
 
 **Two modes:**
+
 - `REVIEW` — page exists; audit and produce a report with verdict and specific fixes. Use when content is mostly right but needs refinement.
 - `WRITE` — page does not exist, or REVIEW verdict was REWRITE REQUIRED. Write or rewrite the full content layer.
 
@@ -17,7 +19,7 @@ Layout, MDX structure, component selection, and frontmatter are handled in **Pas
 
 ## Context block
 
-*Fill all fields before running. Vague answers here produce vague output.*
+_Fill all fields before running. Vague answers here produce vague output._
 
 ```
 TAB:              [gateways / orchestrators]
@@ -64,11 +66,13 @@ Record answers. Proceed only when all three pass.
 ## Phase 1 — Read
 
 **REVIEW / REWRITE:** Read the current page in full.
+
 - Note what the page claims to do (description, intro)
 - Note what the page actually does (content per section)
 - Record existing frontmatter values
 
 **WRITE:** Confirm the brief is actionable.
+
 - Every context block field is filled and specific
 - Primary sources are named for expected factual claims
 - Reader journey is clear (prev → this → next)
@@ -82,7 +86,9 @@ Do not begin content analysis until Phase 1 is complete.
 For the stated AUDIENCE + PERSONA + LIFECYCLE_STAGE:
 
 ### 2.1 Knowledge level
+
 Does the page's language match COMPLEXITY?
+
 - `beginner` — no assumed prior knowledge of the domain
 - `intermediate` — familiar with the domain, not yet operational
 - `advanced` — deep operational experience, reads for precision
@@ -90,10 +96,12 @@ Does the page's language match COMPLEXITY?
 Flag: sections that assume too much (above complexity) or over-explain (below complexity).
 
 ### 2.2 Persona fit
+
 Load the persona definition from [framework.md](../../CONTENT-WRITING/framework.md).
 Does every major section serve this persona's arriving question and motivation?
 
 Persona arriving questions for pilot scope:
+
 - `graduate` (gateway): migrating from hosted API to self-hosted — needs clear setup path, realistic economics
 - `provider` (gateway): running public gateway-as-service — needs production-grade configuration, reliability
 - `architect` (gateway): building SDK or alternative gateway — needs protocol-level technical detail
@@ -108,6 +116,7 @@ Persona arriving questions for pilot scope:
 Flag: sections that serve a different persona, or that omit the stated persona's primary concern.
 
 ### 2.3 Register
+
 Does the page's writing register match the audience?
 Load audience register rules from `Prompts/voice-rules.md` for the stated AUDIENCE.
 
@@ -121,23 +130,23 @@ Flag register mismatches. Quote the specific text and state what register it sho
 
 Does the page deliver on its stated PURPOSE?
 
-| Purpose | Reader can do this after reading |
-|---|---|
-| `orient` | Navigate to the correct next destination |
-| `explain` | Describe how the mechanism or concept works |
-| `learn` | Apply the terminology or concept correctly in context |
-| `choose` | Make a specific named decision between options |
-| `evaluate` | Assess fit of this option against their situation |
-| `start` | Complete a first successful run |
-| `build` | Create or implement a named thing |
-| `configure` | Apply specific parameters or settings correctly |
-| `operate` | Run and manage the system in practice |
-| `troubleshoot` | Identify and resolve a named failure mode |
-| `verify` | Confirm correct state or expected output |
-| `integrate` | Connect this system with a named external system |
-| `optimise` | Improve a named metric by a concrete method |
-| `reference` | Look up a specific fact, value, or specification |
-| `update` | Know what changed and what action is required |
+| Purpose        | Reader can do this after reading                      |
+| -------------- | ----------------------------------------------------- |
+| `orient`       | Navigate to the correct next destination              |
+| `explain`      | Describe how the mechanism or concept works           |
+| `learn`        | Apply the terminology or concept correctly in context |
+| `choose`       | Make a specific named decision between options        |
+| `evaluate`     | Assess fit of this option against their situation     |
+| `start`        | Complete a first successful run                       |
+| `build`        | Create or implement a named thing                     |
+| `configure`    | Apply specific parameters or settings correctly       |
+| `operate`      | Run and manage the system in practice                 |
+| `troubleshoot` | Identify and resolve a named failure mode             |
+| `verify`       | Confirm correct state or expected output              |
+| `integrate`    | Connect this system with a named external system      |
+| `optimise`     | Improve a named metric by a concrete method           |
+| `reference`    | Look up a specific fact, value, or specification      |
+| `update`       | Know what changed and what action is required         |
 
 **Check:** Does the page's section sequence lead the reader to that outcome? Is the outcome reachable before reaching the end?
 
@@ -151,9 +160,10 @@ Does the page deliver on its stated PURPOSE?
 For each section in the page, identify the information type and check it is permitted for the pageType.
 
 | Section heading | Information type | Permitted for pageType? | Veracity standard |
-|---|---|---|---|
+| --------------- | ---------------- | ----------------------- | ----------------- |
 
 **Information types:**
+
 - `factual` — stated facts, numbers, specs, on-chain values → **very high** veracity required
 - `technical` — code, commands, API calls, config syntax → **very high** veracity required
 - `procedural` — sequential steps the reader follows → **very high** veracity required
@@ -165,6 +175,7 @@ For each section in the page, identify the information type and check it is perm
 - `narrative` — framing, context, voice, transitions → **lower** veracity (embedded factual claims inherit factual standard)
 
 **Permitted primary types by pageType:**
+
 - `concept`: conceptual, narrative, analytical — secondary: factual
 - `instruction`: procedural, technical — secondary: factual, structural
 - `guide`: analytical, evaluative, conceptual, narrative — secondary: factual
@@ -187,6 +198,7 @@ Check every sentence. These are hard blockers regardless of audience.
 `effectively, essentially, basically, meaningful, significant, real` (as intensifier), `various, several, obviously, clearly`
 
 **Banned phrases:**
+
 - "This section covers"
 - "This page covers / explains / walks you through"
 - "Understanding X is essential"
@@ -199,6 +211,7 @@ Check every sentence. These are hard blockers regardless of audience.
 - "can generate" / "may produce" in value claims (assert directly or delete)
 
 **Banned constructions:**
+
 - `not [X]` in value statements → rewrite as a positive assertion
 - `if [condition]` in body prose → resolve the condition or move to prerequisites; exception: code blocks, exact config conditions
 - `This page [verb]` → delete self-reference, open with content
@@ -240,6 +253,7 @@ For every section with information type `factual`, `technical`, `procedural`, or
 3. For claims that cannot be verified in this pass: flag with `{/* REVIEW: [specific claim] — verify with: [named source] */}`
 
 **Veracity standards reference:**
+
 - `factual` / `technical` / `procedural` / `change` → very high: every claim must be citable
 - `evaluative` / `structural` → high: evidence must be real and sourced
 - `analytical` / `conceptual` → medium: reasoning must be internally consistent
@@ -250,6 +264,21 @@ For every section with information type `factual`, `technical`, `procedural`, or
 ---
 
 ## Phase 7 — Structure check
+
+### 7.1 Opening orientation (universal rule — all pageTypes)
+
+Every page must open with an orientation statement that answers three questions:
+1. What does this page deliver? (not "this page covers...")
+2. Who is it for? (audience/persona at this journey position)
+3. What does the reader leave with? (one concrete outcome or action)
+
+Check the opening paragraph against these three. If any are missing or vague, flag it.
+
+**The opening paragraph is written last** — after sections are finalised. For WRITE mode: draft the body first, then write the opening to reflect what the page actually delivers.
+
+Exception: `navigation` pages — orientation is implicit in the card grid value propositions, not a separate prose paragraph.
+
+### 7.2 Section sequence and handoffs
 
 - [ ] Section sequence follows the reader's journey toward the stated PURPOSE (not editor convenience or chronological order of the system)
 - [ ] Every section has a clear handoff — what does the reader do or know after this section? Where do they go next?

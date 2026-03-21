@@ -1,4 +1,5 @@
 # Prompt: Level 2 Pass B — Layout & Style
+
 ## Livepeer Docs Content Pipeline
 
 ---
@@ -41,16 +42,16 @@ VERACITY_STATUS:  [verified / unverified / stale]
 
 Map PAGE_TYPE + PAGE_VARIANT to the base template:
 
-| pageType | pageVariant | Template |
-|---|---|---|
-| `instruction` | `quickstart` or `setup` or default | `snippets/templates/pages/how-to-page.mdx` |
-| `concept` | any | `snippets/templates/pages/overview-page.mdx` |
-| `guide` | any | `snippets/templates/pages/overview-page.mdx` |
-| `tutorial` | any | `snippets/templates/pages/tutorial-page.mdx` |
-| `reference` | `compendium` | `snippets/templates/pages/faq-page.mdx` |
-| `reference` | `specification` or `changelog` | `snippets/templates/pages/reference-page.mdx` |
-| `navigation` | `portal` or `landing` | `snippets/templates/pages/landing-frame-page.mdx` |
-| `resource` | `knowledge-hub` | `snippets/templates/pages/overview-page.mdx` |
+| pageType      | pageVariant                        | Template                                          |
+| ------------- | ---------------------------------- | ------------------------------------------------- |
+| `instruction` | `quickstart` or `setup` or default | `snippets/templates/pages/how-to-page.mdx`        |
+| `concept`     | any                                | `snippets/templates/pages/overview-page.mdx`      |
+| `guide`       | any                                | `snippets/templates/pages/overview-page.mdx`      |
+| `tutorial`    | any                                | `snippets/templates/pages/tutorial-page.mdx`      |
+| `reference`   | `compendium`                       | `snippets/templates/pages/faq-page.mdx`           |
+| `reference`   | `specification` or `changelog`     | `snippets/templates/pages/reference-page.mdx`     |
+| `navigation`  | `portal` or `landing`              | `snippets/templates/pages/landing-frame-page.mdx` |
+| `resource`    | `knowledge-hub`                    | `snippets/templates/pages/overview-page.mdx`      |
 
 Read the selected template. Note its required sections and skeleton structure.
 
@@ -65,28 +66,29 @@ Map the approved content sections onto the template's structure.
 For each section from Pass A output:
 
 | Content section | Template slot | Heading level | MDX component needed? |
-|---|---|---|---|
+| --------------- | ------------- | ------------- | --------------------- |
 
 **Heading levels:**
+
 - `##` — top-level sections (primary steps, major concepts)
 - `###` — sub-sections within a top-level section
 - `####` — granular detail; use sparingly; not for navigational sections
 
 **Template slot mapping** (by pageType):
 
-*instruction / how-to:*
+_instruction / how-to:_
 Overview → ## Overview | Prerequisites → ## Prerequisites | Steps → ## Steps (inside `<Steps>`) | Validate → ## Validate | Next → ## Next Steps
 
-*concept:*
+_concept:_
 Context/framing → ## Overview | How it works → ## [Concept name] | Architecture/diagram → ## Architecture | Key terms → ## Reference (or inline definitions) | Next → ## Next Steps
 
-*guide:*
+_guide:_
 Outcome → ## Overview | Main content → ## [Primary subject sections] | Decision aid → ## [Which path / comparison table] | Next → ## Next Steps
 
-*tutorial:*
+_tutorial:_
 Goal → ## Overview | Prerequisites → ## Prerequisites | Steps → `<Steps>` | What you built → ## What you built | Next → ## Next Steps
 
-*reference / specification:*
+_reference / specification:_
 Index → ## Overview (or `<AccordionGroup>`) | Lookup sections → ## [Term / endpoint / flag] | Source → ## Source
 
 ---
@@ -96,11 +98,13 @@ Index → ## Overview (or `<AccordionGroup>`) | Lookup sections → ## [Term / e
 For each section, apply these rules to select the correct MDX component.
 
 ### Procedures and steps
+
 `<Steps>` with `<Step title="">` for any sequential procedure with 2 or more steps.
 Do not use numbered markdown lists for procedures — use `<Steps>`.
 Do not nest `<Steps>` — flatten multi-stage procedures into a single sequence or split into sub-sections.
 
 ### Code
+
 `<CodeGroup>` — multiple code variants (different languages, different OS, different configs)
 Single code fence — a single standalone example
 `<CodeBlock filename="" icon="">` — when filename/icon context is important
@@ -108,6 +112,7 @@ Single code fence — a single standalone example
 **Rule:** Commands that answer the primary question on the page appear in body copy — not only inside accordions, notes, or card CTAs.
 
 ### Callouts
+
 `<Note>` — forward-pointing supplementary context. Must not hedge or apologise for the content that precedes it. Allowed: "Orchestrator profiles update frequently — #orchestrators on Discord is the current source." Not allowed: "Note that this may change."
 `<Tip>` — specific actionable shortcut or time-saver.
 `<Warning>` — a real failure mode with real consequences. Not general caution.
@@ -116,23 +121,28 @@ Single code fence — a single standalone example
 **Rule:** A section must not end with a `<Note>` that qualifies or hedges the section's content.
 
 ### Tables
+
 Native markdown tables. No table should duplicate information in adjacent prose — if it does, delete the prose.
 
 ### Tabs
+
 `<Tabs>` only when content genuinely splits by persona, OS, or configuration variant — and the reader can self-identify which tab applies to them.
 The majority path is never behind a `<Tab>`. It is the page's default content.
 Do not use `<Tabs>` for visual variety.
 
 ### Cards
+
 `<Card title="" href="">` — next-step CTAs at the end of a page or major section.
 `<CardGroup cols={2}>` — 2–4 equal-priority options.
 Do not use Cards as navigation lists — that is the sidebar's function.
 
 ### Accordions
+
 `<AccordionGroup><Accordion title="">` — supplementary detail the primary reader can skip.
 High-value commands, critical steps, and primary CTAs must not be inside an `<Accordion>`.
 
 ### Quotes and callouts
+
 `<Quote>` — for definitions or strong value propositions at the top of a page (header CTA position).
 
 ---
@@ -143,25 +153,27 @@ Produce the complete frontmatter block with all required fields:
 
 ```yaml
 ---
-title:           [See naming rules below]
-sidebarTitle:    [Shorter form if title > 3 words — 1–2 words. Omit if same as title.]
-description:     [One sentence, outcome-focused, <= 160 chars. See rules below.]
-pageType:        [canonical enum]
-pageVariant:     [canonical enum, or omit]
-audience:        [canonical audience token]
-persona:         [audience-scoped persona token, or omit]
-purpose:         [canonical 15-value purpose token]
-lifecycleStage:  [canonical 7-value lifecycle token]
-complexity:      [beginner / intermediate / advanced]
-industry:        [array, max 2, first dominates]
-niche:           [array]
-veracityStatus:  [verified / unverified / stale]
-status:          [current / draft / deprecated]
-lastVerified:    [YYYY-MM-DD]
+title: [See naming rules below]
+sidebarTitle:
+  [Shorter form if title > 3 words — 1–2 words. Omit if same as title.]
+description: [One sentence, outcome-focused, <= 160 chars. See rules below.]
+pageType: [canonical enum]
+pageVariant: [canonical enum, or omit]
+audience: [canonical audience token]
+persona: [audience-scoped persona token, or omit]
+purpose: [canonical 15-value purpose token]
+lifecycleStage: [canonical 7-value lifecycle token]
+complexity: [beginner / intermediate / advanced]
+industry: [array, max 2, first dominates]
+niche: [array]
+veracityStatus: [verified / unverified / stale]
+status: [current / draft / deprecated]
+lastVerified: [YYYY-MM-DD]
 ---
 ```
 
 ### Title rules
+
 - 1–3 words
 - Concept-derived: use the domain's native terminology, not a generic tech substitute
   ✅ "Reward Cut" not "Earnings Percentage" | ✅ "Clearinghouse" not "Payment Settlement"
@@ -171,6 +183,7 @@ lastVerified:    [YYYY-MM-DD]
 - Not the section name repeated: the page title distinguishes the page within its section
 
 ### Description rules
+
 - One sentence, subject-first
 - Opens with the reader outcome or subject — not "This page" or "Overview of"
 - <= 160 characters
@@ -186,6 +199,7 @@ For every `##` and `###` heading in the page:
 Apply the scoring criteria from `Prompts/section-naming.md`.
 
 Key rules to check:
+
 - **Domain anchor**: uses the domain's native term — not a generic substitute
   ✅ "Reward Cut" | ❌ "Earnings Parameter"
   ✅ "Pipeline Throughput" | ❌ "Processing Speed"
@@ -219,6 +233,7 @@ Before writing the final file:
 Produce the final `.mdx` file ready to write to `PAGE_PATH`.
 
 Structure:
+
 ```
 ---
 [complete frontmatter]
@@ -232,6 +247,7 @@ Structure:
 ```
 
 **Before writing the file**, flag any decisions that require human approval:
+
 - Template gap (no rule covers a specific content type)
 - Structural mismatch (content doesn't map cleanly to any template slot)
 - Ambiguous component choice (two components could both apply)
