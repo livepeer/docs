@@ -106,10 +106,10 @@ See [framework.md](framework.md) for full per-audience persona lists
 | 6 | Industry + niche (field taxonomy — terminology + voice register) | ✅ [industry.md](industry.md) |
 | 7 | Complexity + lifecycleStage | ✅ [complexity.md](complexity.md) |
 | ▶ 8a | IA per tab — section structure, audience journey, page groups | 🔄 [08a-ia-per-tab.md](../../v2/_workspace/references/content-pipeline/08a-ia-per-tab.md) — DRAFT, awaiting checkpoint |
-| 8 | Generation contract (how all fields combine) | TBD |
-| 9 | Voice rules per audience | TBD |
-| 10 | Section naming rules | TBD |
-| 11 | Page structure rules per pageType | TBD |
+| 8 | Prompt input spec — what each pipeline prompt needs in its context block | TBD |
+| 9 | Voice rules per audience — feeds Pass A context blocks and review criteria | TBD |
+| 10 | Formalise naming rules as a pipeline prompt (consolidate + move) | 🔄 [Prompts/section-naming.md](Prompts/section-naming.md) — draft |
+| 11 | Page templates per pageType (Part A) + golden examples (Part B) | TBD |
 
 ---
 
@@ -119,7 +119,7 @@ See [framework.md](framework.md) for full per-audience persona lists
 |---|---|
 | `docs-guide/frameworks/page-taxonomy-framework.mdx` | Canonical source of truth — all framework definitions must align here |
 | `snippets/templates/pages/page-composition-framework.mdx` | Page composition rules — input to Step 11 |
-| `v2/_workspace/research/content-naming.md` | Section naming rubric — input to Step 10 |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | Section naming prompt (moved from `v2/_workspace/research/content-naming.md`) — input to Step 10 |
 | `v2/_workspace/research/ai-coauthoring.md` | Purpose + evaluation research notes — informed pagePurpose.md |
 | `tasks/plan/active/TERMINOLOGY-COLLATE/` | Full terminology collation across all tabs — input to veracity library |
 | `tasks/plan/active/SCRIPT-GOVERNANCE/catalog.md` | Script catalog — reference for validation tooling in Phase 2 |

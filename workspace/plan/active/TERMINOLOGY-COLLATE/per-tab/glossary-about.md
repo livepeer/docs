@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/about/`
 **Date**: 2026-03-20
-**Terms**: 58
+**Terms**: 65
 **Source**: Agent deep-read + classified-by-tag.md
 
 ---
@@ -103,6 +103,16 @@
 **Tags**: `livepeer:contract`
 **Status**: current
 **Pages**: `about/protocol`, `about/contracts`
+
+---
+
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+**External**: [Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+**Tags**: `technical:hardware`
+**Status**: current
+**Pages**: `about/architecture`, `about/ai`
 
 ---
 
@@ -306,6 +316,16 @@
 
 ---
 
+### Low-Latency
+
+**Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+**Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+**Tags**: `video:streaming`
+**Status**: current
+**Pages**: `about/ai`, `about/streaming`
+
+---
+
 ### Minter Contract
 
 **Definition**: The smart contract responsible for minting new LPT tokens during orchestrator reward calls and holding ETH collected from winning payment tickets.
@@ -333,6 +353,17 @@
 **Tags**: `web3:concept`
 **Status**: current
 **Pages**: `about/protocol`, `about/contracts`
+
+---
+
+### Open Source
+
+**Definition**: Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source.
+**Also known as**: open-source, FOSS
+**External**: [Wikipedia](https://en.wikipedia.org/wiki/Open-source_software)
+**Tags**: `technical:concept`
+**Status**: current
+**Pages**: `about/protocol`, `about/architecture`
 
 ---
 
@@ -383,6 +414,26 @@
 **Tags**: `economic:payment`, `livepeer:protocol`
 **Status**: current
 **Pages**: `about/payments`, `about/protocol`
+
+---
+
+### Per Pixel (Price Per Pixel)
+
+**Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+**Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+**Tags**: `livepeer:economics`
+**Status**: current
+**Pages**: `about/economics`, `about/transcoding`
+
+---
+
+### Per Round
+
+**Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+**Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+**Tags**: `livepeer:economics`
+**Status**: current
+**Pages**: `about/protocol`, `about/staking`
 
 ---
 
@@ -516,6 +567,16 @@
 
 ---
 
+### Stake-Weighted
+
+**Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+**Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+**Tags**: `livepeer:governance`
+**Status**: current
+**Pages**: `about/governance`, `about/staking`
+
+---
+
 ### Stake-Weighted Voting
 
 **Definition**: A governance voting system where each participant's vote weight is proportional to their bonded LPT stake.
@@ -553,6 +614,16 @@
 **Tags**: `web3:tokenomics`
 **Status**: current
 **Pages**: `about/staking`, `about/delegators`
+
+---
+
+### USD (United States Dollar)
+
+**Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+**External**: [Wikipedia](https://en.wikipedia.org/wiki/United_States_dollar)
+**Tags**: `economic:currency`
+**Status**: current
+**Pages**: `about/economics`, `about/governance`
 
 ---
 

@@ -1346,6 +1346,20 @@
 
 ---
 
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+
+**Tags**: `technical:hardware`
+
+**Tabs**: gateways, orchestrators, developers, about
+
+**External**: [Central processing unit (Wikipedia)](https://en.wikipedia.org/wiki/Central_processing_unit)
+
+**Status**: current
+
+---
+
 ### DAO (Decentralized Autonomous Organization)
 
 **Definition**: An organization governed by smart contracts, with rules encoded in code rather than legal structures, and members vote on proposals via a decentralized ledger.
@@ -2164,6 +2178,20 @@
 
 ---
 
+### GB (Gigabyte)
+
+**Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+
+**Tags**: `technical:hardware`
+
+**Tabs**: gateways, orchestrators, developers
+
+**External**: [Gigabyte (Wikipedia)](https://en.wikipedia.org/wiki/Gigabyte)
+
+**Status**: current
+
+---
+
 ### Gateway
 
 **Definition**: A node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface between applications and the Livepeer Network. Gateways do not perform compute themselves; they replaced the older "Broadcaster" role.
@@ -2255,6 +2283,20 @@
 **Pages**: `lpt/tokenomics`, `lpt/history`
 
 **Context**: The genesis supply was the starting point for LPT tokenomics; total supply has grown from 10M through inflation since the mainnet launch in 2018.
+
+**Status**: current
+
+---
+
+### GeForce
+
+**Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+
+**Tags**: `technical:hardware`
+
+**Tabs**: gateways, orchestrators
+
+**External**: [NVIDIA GeForce](https://www.nvidia.com/en-us/geforce/)
 
 **Status**: current
 
@@ -2458,6 +2500,22 @@
 
 ---
 
+### GTX (NVIDIA GTX)
+
+**Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+
+**Tags**: `technical:hardware`
+
+**Tabs**: gateways, orchestrators
+
+**Also known as**: GeForce GTX
+
+**External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+**Status**: current
+
+---
+
 ### GWID (Gateway Wizard)
 
 **Definition**: Gateway Wizard SPE building a managed DevOps tool for running and managing gateway infrastructure.
@@ -2519,6 +2577,22 @@
 **Pages**: `gateways/ingest`, `gateways/streaming`
 
 **External**: [HTTP (Wikipedia)](https://en.wikipedia.org/wiki/HTTP)
+
+**Status**: current
+
+---
+
+### HuggingFace
+
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+
+**Tags**: `ai:platform`
+
+**Tabs**: gateways, orchestrators, developers, community
+
+**Also known as**: Hugging Face, HF
+
+**External**: [HuggingFace](https://huggingface.co/)
 
 **Status**: current
 
@@ -2795,6 +2869,22 @@
 **Pages**: `solutions/api`
 
 **External**: [JSON (Wikipedia)](https://en.wikipedia.org/wiki/JSON)
+
+**Status**: current
+
+---
+
+### JavaScript
+
+**Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+
+**Tags**: `technical:language`
+
+**Tabs**: developers, community
+
+**Also known as**: JS
+
+**External**: [JavaScript (MDN Web Docs)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 **Status**: current
 
@@ -3156,6 +3246,20 @@
 
 ---
 
+### livepeer-python-gateway
+
+**Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+
+**Tags**: `livepeer:sdk`
+
+**Tabs**: gateways, developers
+
+**Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations with the Livepeer network.
+
+**Status**: current
+
+---
+
 ### Livepeer Actor
 
 **Definition**: A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system.
@@ -3409,6 +3513,20 @@
 **Pages**: `developers/pipelines`, `developers/ai-gateway`
 
 **External**: [LoRA training (Hugging Face)](https://huggingface.co/docs/diffusers/training/lora)
+
+**Status**: current
+
+---
+
+### Low-Latency
+
+**Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+
+**Tags**: `video:streaming`
+
+**Tabs**: solutions, about, developers
+
+**Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
 
 **Status**: current
 

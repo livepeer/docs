@@ -268,6 +268,30 @@ Remove an entry from `.allowlist` when any of the following is true:
 - `contribute/CONTRIBUTING/GIT-HOOKS.md`
 - `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md`
 
+## `api/` Governance
+
+`api/` is a schema-only directory. It contains OpenAPI specification files referenced by the docs platform for API reference rendering.
+
+Rules:
+
+1. **Spec files only** — `api/` must contain only OpenAPI/JSON schema files (`.yaml`, `.json`). No `.mdx` page content, no `.backup` files, no partial mirrors.
+2. **No backup files** — `openapi.yaml.backup` and similar were removed as part of Phase 0 cleanup (2026-03-21). Future backups belong in `_workspace/archive/` if they exist at all.
+3. **No duplicate subdirs** — `api/worker/` was removed (2026-03-21) as it was an exact mirror of `api/` root files. If worker-specific specs diverge in the future, they get their own named spec file in `api/`, not a subdirectory mirror.
+4. **Size** — specs are schema-only; they should remain small. If a spec exceeds 500 KB, review for consolidation.
+
+Current spec inventory:
+
+| File | Purpose |
+|------|---------|
+| `api/gateway.openapi.yaml` | Gateway API spec |
+| `api/openapi.yaml` | Primary public API spec |
+| `api/openapi.json` | JSON mirror of openapi.yaml |
+| `api/ai-worker.yaml` | AI Worker API spec |
+| `api/cli-http.yaml` | CLI HTTP API spec |
+| `api/studio.yaml` | Studio API spec |
+
+---
+
 ### Official external sources
 
 - [Mintlify settings](https://mintlify.com/docs/settings)

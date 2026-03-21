@@ -7,7 +7,7 @@
  * @needs             F-R6, F-R7
  * @purpose-statement Tests OpenRouter provider — validates API call logic and response parsing
  * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/i18n/test/provider-openrouter.test.js [flags]
+ * @usage             node tools/scripts/automations/content/language-translation/test/provider-openrouter.test.js [flags]
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');

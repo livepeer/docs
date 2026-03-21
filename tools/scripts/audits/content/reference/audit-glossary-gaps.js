@@ -53,8 +53,8 @@ const VERBOSE = args.includes('--verbose');
 const MIN_COUNT = minCountFlagIdx !== -1 ? parseInt(args[minCountFlagIdx + 1], 10) : 2;
 
 const SKIP_DIRS = new Set(['_workspace', 'x-archived', 'x-deprecated', 'node_modules', '.git']);
-// Skip localization folders — they are translations and would inflate counts
-const SKIP_LOCALE_PREFIXES = ['v2/cn', 'v2/es', 'v2/fr'];
+// Skip localization copies and internal non-user-facing folders
+const SKIP_LOCALE_PREFIXES = ['v2/cn', 'v2/es', 'v2/fr', 'v2/internal'];
 
 // --- Known-term baseline: load all companion JSONs ---------------------------
 
@@ -134,11 +134,18 @@ const STOPWORDS = new Set([
   'codeblocktabs', 'dynamictable', 'searchtable', 'scrollablediagram',
   'showcasecards', 'mathinline', 'markdownembed', 'coingeckoexchanges',
   'cardcarousel', 'focusablescrollregions', 'scrollbox', 'downloadbutton',
-  // GitHub is a proper noun but not a Livepeer glossary term
-  'github', 'gitlab', 'youtube', 'twitter', 'discord',
-  // Internal path segment patterns — not glossary terms
+  'customcodeblock', 'centeredcontainer', 'mathblock', 'doubleiconlink',
+  'customcardtitle', 'customcallout', 'styledcard', 'linkbutton',
+  // Social / hosting platforms — not Livepeer glossary terms
+  'github', 'gitlab', 'youtube', 'twitter', 'discord', 'telegram',
+  // Navigation / path slug patterns — not glossary terms
   'run-a-gateway', 'run-an-orchestrator', 'api-reference', 'component-library',
   'documentation-guide', 'docs-guide', 'livepeer-studio', 'livepeer-protocol',
+  'repo-ops', 'audit-tasks-folders', 'live-video-to', 'ai-and-job',
+  'get-all', 'get-started', 'roadmap-and-funding', 'config-and-optimisation',
+  // Icon names (Mintlify uses hyphenated icon identifiers) — common ones
+  'book-open', 'chart-line', 'circle-question', 'circle-check', 'circle-info',
+  'arrow-right', 'arrow-left', 'check-circle', 'caret-right', 'caret-down',
 ]);
 
 /**
@@ -149,14 +156,19 @@ function stripNonProse(content) {
   let text = content.replace(/^---[\s\S]*?---\n/, '');
   // Remove MDX block comments {/* ... */}
   text = text.replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
-  // Remove JSX expression blocks {`...`} and {" ... "}
+  // Remove JSX expression blocks
   text = text.replace(/\{[^}]+\}/g, '');
   // Remove import/export lines
   text = text.replace(/^(import|export)\s+.+$/gm, '');
-  // Remove code blocks (``` ... ```) — don't want to pick up code identifiers as prose terms
+  // Remove code blocks
   text = text.replace(/```[\s\S]*?```/g, '');
-  // Remove inline code backticks content
+  // Remove inline code
   text = text.replace(/`[^`]+`/g, '');
+  // Remove JSX attribute values — these are prop strings like icon="book-open", href="/v2/..."
+  // They contain path slugs and icon names that are not prose terminology
+  text = text.replace(/\b\w+=["'][^"']*["']/g, '');
+  // Remove bare URL-path-like strings (slash-prefixed paths that ended up in prose)
+  text = text.replace(/\/v2\/[a-z0-9/_-]+/g, '');
   return text;
 }
 

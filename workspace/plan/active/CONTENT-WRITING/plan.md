@@ -192,26 +192,35 @@ Every tab has a specific audience, purpose, and internal IA. The pipeline needs 
 
 ---
 
-### Step 8. Define how the fields combine — the generation contract
+### Step 8. Define prompt input spec — what each pipeline prompt needs in its context block
 
-**Input**: Approved outputs from steps 2-8a.
+**Input**: Approved outputs from steps 2–8a.
 
-This is the core of the framework: how do pageType + audience + persona + purpose + domain + niche + complexity + lifecycleStage combine to determine page structure, section naming, voice, component selection, CTA style?
+Not a static decision matrix. The framework fields (pageType, audience, persona, purpose, industry, niche, complexity, lifecycleStage) are only useful if we know which fields each pipeline prompt type actually needs in its context block, and in what form. This step defines that.
 
-- [ ] 🔄 Build a decision matrix / lookup table showing how field combinations drive output
-  - ⏸ CHECKPOINT: human reviews matrix structure
-- [ ] 🔄 Test the matrix against 5 real pages from the pilot group — does it produce the right answer for each?
-  - ⏸ CHECKPOINT: human confirms matrix gives correct guidance for real pages
-- [ ] 🔄 Revise until the matrix is reliable
-  - ⏸ CHECKPOINT: human gives final approval on the generation contract
+For each pipeline prompt type (Level 1 tab map, Level 2 Pass A content, Level 2 Pass B layout):
+- What fields from the framework go in its context block?
+- What does the context block look like (structure, required vs optional fields)?
+- What phases does the prompt run?
+- What quality gates apply before delivery?
+- What is the output format?
 
-**Output**: Approved generation contract (the master reference for all skills).
+This spec is the contract that Steps 16–19 build against.
+
+- [ ] 🔄 For each prompt type: define context block fields, phases, quality gates, output format
+  - ⏸ CHECKPOINT: human approves spec per prompt type
+- [ ] 🔄 Test spec against 2 real pages from pilot group — does filling the context block produce useful guidance?
+  - ⏸ CHECKPOINT: human confirms spec is workable
+
+**Output**: Approved prompt input spec — the contract for Phase 2 prompt/skill builds.
 
 ---
 
-### Step 8. Define voice rules per audience
+### Step 9. Define voice rules per audience
 
 **Input**: Existing `copy-rules-SKILL.md` (operator-focused), approved audience definitions from step 3.
+
+Voice rules feed two places: the context block for Level 2 Pass A prompts (what register, terminology, don'ts apply) and the Pass A review criteria (what to flag when reviewing existing content).
 
 - [ ] 🔄 For each audience: define section opening order, acceptable terminology, tone, don'ts
   - ⏸ CHECKPOINT: human approves voice rules per audience
@@ -220,37 +229,64 @@ This is the core of the framework: how do pageType + audience + persona + purpos
 - [ ] 🔄 Draft extended voice rules for audiences not yet covered (developer, delegator, community, etc.)
   - ⏸ CHECKPOINT: human approves new voice rules
 
-**Output**: Approved voice rules per audience.
+**Output**: Approved voice rules per audience — feeds Pass A context blocks and review criteria.
 
 ---
 
-### Step 10. Define section naming rules
+### Step 10. Formalise naming rules as a pipeline prompt
 
-**Input**: Existing `content-naming.md` rubric, `page-composition-framework.mdx` naming examples.
+**Input**: `v2/_workspace/research/content-naming.md` — existing draft naming prompt (already working). `page-composition-framework.mdx` naming examples.
 
-- [ ] 🔄 Review rubric — complete? Does it work for all pageTypes?
-  - ⏸ CHECKPOINT: human confirms rubric is sound
-- [ ] 🔄 Test on 5 real section titles across different pageTypes — do scores match human judgment?
-  - ⏸ CHECKPOINT: human confirms scores align
-- [ ] 🔄 Revise rubric if needed
-  - ⏸ CHECKPOINT: human approves final naming rubric
+The naming rubric already exists as a working prompt in `content-naming.md`. This step formalises it:
+- Move `content-naming.md` into `/Prompts/` alongside the other pipeline prompts
+- Add the context block (pageType, audience, purpose inputs) — second version in the file already has this
+- Add quality gates (the scoring criteria already exist)
+- Verify it works across all 7 pageTypes in the pilot group
 
-**Output**: Approved section naming rubric.
+The naming prompt feeds Pass B (layout/style pass) — it's applied after content is written, not during.
+
+- [ ] Move `v2/_workspace/research/content-naming.md` → `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md`
+  - ⏸ CHECKPOINT: human confirms move
+- [ ] 🔄 Consolidate two prompt versions in the file into one with context block (pageType + audience + purpose inputs)
+  - ⏸ CHECKPOINT: human approves final prompt
+- [ ] 🔄 Test on 5 real section titles across different pageTypes — scores match human judgment?
+  - ⏸ CHECKPOINT: human confirms
+
+**Output**: Formalised naming prompt in `/Prompts/` — ready for Pass B integration.
 
 ---
 
-### Step 11. Define page structure rules per pageType
+### Step 11. Page templates + golden examples — the Pass B foundation
 
-**Input**: Existing `page-composition-framework.mdx`, existing templates in `snippets/templates/pages/`, `component-layout-decisions.mdx`.
+**Input**: `page-composition-framework.mdx`, existing templates in `snippets/templates/pages/`, `component-layout-decisions.mdx`, pilot group pages.
 
-- [ ] 🔄 For each pageType: define required sections, section order, allowed components
-  - ⏸ CHECKPOINT: human approves structure rules per pageType
-- [ ] 🔄 Verify alignment between composition framework, templates, and layout decisions — flag conflicts
-  - ⏸ CHECKPOINT: human resolves any conflicts
-- [ ] 🔄 Update templates to match approved structure rules where they diverge
-  - ⏸ CHECKPOINT: human approves template updates
+This step has two parts and is currently a real gap. Currently bare bones. Must be solid before Pass B (layout/style) is built.
 
-**Output**: Approved page structure rules per pageType + aligned templates.
+**Part A — Page templates per pageType**
+
+For each of the 7 pageTypes: define the structural contract Pass B applies:
+- Required sections (names, order)
+- Allowed components per section
+- Forbidden patterns
+
+Check existing templates and composition framework against this — flag conflicts, resolve with human.
+
+- [ ] 🔄 For each pageType: define required sections, section order, allowed components, forbidden patterns
+  - ⏸ CHECKPOINT: human approves structure contract per pageType
+- [ ] 🔄 Audit existing templates + composition framework against the contract — flag conflicts
+  - ⏸ CHECKPOINT: human resolves conflicts
+
+**Part B — Golden examples per pageType**
+
+Identify 1–2 genuinely good existing pages per pageType in the pilot group. "Good" means: correct on both content (right audience, right purpose, right journey) AND layout (right template applied, right components, correct naming). These become the target the pipeline produces toward.
+
+- [ ] 🔄 Candidate list per pageType — pages that might be golden examples
+  - ⏸ CHECKPOINT: human selects or rejects each
+- [ ] 🔄 For each selected page: annotate why it works (what makes it the right model)
+  - ⏸ CHECKPOINT: human approves annotation
+- [ ] Place annotated examples in `v2/_workspace/references/content-pipeline/golden-examples/`
+
+**Output**: Per-pageType structural contracts + annotated golden examples. Both feed Pass B.
 
 ---
 
@@ -312,92 +348,106 @@ Extract from approved voice rules (step 9) into standalone files.
 
 ---
 
-### Step 16. Create condensed reference bundles per skill
+### Step 16. Build Level 1 — Site + Tab map prompt
 
-Each skill gets a `references/` directory with only the rules it needs, extracted from the framework.
+**Approach**: Prompt-based (extends the `/Prompts/` Tier 1/2 model that already works).
 
-- [ ] 🔄 Draft references for Context Pack skill (source-of-truth boundaries, persona format, journey stages, gap criteria)
-  - ⏸ CHECKPOINT: human approves
-- [ ] 🔄 Draft references for Page Review skill (copy rules condensed, naming rubric condensed, taxonomy enums, layout contract)
-  - ⏸ CHECKPOINT: human approves
-- [ ] 🔄 Draft references for Rewrite skill (template selection guide, component usage condensed, voice examples)
-  - ⏸ CHECKPOINT: human approves
-- [ ] Test: fresh AI session with ONLY SKILL.md + references/ — can it produce correct output?
-  - ⏸ CHECKPOINT: human reviews test results
+**Input**: context block filled with: tab name, audience, section groups (from 8a), framework enums.
+**Output**: per-tab context document — audience, journey, section groups, page inventory with frontmatter.
+**Used as**: input to Level 2 prompts for any page in that tab.
+
+- [ ] 🔄 Define context block fields and output format for the tab map prompt
+  - ⏸ CHECKPOINT: human approves format
+- [ ] Build the prompt (following the phased structure of existing `/Prompts/` files)
+  - ⏸ CHECKPOINT: human reviews prompt
+- [ ] Run on gateways tab — generate tab map document
+  - ⏸ CHECKPOINT: human reviews output quality
+- [ ] Run on orchestrators tab
+  - ⏸ CHECKPOINT: human reviews
+- [ ] Iterate until output is accurate and reusable by a fresh AI session
 
 ---
 
-### Step 17. Build Context Pack skill (Layer 1)
+### Step 17. Build Level 2 Pass A — Content review/write
 
-- [ ] 🔄 Define output format (sections, structure, detail level)
-  - ⏸ CHECKPOINT: human approves format
-- [ ] 🔄 Define skill contract (SKILL.md: inputs, outputs, workflow, failure modes, validation)
-  - ⏸ CHECKPOINT: human approves contract
-- [ ] 🔄 Choose approach: prompt-only vs script-backed
-  - ⏸ CHECKPOINT: human decides
-- [ ] Build the skill
-  - ⏸ CHECKPOINT: human reviews implementation
-- [ ] Generate context pack for `gateways/guides`
+**Approach**: Prompt first, then decide if a skill wrapper adds value. Try both; keep what works.
+
+Most content is already written. The primary use is **review**: does existing content match the journey, audience, and purpose? The secondary use is **write/rewrite** where it doesn't.
+
+**Input**: tab map (from Level 1) + section context + existing page (review mode) or section brief (write mode).
+**Does**: reviews or writes content section by section — correct audience? correct purpose? right information per section? tags information type per section. Applies voice + terminology rules.
+**Output**: content verdict + section-by-section proposed content with headings (naming rules applied at header level only).
+
+Two paths, same prompt framework:
+- **Review path** — reads existing page, flags what fails journey/purpose/audience/voice, proposes edits only where needed
+- **Write path** — writes from scratch from tab map + section brief
+
+- [ ] 🔄 Define context block, phases, quality gates for Pass A (per prompt input spec, Step 8)
+  - ⏸ CHECKPOINT: human approves
+- [ ] Build prompt version first
+  - ⏸ CHECKPOINT: human reviews
+- [ ] Test review path on 3 pilot pages — how many findings are accurate? how much is over-flagged?
+  - ⏸ CHECKPOINT: human scores quality
+- [ ] Test write path on 1 page from scratch
   - ⏸ CHECKPOINT: human reviews output
-- [ ] Test: completeness (all sections present), accuracy (human scores 1-5 per section), reusability (fresh AI can interpret it)
-  - ⏸ CHECKPOINT: human confirms test results
-- [ ] Iterate until human scores >= 4/5 on all sections
-  - ⏸ CHECKPOINT: human gives final approval
+- [ ] 🔄 Decide: does a skill wrapper improve output over the prompt alone?
+  - ⏸ CHECKPOINT: human decides
+- [ ] Build skill wrapper if decided
+  - ⏸ CHECKPOINT: human reviews
 
 ---
 
-### Step 18. Build Page Review skill (Layer 2)
+### Step 18. Build Level 2 Pass B — Layout and style
 
-- [ ] 🔄 Define review brief format (8 assessment sections, findings structure, priority)
-  - ⏸ CHECKPOINT: human approves format
-- [ ] 🔄 Define assessment criteria (thresholds, severity, what's acceptable vs flaggable)
-  - ⏸ CHECKPOINT: human approves criteria
-- [ ] Build the skill (replaces: docs-change-review, docs-copy, mintlify-authoring-style-compliance, page-content-research-review)
+**Approach**: Skill (structured, consistent application of template rules and naming).
+
+Runs after Pass A content is approved. Takes content output and applies structural formatting: pageType template, component selection, MDX formatting, section naming scored against naming prompt.
+
+**Input**: Pass A approved content output.
+**Does**: applies pageType template, selects components, formats MDX, scores and corrects section names.
+**Output**: MDX-ready page.
+
+- [ ] 🔄 Define skill contract (inputs, outputs, rules applied, failure modes)
+  - ⏸ CHECKPOINT: human approves
+- [ ] Build the skill (uses: page templates from Step 11, naming prompt from Step 10, component rules)
   - ⏸ CHECKPOINT: human reviews implementation
-- [ ] 🔄 Test precision (>=90%): run on 5 pages, human marks each finding true/false positive
-  - ⏸ CHECKPOINT: human confirms score
-- [ ] 🔄 Test recall (>=80%): human reviews same pages independently, compare
-  - ⏸ CHECKPOINT: human confirms score
-- [ ] Test comparison: compare to existing gateway review packets
-  - ⏸ CHECKPOINT: human reviews
-- [ ] Test actionability: can a fresh AI rewrite a page using only the brief?
-  - ⏸ CHECKPOINT: human reviews
-- [ ] Iterate until precision >= 90%, recall >= 80%
-  - ⏸ CHECKPOINT: human gives final approval
+- [ ] Test on 3 pilot pages post Pass A
+  - ⏸ CHECKPOINT: human reviews MDX output — correct template applied? naming correct? components appropriate?
+- [ ] Iterate until output is consistently correct
 
 ---
 
-### Step 19. Build Rewrite skill (Layer 3)
+### Step 19. Integrate veracity check into Pass A
 
-- [ ] 🔄 Define rewrite boundaries (what can change, what's preserved, brief-to-rewrite relationship)
-  - ⏸ CHECKPOINT: human approves boundaries
-- [ ] 🔄 Define diff summary format (changes keyed to brief findings)
-  - ⏸ CHECKPOINT: human approves format
-- [ ] Build the skill
-  - ⏸ CHECKPOINT: human reviews implementation
-- [ ] Test brief coverage: every brief item addressed in rewrite
+The veracity framework (veracity.md + 45-source library) is complete but not connected to the review/write workflow. This step adds the veracity check as a phase inside Pass A.
+
+**What it adds to Pass A**: when reviewing or writing a factual or procedural section, the agent checks the claim against the sources library, flags unverifiable claims with `{/* REVIEW: claim — verify with: source */}`, and sets `veracityStatus` in frontmatter.
+
+- [ ] 🔄 Define where in Pass A the veracity check runs (which section types trigger it, what the output looks like)
+  - ⏸ CHECKPOINT: human approves
+- [ ] Integrate into Pass A prompt/skill
   - ⏸ CHECKPOINT: human reviews
-- [ ] Test automated gates: zero banned words, valid frontmatter, naming scores >= 20/25, MDX renders, layout compliant, no broken links
-  - ⏸ CHECKPOINT: human reviews
-- [ ] 🔄 Test human quality: accuracy, voice, journey, readability, no regressions
-  - ⏸ CHECKPOINT: human confirms scores
-- [ ] 🔄 Test before/after: score original vs rewrite on all 8 dimensions
-  - ⏸ CHECKPOINT: human confirms improvement
-- [ ] Iterate until all tests pass
-  - ⏸ CHECKPOINT: human gives final approval
+- [ ] Test on 2 pages with known factual claims — are flags accurate and actionable?
+  - ⏸ CHECKPOINT: human confirms
 
 ---
 
 ## Phase 3: Run the Pipeline
 
-### Step 20. Wire the pipeline
+### Step 20. Wire the two paths
 
-- [ ] 🔄 Choose orchestration approach (manual invocation / meta-skill / script-backed)
-  - ⏸ CHECKPOINT: human decides
-- [ ] Build sequential flow: context pack → review → rewrite → validate (with checkpoints between layers)
-  - ⏸ CHECKPOINT: human reviews implementation
-- [ ] Test end-to-end on 1 page
-  - ⏸ CHECKPOINT: human reviews result + checkpoint UX
+Document and test the end-to-end flow for both paths. No new build — just the runbook and a verified test run.
+
+**Review path**: Level 1 tab map → ⏸ → Level 2 Pass A review → ⏸ human edits/approves → Level 2 Pass B layout → ⏸ → apply to file.
+
+**Write path**: Level 1 tab map + section brief → ⏸ → Level 2 Pass A write → ⏸ human edits/approves → Level 2 Pass B layout → ⏸ → apply to file.
+
+- [ ] 🔄 Write runbook documenting both paths with checkpoint positions
+  - ⏸ CHECKPOINT: human approves runbook
+- [ ] Test review path end-to-end on 1 pilot page
+  - ⏸ CHECKPOINT: human reviews result and checkpoint UX
+- [ ] Test write path end-to-end on 1 pilot page
+  - ⏸ CHECKPOINT: human reviews result
 
 ---
 
@@ -453,10 +503,10 @@ Update this section as each step completes. Current step is marked with ▶.
 | 6 | Define industry + niche (layer 3 — voice/terminology) | ✅ Done — industry.md (9 industry tokens + 8 niche tokens, locked) |
 | 7 | Define complexity + lifecycleStage | ✅ Done — complexity.md |
 | ▶ 8a | Define IA per tab — section structure, audience journey, page groups | 🔄 DRAFT — 08a-ia-per-tab.md, awaiting checkpoint |
-| 8 | Define generation contract (how all fields combine) | ⬜ Not started |
+| 8 | Define prompt input spec (what each pipeline prompt needs) | ⬜ Not started |
 | 9 | Define voice rules per audience | ⬜ Not started |
-| 10 | Define section naming rules | ⬜ Not started |
-| 11 | Define page structure rules per pageType | ⬜ Not started |
+| 10 | Formalise naming rules as pipeline prompt (move + consolidate content-naming.md) | ⬜ Not started |
+| 11 | Page templates per pageType + golden examples (Part A + B) | ⬜ Not started |
 
 ### Phase 2: Build the Pipeline
 
@@ -465,11 +515,11 @@ Update this section as each step completes. Current step is marked with ▶.
 | 12 | Schema migration (implement definitions in code) | ⬜ Not started |
 | 13 | Audit existing references against new definitions | ⬜ Not started |
 | 14 | Create per-audience don'ts | ⬜ Not started |
-| 15 | Create golden examples per pageType | ⬜ Not started |
-| 16 | Create condensed reference bundles per skill | ⬜ Not started |
-| 17 | Build Context Pack skill (Layer 1) | ⬜ Not started |
-| 18 | Build Page Review skill (Layer 2) | ⬜ Not started |
-| 19 | Build Rewrite skill (Layer 3) | ⬜ Not started |
+| 15 | Golden examples per pageType (identify + annotate) | ⬜ Not started |
+| 16 | Build Level 1 — Site + Tab map prompt | ⬜ Not started |
+| 17 | Build Level 2 Pass A — Content review/write (prompt → decide on skill) | ⬜ Not started |
+| 18 | Build Level 2 Pass B — Layout/style skill | ⬜ Not started |
+| 19 | Integrate veracity check into Pass A | ⬜ Not started |
 
 ### Phase 3: Run the Pipeline
 
@@ -490,18 +540,26 @@ Step 1 (collation) ✅
 Steps 2-11 (define framework) ──── all 🔄 INTERACTIVE, sequential ────►
      │
      ▼
-Step 12 (schema migration) ──► Step 13 (audit refs) ──► Steps 14-16 (don'ts, golden examples, ref bundles)
+Step 12 (schema migration) ──► Step 13 (audit refs) ──► Step 14 (don'ts) ──► Step 15 (golden examples)
      │
      ▼
-Step 17 (context pack skill) ──► Step 18 (page review skill) ──► Step 19 (rewrite skill)
+Step 16 (Level 1 tab map prompt)
      │
      ▼
-Step 20 (wire) ──► Step 21 (pilot) ──► Step 22 (scale)
+Step 17 (Level 2 Pass A content prompt/skill) ──► Step 18 (Level 2 Pass B layout skill)
+     │                                                        │
+     └──────────────── Step 19 (veracity check) ─────────────┘
+                       integrated into Pass A
+     │
+     ▼
+Step 20 (wire both paths + runbook) ──► Step 21 (pilot) ──► Step 22 (scale)
 ```
 
-- Steps 2-11 are fully sequential and blocking — the framework must be agreed before anything is built.
-- Steps 12-16 can partially overlap but each depends on the framework.
-- Steps 17-19 are sequential (each layer needs the previous layer's output for testing).
+- Steps 2-11 are fully sequential and blocking.
+- Steps 12-15 can partially overlap but depend on the framework.
+- Step 16 (tab map) must complete before Steps 17-18 (page work).
+- Steps 17 and 18 are sequential (Pass A content before Pass B layout).
+- Step 19 (veracity) integrates into Step 17 — runs in parallel with Pass A build.
 - Steps 20-22 are sequential.
 
 ---

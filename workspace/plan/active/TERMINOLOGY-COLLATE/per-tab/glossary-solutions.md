@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/solutions/`
 **Date**: 2026-03-20
-**Terms**: 74
+**Terms**: 76
 **Source**: Agent deep-read + classified-by-tag.md
 
 ---
@@ -335,6 +335,16 @@
 **Tags**: `video:playback`
 **Status**: current
 **Pages**: `solutions/livestreaming`, `solutions/index`
+
+---
+
+### Low-Latency
+
+**Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+**Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+**Tags**: `video:streaming`
+**Status**: current
+**Pages**: `solutions/livestreaming`, `solutions/webrtc`
 
 ---
 
@@ -675,6 +685,17 @@
 **Tags**: `video:studio`
 **Status**: current
 **Pages**: `solutions/analytics`, `solutions/api`
+
+---
+
+### Video on Demand (VOD)
+
+**Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+**Also known as**: VOD, on-demand video
+**External**: [Video on demand — Wikipedia](https://en.wikipedia.org/wiki/Video_on_demand)
+**Tags**: `video:delivery`
+**Status**: current
+**Pages**: `solutions/vod`, `solutions/index`
 
 ---
 

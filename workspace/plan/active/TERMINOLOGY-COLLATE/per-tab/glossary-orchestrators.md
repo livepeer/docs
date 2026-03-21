@@ -1,8 +1,8 @@
 # Glossary — Orchestrators Tab
 
 **Tab folder**: `v2/orchestrators/`
-**Date**: 2026-03-20
-**Terms**: 115
+**Date**: 2026-03-21
+**Terms**: 123
 **Source**: Agent deep-read + classified-by-tag.md + existing orchestrators glossary
 
 ---
@@ -187,6 +187,15 @@
 
 ---
 
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+**Category**: technical:hardware
+**External**: https://en.wikipedia.org/wiki/Central_processing_unit
+**Status**: current
+
+---
+
 ### Cold Model / Cold Start
 
 **Definition**: Latency incurred when an AI model must be loaded from storage into GPU memory before the first request can be processed, typically adding 5 to 90 seconds of delay.
@@ -327,6 +336,24 @@
 
 ---
 
+### GB (Gigabyte)
+
+**Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+**Category**: technical:hardware
+**External**: https://en.wikipedia.org/wiki/Gigabyte
+**Status**: current
+
+---
+
+### GeForce
+
+**Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/
+**Status**: current
+
+---
+
 ### go-livepeer
 
 **Definition**: Official Go implementation of the Livepeer protocol containing the Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary.
@@ -367,6 +394,16 @@
 
 ---
 
+### GTX (NVIDIA GTX)
+
+**Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+**Also known as**: GeForce GTX
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/graphics-cards/
+**Status**: current
+
+---
+
 ### Hard Gate
 
 **Definition**: Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold.
@@ -384,6 +421,16 @@
 **Tags**: `video:protocol`
 **Status**: current
 **Pages**: `orchestrators/transcoding`, `orchestrators/streaming`
+
+---
+
+### HuggingFace
+
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+**Also known as**: Hugging Face, HF
+**Category**: ai:platform
+**External**: https://huggingface.co/
+**Status**: current
 
 ---
 
@@ -627,6 +674,24 @@
 
 ---
 
+### Per Pixel (Price Per Pixel)
+
+**Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+**Category**: livepeer:economics
+**Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+**Status**: current
+
+---
+
+### Per Round
+
+**Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+**Category**: livepeer:economics
+**Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+**Status**: current
+
+---
+
 ### Performance Score
 
 **Definition**: Composite metric rating an orchestrator's reliability and speed, calculated as latency score multiplied by success rate, used by gateways in orchestrator selection.
@@ -785,6 +850,16 @@
 **Tags**: `video:protocol`
 **Status**: current
 **Pages**: `orchestrators/streaming`
+
+---
+
+### RTX (NVIDIA RTX)
+
+**Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+**Also known as**: GeForce RTX
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/graphics-cards/
+**Status**: current
 
 ---
 

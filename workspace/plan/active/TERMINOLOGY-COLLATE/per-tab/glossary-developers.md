@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/developers/`
 **Date**: 2026-03-20
-**Terms**: 73
+**Terms**: 83
 **Source**: Agent deep-read + classified-by-tag.md
 
 ---
@@ -65,6 +65,16 @@
 **Tags**: `ai:concept`, `livepeer:config`
 **Status**: current
 **Pages**: `developers/pipelines`, `developers/ai-gateway`
+
+---
+
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+**External**: [Central processing unit — Wikipedia](https://en.wikipedia.org/wiki/Central_processing_unit)
+**Tags**: `technical:hardware`
+**Status**: current
+**Pages**: `developers/compute`, `developers/node`
 
 ---
 
@@ -178,6 +188,16 @@
 
 ---
 
+### GB (Gigabyte)
+
+**Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+**External**: [Gigabyte — Wikipedia](https://en.wikipedia.org/wiki/Gigabyte)
+**Tags**: `technical:hardware`
+**Status**: current
+**Pages**: `developers/compute`, `developers/node`
+
+---
+
 ### Gateway
 
 **Definition**: Node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface for developers.
@@ -218,6 +238,17 @@
 
 ---
 
+### HuggingFace
+
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+**Also known as**: Hugging Face, HF
+**External**: [HuggingFace](https://huggingface.co/)
+**Tags**: `ai:platform`
+**Status**: current
+**Pages**: `developers/pipelines`, `developers/ai-gateway`
+
+---
+
 ### Image-to-Image
 
 **Definition**: AI pipeline transforming an input image into a modified output image guided by a text prompt or conditioning signal.
@@ -255,6 +286,17 @@
 **Tags**: `ai:concept`
 **Status**: current
 **Pages**: `developers/ai-gateway`, `developers/pipelines`
+
+---
+
+### JavaScript
+
+**Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+**Also known as**: JS
+**External**: [JavaScript — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+**Tags**: `technical:language`
+**Status**: current
+**Pages**: `developers/sdks`, `developers/api`
 
 ---
 
@@ -328,6 +370,16 @@
 
 ---
 
+### livepeer-python-gateway
+
+**Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+**Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations with the Livepeer network.
+**Tags**: `livepeer:sdk`
+**Status**: current
+**Pages**: `developers/sdks`, `developers/ai-gateway`
+
+---
+
 ### LLM (Large Language Model)
 
 **Definition**: Large language model — neural network trained on massive text corpora to understand and generate natural language.
@@ -355,6 +407,16 @@
 **Tags**: `livepeer:protocol`, `web3:token`
 **Status**: current
 **Pages**: `developers/protocol`, `developers/staking`
+
+---
+
+### Low-Latency
+
+**Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+**Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+**Tags**: `video:streaming`
+**Status**: current
+**Pages**: `developers/ai-video`, `developers/streaming`
 
 ---
 
@@ -489,6 +551,17 @@
 
 ---
 
+### RTX (NVIDIA RTX)
+
+**Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+**Also known as**: GeForce RTX
+**External**: [NVIDIA GeForce RTX](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+**Tags**: `technical:hardware`
+**Status**: current
+**Pages**: `developers/compute`, `developers/node`
+
+---
+
 ### SAM 2
 
 **Definition**: Meta's unified foundation model for promptable segmentation in images and videos with streaming memory, enabling interactive region selection.
@@ -530,6 +603,16 @@
 
 ---
 
+### Self-Hosted
+
+**Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+**External**: [Self-hosting — Wikipedia](https://en.wikipedia.org/wiki/Self-hosting_(web_services))
+**Tags**: `technical:deployment`
+**Status**: current
+**Pages**: `developers/node`, `developers/compute`
+
+---
+
 ### Smart Contract
 
 **Definition**: Self-executing program deployed on a blockchain that automatically enforces agreement terms without intermediaries.
@@ -537,6 +620,16 @@
 **Tags**: `web3:concept`
 **Status**: current
 **Pages**: `developers/protocol`, `developers/architecture`
+
+---
+
+### SLA (Service Level Agreement)
+
+**Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+**External**: [Service-level agreement — Wikipedia](https://en.wikipedia.org/wiki/Service-level_agreement)
+**Tags**: `technical:operations`
+**Status**: current
+**Pages**: `developers/architecture`, `developers/api`
 
 ---
 
@@ -668,6 +761,17 @@
 **Tags**: `livepeer:sdk`
 **Status**: current
 **Pages**: `developers/streaming`, `developers/architecture`
+
+---
+
+### Video on Demand (VOD)
+
+**Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+**Also known as**: VOD, on-demand video
+**External**: [Video on demand — Wikipedia](https://en.wikipedia.org/wiki/Video_on_demand)
+**Tags**: `video:delivery`
+**Status**: current
+**Pages**: `developers/streaming`, `developers/api`
 
 ---
 

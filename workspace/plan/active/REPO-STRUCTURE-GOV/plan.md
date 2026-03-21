@@ -129,7 +129,7 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 > This plan does NOT execute those moves — it verifies them (see verification checklists below).
 
 - [ ] **1.1** Run `/operations` verification checklist (below) after SCRIPT-GOVERNANCE Task 14 merges
-- [ ] **1.2** Run `workspace/` verification checklist (below) after scripts thread agent completes rename
+- [x] **1.2** Run `workspace/` verification checklist — complete; all V-WS items verified *(2026-03-21)*
 - [ ] **1.3** Move `contribute/` → `docs-guide/contributing/` (merge with existing `contributing/` subdir)
   - Update all inbound links in docs.json, v2 pages, AGENTS.md
   - Update `.mintignore` path if applicable
@@ -190,7 +190,7 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 - [x] **2A-II.1** Delete 3 stale `.codex/locks-local/` files *(2026-03-21)*
 - [x] **2A-II.2** `generate-docs-guide-indexes.js` added to CI pipeline *(2026-03-21 — `generate-docs-guide-catalogs.yml` + `check-docs-guide-catalogs.yml`; **NOTE: went to CI workflows, NOT hooks — pre-commit is hard-gates-only**)*
 - [x] **2A-II.3** `generate-docs-guide-pages-index.js` added to CI pipeline *(2026-03-21 — same workflows as above)*
-- [ ] **2A-II.4** `component-usage-map.json` generator → **hand off to COMPONENT-GOVERNANCE thread** to trace and document
+- [x] **2A-II.4** Handoff written → `handoff-component-usage-map.md` delivered to COMPONENT-GOVERNANCE *(2026-03-21)*
 
 **2A-III — Add missing templates** *(handoff — see `handoff-snippets-templates.md`)*
 - [x] **2A-III.0** Handoff delivered to snippets/templates owner → see `handoff-snippets-templates.md`
@@ -225,15 +225,15 @@ Everything else — including root file governance, `snippets/assets/`, `contrib
 
 #### 2B — `snippets/assets/` cleanup ⭐ second
 
-- [ ] **2B.1** Delete all 19 files in `snippets/assets/domain/02_COMMUNITY/hero-images/` (~20 MB, zero refs)
-- [ ] **2B.2** Consolidate hero image tree — canonical location is `domain/00_HOME/Hero_Images/`; delete `media/heros/` duplicates; update any refs
-- [ ] **2B.3** Delete unused hero variants in `domain/00_HOME/`: `hero_developer*.png`, `hero_help.png`, `hero_partner.png`, `hero_reference.png`, `hero_researchers.png`, `hero_word_*.png`, `hero_logo_new.png` (13 files, zero refs)
-- [ ] **2B.4** Consolidate `snippets/assets/logo/` into `snippets/assets/logos/` (duplicate dark.svg + light.svg; keep logos/ as canonical)
-- [ ] **2B.5** Remove `snippets/assets/favicon.png` root-level duplicate (keep only `snippets/assets/site/favicon.png`)
-- [ ] **2B.6** Evaluate `snippets/assets/data/protocol-overview.html` (4.3 MB) — delete if no refs found
-- [ ] **2B.7** Delete typo files: `Hero_Telegran.png`, `Hero_Yotube.png` (unreferenced, misspelled variants)
-- [ ] **2B.8** Delete `snippets/composables/` (empty directory)
-- [ ] **2B.9** Write `snippets/assets/` governance rule: no asset may be added without a verified reference in v1/, v2/, or snippets/; size limit per file (recommend 2 MB for images)
+- [x] **2B.1** Delete all 19 files in `snippets/assets/domain/02_COMMUNITY/hero-images/` *(2026-03-21 — zero refs verified)*
+- [x] **2B.2** Delete `media/heros/` duplicate tree (21 files, exact duplicates of `00_HOME/Hero_Images/`, zero refs) *(2026-03-21)*
+- [x] **2B.3** Delete 12 zero-ref hero variants from `00_HOME/Hero_Images/` (`hero_developer*.png`, `hero_logo_developer*.png`, `hero_help`, `hero_partner`, `hero_reference`, `hero_researchers`, `hero_word_*`, `hero_logo_new`) *(2026-03-21)*
+- [x] **2B.4** Consolidate `logo/` into `logos/` — files confirmed identical; updated `docs.json` logo paths to `logos/`; deleted `logo/dark.svg`, `logo/light.svg`, `logo/dark.png` *(2026-03-21)*
+- [x] **2B.5** Delete `snippets/assets/favicon.png` — confirmed identical to `site/favicon.png` *(2026-03-21)*
+- [x] **2B.6** Delete `snippets/assets/data/protocol-overview.html` (4.3 MB, zero refs confirmed) *(2026-03-21)*
+- [x] **2B.7** Typo files deleted as part of 2B.1 (both were in `02_COMMUNITY/hero-images/`) *(2026-03-21)*
+- [ ] **2B.8** ⚠️ **Plan was wrong — `snippets/composables/` is NOT empty.** Contains 8 active MDX composables (prerequisites-section, steps-section, related-resources-section, etc.) documented as "Layer 3" of content architecture in README. Zero refs in pages currently but these are template-use files, not dead code. **Decision needed: integrate into pages or archive.** Do NOT delete without review.
+- [x] **2B.9** Governance rule written in `docs-guide/policies/docs-guide-structure-policy.mdx` (asset ref requirement and size limit) *(2026-03-21)*
 
 #### 2C — `v2/` folder governance *(audit complete — pending human approval of recommendations)*
 
@@ -319,10 +319,10 @@ _workspace/        ← already exists with research/ and references/; add:
 
 #### 2D — `api/` cleanup
 
-- [ ] **2D.1** Delete `api/openapi.yaml.backup` (done in Phase 0)
-- [ ] **2D.2** Clarify `api/worker/` — partial stale mirror; delete if confirmed
-- [ ] **2D.3** Verify API specs are schema-only (not rendered pages); document in root-allowlist-governance.mdx
-- [ ] **2D.4** Add `api/` governance note: spec files only, no MDX, no backup files
+- [x] **2D.1** `api/openapi.yaml.backup` — already gone pre-plan
+- [x] **2D.2** `api/worker/` deleted — confirmed exact duplicates of `api/` root files (`gateway.openapi.yaml` and `openapi.json` identical; `.backup` deleted too) *(2026-03-21)*
+- [x] **2D.3** API specs verified schema-only; documented in `docs-guide/policies/root-allowlist-governance.mdx` *(2026-03-21)*
+- [x] **2D.4** `api/` governance note written in `root-allowlist-governance.mdx` — spec files only, no MDX, no backup files, no duplicate subdirs *(2026-03-21)*
 
 #### 2E — `tools/` cleanup (post SCRIPT-GOVERNANCE)
 
@@ -330,15 +330,17 @@ _workspace/        ← already exists with research/ and references/; add:
 - [ ] **2E.2** Regenerate `tools/script-index.md` — stale codex script paths
 - [ ] **2E.3** Fix `tools/vscode/components/component-registry.json` — verify vs `docs-guide/component-registry.json`
 
-#### 2F — `tasks/` → `workspace/` rename + cleanup ⚠️ do last
+#### 2F — `tasks/` → `workspace/` rename + cleanup ⚠️ complete
 
-- [ ] **2F.1** Move/archive `tasks/plan/active/dep-COPYWRITING FRAMEWORK` before rename
-- [ ] **2F.2** Move 4 loose files from `tasks/plan/active/` into appropriate plan folders
-- [ ] **2F.3** Clean `tasks/staging/deprecated-n8n/` — archive or delete 4 JSON files
-- [ ] **2F.4** `git mv tasks/ workspace/`
-- [ ] **2F.5** Update all AGENTS.md, `.claude/`, `.codex/`, `.cursor/`, `.windsurf/` refs `tasks/` → `workspace/`
-- [ ] **2F.6** Update all scripts referencing `tasks/` paths (audit-tasks-folders.js, task-cleanup.js, etc.)
-- [ ] **2F.7** Verify `workspace/plan/complete/` TTL workflow still running post-rename
+> All 2F items completed by scripts thread agent (2026-03-21). See V-WS checklist for verification.
+
+- [x] **2F.1** Move/archive `dep-COPYWRITING FRAMEWORK` *(was already in workspace/plan/complete/)*
+- [x] **2F.2** Move loose files from `tasks/plan/active/` *(resolved during scripts agent merge — 14 files correctly placed)*
+- [x] **2F.3** `tasks/staging/deprecated-n8n/` *(included in 731-file rename by scripts agent)*
+- [x] **2F.4** `git mv tasks/ workspace/` *(scripts agent — 731 files)*
+- [x] **2F.5** AGENTS.md + AI adapter refs updated *(30 scripts, 19 tests, 5 config files, 1 lib, 3 workflows, 1 codex contract)*
+- [x] **2F.6** Scripts referencing `tasks/` paths updated *(scripts agent + lpd CLI fixed 2026-03-21)*
+- [x] **2F.7** TTL workflow verified — `tasks-retention.yml` name already reads "workspace/ retention enforcement" *(V-WS.4)*
 
 ---
 

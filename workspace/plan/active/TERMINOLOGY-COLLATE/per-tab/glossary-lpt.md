@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/lpt/`
 **Date**: 2026-03-20
-**Terms**: 94
+**Terms**: 98
 **Source**: Agent deep-read + classified-by-tag.md
 
 ---
@@ -496,6 +496,16 @@
 
 ---
 
+### Per Round
+
+**Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+**Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+**Tags**: `livepeer:economics`
+**Status**: current
+**Pages**: `lpt/protocol`, `lpt/staking`
+
+---
+
 ### Price Per Pixel
 
 **Definition**: The fundamental pricing unit for Livepeer transcoding work, expressed as the cost in wei for processing one pixel of video.
@@ -728,6 +738,27 @@
 
 ---
 
+### USD (United States Dollar)
+
+**Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+**External**: [Wikipedia](https://en.wikipedia.org/wiki/United_States_dollar)
+**Tags**: `economic:currency`
+**Status**: current
+**Pages**: `lpt/economics`, `lpt/governance`
+
+---
+
+### USDT (Tether)
+
+**Definition**: A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT.
+**Also known as**: Tether
+**External**: [Tether](https://tether.to/)
+**Tags**: `web3:token`
+**Status**: current
+**Pages**: `lpt/economics`, `lpt/token-portal`
+
+---
+
 ### veLPT (Vote-Escrowed LPT)
 
 **Definition**: A proposed mechanism that would allow LPT holders to lock tokens for an extended period in exchange for enhanced governance voting power, aligning long-term incentives.
@@ -901,6 +932,16 @@
 **Tags**: `livepeer:protocol`, `economic:reward`
 **Status**: draft
 **Pages**: `lpt/staking`, `lpt/protocol`
+
+---
+
+### Stake-Weighted
+
+**Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+**Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+**Tags**: `livepeer:governance`
+**Status**: current
+**Pages**: `lpt/governance`, `lpt/staking`
 
 ---
 

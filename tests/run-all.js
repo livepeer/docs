@@ -437,6 +437,18 @@ async function runAllTests() {
     if (usefulnessJourneyCheck.status !== 0) totalErrors += 1;
     const usefulnessFailures = (usefulnessRubricCheck.status === 0 ? 0 : 1) + (usefulnessJourneyCheck.status === 0 ? 0 : 1);
     console.log(`   ${usefulnessFailures} errors, 0 warnings`);
+
+    // i18n Unit Tests
+    console.log('\n🌐 Running i18n Unit Tests...');
+    const i18nCheck = spawnSync(
+      'node --test tools/scripts/automations/content/language-translation/test/*.test.js',
+      [],
+      { cwd: REPO_ROOT, encoding: 'utf8', shell: true }
+    );
+    if (i18nCheck.stdout) process.stdout.write(i18nCheck.stdout);
+    if (i18nCheck.stderr) process.stderr.write(i18nCheck.stderr);
+    if (i18nCheck.status !== 0) totalErrors += 1;
+    console.log(`   ${i18nCheck.status === 0 ? 0 : 1} errors, 0 warnings`);
   }
 
   // Pages Index Sync Validation

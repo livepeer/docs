@@ -198,15 +198,15 @@ function buildPageSnippetLines(template) {
   const lines = ['---'];
 
   if (mode) lines.push(`mode: ${mode}`);
-  lines.push(`title: ${yamlSingleQuote(title)}`);
+  lines.push(`title: '\${1:${title}}'`);
   lines.push(`sidebarTitle: ${yamlSingleQuote(sidebarTitle)}`);
   if (tag) lines.push(`tag: ${yamlSingleQuote(tag)}`);
-  lines.push(`description: ${yamlSingleQuote(pageDescription)}`);
+  lines.push(`description: '\${2:${pageDescription}}'`);
   lines.push(`audience: ${audience}`);
   lines.push(`pageType: ${pageType}`);
   lines.push(`purpose: ${purpose}`);
   lines.push(`status: ${status}`);
-  lines.push(`lastVerified: ${lastVerified}`);
+  lines.push(`lastVerified: \${3:${lastVerified}}`);
   lines.push('keywords:');
   keywords.forEach((keyword) => {
     lines.push(`  - ${keyword}`);

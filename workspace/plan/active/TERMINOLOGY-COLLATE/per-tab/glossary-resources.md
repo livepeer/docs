@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/resources/`
 **Date**: 2026-03-20
-**Terms**: 98
+**Terms**: 103
 **Source**: Agent deep-read + classified-by-tag.md + existing resources glossary
 
 ---
@@ -195,6 +195,16 @@
 
 ---
 
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+**External**: [Central processing unit (Wikipedia)](https://en.wikipedia.org/wiki/Central_processing_unit)
+**Tags**: `technical:hardware`
+**Status**: current
+**Pages**: `resources/glossary`, `resources/network`
+
+---
+
 ### DAO
 
 **Also known as**: Decentralized Autonomous Organization
@@ -373,6 +383,17 @@
 
 ---
 
+### HuggingFace
+
+**Also known as**: Hugging Face, HF
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+**External**: [HuggingFace](https://huggingface.co/)
+**Tags**: `ai:platform`
+**Status**: current
+**Pages**: `resources/glossary`, `resources/ai`
+
+---
+
 ### Inflation
 
 **Definition**: The dynamic issuance of new LPT each round, distributed to orchestrators and delegators based on their participation, designed to incentivize staking toward a 50% target bonding rate.
@@ -400,6 +421,17 @@
 **Tags**: `video:processing`
 **Status**: current
 **Pages**: `resources/glossary`, `resources/streaming`
+
+---
+
+### JavaScript
+
+**Also known as**: JS
+**Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+**External**: [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+**Tags**: `technical:language`
+**Status**: current
+**Pages**: `resources/glossary`, `resources/tools`
 
 ---
 
@@ -480,6 +512,16 @@
 **Tags**: `livepeer:protocol`
 **Status**: current
 **Pages**: `resources/glossary`, `resources/protocol`
+
+---
+
+### Low-Latency
+
+**Definition**: A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines.
+**Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+**Tags**: `video:streaming`
+**Status**: current
+**Pages**: `resources/glossary`, `resources/streaming`
 
 ---
 
@@ -901,6 +943,17 @@
 **Tags**: `livepeer:protocol`
 **Status**: current
 **Pages**: `resources/glossary`, `resources/protocol`
+
+---
+
+### Video on Demand (VOD)
+
+**Also known as**: VOD, on-demand video
+**Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+**External**: [Video on demand (Wikipedia)](https://en.wikipedia.org/wiki/Video_on_demand)
+**Tags**: `video:delivery`
+**Status**: current
+**Pages**: `resources/glossary`, `resources/streaming`
 
 ---
 

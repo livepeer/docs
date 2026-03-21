@@ -8,7 +8,7 @@
  * @purpose-statement Tests i18n CLI guardrails — validates argument validation and safety checks
  * @pipeline          manual — not yet in pipeline
  * @dualmode          dual-mode (document flags)
- * @usage             node tools/scripts/i18n/test/cli-guardrails.test.js [flags]
+ * @usage             node tools/scripts/automations/content/language-translation/test/cli-guardrails.test.js [flags]
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');

@@ -2,7 +2,7 @@
 
 **Tab folder**: `v2/community/`
 **Date**: 2026-03-20
-**Terms**: 97
+**Terms**: 101
 **Source**: Agent deep-read + classified-by-tag.md
 
 ---
@@ -265,6 +265,17 @@
 
 ---
 
+### HuggingFace
+
+**Also known as**: Hugging Face, HF
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+**External**: [HuggingFace](https://huggingface.co/)
+**Tags**: `ai:platform`
+**Status**: current
+**Pages**: `community/ai`, `community/tools`
+
+---
+
 ### GWID (Gateway Wizard)
 
 **Definition**: Gateway Wizard SPE building a managed DevOps tool for running and managing gateway infrastructure.
@@ -272,6 +283,17 @@
 **Tags**: `livepeer:entity`
 **Status**: current
 **Pages**: `community/governance`, `community/proposals`
+
+---
+
+### JavaScript
+
+**Also known as**: JS
+**Definition**: A high-level interpreted scripting language used for web and server-side development; Livepeer's primary SDKs and gateway clients expose JavaScript/TypeScript APIs.
+**External**: [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+**Tags**: `technical:language`
+**Status**: current
+**Pages**: `community/sdks`, `community/tools`
 
 ---
 
@@ -432,6 +454,17 @@
 **Tags**: `livepeer:protocol`, `economic:treasury`
 **Status**: current
 **Pages**: `community/treasury`
+
+---
+
+### Open Source
+
+**Also known as**: open-source, FOSS
+**Definition**: Software distributed with its source code under a licence permitting study, modification, and redistribution; Livepeer's protocol, go-livepeer node software, and SDK libraries are all open source.
+**External**: [Open-source software (Wikipedia)](https://en.wikipedia.org/wiki/Open-source_software)
+**Tags**: `technical:concept`
+**Status**: current
+**Pages**: `community/index`, `community/tools`
 
 ---
 
@@ -652,6 +685,16 @@
 **Tags**: `web3:tokenomics`
 **Status**: current
 **Pages**: `community/staking`
+
+---
+
+### USD (United States Dollar)
+
+**Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+**External**: [United States dollar (Wikipedia)](https://en.wikipedia.org/wiki/United_States_dollar)
+**Tags**: `economic:currency`
+**Status**: current
+**Pages**: `community/treasury`, `community/economics`
 
 ---
 

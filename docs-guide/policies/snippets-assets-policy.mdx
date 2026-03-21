@@ -1,0 +1,99 @@
+---
+title: Snippets Assets Policy
+sidebarTitle: Snippets Assets
+description: Governance rules for snippets/assets/ — what may be added, size limits, and directory structure.
+owner: "@livepeer/docs-team"
+status: active
+version: "1.0"
+created: 2026-03-21
+lastUpdated: 2026-03-21
+---
+
+# Snippets Assets Policy
+
+> Defines what may be added to `snippets/assets/`, how assets are organised, and when they may be removed.
+
+---
+
+## Scope
+
+| In scope | Out of scope |
+|----------|--------------|
+| All files under `snippets/assets/` | `snippets/components/` (JSX component library) |
+| Image, SVG, data, and script assets | `snippets/data/` (structured JSON/JS data) |
+| `docs.json` logo and favicon references | `api/` spec files |
+
+---
+
+## Rules
+
+1. **Reference required before merge** — no asset may be added to `snippets/assets/` without a verified reference in at least one of: `v1/`, `v2/`, `snippets/`, or `docs.json`. Unreferenced assets will be removed during audits.
+
+2. **Size limit: 2 MB per image file** — images over 2 MB must be optimised before commit. PNG files over 500 KB should be reviewed for WebP conversion. The only exceptions are OG images in `site/og-image/` (generated artifacts).
+
+3. **No duplicate files across subdirectories** — if a file exists in `logos/`, it must not also exist in `logo/`. Canonical subdirectory wins; duplicates are deleted. Current canonical subdirectories:
+   - `logos/` — brand SVG and PNG logos
+   - `site/` — favicon, OG images, site-level assets
+   - `domain/` — section and persona hero images
+   - `data/` — non-image data assets
+   - `scripts/n8n/` — workflow JSON and docs
+
+4. **No backup files** — `.bak`, `.backup`, or similarly named files are not permitted. Use git history for rollback.
+
+5. **Hero images must be in `domain/00_HOME/Hero_Images/`** — this is the canonical location for hero images. `media/heros/` (now removed) and other subtrees are not permitted as mirror locations.
+
+6. **No ad-hoc subdirectories** — new subdirectories under `snippets/assets/` require a policy update to this document. Use the existing subdirectories.
+
+---
+
+## Canonical Directory Map
+
+```
+snippets/assets/
+├── logos/         ← brand SVG logos (canonical; logo/ removed 2026-03-21)
+├── site/          ← favicon, OG images, site-level assets
+│   ├── favicon/   ← multi-format favicon set
+│   ├── og-image/  ← generated OG images per locale
+│   └── images/    ← site-level illustrations
+├── domain/        ← section and persona images
+│   ├── 00_HOME/Hero_Images/  ← canonical hero images
+│   ├── 01_ABOUT/
+│   ├── 04_GATEWAYS/
+│   ├── 10_PRODUCTS/
+│   └── SHARED/
+├── data/          ← non-image data assets
+├── scripts/n8n/   ← n8n workflow JSON and documentation
+└── media/         ← (media/heros/ removed 2026-03-21; media/images, media/videos remain)
+```
+
+---
+
+## Enforcement
+
+| Mechanism | Trigger | Action |
+|-----------|---------|--------|
+| Manual audit | Governance cleanup phases | Grep for unreferenced assets; delete after 30-day notice |
+| Pre-commit hook | File deletion guard | Requires `allow-deletions=true` trailer for asset deletions |
+| PR review | Any new asset added | Reviewer confirms reference exists before merging |
+
+---
+
+## Recent Cleanup (2026-03-21)
+
+| Action | Files | Size reclaimed |
+|--------|-------|---------------|
+| Deleted `02_COMMUNITY/hero-images/` | 19 files | ~20 MB |
+| Deleted `media/heros/` duplicate tree | 21 files | ~15 MB |
+| Deleted 12 zero-ref hero variants from `00_HOME/Hero_Images/` | 12 files | ~8 MB |
+| Deleted `data/protocol-overview.html` | 1 file | 4.3 MB |
+| Deleted `favicon.png` root duplicate | 1 file | — |
+| Deleted `logo/` (consolidated into `logos/`) | 3 files | — |
+| **Total** | **57 files** | **~47 MB** |
+
+---
+
+## Related
+
+- [Docs Guide Structure Policy](docs-guide-structure-policy)
+- [Root Allowlist Governance](root-allowlist-governance)
+- [Workspace Lifecycle Policy](workspace-lifecycle-policy)

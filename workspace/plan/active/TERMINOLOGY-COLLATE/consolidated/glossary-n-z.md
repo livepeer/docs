@@ -490,6 +490,20 @@
 
 ---
 
+### Per Pixel (Price Per Pixel)
+
+**Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+
+**Tags**: `livepeer:economics`
+
+**Tabs**: about, gateways, orchestrators
+
+**Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+
+**Status**: current
+
+---
+
 ### Per-Pixel Pricing
 
 **Definition**: A cost model charging for transcoding work based on the total number of pixels processed (width × height × frame count), enabling standardized comparison across resolutions.
@@ -517,6 +531,20 @@
 **Pages**: `gateways/pricing`, `gateways/pipelines`
 
 **External**: [Livepeer AI pipelines](https://docs.livepeer.org/ai/pipelines/audio-to-text)
+
+**Status**: current
+
+---
+
+### Per Round
+
+**Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+
+**Tags**: `livepeer:economics`
+
+**Tabs**: about, lpt, orchestrators
+
+**Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
 
 **Status**: current
 
@@ -1414,6 +1442,22 @@
 
 ---
 
+### RTX (NVIDIA RTX)
+
+**Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+
+**Tags**: `technical:hardware`
+
+**Tabs**: gateways, orchestrators, developers
+
+**Also known as**: GeForce RTX
+
+**External**: [NVIDIA GeForce graphics cards](https://www.nvidia.com/en-us/geforce/graphics-cards/)
+
+**Status**: current
+
+---
+
 ### SAM 2
 
 **Definition**: Meta's unified foundation model for promptable segmentation in images and videos with streaming memory, enabling interactive region selection.
@@ -1546,6 +1590,20 @@
 
 ---
 
+### Self-Hosted
+
+**Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+
+**Tags**: `technical:deployment`
+
+**Tabs**: developers, gateways
+
+**External**: [Self-hosting (Wikipedia)](https://en.wikipedia.org/wiki/Self-hosting_(web_services))
+
+**Status**: current
+
+---
+
 ### Service Margin
 
 **Definition**: A markup that gateway operators add on top of orchestrator costs when reselling gateway access to end users.
@@ -1653,6 +1711,20 @@
 **Pages**: `gateways/security`, `gateways/config`
 
 **Context**: In an on-chain gateway, the signer is typically a local keystore file. In an off-chain gateway, signing is delegated to a remote signer service. The signer never needs to hold large ETH balances in the off-chain model.
+
+**Status**: current
+
+---
+
+### SLA (Service Level Agreement)
+
+**Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+
+**Tags**: `technical:operations`
+
+**Tabs**: developers, gateways
+
+**External**: [Service-level agreement (Wikipedia)](https://en.wikipedia.org/wiki/Service-level_agreement)
 
 **Status**: current
 
@@ -1901,6 +1973,20 @@
 **Status**: current
 
 **Also known as**: SFA
+
+---
+
+### Stake-Weighted
+
+**Definition**: A mechanism where each participant's voting power, reward allocation, or selection probability is proportional to their staked token balance rather than equal per-participant.
+
+**Tags**: `livepeer:governance`
+
+**Tabs**: about, lpt
+
+**Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+
+**Status**: current
 
 ---
 
@@ -2668,6 +2754,20 @@
 
 ---
 
+### USD (United States Dollar)
+
+**Definition**: The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data.
+
+**Tags**: `economic:currency`
+
+**Tabs**: lpt, community, about
+
+**External**: [United States dollar (Wikipedia)](https://en.wikipedia.org/wiki/United_States_dollar)
+
+**Status**: current
+
+---
+
 ### USD Pricing
 
 **Definition**: A pricing configuration where work costs are denominated in US dollars, with automatic dynamic conversion to wei as the ETH/USD exchange rate fluctuates.
@@ -2679,6 +2779,22 @@
 **Pages**: `gateways/pricing`, `gateways/config`, `orchestrators/pricing`, `orchestrators/config`
 
 **Context**: USD pricing shields gateway and orchestrator operators from ETH price volatility. The gateway or an external price feed integration queries an ETH/USD oracle and adjusts the wei-denominated MaxPrice accordingly.
+
+**Status**: current
+
+---
+
+### USDT (Tether)
+
+**Definition**: A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT.
+
+**Tags**: `web3:token`
+
+**Tabs**: lpt
+
+**Also known as**: Tether
+
+**External**: [Tether](https://tether.to/)
 
 **Status**: current
 
@@ -2761,6 +2877,22 @@
 **Pages**: `solutions/analytics`, `solutions/api`
 
 **Context**: Livepeer Studio provides a Viewership API returning per-asset or per-stream engagement metrics; data is collected from the Livepeer Player or via the `reportPlayback` API endpoint in custom players.
+
+**Status**: current
+
+---
+
+### Video on Demand (VOD)
+
+**Definition**: A media delivery model where recorded video content is stored server-side and streamed to viewers on request at any time, in contrast to live streaming.
+
+**Tags**: `video:delivery`
+
+**Tabs**: developers, solutions
+
+**Also known as**: VOD, on-demand video
+
+**External**: [Video on demand (Wikipedia)](https://en.wikipedia.org/wiki/Video_on_demand)
 
 **Status**: current
 

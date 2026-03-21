@@ -50,3 +50,21 @@ E. at what governance "tier" is this script acting (need to identify these tiers
 F. could the script be bundled into a full "concern" orchestrator script or is it already? (probably part of A if already in one)
 
 3. FULLY DEFINED GOVERNANCE
+
+---
+
+## Icon Taxonomy Task (flagged 2026-03-21)
+
+**Observation**: Mintlify uses hyphenated icon identifiers (e.g. `book-open`, `chart-line`, `circle-question`) as prop values throughout MDX files. These are not user-facing terminology but they are not documented anywhere.
+
+**Proposed task**: Audit all icon values used across the repo and create an icon taxonomy/catalog in `docs-guide/` — covering:
+- Which icon names are used
+- Which components accept icon props (`Accordion`, `Card`, `Tip`, etc.)
+- Canonical icon names to use for each content type (e.g. `book-open` for definitions, `code` for code references)
+- Guidelines for consistent icon use across components
+
+**Why**: Reduces inconsistency in icon choices, makes components easier to author, and prevents the audit script from confusing icon names with glossary terms (the glossary gap script needed explicit icon stopwords because there's no taxonomy to reference).
+
+**Candidate home**: `docs-guide/policies/` or `docs-guide/catalog/` — TBD based on whether it's a policy or reference.
+
+**Related**: glossary gap audit script (`tools/scripts/audits/content/reference/audit-glossary-gaps.js`) currently filters icon names via a stopword list — a proper taxonomy would let the script exclude icons programmatically.

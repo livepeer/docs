@@ -1,8 +1,8 @@
 # Glossary — Gateways Tab
 
 **Tab folder**: `v2/gateways/`
-**Date**: 2026-03-20
-**Terms**: 65
+**Date**: 2026-03-21
+**Terms**: 75
 **Source**: Agent deep-read + classified-by-tag.md + existing gateways glossary
 
 ---
@@ -110,6 +110,15 @@
 
 ---
 
+### CPU (Central Processing Unit)
+
+**Definition**: The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads.
+**Category**: technical:hardware
+**External**: https://en.wikipedia.org/wiki/Central_processing_unit
+**Status**: current
+
+---
+
 ### Demand Aggregation
 
 **Definition**: Consolidating requests from multiple users or applications for efficient routing to the orchestrator network.
@@ -181,6 +190,24 @@
 
 ---
 
+### GB (Gigabyte)
+
+**Definition**: A unit of digital storage equal to 1,073,741,824 bytes (binary); used in Livepeer hardware specifications for RAM, VRAM, and storage requirements.
+**Category**: technical:hardware
+**External**: https://en.wikipedia.org/wiki/Gigabyte
+**Status**: current
+
+---
+
+### GeForce
+
+**Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/
+**Status**: current
+
+---
+
 ### Gateway
 
 **Definition**: A node that submits jobs, routes work to orchestrators, manages payment flows, and provides a protocol interface between applications and the Livepeer network.
@@ -232,6 +259,16 @@
 
 ---
 
+### GTX (NVIDIA GTX)
+
+**Definition**: NVIDIA's previous-generation consumer GPU product line; capable of Livepeer video transcoding but lacks the Tensor cores of the RTX series needed for accelerated AI inference.
+**Also known as**: GeForce GTX
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/graphics-cards/
+**Status**: current
+
+---
+
 ### HTTP Live Streaming (HLS)
 
 **Definition**: An HTTP-based streaming protocol by Apple that encodes video into multiple quality levels with an index playlist for adaptive delivery.
@@ -250,6 +287,16 @@
 **Tags**: `video:processing`
 **Status**: current
 **Pages**: `gateways/ingest`, `gateways/streaming`
+
+---
+
+### HuggingFace
+
+**Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+**Also known as**: Hugging Face, HF
+**Category**: ai:platform
+**External**: https://huggingface.co/
+**Status**: current
 
 ---
 
@@ -300,6 +347,15 @@
 **Tags**: `livepeer:protocol`
 **Status**: current
 **Pages**: `gateways/code`, `gateways/architecture`
+
+---
+
+### livepeer-python-gateway
+
+**Definition**: An open-source Python reference implementation of a Livepeer gateway, enabling job submission, payment flow management, and pipeline routing from Python applications.
+**Category**: livepeer:sdk
+**Context**: Maintained by the community as a lightweight alternative for developers building Python-native integrations.
+**Status**: current
 
 ---
 
@@ -416,6 +472,15 @@
 
 ---
 
+### Per Pixel (Price Per Pixel)
+
+**Definition**: Livepeer's unit-based pricing mechanism where fees are calculated based on the number of pixels processed during a transcoding or AI inference job.
+**Category**: livepeer:economics
+**Context**: A 4K frame costs more to process than a 720p frame because it contains more pixels; enables pricing that scales with workload complexity.
+**Status**: current
+
+---
+
 ### Per-Pixel Pricing
 
 **Definition**: A cost model charging for transcoding work based on the total number of pixels processed (width × height × frame count), enabling standardized comparison across resolutions.
@@ -527,6 +592,16 @@
 
 ---
 
+### RTX (NVIDIA RTX)
+
+**Definition**: NVIDIA's current consumer GPU product line featuring dedicated Tensor cores that accelerate AI/ML inference workloads; RTX GPUs are well-suited for Livepeer AI pipeline tasks.
+**Also known as**: GeForce RTX
+**Category**: technical:hardware
+**External**: https://www.nvidia.com/en-us/geforce/graphics-cards/
+**Status**: current
+
+---
+
 ### Scaling
 
 **Definition**: Increasing gateway capacity to handle more concurrent requests, either horizontally (deploying additional gateway nodes) or vertically (adding resources to an existing node).
@@ -544,6 +619,15 @@
 **Tags**: `video:processing`, `livepeer:protocol`
 **Status**: current
 **Pages**: `gateways/transcoding`, `gateways/protocol`
+
+---
+
+### Self-Hosted
+
+**Definition**: A deployment model in which the operator runs their own infrastructure rather than relying on a managed cloud service; Livepeer gateways and AI nodes can be self-hosted on any compatible hardware.
+**Category**: technical:deployment
+**External**: https://en.wikipedia.org/wiki/Self-hosting_(web_services)
+**Status**: current
 
 ---
 
@@ -594,6 +678,15 @@
 **Tags**: `technical:security`
 **Status**: current
 **Pages**: `gateways/security`, `gateways/config`
+
+---
+
+### SLA (Service Level Agreement)
+
+**Definition**: A formal commitment between a service provider and a customer defining expected performance levels, uptime guarantees, and remediation obligations.
+**Category**: technical:operations
+**External**: https://en.wikipedia.org/wiki/Service-level_agreement
+**Status**: current
 
 ---
 
