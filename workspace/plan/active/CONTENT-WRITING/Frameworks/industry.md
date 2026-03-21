@@ -1,6 +1,6 @@
 # Industry + Niche — Definitions
 
-**Status**: DRAFT
+**Status**: ✅ Locked
 **Related**: [index.md](index.md) | [pagePurpose.md](pagePurpose.md) | [framework.md](framework.md)
 
 ---

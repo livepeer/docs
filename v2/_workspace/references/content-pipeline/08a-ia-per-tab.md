@@ -1,6 +1,6 @@
 # 08a — IA Per Tab: Section Vocabulary, Audience Journey, Page Groups
 
-**Status**: DRAFT — awaiting checkpoint approval
+**Status**: ✅ Locked
 **Step**: 8a (Content Writing Pipeline)
 **Scope**: Gateways + Orchestrators (pilot). All other tabs are post-pipeline.
 **Sources**:
@@ -196,23 +196,21 @@ For each page group in the pilot, the default field combination (pageType + audi
 
 ---
 
-## Open Questions for Checkpoint
+## Resolved Decisions
 
-1. **`resources/` flat content reorganisation**: Both tabs have reference content (faq.mdx, glossary.mdx, compendium/, technical/) sitting flat in `resources/`. Should the pipeline reorganise this into `resources/reference/` as a pipeline output (Step 21), or is this a separate task?
+1. **`resources/` flat content reorganisation — deferred to Step 21**: Both tabs have reference content sitting flat in `resources/` — this is a pipeline output, not a framework blocker. The canonical structure (`resources/reference/` + `resources/knowledge-hub/`) is locked here; reorganisation happens as part of pilot execution (Step 21).
 
-2. **`roadmap-and-funding/` placement**: Currently in `guides/`, but pages here are a mix of `resource` (funding links, grants) and `guide` (roadmap context). Should this subgroup eventually move to `resources/knowledge-hub/`?
+2. **`roadmap-and-funding/` placement — stays in `guides/` for now**: Mixed type (resource + guide) is not unusual for a subgroup at the operational stage. Moving to `knowledge-hub/` is a post-pipeline option if the content warrants it after Phase 3 audit. No structural change for the pilot.
 
-3. **`guides/tutorials/` vs `resources/knowledge-hub/`**: Confirm rule: tab-specific tutorials (purpose-built for this tab's audience) → `guides/tutorials/`. Externally-sourced or community tutorials worth surfacing → `resources/knowledge-hub/`.
+3. **`guides/tutorials/` vs `resources/knowledge-hub/` — confirmed**: Tab-specific tutorials (purpose-built for this tab's audience, maintained by docs team) → `guides/tutorials/`. Externally-sourced or community tutorials worth surfacing → `resources/knowledge-hub/`. Rule is as stated in 8a-1.
 
 ---
 
-## ⏸ CHECKPOINT
+## ✅ CHECKPOINT PASSED
 
-**Review checklist**:
-
-- [ ] Section vocabulary (8a-1) — `resources/reference/` and `resources/knowledge-hub/` structure correct?
-- [ ] Folder divergence (8a-2) — divergence assessment accurate?
-- [ ] Audience + journey (8a-4) — journeys accurate for both tabs?
-- [ ] Guide subgroup IA (8a-5) — pageType and lifecycleStage assignments correct?
-- [ ] Per-page field combinations (8a-6) — input to generation contract correct?
-- [ ] Open questions resolved?
+- [x] Section vocabulary (8a-1) — `resources/reference/` and `resources/knowledge-hub/` structure locked
+- [x] Folder divergence (8a-2) — both tabs assessed; divergence is execution-phase work (Step 21), not a framework blocker
+- [x] Audience + journey (8a-4) — journeys confirmed for gateways and orchestrators
+- [x] Guide subgroup IA (8a-5) — pageType and lifecycleStage assignments confirmed for pilot scope
+- [x] Per-page field combinations (8a-6) — input to generation contract confirmed
+- [x] Open questions resolved

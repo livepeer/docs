@@ -105,7 +105,7 @@ Everything in this phase is 🔄 INTERACTIVE. These steps define what "good" mea
 
 ---
 
-### Step 6. Define industry + niche — what field the content belongs to ✅ DRAFT
+### Step 6. Define industry + niche — what field the content belongs to ✅ LOCKED
 
 **Input**: User notes in `v2/_workspace/research/ai-coauthoring.md` and `content-naming.md` (domain-anchor rule).
 
@@ -119,9 +119,9 @@ Industry+niche governs: section naming (domain-anchor rule becomes enforceable),
 - [x] 🔄 Array format confirmed — ordered, max 2, first dominates
 - [x] 🔄 9 industry tokens defined with native terms + reference sources
 - [x] 🔄 8 niche tokens defined
-- [ ] ⏸ CHECKPOINT: human locks industry.md
+- [x] ⏸ CHECKPOINT: industry.md locked ✅
 
-**Output**: [industry.md](industry.md) — DRAFT, pending lock
+**Output**: [Frameworks/industry.md](Frameworks/industry.md) — ✅ Locked
 
 ---
 
@@ -138,7 +138,7 @@ Industry+niche governs: section naming (domain-anchor rule becomes enforceable),
 
 ---
 
-### Step 8a. Define IA per tab — section structure, audience journey, page groups
+### Step 8a. Define IA per tab — section structure, audience journey, page groups ✅ LOCKED
 
 **Input**:
 - `docs.json` (actual nav structure)
@@ -183,7 +183,7 @@ Every tab has a specific audience, purpose, and internal IA. The pipeline needs 
 - This becomes the context pack's structural context layer
 - ⏸ CHECKPOINT: human approves per-page definitions
 
-**Output**: Approved per-tab IA — section vocabulary, audience journey, page group definitions. Input to generation contract and context pack skill.
+**Output**: [08a-ia-per-tab.md](../../../v2/_workspace/references/content-pipeline/08a-ia-per-tab.md) — ✅ Locked. Section vocabulary, audience journeys for gateways + orchestrators, guide subgroup IA, per-page field combinations. All open questions resolved. Resources reorganisation deferred to Step 21.
 
 **Cross-references (folder map review, 2026-03-21)**:
 - `catalog/` in the published folder map validates `knowledge-hub` naming logic — curated external content directories are already a recognised pattern
@@ -216,43 +216,33 @@ This spec is the contract that Steps 16–19 build against.
 
 ---
 
-### Step 9. Define voice rules per audience
+### Step 9. Define voice rules per audience ✅ LOCKED
 
 **Input**: Existing `copy-rules-SKILL.md` (operator-focused), approved audience definitions from step 3.
 
 Voice rules feed two places: the context block for Level 2 Pass A prompts (what register, terminology, don'ts apply) and the Pass A review criteria (what to flag when reviewing existing content).
 
-- [ ] 🔄 For each audience: define section opening order, acceptable terminology, tone, don'ts
-  - ⏸ CHECKPOINT: human approves voice rules per audience
-- [ ] 🔄 Identify where current copy rules need extending vs where they already cover all audiences
-  - ⏸ CHECKPOINT: human approves gap analysis
-- [ ] 🔄 Draft extended voice rules for audiences not yet covered (developer, delegator, community, etc.)
-  - ⏸ CHECKPOINT: human approves new voice rules
+- [x] 🔄 For each audience: define section opening order, acceptable terminology, tone, don'ts
+- [x] 🔄 Identify where current copy rules need extending vs where they already cover all audiences
+- [x] 🔄 Draft extended voice rules for audiences not yet covered (developer, delegator, community, etc.)
+- [x] 🔄 4 open questions resolved (register distinctions, sub-variants, positive exemplars, founder split)
+- [x] ⏸ CHECKPOINT: voice-rules.md locked ✅
 
-**Output**: Approved voice rules per audience — feeds Pass A context blocks and review criteria.
+**Output**: [Prompts/voice-rules.md](Prompts/voice-rules.md) — ✅ Locked. 7 audiences defined; universal rules + per-audience register, tone, do/don't, prohibited phrases; community section has positive exemplars.
 
 ---
 
-### Step 10. Formalise naming rules as a pipeline prompt
+### Step 10. Formalise naming rules as a pipeline prompt ✅ LOCKED (testing pending)
 
 **Input**: `v2/_workspace/research/content-naming.md` — existing draft naming prompt (already working). `page-composition-framework.mdx` naming examples.
 
-The naming rubric already exists as a working prompt in `content-naming.md`. This step formalises it:
-- Move `content-naming.md` into `/Prompts/` alongside the other pipeline prompts
-- Add the context block (pageType, audience, purpose inputs) — second version in the file already has this
-- Add quality gates (the scoring criteria already exist)
-- Verify it works across all 7 pageTypes in the pilot group
-
-The naming prompt feeds Pass B (layout/style pass) — it's applied after content is written, not during.
-
-- [ ] Move `v2/_workspace/research/content-naming.md` → `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md`
-  - ⏸ CHECKPOINT: human confirms move
-- [ ] 🔄 Consolidate two prompt versions in the file into one with context block (pageType + audience + purpose inputs)
-  - ⏸ CHECKPOINT: human approves final prompt
+- [x] Move `v2/_workspace/research/content-naming.md` → `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md`
+- [x] 🔄 Consolidate two prompt versions into one canonical prompt with context block (pageType + audience + purpose inputs)
+- [x] ⏸ CHECKPOINT: section-naming.md locked ✅
 - [ ] 🔄 Test on 5 real section titles across different pageTypes — scores match human judgment?
-  - ⏸ CHECKPOINT: human confirms
+  - ⏸ CHECKPOINT: human confirms — deferred to pilot phase (Step 21)
 
-**Output**: Formalised naming prompt in `/Prompts/` — ready for Pass B integration.
+**Output**: [Prompts/section-naming.md](Prompts/section-naming.md) — ✅ Locked. Canonical 6-step scoring prompt with quick-reference label taxonomy; 1–4 word rule, governing-concept over literal labels, 10-question winner filter.
 
 ---
 
@@ -504,8 +494,8 @@ Update this section as each step completes. Current step is marked with ▶.
 | 7 | Define complexity + lifecycleStage | ✅ Done — complexity.md |
 | ▶ 8a | Define IA per tab — section structure, audience journey, page groups | 🔄 DRAFT — 08a-ia-per-tab.md, awaiting checkpoint |
 | 8 | Define prompt input spec (what each pipeline prompt needs) | ⬜ Not started |
-| 9 | Define voice rules per audience | ⬜ Not started |
-| 10 | Formalise naming rules as pipeline prompt (move + consolidate content-naming.md) | ⬜ Not started |
+| 9 | Define voice rules per audience | 🔄 DRAFT — voice-rules.md exists in Prompts/; built ahead of sequence; awaiting framework lock + checkpoint |
+| 10 | Formalise naming rules as pipeline prompt (move + consolidate content-naming.md) | 🔄 PARTIAL — section-naming.md moved to Prompts/; consolidation of two prompt versions pending |
 | 11 | Page templates per pageType + golden examples (Part A + B) | ⬜ Not started |
 
 ### Phase 2: Build the Pipeline
@@ -516,10 +506,10 @@ Update this section as each step completes. Current step is marked with ▶.
 | 13 | Audit existing references against new definitions | ⬜ Not started |
 | 14 | Create per-audience don'ts | ⬜ Not started |
 | 15 | Golden examples per pageType (identify + annotate) | ⬜ Not started |
-| 16 | Build Level 1 — Site + Tab map prompt | ⬜ Not started |
-| 17 | Build Level 2 Pass A — Content review/write (prompt → decide on skill) | ⬜ Not started |
-| 18 | Build Level 2 Pass B — Layout/style skill | ⬜ Not started |
-| 19 | Integrate veracity check into Pass A | ⬜ Not started |
+| 16 | Build Level 1 — Site + Tab map prompt | 🔄 DRAFT — level-1-tab-map.md exists in Prompts/; built ahead of sequence; revision required after Steps 8-15 |
+| 17 | Build Level 2 Pass A — Content review/write (prompt → decide on skill) | 🔄 DRAFT — level-2-pass-a-content.md exists in Prompts/; built ahead of sequence |
+| 18 | Build Level 2 Pass B — Layout/style skill | 🔄 DRAFT — level-2-pass-b-layout.md exists in Prompts/; built ahead of sequence |
+| 19 | Integrate veracity check into Pass A | ⬜ Not started — veracity framework complete (veracity.md, veracity-library.md); integration pending |
 
 ### Phase 3: Run the Pipeline
 

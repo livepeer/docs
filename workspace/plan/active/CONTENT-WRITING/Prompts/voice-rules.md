@@ -2,7 +2,7 @@
 
 ## Livepeer Docs Content Pipeline — Step 9 Draft
 
-**Status**: DRAFT — awaiting checkpoint approval
+**Status**: ✅ Locked
 **Feeds**: Pass A Phase 5 voice check · Pass B frontmatter tone calibration
 **Related**: `ai-tools/ai-skills/docs-copy/skills/copy-rules.md` (universal rules) | `framework.md` (audience + persona definitions)
 
@@ -241,6 +241,14 @@ UK English throughout. Full correction table at the end of this file.
 - "The community is the heart of..."
 - "Exciting opportunity to contribute"
 
+**Positive exemplars (by persona):**
+
+- `explorer`: "Livepeer is a decentralised video infrastructure network. Participants can run infrastructure as a gateway or orchestrator, build products using the API, stake LPT as a delegator, or contribute to the ecosystem. Start with the section that fits your role."
+- `ambassador`: "Live Pioneers accepts applications on a rolling basis. Contributors log work in the contribution tracker and receive monthly reward distributions based on contribution categories."
+- `engager`: "The Governance Forum is where proposals are posted before going on-chain. Comments during the review period can extend the voting timeline. To vote, you need staked LPT — that is handled in the LP Token tab."
+- `researcher`: "Network utilisation data is published via the Livepeer Explorer API. Historical round data is available in the subgraph. The whitepaper (Ericsson, 2018) is the primary citation for protocol mechanics."
+- `internal`: "The `docs-guide/` directory contains all contributor tooling, policies, and component documentation. Begin with AGENTS.md for repo rules and contribution workflow."
+
 ---
 
 ### `founder` — business-executive register
@@ -296,12 +304,12 @@ UK English throughout. Full correction table at the end of this file.
 
 ---
 
-## Open questions for checkpoint
+## Resolved Decisions
 
-1. **gateway vs orchestrator register:** Currently described as "peer-to-peer technical" for both. Is there a meaningful distinction in register, or only in content domain (networking vs hardware)?
+1. **gateway vs orchestrator register — confirmed unified**: Same base register (peer-to-peer technical, operator-to-operator, precision over warmth) for both. The distinction is vocabulary domain, not register: gateway uses networking/routing vocabulary; orchestrator uses hardware/GPU vocabulary. Vocabulary domain is handled at the field level (`industry` + `niche` frontmatter), not in the register definition. No register change needed.
 
-2. **developer register sub-variants:** The developer audience spans BYOC (deep protocol) through tooling builders (SDK consumers). Should the register have sub-variants, or does one code-first register serve all?
+2. **developer register sub-variants — confirmed none needed**: One code-first register serves all developer personas. BYOC (deep protocol) through tooling builders (SDK consumers) share the same essential register: code-first, minimal prose, precision, no ceremony. Sub-variants would add complexity without meaningful benefit. Vocabulary context is handled by `industry` + `niche` per page.
 
-3. **community positive exemplars:** The current rules are prohibition-focused. Would a set of positive exemplar sentences per persona be more useful than prohibitions alone?
+3. **community positive exemplars — added**: Positive exemplar sentences per persona added to the community section above. Prohibitions alone are insufficient — exemplars anchor what correct voice looks like for each persona.
 
-4. **founder register: technical vs business split:** Currently handled as a note. Should these be two separate register definitions, given they likely produce meaningfully different pages?
+4. **founder register: technical vs business split — confirmed unified**: The founder register (executive summary, outcome-before-mechanism, numbers over adjectives, business framing) applies to both technical and business founders. The current section already routes by persona (`technical` → architecture/reliability/integration implications; `business` → cost/competitive positioning/risk; `partner` → process and programme mechanics). Splitting into two full register definitions would add overhead without benefit.

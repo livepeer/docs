@@ -1,6 +1,6 @@
 # Page Purpose — Full Definitions
 
-**Status**: DRAFT — for review and edit before locking to `page-taxonomy-framework.mdx`
+**Status**: ✅ Locked — canonical. Mirror to `page-taxonomy-framework.mdx` in schema migration (Step 12).
 **Enum**: 15 intent-based values (UK English)
 **Related**: [framework.md](framework.md) | [plan.md](plan.md)
 

@@ -127,7 +127,7 @@ Examples:
 
 Notes:
   - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
-  - `lpd dev` auto-installs/updates pre-commit hooks via tools/scripts/mint-dev.sh.
+  - `lpd dev` auto-installs/updates pre-commit hooks via tools/dev/mint-dev.sh.
   - `lpd dev` defaults to port 3333 when no port is provided and rejects port 3000.
   - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
   - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
@@ -222,13 +222,13 @@ sync_codex_planner_skill() {
         return 1
     fi
 
-    if [ ! -f "$REPO_ROOT/tools/scripts/sync-codex-skills.js" ]; then
-        echo "sync-codex-skills.js not found at $REPO_ROOT/tools/scripts/sync-codex-skills.js" >&2
+    if [ ! -f "$REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" ]; then
+        echo "sync-codex-skills.js not found at $REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" >&2
         return 1
     fi
 
     echo "Syncing Codex planner skill to $target_dir..."
-    node tools/scripts/sync-codex-skills.js --skills agentic-project-management-orchestrator
+    node operations/scripts/automations/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
 }
 
 emit_json() {
@@ -354,11 +354,11 @@ install_cli_link() {
 
 group_root() {
     case "$1" in
-        tools) echo "tools/scripts" ;;
+        tools) echo "operations/scripts" ;;
         workspace) echo "workspace/scripts" ;;
         tasks) echo "workspace/scripts" ;;  # legacy alias for workspace
-        tests) echo "tests" ;;
-        v2) echo "tools/scripts/dev" ;;
+        tests) echo "operations/tests" ;;
+        v2) echo "tools/dev" ;;
         hooks) echo ".githooks" ;;
         *)
             return 1
@@ -380,7 +380,7 @@ group_risk() {
 is_builtin_excluded() {
     local rel="$1"
     case "$rel" in
-        */node_modules/*|*.bak|*.bak2|*~|*.tmp|*.temp|*.log|logs/*|tests/reports/*|*/README|*/README.md|*/README.mdx|*/README-test-*.md)
+        */node_modules/*|*.bak|*.bak2|*~|*.tmp|*.temp|*.log|logs/*|operations/tests/reports/*|*/README|*/README.md|*/README.mdx|*/README-test-*.md)
             return 0
             ;;
         *)
@@ -817,10 +817,10 @@ EOF
         failures=$((failures + 1))
     fi
 
-    if [ -d "$REPO_ROOT/tests/node_modules" ]; then
+    if [ -d "$REPO_ROOT/operations/tests/node_modules" ]; then
         echo "✓ tests dependencies installed"
     else
-        echo "✗ tests dependencies missing (run: cd tests && npm install)" >&2
+        echo "✗ tests dependencies missing (run: cd operations/tests && npm install)" >&2
         failures=$((failures + 1))
     fi
 
@@ -903,7 +903,7 @@ EOF
             *) install_tools=1 ;;
         esac
 
-        printf "Install tests dependencies (cd tests && npm install)? [Y/n]: "
+        printf "Install tests dependencies (cd operations/tests && npm install)? [Y/n]: "
         read -r answer || true
         case "$answer" in
             n|N|no|NO) install_tests=0 ;;
@@ -982,13 +982,13 @@ run_test_mode() {
     local mode="$1"
     case "$mode" in
         fast)
-            node tests/run-all.js --skip-browser
+            node operations/tests/run-all.js --skip-browser
             ;;
         staged)
-            node tests/run-all.js --staged --skip-browser
+            node operations/tests/run-all.js --staged --skip-browser
             ;;
         full)
-            node tests/run-all.js
+            node operations/tests/run-all.js
             ;;
         *)
             return 1
@@ -999,7 +999,7 @@ run_test_mode() {
 cmd_dev() {
     local run_tests=0
     local test_mode="fast"
-    local script_path="$REPO_ROOT/tools/scripts/mint-dev.sh"
+    local script_path="$REPO_ROOT/tools/dev/mint-dev.sh"
     local dry_run=0
     local scoped_mode=0
     local docs_config=""
@@ -1363,14 +1363,14 @@ EOF
     fi
 
     if [ "$run_browser" = "1" ]; then
-        if ! node tests/integration/browser.test.js; then
+        if ! node operations/tests/integration/browser.test.js; then
             failures=$((failures + 1))
         fi
     fi
 
     if [ -n "$domain_scope" ]; then
         local -a domain_cmd
-        domain_cmd=(node tests/integration/domain-pages-audit.js --version "$domain_scope")
+        domain_cmd=(node operations/tests/integration/domain-pages-audit.js --version "$domain_scope")
         if [ -n "$base_url" ]; then
             domain_cmd+=(--base-url "$base_url")
         fi
@@ -1381,7 +1381,7 @@ EOF
 
     if [ "$run_wcag" = "1" ]; then
         local -a wcag_cmd
-        wcag_cmd=(node tests/integration/v2-wcag-audit.js)
+        wcag_cmd=(node operations/tests/integration/v2-wcag-audit.js)
         case "$mode" in
             full)
                 wcag_cmd+=(--full)
@@ -1410,7 +1410,7 @@ EOF
                 external_report="/tmp/v2-link-audit-external-full.md"
                 external_report_json="/tmp/v2-link-audit-external-full.json"
                 external_link_cmd=(
-                    node tests/integration/v2-link-audit.js
+                    node operations/tests/integration/v2-link-audit.js
                     --full
                     --external-policy validate
                     --external-link-types navigational
@@ -1423,7 +1423,7 @@ EOF
                 external_report="/tmp/v2-link-audit-external-staged.md"
                 external_report_json="/tmp/v2-link-audit-external-staged.json"
                 external_link_cmd=(
-                    node tests/integration/v2-link-audit.js
+                    node operations/tests/integration/v2-link-audit.js
                     --staged
                     --external-policy validate
                     --external-link-types navigational
@@ -1488,12 +1488,12 @@ EOF
     done
 
     local failures=0
-    if ! node tests/run-all.js --skip-browser; then
+    if ! node operations/tests/run-all.js --skip-browser; then
         failures=$((failures + 1))
     fi
 
     local -a domain_cmd
-    domain_cmd=(node tests/integration/domain-pages-audit.js --version both)
+    domain_cmd=(node operations/tests/integration/domain-pages-audit.js --version both)
     if [ -n "$base_url" ]; then
         domain_cmd+=(--base-url "$base_url")
     fi
@@ -1502,7 +1502,7 @@ EOF
     fi
 
     if [ "$skip_browser" != "1" ]; then
-        if ! node tests/integration/browser.test.js; then
+        if ! node operations/tests/integration/browser.test.js; then
             failures=$((failures + 1))
         fi
     fi
@@ -1620,7 +1620,7 @@ EOF
     case "$surface" in
       portable-skills)
         if [ "$mode" = "write" ]; then
-          run_cli_step node tools/scripts/export-portable-skills.js --write || {
+          run_cli_step node operations/scripts/automations/ai/agents/export-portable-skills.js --write || {
             finish 1 "repair" "Portable skills export failed."
             return 1
           }
@@ -1628,49 +1628,49 @@ EOF
             git add ai-tools/ai-skills/templates ai-tools/agent-packs/skills || true
           fi
         fi
-        run_cli_step node tests/unit/export-portable-skills.test.js || {
+        run_cli_step node operations/tests/unit/export-portable-skills.test.js || {
           finish 1 "repair" "Portable skills validation failed."
           return 1
         }
-        run_cli_step node tests/unit/codex-skill-sync.test.js || {
+        run_cli_step node operations/tests/unit/codex-skill-sync.test.js || {
           finish 1 "repair" "Codex skill sync validation failed."
           return 1
         }
         ;;
       docs-guide-generated)
         if [ "$mode" = "write" ]; then
-          run_cli_step node tools/scripts/generate-docs-guide-indexes.js --write || {
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write || {
             finish 1 "repair" "Docs-guide index generation failed."
             return 1
           }
-          run_cli_step node tools/scripts/generate-docs-guide-pages-index.js --write || {
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write || {
             finish 1 "repair" "Docs-guide pages index generation failed."
             return 1
           }
-          run_cli_step node tools/scripts/generate-docs-guide-components-index.js --write || {
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write || {
             finish 1 "repair" "Docs-guide components index generation failed."
             return 1
           }
-          run_cli_step node tests/unit/script-docs.test.js --write --rebuild-indexes || {
+          run_cli_step node operations/tests/unit/script-docs.test.js --write --rebuild-indexes || {
             finish 1 "repair" "Script catalog regeneration failed."
             return 1
           }
           if [ "$stage_outputs" = "1" ]; then
-            git add docs-guide/catalog tests/script-index.md tools/script-index.md tools/lib/script-index.md workspace/reports/script-classifications.json || true
+            git add docs-guide/catalog operations/tests/script-index.md tools/script-index.md tools/lib/script-index.md workspace/reports/script-classifications.json || true
           fi
         fi
-        run_cli_step node tests/unit/docs-guide-sot.test.js || {
+        run_cli_step node operations/tests/unit/docs-guide-sot.test.js || {
           finish 1 "repair" "Docs-guide source-of-truth validation failed."
           return 1
         }
         ;;
       ui-templates)
-        if [ ! -f "$REPO_ROOT/tools/scripts/generate-ui-templates.js" ] || [ ! -f "$REPO_ROOT/tests/unit/ui-template-generator.test.js" ]; then
+        if [ ! -f "$REPO_ROOT/operations/scripts/generators/components/library/generate-ui-templates.js" ] || [ ! -f "$REPO_ROOT/operations/tests/unit/ui-template-generator.test.js" ]; then
           finish 1 "repair" "ui-templates surface is not available on this branch yet."
           return 1
         fi
         if [ "$mode" = "write" ]; then
-          run_cli_step node tools/scripts/generate-ui-templates.js --write || {
+          run_cli_step node operations/scripts/generators/components/library/generate-ui-templates.js --write || {
             finish 1 "repair" "UI template generation failed."
             return 1
           }
@@ -1678,7 +1678,7 @@ EOF
             git add snippets/templates v2/templates .vscode/templates.code-snippets .vscode/components.code-snippets docs-guide/catalog/ui-templates.mdx || true
           fi
         fi
-        run_cli_step node tests/unit/ui-template-generator.test.js || {
+        run_cli_step node operations/tests/unit/ui-template-generator.test.js || {
           finish 1 "repair" "UI template validation failed."
           return 1
         }
@@ -1694,7 +1694,7 @@ EOF
             return 1
           fi
           local -a script_cmd
-          script_cmd=(node tools/scripts/orchestrators/repair-governance.js)
+          script_cmd=(node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js)
           if [ "$scope_mode" = "staged" ]; then
             script_cmd+=(--staged)
           else
@@ -1705,7 +1705,7 @@ EOF
             return 1
           }
         else
-          run_cli_step node tests/unit/script-docs.test.js "${quality_scope[@]}" || {
+          run_cli_step node operations/tests/unit/script-docs.test.js "${quality_scope[@]}" || {
             finish 1 "repair" "Script governance validation failed."
             return 1
           }
@@ -1713,7 +1713,7 @@ EOF
         ;;
       component-governance)
         local -a component_cmd
-        component_cmd=(node tools/scripts/remediators/components/repair-component-metadata.js)
+        component_cmd=(node operations/scripts/remediators/components/library/repair-component-metadata.js)
         if [ "$mode" = "write" ]; then
           component_cmd+=(--fix)
         else
@@ -1727,11 +1727,11 @@ EOF
           return 1
         }
         if [ "$mode" = "write" ]; then
-          run_cli_step node tools/scripts/generate-component-registry.js || {
+          run_cli_step node operations/scripts/generators/components/library/generate-component-registry.js || {
             finish 1 "repair" "Component registry generation failed."
             return 1
           }
-          run_cli_step node tools/scripts/generate-component-docs.js --fix --template-only || {
+          run_cli_step node operations/scripts/generators/components/documentation/generate-component-docs.js --fix --template-only || {
             finish 1 "repair" "Component docs generation failed."
             return 1
           }
@@ -1739,16 +1739,16 @@ EOF
             git add snippets/components docs-guide/component-registry.json docs-guide/component-registry-schema.json v2/resources/documentation-guide/component-library || true
           fi
         else
-          run_cli_step node tools/scripts/generate-component-registry.js --validate-only || {
+          run_cli_step node operations/scripts/generators/components/library/generate-component-registry.js --validate-only || {
             finish 1 "repair" "Component registry validation failed."
             return 1
           }
-          run_cli_step node tools/scripts/generate-component-docs.js --check --template-only || {
+          run_cli_step node operations/scripts/generators/components/documentation/generate-component-docs.js --check --template-only || {
             finish 1 "repair" "Component docs validation failed."
             return 1
           }
         fi
-        run_cli_step node tests/unit/component-governance-generators.test.js || {
+        run_cli_step node operations/tests/unit/component-governance-generators.test.js || {
           finish 1 "repair" "Component governance validation failed."
           return 1
         }
@@ -1758,11 +1758,11 @@ EOF
           finish 1 "repair" "frontmatter-contract is check-only because there is no deterministic writer."
           return 1
         fi
-        run_cli_step node tests/unit/quality.test.js "${quality_scope[@]}" || {
+        run_cli_step node operations/tests/unit/quality.test.js "${quality_scope[@]}" || {
           finish 1 "repair" "Frontmatter contract validation failed."
           return 1
         }
-        run_cli_step node tests/unit/frontmatter-taxonomy.test.js || {
+        run_cli_step node operations/tests/unit/frontmatter-taxonomy.test.js || {
           finish 1 "repair" "Frontmatter taxonomy validation failed."
           return 1
         }
@@ -1805,7 +1805,7 @@ EOF
     done
 
     local -a cmd
-    cmd=(node tools/scripts/generate-ai-sitemap.js)
+    cmd=(node operations/scripts/generators/content/seo/generate-ai-sitemap.js)
     case "$mode" in
         write)
             cmd+=(--write)
@@ -1867,7 +1867,7 @@ EOF
     local source_path="$1"
     local target_path="$2"
     local -a sync_cmd
-    sync_cmd=(node tools/scripts/remediators/content/sync-docs-paths.js)
+    sync_cmd=(node operations/scripts/remediators/content/repair/sync-docs-paths.js)
 
     if [ "$check_only" = "1" ]; then
         sync_cmd+=(--dry-run)
