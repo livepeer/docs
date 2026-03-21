@@ -15,18 +15,19 @@ JSDoc headers in snippets/components/**/*.jsx
   │
   ▼ [MANUAL: generate-component-registry.js]
   │
-  ├→ docs-guide/component-registry.json          ← master generated artifact
-  │     (121 exports, 5,796 lines)
-  └→ docs-guide/component-registry-schema.json
-        │
-        ▼ [MANUAL: generate-component-docs.js]
-        │
-        └→ v2/resources/documentation-guide/component-library/*.mdx   (4 locales)
-              │
-              ▼ [CI/CD ON MAIN PUSH: generate-docs-guide-catalogs.yml]
-              │
-              └→ docs-guide/catalog/components-catalog.mdx
-                    └→ published browsable library in v2/
+  ├→ OUT: docs-guide/component-registry.json          (121 exports, 5,796 lines)
+  └→ OUT: docs-guide/component-registry-schema.json
+
+  ▼ [MANUAL: generate-component-docs.js]
+  │   IN:  docs-guide/component-registry.json
+  │
+  └→ OUT: v2/resources/documentation-guide/component-library/*.mdx   (4 locales)
+
+  ▼ [CI/CD ON MAIN PUSH: generate-docs-guide-catalogs.yml]
+  │   IN:  v2/resources/documentation-guide/component-library/*.mdx
+  │
+  └→ OUT: docs-guide/catalog/components-catalog.mdx
+              └→ published browsable library in v2/
 ```
 
 **Trigger sequence summary:**
@@ -56,15 +57,17 @@ snippets/components/**/*.jsx
 ### 1.3 Companion / AI discoverability pipeline
 
 ```
-Components with @aiDiscoverability=snapshot
-  → snippets/data/snapshots/*.json           manual stub OR CDA-5 (unbuilt)
+IN:  @aiDiscoverability=snapshot fields in component-registry.json
+  ▼ [MANUAL stub / CDA-5 refresh script — unbuilt]
+  OUT: snippets/data/snapshots/*.json
 
-Components with @aiDiscoverability=props-extracted
-  → v2/*/resources/compendium/glossary-data.json   generate-glossary-companions.js
-  → v2/home/solutions/showcase-data.json           manual
+IN:  @aiDiscoverability=props-extracted fields + MDX page data
+  ▼ [generate-glossary-companions.js / manual]
+  OUT: v2/*/resources/compendium/glossary-data.json
+  OUT: v2/home/solutions/showcase-data.json
 
-docs-guide/catalog/ai-companion-manifest.json       manual (CDA-6 governance checker unbuilt)
-docs-guide/catalog/ai-companion-schema.json         static schema definition
+OUT: docs-guide/catalog/ai-companion-manifest.json   (manual index; CDA-6 checker unbuilt)
+OUT: docs-guide/catalog/ai-companion-schema.json     (static schema — no generator)
 ```
 
 **Status:** Partially automated. Generator exists for glossary companions only. Snapshot refresh (CDA-5) not yet built.
@@ -97,7 +100,7 @@ docs-guide/catalog/ai-companion-schema.json         static schema definition
 | Script | Path | Purpose | Automation |
 |--------|------|---------|-----------|
 | `governance-pipeline` | `tools/scripts/dispatch/governance/pipelines/` | Chains audit → repair → verify → report | Manual (`--auto-commit` optional) |
-| `sync-generated-files` | `tools/scripts/dispatch/governance/pipelines/` | Syncs generated artifacts across branches/locales | Manual |
+| `sync-generated-files` | `tools/scripts/dispatch/governance/pipelines/` | Distributes generated outputs across branches/locales | Manual |
 | `repo-audit-orchestrator` | `tools/scripts/dispatch/governance/repo/` | Full-repo audit orchestration | Manual |
 
 ---
