@@ -32,11 +32,11 @@ echo -e "${YELLOW}🔍 Running verification checks...${NC}"
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
 get_staged_docs_pages() {
-    if ! command -v node &>/dev/null || [ ! -f "tests/utils/file-walker.js" ]; then
+    if ! command -v node &>/dev/null || [ ! -f "operations/tests/utils/file-walker.js" ]; then
         return 0
     fi
 
-    node -e "const path = require('path'); const { getStagedDocsPageFiles } = require('./tests/utils/file-walker'); const root = process.cwd(); const files = getStagedDocsPageFiles(root).map((filePath) => path.relative(root, filePath).split(path.sep).join('/')); process.stdout.write(files.join('\n'));"
+    node -e "const path = require('path'); const { getStagedDocsPageFiles } = require('./operations/tests/utils/file-walker'); const root = process.cwd(); const files = getStagedDocsPageFiles(root).map((filePath) => path.relative(root, filePath).split(path.sep).join('/')); process.stdout.write(files.join('\n'));"
 }
 
 STAGED_DOCS_PAGES=$(get_staged_docs_pages)
@@ -164,17 +164,17 @@ fi
 if command -v node &>/dev/null; then
     # Check if puppeteer is available (tests/ first, then tools/, then legacy root node_modules)
     PUPPETEER_AVAILABLE=false
-    if [ -f "tests/node_modules/puppeteer/package.json" ]; then
+    if [ -f "operations/tests/node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
-        export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+        export NODE_PATH="$(pwd)/operations/tests/node_modules:${NODE_PATH:-}"
     elif [ -f "tools/node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
         export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
     elif [ -f "node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
-    elif [ -f "tests/package.json" ] && grep -q "puppeteer" tests/package.json; then
+    elif [ -f "operations/tests/package.json" ] && grep -q "puppeteer" operations/tests/package.json; then
         PUPPETEER_AVAILABLE=true
-        export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+        export NODE_PATH="$(pwd)/operations/tests/node_modules:${NODE_PATH:-}"
     elif [ -f "tools/package.json" ] && grep -q "puppeteer" tools/package.json; then
         PUPPETEER_AVAILABLE=true
         export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
@@ -200,14 +200,14 @@ if command -v node &>/dev/null; then
                 cd "$REPO_ROOT"
                 echo -e "${RED}❌ Failed to install dependencies${NC}"
             fi
-        elif [ -f "tests/package.json" ] && grep -q "puppeteer" tests/package.json; then
+        elif [ -f "operations/tests/package.json" ] && grep -q "puppeteer" operations/tests/package.json; then
             echo -e "${YELLOW}⚠️  Puppeteer not found, attempting to install dependencies...${NC}"
             if cd tests && npm install --silent 2>&1; then
                 cd "$REPO_ROOT"
                 # Check again after install
-                if [ -f "tests/node_modules/puppeteer/package.json" ]; then
+                if [ -f "operations/tests/node_modules/puppeteer/package.json" ]; then
                     PUPPETEER_AVAILABLE=true
-                    export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+                    export NODE_PATH="$(pwd)/operations/tests/node_modules:${NODE_PATH:-}"
                     echo -e "${GREEN}✓ Puppeteer installed successfully${NC}"
                 else
                     echo -e "${RED}❌ Puppeteer installation failed or incomplete${NC}"
@@ -224,8 +224,8 @@ if command -v node &>/dev/null; then
         # Set NODE_PATH for verify-browser.js to find puppeteer
         if [ -d "tools/node_modules" ]; then
             export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
-        elif [ -d "tests/node_modules" ]; then
-            export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+        elif [ -d "operations/tests/node_modules" ]; then
+            export NODE_PATH="$(pwd)/operations/tests/node_modules:${NODE_PATH:-}"
         fi
         
         # Cross-platform timeout function (30 seconds max)

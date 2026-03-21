@@ -40,7 +40,7 @@ Call out conflicts explicitly instead of guessing.
 - Do not use `git reset --hard`, `git stash`, or `git push --force` unless a human explicitly directs it.
 - Do not delete tracked files casually. File deletions require a human-owned commit with `--trailer "allow-deletions=true"`.
 - Do not make the final `.allowlist` commit yourself. A human must commit `.allowlist` edits with `--trailer "allowlist-edit=true"`.
-- On `codex/*` branches, follow `.codex/task-contract.yaml` plus the lock/task validators under `tools/scripts/dispatch/ai/codex/`.
+- On `codex/*` branches, follow `.codex/task-contract.yaml` plus the lock/task validators under `operations/scripts/dispatch/ai/codex/`.
 
 ## Root and Structure Governance
 
@@ -66,8 +66,8 @@ Call out conflicts explicitly instead of guessing.
 Run the smallest relevant validation set before handing work back:
 
 - `lpd test --staged`
-- `node tools/scripts/validators/governance/check-agent-docs-freshness.js --json`
-- `node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check`
+- `node operations/scripts/validators/governance/check-agent-docs-freshness.js --json`
+- `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check`
 - task-specific generators or validators when routing, governance, or generated artifacts changed
 
 ## Response and Review Contract

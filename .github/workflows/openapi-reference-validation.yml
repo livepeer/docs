@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: tests/package-lock.json
+          cache-dependency-path: operations/tests/package-lock.json
 
       - name: Install test dependencies
         env:
@@ -70,7 +70,7 @@ jobs:
         id: initial_audit
         run: |
           set +e
-          node tests/integration/openapi-reference-audit.js \
+          node operations/tests/integration/openapi-reference-audit.js \
             --full \
             --strict \
             --report /tmp/openapi-audit-initial.md \
@@ -84,7 +84,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           set +e
-          node tests/integration/openapi-reference-audit.js \
+          node operations/tests/integration/openapi-reference-audit.js \
             --full \
             --fix \
             --write \
@@ -105,7 +105,7 @@ jobs:
         id: final_audit
         run: |
           set +e
-          node tests/integration/openapi-reference-audit.js \
+          node operations/tests/integration/openapi-reference-audit.js \
             --full \
             --strict \
             --report /tmp/openapi-audit-final.md \
@@ -211,7 +211,7 @@ jobs:
             ${{ steps.summary.outputs.top_findings }}
 
             Reproduce locally:
-            `node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json`
+            `node operations/tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json`
           labels: |
             docs-v2
             type: bug
@@ -272,7 +272,7 @@ jobs:
             const path = require('path');
             const helpers = require(path.join(
               process.env.GITHUB_WORKSPACE || process.cwd(),
-              'tests/utils/openapi-rolling-issue.js'
+              'operations/tests/utils/openapi-rolling-issue.js'
             ));
 
             const owner = context.repo.owner;

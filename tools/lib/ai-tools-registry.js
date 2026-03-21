@@ -25,10 +25,10 @@ const RELEVANT_PATHS = new Set([
   'docs-guide/policies/ownerless-governance.mdx',
   'docs-guide/policies/skill-pipeline-map.mdx',
   'docs-guide/policies/source-of-truth-policy.mdx',
-  'tests/unit/ai-tools-registry.test.js',
+  'operations/tests/unit/ai-tools-registry.test.js',
   'tools/config/ownerless-governance-surfaces.json',
   'tools/lib/ai-tools-registry.js',
-  'tools/scripts/validate-ai-tools-registry.js'
+  'operations/scripts/validate-ai-tools-registry.js'
 ]);
 
 function getRepoRoot() {
