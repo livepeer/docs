@@ -25,6 +25,8 @@ components/
 └── _archive/        # Legacy sources retained for review
 ```
 
+**Browsable catalog**: `docs-guide/catalog/components-catalog.mdx` — auto-generated on every push to main. That file is the authoritative component listing; do not maintain manual catalog files here.
+
 ## Decision Rules
 
 | Category | Rule |
