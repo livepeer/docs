@@ -24,8 +24,8 @@ const {
 } = require('../../../../../tools/lib/component-governance-utils');
 
 const REPO_ROOT = process.cwd();
-const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
-const SCHEMA_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry-schema.json');
+const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
+const SCHEMA_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry-schema.json');
 
 const CATEGORY_PURPOSES = {
   elements: 'Smallest visual atoms — no children, no fetching, no arrangement',

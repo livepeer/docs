@@ -33,7 +33,7 @@ const {
 } = require('../../../automations/content/language-translation/lib/provenance');
 
 const REPO_ROOT = process.cwd();
-const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
+const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
 const EDITORIAL_CACHE_PATH = path.join(REPO_ROOT, 'docs-guide', '.editorial-cache.json');
 const ENGLISH_OUTPUT_DIR = path.join(REPO_ROOT, 'v2', 'resources', 'documentation-guide', 'component-library');
 const LOCALE_DIRS = {
@@ -158,7 +158,7 @@ function normalizeFileContent(content) {
 
 function readRegistry() {
   if (!fs.existsSync(REGISTRY_PATH)) {
-    throw new Error('Missing docs-guide/component-registry.json. Run generate-component-registry first.');
+    throw new Error('Missing docs-guide/config/component-registry.json. Run generate-component-registry first.');
   }
   return JSON.parse(fs.readFileSync(REGISTRY_PATH, 'utf8'));
 }
@@ -388,7 +388,7 @@ async function renderCategoryPage(category, components, args, cache, warnings) {
     },
     banner: {
       script: 'operations/scripts/generate-component-docs.js',
-      purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
+      purpose: 'Generated component-library MDX pages derived from docs-guide/config/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
       runCommand: `node operations/scripts/generate-component-docs.js --fix --template-only --category ${category}`
     }
@@ -444,7 +444,7 @@ function renderOverviewPage(registry) {
     },
     banner: {
       script: 'operations/scripts/generate-component-docs.js',
-      purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
+      purpose: 'Generated component-library MDX pages derived from docs-guide/config/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
       runCommand: 'node operations/scripts/generate-component-docs.js --fix --template-only'
     }
@@ -467,8 +467,8 @@ function renderOverviewPage(registry) {
       '',
       '### Canonical Sources',
       '',
-      '- Registry JSON: [`docs-guide/component-registry.json`](/docs-guide/component-registry.json)',
-      '- Usage map: [`docs-guide/component-usage-map.json`](/docs-guide/component-usage-map.json)',
+      '- Registry JSON: [`docs-guide/config/component-registry.json`](/docs-guide/config/component-registry.json)',
+      '- Usage map: [`docs-guide/config/component-usage-map.json`](/docs-guide/config/component-usage-map.json)',
       '- Docs-guide index: [`docs-guide/catalog/components-catalog.mdx`](/docs-guide/catalog/components-catalog.mdx)',
       ''
     ].join('\n')
@@ -485,7 +485,7 @@ function renderLandingPage(registry) {
     },
     banner: {
       script: 'operations/scripts/generate-component-docs.js',
-      purpose: 'Generated component-library MDX pages derived from docs-guide/component-registry.json.',
+      purpose: 'Generated component-library MDX pages derived from docs-guide/config/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or published component-library templates change.',
       runCommand: 'node operations/scripts/generate-component-docs.js --fix --template-only'
     }
@@ -616,7 +616,7 @@ function renderLocaleScaffold(locale, slug, registry) {
     },
     banner: {
       script: 'operations/scripts/generate-component-docs.js',
-      purpose: 'Generated localized component-library route scaffolds derived from docs-guide/component-registry.json.',
+      purpose: 'Generated localized component-library route scaffolds derived from docs-guide/config/component-registry.json.',
       runWhen: 'Component governance metadata, registry outputs, or component-library templates change.',
       runCommand:
         slug === 'overview' || slug === 'component-library'

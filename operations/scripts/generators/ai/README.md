@@ -9,10 +9,10 @@ Future home for AI companion file generation scripts.
 Generates static companion files for components with `@aiDiscoverability: snapshot | props-extracted`.
 
 **Responsibilities:**
-1. Read `docs-guide/component-registry.json` for components with `@aiDiscoverability`
+1. Read `docs-guide/config/component-registry.json` for components with `@aiDiscoverability`
 2. `snapshot` components: call external API → write to `snippets/data/snapshots/[source-id].json`
 3. `props-extracted` components: parse MDX files that import the component → extract data prop → write `v2/[section]/[page-slug]-data.json`
-4. Write/update manifest at `docs-guide/catalog/ai-companion-manifest.json`
+4. Write/update manifest at `docs-guide/config/ai-companion-manifest.json`
 5. `--check` mode: verify all companions exist and are not stale
 
 **Why this folder (not `generators/components/`):**

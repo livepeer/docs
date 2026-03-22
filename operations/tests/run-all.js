@@ -87,8 +87,8 @@ function hasStagedComponentGovernanceChanges() {
   }
 
   const relevantFiles = new Set([
-    'docs-guide/component-registry.json',
-    'docs-guide/component-usage-map.json',
+    'docs-guide/config/component-registry.json',
+    'docs-guide/config/component-usage-map.json',
     'tools/lib/component-governance-utils.js',
     'operations/scripts/audits/components/documentation/audit-component-usage.js',
     'operations/scripts/generators/components/library/generate-component-registry.js',
@@ -131,7 +131,7 @@ function hasStagedUiTemplateChanges() {
       filePath.startsWith('.vscode/') ||
       filePath === 'docs-guide/catalog/ui-templates.mdx' ||
       filePath === 'docs-guide/features/ui-system.mdx' ||
-      filePath === 'docs-guide/component-registry.json' ||
+      filePath === 'docs-guide/config/component-registry.json' ||
       filePath === 'operations/scripts/generators/components/library/generate-ui-templates.js' ||
       filePath === 'operations/tests/unit/ui-template-generator.test.js'
   );

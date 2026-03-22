@@ -1,7 +1,7 @@
 /**
  * CDA-6: AI Companion Manifest Checker
  *
- * Validates that docs-guide/catalog/ai-companion-manifest.json is consistent
+ * Validates that docs-guide/config/ai-companion-manifest.json is consistent
  * with the component registry's aiDiscoverability fields.
  *
  * Checks:
@@ -21,8 +21,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../../../../..');
-const REGISTRY_PATH = path.join(ROOT, 'docs-guide/component-registry.json');
-const MANIFEST_PATH = path.join(ROOT, 'docs-guide/catalog/ai-companion-manifest.json');
+const REGISTRY_PATH = path.join(ROOT, 'docs-guide/config/component-registry.json');
+const MANIFEST_PATH = path.join(ROOT, 'docs-guide/config/ai-companion-manifest.json');
 
 const args = {
   check: process.argv.includes('--check'),
