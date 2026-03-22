@@ -1,0 +1,180 @@
+---
+title: '[Topic] — Source of Truth'
+description: 'Canonical reference for how [topic] artifacts are classified, structured, enforced, and maintained.'
+snippetPrefix: lp-sot
+snippetLabel: Source of truth page scaffold
+sidebarTitle: '[Topic] Source of Truth'
+pageTitle: '[Topic] — Source of Truth'
+pageDescription: 'Canonical reference for [topic] — classification rules, folder structure, naming conventions, enforcement, and governance.'
+audience: community
+persona: internal
+pageType: reference
+pageVariant: specification
+purpose: reference
+status: current
+lastVerified: 2026-03-20
+keywords:
+  - livepeer
+  - source of truth
+  - governance
+  - reference
+  - canonical
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+
+{/*
+  SOURCE OF TRUTH PAGE TEMPLATE
+  ─────────────────────────────
+  Use this template for any canonical reference page that documents how a system
+  or category of artifacts is classified, structured, enforced, and maintained.
+
+  Scope: one governed system per page (e.g. components, scripts, templates, AI tools).
+
+  Replace all [Topic], [item], [items], [category-x] placeholders throughout.
+  Update the import paths if different component files are needed.
+*/}
+
+## Overview
+
+{/* One paragraph: what system does this page govern, who it's for, and what the reader gets. */}
+
+This is the canonical reference for **[Topic]** in the Livepeer docs repo.
+It covers classification rules, folder structure, naming conventions, enforcement policies, and governance.
+Use this page to find, build, modify, or audit [items].
+
+<CustomDivider />
+
+## Repo Context & Folders
+
+{/* Show where the governed artifacts live. Expand the tree to the depth that's useful — not exhaustive. */}
+
+<Tree>
+  <Folder name="path/to/governed-folder" defaultOpen>
+    <Folder name="category-a">
+      <File name="Example.jsx" />
+    </Folder>
+    <Folder name="category-b">
+      <File name="Example.jsx" />
+    </Folder>
+    <File name="README.md" />
+  </Folder>
+</Tree>
+
+<CustomDivider />
+
+## Framework & Standards
+
+{/*
+  One row per category or type.
+  Columns: Category | Description | Repo Location | Example artifact
+*/}
+
+<StyledTable>
+  <TableRow header>
+    <TableCell>Category</TableCell>
+    <TableCell>Description</TableCell>
+    <TableCell>Repo Location</TableCell>
+    <TableCell>Example</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`category-a`</TableCell>
+    <TableCell>What belongs here and the decision rule for classifying items into this category.</TableCell>
+    <TableCell>`path/to/category-a/`</TableCell>
+    <TableCell>`ExampleItem.jsx`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`category-b`</TableCell>
+    <TableCell>What belongs here and the decision rule for classifying items into this category.</TableCell>
+    <TableCell>`path/to/category-b/`</TableCell>
+    <TableCell>`AnotherItem.jsx`</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+## Item Specification
+
+{/*
+  Link to the composable template that defines the structure of a single [item].
+  This keeps the per-item spec DRY — the SOT page links out rather than duplicating it.
+*/}
+
+<Card
+  title="[Item] Composable Template"
+  icon="file-code"
+  href="/snippets/composables/[item]-template"
+  arrow
+>
+  Full spec: required fields, JSDoc/frontmatter standard, naming rules, and an annotated example.
+</Card>
+
+<CustomDivider />
+
+## Enforcement Policies
+
+{/*
+  List every enforcement script, hook, or policy gate that applies to [topic].
+  Include what triggers it and whether it hard-blocks or is advisory.
+*/}
+
+| Policy | Enforced by | Trigger | Blocks commit? |
+| --- | --- | --- | --- |
+| [Rule description] | `tools/scripts/[script-name].js` | pre-commit | Yes |
+| [Rule description] | `tools/scripts/[script-name].js` | CI / manual | No (advisory) |
+
+Related policies:
+
+- [`docs-guide/policies/[relevant-policy].mdx`](/docs-guide/policies/[relevant-policy])
+
+<CustomDivider />
+
+## Overview & Usage Guides
+
+{/*
+  One AccordionGroup per logical category.
+  Each Accordion covers one [item] or a closely related sub-group.
+  Keep each entry focused: purpose, location, usage snippet.
+*/}
+
+### [Category A]
+
+<AccordionGroup>
+  <Accordion title="[Item name]">
+    **Purpose:** What this item does and when to reach for it.
+
+    **Location:** `path/to/item.ext`
+
+    **Usage:**
+
+    ```jsx
+    // minimal usage example
+    ```
+  </Accordion>
+  <Accordion title="[Item name]">
+    {/* repeat per item */}
+  </Accordion>
+</AccordionGroup>
+
+### [Category B]
+
+<AccordionGroup>
+  <Accordion title="[Item name]">
+    **Purpose:** What this item does and when to reach for it.
+
+    **Location:** `path/to/item.ext`
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## References
+
+{/* Links out to the generated catalog, the framework page, and any related policies. */}
+
+<Columns>
+  <Card title="[Topic] Catalog" icon="list" href="/docs-guide/catalog/[topic]-catalog" arrow />
+  <Card title="Framework & Standards" icon="book-open" href="/docs-guide/frameworks/[topic]-framework" arrow />
+  <Card title="Enforcement Policies" icon="shield" href="/docs-guide/policies/[topic]-policy" arrow />
+</Columns>

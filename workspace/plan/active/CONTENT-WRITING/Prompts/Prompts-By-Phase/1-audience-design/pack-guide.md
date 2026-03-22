@@ -1,0 +1,108 @@
+# Phase 1 — Audience Design: Pack Guide
+
+**Prompt**: `audience-design.md`
+**Resources**: `phase-resources.md`
+**Test outputs**: `testing/`
+
+---
+
+## What This Phase Produces
+
+A fully specified audience design for one tab: who is arriving, why, what they need, and what section structure serves them. This is the foundation every downstream phase builds on. A weak audience design compounds through Phases 2, 3, and 4.
+
+Output document contains: arriving question, personas with entry vectors, jobs-to-be-done, ideal journey (linear + on-demand + cross-tab), ideal section structure with reader questions and exit states, persona path validation.
+
+---
+
+## When to Run This Phase
+
+- Starting fresh on a tab that has never been designed properly
+- Re-running on a tab where the current IA is broken or the audience has shifted
+- Before any structure audit (Phase 2) — Phase 2 requires Phase 1 output
+
+**Do not run**: on a tab where a Phase 1 output already exists and has been validated — treat it as a living document to update, not re-run from scratch.
+
+---
+
+## Pre-flight (Human Steps Before Running the Prompt)
+
+These are human responsibilities — the prompt cannot do them.
+
+- [ ] **Persona source documentation**: Have you identified WHERE your persona research comes from? Discord threads, GitHub issues, support tickets, forum posts, user interviews? The prompt will generate plausible personas without this — but plausible is not the same as real. AI-generated personas without source grounding will mislead every downstream phase. Gather at least 2–3 direct signals (quotes, reported friction, observed behaviour) per persona before running.
+- [ ] **Terminology lock**: Identify 5–10 core terms for this tab's audience before the prompt starts. Load `reference-sources-quality-scored/universal-terms.md` and the per-tab glossary. Terminology decisions made in Phase 1 (persona names, job descriptions, section names) propagate to every downstream phase. Get them right here.
+- [ ] **Select from `phase-resources.md`**: Review the resource list. Using first principles, decide which 2–3 resources would genuinely improve your output. Do not load the full list — it will add noise and dilute the first-principles thinking the prompt is designed to produce.
+
+---
+
+## Running Order
+
+1. Fill the context block (`TAB` + `AUDIENCE`)
+2. Run Phase 1 (persona research) — pause here for human review before continuing
+3. Run Phase 2A (jobs) — pause for human review
+4. Run Phase 2B (ideal journey)
+5. Run Phase 2C (section structure) — pause for human review, especially cross-tab gate
+6. Run Phase 3 (persona path validation)
+7. Produce output document
+8. Human checkpoint: review all gates before marking DRAFT → APPROVED
+
+Human checkpoints are not optional. This phase produces the foundation for the entire pipeline. A 10-minute human review at each gate prevents hours of rework downstream.
+
+---
+
+## Dos
+
+- **Do** push back on AI personas that sound generic. "Experienced developer evaluating Livepeer" is not a persona. A persona has a specific arriving situation: "Has built on Ethereum, evaluating Livepeer for AI inference routing, blocked by not understanding the gateway vs orchestrator split."
+- **Do** treat entry blockers as ordering constraints. If on-chain funding is required before any test is possible, the first section must resolve that blocker — or make it skippable — before any other section runs.
+- **Do** enforce the no-"understands" rule on every exit state. If the AI writes "understands the tokenomics model", push back: "Has read the tokenomics overview and can calculate their expected delegation rewards" is the correct form.
+- **Do** run the cross-tab gate on every single section. The site ownership map exists because previous tabs over-claimed content from neighbouring tabs. Each overclaim creates duplication that breaks the reader's cross-tab journey.
+- **Do** check whether the self-identification label is ambiguous. "Developer" maps to at least 4 different personas in Livepeer's context. If the audience token is `developer`, run the disambiguation check and flag whether a routing page is needed.
+
+## Don'ts
+
+- **Don't** load persona files as a substitute for source research. `personas.md` points at prior persona work — it can serve as a cross-check or a starting point, but it is not a replacement for grounding new persona work in real signals.
+- **Don't** let the AI derive jobs from current nav labels or page titles. The prompt explicitly states this. If jobs look like a mirror of the current sidebar, the AI has cheated. Delete them and re-run from scratch.
+- **Don't** accept more than 12 jobs-to-be-done. Community research produced 20 JTBDs — most were sub-tasks or duplicates. The prompt asks for 5–7. If you get more than 10, consolidate.
+- **Don't** skip persona path validation. The section shape table can look complete and still fail a specific persona. Path validation is the only way to find missing sections that aren't visible from the table shape alone.
+- **Don't** conflate cross-tab linking with duplication. Introducing a concept in context for the audience and linking to About for depth is correct. Duplicating About's canonical explanation is not.
+
+---
+
+## What Good Output Looks Like
+
+**Good arriving question**: "Can I run a gateway without holding LPT?" — specific, answerable, reveals real friction.
+**Bad arriving question**: "How do gateways work?" — a topic, not a question a real person asks.
+
+**Good persona**: "Has an existing GPU rig running HiveOS, wants to add Livepeer as a secondary revenue stream, arriving from a Discord recommendation. No crypto background — blocked by on-chain setup requirement."
+**Bad persona**: "Experienced GPU operator evaluating Livepeer as an additional compute marketplace."
+
+**Good exit state**: "Has submitted their first transcoding bid and confirmed it appears in the Explorer."
+**Bad exit state**: "Understands the orchestrator economics model."
+
+**Good job**: "When my node goes offline unexpectedly, I want to diagnose whether the issue is my hardware, my network, or the Livepeer network so I can fix the right thing."
+**Bad job**: "Learn about orchestrator troubleshooting."
+
+---
+
+## Common Failure Modes
+
+| Failure | Signal | Fix |
+|---|---|---|
+| Generic personas | Persona names are role labels, not arriving situations | Delete and re-run; push for specificity in arriving state |
+| Jobs mirror current nav | Job descriptions match section titles in the current sidebar | Explicitly tell AI: "Do not look at the current structure. What would this person actually do?" |
+| Abstract exit states | "Understands", "knows", "is aware of" in exit column | Hard rule: not accepted. Ask AI to rewrite as "has done" or "has decided" |
+| Missing disambiguation page | Audience token is a generic label ("developer") and no routing page appears in section structure | Trigger self-identification check; add routing page to Phase 2C |
+| Overclaiming from other tabs | Section content belongs to a neighbouring tab per the ownership map | Apply cross-tab gate; replace with a cross-tab link row |
+| Persona path blocked | A persona has no path through sections 3–5 because prerequisite content wasn't designed | Add missing section to Phase 2C; re-run path validation |
+
+---
+
+## After Running — Testing & Iteration
+
+Record your test run in `testing/`. Minimum entry:
+- Date
+- Tab and audience tested
+- Which resources were loaded (from `phase-resources.md`)
+- Quality assessment: what worked, what didn't
+- Updates made to the prompt or resource list as a result
+
+Update `⬜ not tested` status in `phase-resources.md` for any resource you used. Mark as `✅ tested — improves output`, `⚠️ tested — no clear improvement`, or `❌ tested — adds noise`.

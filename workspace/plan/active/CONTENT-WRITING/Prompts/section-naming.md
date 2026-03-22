@@ -5,6 +5,12 @@
 **Use in pipeline**: Pass B (layout/style) — naming check step; also usable in Pass A structural review
 **Related**: `Prompts/voice-rules.md` | `Frameworks/pageType.md` | `Frameworks/pagePurpose.md`
 
+**Step 16 enrichment needed**: Step 2 (Use the metadata correctly) currently has three generic placeholder examples. At Step 16 (building Pass B), replace with full enum-level guidance drawn from locked definitions:
+- All 7 pageTypes → naming style per type (e.g. `reference` → literal/findability; `concept` → governing concept; `instruction` → task-oriented; `navigation` → map language)
+- All 15 purposes → title job per purpose (e.g. `explain` → concept labels; `choose` → decision-oriented; `reference` → exact findability; `orient` → map/overview language)
+- All 7 audiences → terminology register per audience (e.g. `developer` → specialised technical; `delegator` → finance/governance register; `community` → accessible/narrative)
+This turns the prompt from a standalone tool into a first-class pipeline component connected to the taxonomy.
+
 ---
 
 ## Quick Reference — Label Classes

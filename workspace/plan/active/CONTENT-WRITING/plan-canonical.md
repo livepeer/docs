@@ -5,6 +5,34 @@
 **Created**: 2026-03-19
 **Research**: See [research.md](research.md) for architecture rationale and existing asset map.
 **Collation**: See [collation.md](collation.md) for dated inventory of every repo resource with themes.
+**Prompts subplan**: [Prompts/Prompts-By-Phase/COLLATION-PLAN.md](Prompts/Prompts-By-Phase/COLLATION-PLAN.md) — GET IT ALL collation (✅ Task 1 done)
+**Master reference index**: [Prompts/Prompts-By-Phase/_research-and-consolidated-notes/MASTER-INDEX.md](Prompts/Prompts-By-Phase/_research-and-consolidated-notes/MASTER-INDEX.md) — 65 files sorted by type, all `not-assessed`
+**Active prompts**: [Prompts/Prompts-By-Phase/](Prompts/Prompts-By-Phase/) — `1-audience-design/audience-design.md`, `2-structure-audit/structure-audit.md`
+
+---
+
+## Now Running — Content Review Execution
+
+Framework is locked (Steps 2–8). Building and testing the pipeline by running it. Prompts refined through use, not in isolation.
+
+### Execution Sequence
+
+| Step | What | Output | Status |
+|---|---|---|---|
+| 1 | Full site map — what each tab owns, primary persona, boundary notes | `v2/_workspace/context-packs/site-map.md` | ✅ Done |
+| 2 | Per-tab IA maps — first-principles audience design per tab (Level 1 Prompt A) | `v2/_workspace/context-packs/[tab]-audience-design.md` | ▶ In progress |
+| 3 | Per-tab audit — existing content measured against designed ideal (Level 1 Prompt B) | `v2/_workspace/context-packs/[tab]-tab-map.md` | ⬜ |
+| 4 | Per-section taxonomy — every page classified (pageType, audience, purpose, lifecycleStage) | Inline in tab-map.md | ⬜ |
+| 5 | Content audit + gaps — AUDIT mode Pass A per section group | `v2/_workspace/context-packs/[group]/audit.md` | ⬜ |
+
+### Tab Priority for IA Maps
+
+1. Orchestrators
+2. Gateways *(08a-ia-per-tab.md already exists — skip Prompt A, go to Prompt B audit)*
+3. LP Token
+4. Developers
+5. About
+6. Resource HUB *(restructure — scope TBD)*
 
 ---
 
@@ -506,9 +534,9 @@ Update this section as each step completes. Current step is marked with ▶.
 | 13 | Audit existing references against new definitions | ⬜ Not started |
 | 14 | Create per-audience don'ts | ⬜ Not started |
 | 15 | Golden examples per pageType (identify + annotate) | ⬜ Not started |
-| 16 | Build Level 1 — Site + Tab map prompt | 🔄 DRAFT — level-1-tab-map.md exists in Prompts/; built ahead of sequence; revision required after Steps 8-15 |
-| 17 | Build Level 2 Pass A — Content review/write (prompt → decide on skill) | 🔄 DRAFT — level-2-pass-a-content.md exists in Prompts/; built ahead of sequence |
-| 18 | Build Level 2 Pass B — Layout/style skill | 🔄 DRAFT — level-2-pass-b-layout.md exists in Prompts/; built ahead of sequence |
+| 16 | Build Level 1 — Site + Tab map prompt | ⬜ Not started — deprecated draft removed; build from 10-prompt-input-spec.md |
+| 17 | Build Level 2 Pass A — Content review/write (prompt → decide on skill) | ⬜ Not started — deprecated draft removed; build from 10-prompt-input-spec.md |
+| 18 | Build Level 2 Pass B — Layout/style skill | ⬜ Not started — deprecated draft removed; build from 10-prompt-input-spec.md after Step 11 |
 | 19 | Integrate veracity check into Pass A | ⬜ Not started — veracity framework complete (veracity.md, veracity-library.md); integration pending |
 
 ### Phase 3: Run the Pipeline

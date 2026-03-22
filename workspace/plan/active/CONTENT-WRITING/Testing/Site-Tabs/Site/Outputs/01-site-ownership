@@ -1,0 +1,239 @@
+# Flags
+
+Now I have what I need. Let me execute the brief.Good — I have solid context. Now producing the full brief output.The site ownership map is complete across all five phases. A few things worth flagging before this feeds into the tab prompts:
+
+**Decisions that need your sign-off:**
+
+1. **Resource HUB ownership rule** — I've defined it as cross-cutting reference only (anything cited by 2+ tabs). If you want it to also host long-form reference material that is role-specific but too heavy for a role tab (e.g., full protocol spec), that rule needs widening.
+
+2. **Developers as the contribution tab** — Code contribution, grants, RFPs, and bug bounties are assigned to Developers, not Community. Community links. This is consistent with your existing Community tab Doc 05 decision, but confirm it's still correct — some ecosystems prefer Community to be the contributor front door with Developers as the technical depth.
+
+3. **`developer` vs `gateway` graduation** — The path I've written routes `developer → Gateways` only if they outgrow the hosted path. If BYOC is expected to be a common primary path (not an edge case), that trigger needs strengthening — the Developers tab may need a clearer "running your own gateway" signpost earlier in the journey.
+
+4. **Home tab** — I've given it no content ownership at all (routing only). If the brief for Home includes any original content (hero copy, network stats, featured use cases), that ownership should be made explicit rather than treated as an exception.
+
+Everything else passed the checkpoint. All 15 boundary rules are drawn at a specific criterion, not a principle.
+
+# Livepeer Docs — Site Ownership Map
+
+**Generated**: March 2026
+**Status**: DRAFT — awaiting checkpoint
+**Brief source**: `1-site-prompt.md`
+
+---
+
+## Phase 1 — Audience Analysis
+
+| Audience       | Arriving state                                                                                                                                                                                       | Primary question                                                            | Success state                                                                                                                                                                            | Failure mode                                                                                                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `founder`      | Evaluating whether to build a product on Livepeer; comparing decentralised compute vs AWS/centralised alternatives. Has heard of Livepeer through ecosystem, funding rounds, or competitor research. | "Is Livepeer the right infrastructure for my product?"                      | Leaves with a clear evaluation decision: capable of writing an internal brief or making a go/no-go call, without needing to contact the team first.                                      | Lands in technical operator setup docs. Sees GPU configuration requirements before understanding what value they would be buying. Bounces.                                    |
+| `builder`      | Has decided to try Livepeer. Writing code or evaluating APIs. Wants a working integration as quickly as possible.                                                                                    | "How do I call the API and get a result?"                                   | Has a working API call or SDK integration within their dev environment within one session.                                                                                               | Cannot find API reference without digging. Encounters LPT economics or node setup docs before reaching the SDK quickstart.                                                    |
+| `developer`    | Experienced builder pushing beyond hosted gateway limits. Needs BYOC, custom pipelines, or direct protocol access. Has already built something on Livepeer.                                          | "How do I extend or replace the default gateway path?"                      | Understands the architecture clearly enough to write a custom integration plan; has found the relevant SDK/protocol specs.                                                               | Content is too shallow (written for `builder`). BYOC and off-chain routing are buried or missing.                                                                             |
+| `gateway`      | Has infrastructure experience. Is evaluating whether to run a gateway or has been directed here after running nodes.                                                                                 | "What does it take to run a gateway, and is it economically viable for me?" | Has a complete picture of hardware requirements, routing economics, and the activation path — enough to make a deploy decision.                                                          | Finds gateway content mixed with orchestrator content. Cannot determine which node type they are configuring.                                                                 |
+| `orchestrator` | Has GPU hardware, or is evaluating hardware investment. Has heard of Livepeer through mining/DePIN/AI inference communities.                                                                         | "Can my hardware earn fees, and how do I set it up?"                        | Has identified whether their hardware qualifies, understands the economics, and has started or completed the setup sequence.                                                             | Hardware thresholds and economics are buried. Setup is the first thing they see without a viability filter. They spend time configuring hardware that will never clear costs. |
+| `delegator`    | Holds LPT or is evaluating acquiring it. Wants to earn from staking without running infrastructure. Comes from DeFi/token-holder context.                                                            | "How do I stake LPT, pick an orchestrator, and earn rewards?"               | Has delegated stake to a chosen orchestrator, understands reward/fee cut mechanics, and knows how to monitor performance.                                                                | LPT page mixes token economics with protocol internals. Cannot distinguish staking actions from governance theory.                                                            |
+| `community`    | Ecosystem-aware person: contributor, researcher, governance participant, or LPT holder interested in the project beyond their operator role. Varied arrivals — Discord, Twitter, grants calls.       | "Where do I fit in, and how do I participate?"                              | Finds a clear, current description of how the community is organised, what is happening, and at least one concrete action to take (join a call, submit a proposal, follow a workstream). | Tab is a link dump or aspirational copy with no actionable structure. Community content is scattered across the site with no single home.                                     |
+
+---
+
+## Phase 2 — Tab Purpose Mapping
+
+| Tab               | Must own                                                                                                                                                                                                                                                     | Must not own                                                                                                                                                                    | Primary audience                               | Secondary audiences                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| **Home**          | Entry routing: 30-second product orientation for a first-time visitor; signposting to the correct tab by role; highest-level value proposition.                                                                                                              | Deep content of any kind. Any content that is duplicated from another tab.                                                                                                      | All (entry only)                               | None — it is routing infrastructure, not a destination                     |
+| **About**         | Protocol-level concepts: what Livepeer is architecturally, how the network functions, consensus and economics theory, LPT token role, SPE mechanics as protocol features, LIPs overview, Arbitrum integration context.                                       | Operator how-tos. Role-specific economics. Governance voting procedures.                                                                                                        | `founder` evaluating at a conceptual level     | `community` (researchers), `delegator` (understanding LPT before acting)   |
+| **Solutions**     | Product-level value propositions for demand-side buyers: use-case pages, pricing/cost comparisons, hosted gateway feature set, case studies, migration guides from centralised alternatives. The answer to "why Livepeer?" for a business decision-maker.    | Protocol internals. Operator setup. SDK reference. Anything requiring existing Livepeer knowledge.                                                                              | `founder`                                      | `builder` (validating the product before committing to integration)        |
+| **Developers**    | API reference, SDK docs, quickstart guides, BYOC, ComfyStream, off-chain pipeline building, custom gateway paths, AI model catalogue, gateway SDKs for custom routing, code contribution guides, grants and RFPs, bug bounty.                                | Gateway infrastructure operations (running `go-livepeer` as a gateway). Orchestrator node setup. LPT delegation.                                                                | `builder` (primary entry), `developer` (depth) | `gateway` (SDK portion only, before they diverge to Gateways tab)          |
+| **Gateways**      | `go-livepeer` gateway node operation: installation, configuration, networking, routing economics, monitoring, on-chain setup, fee structures, probabilistic micropayments from the gateway perspective, upgrade procedures.                                  | SDK-based gateway building (belongs in Developers). Orchestrator node setup. AI model serving (orchestrator concern).                                                           | `gateway`                                      | `developer` evaluating whether to run infra vs use hosted path             |
+| **Orchestrators** | GPU node operation: hardware requirements, NVENC/NVDEC support, `go-livepeer` orchestrator installation, reward/fee cut configuration, active set mechanics, staking requirements, AI workload serving, aiModels.json, performance optimisation, monitoring. | Gateway routing. LPT delegation (delegator concern). Protocol economics theory (About concern).                                                                                 | `orchestrator`                                 | `gateway` (shared `go-livepeer` binary — link, do not duplicate)           |
+| **LP Token**      | LPT acquisition, delegation mechanics, reward/fee cut reading, orchestrator selection for delegation, undelegation and unbonding periods, governance voting procedures (LIPs, Snapshot), TicketBroker mechanics as they affect delegator income.             | Protocol economics theory (About). Community governance discussion (Community). SPE mechanics as protocol concept (About).                                                      | `delegator`                                    | `orchestrator` (their own LPT position), `community` (voters)              |
+| **Community**     | Social and cultural layer: who the community is, how it is organised, channels, events and calls, workstreams, contribution pathways, governance discourse (not mechanics), ecosystem tools and guides not covered by role tabs.                             | Governance voting procedures (LP Token). Protocol concepts (About). Code contribution and grants (Developers). Role-specific operational tooling (Orchestrators/Gateways tabs). | `community`                                    | `founder` (ecosystem context), `delegator` (community layer of governance) |
+| **Resource HUB**  | Cross-cutting reference aggregation: glossary, contract addresses, network parameters, audit reports, brand assets, ecosystem directory, changelog, API status. Content that is referenced by multiple role tabs but owned by none.                          | Operational guides. Conceptual explanations. Anything that is not pure reference.                                                                                               | All (lookup only)                              | None — it is a reference terminal, not a journey tab                       |
+
+---
+
+## Phase 3 — Cross-Tab Graduation Paths
+
+### `founder`
+
+```
+founder: Home → About → Solutions → (Developers or exit)
+Trigger Home→About:     Needs to understand what Livepeer is before evaluating it
+Trigger About→Solutions: Understands the network; wants to know what they can buy/build
+Trigger Solutions→exit:  Makes a go/no-go decision; if yes, routes to Developers for integration
+```
+
+### `builder`
+
+```
+builder: Home → Solutions → Developers
+Trigger Home→Solutions:  Validates product-market fit before spending integration time
+Trigger Solutions→Developers: Confirmed it solves their problem; now needs quickstart and API reference
+```
+
+**Depth tab**: Developers
+**Exit path**: Their own codebase / production deployment
+
+### `developer`
+
+```
+developer: Home → Developers (deep) → Gateways (if running infra)
+Trigger Home→Developers:    Knows what they need; goes directly to SDK/BYOC content
+Trigger Developers→Gateways: Reaches limits of hosted path; needs to run own gateway
+```
+
+**Depth tab**: Developers (BYOC, SDK, off-chain pipelines)
+**Exit path**: GitHub, deployed pipeline
+
+### `gateway`
+
+```
+gateway: Home → Developers (SDK eval) → Gateways (node operation)
+Trigger Home→Developers:    Evaluates whether SDK path is sufficient before committing to infra
+Trigger Developers→Gateways: SDK path insufficient; running go-livepeer gateway is the right path
+```
+
+**Depth tab**: Gateways
+**Exit path**: Running node, monitoring dashboard
+
+### `orchestrator`
+
+```
+orchestrator: Home → About (network overview) → Orchestrators (economics → setup)
+Trigger Home→About:          Wants to understand what the network does before committing hardware
+Trigger About→Orchestrators: Network makes sense; now evaluating economics, then setup
+```
+
+**Depth tab**: Orchestrators
+**Exit path**: Running node, active set, earning fees
+
+### `delegator`
+
+```
+delegator: Home → About (LPT concept) → LP Token (staking action)
+Trigger Home→About:      Wants to understand LPT and why staking exists
+Trigger About→LP Token:  Understands the system; wants to act (acquire, delegate, earn)
+```
+
+**Depth tab**: LP Token
+**Exit path**: Staked position on Arbitrum
+
+### `community`
+
+```
+community: Home → Community → (LP Token | Developers | Orchestrators) depending on interest
+Trigger Home→Community:   Wants to find where they fit in the ecosystem
+Trigger Community→LP Token: Wants to participate in governance voting
+Trigger Community→Developers: Wants to contribute code or apply for grants
+Trigger Community→Orchestrators/Gateways: Wants to run infrastructure
+```
+
+**Depth tab**: Community
+**Exit path**: Discord, Snapshot vote, GitHub PR, grant application
+
+---
+
+## Phase 4 — Duplication Risk Register
+
+| Topic                                      | Tabs at risk                       | Canonical owner                                                                                               | Resolution rule                                                                                                                                                                                                                            |
+| ------------------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| LPT token role and economics theory        | About, LP Token                    | **About**                                                                                                     | About owns the conceptual model (what LPT is, why it exists, how it secures the network). LP Token owns the action layer (how to acquire, delegate, earn, vote). LP Token may introduce the concept in one sentence then link to About.    |
+| `go-livepeer` binary installation          | Gateways, Orchestrators            | **Both — scoped**                                                                                             | Each tab documents the binary for its own role only. Shared prerequisites (Docker, hardware) are referenced by linking to a Resource HUB page, not duplicated.                                                                             |
+| Protocol governance (LIPs, voting)         | About, LP Token, Community         | **LP Token** (mechanics) + **Community** (discourse)                                                          | About explains that governance exists and how it works conceptually. LP Token owns the voting action (how to vote, LIP lifecycle, Snapshot). Community owns the discourse and participation culture around governance — not the mechanics. |
+| Probabilistic micropayments                | Gateways, Orchestrators, About     | **About** (concept) + **Gateways** (gateway-side mechanics) + **Orchestrators** (orchestrator-side mechanics) | About owns the system-level explanation. Gateways and Orchestrators each own their operational perspective. Neither tab should explain the other's side.                                                                                   |
+| Reward/fee cut                             | LP Token, Orchestrators            | **Orchestrators** (configuration) + **LP Token** (reading/selecting)                                          | Orchestrators owns setting reward/fee cut. LP Token owns interpreting it as a delegator selection signal. Neither duplicates the other's operational detail.                                                                               |
+| AI workloads / model serving               | Developers, Orchestrators, About   | **Orchestrators** (serving) + **Developers** (consuming)                                                      | Orchestrators owns aiModels.json, NVENC/NVDEC AI workload config, and model serving. Developers owns API/SDK access to AI inference. About owns the network-level description of AI compute as a feature.                                  |
+| Gateway routing and selection              | Gateways, Developers               | **Gateways** (running infra) + **Developers** (consuming hosted path)                                         | Developers explains what a gateway is and links to Gateways for operators. Gateways does not document SDK usage — that stays in Developers.                                                                                                |
+| BYOC (Bring Your Own Compute)              | Developers, Orchestrators          | **Developers**                                                                                                | BYOC is a developer integration pattern for running custom compute pipelines. Orchestrators may reference it as an alternative path but does not document it.                                                                              |
+| SPE (Special Purpose Entity)               | About, Community                   | **About**                                                                                                     | SPE mechanics are a protocol governance feature. Community may reference SPEs in governance participation context but links to About for the explanation.                                                                                  |
+| Network/contract addresses                 | Resource HUB, About, role tabs     | **Resource HUB**                                                                                              | All contract addresses, network parameters, and chain references live in Resource HUB. Other tabs reference them by linking — never by inline listing.                                                                                     |
+| Economics/viability calculators            | Orchestrators, LP Token, Solutions | **Each tab — scoped**                                                                                         | Orchestrators owns hardware economics. LP Token owns delegation yield. Solutions owns product-level pricing. None should include another tab's economic framing.                                                                           |
+| Contribution pathways (code, grants, RFPs) | Community, Developers              | **Developers**                                                                                                | Code contribution, grants, bug bounty, and RFPs are developer-track activities. Community links to them. Community owns the social participation layer (calls, workstreams, discourse) — not the technical contribution track.             |
+| Monitoring and performance                 | Orchestrators, Gateways            | **Each tab — scoped**                                                                                         | Each tab owns monitoring for its own node type. Resource HUB may link to monitoring tools in the ecosystem directory.                                                                                                                      |
+
+---
+
+## Phase 5 — Boundary Rules
+
+**About ↔ Orchestrators**: _Protocol economics vs operator economics_
+Rule: About owns why the incentive system exists and how it works at the protocol level. Orchestrators owns what specific numbers an operator should target, how to configure them, and what thresholds matter operationally. The line is drawn at: "does this help someone understand the system?" (About) vs "does this help someone run a node?" (Orchestrators).
+
+**About ↔ LP Token**: _Token concept vs token mechanics_
+Rule: About owns LPT as a protocol-securing mechanism — why it exists, its relationship to inflation and staking security. LP Token owns every action: acquiring LPT, delegating, reading reward/fee cut, voting on LIPs. The line is drawn at: can the reader take an action from this content? If yes, it belongs in LP Token.
+
+**About ↔ Community**: _Protocol governance vs community participation_
+Rule: About owns governance as a protocol feature — LIPs, upgrade process, how changes are ratified. Community owns the human layer — how to engage in governance discourse, workstreams, and participation culture. The line is drawn at: is this about the protocol mechanism, or about how people organise around it?
+
+**Solutions ↔ Developers**: _Evaluation vs integration_
+Rule: Solutions owns the business case — what Livepeer does, why it is the right choice, what you get. Developers owns the technical path — how to integrate, call APIs, build pipelines. The line is drawn at: does the reader need to have already decided to use Livepeer? If yes, it is Developers. If they are still deciding, it is Solutions.
+
+**Gateways ↔ Developers**: _Running infra vs consuming infra_
+Rule: Developers owns all SDK-based and API-based access to Livepeer compute, including custom gateway SDKs used programmatically. Gateways owns `go-livepeer` node operation — installation, configuration, on-chain setup, routing economics. The line is drawn at: is the reader running a node binary, or writing code that calls a gateway? Binary operation → Gateways. Code → Developers.
+
+**Gateways ↔ Orchestrators**: _Demand side vs supply side_
+Rule: Gateways routes compute jobs from clients to orchestrators — demand-side infrastructure. Orchestrators provides GPU compute to fulfil those jobs — supply-side infrastructure. The line is drawn at data flow direction: Gateways owns everything upstream of the job (client → gateway → routing). Orchestrators owns everything downstream (routing → transcoding/inference → result delivery). Shared binary aspects (go-livepeer) are each documented in-tab for that role only; the other tab links rather than duplicates.
+
+**LP Token ↔ Community**: _Voting mechanics vs governance participation_
+Rule: LP Token owns the complete voting action — accessing Snapshot, reading proposals, casting votes, tracking outcomes. Community owns the participation culture — where governance discussion happens, how to follow workstreams, how community members shape proposals before they reach a vote. The line is drawn at: is this the action of voting (LP Token) or the culture and context around it (Community)?
+
+**Resource HUB ↔ all role tabs**: _Reference aggregation vs role-specific reference_
+Rule: Resource HUB owns any reference item cited by more than one tab — contract addresses, network parameters, glossary terms, audit links, brand assets. Role tabs own reference material that is only ever consulted by their primary audience in the context of that role's operation. A piece of content that is useful to three different audiences belongs in Resource HUB with links from the role tabs — not duplicated across them. The line is drawn at: is this reference material used by one role, or many? Many → Resource HUB.
+
+**Home ↔ all tabs**: _Routing vs content_
+Rule: Home owns nothing except the first-impression orientation layer and navigation routing. No content that explains how anything works, how to do anything, or what anything costs belongs on Home. Any content that would be useful on a second visit belongs in a tab, not on Home.
+
+---
+
+## Ownership Map (Summary)
+
+| Tab           | What it owns                                                                                                                                             | Primary audience       | Does NOT own                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------- |
+| Home          | Entry routing, role signposting, 30-second product orientation                                                                                           | All                    | Any explanatory or operational content                                                    |
+| About         | Protocol architecture, network mechanics, LPT concept, SPE concept, LIPs overview, Arbitrum integration                                                  | `founder`              | Operator how-tos, voting procedures, role-specific economics                              |
+| Solutions     | Use-case pages, hosted product value propositions, pricing comparisons, migration guides, case studies                                                   | `founder`              | Protocol internals, SDK reference, operator setup                                         |
+| Developers    | API reference, SDK docs, quickstarts, BYOC, ComfyStream, AI model catalogue, off-chain pipelines, code contribution, grants, RFPs                        | `builder`, `developer` | Gateway node operation, orchestrator node setup, LPT delegation                           |
+| Gateways      | `go-livepeer` gateway node: installation, config, routing economics, on-chain setup, monitoring, micropayments (gateway-side)                            | `gateway`              | SDK-based gateway building, orchestrator setup, AI model serving                          |
+| Orchestrators | GPU node operation, hardware requirements, `go-livepeer` orchestrator, reward/fee cut config, active set, AI workload serving, aiModels.json, monitoring | `orchestrator`         | Gateway routing, LPT delegation, protocol economics theory                                |
+| LP Token      | LPT acquisition, delegation, orchestrator selection, reward/fee cut reading, undelegation, voting procedures, TicketBroker (delegator side)              | `delegator`            | Protocol economics theory, community governance discourse, orchestrator node config       |
+| Community     | Social/cultural layer: who's here, channels, events, workstreams, contribution pathways, governance discourse, ecosystem tools and guides                | `community`            | Governance voting procedures, protocol concepts, code contribution, role-specific tooling |
+| Resource HUB  | Cross-cutting reference: glossary, contract addresses, network parameters, audits, brand assets, ecosystem directory, changelog, API status              | All                    | Operational guides, conceptual explanations, anything non-reference                       |
+
+---
+
+## Graduation Paths (Summary)
+
+```
+founder:     Home → About → Solutions → (exit or Developers)
+builder:     Home → Solutions → Developers
+developer:   Home → Developers → Gateways (if running infra)
+gateway:     Home → Developers (SDK eval) → Gateways
+orchestrator: Home → About → Orchestrators (economics → setup)
+delegator:   Home → About → LP Token
+community:   Home → Community → (LP Token | Developers | role tabs)
+```
+
+---
+
+## Duplication Risk Register (Summary)
+
+| Topic                               | Canonical owner                                                          | Resolution                                                              |
+| ----------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| LPT token concept                   | About                                                                    | LP Token introduces in one sentence, links to About                     |
+| `go-livepeer` binary                | Gateways + Orchestrators (each scoped)                                   | Each tab documents for its own role only; shared prereqs → Resource HUB |
+| Protocol governance mechanics       | LP Token                                                                 | About explains concept; Community owns discourse culture                |
+| Probabilistic micropayments         | About (concept) + Gateways + Orchestrators (each operational side)       | Each tab owns its perspective only                                      |
+| Reward/fee cut                      | Orchestrators (config) + LP Token (reading/selecting)                    | No cross-tab duplication of operational detail                          |
+| AI workloads                        | Orchestrators (serving) + Developers (consuming) + About (network-level) | Each tab scoped to its audience's action                                |
+| BYOC                                | Developers                                                               | Orchestrators references it, does not document it                       |
+| SPE mechanics                       | About                                                                    | Community links, does not explain                                       |
+| Contract addresses / network params | Resource HUB                                                             | All tabs link; none inline-list                                         |
+| Contribution (code, grants, RFPs)   | Developers                                                               | Community links to Developers contribution paths                        |
+
+---
+
+## ⏸ Checkpoint
+
+- [x] Every tab's ownership is distinct — no two tabs own the same thing
+- [x] Graduation paths cover all 7 audience tokens
+- [x] Boundary rules are specific enough to be enforced — drawn at a specific criterion, not a vague principle
+- [x] Duplication risks are all resolved with a clear canonical owner

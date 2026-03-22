@@ -30,7 +30,7 @@ Constraints
 - Frontmatter must use canonical enum values only. Do not invent new values.
 
 When to load references
-- Load `workspace/plan/active/CONTENT-WRITING/Prompts/level-2-pass-b-layout.md` — full prompt with phases and quality gates.
+- Load `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` — full prompt with phases and quality gates.
 - Load `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` — for Phase 5 section naming check.
 - Load the target template file from `snippets/templates/pages/` — based on PAGE_TYPE + PAGE_VARIANT.
 - Load the Pass A output (approved content or paste directly).

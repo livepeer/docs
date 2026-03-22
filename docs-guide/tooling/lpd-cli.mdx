@@ -15,8 +15,8 @@ keywords:
 audience: internal
 pageType: reference
 purpose: reference
-status: draft
-lastVerified: 2026-03-16T00:00:00.000Z
+status: current
+lastVerified: 2026-03-22T00:00:00.000Z
 'og:image': /snippets/assets/site/og-image/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
@@ -80,7 +80,7 @@ bash lpd dev --scoped --docs-config docs-gate-work.json
 ### Use the custom Mint loader helper
 
 ```bash icon="terminal"
-bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
+bash tools/dev/mint-custom-loader.sh docs-orch-work.json
 ```
 
 ### Run pre-PR checks
@@ -158,7 +158,7 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
       Skip `cd tools && npm install`.
     </ResponseField>
     <ResponseField name="--no-tests" type="boolean" default="false">
-      Skip `cd tests && npm install`.
+      Skip `cd operations/tests && npm install`.
     </ResponseField>
     <ResponseField name="--no-hooks" type="boolean" default="false">
       Skip `.githooks/install.sh`.
@@ -190,7 +190,7 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
     - Node availability
     - Mint availability
     - `tools/node_modules`
-    - `tests/node_modules`
+    - `operations/tests/node_modules`
     - hook sync state
 
     **Examples**
@@ -265,7 +265,7 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
     <ResponseField name="--test-mode fast|staged|full" type="enum" default="fast">
       Choose which advisory test mode to run with `--test`.
     </ResponseField>
-    <ResponseField name="--script [path]" type="string" default="tools/scripts/mint-dev.sh">
+    <ResponseField name="--script [path]" type="string" default="tools/dev/mint-dev.sh">
       Override the launcher script path.
     </ResponseField>
     <ResponseField name="--dry-run" type="boolean" default="false">
@@ -321,13 +321,13 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
 
     **Usage**
     ```bash icon="terminal"
-    bash tools/scripts/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
+    bash tools/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
     ```
 
     **Examples**
     ```bash icon="terminal"
-    bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
-    bash tools/scripts/dev/mint-custom-loader.sh docs-gate-work.json -- --port 3333
+    bash tools/dev/mint-custom-loader.sh docs-orch-work.json
+    bash tools/dev/mint-custom-loader.sh docs-gate-work.json -- --port 3333
     ```
 
     **Use this when**
@@ -601,8 +601,8 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
     For alternate docs configs, use the helper:
 
     ```bash icon="terminal"
-    bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
-    bash tools/scripts/dev/mint-custom-loader.sh docs-gate-work.json
+    bash tools/dev/mint-custom-loader.sh docs-orch-work.json
+    bash tools/dev/mint-custom-loader.sh docs-gate-work.json
     ```
   </ResponseField>
 
@@ -634,9 +634,13 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
 
 <TabsContainer>
   <Tab title="Tools">
-  #### Tools Scripts: `tools` (39)
+  #### Tools Scripts: `tools`
 
-  | Script token | Flags available | Resolved path | PURPOSE |
+  <Note>
+  Resolved paths in this table reflect the pre-2026-03-21 layout. Scripts have since moved to `operations/scripts/<type>/<concern>/<niche>/`. Run `lpd scripts list --group tools` to see current resolved paths.
+  </Note>
+
+  | Script token | Flags available | Resolved path (pre-restructure) | PURPOSE |
   |---|---|---|---|
   | `audit-all-pages-simple` | script-specific via `-- <args>` | `tools/scripts/audit-all-pages-simple.js` | Utility script for tasks/scripts/audit-all-pages-simple.js. |
   | `audit-all-pages` | script-specific via `-- <args>` | `tools/scripts/audit-all-pages.js` | Utility script for tasks/scripts/audit-all-pages.js. |
@@ -647,11 +651,11 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
   | `convert-rss-to-mdx` | script-specific via `-- <args>` | `tools/scripts/convert-rss-to-mdx.js` | Runs `tools/scripts/convert-rss-to-mdx.js`. |
   | `debug-mint-dev` | script-specific via `-- <args>` | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. |
   | `deprecated project-management-output-script` | script-specific via `-- <args>` | `tools/scripts/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. |
-  | `dev add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. |
-  | `dev batch-update-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. |
-  | `dev ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
-  | `dev replace-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. |
-  | `dev test-add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. |
+  | `dev add-callouts` | script-specific via `-- <args>` | `tools/dev/add-callouts.js` | Utility script for tools/dev/add-callouts.js. |
+  | `dev batch-update-og-image` | script-specific via `-- <args>` | `tools/dev/batch-update-og-image.sh` | Utility script for tools/dev/batch-update-og-image.sh. |
+  | `dev ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
+  | `dev replace-og-image` | script-specific via `-- <args>` | `tools/dev/replace-og-image.py` | Utility script for tools/dev/replace-og-image.py. |
+  | `dev test-add-callouts` | script-specific via `-- <args>` | `tools/dev/test-add-callouts.js` | Utility script for tools/dev/test-add-callouts.js. |
   | `generate-ai-sitemap` | script-specific via `-- <args>` | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. |
   | `generate-docs-guide-indexes` | script-specific via `-- <args>` | `tools/scripts/generate-docs-guide-indexes.js` | Generate docs-guide workflow/template indexes and optionally verify they are up to date. |
   | `generate-docs-guide-pages-index` | script-specific via `-- <args>` | `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/catalog/pages-catalog.mdx from v2/index.mdx entries filtered to docs.json navigation pages. |
@@ -693,29 +697,29 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
 
   | Script token | Flags available | Resolved path | PURPOSE |
   |---|---|---|---|
-  | `integration browser.test` | script-specific via `-- <args>` | `tests/integration/browser.test.js` | Utility script for tests/integration/browser.test.js. |
-  | `integration domain-pages-audit` | script-specific via `-- <args>` | `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. |
-  | `integration v2-link-audit` | script-specific via `-- <args>` | `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. |
-  | `integration v2-link-audit.selftest` | script-specific via `-- <args>` | `tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. |
-  | `integration v2-wcag-audit` | script-specific via `-- <args>` | `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. |
-  | `integration v2-wcag-audit.selftest` | script-specific via `-- <args>` | `tests/integration/v2-wcag-audit.selftest.js` | Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behaviour without Mintlify). |
-  | `run-all` | script-specific via `-- <args>` | `tests/run-all.js` | Utility script for tests/run-all.js. |
-  | `run-pr-checks` | script-specific via `-- <args>` | `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. |
-  | `unit docs-guide-sot.test` | script-specific via `-- <args>` | `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. |
-  | `unit docs-navigation.test` | script-specific via `-- <args>` | `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax, report missing routes, suggest remaps, and optionally apply approved remaps (`--write-report` to refresh navigation-report artifacts). |
-  | `unit docs-usefulness-accuracy-verifier.test` | script-specific via `-- <args>` | `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). |
-  | `unit links-imports.test` | script-specific via `-- <args>` | `tests/unit/links-imports.test.js` | Utility script for tests/unit/links-imports.test.js. |
-  | `unit mdx-guards.test` | script-specific via `-- <args>` | `tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. |
-  | `unit mdx.test` | script-specific via `-- <args>` | `tests/unit/mdx.test.js` | Utility script for tests/unit/mdx.test.js. |
-  | `unit quality.test` | script-specific via `-- <args>` | `tests/unit/quality.test.js` | Utility script for tests/unit/quality.test.js. |
-  | `unit script-docs.test` | script-specific via `-- <args>` | `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. |
-  | `unit spelling.test` | script-specific via `-- <args>` | `tests/unit/spelling.test.js` | Utility script for tests/unit/spelling.test.js. |
-  | `unit style-guide.test` | script-specific via `-- <args>` | `tests/unit/style-guide.test.js` | Utility script for tests/unit/style-guide.test.js. |
-  | `unit v2-link-audit.test` | script-specific via `-- <args>` | `tests/unit/v2-link-audit.test.js` | Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behaviour. |
-  | `unit v2-wcag-audit.test` | script-specific via `-- <args>` | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes). |
-  | `utils file-walker` | script-specific via `-- <args>` | `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. |
-  | `utils mdx-parser` | script-specific via `-- <args>` | `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. |
-  | `utils spell-checker` | script-specific via `-- <args>` | `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. |
+  | `integration browser.test` | script-specific via `-- <args>` | `operations/tests/integration/browser.test.js` | Utility script for operations/tests/integration/browser.test.js. |
+  | `integration domain-pages-audit` | script-specific via `-- <args>` | `operations/tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. |
+  | `integration v2-link-audit` | script-specific via `-- <args>` | `operations/tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. |
+  | `integration v2-link-audit.selftest` | script-specific via `-- <args>` | `operations/tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. |
+  | `integration v2-wcag-audit` | script-specific via `-- <args>` | `operations/tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. |
+  | `integration v2-wcag-audit.selftest` | script-specific via `-- <args>` | `operations/tests/integration/v2-wcag-audit.selftest.js` | Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behaviour without Mintlify). |
+  | `run-all` | script-specific via `-- <args>` | `operations/tests/run-all.js` | Utility script for operations/tests/run-all.js. |
+  | `run-pr-checks` | script-specific via `-- <args>` | `operations/tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. |
+  | `unit docs-guide-sot.test` | script-specific via `-- <args>` | `operations/tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. |
+  | `unit docs-navigation.test` | script-specific via `-- <args>` | `operations/tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax, report missing routes, suggest remaps, and optionally apply approved remaps (`--write-report` to refresh navigation-report artifacts). |
+  | `unit docs-usefulness-accuracy-verifier.test` | script-specific via `-- <args>` | `operations/tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). |
+  | `unit links-imports.test` | script-specific via `-- <args>` | `operations/tests/unit/links-imports.test.js` | Utility script for operations/tests/unit/links-imports.test.js. |
+  | `unit mdx-guards.test` | script-specific via `-- <args>` | `operations/tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. |
+  | `unit mdx.test` | script-specific via `-- <args>` | `operations/tests/unit/mdx.test.js` | Utility script for operations/tests/unit/mdx.test.js. |
+  | `unit quality.test` | script-specific via `-- <args>` | `operations/tests/unit/quality.test.js` | Utility script for operations/tests/unit/quality.test.js. |
+  | `unit script-docs.test` | script-specific via `-- <args>` | `operations/tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. |
+  | `unit spelling.test` | script-specific via `-- <args>` | `operations/tests/unit/spelling.test.js` | Utility script for operations/tests/unit/spelling.test.js. |
+  | `unit style-guide.test` | script-specific via `-- <args>` | `operations/tests/unit/style-guide.test.js` | Utility script for operations/tests/unit/style-guide.test.js. |
+  | `unit v2-link-audit.test` | script-specific via `-- <args>` | `operations/tests/unit/v2-link-audit.test.js` | Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behaviour. |
+  | `unit v2-wcag-audit.test` | script-specific via `-- <args>` | `operations/tests/unit/v2-wcag-audit.test.js` | Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes). |
+  | `utils file-walker` | script-specific via `-- <args>` | `operations/tests/utils/file-walker.js` | Utility script for operations/tests/utils/file-walker.js. |
+  | `utils mdx-parser` | script-specific via `-- <args>` | `operations/tests/utils/mdx-parser.js` | Utility script for operations/tests/utils/mdx-parser.js. |
+  | `utils spell-checker` | script-specific via `-- <args>` | `operations/tests/utils/spell-checker.js` | Utility script for operations/tests/utils/spell-checker.js. |
 
   </Tab>
   <Tab title="Other">
@@ -723,11 +727,11 @@ bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/n
 
   | Script token | Flags available | Resolved path | PURPOSE |
   |---|---|---|---|
-  | `add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. |
-  | `batch-update-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. |
-  | `ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
-  | `replace-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. |
-  | `test-add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. |
+  | `add-callouts` | script-specific via `-- <args>` | `tools/dev/add-callouts.js` | Utility script for tools/dev/add-callouts.js. |
+  | `batch-update-og-image` | script-specific via `-- <args>` | `tools/dev/batch-update-og-image.sh` | Utility script for tools/dev/batch-update-og-image.sh. |
+  | `ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
+  | `replace-og-image` | script-specific via `-- <args>` | `tools/dev/replace-og-image.py` | Utility script for tools/dev/replace-og-image.py. |
+  | `test-add-callouts` | script-specific via `-- <args>` | `tools/dev/test-add-callouts.js` | Utility script for tools/dev/test-add-callouts.js. |
 
   </Tab>
 </TabsContainer>

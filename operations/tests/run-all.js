@@ -128,7 +128,6 @@ function hasStagedUiTemplateChanges() {
   return getStagedRepoRelativeFiles().some(
     (filePath) =>
       filePath.startsWith('snippets/templates/') ||
-      filePath.startsWith('v2/templates/') ||
       filePath.startsWith('.vscode/') ||
       filePath === 'docs-guide/catalog/ui-templates.mdx' ||
       filePath === 'docs-guide/features/ui-system.mdx' ||

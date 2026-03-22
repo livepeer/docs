@@ -16,9 +16,9 @@
 | Path fixes (stale `tools/scripts/`, `tests/`) | ✅ Fixed 2026-03-21 |
 | `tasks → workspace` alias | ✅ Already correct (V-WS.9) |
 | `run-all.js` i18n path | ✅ Fixed 2026-03-21 |
-| Documentation (`lpd-cli.mdx`) | ⚠️ Needs freshness gate |
+| Documentation (`lpd-cli.mdx`) | ✅ Updated 2026-03-22 |
 | Deprecated locale docs | ⚠️ Need archiving |
-| Self-update mechanism | ❌ Missing — see recommendations |
+| Self-update mechanism (Layer 1) | ✅ `validate-lpd-paths.js` created 2026-03-22 |
 
 ---
 

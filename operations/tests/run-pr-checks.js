@@ -287,7 +287,6 @@ function partitionFiles(changedFiles) {
   );
   const uiTemplateFiles = existingChangedFiles.filter((file) =>
     file.startsWith('snippets/templates/') ||
-    file.startsWith('v2/templates/') ||
     file.startsWith('.vscode/') ||
     file === 'docs-guide/catalog/ui-templates.mdx' ||
     file === 'docs-guide/features/ui-system.mdx' ||

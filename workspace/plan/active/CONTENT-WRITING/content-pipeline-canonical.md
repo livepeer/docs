@@ -82,17 +82,20 @@ What "good" means at each level of the documentation hierarchy. Each level has t
 **Aims**: Consistent taxonomy across all tabs; every page framework-aligned; no structural orphans; navigation matches file system.
 
 **Usefulness metrics**:
+
 - Audience journey complete for every primary audience segment — entry, depth, exit
 - All audiences have a clear path in and out
 - Cross-tab links exist at every audience journey intersection
 
 **Content metrics**:
+
 - 0 pages with missing-fields classification
 - 0 pages with wrong-type classification
 - All factual claims veracity-tracked across the full site
 - No unresolved stale content in very-high veracity sections
 
 **UX metrics**:
+
 - All navigated pages use pageType-correct templates
 - All headings score ≥20/25 across the site
 - No component rule violations
@@ -105,16 +108,19 @@ What "good" means at each level of the documentation hierarchy. Each level has t
 **Aims**: Complete audience journey from entry to activation; all canonical section positions present; cross-tab links at journey intersection points.
 
 **Usefulness metrics**:
+
 - Primary audience journey complete — entry → depth → exit — with no missing steps
 - On-demand sections (guides, reference, resources) exist for every major post-activation need
 - At least 3 cross-tab links at points where audience journeys intersect
 
 **Content metrics**:
+
 - All pages classified correctly for this tab's audience and lifecycle stage
 - No pages in the wrong section
 - No stale or unverified content in very-high veracity sections (setup, config, reference)
 
 **UX metrics**:
+
 - Tab entry portal correctly routes to all sections
 - All sections have an orientation page
 - No dead-end pages — every page has a clear next step
@@ -126,15 +132,18 @@ What "good" means at each level of the documentation hierarchy. Each level has t
 **Aims**: All pages serve the same audience at the right lifecycle stage; sequence builds on itself; section has an orientation page that correctly routes.
 
 **Usefulness metrics**:
+
 - Reader can complete the section's primary task without leaving the section for missing prerequisites
 - No knowledge gaps between adjacent pages
 
 **Content metrics**:
+
 - All pages have correct pageType for their section position
 - No content duplicated from adjacent sections
 - All factual claims veracity-tracked within the section
 
 **UX metrics**:
+
 - Section orientation page present and correctly routes to all subsections
 - All pages have passing heading names
 - Components appropriate for each page's pageType — no forbidden components in use
@@ -146,16 +155,19 @@ What "good" means at each level of the documentation hierarchy. Each level has t
 **Aims**: One purpose, one audience, one job the reader achieves before the end.
 
 **Usefulness metrics**:
+
 - Reader achieves the stated purpose without needing additional context from outside the page
 - PREV_PAGE and NEXT_PAGE adjacency is correct — no knowledge gaps in either direction
 - All prerequisite knowledge is either stated or linked
 
 **Content metrics**:
+
 - Voice correct for audience — register, terminology, no banned words or constructions
 - Factual, technical, and procedural claims verified or explicitly flagged
 - UK English throughout; no passive value statements; no hedging openers
 
 **UX metrics**:
+
 - Correct template applied for pageType + pageVariant
 - All 10 frontmatter fields present and correct
 - All heading names score ≥20/25
@@ -173,14 +185,14 @@ The pipeline solves the Core Issues through a sequence of phases, each narrowing
 
 **Phases**:
 
-| Phase | Job | Output |
-|---|---|---|
-| 1 — Define Context | Understand the landscape at every level | Context documents (site → tab → section → page) |
-| 2 — Frameworks & Definitions | Lock the standards every page is measured against | Locked framework files |
-| 3 — Content Audit | Inventory what exists; classify against framework | Audit report per tab |
-| 4 — Fill Gaps | Write missing content | Draft pages for gap positions |
-| 5 — Review & Refine | Review content against framework; fix what doesn't pass | Revised content per page |
-| 6 — UX & Layout | Apply template, components, naming, frontmatter | MDX-ready pages |
+| Phase                        | Job                                                     | Output                                          |
+| ---------------------------- | ------------------------------------------------------- | ----------------------------------------------- |
+| 1 — Define Context           | Understand the landscape at every level                 | Context documents (site → tab → section → page) |
+| 2 — Frameworks & Definitions | Lock the standards every page is measured against       | Locked framework files                          |
+| 3 — Content Audit            | Inventory what exists; classify against framework       | Audit report per tab                            |
+| 4 — Fill Gaps                | Write missing content                                   | Draft pages for gap positions                   |
+| 5 — Review & Refine          | Review content against framework; fix what doesn't pass | Revised content per page                        |
+| 6 — UX & Layout              | Apply template, components, naming, frontmatter         | MDX-ready pages                                 |
 
 ---
 
@@ -250,11 +262,11 @@ Full site — all tabs, all audiences, all navigation.
 
 #### Artefacts & Status
 
-| Artefact | Description | Status |
-|---|---|---|
+| Artefact                   | Description                                                          | Status           |
+| -------------------------- | -------------------------------------------------------------------- | ---------------- |
 | Full site context document | Compressed summary of site purpose, audiences, and content landscape | [draft / locked] |
-| Audience segments document | Audience segments, success metric per segment, graduation paths | [draft / locked] |
-| Full site IA / navigation | IA by audience segment — locked before Phase 2 begins | [draft / locked] |
+| Audience segments document | Audience segments, success metric per segment, graduation paths      | [draft / locked] |
+| Full site IA / navigation  | IA by audience segment — locked before Phase 2 begins                | [draft / locked] |
 
 #### Useful Research / Frameworks
 
@@ -294,10 +306,10 @@ Each tab individually — gateways, orchestrators, developers, delegators, commu
 
 #### Artefacts & Status
 
-| Artefact | Description | Status |
-|---|---|---|
-| Tab context document | Per-tab: audience, arriving question, journey, canonical sections | [draft / locked] per tab |
-| Tab map | Structural audit of each tab — section inventory, page classification, gaps | [draft / locked] per tab |
+| Artefact             | Description                                                                 | Status                   |
+| -------------------- | --------------------------------------------------------------------------- | ------------------------ |
+| Tab context document | Per-tab: audience, arriving question, journey, canonical sections           | [draft / locked] per tab |
+| Tab map              | Structural audit of each tab — section inventory, page classification, gaps | [draft / locked] per tab |
 
 ---
 
@@ -326,8 +338,8 @@ Each canonical section within a tab (concepts, quickstart, setup, guides, refere
 
 #### Artefacts & Status
 
-| Artefact | Description | Status |
-|---|---|---|
+| Artefact        | Description                                                                      | Status                   |
+| --------------- | -------------------------------------------------------------------------------- | ------------------------ |
 | Section context | Embedded in tab map — per section: purpose, audience, lifecycle stage, adjacency | [draft / locked] per tab |
 
 ---
@@ -357,8 +369,8 @@ Every navigated page across all tabs in scope.
 
 #### Artefacts & Status
 
-| Artefact | Description | Status |
-|---|---|---|
+| Artefact                  | Description                                                                                                                        | Status                   |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
 | Page classification table | Per page: pageType, audience, purpose, lifecycle stage, classification (aligned / wrong-type / missing-fields / misplaced / stale) | [draft / locked] per tab |
 
 ---
@@ -383,18 +395,18 @@ Per scope level (site → tab → section → page):
 
 #### Needs
 
-| Framework file | Status |
-|---|---|
-| `Frameworks/pageType.md` | ✅ Locked |
-| `Frameworks/pagePurpose.md` | ✅ Locked |
-| `Frameworks/information-type.md` | ✅ Locked |
-| `Frameworks/veracity.md` + `veracity-library.md` | ✅ Locked |
-| `Frameworks/complexity.md` | ✅ Locked |
-| `Frameworks/industry.md` | ✅ Locked |
-| `Prompts/voice-rules.md` | ✅ Locked |
-| `Prompts/section-naming.md` | ✅ Locked |
-| `v2/_workspace/references/content-pipeline/08a-ia-per-tab.md` | ✅ Locked |
-| Page templates per pageType | ⬜ Not started — Step 11 |
+| Framework file                                                | Status                   |
+| ------------------------------------------------------------- | ------------------------ |
+| `Frameworks/pageType.md`                                      | ✅ Locked                |
+| `Frameworks/pagePurpose.md`                                   | ✅ Locked                |
+| `Frameworks/information-type.md`                              | ✅ Locked                |
+| `Frameworks/veracity.md` + `veracity-library.md`              | ✅ Locked                |
+| `Frameworks/complexity.md`                                    | ✅ Locked                |
+| `Frameworks/industry.md`                                      | ✅ Locked                |
+| `Prompts/voice-rules.md`                                      | ✅ Locked                |
+| `Prompts/section-naming.md`                                   | ✅ Locked                |
+| `v2/_workspace/references/content-pipeline/08a-ia-per-tab.md` | ✅ Locked                |
+| Page templates per pageType                                   | ⬜ Not started — Step 11 |
 
 ---
 
@@ -482,12 +494,14 @@ Review each page for:
 Apply the Phase 5.1 findings:
 
 **Content**:
+
 - Tighten prose — one paragraph, one job
 - Update incorrect or unverified items; add REVIEW flags for unresolved claims
 - Refine voice — correct register, correct terminology, no violations
 - Ensure naming practices met — headings score ≥20/25
 
 **Structure**:
+
 - Fits the journey type (pageType template)
 - Delivers information in the correct flow sequence for the stated purpose
 - Achieves the process and outcome the reader needs
@@ -524,12 +538,11 @@ Apply visual structure and MDX formatting to reviewed and approved content. Does
 
 Implementation detail for each phase lives in:
 
-| File | Phase |
-|---|---|
-| `Prompts/level-1-tab-map.md` | Phase 1.2–1.4 (tab → page context and classification) |
-| `Prompts/level-2-pass-a-content.md` | Phase 5.1–5.2 (review and refine content) |
-| `Prompts/level-2-pass-b-layout.md` | Phase 6 (UX and layout) |
-| `Prompts/voice-rules.md` | Phase 2 input; Phase 5 review criteria |
-| `Prompts/section-naming.md` | Phase 6 naming check |
-| `Skills/` | Phase 2 automation — schema validation, frontmatter checks |
-
+| File                                | Phase                                                      |
+| ----------------------------------- | ---------------------------------------------------------- |
+| `Prompts/level-1-tab-map.md`        | Phase 1.2–1.4 (tab → page context and classification)      |
+| `Prompts/level-2-pass-a-content.md` | Phase 5.1–5.2 (review and refine content)                  |
+| `Prompts/level-2-pass-b-layout.md`  | Phase 6 (UX and layout)                                    |
+| `Prompts/voice-rules.md`            | Phase 2 input; Phase 5 review criteria                     |
+| `Prompts/section-naming.md`         | Phase 6 naming check                                       |
+| `Skills/`                           | Phase 2 automation — schema validation, frontmatter checks |

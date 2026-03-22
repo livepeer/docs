@@ -31,10 +31,10 @@ Constraints
 
 When to load references
 
-- Load `workspace/plan/active/CONTENT-WRITING/Prompts/level-2-pass-a-content.md` — full prompt with phases and quality gates.
+- Load `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` — full prompt with phases and quality gates.
 - Load `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` — required for Phase 5 audience-specific voice check.
-- Load `workspace/plan/active/CONTENT-WRITING/framework.md` — for audience, persona, and purpose definitions.
-- Load `workspace/plan/active/CONTENT-WRITING/veracity.md` — for Phase 6 veracity standards.
+- Load `workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md` — for audience, persona, and purpose definitions.
+- Load `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` — for Phase 6 veracity standards.
 - Load the page file (REVIEW / REWRITE) or page brief (WRITE) before running any phase.
 - Load `v2/[tab]/_workspace/tab-map.md` if available for reader journey context.
 

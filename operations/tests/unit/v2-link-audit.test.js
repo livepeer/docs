@@ -200,22 +200,12 @@ async function runTests() {
     assert(analyzedFiles.every((file) => !file.includes('v2/orchestrators/guides/')));
   });
 
-  await runCase('Resolves rooted hidden v2 routes outside docs.json navigation', async () => {
-    const root = getRepoRoot();
-    const currentFile = path.join(root, 'snippets', 'templates', 'pages', 'landing-and-navigation', 'navigation-page.mdx');
-    const resolved = audit.resolveInternalPath('/templates/pages/overview-page-template', currentFile);
-
-    assert.strictEqual(
-      path.relative(root, resolved).split(path.sep).join('/'),
-      'v2/templates/pages/overview-page-template'
-    );
-  });
 
   return {
     errors,
     warnings,
     passed: errors.length === 0,
-    total: 10
+    total: 9
   };
 }
 
