@@ -183,7 +183,7 @@ function shouldRunForChangedFiles(changedFiles) {
     const relPath = toPosix(filePath);
     return (
       COMPONENT_CHANGE_RE.test(relPath) ||
-      relPath === 'operations/scripts/validators/components/library/check-mdx-component-scope.js' ||
+      relPath === 'operations/scripts/validators/components/library/validate-mdx-component-scope.js' ||
       relPath === 'tests/integration/mdx-component-runtime-smoke.js' ||
       SENTINEL_ROUTE_FILES.has(relPath)
     );

@@ -46,7 +46,7 @@ const rootAllowlistFormatTests = require('./unit/root-allowlist-format.test');
 const exportPortableSkillsTests = require('./unit/export-portable-skills.test');
 const docsGuideSotTests = require('./unit/docs-guide-sot.test');
 const uiTemplateGeneratorTests = require('./unit/ui-template-generator.test');
-const componentNamingTests = require('../scripts/validators/components/library/check-naming-conventions');
+const componentNamingTests = require('../scripts/validators/components/library/validate-naming-conventions');
 const { isAiToolsRegistryRelevantPath } = require('../../tools/lib/ai-tools-registry');
 
 const REPO_ROOT = getRepoRoot();
@@ -93,7 +93,7 @@ try {
 
 let mdxSafeMarkdownValidator = null;
 try {
-  mdxSafeMarkdownValidator = require('../scripts/validators/content/structure/check-mdx-safe-markdown');
+  mdxSafeMarkdownValidator = require('../scripts/validators/content/structure/validate-mdx-safe-markdown');
 } catch (_error) {
   mdxSafeMarkdownValidator = null;
 }
@@ -301,7 +301,7 @@ function partitionFiles(changedFiles) {
     file === 'operations/tests/unit/check-agent-docs-freshness.test.js' ||
     file === 'operations/tests/unit/root-allowlist-format.test.js' ||
     file === 'operations/scripts/repair-ownerless-language.js' ||
-    file === 'operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js' ||
+    file === 'operations/scripts/validators/governance/compliance/validate-agent-docs-freshness.js' ||
     file === '.allowlist' ||
     file === 'AGENTS.md' ||
     file === '.github/copilot-instructions.md' ||
@@ -1068,7 +1068,7 @@ function createBranchHealthRegistry(context) {
       label: 'Component Naming',
       files: groups.componentJsx,
       args: [
-        'operations/scripts/validators/components/library/check-naming-conventions.js',
+        'operations/scripts/validators/components/library/validate-naming-conventions.js',
         ...buildFilesArgs(groups.componentJsx)
       ]
     }),
@@ -1090,7 +1090,7 @@ function createBranchHealthRegistry(context) {
     createCommandCheck({
       label: 'MDX-safe Markdown',
       files: groups.repoMarkdownFilesAbs,
-      args: ['operations/scripts/validators/content/structure/check-mdx-safe-markdown.js', ...buildFilesArgs(groups.repoMarkdownFilesAbs)]
+      args: ['operations/scripts/validators/content/structure/validate-mdx-safe-markdown.js', ...buildFilesArgs(groups.repoMarkdownFilesAbs)]
     }),
     createCommandCheck({
       label: 'Spelling',
