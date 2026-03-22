@@ -4,8 +4,8 @@ import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
  * @component BasicList
  * @type wrappers
  * @subniche lists
- * @status broken
- * @description Non-functional stub — returns empty fragment.
+ * @status planned
+ * @description Planned list component — not yet implemented.
  * @accepts none
   * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
@@ -18,8 +18,8 @@ export const BasicList = ({ listItems: array }) => {
  * @component IconList
  * @type wrappers
  * @subniche lists
- * @status broken
- * @description Non-functional stub — returns empty fragment.
+ * @status planned
+ * @description Planned icon list component — not yet implemented.
  * @accepts none
   * @aiDiscoverability none
  * @param {any} listItems - list Items prop.
@@ -80,8 +80,8 @@ export const StepLinkList = ({ listItems, className = "", style = {}, ...rest })
  * @component UpdateList
  * @type wrappers
  * @subniche lists
- * @status broken
- * @description Non-functional — ignores props, renders hardcoded static content.
+ * @status planned
+ * @description Planned update list component — not yet implemented.
  * @accepts none
   * @aiDiscoverability none
  * @param {any} listItems - list Items prop.

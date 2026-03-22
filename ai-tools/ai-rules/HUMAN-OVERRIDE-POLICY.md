@@ -20,7 +20,7 @@ Use helper:
 
 ```bash
 ALLOW_HUMAN_NO_VERIFY=1 \
-node tools/scripts/codex-commit.js \
+node operations/scripts/codex-commit.js \
   --message "<commit message>" \
   --no-verify \
   --human-override true \

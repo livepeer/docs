@@ -1,13 +1,10 @@
 ---
 name: script-footprint-and-usage-audit
-version: "1.1"
-category: audit
 description: >-
-  Audit script sprawl, duplicate automation, placeholder fixtures, and run-context drift so maintainers can reduce repository complexity without losing governance coverage.
-invoke_when:
-  - "audit script sprawl in the repo"
-  - "find duplicate or obsolete scripts"
-  - "review script footprint and usage drift"
+  Audit script sprawl, duplicate automation, placeholder fixtures, and run-context drift so maintainers can reduce repository complexity without losing governance coverage. Use when auditing script sprawl, finding duplicate or obsolete scripts, or reviewing script footprint and usage drift.
+metadata:
+  version: "1.2"
+  category: audit
 ---
 
 SKILL: Script Footprint and Usage Audit
@@ -17,7 +14,7 @@ Identify script quality and maintenance risks that increase repo complexity and 
 
 Command
 ```bash
-node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full
+node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full
 ```
 
 Outputs

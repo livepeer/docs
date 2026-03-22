@@ -1,22 +1,24 @@
 ---
 name: docs-impact-propagation
-version: "1.1"
-category: review-pipeline
-description: Map changed claim families to every dependent page, glossary, example, comparison, and reference surface that should be verified or updated.
-tier: 2
-invoke_when:
-  - "find every page affected by this docs change"
-  - "propagate this claim update across the docs"
-  - "identify downstream pages that depend on this statement"
+description: >-
+  Map changed claim families to every dependent page, glossary, example,
+  comparison, and reference surface that should be verified or updated. Use
+  when: find every page affected by this docs change, propagate this claim
+  update across the docs, identify downstream pages that depend on this
+  statement.
+metadata:
+  version: "1.2"
+  category: "review-pipeline"
+  tier: "2"
 primary_paths:
   - "v2"
-  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
-  - "tools/scripts/audits/content/veracity/docs-page-research.js"
+  - "operations/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
   - "workspace/research/claims"
   - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Docs Impact Propagation

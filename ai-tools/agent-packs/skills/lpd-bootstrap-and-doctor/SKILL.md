@@ -10,12 +10,12 @@ invoke_when:
   - "bootstrap lpd tooling"
 primary_paths:
   - "README.md"
-  - "lpd"
+  - "tools/lpd"
   - "tools/package.json"
   - "tests/package.json"
 primary_commands:
-  - "bash lpd setup --yes"
-  - "bash lpd doctor --strict"
+  - "bash tools/lpd setup --yes"
+  - "bash tools/lpd doctor --strict"
 ---
 
 SKILL: LPD Bootstrap and Doctor
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-bash lpd setup --yes
-bash lpd doctor --strict
+bash tools/lpd setup --yes
+bash tools/lpd doctor --strict
 ```
 
 Deliverable Format
@@ -45,7 +45,7 @@ Deliverable Format
 - List of blockers with exact command-based fixes.
 
 Failure Modes / Fallback
-- If `lpd` is not on PATH, use `bash lpd <command>` fallback.
+- If `lpd` is not on PATH, use `bash tools/lpd <command>` from repo root.
 - If strict doctor fails, run non-strict doctor and isolate failing checks for targeted fixes.
 
 Validation Checklist

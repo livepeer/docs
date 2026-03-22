@@ -1,22 +1,21 @@
 ---
 name: v2-pages-index-sync
-version: "1.1"
-category: governance
 description: >-
-  Generate, verify, and stage section/root index.mdx files for v2 pages. Use when tasks include v2 index.mdx out of date, sync top-level page indexes, remove nested index files.
-tier: 2
-invoke_when:
-  - "v2 index.mdx out of date"
-  - "sync top-level page indexes"
-  - "remove nested index files"
+  Generate, verify, and stage section/root index.mdx files for v2 pages.
+  Use when: v2 index.mdx out of date, sync top-level page indexes, remove
+  nested index files.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/generators/content/catalogs/generate-pages-index.js"
+  - "operations/scripts/generators/content/catalogs/generate-pages-index.js"
   - "v2/pages/index.mdx"
   - "docs.json"
   - "tests/README.md"
 primary_commands:
-  - "node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged --write --stage"
-  - "node tools/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes"
+  - "node operations/scripts/generators/content/catalogs/generate-pages-index.js --staged --write --stage"
+  - "node operations/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes"
 ---
 
 SKILL: v2 Pages Index Sync
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged --write --stage
-node tools/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes
+node operations/scripts/generators/content/catalogs/generate-pages-index.js --staged --write --stage
+node operations/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes
 ```
 
 Deliverable Format

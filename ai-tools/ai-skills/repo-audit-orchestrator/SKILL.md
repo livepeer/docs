@@ -1,13 +1,10 @@
 ---
 name: repo-audit-orchestrator
-version: "1.1"
-category: meta
 description: >-
-  Run the docs-as-infrastructure audit pipeline, aggregate stage results, and emit one prioritized scorecard that maintainers can use to sequence repository fixes.
-invoke_when:
-  - "run the full docs audit pipeline"
-  - "aggregate repo audit stages"
-  - "produce one repo audit scorecard"
+  Run the docs-as-infrastructure audit pipeline, aggregate stage results, and emit one prioritised scorecard that maintainers can use to sequence repository fixes. Use when running the full docs audit pipeline, aggregating repo audit stages, or producing a single repo audit scorecard.
+metadata:
+  version: "1.2"
+  category: meta
 ---
 
 SKILL: Repo Audit Orchestrator
@@ -22,7 +19,7 @@ Inputs
 
 Command
 ```bash
-node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
+node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
 ```
 
 Outputs

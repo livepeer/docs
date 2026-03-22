@@ -1,14 +1,13 @@
 ---
 name: structure-and-allowlist-guardrails
-version: "1.1"
-category: governance
 description: >-
-  Apply repository structure rules and root allowlist constraints before committing changes. Use when tasks include pre-commit blocked unauthorized root files, where should this file be moved, allowlist or structure violation.
-tier: 1
-invoke_when:
-  - "pre-commit blocked unauthorized root files"
-  - "where should this file be moved"
-  - "allowlist or structure violation"
+  Apply repository structure rules and root allowlist constraints before
+  committing changes. Use when: pre-commit blocked unauthorized root files,
+  where should this file be moved, allowlist or structure violation.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "README.md"
   - ".allowlist"

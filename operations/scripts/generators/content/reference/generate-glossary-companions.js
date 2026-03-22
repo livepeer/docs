@@ -11,7 +11,7 @@
  * @mode        generate
  * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual
  * @scope       tools/scripts
- * @usage       node tools/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]
+ * @usage       node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]
  * @flags
  *   --dry-run   Print what would be written without writing any files
  *   --check     Verify all expected companion JSONs exist and are up-to-date; exit 1 if any are missing or stale

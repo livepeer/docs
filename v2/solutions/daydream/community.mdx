@@ -1,6 +1,6 @@
 ---
-title: Daydream — Community & Updates
-sidebarTitle: Community & Updates
+title: Daydream Recent Announcements
+sidebarTitle: Daydream Live 📡
 description: 'Latest videos, socials, and community activity for Daydream.'
 purpose: orient
 pageType: resource
@@ -17,63 +17,45 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: builder
-lastVerified: 2026-03-21
+lastVerified: 2026-03-23
 ---
 
-import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
-import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
-import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { SocialLinks } from '/snippets/components/elements/social/SocialLinks.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
+import { ColumnsBlogCardLayout } from '/snippets/components/integrators/blog/Data.jsx'
+import { daydreamBlogData } from '/snippets/automations/solutions/daydream/blogData.jsx'
+import { youtubeData } from '/snippets/automations/solutions/daydream/youtubeData.jsx'
 
 <Tip>
-  Daydream is an open-source real-time AI video toolkit built on Livepeer.
-  This page aggregates community activity across their socials and GitHub.
+  Uses automations to pull in the latest community activity for Daydream.
 </Tip>
 
-## <Icon icon="camera-movie" size={24} /> Featured Video
+<SocialLinks links={[
+  { icon: "globe", href: "https://daydream.live", label: "Daydream Website" },
+  { icon: "github", href: "https://github.com/daydreamlive/scope", label: "Daydream GitHub" },
+  { icon: "discord", href: "https://discord.gg/pF2Akym5bV", label: "Daydream Discord" },
+  { icon: "book-open", href: "https://docs.daydream.live", label: "Daydream Docs" },
+  { icon: "x-twitter", href: "https://x.com/daydreamlive", label: "Daydream on X" },
+  { icon: "pen-line", href: "https://blog.daydream.live", label: "Daydream Blog" },
+]} />
+
+## Videos
 
 <YouTubeVideo
-  embedUrl="https://www.youtube.com/embed/yeoGzSWdNGM"
-  caption="Yondon Fu — Real-Time AI Video as a Creative Medium"
+  embedUrl="https://www.youtube.com/embed/ggA2N4tInD0"
+  caption="Scope Workshop — Mar 20, 2026"
 />
 
-<CustomDivider />
+<YouTubeVideo
+  embedUrl="https://www.youtube.com/embed/U0U9fDezxFQ"
+  caption="Daydream AI — Recent Upload"
+/>
 
-## <Icon icon="github" size={24} /> GitHub
+## Test YouTubeVideoData
 
-<MarkdownEmbed url="https://raw.githubusercontent.com/daydreamlive/scope/main/README.md" />
+<YouTubeVideoData items={youtubeData} limit={2} />
 
-<LinkArrow label="View Daydream on GitHub" href="https://github.com/daydreamlive/scope" newline={false} />
+## Blog
 
-<CustomDivider />
-
-## <Icon icon="twitter" size={24} /> X / Twitter
-
-Follow Daydream for real-time AI video updates.
-
-<LinkArrow label="@daydreamlive on X" href="https://x.com/daydreamlive" newline={false} />
-
-<CustomDivider />
-
-## <Icon icon="discord" size={24} /> Discord
-
-Join the Daydream community for support and collaboration.
-
-<LinkArrow label="Daydream Discord" href="https://discord.gg/pF2Akym5bV" newline={false} />
-
-<CustomDivider />
-
-## <Icon icon="pencil-line" size={24} /> Blog
-
-Read the latest from the Daydream team.
-
-<LinkArrow label="Daydream Blog" href="https://blog.daydream.live" newline={false} />
-
-<CustomDivider />
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Daydream Overview" icon="book-open" href="/solutions/daydream/overview" />
-  <Card title="Daydream Quickstart" icon="rocket" href="/solutions/daydream/quickstart" />
-</CardGroup>
+Blog test - is just the import breaking it?

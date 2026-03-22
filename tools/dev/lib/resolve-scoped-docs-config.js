@@ -2,12 +2,12 @@
  * @script            resolve-scoped-docs-config
  * @category          utility
  * @purpose           tooling:dev-tools
- * @scope             tools/scripts/dev/lib, tools/config/scoped-navigation
+ * @scope             tools/dev/lib, tools/config/scoped-navigation
  * @domain            docs
  * @needs             E-C6, F-C1
  * @purpose-statement Scoped docs config resolver — resolves named scoped navigation configs and explicit docs config paths for mint-dev tooling
  * @pipeline          indirect -- library module
- * @usage             node -e "require('./tools/scripts/dev/lib/resolve-scoped-docs-config')"
+ * @usage             node -e "require('./tools/dev/lib/resolve-scoped-docs-config')"
  */
 const fs = require('fs');
 const path = require('path');

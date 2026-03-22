@@ -1,14 +1,13 @@
 ---
 name: style-mdx-quality-fix-playbook
-version: "1.1"
-category: governance
 description: >-
-  Systematically fix style, MDX, and quality test failures with smallest-risk edits. Use when tasks include quality tests failing on docs pages, fix mdx and style errors together, frontmatter and content quality cleanup.
-tier: 1
-invoke_when:
-  - "quality tests failing on docs pages"
-  - "fix mdx and style errors together"
-  - "frontmatter and content quality cleanup"
+  Systematically fix style, MDX, and quality test failures with smallest-risk
+  edits. Use when: quality tests failing on docs pages, fix mdx and style
+  errors together, frontmatter and content quality cleanup.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "tests/unit/style-guide.test.js"
   - "tests/unit/mdx.test.js"

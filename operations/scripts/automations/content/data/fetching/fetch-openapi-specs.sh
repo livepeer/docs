@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual — not yet in pipeline
 # @scope       tools/scripts
-# @usage       bash tools/scripts/automations/content/data/fetching/fetch-openapi-specs.sh [flags]
+# @usage       bash operations/scripts/automations/content/data/fetching/fetch-openapi-specs.sh [flags]
 # @policy      F-R17
 # Pre-build script to fetch external OpenAPI specification files
 # Run this before building the docs to ensure API specs are up-to-date

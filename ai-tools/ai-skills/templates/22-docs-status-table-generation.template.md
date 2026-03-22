@@ -1,21 +1,20 @@
 ---
 name: docs-status-table-generation
-version: "1.1"
-category: audit
 description: >-
-  Generate docs status table and structure diagram artifacts from docs navigation sources. Use when tasks include regenerate docs status table, update docs structure diagram, sync status report with docs.json.
-tier: 2
-invoke_when:
-  - "regenerate docs status table"
-  - "update docs structure diagram"
-  - "sync status report with docs.json"
+  Generate docs status table and structure diagram artifacts from docs
+  navigation sources. Use when: regenerate docs status table, update docs
+  structure diagram, sync status report with docs.json.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/generate-docs-status.js"
+  - "operations/scripts/snippets/generate-docs-status.js"
   - "snippets/generated/docs-status-table.mdx"
   - "snippets/generated/docs-structure-diagram.mdx"
   - "snippets/docs-status-data.json"
 primary_commands:
-  - "node tools/scripts/snippets/generate-docs-status.js"
+  - "node operations/scripts/snippets/generate-docs-status.js"
   - "rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx"
 ---
 
@@ -37,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/snippets/generate-docs-status.js
+node operations/scripts/snippets/generate-docs-status.js
 rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx
 ```
 

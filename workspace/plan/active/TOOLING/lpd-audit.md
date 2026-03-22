@@ -17,7 +17,7 @@
 | `tasks → workspace` alias | ✅ Already correct (V-WS.9) |
 | `run-all.js` i18n path | ✅ Fixed 2026-03-21 |
 | Documentation (`lpd-cli.mdx`) | ✅ Updated 2026-03-22 |
-| Deprecated locale docs | ⚠️ Need archiving |
+| Deprecated locale docs | ✅ Archived 2026-03-22 (cn, fr, es) |
 | Self-update mechanism (Layer 1) | ✅ `validate-lpd-paths.js` created 2026-03-22 |
 
 ---
@@ -79,15 +79,10 @@ Added i18n test block earlier in this session used stale `tools/scripts/...` pat
 
 | File | Status | Issue |
 |---|---|---|
-| `docs-guide/tooling/lpd-cli.mdx` | `status: draft`, `lastVerified: 2026-03-16` | Does not reflect `operations/` paths yet; no auto-update |
-| `v2/cn/docs-guide/x-deprecated/lpd.md` | Stale locale copy | Archive with `git mv` |
-| `v2/fr/docs-guide/x-deprecated/lpd.md` | Stale locale copy | Archive with `git mv` |
-
-### `lpd-cli.mdx` specific gaps
-
-The docs page still references `tools/scripts/...` and `tests/...` paths in examples. Any code block
-showing script paths or `lpd ci` internals is now stale. Should be updated alongside a
-`lastVerified` bump and status change from `draft` → `current`.
+| `docs-guide/tooling/lpd-cli.mdx` | ✅ `status: current`, `lastVerified: 2026-03-22` | Updated 2026-03-22 |
+| `v2/cn/docs-guide/x-deprecated/lpd.md` | ✅ Archived 2026-03-22 | Locale docs will return — archived due to staleness, not permanent removal |
+| `v2/fr/docs-guide/x-deprecated/lpd.md` | ✅ Archived 2026-03-22 | Same |
+| `v2/es/docs-guide/x-deprecated/lpd.md` | ✅ Archived 2026-03-22 | Same |
 
 ---
 

@@ -12,7 +12,7 @@
  * @mode        audit
  * @pipeline    manual | post-PR | cron
  * @scope       tools/scripts
- * @usage       node tools/scripts/audits/content/reference/audit-icon-usage.js [flags]
+ * @usage       node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]
  * @flags
  *   --output <path>   Write JSON report to file (default: workspace/reports/_local/icon-usage-report.json)
  *   --md              Also write a markdown summary (icon-usage-report.md in same dir)
@@ -291,7 +291,7 @@ function main() {
   }
 
   console.log(`\nReview unmapped icons and add to: snippets/data/reference-maps/icon-map.jsx`);
-  console.log(`Regenerate this report after updating the map: node tools/scripts/audits/content/reference/audit-icon-usage.js`);
+  console.log(`Regenerate this report after updating the map: node operations/scripts/audits/content/reference/audit-icon-usage.js`);
 }
 
 main();

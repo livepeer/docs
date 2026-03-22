@@ -1,14 +1,13 @@
 ---
 name: spelling-and-cspell-maintenance
-version: "1.1"
-category: governance
 description: >-
-  Maintain spelling quality with repo dictionaries and staged spell checks. Use when tasks include spelling test failed, add accepted term to dictionary, fix cspell issues in docs.
-tier: 1
-invoke_when:
-  - "spelling test failed"
-  - "add accepted term to dictionary"
-  - "fix cspell issues in docs"
+  Maintain spelling quality with repo dictionaries and staged spell checks.
+  Use when: spelling test failed, add accepted term to dictionary, fix cspell
+  issues in docs.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "tests/unit/spelling.test.js"
   - "tests/config/spell-dict.json"

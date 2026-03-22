@@ -1,22 +1,21 @@
 ---
 name: component-library-index-refresh
-version: "1.1"
-category: governance
 description: >-
-  Refresh component inventory documentation generated from snippets component directories. Use when tasks include update component inventory page, new component not listed in library index, refresh snippets wiki component tree.
-tier: 2
-invoke_when:
-  - "update component inventory page"
-  - "new component not listed in library index"
-  - "refresh snippets wiki component tree"
+  Refresh component inventory documentation generated from snippets component
+  directories. Use when: update component inventory page, new component not
+  listed in library index, refresh snippets wiki component tree.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/update-component-library.sh"
+  - "operations/scripts/snippets/update-component-library.sh"
   - "snippets/snippetsWiki/componentLibrary/index.mdx"
   - "snippets/components"
-  - "tools/scripts/snippets/paths.config.json"
+  - "operations/scripts/snippets/paths.config.json"
 primary_commands:
-  - "bash tools/scripts/snippets/update-component-library.sh"
-  - "bash tools/scripts/snippets/test-scripts.sh"
+  - "bash operations/scripts/snippets/update-component-library.sh"
+  - "bash operations/scripts/snippets/test-scripts.sh"
 ---
 
 SKILL: Component Library Index Refresh
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-bash tools/scripts/snippets/update-component-library.sh
-bash tools/scripts/snippets/test-scripts.sh
+bash operations/scripts/snippets/update-component-library.sh
+bash operations/scripts/snippets/test-scripts.sh
 ```
 
 Deliverable Format

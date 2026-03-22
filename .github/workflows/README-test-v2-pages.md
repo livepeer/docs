@@ -118,7 +118,7 @@ The JSON report (`v2-page-test-report.json`) contains:
 
 ### Tests timeout
 - Some pages may be slow to load
-- Consider increasing per-page timeout in `tools/scripts/test-v2-pages.js`
+- Consider increasing per-page timeout in `operations/scripts/test-v2-pages.js`
 
 ### Puppeteer issues
 - The workflow uses the system Chrome/Chromium
@@ -139,7 +139,7 @@ npm --prefix tools run test:v2-pages
 ## Customization
 
 ### Test specific pages only
-Modify `tools/scripts/test-v2-pages.js` to filter pages:
+Modify `operations/scripts/test-v2-pages.js` to filter pages:
 
 ```javascript
 const pages = getV2Pages().filter(page => 
@@ -148,7 +148,7 @@ const pages = getV2Pages().filter(page =>
 ```
 
 ### Change timeout
-Update `TIMEOUT` constant in `tools/scripts/test-v2-pages.js`
+Update `TIMEOUT` constant in `operations/scripts/test-v2-pages.js`
 
 ### Skip on certain branches
 Add conditions to workflow:

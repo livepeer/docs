@@ -1,14 +1,13 @@
 ---
 name: staged-test-suite-runner
-version: "1.1"
-category: meta
 description: >-
-  Run staged-scope validation flow to check only changed docs and scripts before commit. Use when tasks include run only staged tests, quick pre-commit checks locally, validate changed files only.
-tier: 1
-invoke_when:
-  - "run only staged tests"
-  - "quick pre-commit checks locally"
-  - "validate changed files only"
+  Run staged-scope validation flow to check only changed docs and scripts
+  before commit. Use when: run only staged tests, quick pre-commit checks
+  locally, validate changed files only.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - "tests/run-all.js"
   - "tests/README.md"

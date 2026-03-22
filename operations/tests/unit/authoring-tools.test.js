@@ -3,7 +3,7 @@
  * @script            authoring-tools.test
  * @category          validator
  * @purpose           tooling:dev-tools
- * @scope             tests/unit, tools/vscode/authoring-tools, operations/scripts/format-mdx.js
+ * @scope             tests/unit, tools/editor-extensions/authoring-tools, operations/scripts/format-mdx.js
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement Unit tests for repo-owned authoring tools — verifies MDX formatting and real-path completion/validation helpers.
@@ -20,7 +20,7 @@ const {
   getRealDocsRoutes,
   validateDocsJsonRoutes,
   validateSnippetImports
-} = require('../../../tools/vscode/authoring-tools/lib/authoring-core');
+} = require('../../../tools/editor-extensions/authoring-tools/lib/authoring-core');
 
 const REPO_ROOT = path.resolve(__dirname, '../../..');
 

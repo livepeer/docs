@@ -18,7 +18,7 @@ containerized with Docker.
   - Use `.tsx` for new components; `.jsx` is legacy but supported.
 - **Automations & Scripts:**
   - All dynamic, AI, and data-fetching logic in `automations/` and `ai-tools/`.
-  - Scripts for API doc generation and external data in `tools/scripts/snippets/` (see
+  - Scripts for API doc generation and external data in `operations/scripts/snippets/` (see
     generate-api-docs.sh, fetch-openapi-specs.sh).
 - **API Reference:**
   - OpenAPI spec in `openapi.yaml` (AI API: see ai/worker/api/openapi.yaml). Use
@@ -37,10 +37,10 @@ containerized with Docker.
     `docker buildx build --platform linux/amd64 --load -t livepeer/docs .`
   - Makefile: `make all`
 - **API Docs Generation:**
-  - Use `tools/scripts/snippets/generate-api-docs.sh` to convert OpenAPI specs to
+  - Use `operations/scripts/snippets/generate-api-docs.sh` to convert OpenAPI specs to
     MDX/API docs and navigation JSON. Example:
     ```bash
-    ./tools/scripts/snippets/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+    ./operations/scripts/snippets/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
     ```
   - Output: MDX files + navigation snippet for `docs.json`.
 - **External Data Fetching:**
@@ -77,7 +77,7 @@ containerized with Docker.
 - **OpenAPI:** API docs generated from `openapi.yaml` (see also
   `ai/worker/api/openapi.yaml`).
 - **Docker:** Containerized builds for CI/CD and local dev.
-- **Automations:** Scripts in `tools/scripts/snippets/` automate API doc generation
+- **Automations:** Scripts in `operations/scripts/snippets/` automate API doc generation
   and external data sync.
 
 ## Key Files & Directories
@@ -88,7 +88,7 @@ containerized with Docker.
 - `openapi.yaml`, `ai/worker/api/openapi.yaml` — API reference
 - `Dockerfile`, `Makefile` — Build/deploy
 - `README.md`, `README_V2.md` — Developer notes, protocol/architecture
-- `tools/scripts/snippets/` — Automation scripts (API docs, data fetching)
+- `operations/scripts/snippets/` — Automation scripts (API docs, data fetching)
 
 ---
 

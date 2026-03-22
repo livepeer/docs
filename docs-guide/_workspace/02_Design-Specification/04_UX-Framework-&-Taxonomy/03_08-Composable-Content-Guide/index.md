@@ -95,7 +95,7 @@ Content starts local. It moves to shared only when a concrete second consumer ap
 
 ### **Generated Content**
 
-Scripts in `tools/scripts/generate-*.js` produce content that lives where readers expect it (e.g., `v2/**/index.mdx`). Generated files include a provenance comment. Never hand-edit — edit the script.
+Scripts in `operations/scripts/generate-*.js` produce content that lives where readers expect it (e.g., `v2/**/index.mdx`). Generated files include a provenance comment. Never hand-edit — edit the script.
 
 ## **Scope Inheritance Rules for Composed Pages**
 
@@ -144,10 +144,12 @@ Names describe WHAT the content IS, not where it's used or how it was made.
 
 **Two questions:**
 
-1. **Does any other page need this?**
+1. **Does any other page need this?
+**
   - NO → it lives with your page (`v2/{section}/{page}/`)
   - YES → it lives in the shared library (`snippets/`)
-1. **What is it?**
+1. **What is it?
+**
   - Rendering logic (JSX) → `components/`
   - Authored prose (MDX) → `content/`
   - Structured data → `data/`

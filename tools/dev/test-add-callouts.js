@@ -8,7 +8,7 @@
  * @needs             E-R1, R-R11
  * @purpose-statement Test for add-callouts.js — validates callout insertion logic against fixtures
  * @pipeline          manual — developer tool
- * @usage             node tools/scripts/dev/test-add-callouts.js [flags]
+ * @usage             node tools/dev/test-add-callouts.js [flags]
  */
 
 /**

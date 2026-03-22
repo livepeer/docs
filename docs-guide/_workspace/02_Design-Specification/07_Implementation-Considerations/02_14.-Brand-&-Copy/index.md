@@ -252,5 +252,5 @@ When writing a new page:
 1. **Open 06 (Brand & Copy Guide)** — what voice for this page type? Opening/closing pattern? Terminology?
 1. **Open **`style-guide.mdx` — formatting rules, CSS variables, Mintlify gotchas, frontmatter template
 1. **Write the page**
-1. **Run enforcement:** `node tools/scripts/style-and-language-homogenizer-en-gb.js --scope changed`
-1. **Run governance:** `node tools/scripts/component-layout-governance.js --scope changed`
+1. **Run enforcement:** `node operations/scripts/style-and-language-homogenizer-en-gb.js --scope changed`
+1. **Run governance:** `node operations/scripts/component-layout-governance.js --scope changed`

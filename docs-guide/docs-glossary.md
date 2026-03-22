@@ -6,13 +6,15 @@
 | Scope | Internal terminology for contributors/agents/maintainers |
 | Source | categories.md domains 9-13 |
 
+> **Scope**: Internal contributor and agent terms — component taxonomy, script taxonomy, governance terminology, page types.
 > For protocol/video/AI/web3 terms see `v2/resources/livepeer-glossary.mdx`.
+> For resources-section-scoped terms see `v2/resources/resources/compendium/glossary.mdx`.
 
 ---
 
 ## Component Taxonomy
 
-Source: `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md`
+Source: `workspace/plan/active/COMPONENT-GOVERNANCE/structure.md`
 
 ### Component Types (6)
 
@@ -94,7 +96,7 @@ Source: `tasks/plan/active/COMPONENT-GOVERNANCE/structure.md`
 
 ## Script Taxonomy
 
-Source: `tasks/plan/active/SCRIPT-GOVERNANCE/structure.md`
+Source: `workspace/plan/active/SCRIPT-GOVERNANCE/structure.md`
 
 ### Script Types (6)
 

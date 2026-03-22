@@ -54,23 +54,6 @@ export const PdfEmbed = ({
 )
 
 /**
- * @component EmbedMarkdown
- * @type integrators
- * @subniche embeds
- * @status deprecated
- * @description Alias for MarkdownEmbed — use MarkdownEmbed instead.
- * @deprecated Use MarkdownEmbed. Kept for backwards-compat — see tasks/reports/archived-components-review.md
- * @see MarkdownEmbed
- * @dataSource fetch(url)
- * @accepts {string} url, {string} className, {object} style, ...rest
-  * @aiDiscoverability none
- * @param {string} url - Destination URL used by the component.
- * @param {string} [className=""] - CSS class name.
- * @param {object} [style={}] - Inline style overrides.
- */
-export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <MarkdownEmbed url={url} className={className} style={style} {...rest} />
-
-/**
  * @component TwitterTimeline
  * @type integrators
  * @subniche embeds

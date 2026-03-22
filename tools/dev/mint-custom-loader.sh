@@ -11,13 +11,13 @@
 # @usage       bash tools/dev/mint-custom-loader.sh [flags]
 # @policy      E-C6, F-C1
 # Custom Mintlify loader for alternate docs config
-# Usage: bash tools/scripts/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
+# Usage: bash tools/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 if [ "$#" -lt 1 ]; then
-  echo "Usage: bash tools/scripts/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]"
+  echo "Usage: bash tools/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]"
   exit 1
 fi
 
@@ -39,4 +39,4 @@ if [ ! -f "$CUSTOM_DOCS_JSON" ]; then
 fi
 
 echo "Launching Mint with alternate docs config: $CUSTOM_DOCS_JSON"
-exec bash "$REPO_ROOT/lpd" dev --scoped --docs-config "$CUSTOM_DOCS_JSON" -- "$@"
+exec bash "$REPO_ROOT/tools/lpd" dev --scoped --docs-config "$CUSTOM_DOCS_JSON" -- "$@"

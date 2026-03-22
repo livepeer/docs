@@ -1,0 +1,2148 @@
+#!/usr/bin/env bash
+
+# @script            lpd
+# @category          orchestrator
+# @purpose           infrastructure:pipeline-orchestration
+# @scope             full-repo
+# @domain            docs
+# @needs             R-R29
+# @purpose-statement Developer CLI orchestrator — unified command surface for setup, dev server, testing, hooks, and script execution across all repo domains
+# @pipeline          manual — not yet in pipeline
+set -euo pipefail
+
+CLI_VERSION="0.2.0"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$SCRIPT_DIR"
+
+if git_root="$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null)"; then
+    if [ -f "$git_root/docs.json" ] && [ -d "$git_root/tools" ]; then
+        REPO_ROOT="$git_root"
+    fi
+fi
+
+cd "$REPO_ROOT"
+
+GLOBAL_JSON=0
+
+if [ "${1:-}" = "--json" ]; then
+    GLOBAL_JSON=1
+    shift
+fi
+
+print_main_help() {
+    cat <<'EOF'
+Root command: `lpd` (preferred, when on PATH) or `./lpd` (repo-local fallback).
+
+`lpd` is the Livepeer Docs command-line interface for setting up this repo, running local docs development, executing tests, managing hooks, and invoking project scripts through one consistent entrypoint.
+
+Usage:
+  lpd help
+    - info: Show command summary and examples.
+
+  lpd info
+    - info: Show CLI purpose, command groups, and workflows.
+
+  lpd version
+    - info: Print CLI version.
+
+  lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills] [--json]
+    - flags: control dependency installs, hook install, Mintlify install, CLI PATH wiring, and Codex skill sync.
+    - info: Bootstrap local environment for docs development.
+
+  lpd doctor [--strict] [--json]
+    - flags: `--strict` makes warnings fail.
+    - info: Check local environment and repo readiness.
+
+  lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--scoped] [--docs-config <path>] [--scope-...] [-- ...mint args]
+    - flags: run advisory tests first, optional scoped docs profile for large docs.json or alternate docs config, override launcher script, pass-through Mintlify args.
+    - info: Run local docs dev launcher.
+
+  lpd mint dev [--scoped] [--scope-...] [-- ...mint args]
+    - flags: same as `lpd dev`, plus pass-through Mintlify args.
+    - info: Compatibility alias to `lpd dev`.
+
+  lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL]
+    - flags: choose test scope and optional browser/domain/WCAG/external-link-audit checks.
+    - info: Run test suite with optional integration checks.
+
+  lpd move-page <old> <new> [--yes] [--check] [--no-stage]
+    - flags: dry-run with `--check`, skip `git add` with `--no-stage`, auto-confirm via `--yes`.
+    - info: Move a docs page with `git mv`, then run governed docs path sync.
+
+  lpd ai-sitemap [--write|--check] [--json]
+    - flags: write or verify the AI sitemap artifact.
+    - info: Generate or validate sitemap-ai.xml.
+
+  lpd ci [--skip-browser] [--base-url URL]
+    - flags: optionally skip browser checks and set domain audit base URL.
+    - info: Run CI-like validation flow locally.
+
+  lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
+    - flags: choose the governed surface, optional scope, write mode, and optional staging of repaired outputs.
+    - info: Run ownerless-governance repair flows through one deterministic entrypoint.
+
+  lpd hooks <install|status|verify|info|<hook-script tokens...>>
+    - flags: subcommands define the hook action.
+    - info: Manage hooks or run hook scripts.
+
+  lpd scripts <list|run> ...
+    - flags: use `list` to discover commands and `run` to execute.
+    - info: List or execute managed scripts.
+
+  lpd <tools|workspace|tasks|tests|v2> <script-path tokens...> [-- script args]
+    - flags: script-path tokens resolve to a managed script in that group.
+    - info: Shorthand for `lpd scripts run <group> ...`. `tasks` is a legacy alias for `workspace`.
+
+Examples:
+  lpd dev
+    - Starts local docs development server on the default non-3000 port (3333 unless overridden).
+
+  lpd dev --test --test-mode staged -- --port 3333
+    - Runs staged checks, then launches docs server on port 3333.
+
+  lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+    - Launches Mint with a reduced dev-only docs profile for faster startup and route transitions.
+
+  lpd test --browser
+    - Runs tests plus browser integration checks.
+
+  lpd test --staged --wcag
+    - Runs staged tests and a staged/capped WCAG audit (autofix enabled by default).
+
+  lpd ai-sitemap --write
+    - Generates sitemap-ai.xml at repo root.
+
+  lpd repair --surface script-governance --write --staged
+    - Repairs staged script-governance metadata drift with bounded scope.
+
+  lpd scripts list --group tools
+    - Lists available scripts in the tools group.
+
+  lpd tools dev test-add-callouts -- --help
+    - Shows help for a managed tools/dev script via shorthand.
+
+  lpd scripts run workspace run-audit --dry-run
+    - Previews the exact workspace-script command without executing.
+
+Notes:
+  - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
+  - `lpd dev` auto-installs/updates pre-commit hooks via tools/dev/mint-dev.sh.
+  - `lpd dev` defaults to port 3333 when no port is provided and rejects port 3000.
+  - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
+  - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
+  - Script discovery supports `.lpdignore` (gitignore-style patterns) if present in repo root.
+EOF
+}
+
+cmd_info() {
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd info
+Shows CLI-tool information (purpose, command map, and common workflows).
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "info" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    cat <<'EOF'
+lpd (Livepeer Docs CLI) is a task runner for docs development operations in this repository.
+It standardizes setup, local preview, test runs, hooks, and curated script execution behind one command surface.
+
+Command Groups:
+  core
+    lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills]
+    lpd doctor [--strict] [--json]
+    lpd dev [--test] [--test-mode fast|staged|full] [--scoped] [--docs-config <path>] [--scope-...] [-- ...mint args]
+    lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL]
+    lpd move-page <old> <new> [--yes] [--check] [--no-stage]
+    lpd ai-sitemap [--write|--check] [--json]
+    lpd ci [--skip-browser] [--base-url URL]
+    lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
+
+  hooks
+    lpd hooks install
+    lpd hooks status
+    lpd hooks verify
+    lpd hooks info
+
+  script runner
+    lpd scripts list [--group tools|workspace|tasks|tests|v2|hooks] [--show-ignored]
+    lpd scripts run <group> <script-path tokens...> [--yes] [--dry-run] [-- script args]
+    shorthand: lpd <tools|workspace|tasks|tests|v2> <script-path tokens...> [-- script args]
+
+Common Workflows:
+  first-time setup
+    bash lpd setup --yes
+  start docs preview
+    lpd dev
+  fast staged validation
+    lpd test --staged
+  run a managed script
+    lpd tools dev test-add-callouts -- --help
+  regenerate AI sitemap
+    lpd ai-sitemap --write
+  repair a governed surface
+    lpd repair --surface script-governance --write --staged
+  move a docs page and sync docs.json
+    lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/new.mdx
+
+Notes:
+  - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
+  - `lpd dev` defaults to port 3333 when no port is provided and rejects port 3000.
+  - lpd uses .lpdignore (if present) to hide/block scripts from discovery and execution.
+  - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
+  - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
+  - High-risk script groups require confirmation unless --yes is supplied.
+EOF
+}
+
+codex_skills_target_dir() {
+    if [ -n "${CODEX_HOME:-}" ]; then
+        printf '%s\n' "$CODEX_HOME/skills"
+        return 0
+    fi
+    printf '%s\n' "$HOME/.codex/skills"
+}
+
+sync_codex_planner_skill() {
+    local target_dir
+    target_dir="$(codex_skills_target_dir)"
+
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Node is required to sync Codex skills." >&2
+        return 1
+    fi
+
+    if [ ! -f "$REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" ]; then
+        echo "sync-codex-skills.js not found at $REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" >&2
+        return 1
+    fi
+
+    echo "Syncing Codex planner skill to $target_dir..."
+    node operations/scripts/automations/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
+}
+
+emit_json() {
+    local ok="$1"
+    local command="$2"
+    local message="$3"
+    local code="${4:-0}"
+
+    if command -v node >/dev/null 2>&1; then
+        node -e '
+const [ok, command, message, code] = process.argv.slice(1);
+console.log(JSON.stringify({
+  ok: ok === "1",
+  command,
+  message,
+  exit_code: Number(code),
+  repo_root: process.cwd()
+}, null, 2));
+' "$ok" "$command" "$message" "$code"
+        return
+    fi
+
+    if [ "$ok" = "1" ]; then
+        printf '{"ok":true,"command":"%s","message":"%s","exit_code":%s}\n' "$command" "$message" "$code"
+    else
+        printf '{"ok":false,"command":"%s","message":"%s","exit_code":%s}\n' "$command" "$message" "$code"
+    fi
+}
+
+finish() {
+    local code="$1"
+    local command="$2"
+    local message="$3"
+
+    if [ "$GLOBAL_JSON" = "1" ]; then
+        if [ "$code" -eq 0 ]; then
+            emit_json "1" "$command" "$message" "$code"
+        else
+            emit_json "0" "$command" "$message" "$code"
+        fi
+    else
+        if [ "$code" -eq 0 ]; then
+            echo "$message"
+        else
+            echo "Error: $message" >&2
+        fi
+    fi
+
+    return "$code"
+}
+
+require_repo_layout() {
+    if [ ! -f "$REPO_ROOT/docs.json" ] || [ ! -d "$REPO_ROOT/tools" ]; then
+        finish 1 "init" "Not in livepeer-docs repo root."
+        exit 1
+    fi
+}
+
+is_in_path() {
+    local dir="$1"
+    case ":$PATH:" in
+        *":$dir:"*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+preferred_cli_install_dir() {
+    local candidate
+    for candidate in "$HOME/.local/bin" "$HOME/Library/pnpm" "$HOME/bin"; do
+        if is_in_path "$candidate"; then
+            echo "$candidate"
+            return 0
+        fi
+    done
+    echo "$HOME/.local/bin"
+}
+
+shell_rc_file() {
+    case "${SHELL:-}" in
+        */zsh) echo "$HOME/.zshrc" ;;
+        */bash) echo "$HOME/.bashrc" ;;
+        *)
+            if [ -f "$HOME/.zshrc" ]; then
+                echo "$HOME/.zshrc"
+            else
+                echo "$HOME/.bashrc"
+            fi
+            ;;
+    esac
+}
+
+install_cli_link() {
+    local install_dir="${LPD_INSTALL_DIR:-$(preferred_cli_install_dir)}"
+    local target="$REPO_ROOT/tools/lpd"
+    local link_path="$install_dir/lpd"
+    local rc_file
+    local export_line
+
+    mkdir -p "$install_dir"
+    ln -sf "$target" "$link_path"
+
+    if is_in_path "$install_dir"; then
+        return 0
+    fi
+
+    rc_file="$(shell_rc_file)"
+    export_line="export PATH=\"$install_dir:\$PATH\""
+
+    if [ -f "$rc_file" ] && grep -Fq "$export_line" "$rc_file"; then
+        return 0
+    fi
+
+    {
+        echo ""
+        echo "# Added by lpd setup"
+        echo "$export_line"
+    } >> "$rc_file"
+
+    echo "Updated $rc_file to include $install_dir on PATH."
+    echo "Run: source $rc_file"
+    return 0
+}
+
+group_root() {
+    case "$1" in
+        tools) echo "operations/scripts" ;;
+        workspace) echo "workspace/scripts" ;;
+        tasks) echo "workspace/scripts" ;;  # legacy alias for workspace
+        tests) echo "operations/tests" ;;
+        v2) echo "tools/dev" ;;
+        hooks) echo ".githooks" ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+group_risk() {
+    case "$1" in
+        tests) echo "low" ;;
+        tools|hooks) echo "medium" ;;
+        workspace|tasks|v2) echo "high" ;;
+        *)
+            echo "medium"
+            ;;
+    esac
+}
+
+is_builtin_excluded() {
+    local rel="$1"
+    case "$rel" in
+        */node_modules/*|*.bak|*.bak2|*~|*.tmp|*.temp|*.log|logs/*|operations/tests/reports/*|*/README|*/README.md|*/README.mdx|*/README-test-*.md)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+LPIGNORE_MATCH=""
+is_lpignored() {
+    local rel="$1"
+    local lpignore_file="$REPO_ROOT/.lpdignore"
+    LPIGNORE_MATCH=""
+
+    if [ ! -f "$lpignore_file" ]; then
+        return 1
+    fi
+
+    local out
+    out=$(git -c core.excludesfile="$lpignore_file" check-ignore --no-index -v -- "$rel" 2>/dev/null || true)
+    if [ -z "$out" ]; then
+        return 1
+    fi
+
+    case "$out" in
+        "$lpignore_file":*|".lpdignore:"*)
+            LPIGNORE_MATCH="$out"
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+is_runnable_file() {
+    local abs="$1"
+    if [ -x "$abs" ]; then
+        return 0
+    fi
+
+    local first_line=""
+    first_line="$(head -n 1 "$abs" 2>/dev/null || true)"
+    case "$first_line" in
+        '#!'*)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+script_id_from_rel() {
+    local group="$1"
+    local root="$2"
+    local rel="$3"
+    local sub="${rel#$root/}"
+    sub="${sub%.*}"
+    sub="${sub//\// }"
+    echo "$group $sub"
+}
+
+# Output records:
+#   script|<id>|<rel>|<risk>
+#   ignored|<id>|<rel>|<risk>|<pattern>
+discover_group_scripts() {
+    local group="$1"
+    local include_ignored="${2:-0}"
+    local root
+    root="$(group_root "$group")" || return 1
+    local abs_root="$REPO_ROOT/$root"
+    local risk
+    risk="$(group_risk "$group")"
+
+    if [ ! -d "$abs_root" ]; then
+        return 0
+    fi
+
+    while IFS= read -r abs; do
+        local rel="$abs"
+        if [[ "$abs" == "$REPO_ROOT/"* ]]; then
+            rel="${abs:${#REPO_ROOT}+1}"
+        fi
+        if is_builtin_excluded "$rel"; then
+            continue
+        fi
+        if ! is_runnable_file "$abs"; then
+            continue
+        fi
+        local id
+        id="$(script_id_from_rel "$group" "$root" "$rel")"
+        if is_lpignored "$rel"; then
+            if [ "$include_ignored" = "1" ]; then
+                echo "ignored|$id|$rel|$risk|$LPIGNORE_MATCH"
+            fi
+            continue
+        fi
+        echo "script|$id|$rel|$risk"
+    done < <(find "$abs_root" -type f | LC_ALL=C sort)
+}
+
+resolve_script_entry() {
+    local group="$1"
+    shift
+    local target="$*"
+
+    RESOLVED_REL=""
+    RESOLVED_ID=""
+    RESOLVED_RISK=""
+    RESOLVED_IGNORE=""
+
+    while IFS='|' read -r kind id rel risk extra; do
+        local tail="${id#"$group "}"
+        if [ "$tail" = "$target" ]; then
+            if [ "$kind" = "script" ]; then
+                RESOLVED_REL="$rel"
+                RESOLVED_ID="$id"
+                RESOLVED_RISK="$risk"
+                return 0
+            fi
+            if [ "$kind" = "ignored" ]; then
+                RESOLVED_IGNORE="$extra"
+            fi
+        fi
+    done < <(discover_group_scripts "$group" 1)
+
+    return 1
+}
+
+run_script_file() {
+    local rel="$1"
+    shift
+    local dry_run="${LP_DRY_RUN:-0}"
+    local abs="$REPO_ROOT/$rel"
+    local first_line=""
+    local -a cmd
+    cmd=()
+
+    if [ -x "$abs" ]; then
+        cmd=("$abs")
+    else
+        first_line="$(head -n 1 "$abs" 2>/dev/null || true)"
+        case "$first_line" in
+            '#!'*)
+                local shebang="${first_line#\#!}"
+                if [[ "$shebang" == /usr/bin/env* ]]; then
+                    shebang="${shebang#/usr/bin/env }"
+                fi
+                local -a interpreter
+                read -r -a interpreter <<<"$shebang"
+                if [ "${#interpreter[@]}" -eq 0 ]; then
+                    finish 1 "scripts run" "Could not parse shebang in $rel"
+                    return 1
+                fi
+                cmd=("${interpreter[@]}" "$abs")
+                ;;
+            *)
+                case "$abs" in
+                    *.sh|*.bash)
+                        cmd=(bash "$abs")
+                        ;;
+                    *.py)
+                        cmd=(python3 "$abs")
+                        ;;
+                    *.js|*.mjs|*.cjs)
+                        cmd=(node "$abs")
+                        ;;
+                    *)
+                        finish 1 "scripts run" "File is not runnable: $rel"
+                        return 1
+                        ;;
+                esac
+                ;;
+        esac
+    fi
+
+    if [ "$#" -gt 0 ]; then
+        cmd+=("$@")
+    fi
+
+    if [ "$dry_run" = "1" ]; then
+        printf 'Dry run:'
+        printf ' %q' "${cmd[@]}"
+        printf '\n'
+        return 0
+    fi
+
+    "${cmd[@]}"
+}
+
+confirm_high_risk() {
+    local id="$1"
+    if [ "${LP_ASSUME_YES:-0}" = "1" ]; then
+        return 0
+    fi
+
+    if [ ! -t 0 ]; then
+        finish 1 "scripts run" "High-risk command requires confirmation or --yes: $id"
+        return 1
+    fi
+
+    printf "High-risk command '%s'. Continue? [y/N]: " "$id"
+    local answer
+    read -r answer
+    case "$answer" in
+        y|Y|yes|YES)
+            return 0
+            ;;
+        *)
+            finish 1 "scripts run" "Cancelled."
+            return 1
+            ;;
+    esac
+}
+
+run_step() {
+    local label="$1"
+    shift
+    if "$@"; then
+        echo "✓ $label"
+        return 0
+    fi
+    echo "✗ $label" >&2
+    return 1
+}
+
+run_cli_step() {
+    printf '→'
+    printf ' %q' "$@"
+    printf '\n'
+    "$@"
+}
+
+hook_status_check() {
+    local source_dir="$REPO_ROOT/.githooks"
+    local source_hook="$source_dir/pre-commit"
+    local source_pre_push="$source_dir/pre-push"
+    local hooks_path
+
+    if [ ! -f "$source_hook" ]; then
+        echo "missing-source"
+        return 1
+    fi
+
+    hooks_path="$(cd "$REPO_ROOT" && git config --path --get core.hooksPath 2>/dev/null || true)"
+    if [ -z "$hooks_path" ]; then
+        echo "not-installed"
+        return 1
+    fi
+    if [[ "$hooks_path" != /* ]]; then
+        hooks_path="$REPO_ROOT/$hooks_path"
+    fi
+
+    if [ "$hooks_path" != "$source_dir" ]; then
+        echo "wrong-path:$hooks_path"
+        return 1
+    fi
+
+    if [ ! -x "$source_hook" ] || [ ! -x "$source_pre_push" ]; then
+        echo "not-executable"
+        return 1
+    fi
+
+    echo "installed"
+    return 0
+}
+
+cmd_version() {
+    finish 0 "version" "lpd $CLI_VERSION"
+}
+
+cmd_hooks() {
+    local sub="${1:-status}"
+    shift || true
+
+    case "$sub" in
+        install)
+            if ./.githooks/install.sh; then
+                finish 0 "hooks install" "Hooks installed."
+            else
+                finish 1 "hooks install" "Hook installation failed."
+            fi
+            ;;
+        status)
+            local status
+            status="$(hook_status_check)" || true
+            case "$status" in
+                installed)
+                    finish 0 "hooks status" "Hooks are installed via worktree-local core.hooksPath."
+                    ;;
+                not-installed)
+                    finish 1 "hooks status" "Hooks are not installed."
+                    ;;
+                wrong-path:*)
+                    finish 1 "hooks status" "Hooks are routed to the wrong path: ${status#wrong-path:}"
+                    ;;
+                not-executable)
+                    finish 1 "hooks status" "Hook entrypoints exist but are not executable."
+                    ;;
+                *)
+                    finish 1 "hooks status" "Hook status check failed: $status"
+                    ;;
+            esac
+            ;;
+        verify)
+            if bash ./.githooks/verify.sh; then
+                finish 0 "hooks verify" "Hook verification passed."
+            else
+                finish 1 "hooks verify" "Hook verification failed."
+            fi
+            ;;
+        info)
+            cat <<'EOF'
+`lpd hooks` manages repository git hooks and related validation scripts.
+
+Usage:
+  lpd hooks install
+    - info: Configure this worktree to execute hooks directly from `.githooks/`.
+
+  lpd hooks status
+    - info: Check whether this worktree routes hooks to `.githooks/` and whether entrypoints are executable.
+
+  lpd hooks verify
+    - info: Run hook verification checks from `.githooks/verify.sh`.
+
+  lpd hooks <hook-script tokens...> [-- script args]
+    - info: Run managed scripts under `.githooks/` (via script runner fallback).
+
+Hook Scripts:
+  - `.githooks/install.sh`
+  - `.githooks/pre-commit`
+  - `.githooks/pre-commit-no-deletions`
+  - `.githooks/verify.sh`
+  - `.githooks/verify-browser.js`
+  - `.githooks/server-manager.js`
+
+Bypass Flags (pre-commit; use sparingly):
+  - `SKIP_STRUCTURE_CHECK=1`  : skip root/snippets/v1 structure checks.
+  - `SKIP_STYLE_CHECK=1`      : skip style-guide compliance checks.
+  - `SKIP_VERIFICATION=1`     : skip verification script checks.
+  - `SKIP_TESTS=1`            : skip staged test suite checks.
+  - `DISABLE_PRECOMMIT_STAGED_CACHE=1` : rerun the expensive staged suite even if the staged snapshot already passed.
+  - `SKIP_ALL=1`              : skip all pre-commit checks.
+
+Human-Only Overrides:
+  - `git commit ... --trailer "allowlist-edit=true"`
+  - `git commit ... --trailer "allow-deletions=true"`
+
+Legacy Environment Overrides:
+  - `ALLOWLIST_EDIT=1` (legacy fallback for allowlist edits)
+  - `ALLOW_DELETIONS=1`      (legacy fallback for deletions)
+
+Notes:
+  - Human `.allowlist` edits require explicit human override.
+  - Human deletions outside `workspace/` require explicit human override.
+  - See `.githooks/BYPASS.md` and `contribute/CONTRIBUTING/GIT-HOOKS.md` for policy and details.
+EOF
+            ;;
+        --help|-h)
+            cat <<'EOF'
+Usage:
+  lpd hooks install
+  lpd hooks status
+  lpd hooks verify
+  lpd hooks info
+  lpd hooks <hook-script tokens...> [-- script args]
+
+Note:
+  Human `.allowlist` edits require:
+  git commit -m "msg" --trailer "allowlist-edit=true"
+  Human deletions require:
+  git commit -m "msg" --trailer "allow-deletions=true"
+EOF
+            ;;
+        *)
+            # Fallback: treat as .githooks script path.
+            cmd_scripts_run_internal "hooks" "$sub" "$@"
+            ;;
+    esac
+}
+
+cmd_doctor() {
+    local strict=0
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --strict)
+                strict=1
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd doctor [--strict] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "doctor" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    local failures=0
+
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "✓ git repository"
+    else
+        echo "✗ git repository" >&2
+        failures=$((failures + 1))
+    fi
+
+    if command -v node >/dev/null 2>&1; then
+        echo "✓ node: $(node --version)"
+    else
+        echo "✗ node not found" >&2
+        failures=$((failures + 1))
+    fi
+
+    if command -v mint >/dev/null 2>&1; then
+        echo "✓ mint: $(mint --version 2>/dev/null || echo available)"
+    else
+        echo "✗ mint CLI not found" >&2
+        failures=$((failures + 1))
+    fi
+
+    if [ -d "$REPO_ROOT/tools/node_modules" ]; then
+        echo "✓ tools dependencies installed"
+    else
+        echo "✗ tools dependencies missing (run: cd tools && npm install)" >&2
+        failures=$((failures + 1))
+    fi
+
+    if [ -d "$REPO_ROOT/operations/tests/node_modules" ]; then
+        echo "✓ tests dependencies installed"
+    else
+        echo "✗ tests dependencies missing (run: cd operations/tests && npm install)" >&2
+        failures=$((failures + 1))
+    fi
+
+    local hook_state
+    hook_state="$(hook_status_check)" || true
+    if [ "$hook_state" = "installed" ]; then
+        echo "✓ hooks installed and synced"
+    else
+        echo "✗ hooks state: $hook_state" >&2
+        failures=$((failures + 1))
+    fi
+
+    if [ "$strict" = "1" ] && [ "$failures" -gt 0 ]; then
+        finish 1 "doctor" "Doctor found $failures issue(s)."
+        return 1
+    fi
+
+    if [ "$failures" -gt 0 ]; then
+        finish 0 "doctor" "Doctor completed with $failures warning(s)."
+    else
+        finish 0 "doctor" "Doctor passed."
+    fi
+}
+
+cmd_setup() {
+    local assume_yes=0
+    local install_tools=1
+    local install_tests=1
+    local install_hooks=1
+    local install_mint=0
+    local install_cli=1
+    local install_codex_skills=1
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --yes)
+                assume_yes=1
+                ;;
+            --no-tools)
+                install_tools=0
+                ;;
+            --no-tests)
+                install_tests=0
+                ;;
+            --no-hooks)
+                install_hooks=0
+                ;;
+            --with-mintlify)
+                install_mint=1
+                ;;
+            --no-cli)
+                install_cli=0
+                ;;
+            --no-codex-skills)
+                install_codex_skills=0
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "setup" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    if [ "$assume_yes" != "1" ] && [ -t 0 ]; then
+        local answer=""
+        printf "Install tools dependencies (cd tools && npm install)? [Y/n]: "
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_tools=0 ;;
+            *) install_tools=1 ;;
+        esac
+
+        printf "Install tests dependencies (cd operations/tests && npm install)? [Y/n]: "
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_tests=0 ;;
+            *) install_tests=1 ;;
+        esac
+
+        printf "Install/update git hooks? [Y/n]: "
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_hooks=0 ;;
+            *) install_hooks=1 ;;
+        esac
+
+        printf "Install Mintlify globally (npm i -g mintlify)? [y/N]: "
+        read -r answer || true
+        case "$answer" in
+            y|Y|yes|YES) install_mint=1 ;;
+            *) install_mint=0 ;;
+        esac
+
+        printf "Install lpd on PATH for this user? [Y/n]: "
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_cli=0 ;;
+            *) install_cli=1 ;;
+        esac
+
+        printf "Sync the Codex planning skill to %s? [Y/n]: " "$(codex_skills_target_dir)"
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_codex_skills=0 ;;
+            *) install_codex_skills=1 ;;
+        esac
+    fi
+
+    local failures=0
+    if [ "$install_tools" = "1" ]; then
+        if ! (cd "$REPO_ROOT/tools" && npm install); then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_tests" = "1" ]; then
+        if ! (cd "$REPO_ROOT/tests" && npm install); then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_hooks" = "1" ]; then
+        if ! ./.githooks/install.sh; then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_mint" = "1" ]; then
+        if ! npm i -g mintlify; then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_cli" = "1" ]; then
+        if ! install_cli_link; then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_codex_skills" = "1" ]; then
+        if ! sync_codex_planner_skill; then
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [ "$failures" -gt 0 ]; then
+        finish 1 "setup" "Setup completed with $failures failure(s)."
+        return 1
+    fi
+    finish 0 "setup" "Setup completed."
+}
+
+run_test_mode() {
+    local mode="$1"
+    case "$mode" in
+        fast)
+            node operations/tests/run-all.js --skip-browser
+            ;;
+        staged)
+            node operations/tests/run-all.js --staged --skip-browser
+            ;;
+        full)
+            node operations/tests/run-all.js
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+cmd_dev() {
+    local run_tests=0
+    local test_mode="fast"
+    local script_path="$REPO_ROOT/tools/dev/mint-dev.sh"
+    local dry_run=0
+    local scoped_mode=0
+    local docs_config=""
+    local scope_interactive=0
+    local scope_file=""
+    local scope_versions=""
+    local scope_languages=""
+    local scope_tabs=""
+    local scope_prefixes=""
+    local skip_external_fetch=0
+    local disable_openapi=0
+    local -a mint_args
+    mint_args=()
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --test)
+                run_tests=1
+                ;;
+            --test-mode)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--test-mode requires a value."
+                    return 1
+                fi
+                test_mode="$2"
+                shift
+                ;;
+            --script)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--script requires a path."
+                    return 1
+                fi
+                script_path="$2"
+                shift
+                ;;
+            --script=*)
+                script_path="${1#--script=}"
+                ;;
+            --dry-run)
+                dry_run=1
+                ;;
+            --scoped)
+                scoped_mode=1
+                ;;
+            --docs-config)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--docs-config requires a path."
+                    return 1
+                fi
+                scoped_mode=1
+                docs_config="$2"
+                shift
+                ;;
+            --docs-config=*)
+                scoped_mode=1
+                docs_config="${1#--docs-config=}"
+                ;;
+            --scope-interactive)
+                scoped_mode=1
+                scope_interactive=1
+                ;;
+            --scope-file)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-file requires a path."
+                    return 1
+                fi
+                scoped_mode=1
+                scope_file="$2"
+                shift
+                ;;
+            --scope-file=*)
+                scoped_mode=1
+                scope_file="${1#--scope-file=}"
+                ;;
+            --scope-version)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-version requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_versions" ]; then
+                    scope_versions="$scope_versions,$2"
+                else
+                    scope_versions="$2"
+                fi
+                shift
+                ;;
+            --scope-version=*)
+                scoped_mode=1
+                if [ -n "$scope_versions" ]; then
+                    scope_versions="$scope_versions,${1#--scope-version=}"
+                else
+                    scope_versions="${1#--scope-version=}"
+                fi
+                ;;
+            --scope-language)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-language requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_languages" ]; then
+                    scope_languages="$scope_languages,$2"
+                else
+                    scope_languages="$2"
+                fi
+                shift
+                ;;
+            --scope-language=*)
+                scoped_mode=1
+                if [ -n "$scope_languages" ]; then
+                    scope_languages="$scope_languages,${1#--scope-language=}"
+                else
+                    scope_languages="${1#--scope-language=}"
+                fi
+                ;;
+            --scope-tab)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-tab requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_tabs" ]; then
+                    scope_tabs="$scope_tabs,$2"
+                else
+                    scope_tabs="$2"
+                fi
+                shift
+                ;;
+            --scope-tab=*)
+                scoped_mode=1
+                if [ -n "$scope_tabs" ]; then
+                    scope_tabs="$scope_tabs,${1#--scope-tab=}"
+                else
+                    scope_tabs="${1#--scope-tab=}"
+                fi
+                ;;
+            --scope-prefix)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-prefix requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_prefixes" ]; then
+                    scope_prefixes="$scope_prefixes,$2"
+                else
+                    scope_prefixes="$2"
+                fi
+                shift
+                ;;
+            --scope-prefix=*)
+                scoped_mode=1
+                if [ -n "$scope_prefixes" ]; then
+                    scope_prefixes="$scope_prefixes,${1#--scope-prefix=}"
+                else
+                    scope_prefixes="${1#--scope-prefix=}"
+                fi
+                ;;
+            --skip-external-fetch)
+                skip_external_fetch=1
+                ;;
+            --disable-openapi)
+                disable_openapi=1
+                ;;
+            --scope-*)
+                finish 1 "dev" "Unknown scoped option: $1"
+                return 1
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--dry-run] [--scoped] [--docs-config <path>] [--scope-interactive] [--scope-file <path>] [--scope-version <csv>] [--scope-language <csv>] [--scope-tab <csv>] [--scope-prefix <csv>] [--skip-external-fetch] [--disable-openapi] [-- ...mint args]
+EOF
+                return 0
+                ;;
+            --)
+                shift
+                mint_args+=("$@")
+                break
+                ;;
+            *)
+                mint_args+=("$1")
+                ;;
+        esac
+        shift
+    done
+
+    if [ "${script_path#/}" = "$script_path" ]; then
+        script_path="$REPO_ROOT/$script_path"
+    fi
+
+    if [ ! -f "$script_path" ]; then
+        finish 1 "dev" "Dev launcher script not found: $script_path"
+        return 1
+    fi
+
+    if [ "$run_tests" = "1" ]; then
+        if ! run_test_mode "$test_mode"; then
+            echo "Warning: advisory tests failed in mode '$test_mode'. Continuing with dev server."
+        fi
+    fi
+
+        if [ "$dry_run" = "1" ]; then
+        if [ "$scoped_mode" = "1" ]; then
+            echo "Scoped mint profile: enabled"
+            if [ -n "$docs_config" ]; then
+                echo "  docs_config: $docs_config"
+            fi
+            if [ "$scope_interactive" = "1" ]; then
+                echo "  scope_interactive: true"
+            fi
+            if [ -n "$scope_file" ]; then
+                echo "  scope_file: $scope_file"
+            fi
+            if [ -n "$scope_versions" ]; then
+                echo "  scope_versions: $scope_versions"
+            fi
+            if [ -n "$scope_languages" ]; then
+                echo "  scope_languages: $scope_languages"
+            fi
+            if [ -n "$scope_tabs" ]; then
+                echo "  scope_tabs: $scope_tabs"
+            fi
+            if [ -n "$scope_prefixes" ]; then
+                echo "  scope_prefixes: $scope_prefixes"
+            fi
+        fi
+        if [ "$skip_external_fetch" = "1" ]; then
+            echo "External fetch: disabled"
+        fi
+        if [ "$disable_openapi" = "1" ]; then
+            echo "OpenAPI docs scope: disabled"
+        fi
+        printf 'Dry run:'
+        printf ' %q' "$script_path"
+        if [ "${#mint_args[@]}" -gt 0 ]; then
+            printf ' %q' "${mint_args[@]}"
+        fi
+        printf '\n'
+        return 0
+    fi
+
+    local -a env_vars
+    env_vars=()
+    if [ "$scoped_mode" = "1" ]; then
+        env_vars+=("LPD_SCOPED_MINT_DEV=1")
+    fi
+    if [ -n "$docs_config" ]; then
+        env_vars+=("LPD_MINT_DOCS_CONFIG=$docs_config")
+    fi
+    if [ "$scope_interactive" = "1" ]; then
+        env_vars+=("LPD_MINT_SCOPE_INTERACTIVE=1")
+    fi
+    if [ -n "$scope_file" ]; then
+        env_vars+=("LPD_MINT_SCOPE_FILE=$scope_file")
+    fi
+    if [ -n "$scope_versions" ]; then
+        env_vars+=("LPD_MINT_SCOPE_VERSIONS=$scope_versions")
+    fi
+    if [ -n "$scope_languages" ]; then
+        env_vars+=("LPD_MINT_SCOPE_LANGUAGES=$scope_languages")
+    fi
+    if [ -n "$scope_tabs" ]; then
+        env_vars+=("LPD_MINT_SCOPE_TABS=$scope_tabs")
+    fi
+    if [ -n "$scope_prefixes" ]; then
+        env_vars+=("LPD_MINT_SCOPE_PREFIXES=$scope_prefixes")
+    fi
+    if [ "$skip_external_fetch" = "1" ]; then
+        env_vars+=("MINT_SKIP_EXTERNAL_FETCH=1")
+    fi
+    if [ "$disable_openapi" = "1" ]; then
+        env_vars+=("LPD_MINT_DISABLE_OPENAPI=1")
+    fi
+
+    if [ "${#env_vars[@]}" -gt 0 ]; then
+        if [ "${#mint_args[@]}" -gt 0 ]; then
+            env "${env_vars[@]}" "$script_path" "${mint_args[@]}"
+        else
+            env "${env_vars[@]}" "$script_path"
+        fi
+        return
+    fi
+
+    if [ "${#mint_args[@]}" -gt 0 ]; then
+        "$script_path" "${mint_args[@]}"
+    else
+        "$script_path"
+    fi
+}
+
+cmd_test() {
+    local mode="fast"
+    local run_browser=0
+    local domain_scope=""
+    local run_wcag=0
+    local run_link_audit_external=0
+    local wcag_no_fix=0
+    local base_url=""
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --staged)
+                mode="staged"
+                ;;
+            --full)
+                mode="full"
+                ;;
+            --browser)
+                run_browser=1
+                ;;
+            --domain)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "test" "--domain requires v1|v2|both."
+                    return 1
+                fi
+                domain_scope="$2"
+                shift
+                ;;
+            --wcag)
+                run_wcag=1
+                ;;
+            --wcag-no-fix)
+                run_wcag=1
+                wcag_no_fix=1
+                ;;
+            --link-audit-external)
+                run_link_audit_external=1
+                ;;
+            --base-url)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "test" "--base-url requires a URL."
+                    return 1
+                fi
+                base_url="$2"
+                shift
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "test" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    local failures=0
+
+    if ! run_test_mode "$mode"; then
+        failures=$((failures + 1))
+    fi
+
+    if [ "$run_browser" = "1" ]; then
+        if ! node operations/tests/integration/browser.test.js; then
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [ -n "$domain_scope" ]; then
+        local -a domain_cmd
+        domain_cmd=(node operations/tests/integration/domain-pages-audit.js --version "$domain_scope")
+        if [ -n "$base_url" ]; then
+            domain_cmd+=(--base-url "$base_url")
+        fi
+        if ! "${domain_cmd[@]}"; then
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [ "$run_wcag" = "1" ]; then
+        local -a wcag_cmd
+        wcag_cmd=(node operations/tests/integration/v2-wcag-audit.js)
+        case "$mode" in
+            full)
+                wcag_cmd+=(--full)
+                ;;
+            *)
+                wcag_cmd+=(--staged --max-pages 10)
+                ;;
+        esac
+        if [ "$wcag_no_fix" = "1" ]; then
+            wcag_cmd+=(--no-fix)
+        fi
+        if [ -n "$base_url" ]; then
+            wcag_cmd+=(--base-url "$base_url")
+        fi
+        if ! "${wcag_cmd[@]}"; then
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [ "$run_link_audit_external" = "1" ]; then
+        local external_report
+        local external_report_json
+        local -a external_link_cmd
+        case "$mode" in
+            full)
+                external_report="/tmp/v2-link-audit-external-full.md"
+                external_report_json="/tmp/v2-link-audit-external-full.json"
+                external_link_cmd=(
+                    node operations/tests/integration/v2-link-audit.js
+                    --full
+                    --external-policy validate
+                    --external-link-types navigational
+                    --no-write-links
+                    --report "$external_report"
+                    --report-json "$external_report_json"
+                )
+                ;;
+            *)
+                external_report="/tmp/v2-link-audit-external-staged.md"
+                external_report_json="/tmp/v2-link-audit-external-staged.json"
+                external_link_cmd=(
+                    node operations/tests/integration/v2-link-audit.js
+                    --staged
+                    --external-policy validate
+                    --external-link-types navigational
+                    --no-write-links
+                    --report "$external_report"
+                    --report-json "$external_report_json"
+                )
+                ;;
+        esac
+
+        if ! "${external_link_cmd[@]}"; then
+            if [ "$mode" = "full" ]; then
+                failures=$((failures + 1))
+                echo "External link audit failed in full mode (blocking). Reports: $external_report, $external_report_json"
+            else
+                echo "Warning: external link audit failed in '$mode' mode (advisory). Reports: $external_report, $external_report_json"
+            fi
+        else
+            echo "External link audit completed successfully. Reports: $external_report, $external_report_json"
+        fi
+    fi
+
+    if [ "$failures" -gt 0 ]; then
+        finish 1 "test" "Test command completed with $failures failing step(s)."
+        return 1
+    fi
+    finish 0 "test" "Test command completed successfully."
+}
+
+cmd_ci() {
+    local skip_browser=0
+    local base_url=""
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --skip-browser)
+                skip_browser=1
+                ;;
+            --base-url)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "ci" "--base-url requires a URL."
+                    return 1
+                fi
+                base_url="$2"
+                shift
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd ci [--skip-browser] [--base-url URL] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "ci" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    local failures=0
+    if ! node operations/tests/run-all.js --skip-browser; then
+        failures=$((failures + 1))
+    fi
+
+    local -a domain_cmd
+    domain_cmd=(node operations/tests/integration/domain-pages-audit.js --version both)
+    if [ -n "$base_url" ]; then
+        domain_cmd+=(--base-url "$base_url")
+    fi
+    if ! "${domain_cmd[@]}"; then
+        failures=$((failures + 1))
+    fi
+
+    if [ "$skip_browser" != "1" ]; then
+        if ! node operations/tests/integration/browser.test.js; then
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [ "$failures" -gt 0 ]; then
+        finish 1 "ci" "CI simulation completed with $failures failing step(s)."
+        return 1
+    fi
+
+    finish 0 "ci" "CI simulation completed successfully."
+}
+
+cmd_repair() {
+    local surface=""
+    local scope_mode="staged"
+    local files_csv=""
+    local scope_count=0
+    local mode="check"
+    local stage_outputs=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --surface)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "repair" "--surface requires a value."
+                    return 1
+                fi
+                surface="$2"
+                shift
+                ;;
+            --surface=*)
+                surface="${1#--surface=}"
+                ;;
+            --staged)
+                scope_mode="staged"
+                scope_count=$((scope_count + 1))
+                ;;
+            --files)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "repair" "--files requires a comma-separated value."
+                    return 1
+                fi
+                files_csv="$2"
+                scope_mode="files"
+                scope_count=$((scope_count + 1))
+                shift
+                ;;
+            --files=*)
+                files_csv="${1#--files=}"
+                scope_mode="files"
+                scope_count=$((scope_count + 1))
+                ;;
+            --full)
+                scope_mode="full"
+                scope_count=$((scope_count + 1))
+                ;;
+            --write)
+                mode="write"
+                ;;
+            --check)
+                mode="check"
+                ;;
+            --stage)
+                stage_outputs=1
+                mode="write"
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
+
+Surfaces:
+  portable-skills
+  docs-guide-generated
+  ui-templates
+  script-governance
+  component-governance
+  frontmatter-contract
+
+Notes:
+  - Default mode is --check.
+  - --stage implies --write.
+  - frontmatter-contract is check-only because there is no deterministic writer.
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "repair" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    if [ -z "$surface" ]; then
+      finish 1 "repair" "Missing required --surface value."
+      return 1
+    fi
+
+    if [ "$scope_count" -gt 1 ]; then
+      finish 1 "repair" "Choose only one scope flag: --staged, --files, or --full."
+      return 1
+    fi
+
+    local -a quality_scope
+    quality_scope=()
+    if [ "$scope_mode" = "staged" ]; then
+      quality_scope+=(--staged)
+    elif [ "$scope_mode" = "files" ]; then
+      quality_scope+=(--files "$files_csv")
+    fi
+
+    case "$surface" in
+      portable-skills)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/automations/ai/agents/export-portable-skills.js --write || {
+            finish 1 "repair" "Portable skills export failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add ai-tools/ai-skills/templates ai-tools/agent-packs/skills || true
+          fi
+        fi
+        run_cli_step node operations/tests/unit/export-portable-skills.test.js || {
+          finish 1 "repair" "Portable skills validation failed."
+          return 1
+        }
+        run_cli_step node operations/tests/unit/codex-skill-sync.test.js || {
+          finish 1 "repair" "Codex skill sync validation failed."
+          return 1
+        }
+        ;;
+      docs-guide-generated)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write || {
+            finish 1 "repair" "Docs-guide index generation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write || {
+            finish 1 "repair" "Docs-guide pages index generation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write || {
+            finish 1 "repair" "Docs-guide components index generation failed."
+            return 1
+          }
+          run_cli_step node operations/tests/unit/script-docs.test.js --write --rebuild-indexes || {
+            finish 1 "repair" "Script catalog regeneration failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add docs-guide/catalog operations/tests/script-index.md tools/script-index.md tools/lib/script-index.md workspace/reports/script-classifications.json || true
+          fi
+        fi
+        run_cli_step node operations/tests/unit/docs-guide-sot.test.js || {
+          finish 1 "repair" "Docs-guide source-of-truth validation failed."
+          return 1
+        }
+        ;;
+      ui-templates)
+        if [ ! -f "$REPO_ROOT/operations/scripts/generators/components/library/generate-ui-templates.js" ] || [ ! -f "$REPO_ROOT/operations/tests/unit/ui-template-generator.test.js" ]; then
+          finish 1 "repair" "ui-templates surface is not available on this branch yet."
+          return 1
+        fi
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/generators/components/library/generate-ui-templates.js --write || {
+            finish 1 "repair" "UI template generation failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add snippets/templates v2/templates .vscode/templates.code-snippets .vscode/components.code-snippets docs-guide/catalog/ui-templates.mdx || true
+          fi
+        fi
+        run_cli_step node operations/tests/unit/ui-template-generator.test.js || {
+          finish 1 "repair" "UI template validation failed."
+          return 1
+        }
+        ;;
+      script-governance)
+        if [ "$mode" = "write" ]; then
+          if [ "$scope_mode" = "full" ]; then
+            finish 1 "repair" "Full-repo script-governance repair is disabled during the @owner -> @domain migration. Use --staged or --files."
+            return 1
+          fi
+          if [ "$scope_mode" != "staged" ] && [ "$scope_mode" != "files" ]; then
+            finish 1 "repair" "Script-governance write mode requires explicit scope. Use --staged or --files."
+            return 1
+          fi
+          local -a script_cmd
+          script_cmd=(node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js)
+          if [ "$scope_mode" = "staged" ]; then
+            script_cmd+=(--staged)
+          else
+            script_cmd+=(--files "$files_csv")
+          fi
+          run_cli_step "${script_cmd[@]}" || {
+            finish 1 "repair" "Script governance repair failed."
+            return 1
+          }
+        else
+          run_cli_step node operations/tests/unit/script-docs.test.js "${quality_scope[@]}" || {
+            finish 1 "repair" "Script governance validation failed."
+            return 1
+          }
+        fi
+        ;;
+      component-governance)
+        local -a component_cmd
+        component_cmd=(node operations/scripts/remediators/components/library/repair-component-metadata.js)
+        if [ "$mode" = "write" ]; then
+          component_cmd+=(--fix)
+        else
+          component_cmd+=(--dry-run)
+        fi
+        if [ "$scope_mode" = "staged" ]; then
+          component_cmd+=(--staged)
+        fi
+        run_cli_step "${component_cmd[@]}" || {
+          finish 1 "repair" "Component metadata repair failed."
+          return 1
+        }
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/generators/components/library/generate-component-registry.js || {
+            finish 1 "repair" "Component registry generation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/generators/components/documentation/generate-component-docs.js --fix --template-only || {
+            finish 1 "repair" "Component docs generation failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add snippets/components docs-guide/component-registry.json docs-guide/component-registry-schema.json v2/resources/documentation-guide/component-library || true
+          fi
+        else
+          run_cli_step node operations/scripts/generators/components/library/generate-component-registry.js --validate-only || {
+            finish 1 "repair" "Component registry validation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/generators/components/documentation/generate-component-docs.js --check --template-only || {
+            finish 1 "repair" "Component docs validation failed."
+            return 1
+          }
+        fi
+        run_cli_step node operations/tests/unit/component-governance-generators.test.js || {
+          finish 1 "repair" "Component governance validation failed."
+          return 1
+        }
+        ;;
+      frontmatter-contract)
+        if [ "$mode" = "write" ] || [ "$stage_outputs" = "1" ]; then
+          finish 1 "repair" "frontmatter-contract is check-only because there is no deterministic writer."
+          return 1
+        fi
+        run_cli_step node operations/tests/unit/quality.test.js "${quality_scope[@]}" || {
+          finish 1 "repair" "Frontmatter contract validation failed."
+          return 1
+        }
+        run_cli_step node operations/tests/unit/frontmatter-taxonomy.test.js || {
+          finish 1 "repair" "Frontmatter taxonomy validation failed."
+          return 1
+        }
+        ;;
+      *)
+        finish 1 "repair" "Unknown surface: $surface"
+        return 1
+        ;;
+    esac
+
+    finish 0 "repair" "Repair flow completed for $surface ($mode)."
+}
+
+cmd_ai_sitemap() {
+    local mode="check"
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --write)
+                mode="write"
+                ;;
+            --check)
+                mode="check"
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd ai-sitemap [--write|--check] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "ai-sitemap" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    local -a cmd
+    cmd=(node operations/scripts/generators/content/seo/generate-ai-sitemap.js)
+    case "$mode" in
+        write)
+            cmd+=(--write)
+            ;;
+        check)
+            cmd+=(--check)
+            ;;
+    esac
+
+    if ! "${cmd[@]}"; then
+        finish 1 "ai-sitemap" "AI sitemap command failed."
+        return 1
+    fi
+
+    finish 0 "ai-sitemap" "AI sitemap command completed successfully."
+}
+
+cmd_move_page() {
+    local check_only=0
+    local stage_changes=1
+    local assume_yes=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --check)
+                check_only=1
+                ;;
+            --no-stage)
+                stage_changes=0
+                ;;
+            --yes)
+                assume_yes=1
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd move-page <old> <new> [--yes] [--check] [--no-stage] [--json]
+EOF
+                return 0
+                ;;
+            --*)
+                finish 1 "move-page" "Unknown option: $1"
+                return 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+        shift
+    done
+
+    if [ "$#" -ne 2 ]; then
+        finish 1 "move-page" "Usage: lpd move-page <old> <new> [--yes] [--check] [--no-stage]"
+        return 1
+    fi
+
+    local source_path="$1"
+    local target_path="$2"
+    local -a sync_cmd
+    sync_cmd=(node operations/scripts/remediators/content/repair/sync-docs-paths.js)
+
+    if [ "$check_only" = "1" ]; then
+        sync_cmd+=(--dry-run)
+    else
+        if [ "$assume_yes" != "1" ]; then
+            printf 'Move %s -> %s and sync docs paths? [y/N] ' "$source_path" "$target_path"
+            read -r reply
+            case "$reply" in
+                y|Y|yes|YES) ;;
+                *)
+                    finish 1 "move-page" "Cancelled."
+                    return 1
+                    ;;
+            esac
+        fi
+
+        if ! git mv -- "$source_path" "$target_path"; then
+            finish 1 "move-page" "git mv failed."
+            return 1
+        fi
+
+        sync_cmd+=(--write)
+    fi
+
+    sync_cmd+=(--from "$source_path" --to "$target_path")
+    if [ "$stage_changes" = "1" ] && [ "$check_only" != "1" ]; then
+        sync_cmd+=(--stage)
+    fi
+
+    if ! "${sync_cmd[@]}"; then
+        finish 1 "move-page" "Docs path sync failed."
+        return 1
+    fi
+
+    finish 0 "move-page" "Docs move sync completed successfully."
+}
+
+cmd_scripts_list() {
+    local group_filter=""
+    local show_ignored=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --group)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "scripts list" "--group requires a value."
+                    return 1
+                fi
+                group_filter="$2"
+                shift
+                ;;
+            --show-ignored)
+                show_ignored=1
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd scripts list [--group tools|workspace|tasks|tests|v2|hooks] [--show-ignored] [--json]
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "scripts list" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    local groups="tools workspace tasks tests v2 hooks"
+    if [ -n "$group_filter" ]; then
+        groups="$group_filter"
+    fi
+
+    local count=0
+    if [ "$GLOBAL_JSON" != "1" ]; then
+        printf '%-8s %-8s %-55s %s\n' "GROUP" "RISK" "COMMAND" "PATH"
+        printf '%-8s %-8s %-55s %s\n' "-----" "----" "-------" "----"
+    fi
+
+    for group in $groups; do
+        group_root "$group" >/dev/null || {
+            finish 1 "scripts list" "Unknown group: $group"
+            return 1
+        }
+        while IFS='|' read -r kind id rel risk extra; do
+            if [ "$kind" = "ignored" ] && [ "$show_ignored" != "1" ]; then
+                continue
+            fi
+            count=$((count + 1))
+            if [ "$GLOBAL_JSON" != "1" ]; then
+                if [ "$kind" = "ignored" ]; then
+                    printf '%-8s %-8s %-55s %s\n' "$group" "$risk" "${id#"$group "}" "IGNORED ($extra)"
+                else
+                    printf '%-8s %-8s %-55s %s\n' "$group" "$risk" "${id#"$group "}" "$rel"
+                fi
+            fi
+        done < <(discover_group_scripts "$group" "$show_ignored")
+    done
+
+    finish 0 "scripts list" "Listed $count script command(s)."
+}
+
+cmd_scripts_run_internal() {
+    local group="$1"
+    shift
+    local -a cmd_tokens
+    cmd_tokens=()
+    local -a script_args
+    script_args=()
+    LP_DRY_RUN=0
+    LP_ASSUME_YES=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --dry-run)
+                LP_DRY_RUN=1
+                shift
+                ;;
+            --yes)
+                LP_ASSUME_YES=1
+                shift
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                shift
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage:
+  lpd scripts run <group> <script-path tokens...> [--dry-run] [--yes] [-- script args]
+
+Example:
+  lpd scripts run tools dev test-add-callouts -- --help
+EOF
+                return 0
+                ;;
+            --)
+                shift
+                script_args=("$@")
+                break
+                ;;
+            *)
+                cmd_tokens+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [ "${#cmd_tokens[@]}" -eq 0 ]; then
+        finish 1 "scripts run" "Missing script path tokens."
+        return 1
+    fi
+
+    if ! group_root "$group" >/dev/null 2>&1; then
+        finish 1 "scripts run" "Unknown group: $group"
+        return 1
+    fi
+
+    resolve_script_entry "$group" "${cmd_tokens[@]}" || true
+    if [ -z "$RESOLVED_REL" ]; then
+        if [ -n "$RESOLVED_IGNORE" ]; then
+            finish 1 "scripts run" "Command is ignored by .lpdignore: $RESOLVED_IGNORE"
+            return 1
+        fi
+        finish 1 "scripts run" "Script not found: $group ${cmd_tokens[*]}"
+        return 1
+    fi
+
+    if [ "$RESOLVED_RISK" = "high" ]; then
+        confirm_high_risk "$RESOLVED_ID" || return 1
+    fi
+
+    if [ "${#script_args[@]}" -gt 0 ]; then
+        run_script_file "$RESOLVED_REL" "${script_args[@]}"
+    else
+        run_script_file "$RESOLVED_REL"
+    fi
+}
+
+cmd_scripts() {
+    local sub="${1:-list}"
+    shift || true
+    case "$sub" in
+        list)
+            cmd_scripts_list "$@"
+            ;;
+        run)
+            if [ "$#" -lt 2 ]; then
+                finish 1 "scripts run" "Usage: lpd scripts run <group> <script-path tokens...>"
+                return 1
+            fi
+            local group="$1"
+            shift
+            cmd_scripts_run_internal "$group" "$@"
+            ;;
+        *)
+            finish 1 "scripts" "Unknown scripts subcommand: $sub"
+            ;;
+    esac
+}
+
+cmd_group_shorthand() {
+    local group="$1"
+    shift
+    cmd_scripts_run_internal "$group" "$@"
+}
+
+cmd_mint_alias() {
+    local sub="${1:-}"
+    shift || true
+    case "$sub" in
+        dev)
+            cmd_dev "$@"
+            ;;
+        *)
+            finish 1 "mint" "Unsupported mint alias: $sub"
+            ;;
+    esac
+}
+
+require_repo_layout
+
+COMMAND="${1:-help}"
+shift || true
+
+case "$COMMAND" in
+    help|--help|-h)
+        print_main_help
+        ;;
+    info)
+        cmd_info "$@"
+        ;;
+    version)
+        cmd_version "$@"
+        ;;
+    setup)
+        cmd_setup "$@"
+        ;;
+    doctor)
+        cmd_doctor "$@"
+        ;;
+    dev)
+        cmd_dev "$@"
+        ;;
+    mint)
+        cmd_mint_alias "$@"
+        ;;
+    test)
+        cmd_test "$@"
+        ;;
+    move-page)
+        cmd_move_page "$@"
+        ;;
+    ai-sitemap)
+        cmd_ai_sitemap "$@"
+        ;;
+    ci)
+        cmd_ci "$@"
+        ;;
+    repair)
+        cmd_repair "$@"
+        ;;
+    hooks)
+        cmd_hooks "$@"
+        ;;
+    scripts)
+        cmd_scripts "$@"
+        ;;
+    tools|tasks|tests|v2)
+        cmd_group_shorthand "$COMMAND" "$@"
+        ;;
+    *)
+        finish 1 "main" "Unsupported command: $COMMAND"
+        ;;
+esac

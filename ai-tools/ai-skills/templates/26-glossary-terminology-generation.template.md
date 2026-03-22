@@ -1,22 +1,21 @@
 ---
 name: glossary-terminology-generation
-version: "1.1"
-category: authoring
 description: >-
-  Generate discovered terminology and glossary datasets from repository content signals. Use when tasks include update glossary terms, discover missing terminology in docs, regenerate terminology data files.
-tier: 3
-invoke_when:
-  - "update glossary terms"
-  - "discover missing terminology in docs"
-  - "regenerate terminology data files"
+  Generate discovered terminology and glossary datasets from repository content
+  signals. Use when: update glossary terms, discover missing terminology in
+  docs, regenerate terminology data files.
+metadata:
+  version: "1.2"
+  category: "authoring"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/generate-data/scripts/terminology-search.js"
-  - "tools/scripts/snippets/generate-data/scripts/generate-glossary.js"
-  - "tools/scripts/snippets/generate-data/data"
+  - "operations/scripts/snippets/generate-data/scripts/terminology-search.js"
+  - "operations/scripts/snippets/generate-data/scripts/generate-glossary.js"
+  - "operations/scripts/snippets/generate-data/data"
   - "workspace/plan/23-glossary-maintenance.md"
 primary_commands:
-  - "node tools/scripts/snippets/generate-data/scripts/terminology-search.js"
-  - "node tools/scripts/snippets/generate-data/scripts/generate-glossary.js"
+  - "node operations/scripts/snippets/generate-data/scripts/terminology-search.js"
+  - "node operations/scripts/snippets/generate-data/scripts/generate-glossary.js"
 ---
 
 SKILL: Glossary Terminology Generation
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/snippets/generate-data/scripts/terminology-search.js
-node tools/scripts/snippets/generate-data/scripts/generate-glossary.js
+node operations/scripts/snippets/generate-data/scripts/terminology-search.js
+node operations/scripts/snippets/generate-data/scripts/generate-glossary.js
 ```
 
 Deliverable Format

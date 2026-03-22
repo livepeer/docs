@@ -32,7 +32,7 @@ This repository currently governs about 214 scripts, hooks, and support modules 
 |---|---|---|---|---|
 | Commit | Every `git commit` | `.githooks/pre-commit` -> `tests/unit/script-docs.test.js --staged --write --stage --autofill` | Placeholder header injection for newly added governed scripts, plus script index refresh | Yes |
 | Pull request | Every pull request to `main` or `docs-v2` | `.github/workflows/test-suite.yml` -> `tests/run-pr-checks.js` | None | Yes |
-| Scheduled repair | Weekly on Monday at 05:00 UTC | `.github/workflows/repair-governance.yml` -> `tools/scripts/orchestrators/repair-governance.js` in fix mode | Safe governance repairs, report refresh, optional repair PR creation | No |
+| Scheduled repair | Weekly on Monday at 05:00 UTC | `.github/workflows/repair-governance.yml` -> `operations/scripts/orchestrators/repair-governance.js` in fix mode | Safe governance repairs, report refresh, optional repair PR creation | No |
 | Manual | Any time | Workflow dispatch for `repair-governance.yml`, `npm --prefix tools run audit:scripts`, or `npm --prefix tools run repair:governance` | Depends on command mode | No |
 
 There is no dedicated merge or push stage governance-sync workflow today. Governance repair happens on the Monday schedule or when a maintainer runs it manually.
@@ -65,21 +65,21 @@ There is no dedicated merge or push stage governance-sync workflow today. Govern
 
 ```bash icon="terminal"
 npm --prefix tools run audit:scripts
-node tools/scripts/validators/governance/audit-script-inventory.js --dry-run
-node tools/scripts/validators/governance/audit-script-inventory.js --fix
-node tools/scripts/validators/governance/audit-script-inventory.js --verbose
+node operations/scripts/validators/governance/audit-script-inventory.js --dry-run
+node operations/scripts/validators/governance/audit-script-inventory.js --fix
+node operations/scripts/validators/governance/audit-script-inventory.js --verbose
 
 npm --prefix tools run repair:governance
-node tools/scripts/orchestrators/repair-governance.js --dry-run
-node tools/scripts/orchestrators/repair-governance.js --report-only
-node tools/scripts/orchestrators/repair-governance.js --auto-commit
+node operations/scripts/orchestrators/repair-governance.js --dry-run
+node operations/scripts/orchestrators/repair-governance.js --report-only
+node operations/scripts/orchestrators/repair-governance.js --auto-commit
 ```
 
 Use the audit command family when you want a detailed inventory or a targeted repair preview. Use the repair orchestrator when you want the full safe-repair pipeline, including verification and repair reports.
 
 ## Adding a new script
 
-1. Create the script under a governed root such as `tools/scripts/`, `tests/`, `.githooks/`, or `tasks/scripts/`.
+1. Create the script under a governed root such as `operations/scripts/`, `tests/`, `.githooks/`, or `tasks/scripts/`.
 2. Add the framework header fields: `@script`, `@category`, `@purpose`, `@scope`, `@owner`, `@needs`, `@purpose-statement`, `@pipeline`, and `@usage`.
 3. Run `node tests/unit/script-docs.test.js --write --rebuild-indexes`.
 4. Commit the change. The pre-commit hook can auto-fill a missing placeholder template for newly added scripts, but it does not invent judgement fields for you.

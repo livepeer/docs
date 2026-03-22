@@ -1,21 +1,20 @@
 ---
 name: external-docs-sync-and-sanitize
-version: "1.1"
-category: governance
 description: >-
-  Fetch external markdown docs and sanitize them for MDX-safe inclusion in this repository. Use when tasks include refresh external docs content, import upstream markdown into snippets/external, sanitize html-heavy markdown for mdx.
-tier: 3
-invoke_when:
-  - "refresh external docs content"
-  - "import upstream markdown into snippets/external"
-  - "sanitize html-heavy markdown for mdx"
+  Fetch external markdown docs and sanitize them for MDX-safe inclusion in this
+  repository. Use when: refresh external docs content, import upstream markdown
+  into snippets/external, sanitize html-heavy markdown for mdx.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/fetch-external-docs.sh"
+  - "operations/scripts/snippets/fetch-external-docs.sh"
   - "snippets/external"
-  - "tools/scripts/snippets/paths.config.json"
+  - "operations/scripts/snippets/paths.config.json"
   - "v2/resources/documentation-guide/docs-features-and-ai-integrations.mdx"
 primary_commands:
-  - "bash tools/scripts/snippets/fetch-external-docs.sh"
+  - "bash operations/scripts/snippets/fetch-external-docs.sh"
   - "rg --files snippets/external"
 ---
 
@@ -37,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-bash tools/scripts/snippets/fetch-external-docs.sh
+bash operations/scripts/snippets/fetch-external-docs.sh
 rg --files snippets/external
 ```
 

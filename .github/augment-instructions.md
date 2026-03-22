@@ -84,7 +84,7 @@
    - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
 
 2. **File Locations** - Files must be in correct directories:
-   - Scripts → `tools/scripts/` (organised by type/concern/niche)
+   - Scripts → `operations/scripts/` (organised by type/concern/niche)
    - Config files → `tools/config/` **EXCEPT**:
      - `.prettierrc.yaml` → **ROOT** (Prettier convention)
    - `.speakeasy/` → `tools/config/.speakeasy/` (Speakeasy API docs tool config)
@@ -97,7 +97,7 @@
 3. **Snippets Directory** - MUST follow Mintlify conventions:
    - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
    - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
-   - ❌ Forbidden: Scripts (→ `tools/scripts/` organised by type/concern/niche), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
+   - ❌ Forbidden: Scripts (→ `operations/scripts/` organised by type/concern/niche), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
    - ✅ All imports must be absolute paths from root: `/snippets/components/...`
    - ❌ Components cannot import other components
 
@@ -119,7 +119,7 @@
 - `snippets/pages/` - REQUIRED for MDX sub-views (MDX-in-MDX pattern)
 - `snippets/assets/` - Static assets for docs content
 - `snippets/automations/` - Dynamic/AI/data-fetching logic
-- `tools/scripts/` - All scripts (organised by type/concern/niche: audits, generators, validators, remediators, dispatch, automations)
+- `operations/scripts/` - All scripts (organised by type/concern/niche: audits, generators, validators, remediators, dispatch, automations)
 - `tools/config/` - Tool configurations
 - `tools/ai-rules/` - AI guidelines and rules
 - `api/` - Consolidated OpenAPI specifications

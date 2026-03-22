@@ -19,8 +19,16 @@ const { VALID_CATEGORIES, VALID_STATUSES } = require('../../../../../tools/lib/c
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
-  buildGeneratedNoteLines
+  buildGeneratedNoteLines,
+  readCatalogMarkers
 } = require('../../../../../tools/lib/generated-file-banners');
+
+// Template path — layout and diagram decisions are read from markers in this file.
+// To change the catalog layout or add/remove a diagram, edit the template.
+// Markers read by this generator:
+//   @catalog-layout  — currently expected: 'accordion-group'
+//   @diagram         — not used by components catalog (no pipeline diagram)
+const TEMPLATE_PATH = path.join(process.cwd(), 'snippets', 'templates', 'docs-guide', 'catalog-page.mdx');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -32,12 +40,24 @@ const STATUS_COLUMNS = VALID_STATUSES.filter((status) =>
 );
 
 const CATEGORY_LABELS = {
-  primitives: 'Primitives',
-  layout: 'Layout',
-  content: 'Content',
-  data: 'Data',
-  'page-structure': 'Page Structure'
+  elements: 'Elements',
+  wrappers: 'Wrappers',
+  displays: 'Displays',
+  scaffolding: 'Scaffolding',
+  integrators: 'Integrators',
+  config: 'Config'
 };
+
+const STATUS_ICONS = {
+  stable: '🟢',
+  experimental: '🧪',
+  deprecated: '🟠',
+  broken: '🔴',
+  placeholder: '⬜'
+};
+
+const STATUS_KEY_LINE =
+  '**Status:** 🟢 stable · 🧪 experimental · 🟠 deprecated · 🔴 broken · ⬜ placeholder';
 
 function toLegacyCatalogPath(filePath) {
   return path.join(
@@ -115,10 +135,16 @@ function buildStatusBreakdown(components) {
   }, {});
 }
 
-function renderSummaryTable(registry) {
+function buildUnusedSet(usageMap) {
+  return new Set((usageMap.orphaned || []).map((e) => `${e.name}::${e.file}`));
+}
+
+function renderSummaryTable(registry, usageMap) {
+  const unusedSet = buildUnusedSet(usageMap);
+
   const rows = [
-    '| Category | Exports | Stable | Experimental | Deprecated | Broken | Placeholder |',
-    '| --- | --- | --- | --- | --- | --- | --- |'
+    '| Category | Exports | 🟢 Stable | 🧪 Experimental | 🟠 Deprecated | 🔴 Broken | ⬜ Placeholder | Unused |',
+    '| --- | --- | --- | --- | --- | --- | --- | --- |'
   ];
 
   const totals = {
@@ -127,63 +153,60 @@ function renderSummaryTable(registry) {
     experimental: 0,
     deprecated: 0,
     broken: 0,
-    placeholder: 0
+    placeholder: 0,
+    unused: 0
   };
 
   VALID_CATEGORIES.forEach((category) => {
     const components = registry.components.filter((component) => component.category === category);
     const counts = buildStatusBreakdown(components);
+    const unused = components.filter((c) => unusedSet.has(`${c.name}::${c.file}`)).length;
     totals.exports += components.length;
     STATUS_COLUMNS.forEach((status) => {
       totals[status] += counts[status];
     });
+    totals.unused += unused;
 
     rows.push(
-      `| [${CATEGORY_LABELS[category]}](#${category}) | ${components.length} | ${counts.stable} | ${counts.experimental} | ${counts.deprecated} | ${counts.broken} | ${counts.placeholder} |`
+      `| [${CATEGORY_LABELS[category]}](#${category}) | ${components.length} | ${counts.stable} | ${counts.experimental} | ${counts.deprecated} | ${counts.broken} | ${counts.placeholder} | ${unused} |`
     );
   });
 
   rows.push(
-    `| **Total** | **${totals.exports}** | **${totals.stable}** | **${totals.experimental}** | **${totals.deprecated}** | **${totals.broken}** | **${totals.placeholder}** |`
+    `| **Total** | **${totals.exports}** | **${totals.stable}** | **${totals.experimental}** | **${totals.deprecated}** | **${totals.broken}** | **${totals.placeholder}** | **${totals.unused}** |`
   );
 
   return rows.join('\n');
 }
 
-function renderCategorySection(category, components) {
-  const rows = [
-    '| Component | File | Tier | Status | Description | Import path |',
-    '| --- | --- | --- | --- | --- | --- |'
-  ];
+function renderCategorySection(category, components, usageMap) {
+  const label = CATEGORY_LABELS[category] || category;
+  if (components.length === 0) return '';
 
-  components.forEach((component) => {
-    rows.push(
-      `| ${mdEscape(component.name)} | \`/${mdEscape(component.file)}\` | \`${mdEscape(component.tier)}\` | \`${mdEscape(component.status)}\` | ${mdEscape(component.description)} | \`/${mdEscape(component.file)}\` |`
-    );
+  const unusedSet = buildUnusedSet(usageMap);
+
+  const accordions = components.map((component) => {
+    const isUnused = unusedSet.has(`${component.name}::${component.file}`);
+    const icon = STATUS_ICONS[component.status] || '';
+    return [
+      `<Accordion title="${icon ? `${icon} ` : ''}${mdEscape(component.name)}">`,
+      `<ResponseField name="status" type="string">\`${mdEscape(component.status)}\`</ResponseField>`,
+      `<ResponseField name="description" type="string">${mdEscape(component.description)}</ResponseField>`,
+      `<ResponseField name="file" type="string">\`/${mdEscape(component.file)}\`</ResponseField>`,
+      `<ResponseField name="usage" type="string">${isUnused ? 'unused' : 'in use'}</ResponseField>`,
+      `</Accordion>`
+    ].join('\n');
   });
 
   return [
-    `## ${category}`,
+    `## ${label}`,
     '',
-    rows.join('\n')
+    '<AccordionGroup>',
+    '',
+    accordions.join('\n\n'),
+    '',
+    '</AccordionGroup>'
   ].join('\n');
-}
-
-function renderDeprecatedSection(components) {
-  if (components.length === 0) return '';
-
-  const rows = [
-    '| Component | File | Replacement | Deprecation note |',
-    '| --- | --- | --- | --- |'
-  ];
-
-  components.forEach((component) => {
-    rows.push(
-      `| ${mdEscape(component.name)} | \`/${mdEscape(component.file)}\` | ${component.see ? `\`${mdEscape(component.see)}\`` : '`none`'} | ${mdEscape(component.deprecated || 'No note provided.')} |`
-    );
-  });
-
-  return ['## Deprecated Components', '', rows.join('\n')].join('\n');
 }
 
 function getRegistryLookupKeys(component) {
@@ -200,53 +223,80 @@ function getRegistryLookupKeys(component) {
   return keys;
 }
 
-function renderOrphanedSection(usageMap, registry) {
-  if (!Array.isArray(usageMap.orphaned) || usageMap.orphaned.length === 0) return '';
-
+function renderAuditSection(registry, usageMap) {
   const componentLookup = new Map();
   registry.components.forEach((component) => {
     getRegistryLookupKeys(component).forEach((key) => {
-      if (!componentLookup.has(key)) {
-        componentLookup.set(key, component);
-      }
+      if (!componentLookup.has(key)) componentLookup.set(key, component);
     });
   });
+
   const rows = [
-    '| Component | Category | File | Status | Description |',
-    '| --- | --- | --- | --- | --- |'
+    '| Component | Category | Status | Note |',
+    '| --- | --- | --- | --- |'
   ];
 
-  usageMap.orphaned.forEach((entry) => {
+  const seen = new Set();
+
+  registry.components
+    .filter((c) => c.status === 'deprecated')
+    .forEach((c) => {
+      const key = `${c.name}::${c.file}`;
+      seen.add(key);
+      const seeIsComponent = c.see && /^[A-Z][a-zA-Z0-9]+$/.test(c.see.trim());
+      const note = seeIsComponent
+        ? `Replaced by \`${mdEscape(c.see)}\``
+        : mdEscape(c.deprecated || c.see || 'No note provided.');
+      rows.push(
+        `| ${mdEscape(c.name)} | \`${mdEscape(c.category)}\` | \`deprecated\` | ${note} |`
+      );
+    });
+
+  (usageMap.orphaned || []).forEach((entry) => {
+    const key = `${entry.name}::${entry.file}`;
+    if (seen.has(key)) return;
     const component = getRegistryLookupKeys(entry)
-      .map((key) => componentLookup.get(key))
+      .map((k) => componentLookup.get(k))
       .find(Boolean);
     rows.push(
-      `| ${mdEscape(entry.name)} | \`${mdEscape(entry.category)}\` | \`/${mdEscape(entry.file)}\` | \`${mdEscape(component?.status || 'unknown')}\` | ${mdEscape(component?.description || '')} |`
+      `| ${mdEscape(entry.name)} | \`${mdEscape(entry.category)}\` | \`${mdEscape(component?.status || 'unknown')}\` | Not imported in any page |`
     );
   });
 
-  return ['## Orphaned Components', '', rows.join('\n')].join('\n');
+  if (rows.length <= 2) return '';
+
+  const itemCount = rows.length - 2;
+  return [
+    `<Accordion title="⚠️ Audit — ${itemCount} item${itemCount === 1 ? '' : 's'}">`,
+    '',
+    rows.join('\n'),
+    '',
+    '</Accordion>'
+  ].join('\n');
 }
 
 function buildOutput(registry, usageMap) {
+  const scriptPath =
+    'operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js';
   const details = {
-    script: 'operations/scripts/generate-docs-guide-components-index.js',
-    purpose: 'Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json.',
+    script: scriptPath,
+    purpose:
+      'Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json.',
     runWhen: 'Component governance metadata, registry output, or usage-map output changes.',
-    runCommand: 'node operations/scripts/generate-docs-guide-components-index.js --fix'
+    runCommand: `node ${scriptPath} --fix`
   };
 
   const sections = VALID_CATEGORIES.map((category) =>
     renderCategorySection(
       category,
-      registry.components.filter((component) => component.category === category)
+      registry.components.filter((component) => component.category === category),
+      usageMap
     )
-  );
+  ).filter(Boolean);
 
-  const deprecatedSection = renderDeprecatedSection(
-    registry.components.filter((component) => component.status === 'deprecated')
-  );
-  const orphanedSection = renderOrphanedSection(usageMap, registry);
+  const contentLines = sections.flatMap((section, index) => (index === 0 ? [section] : ['', section]));
+
+  const auditSection = renderAuditSection(registry, usageMap);
 
   return normalizeFileContent(
     [
@@ -255,6 +305,10 @@ function buildOutput(registry, usageMap) {
         sidebarTitle: 'Components Catalog',
         description: 'Generated catalog of all governed component exports.',
         pageType: 'overview',
+        consumer: ['human', 'agent'],
+        maintenance: 'generated',
+        status: 'active',
+        generator: scriptPath,
         keywords: ['livepeer', 'components catalog', 'registry', 'usage map', 'inventory']
       }),
       '',
@@ -266,11 +320,13 @@ function buildOutput(registry, usageMap) {
       '',
       '## Summary',
       '',
-      renderSummaryTable(registry),
+      renderSummaryTable(registry, usageMap),
       '',
-      ...sections.flatMap((section, index) => (index === 0 ? [section] : ['', section])),
-      ...(deprecatedSection ? ['', deprecatedSection] : []),
-      ...(orphanedSection ? ['', orphanedSection] : [])
+      STATUS_KEY_LINE,
+      '',
+      ...contentLines,
+
+      ...(auditSection ? ['', auditSection] : [])
     ].join('\n')
   );
 }
@@ -278,6 +334,17 @@ function buildOutput(registry, usageMap) {
 function buildOutputs() {
   const registry = readJsonFile(REGISTRY_PATH);
   const usageMap = readJsonFile(USAGE_MAP_PATH);
+
+  // Read layout/diagram markers from the template so changes there automatically
+  // surface as warnings here — generators should never need to be edited for
+  // layout changes, but they do need to know if the template drifts.
+  const markers = readCatalogMarkers(TEMPLATE_PATH);
+  const templateLayout = markers['catalog-layout'];
+  if (templateLayout && templateLayout !== 'accordion-group') {
+    console.warn(
+      `⚠️  Template @catalog-layout is '${templateLayout}' but this generator only supports 'accordion-group'. Update the generator to support the new layout, or revert the template.`
+    );
+  }
 
   return new Map([[OUTPUT_PATH, buildOutput(registry, usageMap)]]);
 }
@@ -370,6 +437,9 @@ if (require.main === module) {
 module.exports = {
   buildOutputs,
   buildOutput,
+  renderSummaryTable,
+  renderCategorySection,
+  renderAuditSection,
   parseArgs,
   run
 };

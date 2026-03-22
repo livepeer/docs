@@ -7,11 +7,11 @@
 # @needs             E-C6, F-C1
 # @purpose-statement Snippet test runner — runs basic validation on snippet scripts
 # @pipeline          manual — developer tool
-# @usage             bash tools/scripts/snippets/test-scripts.sh [flags]
-# Test suite for tools/scripts/snippets
+# @usage             bash operations/scripts/snippets/test-scripts.sh [flags]
+# Test suite for operations/scripts/snippets
 # Run this before using scripts to verify they work correctly
 #
-# Usage: ./tools/scripts/snippets/test-scripts.sh
+# Usage: ./operations/scripts/snippets/test-scripts.sh
 #
 # Exit codes:
 #   0 - All tests passed
@@ -147,7 +147,7 @@ fi
 # Test 7: Deprecated generate-docs-status.js (moved out of snippets scope)
 echo ""
 echo "--- Test: generate-docs-status.js dry run (deprecated) ---"
-skip "generate-docs-status.js deprecated and moved to tools/scripts/archive/deprecated/project-management-output-script.js"
+skip "generate-docs-status.js deprecated and moved to operations/scripts/archive/deprecated/project-management-output-script.js"
 
 
 # Summary

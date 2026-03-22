@@ -18,7 +18,8 @@ const { execSync } = require('child_process');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
-  buildGeneratedNoteLines
+  buildGeneratedNoteLines,
+  readCatalogMarkers
 } = require('../../../tools/lib/generated-file-banners');
 const {
   extractLeadingScriptHeader,
@@ -85,18 +86,51 @@ const PLACEHOLDER_PATTERNS = [
 const SCRIPT_EXTENSIONS = new Set(GOVERNED_SCRIPT_EXTENSIONS);
 const VALIDATION_ROOTS = GOVERNED_ROOTS;
 const CLASSIFICATION_ROOTS = GOVERNED_ROOTS;
+const AGGREGATE_SCRIPT_PATH = 'operations/tests/unit/script-docs.test.js';
+const TEMPLATE_PATH = path.join(REPO_ROOT, 'snippets', 'templates', 'docs-guide', 'script-catalog.mdx');
+
 const AGGREGATE_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Scripts Catalog',
   sidebarTitle: 'Scripts Catalog',
-  description: 'This page provides an aggregate catalog inventory of repository scripts generated from group script indexes.',
-  keywords: ['livepeer', 'scripts catalog', 'aggregate inventory', 'repository', 'scripts']
+  description: 'Generated catalog of all governed repository scripts, grouped by type with pipeline flow diagram.',
+  consumer: ['human', 'agent'],
+  maintenance: 'generated',
+  status: 'active',
+  generator: AGGREGATE_SCRIPT_PATH,
+  keywords: ['livepeer', 'scripts catalog', 'aggregate inventory', 'repository', 'scripts', 'pipeline']
 });
 const AGGREGATE_DETAILS = {
-  script: 'tests/unit/script-docs.test.js',
+  script: AGGREGATE_SCRIPT_PATH,
   purpose: 'Enforce script header schema, keep group script indexes in sync, and build aggregate script catalog.',
   runWhen: 'Script metadata changes in validation roots or script changes in indexed roots.',
-  runCommand: 'node tests/unit/script-docs.test.js --write --rebuild-indexes'
+  runCommand: `node ${AGGREGATE_SCRIPT_PATH} --write --rebuild-indexes`
 };
+
+// Type labels and icons — match @type values from framework JSDoc headers.
+// To change layout or add a diagram, edit snippets/templates/docs-guide/script-catalog.mdx.
+// Markers read by this generator:
+//   @catalog-layout  — expected: 'grouped-tables'
+//   @diagram         — expected: 'pipeline-flow' (renders Mermaid chart before tables)
+const TYPE_ORDER = ['audit', 'automation', 'generator', 'validator', 'remediator', 'dispatch'];
+const TYPE_ICONS = {
+  audit: '🔍',
+  automation: '⚙️',
+  generator: '🏭',
+  validator: '✅',
+  remediator: '🔧',
+  dispatch: '🚦'
+};
+const TYPE_LABELS = {
+  audit: 'Audits',
+  automation: 'Automations',
+  generator: 'Generators',
+  validator: 'Validators',
+  remediator: 'Remediators',
+  dispatch: 'Dispatch'
+};
+
+// Canonical pipeline tiers — normalised from freeform JSDoc @pipeline strings.
+const PIPELINE_TIERS = ['P1', 'P2', 'P3', 'P5', 'P6'];
 
 function readFileSafe(repoPath) {
   try {
@@ -638,33 +672,233 @@ function checkIndexFile(indexPath, body) {
   };
 }
 
+function loadRegistry() {
+  try {
+    const raw = fs.readFileSync(path.join(REPO_ROOT, CLASSIFICATION_DATA_PATH), 'utf8');
+    return JSON.parse(raw);
+  } catch (_) {
+    return [];
+  }
+}
+
+function normalizePipelineTiers(raw) {
+  const s = String(raw || '').toLowerCase();
+  if (s.includes('indirect')) return ['indirect'];
+  const tiers = [];
+  if (s.includes('p1') || /\bcommit\b/.test(s)) tiers.push('P1');
+  if (s.includes('p2') || /\bpush\b/.test(s)) tiers.push('P2');
+  if (s.includes('p3') || /\btrack b\b/.test(s) || s === 'ci') tiers.push('P3');
+  if (s.includes('p5')) tiers.push('P5');
+  if (s.includes('p6')) tiers.push('P6');
+  return tiers.length > 0 ? tiers : ['manual'];
+}
+
+function normalizePipelineDisplay(raw) {
+  const tiers = normalizePipelineTiers(raw);
+  return tiers.join(', ');
+}
+
+function buildPipelineMermaid(registry) {
+  const MAX_PER_TIER = 12;
+  const tierScripts = { P1: [], P2: [], P3: [], 'P5/P6': [] };
+
+  registry.forEach((entry) => {
+    if (!entry.path) return;
+    const tiers = normalizePipelineTiers(entry.pipeline);
+    const name = entry.name || path.basename(entry.path);
+    tiers.forEach((tier) => {
+      if (tier === 'P5' || tier === 'P6') {
+        if (!tierScripts['P5/P6'].find((n) => n === name)) tierScripts['P5/P6'].push(name);
+      } else if (tierScripts[tier]) {
+        if (!tierScripts[tier].find((n) => n === name)) tierScripts[tier].push(name);
+      }
+    });
+  });
+
+  function subgraphNodes(tier, prefix) {
+    const scripts = tierScripts[tier] || [];
+    const shown = scripts.slice(0, MAX_PER_TIER);
+    const remaining = scripts.length - shown.length;
+    const nodes = shown.map((name, i) => {
+      const safe = name.replace(/"/g, '&quot;').replace(/[^a-zA-Z0-9_\-. &]/g, '');
+      return `    ${prefix}${i}["${safe}"]`;
+    });
+    if (remaining > 0) nodes.push(`    ${prefix}more["... ${remaining} more"]`);
+    return nodes.join('\n');
+  }
+
+  const tierDefs = [
+    { key: 'P1', prefix: 'c', label: '🔴 P1 — Commit Gate', count: tierScripts['P1'].length },
+    { key: 'P2', prefix: 'p', label: '🟠 P2 — Push Gate', count: tierScripts['P2'].length },
+    { key: 'P3', prefix: 'r', label: '🟡 P3 — PR Gate', count: tierScripts['P3'].length },
+    { key: 'P5/P6', prefix: 's', label: '🔵 P5/P6 — Scheduled', count: tierScripts['P5/P6'].length }
+  ].filter((t) => t.count > 0);
+
+  if (tierDefs.length === 0) return '';
+
+  const subgraphs = tierDefs
+    .map((t) => {
+      return [
+        `  subgraph ${t.key.replace('/', '_')}["${t.label} (${t.count})"]`,
+        '    direction TB',
+        subgraphNodes(t.key, t.prefix),
+        '  end'
+      ].join('\n');
+    })
+    .join('\n\n');
+
+  const edges = [];
+  const keys = tierDefs.map((t) => t.key.replace('/', '_'));
+  if (keys.includes('P1')) edges.push('  DEV -->|commit| P1');
+  if (keys.includes('P1') && keys.includes('P2')) edges.push('  P1 -->|push| P2');
+  if (keys.includes('P2') && keys.includes('P3')) edges.push('  P2 -->|open PR| P3');
+  if (!keys.includes('P2') && keys.includes('P3')) edges.push('  P1 -->|open PR| P3');
+  if (keys.includes('P3') && keys.includes('P5_P6')) edges.push('  P3 -->|merge| P5_P6');
+
+  return [
+    '```mermaid',
+    'flowchart LR',
+    '  DEV([👤 Developer])',
+    '',
+    subgraphs,
+    '',
+    ...edges,
+    '```'
+  ].join('\n');
+}
+
+function buildTypeGroupSection(type, registry) {
+  const rows = registry.filter((e) => (e.type || '') === type && !normalizePipelineTiers(e.pipeline).includes('indirect'));
+  if (rows.length === 0) return '';
+
+  const icon = TYPE_ICONS[type] || '';
+  const label = TYPE_LABELS[type] || type;
+  const header = `## ${icon} ${label}`;
+
+  const tableRows = rows
+    .sort((a, b) => (a.name || a.path).localeCompare(b.name || b.path))
+    .map((e) => {
+      const name = renderMdxCodeCell(e.name || path.basename(e.path));
+      const desc = escapeMdxTableCell(e.description || '');
+      const pipeline = escapeMdxTableCell(normalizePipelineDisplay(e.pipeline));
+      const concern = escapeMdxTableCell(e.concern || '');
+      const usage = renderMdxCodeCell(e.usage || '');
+      return `| ${name} | ${desc} | ${pipeline} | ${concern} | ${usage} |`;
+    });
+
+  return [
+    header,
+    '',
+    '| Script | Description | Pipeline | Concern | Usage |',
+    '|---|---|---|---|---|',
+    ...tableRows
+  ].join('\n');
+}
+
+function buildLibraryModulesAccordion(registry) {
+  const rows = registry.filter((e) => normalizePipelineTiers(e.pipeline).includes('indirect'));
+  if (rows.length === 0) return '';
+
+  const tableRows = rows
+    .sort((a, b) => (a.name || a.path).localeCompare(b.name || b.path))
+    .map((e) => {
+      const name = renderMdxCodeCell(e.name || path.basename(e.path));
+      const desc = escapeMdxTableCell(e.description || '');
+      const concern = escapeMdxTableCell(e.concern || '');
+      return `| ${name} | ${desc} | ${concern} |`;
+    });
+
+  return [
+    `<Accordion title="📚 Library Modules — ${rows.length}">`,
+    '',
+    '| Module | Description | Concern |',
+    '|---|---|---|',
+    ...tableRows,
+    '',
+    '</Accordion>'
+  ].join('\n');
+}
+
+function buildUnclassifiedAccordion(registry) {
+  const rows = registry.filter(
+    (e) => !(e.type || '').trim() && !normalizePipelineTiers(e.pipeline).includes('indirect')
+  );
+  if (rows.length === 0) return '';
+
+  const tableRows = rows
+    .sort((a, b) => (a.path || '').localeCompare(b.path || ''))
+    .map((e) => {
+      const name = renderMdxCodeCell(e.name || path.basename(e.path));
+      const pathCell = renderMdxCodeCell(e.path || '');
+      const pipeline = escapeMdxTableCell(normalizePipelineDisplay(e.pipeline));
+      return `| ${name} | ${pathCell} | ${pipeline} | Missing \`@type\` in JSDoc header |`;
+    });
+
+  return [
+    `<Accordion title="⚠️ Unclassified — ${rows.length} scripts need @type">`,
+    '',
+    '| Script | Path | Pipeline | Notes |',
+    '|---|---|---|---|',
+    ...tableRows,
+    '',
+    '</Accordion>'
+  ].join('\n');
+}
+
 function buildAggregateMarkdown() {
+  const registry = loadRegistry();
+
+  // Read layout/diagram markers from template — change them there, not here.
+  const markers = readCatalogMarkers(TEMPLATE_PATH);
+  const templateLayout = markers['catalog-layout'];
+  const templateDiagram = markers['diagram'];
+
+  if (templateLayout && templateLayout !== 'grouped-tables') {
+    console.warn(
+      `⚠️  Template @catalog-layout is '${templateLayout}' but this generator only supports 'grouped-tables'. Update the generator to support the new layout, or revert the template.`
+    );
+  }
+
   const lines = [
     ...AGGREGATE_FRONTMATTER_LINES,
     '',
     ...buildGeneratedHiddenBannerLines(AGGREGATE_DETAILS),
     '',
     ...buildGeneratedNoteLines(AGGREGATE_DETAILS),
+    '',
+    `The governed script library currently indexes **${registry.length}** script(s).`,
     ''
   ];
-  for (const group of GROUP_INDEX_MAP) {
-    const rows = buildGroupRows(group.root);
-    lines.push(`## ${group.root}`);
-    lines.push('');
-    if (rows.length === 0) {
-      lines.push('_No scripts indexed yet._');
-      lines.push('');
-      continue;
+
+  // Pipeline flow diagram — only emitted when template declares @diagram: pipeline-flow
+  if (templateDiagram === 'pipeline-flow') {
+    lines.push('## Pipeline Flow', '');
+    const diagram = buildPipelineMermaid(registry);
+    if (diagram) {
+      lines.push(diagram, '');
     }
-    lines.push('| Script | Summary | Usage | Domain |');
-    lines.push('|---|---|---|---|');
-    rows.forEach((row) => {
-      lines.push(
-        `| ${renderMdxCodeCell(row.script)} | ${escapeMdxTableCell(row.summary)} | ${renderMdxCodeCell(row.usage)} | ${escapeMdxTableCell(row.domain)} |`
-      );
-    });
-    lines.push('');
   }
+
+  // Type key
+  const typeKeyParts = TYPE_ORDER.map((t) => `${TYPE_ICONS[t]} ${t}`).concat(['📚 library module', '⚠️ unclassified']);
+  lines.push(`**Type key:** ${typeKeyParts.join(' · ')}`, '');
+
+  // Grouped tables — one ## section per type
+  for (const type of TYPE_ORDER) {
+    const section = buildTypeGroupSection(type, registry);
+    if (section) {
+      lines.push(section, '');
+    }
+  }
+
+  // Library modules accordion
+  const libSection = buildLibraryModulesAccordion(registry);
+  if (libSection) lines.push(libSection, '');
+
+  // Unclassified audit accordion
+  const unclassifiedSection = buildUnclassifiedAccordion(registry);
+  if (unclassifiedSection) lines.push(unclassifiedSection, '');
+
   return lines.join('\n');
 }
 

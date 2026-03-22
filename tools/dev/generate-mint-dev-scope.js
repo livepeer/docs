@@ -8,7 +8,7 @@
  * @description Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       tools/scripts/dev, docs.json, .mintignore
+ * @scope       operations/scripts/dev, docs.json, .mintignore
  * @usage       node tools/dev/generate-mint-dev-scope.js [flags]
  * @policy      E-C6, F-C1
  */
@@ -29,7 +29,7 @@ const REPO_ROOT_IMPORT_PREFIX_REGEX = /^(?:v1|v2|snippets|docs-guide|tools|tests
 function printUsage() {
   console.log(
     [
-      'Usage: node tools/scripts/dev/generate-mint-dev-scope.js [options]',
+      'Usage: node tools/dev/generate-mint-dev-scope.js [options]',
       '',
       'Options:',
       '  --repo-root <path>',
@@ -876,7 +876,7 @@ function collectDocsConfigFileReferences(node, out = new Set()) {
 function isGeneratedPagesIndexFile(filePath, content) {
   if (path.basename(filePath) !== 'index.mdx') return false;
   const body = String(content || '');
-  return body.includes('generated-file-banner:v1') && body.includes('tools/scripts/generate-pages-index.js');
+  return body.includes('generated-file-banner:v1') && body.includes('operations/scripts/generate-pages-index.js');
 }
 
 function looksLikeRepoLink(value) {

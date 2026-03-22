@@ -38,8 +38,8 @@ Explicitly refreshes:
   - `tasks/reports/navigation-links/navigation-report.json`
 
 - `node tests/unit/docs-guide-sot.test.js`
-- `node tools/scripts/generate-pages-index.js`
-- `node tools/scripts/enforce-generated-file-banners.js --check`
+- `node operations/scripts/generate-pages-index.js`
+- `node operations/scripts/enforce-generated-file-banners.js --check`
 - `.mintignore` and shared file-selection helpers should exclude governed non-publishable lanes such as `_workspace/`, `x-deprecated/`, and `v2/x-archived/` once enforcement lands.
 
 ### Integration Suites
@@ -169,8 +169,8 @@ bash lpd test --full --wcag --wcag-no-fix
 bash lpd tools wcag-repair-common -- --staged --stage
 node tests/run-pr-checks.js --base-ref main
 node tests/run-pr-checks.js --base-ref main --lane branch-health
-node tools/scripts/create-codex-pr.js --advisory-research --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
-node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
+node operations/scripts/create-codex-pr.js --advisory-research --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
+node operations/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
 ```
 
 ### npm Scripts (`tests/package.json`)
@@ -218,12 +218,12 @@ npm --prefix tests run test:wcag:selftest
   - script docs enforcement on changed scripts (`tests/unit/script-docs.test.js --files ...`)
   - strict V2 link audit on changed docs pages (`tests/integration/v2-link-audit.js --files ... --strict`)
 - Advisory research pass for tracked claim families is available locally via:
-  `node tools/scripts/docs-page-research-pr-report.js --files <changed-file[,changed-file...]> --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json`
+  `node operations/scripts/docs-page-research-pr-report.js --files <changed-file[,changed-file...]> --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json`
 - Experimental advisory integration is also available in local/manual PR prep via:
-  `node tools/scripts/create-codex-pr.js --advisory-research --changed-files <changed-file[,changed-file...]>`
+  `node operations/scripts/create-codex-pr.js --advisory-research --changed-files <changed-file[,changed-file...]>`
 - This helper is intentionally not wired into blocking PR CI yet. Use it after changed-file checks when a diff touches tracked gateway/orchestrator factual claim surfaces.
 - Legacy route-centric helper note:
-  `node tools/scripts/docs-claim-ledger-pr-report.js ...` is retained only for comparison while the fact-runner advisory path is adopted. It is no longer the active PR workflow.
+  `node operations/scripts/docs-claim-ledger-pr-report.js ...` is retained only for comparison while the fact-runner advisory path is adopted. It is no longer the active PR workflow.
 
 ## Experimental Page Research Usage
 
@@ -251,7 +251,7 @@ Use those pages for workflow scope, commands, readiness, outputs, and source-of-
   `node tests/unit/script-docs.test.js --staged --write --stage --autofill`
   Missing headers are auto-inserted, then commit remains blocked until placeholder values are filled.
 - Pre-commit also synchronizes `v2/pages` index files:
-  `node tools/scripts/generate-pages-index.js --staged --write --stage`
+  `node operations/scripts/generate-pages-index.js --staged --write --stage`
   This regenerates top-level section `index.mdx` files, updates root `v2/pages/index.mdx`, marks missing `docs.json` pages with `⚠️`, and removes nested `index.mdx`/`index.md` files.
 - The hook lane intentionally stops at staged syntax/style/content basics. Repo-wide governance/unit suites stay in full `node tests/run-all.js` runs and CI.
 - Pre-commit fails fast on cheap blockers and skips the expensive staged suite until those are fixed.
@@ -303,8 +303,8 @@ Example:
 ### Auto-create Script Template
 Use the generator to create a new script with header already attached:
 ```bash
-node tools/scripts/new-script.js --path tools/scripts/my-script.js
-node tools/scripts/new-script.js --path tasks/scripts/my-script.sh --domain docs --scope tasks/scripts
+node operations/scripts/new-script.js --path operations/scripts/my-script.js
+node operations/scripts/new-script.js --path tasks/scripts/my-script.sh --domain docs --scope tasks/scripts
 ```
 
 {/* SCRIPT-INDEX:START */}

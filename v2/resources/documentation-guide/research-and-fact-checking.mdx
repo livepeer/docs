@@ -80,13 +80,13 @@ If strong evidence is missing, the output should classify the claim as unresolve
 Validate the claim registry first:
 
 ```bash icon="terminal"
-node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+node operations/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
 ```
 
 Run a single-page research pass:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research.js \
+node operations/scripts/docs-page-research.js \
   --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
   --report-md /tmp/docs-page-research.md \
   --report-json /tmp/docs-page-research.json
@@ -95,7 +95,7 @@ node tools/scripts/docs-page-research.js \
 Run a cluster review when the same claim appears in multiple pages:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research.js \
+node operations/scripts/docs-page-research.js \
   --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
   --report-md /tmp/docs-page-research-cluster.md \
   --report-json /tmp/docs-page-research-cluster.json
@@ -104,7 +104,7 @@ node tools/scripts/docs-page-research.js \
 Run the PR advisory helper when a docs diff touches tracked factual pages:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research-pr-report.js \
+node operations/scripts/docs-page-research-pr-report.js \
   --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
   --report-md /tmp/page-content-research-pr.md \
   --report-json /tmp/page-content-research-pr.json

@@ -1,13 +1,10 @@
 ---
 name: page-authoring
-version: "1.2"
-category: authoring
 description: >-
-  Canonical guidance for authoring new v2 documentation pages. Covers frontmatter, page-type and purpose alignment, MDX/component constraints, and repo-backed validation without collapsing copy quality into rigid templates.
-invoke_when:
-  - "write a new v2 docs page"
-  - "draft mdx content for livepeer docs"
-  - "apply repo authoring rules to a docs page"
+  Canonical guidance for authoring new v2 documentation pages. Covers frontmatter, page-type and purpose alignment, MDX/component constraints, and repo-backed validation without collapsing copy quality into rigid templates. Use when writing a new v2 docs page, drafting MDX content for Livepeer docs, or applying repo authoring rules to an existing page.
+metadata:
+  version: "1.3"
+  category: authoring
 ---
 
 # SKILL: Page Authoring for Livepeer v2 Docs

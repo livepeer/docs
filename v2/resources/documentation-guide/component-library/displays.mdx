@@ -28,7 +28,7 @@ Run command: node operations/scripts/generate-component-docs.js --fix --template
 
 Renderers for authored content — code, video, diagrams, quotes, response fields.
 
-This category currently contains **6** governed export(s).
+This category currently contains **20** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -42,14 +42,157 @@ This category currently contains **6** governed export(s).
 
 | Component | Status | Import path | Description |
 | --- | --- | --- | --- |
+| CardVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed inside a Card wrapper with aspect-ratio iframe. |
+| CodeComponent | `stable` | `/snippets/components/displays/code/Code.jsx` | Simple code block with title and language syntax highlighting. |
+| CodeSection | `stable` | `/snippets/components/displays/code/Code.jsx` | Expandable code section with title header. |
+| ComplexCodeBlock | `stable` | `/snippets/components/displays/code/Code.jsx` | Code block with both pre-note and post-note sections. |
+| CustomCodeBlock | `stable` | `/snippets/components/displays/code/Code.jsx` | Code block with optional pre/post notes and expandable wrapper. |
 | CustomResponseField | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Custom-styled API response field with configurable margin. |
+| FrameQuote | `stable` | `/snippets/components/displays/quotes/Quote.jsx` | Framed blockquote with optional author, source link, and image. |
+| LinkedInEmbed | `stable` | `/snippets/components/displays/video/Video.jsx` | LinkedIn post embed via responsive iframe with compact layout. |
+| Quote | `stable` | `/snippets/components/displays/quotes/Quote.jsx` | Styled blockquote with accent border and centred italic text. |
 | ResponseFieldAccordion | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Accordion-style response field with collapsible detail section. |
 | ResponseFieldExpandable | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Expandable response field that reveals nested content on click. |
 | ResponseFieldGroup | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Container for grouping multiple response fields with consistent spacing. |
 | ScrollableDiagram | `stable` | `/snippets/components/displays/diagrams/ZoomableDiagram.jsx` | Pannable, zoomable diagram container with zoom controls and accessible buttons. |
+| ShowcaseVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | Full-width video with negative-margin breakout and rounded frame. |
+| TitledVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion. |
 | ValueResponseField | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | API response field with name, type, and value display. |
+| Video | `stable` | `/snippets/components/displays/video/Video.jsx` | Basic framed video player with caption support. |
+| YouTubeVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed via responsive iframe with aspect-ratio preservation. |
+| YouTubeVideoData | `stable` | `/snippets/components/displays/video/Video.jsx` | Renders a columned grid of YouTubeVideo embeds from an items array. |
+| YouTubeVideoDownload | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed with download hint text below. |
 
 ## Component Reference
+
+### CardVideo
+Use **CardVideo** when you need youTube embed inside a Card wrapper with aspect-ratio iframe.. Accepts: style, className, ...rest.
+Source description: YouTube embed inside a Card wrapper with aspect-ratio iframe.
+**Import path**
+```jsx
+import { CardVideo } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `style` | `any` | `` | Yes | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### CodeComponent
+Use **CodeComponent** when you need simple code block with title and language syntax highlighting.. Accepts: className, style, ...rest.
+Source description: Simple code block with title and language syntax highlighting.
+**Import path**
+```jsx
+import { CodeComponent } from '/snippets/components/displays/code/Code.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `string` | `""` | No | filename prop. |
+| `icon` | `string` | `"terminal"` | No | icon prop. |
+| `language` | `string` | `""` | No | language prop. |
+| `highlight` | `string` | `""` | No | highlight prop. |
+| `expandable` | `boolean` | `false` | No | expandable prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### CodeSection
+Use **CodeSection** when you need expandable code section with title header.. Accepts: className, style, ...rest.
+Source description: Expandable code section with title header.
+**Import path**
+```jsx
+import { CodeSection } from '/snippets/components/displays/code/Code.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | `{}` | No | fields prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### ComplexCodeBlock
+Use **ComplexCodeBlock** when you need code block with both pre-note and post-note sections.. Accepts: none.
+Source description: Code block with both pre-note and post-note sections.
+**Import path**
+```jsx
+import { ComplexCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | `` | Yes | filename prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `language` | `any` | `` | Yes | language prop. |
+| `highlight` | `any` | `` | Yes | highlight prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `preNote` | `any` | `null` | No | pre Note prop. |
+| `postNote` | `any` | `null` | No | post Note prop. |
+
+
+<CustomDivider />
+
+### CustomCodeBlock
+Use **CustomCodeBlock** when you need code block with optional pre/post notes and expandable wrapper.. Accepts: none.
+Source description: Code block with optional pre/post notes and expandable wrapper.
+**Import path**
+```jsx
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | `` | Yes | filename prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `language` | `any` | `` | Yes | language prop. |
+| `highlight` | `any` | `` | Yes | highlight prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `preNote` | `string` | `""` | No | pre Note prop. |
+| `postNote` | `string` | `""` | No | post Note prop. |
+| `output` | `string` | `""` | No | output prop. |
+
+
+<CustomDivider />
 
 ### CustomResponseField
 Use **CustomResponseField** when you need custom-styled API response field with configurable margin.. Accepts: className, style, ...props.
@@ -69,6 +212,80 @@ import { CustomResponseField } from '/snippets/components/displays/response-fiel
 | `props` | `object` | `` | No | Additional props forwarded to ResponseField. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### FrameQuote
+Use **FrameQuote** when you need framed blockquote with optional author, source link, and image.. Accepts: children, className, style, ...props.
+Source description: Framed blockquote with optional author, source link, and image.
+**Import path**
+```jsx
+import { FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, style, ...props`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `author` | `any` | `` | Yes | author prop. |
+| `source` | `any` | `` | Yes | source prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `frame` | `boolean` | `true` | No | frame prop. |
+| `align` | `string` | `'right'` | No | align prop. |
+| `borderColor` | `any` | `` | Yes | border Color prop. |
+| `img` | `any` | `` | Yes | img prop. |
+| `spacing` | `boolean` | `true` | No | spacing prop. |
+| `props` | `any` | `` | Yes | props prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### LinkedInEmbed
+Use **LinkedInEmbed** when you need linkedIn post embed via responsive iframe with compact layout.. Accepts: none.
+Source description: LinkedIn post embed via responsive iframe with compact layout.
+**Import path**
+```jsx
+import { LinkedInEmbed } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `string` | `"Embedded post"` | No | title prop. |
+| `hint` | `string` | `""` | No | hint prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `height` | `string` | `"399"` | No | height prop. |
+
+
+<CustomDivider />
+
+### Quote
+Use **Quote** when you need styled blockquote with accent border and centred italic text.. Accepts: children, className, style, ...rest.
+Source description: Styled blockquote with accent border and centred italic text.
+**Import path**
+```jsx
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
 
 
 <CustomDivider />
@@ -165,6 +382,54 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Zoomab
 
 <CustomDivider />
 
+### ShowcaseVideo
+Use **ShowcaseVideo** when you need full-width video with negative-margin breakout and rounded frame.. Accepts: className, style, ...rest.
+Source description: Full-width video with negative-margin breakout and rounded frame.
+**Import path**
+```jsx
+import { ShowcaseVideo } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `subtitle` | `any` | `` | Yes | subtitle prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### TitledVideo
+Use **TitledVideo** when you need auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.. Accepts: className, style, ...rest.
+Source description: Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.
+**Import path**
+```jsx
+import { TitledVideo } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `subtitle` | `any` | `` | Yes | subtitle prop. |
+| `arrow` | `boolean` | `false` | No | arrow prop. |
+| `borderRadius` | `string` | `"12px"` | No | border Radius prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
 ### ValueResponseField
 Use **ValueResponseField** when you need aPI response field with name, type, and value display.. Accepts: children, className, style, ...props.
 Source description: API response field with name, type, and value display.
@@ -187,3 +452,103 @@ import { ValueResponseField } from '/snippets/components/displays/response-field
 | `props` | `object` | `` | No | Additional props forwarded to ResponseField. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### Video
+Use **Video** when you need basic framed video player with caption support.. Accepts: children, className, style, ...rest.
+Source description: Basic framed video player with caption support.
+**Import path**
+```jsx
+import { Video } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `string` | `""` | No | title prop. |
+| `author` | `string` | `""` | No | author prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `href` | `string` | `""` | No | href prop. |
+| `controls` | `boolean` | `true` | No | controls prop. |
+| `autoPlay` | `boolean` | `false` | No | auto Play prop. |
+| `loop` | `boolean` | `false` | No | loop prop. |
+| `muted` | `boolean` | `false` | No | muted prop. |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### YouTubeVideo
+Use **YouTubeVideo** when you need youTube embed via responsive iframe with aspect-ratio preservation.. Accepts: className, style, ...rest.
+Source description: YouTube embed via responsive iframe with aspect-ratio preservation.
+**Import path**
+```jsx
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `string` | `""` | No | title prop. |
+| `author` | `string` | `""` | No | author prop. |
+| `hint` | `string` | `""` | No | hint prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### YouTubeVideoData
+Use **YouTubeVideoData** when you need renders a columned grid of YouTubeVideo embeds from an items array.. Accepts: none.
+Source description: Renders a columned grid of YouTubeVideo embeds from an items array.
+**Import path**
+```jsx
+import { YouTubeVideoData } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `cols` | `number` | `2` | No | cols prop. |
+
+
+<CustomDivider />
+
+### YouTubeVideoDownload
+Use **YouTubeVideoDownload** when you need youTube embed with download hint text below.. Accepts: className, style, ...rest.
+Source description: YouTube embed with download hint text below.
+**Import path**
+```jsx
+import { YouTubeVideoDownload } from '/snippets/components/displays/video/Video.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `hint` | `any` | `` | Yes | hint prop. |
+| `caption` | `string` | `""` | No | caption prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |

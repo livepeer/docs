@@ -1,191 +1,156 @@
-# AI Governance — Open Items Plan
+# AI-Tools Governance — Active Plan
 
-**Status:** Active — consolidates all open AI governance items post Phase 1–8 completion
+**Last updated:** 2026-03-22
+**Branch:** `docs-v2-dev`
+**Status:** Ongoing maintenance — core governance complete, 3 decision gates open
 
----
-
-## Context
-
-Phases 1–8 of the AI-Tools Governance plan are complete. This plan captures all remaining open items across five concern areas: path accuracy, AI discoverability, ai-tools navigation/docs, ai-skills structural integrity, and agent instructions cleanup. Items are ordered by dependency — earlier tasks unblock later ones.
-
-**Already done:**
-- `ai-tools/README.md` — exists ✓
-- `ai-tools/registry/README.md` — exists ✓
-- `ai-tools/ai-rules/_retired/` — three legacy files archived ✓
-- `ai-tools/ai-rules/best-practices.md` — created ✓
-- `AGENTS.md` best-practices extensions — done ✓
-- Phase 1 path accuracy fixes — done ✓
-- Phase 2.1 CI wire for check-companion-manifest — done ✓
+> This file consolidates the original Phases 1–9 plan, the open-items backlog (former `plan.md`), and `plan2.md` post-completion tasks. `plan2.md` is now a pointer to this file.
 
 ---
 
-## Phase 1 — Path Accuracy Fixes ✅
+## What Is Complete
 
-### Task 1.1 — Fix AGENTS.md validator table paths ✅
+Everything below is done and committed. Not listed in the active work sections.
 
-**File:** `AGENTS.md`
-
-Replaced three stale `tools/scripts/` entries with correct `operations/scripts/` paths:
-- `validate-frontmatter.js` → `lint-structure.js` (correct validator for routing/nav)
-- `check-agent-docs-freshness.js` path prefix corrected
-- `generate-docs-guide-indexes.js` path prefix corrected
-
-### Task 1.2 — Fix ai-tools/README.md registry script path ✅
-
-**File:** `ai-tools/README.md`
-
-Changed `node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js`
-to `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js`
-
-### Task 1.3 — Archive ai-rules/rules/imported/ ✅
-
-`ai-tools/ai-rules/rules/imported/copilot-instructions.md` archived to `ai-tools/ai-rules/_retired/imported-copilot-instructions.md`.
-Empty `rules/imported/` directory removed.
-
----
-
-## Phase 2 — AI Discoverability Deferred Items
-
-### Task 2.1 — Wire CDA-6: companion manifest CI check ✅
-
-**File created:** `.github/workflows/check-ai-companion-manifest.yml`
-**Script:** `operations/scripts/validators/governance/ai/check-companion-manifest.js`
-
-### Task 2.2 — Fix llms.txt duplicate URLs
-
-**Status:** Pending
-
-Run generator with `--check` to identify 7 duplicate URLs:
-```bash
-node operations/scripts/generators/content/catalogs/generate-llms-files.js --check
-```
-Fix at source (MDX pages with identical titles or listed twice in `docs.json`), then regenerate.
-
----
-
-## Phase 3 — ai-tools Navigation and Docs
-
-### Task 3.1 — Add agent setup guides to docs.json nav
-
-**Status:** Pending
-
-Files `ai-tools/claude-code.mdx`, `ai-tools/cursor.mdx`, `ai-tools/windsurf.mdx` exist but are not in `docs.json` navigation.
-Check `docs.json` for existing `ai-tools` or `tooling` nav group. If found, add entries there.
-Verify: `lpd test --staged` passes.
-
-### Task 3.2 — Reduce AGENT-INSTRUCTIONS.md to a pointer
-
-**Status:** Pending
-
-**File:** `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md`
-
-Per `docs-guide/policies/agent-governance-framework.mdx`: reduce to a link to AGENTS.md.
-
-Replace full content with:
-```markdown
-# Agent Instructions
-
-The canonical agent baseline is [`AGENTS.md`](../../AGENTS.md) at repo root.
-
-For Codex-specific task isolation rules (branch naming, task contract, locks):
-see `.github/AGENTS.md` (read alongside root `AGENTS.md` via directory-walk).
-
-For override policy: `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`.
-```
-
----
-
-## Phase 4 — ai-skills Structural Integrity (Phase 7 completion)
-
-### Task 4.1 — Add `category` field to all 16 local SKILL.md files
-
-**Status:** Pending
-
-Category taxonomy:
-
-| Value | Skills |
+| Phase | Work |
 |---|---|
-| `audit` | `script-footprint-and-usage-audit`, `docs-quality-and-freshness-audit`, `docs-coverage-and-route-integrity-audit`, `rubric-static-review` |
-| `authoring` | `page-authoring`, `docs-copy`, `product-thinking` |
-| `governance` | `component-layout-governance`, `generated-mdx-banners-governance`, `style-and-language-homogenizer-en-gb`, `cleanup-quarantine-manager` |
-| `review-pipeline` | `docs-review-packet-generation`, `docs-review-fix-execution` |
-| `meta` | `repo-audit-orchestrator`, `cross-agent-packager`, `skill-docs` |
-
-Add `category: <value>` after `version` in each file's frontmatter. Bump `version` (e.g. `"1.0"` → `"1.1"`).
-
-Also update `ai-tools/ai-skills/skill-spec-contract.md`:
-- Add `category` to required fields table
-- Add the 5 allowed values as an enum
-- Move `tier` from "template-only" to "Optional fields (local + template)"
-
-### Task 4.2 — Add structural enforcement to skill-docs.test.js
-
-**Status:** Pending
-
-**File:** `tests/unit/skill-docs.test.js`
-
-Add three new checks in a `validateFolderStructure()` function:
-
-- **Check A — Root loose-file guard:** Fail if any `.md`/`.json` found at `ai-tools/ai-skills/` root except `content-map.md`, `inventory.json`, `skill-spec-contract.md`
-- **Check B — Template prefix uniqueness:** Fail if any numeric prefix appears more than once
-- **Check C — Template/agent-pack parity:** Fail if template count ≠ agent-pack skill count
-
-### Task 4.3 — Update skill-docs/SKILL.md
-
-**Status:** Pending
-
-Add to Constraints section:
-- `category` field is required (enum: audit, authoring, governance, review-pipeline, meta)
-- `tier` is optional on local skills
-- Retired skills go to `_workspace/retired/` via `git mv`, never deleted
-- Template prefix must be sequential
-
-Update `invoke_when` to include "add category to an existing skill" and "retire a skill".
-Bump version to `"1.1"`.
-
-### Task 4.4 — Regenerate all agent-pack exports
-
-**Status:** Pending
-
-After Tasks 4.1–4.3:
-```bash
-node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all
-```
+| Phases 1–9 (original) | Full AI-tools governance buildout — registry, skill system, rules, agent instructions |
+| Open-items Phase 1 | Path accuracy fixes — AGENTS.md validator paths, ai-tools/README.md script path, copilot-instructions archival |
+| Open-items Phase 2 | AI discoverability — CDA-6 CI check confirmed, 7 llms.txt duplicate URLs removed |
+| Open-items Phase 3 | ai-tools nav — setup guides confirmed in docs.json, AGENT-INSTRUCTIONS.md reduced to pointer |
+| Open-items Phase 4 | ai-skills structural integrity — category fields on all 19 skills, validateFolderStructure() in test suite, skill-docs/SKILL.md updated, agent-packs regenerated |
+| agentskills.io alignment | VS Code schema warnings resolved — all 61 governed skill files migrated to agentskills.io standard; invoke_when removed; metadata: block added; test suite rewritten |
+| Registry sync | ai-tools-registry.json corrected — 4 stale artifact paths, 6 missing entries; 222 → 227 artifacts |
+| Inventory regenerated | ai-tools-inventory.md regenerated at 227 artifacts (was stale at 215) |
+| Safe cleanup | docs-guide/.DS_Store removed; docs.json.bak and openapi.yaml.backup already gone; .codex/locks-local/ already gone; source-of-truth.md stubs already gone |
+| _workspace structure | api/, snippets/, tools/ _workspace subdirs populated: api=(spec-drafts, research, archive), snippets=(component-drafts, asset-staging, archive), tools=(experiments, archive) |
+| structure.md | Updated — new schema fields, content-pipeline category added, correct test/script paths |
 
 ---
 
-## Phase 5 — Deferred (needs decision or dependency)
+## Active Work — No Decision Needed
+
+These are safe to execute without human approval.
+
+### Fix completion-report.md R4 (obsolete)
+
+**File:** `workspace/plan/active/AI-TOOLS-GOVERNANCE/completion-report.md`
+
+R4 says: "Add `content-pipeline` to `skill-docs/SKILL.md` invoke_when." `invoke_when` no longer exists (removed in agentskills.io alignment). `content-pipeline` is already in skill-docs/SKILL.md v1.4 Constraints section. Strike R4 as resolved.
+
+---
+
+## Decision Gates
+
+### Gate 3.1 — docs-guide/ restructure — DEFERRED
+
+Decision: Defer. No execution until approved. Tracked in `REPO-STRUCTURE-GOV/` plan.
+
+---
+
+### Gate 3.2 — Skill consolidation — NEEDS DECISION
+
+**Context:** Two pairs of skills were flagged as potential merge candidates.
+
+**Pair A — Audit skills** (`category: audit`):
+
+| Skill | What it does |
+|---|---|
+| `docs-quality-and-freshness-audit` | Finds TODO/TBD markers, thin content, freshness-risk text — *content readiness* |
+| `docs-coverage-and-route-integrity-audit` | Finds missing nav routes, orphan files, legacy path refs — *navigation health* (script not yet implemented) |
+
+**Recommendation: keep separate.** These address completely different problem domains. Quality/freshness is a content concern; route/coverage is a navigation concern. An agent auditing content freshness should not have to think about route integrity and vice versa.
+
+**Pair B — Review pipeline skills** (`category: review-pipeline`):
+
+| Skill | What it does |
+|---|---|
+| `docs-review-packet-generation` | Read-only: derives scope from nav, runs 3 analysis phases, builds tracker + reports |
+| `docs-review-fix-execution` | Write: executes an existing approved packet, applies fixes, closes sections |
+
+**Recommendation: keep separate.** These are explicitly sequential — generation always precedes execution with a human review/approval step in between. Merging them would create a single skill that would sometimes be read-only and sometimes edit pages, depending on a flag. The separation is load-bearing: it enforces the human gate.
+
+**→ Decision needed:** Confirm keep separate, or override with merge instruction.
+
+---
+
+### Gate 3.3 — SOLUTIONS-SOCIAL-DATA — HANDLED IN SEPARATE THREAD
+
+Active work is tracked in `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/`. Not this thread's concern.
+
+---
+
+### Gate 3.4 — _workspace standardisation — DONE
+
+Best-guess subdirectory structure applied (no approval wait per user instruction):
+
+- `ai-tools/_workspace/` — already had `skill-research/`, `rule-drafts/`, `archive/` ✓
+- `api/_workspace/` — added `spec-drafts/`, `research/`, `archive/`
+- `snippets/_workspace/` — added `component-drafts/`, `asset-staging/`, `archive/`
+- `tools/_workspace/` — added `experiments/`, `archive/`
+
+All subdirs have `.gitkeep` so they track in git while empty.
+
+---
+
+## Low Priority / Health (plan2.md Phase 4)
+
+Execute when convenient, no dependencies.
+
+### Task 4.1 — Run audit pipeline end-to-end
+
+```bash
+node operations/scripts/audits/governance/repo/repo-audit-orchestrator.js --mode static --scope full
+```
+
+Document which catalog skills produce useful output and which are aspirational. Update `structure.md` with findings.
+
+### Task 4.2 — snippets/assets/ cleanup
+
+Safe item-by-item with individual checks (grep refs before each deletion):
+
+1. Delete `snippets/assets/domain/02_COMMUNITY/hero-images/` (~20 MB, zero refs confirmed)
+2. Delete unused `domain/00_HOME/` hero variants (13 files, zero refs)
+3. Consolidate `snippets/assets/logo/` → `snippets/assets/logos/`
+4. Remove `snippets/assets/favicon.png` root duplicate
+5. Evaluate `snippets/assets/data/protocol-overview.html` (4.3 MB)
+6. Delete typo files: `Hero_Telegran.png`, `Hero_Yotube.png`
+
+### Task 4.3 — Script-governance cross-check
+
+Confirm `SCRIPT-GOVERNANCE/plan.md` status — which tasks are complete, which remain open, whether Task 14 (`tools/scripts/` → `operations/`) is done. This gates REPO-STRUCTURE-GOV Phase 1.
+
+---
+
+## Deferred (external dependencies)
 
 | Item | Blocker |
 |---|---|
-| CDA-5: auto-generation script for CoinGecko snapshots | Needs network access + cron infrastructure decision |
-| CDA-7: template guidance for Tier 2 component pages | Depends on page template system being finalized |
-| Showcase-data.json companion | Showcase content not finalised |
-| Skill consolidation (docs-quality + docs-coverage, review-packet + review-fix) | Human decision gate — see plan2.md Task 3.2 |
-| `docs-guide/` restructure | Human decision gate — see plan2.md Task 3.1 |
+| docs.json Resource HUB stub fix | User confirmation required for docs.json commits; content decision on 7 stub nav groups |
+| llms.txt regeneration (local) | ESM `unified` package not resolvable from `operations/scripts/`; works in CI |
+| CDA-5: CoinGecko snapshot auto-gen | Network access policy + CI cron infrastructure |
+| CDA-7: Tier 2 component page template | Page template system must be finalised first |
+| Showcase-data.json AI companion | Showcase content not finalised |
+| `.github/AGENTS.md` rewrite | Still has fictional checkpoint branch system + stale paths; low risk but needs separate focused commit + Codex command path verification |
 
 ---
 
-## Verification Sequence
-
-Run in order after all phases complete:
+## Verification
 
 ```bash
-# 1. Path accuracy
+# Skill validator
+node operations/tests/unit/skill-docs.test.js
+# → ✅ 62 targets, 0 errors
+
+# Registry
+node operations/tests/unit/ai-tools-registry.test.js
+# → ✅ 227 artifacts, 0 errors
+
+# Freshness
 node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json
+# → ✅ 0 errors (agentskills-io-standard.md shows WARNING: no git history until committed)
 
-# 2. Skill validator
-node tests/unit/skill-docs.test.js
-
-# 3. No stale tools/ paths in ai-tools/
-grep -rn "node tools/scripts/" ai-tools/README.md AGENTS.md
-
-# 4. category field count
-grep -r "^category:" ai-tools/ai-skills/*/SKILL.md | wc -l
-# → 16
-
-# 5. Template/agent-pack parity
-ls ai-tools/ai-skills/templates/*.template.md | wc -l
-ls -d ai-tools/agent-packs/skills/*/ | wc -l
-# → equal
+# No stale tools/ paths in ai-tools governed areas
+grep -rn "node tools/scripts/" ai-tools/ --include="*.md" --include="*.mdx" | grep -v "source-content\|_workspace\|agent-packs/skills"
+# → empty
 ```

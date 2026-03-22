@@ -1,14 +1,13 @@
 ---
 name: precommit-failure-triage
-version: "1.1"
-category: meta
 description: >-
-  Diagnose and resolve pre-commit failures by mapping hook output to exact rule and fix path. Use when tasks include commit blocked by pre-commit hook, hook verification failed, fix pre-commit errors quickly.
-tier: 1
-invoke_when:
-  - "commit blocked by pre-commit hook"
-  - "hook verification failed"
-  - "fix pre-commit errors quickly"
+  Diagnose and resolve pre-commit failures by mapping hook output to exact rule
+  and fix path. Use when: commit blocked by pre-commit hook, hook verification
+  failed, fix pre-commit errors quickly.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - ".githooks/pre-commit"
   - ".githooks/verify.sh"

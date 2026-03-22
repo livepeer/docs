@@ -49,12 +49,14 @@ function escapeForJSX(str) {
     .replace(/"/g, '\\"')
     .replace(/`/g, "\\`")
     .replace(/\$/g, "\\$")
-    .replace(/\u2018|\u2019/g, "\\'")  // smart single quotes
-    .replace(/\u201C|\u201D/g, '\\"')  // smart double quotes
-    .replace(/\u2014/g, "-")           // em dash
-    .replace(/\u2013/g, "-")           // en dash
-    .replace(/\u2022/g, "-")           // bullet
-    .replace(/\u2192/g, "->")          // arrow
+    .replace(/\u2018|\u2019/g, "\\'")
+    .replace(/\u201C|\u201D/g, '\\"')
+    .replace(/\u2014/g, "-")
+    .replace(/\u2013/g, "-")
+    .replace(/\u2022/g, "-")
+    .replace(/\u2192/g, "->")
+    .replace(/[\u00A0]/g, " ")
+    .replace(/&[#\w]+;/g, "")
     .replace(/\n/g, " ")
     .replace(/\r/g, "")
     .replace(/\t/g, " ");

@@ -3,17 +3,17 @@
 ## Scope
 
 [//]: # (Required for codex/* PRs: list in-scope files/prefixes and explicit out-of-scope exclusions)
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## Validation
 
 [//]: # (Required for codex/* PRs: list exact validation commands and outcomes)
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## Follow-up Tasks
 
 [//]: # (Required for codex/* PRs: link follow-up issues, or write "none")
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## 📌 Page Classification (Required)
 

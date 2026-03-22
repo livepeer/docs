@@ -6,7 +6,7 @@ pageType: reference
 purpose: source_of_truth
 audience: maintainer
 status: current
-lastVerified: '2026-03-20'
+lastVerified: '2026-03-22'
 keywords:
   - vscode extension
   - mdx preview
@@ -26,14 +26,14 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/
 
 **Keybinding:** `Cmd+Shift+V` (Mac) / `Ctrl+Shift+V` (Windows/Linux)
 
-**Location:** `tools/vscode/lpd-mdx-preview/`
+**Location:** `tools/editor-extensions/lpd-mdx-preview/`
 
 <CustomDivider />
 
 ## Repo Context
 
 <Tree>
-  <Folder name="tools/vscode/lpd-mdx-preview" defaultOpen>
+  <Folder name="tools/editor-extensions/lpd-mdx-preview" defaultOpen>
     <File name="extension.js" />
     <File name="package.json" />
     <File name="README.md" />
@@ -50,7 +50,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/
       <File name="markdown-it.min.js" />
       <File name="mermaid.min.js" />
     </Folder>
-    <File name="lpd-mdx-preview-0.0.1.vsix" />
+    <File name="lpd-mdx-preview-0.0.2.vsix" />
   </Folder>
 </Tree>
 
@@ -58,22 +58,28 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/
 
 ## Installation
 
-**From the pre-built `.vsix`:**
+Works in VS Code, Cursor, and Windsurf (all VS Code forks). The same `.vsix` file installs in all three.
+
+**All editors at once (recommended):**
 
 ```bash
-code --install-extension tools/vscode/lpd-mdx-preview/lpd-mdx-preview-0.0.1.vsix
+bash tools/editor-extensions/install.sh
 ```
 
-Or via VS Code UI: **Extensions** → `...` menu → **Install from VSIX** → select `lpd-mdx-preview-0.0.1.vsix`.
+Detects which editors are installed (`~/.vscode`, `~/.cursor`, `~/.windsurf`) and deploys to each.
+
+**Manual install:**
+
+Extensions sidebar → `...` menu → **Install from VSIX** → select `tools/editor-extensions/lpd-mdx-preview/lpd-mdx-preview-0.0.2.vsix`.
 
 **Rebuild after source changes:**
 
 ```bash
-cd tools/vscode/lpd-mdx-preview
+cd tools/editor-extensions/lpd-mdx-preview
 npx @vscode/vsce package --no-dependencies
 ```
 
-Then reinstall the new `.vsix`.
+Then re-run `install.sh` or reinstall manually.
 
 <CustomDivider />
 
@@ -1060,6 +1066,13 @@ Data-feed integrators (`ShowcaseCards`, `CoinGeckoExchanges`, `LumaEvents`, `Dis
   <Accordion title="Custom component hot-reload ✓ Implemented">
     `onDidSaveTextDocument` watches for any `.jsx` save in the workspace and re-renders all open preview panels. Component source changes are reflected immediately without touching the `.mdx` file.
   </Accordion>
+  <Accordion title="Collapsible JSX comment blocks ✓ Implemented (v0.0.2)">
+    Multi-line `{/* ... */}` comment blocks — typically template instructions or reviewer flags — are rendered as collapsed `<details>` elements instead of leaking into the preview as visible text. Single-line `{/* ... */}` comments are still silently stripped. The collapsible uses a dashed border and muted palette to distinguish it from content.
+
+    **Parser**: `lib/mdx-parser.js` detects `{/*` without a same-line `*/}` and collects lines until the closing `*/}`, emitting a `jsx-comment` segment.
+
+    **Renderer**: `lib/component-map.js` handles `jsx-comment` as `<details class="lpd-comment">` with a `💬 comment` summary and pre-formatted body.
+  </Accordion>
 </AccordionGroup>
 
 <CustomDivider />
@@ -1067,13 +1080,13 @@ Data-feed integrators (`ShowcaseCards`, `CoinGeckoExchanges`, `LumaEvents`, `Dis
 ## References
 
 <CardGroup cols={3}>
-  <Card title="Extension source" icon="code" href="/tools/vscode/lpd-mdx-preview/extension.js" arrow>
+  <Card title="Extension source" icon="code" href="/tools/editor-extensions/lpd-mdx-preview/extension.js" arrow>
     Entry point and command registration.
   </Card>
-  <Card title="Component map" icon="map" href="/tools/vscode/lpd-mdx-preview/lib/component-map.js" arrow>
+  <Card title="Component map" icon="map" href="/tools/editor-extensions/lpd-mdx-preview/lib/component-map.js" arrow>
     Tier 2 renderers and dispatch logic.
   </Card>
-  <Card title="Authoring tools" icon="screwdriver-wrench" href="/tools/vscode/authoring-tools" arrow>
+  <Card title="Authoring tools" icon="screwdriver-wrench" href="/tools/editor-extensions/authoring-tools" arrow>
     Other VS Code tools in this repo.
   </Card>
 </CardGroup>

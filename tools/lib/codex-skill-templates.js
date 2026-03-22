@@ -2,7 +2,7 @@
  * @script            codex-skill-templates
  * @category          utility
  * @purpose           governance:agent-governance
- * @scope             tools/lib, ai-tools/ai-skills/templates, tools/scripts/sync-codex-skills.js, tools/scripts/export-portable-skills.js
+ * @scope             tools/lib, ai-tools/ai-skills/templates, operations/scripts/sync-codex-skills.js, operations/scripts/export-portable-skills.js
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Shared helper for validating, selecting, and loading canonical Codex skill templates.

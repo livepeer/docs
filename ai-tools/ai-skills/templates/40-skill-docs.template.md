@@ -1,15 +1,14 @@
 ---
 name: skill-docs
-version: "1.1"
-category: meta
 description: >-
-  Govern governed skill documentation structure, central contract alignment, and validator readiness so new or edited skills pass enforcement on the first commit.
-tier: 2
-invoke_when:
-  - "create a new governed skill"
-  - "edit a skill template contract"
-  - "write or update a skill file"
-  - "add skill documentation enforcement"
+  Govern governed skill documentation structure, central contract alignment, and
+  validator readiness so new or edited skills pass enforcement on the first
+  commit. Use when: create a new governed skill, edit a skill template contract,
+  write or update a skill file, add skill documentation enforcement.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - "ai-tools/ai-skills/skill-spec-contract.md"
   - "ai-tools/ai-skills/templates"

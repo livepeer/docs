@@ -47,9 +47,9 @@ components/
 | File | Sub-niche | Key Exports | Description |
 |---|---|---|---|
 | `A11y.jsx` | a11y | `FocusableScrollRegions` | Accessibility helpers |
-| `Buttons.jsx` | buttons | `DownloadButton`, `BasicBtn` | Button components |
+| `Buttons.jsx` | buttons | `DownloadButton` | Button components |
 | `PreviewCallouts.jsx` | callouts | `ComingSoonCallout`, `PreviewCallout`, `ReviewCallout` | Status callout banners |
-| `Icons.jsx` | icons | `LivepeerSVG`, `LivepeerIcon`, `LivepeerIconOld`, `LivepeerIconFlipped` | Brand icons |
+| `Icons.jsx` | icons | `LivepeerSVG`, `LivepeerIcon` | Brand icons |
 | `Image.jsx` | images | `Image`, `LinkImage` | Static image display |
 | `Links.jsx` | links | `CustomCallout`, `BlinkingIcon`, `GotoLink`, `GotoCard`, `TipWithArrow`, `LinkArrow` | Navigation and link elements |
 | `Math.jsx` | math | `MathBlock`, `MathInline` | Mathematical notation |
@@ -73,7 +73,7 @@ components/
 | `CardCarousel.jsx` | grids | `CardCarousel` | Card carousel layout |
 | `QuadGrid.jsx` | grids | `QuadGrid` | Four-column grid layout |
 | `ListSteps.jsx` | lists | `ListSteps` | Step list component |
-| `Lists.jsx` | lists | `BasicList`, `IconList`, `StepList`, `StepLinkList`, `UpdateList`, `UpdateLinkList` | List layouts |
+| `Lists.jsx` | lists | `StepList`, `StepLinkList`, `UpdateLinkList` (stable); `BasicList`, `IconList`, `UpdateList` (planned) | List layouts |
 | `Steps.jsx` | steps | `StyledSteps`, `StyledStep` | Styled step components |
 | `ApiBaseUrlsTable.mdx` | tables | API base URL table | MDX-defined table |
 | `SearchTable.jsx` | tables | `SearchTable` | Searchable table |
@@ -103,7 +103,7 @@ components/
 | File | Sub-niche | Key Exports | Description |
 |---|---|---|---|
 | `Data.jsx` | blog | `BlogCard`, `PostCard`, `CardColumnsPostLayout`, `ForumLatestLayout`, `DiscordAnnouncements`, `LumaEvents` | Blog/feed data renderers |
-| `DataEmbed.jsx` | embeds | `MarkdownEmbed`, `EmbedMarkdown`, `PdfEmbed`, `TwitterTimeline` | Third-party embed components |
+| `DataEmbed.jsx` | embeds | `MarkdownEmbed`, `PdfEmbed`, `TwitterTimeline` | Third-party embed components |
 | `ExternalContent.jsx` | embeds | `ExternalContent` | External content loader |
 | `Coingecko.jsx` | feeds | `CoinGeckoExchanges` | CoinGecko exchange data |
 | `Release.jsx` | feeds | `LatestVersion` | Version data display |
@@ -137,5 +137,5 @@ primitives globally — do not import them.
 
 - **Naming**: PascalCase for all `.jsx`/`.mdx` component files
 - **JSDoc**: Every export requires `@type`, `@subniche`, `@component`, `@status`, `@description`, `@accepts` (plus `@dataSource` for integrators)
-- **Validation**: `node tools/scripts/generators/components/library/generate-component-registry.js --strict`
-- **Import scanning**: `node tools/scripts/audits/components/library/scan-component-imports.js --verify`
+- **Validation**: `node operations/scripts/generators/components/library/generate-component-registry.js --strict`
+- **Import scanning**: `node operations/scripts/audits/components/library/scan-component-imports.js --verify`

@@ -28,7 +28,7 @@ Run command: node operations/scripts/generate-component-docs.js --fix --template
 
 Standalone visual atoms — icons, text, links, callouts, math, spacing, images.
 
-This category currently contains **5** governed export(s).
+This category currently contains **27** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -42,13 +42,140 @@ This category currently contains **5** governed export(s).
 
 | Component | Status | Import path | Description |
 | --- | --- | --- | --- |
+| AccordionTitleWithArrow | `stable` | `/snippets/components/elements/text/Text.jsx` | Accordion header text with trailing arrow icon. |
+| BlinkingIcon | `stable` | `/snippets/components/elements/links/Links.jsx` | Animated icon with pulsing opacity. Respects prefers-reduced-motion. |
+| BlinkingTerminal | `stable` | `/snippets/components/elements/links/Links.jsx` | Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults). |
+| CardTitleTextWithArrow | `stable` | `/snippets/components/elements/text/Text.jsx` | Card title with trailing arrow icon for navigation indication. |
 | ComingSoonCallout | `stable` | `/snippets/components/elements/callouts/PreviewCallouts.jsx` | Banner indicating a feature or page is coming soon, with links to related resources. |
+| CopyText | `stable` | `/snippets/components/elements/text/Text.jsx` | Text with a click-to-copy button that copies content to clipboard. |
+| CustomCallout | `stable` | `/snippets/components/elements/links/Links.jsx` | Styled callout box with icon, custom colour, and child content. |
 | CustomCardTitle | `stable` | `/snippets/components/elements/text/CustomCardTitle.jsx` | Card title row with icon and text, using flexbox alignment. |
+| CustomDivider | `stable` | `/snippets/components/elements/spacing/Divider.jsx` | Themed horizontal divider with optional centre text and Livepeer logo accents. |
+| DoubleIconLink | `stable` | `/snippets/components/elements/links/Links.jsx` | Inline link with icons on both sides. |
+| DownloadButton | `stable` | `/snippets/components/elements/buttons/Buttons.jsx` | Lazy-loaded download button with icon that renders on viewport intersection. |
+| FocusableScrollRegions | `stable` | `/snippets/components/elements/a11y/A11y.jsx` | Makes scroll regions keyboard-focusable by adding tabindex to matching selectors. |
+| GotoCard | `stable` | `/snippets/components/elements/links/Links.jsx` | Card-style navigation link wrapping Mintlify Card component. |
+| GotoLink | `stable` | `/snippets/components/elements/links/Links.jsx` | Inline navigation link with icon prefix and label. |
+| Image | `stable` | `/snippets/components/elements/images/Image.jsx` | Framed image with optional caption and full-width toggle. |
+| LinkArrow | `stable` | `/snippets/components/elements/links/Links.jsx` | External link with arrow icon, optional description, and line break control. |
+| LinkImage | `stable` | `/snippets/components/elements/images/Image.jsx` | Clickable framed image that opens a URL in a new tab. |
+| LivepeerIcon | `stable` | `/snippets/components/elements/icons/Icons.jsx` | Theme-aware Livepeer icon with CSS custom property colour adaptation. |
+| LivepeerSVG | `stable` | `/snippets/components/elements/icons/Icons.jsx` | Inline Livepeer logo as SVG with currentColor fill. |
+| MathBlock | `stable` | `/snippets/components/elements/math/Math.jsx` | Renders LaTeX as a block-level math expression using KaTeX. |
+| MathInline | `stable` | `/snippets/components/elements/math/Math.jsx` | Renders LaTeX as inline math using KaTeX. |
 | PreviewCallout | `stable` | `/snippets/components/elements/callouts/PreviewCallouts.jsx` | Banner indicating content is in preview/draft state with feedback links. |
 | ReviewCallout | `stable` | `/snippets/components/elements/callouts/PreviewCallouts.jsx` | Banner indicating content is under review with status links. |
 | SocialLinks | `stable` | `/snippets/components/elements/social/SocialLinks.jsx` | Row of icon-only social media links with tooltips and aria-labels. |
+| Spacer | `stable` | `/snippets/components/elements/spacing/Spacer.jsx` | Empty spacer div with configurable size and direction. |
+| Subtitle | `stable` | `/snippets/components/elements/text/Text.jsx` | Styled subtitle text with configurable colour, size, and alignment. |
+| TipWithArrow | `stable` | `/snippets/components/elements/links/Links.jsx` | Callout box with tip icon and corner arrow indicator. |
 
 ## Component Reference
+
+### AccordionTitleWithArrow
+Use **AccordionTitleWithArrow** when you need accordion header text with trailing arrow icon.. Accepts: children, style, className, ...rest.
+Source description: Accordion header text with trailing arrow icon.
+**Import path**
+```jsx
+import { AccordionTitleWithArrow } from '/snippets/components/elements/text/Text.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `text` | `any` | `` | Yes | text prop. |
+| `children` | `any` | `` | Yes | children prop. |
+| `color` | `string` | `"var(--text)"` | No | color prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<AccordionTitleWithArrow text="example">Example content</AccordionTitleWithArrow>
+```
+
+<CustomDivider />
+
+### BlinkingIcon
+Use **BlinkingIcon** when you need animated icon with pulsing opacity. Respects prefers-reduced-motion.. Accepts: style, className, ...rest.
+Source description: Animated icon with pulsing opacity. Respects prefers-reduced-motion.
+**Import path**
+```jsx
+import { BlinkingIcon } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `icon` | `string` | `"terminal"` | No | Icon name to display |
+| `size` | `number` | `16` | No | Size of the icon in pixels |
+| `color` | `string` | `` | Yes | Color of the icon (defaults to theme accent) |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<BlinkingIcon color="example" />
+```
+
+<CustomDivider />
+
+### BlinkingTerminal
+Use **BlinkingTerminal** when you need preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).. Accepts: style, className, ...rest.
+Source description: Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).
+**Import path**
+```jsx
+import { BlinkingTerminal } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+No documented props.
+
+**Code example**
+
+```jsx
+<BlinkingTerminal />
+```
+
+<CustomDivider />
+
+### CardTitleTextWithArrow
+Use **CardTitleTextWithArrow** when you need card title with trailing arrow icon for navigation indication.. Accepts: children, style, className, ...cardProps.
+Source description: Card title with trailing arrow icon for navigation indication.
+**Import path**
+```jsx
+import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, style, className, ...cardProps`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `cardProps` | `any` | `` | Yes | card Props prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
+```
+
+<CustomDivider />
 
 ### ComingSoonCallout
 Use **ComingSoonCallout** when you need banner indicating a feature or page is coming soon, with links to related resources.. Accepts: style, className, ...rest.
@@ -76,6 +203,64 @@ import { ComingSoonCallout } from '/snippets/components/elements/callouts/Previe
 
 <CustomDivider />
 
+### CopyText
+Use **CopyText** when you need text with a click-to-copy button that copies content to clipboard.. Accepts: style, className, ...rest.
+Source description: Text with a click-to-copy button that copies content to clipboard.
+**Import path**
+```jsx
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `text` | `any` | `` | Yes | text prop. |
+| `label` | `any` | `` | Yes | label prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<CopyText text="example" label="example" />
+```
+
+<CustomDivider />
+
+### CustomCallout
+Use **CustomCallout** when you need styled callout box with icon, custom colour, and child content.. Accepts: children, style, className, ...rest.
+Source description: Styled callout box with icon, custom colour, and child content.
+**Import path**
+```jsx
+import { CustomCallout } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content to display in the callout |
+| `icon` | `string` | `"lightbulb"` | No | Icon name to display |
+| `color` | `string` | `` | Yes | Primary color for icon, border, and background (defaults to theme accent) |
+| `iconSize` | `number` | `16` | No | Size of the icon in pixels |
+| `textSize` | `string` | `"0.875rem"` | No | Font size for the text content |
+| `textColor` | `string` | `` | Yes | Text color (defaults to match icon color) |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<CustomCallout color="example" textColor="example">Example content</CustomCallout>
+```
+
+<CustomDivider />
+
 ### CustomCardTitle
 Use **CustomCardTitle** when you need card title row with icon and text, using flexbox alignment.. Accepts: style, className, ...rest.
 Source description: Card title row with icon and text, using flexbox alignment.
@@ -99,6 +284,375 @@ import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTi
 
 ```jsx
 <CustomCardTitle icon="sparkles" title="Example" style={{}} />
+```
+
+<CustomDivider />
+
+### CustomDivider
+Use **CustomDivider** when you need themed horizontal divider with optional centre text and Livepeer logo accents.. Accepts: style, className, ...rest.
+Source description: Themed horizontal divider with optional centre text and Livepeer logo accents.
+**Import path**
+```jsx
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `color` | `string` | `"var(--border)"` | No | color prop. |
+| `middleText` | `string` | `""` | No | middle Text prop. |
+| `spacing` | `string` | `"default"` | No | Named spacing preset for authored page layouts. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+**Code example**
+
+```jsx
+<CustomDivider />
+```
+
+<CustomDivider />
+
+### DoubleIconLink
+Use **DoubleIconLink** when you need inline link with icons on both sides.. Accepts: style, className, ...rest.
+Source description: Inline link with icons on both sides.
+**Import path**
+```jsx
+import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | `""` | No | Link text/label |
+| `href` | `string` | `"#"` | No | Link URL |
+| `text` | `string` | `""` | No | Optional text to display before the link |
+| `iconLeft` | `string` | `"github"` | No | Icon to display on the left |
+| `iconRight` | `string` | `"arrow-up-right"` | No | Icon to display on the right |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<DoubleIconLink />
+```
+
+<CustomDivider />
+
+### DownloadButton
+Use **DownloadButton** when you need lazy-loaded download button with icon that renders on viewport intersection.. Accepts: style, className, ...rest.
+Source description: Lazy-loaded download button with icon that renders on viewport intersection.
+**Import path**
+```jsx
+import { DownloadButton } from '/snippets/components/elements/buttons/Buttons.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | `'Download'` | No | label prop. |
+| `icon` | `string` | `'download'` | No | icon prop. |
+| `downloadLink` | `any` | `` | Yes | download Link prop. |
+| `rightIcon` | `string` | `''` | No | right Icon prop. |
+| `border` | `boolean` | `false` | No | border prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<DownloadButton downloadLink="example" />
+```
+
+<CustomDivider />
+
+### FocusableScrollRegions
+Use **FocusableScrollRegions** when you need makes scroll regions keyboard-focusable by adding tabindex to matching selectors.. Accepts: selectors.
+Source description: Makes scroll regions keyboard-focusable by adding tabindex to matching selectors.
+**Import path**
+```jsx
+import { FocusableScrollRegions } from '/snippets/components/elements/a11y/A11y.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `selectors`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `selectors` | `any` | `` | Yes | selectors prop. |
+
+**Code example**
+
+```jsx
+<FocusableScrollRegions selectors="example" />
+```
+
+<CustomDivider />
+
+### GotoCard
+Use **GotoCard** when you need card-style navigation link wrapping Mintlify Card component.. Accepts: style, className, ...props.
+Source description: Card-style navigation link wrapping Mintlify Card component.
+**Import path**
+```jsx
+import { GotoCard } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...props`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | `` | Yes | Card title |
+| `relativePath` | `string` | `` | Yes | Relative URL path |
+| `icon` | `string` | `` | Yes | Icon to display (defaults to "arrow-turn-down-right") |
+| `text` | `React.ReactNode` | `` | Yes | Card content |
+| `cta` | `string` | `""` | No | Call-to-action button text |
+| `props` | `any` | `` | Yes | props prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<GotoCard label="example" relativePath="example" />
+```
+
+<CustomDivider />
+
+### GotoLink
+Use **GotoLink** when you need inline navigation link with icon prefix and label.. Accepts: style, className, ...rest.
+Source description: Inline navigation link with icon prefix and label.
+**Import path**
+```jsx
+import { GotoLink } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | `` | Yes | Link text/label |
+| `relativePath` | `string` | `` | Yes | Relative URL path |
+| `text` | `string` | `""` | No | Optional text to display before the link |
+| `icon` | `string` | `"arrow-turn-down-right"` | No | Icon to display |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<GotoLink label="example" relativePath="example" />
+```
+
+<CustomDivider />
+
+### Image
+Use **Image** when you need framed image with optional caption and full-width toggle.. Accepts: style, className, ...rest.
+Source description: Framed image with optional caption and full-width toggle.
+**Import path**
+```jsx
+import { Image } from '/snippets/components/elements/images/Image.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `alt` | `any` | `` | Yes | alt prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `hint` | `any` | `` | Yes | hint prop. |
+| `fullwidth` | `boolean` | `true` | No | fullwidth prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<Image src="example" alt="example" />
+```
+
+<CustomDivider />
+
+### LinkArrow
+Use **LinkArrow** when you need external link with arrow icon, optional description, and line break control.. Accepts: style, className, ...rest.
+Source description: External link with arrow icon, optional description, and line break control.
+**Import path**
+```jsx
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `href` | `any` | `` | Yes | href prop. |
+| `label` | `any` | `` | Yes | label prop. |
+| `description` | `any` | `` | Yes | description prop. |
+| `newline` | `boolean` | `true` | No | newline prop. |
+| `borderColor` | `any` | `` | Yes | border Color prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<LinkArrow href="example" label="example" />
+```
+
+<CustomDivider />
+
+### LinkImage
+Use **LinkImage** when you need clickable framed image that opens a URL in a new tab.. Accepts: style, className, ...rest.
+Source description: Clickable framed image that opens a URL in a new tab.
+**Import path**
+```jsx
+import { LinkImage } from '/snippets/components/elements/images/Image.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `alt` | `any` | `` | Yes | alt prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `hint` | `any` | `` | Yes | hint prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<LinkImage src="example" alt="example" />
+```
+
+<CustomDivider />
+
+### LivepeerIcon
+Use **LivepeerIcon** when you need theme-aware Livepeer icon with CSS custom property colour adaptation.. Accepts: ...props.
+Source description: Theme-aware Livepeer icon with CSS custom property colour adaptation.
+**Import path**
+```jsx
+import { LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `...props`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | `16` | No | size prop. |
+| `color` | `any` | `` | Yes | color prop. |
+| `props` | `any` | `` | Yes | props prop. |
+
+**Code example**
+
+```jsx
+<LivepeerIcon color="example" props="example" />
+```
+
+<CustomDivider />
+
+### LivepeerSVG
+Use **LivepeerSVG** when you need inline Livepeer logo as SVG with currentColor fill.. Accepts: ...props.
+Source description: Inline Livepeer logo as SVG with currentColor fill.
+**Import path**
+```jsx
+import { LivepeerSVG } from '/snippets/components/elements/icons/Icons.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `...props`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | `24` | No | size prop. |
+| `props` | `any` | `` | Yes | props prop. |
+
+**Code example**
+
+```jsx
+<LivepeerSVG props="example" />
+```
+
+<CustomDivider />
+
+### MathBlock
+Use **MathBlock** when you need renders LaTeX as a block-level math expression using KaTeX.. Accepts: style, className, ...rest.
+Source description: Renders LaTeX as a block-level math expression using KaTeX.
+**Import path**
+```jsx
+import { MathBlock } from '/snippets/components/elements/math/Math.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `latex` | `any` | `` | Yes | latex prop. |
+| `className` | `string` | `""` | No | class Name prop. |
+| `ariaLabel` | `any` | `` | Yes | aria Label prop. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<MathBlock latex="example" ariaLabel="example" />
+```
+
+<CustomDivider />
+
+### MathInline
+Use **MathInline** when you need renders LaTeX as inline math using KaTeX.. Accepts: style, className, ...rest.
+Source description: Renders LaTeX as inline math using KaTeX.
+**Import path**
+```jsx
+import { MathInline } from '/snippets/components/elements/math/Math.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `latex` | `any` | `` | Yes | latex prop. |
+| `className` | `string` | `""` | No | class Name prop. |
+| `ariaLabel` | `any` | `` | Yes | aria Label prop. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<MathInline latex="example" ariaLabel="example" />
 ```
 
 <CustomDivider />
@@ -178,4 +732,89 @@ import { SocialLinks } from '/snippets/components/elements/social/SocialLinks.js
 
 ```jsx
 <SocialLinks color="value" />
+```
+
+<CustomDivider />
+
+### Spacer
+Use **Spacer** when you need empty spacer div with configurable size and direction.. Accepts: style, className, ...rest.
+Source description: Empty spacer div with configurable size and direction.
+**Import path**
+```jsx
+import { Spacer } from '/snippets/components/elements/spacing/Spacer.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `string` | `"1rem"` | No | Size used by the component. |
+| `direction` | `string` | `"vertical"` | No | Direction used by the component. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<Spacer />
+```
+
+<CustomDivider />
+
+### Subtitle
+Use **Subtitle** when you need styled subtitle text with configurable colour, size, and alignment.. Accepts: children, style, className, ...rest.
+Source description: Styled subtitle text with configurable colour, size, and alignment.
+**Import path**
+```jsx
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `style` | `object` | `{}` | No | style prop. |
+| `text` | `any` | `` | Yes | text prop. |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+**Code example**
+
+```jsx
+<Subtitle text="example">Example content</Subtitle>
+```
+
+<CustomDivider />
+
+### TipWithArrow
+Use **TipWithArrow** when you need callout box with tip icon and corner arrow indicator.. Accepts: children, style, className, ...rest.
+Source description: Callout box with tip icon and corner arrow indicator.
+**Import path**
+```jsx
+import { TipWithArrow } from '/snippets/components/elements/links/Links.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, style, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content to display in the tip |
+| `icon` | `string` | `"lightbulb"` | No | Main icon to display on the left |
+| `arrowIcon` | `string` | `"arrow-up-right"` | No | Arrow icon to display in top-right |
+| `color` | `string` | `` | Yes | Primary color for icons, border, and background (defaults to theme accent) |
+| `iconSize` | `number` | `16` | No | Size of the main icon in pixels |
+| `arrowSize` | `number` | `16` | No | Size of the arrow icon in pixels |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+**Code example**
+
+```jsx
+<TipWithArrow color="example">Example content</TipWithArrow>
 ```

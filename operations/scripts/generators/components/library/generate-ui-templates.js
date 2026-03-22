@@ -420,7 +420,7 @@ function renderUiSystemGeneratedSection(pageTemplates, blockTemplates) {
   const templatePaths = [...pageTemplates, ...blockTemplates].map((item) => item.repoPath);
   const lines = [
     '<Note>',
-    '**Generated section**: This section is synchronized by `tools/scripts/generate-ui-templates.js`. Do not edit the generated block by hand. <br/>',
+    '**Generated section**: This section is synchronized by `operations/scripts/generate-ui-templates.js`. Do not edit the generated block by hand. <br/>',
     '</Note>',
     '',
     '### Overview',

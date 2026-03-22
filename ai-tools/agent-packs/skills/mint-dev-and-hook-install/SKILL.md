@@ -9,7 +9,7 @@ invoke_when:
   - "install hooks before dev"
   - "mint dev not working in this repo"
 primary_paths:
-  - "tools/scripts/mint-dev.sh"
+  - "operations/scripts/mint-dev.sh"
   - ".githooks/install.sh"
   - ".githooks/pre-commit"
   - "contribute/CONTRIBUTING/GIT-HOOKS.md"

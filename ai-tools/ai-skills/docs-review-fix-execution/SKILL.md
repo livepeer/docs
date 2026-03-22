@@ -1,17 +1,15 @@
 ---
 name: docs-review-fix-execution
-version: "1.2"
-category: review-pipeline
 description: >-
-  Execute approved docs review packet fixes section by section so copy and
-  style tasks close in tracker order, validations rerun, and completion state
-  stays trustworthy.
-tier: 2
-invoke_when:
-  - "execute fixes from this review packet"
-  - "work through the tracker section by section"
-  - "apply copy and style fixes from the packet"
-  - "close out review packet tasks and update the tracker"
+  Execute approved docs review packet fixes section by section so copy and style
+  tasks close in tracker order, validations rerun, and completion state stays
+  trustworthy. Use when executing fixes from a review packet, working through a
+  tracker section by section, applying copy and style fixes, or closing out
+  review packet tasks.
+metadata:
+  version: "1.3"
+  category: review-pipeline
+  tier: "2"
 ---
 
 SKILL: Docs Review Fix Execution

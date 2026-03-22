@@ -1,14 +1,13 @@
 ---
 name: n8n-workflow-maintenance
-version: "1.1"
-category: meta
 description: >-
-  Audit and maintain n8n automation JSON workflows and their output contracts for docs data feeds. Use when tasks include update n8n automation json, n8n workflow drift from docs outputs, audit active vs inactive n8n flows.
-tier: 3
-invoke_when:
-  - "update n8n automation json"
-  - "n8n workflow drift from docs outputs"
-  - "audit active vs inactive n8n flows"
+  Audit and maintain n8n automation JSON workflows and their output contracts
+  for docs data feeds. Use when: update n8n automation json, n8n workflow drift
+  from docs outputs, audit active vs inactive n8n flows.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - "snippets/automations/scripts/n8n"
   - "v2/resources/documentation-guide/automations-workflows.mdx"

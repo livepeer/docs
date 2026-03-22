@@ -1,19 +1,15 @@
 ---
 name: content-pipeline-pass-b
-version: "1.0"
-category: content-pipeline
 description: >-
   Level 2 Pass B — layout and style application for a single Livepeer docs page.
   Takes approved Pass A content (plain markdown) and produces a production-ready
   MDX file: template selection, component placement, frontmatter completion,
-  section naming check, and render validation. Does not rewrite content.
-invoke_when:
-  - "apply the layout to this page"
-  - "Pass B for [page path]"
-  - "convert to MDX"
-  - "apply template and components to [page]"
-  - "finalise the MDX for [page]"
-  - "complete the frontmatter for [page]"
+  section naming check, and render validation. Does not rewrite content. Use
+  when applying layout to a page, running Pass B, converting markdown to MDX,
+  or completing frontmatter for a page.
+metadata:
+  version: "1.1"
+  category: content-pipeline
 ---
 
 SKILL: Content Pipeline — Level 2 Pass B (Layout & Style)

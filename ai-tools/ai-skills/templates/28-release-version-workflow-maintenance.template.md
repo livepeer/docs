@@ -1,14 +1,13 @@
 ---
 name: release-version-workflow-maintenance
-version: "1.1"
-category: meta
 description: >-
-  Maintain the release-version updater workflow and related globals file path/value logic. Use when tasks include latest release automation is broken, globals latestVersion not updating, fix update-livepeer-release workflow.
-tier: 3
-invoke_when:
-  - "latest release automation is broken"
-  - "globals latestVersion not updating"
-  - "fix update-livepeer-release workflow"
+  Maintain the release-version updater workflow and related globals file
+  path/value logic. Use when: latest release automation is broken, globals
+  latestVersion not updating, fix update-livepeer-release workflow.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".github/workflows/update-livepeer-release.yml"
   - "snippets/automations/globals/globals.mdx"

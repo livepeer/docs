@@ -12,18 +12,18 @@ invoke_when:
   - "review this docs section and write research reports"
   - "build a research packet for these docs pages"
 primary_paths:
-  - "tools/scripts/docs-research-packet.js"
-  - "tools/scripts/docs-page-research.js"
-  - "tools/scripts/docs-page-research-pr-report.js"
-  - "tools/scripts/docs-fact-registry.js"
-  - "tools/scripts/docs-research-adjudication.js"
+  - "operations/scripts/docs-research-packet.js"
+  - "operations/scripts/docs-page-research.js"
+  - "operations/scripts/docs-page-research-pr-report.js"
+  - "operations/scripts/docs-fact-registry.js"
+  - "operations/scripts/docs-research-adjudication.js"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
   - "docs-guide/tooling/research-review-packet-plan-template.md"
   - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/docs-research-adjudication.js --validate --ledger workspace/research/adjudication/page-content-research-outcomes.json"
-  - "node tools/scripts/docs-research-packet.js --tab [name] --group [name] --out [path]"
+  - "node operations/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/docs-research-adjudication.js --validate --ledger workspace/research/adjudication/page-content-research-outcomes.json"
+  - "node operations/scripts/docs-research-packet.js --tab [name] --group [name] --out [path]"
 ---
 
 SKILL: Docs Research Packet Generation
@@ -47,8 +47,8 @@ Workflow
 1. Classify the request into one packet mode: `nav`, `manifest`, or `paths`.
 2. Validate the fact registry and adjudication ledger before tranche execution.
 3. Derive tranche order from the nav source, manifest, or explicit path split requested by the user.
-4. Run `tools/scripts/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
-5. Run `tools/scripts/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
+4. Run `operations/scripts/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
+5. Run `operations/scripts/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
 6. Build `03-research.md`, `research-summary.json`, `00-master-packet.md`, and `packet-summary.json` without collapsing page-run and PR-run deltas.
 7. Return the packet root, the scope source used, the validation status, and any blocked tranche details.
 

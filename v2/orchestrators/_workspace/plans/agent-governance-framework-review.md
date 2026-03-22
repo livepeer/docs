@@ -35,7 +35,7 @@ Approved target paths:
 | `.codex/README.md` | Codex lock and worktree guidance | recommended supplemental | keep |
 | `.codex/task-contract.yaml` | Codex task contract | recommended supplemental | keep |
 | `.codex/locks-local/*` | Codex local lock state | recommended supplemental | keep |
-| `tools/scripts/validators/governance/check-agent-docs-freshness.js` | enforcement script for agent doc presence/freshness | recommended supplemental | update in Task 3 to match the new canonical file set |
+| `operations/scripts/validators/governance/check-agent-docs-freshness.js` | enforcement script for agent doc presence/freshness | recommended supplemental | update in Task 3 to match the new canonical file set |
 
 ## Overlap and Drift Risk
 
@@ -106,7 +106,7 @@ Decision:
 - `v2/**`
 - `.githooks/pre-commit`
 - `.githooks/pre-push`
-- `tools/scripts/validators/governance/*`
+- `operations/scripts/validators/governance/*`
 - `.codex/*`
 
 ### Must-have rule domains
@@ -133,7 +133,7 @@ Decision:
 2. Create `.claude/CLAUDE.md`, `.cursor/rules/*.mdc`, and `.windsurf/rules/*.md` as native adapters.
 3. Reduce `.github/copilot-instructions.md` to Copilot-specific adapter content that references `AGENTS.md`.
 4. Retire `.github/AGENTS.md`, `.github/augment-instructions.md`, `.cursorrules`, and `ASSISTANT.md` only after replacements exist.
-5. Update `tools/scripts/validators/governance/check-agent-docs-freshness.js` to validate the new canonical set.
+5. Update `operations/scripts/validators/governance/check-agent-docs-freshness.js` to validate the new canonical set.
 6. Regenerate or replace `ai-tools/agent-packs/*` after the new source policy is live.
 
 ## Prior Reports Included
@@ -161,7 +161,7 @@ This review incorporates:
 - `ai-tools/agent-packs/README.md`
 - `.codex/README.md`
 - `.codex/task-contract.yaml`
-- `tools/scripts/validators/governance/check-agent-docs-freshness.js`
+- `operations/scripts/validators/governance/check-agent-docs-freshness.js`
 
 ### Official docs
 

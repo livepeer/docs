@@ -8,7 +8,7 @@
  * @description MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension.
  * @mode        execute
  * @pipeline    manual
- * @scope       tools/scripts, tools/vscode/authoring-tools, tests/unit
+ * @scope       tools/scripts, tools/editor-extensions/authoring-tools, tests/unit
  * @usage       node tools/dev/format-mdx.js [--check|--write] [--files a,b]
  * @policy      E-C6, F-C1
  */

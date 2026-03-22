@@ -1,14 +1,13 @@
 ---
 name: script-header-and-index-sync
-version: "1.1"
-category: governance
 description: >-
-  Enforce script header schema and synchronize group/aggregate script indexes. Use when tasks include script-docs test failed, regenerate script index files, autofill missing script headers.
-tier: 2
-invoke_when:
-  - "script-docs test failed"
-  - "regenerate script index files"
-  - "autofill missing script headers"
+  Enforce script header schema and synchronize group/aggregate script indexes.
+  Use when: script-docs test failed, regenerate script index files, autofill
+  missing script headers.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
   - "tests/unit/script-docs.test.js"
   - "tools/script-index.md"

@@ -1,13 +1,10 @@
 ---
 name: generated-mdx-banners-governance
-version: "1.1"
-category: governance
 description: >-
-  Standardize generated MDX artifacts with consistent frontmatter, hidden generated banners, and visible Note policy across docs-guide and v2 generators while preserving provenance and parity rules.
-invoke_when:
-  - "add or update generated mdx banners"
-  - "enforce generated page note parity"
-  - "migrate generated docs outputs safely"
+  Standardise generated MDX artifacts with consistent frontmatter, hidden generated banners, and visible Note policy across docs-guide and v2 generators while preserving provenance and parity rules. Use when adding or updating generated MDX banners, enforcing generated page note parity, or migrating generated docs outputs safely.
+metadata:
+  version: "1.2"
+  category: governance
 ---
 
 SKILL: Generated MDX Banner Governance
@@ -35,13 +32,13 @@ Single Source of Formatting
 
 Primary Files to Touch
 - `tools/lib/generated-file-banners.js`
-- `tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`
-- `tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js`
-- `tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`
-- `tools/scripts/generators/content/catalogs/generate-pages-index.js`
+- `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`
+- `operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js`
+- `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`
+- `operations/scripts/generators/content/catalogs/generate-pages-index.js`
 - `tests/unit/script-docs.test.js`
-- `tools/scripts/validators/content/structure/enforce-generated-file-banners.js`
-- `tools/scripts/automations/content/language-translation/translate-docs.js`
+- `operations/scripts/validators/content/structure/enforce-generated-file-banners.js`
+- `operations/scripts/automations/content/language-translation/translate-docs.js`
 - `tests/unit/docs-guide-sot.test.js`
 - `tests/run-all.js`
 - `tests/run-pr-checks.js`
@@ -63,22 +60,22 @@ Execution Steps
 
 Validation Commands
 ```bash
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --check
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --check
 node tests/unit/script-docs.test.js --check-indexes
-node tools/scripts/generators/content/catalogs/generate-pages-index.js
-node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check
+node operations/scripts/generators/content/catalogs/generate-pages-index.js
+node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check
 ```
 
 Write/Normalize Commands
 ```bash
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
-node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write
 node tests/unit/script-docs.test.js --write --rebuild-indexes
-node tools/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes
-node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --write
+node operations/scripts/generators/content/catalogs/generate-pages-index.js --write --rebuild-indexes
+node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --write
 ```
 
 Guardrails

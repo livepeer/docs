@@ -20,7 +20,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractImports } = require('../utils/mdx-parser');
-const { validateSnippetImports } = require('../../../tools/vscode/authoring-tools/lib/authoring-core');
+const { validateSnippetImports } = require('../../../tools/editor-extensions/authoring-tools/lib/authoring-core');
 
 let errors = [];
 let warnings = [];

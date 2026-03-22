@@ -236,7 +236,7 @@ function buildStageCommands(stageId, options) {
     {
       label: `${stageId}:run`,
       command: 'node',
-      args: [`tools/scripts/${stageId}.js`, '--scope', options.scope, '--output-dir', outputDirRel]
+      args: [`operations/scripts/${stageId}.js`, '--scope', options.scope, '--output-dir', outputDirRel]
     }
   ];
 }

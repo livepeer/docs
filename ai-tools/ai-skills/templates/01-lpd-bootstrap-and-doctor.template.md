@@ -1,22 +1,21 @@
 ---
 name: lpd-bootstrap-and-doctor
-version: "1.1"
-category: meta
 description: >-
-  Bootstrap local docs environment and verify readiness using lpd setup and doctor workflows. Use when tasks include set up this repo locally, run doctor for docs environment, bootstrap lpd tooling.
-tier: 1
-invoke_when:
-  - "set up this repo locally"
-  - "run doctor for docs environment"
-  - "bootstrap lpd tooling"
+  Bootstrap local docs environment and verify readiness using lpd setup and
+  doctor workflows. Use when: set up this repo locally, run doctor for docs
+  environment, bootstrap lpd tooling.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - "README.md"
-  - "lpd"
+  - "tools/lpd"
   - "tools/package.json"
   - "tests/package.json"
 primary_commands:
-  - "bash lpd setup --yes"
-  - "bash lpd doctor --strict"
+  - "bash tools/lpd setup --yes"
+  - "bash tools/lpd doctor --strict"
 ---
 
 SKILL: LPD Bootstrap and Doctor
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-bash lpd setup --yes
-bash lpd doctor --strict
+bash tools/lpd setup --yes
+bash tools/lpd doctor --strict
 ```
 
 Deliverable Format
@@ -46,7 +45,7 @@ Deliverable Format
 - List of blockers with exact command-based fixes.
 
 Failure Modes / Fallback
-- If `lpd` is not on PATH, use `bash lpd <command>` fallback.
+- If `lpd` is not on PATH, use `bash tools/lpd <command>` from repo root.
 - If strict doctor fails, run non-strict doctor and isolate failing checks for targeted fixes.
 
 Validation Checklist

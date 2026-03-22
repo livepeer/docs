@@ -1,14 +1,13 @@
 ---
 name: v2-link-audit-runbook
-version: "1.1"
-category: audit
 description: >-
-  Run and interpret the comprehensive v2 link/import audit in full, staged, or file-targeted modes. Use when tasks include run strict link audit, find broken internal links in v2, audit mdx imports and hrefs.
-tier: 1
-invoke_when:
-  - "run strict link audit"
-  - "find broken internal links in v2"
-  - "audit mdx imports and hrefs"
+  Run and interpret the comprehensive v2 link/import audit in full, staged, or
+  file-targeted modes. Use when: run strict link audit, find broken internal
+  links in v2, audit mdx imports and hrefs.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "1"
 primary_paths:
   - "tests/integration/v2-link-audit.js"
   - "workspace/reports/navigation-links/LINK_TEST_REPORT.md"

@@ -678,6 +678,63 @@ documentation. Produce a recommendation report — do NOT execute changes in thi
 
 ---
 
+## Task 15b — `.github/` pipeline path audit + n8n→GHA conversion review
+
+**Goal**: Fix all stale paths in `.github/scripts/` and `.github/workflows/` caused by the `tools/scripts/` → `operations/scripts/` restructuring. Validate n8n→GitHub Actions conversion status. Commit working-tree fixes.
+
+**Context**: Task 11/14 (root restructure) moved `tools/scripts/config/` → `operations/scripts/config/`. Five `.github/scripts/fetch-*.js` scripts still reference the old path at HEAD. Working-tree fixes exist but are uncommitted. Two workflow files have additional path bugs discovered during Task 12 investigation.
+
+### Issues to fix
+
+| File | Issue | Fix |
+|---|---|---|
+| `fetch-discord-announcements.js` | CONFIG_PATH → `tools/scripts/config/` (hard crash, no try-catch) | Commit working-tree fix |
+| `fetch-github-discussions.js` | CONFIG_PATH → `tools/scripts/config/` (hard crash) | Commit working-tree fix |
+| `fetch-github-releases.js` | CONFIG_PATH → `tools/scripts/config/` (hard crash) | Commit working-tree fix |
+| `fetch-rss-blog-data.js` | CONFIG_PATH → `tools/scripts/config/` (hard crash) | Commit working-tree fix |
+| `fetch-youtube-data.js` | CONFIG_PATH + product output path (try-catch degrades gracefully) | Commit working-tree fix |
+| `fetch-ghost-blog-data.js` | `safeHTML()` escapes backticks but NOT `$` — template literal break risk | Add `$` escaping |
+| `update-livepeer-release.yml` | Path: `automationData/` → should be `automations/` (runs every 30 min, broken) | Fix path in workflow |
+| `update-discord-data.yml` | Glob `*/discordData.jsx` doesn't match `solutions/*/discordData.jsx` | Change to `**/discordData.jsx` |
+| `update-blog-data.yml` | Legacy broken workflow (raw curl, hardcoded `YOUR_CONTENT_API_KEY`) | Disable/remove |
+
+### n8n → GitHub Actions audit
+
+Review against current live n8n exports (user to provide — repo versions are stale).
+
+**Known conversion status:**
+
+| n8n workflow | GitHub Actions equivalent | Status |
+|---|---|---|
+| `YouTube-To-Mintlify.json` | `update-youtube-data.yml` | ✅ Converted |
+| `Forum-To-Mintlify-Latest-Topics.json` | `update-forum-data.yml` | ✅ Converted |
+| `Ghost-to-Mintlify.json` | `update-ghost-blog-data.yml` | ✅ Converted |
+| `Discord_Announce_to_Mintlify.json` | `update-discord-data.yml` | ⚠️ Partial — product-only, no global community feed |
+| `Discord-Issue-Intake.json` | `discord-issue-intake.yml` | ✅ Converted (repository_dispatch) |
+| `Showcase_Project_Pipeline.json` | `project-showcase-sync.yml` | ✅ Converted |
+| `Luma-To-Mintlify.json` | None | ❌ Still n8n only |
+| `project-showcase-application-workflow.json` | `project-showcase-sync.yml` | ✅ Likely covered |
+| `mp4-to-gif.json` | None | Utility — n8n only is fine |
+
+**Questions to resolve with current n8n exports:**
+- Does Luma still write to `snippets/automations/luma/lumaEventsData.jsx`?
+- Does any n8n workflow write the global `discord/discordAnnouncementsData.jsx`?
+- Are Showcase paths current with `snippets/automations/showcase/`?
+
+### Tasks
+
+- [ ] **15b.1** Receive current n8n exports from user — verify paths match repo data file locations
+- [ ] **15b.2** Stage + commit all working-tree fixes to `.github/scripts/fetch-*.js`
+- [ ] **15b.3** Add `$` escaping to `safeHTML()` in `fetch-ghost-blog-data.js`
+- [ ] **15b.4** Fix `update-livepeer-release.yml` path (`automationData` → `automations`)
+- [ ] **15b.5** Fix `update-discord-data.yml` glob (`*/` → `**/`)
+- [ ] **15b.6** Disable/remove `update-blog-data.yml` legacy workflow
+- [ ] **15b.7** Verify n8n Luma workflow path matches `snippets/automations/luma/`
+- [ ] **15b.8** Confirm or create global Discord community feed pipeline
+- [ ] **15b.9** **CHECKPOINT** — present all fixes to human for review before committing
+
+---
+
 ## Task 16 — Final merge to docs-v2-dev
 
 **Goal**: Clean merge of all work back to `docs-v2-dev`. Verify branch is clean.

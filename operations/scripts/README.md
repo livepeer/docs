@@ -49,7 +49,7 @@ Full spec: `docs-guide/policies/script-governance.mdx` (also on the docs-guide n
 ## Creating a new script
 
 ```bash
-node tools/scripts/generators/governance/scaffold/new-script.js --path tools/scripts/<type>/<concern>/<niche>/my-script.js
+node operations/scripts/generators/governance/scaffold/new-script.js --path operations/scripts/<type>/<concern>/<niche>/my-script.js
 ```
 
 ## Full catalog

@@ -16,7 +16,7 @@
 | `.allowlist` | active | yes | text | Defines the machine-readable allowlist of governed repo-root entries. |
 | `docs-guide/policies/agent-governance-framework.mdx` | active | yes | mdx | Documents the canonical supported-agent layout, taxonomy, and retirement policy. |
 | `docs-guide/policies/root-allowlist-governance.mdx` | active | yes | mdx | Documents root-entry policy, allowlist authoring rules, and parser constraints. |
-| `tools/scripts/validators/governance/check-agent-docs-freshness.js` | active | yes | javascript | Validates the canonical agent runtime surfaces and governance docs for existence and freshness. |
+| `operations/scripts/validators/governance/check-agent-docs-freshness.js` | active | yes | javascript | Validates the canonical agent runtime surfaces and governance docs for existence and freshness. |
 | `.codex/README.md` | active | yes | markdown | Documents Codex task isolation, lock lifecycle, and local operational conventions. |
 | `.codex/task-contract.yaml` | active | yes | yaml | Defines task-scope metadata and acceptance contracts for codex implementation branches. |
 

@@ -1,16 +1,11 @@
 ---
 name: docs-copy
-version: "1.3"
-category: authoring
 description: >-
-  Route documentation copy planning, rewriting, review, and claim-sensitive updates through the correct Livepeer Docs skills so wording changes stay accurate, scoped, and ready for handoff.
-tier: 2
-invoke_when:
-  - "apply docs-copy framework to this task"
-  - "rewrite this docs content for clarity and accuracy"
-  - "plan a docs copy pass for this page"
-  - "review and tighten this docs copy"
-  - "update docs copy after facts changed"
+  Route documentation copy planning, rewriting, review, and claim-sensitive updates through the correct Livepeer Docs skills so wording changes stay accurate, scoped, and ready for handoff. Use when applying the docs-copy framework, rewriting docs content for clarity and accuracy, planning a copy pass, reviewing and tightening copy, or updating docs after facts have changed.
+metadata:
+  version: "1.4"
+  category: authoring
+  tier: "2"
 ---
 
 SKILL: Docs Copy

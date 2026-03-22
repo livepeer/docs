@@ -35,6 +35,12 @@ jobs:
       - name: Verify component docs pages are current
         run: node operations/scripts/generators/components/documentation/generate-component-docs.js --check
 
+      - name: Check component library health (stale imports, sync, coverage)
+        run: node operations/scripts/validators/components/library/check-component-health.js --check
+
+      - name: Check component example files (stale imports in examples)
+        run: node operations/scripts/generators/components/library/generate-component-examples.js --check
+
       - name: Verify workflows and templates catalogs are current
         run: node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
 

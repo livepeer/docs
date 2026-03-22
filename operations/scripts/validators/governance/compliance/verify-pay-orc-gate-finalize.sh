@@ -8,7 +8,7 @@
 # @mode        read-only
 # @pipeline    manual — not yet in pipeline
 # @scope       v2-content
-# @usage       bash tools/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh [flags]
+# @usage       bash operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh [flags]
 # @policy      E-C1, R-R14
 set -euo pipefail
 

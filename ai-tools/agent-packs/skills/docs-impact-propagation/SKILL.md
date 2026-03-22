@@ -9,13 +9,13 @@ invoke_when:
   - "identify downstream pages that depend on this statement"
 primary_paths:
   - "v2"
-  - "tools/scripts/docs-fact-registry.js"
-  - "tools/scripts/docs-page-research.js"
+  - "operations/scripts/docs-fact-registry.js"
+  - "operations/scripts/docs-page-research.js"
   - "workspace/research/claims"
   - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Docs Impact Propagation

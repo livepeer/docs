@@ -1,12 +1,10 @@
 ---
 name: product-thinking
-version: "1.1"
-category: authoring
-description: "Product thinking framework for documentation IA and content strategy. Treat docs as a product, apply product-management analysis methods, and use it when reviewing information architecture, journeys, gaps, or navigation priorities across docs."
-invoke_when:
-  - "review docs information architecture with product thinking"
-  - "audit navigation or journeys as a docs product"
-  - "apply product frameworks to documentation strategy"
+description: >-
+  Product thinking framework for documentation IA and content strategy. Treats docs as a product and applies product-management analysis methods to information architecture, journeys, gaps, and navigation priorities. Use when reviewing docs IA with product thinking, auditing navigation or journeys as a docs product, or applying product frameworks to documentation strategy.
+metadata:
+  version: "1.2"
+  category: authoring
 ---
 
 # SKILL: Product Thinking for Documentation

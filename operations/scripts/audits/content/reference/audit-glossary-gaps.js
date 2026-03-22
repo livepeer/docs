@@ -13,7 +13,7 @@
  * @mode        audit
  * @pipeline    manual | post-PR | cron
  * @scope       tools/scripts
- * @usage       node tools/scripts/audits/content/reference/audit-glossary-gaps.js [flags]
+ * @usage       node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]
  * @flags
  *   --output <path>   Write JSON report to file (default: workspace/reports/_local/glossary-gap-report.json)
  *   --md              Also write a markdown summary (glossary-gap-report.md in same dir)
@@ -329,7 +329,7 @@ function main() {
   }
 
   console.log(`\nReview the report and add missing terms to the appropriate per-tab glossary source files.`);
-  console.log(`Regenerate companion JSONs after updating: node tools/scripts/generators/content/reference/generate-glossary-companions.js`);
+  console.log(`Regenerate companion JSONs after updating: node operations/scripts/generators/content/reference/generate-glossary-companions.js`);
 }
 
 main();

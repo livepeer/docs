@@ -1,14 +1,13 @@
 ---
 name: docs-ia-route-placement
-version: "1.1"
-category: authoring
 description: >-
-  Place new or moved content in the correct v2 section hierarchy and route context. Use when tasks include where should this page live in v2, move docs page to correct section, fix information architecture placement.
-tier: 1
-invoke_when:
-  - "where should this page live in v2"
-  - "move docs page to correct section"
-  - "fix information architecture placement"
+  Place new or moved content in the correct v2 section hierarchy and route
+  context. Use when: where should this page live in v2, move docs page to
+  correct section, fix information architecture placement.
+metadata:
+  version: "1.2"
+  category: "authoring"
+  tier: "1"
 primary_paths:
   - "v2/pages"
   - "docs.json"
@@ -16,7 +15,7 @@ primary_paths:
   - "v2/resources/documentation-guide/documentation-guide.mdx"
 primary_commands:
   - "rg --files v2/pages"
-  - "node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged"
+  - "node operations/scripts/generators/content/catalogs/generate-pages-index.js --staged"
 ---
 
 SKILL: Docs IA Route Placement
@@ -38,7 +37,7 @@ Workflow
 Command examples
 ```bash
 rg --files v2/pages
-node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged
+node operations/scripts/generators/content/catalogs/generate-pages-index.js --staged
 ```
 
 Deliverable Format

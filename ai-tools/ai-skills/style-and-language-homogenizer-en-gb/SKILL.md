@@ -1,13 +1,10 @@
 ---
 name: style-and-language-homogenizer-en-gb
-version: "1.1"
-category: governance
 description: >-
-  Enforce UK English usage and shared style conventions across English v2 docs so language drift is corrected before review and publication.
-invoke_when:
-  - "enforce uk english across docs"
-  - "normalize en-gb style in v2 docs"
-  - "homogenize english docs language"
+  Enforce UK English usage and shared style conventions across English v2 docs so language drift is corrected before review and publication. Use when enforcing UK English across docs, normalising EN-GB style in v2 docs, or homogenising English docs language.
+metadata:
+  version: "1.2"
+  category: governance
 ---
 
 SKILL: Style and Language Homogenizer (EN-GB)
@@ -17,7 +14,7 @@ Standardize language and style quality in English v2 docs while excluding locale
 
 Command
 ```bash
-node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full
+node operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full
 ```
 
 Outputs

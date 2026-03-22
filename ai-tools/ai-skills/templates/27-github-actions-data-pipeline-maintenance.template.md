@@ -1,14 +1,13 @@
 ---
 name: github-actions-data-pipeline-maintenance
-version: "1.1"
-category: meta
 description: >-
-  Maintain forum/ghost/youtube data update workflows and associated fetch scripts. Use when tasks include forum or blog data workflow failing, youtube automation not updating snippets data, maintain github actions data fetch scripts.
-tier: 3
-invoke_when:
-  - "forum or blog data workflow failing"
-  - "youtube automation not updating snippets data"
-  - "maintain github actions data fetch scripts"
+  Maintain forum/ghost/youtube data update workflows and associated fetch
+  scripts. Use when: forum or blog data workflow failing, youtube automation not
+  updating snippets data, maintain github actions data fetch scripts.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".github/workflows/update-forum-data.yml"
   - ".github/workflows/update-ghost-blog-data.yml"

@@ -12,12 +12,12 @@ primary_paths:
   - "docs-guide/policies/source-of-truth-policy.mdx"
   - "workspace/research/claims"
   - "workspace/reports/repo-ops"
-  - "tools/scripts/docs-fact-registry.js"
-  - "tools/scripts/docs-page-research.js"
+  - "operations/scripts/docs-fact-registry.js"
+  - "operations/scripts/docs-page-research.js"
   - "ai-tools/ai-skills/templates"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Page Content Research Review

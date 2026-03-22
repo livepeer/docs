@@ -5,6 +5,7 @@ AI Rules
 - THIS IS CO-CREATION not mindlessness
 - Always suggest and recommend what you think to be true for confirmation - dont just ask stupid questions and apply learned helplessness.
 - Always repeat understanding & scope of a task back to user before implementing or executing — for batch operations or hard-to-reverse changes, dry-run first if the option exists
+- **Describing the next task is not approval to execute it.** State what comes next and wait. "Go" / "ok" / "proceed" is approval. Silence, a question, or "what's that?" is not. Never auto-proceed even when the next step feels obvious.
 - On EACH STEP OF A PLAN - each task completion provide in inline chat:
   - Notes on completion
   - Any flags / recommendations found when implementing
@@ -23,13 +24,46 @@ This applies even if you believe you already know the content. Decisions evolve.
 
 This also applies to claims and fix directions. Before writing that X is stale, wrong, or should be replaced by Y — verify both sides empirically: confirm X exists where you say it does, confirm Y is the actual correct replacement, and confirm the direction is right. Getting the direction of a fix wrong creates more downstream work than the original problem. An unverified finding written into a plan or audit is not a finding — it is a liability.
 
+### Before running any phase prompt
+
+Every phase prompt has a `pack-guide.md` in its folder. **Read it before doing anything else.** The pack-guide defines:
+- Pre-flight steps the human must complete before the prompt runs (terminology lock, persona source documentation, resource selection)
+- Running order — which phases pause for human review and which continue
+- Dos and Don'ts — failure modes the prompt is known to hit without them
+- What good output looks like vs what bad output looks like
+
+**The pre-flight steps are not optional.** Skipping them produces output that looks correct but is built on bad foundations — AI-generated personas without source grounding, jobs derived from current nav labels, terminology leaked from prior AI output. This contaminates every downstream phase.
+
+Mandatory read order before running any phase prompt:
+1. `pack-guide.md` for that phase — defines the full execution process
+2. The prompt file itself — understand what it asks for before generating anything
+3. The plan's Decision Log — check for decisions that affect this phase
+4. Resources specified in `phase-resources.md` — load only what the pack-guide recommends for this run
+
 ---
 
 ## Document Decisions
 
-After every HUMAN REVIEW step, write all decisions made to the plan's Decision Log: named, dated, with rationale. Decisions made in chat that are not written down do not exist.
+After **every task** — not just HUMAN REVIEW steps — write any decisions, corrections, scope changes, or resolved questions to the plan's Decision Log: named, dated, with rationale. This includes:
+- Corrections to prior design decisions made during review
+- Naming changes and renames
+- Scope changes (what's in/out of a task or phase)
+- Approach changes (how something will be built or structured)
+- Anything a future session would need to know to avoid re-asking or re-deciding
 
-The Decision Log is the authoritative record. If a decision was not logged, it has no status — it cannot be referenced, built on, or treated as resolved.
+Decisions made in chat that are not written down do not exist. A decision not in the log has no status — it cannot be referenced, built on, or treated as resolved across context resets or handoffs.
+
+**Before starting any new phase**, re-read the full Decision Log for that plan. Do not rely on memory or context summaries — the log is the record. This is how you avoid asking the human to re-decide things they have already decided.
+
+**Implementation discoveries also belong in the plan.** When execution surfaces issues that are out of scope for the current task, add them as named, scoped items in the relevant future task — with the file/location, why it matters, and which task owns it. A flag mentioned only in the completion report does not survive context resets or handoffs.
+
+---
+
+## Findings Before Fixes
+
+When doing any audit, scan, or review work — gather all findings first, then present them as a structured report, then get approval on scope, then execute. Do not fix things as you find them.
+
+This keeps the human in control of what gets changed, prevents scope drift mid-task, and means the full picture is visible before any work begins. One finding fixed before the next is found is not an audit — it is uncontrolled iteration.
 
 ---
 
@@ -49,6 +83,8 @@ Any system design produces two complementary documents — a design-canonical an
 Before proposing or confirming any name, enum value, file path, or classification — read the document where that thing was defined and locked. Do not derive names from general reasoning when a locked source exists.
 
 If a taxonomy, enum, or naming convention has been locked in a framework file, that file is authoritative. Any claim that contradicts it is wrong until the source is checked and the discrepancy is explained.
+
+**Conventions agreed in conversation must be written to the relevant canonical doc before the session ends.** A naming rule, classification scheme, or structural pattern that exists only in chat is not enforced, not discoverable, and will be applied inconsistently. Chat is not a governance record.
 
 ---
 

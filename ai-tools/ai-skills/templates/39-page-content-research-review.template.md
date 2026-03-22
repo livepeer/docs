@@ -1,24 +1,26 @@
 ---
 name: page-content-research-review
-version: "1.1"
-category: audit
-description: Route high-rigor Livepeer Docs fact-checking across claim extraction, source verification, contradiction analysis, claim-family propagation, and final research reporting workflows consistently.
-tier: 2
-invoke_when:
-  - "deep research this docs page"
-  - "verify whether this page is accurate and valid"
-  - "review this page for stale or unsupported claims"
+description: >-
+  Route high-rigor Livepeer Docs fact-checking across claim extraction, source
+  verification, contradiction analysis, claim-family propagation, and final
+  research reporting workflows consistently. Use when: deep research this docs
+  page, verify whether this page is accurate and valid, review this page for
+  stale or unsupported claims.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "2"
 primary_paths:
   - "v2"
   - "docs-guide/policies/source-of-truth-policy.mdx"
   - "workspace/research/claims"
   - "workspace/reports/repo-ops"
-  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
-  - "tools/scripts/audits/content/veracity/docs-page-research.js"
+  - "operations/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
   - "ai-tools/ai-skills/templates"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Page Content Research Review

@@ -16,7 +16,7 @@ const { spawnSync } = require('child_process');
 const { isPublishedDocsPath: isPublishableDocsPath } = require('./docs-publishability');
 
 const VALID_CATEGORIES = ['elements', 'wrappers', 'displays', 'scaffolding', 'integrators', 'config'];
-const VALID_STATUSES = ['stable', 'experimental', 'deprecated', 'broken', 'placeholder'];
+const VALID_STATUSES = ['stable', 'experimental', 'deprecated', 'broken', 'placeholder', 'planned'];
 const VALID_TIERS = ['primitive', 'composite', 'pattern'];
 const VALID_RISKS = ['low', 'medium', 'high'];
 const VALID_DECISIONS = ['KEEP', 'MOVE', 'SPLIT', 'MERGE', 'REMOVE'];

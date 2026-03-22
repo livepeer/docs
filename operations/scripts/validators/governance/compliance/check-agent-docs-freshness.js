@@ -166,10 +166,10 @@ function buildRecord(entry, thresholdDays) {
       label: entry.label,
       candidates: entry.candidates,
       path: entry.resolvedPath,
-      status: 'ERROR',
+      status: 'WARNING',
       ageDays: null,
       lastTouched: '',
-      message: 'File exists but has no git history'
+      message: 'File exists but has no git history (new untracked file)'
     };
   }
 

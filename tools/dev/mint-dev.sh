@@ -14,7 +14,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MINT_WORKDIR="$REPO_ROOT"
-SCOPE_GENERATOR="$REPO_ROOT/tools/scripts/dev/generate-mint-dev-scope.js"
+SCOPE_GENERATOR="$REPO_ROOT/tools/dev/generate-mint-dev-scope.js"
 SCOPED_MODE="${LPD_SCOPED_MINT_DEV:-0}"
 DOCS_CONFIG="${LPD_MINT_DOCS_CONFIG:-}"
 SCOPE_INTERACTIVE="${LPD_MINT_SCOPE_INTERACTIVE:-0}"
@@ -205,16 +205,16 @@ if ! command -v mint >/dev/null 2>&1; then
 fi
 
 echo "Checking Mint watcher patch..."
-if bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply; then
+if bash "$REPO_ROOT/tools/dev/ensure-mint-watcher-patch.sh" --apply; then
     echo "Mint watcher patch preflight complete."
 else
     echo "Warning: Mint watcher patch preflight failed."
-    echo "Run manually: bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply"
+    echo "Run manually: bash tools/dev/ensure-mint-watcher-patch.sh --apply"
     echo "Continuing with repo-local watcher-safe launcher path fallback."
 fi
 
 echo "Fetching external snippets..."
-bash tools/scripts/automations/content/data/fetching/fetch-external-docs.sh
+bash "$REPO_ROOT/operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
 
 parse_port_args "$@"
 enforce_safe_port

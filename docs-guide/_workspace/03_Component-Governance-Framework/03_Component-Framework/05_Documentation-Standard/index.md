@@ -1,6 +1,13 @@
 # **Documentation & Example Standards**
 
-**Deliverable:** D5 — Component Governance Framework, Part 3 (Technical Design) **Repository:** `livepeer/docs`, `docs-v2` branch **Scope:** How components are documented — JSDoc format, props tables, examples, published docs, deprecation **Platform:** Mintlify (MDX-based) **Date:** 7 March 2026 **Author:** Wonderland (Alison Haire) / Claude collaboration **Status:** COMPLETE **Depends on:** D1 (Classification), D2 (Repo Structure), D3 (Styling), D4 (Development Standards)
+**Deliverable:** D5 — Component Governance Framework, Part 3 (Technical Design)
+ **Repository:** `livepeer/docs`, `docs-v2` branch
+ **Scope:** How components are documented — JSDoc format, props tables, examples, published docs, deprecation
+ **Platform:** Mintlify (MDX-based)
+ **Date:** 7 March 2026
+ **Author:** Wonderland (Alison Haire) / Claude collaboration
+ **Status:** COMPLETE
+ **Depends on:** D1 (Classification), D2 (Repo Structure), D3 (Styling), D4 (Development Standards)
 
 ## 1. Purpose
 
@@ -146,7 +153,7 @@ Each category page follows this generated structure:
 
 ### **6.3 Generation Pipeline**
 
-**Script:** `tools/scripts/generate-component-docs.js`
+**Script:** `operations/scripts/generate-component-docs.js`
 
 ### **6.4 OpenRouter Integration**
 

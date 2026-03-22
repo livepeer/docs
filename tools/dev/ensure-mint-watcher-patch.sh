@@ -7,7 +7,7 @@
 # @description Mint watcher patcher — applies patch to fix Mintlify file watcher issues in dev mode
 # @mode        execute
 # @pipeline    manual — interactive developer tool, not suited for automated pipelines
-# @scope       tools/scripts
+# @scope       tools/dev
 # @usage       bash tools/dev/ensure-mint-watcher-patch.sh [flags]
 # @policy      E-C6, F-C1
 set -euo pipefail
@@ -20,8 +20,8 @@ elif [ "${1:-}" = "--apply" ] || [ "${1:-}" = "" ]; then
 elif [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
     cat <<'EOF'
 Usage:
-  bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check
-  bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply
+  bash tools/dev/ensure-mint-watcher-patch.sh --check
+  bash tools/dev/ensure-mint-watcher-patch.sh --apply
 EOF
     exit 0
 else

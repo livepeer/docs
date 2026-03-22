@@ -59,8 +59,8 @@ lpd test --staged --link-audit-external
 If `mint dev` stops hot-reloading all pages, use this flow:
 
 ```bash
-bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check
-bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply
+bash tools/dev/ensure-mint-watcher-patch.sh --check
+bash tools/dev/ensure-mint-watcher-patch.sh --apply
 ```
 
 Known trigger:
@@ -69,8 +69,8 @@ Known trigger:
 
 Recovery:
 
-1. Use `lpd dev` (or `bash tools/scripts/mint-dev.sh`) so the launcher applies the patch preflight and uses a watcher-safe path fallback.
-2. Re-run `bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply` after `mint update`.
+1. Use `lpd dev` (or `bash operations/scripts/mint-dev.sh`) so the launcher applies the patch preflight and uses a watcher-safe path fallback.
+2. Re-run `bash tools/dev/ensure-mint-watcher-patch.sh --apply` after `mint update`.
 
 ## Core Capabilities (At a Glance)
 
@@ -159,7 +159,7 @@ Enforcement runs on `codex/*` only via:
 To auto-fill PR sections from task contract metadata:
 
 ```bash
-node tools/scripts/create-codex-pr.js --create
+node operations/scripts/create-codex-pr.js --create
 ```
 
 This generates `.codex/pr-body.generated.md` and calls `gh pr create --body-file ...`.
@@ -197,7 +197,7 @@ High-level directory map:
 - `v2/` active docs pages
 - `v1/` legacy/frozen docs
 - `snippets/` components, data, automations, shared assets
-- `tools/scripts/` operational/generation scripts
+- `operations/scripts/` operational/generation scripts
 - `tests/` unit/integration checks and runners
 - `.githooks/` local hook scripts
 - `.github/workflows/` CI and scheduled automations
@@ -235,8 +235,8 @@ Automation deep docs:
 Regenerate docs-guide generated indexes:
 
 ```bash
-node tools/scripts/generate-docs-guide-indexes.js --write
-node tools/scripts/generate-docs-guide-pages-index.js --write
-node tools/scripts/generate-docs-guide-components-index.js --write
+node operations/scripts/generate-docs-guide-indexes.js --write
+node operations/scripts/generate-docs-guide-pages-index.js --write
+node operations/scripts/generate-docs-guide-components-index.js --write
 node tests/unit/script-docs.test.js --write --rebuild-indexes
 ```

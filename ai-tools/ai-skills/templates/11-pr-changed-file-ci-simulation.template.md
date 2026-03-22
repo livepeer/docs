@@ -1,14 +1,13 @@
 ---
 name: pr-changed-file-ci-simulation
-version: "1.1"
-category: meta
 description: >-
-  Simulate pull-request changed-file checks locally to reproduce CI behavior before opening PRs. Use when tasks include simulate ci locally, run pr checks before push, changed-file checks failed in github actions.
-tier: 1
-invoke_when:
-  - "simulate ci locally"
-  - "run pr checks before push"
-  - "changed-file checks failed in github actions"
+  Simulate pull-request changed-file checks locally to reproduce CI behavior
+  before opening PRs. Use when: simulate ci locally, run pr checks before push,
+  changed-file checks failed in github actions.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - "tests/run-pr-checks.js"
   - ".github/workflows/test-suite.yml"

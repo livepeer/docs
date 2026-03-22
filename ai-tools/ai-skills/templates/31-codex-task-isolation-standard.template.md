@@ -1,27 +1,27 @@
 ---
 name: codex-task-isolation-standard
-version: "1.1"
-category: meta
 description: >-
-  Enforce isolated Codex task execution with branch-scoped contracts, scoped validation, and clean PR evidence. Use when tasks include start codex implementation task, set up isolated codex worktree and branch, validate codex scope and pr contract.
-tier: 3
-invoke_when:
-  - "start codex implementation task"
-  - "set up isolated codex worktree and branch"
-  - "validate codex scope and pr contract"
+  Enforce isolated Codex task execution with branch-scoped contracts, scoped
+  validation, and clean PR evidence. Use when: start codex implementation task,
+  set up isolated codex worktree and branch, validate codex scope and pr
+  contract.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".codex/task-contract.yaml"
   - ".codex/pr-body.generated.md"
   - ".githooks/pre-push"
-  - "tools/scripts/dispatch/ai/codex/create-codex-pr.js"
-  - "tools/scripts/validators/governance/compliance/validate-codex-task-contract.js"
+  - "operations/scripts/dispatch/ai/codex/create-codex-pr.js"
+  - "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js"
   - "tests/run-pr-checks.js"
   - ".github/pull_request_template.md"
   - ".github/pull-request-template-v2.md"
 primary_commands:
   - "git worktree add ../livepeer-docs-codex-ISSUE_ID -b codex/ISSUE_ID-TASK_SLUG docs-v2"
-  - "node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/ISSUE_ID-TASK_SLUG --require-pr-body"
-  - "node tools/scripts/dispatch/ai/codex/create-codex-pr.js --create"
+  - "node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/ISSUE_ID-TASK_SLUG --require-pr-body"
+  - "node operations/scripts/dispatch/ai/codex/create-codex-pr.js --create"
 ---
 
 SKILL: Codex Task Isolation Standard
@@ -39,8 +39,8 @@ Workflow
 1. Create a dedicated worktree and codex branch from `docs-v2`.
 2. Create `.codex/task-contract.yaml` first and bind `task_id`, `branch`, `scope_in`, and acceptance checks.
 3. Implement only scoped changes, then run targeted checks listed in `acceptance_checks`.
-4. Run `node tools/scripts/validators/governance/compliance/validate-codex-task-contract.js` before push/PR.
-5. Generate and open PR using `node tools/scripts/dispatch/ai/codex/create-codex-pr.js --create` so required sections are prefilled from contract metadata.
+4. Run `node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js` before push/PR.
+5. Generate and open PR using `node operations/scripts/dispatch/ai/codex/create-codex-pr.js --create` so required sections are prefilled from contract metadata.
 
 Deliverable Format
 - Contract file updated with explicit scope and risk flags.

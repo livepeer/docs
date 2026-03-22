@@ -1,0 +1,168 @@
+---
+title: "[Script Catalog Name]"
+sidebarTitle: "[Script Catalog Name]"
+description: "Auto-generated from [source]. Do not edit manually."
+consumer: [human, agent]
+maintenance: generated
+status: active
+generator: "[path/to/generator.js]"
+keywords: ['livepeer', '[catalog keyword]', 'scripts', 'catalog', 'inventory']
+---
+
+{/*
+generated-file-banner:v1
+Generation Script: [path/to/generator.js]
+Purpose: [What this catalog indexes and why]
+Run when: [Condition that makes this stale]
+Run command: node [path/to/generator.js] --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `[path/to/generator.js]`. <br/>
+**Purpose**: [What this catalog indexes and why.] <br/>
+**Run when**: [Condition that makes this stale.] <br/>
+**Important**: Do not manually edit this file; run `node [path/to/generator.js] --write`. <br/>
+</Note>
+
+{/*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@catalog-layout: grouped-tables
+@diagram: pipeline-flow
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LAYOUT — grouped-tables is the right choice for scripts because:
+  • Scale: 200+ scripts — per-item accordions are unusable at this count.
+  • Scan pattern: engineers look up a script by name or filter by type,
+    not by expanding individual items for detail.
+  • Grouping: by type (audit, automation, generator, validator,
+    remediator, dispatch) gives the most useful discovery path.
+
+DIAGRAM — pipeline-flow renders a Mermaid flowchart from the
+  normalised pipeline tier data in the registry. Generators MUST
+  normalise raw pipeline strings to these canonical tiers:
+    P1   — commit gate (pre-commit hook, hard-blocking)
+    P2   — push gate  (pre-push hook)
+    P3   — PR gate    (CI, Track B)
+    P5   — scheduled  (post-merge cron, nightly)
+    P6   — scheduled  (weekly / low-frequency cron)
+    manual — on-demand developer tool
+    indirect — library / utility module (not invoked directly)
+
+━━ PIPELINE DIAGRAM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Placed BEFORE the grouped tables. Shows which scripts fire at each
+pipeline stage. Generator builds subgraph node labels from the
+registry — one node per script name, truncated to 32 chars.
+
+```mermaid
+flowchart LR
+  DEV([developer])
+
+  subgraph P1[" 🔴 P1 — Commit Gate"]
+    direction TB
+    p1a["[script-name]"]
+    p1b["[script-name]"]
+  end
+
+  subgraph P2[" 🟠 P2 — Push Gate"]
+    direction TB
+    p2a["[script-name]"]
+  end
+
+  subgraph P3[" 🟡 P3 — PR Gate"]
+    direction TB
+    p3a["[script-name]"]
+    p3b["[script-name]"]
+  end
+
+  subgraph CRON[" 🔵 P5 / P6 — Scheduled"]
+    direction TB
+    cr1["[script-name]"]
+  end
+
+  subgraph MANUAL[" ⚪ Manual / On-demand"]
+    direction TB
+    m1["[script-name]"]
+    m2["[script-name]"]
+  end
+
+  DEV -->|commit| P1
+  P1  -->|push|   P2
+  P2  -->|open PR| P3
+  P3  -->|merge|  CRON
+  DEV -.->|on-demand| MANUAL
+```
+
+━━ STATUS KEY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Place after diagram, before grouped tables:
+**Type key:** 🔍 audit · ⚙️ automation · 🏭 generator · ✅ validator · 🔧 remediator · 🚦 dispatch
+
+━━ GROUPED TABLES (one ## per type) ━━━━━━━━━━━━━━━━━━━━━━━━
+Columns: Script | Description | Pipeline | Concern | Usage
+Script column: bare filename, not full path.
+Pipeline column: normalised tier label (P1, P3, manual, indirect — NOT the raw JSDoc string).
+Type order: audit → automation → generator → validator → remediator → dispatch
+
+## 🔍 Audits
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | P3 | [concern] | `node [path] [--flags]` |
+
+## ⚙️ Automations
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | manual | [concern] | `node [path] [--flags]` |
+
+## 🏭 Generators
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | P1 | [concern] | `node [path] [--flags]` |
+
+## ✅ Validators
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | P1, P3 | [concern] | `node [path] [--flags]` |
+
+## 🔧 Remediators
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | manual | [concern] | `node [path] [--flags]` |
+
+## 🚦 Dispatch
+
+| Script | Description | Pipeline | Concern | Usage |
+|---|---|---|---|---|
+| `[script-name.js]` | [description] | P1 | [concern] | `node [path] [--flags]` |
+
+━━ INDIRECT / LIBRARY MODULES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Library modules are not invoked directly — they are imported by other
+scripts. List them in a collapsed accordion so they don't pollute the
+main type-groups but are still discoverable.
+
+<Accordion title="📚 Library Modules — [N]">
+
+| Module | Description | Used by |
+|---|---|---|
+| `[module-name.js]` | [description] | [consumer script(s)] |
+
+</Accordion>
+
+━━ AUDIT SECTION (always at bottom when non-empty) ━━━━━━━━━━
+Scripts with no `type` in their JSDoc header. These need attention.
+Use a single <Accordion> — NOT wrapped in AccordionGroup.
+
+<Accordion title="⚠️ Unclassified — [N scripts need @type]">
+
+| Script | Path | Pipeline | Notes |
+|---|---|---|---|
+| `[script-name.js]` | `[path]` | [raw pipeline value] | Missing @type in JSDoc header |
+
+</Accordion>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/}
+
+[Auto-populated content — replaced on each regeneration]

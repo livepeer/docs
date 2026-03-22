@@ -1,14 +1,13 @@
 ---
 name: mintlify-authoring-style-compliance
-version: "1.1"
-category: governance
 description: >-
-  Author and edit MDX content in compliance with repository style and Mintlify constraints. Use when tasks include fix style-guide violations in docs, author mdx page for livepeer docs, replace ThemeData usage.
-tier: 1
-invoke_when:
-  - "fix style-guide violations in docs"
-  - "author mdx page for livepeer docs"
-  - "replace ThemeData usage"
+  Author and edit MDX content in compliance with repository style and Mintlify
+  constraints. Use when: fix style-guide violations in docs, author mdx page
+  for livepeer docs, replace ThemeData usage.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "v2/resources/documentation-guide/style-guide.mdx"
   - "style.css"

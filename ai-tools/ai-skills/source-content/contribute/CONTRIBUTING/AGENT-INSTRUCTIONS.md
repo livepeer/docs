@@ -29,20 +29,20 @@ Recommended lifecycle:
 
 ```bash
 # Start task scaffold (branch + contract + local lock)
-node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
+node operations/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
 
 # Validate local lock + scope before commit
-node tools/scripts/codex/validate-locks.js --staged
+node operations/scripts/codex/validate-locks.js --staged
 
 # Finalize before PR, then release lock when done
-node tools/scripts/codex/task-finalize.js
-node tools/scripts/codex/lock-release.js
+node operations/scripts/codex/task-finalize.js
+node operations/scripts/codex/lock-release.js
 ```
 
 PR autofill command:
 
 ```bash
-node tools/scripts/create-codex-pr.js --create
+node operations/scripts/create-codex-pr.js --create
 ```
 
 The command generates `.codex/pr-body.generated.md` from task-contract fields and uses it as `gh pr create --body-file`.

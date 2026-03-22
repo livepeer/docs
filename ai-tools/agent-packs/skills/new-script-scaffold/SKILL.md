@@ -9,13 +9,13 @@ invoke_when:
   - "script header template required"
   - "bootstrap test or tooling script"
 primary_paths:
-  - "tools/scripts/new-script.js"
+  - "operations/scripts/new-script.js"
   - "tests/unit/script-docs.test.js"
   - "tools/script-index.md"
   - "tests/script-index.md"
 primary_commands:
-  - "node tools/scripts/new-script.js --path tools/scripts/my-script.js"
-  - "node tests/unit/script-docs.test.js --files tools/scripts/my-script.js --enforce-existing"
+  - "node operations/scripts/new-script.js --path operations/scripts/my-script.js"
+  - "node tests/unit/script-docs.test.js --files operations/scripts/my-script.js --enforce-existing"
 ---
 
 SKILL: New Script Scaffold
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/new-script.js --path tools/scripts/my-script.js
-node tests/unit/script-docs.test.js --files tools/scripts/my-script.js --enforce-existing
+node operations/scripts/new-script.js --path operations/scripts/my-script.js
+node tests/unit/script-docs.test.js --files operations/scripts/my-script.js --enforce-existing
 ```
 
 Deliverable Format

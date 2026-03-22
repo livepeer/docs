@@ -1,30 +1,29 @@
 ---
 name: docs-research-packet-generation
-version: "1.1"
-category: review-pipeline
 description: >-
   Generate report-only research packets from live nav scope, manifests, or
   explicit files and folders so section-level fact-check findings can be
-  produced consistently without bespoke one-off runners.
-tier: 2
-invoke_when:
-  - "generate a research packet"
-  - "run research review on this tab folder or file set"
-  - "review this docs section and write research reports"
-  - "build a research packet for these docs pages"
+  produced consistently without bespoke one-off runners. Use when: generate a
+  research packet, run research review on this tab folder or file set, review
+  this docs section and write research reports, build a research packet for
+  these docs pages.
+metadata:
+  version: "1.2"
+  category: "review-pipeline"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/dispatch/content/veracity/docs-research-packet.js"
-  - "tools/scripts/audits/content/veracity/docs-page-research.js"
-  - "tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
-  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
-  - "tools/scripts/audits/content/veracity/docs-research-adjudication.js"
+  - "operations/scripts/dispatch/content/veracity/docs-research-packet.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
+  - "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
+  - "operations/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "operations/scripts/audits/content/veracity/docs-research-adjudication.js"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
   - "docs-guide/tooling/research-review-packet-plan-template.md"
   - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/audits/content/veracity/docs-research-adjudication.js --validate --ledger workspace/research/adjudication/page-content-research-outcomes.json"
-  - "node tools/scripts/dispatch/content/veracity/docs-research-packet.js --tab [name] --group [name] --out [path]"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-research-adjudication.js --validate --ledger workspace/research/adjudication/page-content-research-outcomes.json"
+  - "node operations/scripts/dispatch/content/veracity/docs-research-packet.js --tab [name] --group [name] --out [path]"
 ---
 
 SKILL: Docs Research Packet Generation
@@ -48,8 +47,8 @@ Workflow
 1. Classify the request into one packet mode: `nav`, `manifest`, or `paths`.
 2. Validate the fact registry and adjudication ledger before tranche execution.
 3. Derive tranche order from the nav source, manifest, or explicit path split requested by the user.
-4. Run `tools/scripts/audits/content/veracity/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
-5. Run `tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
+4. Run `operations/scripts/audits/content/veracity/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
+5. Run `operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
 6. Build `03-research.md`, `research-summary.json`, `00-master-packet.md`, and `packet-summary.json` without collapsing page-run and PR-run deltas.
 7. Return the packet root, the scope source used, the validation status, and any blocked tranche details.
 

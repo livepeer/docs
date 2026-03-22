@@ -1,14 +1,14 @@
 ---
 name: discord-issue-intake-maintenance
-version: "1.1"
-category: meta
 description: >-
-  Maintain Discord repository_dispatch intake workflow validation, idempotency, and issue-shaping logic. Use when tasks include discord issue intake failing, fix repository_dispatch docs_page_issue schema handling, maintain correlation_id dedupe logic.
-tier: 3
-invoke_when:
-  - "discord issue intake failing"
-  - "fix repository_dispatch docs_page_issue schema handling"
-  - "maintain correlation_id dedupe logic"
+  Maintain Discord repository_dispatch intake workflow validation, idempotency,
+  and issue-shaping logic. Use when: discord issue intake failing, fix
+  repository_dispatch docs_page_issue schema handling, maintain
+  correlation_id dedupe logic.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".github/workflows/discord-issue-intake.yml"
   - ".github/workflows/issue-auto-label.yml"

@@ -1,23 +1,25 @@
 ---
 name: docs-source-verification
-version: "1.1"
-category: audit
-description: Verify Livepeer Docs claims against ranked primary sources, record evidence, assess freshness risk, classify contradictions, and downgrade unsupported content before publication.
-tier: 2
-invoke_when:
-  - "verify these docs claims"
-  - "check whether this page is factually accurate"
-  - "research authoritative sources for this docs content"
+description: >-
+  Verify Livepeer Docs claims against ranked primary sources, record evidence,
+  assess freshness risk, classify contradictions, and downgrade unsupported
+  content before publication. Use when: verify these docs claims, check whether
+  this page is factually accurate, research authoritative sources for this docs
+  content.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "2"
 primary_paths:
   - "v2"
   - "docs-guide/policies/source-of-truth-policy.mdx"
-  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
-  - "tools/scripts/audits/content/veracity/docs-page-research.js"
+  - "operations/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
   - "workspace/research/claims"
   - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Docs Source Verification

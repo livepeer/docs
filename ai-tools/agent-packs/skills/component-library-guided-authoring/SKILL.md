@@ -12,10 +12,10 @@ primary_paths:
   - "v2/resources/documentation-guide/component-library.mdx"
   - "snippets/components"
   - "v2/resources/documentation-guide/snippets-inventory.mdx"
-  - "tools/scripts/snippets/update-component-library.sh"
+  - "operations/scripts/snippets/update-component-library.sh"
 primary_commands:
   - "rg --files snippets/components"
-  - "bash tools/scripts/snippets/update-component-library.sh"
+  - "bash operations/scripts/snippets/update-component-library.sh"
 ---
 
 SKILL: Component Library Guided Authoring
@@ -37,7 +37,7 @@ Workflow
 Command examples
 ```bash
 rg --files snippets/components
-bash tools/scripts/snippets/update-component-library.sh
+bash operations/scripts/snippets/update-component-library.sh
 ```
 
 Deliverable Format

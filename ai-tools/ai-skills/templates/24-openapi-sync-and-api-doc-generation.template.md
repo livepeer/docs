@@ -1,22 +1,21 @@
 ---
 name: openapi-sync-and-api-doc-generation
-version: "1.1"
-category: governance
 description: >-
-  Sync OpenAPI sources and generate MDX API portal/endpoint docs using repository scripts. Use when tasks include regenerate api docs from openapi, sync latest openapi specs, create mdx endpoint pages from spec.
-tier: 3
-invoke_when:
-  - "regenerate api docs from openapi"
-  - "sync latest openapi specs"
-  - "create mdx endpoint pages from spec"
+  Sync OpenAPI sources and generate MDX API portal/endpoint docs using
+  repository scripts. Use when: regenerate api docs from openapi, sync latest
+  openapi specs, create mdx endpoint pages from spec.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/fetch-openapi-specs.sh"
-  - "tools/scripts/snippets/generate-api-docs.sh"
+  - "operations/scripts/snippets/fetch-openapi-specs.sh"
+  - "operations/scripts/snippets/generate-api-docs.sh"
   - "api/studio.yaml"
   - "api/ai-worker.yaml"
 primary_commands:
-  - "bash tools/scripts/snippets/fetch-openapi-specs.sh"
-  - "bash tools/scripts/snippets/generate-api-docs.sh api/studio.yaml v2/pages/03_developers/api-reference/studio \"Studio API\""
+  - "bash operations/scripts/snippets/fetch-openapi-specs.sh"
+  - "bash operations/scripts/snippets/generate-api-docs.sh api/studio.yaml v2/pages/03_developers/api-reference/studio \"Studio API\""
 ---
 
 SKILL: OpenAPI Sync and API Doc Generation
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-bash tools/scripts/snippets/fetch-openapi-specs.sh
-bash tools/scripts/snippets/generate-api-docs.sh api/studio.yaml v2/pages/03_developers/api-reference/studio \"Studio API\"
+bash operations/scripts/snippets/fetch-openapi-specs.sh
+bash operations/scripts/snippets/generate-api-docs.sh api/studio.yaml v2/pages/03_developers/api-reference/studio \"Studio API\"
 ```
 
 Deliverable Format

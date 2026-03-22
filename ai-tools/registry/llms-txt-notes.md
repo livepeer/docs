@@ -31,7 +31,7 @@ accuracy and speed of AI-assisted documentation searches.
 
 Project usage
 
-- Generated via `node tools/scripts/generators/ai/llm/generate-llms-files.js --write`.
+- Generated via `node operations/scripts/generators/ai/llm/generate-llms-files.js --write`.
 - Outputs live in repo root: `llms.txt` and `llms-full.txt`.
-- CI verifies freshness with `node tools/scripts/generators/ai/llm/generate-llms-files.js --check`.
+- CI verifies freshness with `node operations/scripts/generators/ai/llm/generate-llms-files.js --check`.
 - Excludes `v2/internal` and any `v2/x-*` directories from navigation output.

@@ -8,7 +8,7 @@
  * @description VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories.
  * @mode        execute
  * @pipeline    manual
- * @scope       tools/scripts, tools/vscode/authoring-tools, .vscode/settings.json
+ * @scope       tools/scripts, tools/editor-extensions/authoring-tools, .vscode/settings.json
  * @usage       node tools/dev/install-authoring-tools-extension.js [--targets vscode,cursor] [--force]
  * @policy      E-C6, F-C1
  */

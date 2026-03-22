@@ -1,17 +1,15 @@
 ---
 name: docs-review-packet-generation
-version: "1.2"
-category: review-pipeline
 description: >-
   Generate dated, report-only docs review packets from live navigation scope so
   copy-framework, authoring-style, and research findings land in reusable
-  trackers, summaries, and section artifact sets.
-tier: 2
-invoke_when:
-  - "generate a docs review packet"
-  - "review this tab or section and create packet reports"
-  - "build copy style and research reports for live docs pages"
-  - "create a tracker and report packet for this docs section"
+  trackers, summaries, and section artifact sets. Use when generating a docs
+  review packet, reviewing a tab or section to create packet reports, building
+  copy and style reports, or creating a tracker for a docs section.
+metadata:
+  version: "1.3"
+  category: review-pipeline
+  tier: "2"
 ---
 
 SKILL: Docs Review Packet Generation

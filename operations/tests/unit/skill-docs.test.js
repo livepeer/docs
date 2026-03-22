@@ -157,18 +157,10 @@ function parseGovernedArtifact(repoPath) {
   return { content, body, frontmatter };
 }
 
-function normalizeInvokeWhen(values) {
-  if (!Array.isArray(values)) return [];
-  return [...new Set(values
-    .map((value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase())
-    .filter(Boolean))]
-    .sort();
-}
-
 function validateFrontmatter(repoPath, frontmatter, options = {}) {
   const errors = [];
   const warnings = [];
-  const requiredKeys = ['name', 'version', 'description', 'invoke_when', 'category'];
+  const requiredKeys = ['name', 'description', 'metadata'];
   const isTemplate = Boolean(options.isTemplate);
 
   requiredKeys.forEach((key) => {
@@ -188,16 +180,6 @@ function validateFrontmatter(repoPath, frontmatter, options = {}) {
       file: repoPath,
       rule: 'Skill name format',
       message: `Invalid skill name "${name}". Expected ${NAME_RE}.`,
-      line: 1
-    });
-  }
-
-  const version = String(frontmatter.version || '').trim();
-  if (version && !VERSION_RE.test(version)) {
-    errors.push({
-      file: repoPath,
-      rule: 'Skill version format',
-      message: `Invalid version "${version}". Expected ${VERSION_RE}.`,
       line: 1
     });
   }
@@ -222,32 +204,80 @@ function validateFrontmatter(repoPath, frontmatter, options = {}) {
     }
   }
 
-  const invokeWhen = Array.isArray(frontmatter.invoke_when)
-    ? frontmatter.invoke_when.map((value) => String(value || '').trim()).filter(Boolean)
-    : [];
-  if (!Array.isArray(frontmatter.invoke_when) || invokeWhen.length === 0) {
-    errors.push({
-      file: repoPath,
-      rule: 'Skill invoke_when',
-      message: 'invoke_when must be a non-empty array of trigger phrases.',
-      line: 1
-    });
-  }
-
-  if ('category' in frontmatter) {
-    const category = String(frontmatter.category || '').trim();
-    if (!VALID_CATEGORIES.includes(category)) {
+  // Validate metadata map (agentskills.io extension point)
+  const metadata = frontmatter.metadata;
+  if (metadata !== undefined) {
+    if (typeof metadata !== 'object' || Array.isArray(metadata) || metadata === null) {
       errors.push({
         file: repoPath,
-        rule: 'Skill category',
-        message: `Invalid category "${category}". Must be one of: ${VALID_CATEGORIES.join(', ')}.`,
+        rule: 'Skill metadata',
+        message: 'metadata must be a YAML map (key: value pairs).',
         line: 1
       });
+    } else {
+      if (!('version' in metadata)) {
+        errors.push({
+          file: repoPath,
+          rule: 'Skill metadata',
+          message: 'metadata.version is required.',
+          line: 1
+        });
+      } else {
+        const version = String(metadata.version || '').trim();
+        if (version && !VERSION_RE.test(version)) {
+          errors.push({
+            file: repoPath,
+            rule: 'Skill metadata version format',
+            message: `Invalid metadata.version "${version}". Expected ${VERSION_RE}.`,
+            line: 1
+          });
+        }
+      }
+
+      if (!('category' in metadata)) {
+        errors.push({
+          file: repoPath,
+          rule: 'Skill metadata',
+          message: 'metadata.category is required.',
+          line: 1
+        });
+      } else {
+        const category = String(metadata.category || '').trim();
+        if (!VALID_CATEGORIES.includes(category)) {
+          errors.push({
+            file: repoPath,
+            rule: 'Skill category',
+            message: `Invalid metadata.category "${category}". Must be one of: ${VALID_CATEGORIES.join(', ')}.`,
+            line: 1
+          });
+        }
+      }
+
+      if ('tier' in metadata) {
+        const tier = String(metadata.tier || '').trim();
+        if (!['1', '2'].includes(tier)) {
+          errors.push({
+            file: repoPath,
+            rule: 'Skill metadata tier',
+            message: `Invalid metadata.tier "${tier}". Must be "1" or "2".`,
+            line: 1
+          });
+        }
+      }
+
+      if (isTemplate && !('tier' in metadata)) {
+        errors.push({
+          file: repoPath,
+          rule: 'Template operational metadata',
+          message: 'Template metadata is missing required field "tier".',
+          line: 1
+        });
+      }
     }
   }
 
   if (isTemplate) {
-    ['tier', 'primary_paths', 'primary_commands'].forEach((key) => {
+    ['primary_paths', 'primary_commands'].forEach((key) => {
       if (!(key in frontmatter)) {
         errors.push({
           file: repoPath,
@@ -270,7 +300,7 @@ function validateFrontmatter(repoPath, frontmatter, options = {}) {
     });
   }
 
-  return { errors, warnings, invokeWhen: normalizeInvokeWhen(frontmatter.invoke_when) };
+  return { errors, warnings };
 }
 
 function resolveGovernedPath(sourcePath, rawRef) {
@@ -418,35 +448,6 @@ function shouldWarnVersionBump(repoPath, options = {}) {
   return contentChanged && !versionChanged;
 }
 
-function collectDuplicateInvokeWhen(records, scopedSet = null) {
-  const groups = new Map();
-  records.forEach((record) => {
-    if (!record.invokeKey) return;
-    if (!groups.has(record.invokeKey)) groups.set(record.invokeKey, []);
-    groups.get(record.invokeKey).push(record.file);
-  });
-
-  const warnings = [];
-  groups.forEach((files, invokeKey) => {
-    if (files.length < 2) return;
-    const names = new Set(records
-      .filter((record) => record.invokeKey === invokeKey)
-      .map((record) => record.name)
-      .filter(Boolean));
-    if (names.size === 1) return;
-    const targets = scopedSet ? files.filter((file) => scopedSet.has(file)) : files;
-    targets.forEach((file) => {
-      warnings.push({
-        file,
-        rule: 'Skill invoke_when duplication',
-        message: `invoke_when duplicates another governed skill exactly: ${files.join(', ')}`,
-        line: 1
-      });
-    });
-  });
-
-  return warnings;
-}
 
 function collectFilesFromArgs(args) {
   const files = [];
@@ -548,9 +549,8 @@ function runInternalUnitChecks() {
   runCase('short description failure', () => {
     const result = validateFrontmatter('tmp.md', {
       name: 'alpha-skill',
-      version: '1.0',
       description: 'too short description',
-      invoke_when: ['trigger']
+      metadata: { version: '1.0', category: 'meta' }
     });
     assert(result.errors.some((entry) => entry.rule === 'Skill description length'));
   });
@@ -559,31 +559,45 @@ function runInternalUnitChecks() {
     const longDescription = Array.from({ length: 101 }, (_, index) => `word${index + 1}`).join(' ');
     const result = validateFrontmatter('tmp.md', {
       name: 'alpha-skill',
-      version: '1.0',
       description: longDescription,
-      invoke_when: ['trigger']
+      metadata: { version: '1.0', category: 'meta' }
     });
     assert(result.warnings.some((entry) => entry.rule === 'Skill description length'));
   });
 
-  runCase('empty invoke_when failure', () => {
+  runCase('missing metadata failure', () => {
     const result = validateFrontmatter('tmp.md', {
       name: 'alpha-skill',
-      version: '1.0',
-      description: 'This description has enough words to satisfy the validator requirement for the unit test.',
-      invoke_when: []
+      description: 'This description has enough words to satisfy the validator requirement for the unit test.'
     });
-    assert(result.errors.some((entry) => entry.rule === 'Skill invoke_when'));
+    assert(result.errors.some((entry) => entry.rule === 'Skill frontmatter'));
   });
 
-  runCase('invalid semver failure', () => {
+  runCase('missing metadata.version failure', () => {
     const result = validateFrontmatter('tmp.md', {
       name: 'alpha-skill',
-      version: 'version-one',
       description: 'This description has enough words to satisfy the validator requirement for the unit test.',
-      invoke_when: ['trigger']
+      metadata: { category: 'meta' }
     });
-    assert(result.errors.some((entry) => entry.rule === 'Skill version format'));
+    assert(result.errors.some((entry) => entry.rule === 'Skill metadata'));
+  });
+
+  runCase('invalid metadata.version failure', () => {
+    const result = validateFrontmatter('tmp.md', {
+      name: 'alpha-skill',
+      description: 'This description has enough words to satisfy the validator requirement for the unit test.',
+      metadata: { version: 'version-one', category: 'meta' }
+    });
+    assert(result.errors.some((entry) => entry.rule === 'Skill metadata version format'));
+  });
+
+  runCase('invalid metadata.category failure', () => {
+    const result = validateFrontmatter('tmp.md', {
+      name: 'alpha-skill',
+      description: 'This description has enough words to satisfy the validator requirement for the unit test.',
+      metadata: { version: '1.0', category: 'not-a-valid-category' }
+    });
+    assert(result.errors.some((entry) => entry.rule === 'Skill category'));
   });
 
   runCase('missing referenced file failure', () => {
@@ -612,14 +626,6 @@ function runInternalUnitChecks() {
     assert.strictEqual(cycles.length, 1);
   });
 
-  runCase('duplicate trigger-set warning', () => {
-    const warnings = collectDuplicateInvokeWhen([
-      { file: 'a', invokeKey: 'one|two' },
-      { file: 'b', invokeKey: 'one|two' }
-    ]);
-    assert.strictEqual(warnings.length, 2);
-  });
-
   runCase('version-bump heuristic', () => {
     const analysis = analyzeDiffForVersion([
       '@@ -1,3 +1,3 @@',
@@ -635,7 +641,7 @@ function runInternalUnitChecks() {
 
 function validateFolderStructure() {
   const errors = [];
-  const ALLOWED_ROOT_FILES = ['content-map.md', 'inventory.json', 'skill-spec-contract.md'];
+  const ALLOWED_ROOT_FILES = ['agentskills-io-standard.md', 'content-map.md', 'inventory.json', 'skill-spec-contract.md'];
   const AGENT_PACKS_SKILLS = 'ai-tools/agent-packs/skills';
 
   // Check A — root loose-file guard
@@ -714,7 +720,6 @@ function runTests(options = {}) {
   const allArtifacts = collectAllGovernedArtifacts();
   const allSkillMarkdown = collectAllSkillMarkdown();
   const graph = new Map();
-  const invokeRecords = [];
 
   allArtifacts.forEach((repoPath) => {
     let parsed;
@@ -741,12 +746,6 @@ function runTests(options = {}) {
       errors.push(...frontmatterResult.errors);
       warnings.push(...frontmatterResult.warnings);
     }
-
-    invokeRecords.push({
-      file: repoPath,
-      name: String(parsed.frontmatter.name || '').trim(),
-      invokeKey: frontmatterResult.invokeWhen.join('|')
-    });
 
     const references = collectGovernedReferences(repoPath, parsed.content);
     const referenceResult = validateReferences(repoPath, references, allSkillMarkdown);
@@ -780,8 +779,6 @@ function runTests(options = {}) {
       line: 1
     });
   });
-
-  warnings.push(...collectDuplicateInvokeWhen(invokeRecords, fullMode ? null : targetedArtifacts));
 
   const total = fullMode
     ? allArtifacts.length + 1
@@ -830,7 +827,6 @@ module.exports = {
   analyzeDiffForVersion,
   collectGovernedReferences,
   detectCycles,
-  normalizeInvokeWhen,
   runTests,
   validateFrontmatter
 };

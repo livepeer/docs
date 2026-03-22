@@ -9,6 +9,7 @@
  * @pipeline          indirect — library module
  * @usage             node tools/lib/generated-file-banners.js [flags]
  */
+const fs = require('fs');
 const GENERATED_HIDDEN_MARKER = 'generated-file-banner:v1';
 
 function normalizeInline(value) {
@@ -65,12 +66,24 @@ function buildGeneratedFrontmatterLines(options = {}) {
   const pageType = normalizeInline(options.pageType);
   const keywords = Array.isArray(options.keywords) ? options.keywords.map((item) => normalizeInline(item)).filter(Boolean) : [];
   const keywordsStyle = options.keywordsStyle === 'multiline' ? 'multiline' : 'inline';
+
+  // Governance fields (from doc-item-model)
+  const consumer = Array.isArray(options.consumer) ? options.consumer.map((v) => normalizeInline(v)).filter(Boolean) : [];
+  const maintenance = normalizeInline(options.maintenance);
+  const status = normalizeInline(options.status);
+  const generator = normalizeInline(options.generator);
+
   const lines = ['---'];
 
   if (title) lines.push(`title: ${asQuotedYaml(title)}`);
   if (sidebarTitle) lines.push(`sidebarTitle: ${asQuotedYaml(sidebarTitle)}`);
   if (description) lines.push(`description: ${asQuotedYaml(description)}`);
   if (pageType) lines.push(`pageType: ${pageType}`);
+
+  if (consumer.length > 0) lines.push(`consumer: [${consumer.join(', ')}]`);
+  if (maintenance) lines.push(`maintenance: ${maintenance}`);
+  if (status) lines.push(`status: ${status}`);
+  if (generator) lines.push(`generator: ${asQuotedYaml(generator)}`);
 
   if (keywords.length > 0) {
     if (keywordsStyle === 'multiline') {
@@ -176,8 +189,50 @@ function hasFrontmatterKey(content, key) {
   return re.test(parsed.frontmatter);
 }
 
+const VALID_CATALOG_LAYOUTS = ['accordion-group', 'flat-table', 'grouped-tables', 'tree'];
+const VALID_CATALOG_DIAGRAMS = ['pipeline-flow', 'none'];
+
+/**
+ * Reads all @marker: value pairs from a catalog template's comment block.
+ * Returns a plain object keyed by marker name (without the @ prefix).
+ * Generators call this to configure themselves from the template — when
+ * the template changes a marker, the generator automatically adapts.
+ *
+ * Supported markers:
+ *   @catalog-layout  — layout strategy ('accordion-group' | 'flat-table' | 'grouped-tables' | 'tree')
+ *   @diagram         — optional diagram section ('pipeline-flow' | 'none')
+ *
+ * Example usage in a generator:
+ *   const { readCatalogMarkers } = require('../../../../../tools/lib/generated-file-banners');
+ *   const markers = readCatalogMarkers(TEMPLATE_PATH);
+ *   const layout = markers['catalog-layout'] ?? 'grouped-tables';
+ *   const diagram = markers['diagram'] ?? null;
+ */
+function readCatalogMarkers(templatePath) {
+  const result = {};
+  try {
+    const content = fs.readFileSync(templatePath, 'utf8');
+    const markerRe = /@([\w-]+):\s*(\S+)/g;
+    let match;
+    while ((match = markerRe.exec(content)) !== null) {
+      result[match[1]] = match[2];
+    }
+  } catch (_) {}
+  return result;
+}
+
+function readCatalogLayout(templatePath) {
+  const markers = readCatalogMarkers(templatePath);
+  const value = markers['catalog-layout'];
+  return value && VALID_CATALOG_LAYOUTS.includes(value) ? value : null;
+}
+
 module.exports = {
   GENERATED_HIDDEN_MARKER,
+  VALID_CATALOG_LAYOUTS,
+  VALID_CATALOG_DIAGRAMS,
+  readCatalogMarkers,
+  readCatalogLayout,
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines,

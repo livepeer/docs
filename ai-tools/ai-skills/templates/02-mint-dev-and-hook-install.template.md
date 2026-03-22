@@ -1,16 +1,15 @@
 ---
 name: mint-dev-and-hook-install
-version: "1.1"
-category: meta
 description: >-
-  Start local Mintlify development with automatic hook installation and verify hook state. Use when tasks include start local docs server, install hooks before dev, mint dev not working in this repo.
-tier: 1
-invoke_when:
-  - "start local docs server"
-  - "install hooks before dev"
-  - "mint dev not working in this repo"
+  Start local Mintlify development with automatic hook installation and verify
+  hook state. Use when: start local docs server, install hooks before dev,
+  mint dev not working in this repo.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
-  - "tools/scripts/mint-dev.sh"
+  - "operations/scripts/mint-dev.sh"
   - ".githooks/install.sh"
   - ".githooks/pre-commit"
   - "contribute/CONTRIBUTING/GIT-HOOKS.md"

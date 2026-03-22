@@ -9,13 +9,13 @@ invoke_when:
   - "new component not listed in library index"
   - "refresh snippets wiki component tree"
 primary_paths:
-  - "tools/scripts/snippets/update-component-library.sh"
+  - "operations/scripts/snippets/update-component-library.sh"
   - "snippets/snippetsWiki/componentLibrary/index.mdx"
   - "snippets/components"
-  - "tools/scripts/snippets/paths.config.json"
+  - "operations/scripts/snippets/paths.config.json"
 primary_commands:
-  - "bash tools/scripts/snippets/update-component-library.sh"
-  - "bash tools/scripts/snippets/test-scripts.sh"
+  - "bash operations/scripts/snippets/update-component-library.sh"
+  - "bash operations/scripts/snippets/test-scripts.sh"
 ---
 
 SKILL: Component Library Index Refresh
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-bash tools/scripts/snippets/update-component-library.sh
-bash tools/scripts/snippets/test-scripts.sh
+bash operations/scripts/snippets/update-component-library.sh
+bash operations/scripts/snippets/test-scripts.sh
 ```
 
 Deliverable Format

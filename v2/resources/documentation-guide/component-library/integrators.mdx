@@ -28,7 +28,7 @@ Run command: node operations/scripts/generate-component-docs.js --fix --template
 
 Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.
 
-This category currently contains **7** governed export(s).
+This category currently contains **18** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -42,35 +42,210 @@ This category currently contains **7** governed export(s).
 
 | Component | Status | Import path | Description |
 | --- | --- | --- | --- |
-| EmbedMarkdown | `deprecated` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Alias for MarkdownEmbed — use MarkdownEmbed instead. |
+| BlogCard | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Blog post card with scrollable content, metadata, and CTA. |
+| BlogDataLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Single-column BlogCard stack. |
+| CardBlogDataLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Grid layout rendering BlogCards from an items array. |
+| CardColumnsPostLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Multi-column PostCard layout. |
+| CardInCardLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | PostCards rendered inside Card wrappers. |
+| CoinGeckoExchanges | `stable` | `/snippets/components/integrators/feeds/Coingecko.jsx` | Sortable table of exchanges listing a token. Keyboard-accessible sort headers. |
+| ColumnsBlogCardLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Multi-column BlogCard layout using Mintlify Columns. |
+| DiscordAnnouncements | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Discord announcement feed with parsed markdown content. Sanitised HTML. |
 | ExternalContent | `stable` | `/snippets/components/integrators/embeds/ExternalContent.jsx` | Fetches and renders external markdown with scrollable container and source link. |
+| ForumLatestLayout | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Latest forum topics with banner image and topic cards. |
+| LatestVersion | `experimental` | `/snippets/components/integrators/feeds/Release.jsx` | Displays the latest release version string from automation data. |
+| LumaEvents | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Upcoming/past event cards from Luma calendar data. |
 | MarkdownEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Fetches and renders remote markdown content. |
 | PdfEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a PDF in a framed iframe with caption. |
+| PostCard | `stable` | `/snippets/components/integrators/blog/Data.jsx` | Post card with gradient header, scrollable content, and metadata. |
 | ShowcaseCards | `experimental` | `/snippets/components/integrators/feeds/ShowcaseCards.jsx` | Paginated project showcase with search, filtering, and media cards. |
 | TwitterTimeline | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a Twitter/X timeline feed widget via iframe. |
 | YouTubeVideoData | `stable` | `/snippets/components/integrators/video-data/VideoData.jsx` | Renders YouTube video data with video embed and metadata columns. |
 
 ## Component Reference
 
-### EmbedMarkdown
-Use **EmbedMarkdown** when you need alias for MarkdownEmbed — use MarkdownEmbed instead.. Accepts: {string} url, {string} className, {object} style, ...rest.
-Source description: Alias for MarkdownEmbed — use MarkdownEmbed instead.
+### BlogCard
+Use **BlogCard** when you need blog post card with scrollable content, metadata, and CTA.. Accepts: {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest.
+Source description: Blog post card with scrollable content, metadata, and CTA.
 **Import path**
 ```jsx
-import { EmbedMarkdown } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { BlogCard } from '/snippets/components/integrators/blog/Data.jsx'
 ```
 **Metadata**
-- Status: `deprecated`
-- Accepts: `{string} url, {string} className, {object} style, ...rest`
-- Data source: `fetch(url)`
-
-Deprecation note: Use MarkdownEmbed. Kept for backwards-compat — see tasks/reports/archived-components-review.md See `MarkdownEmbed`.
+- Status: `stable`
+- Accepts: `{any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
-| `url` | `string` | `` | Yes | Destination URL used by the component. |
-| `className` | `string` | `""` | No | CSS class name. |
-| `style` | `object` | `{}` | No | Inline style overrides. |
+| `title` | `any` | `` | Yes | title prop. |
+| `content` | `any` | `` | Yes | content prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `author` | `string` | `"Livepeer Team"` | No | author prop. |
+| `datePosted` | `any` | `null` | No | date Posted prop. |
+| `excerpt` | `any` | `null` | No | excerpt prop. |
+| `readingTime` | `any` | `null` | No | reading Time prop. |
+| `icon` | `string` | `"book-open"` | No | icon prop. |
+| `authorIcon` | `string` | `"user-pen"` | No | author Icon prop. |
+| `dateIcon` | `string` | `"calendar"` | No | date Icon prop. |
+| `cta` | `string` | `"Read More"` | No | cta prop. |
+| `img` | `any` | `null` | No | img prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### BlogDataLayout
+Use **BlogDataLayout** when you need single-column BlogCard stack.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: Single-column BlogCard stack.
+**Import path**
+```jsx
+import { BlogDataLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### CardBlogDataLayout
+Use **CardBlogDataLayout** when you need grid layout rendering BlogCards from an items array.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: Grid layout rendering BlogCards from an items array.
+**Import path**
+```jsx
+import { CardBlogDataLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### CardColumnsPostLayout
+Use **CardColumnsPostLayout** when you need multi-column PostCard layout.. Accepts: {number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: Multi-column PostCard layout.
+**Import path**
+```jsx
+import { CardColumnsPostLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `cols` | `number` | `2` | No | cols prop. |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### CardInCardLayout
+Use **CardInCardLayout** when you need postCards rendered inside Card wrappers.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: PostCards rendered inside Card wrappers.
+**Import path**
+```jsx
+import { CardInCardLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### CoinGeckoExchanges
+Use **CoinGeckoExchanges** when you need sortable table of exchanges listing a token. Keyboard-accessible sort headers.. Accepts: {string} coinId, {string} className, {object} style, ...rest.
+Source description: Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
+**Import path**
+```jsx
+import { CoinGeckoExchanges } from '/snippets/components/integrators/feeds/Coingecko.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{string} coinId, {string} className, {object} style, ...rest`
+- Data source: `CoinGecko API`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `coinId` | `string` | `"arbitrum"` | No | coin Id prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### ColumnsBlogCardLayout
+Use **ColumnsBlogCardLayout** when you need multi-column BlogCard layout using Mintlify Columns.. Accepts: {Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest.
+Source description: Multi-column BlogCard layout using Mintlify Columns.
+**Import path**
+```jsx
+import { ColumnsBlogCardLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `cols` | `number` | `2` | No | cols prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### DiscordAnnouncements
+Use **DiscordAnnouncements** when you need discord announcement feed with parsed markdown content. Sanitised HTML.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: Discord announcement feed with parsed markdown content. Sanitised HTML.
+**Import path**
+```jsx
+import { DiscordAnnouncements } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/discord`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
 
 
 <CustomDivider />
@@ -96,6 +271,72 @@ import { ExternalContent } from '/snippets/components/integrators/embeds/Externa
 | `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### ForumLatestLayout
+Use **ForumLatestLayout** when you need latest forum topics with banner image and topic cards.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Source description: Latest forum topics with banner image and topic cards.
+**Import path**
+```jsx
+import { ForumLatestLayout } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Data source: `automation/forum`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### LatestVersion
+Use **LatestVersion** when you need displays the latest release version string from automation data.. Accepts: {any} version, {string} className, {object} style, ...rest.
+Source description: Displays the latest release version string from automation data.
+**Import path**
+```jsx
+import { LatestVersion } from '/snippets/components/integrators/feeds/Release.jsx'
+```
+**Metadata**
+- Status: `experimental`
+- Accepts: `{any} version, {string} className, {object} style, ...rest`
+- Data source: `release-version workflow`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `version` | `any` | `` | Yes | version prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### LumaEvents
+Use **LumaEvents** when you need upcoming/past event cards from Luma calendar data.. Accepts: {any} data, {any} limit, {string} type, {string} className, {object} style, ...rest.
+Source description: Upcoming/past event cards from Luma calendar data.
+**Import path**
+```jsx
+import { LumaEvents } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{any} data, {any} limit, {string} type, {string} className, {object} style, ...rest`
+- Data source: `Luma API`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `data` | `any` | `` | Yes | data prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `type` | `string` | `"upcoming"` | No | type prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
 
 
 <CustomDivider />
@@ -141,6 +382,37 @@ import { PdfEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
 | `width` | `string` | `'100%'` | No | Width used by the component. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### PostCard
+Use **PostCard** when you need post card with gradient header, scrollable content, and metadata.. Accepts: {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest.
+Source description: Post card with gradient header, scrollable content, and metadata.
+**Import path**
+```jsx
+import { PostCard } from '/snippets/components/integrators/blog/Data.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `{any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest`
+- Data source: `automation/blog`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `any` | `` | Yes | title prop. |
+| `content` | `any` | `` | Yes | content prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `author` | `string` | `"Unknown"` | No | author prop. |
+| `datePosted` | `any` | `null` | No | date Posted prop. |
+| `replyCount` | `any` | `null` | No | reply Count prop. |
+| `icon` | `string` | `"book-open"` | No | icon prop. |
+| `authorIcon` | `string` | `"user-pen"` | No | author Icon prop. |
+| `dateIcon` | `string` | `"calendar"` | No | date Icon prop. |
+| `cta` | `string` | `"Read More"` | No | cta prop. |
+| `img` | `any` | `null` | No | img prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
 
 
 <CustomDivider />

@@ -33,54 +33,6 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 };
 
 /**
- * @component LivepeerIconOld
- * @type elements
- * @subniche icons
- * @status deprecated
- * @deprecated Light-only SVG — replaced by LivepeerIcon which handles both themes.
- * @see LivepeerIcon
- * @description Legacy Livepeer icon using light-only SVG path.
- * @accepts ...props
-  * @aiDiscoverability none
- * @param {any} props - props prop.
- * @example
- * <LivepeerIconOld props="example" />
- */
-export const LivepeerIconOld = ({ ...props }) => {
-  return (
-    <Icon
-      icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
-      {...props}
-    />
-  );
-};
-
-/**
- * @component LivepeerIconFlipped
- * @type elements
- * @subniche icons
- * @status deprecated
- * @deprecated Flipped transform is non-standard — use LivepeerIcon directly.
- * @see LivepeerIcon
- * @description Horizontally flipped legacy Livepeer icon.
- * @accepts ...props
-  * @aiDiscoverability none
- * @param {any} props - props prop.
- * @example
- * <LivepeerIconFlipped props="example" />
- */
-export const LivepeerIconFlipped = ({ ...props }) => {
-  return (
-    <span style={{ display: "inline-block", transform: "scaleX(-1)" }}>
-      <Icon
-        icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
-        {...props}
-      />
-    </span>
-  );
-};
-
-/**
  * @component LivepeerIcon
  * @type elements
  * @subniche icons

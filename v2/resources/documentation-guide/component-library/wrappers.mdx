@@ -28,7 +28,7 @@ Run command: node operations/scripts/generate-component-docs.js --fix --template
 
 Containers that hold, group, or spatially arrange other components.
 
-This category currently contains **13** governed export(s).
+This category currently contains **31** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -44,8 +44,16 @@ This category currently contains **13** governed export(s).
 | --- | --- | --- | --- |
 | AccordionGroupList | `stable` | `/snippets/components/wrappers/accordions/AccordionGroupList.jsx` | Generates N numbered accordion sections inside an AccordionGroup. |
 | AccordionLayout | `stable` | `/snippets/components/wrappers/accordions/AccordionLayout.jsx` | Vertical stack layout with small gap, designed for accordion content sections. |
+| BasicList | `planned` | `/snippets/components/wrappers/lists/Lists.jsx` | Planned list component — not yet implemented. |
+| BorderedBox | `stable` | `/snippets/components/wrappers/containers/Containers.jsx` | Bordered container with configurable radius and background. |
 | CardCarousel | `stable` | `/snippets/components/wrappers/grids/CardCarousel.jsx` | Paginated horizontal carousel with prev/next navigation and dot indicators. |
+| CenteredContainer | `stable` | `/snippets/components/wrappers/containers/Containers.jsx` | Horizontally centred container with configurable max-width. |
 | DisplayCard | `stable` | `/snippets/components/wrappers/cards/CustomCards.jsx` | Card with icon, custom title row, and body content. |
+| DynamicTable | `stable` | `/snippets/components/wrappers/tables/Table.jsx` | Renders structured data as a scrollable table with section separators and accessible region. |
+| FlexContainer | `stable` | `/snippets/components/wrappers/containers/Layout.jsx` | Flexbox container with configurable direction, gap, and alignment. |
+| FullWidthContainer | `stable` | `/snippets/components/wrappers/containers/Containers.jsx` | Full-viewport-width container that breaks out of parent padding. |
+| GridContainer | `stable` | `/snippets/components/wrappers/containers/Layout.jsx` | CSS Grid container with configurable columns and gap. |
+| IconList | `planned` | `/snippets/components/wrappers/lists/Lists.jsx` | Planned icon list component — not yet implemented. |
 | InlineImageCard | `stable` | `/snippets/components/wrappers/cards/CustomCards.jsx` | Card with inline image alongside content, using negative margin breakout. |
 | InteractiveCard | `stable` | `/snippets/components/wrappers/cards/ShowcaseCards.jsx` | Single interactive card with hover effects. |
 | InteractiveCards | `stable` | `/snippets/components/wrappers/cards/ShowcaseCards.jsx` | Multi-column layout of interactive cards. |
@@ -54,6 +62,16 @@ This category currently contains **13** governed export(s).
 | ScrollBox | `stable` | `/snippets/components/wrappers/containers/ScrollBox.jsx` | Scrollable container with max-height, overflow hint, and accessible region role. |
 | SearchTable | `stable` | `/snippets/components/wrappers/tables/SearchTable.jsx` | Filterable table wrapper with search input and category dropdown. |
 | ShowcaseCards | `stable` | `/snippets/components/wrappers/cards/ShowcaseCards.jsx` | Paginated card layout with search, category, and product filtering. |
+| Spacer | `stable` | `/snippets/components/wrappers/containers/Layout.jsx` | Spacer element with configurable size. |
+| StepLinkList | `stable` | `/snippets/components/wrappers/lists/Lists.jsx` | Renders listItems as Mintlify Steps with GotoLink navigation. |
+| StepList | `stable` | `/snippets/components/wrappers/lists/Lists.jsx` | Renders listItems as Mintlify Steps with title, icon, and content. |
+| StyledStep | `stable` | `/snippets/components/wrappers/steps/Steps.jsx` | Single step with configurable icon, size, and colour. |
+| StyledSteps | `stable` | `/snippets/components/wrappers/steps/Steps.jsx` | Wrapper around Mintlify Steps with custom icon styling via injected CSS. |
+| StyledTable | `stable` | `/snippets/components/wrappers/tables/Tables.jsx` | Full-width table with header row styling and rounded container. |
+| TableCell | `stable` | `/snippets/components/wrappers/tables/Tables.jsx` | Table cell that switches between th and td based on header prop. |
+| TableRow | `stable` | `/snippets/components/wrappers/tables/Tables.jsx` | Table row with optional header styling and hover effect. |
+| UpdateLinkList | `stable` | `/snippets/components/wrappers/lists/Lists.jsx` | Renders update items as linked entries inside Mintlify Update component. |
+| UpdateList | `planned` | `/snippets/components/wrappers/lists/Lists.jsx` | Planned update list component — not yet implemented. |
 | WidthCard | `stable` | `/snippets/components/wrappers/cards/CustomCards.jsx` | Width-constrained card wrapper with configurable percentage width. |
 
 ## Component Reference
@@ -100,6 +118,50 @@ import { AccordionLayout } from '/snippets/components/wrappers/accordions/Accord
 
 <CustomDivider />
 
+### BasicList
+Use **BasicList** when you need planned list component — not yet implemented.. Accepts: none.
+Source description: Planned list component — not yet implemented.
+**Import path**
+```jsx
+import { BasicList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
+### BorderedBox
+Use **BorderedBox** when you need bordered container with configurable radius and background.. Accepts: children, className, ...rest.
+Source description: Bordered container with configurable radius and background.
+**Import path**
+```jsx
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `variant` | `string` | `"default"` | No | variant prop. |
+| `padding` | `string` | `"1rem"` | No | padding prop. |
+| `borderRadius` | `string` | `"8px"` | No | border Radius prop. |
+| `accentBar` | `string` | `""` | No | Optional accent border token applied to the left edge. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
 ### CardCarousel
 Use **CardCarousel** when you need paginated horizontal carousel with prev/next navigation and dot indicators.. Accepts: children, className, ...rest.
 Source description: Paginated horizontal carousel with prev/next navigation and dot indicators.
@@ -124,6 +186,35 @@ import { CardCarousel } from '/snippets/components/wrappers/grids/CardCarousel.j
 
 <CustomDivider />
 
+### CenteredContainer
+Use **CenteredContainer** when you need horizontally centred container with configurable max-width.. Accepts: children, className, ...rest.
+Source description: Horizontally centred container with configurable max-width.
+**Import path**
+```jsx
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `maxWidth` | `string` | `"800px"` | No | max Width prop. |
+| `padding` | `string` | `"0"` | No | padding prop. |
+| `preset` | `string` | `"default"` | No | Named width/layout preset for common documentation patterns. |
+| `width` | `string` | `""` | No | Explicit width override. |
+| `minWidth` | `string` | `""` | No | Explicit min-width override. |
+| `marginRight` | `string` | `""` | No | Optional right margin override. |
+| `marginBottom` | `string` | `""` | No | Optional bottom margin override. |
+| `textAlign` | `string` | `""` | No | Optional text alignment override. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
 ### DisplayCard
 Use **DisplayCard** when you need card with icon, custom title row, and body content.. Accepts: children, className, ...rest.
 Source description: Card with icon, custom title row, and body content.
@@ -144,6 +235,123 @@ import { DisplayCard } from '/snippets/components/wrappers/cards/CustomCards.jsx
 | `background` | `string` | `'var(--card-background)'` | No | Background used by the component. |
 | `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
 | `className` | `string` | `""` | No | CSS class name. |
+
+
+<CustomDivider />
+
+### DynamicTable
+Use **DynamicTable** when you need renders structured data as a scrollable table with section separators and accessible region.. Accepts: className, style, ...rest.
+Source description: Renders structured data as a scrollable table with section separators and accessible region.
+**Import path**
+```jsx
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `tableTitle` | `any` | `null` | No | table Title prop. |
+| `headerList` | `Array` | `[` | No | ] - header List prop. |
+| `itemsList` | `Array` | `[` | No | ] - items List prop. |
+| `monospaceColumns` | `Array` | `[` | No | ] - monospace Columns prop. |
+| `margin` | `any` | `` | Yes | margin prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### FlexContainer
+Use **FlexContainer** when you need flexbox container with configurable direction, gap, and alignment.. Accepts: children, className, ...rest.
+Source description: Flexbox container with configurable direction, gap, and alignment.
+**Import path**
+```jsx
+import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `direction` | `string` | `"row"` | No | direction prop. |
+| `gap` | `string` | `"1rem"` | No | gap prop. |
+| `align` | `string` | `"flex-start"` | No | align prop. |
+| `justify` | `string` | `"flex-start"` | No | justify prop. |
+| `wrap` | `boolean` | `false` | No | wrap prop. |
+| `marginTop` | `string` | `""` | No | Optional top margin override. |
+| `marginBottom` | `string` | `""` | No | Optional bottom margin override. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### FullWidthContainer
+Use **FullWidthContainer** when you need full-viewport-width container that breaks out of parent padding.. Accepts: children, className, ...rest.
+Source description: Full-viewport-width container that breaks out of parent padding.
+**Import path**
+```jsx
+import { FullWidthContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `backgroundColor` | `any` | `` | Yes | background Color prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### GridContainer
+Use **GridContainer** when you need cSS Grid container with configurable columns and gap.. Accepts: children, className, ...rest.
+Source description: CSS Grid container with configurable columns and gap.
+**Import path**
+```jsx
+import { GridContainer } from '/snippets/components/wrappers/containers/Layout.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `columns` | `any` | `` | Yes | columns prop. |
+| `gap` | `string` | `"1rem"` | No | gap prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### IconList
+Use **IconList** when you need planned icon list component — not yet implemented.. Accepts: none.
+Source description: Planned icon list component — not yet implemented.
+**Import path**
+```jsx
+import { IconList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
 
 
 <CustomDivider />
@@ -342,6 +550,225 @@ import { ShowcaseCards } from '/snippets/components/wrappers/cards/ShowcaseCards
 | `pageSize` | `number` | `10` | No | page Size prop. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### Spacer
+Use **Spacer** when you need element with configurable size.. Accepts: className, style, ...rest.
+Source description: Spacer element with configurable size.
+**Import path**
+```jsx
+import { Spacer } from '/snippets/components/wrappers/containers/Layout.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `string` | `"1rem"` | No | size prop. |
+| `direction` | `string` | `"vertical"` | No | direction prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StepLinkList
+Use **StepLinkList** when you need renders listItems as Mintlify Steps with GotoLink navigation.. Accepts: className, style, ...rest.
+Source description: Renders listItems as Mintlify Steps with GotoLink navigation.
+**Import path**
+```jsx
+import { StepLinkList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StepList
+Use **StepList** when you need renders listItems as Mintlify Steps with title, icon, and content.. Accepts: className, style, ...rest.
+Source description: Renders listItems as Mintlify Steps with title, icon, and content.
+**Import path**
+```jsx
+import { StepList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledStep
+Use **StyledStep** when you need single step with configurable icon, size, and colour.. Accepts: children, className, style, ...rest.
+Source description: Single step with configurable icon, size, and colour.
+**Import path**
+```jsx
+import { StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `any` | `` | Yes | title prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `titleSize` | `string` | `"h3"` | No | title Size prop. |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledSteps
+Use **StyledSteps** when you need wrapper around Mintlify Steps with custom icon styling via injected CSS.. Accepts: children, className, style, ...rest.
+Source description: Wrapper around Mintlify Steps with custom icon styling via injected CSS.
+**Import path**
+```jsx
+import { StyledSteps } from '/snippets/components/wrappers/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, style, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `iconColor` | `any` | `` | Yes | icon Color prop. |
+| `titleColor` | `any` | `` | Yes | title Color prop. |
+| `lineColor` | `any` | `` | Yes | line Color prop. |
+| `iconSize` | `string` | `"24px"` | No | icon Size prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledTable
+Use **StyledTable** when you need full-width table with header row styling and rounded container.. Accepts: children, className, ...rest.
+Source description: Full-width table with header row styling and rounded container.
+**Import path**
+```jsx
+import { StyledTable } from '/snippets/components/wrappers/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `variant` | `string` | `"default"` | No | variant prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### TableCell
+Use **TableCell** when you need table cell that switches between th and td based on header prop.. Accepts: children, className, ...rest.
+Source description: Table cell that switches between th and td based on header prop.
+**Import path**
+```jsx
+import { TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `align` | `string` | `"left"` | No | align prop. |
+| `header` | `boolean` | `false` | No | header prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### TableRow
+Use **TableRow** when you need table row with optional header styling and hover effect.. Accepts: children, className, ...rest.
+Source description: Table row with optional header styling and hover effect.
+**Import path**
+```jsx
+import { TableRow } from '/snippets/components/wrappers/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `children, className, ...rest`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `header` | `boolean` | `false` | No | header prop. |
+| `hover` | `boolean` | `false` | No | hover prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### UpdateLinkList
+Use **UpdateLinkList** when you need renders update items as linked entries inside Mintlify Update component.. Accepts: none.
+Source description: Renders update items as linked entries inside Mintlify Update component.
+**Import path**
+```jsx
+import { UpdateLinkList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
+### UpdateList
+Use **UpdateList** when you need planned update list component — not yet implemented.. Accepts: none.
+Source description: Planned update list component — not yet implemented.
+**Import path**
+```jsx
+import { UpdateList } from '/snippets/components/wrappers/lists/Lists.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
 
 
 <CustomDivider />

@@ -106,7 +106,7 @@ An AI-specific sitemap separate from the SEO sitemap, enriched with content type
 
 **Implementation Steps**
 
-**1.** Create tools/scripts/generate-ai-sitemap.js
+**1.** Create operations/scripts/generate-ai-sitemap.js
 
 **2.** Parse all v2/pages/**/*.mdx frontmatter for: title, description, category, lastVerified
 
@@ -304,7 +304,7 @@ A single JSON file listing every page with: URL, title, description, section, ta
 
 **Implementation Steps**
 
-**1.** Create tools/scripts/generate-docs-index.js
+**1.** Create operations/scripts/generate-docs-index.js
 
 **2.** Parse all v2/pages/**/*.mdx, extract frontmatter + headings + code block languages
 
@@ -679,7 +679,7 @@ Extend the existing generate-glossary.js to include synonyms and aliases per ter
 
 **Implementation Steps**
 
-**1.** Open tools/scripts/snippets/generate-data/scripts/generate-glossary.js
+**1.** Open operations/scripts/snippets/generate-data/scripts/generate-glossary.js
 
 **2.** Extend the term schema: add aliases: string[] and synonyms: string[] fields
 

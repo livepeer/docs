@@ -75,10 +75,10 @@ function getTaxonomy(filePath) {
   const rel = path.relative(REPO, filePath);
   const parts = rel.split(path.sep);
 
-  // tools/scripts/<type>/<concern>/<niche>/script.js
+  // operations/scripts/<type>/<concern>/<niche>/script.js
   // tools/dev/script.js
   // .githooks/script.js
-  // tools/scripts/config/script.js
+  // operations/scripts/config/script.js
 
   if (parts[0] === '.githooks') {
     return { type: 'dispatch', concern: 'governance', niche: 'hooks', location: 'hooks' };
@@ -90,7 +90,7 @@ function getTaxonomy(filePath) {
     return { type: 'generator', concern: 'governance', niche: 'config', location: 'config' };
   }
 
-  // tools/scripts/<type>/<concern>/[<niche>/]script.js
+  // operations/scripts/<type>/<concern>/[<niche>/]script.js
   if (parts[0] === 'tools' && parts[1] === 'scripts') {
     const typeDir = parts[2];
     const type = TYPE_MAP[typeDir] || typeDir;

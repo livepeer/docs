@@ -9,12 +9,12 @@ invoke_when:
   - "console errors across docs pages"
   - "validate all docs.json routes render"
 primary_paths:
-  - "tools/scripts/test-v2-pages.js"
+  - "operations/scripts/test-v2-pages.js"
   - ".github/workflows/test-v2-pages.yml"
   - "tools/v2-page-test-report.json"
   - "docs.json"
 primary_commands:
-  - "node tools/scripts/test-v2-pages.js"
+  - "node operations/scripts/test-v2-pages.js"
   - "npm --prefix tools run test:v2-pages"
 ---
 
@@ -36,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/test-v2-pages.js
+node operations/scripts/test-v2-pages.js
 npm --prefix tools run test:v2-pages
 ```
 

@@ -9,12 +9,12 @@ invoke_when:
   - "update docs structure diagram"
   - "sync status report with docs.json"
 primary_paths:
-  - "tools/scripts/snippets/generate-docs-status.js"
+  - "operations/scripts/snippets/generate-docs-status.js"
   - "snippets/generated/docs-status-table.mdx"
   - "snippets/generated/docs-structure-diagram.mdx"
   - "snippets/docs-status-data.json"
 primary_commands:
-  - "node tools/scripts/snippets/generate-docs-status.js"
+  - "node operations/scripts/snippets/generate-docs-status.js"
   - "rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx"
 ---
 
@@ -36,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/snippets/generate-docs-status.js
+node operations/scripts/snippets/generate-docs-status.js
 rg -n \"Total Pages|Auto-generated from docs.json\" snippets/generated/docs-status-table.mdx
 ```
 

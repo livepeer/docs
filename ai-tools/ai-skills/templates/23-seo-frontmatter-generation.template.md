@@ -1,22 +1,21 @@
 ---
 name: seo-frontmatter-generation
-version: "1.1"
-category: governance
 description: >-
-  Generate and normalize SEO metadata fields in MDX frontmatter with safe, repo-supported scripts. Use when tasks include generate seo metadata for docs pages, missing keywords or og:image in mdx, bulk frontmatter seo normalization.
-tier: 2
-invoke_when:
-  - "generate seo metadata for docs pages"
-  - "missing keywords or og:image in mdx"
-  - "bulk frontmatter seo normalization"
+  Generate and normalize SEO metadata fields in MDX frontmatter with safe,
+  repo-supported scripts. Use when: generate seo metadata for docs pages,
+  missing keywords or og:image in mdx, bulk frontmatter seo normalization.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/snippets/generate-seo.js"
-  - "tools/scripts/dev/seo-generator-safe.js"
+  - "operations/scripts/snippets/generate-seo.js"
+  - "tools/dev/seo-generator-safe.js"
   - "v2/pages"
   - "snippets/assets/domain"
 primary_commands:
-  - "node tools/scripts/snippets/generate-seo.js --dry-run"
-  - "node tools/scripts/snippets/generate-seo.js --file=v2/resources/documentation-guide/style-guide.mdx"
+  - "node operations/scripts/snippets/generate-seo.js --dry-run"
+  - "node operations/scripts/snippets/generate-seo.js --file=v2/resources/documentation-guide/style-guide.mdx"
 ---
 
 SKILL: SEO Frontmatter Generation
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/snippets/generate-seo.js --dry-run
-node tools/scripts/snippets/generate-seo.js --file=v2/resources/documentation-guide/style-guide.mdx
+node operations/scripts/snippets/generate-seo.js --dry-run
+node operations/scripts/snippets/generate-seo.js --file=v2/resources/documentation-guide/style-guide.mdx
 ```
 
 Deliverable Format

@@ -25,13 +25,13 @@ Do not delete entries. Use `lifecycle_state: retired` instead.
 
 ```bash
 # Validate registry structure and coverage
-node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --coverage
+node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --coverage
 
 # Validate lane assignments
-node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --lanes
+node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check --lanes
 
 # Write the generated inventory report
-node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --write-report
+node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --write-report
 ```
 
 ## Lane model

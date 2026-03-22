@@ -1,16 +1,16 @@
 ---
 name: docs-copy
-version: "1.1"
-category: authoring
 description: >-
-  Route documentation copy planning, rewriting, review, and claim-sensitive updates through the correct Livepeer Docs skills so wording changes stay accurate, scoped, and ready for handoff.
-tier: 2
-invoke_when:
-  - "apply docs-copy framework to this task"
-  - "rewrite this docs content for clarity and accuracy"
-  - "plan a docs copy pass for this page"
-  - "review and tighten this docs copy"
-  - "update docs copy after facts changed"
+  Route documentation copy planning, rewriting, review, and claim-sensitive
+  updates through the correct Livepeer Docs skills so wording changes stay
+  accurate, scoped, and ready for handoff. Use when: apply docs-copy framework
+  to this task, rewrite this docs content for clarity and accuracy, plan a docs
+  copy pass for this page, review and tighten this docs copy, update docs copy
+  after facts changed.
+metadata:
+  version: "1.2"
+  category: "authoring"
+  tier: "2"
 primary_paths:
   - "v2"
   - "docs-guide/frameworks/content-system.mdx"
@@ -20,7 +20,7 @@ primary_paths:
   - "ai-tools/ai-skills/product-thinking/SKILL.md"
   - "ai-tools/ai-skills/templates"
 primary_commands:
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
   - "node tests/run-all.js --staged --skip-browser"
   - "node tests/run-pr-checks.js --base-ref docs-v2-dev"
 ---

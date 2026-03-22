@@ -17,10 +17,11 @@
 
 ### Root-level file allowlist
 
-Only these 3 files are permitted directly under `ai-tools/ai-skills/`:
+Only these 4 files are permitted directly under `ai-tools/ai-skills/`:
 
 | File | Purpose |
 |---|---|
+| `agentskills-io-standard.md` | Canonical reference for the agentskills.io open standard (Linux Foundation, Dec 2025) |
 | `content-map.md` | Inventory of agent governance surfaces |
 | `inventory.json` | Machine-readable file catalog |
 | `skill-spec-contract.md` | Canonical field contract and validation rules |
@@ -35,11 +36,12 @@ Any other `.md` or `.json` at root is a blocking validator error.
 |---|---|---|
 | `audit` | Read-only scan, measure, report | `script-footprint-and-usage-audit`, `docs-quality-and-freshness-audit`, `docs-coverage-and-route-integrity-audit`, `rubric-static-review` |
 | `authoring` | Content creation and editing guidance | `page-authoring`, `docs-copy`, `product-thinking` |
+| `content-pipeline` | Multi-pass page writing and review pipeline | `content-pipeline-pass-a`, `content-pipeline-pass-b`, `content-pipeline-tab-map` |
 | `governance` | Enforce rules, apply standards, manage artifacts | `component-layout-governance`, `generated-mdx-banners-governance`, `style-and-language-homogenizer-en-gb`, `cleanup-quarantine-manager` |
 | `review-pipeline` | Multi-step review and fix workflows | `docs-review-packet-generation`, `docs-review-fix-execution` |
 | `meta` | Orchestration, packaging, skill self-governance | `repo-audit-orchestrator`, `cross-agent-packager`, `skill-docs` |
 
-`category` is a required field on every governed skill artifact (enforced by `skill-docs.test.js`).
+`metadata.category` is a required field on every governed skill artifact (enforced by `operations/tests/unit/skill-docs.test.js`).
 
 ---
 
@@ -47,10 +49,10 @@ Any other `.md` or `.json` at root is a blocking validator error.
 
 | Value | Meaning | Indicators |
 |---|---|---|
-| `1` | Single-command skill | One `Command` block in SKILL.md, no `references/` directory needed |
-| `2` | Multi-step workflow skill | Multiple phases, conditional routing, or a `references/` subdirectory |
+| `"1"` | Single-command skill | One `Command` block in SKILL.md, no `references/` directory needed |
+| `"2"` | Multi-step workflow skill | Multiple phases, conditional routing, or a `references/` subdirectory |
 
-`tier` is optional on both local skills and templates. Omit it for skills where complexity is not worth signalling.
+`metadata.tier` is optional on both local skills and templates. Values must be quoted strings (`"1"` or `"2"`). Omit for skills where complexity is not worth signalling.
 
 ---
 
@@ -70,16 +72,16 @@ Any other `.md` or `.json` at root is a blocking validator error.
 
 1. Write the template at `ai-tools/ai-skills/templates/NN-skill-name.template.md` — pick the next available numeric prefix.
 2. Create a local `ai-tools/ai-skills/skill-name/SKILL.md` if the skill is in the audit pipeline or needs a `references/` directory.
-3. Run `node tests/unit/skill-docs.test.js` — must pass before committing.
-4. Regenerate exports: `node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`.
+3. Run `node operations/tests/unit/skill-docs.test.js` — must pass before committing.
+4. Regenerate exports: `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`.
 5. If the skill belongs in the audit pipeline, add an entry to `ai-tools/ai-skills/catalog/skill-catalog.json` and `ai-tools/ai-skills/catalog/execution-manifest.json`.
 
 ### Editing a skill
 
 1. Edit the template (canonical source) first.
 2. If a local `SKILL.md` exists, update it to match.
-3. Bump `version` in frontmatter on every file that changes.
-4. Run `node tests/unit/skill-docs.test.js`.
+3. Bump `metadata.version` in frontmatter on every file that changes.
+4. Run `node operations/tests/unit/skill-docs.test.js`.
 5. Regenerate exports.
 
 ### Retiring a skill
@@ -101,9 +103,9 @@ Never delete. Always `git mv` to `_workspace/retired/`.
 |---|---|---|
 | `ai-tools/ai-skills/catalog/skill-catalog.json` | When adding or removing a pipeline stage | Manual edit |
 | `ai-tools/ai-skills/catalog/execution-manifest.json` | When run order changes | Manual edit |
-| `ai-tools/registry/ai-tools-registry.json` | When any ai-tools artifact is added, moved, or retired | Manual edit + `node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check` |
-| `ai-tools/registry/ai-tools-inventory.md` | After registry changes | `node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --write-report` |
-| `ai-tools/agent-packs/skills/` | After any template or local SKILL.md changes | `node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all` |
+| `ai-tools/registry/ai-tools-registry.json` | When any ai-tools artifact is added, moved, or retired | Manual edit + `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check` |
+| `ai-tools/registry/ai-tools-inventory.md` | After registry changes | `node operations/scripts/generators/governance/reports/generate-ai-tools-inventory.js --write-report` |
+| `ai-tools/agent-packs/skills/` | After any template or local SKILL.md changes | `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all` |
 
 ---
 
@@ -111,13 +113,13 @@ Never delete. Always `git mv` to `_workspace/retired/`.
 
 | Check | Enforced by | Severity |
 |---|---|---|
-| Required frontmatter fields (`name`, `version`, `description`, `invoke_when`, `category`) | `tests/unit/skill-docs.test.js` | Blocking |
-| `category` enum validation | `tests/unit/skill-docs.test.js` | Blocking |
-| `primary_paths` / `primary_commands` not on local skills | `tests/unit/skill-docs.test.js` | Blocking |
-| Template operational fields (`tier`, `primary_paths`, `primary_commands`) required on templates | `tests/unit/skill-docs.test.js` | Blocking |
-| Stray root `.md` / `.json` files | `tests/unit/skill-docs.test.js` | Blocking |
-| Template prefix uniqueness | `tests/unit/skill-docs.test.js` | Blocking |
-| Template / agent-pack parity count | `tests/unit/skill-docs.test.js` | Blocking |
-| Cross-reference paths resolve | `tests/unit/skill-docs.test.js` | Blocking |
-| No circular references | `tests/unit/skill-docs.test.js` | Blocking |
-| Version bump on content change | `tests/unit/skill-docs.test.js` | Warning |
+| Required frontmatter fields (`name`, `description`, `metadata` with `version` and `category`) | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| `metadata.category` enum validation (6 values) | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| `primary_paths` / `primary_commands` not on local skills | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Template operational fields (`metadata.tier`, `primary_paths`, `primary_commands`) required on templates | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Stray root `.md` / `.json` files (allowlist: 4 files) | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Template prefix uniqueness | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Template / agent-pack parity count | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Cross-reference paths resolve | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| No circular references | `operations/tests/unit/skill-docs.test.js` | Blocking |
+| Version bump on content change | `operations/tests/unit/skill-docs.test.js` | Warning |

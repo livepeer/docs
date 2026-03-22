@@ -1,13 +1,10 @@
 ---
 name: cleanup-quarantine-manager
-version: "1.1"
-category: governance
 description: >-
-  Classify likely obsolete repository artifacts, quarantine them with reversible manifests, and guide safe cleanup review before any deletion or irreversible repository pruning.
-invoke_when:
-  - "quarantine obsolete repo artifacts safely"
-  - "review cleanup candidates before deletion"
-  - "generate a reversible cleanup manifest"
+  Classify likely obsolete repository artifacts, quarantine them with reversible manifests, and guide safe cleanup review before any deletion or irreversible repository pruning. Use when quarantining obsolete repo artifacts safely, reviewing cleanup candidates before deletion, or generating a reversible cleanup manifest.
+metadata:
+  version: "1.2"
+  category: governance
 ---
 
 SKILL: Cleanup Quarantine Manager
@@ -17,8 +14,8 @@ Reduce repo noise safely by quarantining likely obsolete artifacts before any de
 
 Commands
 ```bash
-node tools/scripts/remediators/content/repair/quarantine-manager.js
-node tools/scripts/remediators/content/repair/quarantine-manager.js --apply
+node operations/scripts/remediators/content/repair/quarantine-manager.js
+node operations/scripts/remediators/content/repair/quarantine-manager.js --apply
 ```
 
 Outputs

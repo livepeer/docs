@@ -1,18 +1,15 @@
 ---
 name: content-pipeline-tab-map
-version: '1.0'
-category: content-pipeline
 description: >-
   Run the Level 1 tab map for a Livepeer docs tab (gateways or orchestrators).
   Produces a structural inventory of the tab's sections and pages — classified
   against the canonical section vocabulary — with audience journey map, gap
-  analysis, and recommended actions. Required before running any Level 2 operation.
-invoke_when:
-  - 'run the tab map for [tab]'
-  - 'generate the content pipeline tab map'
-  - 'Level 1 pipeline for [tab]'
-  - 'scan and classify [gateways/orchestrators] tab'
-  - 'what pages and gaps are in [tab]?'
+  analysis, and recommended actions. Required before running any Level 2 content
+  pipeline operation. Use when generating a tab map, running Level 1 pipeline,
+  or scanning and classifying a gateways or orchestrators tab.
+metadata:
+  version: "1.1"
+  category: content-pipeline
 ---
 
 SKILL: Content Pipeline — Level 1 Tab Map

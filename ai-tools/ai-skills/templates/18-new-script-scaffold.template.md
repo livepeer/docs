@@ -1,22 +1,21 @@
 ---
 name: new-script-scaffold
-version: "1.1"
-category: meta
 description: >-
-  Create new repository scripts with compliant header template and expected metadata tags. Use when tasks include create a new repo script, script header template required, bootstrap test or tooling script.
-tier: 2
-invoke_when:
-  - "create a new repo script"
-  - "script header template required"
-  - "bootstrap test or tooling script"
+  Create new repository scripts with compliant header template and expected
+  metadata tags. Use when: create a new repo script, script header template
+  required, bootstrap test or tooling script.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/generators/governance/scaffold/new-script.js"
+  - "operations/scripts/generators/governance/scaffold/new-script.js"
   - "tests/unit/script-docs.test.js"
   - "tools/script-index.md"
   - "tests/script-index.md"
 primary_commands:
-  - "node tools/scripts/generators/governance/scaffold/new-script.js --path tools/scripts/my-script.js"
-  - "node tests/unit/script-docs.test.js --files tools/scripts/my-script.js --enforce-existing"
+  - "node operations/scripts/generators/governance/scaffold/new-script.js --path operations/scripts/my-script.js"
+  - "node tests/unit/script-docs.test.js --files operations/scripts/my-script.js --enforce-existing"
 ---
 
 SKILL: New Script Scaffold
@@ -37,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generators/governance/scaffold/new-script.js --path tools/scripts/my-script.js
-node tests/unit/script-docs.test.js --files tools/scripts/my-script.js --enforce-existing
+node operations/scripts/generators/governance/scaffold/new-script.js --path operations/scripts/my-script.js
+node tests/unit/script-docs.test.js --files operations/scripts/my-script.js --enforce-existing
 ```
 
 Deliverable Format

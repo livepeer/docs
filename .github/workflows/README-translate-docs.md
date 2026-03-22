@@ -9,7 +9,7 @@ The workflow also fails non-dry runs if the checked-in provider is accidentally 
 
 1. Installs `tools` dependencies
 2. Runs i18n unit tests (`npm --prefix tools run test:i18n`)
-3. Runs `tools/scripts/i18n/translate-docs.js`
+3. Runs `operations/scripts/i18n/translate-docs.js`
 4. Updates `docs.json` (`generate-localized-docs-json.js`) when not dry-run
 5. Validates generated localized MDX (`validate-generated.js`) when not dry-run
 6. Validates docs navigation (`tests/unit/docs-navigation.test.js`) when not dry-run

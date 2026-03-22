@@ -106,7 +106,7 @@ This policy starts with documentation plus a recommendation-only cleanup matrix.
 Generator:
 
 ```bash icon="terminal"
-node tools/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --as-of 2026-03-16
+node operations/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --as-of 2026-03-16
 ```
 
 Generated artifacts:
@@ -115,6 +115,15 @@ Generated artifacts:
 - `tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.json`
 
 The matrix inventories current `v2/` legacy workspace buckets, stray `.md` files, deprecated/archive folders, and similar non-publishable material. Locale trees are governed now but default to later move-wave review unless a human explicitly promotes them.
+
+## i18n Trees
+
+`v2/cn/`, `v2/es/`, `v2/fr/` are translation mirror trees governed separately from the standard content section rules.
+
+- i18n trees do **not** have `_workspace/` directories. Do not create them.
+- i18n content is not subject to standard `_workspace/` normalisation passes.
+- Stale or incomplete translations follow the same deprecation path as their English counterparts, governed by the English page lifecycle.
+- These trees are not touched by standard workspace governance unless a specific i18n migration is explicitly approved.
 
 ## Follow-on Workstreams
 

@@ -1,6 +1,13 @@
 # **Repo Structure & Documentation Architecture**
 
-**Deliverable:** D2 — Component Governance Framework, Part 2 **Repository:** `livepeer/docs`, `docs-v2` branch **Scope:** `snippets/components/` — physical structure, naming, documentation, registry, pipeline **Platform:** Mintlify (MDX-based) **Date:** 7 March 2026 **Author:** Wonderland (Alison Haire) / Claude collaboration **Status:** COMPLETE **Depends on:** D1 (Classification & Purpose Model)
+**Deliverable:** D2 — Component Governance Framework, Part 2
+ **Repository:** `livepeer/docs`, `docs-v2` branch
+ **Scope:** `snippets/components/` — physical structure, naming, documentation, registry, pipeline
+ **Platform:** Mintlify (MDX-based)
+ **Date:** 7 March 2026
+ **Author:** Wonderland (Alison Haire) / Claude collaboration
+ **Status:** COMPLETE
+ **Depends on:** D1 (Classification & Purpose Model)
 
 ## **1. Purpose**
 
@@ -167,7 +174,7 @@ A JSON Schema file (`docs-guide/component-registry-schema.json`) validates the r
 
 ### **8.1 Script**
 
-**File:** `tools/scripts/generate-component-registry.js`
+**File:** `operations/scripts/generate-component-registry.js`
 
 Follows the existing script governance model (INFRA-01): structured header, documented in `docs-guide/scripts-index.md`, scaffolded via `new-script.js`.
 
@@ -272,7 +279,7 @@ Per the Component Governance Framework plan:
 | **Item** | **Downstream deliverable** | **Notes** |
 | --- | --- | --- |
 | Composition rules under nested import restriction | D4 (Component Development Standards) | Mintlify's no-nested-imports constraint means composition is MDX-page-level. D4 must define how this works in practice. |
-| Generation script implementation | D9 (Migration Plan) | tools/scripts/generate-component-registry.js — new script, follows INFRA-01 pattern |
+| Generation script implementation | D9 (Migration Plan) | operations/scripts/generate-component-registry.js — new script, follows INFRA-01 pattern |
 | Pre-commit hook extension | D9 (Migration Plan) | Extend existing .githooks/pre-commit to trigger registry generation |
 | JSON Schema creation | D9 (Migration Plan) | docs-guide/component-registry-schema.json — validates registry structure |
 | Published MDX page updates | D9 (Migration Plan) | Restructure Resource Hub component library pages to per-category format with generated + editorial content |

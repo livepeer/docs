@@ -263,7 +263,7 @@ Content was rewritten to be zero-to-hero accessible for each persona, product-fo
 
 **Delivered:** SEO and Answer Engine Optimisation were treated structurally, not cosmetically. In-repo tooling was built for ongoing maintenance:
 
-- `tools/scripts/snippets/generate-seo.js` — metadata generation script for MDX frontmatter, runnable at any time with a context file for additional direction
+- `operations/scripts/snippets/generate-seo.js` — metadata generation script for MDX frontmatter, runnable at any time with a context file for additional direction
 - AEO logic embedded in the SEO generator
 - Consistent frontmatter and metadata patterns established across pages
 - URL and navigation consistency improvements through the v2 architecture
@@ -325,7 +325,7 @@ This is the most significant section of the audit. The work delivered extends fa
 
 **Structural and style enforcement.** Automated checks enforce style guide compliance, MDX validity, and import correctness on every commit and every pull request. This converts documentation authoring from a manually-reviewed process into a repeatable, tooling-validated system.
 
-**Navigation management.** `docs.json` controls all routing and navigation. `tools/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders plus the root aggregate index — ensuring navigation never drifts from actual page content.
+**Navigation management.** `docs.json` controls all routing and navigation. `operations/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders plus the root aggregate index — ensuring navigation never drifts from actual page content.
 
 **v2 section organisation.** The `v2/pages/` directory is structured with numbered prefixes (`00_home`, `01_about`, `02_community`, etc.) for deterministic ordering and clear maintainer navigation.
 
@@ -361,9 +361,9 @@ A dedicated `pre-commit-no-deletions` hook prevents accidental bulk deletions.
 - Integration tests: `tests/integration/browser.test.js` (Puppeteer), `tests/integration/domain-pages-audit.js`, `tests/integration/v2-link-audit.js`
 - Test runners: `tests/run-all.js`, `tests/run-pr-checks.js`
 
-**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/policies/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `tools/scripts/generate-docs-guide-indexes.js --check`.
+**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/policies/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `operations/scripts/generate-docs-guide-indexes.js --check`.
 
-**Repo evidence (full script inventory):** See `docs-guide/catalog/scripts-catalog.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `tools/scripts/generate-pages-index.js`.
+**Repo evidence (full script inventory):** See `docs-guide/catalog/scripts-catalog.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `operations/scripts/generate-pages-index.js`.
 
 ### 5c. AI, Automations, and Community Pipelines
 
@@ -405,23 +405,23 @@ A multi-source automation layer was built providing ongoing content freshness an
 
 A suite of maintenance scripts was built to ensure the documentation system remains maintainable without manual overhead.
 
-**SEO and AEO generation.** `tools/scripts/snippets/generate-seo.js` generates SEO metadata for all MDX pages. The script accepts a context file for additional direction and can be run at any time to refresh metadata across the entire site.
+**SEO and AEO generation.** `operations/scripts/snippets/generate-seo.js` generates SEO metadata for all MDX pages. The script accepts a context file for additional direction and can be run at any time to refresh metadata across the entire site.
 
-**Glossary generation.** `tools/scripts/snippets/generate-data/scripts/generate-glossary.js` automatically extracts and classifies terminology from the repository, with optional LLM-assisted classification. Generated term data is output to `tools/scripts/snippets/generate-data/data/glossary-terms.json`. `terminology-search.js` provides discovery and search across generated terms.
+**Glossary generation.** `operations/scripts/snippets/generate-data/scripts/generate-glossary.js` automatically extracts and classifies terminology from the repository, with optional LLM-assisted classification. Generated term data is output to `operations/scripts/snippets/generate-data/data/glossary-terms.json`. `terminology-search.js` provides discovery and search across generated terms.
 
-**Pages index generation.** `tools/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders and the root aggregate index.
+**Pages index generation.** `operations/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders and the root aggregate index.
 
-**Docs-guide index generation.** `tools/scripts/generate-docs-guide-indexes.js` generates the script catalog, workflow catalog, and template catalog in `docs-guide/` — ensuring the internal maintainer documentation stays in sync with the actual repository contents.
+**Docs-guide index generation.** `operations/scripts/generate-docs-guide-indexes.js` generates the script catalog, workflow catalog, and template catalog in `docs-guide/` — ensuring the internal maintainer documentation stays in sync with the actual repository contents.
 
-**Script self-documentation enforcement.** `tests/unit/script-docs.test.js` enforces a required header schema on all scripts (summary, usage, owner), keeps group script indexes in sync, and builds the aggregate script index. This means any new script added to the repository is automatically catalogued and validated. `tools/scripts/new-script.js` creates new scripts prefilled with the required docs header template.
+**Script self-documentation enforcement.** `tests/unit/script-docs.test.js` enforces a required header schema on all scripts (summary, usage, owner), keeps group script indexes in sync, and builds the aggregate script index. This means any new script added to the repository is automatically catalogued and validated. `operations/scripts/new-script.js` creates new scripts prefilled with the required docs header template.
 
-**Script audit tooling.** `tools/scripts/audit-scripts.js` audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports.
+**Script audit tooling.** `operations/scripts/audit-scripts.js` audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports.
 
-**Component documentation.** `tools/scripts/snippets/update-component-library.sh` automatically creates and updates component library documentation.
+**Component documentation.** `operations/scripts/snippets/update-component-library.sh` automatically creates and updates component library documentation.
 
-**Docs status generation.** `tools/scripts/snippets/generate-docs-status.js` generates documentation coverage and status reports.
+**Docs status generation.** `operations/scripts/snippets/generate-docs-status.js` generates documentation coverage and status reports.
 
-**API documentation generation.** `tools/scripts/snippets/generate-api-docs.sh` and `tools/scripts/snippets/fetch-openapi-specs.sh` handle OpenAPI spec fetching and API documentation generation.
+**API documentation generation.** `operations/scripts/snippets/generate-api-docs.sh` and `operations/scripts/snippets/fetch-openapi-specs.sh` handle OpenAPI spec fetching and API documentation generation.
 
 **Repo evidence:** All 58 scripts catalogued in `docs-guide/catalog/scripts-catalog.mdx`.
 
@@ -457,9 +457,9 @@ The depth of technical content in the v2 documentation significantly exceeds wha
 
 **OpenAPI and API specifications.** Full OpenAPI spec integration with multiple API specification files: `api/openapi.yaml`, `api/openapi.json`, `api/studio.yaml`, `api/gateway.openapi.yaml`, `api/ai-worker.yaml`, `api/cli-http.yaml`. API documentation generation scripts are in place and operational.
 
-**LPT exchange data integration.** `tools/scripts/snippets/fetch-lpt-exchanges.sh` fetches LPT exchange data. `snippets/data/` contains domain data modules including exchange and reference data surfaces.
+**LPT exchange data integration.** `operations/scripts/snippets/fetch-lpt-exchanges.sh` fetches LPT exchange data. `snippets/data/` contains domain data modules including exchange and reference data surfaces.
 
-**External docs integration.** `tools/scripts/snippets/fetch-external-docs.sh` provides automated fetching of external documentation sources.
+**External docs integration.** `operations/scripts/snippets/fetch-external-docs.sh` provides automated fetching of external documentation sources.
 
 **SDK documentation.** Automated SDK generation is handled by `sdk_generation.yaml` (GitHub Actions), which runs on schedule and produces PRs with updated SDK documentation.
 
@@ -756,27 +756,27 @@ This section covers all software engineering, automation, and tooling work — t
 
 | #   | Work item                                                                                                                 | Description                                                  | Low hrs | High hrs | Actuals |
 | --- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------- | -------- | ------- |
-| M1  | `tools/scripts/snippets/generate-seo.js`                                                                                  | SEO metadata generator with context file support             | 5       | 9        | \_\_    |
-| M2  | `tools/scripts/dev/seo-generator-safe.js` + `test-seo-generator.js`                                                       | SEO generator dev/test variants                              | 2       | 4        | \_\_    |
-| M3  | `tools/scripts/snippets/generate-data/scripts/generate-glossary.js`                                                       | Glossary term extraction and generation                      | 5       | 9        | \_\_    |
-| M4  | `tools/scripts/snippets/generate-data/scripts/terminology-search.js`                                                      | Terminology discovery and search                             | 3       | 5        | \_\_    |
-| M5  | `tools/scripts/snippets/generate-data/data/glossary-terms.json`                                                           | Generated glossary data artifact                             | 1       | 2        | \_\_    |
-| M6  | `tools/scripts/generate-pages-index.js`                                                                                   | Section-level index.mdx generator                            | 4       | 7        | \_\_    |
-| M7  | `tools/scripts/generate-docs-guide-indexes.js`                                                                            | Docs-guide catalog generator (scripts, workflows, templates) | 4       | 7        | \_\_    |
-| M8  | `tools/scripts/new-script.js`                                                                                             | New script template creator with enforced header             | 2       | 4        | \_\_    |
-| M9  | `tools/scripts/audit-scripts.js`                                                                                          | Full-repo script audit and SCRIPT_AUDIT report generator     | 3       | 6        | \_\_    |
-| M10 | `tools/scripts/snippets/update-component-library.sh`                                                                      | Component library documentation updater                      | 2       | 4        | \_\_    |
-| M11 | `tools/scripts/snippets/generate-docs-status.js`                                                                          | Documentation coverage and status reporter                   | 3       | 5        | \_\_    |
-| M12 | `tools/scripts/snippets/fetch-openapi-specs.sh`                                                                           | OpenAPI spec fetcher                                         | 2       | 4        | \_\_    |
-| M13 | `tools/scripts/snippets/generate-api-docs.sh`                                                                             | API documentation generator                                  | 3       | 5        | \_\_    |
-| M14 | `tools/scripts/snippets/fetch-lpt-exchanges.sh`                                                                           | LPT exchange data fetcher                                    | 2       | 4        | \_\_    |
-| M15 | `tools/scripts/snippets/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
-| M16 | `tools/scripts/snippets/test-scripts.sh`                                                                                  | Script test runner                                           | 1       | 2        | \_\_    |
+| M1  | `operations/scripts/snippets/generate-seo.js`                                                                                  | SEO metadata generator with context file support             | 5       | 9        | \_\_    |
+| M2  | `tools/dev/seo-generator-safe.js` + `test-seo-generator.js`                                                       | SEO generator dev/test variants                              | 2       | 4        | \_\_    |
+| M3  | `operations/scripts/snippets/generate-data/scripts/generate-glossary.js`                                                       | Glossary term extraction and generation                      | 5       | 9        | \_\_    |
+| M4  | `operations/scripts/snippets/generate-data/scripts/terminology-search.js`                                                      | Terminology discovery and search                             | 3       | 5        | \_\_    |
+| M5  | `operations/scripts/snippets/generate-data/data/glossary-terms.json`                                                           | Generated glossary data artifact                             | 1       | 2        | \_\_    |
+| M6  | `operations/scripts/generate-pages-index.js`                                                                                   | Section-level index.mdx generator                            | 4       | 7        | \_\_    |
+| M7  | `operations/scripts/generate-docs-guide-indexes.js`                                                                            | Docs-guide catalog generator (scripts, workflows, templates) | 4       | 7        | \_\_    |
+| M8  | `operations/scripts/new-script.js`                                                                                             | New script template creator with enforced header             | 2       | 4        | \_\_    |
+| M9  | `operations/scripts/audit-scripts.js`                                                                                          | Full-repo script audit and SCRIPT_AUDIT report generator     | 3       | 6        | \_\_    |
+| M10 | `operations/scripts/snippets/update-component-library.sh`                                                                      | Component library documentation updater                      | 2       | 4        | \_\_    |
+| M11 | `operations/scripts/snippets/generate-docs-status.js`                                                                          | Documentation coverage and status reporter                   | 3       | 5        | \_\_    |
+| M12 | `operations/scripts/snippets/fetch-openapi-specs.sh`                                                                           | OpenAPI spec fetcher                                         | 2       | 4        | \_\_    |
+| M13 | `operations/scripts/snippets/generate-api-docs.sh`                                                                             | API documentation generator                                  | 3       | 5        | \_\_    |
+| M14 | `operations/scripts/snippets/fetch-lpt-exchanges.sh`                                                                           | LPT exchange data fetcher                                    | 2       | 4        | \_\_    |
+| M15 | `operations/scripts/snippets/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
+| M16 | `operations/scripts/snippets/test-scripts.sh`                                                                                  | Script test runner                                           | 1       | 2        | \_\_    |
 | M17 | OG image tooling (`dev/update-og-image.js`, `batch-update-og-image.sh`, `replace-og-image.py`, `update-all-og-images.js`) | Open Graph image management tooling                          | 4       | 8        | \_\_    |
-| M18 | `tools/scripts/test-v2-pages.js`, `test-all-pages-browser.js`, `test-all-pages-comprehensive.js`                          | Page testing scripts                                         | 4       | 7        | \_\_    |
-| M19 | `tools/scripts/verify-all-pages.js`, `verify-pages.js`, `final-verification.js`                                           | Page verification scripts                                    | 3       | 5        | \_\_    |
-| M20 | `tools/scripts/audit-all-v2-pages.js`, `audit-component-usage.js`, `check-component-errors.js`                            | Audit and check scripts                                      | 3       | 6        | \_\_    |
-| M21 | `tools/scripts/inspect-page.js`, `inspect-video-page.js`, `find-correct-url.js`, `debug-mint-dev.js`                      | Debug and inspection utilities                               | 2       | 4        | \_\_    |
+| M18 | `operations/scripts/test-v2-pages.js`, `test-all-pages-browser.js`, `test-all-pages-comprehensive.js`                          | Page testing scripts                                         | 4       | 7        | \_\_    |
+| M19 | `operations/scripts/verify-all-pages.js`, `verify-pages.js`, `final-verification.js`                                           | Page verification scripts                                    | 3       | 5        | \_\_    |
+| M20 | `operations/scripts/audit-all-v2-pages.js`, `audit-component-usage.js`, `check-component-errors.js`                            | Audit and check scripts                                      | 3       | 6        | \_\_    |
+| M21 | `operations/scripts/inspect-page.js`, `inspect-video-page.js`, `find-correct-url.js`, `debug-mint-dev.js`                      | Debug and inspection utilities                               | 2       | 4        | \_\_    |
 | M22 | `tasks/scripts/` (9 task-scoped audit scripts)                                                                            | Task-scoped audit tooling                                    | 3       | 6        | \_\_    |
 |     |                                                                                                                           | **MAINTENANCE SCRIPTS SUBTOTAL**                             | **63**  | **117**  | \_\_    |
 
@@ -946,7 +946,7 @@ The following table applies standard market rates for the type of work delivered
 | Present new documentation strategy   | ✅ Complete                     | Milestone 1 & 2 Report (Google Doc, Nov 26 2024); Watercooler presentation (Nov 25 2024); forum update posts | Delivered as formal milestone with community-facing presentation                                    |
 | Rewrite documentation                | ✅ Complete                     | Live at docs.livepeer.org/v2; 9 top-level sections deployed; last modified Feb 20, 2026                      | All primary sections live; final polish in progress EoW                                             |
 | v1 documentation live with redirects | ✅ Complete                     | docs.livepeer.org/v1 live; version switcher in navigation; `docs.json:17`, `docs.json:3173`                  | v1 fully preserved and accessible                                                                   |
-| SEO/AEO                              | ⚠️ Partial                      | `tools/scripts/snippets/generate-seo.js`; AEO logic in generator; consistent frontmatter patterns            | Tooling built and deployable; full sitewide enforcement gate not yet in CI. Completion task exists. |
+| SEO/AEO                              | ⚠️ Partial                      | `operations/scripts/snippets/generate-seo.js`; AEO logic in generator; consistent frontmatter patterns            | Tooling built and deployable; full sitewide enforcement gate not yet in CI. Completion task exists. |
 | WCAG accessibility                   | ⚠️ Partial — needs Alison input | Mintlify platform has accessibility defaults; no explicit WCAG audit evidence in repo                        | Alison to confirm if WCAG audit was conducted                                                       |
 | Analytics                            | ⚠️ Partial — needs Alison input | Mintlify analytics available; no evidence of custom analytics integration or reporting setup                 | Alison to confirm analytics configuration                                                           |
 | i18n foundations                     | ⚠️ Partial — needs Alison input | Language switcher present in live nav (English / US flag visible); full i18n implementation not evidenced    | Language switcher is live; Alison to confirm translation pipeline status                            |
@@ -973,11 +973,11 @@ The following table applies standard market rates for the type of work delivered
 | Release version tracking              | Automation          | Automated release version and global state updates                                            | `update-livepeer-release.yml`; `snippets/automations/globals/globals.mdx`                    | Small                       |
 | n8n workflow assets                   | Automation          | Parallel n8n pipeline assets providing platform-independent automation                        | `snippets/automations/scripts/n8n/`                                                          | Medium                      |
 | Governance and intake automation      | Automation          | Discord issue intake, auto-labelling, review asset generation, reviewer assignment            | `discord-issue-intake.yml`; `issue-auto-label.yml`; review workflows                         | Medium                      |
-| SEO/AEO generator                     | Maintenance scripts | Runnable script generating SEO metadata and AEO structure across all pages                    | `tools/scripts/snippets/generate-seo.js`                                                     | Small–medium                |
+| SEO/AEO generator                     | Maintenance scripts | Runnable script generating SEO metadata and AEO structure across all pages                    | `operations/scripts/snippets/generate-seo.js`                                                     | Small–medium                |
 | Glossary generation tooling           | Maintenance scripts | Automated terminology extraction, classification, and JSON data generation                    | `generate-glossary.js`; `terminology-search.js`; `glossary-terms.json`                       | Medium                      |
-| Pages index generator                 | Maintenance scripts | Generates section-level index.mdx files and root aggregate index                              | `tools/scripts/generate-pages-index.js`                                                      | Small                       |
-| Docs-guide index generator            | Maintenance scripts | Generates script, workflow, and template catalogs in docs-guide/                              | `tools/scripts/generate-docs-guide-indexes.js`                                               | Small                       |
-| Script self-documentation system      | Maintenance scripts | Enforces script header schema; auto-generates script index; `new-script.js` template creator  | `tests/unit/script-docs.test.js`; `tools/scripts/new-script.js`                              | Medium                      |
+| Pages index generator                 | Maintenance scripts | Generates section-level index.mdx files and root aggregate index                              | `operations/scripts/generate-pages-index.js`                                                      | Small                       |
+| Docs-guide index generator            | Maintenance scripts | Generates script, workflow, and template catalogs in docs-guide/                              | `operations/scripts/generate-docs-guide-indexes.js`                                               | Small                       |
+| Script self-documentation system      | Maintenance scripts | Enforces script header schema; auto-generates script index; `new-script.js` template creator  | `tests/unit/script-docs.test.js`; `operations/scripts/new-script.js`                              | Medium                      |
 | Internal docs-guide system            | Governance          | 8 canonical internal maintainer documents + 3 generated indexes                               | `docs-guide/*.md`                                                                            | Medium (20–30 hrs)          |
 | Source-of-truth policy                | Governance          | Canonical ownership boundaries, change management rules, enforced via CI                      | `docs-guide/policies/source-of-truth-policy.mdx`; `tests/unit/docs-guide-sot.test.js`                  | Small                       |
 | AI-ready content structure            | AI-readiness        | Semantic headings, consistent frontmatter, component-driven construction for LLM parsing      | Site-wide                                                                                    | Embedded in content work    |

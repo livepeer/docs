@@ -9,12 +9,12 @@ invoke_when:
   - "import upstream markdown into snippets/external"
   - "sanitize html-heavy markdown for mdx"
 primary_paths:
-  - "tools/scripts/snippets/fetch-external-docs.sh"
+  - "operations/scripts/snippets/fetch-external-docs.sh"
   - "snippets/external"
-  - "tools/scripts/snippets/paths.config.json"
+  - "operations/scripts/snippets/paths.config.json"
   - "v2/resources/documentation-guide/docs-features-and-ai-integrations.mdx"
 primary_commands:
-  - "bash tools/scripts/snippets/fetch-external-docs.sh"
+  - "bash operations/scripts/snippets/fetch-external-docs.sh"
   - "rg --files snippets/external"
 ---
 
@@ -36,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-bash tools/scripts/snippets/fetch-external-docs.sh
+bash operations/scripts/snippets/fetch-external-docs.sh
 rg --files snippets/external
 ```
 

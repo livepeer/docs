@@ -18,7 +18,7 @@
   - Quality checks
   - Broken links & imports validation
 - Script docs enforcement (`tests/unit/script-docs.test.js --staged --write --stage --autofill`)
-- Pages index sync (`tools/scripts/generate-pages-index.js --staged --write --stage`)
+- Pages index sync (`operations/scripts/generate-pages-index.js --staged --write --stage`)
 - Staged WCAG accessibility audit with conservative autofix (`tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious ...`)
 - Staged strict V2 link audit (`tests/integration/v2-link-audit.js --staged --strict ...`)
 - Staged selection will eventually exclude governed V2 non-publishable lanes through `.mintignore`; legacy buckets such as `_contextData`, `_plans-and-research`, `x-resources`, and nested `review.md` remain in inventory until move waves complete.
@@ -73,7 +73,7 @@
 - On pull requests to `main` or `docs-v2`
 
 **What Runs:**
-- Full V2 browser sweep from `docs.json` (`tools/scripts/test-v2-pages.js`)
+- Full V2 browser sweep from `docs.json` (`operations/scripts/test-v2-pages.js`)
 
 **Output:**
 - PR comment summary

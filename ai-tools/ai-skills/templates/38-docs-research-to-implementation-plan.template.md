@@ -1,28 +1,27 @@
 ---
 name: docs-research-to-implementation-plan
-version: "1.1"
-category: review-pipeline
 description: >-
   Turn docs research outputs into a decision-complete implementation plan so
   factual findings become ordered repo work without re-deciding scope, risks,
-  or validation gates.
-tier: 2
-invoke_when:
-  - "turn this research report into an implementation plan"
-  - "plan the fixes from this docs research run"
-  - "convert this research packet into phased repo work"
-  - "make an implementation plan from these research findings"
+  or validation gates. Use when: turn this research report into an
+  implementation plan, plan the fixes from this docs research run, convert this
+  research packet into phased repo work, make an implementation plan from these
+  research findings.
+metadata:
+  version: "1.2"
+  category: "review-pipeline"
+  tier: "2"
 primary_paths:
-  - "tools/scripts/audits/content/veracity/docs-page-research.js"
-  - "tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
-  - "tools/scripts/dispatch/content/veracity/docs-research-packet.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
+  - "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
+  - "operations/scripts/dispatch/content/veracity/docs-research-packet.js"
   - "workspace/research/claims"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
   - "docs-guide/tooling/research-to-implementation-plan-template.md"
 primary_commands:
-  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
-  - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
-  - "node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js --files [a,b,c] --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js --files [a,b,c] --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json"
 ---
 
 SKILL: Docs Research To Implementation Plan

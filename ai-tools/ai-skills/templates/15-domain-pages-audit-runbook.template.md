@@ -1,14 +1,13 @@
 ---
 name: domain-pages-audit-runbook
-version: "1.1"
-category: audit
 description: >-
-  Run deployed page-load audits across v1/v2/both scopes and triage failing routes. Use when tasks include audit docs.livepeer.org pages, check deployed pages by version, domain page load failures.
-tier: 1
-invoke_when:
-  - "audit docs.livepeer.org pages"
-  - "check deployed pages by version"
-  - "domain page load failures"
+  Run deployed page-load audits across v1/v2/both scopes and triage failing
+  routes. Use when: audit docs.livepeer.org pages, check deployed pages by
+  version, domain page load failures.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "1"
 primary_paths:
   - "tests/integration/domain-pages-audit.js"
   - "tests/reports/domain-page-load-report.json"

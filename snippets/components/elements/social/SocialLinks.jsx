@@ -3,9 +3,10 @@
  * @type elements
  * @subniche social
  * @status stable
- * @description Row of icon-only social media links with tooltips and aria-labels.
- * @accepts style, className, ...rest
-  * @aiDiscoverability none
+ * @description Row of icon-only social media links with tooltips and aria-labels. Pass a `links` array to customise per product; omit for Livepeer defaults.
+ * @accepts links, size, gap, justify, color, style, className, ...rest
+ * @aiDiscoverability none
+ * @param {Array} [links] - Array of {icon, href, label} objects. Falls back to Livepeer defaults if omitted.
  * @param {number} [size=20] - Size used by the component.
  * @param {string} [gap="0.75rem"] - Gap used by the component.
  * @param {string} [justify="center"] - Justify used by the component.
@@ -15,8 +16,14 @@
  *
  * @example
  * <SocialLinks color="value" />
+ * @example
+ * <SocialLinks links={[
+ *   { icon: "github", href: "https://github.com/org", label: "GitHub" },
+ *   { icon: "discord", href: "https://discord.gg/invite", label: "Discord" },
+ * ]} />
  */
 export const SocialLinks = ({
+  links,
   size = 20,
   gap = "0.75rem",
   justify = "center",
@@ -42,6 +49,28 @@ export const SocialLinks = ({
     blog: color ? color : "var(--accent)",
   };
 
+  const iconColorMap = {
+    discord: "discord",
+    "x-twitter": "twitter",
+    github: "github",
+    "comment-pen": "forum",
+    "pen-line": "blog",
+    "pencil-line": "blog",
+    globe: "website",
+    "book-open": "website",
+  };
+
+  const defaultLinks = [
+    { icon: "discord", href: "https://discord.com/invite/livepeer", label: "Livepeer Discord" },
+    { icon: "globe", href: "https://livepeer.org", label: "Livepeer Website" },
+    { icon: "github", href: "https://github.com/livepeer", label: "Livepeer GitHub" },
+    { icon: "comment-pen", href: "https://forum.livepeer.org", label: "Livepeer Forum" },
+    { icon: "pen-line", href: "https://livepeer.org/blog", label: "Livepeer Blog" },
+    { icon: "x-twitter", href: "https://x.com/livepeer", label: "Livepeer X" },
+  ];
+
+  const items = links || defaultLinks;
+
   return (
     <div className={className} style={style} {...rest}>
       <style>{`
@@ -59,36 +88,13 @@ export const SocialLinks = ({
           marginTop: "0.5rem",
         }}
       >
-        <a href="https://discord.com/invite/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Discord" style={linkStyle}>
-          <Tooltip headline="Livepeer Discord">
-            <Icon icon="discord" size={size} color={colors.discord} aria-hidden="true" />
-          </Tooltip>
-        </a>
-        <a href="https://livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Website" style={linkStyle}>
-          <Tooltip headline="Livepeer Website">
-            <Icon icon="globe" size={size} color={colors.website} aria-hidden="true" />
-          </Tooltip>
-        </a>
-        <a href="https://github.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer GitHub" style={linkStyle}>
-          <Tooltip headline="Livepeer GitHub">
-            <Icon icon="github" size={size} color={colors.github} aria-hidden="true" />
-          </Tooltip>
-        </a>
-        <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Forum" style={linkStyle}>
-          <Tooltip headline="Livepeer Forum">
-            <Icon icon="comment-pen" size={size} color={colors.forum} aria-hidden="true" />
-          </Tooltip>
-        </a>
-        <a href="https://livepeer.org/blog" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Blog" style={linkStyle}>
-          <Tooltip headline="Livepeer Blog">
-            <Icon icon="pen-line" size={size} color={colors.blog} aria-hidden="true" />
-          </Tooltip>
-        </a>
-        <a href="https://x.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer X" style={linkStyle}>
-          <Tooltip headline="Livepeer X">
-            <Icon icon="x-twitter" size={size} color={colors.twitter} aria-hidden="true" />
-          </Tooltip>
-        </a>
+        {items.map((item, i) => (
+          <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" aria-label={item.label} style={linkStyle}>
+            <Tooltip headline={item.label}>
+              <Icon icon={item.icon} size={size} color={colors[iconColorMap[item.icon] || "website"] || "var(--accent)"} aria-hidden="true" />
+            </Tooltip>
+          </a>
+        ))}
       </span>
     </div>
   );

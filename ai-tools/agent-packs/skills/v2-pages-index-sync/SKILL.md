@@ -9,13 +9,13 @@ invoke_when:
   - "sync top-level page indexes"
   - "remove nested index files"
 primary_paths:
-  - "tools/scripts/generate-pages-index.js"
+  - "operations/scripts/generate-pages-index.js"
   - "v2/pages/index.mdx"
   - "docs.json"
   - "tests/README.md"
 primary_commands:
-  - "node tools/scripts/generate-pages-index.js --staged --write --stage"
-  - "node tools/scripts/generate-pages-index.js --write --rebuild-indexes"
+  - "node operations/scripts/generate-pages-index.js --staged --write --stage"
+  - "node operations/scripts/generate-pages-index.js --write --rebuild-indexes"
 ---
 
 SKILL: v2 Pages Index Sync
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generate-pages-index.js --staged --write --stage
-node tools/scripts/generate-pages-index.js --write --rebuild-indexes
+node operations/scripts/generate-pages-index.js --staged --write --stage
+node operations/scripts/generate-pages-index.js --write --rebuild-indexes
 ```
 
 Deliverable Format

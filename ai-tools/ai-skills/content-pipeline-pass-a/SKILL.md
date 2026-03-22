@@ -1,19 +1,15 @@
 ---
 name: content-pipeline-pass-a
-version: '1.0'
-category: content-pipeline
 description: >-
   Level 2 Pass A — content review or write for a single Livepeer docs page.
   Audits or drafts the content layer: audience fit, purpose delivery, information
   types, voice rules, veracity flags, and section structure. Does not apply MDX
-  formatting or component selection — that is Pass B.
-invoke_when:
-  - 'review this page for the content pipeline'
-  - 'Pass A for [page path]'
-  - 'content review [page]'
-  - 'write this page — Pass A'
-  - 'audit content on [page path]'
-  - 'does this page serve its audience?'
+  formatting or component selection — that is Pass B. Use when reviewing or
+  writing a page for the content pipeline, running Pass A, auditing content,
+  or checking whether a page serves its audience.
+metadata:
+  version: "1.1"
+  category: content-pipeline
 ---
 
 SKILL: Content Pipeline — Level 2 Pass A (Content)

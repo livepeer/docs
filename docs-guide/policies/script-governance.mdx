@@ -27,10 +27,10 @@ The full script inventory lives in the auto-generated catalog: [Scripts Catalog]
 
 ## Taxonomy — the three-tier model
 
-Every script in `tools/scripts/` is placed at a path following this structure:
+Every script in `operations/scripts/` is placed at a path following this structure:
 
 ```
-tools/scripts/<type>/<concern>/<niche>/script-name.js
+operations/scripts/<type>/<concern>/<niche>/script-name.js
 ```
 
 This hierarchy is enforced — a script placed in the wrong folder will fail classification validation.
@@ -170,7 +170,7 @@ Examples:
  * @mode        read-only
  * @pipeline    pr-workflow → staged .mdx files → exit-code, stdout:violations
  * @scope       staged, changed, v2-content, single-file
- * @usage       node tools/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
+ * @usage       node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
  * @policy      E-R1, R-R11
  */
 ```
@@ -252,11 +252,11 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 <Steps>
   <Step title="Classify it first">
     Use the decision tree above to determine `type`, `concern`, and `niche`.
-    Place the file at `tools/scripts/<type>/<concern>/<niche>/<script-name>.js`.
+    Place the file at `operations/scripts/<type>/<concern>/<niche>/<script-name>.js`.
   </Step>
   <Step title="Write the JSDoc header">
     Copy the example header above. Fill all 11 tags. Do not leave placeholder values.
-    Run `node tools/scripts/validators/governance/compliance/review-governance-repair-checklist.js --staged` to validate.
+    Run `node operations/scripts/validators/governance/compliance/review-governance-repair-checklist.js --staged` to validate.
   </Step>
   <Step title="Follow the file structure">
     Shebang → JSDoc header → `'use strict'` → imports → constants/config at top → helpers → main() → export/execute.
@@ -271,7 +271,7 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
     Set `@pipeline` to indicate where the script runs. Hard gates go in pre-commit or required CI; soft gates in non-required CI; self-heals in cron.
   </Step>
   <Step title="Add to the registry">
-    Run `node tools/scripts/generators/governance/catalogs/generate-script-registry.js` to update `tools/config/script-registry.json`. The catalog is regenerated automatically from the registry.
+    Run `node operations/scripts/generators/governance/catalogs/generate-script-registry.js` to update `tools/config/script-registry.json`. The catalog is regenerated automatically from the registry.
   </Step>
 </Steps>
 
@@ -285,4 +285,4 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 | Full technical spec | `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` |
 | Script registry (derived index) | `tools/config/script-registry.json` |
 | Script catalog (auto-generated) | [docs-guide/catalog/scripts-catalog](/docs-guide/catalog/scripts-catalog) |
-| Registry generator | `tools/scripts/generators/governance/catalogs/generate-script-registry.js` |
+| Registry generator | `operations/scripts/generators/governance/catalogs/generate-script-registry.js` |
