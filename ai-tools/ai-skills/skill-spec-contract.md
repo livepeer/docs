@@ -33,7 +33,7 @@ Required fields for every governed skill artifact:
 | `version` | Yes | Semver-like string matching `^[0-9]+\.[0-9]+(?:\.[0-9]+)?$`. |
 | `description` | Yes | Plain-English description between 20 and 100 words. State what the skill does and when to use it. |
 | `invoke_when` | Yes | Non-empty array of trigger phrases. Exact duplicate trigger sets across governed skills are warned. |
-| `category` | Yes | One of: `audit`, `authoring`, `governance`, `review-pipeline`, `meta`. See category taxonomy below. |
+| `category` | Yes | One of: `audit`, `authoring`, `content-pipeline`, `governance`, `review-pipeline`, `meta`. See category taxonomy below. |
 
 Category taxonomy:
 
@@ -41,6 +41,7 @@ Category taxonomy:
 | --- | --- | --- |
 | `audit` | Read-only scan, measure, report | `script-footprint-and-usage-audit`, `docs-quality-and-freshness-audit`, `docs-coverage-and-route-integrity-audit`, `rubric-static-review` |
 | `authoring` | Content creation and editing guidance | `page-authoring`, `docs-copy`, `product-thinking` |
+| `content-pipeline` | Multi-pass page writing and review pipeline | `content-pipeline-pass-a`, `content-pipeline-pass-b`, `content-pipeline-tab-map` |
 | `governance` | Enforce rules, apply standards, manage artifacts | `component-layout-governance`, `generated-mdx-banners-governance`, `style-and-language-homogenizer-en-gb`, `cleanup-quarantine-manager` |
 | `review-pipeline` | Multi-step review and fix workflows | `docs-review-packet-generation`, `docs-review-fix-execution` |
 | `meta` | Orchestration, packaging, skill self-governance | `repo-audit-orchestrator`, `cross-agent-packager`, `skill-docs` |
@@ -74,7 +75,7 @@ Blocking failures:
 - Invalid `name` or `version` format.
 - `description` under 20 words.
 - Empty `invoke_when`.
-- `category` value not in the allowed enum (`audit`, `authoring`, `governance`, `review-pipeline`, `meta`).
+- `category` value not in the allowed enum (`audit`, `authoring`, `content-pipeline`, `governance`, `review-pipeline`, `meta`).
 - Missing required sections in this contract document.
 - Governed reference path does not exist.
 - Self-reference to the current governed skill artifact.

@@ -106,5 +106,5 @@ These skills are not part of the audit pipeline but provide standards and guidan
 - Outputs:
   - `new MDX page conforming to all repo standards`
 
-Run source: `node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`
+Run source: `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`
 

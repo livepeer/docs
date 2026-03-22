@@ -23,7 +23,7 @@ const TEMPLATE_ROOT = 'ai-tools/ai-skills/templates';
 const CONTRACT_PATH = 'ai-tools/ai-skills/skill-spec-contract.md';
 const NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
 const VERSION_RE = /^[0-9]+\.[0-9]+(?:\.[0-9]+)?$/;
-const VALID_CATEGORIES = ['audit', 'authoring', 'governance', 'review-pipeline', 'meta'];
+const VALID_CATEGORIES = ['audit', 'authoring', 'content-pipeline', 'governance', 'review-pipeline', 'meta'];
 const REQUIRED_CONTRACT_SECTIONS = [
   { heading: '## Purpose', rule: 'Skill contract sections' },
   { heading: '## Layer Map', rule: 'Skill contract sections' },

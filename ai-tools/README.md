@@ -29,6 +29,6 @@ All AI agent tooling for the Livepeer Docs repo: skills, templates, agent-pack e
 - Canonical policy: `docs-guide/policies/agent-governance-framework.mdx`
 - Root allowlist: `docs-guide/policies/root-allowlist-governance.mdx`
 - Registry: `ai-tools/registry/ai-tools-registry.json`
-- Skill validator: `node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js`
+- Skill validator: `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js`
 
 The `ai-rules/` subdirectory is `advisory_only` in the registry. The safety rules that actually gate CI live in `AGENTS.md` and the git hook layer, not in `ai-rules/`.

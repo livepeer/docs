@@ -75,10 +75,10 @@ Run the smallest relevant validation set before handing work back:
 | Change type | Validator to run |
 |---|---|
 | Any staged change | `lpd test --staged` |
-| Routing or nav edits (`docs.json`) | `node tools/scripts/validators/governance/compliance/validate-frontmatter.js --check` |
+| Routing or nav edits (`docs.json`) | `node operations/scripts/validators/content/structure/lint-structure.js --check` |
 | Generated file changed | Run the generator with `--check` first, then without, then `--check` again to confirm |
-| Governance or agent doc edits | `node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json` |
-| Catalog or index regeneration | `node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check` |
+| Governance or agent doc edits | `node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json` |
+| Catalog or index regeneration | `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check` |
 
 If a validator fails: read the output, fix the root cause, rerun. Do not skip.
 
