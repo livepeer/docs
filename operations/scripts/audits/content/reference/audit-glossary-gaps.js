@@ -12,7 +12,7 @@
  *              as the known-term baseline.
  * @mode        audit
  * @pipeline    manual | post-PR | cron
- * @scope       tools/scripts
+ * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]
  * @flags
  *   --output <path>   Write JSON report to file (default: workspace/reports/_local/glossary-gap-report.json)

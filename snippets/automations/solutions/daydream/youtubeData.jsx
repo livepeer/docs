@@ -48,7 +48,7 @@ export const youtubeData = [
     title: 'Encuentros de Tecnólogos Creativos de Madrid Daydream x MappingOn',
     href: 'https://www.youtube.com/watch?v=yZHcay_uodc',
     author: 'By Daydream AI',
-    content: 'Visuales Generativos en Tiempo Real: TouchDesigner x StreamDiffusion x Daydream  En este workshop de 2 horas exploramos cómo crear visuales generativos en tiempo real combinando TouchDesigner, StreamDiffusion y Daydream. Recorrimos el flujo completo desde la entrada hasta la salida, procesando con IA generativa en vivo, desde configuración básica hasta un Live VJ Show con videomapping.   Qué es Daydream? Daydream es una plataforma de video IA en tiempo real que genera y transforma contenido vis...',
+    content: 'Visuales Generativos en Tiempo Real: TouchDesigner × StreamDiffusion × Daydream  En este workshop de 2 horas exploramos cómo crear visuales generativos en tiempo real combinando TouchDesigner, StreamDiffusion y Daydream. Recorrimos el flujo completo desde la entrada hasta la salida, procesando con IA generativa en vivo, desde configuración básica hasta un Live VJ Show con videomapping.   ¿Qué es Daydream? Daydream es una plataforma de video IA en tiempo real que genera y transforma contenido vis...',
     publishedDate: 'Mar 4, 2026',
     duration: 'PT2H56M16S',
     thumbnailUrl: 'https://i.ytimg.com/vi/yZHcay_uodc/hqdefault.jpg'
@@ -165,25 +165,25 @@ export const youtubeData = [
     title: 'TouchDesigner x Scope EP 03: Depth Maps and VACE',
     href: 'https://www.youtube.com/watch?v=v53458eIqeY',
     author: 'By Daydream AI',
-    content: 'In this third episode of TouchDesigner x Scope, I use the Depth TOP in TouchDesigner to create a depth map to activate VACE to better control my output visual.  Project files and  assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-ep-03-depth-maps-and-vace?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative control.  1:03 -...',
+    content: 'In this third episode of TouchDesigner × Scope, I use the Depth TOP in TouchDesigner to create a depth map to activate VACE to better control my output visual.  Project files and  assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-ep-03-depth-maps-and-vace?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative control.  1:03 -...',
     publishedDate: 'Jan 28, 2026',
     duration: 'PT7M51S',
     thumbnailUrl: 'https://i.ytimg.com/vi/v53458eIqeY/hqdefault.jpg'
   },
   {
-    title: 'TouchDesigner x  Scope EP 02: Krea Model and Denoising',
+    title: 'TouchDesigner ×  Scope EP 02: Krea Model and Denoising',
     href: 'https://www.youtube.com/watch?v=NVumbOMf-os',
     author: 'By Daydream AI',
-    content: 'In this second episode of TouchDesigner x Scope, I use the same visual input as the previous video to understand model differences and make sense of denoising parameters.  Project files and timeline assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-first-connection?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative contro...',
+    content: 'In this second episode of TouchDesigner × Scope, I use the same visual input as the previous video to understand model differences and make sense of denoising parameters.  Project files and timeline assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-first-connection?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative contro...',
     publishedDate: 'Jan 24, 2026',
     duration: 'PT6M46S',
     thumbnailUrl: 'https://i.ytimg.com/vi/NVumbOMf-os/hqdefault.jpg'
   },
   {
-    title: 'TouchDesigner x  Scope EP 01: First Output',
+    title: 'TouchDesigner ×  Scope EP 01: First Output',
     href: 'https://www.youtube.com/watch?v=K_tX255qSkw',
     author: 'By Daydream AI',
-    content: 'In this first episode of TouchDesigner x Scope, I explore using TouchDesigner as a live input source for Scope running the LongLive Model.   Project files and timeline assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-first-connection?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative control.  0:00 - Introduction & Overv...',
+    content: 'In this first episode of TouchDesigner × Scope, I explore using TouchDesigner as a live input source for Scope running the LongLive Model.   Project files and timeline assets can be found here:  https://app.daydream.live/creators/as.ws__/touchdesigner-x-scope-first-connection?utm_source=youtube&utm_medium=social&utm_campaign=scope-touchdesigner  More episodes coming soon as we dive deeper into Scope\'s video models, prompting workflows, and real time creative control.  0:00 - Introduction & Overv...',
     publishedDate: 'Jan 24, 2026',
     duration: 'PT8M29S',
     thumbnailUrl: 'https://i.ytimg.com/vi/K_tX255qSkw/hqdefault.jpg'
@@ -345,7 +345,7 @@ export const youtubeData = [
     title: 'StreamDiffusion in TouchDesigner Workshop',
     href: 'https://www.youtube.com/watch?v=iLjksLHr2NI',
     author: 'By Daydream AI',
-    content: 'Learn how to use Daydream\'s remote Stream Diffusion service to run advanced AI workflows without needing a $3,000+ RTX 4090/5090 GPU workstation.  Below you will find all relevant links:  https://www.patreon.com/posts/streamdiffusiont-142969263 https://app.daydream.live/creators/daydream https://app.daydream.live/dashboard/api-keys  Learn more about Daydream:   X: @daydreamLiveAI  Website:  https://daydream.live/  Discord: https://discord.com/invite/daydreamlive...',
+    content: 'Learn how to use Daydream\'s remote Stream Diffusion service to run advanced AI workflows without needing a \$3,000+ RTX 4090/5090 GPU workstation.  Below you will find all relevant links:  https://www.patreon.com/posts/streamdiffusiont-142969263 https://app.daydream.live/creators/daydream https://app.daydream.live/dashboard/api-keys  Learn more about Daydream:   X: @daydreamLiveAI  Website:  https://daydream.live/  Discord: https://discord.com/invite/daydreamlive...',
     publishedDate: 'Nov 13, 2025',
     duration: 'PT48M45S',
     thumbnailUrl: 'https://i.ytimg.com/vi/iLjksLHr2NI/hqdefault.jpg'
@@ -381,7 +381,7 @@ export const youtubeData = [
     title: 'Krea x Daydream Scope - Real-Time Video Model Integration',
     href: 'https://www.youtube.com/watch?v=uEvM638QWZI',
     author: 'By Daydream AI',
-    content: 'The latest Daydream Scope release introduces support for the Krea AI real-time video model, enabling interactive text-to-video generation with smooth, dynamic prompt transitions.  In this video, Yondon Fu walks through the new integration, showing how the model runs live inside Scope, including real-time prompt changes and performance benchmarks: ~6 FPS at 480x832 on NVIDIA H100 ~11 FPS at 320x576 on RTX 5090 with FP8 quantization (Linux only; Windows support in progress)  Full release notes: ht...',
+    content: 'The latest Daydream Scope release introduces support for the Krea AI real-time video model, enabling interactive text-to-video generation with smooth, dynamic prompt transitions.  In this video, Yondon Fu walks through the new integration, showing how the model runs live inside Scope, including real-time prompt changes and performance benchmarks: ~6 FPS at 480×832 on NVIDIA H100 ~11 FPS at 320×576 on RTX 5090 with FP8 quantization (Linux only; Windows support in progress)  Full release notes: ht...',
     publishedDate: 'Oct 31, 2025',
     duration: 'PT3M37S',
     thumbnailUrl: 'https://i.ytimg.com/vi/uEvM638QWZI/hqdefault.jpg'

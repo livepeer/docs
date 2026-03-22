@@ -524,14 +524,15 @@ This task runs after all internal script restructuring is complete and tested.
 
 ### Tasks
 
-- [ ] **14.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **14.2** Create `/operations` root directory
-- [ ] **14.3** `git mv` `tools/scripts/` to `/operations/scripts/`
-- [ ] **14.4** `git mv` `tests/` to `/operations/tests/`
-- [ ] **14.5** Update all path references (package.json, workflows, hooks, imports, docs)
-- [ ] **14.6** **CHECKPOINT** — show full tree + test results to human
-- [ ] **14.7** Commit + merge back to `docs-v2-dev`
-- [ ] **14.8** Strikethrough completed tasks in this plan
+- [x] ~~**14.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**14.2** Create `/operations` root directory~~
+- [x] ~~**14.3** `git mv` `tools/scripts/` to `/operations/scripts/`~~
+- [x] ~~**14.4** `git mv` `tests/` to `/operations/tests/`~~
+- [x] ~~**14.5** Update all path references (package.json, workflows, hooks, imports, docs)~~
+- [x] ~~**14.6** CHECKPOINT — show full tree + test results to human~~
+- [x] ~~**14.7** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**14.8** Strikethrough completed tasks in this plan~~
+- [ ] **14.9** Fix 9 stale `@usage`/`@scope` headers in `operations/scripts/` still referencing `tools/scripts/`
 
 ---
 
@@ -728,9 +729,13 @@ Review against current live n8n exports (user to provide — repo versions are s
 - [ ] **15b.3** Add `$` escaping to `safeHTML()` in `fetch-ghost-blog-data.js`
 - [ ] **15b.4** Fix `update-livepeer-release.yml` path (`automationData` → `automations`)
 - [ ] **15b.5** Fix `update-discord-data.yml` glob (`*/` → `**/`)
-- [ ] **15b.6** Disable/remove `update-blog-data.yml` legacy workflow
-- [ ] **15b.7** Verify n8n Luma workflow path matches `snippets/automations/luma/`
-- [ ] **15b.8** Confirm or create global Discord community feed pipeline
+- [x] ~~**15b.2** Stage + commit all working-tree fixes to `.github/scripts/fetch-*.js`~~ (2cc89276)
+- [x] ~~**15b.3** Add `$` escaping to `safeHTML()` in `fetch-ghost-blog-data.js`~~ (2cc89276)
+- [x] ~~**15b.4** Fix `update-livepeer-release.yml` path (`automationData` → `automations`)~~ (2cc89276)
+- [x] ~~**15b.5** Fix `update-discord-data.yml` glob (`*/` → `**/`)~~ (2cc89276)
+- [ ] **15b.6** Disable/remove `update-blog-data.yml` legacy workflow ⏸ **FLAGGED — destructive, needs explicit approval**
+- [ ] **15b.7** Verify n8n Luma workflow path matches `snippets/automations/luma/` ⏸ **BLOCKED — needs current n8n JSON from user**
+- [ ] **15b.8** Confirm or create global Discord community feed pipeline ⏸ **BLOCKED — needs current n8n JSON; `discord/discordAnnouncementsData.jsx` is static since Jan 2026**
 - [ ] **15b.9** **CHECKPOINT** — present all fixes to human for review before committing
 
 ---

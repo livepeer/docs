@@ -54,7 +54,7 @@
     "description": "",
     "mode": "",
     "pipeline": "P2 (push, hook entry point)",
-    "scope": ".githooks, operations/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml",
+    "scope": ".githooks, operations/scripts/validators/governance/compliance/validate-codex-task-contract.js, .codex/task-contract.yaml",
     "usage": "bash .githooks/pre-push [flags]",
     "policy": "",
     "status": "active"
@@ -105,6 +105,21 @@
     "status": "active"
   },
   {
+    "path": ".github/scripts/fetch-discord-announcements.js",
+    "name": "fetch-discord-announcements.js",
+    "type": "automation",
+    "concern": "content",
+    "niche": "data/fetching",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Fetches announcements from Discord channels via bot token, writes per-product JSX data files.",
+    "mode": "generate",
+    "pipeline": "config → Discord API → snippets/automations/{product}/discordData.jsx",
+    "scope": ".github/scripts, snippets/automations/",
+    "usage": "node .github/scripts/fetch-discord-announcements.js",
+    "policy": "Announcements channel only. No general chat. Requires DISCORD_BOT_TOKEN.",
+    "status": "active"
+  },
+  {
     "path": ".github/scripts/fetch-forum-data.js",
     "name": "fetch-forum-data.js",
     "type": "",
@@ -132,6 +147,51 @@
     "scope": ".github/scripts",
     "usage": "node .github/scripts/fetch-ghost-blog-data.js [flags]",
     "policy": "",
+    "status": "active"
+  },
+  {
+    "path": ".github/scripts/fetch-github-discussions.js",
+    "name": "fetch-github-discussions.js",
+    "type": "automation",
+    "concern": "content",
+    "niche": "data/fetching",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Fetches latest GitHub Discussions via public GraphQL API, writes per-product JSX data files.",
+    "mode": "generate",
+    "pipeline": "config → GitHub GraphQL API → snippets/automations/{product}/githubDiscussionsData.jsx",
+    "scope": ".github/scripts, snippets/automations/",
+    "usage": "node .github/scripts/fetch-github-discussions.js",
+    "policy": "Public repos only. Uses GITHUB_TOKEN for rate limits (optional for public repos).",
+    "status": "active"
+  },
+  {
+    "path": ".github/scripts/fetch-github-releases.js",
+    "name": "fetch-github-releases.js",
+    "type": "automation",
+    "concern": "content",
+    "niche": "data/fetching",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Fetches latest GitHub Releases via public REST API, writes per-product JSX data files.",
+    "mode": "generate",
+    "pipeline": "config → GitHub REST API → snippets/automations/{product}/githubReleasesData.jsx",
+    "scope": ".github/scripts, snippets/automations/",
+    "usage": "node .github/scripts/fetch-github-releases.js",
+    "policy": "Public repos only. No auth needed for public repos. GITHUB_TOKEN optional for rate limits.",
+    "status": "active"
+  },
+  {
+    "path": ".github/scripts/fetch-rss-blog-data.js",
+    "name": "fetch-rss-blog-data.js",
+    "type": "automation",
+    "concern": "content",
+    "niche": "data/fetching",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files.",
+    "mode": "generate",
+    "pipeline": "config → RSS feed → snippets/automations/{product}/blogData.jsx",
+    "scope": ".github/scripts, snippets/automations/",
+    "usage": "node .github/scripts/fetch-rss-blog-data.js",
+    "policy": "PUBLIC APIs / RSS only. No API keys for platforms we don't own.",
     "status": "active"
   },
   {
@@ -235,7 +295,7 @@
     "mode": "read-only",
     "pipeline": "manual — not yet in pipeline",
     "scope": "tasks/scripts",
-    "usage": "python3 operations/scripts/audits/governance/repo/audit-python.py [flags]",
+    "usage": "python3 operations/scripts/audits/content/quality/audit-python.py [flags]",
     "policy": "E-C1, R-R14",
     "status": "active"
   },
@@ -282,6 +342,36 @@
     "scope": "operations/scripts, tools/config, tools/lib, v2, workspace/reports/content-gap",
     "usage": "node operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]",
     "policy": "R-R16, R-R17",
+    "status": "active"
+  },
+  {
+    "path": "operations/scripts/audits/content/reference/audit-glossary-gaps.js",
+    "name": "audit-glossary-gaps.js",
+    "type": "audit",
+    "concern": "content",
+    "niche": "reference",
+    "purpose": "tooling:dev-tools",
+    "description": "Glossary gap auditor — scans v2 MDX pages for terminology candidates not",
+    "mode": "audit",
+    "pipeline": "manual | post-PR | cron",
+    "scope": "operations/scripts/audits/content/reference",
+    "usage": "node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]",
+    "policy": "E-C6, F-C1",
+    "status": "active"
+  },
+  {
+    "path": "operations/scripts/audits/content/reference/audit-icon-usage.js",
+    "name": "audit-icon-usage.js",
+    "type": "audit",
+    "concern": "content",
+    "niche": "reference",
+    "purpose": "tooling:dev-tools",
+    "description": "Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop",
+    "mode": "audit",
+    "pipeline": "manual | post-PR | cron",
+    "scope": "operations/scripts/audits/content/reference",
+    "usage": "node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]",
+    "policy": "",
     "status": "active"
   },
   {
@@ -429,7 +519,7 @@
     "description": "Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.",
     "mode": "execute",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "operations/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, tools/lib/codex-skill-templates.js operations/tests/unit/export-portable-skills.test.js",
+    "scope": "operations/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js operations/tests/unit/export-portable-skills.test.js",
     "usage": "node operations/scripts/automations/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]",
     "policy": "R-R27, R-R30",
     "status": "active"
@@ -504,7 +594,7 @@
     "description": "External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds",
     "mode": "execute",
     "pipeline": "manual",
-    "scope": "tools/scripts",
+    "scope": "operations/scripts/automations/content/data/fetching",
     "usage": "bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh [flags]",
     "policy": "F-R1",
     "status": "active"
@@ -519,7 +609,7 @@
     "description": "LPT exchange data fetcher — pulls exchange listing data for LPT token pages",
     "mode": "execute",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "tools/scripts",
+    "scope": "operations/scripts/automations/content/data/fetching",
     "usage": "bash operations/scripts/automations/content/data/fetching/fetch-lpt-exchanges.sh [flags]",
     "policy": "F-R1",
     "status": "active"
@@ -534,7 +624,7 @@
     "description": "OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages",
     "mode": "execute",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "tools/scripts",
+    "scope": "operations/scripts/automations/content/data/fetching",
     "usage": "bash operations/scripts/automations/content/data/fetching/fetch-openapi-specs.sh [flags]",
     "policy": "F-R17",
     "status": "active"
@@ -975,6 +1065,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+    "name": "run-solutions-social-fetch.js",
+    "type": "dispatch",
+    "concern": "content",
+    "niche": "data",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Dispatches all solutions social data fetch scripts in sequence with env from a local .env file.",
+    "mode": "execute",
+    "pipeline": "manual → .env + product-social-config.json → .github/scripts/fetch-*.js → snippets/automations/solutions/{product}/*.jsx",
+    "scope": ".github/scripts/fetch-*.js, snippets/automations/solutions/",
+    "usage": "node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--env path/to/.env] [--skip youtube,discord]",
+    "policy": "Requires API keys — see docs-guide/repo-ops/secrets/solutions-secrets.mdx",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js",
     "name": "docs-page-research-pr-report.js",
     "type": "dispatch",
@@ -1095,6 +1200,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/generators/components/library/generate-component-examples.js",
+    "name": "generate-component-examples.js",
+    "type": "generator",
+    "concern": "components",
+    "niche": "library",
+    "purpose": "governance:index-management",
+    "description": "Keeps per-file example MDX files in sync with the component registry.",
+    "mode": "generate",
+    "pipeline": "manual, pr-workflow → component-registry.json, snippets/components/**/*.jsx → snippets/components/**/examples/*.mdx",
+    "scope": "",
+    "usage": "",
+    "policy": "",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/generators/components/library/generate-component-registry.js",
     "name": "generate-component-registry.js",
     "type": "generator",
@@ -1116,7 +1236,7 @@
     "concern": "components",
     "niche": "library",
     "purpose": "governance:index-management",
-    "description": "Generates the UI template catalog, template preview routes, and VS Code snippets from canonical template/component sources",
+    "description": "Generates the UI template catalog and VS Code snippets from canonical template/component sources.",
     "mode": "generate",
     "pipeline": "manual — interactive developer tool, not suited for automated pipelines",
     "scope": "operations/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, .vscode",
@@ -1164,8 +1284,23 @@
     "description": "API docs generator — generates API reference pages from OpenAPI specs",
     "mode": "generate",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "tools/scripts",
+    "scope": "operations/scripts/generators/content/reference",
     "usage": "bash operations/scripts/generators/content/reference/generate-api-docs.sh [flags]",
+    "policy": "E-C6, F-C1",
+    "status": "active"
+  },
+  {
+    "path": "operations/scripts/generators/content/reference/generate-glossary-companions.js",
+    "name": "generate-glossary-companions.js",
+    "type": "generator",
+    "concern": "content",
+    "niche": "reference",
+    "purpose": "tooling:dev-tools",
+    "description": "Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages",
+    "mode": "generate",
+    "pipeline": "CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual",
+    "scope": "operations/scripts/generators/content/reference",
+    "usage": "node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]",
     "policy": "E-C6, F-C1",
     "status": "active"
   },
@@ -1253,7 +1388,7 @@
     "purpose": "governance:index-management",
     "description": "Generates docs-guide workflow/template catalogs and optionally verifies freshness",
     "mode": "generate",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)",
     "scope": "operations/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE",
     "usage": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]",
     "policy": "R-R16, R-R17",
@@ -1268,7 +1403,7 @@
     "purpose": "governance:index-management",
     "description": "Generates the docs-guide pages catalog",
     "mode": "generate",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)",
     "scope": "operations/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json",
     "usage": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]",
     "policy": "R-R16, R-R17",
@@ -1554,7 +1689,7 @@
     "description": "",
     "mode": "",
     "pipeline": "manual — developer tool",
-    "scope": "tools/scripts",
+    "scope": "operations/scripts/snippets",
     "usage": "bash operations/scripts/snippets/test-scripts.sh [flags]",
     "policy": "",
     "status": "active"
@@ -1569,7 +1704,7 @@
     "description": "AI stash enforcer — blocks push if AI temporary/stash files are present in working tree",
     "mode": "execute",
     "pipeline": "manual",
-    "scope": "tools/scripts, .githooks/pre-commit",
+    "scope": "operations/scripts/validators/ai/codex, .githooks/pre-commit",
     "usage": "bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]",
     "policy": "R-R27, R-R30",
     "status": "active"
@@ -1617,6 +1752,21 @@
     "scope": "single-domain",
     "usage": "node operations/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]",
     "policy": "R-R10",
+    "status": "active"
+  },
+  {
+    "path": "operations/scripts/validators/components/library/check-component-health.js",
+    "name": "check-component-health.js",
+    "type": "validator",
+    "concern": "components",
+    "niche": "library",
+    "purpose": "governance:quality-gate",
+    "description": "Checks component library health:",
+    "mode": "read-only",
+    "pipeline": "pr-workflow → component-registry.json, v2/**/*.mdx, snippets/components/**/*.jsx → exit-code, stdout:violations",
+    "scope": "",
+    "usage": "",
+    "policy": "",
     "status": "active"
   },
   {
@@ -1905,6 +2055,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/validators/governance/ai/check-companion-manifest.js",
+    "name": "check-companion-manifest.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "ai",
+    "purpose": "",
+    "description": "",
+    "mode": "",
+    "pipeline": "",
+    "scope": "",
+    "usage": "",
+    "policy": "",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js",
     "name": "check-agent-docs-freshness.js",
     "type": "validator",
@@ -2025,6 +2190,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/validators/governance/repo/validate-lpd-paths.js",
+    "name": "validate-lpd-paths.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "repo",
+    "purpose": "governance:repo-health",
+    "description": "Validates that every script path referenced in `lpd` exists on disk. Parses the lpd bash CLI for node and script_path invocations and checks each file against the filesystem. Exits non-zero if any path is missing.",
+    "mode": "read-only",
+    "pipeline": "manual, ci",
+    "scope": "lpd (repo root bash CLI)",
+    "usage": "node operations/scripts/validators/governance/repo/validate-lpd-paths.js [--json]",
+    "policy": "R-R14",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/x-archive/.verify-large-change.sh",
     "name": ".verify-large-change.sh",
     "type": "",
@@ -2034,8 +2214,8 @@
     "description": "",
     "mode": "",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "operations/scripts/verify",
-    "usage": "bash operations/scripts/verify/.verify-large-change.sh [flags]",
+    "scope": "tools/scripts/verify",
+    "usage": "bash tools/scripts/verify/.verify-large-change.sh [flags]",
     "policy": "",
     "status": "archived"
   },
@@ -2050,7 +2230,7 @@
     "mode": "",
     "pipeline": "manual — developer tool",
     "scope": "tools/scripts",
-    "usage": "bash operations/scripts/dev/batch-update-og-image.sh",
+    "usage": "bash tools/scripts/dev/batch-update-og-image.sh",
     "policy": "",
     "status": "archived"
   },
@@ -2064,8 +2244,8 @@
     "description": "",
     "mode": "",
     "pipeline": "manual — developer tool",
-    "scope": "tools/scripts, operations/scripts/codex",
-    "usage": "node operations/scripts/codex-safe-merge-with-stash.js [flags]",
+    "scope": "tools/scripts, tools/scripts/codex",
+    "usage": "node tools/scripts/codex-safe-merge-with-stash.js [flags]",
     "policy": "",
     "status": "archived"
   },
@@ -2080,7 +2260,7 @@
     "mode": "",
     "pipeline": "manual — developer tool",
     "scope": "tools/scripts",
-    "usage": "python3 operations/scripts/dev/replace-og-image.py",
+    "usage": "python3 tools/scripts/dev/replace-og-image.py",
     "policy": "",
     "status": "archived"
   },
@@ -2095,7 +2275,7 @@
     "mode": "",
     "pipeline": "manual — interactive developer helper",
     "scope": "tools/scripts",
-    "usage": "node operations/scripts/dev/seo-generator-safe.js",
+    "usage": "node tools/scripts/dev/seo-generator-safe.js",
     "policy": "",
     "status": "archived"
   },
@@ -2110,7 +2290,7 @@
     "mode": "",
     "pipeline": "manual — on-demand maintainer sync tool",
     "scope": "full-repo",
-    "usage": "node operations/scripts/redirects/sync-legacy-root-v1.js [--bootstrap-manifest] [--write] [--repo-root <path>] [--manifest <path>] [--docs-json <path>]",
+    "usage": "node tools/scripts/redirects/sync-legacy-root-v1.js [--bootstrap-manifest] [--write] [--repo-root <path>] [--manifest <path>] [--docs-json <path>]",
     "policy": "",
     "status": "archived"
   },
@@ -2125,7 +2305,7 @@
     "mode": "",
     "pipeline": "manual — developer tool",
     "scope": "tools/scripts",
-    "usage": "node operations/scripts/dev/update-all-og-images.js",
+    "usage": "node tools/scripts/dev/update-all-og-images.js",
     "policy": "",
     "status": "archived"
   },
@@ -2140,7 +2320,7 @@
     "mode": "",
     "pipeline": "manual — interactive developer helper",
     "scope": "tools/scripts",
-    "usage": "node operations/scripts/dev/update-og-image.js",
+    "usage": "node tools/scripts/dev/update-og-image.js",
     "policy": "",
     "status": "archived"
   },
@@ -2304,7 +2484,7 @@
     "description": "",
     "mode": "",
     "pipeline": "P1, P3",
-    "scope": "tests/unit, ai-tools/registry, tools/lib/ai-tools-registry.js, operations/scripts/validate-ai-tools-registry.js, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx, tools/config/ownerless-governance-surfaces.json",
+    "scope": "operations/tests/unit, ai-tools/registry, tools/lib/ai-tools-registry.js, operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js, docs-guide/tooling/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx, tools/config/ownerless-governance-surfaces.json",
     "usage": "node tests/unit/ai-tools-registry.test.js [--staged|--files path[,path]]",
     "policy": "",
     "status": "active"
@@ -2394,7 +2574,7 @@
     "description": "",
     "mode": "",
     "pipeline": "manual — not yet in pipeline",
-    "scope": "tests/unit, operations/scripts/sync-codex-skills.js, ai-tools/ai-skills/templates",
+    "scope": "operations/tests/unit, operations/scripts/automations/ai/agents/sync-codex-skills.js, ai-tools/ai-skills/templates",
     "usage": "node tests/unit/codex-skill-sync.test.js [flags]",
     "policy": "",
     "status": "active"
@@ -3309,7 +3489,7 @@
     "description": "",
     "mode": "",
     "pipeline": "indirect -- library module used by validator and test surfaces",
-    "scope": "tools/lib, ai-tools/registry, operations/scripts/validate-ai-tools-registry.js, tests/unit/ai-tools-registry.test.js, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, tools/config/ownerless-governance-surfaces.json",
+    "scope": "tools/lib, ai-tools/registry, operations/scripts/validate-ai-tools-registry.js, tests/unit/ai-tools-registry.test.js, docs-guide/tooling/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, tools/config/ownerless-governance-surfaces.json",
     "usage": "const registry = require('../lib/ai-tools-registry');",
     "policy": "",
     "status": "active"

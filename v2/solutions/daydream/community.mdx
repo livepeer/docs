@@ -1,4 +1,5 @@
 ---
+mode: wide
 title: Daydream Recent Announcements
 sidebarTitle: Daydream Live 📡
 description: 'Latest videos, socials, and community activity for Daydream.'
@@ -23,13 +24,13 @@ lastVerified: 2026-03-23
 import { SocialLinks } from '/snippets/components/elements/social/SocialLinks.jsx'
 import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
 import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
-import { ColumnsBlogCardLayout } from '/snippets/components/integrators/blog/Data.jsx'
-import { daydreamBlogData } from '/snippets/automations/solutions/daydream/blogData.jsx'
+import { ColumnsBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/Data.jsx'
+import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { youtubeData } from '/snippets/automations/solutions/daydream/youtubeData.jsx'
-
-<Tip>
-  Uses automations to pull in the latest community activity for Daydream.
-</Tip>
+import { daydreamBlogData } from '/snippets/automations/solutions/daydream/blogData.jsx'
+import { daydreamDiscordData } from '/snippets/automations/solutions/daydream/discordData.jsx'
 
 <SocialLinks links={[
   { icon: "globe", href: "https://daydream.live", label: "Daydream Website" },
@@ -40,22 +41,59 @@ import { youtubeData } from '/snippets/automations/solutions/daydream/youtubeDat
   { icon: "pen-line", href: "https://blog.daydream.live", label: "Daydream Blog" },
 ]} />
 
-## Videos
+<Tip>
+  Uses automations to pull in the latest YouTube videos, blog posts, Discord announcements, and GitHub README for Daydream.
+</Tip>
 
-<YouTubeVideo
-  embedUrl="https://www.youtube.com/embed/ggA2N4tInD0"
-  caption="Scope Workshop — Mar 20, 2026"
-/>
+## <Icon icon="camera-movie" size={24} /> Videos
 
-<YouTubeVideo
-  embedUrl="https://www.youtube.com/embed/U0U9fDezxFQ"
-  caption="Daydream AI — Recent Upload"
-/>
+Watch the latest on the <LinkArrow label="Daydream YouTube Channel" href="https://www.youtube.com/channel/UCviyh_-8H2vkYq9ROHMBffQ" newline={false} />
 
-## Test YouTubeVideoData
+<YouTubeVideoData items={youtubeData} limit={4} />
 
-<YouTubeVideoData items={youtubeData} limit={2} />
+<CustomDivider />
 
-## Blog
+## <Icon icon="pencil-line" size={24} /> Blog
 
-Blog test - is just the import breaking it?
+Read recent posts from the <LinkArrow label="Daydream Blog" href="https://blog.daydream.live" newline={false} />
+{/*
+<ColumnsBlogCardLayout items={daydreamBlogData} limit={2} />
+
+<CustomDivider />
+
+## <Icon icon="discord" size={24} /> Discord Announcements
+
+Latest from the <LinkArrow label="Daydream Discord" href="https://discord.gg/pF2Akym5bV" newline={false} />
+
+<DiscordAnnouncements items={daydreamDiscordData} limit={3} />
+
+<CustomDivider />
+
+## <Icon icon="github" size={24} /> GitHub
+
+<MarkdownEmbed url="https://raw.githubusercontent.com/daydreamlive/scope/main/README.md" />
+
+<LinkArrow label="View Daydream on GitHub" href="https://github.com/daydreamlive/scope" newline={false} />
+
+<CustomDivider />
+
+## <Icon icon="tag" size={24} /> Releases
+
+<LinkArrow label="Daydream GitHub Releases" href="https://github.com/daydreamlive/scope/releases" newline={false} />
+
+<CustomDivider />
+
+## <Icon icon="twitter" size={24} /> X / Twitter
+
+Follow Daydream for real-time AI video updates.
+
+<LinkArrow label="@daydreamlive on X" href="https://x.com/daydreamlive" newline={false} />
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Daydream Overview" icon="book-open" href="/solutions/daydream/overview" />
+  <Card title="Daydream Quickstart" icon="rocket" href="/solutions/daydream/quickstart" />
+</CardGroup> */}

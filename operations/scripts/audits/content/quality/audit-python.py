@@ -8,7 +8,7 @@
 # @mode        read-only
 # @pipeline    manual — not yet in pipeline
 # @scope       tasks/scripts
-# @usage       python3 tools/scripts/audits/governance/repo/audit-python.py [flags]
+# @usage       python3 operations/scripts/audits/content/quality/audit-python.py [flags]
 # @policy      E-C1, R-R14
 """
 Comprehensive audit script for all v2 pages

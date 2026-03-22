@@ -7,7 +7,7 @@
 # @description External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds
 # @mode        execute
 # @pipeline    manual
-# @scope       tools/scripts
+# @scope       operations/scripts/automations/content/data/fetching
 # @usage       bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh [flags]
 # @policy      F-R1
 # Pre-build script to fetch external markdown files

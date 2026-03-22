@@ -7,7 +7,7 @@
 # @description API docs generator — generates API reference pages from OpenAPI specs
 # @mode        generate
 # @pipeline    manual — not yet in pipeline
-# @scope       tools/scripts
+# @scope       operations/scripts/generators/content/reference
 # @usage       bash operations/scripts/generators/content/reference/generate-api-docs.sh [flags]
 # @policy      E-C6, F-C1
 # Generate API documentation from OpenAPI spec

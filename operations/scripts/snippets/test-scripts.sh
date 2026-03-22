@@ -2,7 +2,7 @@
 # @script            test-scripts
 # @category          utility
 # @purpose           tooling:dev-tools
-# @scope             tools/scripts
+# @scope             operations/scripts/snippets
 # @owner             docs
 # @needs             E-C6, F-C1
 # @purpose-statement Snippet test runner — runs basic validation on snippet scripts

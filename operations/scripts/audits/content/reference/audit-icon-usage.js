@@ -11,7 +11,7 @@
  *              report. Does NOT modify any files. Flags gaps only.
  * @mode        audit
  * @pipeline    manual | post-PR | cron
- * @scope       tools/scripts
+ * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]
  * @flags
  *   --output <path>   Write JSON report to file (default: workspace/reports/_local/icon-usage-report.json)

@@ -7,7 +7,7 @@
 # @description AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
 # @mode        execute
 # @pipeline    manual
-# @scope       tools/scripts, .githooks/pre-commit
+# @scope       operations/scripts/validators/ai/codex, .githooks/pre-commit
 # @usage       bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]
 # @policy      R-R27, R-R30
 set -euo pipefail
