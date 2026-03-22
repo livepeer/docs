@@ -290,7 +290,7 @@ function partitionFiles(changedFiles) {
     file.startsWith('.vscode/') ||
     file === 'docs-guide/catalog/ui-templates.mdx' ||
     file === 'docs-guide/features/ui-system.mdx' ||
-    file === 'docs-guide/component-registry.json' ||
+    file === 'docs-guide/config/component-registry.json' ||
     file === 'operations/scripts/generate-ui-templates.js' ||
     file === 'operations/tests/unit/ui-template-generator.test.js'
   );

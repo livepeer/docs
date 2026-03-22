@@ -23,8 +23,8 @@ const {
 } = require('../../../../../tools/lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
-const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
-const USAGE_MAP_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json');
+const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
+const USAGE_MAP_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-usage-map.json');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'catalog', 'components-catalog.mdx');
 const LEGACY_OUTPUT_PATHS = [toLegacyCatalogPath(OUTPUT_PATH)];
 const STATUS_COLUMNS = VALID_STATUSES.filter((status) =>
@@ -231,7 +231,7 @@ function renderOrphanedSection(usageMap, registry) {
 function buildOutput(registry, usageMap) {
   const details = {
     script: 'operations/scripts/generate-docs-guide-components-index.js',
-    purpose: 'Generated inventory of governed component exports from docs-guide/component-registry.json and docs-guide/component-usage-map.json.',
+    purpose: 'Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json.',
     runWhen: 'Component governance metadata, registry output, or usage-map output changes.',
     runCommand: 'node operations/scripts/generate-docs-guide-components-index.js --fix'
   };

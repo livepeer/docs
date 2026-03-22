@@ -3,7 +3,7 @@
  * @script            ui-template-generator.test
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             tests, operations/scripts/generate-ui-templates.js, .vscode, snippets/templates, docs-guide/component-registry.json
+ * @scope             tests, operations/scripts/generate-ui-templates.js, .vscode, snippets/templates, docs-guide/config/component-registry.json
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Validates UI template generator snippet outputs are valid JSON, deterministic, and safe for after-< component insertion

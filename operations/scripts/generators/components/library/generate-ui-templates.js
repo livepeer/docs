@@ -32,7 +32,7 @@ const TEMPLATE_CATALOG_PATH = 'docs-guide/catalog/ui-templates.mdx';
 const UI_SYSTEM_PAGE_PATH = 'docs-guide/features/ui-system.mdx';
 const TEMPLATE_SNIPPETS_PATH = '.vscode/templates.code-snippets';
 const COMPONENT_SNIPPETS_PATH = '.vscode/components.code-snippets';
-const COMPONENT_REGISTRY_PATH = 'docs-guide/component-registry.json';
+const COMPONENT_REGISTRY_PATH = 'docs-guide/config/component-registry.json';
 
 const UI_SYSTEM_SECTION_START = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:START)';
 const UI_SYSTEM_SECTION_END = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:END)';
@@ -469,7 +469,7 @@ function renderUiSystemShell() {
     '',
     '- Governed JSX components live in `snippets/components/`.',
     '- The generated component inventory lives in `docs-guide/catalog/components-catalog.mdx`.',
-    '- Component snippets are generated from `docs-guide/component-registry.json`.',
+    '- Component snippets are generated from `docs-guide/config/component-registry.json`.',
     '',
     '## Templates',
     '',

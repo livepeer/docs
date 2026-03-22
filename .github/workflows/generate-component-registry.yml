@@ -37,8 +37,8 @@ jobs:
         id: git-check
         run: |
           git diff --exit-code \
-            docs-guide/component-registry.json \
-            docs-guide/component-registry-schema.json \
+            docs-guide/config/component-registry.json \
+            docs-guide/config/component-registry-schema.json \
           || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changed
@@ -47,7 +47,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add \
-            docs-guide/component-registry.json \
-            docs-guide/component-registry-schema.json
+            docs-guide/config/component-registry.json \
+            docs-guide/config/component-registry-schema.json
           git commit -m "chore(components): regenerate component registry - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           git push

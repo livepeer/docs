@@ -27,7 +27,7 @@ const {
 } = require('../../../../../tools/lib/component-governance-utils');
 
 const REPO_ROOT = process.cwd();
-const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json');
+const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-usage-map.json');
 
 function usage() {
   console.log(
