@@ -1,7 +1,7 @@
 # SOLUTIONS-SOCIAL-DATA Plan
 
 **Created:** 2026-03-21
-**Updated:** 2026-03-21
+**Updated:** 2026-03-23
 **Branch:** docs-v2-dev
 **Status:** Phase 4 COMPLETE — all phases done
 
@@ -101,7 +101,7 @@ sidebarTitle: 'Community & Updates'
 description: 'Latest videos, socials, and community activity for {Product}.'
 purpose: orient
 pageType: resource
-pageVariant: landing
+pageVariant: overview
 keywords:
   - '{product}'
   - livepeer
@@ -117,7 +117,7 @@ lastVerified: YYYY-MM-DD
 ---
 ```
 
-**Rationale:** Using Phase 1 schema values. `pageType: resource` (curated collection), `purpose: orient` (what exists + where reader fits), `pageVariant: landing` (visual, card-heavy layout).
+**Rationale:** Using Phase 1 schema values. `pageType: resource` (curated collection), `purpose: orient` (what exists + where reader fits), `pageVariant: overview` (`landing` is only valid for `navigation` type — fixed in Phase 4 validation).
 
 ### 4b. Template Layout Structure
 
@@ -202,7 +202,7 @@ From scanning `snippets/templates/pages/`:
 ### Phase 1: Research & Config — COMPLETE
 - [x] Web search to complete `socials-research.md` (verify all product socials, GitHub Discussions, Releases, public blog APIs)
 - [x] Source hero videos for each product (candidates identified — see config; some gaps flagged)
-- [x] Create `tools/scripts/config/product-social-config.json` mapping product → social channels
+- [x] Create `operations/scripts/config/product-social-config.json` mapping product → social channels
 - [x] **CHECKPOINT:** Findings reported inline. Committed. Awaiting approval for Phase 2.
 
 ### Phase 2: Pipeline Extensions — COMPLETE
@@ -249,29 +249,72 @@ From scanning `snippets/templates/pages/`:
 
 ---
 
-## 7. Files to Create/Modify
+## 7. Artefact Inventory (as-built)
 
-### New Files
-- `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/socials-research.md` — Product socials inventory
-- `snippets/templates/pages/data-imports/social-data-page.mdx` — Reusable template
-- `tools/scripts/config/product-social-config.json` — Central config registry
-- `.github/scripts/fetch-discord-announcements.js` — Discord GH Actions script (replaces n8n)
-- `.github/scripts/fetch-github-discussions.js` — GitHub Discussions fetch
-- `.github/scripts/fetch-github-releases.js` — GitHub Releases/Changelog fetch
-- `.github/workflows/update-discord-data.yml` — Discord data workflow
-- `.github/workflows/update-github-data.yml` — GitHub Discussions + Releases workflow
-- `snippets/automations/{product}/youtubeData.jsx` — Per-product YT data (per product)
-- `snippets/automations/{product}/discordData.jsx` — Per-product Discord data (per product)
-- `snippets/automations/{product}/githubDiscussionsData.jsx` — Per-product GH Discussions (per product)
-- `snippets/automations/{product}/githubReleasesData.jsx` — Per-product GH Releases (per product)
-- `v2/solutions/{product}/community.mdx` — Per-product social pages (per product)
+### Planning & Research
+| File | Location | Purpose |
+|------|----------|---------|
+| Plan (this file) | `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/plan.md` | Master plan |
+| Socials research | `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/_workspace/research/socials-research.md` | Verified social channels for all 5 products |
 
-### Modified Files
-- `.github/scripts/fetch-youtube-data.js` — Multi-channel support
-- `docs.json` — Add community pages to solutions navigation
+### Fetch Scripts (`.github/scripts/`)
+| File | Status | What it does |
+|------|--------|-------------|
+| `fetch-youtube-data.js` | Modified | Multi-channel support via `PRODUCT_KEY` env var + config-driven |
+| `fetch-discord-announcements.js` | New | Discord API, per-product announcements from config |
+| `fetch-github-discussions.js` | New | GitHub GraphQL API, per-product discussions from config |
+| `fetch-github-releases.js` | New | GitHub REST API, per-product releases from config |
+| `fetch-rss-blog-data.js` | New | Generic RSS parser (Ghost RSS, Leaflet, etc.), skips Ghost API products |
+
+### GitHub Actions Workflows (`.github/workflows/`)
+| File | Schedule | Scripts it runs |
+|------|----------|----------------|
+| `update-discord-data.yml` | Daily 01:00 UTC | fetch-discord-announcements.js |
+| `update-github-data.yml` | Daily 02:00 UTC | fetch-github-discussions.js + fetch-github-releases.js |
+| `update-rss-blog-data.yml` | Daily 03:00 UTC | fetch-rss-blog-data.js |
+
+### Config
+| File | Location | Purpose |
+|------|----------|---------|
+| Product social config | `operations/scripts/config/product-social-config.json` | Central registry: product → social channels, data sources, hero videos |
+
+### Template
+| File | Location | Purpose |
+|------|----------|---------|
+| Social data page template | `snippets/templates/pages/data-imports/social-data-page.mdx` | Reusable scaffold for product community pages |
+
+### Community Pages (`v2/solutions/`)
+| File | Data sources used |
+|------|------------------|
+| `v2/solutions/daydream/community.mdx` | YouTube hero, GitHub README embed, X, Discord, Blog links |
+| `v2/solutions/embody/community.mdx` | YouTube hero, GitHub README embed, Forum threads |
+| `v2/solutions/frameworks/community.mdx` | YouTube hero, GitHub README embed, X, Discord, Forum links |
+| `v2/solutions/livepeer-studio/community.mdx` | Live data feeds: YouTube, Ghost blog, Forum, Discord (all automated) |
+| `v2/solutions/streamplace/community.mdx` | GitHub README embed, Bluesky, Discord, Blog, Forum, App Store links |
+
+### Modified Existing Files
+| File | Change |
+|------|--------|
+| `docs.json` | Added community page to each product nav group |
+| `v2/community/livepeer-community/trending-topics.mdx` | Added Product Communities CardGroup (cols={2}, 5 cards) |
+| `v2/solutions/streamplace/overview.mdx` | Fixed GitHub URL (streamplace/overview → streamplace/streamplace) |
+
+### Secrets & Handover Documentation (`docs-guide/repo-ops/`)
+| File | Purpose |
+|------|---------|
+| `docs-guide/repo-ops/secrets/solutions-secrets.mdx` | Pipeline overview, secrets table, setup checklist |
+| `docs-guide/repo-ops/config/.env.example` | Full repo env var reference (grouped by pipeline) |
+
+### Per-Product Data Files (generated by scripts — not yet populated)
+Scripts write to `snippets/automations/{product}/` when run. These files do not exist yet because the workflows only run on `main` branch and some secrets (e.g. `DISCORD_BOT_TOKEN`) need configuration first. Expected outputs:
+- `snippets/automations/{product}/youtubeData.jsx`
+- `snippets/automations/{product}/discordData.jsx`
+- `snippets/automations/{product}/blogData.jsx`
+- `snippets/automations/{product}/githubDiscussionsData.jsx`
+- `snippets/automations/{product}/githubReleasesData.jsx`
 
 ### Governance Compliance
-- All new files in `workspace/plan/active/` follow existing SOLUTIONS-SOCIAL-DATA folder structure
-- All new scripts include JSDoc headers per SCRIPT-GOVERNANCE framework (11 required tags)
-- All new `.mdx` pages include Phase 1 frontmatter schema
-- All new GH Actions workflows follow existing naming/structure conventions
+- All scripts include JSDoc headers per SCRIPT-GOVERNANCE framework
+- All `.mdx` pages use Phase 1 frontmatter schema (`pageType: resource`, `purpose: orient`, `pageVariant: overview`)
+- All GH Actions workflows follow existing naming/structure conventions
+- Folder structure follows `_workspace/research/` convention per project management guide
