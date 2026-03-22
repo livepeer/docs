@@ -17,7 +17,7 @@ const path = require("path");
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CONFIG_PATH =
-  process.env.CONFIG_PATH || "tools/scripts/config/product-social-config.json";
+  process.env.CONFIG_PATH || "operations/scripts/config/product-social-config.json";
 const LIMIT = parseInt(process.env.LIMIT || "10", 10);
 
 function discordGet(endpoint) {
@@ -50,7 +50,9 @@ function discordGet(endpoint) {
 function escapeForJSX(str) {
   return (str || "")
     .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`")
     .replace(/"/g, '\\"')
+    .replace(/\$/g, "\\$")
     .replace(/\n/g, "<br />")
     .replace(/\r/g, "");
 }
@@ -128,7 +130,7 @@ async function main() {
     jsx += `];\n`;
 
     // Write to per-product directory
-    const outDir = `snippets/automations/${productKey}`;
+    const outDir = `snippets/automations/solutions/${productKey}`;
     fs.mkdirSync(outDir, { recursive: true });
     const outPath = path.join(outDir, "discordData.jsx");
     fs.writeFileSync(outPath, jsx);

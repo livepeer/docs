@@ -17,7 +17,7 @@ const fs = require("fs");
 const path = require("path");
 
 const CONFIG_PATH =
-  process.env.CONFIG_PATH || "tools/scripts/config/product-social-config.json";
+  process.env.CONFIG_PATH || "operations/scripts/config/product-social-config.json";
 const LIMIT = parseInt(process.env.LIMIT || "4", 10);
 
 function fetchUrl(url) {
@@ -40,7 +40,9 @@ function fetchUrl(url) {
 function escapeForJSX(str) {
   return (str || "")
     .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`")
     .replace(/"/g, '\\"')
+    .replace(/\$/g, "\\$")
     .replace(/\n/g, " ")
     .replace(/\r/g, "")
     .replace(/\t/g, " ");
@@ -188,7 +190,7 @@ async function main() {
       });
       jsx += `];\n`;
 
-      const outDir = `snippets/automations/${productKey}`;
+      const outDir = `snippets/automations/solutions/${productKey}`;
       fs.mkdirSync(outDir, { recursive: true });
       const outPath = path.join(outDir, "blogData.jsx");
       fs.writeFileSync(outPath, jsx);

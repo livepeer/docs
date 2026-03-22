@@ -11,12 +11,13 @@
  */
 const https = require("https");
 const fs = require("fs");
+const path = require("path");
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID || "UCzfHtZnmUzMbJDxGCwIgY2g";
 const PRODUCT_KEY = process.env.PRODUCT_KEY || "";
 const CONFIG_PATH =
-  process.env.CONFIG_PATH || "tools/scripts/config/product-social-config.json";
+  process.env.CONFIG_PATH || "operations/scripts/config/product-social-config.json";
 
 function httpsGet(url) {
   return new Promise((resolve, reject) => {
@@ -46,6 +47,14 @@ function escapeForJSX(str) {
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'")
     .replace(/"/g, '\\"')
+    .replace(/`/g, "\\`")
+    .replace(/\$/g, "\\$")
+    .replace(/\u2018|\u2019/g, "\\'")  // smart single quotes
+    .replace(/\u201C|\u201D/g, '\\"')  // smart double quotes
+    .replace(/\u2014/g, "-")           // em dash
+    .replace(/\u2013/g, "-")           // en dash
+    .replace(/\u2022/g, "-")           // bullet
+    .replace(/\u2192/g, "->")          // arrow
     .replace(/\n/g, " ")
     .replace(/\r/g, "")
     .replace(/\t/g, " ");
@@ -179,7 +188,7 @@ async function main() {
 
   for (const { key, channelId } of channels) {
     const outputPath = key
-      ? `snippets/automations/${key}/youtubeData.jsx`
+      ? `snippets/automations/solutions/${key}/youtubeData.jsx`
       : "snippets/automations/youtube/youtubeData.jsx";
     await fetchChannel(channelId, outputPath);
   }

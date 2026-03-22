@@ -33,9 +33,12 @@ function fetchJSON(url) {
   });
 }
 
-// Safe HTML escape - only escape backticks for template literals
+// Safe HTML escape for template literals — escape backticks and $ to prevent template expression injection
 function safeHTML(html) {
-  return (html || "").replace(/`/g, "\\`");
+  return (html || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`")
+    .replace(/\$/g, "\\$");
 }
 
 // Format date

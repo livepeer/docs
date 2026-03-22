@@ -26,7 +26,7 @@ jobs:
       - name: Read current version from globals.mdx
         id: current_version
         run: |
-          CURRENT=$(grep -oP 'latestVersion\s*=\s*["'"'"']?\K[^"'"'"']+' snippets/automationData/globals/globals.mdx || echo "")
+          CURRENT=$(grep -oP 'latestVersion\s*=\s*["'"'"']?\K[^"'"'"']+' snippets/automations/globals/globals.mdx || echo "")
           echo "current=${CURRENT}" >> $GITHUB_OUTPUT
           echo "Current version: ${CURRENT}"
 
@@ -36,17 +36,17 @@ jobs:
           steps.current_version.outputs.current
         run: |
           # Create backup
-          cp snippets/automationData/globals/globals.mdx snippets/automationData/globals/globals.mdx.bak
+          cp snippets/automations/globals/globals.mdx snippets/automations/globals/globals.mdx.bak
 
           # Update the latestVersion value
-          sed -i "s/latestVersion[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']/latestVersion = \"${{ steps.get_release.outputs.release }}\"/" snippets/automationData/globals/globals.mdx
+          sed -i "s/latestVersion[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']/latestVersion = \"${{ steps.get_release.outputs.release }}\"/" snippets/automations/globals/globals.mdx
 
           # Update the latestVersionUrl value
-          sed -i "s|latestVersionUrl[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']|latestVersionUrl = \"https://github.com/livepeer/go-livepeer/releases/download/${{ steps.get_release.outputs.release }}\"|" snippets/automationData/globals/globals.mdx
+          sed -i "s|latestVersionUrl[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']|latestVersionUrl = \"https://github.com/livepeer/go-livepeer/releases/download/${{ steps.get_release.outputs.release }}\"|" snippets/automations/globals/globals.mdx
 
           # Verify the changes
           echo "Updated content:"
-          grep "latestVersion" snippets/automationData/globals/globals.mdx
+          grep "latestVersion" snippets/automations/globals/globals.mdx
 
       - name: Commit and push if changed
         if:
@@ -55,6 +55,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add snippets/automationData/globals/globals.mdx
+          git add snippets/automations/globals/globals.mdx
           git commit -m "chore: update latest release to ${{ steps.get_release.outputs.release }}"
           git push
