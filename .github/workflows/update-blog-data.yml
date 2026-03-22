@@ -1,9 +1,11 @@
 name: Update Blog and Forum Data
+# DISABLED: superseded by n8n Ghost-to-Mintlify and Forum-To-Mintlify-Latest-Topics workflows
+# and by .github/scripts/fetch-ghost-blog-data.js + fetch-github-discussions.js (GHA).
+# The curl + raw JSON approach never worked (uses YOUR_CONTENT_API_KEY placeholder).
+# Kept for reference only. Re-enable workflow_dispatch if emergency manual use needed.
 
 on:
-  schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight UTC
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch: # Manual trigger only — schedule removed
 
 jobs:
   update-data:

@@ -532,7 +532,7 @@ This task runs after all internal script restructuring is complete and tested.
 - [x] ~~**14.6** CHECKPOINT — show full tree + test results to human~~
 - [x] ~~**14.7** Commit + merge back to `docs-v2-dev`~~
 - [x] ~~**14.8** Strikethrough completed tasks in this plan~~
-- [ ] **14.9** Fix 9 stale `@usage`/`@scope` headers in `operations/scripts/` still referencing `tools/scripts/`
+- [x] ~~**14.9** Fix 9 stale `@usage`/`@scope` headers + pre-push runtime paths + regenerate registry~~ (a56f2114)
 
 ---
 
@@ -701,42 +701,44 @@ documentation. Produce a recommendation report — do NOT execute changes in thi
 
 ### n8n → GitHub Actions audit
 
-Review against current live n8n exports (user to provide — repo versions are stale).
+Current n8n exports received: `workspace/plan/active/SCRIPT-GOVERNANCE/n8n/`
 
-**Known conversion status:**
+**Verified path/branch mapping (from live n8n exports):**
 
-| n8n workflow | GitHub Actions equivalent | Status |
-|---|---|---|
-| `YouTube-To-Mintlify.json` | `update-youtube-data.yml` | ✅ Converted |
-| `Forum-To-Mintlify-Latest-Topics.json` | `update-forum-data.yml` | ✅ Converted |
-| `Ghost-to-Mintlify.json` | `update-ghost-blog-data.yml` | ✅ Converted |
-| `Discord_Announce_to_Mintlify.json` | `update-discord-data.yml` | ⚠️ Partial — product-only, no global community feed |
-| `Discord-Issue-Intake.json` | `discord-issue-intake.yml` | ✅ Converted (repository_dispatch) |
-| `Showcase_Project_Pipeline.json` | `project-showcase-sync.yml` | ✅ Converted |
-| `Luma-To-Mintlify.json` | None | ❌ Still n8n only |
-| `project-showcase-application-workflow.json` | `project-showcase-sync.yml` | ✅ Likely covered |
-| `mp4-to-gif.json` | None | Utility — n8n only is fine |
+| n8n workflow | Writes to | Branch | Repo path | Status |
+|---|---|---|---|---|
+| `Discord_Announce_to_Mintlify` | `snippets/automations/discord/discordAnnouncementsData.jsx` | docs-v2-preview | exists ✓ | ✅ active, path correct |
+| `Forum-To-Mintlify-Latest-Topics` | `snippets/automations/forum/forumData.jsx` | docs-v2-preview | exists ✓ | ✅ active, path correct |
+| `Ghost-to-Mintlify` | `snippets/automations/blog/ghostBlogData.jsx` | docs-v2-preview | exists ✓ | ✅ active, path correct — ⚠️ `safeHTML()` only escapes backticks, not `$` (n8n cannot be fixed from repo) |
+| `Youtube to Mintlify` | `snippets/automations/youtube/youtubeData.jsx` | docs-v2-preview | exists ✓ | ✅ active, path correct |
+| `Get LatestRelease And push to Docs` | `snippets/automationData/globals/globals.jsx` | docs-v2 | **doesn't exist** | ❌ fully broken — stale path + stale branch + stale regex. Superseded by `update-livepeer-release.yml` (GHA). Disable in n8n. |
+| Luma | — | — | — | Not in exports — no active Luma n8n workflow provided |
 
-**Questions to resolve with current n8n exports:**
-- Does Luma still write to `snippets/automations/luma/lumaEventsData.jsx`?
-- Does any n8n workflow write the global `discord/discordAnnouncementsData.jsx`?
-- Are Showcase paths current with `snippets/automations/showcase/`?
+**Branch split clarified:**
+- n8n writes → `docs-v2-preview` (4 workflows active)
+- GHA writes → `main` (all `.github/workflows/` on `main`)
+- `docs-v2-dev` / other branches: static copies, not auto-updated by either system
+
+**Global Discord feed (`discord/discordAnnouncementsData.jsx`):**
+The n8n `Discord_Announce_to_Mintlify` workflow IS writing to this file on `docs-v2-preview`. It's active. The file is only static in `docs-v2-dev` because dev branch doesn't receive `docs-v2-preview` updates. No gap — the pipeline exists.
+
+**Luma (`snippets/automations/luma/`):**
+No Luma workflow in provided exports. Directory exists in repo with static data. Status unknown — may no longer be active or was not included in export.
+
+**Actions required outside the repo (n8n side):**
+- Disable the `Get LatestRelease And push to Docs` n8n workflow — it's broken and superseded by GHA
 
 ### Tasks
 
-- [ ] **15b.1** Receive current n8n exports from user — verify paths match repo data file locations
-- [ ] **15b.2** Stage + commit all working-tree fixes to `.github/scripts/fetch-*.js`
-- [ ] **15b.3** Add `$` escaping to `safeHTML()` in `fetch-ghost-blog-data.js`
-- [ ] **15b.4** Fix `update-livepeer-release.yml` path (`automationData` → `automations`)
-- [ ] **15b.5** Fix `update-discord-data.yml` glob (`*/` → `**/`)
+- [x] ~~**15b.1** Receive current n8n exports — verify paths match repo data file locations~~ (exports received, all 4 active n8n workflows verified correct)
 - [x] ~~**15b.2** Stage + commit all working-tree fixes to `.github/scripts/fetch-*.js`~~ (2cc89276)
 - [x] ~~**15b.3** Add `$` escaping to `safeHTML()` in `fetch-ghost-blog-data.js`~~ (2cc89276)
 - [x] ~~**15b.4** Fix `update-livepeer-release.yml` path (`automationData` → `automations`)~~ (2cc89276)
 - [x] ~~**15b.5** Fix `update-discord-data.yml` glob (`*/` → `**/`)~~ (2cc89276)
-- [ ] **15b.6** Disable/remove `update-blog-data.yml` legacy workflow ⏸ **FLAGGED — destructive, needs explicit approval**
-- [ ] **15b.7** Verify n8n Luma workflow path matches `snippets/automations/luma/` ⏸ **BLOCKED — needs current n8n JSON from user**
-- [ ] **15b.8** Confirm or create global Discord community feed pipeline ⏸ **BLOCKED — needs current n8n JSON; `discord/discordAnnouncementsData.jsx` is static since Jan 2026**
-- [ ] **15b.9** **CHECKPOINT** — present all fixes to human for review before committing
+- [x] ~~**15b.6** Disable `update-blog-data.yml` — removed cron schedule, manual trigger only, added superseded note~~ (pending commit)
+- [ ] **15b.7** ⏸ User action: disable `Get LatestRelease And push to Docs` n8n workflow — broken, superseded by GHA
+- [ ] **15b.8** ⏸ Clarify Luma status — no Luma n8n export provided; `snippets/automations/luma/` has static data
+- [x] ~~**15b.9** CHECKPOINT — present all fixes to human for review~~ (this update)
 
 ---
 
