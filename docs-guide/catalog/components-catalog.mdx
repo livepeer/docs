@@ -18,16 +18,235 @@ Run when: Component governance metadata, registry output, or usage-map output ch
 Run command: node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix
 */}
 
-<Note>
-**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`. <br/>
-**Purpose**: Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json. <br/>
-**Run when**: Component governance metadata, registry output, or usage-map output changes. <br/>
-**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix`. <br/>
-</Note>
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
+import { SearchTable } from "/snippets/components/wrappers/tables/SearchTable.jsx"
+import { DynamicTable } from "/snippets/components/wrappers/tables/Table.jsx"
+
+{/* should not be here.  */}
+export const componentTableData = [
+  { Name: 'MermaidColours', Category: 'config', Status: 'stable', File: 'snippets/components/config/MermaidColours.jsx' },
+  { Name: 'CardVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'CodeComponent', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
+  { Name: 'CodeSection', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
+  { Name: 'ComplexCodeBlock', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
+  { Name: 'CustomCodeBlock', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
+  { Name: 'CustomResponseField', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
+  { Name: 'FrameQuote', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/quotes/Quote.jsx' },
+  { Name: 'LinkedInEmbed', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'Quote', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/quotes/Quote.jsx' },
+  { Name: 'ResponseFieldAccordion', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
+  { Name: 'ResponseFieldExpandable', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
+  { Name: 'ResponseFieldGroup', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
+  { Name: 'ScrollableDiagram', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/diagrams/ZoomableDiagram.jsx' },
+  { Name: 'ShowcaseVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'TitledVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'ValueResponseField', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
+  { Name: 'Video', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'YouTubeVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'YouTubeVideoData', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'YouTubeVideoDownload', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
+  { Name: 'AccordionTitleWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
+  { Name: 'BlinkingIcon', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'BlinkingTerminal', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'CardTitleTextWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
+  { Name: 'ComingSoonCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
+  { Name: 'CopyText', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
+  { Name: 'CustomCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'CustomCardTitle', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/CustomCardTitle.jsx' },
+  { Name: 'CustomDivider', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/spacing/Divider.jsx' },
+  { Name: 'DoubleIconLink', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'DownloadButton', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/buttons/Buttons.jsx' },
+  { Name: 'FocusableScrollRegions', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/a11y/A11y.jsx' },
+  { Name: 'GotoCard', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'GotoLink', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'Image', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/images/Image.jsx' },
+  { Name: 'LinkArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'LinkImage', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/images/Image.jsx' },
+  { Name: 'LivepeerIcon', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/icons/Icons.jsx' },
+  { Name: 'LivepeerSVG', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/icons/Icons.jsx' },
+  { Name: 'MathBlock', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/math/Math.jsx' },
+  { Name: 'MathInline', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/math/Math.jsx' },
+  { Name: 'PreviewCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
+  { Name: 'ReviewCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
+  { Name: 'SocialLinks', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/social/SocialLinks.jsx' },
+  { Name: 'Spacer', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/spacing/Spacer.jsx' },
+  { Name: 'Subtitle', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
+  { Name: 'TipWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
+  { Name: 'BlogCard', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'BlogDataLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'CardBlogDataLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'CardColumnsPostLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'CardInCardLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'CoinGeckoExchanges', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/feeds/Coingecko.jsx' },
+  { Name: 'ColumnsBlogCardLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'DiscordAnnouncements', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'ExternalContent', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/ExternalContent.jsx' },
+  { Name: 'ForumLatestLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'LatestVersion', Category: 'integrators', Status: 'experimental', File: 'snippets/components/integrators/feeds/Release.jsx' },
+  { Name: 'LumaEvents', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'MarkdownEmbed', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
+  { Name: 'PdfEmbed', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
+  { Name: 'PostCard', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/Data.jsx' },
+  { Name: 'ShowcaseCards', Category: 'integrators', Status: 'experimental', File: 'snippets/components/integrators/feeds/ShowcaseCards.jsx' },
+  { Name: 'TwitterTimeline', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
+  { Name: 'YouTubeVideoData', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/video-data/VideoData.jsx' },
+  { Name: 'Divider', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H1', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H2', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H3', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H4', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H5', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'H6', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'HeroContentContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'HeroImageBackgroundComponent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'HeroOverviewContent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'HeroSectionContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'LogoHeroContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'P', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'PageHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
+  { Name: 'PortalCardsHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'PortalContentContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'PortalHeroContent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'PortalSectionHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'RefCardContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
+  { Name: 'Starfield', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/heroes/HeroGif.jsx' },
+  { Name: 'AccordionGroupList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/accordions/AccordionGroupList.jsx' },
+  { Name: 'AccordionLayout', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/accordions/AccordionLayout.jsx' },
+  { Name: 'BasicList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'BorderedBox', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
+  { Name: 'CardCarousel', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/grids/CardCarousel.jsx' },
+  { Name: 'CenteredContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
+  { Name: 'DisplayCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/CustomCards.jsx' },
+  { Name: 'DynamicTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/tables/Table.jsx' },
+  { Name: 'FlexContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
+  { Name: 'FullWidthContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
+  { Name: 'GridContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
+  { Name: 'IconList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'InlineImageCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/CustomCards.jsx' },
+  { Name: 'InteractiveCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/ShowcaseCards.jsx' },
+  { Name: 'InteractiveCards', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/ShowcaseCards.jsx' },
+  { Name: 'ListSteps', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/lists/ListSteps.jsx' },
+  { Name: 'QuadGrid', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/grids/QuadGrid.jsx' },
+  { Name: 'ScrollBox', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/ScrollBox.jsx' },
+  { Name: 'SearchTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/tables/SearchTable.jsx' },
+  { Name: 'ShowcaseCards', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/ShowcaseCards.jsx' },
+  { Name: 'Spacer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
+  { Name: 'StepLinkList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'StepList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'StyledStep', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/steps/Steps.jsx' },
+  { Name: 'StyledSteps', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/steps/Steps.jsx' },
+  { Name: 'StyledTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/tables/Tables.jsx' },
+  { Name: 'TableCell', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/tables/Tables.jsx' },
+  { Name: 'TableRow', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/tables/Tables.jsx' },
+  { Name: 'UpdateLinkList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'UpdateList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/wrappers/lists/Lists.jsx' },
+  { Name: 'WidthCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/cards/CustomCards.jsx' },
+];
+
+<Tip>
+This file is an auto-generated index catalog for all available Livepeer Custom Components <br/>
+</Tip>
+<Danger> Do not manually edit this file </Danger>
+
+<Expandable title="Script Generation Details">
+**Generation Script**
+- This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`.
+
+**Purpose**
+- Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json.
+
+**Run when**
+- Component governance metadata, registry output, or usage-map output changes. <br/>
+
+**Important**
+- Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix`.
+
+## Script Pipeline
+
+```mermaid
+flowchart TD
+    SRC["📄 snippets/components/**/*.jsx\nJSDoc headers — source of truth"]
+
+    SRC -->|git commit| PC["pre-commit\nhard gates only\nMDX syntax · docs.json integrity · deletion guard"]
+
+    SRC -->|push → main, jsx paths changed| WF1["🔄 generate-component-registry.yml"]
+    WF1 --> RS1["generate-component-registry.js"]
+    RS1 --> REG["component-registry.json\ncomponent-registry-schema.json\nauto-committed to main"]
+
+    REG -->|auto-commit triggers push → main| WF2["🔄 generate-docs-guide-catalogs.yml"]
+    WF2 --> RS2["generate-component-docs.js"]
+    RS2 --> V2["v2/ component doc pages\npublished to docs"]
+
+    SRC -->|PR → docs-v2 or main| WF3["✅ check-docs-guide-catalogs.yml — PR gate"]
+    WF3 --> CHK["registry --validate-only\ncheck-component-health.js\ngenerate-component-examples.js --check"]
+
+    REG -. "⚠️ manual only — no CI trigger\nnode ...generate-docs-guide-components-index.js --fix" .-> CAT["📋 components-catalog.mdx\nthis file"]
+```
+
+</Expandable>
+
+<CustomDivider />
+
+## Component Tree
+
+<Tree>
+  <Tree.Folder name="snippets/components" defaultOpen>
+    <Tree.Folder name="elements">
+      <Tree.File name="a11y/A11y.jsx" />
+      <Tree.File name="buttons/Buttons.jsx" />
+      <Tree.File name="callouts/PreviewCallouts.jsx" />
+      <Tree.File name="links/Links.jsx" />
+      <Tree.File name="spacing/Divider.jsx" />
+      <Tree.File name="text/CustomCardTitle.jsx" />
+      <Tree.File name="text/Text.jsx" />
+    </Tree.Folder>
+    <Tree.Folder name="wrappers">
+      <Tree.File name="cards/Cards.jsx" />
+      <Tree.File name="containers/Containers.jsx" />
+      <Tree.File name="grids/Grids.jsx" />
+      <Tree.File name="tabs/Tabs.jsx" />
+    </Tree.Folder>
+    <Tree.Folder name="displays">
+      <Tree.File name="badges/Badges.jsx" />
+      <Tree.File name="quotes/Quote.jsx" />
+      <Tree.File name="stats/Stats.jsx" />
+      <Tree.File name="tables/Tables.jsx" />
+      <Tree.File name="video/Video.jsx" />
+    </Tree.Folder>
+    <Tree.Folder name="scaffolding">
+      <Tree.File name="embeds/DataEmbed.jsx" />
+      <Tree.File name="images/Image.jsx" />
+      <Tree.File name="layouts/Layouts.jsx" />
+      <Tree.File name="navigation/Navigation.jsx" />
+    </Tree.Folder>
+    <Tree.Folder name="integrators">
+      <Tree.File name="embeds/Embeds.jsx" />
+      <Tree.File name="forms/Forms.jsx" />
+      <Tree.File name="social/Social.jsx" />
+    </Tree.Folder>
+    <Tree.Folder name="config">
+      <Tree.File name="theme/Theme.jsx" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+
+{/* ## Component Framework - SHOULD LINK TO THE PAGE THAT HAS THIS
+
+Categorisation:
+
+<Expandable title="JsDocs Headers">
+Jsdocs Template Here with definition and use of each "tag"
+-> separate to generic jsdocs items
+-> our custom extension
+
+<Expandable />
+
+## Component Tooling */}
+{/* Tooling available for components */}
+
+## Component Summary
 
 The governed component library currently exposes **121** named export(s).
-
-## Summary
 
 | Category | Exports | 🟢 Stable | 🧪 Experimental | 🟠 Deprecated | 🔴 Broken | ⬜ Placeholder | Unused |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -39,7 +258,28 @@ The governed component library currently exposes **121** named export(s).
 | [Config](#config) | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
 | **Total** | **121** | **112** | **2** | **4** | **3** | **0** | **15** |
 
-**Status:** 🟢 stable · 🧪 experimental · 🟠 deprecated · 🔴 broken · ⬜ placeholder
+# Components: Searchable
+
+<SearchTable
+  TableComponent={DynamicTable}
+  headerList={['Name', 'Category', 'Status', 'File']}
+  itemsList={componentTableData}
+  searchColumns={['Name', 'Category', 'Status']}
+  categoryColumn="Category"
+  monospaceColumns={['File']}
+  searchPlaceholder="Search by name or category..."
+/>
+
+# Components by Type
+
+<BorderedBox style={{width: "fit-content"}}>
+**Status Key** <br/>
+🟢 stable <br/>
+🧪 experimental <br/>
+🟠 deprecated <br/>
+🔴 broken <br/>
+⬜ placeholder <br/>
+</BorderedBox>
 
 ## Elements
 
@@ -924,6 +1164,7 @@ The governed component library currently exposes **121** named export(s).
 
 </AccordionGroup>
 
+## Audit
 <Accordion title="⚠️ Audit — 18 items">
 
 | Component | Category | Status | Note |
@@ -948,3 +1189,4 @@ The governed component library currently exposes **121** named export(s).
 | ListSteps | `wrappers` | `stable` | Not imported in any page |
 
 </Accordion>
+

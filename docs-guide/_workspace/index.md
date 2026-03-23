@@ -110,7 +110,7 @@ An AI-specific sitemap separate from the SEO sitemap, enriched with content type
 
 **2.** Parse all v2/pages/**/*.mdx frontmatter for: title, description, category, lastVerified
 
-**3.** Emit XML with custom <ai:contentType>, <ai:wordCount>, <ai:category> elements
+**3.** Emit XML with custom `<ai:contentType>`, `<ai:wordCount>`, `<ai:category>` elements
 
 **4.** Output to public/sitemap-ai.xml
 
@@ -135,7 +135,7 @@ The API specs exist in /api/ but must be served live at stable, well-known URLs 
 
 **2.** Add a canonical API index at docs.livepeer.org/api/index.json listing all specs with name, URL, version
 
-**3.** Add Link headers in HTTP responses: Link: </api/openapi.json>; rel="describedby"
+**3.** Add Link headers in HTTP responses: `Link: </api/openapi.json>; rel="describedby"`
 
 **4.** Register specs on APIs.guru (apis.guru/add-api) and SwaggerHub
 
@@ -185,7 +185,7 @@ Expand the existing gateway runbook (get-AI-to-setup-the-gateway.mdx) into a ded
 
 **3.** Write initial runbooks: Setup AI pipeline, Run a Gateway, Stake LPT, Register Orchestrator
 
-**4.** Add to mint.json navigation group: { "group": "For AI Agents", "pages": [...] }
+**4.** Add to mint.json navigation group: `{ "group": "For AI Agents", "pages": [...] }`
 
 **5.** Ensure each page has frontmatter: agent_executable: true, requires_human: false/true
 
@@ -237,7 +237,7 @@ Embed 3-5 explicit Q&A pairs per page in a machine-readable format. This is the 
 
 **4.** Focus questions on: "How do I...", "What is...", "Why does...", "When should I..."
 
-**5.** Add a CI check: pages with type: guide\|reference must have at least 3 <QA> blocks
+**5.** Add a CI check: pages with type: guide\|reference must have at least 3 `<QA>`blocks
 
 **6.** Store Q&A content in frontmatter OR as MDX component — not both (choose one source of truth)
 
@@ -256,7 +256,7 @@ For every Livepeer-specific term (LPT, Gateway, Orchestrator, Pipeline), add mac
 
 **1.** Audit the generated glossary-terms.json — ensure all key entities are present
 
-**2.** Add <dfn id="gateway"> HTML anchors in glossary page MDX for each term
+**2.** Add `<dfn id="gateway">` HTML anchors in glossary page MDX for each term
 
 **3.** Add entity_type: protocol_component\|token\|role\|concept to each glossary frontmatter entry
 
@@ -308,7 +308,7 @@ A single JSON file listing every page with: URL, title, description, section, ta
 
 **2.** Parse all v2/pages/**/*.mdx, extract frontmatter + headings + code block languages
 
-**3.** Output: { version, generated, pages: [{ url, title, description, section, tags, entities, apiEndpoints, wordCount, difficulty, lastVerified }] }
+**3.** Output: `{ version, generated, pages: [{ url, title, description, section, tags, entities, apiEndpoints, wordCount, difficulty, lastVerified }] }`
 
 **4.** Serve at docs.livepeer.org/docs-index.json (add to public/)
 
@@ -325,17 +325,17 @@ A single JSON file listing every page with: URL, title, description, section, ta
 | Category: Discovery & Indexing | **Effort: Medium** | **Impact: Critical** |  |
 | --- | --- | --- | --- |
 
-Embed TechArticle, HowTo, FAQPage, and APIReference JSON-LD schema in every page's <head>. This is the primary mechanism by which Google AI Overviews, Bing Copilot, and Perplexity extract structured answers.
+Embed TechArticle, HowTo, FAQPage, and APIReference JSON-LD schema in every page's `<head>`. This is the primary mechanism by which Google AI Overviews, Bing Copilot, and Perplexity extract structured answers.
 
 **Implementation Steps**
 
-**1.** In Mintlify, use the "head" frontmatter field or a global <Head> component to inject JSON-LD
+**1.** In Mintlify, use the "head" frontmatter field or a global `<Head>` component to inject JSON-LD
 
 **2.** Map page type to schema: type:guide -> HowTo, type:reference -> TechArticle, type:faq -> FAQPage
 
 **3.** For HowTo: include step-by-step instructions from page headings + prose
 
-**4.** For FAQPage: pull from <QA> component blocks (item 8)
+**4.** For FAQPage: pull from `<QA>`component blocks (item 8)
 
 **5.** Extend generate-seo.js to emit a jsonLd object per page that Mintlify injects
 
@@ -404,7 +404,7 @@ A collapsible block on key pages containing a compressed, dense context summary 
 
 **Implementation Steps**
 
-**1.** Create a <AIContext> Mintlify component that renders a collapsed "Use with AI" block
+**1.** Create a `<AIContext>` Mintlify component that renders a collapsed "Use with AI" block
 
 **2.** Inside: a copyable text block covering core concepts, key APIs, gotchas, and code patterns for that section
 
@@ -483,7 +483,7 @@ Pages written specifically for agent error recovery: "Why your AI pipeline job f
 
 **2.** Write pages using the format: Error message (exact string) -> Cause -> Fix -> Prevention
 
-**3.** Include error codes as machine-readable anchors: <dfn id="ERR_PIPELINE_TIMEOUT">
+**3.** Include error codes as machine-readable anchors: `<dfn id="ERR_PIPELINE_TIMEOUT">`
 
 **4.** Add to frontmatter: error_codes: [ERR_PIPELINE_TIMEOUT, ERR_GPU_OOM]
 
@@ -504,7 +504,7 @@ A stable JSON endpoint that agents poll to know if their cached knowledge of Liv
 
 **Implementation Steps**
 
-**1.** Create public/changelog.json with schema: { version, entries: [{ date, type, affectedUrls, summary, breakingChange }] }
+**1.** Create public/changelog.json with schema: `{ version, entries: [{ date, type, affectedUrls, summary, breakingChange }] }`
 
 **2.** Add a GitHub Action that appends to changelog.json on every merge to main that touches v2/pages/
 
@@ -556,7 +556,7 @@ A live JSON endpoint at docs.livepeer.org/data/network-state.json with current p
 
 **1.** Create a Cloudflare Worker or serverless function that queries the Livepeer API + CoinGecko
 
-**2.** Output: { timestamp, lptPrice, activePipelines, activeOrchestrators, networkStatus, apiHealth }
+**2.** Output: `{ timestamp, lptPrice, activePipelines, activeOrchestrators, networkStatus, apiHealth }`
 
 **3.** Cache with a 60-second TTL to avoid hammering upstream APIs
 
@@ -606,7 +606,7 @@ Mintlify emits Link and X-Llms-Txt response headers pointing to /llms.txt on eve
 
 **1.** Verify headers are present now: curl -I https://docs.livepeer.org \| grep -i llms
 
-**2.** Expected: Link: </llms.txt>; rel="llms-txt" and X-Llms-Txt: https://docs.livepeer.org/llms.txt
+**2.** Expected: `Link: </llms.txt>; rel="llms-txt"` and X-Llms-Txt: https://docs.livepeer.org/llms.txt
 
 **3.** If missing: check Mintlify docs for the ai.llmsTxt config option in docs.json and enable it
 
@@ -704,7 +704,7 @@ A structured "task → best page(s)" lookup: "run a gateway" → /gateways/quick
 
 **Implementation Steps**
 
-**1.** Create snippets/data/task-map.json with schema: { tasks: [{ intent: string, keywords: string[], primaryUrl: string, secondaryUrls: string[], persona: string }] }
+**1.** Create snippets/data/task-map.json with schema: `{ tasks: [{ intent: string, keywords: string[], primaryUrl: string, secondaryUrls: string[], persona: string }] }`
 
 **2.** Seed with 20–30 top developer and operator tasks derived from Discord/forum support queries
 

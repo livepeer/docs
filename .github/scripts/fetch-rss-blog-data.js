@@ -118,6 +118,7 @@ function parseRSSItem(xml) {
     title: extractTag(xml, "title"),
     href: extractTag(xml, "link"),
     author: extractTag(xml, "dc:creator") || extractTag(xml, "author") || "",
+    contentHtml: extractTag(xml, "content:encoded") || extractTag(xml, "description") || "",
     content: stripHTML(
       extractTag(xml, "content:encoded") || extractTag(xml, "description") || ""
     ).substring(0, 500),
@@ -133,6 +134,7 @@ function parseAtomEntry(xml) {
     title: extractTag(xml, "title"),
     href: extractAttr(xml, 'link[^>]*rel="alternate"', "href") || extractAttr(xml, "link", "href"),
     author: extractTag(xml, "name") || "",
+    contentHtml: extractTag(xml, "content") || extractTag(xml, "summary") || "",
     content: stripHTML(
       extractTag(xml, "content") || extractTag(xml, "summary") || ""
     ).substring(0, 500),
@@ -183,7 +185,7 @@ async function main() {
         continue;
       }
 
-      // Generate JSX export
+      // Generate JSX export — RSS data shape (plain text, no HTML)
       const exportName = `${productKey.replace(/-/g, "")}BlogData`;
       let jsx = `export const ${exportName} = [\n`;
       items.forEach((item, idx) => {
@@ -191,7 +193,7 @@ async function main() {
         jsx += `    title: "${escapeForJSX(item.title)}",\n`;
         jsx += `    href: "${escapeForJSX(item.href)}",\n`;
         jsx += `    author: "${escapeForJSX(item.author ? `By ${item.author}` : "")}",\n`;
-        jsx += `    content: "${escapeForJSX(item.content)}...",\n`;
+        jsx += `    excerpt: "${escapeForJSX(item.content)}",\n`;
         jsx += `    datePosted: "${item.datePosted}",\n`;
         jsx += `    img: "${escapeForJSX(item.img)}"\n`;
         jsx += `  }${idx < items.length - 1 ? "," : ""}\n`;

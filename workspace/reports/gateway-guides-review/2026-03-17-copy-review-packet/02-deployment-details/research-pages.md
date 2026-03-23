@@ -12,7 +12,7 @@
   - extracted: Correcting a common misconception: Older docs and community guides state that running an off chain gateway requires your own orchestrator node (and therefore a GPU).
   - extracted: Reference implementation: by j0sh Workload support: Live AI (live video to video) fully supported; remote signer designed for this first BYOC (Bring Your Own Compute) supported; uses HTTP not gRPC for discovery Batch AI same payment mechanism; full remote signer support not confirmed as shipped Video transcoding excluded by design (ticket signing is synchronous in hot path) Tradeoffs: Full control over routing logic and language choice.
   - extracted: Video transcoding is not supported.
-  - extracted: <YouTubeVideo embedUrl="https://www.youtube.com/embed/csJjzoIw pM" caption="GWID Demo of Livepeer Gateway Single Click Deployment with Playback Stream Test" / <Card href="https://github.com/videoDAC/livepeer gateway/blob/master/README.md" title="GWID Github (VideoDAC)" icon="github" arrow horizontal View the GWID repository on GitHub GWID updates: Tradeoffs: Fastest path to deployment.
+  - extracted: `<YouTubeVideo embedUrl="https://www.youtube.com/embed/csJjzoIw pM" caption="GWID Demo of Livepeer Gateway Single Click Deployment with Playback Stream Test" />` `<Card href="https://github.com/videoDAC/livepeer gateway/blob/master/README.md" title="GWID Github (VideoDAC)" icon="github" arrow horizontal>` View the GWID repository on GitHub GWID updates: Tradeoffs: Fastest path to deployment.
 - `v2/gateways/guides/deployment-details/setup-requirements.mdx`
   - claim families: none
   - extracted: Gateways are software nodes that require network optimisations (bandwidth and latency) and only minimal hardware (CPU and RAM).

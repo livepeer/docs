@@ -141,7 +141,7 @@ The opening paragraph is written **last** — after sections are finalised. It r
 | Variant | Covers |
 |---|---|
 | `overview` | Entry/orientation page for an instruction section — "here's the setup flow" (e.g. orchestrators/setup/guide.mdx, gateways/setup/install/install-overview.mdx) |
-| `quickstart` | Fastest path from zero to running. Minimal explanation, maximum speed. Target: <15 minutes. |
+| `quickstart` | Fastest path from zero to running. Minimal explanation, maximum speed. Target: < 15 minutes. |
 | `setup` | Initial installation, configuration, and activation procedures. Longer and more thorough than quickstart. |
 
 **Distinction from guide**: Instruction is pure procedure (do this, then this). Guide includes explanation and context.
@@ -157,7 +157,7 @@ The opening paragraph is written **last** — after sections are finalised. It r
 **UX pattern**: Search and find — reader looks up a fact and leaves.
 **Content**: Structured, scannable data (tables, field lists, accordions). Each entry is self-contained.
 **Forbidden**: Long narrative prose; tutorials; opinions.
-**Success metric**: Reader finds the exact value/syntax they need in <60 seconds.
+**Success metric**: Reader finds the exact value/syntax they need in < 60 seconds.
 **Component rules**: Tables, ResponseField, code blocks, Accordions. No Steps.
 
 | Variant | Covers |

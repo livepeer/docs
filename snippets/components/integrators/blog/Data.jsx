@@ -256,10 +256,101 @@ export const CardBlogDataLayout = ({ items = [], limit, className = "", style = 
  */
 export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
+  if (!displayItems || displayItems.length === 0) {
+    return (
+      <Note>
+        <p style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+          No blog posts at this time.
+        </p>
+      </Note>
+    );
+  }
   return (
     <Columns cols={cols} className={className} style={style} {...rest}>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
+      ))}
+    </Columns>
+  );
+};
+
+/**
+ * @component RssBlogCard
+ * @type integrators
+ * @subniche blog
+ * @status stable
+ * @description Blog card for RSS feed data. Renders plain text excerpt — no HTML content. Use for non-Ghost blog sources (Daydream, Streamplace, etc.).
+ * @dataSource automation/rss
+ * @accepts {string} title, {string} href, {string} author, {string} excerpt, {string} datePosted, {string} img, {string} className, {object} style, ...rest
+ * @aiDiscoverability none
+ */
+export const RssBlogCard = ({
+  title,
+  href,
+  author = "",
+  excerpt = "",
+  datePosted = null,
+  img = null,
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  return (
+    <Card
+      className={className}
+      style={style}
+      title={title}
+      href={href}
+      img={img || undefined}
+      arrow
+      {...rest}
+    >
+      {datePosted && (
+        <div style={{ display: "flex", alignItems: "center", fontSize: 12, color: "var(--hero-text)", gap: 6, marginBottom: "0.5rem" }}>
+          <Icon icon="calendar" size={14} />
+          <span>{datePosted}</span>
+          {author && (
+            <>
+              <span style={{ color: "var(--text)" }}>•</span>
+              <span>{author}</span>
+            </>
+          )}
+        </div>
+      )}
+      {excerpt && (
+        <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", margin: 0, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {excerpt}
+        </p>
+      )}
+    </Card>
+  );
+};
+
+/**
+ * @component RssBlogCardLayout
+ * @type integrators
+ * @subniche blog
+ * @status stable
+ * @description Multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources).
+ * @dataSource automation/rss
+ * @accepts {Array} items, {number} cols, {number} limit, {string} className, {object} style, ...rest
+ * @aiDiscoverability none
+ */
+export const RssBlogCardLayout = ({ items = [], cols = 2, limit, className = "", style = {}, ...rest }) => {
+  const displayItems = limit ? items.slice(0, limit) : items;
+  if (!displayItems || displayItems.length === 0) {
+    return (
+      <Note>
+        <p style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+          No blog posts at this time.
+        </p>
+      </Note>
+    );
+  }
+  return (
+    <Columns cols={cols} className={className} style={style} {...rest}>
+      {displayItems.map((props, idx) => (
+        <RssBlogCard key={props.href || idx} {...props} />
       ))}
     </Columns>
   );

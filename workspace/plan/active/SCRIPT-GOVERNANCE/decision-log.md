@@ -22,7 +22,7 @@ Named, dated, with rationale. Source of truth across context resets and handoffs
 
 ## D3 — Pre-commit hook scope (Task 3)
 **Date**: 2026-03-19
-**Decision**: Pre-commit hook reduced to 5 hard gates only: MDX syntax, docs.json schema, deletion guard, allowlist/v1 freeze, codex isolation. Everything else moved to GitHub Actions PR workflows. Target: <5 second pre-commit.
+**Decision**: Pre-commit hook reduced to 5 hard gates only: MDX syntax, docs.json schema, deletion guard, allowlist/v1 freeze, codex isolation. Everything else moved to GitHub Actions PR workflows. Target: < 5 second pre-commit.
 **Rationale**: 1,599-line pre-commit was blocking daily workflow. Index/catalog regeneration scripts must never run in pre-commit — too slow.
 
 ---

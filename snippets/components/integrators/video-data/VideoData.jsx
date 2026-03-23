@@ -37,13 +37,18 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", 
     <Columns cols={cols} className={className} style={style} {...rest}>
       {displayItems.map((item, idx) => {
         if (!item || !item.href) return null;
+        const needsSpacer = idx > 0 && idx % cols === 0;
         return (
-          <YouTubeVideo
-            key={item.href || idx}
-            embedUrl={getEmbedUrl(item.href)}
-            title={item.title || ""}
-            caption={`${item.author || ""} • ${item.publishedDate || ""}`}
-          />
+          <>
+            {needsSpacer && <div key={`spacer-${idx}`} style={{ height: "1.5rem", width: "100%" }} />}
+            {needsSpacer && <div key={`spacer2-${idx}`} style={{ height: "1.5rem", width: "100%" }} />}
+            <YouTubeVideo
+              key={item.href || idx}
+              embedUrl={getEmbedUrl(item.href)}
+              title={item.title || ""}
+              caption={`${item.author || ""} • ${item.publishedDate || ""}`}
+            />
+          </>
         );
       })}
     </Columns>

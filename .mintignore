@@ -1,5 +1,7 @@
 # All plain markdown files — Mintlify parses as MDX causing failures; all pages use .mdx
+# Both forms needed: ** glob for deep paths (unreliable on some Mintlify versions), bare *.md as fallback
 **/*.md
+*.md
 
 # Bare node_modules — Mintlify's ignore parser doesn't reliably handle ** globs
 node_modules
@@ -46,6 +48,9 @@ tmp_*
 **/*.disabled
 
 # All _workspace/ dirs anywhere in the tree
+# Bare name matches the directory itself at any depth (required for getFileList directory pruning)
+# The /**  pattern only matches contents inside; without the bare name, getFileList enters the dir
+_workspace
 **/_workspace/**
 
 # Root folder _workspace/ dirs (explicit for simpler ignore parsers)

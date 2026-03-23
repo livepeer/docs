@@ -280,7 +280,7 @@
 | orchestrators/guides/roadmap-and-funding/orchestrator-profiles.mdx | guide | (none) | STUB — placeholder for case studies | resource | (none) | learn |
 | orchestrators/guides/roadmap-and-funding/funding-and-support.mdx | guide | (none) | STUB — placeholder for funding programmes | resource | (none) | orient |
 | orchestrators/guides/tutorials/add-ai-to-video-node.mdx | tutorial | (none) | Tutorial: add AI to existing video orchestrator | tutorial | (none) | build |
-| orchestrators/guides/tutorials/ai-earning-quickstart.mdx | tutorial | (none) | Tutorial: start earning from AI in <2 hours | tutorial | (none) | start |
+| orchestrators/guides/tutorials/ai-earning-quickstart.mdx | tutorial | (none) | Tutorial: start earning from AI in < 2 hours | tutorial | (none) | start |
 | orchestrators/guides/tutorials/full-ai-pipeline-tutorial.mdx | tutorial | (none) | End-to-end: gateway routes inference to orchestrator | tutorial | (none) | build |
 | orchestrators/guides/tutorials/realtime-ai-tutorial.mdx | tutorial | (none) | Live video-to-video AI with ComfyStream/Cascade | tutorial | (none) | build |
 | orchestrators/guides/tutorials/zero-to-first-reward.mdx | tutorial | (none) | End-to-end: install, configure, fund, activate, first reward | tutorial | (none) | start |

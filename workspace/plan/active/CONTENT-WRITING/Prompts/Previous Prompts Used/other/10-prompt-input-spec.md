@@ -372,7 +372,7 @@ Takes approved Pass A content (plain markdown) and applies the full visual and s
 1. **Template selection** — pageType + pageVariant → select correct template; load required section list and order
 2. **Structure validation** — does Pass A content match the template's required sections? Flag missing sections, wrong-order sections, forbidden sections
 3. **Component selection** — per section, identify information type → select correct component from the permitted palette for this pageType; no forbidden components
-4. **Section naming** — run all headings through `section-naming.md` scoring; any heading scoring <20/25 is flagged and a replacement proposed
+4. **Section naming** — run all headings through `section-naming.md` scoring; any heading scoring < 20/25 is flagged and a replacement proposed
 5. **Frontmatter completion** — take Pass A frontmatter proposal; validate all 10 fields present and match locked enums; fill any missing fields
 6. **MDX formatting** — wrap sections in correct component syntax; format code blocks; add required component props; insert PREV/NEXT page links from tab map
 7. **UK English final pass** — scan for US spellings, banned constructions, passive value statements; correct inline

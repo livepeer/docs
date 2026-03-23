@@ -1,8 +1,8 @@
-<!-- Codex layer extension. This file adds Codex-specific task isolation rules
-     (HitL verification, checkpoint branches, lock lifecycle, pre-write announcements)
-     on top of the repo-wide baseline in root AGENTS.md. It is NOT a duplicate.
-     OpenAI Codex reads both files via its directory-walk mechanism.
-     This file is not for GitHub Copilot — see .github/copilot-instructions.md instead. -->
+{/* Codex layer extension. This file adds Codex-specific task isolation rules
+   (HitL verification, checkpoint branches, lock lifecycle, pre-write announcements)
+   on top of the repo-wide baseline in root AGENTS.md. It is NOT a duplicate.
+   OpenAI Codex reads both files via its directory-walk mechanism.
+   This file is not for GitHub Copilot — see .github/copilot-instructions.md instead. */}
 
 # 🤖 PROJECT AGENT RULES & SAFETY PROTOCOLS
 

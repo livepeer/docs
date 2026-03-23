@@ -292,7 +292,7 @@ Frontmatter schema, page taxonomy, content layers, audience segmentation, naming
 | portal                           | Tab-level entry point with hero/starfield                             | current |
 | landing                          | Section-level entry with cards and brief context                      | current |
 | overview                         | Entry/orientation page for a section                                  | current |
-| quickstart                       | Fastest path from zero to running (<15 min)                           | current |
+| quickstart                       | Fastest path from zero to running (< 15 min)                          | current |
 | setup                            | Initial installation, configuration, activation procedures            | current |
 | specification                    | API specs, CLI flags, config parameters, technical data               | current |
 | compendium                       | Glossary terms, FAQ, troubleshooting, comparisons, ecosystem catalogs | current |
@@ -481,7 +481,7 @@ Canonical sources, quality gates, artifact classification, cleanup workflows, ow
 | Generated artifacts                  | Files rebuilt from source scripts, never hand-maintained                       | current |
 | Content contract                     | Docs pages, navigation, and imports must stay structurally valid               | current |
 | **Quality gates**                    |                                                                                |         |
-| Pre-commit                           | Local gate: fast staged structure/style invariants (<=60s budget)              | current |
+| Pre-commit                           | Local gate: fast staged structure/style invariants (≤ 60s budget)              | current |
 | Pre-push                             | codex/\* governance gate for task-contract, issue-readiness, lock overlap      | current |
 | PR Changed-File CI                   | Blocking gate for changed-file checks                                          | current |
 | Full sweep CI                        | Browser/link/page sweeps catching system-level regressions                     | current |

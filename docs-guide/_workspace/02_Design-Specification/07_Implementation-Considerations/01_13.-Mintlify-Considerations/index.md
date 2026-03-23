@@ -334,7 +334,7 @@ Standard fenced code blocks (`'''`) cannot interpolate variables — `{variable}
 
 | **Quirk** | **Detail** |
 | --- | --- |
-| Icon renders as <img> | Mintlify's <Icon> renders custom icon paths as <img> elements, not inline SVG. CSS color has no effect. SVG must contain its own fill colours. |
+| Icon renders as `<img>` | Mintlify's `<Icon>` renders custom icon paths as `<img>` elements, not inline SVG. CSS color has no effect. SVG must contain its own fill colours. |
 | LaTeX delimiters | Use $...$ (inline) and $$...$$ (block). Backslash delimiters \\( and \\[ break MDX parsing. |
 | No api as top-level folder | Mintlify uses Next.js internally, which reserves /api for server routes. Nest it inside another folder. |
 | Frame mode + global components | Global components work in frame mode but lose all default styling. |
@@ -370,7 +370,7 @@ Standard fenced code blocks (`'''`) cannot interpolate variables — `{variable}
 | Invalid frontmatter | ✅ |  |
 | Component logic error |  | ✅ (renders client-side) |
 | Broken external link |  | ✅ |
-| Missing image |  | ✅ (broken <img>) |
+| Missing image |  | ✅ (broken `<img>`) |
 | CSS issue |  | ✅ (wrong styling) |
 
 ### **Data Pipeline Builds**

@@ -131,7 +131,7 @@ Notes:
   - `lpd dev` defaults to port 3333 when no port is provided and rejects port 3000.
   - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
   - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
-  - Script discovery supports `.lpdignore` (gitignore-style patterns) if present in repo root.
+  - Script discovery supports `tools/.lpdignore` (gitignore-style patterns) if present.
 EOF
 }
 
@@ -198,7 +198,7 @@ Common Workflows:
 Notes:
   - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
   - `lpd dev` defaults to port 3333 when no port is provided and rejects port 3000.
-  - lpd uses .lpdignore (if present) to hide/block scripts from discovery and execution.
+  - lpd uses tools/.lpdignore (if present) to hide/block scripts from discovery and execution.
   - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
   - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
   - High-risk script groups require confirmation unless --yes is supplied.
@@ -392,7 +392,7 @@ is_builtin_excluded() {
 LPIGNORE_MATCH=""
 is_lpignored() {
     local rel="$1"
-    local lpignore_file="$REPO_ROOT/.lpdignore"
+    local lpignore_file="$REPO_ROOT/tools/.lpdignore"
     LPIGNORE_MATCH=""
 
     if [ ! -f "$lpignore_file" ]; then
@@ -406,7 +406,7 @@ is_lpignored() {
     fi
 
     case "$out" in
-        "$lpignore_file":*|".lpdignore:"*)
+        "$lpignore_file":*|"tools/.lpdignore:"*)
             LPIGNORE_MATCH="$out"
             return 0
             ;;

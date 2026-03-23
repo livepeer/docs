@@ -218,7 +218,7 @@ PROPOSED TAXONOMY:
 
 [Page title]
 
-[Page description — one sentence, outcome-focused, <= 160 chars]
+[Page description — one sentence, outcome-focused, ≤ 160 chars]
 
 ---
 
@@ -302,7 +302,7 @@ If PASS_A_SOURCE is missing or incomplete: refuse to run; return to Pass A.
 - [ ] Component decisions follow Phase 3 rules (no accordion-hiding of primary content)
 - [ ] Frontmatter complete: all 9 taxonomy fields + title + description + status + lastVerified
 - [ ] Title: 1–3 words, concept-derived, no banned forms
-- [ ] Description: subject-first, <= 160 chars, no self-reference, UK English
+- [ ] Description: subject-first, ≤ 160 chars, no self-reference, UK English
 - [ ] Section headings checked against naming rubric — no unresolved generic structure words
 - [ ] No MDX syntax errors
 - [ ] All `{/* REVIEW: */}` flags from Pass A present in output (not removed or modified)
@@ -316,7 +316,7 @@ If PASS_A_SOURCE is missing or incomplete: refuse to run; return to Pass A.
 ---
 title:          [1–3 words, concept-derived]
 sidebarTitle:   [shorter form if title > 3 words; omit if same as title]
-description:    [one sentence, subject-first, outcome-focused, <= 160 chars]
+description:    [one sentence, subject-first, outcome-focused, ≤ 160 chars]
 pageType:       [canonical enum]
 pageVariant:    [canonical enum, or omit]
 audience:       [canonical audience token]

@@ -43,7 +43,7 @@ How to measure whether the documentation system is fast, healthy, and maintainab
 | Total page weight | DevTools Network tab | Measure per page type | &lt;500 KB (doc page) |
 | Asset weight per page | Count images + their sizes | Measure | &lt;200 KB images per page |
 | JavaScript bundle size | DevTools Network tab | Measure | Mintlify-controlled |
-| Time to Interactive (TTI) | Lighthouse | Measure | <3.5s |
+| Time to Interactive (TTI) | Lighthouse | Measure | < 3.5s |
 
 ### **Known Bottlenecks**
 
@@ -78,11 +78,11 @@ Uses Puppeteer (already in the repo for browser tests) with `--enable-performanc
 
 | **Metric** | **How to Measure** | **Baseline** | **Target** |
 | --- | --- | --- | --- |
-| Local dev start time | Time from mintlify dev to localhost:3000 ready | Measure | <30s |
-| Hot reload time | Time from file save to preview update | Measure | <2s |
-| Time to first meaningful edit | Clone → install → dev → edit → see result | Measure | <5 min |
-| Pre-commit failure rate | % of commits blocked by hooks | Git hook logs | <10% |
-| CI false positive rate | % of CI failures that aren't real issues | Manual review | <5% |
+| Local dev start time | Time from mintlify dev to localhost:3000 ready | Measure | < 30s |
+| Hot reload time | Time from file save to preview update | Measure | < 2s |
+| Time to first meaningful edit | Clone → install → dev → edit → see result | Measure | < 5 min |
+| Pre-commit failure rate | % of commits blocked by hooks | Git hook logs | < 10% |
+| CI false positive rate | % of CI failures that aren't real issues | Manual review | < 5% |
 | Import path correctness | % of imports that resolve on first try | v2-link-audit.js | 100% |
 | Docs for tooling | % of scripts with complete JSDoc headers | script-docs.test.js | 100% |
 
@@ -102,13 +102,13 @@ Uses Puppeteer (already in the repo for browser tests) with `--enable-performanc
 
 | **Metric** | **How to Measure** | **Baseline** | **Target** |
 | --- | --- | --- | --- |
-| Blog data age | Last modified date of ghostBlogData.jsx | Check git log | <24 hours |
-| Forum data age | Last modified date of forumData.jsx | Check git log | <24 hours |
-| YouTube data age | Last modified date of youtubeData.jsx | Check git log | <7 days |
-| Showcase data age | Last modified date of showcaseData.jsx | Check git log | <7 days |
+| Blog data age | Last modified date of ghostBlogData.jsx | Check git log | < 24 hours |
+| Forum data age | Last modified date of forumData.jsx | Check git log | < 24 hours |
+| YouTube data age | Last modified date of youtubeData.jsx | Check git log | < 7 days |
+| Showcase data age | Last modified date of showcaseData.jsx | Check git log | < 7 days |
 | Release version accuracy | globals.mdx version vs latest GitHub release | Compare | Match latest |
 | Pipeline success rate | % of scheduled workflow runs that succeed | GitHub Actions API | >95% |
-| Pipeline failure detection | Time from pipeline failure to human awareness | Manual | <24 hours |
+| Pipeline failure detection | Time from pipeline failure to human awareness | Manual | < 24 hours |
 
 ### **Known Bottlenecks**
 
@@ -151,13 +151,13 @@ A single orchestrator script that calls domain-specific measurement functions:
 
 | **Metric** | **Green** | **Yellow** | **Red** |
 | --- | --- | --- | --- |
-| Pre-commit time | <30s | 30-60s | >60s |
-| PR CI time | <5 min | 5-10 min | >10 min |
-| LCP (p75) | <2.5s | 2.5-4s | >4s |
-| Total page weight | <500 KB | 500 KB-1 MB | >1 MB |
-| Pipeline freshness | <24h | 24-72h | >72h |
-| Clone time | <60s | 60-120s | >120s |
-| Health score | 80-100 | 50-79 | <50 |
+| Pre-commit time | < 30s | 30-60s | >60s |
+| PR CI time | < 5 min | 5-10 min | >10 min |
+| LCP (p75) | < 2.5s | 2.5-4s | >4s |
+| Total page weight | < 500 KB | 500 KB-1 MB | >1 MB |
+| Pipeline freshness | < 24h | 24-72h | >72h |
+| Clone time | < 60s | 60-120s | >120s |
+| Health score | 80-100 | 50-79 | < 50 |
 
 ## **Baseline Establishment**
 

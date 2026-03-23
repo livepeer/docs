@@ -136,7 +136,7 @@ Before any sentence ships: *Does this sentence give the reader something they ca
 
 ### Warning-only heuristics (strong guidance, not absolute)
 
-**Description field**: One-sentence outcome statement. Open with reader outcome or fit — not "this page" or "overview of". Target <= 160 chars.
+**Description field**: One-sentence outcome statement. Open with reader outcome or fit — not "this page" or "overview of". Target ≤ 160 chars.
 
 **Opening order**: Lead with the most useful fact for the reader. For option/path/decision sections: outcome or fit before mechanism.
 

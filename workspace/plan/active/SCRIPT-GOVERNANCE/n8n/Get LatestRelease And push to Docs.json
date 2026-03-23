@@ -1,0 +1,234 @@
+{
+  "name": "Get LatestRelease And push to Docs",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      },
+      "id": "b2d82825-2794-4431-bf0c-39cee31bc8b5",
+      "name": "Daily Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1648,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/livepeer/go-livepeer/releases/latest",
+        "options": {}
+      },
+      "id": "dc651090-d765-48d8-9751-f04131ebaaea",
+      "name": "Get Latest Release",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -1456,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// TESTING - Always proceed\nreturn {\n  skip: false,\n  version: $json.tag_name\n};\n\n// Check if release was in last 24 hours\n// const releaseDate = new Date($json.published_at);\n// const now = new Date();\n// const hoursSinceRelease = (now - releaseDate) / (1000 * 60 * 60);\n\n// if (hoursSinceRelease > 24) {\n//   return { skip: true };\n// }\n\n// return {\n//   skip: false,\n//   version: $json.tag_name\n// };"
+      },
+      "id": "5492752f-297a-4574-b428-5c0e5d409235",
+      "name": "Released in Last 24h?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.skip }}"
+            }
+          ]
+        }
+      },
+      "id": "33f8ccb1-8e4c-45a9-b891-3aed963d89dc",
+      "name": "If Recent",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "livepeer",
+          "mode": "list",
+          "cachedResultName": "livepeer",
+          "cachedResultUrl": "https://github.com/livepeer"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "docs",
+          "mode": "list",
+          "cachedResultName": "docs",
+          "cachedResultUrl": "https://github.com/livepeer/docs"
+        },
+        "filePath": "snippets/automationData/globals/globals.jsx",
+        "asBinaryProperty": false,
+        "additionalParameters": {
+          "reference": "docs-v2"
+        }
+      },
+      "id": "a083b662-dcba-4e2e-8087-d5ac52daf702",
+      "name": "Get Globals File",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        272
+      ],
+      "webhookId": "cbc1d5e2-c60b-486f-ba32-72a630158694",
+      "credentials": {
+        "githubApi": {
+          "id": "b06WZhipQogZJzPt",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const newVersion = $('Released in Last 24h?').first().json.version;\nconst fileContent = Buffer.from($json.content, 'base64').toString('utf-8');\n\nconst updatedContent = fileContent.replace(\n  /(LatestRelease:\\s*['\"])([^'\"]+)(['\"])/,\n  `$1${newVersion}$3`\n);\n\nreturn {\n  updatedContent: updatedContent,\n  sha: $json.sha,\n  version: newVersion\n};"
+      },
+      "id": "5b546e37-13e9-4bb5-99e3-c3ce8ff4a850",
+      "name": "Update Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": "livepeer",
+        "repository": "docs",
+        "filePath": "snippets/automationData/globals/globals.jsx",
+        "fileContent": "={{ $json.updatedContent }}",
+        "commitMessage": "chore: update latest release to {{ $json.version }}",
+        "additionalParameters": {
+          "branch": {
+            "branch": "docs-v2"
+          }
+        }
+      },
+      "id": "ad76991a-aed6-4ac5-9d8c-8821e174157e",
+      "name": "Commit Update",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        272
+      ],
+      "webhookId": "facda933-ecb0-4672-829e-04376710d0f4",
+      "credentials": {
+        "githubApi": {
+          "id": "vAAQD9gcQcGNKMOH",
+          "name": "Github Livepeer/docs Write Commit Token"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Latest Release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Latest Release": {
+      "main": [
+        [
+          {
+            "node": "Released in Last 24h?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Released in Last 24h?": {
+      "main": [
+        [
+          {
+            "node": "If Recent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Recent": {
+      "main": [
+        [
+          {
+            "node": "Get Globals File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Globals File": {
+      "main": [
+        [
+          {
+            "node": "Update Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Content": {
+      "main": [
+        [
+          {
+            "node": "Commit Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "400ab00d-0beb-4194-92ba-8250cd0e47de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b77ce31e344450acd6ad20bd6cde79f46c1e07d55921483122bfba86e8350352"
+  },
+  "id": "iNQyBCyhbdGjWIKK",
+  "tags": []
+}

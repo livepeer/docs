@@ -44,7 +44,7 @@ lpd dev
 bash lpd dev
 
 # Optional: add LP CLI script ignore rules
-cp tools/cli/lpdignore.example .lpdignore
+cp tools/cli/lpdignore.example tools/.lpdignore
 ```
 
 ## Style Guide Rules

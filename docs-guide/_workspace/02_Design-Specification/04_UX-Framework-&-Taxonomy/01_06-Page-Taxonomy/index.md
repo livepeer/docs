@@ -23,7 +23,7 @@ Ten page types. Each has a fixed layout pattern, target metrics, and section ord
 | reference | Lookup facts | &lt;1 min/lookup | Varies | Tables, ResponseField |
 | faq | Answer common questions | 1-2 min | Varies | AccordionGroup |
 | troubleshooting | Fix problems by symptom | 1-5 min | Varies | AccordionGroup, CodeBlock |
-| glossary | Define terms | <30 sec/term | Varies | SearchTable or list |
+| glossary | Define terms | < 30 sec/term | Varies | SearchTable or list |
 
 ### **Page Layout Patterns**
 

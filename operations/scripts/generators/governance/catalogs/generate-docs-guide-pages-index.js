@@ -18,7 +18,8 @@ const path = require('path');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
-  buildGeneratedNoteLines
+  buildGeneratedNoteLines,
+  readCatalogMarkers
 } = require('../../../../../tools/lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
@@ -27,18 +28,27 @@ const DOCS_JSON_PATH = 'docs.json';
 const OUTPUT_PATH = 'docs-guide/catalog/pages-catalog.mdx';
 const LEGACY_OUTPUT_PATHS = [toLegacyCatalogRepoPath(OUTPUT_PATH)];
 
+// Template path — layout decisions are read from markers in this file.
+// Markers read: @catalog-layout (expected: 'tree')
+const TEMPLATE_PATH = path.join(process.cwd(), 'snippets', 'templates', 'docs-guide', 'catalog-page.mdx');
+const SCRIPT_PATH = 'operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js';
+
 const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Pages Catalog',
   sidebarTitle: 'Pages Catalog',
   description: 'Tree catalog of docs pages included in docs.json navigation, generated from v2 index data.',
+  consumer: ['human', 'agent'],
+  maintenance: 'generated',
+  status: 'active',
+  generator: SCRIPT_PATH,
   keywords: ['livepeer', 'pages catalog', 'tree', 'docs.json', 'v2']
 });
 
 const GENERATED_DETAILS = {
-  script: 'operations/scripts/generate-docs-guide-pages-index.js',
+  script: SCRIPT_PATH,
   purpose: 'Tree catalog of docs pages included in docs.json navigation, generated from v2 index data.',
   runWhen: '`v2/index.mdx` links or docs.json navigation entries change.',
-  runCommand: 'node operations/scripts/generate-docs-guide-pages-index.js --write'
+  runCommand: `node ${SCRIPT_PATH} --write`
 };
 
 function toLegacyCatalogRepoPath(repoPath) {
@@ -227,6 +237,11 @@ function renderTree(paths) {
 }
 
 function buildContent() {
+  const markers = readCatalogMarkers(TEMPLATE_PATH);
+  if (markers['catalog-layout'] && markers['catalog-layout'] !== 'tree') {
+    console.warn(`⚠️  Template @catalog-layout is '${markers['catalog-layout']}' but pages catalog generator only supports 'tree'. Update the generator or revert the template.`);
+  }
+
   const docsRouteKeys = getDocsJsonRouteKeys();
   const sourceLinks = parseV2IndexLinks();
   const includedFiles = [];

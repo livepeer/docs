@@ -81,7 +81,7 @@ This framework is the component-layer counterpart to three existing governance a
 | **Key Result** | **Metric** | **Target** |
 | --- | --- | --- |
 | Every component classified | % of exports with assigned category, tier, content-type tags | 100% |
-| Component discoverability | A contributor can identify the correct component for a page type in <2 minutes | Pass/fail per page type |
+| Component discoverability | A contributor can identify the correct component for a page type in < 2 minutes | Pass/fail per page type |
 | Documentation accuracy | Published component library pages match actual component state | 0 discrepancies |
 | Health transparency | Every component has a known health status (working / buggy / placeholder / deprecated) | 100% |
 | Single source of truth | One canonical documentation surface, with all others derived or pointing to it | 1 canonical, 0 competing |

@@ -18,7 +18,8 @@ const path = require('path');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
-  buildGeneratedNoteLines
+  buildGeneratedNoteLines,
+  readCatalogMarkers
 } = require('../../../../../tools/lib/generated-file-banners');
 
 let yaml = null;
@@ -42,10 +43,20 @@ const LEGACY_OUTPUT_FILES = Object.fromEntries(
   Object.entries(OUTPUT_FILES).map(([key, repoPath]) => [key, buildLegacyDocsGuideOutputs(repoPath)])
 );
 
+// Template path — layout decisions are read from markers in this file.
+// To change catalog layout, edit the template; do not hardcode layout here.
+// Markers read: @catalog-layout (expected: 'flat-table')
+const TEMPLATE_PATH = path.join(process.cwd(), 'snippets', 'templates', 'docs-guide', 'catalog-page.mdx');
+const SCRIPT_PATH = 'operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js';
+
 const WORKFLOWS_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Workflows Catalog',
   sidebarTitle: 'Workflows Catalog',
   description: 'Aggregate catalog of repository GitHub workflows',
+  consumer: ['human', 'agent'],
+  maintenance: 'generated',
+  status: 'active',
+  generator: SCRIPT_PATH,
   keywords: ['livepeer', 'workflows catalog', 'aggregate inventory', 'repository', 'github', 'workflows'],
   keywordsStyle: 'multiline'
 });
@@ -54,6 +65,10 @@ const TEMPLATES_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Templates Catalog',
   sidebarTitle: 'Templates Catalog',
   description: 'Aggregate catalog of repository templates',
+  consumer: ['human', 'agent'],
+  maintenance: 'generated',
+  status: 'active',
+  generator: SCRIPT_PATH,
   keywords: ['livepeer', 'templates catalog', 'aggregate inventory', 'repository', 'templates'],
   keywordsStyle: 'multiline'
 });
@@ -198,12 +213,17 @@ function buildWorkflowsIndex() {
     };
   });
 
+  const markers = readCatalogMarkers(TEMPLATE_PATH);
+  if (markers['catalog-layout'] && markers['catalog-layout'] !== 'flat-table') {
+    console.warn(`⚠️  Template @catalog-layout is '${markers['catalog-layout']}' but workflows catalog generator only supports 'flat-table'. Update the generator or revert the template.`);
+  }
+
   const lines = [];
   const bannerDetails = {
-    script: 'operations/scripts/generate-docs-guide-indexes.js',
+    script: SCRIPT_PATH,
     purpose: 'Workflow inventory for docs-guide maintenance.',
     runWhen: 'GitHub workflows are added, removed, or changed.',
-    runCommand: 'node operations/scripts/generate-docs-guide-indexes.js --write'
+    runCommand: `node ${SCRIPT_PATH} --write`
   };
   WORKFLOWS_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
   lines.push('');
@@ -296,12 +316,17 @@ function buildTemplatesIndex() {
     })
     .sort((a, b) => a.file.localeCompare(b.file));
 
+  const markers = readCatalogMarkers(TEMPLATE_PATH);
+  if (markers['catalog-layout'] && markers['catalog-layout'] !== 'flat-table') {
+    console.warn(`⚠️  Template @catalog-layout is '${markers['catalog-layout']}' but templates catalog generator only supports 'flat-table'. Update the generator or revert the template.`);
+  }
+
   const lines = [];
   const bannerDetails = {
-    script: 'operations/scripts/generate-docs-guide-indexes.js',
+    script: SCRIPT_PATH,
     purpose: 'Issue and PR template inventory for docs-guide maintenance.',
     runWhen: 'Issue templates or PR templates are added, removed, or changed.',
-    runCommand: 'node operations/scripts/generate-docs-guide-indexes.js --write'
+    runCommand: `node ${SCRIPT_PATH} --write`
   };
   TEMPLATES_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
   lines.push('');

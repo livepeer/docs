@@ -107,3 +107,50 @@ If the mapping from tasks to outcome is unclear, surface that before execution �
 ## One-Shot Tools Have a Cleanup Step
 
 Migration scripts, temporary analysis tools, and one-off utilities are not permanent artefacts. They exist to perform a single operation, not to live in the codebase. After execution and verification, delete them. Do not commit temporary tools as permanent additions.
+
+---
+
+## Map Upstream and Downstream Before Acting on Any Pipeline Component
+
+**Added:** 2026-03-23
+**Triggered by:** Task 15b.6 — `update-blog-data.yml` was disabled without first mapping what pages consume its output files, or confirming replacement pipelines were working end-to-end.
+
+Before disabling, removing, renaming, or restructuring any script, workflow, or data file that is part of a pipeline:
+
+1. **What does it write?** — identify every output file it produces.
+2. **What reads those files?** — identify every MDX page, component, or downstream script that imports or depends on those outputs. These are live pages visible to users.
+3. **What else writes to those same files?** — identify every other writer (n8n, GHA, script) targeting the same output paths.
+4. **Is there a confirmed working replacement?** — verify the replacement actually runs, targets the correct branch, uses a working secret/key, and produces the same or better output format. Not just "it exists" — confirm it works.
+5. **Only then act.**
+
+If any of the above is unknown, resolve the unknowns before touching the pipeline — not after.
+
+The full chain to trace:
+
+```
+Source API/CMS
+  → fetch script
+    → GHA workflow / n8n workflow       ← writer
+      → snippets/automations/**/*.jsx   ← data file
+        → v2/**/*.mdx import            ← page
+          → live docs site              ← user-visible
+```
+
+Breaking any link silently removes content from live pages with no build error.
+
+---
+
+## Root Cause Fixes Only — Never Disable as a Workaround
+
+**Added:** 2026-03-23
+**Triggered by:** The instinct to disable `update-blog-data.yml` because it was broken, without fixing the root cause (missing working secret, wrong output format) or confirming a replacement covered the gap.
+
+A broken thing that is disabled is not fixed — it is hidden. The problem remains; you have just removed visibility of it.
+
+Rules:
+- Never disable a workflow, script, or pipeline stage as a resolution. Disabling is only valid when a confirmed working replacement already covers the same output.
+- Identify the root cause of the breakage. Common causes: wrong/missing secret, stale path, wrong branch, wrong output format, outdated API endpoint.
+- Fix the root cause, or document exactly why the replacement makes this component permanently redundant (with evidence).
+- If a workflow is genuinely superseded, document: what supersedes it, what files the replacement writes to, that those file paths are identical, and that the replacement is confirmed working — then mark it retired with that full explanation, not just disabled.
+
+"It's broken so I turned it off" is not a fix. It is deferred work with hidden risk.

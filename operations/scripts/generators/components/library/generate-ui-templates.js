@@ -20,7 +20,8 @@ const yaml = require('../../../../../tools/lib/load-js-yaml');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
-  buildGeneratedNoteLines
+  buildGeneratedNoteLines,
+  readCatalogMarkers
 } = require('../../../../../tools/lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
@@ -34,14 +35,19 @@ const TEMPLATE_SNIPPETS_PATH = '.vscode/templates.code-snippets';
 const COMPONENT_SNIPPETS_PATH = '.vscode/components.code-snippets';
 const COMPONENT_REGISTRY_PATH = 'docs-guide/config/component-registry.json';
 
+// Template path — layout decisions are read from markers in this file.
+// Markers read: @catalog-layout (expected: 'flat-table')
+const CATALOG_TEMPLATE_PATH = path.join(process.cwd(), 'snippets', 'templates', 'docs-guide', 'catalog-page.mdx');
+const SCRIPT_PATH = 'operations/scripts/generators/components/library/generate-ui-templates.js';
+
 const UI_SYSTEM_SECTION_START = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:START)';
 const UI_SYSTEM_SECTION_END = '[//]: # (AUTO-GENERATED:UI-TEMPLATES:END)';
 
 const CATALOG_DETAILS = {
-  script: 'operations/scripts/generators/components/library/generate-ui-templates.js',
+  script: SCRIPT_PATH,
   purpose: 'UI template catalog, preview routes, and snippet inventory derived from canonical template sources.',
   runWhen: 'Page/block templates or component registry examples change.',
-  runCommand: 'node operations/scripts/generate-ui-templates.js --write'
+  runCommand: `node ${SCRIPT_PATH} --write`
 };
 
 
@@ -311,12 +317,21 @@ function renderTemplateTable(templates) {
 }
 
 function renderCatalogContent(pageTemplates, blockTemplates) {
+  const markers = readCatalogMarkers(CATALOG_TEMPLATE_PATH);
+  if (markers['catalog-layout'] && markers['catalog-layout'] !== 'flat-table') {
+    console.warn(`⚠️  Template @catalog-layout is '${markers['catalog-layout']}' but ui-templates catalog generator only supports 'flat-table'. Update the generator or revert the template.`);
+  }
+
   const templatePaths = [...pageTemplates, ...blockTemplates].map((item) => item.repoPath);
   const lines = [
     ...buildGeneratedFrontmatterLines({
       title: 'UI Templates',
       sidebarTitle: 'UI Templates',
       description: 'Generated catalog of canonical UI page and block templates, authoring snippets, and source locations.',
+      consumer: ['human', 'agent'],
+      maintenance: 'generated',
+      status: 'active',
+      generator: SCRIPT_PATH,
       keywords: ['livepeer', 'ui templates', 'templates', 'authoring', 'snippets', 'catalog'],
       keywordsStyle: 'multiline'
     }),

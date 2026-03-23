@@ -24,13 +24,14 @@ lastVerified: 2026-03-23
 import { SocialLinks } from '/snippets/components/elements/social/SocialLinks.jsx'
 import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
 import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
-import { ColumnsBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/Data.jsx'
+import { RssBlogCard, RssBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/Data.jsx'
 import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { youtubeData } from '/snippets/automations/solutions/daydream/youtubeData.jsx'
 import { daydreamBlogData } from '/snippets/automations/solutions/daydream/blogData.jsx'
 import { daydreamDiscordData } from '/snippets/automations/solutions/daydream/discordData.jsx'
+import { discordAnnouncementsData } from '/snippets/automations/discord/discordAnnouncementsData.jsx'
 
 <SocialLinks links={[
   { icon: "globe", href: "https://daydream.live", label: "Daydream Website" },
@@ -56,8 +57,8 @@ Watch the latest on the <LinkArrow label="Daydream YouTube Channel" href="https:
 ## <Icon icon="pencil-line" size={24} /> Blog
 
 Read recent posts from the <LinkArrow label="Daydream Blog" href="https://blog.daydream.live" newline={false} />
-{/*
-<ColumnsBlogCardLayout items={daydreamBlogData} limit={2} />
+
+<RssBlogCardLayout items={daydreamBlogData} limit={2} />
 
 <CustomDivider />
 
@@ -65,9 +66,10 @@ Read recent posts from the <LinkArrow label="Daydream Blog" href="https://blog.d
 
 Latest from the <LinkArrow label="Daydream Discord" href="https://discord.gg/pF2Akym5bV" newline={false} />
 
-<DiscordAnnouncements items={daydreamDiscordData} limit={3} />
+<DiscordAnnouncements items={discordAnnouncementsData} limit={2} />
 
 <CustomDivider />
+{/*
 
 ## <Icon icon="github" size={24} /> GitHub
 

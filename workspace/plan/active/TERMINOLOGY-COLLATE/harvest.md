@@ -266,7 +266,7 @@
 | Pool operator | ORCH-G | Orchestrator accepting external transcoder workers, managing on-chain operations | Operational | |
 | Pool worker (deprecated) | ORCH-G | Renamed to "pool node" | Operational | Deprecated |
 | portal | CW-FW | pageVariant: tab-level entry point with hero/starfield | Content Architecture | |
-| Pre-commit | QG | Local gate: fast staged structure/style invariants (<=60s budget) | Governance & Policy | |
+| Pre-commit | QG | Local gate: fast staged structure/style invariants (≤ 60s budget) | Governance & Policy | |
 | Pre-push | QG | codex/* governance gate for task-contract, issue-readiness, lock overlap | Governance & Policy | |
 | PR Changed-File CI | QG | Blocking gate for changed-file checks (style, MDX, spelling, quality, links) | Governance & Policy | |
 | pricePerGateway | ORCH-G | Flag allowing different prices for different gateway addresses | Operational | CLI flag |
@@ -274,8 +274,8 @@
 | Probabilistic micropayments | GW-G, ORCH-G | Payment mechanism: gateways send lottery tickets; expected value equals fair payment | Payments & Economics | |
 | Protocol | GLOSS | On-chain governance and incentive layer coordinating orchestrators, staking, payments | Protocol & Network | |
 | Protocol Actor | GLOSS | Main participants: gateways, orchestrators, delegators | Actors & Roles | |
-| Publishable content tree | V2-GOV | v2/<section>/<publishable-subtree>/... — user-facing docs pages | Governance & Policy | |
-| Publishable section root | V2-GOV | v2/<section>/index.mdx, portal.mdx, navigator.mdx — section entry points | Governance & Policy | |
+| Publishable content tree | V2-GOV | `v2/<section>/<publishable-subtree>/...` — user-facing docs pages | Governance & Policy | |
+| Publishable section root | V2-GOV | `v2/<section>/index.mdx`, portal.mdx, navigator.mdx — section entry points | Governance & Policy | |
 | purpose | CW-FW | Frontmatter field: reader outcome (15 intent-based values) | Content Architecture | |
 
 ## Q
@@ -284,7 +284,7 @@
 |---|---|---|---|---|
 | Quality Ladder | GLOSS | Multiple renditions of video at different qualities for adaptive playback | Video Engineering | |
 | quarantine | CLEAN-POL | Cleanup outcome: move to tasks/quarantine/ for review | Governance & Policy | |
-| quickstart | CW-FW | pageVariant: fastest path from zero to running (<15 min) | Content Architecture | Was primary type in old enum |
+| quickstart | CW-FW | pageVariant: fastest path from zero to running (< 15 min) | Content Architecture | Was primary type in old enum |
 
 ## R
 

@@ -35,7 +35,7 @@ Seven rules govern how props are named, typed, and defaulted.
 | 3 | Handler props use on prefix | Event callbacks follow React convention | onClick, onToggle, onSearch |
 | 4 | Defaults in destructuring | Default values declared in the parameter destructuring | ({ variant = 'default', size = 'md' }) => ... |
 | 5 | children for slot content, explicit props for data | If a component wraps arbitrary JSX, use children. If it takes structured data, use named props. | <BorderedBox>{children}</BorderedBox> vs <BlogCard title="..." date="..." /> |
-| 6 | Spread last | If passing through props, spread goes last to avoid overwriting explicit props | <div className={styles} {...rest}> — never <div {...rest} className={styles}> |
+| 6 | Spread last | If passing through props, spread goes last to avoid overwriting explicit props | `<div className={styles} {...rest}>` — never `<div {...rest} className={styles}>` |
 | 7 | Required props have no default; optional props always have defaults | The destructuring signature is self-documenting | ({ href, title, icon = null, isCompact = false }) => ... — href and title are required (no default), icon and isCompact are optional |
 
 ### **3.2 Props Template**
@@ -90,8 +90,8 @@ Every component, regardless of category or interactivity, must meet these requir
 
 | **Requirement** | **Rule** |
 | --- | --- |
-| Semantic HTML | Use correct elements: <button> not <div onClick>, <table> not <div> grids, <nav> for navigation, <section> for sections |
-| Heading hierarchy | Frame-mode heading components (H1–H6) render the correct <h1>–<h6> element. Never skip levels. |
+| Semantic HTML | Use correct elements: `<button>` not `<div onClick>`, `<table>` not `<div>` grids, `<nav>` for navigation, `<section>` for sections |
+| Heading hierarchy | Frame-mode heading components (H1–H6) render the correct `<h1>`–`<h6>` element. Never skip levels. |
 | Image alt text | Image and LinkImage components require an alt prop. Default to empty string (alt="") for decorative images, descriptive text for informational. |
 | Link purpose | GotoLink, GotoCard, DoubleIconLink, LinkArrow must have descriptive link text — not "click here". |
 | Colour not sole indicator | Information must not be conveyed by colour alone (enforced by D3 token system, but components must also use icons, text, or patterns alongside colour). |
@@ -105,8 +105,8 @@ Components with interactive behaviour must additionally meet:
 | SearchTable | role="search" on search container, aria-label on input, aria-live="polite" on results region |
 | CardCarousel | role="region", aria-label, aria-roledescription="carousel", pagination controls keyboard-operable (arrow keys), aria-current on active page |
 | ScrollBox | tabIndex="0" for keyboard scrolling (already handled by FocusableScrollRegions utility), aria-label describing content |
-| DownloadButton | Render as <button> or <a> with download attribute, aria-label describing what is downloaded |
-| CopyText | <button> for the copy action, aria-label="Copy to clipboard", aria-live="polite" for success feedback |
+| DownloadButton | Render as `<button>` or `<a>` with download attribute, aria-label describing what is downloaded |
+| CopyText | `<button>` for the copy action, aria-label="Copy to clipboard", aria-live="polite" for success feedback |
 | ShowcaseCards | Filter controls have aria-label, results region has aria-live="polite" |
 | FocusableScrollRegions | Already an a11y utility — maintain and extend as needed |
 
@@ -133,7 +133,7 @@ Every component must follow these rules. No exceptions.
 | --- | --- | --- |
 | 1 | Null-safe prop access | All prop access uses optional chaining or default values. Never assume a prop is present. |
 | 2 | Guard required props | If a required prop is missing, return null and log console.warn. Do not attempt to render. |
-| 3 | Guard array operations | (items ?? []).map(...) or {items && items.map(...)}. Never call .map() on a potentially undefined value. |
+| 3 | Guard array operations | `(items ?? []).map(...)` or `{items && items.map(/* ... */)}`. Never call `.map()` on a potentially undefined value. |
 | 4 | Guard data sources | Data category components check whether their data source exists and has the expected shape before rendering. |
 | 5 | Try-catch for complex logic | Components with computed values, data transformation, or dynamic rendering wrap logic in try-catch. |
 | 6 | Console.warn on degradation | When a component degrades (returns null or fallback), it logs console.warn('[ComponentName] reason'). |

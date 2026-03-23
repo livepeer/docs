@@ -160,7 +160,7 @@ Produce the complete frontmatter block with all required fields:
 title: [See naming rules below]
 sidebarTitle:
   [Shorter form if title > 3 words — 1–2 words. Omit if same as title.]
-description: [One sentence, outcome-focused, <= 160 chars. See rules below.]
+description: [One sentence, outcome-focused, ≤ 160 chars. See rules below.]
 pageType: [canonical enum]
 pageVariant: [canonical enum, or omit]
 audience: [canonical audience token]
@@ -190,7 +190,7 @@ lastVerified: [YYYY-MM-DD]
 
 - One sentence, subject-first
 - Opens with the reader outcome or subject — not "This page" or "Overview of"
-- <= 160 characters
+- ≤ 160 characters
 - No announcement framing: "The three paths to..." → state the subject directly
 - No conditional in sentence 1
 
@@ -268,7 +268,7 @@ Do not silently apply a workaround. State the decision and the default chosen.
 - [ ] Component decisions follow Phase 3 rules (no accordion hiding of primary content)
 - [ ] Frontmatter complete: all required fields with canonical enum values
 - [ ] Title: 1–3 words, concept-derived, no banned forms
-- [ ] Description: subject-first, <= 160 chars, no self-reference
+- [ ] Description: subject-first, ≤ 160 chars, no self-reference
 - [ ] Section headings checked against naming rubric — no unresolved generic structure words
 - [ ] No MDX syntax errors
 - [ ] All `{/* REVIEW: */}` flags from Pass A present in the output

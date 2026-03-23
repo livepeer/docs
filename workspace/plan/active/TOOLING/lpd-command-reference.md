@@ -1,9 +1,9 @@
 lpd — Command Reference
 Version: 0.2.0
 
-Global flag: lpd --json <command> — enables JSON envelope output for any command.
+Global flag: `lpd --json <command>` — enables JSON envelope output for any command.
 
-Fallback form: bash lpd <command> when not on PATH.
+Fallback form: `bash lpd <command>` when not on PATH.
 
 Discovery
 Command What it does
@@ -49,18 +49,18 @@ lpd dev --dry-run --scoped --scope-prefix v2/gateways
 Flag Effect
 --test Run advisory tests before launching server
 --test-mode fast|staged|full Which test mode to run with --test
---script <path> Override launcher script (default: tools/dev/mint-dev.sh)
+--script `<path>`Override launcher script (default: tools/dev/mint-dev.sh)
 --scoped Generate a reduced dev-only Mint profile
---docs-config <path> Use an alternate docs config as the scoped source
---scope-file <path> Load scope filters from JSON
---scope-version <csv> Limit to specific versions
---scope-language <csv> Limit to specific languages
---scope-tab <csv> Limit to specific tabs
---scope-prefix <csv> Limit by route prefix
+--docs-config `<path>`Use an alternate docs config as the scoped source
+--scope-file `<path>`Load scope filters from JSON
+--scope-version `<csv>`Limit to specific versions
+--scope-language `<csv>`Limit to specific languages
+--scope-tab `<csv>`Limit to specific tabs
+--scope-prefix `<csv>`Limit by route prefix
 --scope-interactive Choose scope filters interactively
 --skip-external-fetch Set MINT_SKIP_EXTERNAL_FETCH=1
 --disable-openapi Exclude OpenAPI routes from scoped profile
--- <args> Pass remaining args directly to Mint
+-- `<args>`Pass remaining args directly to Mint
 lpd mint dev — Alias for lpd dev. Same flags.
 
 Testing & CI
@@ -86,7 +86,7 @@ lpd ci
 lpd ci --skip-browser
 lpd ci --base-url http://localhost:3333
 Content Operations
-lpd move-page <old> <new> — Move a docs page with git mv and run governed docs-path sync (updates docs.json references).
+lpd move-page `<old>` `<new>` — Move a docs page with git mv and run governed docs-path sync (updates docs.json references).
 
 lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/guides/new.mdx --check
 lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/guides/new.mdx --yes
@@ -106,9 +106,9 @@ lpd repair --surface script-governance --write --staged
 lpd repair --surface component-governance --full --write
 lpd repair --surface frontmatter-contract --staged # check-only surface
 Flag Effect
---surface <id> Required. Which governed surface to repair
+--surface `<id>`Required. Which governed surface to repair
 --staged Scope to staged files (default)
---files <csv> Scope to specific file paths
+--files `<csv>`Scope to specific file paths
 --full Scope to full repo
 --write Apply fixes (default is check-only)
 --stage Apply fixes + git add outputs (implies --write)
@@ -138,7 +138,7 @@ lpd scripts list --group tests
 lpd scripts list --show-ignored
 Groups: tools, workspace, tasks (alias for workspace), tests, v2, hooks
 
-lpd scripts run <group> <tokens> — Resolve and execute a managed script.
+lpd scripts run `<group>` `<tokens>` — Resolve and execute a managed script.
 
 lpd scripts run tools generate-ai-sitemap
 lpd scripts run workspace run-audit --dry-run
@@ -146,8 +146,8 @@ lpd scripts run tests unit mdx.test -- --help
 Flag Effect
 --dry-run Print the resolved command without running it
 --yes Skip confirmation for high-risk script groups
--- <args> Pass remaining args to the script
-Shorthands — lpd <group> <tokens> expands to lpd scripts run <group> <tokens>.
+-- `<args>`Pass remaining args to the script
+Shorthands — `lpd <group> <tokens>` expands to `lpd scripts run <group> <tokens>`.
 
 lpd tools generate-ai-sitemap
 lpd tools dev test-add-callouts -- --help
