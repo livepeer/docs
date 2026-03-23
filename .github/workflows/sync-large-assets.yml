@@ -3,7 +3,7 @@ name: Sync Large Assets
 on:
   push:
     branches:
-      - docs-v2
+      - "**"
   workflow_dispatch:
     inputs:
       target_branch:
@@ -21,6 +21,7 @@ permissions:
 jobs:
   sync-large-assets:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == vars.DEPLOY_BRANCH || github.ref_name == vars.TEST_BRANCH
     env:
       DEFAULT_TARGET_BRANCH: docs-v2-assets
       DEFAULT_THRESHOLD_MB: "20"

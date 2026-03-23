@@ -1,119 +1,143 @@
 /**
  * @script            fetch-ghost-blog-data
- * @category          automation
+ * @type              automation
+ * @concern           content
+ * @niche             data/fetching
  * @purpose           infrastructure:data-feeds
- * @scope             .github/scripts
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/
- * @pipeline          P5, P6
- * @usage             node .github/scripts/fetch-ghost-blog-data.js [flags]
+ * @description       Fetches Livepeer blog posts via public RSS feed (blog.livepeer.org/rss/). No API key required. Writes to snippets/automations/blog/ghostBlogData.jsx.
+ * @mode              generate
+ * @pipeline          RSS feed → snippets/automations/blog/ghostBlogData.jsx
+ * @scope             .github/scripts, snippets/automations/blog/
+ * @policy            PUBLIC RSS only. No API keys.
+ * @usage             node .github/scripts/fetch-ghost-blog-data.js
  */
 const https = require("https");
+const http = require("http");
 const fs = require("fs");
 
-// Fetch JSON from URL
-function fetchJSON(url) {
+const RSS_URL = process.env.GHOST_RSS_URL || "https://blog.livepeer.org/rss/";
+const LIMIT = parseInt(process.env.LIMIT || "4", 10);
+const OUTPUT_PATH = "snippets/automations/blog/ghostBlogData.jsx";
+
+function fetchUrl(url) {
   return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
+    const client = url.startsWith("https") ? https : http;
+    client
+      .get(url, { headers: { "User-Agent": "livepeer-docs-bot" } }, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          return fetchUrl(res.headers.location).then(resolve).catch(reject);
+        }
         let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-        res.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (e) {
-            reject(e);
-          }
-        });
+        res.on("data", (chunk) => (data += chunk));
+        res.on("end", () => resolve(data));
       })
       .on("error", reject);
   });
 }
 
-// Safe HTML escape for template literals — escape backticks and $ to prevent template expression injection
-function safeHTML(html) {
-  return (html || "")
+function escapeForJSX(str) {
+  return (str || "")
     .replace(/\\/g, "\\\\")
     .replace(/`/g, "\\`")
-    .replace(/\$/g, "\\$");
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, "\\$")
+    .replace(/\u2018|\u2019/g, "'")
+    .replace(/\u201C|\u201D/g, '\\"')
+    .replace(/\u2014/g, "-")
+    .replace(/\u2013/g, "-")
+    .replace(/\u2022/g, "-")
+    .replace(/\u2192/g, "->")
+    .replace(/[\u00A0]/g, " ")
+    .replace(/&[#\w]+;/g, "")
+    .replace(/\n/g, " ")
+    .replace(/\r/g, "")
+    .replace(/\t/g, " ");
 }
 
-// Format date
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function formatDate(dateStr) {
+  try {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+function extractTag(xml, tag) {
+  const cdataRegex = new RegExp(
+    `<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]></${tag}>`,
+    "i"
+  );
+  const cdataMatch = xml.match(cdataRegex);
+  if (cdataMatch) return cdataMatch[1].trim();
+  const regex = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i");
+  const m = xml.match(regex);
+  return m ? m[1].trim() : "";
+}
+
+function extractEnclosureUrl(xml) {
+  // Ghost RSS puts feature images in <media:content> or <enclosure>
+  const media = xml.match(/<media:content[^>]*url="([^"]*)"/i);
+  if (media) return media[1];
+  const enc = xml.match(/<enclosure[^>]*url="([^"]*)"/i);
+  return enc ? enc[1] : "";
+}
+
+function stripHTML(html) {
+  return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+}
+
+function parseRSS(xml) {
+  const items = [];
+  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+  let match;
+  while ((match = itemRegex.exec(xml)) !== null) {
+    const item = match[1];
+    const description = extractTag(item, "description");
+    const contentEncoded = extractTag(item, "content:encoded");
+    const excerpt = stripHTML(description || contentEncoded).substring(0, 500);
+
+    items.push({
+      title: extractTag(item, "title"),
+      href: extractTag(item, "link"),
+      author: extractTag(item, "dc:creator") || extractTag(item, "author") || "",
+      datePosted: formatDate(extractTag(item, "pubDate")),
+      img: extractEnclosureUrl(item),
+      excerpt,
+    });
+  }
+  return items;
 }
 
 async function main() {
-  console.log("Fetching Ghost blog posts...");
+  console.log(`Fetching Ghost RSS: ${RSS_URL}`);
+  const xml = await fetchUrl(RSS_URL);
+  const items = parseRSS(xml).slice(0, LIMIT);
 
-  const apiKey = process.env.GHOST_CONTENT_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      "GHOST_CONTENT_API_KEY environment variable is not set. Please configure your Ghost Content API key."
-    );
+  if (items.length === 0) {
+    throw new Error("No items found in RSS feed");
   }
+  console.log(`Parsed ${items.length} posts`);
 
-  const apiUrl =
-    `https://livepeer-studio.ghost.io/ghost/api/content/posts/?key=${apiKey}&limit=4&include=tags,authors`;
-
-  const response = await fetchJSON(apiUrl);
-
-  if (!response.posts || response.posts.length === 0) {
-    console.log("No posts found");
-    return;
-  }
-
-  console.log(`Found ${response.posts.length} posts`);
-
-  // Process posts
-  const posts = response.posts.map((p) => ({
-    title: p.title,
-    href: p.url,
-    author: p.primary_author?.name
-      ? `By ${p.primary_author.name}`
-      : "By Livepeer Team",
-    content: safeHTML(p.html),
-    datePosted: formatDate(p.published_at),
-    img: p.feature_image || "",
-    excerpt: safeHTML(p.excerpt),
-    readingTime: p.reading_time || 0,
-  }));
-
-  // Generate JavaScript export with template literals
-  let jsExport = "export const ghostData = [\n";
-
-  posts.forEach((post, index) => {
-    jsExport += "{\n";
-    jsExport += `  title: \`${post.title}\`,\n`;
-    jsExport += `  href: \`${post.href}\`,\n`;
-    jsExport += `  author: \`${post.author}\`,\n`;
-    jsExport += `  content: \`${post.content}\`,\n`;
-    jsExport += `  datePosted: \`${post.datePosted}\`,\n`;
-    jsExport += `  img: \`${post.img}\`,\n`;
-    jsExport += `  excerpt: \`${post.excerpt}\`,\n`;
-    jsExport += `  readingTime: ${post.readingTime}\n`;
-    jsExport += "}";
-
-    if (index < posts.length - 1) {
-      jsExport += ",";
-    }
-    jsExport += "\n";
+  let jsx = "export const ghostData = [\n";
+  items.forEach((item, idx) => {
+    jsx += "  {\n";
+    jsx += `    title: "${escapeForJSX(item.title)}",\n`;
+    jsx += `    href: "${escapeForJSX(item.href)}",\n`;
+    jsx += `    author: "${escapeForJSX(item.author ? `By ${item.author}` : "By Livepeer Team")}",\n`;
+    jsx += `    datePosted: "${item.datePosted}",\n`;
+    jsx += `    img: "${escapeForJSX(item.img)}",\n`;
+    jsx += `    excerpt: "${escapeForJSX(item.excerpt)}"\n`;
+    jsx += `  }${idx < items.length - 1 ? "," : ""}\n`;
   });
+  jsx += "];\n";
 
-  jsExport += "];\n";
-
-  // Write to file
-  const outputPath = "snippets/automations/blog/ghostBlogData.jsx";
   fs.mkdirSync("snippets/automations/blog", { recursive: true });
-  fs.writeFileSync(outputPath, jsExport);
-  console.log(`Written to ${outputPath}`);
+  fs.writeFileSync(OUTPUT_PATH, jsx);
+  console.log(`Written to ${OUTPUT_PATH}`);
 }
 
 main().catch((err) => {

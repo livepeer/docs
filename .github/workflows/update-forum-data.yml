@@ -7,7 +7,12 @@ on:
   schedule:
     # Run daily at 00:00 UTC
     - cron: "0 0 * * *"
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 jobs:
   update-forum-data:
@@ -17,7 +22,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js

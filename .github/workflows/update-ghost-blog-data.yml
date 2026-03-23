@@ -1,12 +1,14 @@
-# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
-# N8N IS BEING USING AS AN ALTERNATIVE UNTIL THEN.
-# N8N workflow is in /snippets/automations/n8n-workflows/ghost-to-mintlify.json
 name: Update Ghost Blog Data
 
 on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 jobs:
   update-ghost-data:
@@ -16,6 +18,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
@@ -24,8 +27,6 @@ jobs:
           node-version: "20"
 
       - name: Fetch and process Ghost blog data
-        env:
-          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
         run: |
           node .github/scripts/fetch-ghost-blog-data.js
 
