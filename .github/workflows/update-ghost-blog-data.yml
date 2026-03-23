@@ -16,12 +16,12 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.DOCS_V2 }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Fetch and process Ghost blog data
         env:
@@ -29,9 +29,16 @@ jobs:
         run: |
           node .github/scripts/fetch-ghost-blog-data.js
 
-      - name: Commit and push if changed
+      - name: Check for changes
+        id: git-check
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+          git diff --exit-code snippets/automations/blog/ghostBlogData.jsx || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add snippets/automations/blog/ghostBlogData.jsx
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Ghost blog data - $(date -u +"%Y-%m-%dT%H:%M:%SZ")" && git push)
+          git commit -m "chore: update Ghost blog data [skip ci]"
+          git push

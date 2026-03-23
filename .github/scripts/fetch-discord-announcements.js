@@ -4,9 +4,12 @@
  * @concern           content
  * @niche             data/fetching
  * @purpose           infrastructure:data-feeds
- * @description       Fetches announcements from Discord channels via bot token, writes per-product JSX data files.
+ * @description       Fetches announcements from Discord channels via bot token. Writes per-product
+ *                    JSX data files from config.products[].discord and per-channel JSX files from
+ *                    config.globals.discord[]. Each entry produces a specific output file.
  * @mode              generate
  * @pipeline          config → Discord API → snippets/automations/{product}/discordData.jsx
+ *                                        → snippets/automations/discord/discordAnnouncementsData.jsx
  * @scope             .github/scripts, snippets/automations/
  * @usage             node .github/scripts/fetch-discord-announcements.js
  * @policy            Announcements channel only. No general chat. Requires DISCORD_BOT_TOKEN.
@@ -61,6 +64,9 @@ function escapeForJSX(str) {
     .replace(/\u2192/g, "->")
     .replace(/[\u00A0]/g, " ")
     .replace(/&[#\w]+;/g, "")
+    .replace(/[\u{10000}-\u{10FFFF}]/gu, "")
+    .replace(/[\uD800-\uDFFF]/g, "")
+    .replace(/[^\x20-\x7E\u00A0-\u00FF<>]/g, "")
     .replace(/\n/g, "<br />")
     .replace(/\r/g, "");
 }
@@ -101,6 +107,23 @@ async function fetchForProduct(productKey, discordConfig) {
   }));
 }
 
+function writeJSX(exportName, announcements, outPath) {
+  let jsx = `export const ${exportName} = [\n`;
+  announcements.forEach((item, idx) => {
+    jsx += `  {\n`;
+    jsx += `    id: "${item.id}",\n`;
+    jsx += `    content: "${item.content}",\n`;
+    jsx += `    author: "${escapeForJSX(item.author)}",\n`;
+    jsx += `    timestamp: "${item.timestamp}",\n`;
+    jsx += `    url: "${item.url}"\n`;
+    jsx += `  }${idx < announcements.length - 1 ? "," : ""}\n`;
+  });
+  jsx += `];\n`;
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(outPath, jsx);
+  console.log(`  Written to ${outPath}`);
+}
+
 async function main() {
   if (!DISCORD_BOT_TOKEN) {
     throw new Error(
@@ -109,8 +132,9 @@ async function main() {
   }
 
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
-  const products = config.products || {};
 
+  // Per-product feeds
+  const products = config.products || {};
   for (const [productKey, productConfig] of Object.entries(products)) {
     const discord = productConfig.discord;
     if (!discord) {
@@ -120,29 +144,27 @@ async function main() {
 
     console.log(`Processing ${productKey}...`);
     const announcements = await fetchForProduct(productKey, discord);
-
     if (announcements === null) continue;
 
-    // Generate JSX export
     const exportName = `${productKey.replace(/-/g, "")}DiscordData`;
-    let jsx = `export const ${exportName} = [\n`;
-    announcements.forEach((item, idx) => {
-      jsx += `  {\n`;
-      jsx += `    id: "${item.id}",\n`;
-      jsx += `    content: "${item.content}",\n`;
-      jsx += `    author: "${escapeForJSX(item.author)}",\n`;
-      jsx += `    timestamp: "${item.timestamp}",\n`;
-      jsx += `    url: "${item.url}"\n`;
-      jsx += `  }${idx < announcements.length - 1 ? "," : ""}\n`;
-    });
-    jsx += `];\n`;
+    const outPath = path.join(`snippets/automations/solutions/${productKey}`, "discordData.jsx");
+    writeJSX(exportName, announcements, outPath);
+  }
 
-    // Write to per-product directory
-    const outDir = `snippets/automations/solutions/${productKey}`;
-    fs.mkdirSync(outDir, { recursive: true });
-    const outPath = path.join(outDir, "discordData.jsx");
-    fs.writeFileSync(outPath, jsx);
-    console.log(`  Written to ${outPath}`);
+  // Global channel feeds (explicit outputPath + exportName per entry)
+  const globalChannels = config.globals?.discord || [];
+  for (const channel of globalChannels) {
+    const { key, serverId, announcementsChannelId, outputPath, exportName } = channel;
+    if (!serverId || !announcementsChannelId || !outputPath || !exportName) {
+      console.log(`globals.discord[${key}]: missing required fields, skipping`);
+      continue;
+    }
+
+    console.log(`Processing global channel ${key}...`);
+    const announcements = await fetchForProduct(key, { serverId, announcementsChannelId });
+    if (announcements === null) continue;
+
+    writeJSX(exportName, announcements, outputPath);
   }
 }
 
