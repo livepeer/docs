@@ -19,6 +19,12 @@ on:
       - 'workspace/scripts/**'
       - 'snippets/automations/**'
       - 'workspace/reports/script-classifications.json'
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -60,6 +66,6 @@ jobs:
           body: |
             Automated post-merge governance sync triggered by ${{ github.sha }}.
             See `workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md` for details.
-          base: docs-v2
+          base: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
           delete-branch: true
           labels: governance, automated

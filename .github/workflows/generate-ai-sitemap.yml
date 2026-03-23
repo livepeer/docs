@@ -7,6 +7,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 jobs:
   generate-ai-sitemap:
@@ -28,7 +33,7 @@ jobs:
         run: cd tools && npm install
 
       - name: Generate AI sitemap
-        run: node operations/scripts/generate-ai-sitemap.js --write
+        run: node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write
 
       - name: Check for changes
         id: git-check

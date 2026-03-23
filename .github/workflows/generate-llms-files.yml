@@ -4,6 +4,11 @@ on:
   push:
     branches: [docs-v2]
   workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -23,7 +28,7 @@ jobs:
       - run: cd tools && npm ci
 
       - name: Generate llms files
-        run: node operations/scripts/generate-llms-files.js --write
+        run: node operations/scripts/generators/ai/llm/generate-llms-files.js --write
 
       - name: Commit if changed
         run: |
@@ -31,4 +36,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add llms.txt llms-full.txt
           git diff --cached --quiet || git commit -m "chore: regenerate llms.txt [skip ci]"
-          git push origin HEAD:docs-v2
+          git push origin HEAD:${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}

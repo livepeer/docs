@@ -38,7 +38,14 @@ jobs:
             snippets/automations/luma/lumaEventsData.jsx \
             snippets/automations/showcase/showcaseData.jsx \
             snippets/automations/youtube/youtubeData.jsx \
-            snippets/automations/globals/globals.mdx; do
+            snippets/automations/globals/globals.jsx; do
+
+            # globals.jsx is updated on go-livepeer releases (weeks/months), not daily.
+            # Use a 30-day extended threshold to avoid permanent RED.
+            stale_threshold_hours=72
+            if [ "$file" = "snippets/automations/globals/globals.jsx" ]; then
+              stale_threshold_hours=720
+            fi
 
             if [ ! -f "$file" ]; then
               echo "| $file | FILE MISSING | — | 🔴 MISSING |" >> "$GITHUB_STEP_SUMMARY"
@@ -59,7 +66,7 @@ jobs:
 
             if [ "$hours_stale" -le 24 ]; then
               status="🟢 GREEN"
-            elif [ "$hours_stale" -le 72 ]; then
+            elif [ "$hours_stale" -le "$stale_threshold_hours" ]; then
               status="🟡 YELLOW"
             else
               status="🔴 RED"
