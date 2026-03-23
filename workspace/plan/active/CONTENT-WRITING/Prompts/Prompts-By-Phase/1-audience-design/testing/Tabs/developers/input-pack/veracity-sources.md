@@ -58,6 +58,9 @@ If a claim involves a governance-controlled parameter value (e.g. unbonding peri
 | JS/TS client for AI API (pipeline requests, response schemas) | [livepeer-ai-js repo](https://github.com/livepeer/livepeer-ai-js) | primary | High staleness — AI API evolves frequently |
 | Python client for AI API | [livepeer-ai-sdks repo](https://github.com/livepeer/livepeer-ai-sdks) | primary | High staleness |
 | ComfyUI integration (ComfyStream — ComfyUI workflows as live media backends) | [comfystream repo](https://github.com/livepeer/comfystream) | primary | High staleness — ComfyUI API compatibility breaks often |
+| Python real-time streaming SDK (low-latency developer workflows, trickle streaming protocol) | [pytrickle repo](https://github.com/livepeer/pytrickle) | primary | High staleness — API surface evolves with protocol changes |
+| Runner-side AI execution behaviour, custom inference flow, OpenAPI definitions for AI worker API | [ai-runner repo](https://github.com/livepeer/ai-runner) | primary | High staleness — AI runner architecture changes frequently |
+| Official end-to-end Studio integration example (product wiring patterns, auth, asset management) | [studio-sample-app repo](https://github.com/livepeer/studio-sample-app) | acceptable | Check last-updated date; verify patterns against livepeer-js and Studio API docs |
 | Monitoring stack (Prometheus metrics, Grafana dashboards for go-livepeer) | [livepeer-monitoring repo](https://github.com/livepeer/livepeer-monitoring) | primary | Medium staleness |
 | Community-maintained ecosystem tools | [awesome-livepeer](https://github.com/livepeer/awesome-livepeer) — verify each tool is still maintained | acceptable | High staleness — community tools appear and disappear |
 

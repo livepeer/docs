@@ -1,3 +1,5 @@
+> This file is archived. See `research-best-practices.md` for current best-practices research (2026-03-23). For plan review findings, see `audits/master-audit.md`.
+
 ---
 title: Documentation Governance — Research (Plan Review + Docs-Guide Scan)
 status: active

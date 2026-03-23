@@ -3,235 +3,146 @@ title: Documentation Governance — Execution Plan
 status: active
 owner: DOCUMENTATION
 created: 2026-03-21
-updated: 2026-03-22
+updated: 2026-03-23
 ---
 
 # Documentation Governance — Execution Plan
 
 > **System design reference**: [design-canonical.mdx](design-canonical.mdx) — system architecture, per-part ideal state, quality bars, outputs
 > **Working folder**: `workspace/plan/active/DOCUMENTATION/`
+> **Audit synthesis**: [audits/master-audit.md](audits/master-audit.md) — current state across all 10 concerns
+> **Pipeline recommendations**: [recommendations-pipeline.md](recommendations-pipeline.md) — CI/automation gaps and fixes
 
-The Steps below come from the design-canonical accordions. This plan extends them with parallel run paths, handoffs, and cross-plan dependencies.
+---
 
-**Every phase follows two mandatory rules:**
-1. **READ FIRST** — Before starting any DESIGN, HUMAN REVIEW, or EXECUTION step, read: `designing/structure.md`, `design-canonical.mdx`, this plan's Decision Log, and any locked framework files referenced. No work starts until this is done.
-2. **DOCUMENT DECISIONS** — At the end of every HUMAN REVIEW, write all decisions made to the Decision Log below — named, dated, with rationale. Decisions made in chat that are not written down do not exist.
+## Current State Summary (2026-03-23)
+
+The model and design phases are complete. The 10-concern audit is complete. Research and recommendations are current. Execution of Parts ②–⑤ is blocked pending human review approval of the consumer/maintenance assignment table.
+
+| System Part | Status | Next action |
+|---|---|---|
+| ① One Canonical Location | 🔄 In progress | ① EXECUTION steps 3–5 pending (catalog renames, catalog skeleton, concern nav) |
+| ② Known Freshness | ❌ Pending HUMAN REVIEW | Review `designing/consumer-assignments.md` — approve maintenance type per page |
+| ③ Owned and Repairable | ❌ Not started | Blocked by ①② |
+| ④ Machine-Readable | ❌ Pending HUMAN REVIEW | Review consumer/concern/status assignment table in `designing/consumer-assignments.md` |
+| ⑤ Self-Describing | ❌ Not started | Blocked by ①②③④ |
 
 ---
 
 ## Immediate Next Action
 
-`Frameworks/doc-item-model.md` written and approved. ① HUMAN REVIEW lock is cleared.
+Two HUMAN REVIEW gates can run in parallel now:
 
-**Next:** ① EXECUTION begins. In parallel: ② HUMAN REVIEW and ④ HUMAN REVIEW can start.
-
-| Track | First step | Blocked by |
+| Track | Task | File to review |
 |---|---|---|
-| ① EXECUTION | Create `docs-guide/config/` · move JSON files · rename catalog files (D9) | Nothing — unblocked |
-| ② HUMAN REVIEW | Review `designing/consumer-assignments.md` maintenance type per page | `doc-item-model.md` ✅ |
-| ④ HUMAN REVIEW | Review consumer/concern/status assignment table | `doc-item-model.md` ✅ |
+| ② HUMAN REVIEW | Approve maintenance type per page | `designing/consumer-assignments.md` |
+| ④ HUMAN REVIEW | Approve consumer + concern + status assignments | `designing/consumer-assignments.md` |
+
+While reviews are in progress, ① EXECUTION steps 3–5 are unblocked and can proceed.
 
 ---
 
-## Execution Sequence
+## Phase 1: Model and Design — COMPLETE
+
+All design decisions resolved and locked in `Frameworks/doc-item-model.md`.
+
+| Decision | Outcome | Logged |
+|---|---|---|
+| D1: concern as file prefix vs sub-folder | Option B: concern as sub-folder within type folders | 2026-03-22 |
+| D-CONCERN: `governance` as a valid concern | Collapsed to 4 values: content / components / governance / ai | 2026-03-22 |
+| D9: catalog file rename table | Confirmed — see `Frameworks/doc-item-model.md` | 2026-03-22 |
+| D8: JSON config files home | `docs-guide/config/` | Executed: 5 files moved, 31 consumers updated (commit `40aeb990`) |
+
+---
+
+## Phase 2: Immediate Fixes — COMPLETE
+
+All 5 immediate fixes executed before model was frozen.
+
+| Fix | Status |
+|---|---|
+| I1: Fix wrong filename in `source-of-truth-policy.mdx` (`overview.mdx` → `source-of-truth-guide.mdx`) | ✅ Done |
+| I2: Fix stale `tasks/` path in `docs-guide/docs-glossary.md` | ✅ Done |
+| I3: Re-run `components-catalog.mdx` generator | ✅ Done |
+| I4: Delete `v2/internal/docs-philosophy.mdx` duplicate (merged unique content first) | ✅ Done |
+| I5: Add scope cross-links to all three glossary files | ✅ Done |
+
+---
+
+## Phase 3 / Part ① EXECUTION — In Progress
+
+**Blocked by**: Nothing — unblocked as of 2026-03-22.
+
+Remaining steps:
+
+| Step | Status | Notes |
+|---|---|---|
+| 1. Write `Frameworks/doc-item-model.md` | ✅ Done | Frozen contract |
+| 2. Create `docs-guide/config/` and move JSON files | ✅ Done | Commit `40aeb990` |
+| 3. Rename catalog files to concern-prefix convention (per D9) | ❌ Pending | D9 table in `doc-item-model.md` |
+| 4. Build `governance-documentation-catalog.mdx` skeleton | ❌ Pending | One row per surface |
+| 5. Add concern navigation table to `source-of-truth-guide.mdx` | ❌ Pending | For all 4 concerns |
+| 6. `v2/internal/governance.mdx` | N/A | File does not exist |
+| 7. `v2/internal/governance-pipeline.mdx` | N/A | File does not exist |
+
+**Testing (after step 5):**
+- Run duplicate-path check on `governance-documentation-catalog.mdx`
+- Verify all declared paths resolve to existing files
+- Verify `source-of-truth-guide.mdx` concern nav reaches correct file per concern
+
+---
+
+## Phase 3 / Parts ② + ④ EXECUTION — Blocked by HUMAN REVIEW
+
+**These two execution passes are coordinated — all frontmatter fields applied in one batch pass per page (not two separate passes).**
+
+**Blocked by**: ② HUMAN REVIEW + ④ HUMAN REVIEW (run in parallel).
+
+Once both reviews approve the assignment table in `designing/consumer-assignments.md`, execute in one coordinated batch:
+
+- Apply `maintenance` + `generator`/`validator`/`lastVerified` + `consumer` + `concern` + `status` to all ~40 `docs-guide/**/*.mdx` pages
+- Populate `governance-documentation-catalog.mdx` with all model fields per surface
+- Update `AGENTS.md` with concern navigation rules
+- Update `.claude/CLAUDE.md` and `.cursor/rules/` adapter files with concern navigation
+- Write `validate-lpd-cli-freshness.js`
+
+---
+
+## Phase 4 / Part ③ EXECUTION — Blocked by ①②
+
+Write three new validators and register five new ownerless surfaces:
+
+| Script | Purpose |
+|---|---|
+| `docs-guide-naming-convention.js` | Concern prefix, no `-index.mdx`, frontmatter fields present |
+| `validate-adapter-parity.js` | AGENTS.md critical rules vs each adapter file |
+| `validate-workflow-secrets.js` | `.github/workflows/*.yml` secrets vs `.env.example` |
+
+Five new ownerless surface entries: `.env.example`, adapter parity, required docs-guide files, `lpd-cli.mdx`, `governance-documentation-catalog.mdx`.
+
+---
+
+## Phase 5 / Part ⑤ EXECUTION — Blocked by ①②③④
+
+Write `docs-guide/policies/documentation-governance-policy.mdx`. Update `source-of-truth-policy.mdx` and `source-of-truth-guide.mdx`. Lock the plan complete.
+
+---
+
+## Pipeline Recommendations (from master audit + research)
+
+The full prioritised remediation plan is in `audits/master-audit.md` (P0–P6) and `recommendations-pipeline.md` (R1–R12). Critical path:
 
 ```
-D1 + D-CONCERN + D9 resolved
-         │
-         ▼
-① HUMAN REVIEW lock → doc-item-model.md written
-         │
-         ├──────────────────────────────────────────┐
-         ▼                                          ▼
-① EXECUTION                              ② HUMAN REVIEW + ④ HUMAN REVIEW
-(config/, renames, catalog skeleton,      (approve frontmatter assignments —
- concern nav, v2/internal/ overlaps)       can run in parallel with each other)
-         │                                          │
-         └──────────────┬───────────────────────────┘
-                        ▼
-              ② + ④ EXECUTION — coordinated single pass
-              (apply all frontmatter fields to ~40 pages in one batch:
-               maintenance + generator/validator + consumer + concern + status)
-                        │
-                        ▼
-                ① + ② + ④ TESTING
-                        │
-              ┌─────────┴─────────┐
-              ▼                   ▼
-        ③ EXECUTION          ⑤ EXECUTION
-   (validators + ownerless)   (blocked on ①②③④)
-              │
-              ▼
-        ③ TESTING
-              │
-              ▼
-        ⑤ EXECUTION
-              │
-              ▼
-    ⑤ HUMAN REVIEW + ITERATION
+R1 (data correctness) → R8 (dispatch layer) → R9 (governance validators) → R10 (config schemas)
 ```
 
-**Parallel paths:**
-- ② HUMAN REVIEW and ④ HUMAN REVIEW can run simultaneously (same assignment table, different fields)
-- ② EXECUTION and ④ EXECUTION **must be coordinated** — both apply frontmatter to the same ~40 pages; run as one pass, not two separate passes
-- ① TESTING, ② TESTING, ④ TESTING can run together once their respective executions complete
+Items that can run in parallel with the above: R6 (freshness contracts), R7 (taxonomy enforcement), R11 (Mintlify Workflows), R12 (contributor guides).
 
----
-
-## ① One Canonical Location
-
-**AUDIT** ✅
-1. ✅ Scan all repo documentation locations and classify each file by docType/concern/format
-2. ✅ Identify duplicate canonical files
-3. ✅ List all orphaned files with no declared owner
-
-**DESIGN** 🔄
-1. ✅ Define `docType` enum and map all existing docs-guide files to it
-2. ✅ Define `concern` enum — content / components / governance / ai
-3. ✅ Map all existing docs-guide files to docType/concern/format classification
-4. 🔄 Resolve D1: concern as file prefix vs sub-folder
-5. 🔄 Resolve D-CONCERN: confirm `governance` as a valid concern value
-6. 🔄 Resolve D9: confirm catalog file rename table
-
-**HUMAN REVIEW** ❌ — blocked by D1 + D-CONCERN + D9
-1. ❌ Confirm D1 decision
-2. ❌ Confirm D-CONCERN decision
-3. ❌ Confirm D9 rename table
-4. ❌ Approve completed `Frameworks/doc-item-model.md`
-
-**EXECUTION** 🔄
-1. ✅ Write `Frameworks/doc-item-model.md` — frozen model contract
-2. ✅ Create `docs-guide/config/` and move JSON files — merged at `40aeb990` (31 consumers updated; 5 files moved)
-3. ❌ Rename catalog files to concern-prefix convention (per D9)
-4. ❌ Build `governance-documentation-catalog.mdx` skeleton — one row per surface
-5. ❌ Add concern navigation table to `source-of-truth-guide.mdx`
-6. N/A `v2/internal/governance.mdx` — file does not exist; step closed
-7. N/A `v2/internal/governance-pipeline.mdx` — file does not exist; step closed
-
-**TESTING** ❌
-1. ❌ Run duplicate-path check on `governance-documentation-catalog.mdx`
-2. ❌ Verify all declared paths resolve to existing files
-3. ❌ Verify `source-of-truth-guide.mdx` concern nav reaches correct file per concern
-
----
-
-## ② Known Freshness
-
-**DESIGN** ✅
-1. ✅ Define `maintenance` enum: generated | hand-maintained | mixed
-2. ✅ Define conditional fields: `generator:`, `validator:`, `lastVerified:`
-3. ✅ Write full frontmatter examples per docType in `designing/structure.md` Part 3
-
-**HUMAN REVIEW** ❌ — blocked by doc-item-model.md (①)
-1. ❌ Review draft assignment table in `designing/consumer-assignments.md`
-2. ❌ Approve maintenance type per page
-3. ❌ Confirm generator/validator paths are correct or flag for ③
-
-**EXECUTION** ❌ — coordinated with ④; blocked by HUMAN REVIEW
-> Run as one batch pass with ④ — apply all frontmatter fields to the same ~40 pages together
-1. ❌ Apply maintenance frontmatter to all `catalog/` pages
-2. ❌ Apply to all `policies/` pages
-3. ❌ Apply to all `frameworks/` pages
-4. ❌ Apply to all `features/` pages
-5. ❌ Apply to all `tooling/` pages
-6. ❌ Apply to all `contributing/` pages
-7. ❌ Write `validate-lpd-cli-freshness.js`
-
-**TESTING** ❌
-1. ❌ Run `docs-guide-sot.test.js --check` — verify 0 unknown-state pages
-2. ❌ Simulate `lpd --help` change; verify freshness gate detects and warns
-
----
-
-## ③ Owned and Repairable
-
-**AUDIT** ✅
-1. ✅ Identify unregistered surfaces: `.env.example`, adapter parity, required docs-guide files, `lpd-cli.mdx`, `governance-documentation-catalog.mdx`
-2. ✅ Document enforcement gap per surface in `recommendations.md` R17–R19
-
-**DESIGN** ✅
-1. ✅ Specify `docs-guide-naming-convention.js`
-2. ✅ Specify `validate-adapter-parity.js`
-3. ✅ Specify `validate-workflow-secrets.js`
-
-**EXECUTION** ❌ — blocked by ① + ②
-> Each registration is drafted by AI, approved by human, then written to manifest — one batch per surface type
-1. ❌ Write `docs-guide-naming-convention.js`
-2. ❌ Write `validate-adapter-parity.js`
-3. ❌ Write `validate-workflow-secrets.js`
-4. ❌ Draft + approve + write ownerless registration: `.env.example`
-5. ❌ Draft + approve + write ownerless registration: adapter parity
-6. ❌ Draft + approve + write ownerless registration: required docs-guide files
-7. ❌ Draft + approve + write ownerless registration: `lpd-cli.mdx`
-8. ❌ Draft + approve + write ownerless registration: `governance-documentation-catalog.mdx`
-
-**TESTING** ❌
-1. ❌ Test `docs-guide-naming-convention.js` — pass on valid, fail on invalid
-2. ❌ Test `validate-adapter-parity.js` — detect drift between AGENTS.md and adapter files
-3. ❌ Test `validate-workflow-secrets.js` — detect undeclared secrets in workflows
-4. ❌ Run `validate-ownerless-surfaces.js` — confirm zero unregistered surfaces
-5. ❌ Confirm each of the 5 new repair commands runs without error
-
----
-
-## ④ Machine-Readable
-
-**DESIGN** ✅
-1. ✅ Define `consumer` enum: human | agent | automation
-2. ✅ Define `concern` enum: content | components | governance | ai
-3. ✅ Define `status` enum: active | draft | deprecated
-4. ✅ Draft per-page consumer + concern assignments in `designing/consumer-assignments.md`
-
-**HUMAN REVIEW** ❌ — blocked by doc-item-model.md (①); can run in parallel with ② HUMAN REVIEW
-1. ❌ Review consumer/concern/status assignment table
-2. ❌ Flag any misclassified pages
-3. ❌ Approve final table
-
-**EXECUTION** ❌ — coordinated with ②; blocked by HUMAN REVIEW
-> Run as one batch pass with ② — apply all frontmatter fields to the same ~40 pages together
-1. ❌ Apply consumer + concern + status to all `catalog/` pages (with ② maintenance fields)
-2. ❌ Apply to all `policies/` pages
-3. ❌ Apply to all `frameworks/` pages
-4. ❌ Apply to all `features/` pages
-5. ❌ Apply to all `tooling/` pages
-6. ❌ Apply to all `contributing/` pages
-7. ❌ Populate `governance-documentation-catalog.mdx` — all model fields per surface
-8. ❌ Update `AGENTS.md` with concern navigation rules
-9. ❌ Update `.claude/CLAUDE.md` and `.cursor/rules/` adapter files with concern navigation
-
-**TESTING** ❌
-1. ❌ Agent test: "canonical source for component governance?" → correct file in ≤1 hop
-2. ❌ Agent test: "canonical source for content governance?" → correct file in ≤1 hop
-3. ❌ Agent test: "canonical source for scripts?" → correct file in ≤1 hop
-4. ❌ Agent test: "canonical source for AI governance?" → correct file in ≤1 hop
-5. ❌ Script: parse catalog, filter by `consumer: agent`, verify correct rows returned
-
----
-
-## ⑤ Self-Describing
-
-**DESIGN** ✅
-1. ✅ Define content spec for `documentation-governance-policy.mdx`
-2. ✅ List required updates to `source-of-truth-policy.mdx`
-3. ✅ List required updates to `source-of-truth-guide.mdx`
-
-**EXECUTION** ❌ — blocked by ①②③④
-1. ❌ Draft `documentation-governance-policy.mdx`
-2. ❌ Update `source-of-truth-policy.mdx` — add documentation governance as canonical boundary; update Required Files list
-3. ❌ Update `source-of-truth-guide.mdx` — add catalog regen commands + concern nav + adapter parity check command
-
-**HUMAN REVIEW** ❌
-1. ❌ Read `documentation-governance-policy.mdx` as a new contributor — can you reproduce the model?
-2. ❌ Confirm `source-of-truth-guide.mdx` is the complete operational entry point
-3. ❌ Lock and mark plan complete
-
-**ITERATION** ❌
-1. ❌ Agent test: navigate from policy doc to component governance file (≤2 hops)
-2. ❌ Agent test: navigate from policy doc to content governance file (≤2 hops)
-3. ❌ Agent test: navigate from policy doc to scripts governance file (≤2 hops)
-4. ❌ Agent test: navigate from policy doc to AI governance file (≤2 hops)
-5. ❌ Update metadata/navigation aids where any agent test failed
-6. ❌ Re-run tests until all 4 concerns pass in ≤2 hops
+**P0 items (fix immediately, no sprint required):**
+- Fix stale banner path in `generate-component-docs.js` → triggers fix for 32 v2 pages
+- Fix stale paths in `generated-artifacts.json` (4+ entries)
+- Fix `ai-tools.mdx` missing frontmatter opening delimiter
+- Fix `dev-tools.mdx` stale Tip callout (Python path + draft comment block)
 
 ---
 
@@ -239,12 +150,12 @@ D1 + D-CONCERN + D9 resolved
 
 | Handoff to | What | When |
 |---|---|---|
-| **REPO-STRUCTURE-GOV** | v2/internal/ overlap decisions resolved (governance.mdx, governance-pipeline.mdx) | After ① EXECUTION |
-| **REPO-STRUCTURE-GOV** | contribute/ → docs-guide/contributing/ migration dependencies confirmed | Before ③ EXECUTION |
+| **REPO-STRUCTURE-GOV** | `v2/internal/` overlap decisions resolved | After ① EXECUTION |
+| **REPO-STRUCTURE-GOV** | `contribute/` → `docs-guide/contributing/` migration dependencies | Before ③ EXECUTION |
 | **SCRIPT-GOVERNANCE** | Generator banner update list (new catalog paths after D9 renames) | After ① EXECUTION |
-| **COMPONENT-GOVERNANCE** | Component library public pages decision (v2/resources/documentation-guide/) | After ⑤ HUMAN REVIEW |
+| **COMPONENT-GOVERNANCE** | Component library public pages decision (`v2/resources/documentation-guide/`) | After ⑤ HUMAN REVIEW |
 | **AI-TOOLS** | Adapter files updated with concern navigation rules | After ④ EXECUTION |
-| **CANONICAL-TRUTH-GUIDES** | Absorb or close — scope now covered by this plan | After ⑤ HUMAN REVIEW |
+| **CANONICAL-TRUTH-GUIDES** | Absorb — scope covered by this plan | After ⑤ HUMAN REVIEW |
 
 ---
 
@@ -273,4 +184,7 @@ D1 + D-CONCERN + D9 resolved
 | 2026-03-22 | Phase 2 immediate fixes (I1–I5) completed before model was frozen | Low-risk, no coordination needed; unblocked immediately |
 | 2026-03-22 | D1 resolved: Option B — concern as sub-folder within type folders | Better nav grouping; naming review flagged and handed to scripts thread |
 | 2026-03-22 | D-CONCERN resolved: Option A — `governance` is a valid concern value (4 values) | Flagged for later review as execution may surface issues |
-| 2026-03-22 | D9 resolved: catalog rename table confirmed — see table in ① DESIGN | `ui` is a content sub-area per structure.md; documentation-catalog is governance concern |
+| 2026-03-22 | D9 resolved: catalog rename table confirmed — see table in `Frameworks/doc-item-model.md` | `ui` is a content sub-area per structure.md; documentation-catalog is governance concern |
+| 2026-03-23 | 10-concern audit complete — all findings in `audits/` + master synthesis | Audit phase |
+| 2026-03-23 | `recommendations-pipeline.md` written — CI/pipeline recommendations current | Research phase |
+| 2026-03-23 | `research-best-practices.md` written — Mintlify platform + docs CI/CD best practices | Research phase |

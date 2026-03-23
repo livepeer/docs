@@ -1,3 +1,5 @@
+> This file is archived. It is a duplicate of the root-level `context.md`. See `workspace/plan/active/DOCUMENTATION/context.md` for the current version.
+
 ---
 title: Documentation Governance — Context
 status: active

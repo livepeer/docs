@@ -1,3 +1,5 @@
+> This file is archived. See `audits/master-audit.md` for the current version (2026-03-23 cross-cutting synthesis of all 10 concern audits).
+
 ---
 title: Documentation Governance — Audit
 status: active

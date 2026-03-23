@@ -1,3 +1,5 @@
+> This file is archived. See `design-plan-v2.md` for the current version (all design decisions resolved, full taxonomy locked).
+
 ---
 title: Documentation Governance — Design Plan
 status: draft — co-creation in progress

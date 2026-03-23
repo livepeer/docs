@@ -1,3 +1,5 @@
+> This file is archived. It is an early iteration note from design co-creation, superseded by `design-plan-v2.md`.
+
 ---
 title: Documentation Governance — Holistic Design Plan
 status: active
