@@ -742,6 +742,52 @@ No Luma workflow in provided exports. Directory exists in repo with static data.
 
 ---
 
+## Task 15c — `snippets/automations/` restructure
+
+**Goal**: Reorganise `snippets/automations/` into semantically clear top-level groups. Remove misplaced files (scripts, assets, PDFs). Resolve globals duplication. Coordinate n8n + GHA path updates atomically.
+
+> **Status**: NOT STARTED — requires coordination with n8n workflow updates on same day as repo moves.
+
+**Proposed structure:**
+```
+snippets/automations/
+  socials-data/         ← blog/, discord/, forum/, youtube/, luma/
+  showcase-data/        ← showcase/ (minus PDF → snippets/assets/)
+  product-data/         ← solutions/
+  globals/              ← keep, remove globals.jsx duplicate
+```
+
+**Files moving OUT of snippets/automations entirely:**
+- `scripts/n8n/*.json` → `workspace/plan/active/SCRIPT-GOVERNANCE/n8n/` (already started)
+- `youtube/filterVideos.js` → `.github/scripts/` (it's a GHA helper)
+- `forum/Hero_Livepeer_Forum.png` → `snippets/assets/`
+- `showcase/Livepeer_Ecosystem_Descriptions.pdf` → `snippets/assets/` or `workspace/`
+
+**Downstream dependencies that must be updated atomically:**
+- 7 live MDX pages with `import ... from '/snippets/automations/...'`
+- 5+ GHA workflows with hardcoded `snippets/automations/` paths
+- 4 active n8n workflows writing to current paths (must update in n8n UI same day)
+- `.mintignore` entries referencing `snippets/automations/`
+
+**Globals clarification:**
+- `globals.mdx` — active, written by `update-livepeer-release.yml` GHA. Keep.
+- `globals.jsx` — legacy duplicate, same content. Remove after confirming no live imports.
+
+### Tasks
+
+- [ ] **15c.1** Map all downstream imports and workflow path references (full dependency audit)
+- [ ] **15c.2** Update all GHA workflow `filePath` / `git add` references to new paths
+- [ ] **15c.3** `git mv` all subfolders atomically
+- [ ] **15c.4** Update all MDX import statements in live v2 pages
+- [ ] **15c.5** Move misplaced files (scripts, assets) to correct locations
+- [ ] **15c.6** Remove `globals.jsx` duplicate (after confirming no live imports)
+- [ ] **15c.7** Update n8n workflow target paths in n8n UI (same-day coordination)
+- [ ] **15c.8** Update `.mintignore` if any automations paths are affected
+- [ ] **15c.9** Run full tests + link validation
+- [ ] **15c.10** **CHECKPOINT** → merge back
+
+---
+
 ## Task 16 — Final merge to docs-v2-dev
 
 **Goal**: Clean merge of all work back to `docs-v2-dev`. Verify branch is clean.
