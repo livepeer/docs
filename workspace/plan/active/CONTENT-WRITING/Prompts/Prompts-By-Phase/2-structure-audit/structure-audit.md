@@ -113,6 +113,49 @@ Flag each violation as a structural gap with `P0` priority.
 
 **Routing page check**: Does the Prompt A ideal structure include a routing or disambiguation page (a page whose job is to route the reader to their correct path)? If the Phase 1 self-identification check flagged an ambiguous audience label, a routing page is required. If it is absent from the current tab, flag as `P0` gap.
 
+### 3.3a Position violation check
+
+**Run this step before Phase 3.4.** Classify every section in the proposed canonical structure, then check for mismatches between classification and assigned position.
+
+**Step 1 — Classify each section as linear or on-demand:**
+
+Use these rules to classify. Source of truth: `08a-ia-per-tab.md`. If the rules below conflict with that file, the file wins.
+
+Linear (obligatory — must complete to proceed, positions 1–3):
+- Disambiguation / orientation pages whose job is to route the reader to their correct path
+- Core concept foundation required before any task can be attempted (role, capabilities, architecture, economics)
+- Prerequisites or setup tasks that block the first functional use case
+- Quickstart / first working state
+
+On-demand (optional — reference or return-visit, positions 4–6):
+- Advanced configuration and installation procedures (full setup beyond quickstart)
+- Operational guides and tutorials accessed after the first working state
+- Troubleshooting content
+- Reference tables (parameters, flags, CLI specs, FAQ, glossary)
+- Edge cases, alternatives, and advanced patterns
+- Deep protocol explanations not required for first use
+- Curated external content, tools, community directories
+
+**Step 2 — Check for position violations:**
+
+For each section, compare its classification against its assigned canonical position:
+- LINEAR section in an ON-DEMAND position (4–6): violation — obligatory content is unreachable on the linear path
+- ON-DEMAND section in a LINEAR position (1–3): violation — optional content blocks the reader's path to their first working state
+
+**Step 3 — Output a position violations list:**
+
+| Section | Classification | Assigned position type | Violation type | Recommended fix |
+|---|---|---|---|---|
+
+- "Classification" = linear or on-demand (from Step 1)
+- "Assigned position type" = linear (1–3) or on-demand (4–6) based on where it sits in the canonical structure
+- "Violation type" = `linear-in-on-demand` or `on-demand-in-linear`
+- "Recommended fix" = move to correct position group OR reclassify the content type (with rationale)
+
+If there are zero violations, output:
+
+> Position validation: PASS — all linear sections in positions 1–3, all on-demand sections in positions 4–6
+
 ### 3.4 Identify gaps
 
 A gap is any ideal section with match quality `none` or `partial`. For each gap:
@@ -120,10 +163,12 @@ A gap is any ideal section with match quality `none` or `partial`. For each gap:
 | Gap | Job not served | Priority | Recommendation |
 |---|---|---|---|
 
-Priority:
-- `P0` — blocks the primary arriving persona completing their job
-- `P1` — degrades the journey for a secondary persona
-- `P2` — on-demand / return-visit need not served
+Priority classification (decision tree — apply in order):
+- `P0` — Gap is in a LINEAR position (1–3) AND no workaround exists for a primary persona's critical job
+- `P1` — Gap is in an ON-DEMAND position (4–6), OR affects a secondary persona, OR has a partial workaround
+- `P2` — Polish/backlog: orphaned pages, missing subsections of on-demand content, cross-tab duplicates
+
+Apply these rules before assigning priority. Do not use narrative judgement — if a gap is in position 1–3 and has no workaround, it is P0 regardless of content depth.
 
 Recommendation: which canonical section should absorb this content, or does it require a new page?
 

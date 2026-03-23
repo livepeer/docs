@@ -15,7 +15,7 @@ _Fill all fields before running. Vague answers produce vague output._
 TAB:              [tab name]
 SECTION:          [e.g. guides/payments-and-pricing]
 PAGE_PATH:        [e.g. v2/gateways/guides/payments-and-pricing/clearinghouse.mdx]
-MODE:             [REVIEW / WRITE / REWRITE]
+MODE:             [REVIEW / WRITE / REWRITE / AUDIT]
 
 PAGE_TYPE:        [concept / tutorial / guide / instruction / navigation / reference / resource]
 PAGE_VARIANT:     [overview / specification / compendium / changelog / quickstart / setup / knowledge-hub / none]
@@ -33,6 +33,19 @@ PHASE_1_OUTPUT:   [path to audience-design output for this tab]
 TAB_MAP:          [path to v2/[tab]/_workspace/tab-map.md — or "none" if not yet created]
 PRIMARY_SOURCES:  [authoritative sources for factual claims on this page, e.g. go-livepeer GitHub, API spec]
 ```
+
+### Pre-flight dependency check
+
+Confirm all applicable items before running. Items marked (WRITE only) are required for WRITE mode; all others apply to all modes.
+
+- [ ] Tab map exists (`v2/[tab]/_workspace/tab-map.md`)
+- [ ] Phase 1 canonical audience design approved
+- [ ] Terminology locked (Phase 3.5 complete)
+- [ ] Voice rules confirmed for this tab's audience (`workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` covers all 7 audiences: gateway, orchestrator, developer, builder, delegator, community, founder)
+- [ ] Section naming rubric loaded
+- [ ] AUDIT mode complete — Phase 4 decision (KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP) recorded for this page
+- [ ] Page brief approved (WRITE mode only)
+- [ ] Feedback routing map exists (`decisions/feedback-routing-map.md`)
 
 ---
 
@@ -177,6 +190,26 @@ Flag: any section whose information type doesn't fit the PAGE_TYPE. These are st
 
 ---
 
+## Phase 4b — Information Type → Component Suggestions
+
+**Reference only. This section does not make layout decisions.** It maps each information type to components from `docs-guide/config/component-registry.json` (117 components, 6 categories) that are typically useful when that information type is the dominant type in a section. Component selection is Pass B work. Use this table in WRITE mode to anticipate structure; use it in REVIEW mode to flag component mismatches.
+
+> **Annotation**: `tools/config/component-layout-profile.json` uses deprecated pageType names (`landing`, `how_to`, `overview`, etc.) that do not align with the canonical 7-type schema (`navigation`, `concept`, `tutorial`, `guide`, `instruction`, `reference`, `resource`). Do not treat `component-layout-profile.json` as authoritative for component selection until it is updated to use canonical type names. Cross-reference with the canonical schema before using any component mapping from that file.
+
+| Information Type | Typical Components | When to Consider | Notes |
+|---|---|---|---|
+| `factual` | `StyledTable`, `DynamicTable`, `SearchTable`, `TableComponent`, `ValueResponseField`, `CustomResponseField`, `ResponseFieldGroup`, `LatestVersion` | Dense parameter tables, spec comparisons, version numbers, on-chain values | Tables preferred over prose lists; code blocks for exact syntax |
+| `technical` | `CodeComponent`, `CustomCodeBlock`, `ComplexCodeBlock`, `CodeSection`, `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ValueResponseField`, `CustomResponseField` | Code samples, API contracts, config schemas, CLI commands | Language-tagged code blocks are mandatory; use expandable variants for long blocks |
+| `procedural` | `StyledSteps`, `StyledStep`, `ListSteps`, `StepList`, `StepLinkList` | Numbered installation steps, setup procedures, operational runbooks | Sequential steps require `Steps` component family; do not use bullet lists for procedures |
+| `conceptual` | `ScrollableDiagram`, `DisplayCard`, `BorderedBox`, `AccordionLayout`, `AccordionGroupList` | Mental model diagrams, mechanism explanations, concept hierarchies | Diagrams and prose together; avoid code blocks in purely conceptual sections |
+| `analytical` | `StyledTable`, `DynamicTable`, `SearchTable`, `AccordionGroupList`, `AccordionLayout` | Trade-off comparisons, decision frameworks, diagnostic reasoning | Structured comparison tables; accordion for branching decision paths |
+| `evaluative` | `StyledTable`, `DynamicTable`, `SearchTable`, `DisplayCard`, `BorderedBox` | Benchmarks, cost breakdowns, criteria frameworks, scenario analysis | Evidence must be real and sourced; do not use `Quote` or `FrameQuote` for data |
+| `structural` | `GotoCard`, `GotoLink`, `InteractiveCard`, `InteractiveCards`, `ShowcaseCards`, `RefCardContainer`, `QuadGrid`, `GridContainer` | Navigation hubs, section overviews, taxonomy maps, routing surfaces | Card grids for spatial navigation; minimal prose; no instructional content |
+| `change` | `UpdateList`, `UpdateLinkList`, `StyledTable`, `AccordionGroupList` | Changelogs, release notes, deprecation notices, migration guides | Version/date anchoring is mandatory; severity labels (breaking/non-breaking) in the structure |
+| `narrative` | `HeroOverviewContent`, `PortalHeroContent`, `FrameQuote`, `Quote`, `BorderedBox`, `CustomCallout` | Value propositions, ecosystem framing, motivational context, benefit-forward openers | Narrative sections precede factual/procedural content on the same page; embedded factual claims still require very-high veracity standard |
+
+---
+
 ## Phase 5 — Voice Check
 
 ### 5.1 Universal blocking rules
@@ -224,7 +257,7 @@ Common corrections: optimize→optimise, organize→organise, behavior→behavio
 
 Apply the AUDIENCE section from `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`.
 
-⚠️ Note: voice-rules.md currently covers operator audiences (gateway, orchestrator). If AUDIENCE is developer, delegator, or community, apply the base voice rules from Phase 2.3 only and flag that audience-specific rules are not yet defined.
+`voice-rules.md` (Status: Locked) covers all 7 audiences: `gateway`, `orchestrator`, `developer`, `builder`, `delegator`, `community`, `founder`. Load the section matching AUDIENCE and apply it. There are no audiences without defined voice rules.
 
 **Output**: Per-rule verdict: PASS / FAIL / PARTIAL.
 For every FAIL or PARTIAL: quote the exact failing text and write the corrected version.
@@ -266,6 +299,44 @@ Exception: `navigation` pages — orientation is implicit in card value proposit
 - [ ] No section pre-empts content from NEXT_PAGE
 - [ ] No section repeats content from PREV_PAGE
 - [ ] Final CTA / next step is named specifically (not "see related pages")
+
+---
+
+## Page Brief Template
+
+A page brief is what a human approves before WRITE mode runs. **WRITE mode cannot start without an approved brief.** Fill every field. A vague brief produces a vague page — brief quality is the single largest predictor of output quality.
+
+```
+PAGE BRIEF
+
+Reader definition
+  Audience:            [gateway / orchestrator / developer / builder / delegator / community / founder]
+  Persona:             [persona name from Phase 1 output — or "none"]
+  Arriving knowledge:  [what the reader already knows when they arrive at this page]
+  Arriving question:   [the specific question the reader is trying to answer]
+
+One-sentence page outcome
+  [Complete this: "After reading this page, the reader can _____."]
+  [Must be a concrete action or decision — not "understand X" or "learn about Y"]
+
+Journey position
+  Previous page:  [page title + one sentence: what it covers, what reader leaves able to do]
+  Next page:      [page title + one sentence: what it covers, what reader is expected to arrive knowing]
+
+Single job this page does
+  [One job only. If you cannot state this in one sentence without "and", the page needs splitting.]
+  [Use the purpose enum: orient / explain / learn / choose / evaluate / start / build / configure /
+   operate / troubleshoot / verify / integrate / optimise / reference / update]
+
+Out-of-scope statement
+  [What this page explicitly does NOT cover — at least two items]
+  [Example: "Does not cover reward-cut strategy. Does not cover multi-GPU setup."]
+
+Human approval
+  Approved by:   [name]
+  Date:          [YYYY-MM-DD]
+  Notes:         [any constraints, open questions, or scope adjustments flagged at approval]
+```
 
 ---
 
@@ -324,8 +395,90 @@ Before delivering any output:
 - [ ] Every section has an identified information type
 - [ ] Information types match permitted types for PAGE_TYPE
 - [ ] All universal blocking violations corrected (WRITE) or flagged with quoted text and fix (REVIEW)
-- [ ] Audience-specific voice rules applied — or gap flagged if audience not yet covered
+- [ ] Audience-specific voice rules applied (voice-rules.md covers all 7 audiences — no coverage gaps)
 - [ ] Every very-high veracity claim has a REVIEW flag or a named source
 - [ ] Structure check complete — no orphan sections, no pre-emptions, no PREV_PAGE repetition
 - [ ] WRITE mode: all taxonomy fields identified (PAGE_TYPE, PAGE_VARIANT, AUDIENCE, PERSONA, PURPOSE, LIFECYCLE_STAGE, COMPLEXITY) — to be applied in Pass B
 - [ ] UK English throughout
+
+---
+
+## AUDIT Mode
+
+AUDIT mode reviews every existing page in a section group and produces a reconsolidation plan. It runs **before** WRITE, REVIEW, or REWRITE. A section group is a folder in `v2/[tab]/` — for example `v2/gateways/guides/` — not a logical category or audience grouping.
+
+AUDIT mode does not write or revise content. It produces decisions and rationale only.
+
+### Pre-flight checks (AUDIT mode)
+
+All three must be confirmed before AUDIT mode runs:
+
+- [ ] Tab map exists at `v2/[tab]/_workspace/tab-map.md`
+- [ ] Phase 1 canonical audience design approved for this tab
+- [ ] Section group path exists in `v2/[tab]/`
+
+### Decision framework
+
+For each page in the section group, assign exactly one decision:
+
+| Decision | Condition | Required in output |
+|---|---|---|
+| `KEEP` | Content is in the right location, aligned with the stated audience and purpose, and the content itself is sound | — |
+| `MOVE` | Content is good but belongs in a different section or tab | Target path |
+| `MERGE` | Content is substantially redundant with another named page | Merge target page path |
+| `SPLIT` | Page serves two or more distinct reader jobs | Names and purposes of the proposed new pages |
+| `REWRITE` | Scope is correct but content is wrong, stale, or structurally broken — not patchable | Reason rewrite is needed (not patch) |
+| `DROP` | Content is deprecated, orphaned, or fully superseded | What supersedes it — required before DROP is valid |
+
+**Decision tree:**
+
+1. Is the content in the right location for this audience and tab? If no → `MOVE`.
+2. Does a different page already cover this substantially? If yes → `MERGE`.
+3. Does this page serve more than one distinct reader job? If yes → `SPLIT`.
+4. Is the content scope correct but the content itself wrong, stale, or structurally broken? If yes → `REWRITE`.
+5. Is the content deprecated, orphaned, or fully superseded? If yes → `DROP` (with what supersedes it).
+6. None of the above → `KEEP`.
+
+### Edge cases — handle explicitly
+
+**Wrong-audience pages**: Do not `DROP` a page simply because it appears to serve a different audience than the tab's primary audience. Flag it with `FLAG: cross-tab review needed — [audience] content may belong in [tab]` and record it as a `MOVE` candidate. A human must confirm before the page moves or drops.
+
+**Multi-job pages**: Flag for `SPLIT`. In the rationale, name the two or more distinct jobs the page is performing and propose specific page names and purposes for each. Do not split implicitly — name the new pages.
+
+**Old schema frontmatter**: If a page carries deprecated `pageType` values (`landing`, `how_to`, `overview`, `quickstart`, `faq`, `troubleshooting`, `glossary`, `changelog`) in its frontmatter, flag it with `FLAG: schema migration needed (Phase 9)`. Do not `DROP` on the basis of stale frontmatter alone. Do not update frontmatter in AUDIT mode.
+
+**Cross-tab duplicates**: If a page substantially duplicates content that should live in a different tab, flag it with `FLAG: cross-tab duplicate — also appears in [tab]/[path]` and recommend `MOVE` or `MERGE` with the canonical version. Record the other tab explicitly. Do not resolve cross-tab duplicates unilaterally.
+
+### Output format
+
+Produce a per-page decision table followed by a reconsolidation plan summary.
+
+```
+AUDIT: [section group path]
+TAB: [tab name]
+DATE: [YYYY-MM-DD]
+
+PER-PAGE DECISIONS:
+
+| PAGE | DECISION | RATIONALE | TARGET |
+|---|---|---|---|
+| [page path] | KEEP / MOVE / MERGE / SPLIT / REWRITE / DROP | [one sentence] | [path, page names, or "—"] |
+
+FLAGS:
+  - [page path] — FLAG: [flag type] — [detail]
+
+RECONSOLIDATION PLAN:
+  Pages to keep (no action): [count]
+  Pages to move: [list with source → target paths]
+  Pages to merge: [list with source into target]
+  Pages to split: [list with original → [new page 1 name (purpose), new page 2 name (purpose)]]
+  Pages queued for REWRITE (Phase 6): [list with reason]
+  Pages to drop: [list with what supersedes each]
+  Pages flagged for human review: [list with flag type]
+
+  Estimated net page count after reconsolidation: [before count] → [after count]
+```
+
+Write the audit output to: `context-packs/[tab]/[group]-audit.md`
+
+Do not create stub files, do not move files, do not edit content. AUDIT mode produces the plan only. Execution of moves, merges, and drops is a separate human-approved step.

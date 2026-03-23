@@ -1,6 +1,7 @@
 # Veracity — Definitions
 
-**Status**: DRAFT
+**Status**: LOCKED
+**Version**: 2026-03-23
 **Related**: [information-type.md](information-type.md) | [pagePurpose.md](pagePurpose.md)
 
 ---
