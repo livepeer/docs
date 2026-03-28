@@ -11,7 +11,85 @@
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  */
-export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
+import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+
+/**
+ * @component SolidityEmbed
+ * @type integrators
+ * @subniche embeds
+ * @status stable
+ * @description Fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded.
+ * @dataSource fetch(url) — raw GitHub .sol file
+ * @accepts style, className, ...rest
+ * @aiDiscoverability snapshot
+ * @param {string} url - Raw GitHub URL to the .sol file.
+ * @param {React.ReactNode} [title] - Optional title displayed above the code block. Accepts strings or components.
+ * @param {string} [filename] - Filename shown on the CodeBlock header.
+ * @param {string} [maxHeight="500px"] - Max height of the code container.
+ * @param {object} [style={}] - Inline style overrides.
+ * @param {string} [className=""] - CSS class name.
+ */
+export const SolidityEmbed = ({
+  url,
+  title,
+  filename,
+  maxHeight = '500px',
+  className = '',
+  style = {},
+  ...rest
+}) => {
+  const [code, setCode] = useState('')
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText)
+        return res.text()
+      })
+      .then((text) => setCode(text))
+      .catch(() => setError(true))
+  }, [url])
+
+  const styles = {
+    titleBar: {
+      padding: '0.5rem 0',
+      borderBottom: '1px solid var(--border)',
+      fontSize: '0.8rem',
+      color: 'var(--text-secondary)',
+      fontFamily: 'monospace',
+    },
+    scrollContainer: {
+      maxHeight,
+      overflowY: 'auto',
+    },
+    message: {
+      padding: '1rem',
+      color: 'var(--text-secondary)',
+    },
+  }
+
+  return (
+    <LazyLoad height={maxHeight}>
+      <BorderedBox variant="muted">
+        <div className={className} style={style} {...rest}>
+          {title && <div style={styles.titleBar}>{title}</div>}
+          <div style={styles.scrollContainer}>
+            {error && <p style={styles.message}>Failed to load contract source.</p>}
+            {!error && !code && <p style={styles.message}>Loading...</p>}
+            {code && (
+              <CodeBlock language="js" filename={filename}>
+                {code}
+              </CodeBlock>
+            )}
+          </div>
+        </div>
+      </BorderedBox>
+    </LazyLoad>
+  )
+}
+
+export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
   const [html, setHtml] = useState('')
 
   useEffect(() => {
@@ -25,9 +103,15 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
           // Inline code
           .replace(/`([^`]+)`/g, '<code>$1</code>')
           // Images
-          .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" style="max-width:100%" />')
+          .replace(
+            /!\[([^\]]*)\]\(([^)]+)\)/g,
+            '<img alt="$1" src="$2" style="max-width:100%" />'
+          )
           // Links
-          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+          .replace(
+            /\[([^\]]+)\]\(([^)]+)\)/g,
+            '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+          )
           // Headings
           .replace(/^######\s+(.+)$/gm, '<h6>$1</h6>')
           .replace(/^#####\s+(.+)$/gm, '<h5>$1</h5>')
@@ -46,14 +130,26 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
           // Paragraphs (double newline)
           .replace(/\n\n/g, '</p><p>')
           // Single newlines to <br>
-          .replace(/\n/g, '<br />');
-        setHtml('<p>' + converted + '</p>');
+          .replace(/\n/g, '<br />')
+        setHtml('<p>' + converted + '</p>')
       })
   }, [url])
 
-  if (!html) return <div className={className} style={style} {...rest}><p style={{ color: 'var(--text-secondary)' }}>Loading...</p></div>;
+  if (!html)
+    return (
+      <div className={className} style={style} {...rest}>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
+      </div>
+    )
 
-  return <div className={className} style={style} {...rest} dangerouslySetInnerHTML={{ __html: html }} />
+  return (
+    <div
+      className={className}
+      style={style}
+      {...rest}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
 }
 
 /**
@@ -64,7 +160,7 @@ export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
  * @description Embeds a PDF in a framed iframe with caption.
  * @dataSource iframe(src)
  * @accepts {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest
-  * @aiDiscoverability none
+ * @aiDiscoverability none
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {string} src - Asset or embed source used by the component.
  * @param {string} [height='700px'] - Height used by the component.
@@ -77,12 +173,18 @@ export const PdfEmbed = ({
   src,
   height = '700px',
   width = '100%',
-  className = "",
+  className = '',
   style = {},
   ...rest
 }) => (
   <Frame caption={title} className={className} style={style} {...rest}>
-    <iframe src={src} width={width} height={height} frameBorder="0" title={title}></iframe>
+    <iframe
+      src={src}
+      width={width}
+      height={height}
+      frameBorder="0"
+      title={title}
+    ></iframe>
   </Frame>
 )
 
@@ -99,7 +201,7 @@ export const PdfEmbed = ({
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  */
-export const TwitterTimeline = ({ className = "", style = {}, ...rest }) => {
+export const TwitterTimeline = ({ className = '', style = {}, ...rest }) => {
   return (
     <div
       className={className}
