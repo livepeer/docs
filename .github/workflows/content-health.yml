@@ -15,11 +15,11 @@ jobs:
       - run: cd tools && npm ci
 
       - name: Content quality audit
-        run: node operations/scripts/docs-quality-and-freshness-audit.js --scope full
+        run: node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full
         continue-on-error: true
 
       - name: Component usage audit
-        run: node operations/scripts/audit-component-usage.js
+        run: node operations/scripts/audits/components/documentation/audit-component-usage.js
         continue-on-error: true
 
       - name: Component registry validation
