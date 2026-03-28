@@ -1,0 +1,80 @@
+---
+title: Embody Quickstart
+sidebarTitle: Quickstart
+description: >-
+  Deploy an Embody orchestrator node and run your first live AI avatar session.
+keywords:
+  - embody
+  - livepeer
+  - quickstart
+  - avatar
+  - unreal engine
+  - setup
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Embody Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: platform-builder
+status: current
+lastVerified: 2026-03-25
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Info>
+  You need an NVIDIA GPU host and a Payments allowlist entry from the Embody team before starting. Contact the team via the [Embody Discord](https://discord.gg/gVmDMhYm) to get registered.
+</Info>
+<StyledSteps>
+
+  <StyledStep title="Clone and run setup">
+
+    ```bash
+    git clone https://github.com/its-DeFine/Unreal_Vtuber.git
+    cd Unreal_Vtuber
+    sudo ./scripts/embody_cli.sh
+    ```
+
+    The CLI prompts for your payout wallet address (`ORCHESTRATOR_ADDRESS`) and your host's public IP. It writes `.env` and validates your Payments allowlist entry.
+
+  </StyledStep>
+
+  <StyledStep title="Pull the game image">
+
+    ```bash
+    sudo ./scripts/embody_cli.sh rollout
+    ```
+
+    Fetches, decrypts, and loads the encrypted Unreal Engine game image. Allow 10-20 minutes on first run.
+
+    <Warning>
+      If you see `denied` pulling `ghcr.io/.../embody-ue-ps:*`, your address is not yet allowlisted. Run `./scripts/embody_cli.sh allowlists fix` after the team confirms registration.
+    </Warning>
+
+  </StyledStep>
+
+  <StyledStep title="Deploy the avatar cluster">
+
+    ```bash
+    sudo ./scripts/embody_cli.sh cluster deploy --auto --yes --pull missing
+    ```
+
+    `--auto` selects the number of avatar slots based on available GPU VRAM. The full stack starts: Pixel Streaming UE5 instance, health endpoint at `:9090`, signaling server at `:8080`.
+
+  </StyledStep>
+
+  <StyledStep title="Verify and connect">
+
+    Check the node is healthy:
+
+    ```bash
+    curl http://localhost:9090/health
+    curl http://localhost:9090/meta/gpu/stats
+    ```
+
+    Then open [embody.zone](https://embody.zone/) in Chrome or Edge. The matchmaker routes your session to the registered node. To connect directly to your instance, navigate to `http://<your-host-ip>:8080`.
+
+  </StyledStep>
+
+</StyledSteps>

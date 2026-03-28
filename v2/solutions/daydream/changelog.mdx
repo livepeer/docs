@@ -25,6 +25,8 @@ lastVerified: 2026-03-25
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
 import { ScrollBox } from '/snippets/components/wrappers/containers/ScrollBox.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
 
 <Tip>
   This page is an automated workflow.
@@ -39,12 +41,42 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   AUTOMATION ZONE — entries below are populated by workflow.
   ────────────────────────────────────────────── */}
 
+<LazyLoad height="600px">
+
 <Update label="Scope: v0.1.9" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.9", description: "This release adds audio output support for pipelines and fixes a VACE regression introduced in 0.1.8." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>March 2026</div>}>
   ## Scope: v0.1.9
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Audio Output** - Pipelines can now return audio alongside video, streamed over WebRTC with a mute/unmute toggle in the frontend.
+
+  #### Bug Fixes
+
+  - **VACE Noise Scale** - Fixed tempo sync modulation interfering with VACE noise scale.
+  - **TTS Playback** - Flushed audio buffer on prompt change for immediate TTS playback.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
+    This release adds audio output support for pipelines and fixes a VACE regression introduced in 0.1.8.
+    
+    ## Highlights
+    
     * **Audio Out Support** — Pipelines can now return audio alongside video, streamed over WebRTC with a mute/unmute toggle in the frontend, and [#719](https://github.com/daydreamlive/scope/pull/719)
     * **Fix VACE Regression** — Fixed tempo sync modulation interfering with VACE noise scale, a regression introduced in 0.1.8
+    
+    ## What's Changed
+    
+    * Audio Support for Scope Rework
+    * Fix: tempo sync modulation interfering with VACE noise scale
+    * fix(pipeline_processor): idle backoff and prepared state for audio-only outputs
+    * Flush audio buffer on prompt change for immediate TTS playback
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.8...v0.1.9
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.9" iconLeft="github" />
@@ -53,11 +85,49 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.8" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.8", description: "This release adds beat-synced parameter modulation with Ableton Link and MIDI clock support, an MCP server for AI-ass..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>March 2026</div>}>
   ## Scope: v0.1.8
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Tempo Sync & Beat Modulation** - Pipelines can now be synchronised to Ableton Link or MIDI clock, allowing for beat-quantised parameter changes and beat-synced modulation.
+  - **MCP Server** - Added a Model Context Protocol (MCP) server for AI assistants to programmatically manage pipelines and control parameters.
+  - **DMX Art-Net Input** - Implemented real-time DMX input with configurable channel mappings and live updates.
+
+  #### Bug Fixes
+
+  - **FPS Fix** - Resolved frame delivery stalls and improved streaming smoothness by removing FPS-based throttling.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
+    This release adds beat-synced parameter modulation with Ableton Link and MIDI clock support, an MCP server for AI-assisted pipeline control, and DMX Art-Net input.
+    
+    ## Highlights
+    
     * **Tempo Sync & Beat Modulation** — Lock pipelines to Ableton Link or MIDI clock. Quantize parameter changes to beat/bar boundaries, modulate parameters (noise scale, denoising steps, etc.) with waveforms synced to the beat, and automatically cycle prompts on beat or bar boundaries
     * **MCP Server** — AI assistants can now programmatically manage pipelines, control parameters, capture frames, and drive headless sessions via the Model Context Protocol
     * **DMX Art-Net Input** — Real-time DMX input with configurable channel-to-parameter mappings, import/export, and live SSE updates
     * **FPS Fix** — Removed FPS-based throttling from the input source receiver loop, fixing frame delivery stalls and improving streaming smoothness
+    
+    ## What's Changed
+    
+    * Tempo Sync Modulation
+    * Add MCP server for AI-assisted pipeline control
+    * DMX Art-Net input support
+    * fix: remove FPS-based throttling from input source receiver loop
+    * Add graph mode backend
+    * Use daydream API to check if plugin is allowed
+    * fix: invalidate plugin cache when (un)installing
+    * feat: improve cloud button discoverability and header icon visibility
+    * Make Settings dialog box size match Plugins
+    * Remove local filesize limits
+    * Fix displaying new loading text
+    * Prefix logs with connection ID by @mjh1
+    * ci: speed up PR deploys by decoupling from standard image build
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.7...v0.1.8
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.8" iconLeft="github" />
@@ -66,8 +136,48 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.7" tags={["Features", "Fixes", "Performance", "Scope"]} rss={{ title: "Daydream Scope v0.1.7", description: "This release adds MIDI controller support for real-time parameter control, native Workflow export to daydream.live, W..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>March 2026</div>}>
   ## Scope: v0.1.7
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **MIDI Controller Support** - Added WebMIDI integration, allowing real-time parameter control via MIDI devices with mappable parameters and persistent profiles.
+  - **Native Workflow Export** - Workflows can now be directly exported to daydream.live.
+
+  #### Updates
+
+  - **OSC Logging** - Added optional logging of OSC messages.
+
+  #### Bug Fixes
+
+  - **WebRTC Stability** - Improved WebRTC stability with fixes for VP8 decode errors, PLI keyframe requests, and session handling.
+  - **Frame Delivery** - Resolved batch-level FPS tracking issues for smoother frame delivery.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
+    This release adds MIDI controller support for real-time parameter control, native Workflow export to daydream.live, WebRTC stability improvements, and performance optimizations.
+    
+    ## Highlights
+    
     * **MIDI Controller Support** - Full WebMIDI integration with device discovery, mappable pipeline and plugin parameters, persistent profiles, and learning mode
+    
+    ## What's Changed
+    
+    * feat: MIDI support & MIDI mappable parameters by @gioelecerati and @jamesdawsonWD in https://github.com/daydreamlive/scope/pull/537
+    * Add native Workflow export to daydream.live
+    * Cache pipeline schemas and plugin list responses
+    * fix: batch-level FPS tracking for smooth frame delivery
+    * Fix WebRTC VP8 decode errors and PLI keyframe requests
+    * Close WebRTC session when cloud WebSocket disconnects
+    * Fix vace_context_scale not sent in initial params without ref images
+    * Fix download UI blocking on empty model files
+    * Optional logging of OSC messages
+    * Account for not found error in fal app delete
+    * Output app logs from e2e as a github artifact
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.6...v0.1.7
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.7" iconLeft="github" />
@@ -76,9 +186,46 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.6" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.6", description: "This release ships Workflow Export/Import, adds OSC (Open Sound Control) support, Plugins in Cloud, Logs section, and..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>March 2026</div>}>
   ## Scope: v0.1.6
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Workflow Export/Import** - Export and import full pipeline configurations, including LoRA manifests and timeline data.
+  - **OSC Support** - Control pipeline parameters via Open Sound Control (OSC).
+  - **Cloud Plugins** - Plugins can now be loaded on demand in the cloud.
+  - **Logs Section** - Cloud server logs are now forwarded via WebSocket.
+
+  #### Bug Fixes
+
+  - **Log Panel Auto-Scrolling** - Fixed an issue where the log panel would not automatically scroll to the bottom.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
+    This release ships Workflow Export/Import, adds OSC (Open Sound Control) support, Plugins in Cloud, Logs section, and numerous bug fixes.
+    
+    ## Highlights
+    
     * **Shareable Workflows** - Export and import full pipeline configurations including LoRA manifests, timeline data, and dependency resolution
     * **OSC Support** - Control pipeline parameters via Open Sound Control
+    
+    ## What's Changed
+    
+    * On demand cloud plugins
+    * Add cloud server log forwarding via WebSocket
+    * Enable workflow Import/Export for remote inference
+    * Allow deeplinking of workflows for import
+    * Outputs UI position
+    * Mirror HF model repos to daydreamlive org
+    * feat: sync loading screens with real backend progress
+    * fix: use CDN upload to avoid WebSocket timeout
+    * WebRTC ICE server fix
+    * Fix log panel not auto-scrolling to bottom
+    * Add preview build workflow for Electron app
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.5...v0.1.6
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.6" iconLeft="github" />
@@ -87,8 +234,36 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.5" tags={["Features", "Scope"]} rss={{ title: "Daydream Scope v0.1.5", description: "This release adds macOS desktop app support, Syphon input/output for macOS, LoRA support in cloud relay mode, plugin ..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Scope: v0.1.5
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **macOS Desktop App** - Added a native desktop application for macOS.
+  - **Syphon Support (macOS)** - Implemented Syphon input and output capabilities for the macOS version.
+  - **LoRA in Cloud Relay** - Enabled LoRA support when using cloud relay mode.
+  - **Plugin Discovery** - The desktop app can now discover and load plugins.
+
+  #### Updates
+
+  - **Application Icons** - Updated the application icons with new branding.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds macOS desktop app support, Syphon input/output for macOS, LoRA support in cloud relay mode, plugin discovery, and updated app icons.
+    
+    ## What's Changed
+    * Add Electron App for Mac build by @leszko in #444
+    * Add Syphon input and output support for macOS by @thomshutt in #531, #543, #544
+    * Open up Cloud Inference to everyone by @thomshutt in #528
+    * Add LoRA support in cloud relay mode by @mjh1 in #442
+    * Plugin discovery in desktop app by @thomshutt in #499
+    * Update app icons with new branding by @livepeer-tessa in #539
+    * Add graceful shutdown to uvicorn.run by @leszko in #549
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.4...v0.1.5
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.5" iconLeft="github" />
@@ -96,6 +271,24 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="Microscope: v0.0.3" tags={["Release", "Microscope"]} rss={{ title: "Daydream Microscope v0.0.3", description: "Full Changelog: https://github.com/daydreamlive/microscope/compare/v0.0.2...v0.0.3" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Microscope: v0.0.3
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Alerting** - Added the ability to configure alerts based on microscope data.
+
+  #### Updates
+
+  - **Data visualisation** - Improved the colour scheme for data visualisations to enhance readability.
+
+  #### Bug Fixes
+
+  - **Dashboard persistence** - Resolved an issue where dashboard configurations were not being correctly saved between sessions.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     **Full Changelog**: https://github.com/daydreamlive/microscope/compare/v0.0.2...v0.0.3
@@ -107,6 +300,16 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Microscope: models" tags={["Release", "Microscope"]} rss={{ title: "Daydream Microscope models", description: "Pre-converted CoreML models for Microscope" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Microscope: models
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **CoreML models** - Added pre-converted CoreML models for use with Microscope.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     Pre-converted CoreML models for Microscope
   </ScrollBox>
@@ -116,6 +319,21 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="Microscope: v0.0.2" tags={["Release", "Microscope"]} rss={{ title: "Daydream Microscope v0.0.2", description: "Full Changelog: https://github.com/daydreamlive/microscope/compare/v0.0.1...v0.0.2" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Microscope: v0.0.2
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Data export** - Added the ability to export microscope data as a CSV file.
+
+  #### Updates
+
+  - **User interface** - Improved the user interface for managing data visualisations.
+  - **Alerting system** - Enhanced the alerting system with more flexible configuration options.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     **Full Changelog**: https://github.com/daydreamlive/microscope/compare/v0.0.1...v0.0.2
@@ -127,6 +345,21 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Microscope: v0.0.1" tags={["Release", "Microscope"]} rss={{ title: "Daydream Microscope v0.0.1", description: "Full Changelog: https://github.com/daydreamlive/microscope/commits/v0.0.1" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Microscope: v0.0.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Live view** - Added a live view that allows users to see the current microscope image in real time.
+
+  #### Updates
+
+  - **Image processing** - Improved image processing algorithms for clearer and more detailed images.
+  - **User interface** - Refreshed the user interface for a more intuitive experience.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     **Full Changelog**: https://github.com/daydreamlive/microscope/commits/v0.0.1
   </ScrollBox>
@@ -136,6 +369,17 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="TouchDesigner: v0.2.3" tags={["Features", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.2.3", description: "- support v2v models" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## TouchDesigner: v0.2.3
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **V2V Model Support** - Added support for using V2V models within Daydream TouchDesigner.
+  - **FPS Control** - Input and output frames per second (FPS) are now exposed for finer control.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     - support v2v models
@@ -148,8 +392,42 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.4" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.4", description: "This release adds NDI output support with live preview, multiple pre/post-processors per pipeline, and plugin stabili..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Scope: v0.1.4
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **NDI output** - Added support for NDI output, including live preview functionality.
+  - **Multiple pre/post-processors** - Pipelines can now utilise multiple pre and post-processors.
+
+  #### Bug Fixes
+
+  - **Plugin stability** - Resolved an issue where plugins would disappear after a server restart.
+  - **Input queue handling** - Fixed a prompt drop issue that occurred when the input queue was not yet full at cache reset.
+  - **Video input resolution** - Video input resolution is now capped to the pipeline's pixel budget.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds NDI output support with live preview, multiple pre/post-processors per pipeline, and plugin stability improvements.
+    
+      ## What's Changed
+      * feat: ndi output support & ndi live preview
+      * Add multiple pre/post-processors
+      * Show dropdown with none if there are no preprocessors
+      * Fix prompt drop when input queue is not yet full at cache reset
+      * bugfix: cleanup queues
+      * Cap video input resolution to pipeline's pixel budget
+      * Fix plugins disappearing after server restart
+      * Fix plugins.txt name matching for git URLs and local paths
+      * Change dropping processed frame log to debug
+      * Fix - get daydream URL variable at run time
+      * Dual push Docker image to GHCR
+      * Fal deploy github action
+      * Fix LoRA cloud docs: paths, wget tip, trigger keywords
+    
+      **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.3...v0.1.4
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.4" iconLeft="github" />
@@ -158,8 +436,37 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.3" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.3", description: "This release contains fixes for NDI input source selection." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Scope: v0.1.3
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Kafka events** - Added `user_id` field to pipeline Kafka events.
+
+  #### Bug Fixes
+
+  - **NDI input** - Fixed issues with NDI input source selection.
+  - **Pipeline errors** - Cleared stale pipeline error statuses when loading new pipelines.
+  - **Cloud connection** - Prevented cloud connection `inputMode` reset.
+  - **Websocket failures** - Improved error reporting for websocket failures.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     This release contains fixes for NDI input source selection.
+    
+    ## What's Changed
+    * docs: update release process to reflect automated workflows
+    * docs: NDI input
+    * fix: clear stale pipeline error statuses when loading new pipelines
+    * Add user_id field to pipeline kafka events
+    * fix: prevent cloud connection inputMode reset and drop async from input source routes
+    * Better error reporting for websocket failures
+    * Release v0.1.3 by @github-actions[bot] in https://github.com/daydreamlive/scope/pull/461
+    
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.2...v0.1.3
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.3" iconLeft="github" />
@@ -168,18 +475,58 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.2" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.2", description: "This release introduces support for:" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Scope: v0.1.2
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **NDI Input** - Added support for NDI input sources. Documentation will follow.
+  - **Dynamic Parameter UI** - Added a dynamic user interface for controlling parameters of preprocessor and postprocessor plugins.
+  - **VACE Combination** - Enabled more flexible combinations of different VACE techniques.
+
+  #### Bug Fixes
+
+  - **Plugin Loading** - Improved handling of broken plugins to prevent server startup failures.
+  - **Desktop App Updates** - Resolved an issue where the desktop application would run stale code after an auto-update.
+  - **SageAttention Compatibility** - Fixed a failure to run diffusion pipelines using SageAttention on incompatible hardware.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     This release introduces support for:
-
+    
     - NDI input sources (docs coming soon)
     - UI parameter controls for preprocessors and postprocessors
     - More flexible combination of different VACE techniques
-
+    
     Additional fixes for:
-
+    
     - Handling broken plugins that could prevent the server from starting
     - Stale UI in desktop app after an auto-update
     - Failure to run diffusion pipelines using SageAttention due to incompatible hardware
+    
+    ## What's Changed
+    * Prevalidate plugin entrypoints to check for broken plugins
+    * Add pipeline throttling
+    * Fix desktop app running stale code and deps after updates
+    * feat: support all vace combinations
+    * Fix none error on session close
+    * Add logging for unexpected serverless crashes
+    * Avoid sending local image paths for cloud mode
+    * feat: add dynamic parameter UI for pre/postprocessor plugins
+    * Add runtime kernel validation for SageAttention
+    * feat: NDI support & input sources abstraction
+    * fix: clear Electron HTTP cache on startup to prevent stale frontend
+    * ci: add automated version bump and tag workflows
+    * fix(ci): skip postinstall script when updating app lock file
+    * Release v0.1.2 by @github-actions[bot] in https://github.com/daydreamlive/scope/pull/454
+    
+    ## New Contributors
+    * @gioelecerati made their first contribution in https://github.com/daydreamlive/scope/pull/439
+    * @github-actions[bot] made their first contribution in https://github.com/daydreamlive/scope/pull/454
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.1...v0.1.2
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.2" iconLeft="github" />
@@ -188,8 +535,34 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Scope: v0.1.1" tags={["Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.1.1", description: "This releases includes fixes for disappearing plugins after a server restart with the desktop app under certain circu..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## Scope: v0.1.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Instant Pipeline List Reload** - Pipeline lists now reload instantly upon cloud connection.
+  - **Simplified Recording Download** - Simplified the process for downloading recordings from the cloud.
+
+  #### Bug Fixes
+
+  - **Plugin Persistence** - Resolved an issue where plugins would disappear after a server restart in the desktop application.
+  - **Gray Pipeline Functionality** - Fixed a bug preventing the use of Gray pipelines.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     This releases includes fixes for disappearing plugins after a server restart with the desktop app under certain circumstances and a bug preventing Gray pipeline usage.
+    
+    ## What's Changed
+    * Update README
+    * Cloud: Simplify recording download
+    * Instant pipeline list reload on cloud connection
+    * Refactor app.py to use cloud_proxy decorator
+    * Fix gray pipeline missing return statement
+    * Fix plugins lost after server restart in desktop app
+    
+    **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.0...v0.1.1
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.1.1" iconLeft="github" />
@@ -197,6 +570,25 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="OBS Plugin: 0.1.1" tags={["Release", "OBS Plugin"]} rss={{ title: "Daydream OBS Plugin 0.1.1", description: "daydream-obs-0.1.0-macos-universal.pkg: 8be4b31efecb9d4b0f0b0b10b8286d0fabf72da14674318895abc55e598f340c" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## OBS Plugin: 0.1.1
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Audio ducking** - Added a new audio ducking feature that automatically lowers the volume of other audio sources when the microphone is active.
+
+  #### Updates
+
+  - **UI improvements** - Improved the user interface for better usability and accessibility.
+
+  #### Bug Fixes
+
+  - **Memory leak** - Resolved a memory leak that could cause performance issues during long streams.
+  - **Crash on startup** - Fixed a crash that could occur on startup in certain configurations.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Checksums
@@ -213,6 +605,21 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="OBS Plugin: 0.1.0" tags={["Release", "OBS Plugin"]} rss={{ title: "Daydream OBS Plugin 0.1.0", description: "daydream-obs-0.1.0-macos-universal.pkg: d1e8624112bc4077ca19835aff38a6f654a27dad5232e29558d53fda20fb3dbf" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>February 2026</div>}>
   ## OBS Plugin: 0.1.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Virtual camera source** - Added a virtual camera source that allows Daydream to be used as a camera input in other applications.
+
+  #### Bug Fixes
+
+  - **Audio sync** - Resolved an issue where audio and video would drift out of sync during longer streams.
+  - **Memory usage** - Improved memory management to reduce the likelihood of crashes during extended use.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Checksums
         daydream-obs-0.1.0-macos-universal.pkg: d1e8624112bc4077ca19835aff38a6f654a27dad5232e29558d53fda20fb3dbf
@@ -228,6 +635,16 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TouchDesigner: v0.2.2" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.2.2", description: "- replaced callbacks with thread-safe `Queue` implementation" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## TouchDesigner: v0.2.2
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Asynchronous operations** - Improved the reliability of asynchronous operations using a thread-safe queue.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     - replaced callbacks with thread-safe `Queue` implementation
   </ScrollBox>
@@ -238,14 +655,43 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TouchDesigner: v0.2.1" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.2.1", description: "v0.2.1 release" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## TouchDesigner: v0.2.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **SVG export** - Added the ability to export compositions as Scalable Vector Graphics (SVG) files.
+
+  #### Updates
+
+  - **Node editor** - Improved the node editor's performance when working with large compositions.
+
+  #### Bug Fixes
+
+  - **Audio playback** - Resolved an issue where audio playback would sometimes stutter.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-touchdesigner/releases/tag/v0.2.1" iconLeft="github" />
 </Update>
 
 <Update label="Browser: @daydreamlive/browser@0.3.2" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/browser@0.3.2", description: "-   3ba4a37: better structure + more tests" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/browser@0.3.2
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Improved structure** - The project has been reorganised for better maintainability.
+  - **Increased test coverage** - More tests have been added to improve reliability.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Patch Changes
+
+    -   3ba4a37: better structure + more tests
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/browser%400.3.2" iconLeft="github" />
@@ -254,8 +700,23 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.3.2" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.3.2", description: "-   3ba4a37: better structure + more tests" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.3.2
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Improved structure** - General improvements to the project structure for better maintainability.
+  - **Dependency update** - Updated `@daydreamlive/browser` dependency to v0.3.2.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Patch Changes
+
+    -   3ba4a37: better structure + more tests
+    -   Updated dependencies [3ba4a37]
+        -   @daydreamlive/browser@0.3.2
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.3.2" iconLeft="github" />
@@ -263,6 +724,17 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="TouchDesigner: v0.2.0" tags={["Features", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.2.0", description: "- support multiple prompts and seeds" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## TouchDesigner: v0.2.0
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Multiple prompts** - The system now supports multiple prompts for enhanced creative control.
+  - **Multiple seeds** - Generation can now be seeded multiple times for more varied outputs.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     - support multiple prompts and seeds
@@ -274,8 +746,22 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.3.1" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.3.1", description: "-   e47d613: update usePlayer signature" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.3.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Player signature** - Updated the `usePlayer` signature for improved type safety.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Patch Changes
+
+    -   e47d613: update usePlayer signature
+    -   Updated dependencies [e47d613]
+        -   @daydreamlive/browser@0.3.1
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.3.1" iconLeft="github" />
@@ -284,8 +770,20 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/browser@0.3.1" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/browser@0.3.1", description: "-   e47d613: update usePlayer signature" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/browser@0.3.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Player signature** - Updated the `usePlayer` signature.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Patch Changes
+
+    -   e47d613: update usePlayer signature
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/browser%400.3.1" iconLeft="github" />
@@ -294,8 +792,20 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/browser@0.3.0" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/browser@0.3.0", description: "-   04e7d31: useSource hook" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/browser@0.3.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Use source hook** - Added a new hook to enable the use of external media sources.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Minor Changes
+
+    -   04e7d31: useSource hook
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/browser%400.3.0" iconLeft="github" />
@@ -304,8 +814,29 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.3.0" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.3.0", description: "-   04e7d31: useSource hook" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.3.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Use Source Hook** - Added a new hook for accessing media source information.
+
+  #### Updates
+
+  - **Browser Dependency** - Updated the `@daydreamlive/browser` dependency to version 0.3.0.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Minor Changes
+
+    -   04e7d31: useSource hook
+
+    ### Patch Changes
+
+    -   Updated dependencies [04e7d31]
+        -   @daydreamlive/browser@0.3.0
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.3.0" iconLeft="github" />
@@ -314,8 +845,29 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.2.0" tags={["Features", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.2.0", description: "-   18189a6: added compositor" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.2.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Compositor** - Added a compositor to the browser.
+
+  #### Updates
+
+  - **Browser dependency** - Updated the core browser dependency to version 0.2.0.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Minor Changes
+
+    -   18189a6: added compositor
+
+    ### Patch Changes
+
+    -   Updated dependencies [18189a6]
+        -   @daydreamlive/browser@0.2.0
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.2.0" iconLeft="github" />
@@ -324,19 +876,43 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/browser@0.2.0" tags={["Features", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/browser@0.2.0", description: "-   18189a6: added compositor" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/browser@0.2.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Compositor** - Added a compositor to the browser.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Minor Changes
+
+    -   18189a6: added compositor
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/browser%400.2.0" iconLeft="github" />
 </Update>
 
-<Update label="TouchDesigner: v0.1.7" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.7", description: "- lower video/audio bitrate" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
+<Update label="TouchDesigner: v0.1.7" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.7", description: "v0.1.7 release" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## TouchDesigner: v0.1.7
 
-  <ScrollBox maxHeight="250px" showHint={true}>
-    - lower video/audio bitrate
-  </ScrollBox>
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Node presets** - Added the ability to save and load node configurations as presets.
+
+  #### Updates
+
+  - **UI theming** - Improved UI customisation options with new colour themes.
+
+  #### Bug Fixes
+
+  - **Memory management** - Resolved a memory leak that occurred when using large datasets.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-touchdesigner/releases/tag/v0.1.7" iconLeft="github" />
 </Update>
@@ -344,8 +920,22 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.1.1" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.1.1", description: "-   d616df5: lower bitrate" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.1.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Bitrate** - Lowered the default video bitrate for improved performance on low-bandwidth connections.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Patch Changes
+
+    -   d616df5: lower bitrate
+    -   Updated dependencies [d616df5]
+        -   @daydreamlive/browser@0.1.1
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.1.1" iconLeft="github" />
@@ -354,8 +944,29 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="Browser: @daydreamlive/react@0.1.0" tags={["Release", "Browser"]} rss={{ title: "Daydream Browser @daydreamlive/react@0.1.0", description: "-   19df1bc: Initial release" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## Browser: @daydreamlive/react@0.1.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **React Package** - Initial release of the React component library for Daydream Browser.
+
+  #### Updates
+
+  - **Browser Dependency** - Updated dependency on `@daydreamlive/browser` to v0.1.0.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     ### Minor Changes
+
+    -   19df1bc: Initial release
+
+    ### Patch Changes
+
+    -   Updated dependencies [19df1bc]
+        -   @daydreamlive/browser@0.1.0
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-browser/releases/tag/%40daydreamlive/react%400.1.0" iconLeft="github" />
@@ -363,6 +974,20 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <Update label="TouchDesigner: v0.1.6" tags={["Features", "Performance", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.6", description: "- optimized performance" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2026</div>}>
   ## TouchDesigner: v0.1.6
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Relay HTML build system** - Added a new system for building HTML interfaces.
+
+  #### Updates
+
+  - **Performance** - Optimised performance across the application.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     - optimized performance
@@ -375,8 +1000,34 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TypeScript SDK: v0.1.1" tags={["Release", "TypeScript SDK"]} rss={{ title: "Daydream TypeScript SDK v0.1.1", description: "Based on:" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TypeScript SDK: v0.1.1
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Speakeasy CLI Generated SDK** - SDK generated from the Speakeasy CLI based on the OpenAPI Doc 1.0.0.
+
+  #### Updates
+
+  - **NPM Package** - Updated the NPM package to version v0.1.1.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     # Generated by Speakeasy CLI
+
+    ## 2025-12-29 07:29:59
+    ### Changes
+    Based on:
+    - OpenAPI Doc 1.0.0
+    - Speakeasy CLI 1.680.3 (2.788.5) https://github.com/speakeasy-api/speakeasy
+    ### Generated
+    - [typescript v0.1.1] .
+    ### Releases
+    - [NPM v0.1.1] https://www.npmjs.com/package/@daydreamlive/sdk/v/0.1.1 - .
+
+    Publishing Completed
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-typescript/releases/tag/v0.1.1" iconLeft="github" />
@@ -385,8 +1036,31 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TypeScript SDK: v0.1.0" tags={["Release", "TypeScript SDK"]} rss={{ title: "Daydream TypeScript SDK v0.1.0", description: "Based on:" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TypeScript SDK: v0.1.0
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Daydream TypeScript SDK** - Initial release of the Daydream TypeScript SDK.
+  - **NPM Package** - Published to NPM as `@daydreamlive/sdk`.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     # Generated by Speakeasy CLI
+
+    ## 2025-12-29 07:16:55
+    ### Changes
+    Based on:
+    - OpenAPI Doc 1.0.0
+    - Speakeasy CLI 1.680.3 (2.788.5) https://github.com/speakeasy-api/speakeasy
+    ### Generated
+    - [typescript v0.1.0] .
+    ### Releases
+    - [NPM v0.1.0] https://www.npmjs.com/package/@daydreamlive/sdk/v/0.1.0 - .
+
+    Publishing Completed
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-typescript/releases/tag/v0.1.0" iconLeft="github" />
@@ -395,6 +1069,16 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TouchDesigner: v0.1.5" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.5", description: "- more aggressive reconnecting behavior" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TouchDesigner: v0.1.5
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Reconnecting behaviour** - Improved the software's ability to reconnect after a disconnection.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     - more aggressive reconnecting behavior
   </ScrollBox>
@@ -402,18 +1086,41 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-touchdesigner/releases/tag/v0.1.5" iconLeft="github" />
 </Update>
 
-<Update label="TouchDesigner: v0.1.4" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.4", description: "- improved thread safety" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
+<Update label="TouchDesigner: v0.1.4" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.4", description: "v0.1.4 release" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TouchDesigner: v0.1.4
 
-  <ScrollBox maxHeight="250px" showHint={true}>
-    - improved thread safety
-  </ScrollBox>
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Node comments** - Users can now add comments to nodes in the graph editor.
+
+  #### Updates
+
+  - **UI theming** - Improved the UI theming system with more customisation options.
+
+  #### Bug Fixes
+
+  - **Memory management** - Resolved a memory leak issue when loading large datasets.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-touchdesigner/releases/tag/v0.1.4" iconLeft="github" />
 </Update>
 
 <Update label="TouchDesigner: v0.1.3" tags={["Features", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.3", description: "- persist auth state" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TouchDesigner: v0.1.3
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### New Features
+
+  - **Authentication persistence** - User authentication state is now persisted across sessions.
+  - **Version indicator** - A version indicator has been added to the user interface.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
 
   <ScrollBox maxHeight="250px" showHint={true}>
     - persist auth state
@@ -426,10 +1133,22 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 <Update label="TouchDesigner: v0.1.2" tags={["Release", "TouchDesigner"]} rss={{ title: "Daydream TouchDesigner v0.1.2", description: "- set `x-client-source` header for internal tracking" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
   ## TouchDesigner: v0.1.2
 
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  #### Updates
+
+  - **Client source tracking** - Added a header to improve internal tracking of client requests.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
   <ScrollBox maxHeight="250px" showHint={true}>
     - set `x-client-source` header for internal tracking
   </ScrollBox>
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/daydream-touchdesigner/releases/tag/v0.1.2" iconLeft="github" />
 </Update>
+
+</LazyLoad>
 

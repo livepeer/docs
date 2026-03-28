@@ -49,7 +49,9 @@ import { streamplaceSocials } from "./data/socials.jsx"
   This page is maintained by the Streamplace Team. Help & support available via the [Streamplace Discord]('https://discord.com/invite/EdtZv4UTMU').
 </Info>
 
-<iframe src="https://stream.place" width="100%" height="600px" frameBorder="0" allowFullScreen title="Streamplace — live streams" />
+<Frame>
+    <iframe src="https://stream.place" width="100%" height="700px" frameBorder="0" allowFullScreen title="Streamplace — live streams" />
+</Frame>
 
 {/* explains the product */}
 Streamplace is a **public-goods, open-source decentralised video layer** for social networks, livestreaming platforms, and Web3-native apps. It is a Livepeer Special Purpose Entity (SPE).
@@ -70,71 +72,6 @@ Streamplace routes video ingest and processing through Livepeer's decentralised 
 <YouTubeVideo embedUrl="https://www.youtube.com/embed/-xjd_iaULT0?start=63" title="Streamplace: Eli Mallon, founder"/>
 
 <CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
-
-## Get Started
-Get started with [Stream.place](https://stream.place) by visiting the website and starting a live stream!
-
-<StyledSteps>
-
-  <StyledStep title="Install the Streamplace node">
-
-    ```bash
-    curl -s https://get.stream.place/install | bash
-    ```
-
-    Installs the Streamplace node binary and CLI. The node handles ingest, segmentation, provenance signing, and transcoding dispatch to the Livepeer network.
-
-  </StyledStep>
-
-  <StyledStep title="Start a livestream">
-
-    ```bash
-    streamplace stream start --source webcam
-    ```
-
-    The node accepts WHIP/WHEP, RTMP, or browser WebRTC as input. Swap `--source webcam` for `--source rtmp` to ingest from an existing RTMP feed.
-
-  </StyledStep>
-
-  <StyledStep title="Configure metadata and rights">
-
-    ```json
-    {
-      "contentRights": "CC-BY-4.0",
-      "contentWarnings": ["flashing lights"],
-      "distributionPolicy": {
-        "retainSegments": true,
-        "allowSyndication": true
-      }
-    }
-    ```
-
-    Metadata is embedded into every 1-second MP4 segment alongside a C2PA manifest and Ethereum signature. Rights and distribution policy travel with the content through transcoding and playback.
-
-  </StyledStep>
-
-  <StyledStep title="Integrate with the SDK">
-
-    ```ts
-    import { StreamplaceClient } from '@streamplace/sdk'
-
-    const sp = new StreamplaceClient()
-    const stream = await sp.createStream()
-    ```
-
-    Use `StreamplacePlayer` to surface provenance in your UI:
-
-    ```jsx
-    <StreamplacePlayer src={stream.manifestUrl} showProvenance={true} />
-    ```
-
-    The player exposes C2PA manifests, Ethereum signatures, and rights metadata to viewers automatically.
-
-  </StyledStep>
-
-</StyledSteps>
-
-<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
 
 ## Try Streamplace
 {/*
@@ -161,6 +98,71 @@ Get started with [Stream.place](https://stream.place) by visiting the website an
 
 <CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
 
+## Get Started
+Get started with [Stream.place](https://stream.place) by visiting the website and starting a live stream!
+
+<StyledSteps>
+
+  <StyledStep title="Install the Streamplace node">
+
+    ```bash icon="terminal"
+    curl -s https://get.stream.place/install | bash
+    ```
+
+    Installs the Streamplace node binary and CLI. The node handles ingest, segmentation, provenance signing, and transcoding dispatch to the Livepeer network.
+
+  </StyledStep>
+
+  <StyledStep title="Start a livestream">
+
+    ```bash icon="terminal"
+    streamplace stream start --source webcam
+    ```
+
+    The node accepts WHIP/WHEP, RTMP, or browser WebRTC as input. Swap `--source webcam` for `--source rtmp` to ingest from an existing RTMP feed.
+
+  </StyledStep>
+
+  <StyledStep title="Configure metadata and rights">
+
+    ```json icon="terminal"
+    {
+      "contentRights": "CC-BY-4.0",
+      "contentWarnings": ["flashing lights"],
+      "distributionPolicy": {
+        "retainSegments": true,
+        "allowSyndication": true
+      }
+    }
+    ```
+
+    Metadata is embedded into every 1-second MP4 segment alongside a C2PA manifest and Ethereum signature. Rights and distribution policy travel with the content through transcoding and playback.
+
+  </StyledStep>
+
+  <StyledStep title="Integrate with the SDK">
+
+    ```ts icon="terminal"
+    import { StreamplaceClient } from '@streamplace/sdk'
+
+    const sp = new StreamplaceClient()
+    const stream = await sp.createStream()
+    ```
+
+    Use `StreamplacePlayer` to surface provenance in your UI:
+
+    ```jsx icon="terminal"
+    <StreamplacePlayer src={stream.manifestUrl} showProvenance={true} />
+    ```
+
+    The player exposes C2PA manifests, Ethereum signatures, and rights metadata to viewers automatically.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
 ## Streamplace Resources
 <CenteredContainer maxWidth="fit-content">
   <BorderedBox style={{margin: "0 0 1rem 0", padding: "0.5rem 1rem 1rem 1rem"}} variant="accent">
@@ -178,8 +180,11 @@ Get started with [Stream.place](https://stream.place) by visiting the website an
   <Card title={<CustomCardTitle title="Streamplace docs" icon="newspaper"/>} href="https://stream.place/docs/" arrow>
     Full documentation: node setup, API, and integration guides.
   </Card>
+  <Card title={<CustomCardTitle title="GitLab" icon="gitlab"/>} href="https://git.stream.place/streamplace/streamplace" arrow>
+    Primary source: open-source Streamplace node and SDK.
+  </Card>
   <Card title={<CustomCardTitle title="GitHub" icon="github"/>} href="https://github.com/streamplace/streamplace" arrow>
-    Open-source Streamplace node and SDK.
+    GitHub mirror of the Streamplace repository.
   </Card>
   <Card title={<CustomCardTitle title="Architecture" icon="sitemap"/>} href="/solutions/streamplace/introduction/streamplace-architecture" arrow>
     How Streamplace's decentralised video stack is structured.
