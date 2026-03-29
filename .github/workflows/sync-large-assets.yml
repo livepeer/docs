@@ -20,6 +20,11 @@ on:
         description: "File size threshold in MB (default 1)"
         required: false
         default: "1"
+      dry_run:
+        description: "Dry run — report what would be synced without pushing"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: write
@@ -49,12 +54,14 @@ jobs:
           else
             echo "threshold=${{ env.THRESHOLD_MB }}" >> "$GITHUB_OUTPUT"
           fi
+          echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
 
       - name: Sync large assets to target branch
         shell: bash
         env:
           RESOLVED_TARGET: ${{ steps.config.outputs.target }}
           RESOLVED_THRESHOLD: ${{ steps.config.outputs.threshold }}
+          DRY_RUN: ${{ steps.config.outputs.dry_run }}
         run: |
           set -euo pipefail
 
@@ -152,6 +159,14 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No large-asset changes to commit."
+            exit 0
+          fi
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "::notice::DRY RUN — would sync $file_count assets to $TARGET_BRANCH"
+            echo "::group::Files that would be committed"
+            git diff --cached --stat
+            echo "::endgroup::"
             exit 0
           fi
 
