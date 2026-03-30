@@ -11,6 +11,8 @@
  */
 const https = require("https");
 const fs = require("fs");
+const path = require("path");
+const { escapeForJsx } = require(path.resolve(__dirname, "../../operations/scripts/config/mdx-sanitise"));
 
 // Fetch JSON from URL
 function fetchJSON(url) {

@@ -16,11 +16,10 @@
 
 /**
  * @component PageHeader
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Page-level header with icon, title, and subtitle for frame-mode pages.
- * @accepts {any} title, {any} subtitle, {any} description, {string} children, {any} titleColor, {any} subtitleColor, {any} descriptionColor, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} subtitle - subtitle prop.
@@ -104,11 +103,10 @@ const PageHeader = ({
 
 /**
  * @component H1
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {any} children, {any} icon, {number} iconSize, {any} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} icon - icon prop.
@@ -164,11 +162,10 @@ const H1 = ({
 
 /**
  * @component H2
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -224,11 +221,10 @@ const H2 = ({
 
 /**
  * @component H3
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -284,11 +280,10 @@ const H3 = ({
 
 /**
  * @component H4
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -344,11 +339,10 @@ const H4 = ({
 
 /**
  * @component H5
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -404,11 +398,10 @@ const H5 = ({
 
 /**
  * @component H6
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The heading text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -464,11 +457,10 @@ const H6 = ({
 
 /**
  * @component P
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Paragraph override with optional icon prefix for frame-mode pages.
- * @accepts {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} children - The paragraph text
  * @param {string} icon - Optional icon name or path to theme-aware SVG
@@ -521,11 +513,10 @@ const P = ({
 
 /**
  * @component Divider
- * @type scaffolding
- * @subniche frame-mode
+ * @category scaffolding
+ * @subcategory frame-mode
  * @status stable
  * @description Horizontal rule divider for frame-mode pages.
- * @accepts {string} color, {string} margin, {number} opacity, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} color - Custom color for the divider (optional, defaults to theme border color)
  * @param {string} [margin="1.5rem 0"] - Vertical margin (default: "1.5rem 0")

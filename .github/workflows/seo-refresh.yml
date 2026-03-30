@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_BRANCH }}
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -21,7 +23,7 @@ jobs:
       - name: Generate SEO metadata
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
-            node tools/scripts/snippets/generate-seo.js --dry-run
+            node operations/scripts/remediators/content/seo/generate-seo.js --dry-run
           else
-            node tools/scripts/snippets/generate-seo.js
+            node operations/scripts/remediators/content/seo/generate-seo.js
           fi

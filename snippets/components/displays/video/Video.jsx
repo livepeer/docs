@@ -1,10 +1,9 @@
 /**
  * @component TitledVideo
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.
- * @accepts className, style, ...rest
   * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} title - title prop.
@@ -113,11 +112,10 @@ export const TitledVideo = ({
 
 /**
  * @component ShowcaseVideo
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description Full-width video with negative-margin breakout and rounded frame.
- * @accepts className, style, ...rest
   * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {any} title - title prop.
@@ -148,11 +146,10 @@ export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}
 
 /**
  * @component Video
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description Basic framed video player with caption support.
- * @accepts children, className, style, ...rest
   * @aiDiscoverability none
  * @param {any} src - src prop.
  * @param {string} [title=""] - title prop.
@@ -244,25 +241,7 @@ export const Video = ({
   };
 
   const captionContent = buildCaption();
-  const showArrow = !!href || arrow;
-
-  const frameEl = (
-    <Frame className={className} style={style} {...(captionContent ? { caption: captionContent } : {})} {...rest}>
-      <video
-        controls={controls}
-        autoPlay={autoPlay}
-        loop={loop}
-        muted={muted}
-        playsInline
-        className="w-full aspect-video rounded-xl"
-        src={src}
-        title={title || author || "Video"}
-      />
-      {children}
-    </Frame>
-  );
-
-  if (!showArrow && !href) return frameEl;
+  const [linkHovered, setLinkHovered] = useState(false);
 
   return (
     <div style={{ position: "relative", display: "block" }}>
@@ -271,33 +250,53 @@ export const Video = ({
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={title || author || "Video link"}
-          style={{ position: "absolute", inset: "0", zIndex: "1", display: "block", textDecoration: "none", border: "none", outline: "none", boxShadow: "none" }}
+          aria-label={title || author || "External link"}
+          onMouseEnter={() => setLinkHovered(true)}
+          onMouseLeave={() => setLinkHovered(false)}
+          style={{
+            position: "absolute",
+            top: "0.5rem",
+            right: "0.75rem",
+            zIndex: "2",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "6px",
+            background: linkHovered ? "var(--border)" : "transparent",
+            border: `1.5px solid ${linkHovered ? "var(--accent)" : "var(--hero-text)"}`,
+            borderRadius: "6px",
+            textDecoration: "none",
+            lineHeight: 0,
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <Icon icon="arrow-up-right" size={14} color={linkHovered ? "var(--accent)" : "var(--hero-text)"} />
+        </a>
+      )}
+      <Frame className={className} style={style} {...(captionContent ? { caption: captionContent } : {})} {...rest}>
+        <video
+          controls={controls}
+          autoPlay={autoPlay}
+          loop={loop}
+          muted={muted}
+          playsInline
+          className="w-full aspect-video rounded-xl"
+          src={src}
+          title={title || author || "Video"}
         />
-      )}
-      {showArrow && (
-        <div style={{
-          position: "absolute",
-          top: "0.5rem",
-          right: "0.5rem",
-          zIndex: "2",
-          pointerEvents: "none",
-        }}>
-          <Icon icon="arrow-up-right" size={14} color="var(--lp-color-on-accent)" />
-        </div>
-      )}
-      {frameEl}
+        {children}
+      </Frame>
     </div>
   );
 };
 
 /**
  * @component YouTubeVideo
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description YouTube embed via responsive iframe with aspect-ratio preservation.
- * @accepts className, style, ...rest
   * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title=""] - title prop.
@@ -379,11 +378,10 @@ export const YouTubeVideo = ({
 
 /**
  * @component YouTubeVideoData
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description Renders a columned grid of YouTubeVideo embeds from an items array.
- * @accepts none
   * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -427,11 +425,10 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
 
 /**
  * @component LinkedInEmbed
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description LinkedIn post embed via responsive iframe with compact layout.
- * @accepts none
   * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {string} [title="Embedded post"] - title prop.
@@ -475,11 +472,10 @@ export const LinkedInEmbed = ({
 
 /**
  * @component YouTubeVideoDownload
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description YouTube embed with download hint text below.
- * @accepts className, style, ...rest
   * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.
@@ -537,11 +533,10 @@ export const YouTubeVideoDownload = ({
 
 /**
  * @component CardVideo
- * @type displays
- * @subniche video
+ * @category displays
+ * @subcategory video
  * @status stable
  * @description YouTube embed inside a Card wrapper with aspect-ratio iframe.
- * @accepts style, className, ...rest
   * @aiDiscoverability none
  * @param {any} embedUrl - embed Url prop.
  * @param {any} title - title prop.

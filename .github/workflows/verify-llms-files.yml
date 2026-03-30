@@ -3,10 +3,11 @@ name: Verify llms.txt Files
 on:
   push:
     branches:
-      - main
+      - docs-v2
   pull_request:
     branches:
-      - main
+      - docs-v2
+  workflow_dispatch:
 
 jobs:
   verify-llms-files:
@@ -25,4 +26,4 @@ jobs:
         run: cd tools && npm install
 
       - name: Verify llms outputs
-        run: node tools/scripts/generate-llms-files.js --check
+        run: node operations/scripts/generate-llms-files.js --check

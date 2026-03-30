@@ -1,10 +1,9 @@
 /**
  * @component ScrollBox
- * @type wrappers
- * @subniche containers
+ * @category wrappers
+ * @subcategory containers
  * @status stable
  * @description Scrollable container with max-height, overflow hint, and accessible region role.
- * @accepts children, className, ...rest
  * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {number} [maxHeight=300] - max Height prop.

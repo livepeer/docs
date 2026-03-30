@@ -1,10 +1,9 @@
 /**
  * @component LivepeerSVG
- * @type elements
- * @subniche icons
+ * @category elements
+ * @subcategory icons
  * @status stable
  * @description Inline Livepeer logo as SVG with currentColor fill.
- * @accepts ...props
  * @aiDiscoverability none
  * @param {number} [size=24] - size prop.
  * @param {any} props - props prop.
@@ -34,11 +33,10 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 
 /**
  * @component LivepeerIcon
- * @type elements
- * @subniche icons
+ * @category elements
+ * @subcategory icons
  * @status stable
  * @description Theme-aware Livepeer icon with CSS custom property colour adaptation.
- * @accepts ...props
  * @aiDiscoverability none
  * @param {number} [size=16] - size prop.
  * @param {any} color - color prop.
@@ -48,11 +46,10 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
  */
 /**
  * @component ArbitrumSVG
- * @type elements
- * @subniche icons
+ * @category elements
+ * @subcategory icons
  * @status stable
  * @description Inline Arbitrum logo as SVG with currentColor fill.
- * @accepts ...props
  * @aiDiscoverability none
  * @param {number} [size=24] - size prop.
  * @param {any} props - props prop.
@@ -81,11 +78,10 @@ export const ArbitrumSVG = ({ size = 24, ...props }) => {
 
 /**
  * @component ArbitrumIcon
- * @type elements
- * @subniche icons
+ * @category elements
+ * @subcategory icons
  * @status stable
  * @description Arbitrum logo rendered identically to Mintlify FA icons using mask-image technique.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {number} [size=16] - Icon size in pixels.
  * @param {string} [color] - Override colour. Accepts CSS values including var() custom properties. Default is theme-aware (dark in light mode, light in dark mode).
@@ -123,11 +119,10 @@ export const ArbitrumIcon = ({
 
 /**
  * @component LivepeerIcon
- * @type elements
- * @subniche icons
+ * @category elements
+ * @subcategory icons
  * @status stable
  * @description Livepeer logo rendered identically to Mintlify FA icons using mask-image technique.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {number} [size=16] - Icon size in pixels.
  * @param {string} [color] - Override colour. Accepts CSS values including var() custom properties. Default is theme-aware (dark in light mode, light in dark mode).

@@ -1,10 +1,9 @@
 /**
  * @component ValueResponseField
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description API response field with name, type, and value display.
- * @accepts children, className, style, ...props
   * @aiDiscoverability none
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {string} [post=null] - Post used by the component.
@@ -71,11 +70,10 @@ const expandableCode = () => {
 
 /**
  * @component CustomResponseField
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description Custom-styled API response field with configurable margin.
- * @accepts className, style, ...props
   * @aiDiscoverability none
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
@@ -100,11 +98,10 @@ const CustomResponseField = ({ description, className = "", style = {}, ...props
 
 /**
  * @component ResponseFieldExpandable
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description Expandable response field that reveals nested content on click.
- * @accepts className, style, ...props
   * @aiDiscoverability none
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Expandable.
@@ -128,11 +125,10 @@ const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...p
 
 /**
  * @component ResponseFieldAccordion
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description Accordion-style response field with collapsible detail section.
- * @accepts className, style, ...props
   * @aiDiscoverability none
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to Accordion.
@@ -158,11 +154,10 @@ const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...pr
 // Wrapper that chooses accordion or expandable layout at runtime.
 /**
  * @component ResponseFieldGroup
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description Container for grouping multiple response fields with consistent spacing.
- * @accepts className, style, ...props
   * @aiDiscoverability none
  * @param {string} [component="accordion"] - Component used by the component.
  * @param {object} [fields={}] - Fields used by the component.
@@ -199,11 +194,10 @@ const ResponseFieldGroup = ({
 
 /**
  * @component FunctionField
- * @type displays
- * @subniche response-fields
+ * @category displays
+ * @subcategory response-fields
  * @status stable
  * @description Solidity function signature field with typed parameter pairs and optional return type.
- * @accepts children, className, style, ...rest
  * @aiDiscoverability none
  * @param {string} name - Function name.
  * @param {string[]} [params=[]] - Parameter strings in "type name" format (e.g. "bytes32 _id").

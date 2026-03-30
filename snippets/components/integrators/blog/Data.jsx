@@ -58,12 +58,11 @@ function sanitiseHTML(html) {
 
 /**
  * @component BlogCard
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Blog post card with scrollable content, metadata, and CTA.
  * @dataSource automation/blog
- * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} content - content prop.
@@ -257,12 +256,11 @@ export const BlogCard = ({
 
 /**
  * @component CardBlogDataLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Grid layout rendering BlogCards from an items array.
  * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -297,12 +295,11 @@ export const CardBlogDataLayout = ({
 
 /**
  * @component ColumnsBlogCardLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Multi-column BlogCard layout using Mintlify Columns.
  * @dataSource automation/blog
- * @accepts {Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {number} [cols=2] - cols prop.
@@ -339,12 +336,11 @@ export const ColumnsBlogCardLayout = ({
 
 /**
  * @component RssBlogCard
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Blog card for RSS feed data. Matches BlogCard visual quality with icon title, metadata row, scrollable plain text excerpt, and scroll hint. Use for non-Ghost blog sources (Daydream, Streamplace, etc.).
  * @dataSource automation/rss
- * @accepts {string} title, {string} href, {string} author, {string} excerpt, {string} datePosted, {string} img, {string} icon, {string} cta, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  */
 export const RssBlogCard = ({
@@ -472,12 +468,11 @@ export const RssBlogCard = ({
 
 /**
  * @component RssBlogCardLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources).
  * @dataSource automation/rss
- * @accepts {Array} items, {number} cols, {number} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  */
 export const RssBlogCardLayout = ({
@@ -509,12 +504,11 @@ export const RssBlogCardLayout = ({
 
 /**
  * @component BlogDataLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Single-column BlogCard stack.
  * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -540,12 +534,11 @@ export const BlogDataLayout = ({
 
 /**
  * @component PostCard
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Post card with gradient header, scrollable content, and metadata.
  * @dataSource automation/blog
- * @accepts {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {any} title - title prop.
  * @param {any} content - content prop.
@@ -701,12 +694,11 @@ export const PostCard = ({
 
 /**
  * @component CardColumnsPostLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Multi-column PostCard layout.
  * @dataSource automation/blog
- * @accepts {number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {number} [cols=2] - cols prop.
  * @param {Array} [items=[]] - items prop.
@@ -737,12 +729,11 @@ export const CardColumnsPostLayout = ({
 
 /**
  * @component CardInCardLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description PostCards rendered inside Card wrappers.
  * @dataSource automation/blog
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -772,12 +763,11 @@ export const CardInCardLayout = ({
 
 /**
  * @component ForumLatestLayout
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Latest forum topics with banner image and topic cards.
  * @dataSource automation/forum
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -818,12 +808,11 @@ export const ForumLatestLayout = ({
 
 /**
  * @component DiscordAnnouncements
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Discord announcement feed with parsed markdown content. Sanitised HTML.
  * @dataSource automation/discord
- * @accepts {Array} items, {any} limit, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {Array} [items=[]] - items prop.
  * @param {any} limit - limit prop.
@@ -974,12 +963,11 @@ export const DiscordAnnouncements = ({
 
 /**
  * @component LumaEvents
- * @type integrators
- * @subniche blog
+ * @category integrators
+ * @subcategory blog
  * @status stable
  * @description Upcoming/past event cards from Luma calendar data.
  * @dataSource Luma API
- * @accepts {any} data, {any} limit, {string} type, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {any} data - data prop.
  * @param {any} limit - limit prop.

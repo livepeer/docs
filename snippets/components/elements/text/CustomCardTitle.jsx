@@ -1,10 +1,9 @@
 /**
  * @component CustomCardTitle
- * @type elements
- * @subniche text
+ * @category elements
+ * @subcategory text
  * @status stable
  * @description Title row with icon and text, using flexbox alignment. Accepts Font Awesome strings or React components as icon. Variant prop controls styling context.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string|React.ReactNode} icon - Font Awesome icon name (string) or React component (e.g. ArbitrumIcon).
  * @param {React.ReactNode} title - Title text rendered by the component.
@@ -17,6 +16,35 @@
  * <CustomCardTitle icon="sparkles" title="Example" />
  * <CustomCardTitle variant="accordion" icon={<ArbitrumIcon />} title="Controller" />
  */
+/**
+ * @component AccordionTitle
+ * @category elements
+ * @subcategory text
+ * @status stable
+ * @description Accordion title with icon, name, and optional description subtitle. Wraps CustomCardTitle with an italic description line underneath.
+ * @aiDiscoverability none
+ * @param {string|React.ReactNode} icon - Font Awesome icon name (string) or React component.
+ * @param {React.ReactNode} title - Title text.
+ * @param {React.ReactNode} [description] - Optional subtitle shown below the title in italic.
+ * @param {string} [descriptionColor="var(--text)"] - Description text colour.
+ * @param {string} [descriptionSize="0.85em"] - Description font size.
+ * @param {object} [style={}] - Inline style overrides on the wrapper.
+ * @param {string} [className=""] - CSS class name.
+ *
+ * @example
+ * <AccordionTitle icon="gear" title="Core" description="Staking, payments, and service discovery" />
+ */
+export const AccordionTitle = ({ icon, title, description, descriptionColor = "var(--text)", descriptionSize = "0.85em", style = {}, className = "", ...rest }) => (
+  <div className={className} style={style} {...rest}>
+    <CustomCardTitle variant="accordion" icon={icon} title={title} />
+    {description && (
+      <div style={{ color: descriptionColor, fontStyle: "italic", fontSize: descriptionSize, fontWeight: 400, marginTop: "0.2rem" }}>
+        {description}
+      </div>
+    )}
+  </div>
+);
+
 export const CustomCardTitle = ({ icon, title, variant = "card", iconSize, style = {}, className = "", ...rest }) => {
   const variants = {
     card: { display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: 'var(--hero-text)', fontSize: '1rem', fontWeight: 600 },

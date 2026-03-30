@@ -1,0 +1,310 @@
+---
+title: "Link and Callout Components Examples"
+description: "Examples of using link components and callouts from links.jsx"
+---
+
+import {
+  CustomCallout,
+  BlinkingIcon,
+  DoubleIconLink,
+  GotoLink,
+  GotoCard,
+  TipWithArrow
+} from "/snippets/components/elements/links/Links.jsx";
+
+## CustomCallout Component
+
+### Basic Usage
+
+<CustomCallout>
+  This is a basic callout with default settings.
+</CustomCallout>
+
+### Custom Icon
+
+<CustomCallout icon="rocket">
+  This callout uses a rocket icon instead of the default lightbulb.
+</CustomCallout>
+
+<CustomCallout icon="warning">
+  This is a warning callout with a warning icon.
+</CustomCallout>
+
+<CustomCallout icon="info-circle">
+  This is an informational callout.
+</CustomCallout>
+
+### Custom Color
+
+<CustomCallout color="#3b82f6">
+  This callout uses a blue color scheme.
+</CustomCallout>
+
+<CustomCallout color="#ef4444">
+  This callout uses a red color scheme for warnings.
+</CustomCallout>
+
+<CustomCallout color="#8b5cf6">
+  This callout uses a purple color scheme.
+</CustomCallout>
+
+### Custom Sizes
+
+<CustomCallout iconSize={24} textSize="1rem">
+  This callout has larger icon and text.
+</CustomCallout>
+
+<CustomCallout iconSize={12} textSize="0.75rem">
+  This callout has smaller icon and text.
+</CustomCallout>
+
+### All Custom Options
+
+<CustomCallout
+  icon="star"
+  color="#f59e0b"
+  iconSize={20}
+  textSize="0.9rem"
+>
+  This callout combines all custom options: icon, color, and sizes.
+</CustomCallout>
+
+## BlinkingIcon Component
+
+### Basic Blinking Icon
+
+<BlinkingIcon /> This icon blinks to draw attention.
+
+### Custom Icon
+
+<BlinkingIcon icon="bell" size={20} /> New notification
+
+<BlinkingIcon icon="exclamation-triangle" size={20} color="#ef4444" /> Important alert
+
+### Different Colors
+
+<BlinkingIcon icon="circle" size={16} color="#22c55e" /> Online
+
+<BlinkingIcon icon="circle" size={16} color="#ef4444" /> Offline
+
+### In Context
+
+<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+  <BlinkingIcon icon="broadcast-tower" size={20} color="#2d9a67" />
+  <span>Stream is live</span>
+</div>
+
+## DoubleIconLink Component
+
+### Basic Usage
+
+<DoubleIconLink
+  label="View on GitHub"
+  href="https://github.com/livepeer/go-livepeer"
+/>
+
+### Custom Icons
+
+<DoubleIconLink
+  label="Read the Docs"
+  iconLeft="book"
+  iconRight="arrow-right"
+  href="/docs"
+/>
+
+<DoubleIconLink
+  label="Watch Tutorial"
+  iconLeft="video"
+  iconRight="external-link"
+  href="https://youtube.com/example"
+/>
+
+### With Text Prefix
+
+<DoubleIconLink
+  text="Source code:"
+  label="GitHub Repository"
+  iconLeft="github"
+  href="https://github.com/livepeer/livepeer"
+/>
+
+## GotoLink Component
+
+### Basic Usage
+
+<GotoLink
+  label="Getting Started Guide"
+  relativePath="/docs/getting-started"
+/>
+
+### Custom Icon
+
+<GotoLink
+  label="API Reference"
+  relativePath="/api-reference"
+  icon="code"
+/>
+
+<GotoLink
+  label="Tutorials"
+  relativePath="/tutorials"
+  icon="graduation-cap"
+/>
+
+### With Text
+
+<GotoLink
+  text="Next:"
+  label="Advanced Configuration"
+  relativePath="/docs/advanced"
+  icon="arrow-right"
+/>
+
+## GotoCard Component
+
+### Basic Card Link
+
+<GotoCard
+  label="Quick Start"
+  relativePath="/quickstart"
+  text="Get up and running in 5 minutes"
+/>
+
+### With Custom Icon
+
+<GotoCard
+  label="API Documentation"
+  relativePath="/api"
+  icon="book"
+  text="Complete API reference and examples"
+/>
+
+### With CTA
+
+<GotoCard
+  label="Video Tutorials"
+  relativePath="/tutorials"
+  icon="video"
+  text="Learn through hands-on video guides"
+  cta="Watch Now"
+/>
+
+### Multiple Cards
+
+<CardGroup cols={2}>
+  <GotoCard
+    label="Installation"
+    relativePath="/install"
+    icon="download"
+    text="Install Livepeer on your system"
+  />
+  <GotoCard
+    label="Configuration"
+    relativePath="/config"
+    icon="gear"
+    text="Configure your Livepeer setup"
+  />
+</CardGroup>
+
+## TipWithArrow Component
+
+### Basic Usage
+
+<TipWithArrow>
+  Use the Dropdown at the top-right of this page to view the Quickstart Guide for your preferred OS.
+</TipWithArrow>
+
+### Custom Icon
+
+<TipWithArrow icon="rocket">
+  This tip uses a rocket icon instead of the default lightbulb.
+</TipWithArrow>
+
+<TipWithArrow icon="star">
+  Pro tip: Use keyboard shortcuts to navigate faster!
+</TipWithArrow>
+
+### Custom Arrow Icon
+
+<TipWithArrow arrowIcon="arrow-right">
+  This tip uses a different arrow icon in the corner.
+</TipWithArrow>
+
+<TipWithArrow arrowIcon="external-link">
+  Click the link icon to open in a new tab.
+</TipWithArrow>
+
+### Custom Color
+
+<TipWithArrow color="#3b82f6">
+  This tip uses a blue color scheme.
+</TipWithArrow>
+
+<TipWithArrow color="#8b5cf6">
+  This tip uses a purple color scheme.
+</TipWithArrow>
+
+### Custom Sizes
+
+<TipWithArrow iconSize={20} arrowSize={20}>
+  This tip has larger icons (20px instead of default 16px).
+</TipWithArrow>
+
+<TipWithArrow iconSize={12} arrowSize={12}>
+  This tip has smaller icons for subtle hints.
+</TipWithArrow>
+
+### All Custom Options
+
+<TipWithArrow
+  icon="star"
+  arrowIcon="arrow-up-right-from-square"
+  color="#f59e0b"
+  iconSize={18}
+  arrowSize={14}
+>
+  This tip combines all custom options: custom icon, arrow, color, and sizes.
+</TipWithArrow>
+
+## Combined Examples
+
+### Navigation Section
+
+<CustomCallout icon="map" color="#2d9a67">
+  Choose your learning path below:
+</CustomCallout>
+
+<GotoCard
+  label="Beginner Tutorial"
+  relativePath="/tutorials/beginner"
+  icon="seedling"
+  text="New to Livepeer? Start here!"
+  cta="Start Learning"
+/>
+
+<GotoCard
+  label="Advanced Guide"
+  relativePath="/tutorials/advanced"
+  icon="rocket"
+  text="Ready for more? Dive deeper!"
+  cta="Explore"
+/>
+
+### Alert with Link
+
+<CustomCallout icon="exclamation-triangle" color="#ef4444">
+  <strong>Important:</strong> Make sure to read the 
+  <GotoLink label="security guidelines" relativePath="/security" icon="shield" />
+  before deploying to production.
+</CustomCallout>
+
+### Live Status Indicator
+
+<div style={{ padding: "1rem", border: "1px solid #2d9a67", borderRadius: "8px" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+    <BlinkingIcon icon="circle" size={12} color="#22c55e" />
+    <strong>System Status: Online</strong>
+  </div>
+  <p>All systems operational</p>
+</div>
+

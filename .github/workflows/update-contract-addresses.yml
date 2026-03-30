@@ -1,0 +1,137 @@
+name: Update Contract Addresses
+
+on:
+  schedule:
+    - cron: "0 2 * * 1" # Weekly Monday 02:00 UTC
+
+  repository_dispatch:
+    types: [governor-scripts-update, protocol-update, bridge-update]
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Show changes without writing"
+        type: boolean
+        default: false
+      skip_verify:
+        description: "Skip Arbiscan/Etherscan verification"
+        type: boolean
+        default: false
+      scan_fix:
+        description: "Scan v2/ for stale addresses and auto-fix"
+        type: boolean
+        default: true
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+
+jobs:
+  update-contracts:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout docs repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch and verify contract addresses
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then FLAGS="$FLAGS --dry-run"; fi
+          if [[ "${{ inputs.skip_verify }}" == "true" ]]; then FLAGS="$FLAGS --skip-verify"; fi
+          if [[ "${{ inputs.scan_fix }}" == "true" ]]; then FLAGS="$FLAGS --scan-fix"; fi
+          node .github/scripts/fetch-contract-addresses.js $FLAGS
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changed files:"
+            git diff --name-only
+          fi
+
+      - name: Check for failures (enrichment warnings + health check)
+        id: failures
+        run: |
+          ISSUES=""
+          # Check enrichment warnings in data file
+          node -e "
+            const fs = require('fs');
+            const content = fs.readFileSync('snippets/data/contract-addresses/contractAddressesData.jsx', 'utf8');
+            const match = content.match(/export const contractAddresses\s*=\s*(\{[\s\S]*\});?\s*\$/);
+            if (!match) process.exit(0);
+            const data = new Function('return ' + match[1])();
+            const warnings = data.meta?._warnings || [];
+            if (warnings.length > 0) {
+              const body = warnings.map(w => '- **' + w.contract + '** (' + w.source + '): ' + w.error).join('\n');
+              fs.writeFileSync('/tmp/enrichment-warnings.txt', body);
+              console.log('enrichment_warnings=true');
+            } else {
+              console.log('enrichment_warnings=false');
+            }
+          " >> $GITHUB_OUTPUT
+          # Check health check results
+          HEALTH_FILE="snippets/data/contract-addresses/_health-checks.json"
+          if [ -f "$HEALTH_FILE" ]; then
+            FAIL_COUNT=$(node -e "const d=JSON.parse(require('fs').readFileSync('$HEALTH_FILE','utf8'));console.log(d.checks.filter(c=>c.status==='FAIL').length)")
+            if [ "$FAIL_COUNT" -gt 0 ]; then
+              echo "health_failures=true" >> $GITHUB_OUTPUT
+              node -e "
+                const d=JSON.parse(require('fs').readFileSync('$HEALTH_FILE','utf8'));
+                const body=d.checks.map(c=>'- ['+c.status+'] **'+c.endpoint+'**: '+c.detail+' → '+c.affects).join('\n');
+                require('fs').writeFileSync('/tmp/health-failures.txt', body);
+              "
+            else
+              echo "health_failures=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "health_failures=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create issue on pipeline failure
+        if: (steps.failures.outputs.enrichment_warnings == 'true' || steps.failures.outputs.health_failures == 'true') && inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY="## Contract Pipeline Failures — $(date +%Y-%m-%d)\n\n"
+          if [ -f /tmp/enrichment-warnings.txt ]; then
+            BODY="${BODY}### Enrichment Warnings\n$(cat /tmp/enrichment-warnings.txt)\n\n"
+          fi
+          if [ -f /tmp/health-failures.txt ]; then
+            BODY="${BODY}### Health Check Failures\n$(cat /tmp/health-failures.txt)\n\n"
+          fi
+          BODY="${BODY}### Action required\n- Check Blockscout and Etherscan API status\n- Verify API keys are valid\n- Re-run workflow after fixing\n\n_Auto-generated by update-contract-addresses.yml_"
+          printf "$BODY" | gh issue create \
+            --title "Contract pipeline failure — $(date +%Y-%m-%d)" \
+            --body-file - \
+            --label "api-drift,automated" \
+            --assignee "@me"
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add snippets/data/contract-addresses/contractAddressesData.jsx
+          git add snippets/data/contract-addresses/_health-checks.json
+          git add v2/
+          git commit -m "chore: update contract addresses from governor-scripts [skip ci]"
+          git push

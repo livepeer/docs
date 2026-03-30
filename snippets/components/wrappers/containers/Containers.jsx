@@ -1,10 +1,9 @@
 /**
  * @component BorderedBox
- * @type wrappers
- * @subniche containers
+ * @category wrappers
+ * @subcategory containers
  * @status stable
  * @description Bordered container with configurable radius and background.
- * @accepts children, className, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
@@ -65,11 +64,10 @@ export const BorderedBox = ({
 
 /**
  * @component CenteredContainer
- * @type wrappers
- * @subniche containers
+ * @category wrappers
+ * @subcategory containers
  * @status stable
  * @description Horizontally centred container with configurable max-width.
- * @accepts children, className, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [maxWidth="800px"] - max Width prop.
@@ -145,11 +143,10 @@ export const CenteredContainer = ({
 
 /**
  * @component FullWidthContainer
- * @type wrappers
- * @subniche containers
+ * @category wrappers
+ * @subcategory containers
  * @status stable
  * @description Full-viewport-width container that breaks out of parent padding.
- * @accepts children, className, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} backgroundColor - background Color prop.

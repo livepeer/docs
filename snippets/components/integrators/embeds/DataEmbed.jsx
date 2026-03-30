@@ -1,11 +1,10 @@
 /**
  * @component MarkdownEmbed
- * @type integrators
- * @subniche embeds
+ * @category integrators
+ * @subcategory embeds
  * @status stable
  * @description Fetches and renders remote markdown content.
  * @dataSource fetch(url)
- * @accepts {string} url, {string} className, {object} style, ...rest
  * @aiDiscoverability snapshot
  * @param {string} url - Destination URL used by the component.
  * @param {string} [className=""] - CSS class name.
@@ -15,12 +14,11 @@ import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
 
 /**
  * @component SolidityEmbed
- * @type integrators
- * @subniche embeds
+ * @category integrators
+ * @subcategory embeds
  * @status stable
  * @description Fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded.
  * @dataSource fetch(url) — raw GitHub .sol file
- * @accepts style, className, ...rest
  * @aiDiscoverability snapshot
  * @param {string} url - Raw GitHub URL to the .sol file.
  * @param {React.ReactNode} [title] - Optional title displayed above the code block. Accepts strings or components.
@@ -154,12 +152,11 @@ export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
 
 /**
  * @component PdfEmbed
- * @type integrators
- * @subniche embeds
+ * @category integrators
+ * @subcategory embeds
  * @status stable
  * @description Embeds a PDF in a framed iframe with caption.
  * @dataSource iframe(src)
- * @accepts {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @param {React.ReactNode} title - Title text rendered by the component.
  * @param {string} src - Asset or embed source used by the component.
@@ -190,12 +187,11 @@ export const PdfEmbed = ({
 
 /**
  * @component TwitterTimeline
- * @type integrators
- * @subniche embeds
+ * @category integrators
+ * @subcategory embeds
  * @status stable
  * @description Embeds a Twitter/X timeline feed widget via iframe.
  * @dataSource feed.mikle.com widget
- * @accepts {string} className, {object} style, ...rest
  * @aiDiscoverability none
  * @aiDiscoverabilityNote 3rd-party iframe widget (mikle.com) — no static data in HTML, no API access for snapshot. Twitter feed content is not crawlable. No companion file possible.
  * @param {string} [className=""] - CSS class name.

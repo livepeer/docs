@@ -1,10 +1,9 @@
 /**
  * @component SocialLinks
- * @type elements
- * @subniche social
+ * @category elements
+ * @subcategory social
  * @status stable
  * @description Row of icon-only social media links with tooltips and aria-labels. Pass a `links` array to customise per product; omit for Livepeer defaults.
- * @accepts links, size, gap, justify, iconColor, color, style, className, ...rest
  * @aiDiscoverability none
  * @param {Array} [links] - Array of {icon, href, label} objects. Falls back to Livepeer defaults if omitted.
  * @param {number} [size=20] - Size used by the component.

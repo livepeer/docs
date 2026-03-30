@@ -1,0 +1,139 @@
+---
+sidebarTitle: Changelog
+title: "{DISPLAY_NAME} Changelog"
+description: >-
+  {DESCRIPTION}
+keywords:
+  - {PRODUCT_KEY}
+  - livepeer
+  - changelog
+  - {KEYWORDS}
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': "{DISPLAY_NAME} Docs social preview image"
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: changelog
+purpose: changelog
+audience: {AUDIENCE}
+lastVerified: YYYY-MM-DD
+---
+
+{/*
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  AUTOMATED CHANGELOG TEMPLATE — generalised for all changelog types    │
+  │                                                                         │
+  │  Two modes (set in changelogs{} section of product-social-config.json):│
+  │    releases  — GitHub/GitLab release tags (solutions, go-livepeer)      │
+  │    commits   — Commit history, path-filtered (governor-scripts, docs)   │
+  │                                                                         │
+  │  Placeholders to replace before use:                                    │
+  │    {DISPLAY_NAME}   — Display name (e.g. "Protocol Contracts")          │
+  │    {PRODUCT_KEY}    — kebab-case key matching changelogs{} config entry │
+  │    {DESCRIPTION}    — One-line description for frontmatter              │
+  │    {AUDIENCE}       — Mintlify audience (everyone | builder | general)  │
+  │    {KEYWORDS}       — Additional SEO keywords                           │
+  │    {SOURCE_URL}     — Link target for source tracking line              │
+  │    {SOURCE_LABEL}   — "GitHub" or "GitLab"                              │
+  │    {PATH}           — Nav path prefix (solutions | resources/changelog) │
+  │                                                                         │
+  │  Setup steps:                                                           │
+  │  1. Copy to correct output path (target.outputPath in config)          │
+  │  2. Replace all {PLACEHOLDERS}                                          │
+  │  3. Add to docs.json nav under the correct group                       │
+  │  4. Register entry in changelogs{} in product-social-config.json       │
+  │  5. Verify dry-run: CHANGELOG_KEY={PRODUCT_KEY} node                   │
+  │       .github/scripts/generate-changelog.js --dry-run                  │
+  │                                                                         │
+  │  Reference implementations:                                             │
+  │    v2/solutions/daydream/changelog.mdx     — releases, LLM-enhanced    │
+  │    v2/solutions/streamplace/changelog.mdx  — releases, dual-source     │
+  │    v2/resources/changelog/contracts.mdx   — commits, on-chain verify   │
+  │                                                                         │
+  │  Workflow: .github/workflows/update-changelogs.yml                      │
+  │  Script:   .github/scripts/generate-changelog.js                       │
+  └─────────────────────────────────────────────────────────────────────────┘
+*/}
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/ScrollBox.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+
+<Tip>
+  This page is an automated workflow.
+  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--hero-text)", marginTop: "0.25rem" }}>Subscribe to this changelog's <LinkArrow label="RSS Feed" href="/v2/{PATH}/{PRODUCT_KEY}/changelog/rss.xml" newline={false} /></div>
+</Tip>
+
+<CustomDivider style={{margin: "-0.5rem 0 -1.5rem 0"}} />
+
+{/* MODE: releases — uncomment and fill {SOURCE_URL} and {SOURCE_LABEL} */}
+Track releases for <LinkArrow label="{DISPLAY_NAME}" href="{SOURCE_URL}" newline={false} /> on {SOURCE_LABEL}.
+
+{/* MODE: commits — replace the line above with this:
+Track changes to <LinkArrow label="{TRACKED_FILE}" href="{SOURCE_URL}" newline={false} /> on GitHub.
+*/}
+
+<CustomDivider />
+
+{/* ──────────────────────────────────────────────
+  AUTOMATION ZONE — entries below are populated by workflow.
+
+  ── MODE: releases (Option A — LLM enhanced) ──
+
+  <Update label="vX.Y.Z" tags={["Features", "Fixes"]}
+    rss={{ title: "{DISPLAY_NAME} vX.Y.Z", description: "One sentence for feed readers" }}
+    description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>Month YYYY</div>}>
+    ## vX.Y.Z
+
+    <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+    #### New Features
+
+    - **Feature name** - One sentence.
+
+    <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+    <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>
+
+    <ScrollBox maxHeight="250px" showHint={true}>
+      Full release notes from the maintainer.
+    </ScrollBox>
+
+    <DoubleIconLink label="View release on GitHub" href="{SOURCE_URL}/releases/tag/vX.Y.Z" iconLeft="github" />
+  </Update>
+
+  ── MODE: releases (Option B — raw extraction) ──
+
+  <Update label="vX.Y.Z" tags={["Release"]}
+    rss={{ title: "{DISPLAY_NAME} vX.Y.Z", description: "One sentence" }}
+    description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>Month YYYY</div>}>
+    ## vX.Y.Z
+
+    <ScrollBox maxHeight="250px" showHint={true}>
+      Extracted highlights from release notes.
+    </ScrollBox>
+
+    <DoubleIconLink label="View release on GitHub" href="{SOURCE_URL}/releases/tag/vX.Y.Z" iconLeft="github" />
+  </Update>
+
+  ── MODE: commits ──
+
+  <Update label="{shortSha}" tags={["Commit"]}
+    rss={{ title: "{DISPLAY_NAME} {shortSha}", description: "Commit message first line" }}
+    description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>Month YYYY</div>}>
+    ## {shortSha}
+
+    Commit message (single line inline, or ScrollBox for multi-line).
+
+    <DoubleIconLink label="View commit on GitHub" href="{SOURCE_URL}/commit/{sha}" iconLeft="github" />
+  </Update>
+
+  ── RULES ──
+  - label: version tag (releases) or short SHA 7 chars (commits)
+  - description: date in styled div (Month YYYY)
+  - tags: Features | Fixes | Performance | Breaking | Release | Commit | {RepoLabel}
+  - For GitLab sources: iconLeft="gitlab", label="View release on GitLab"
+  - Wrap all entries in <LazyLoad height="600px"> for deferred rendering
+
+  ────────────────────────────────────────────── */}

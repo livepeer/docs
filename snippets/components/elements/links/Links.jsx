@@ -2,11 +2,10 @@ import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 
 /**
  * @component CustomCallout
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Styled callout box with icon, custom colour, and child content.
- * @accepts children, style, className, ...rest
  * @aiDiscoverability none
  * @param {React.ReactNode} children - Content to display in the callout
  * @param {string} [icon="lightbulb"] - Icon name to display
@@ -79,11 +78,10 @@ const CustomCallout = ({
 
 /**
  * @component BlinkingIcon
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Animated icon with pulsing opacity. Respects prefers-reduced-motion.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string} [icon="terminal"] - Icon name to display
  * @param {number} [size=16] - Size of the icon in pixels
@@ -131,11 +129,10 @@ const BlinkingIcon = ({
 
 /**
  * @component BlinkingTerminal
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @example
  * <BlinkingTerminal />
@@ -144,11 +141,10 @@ const BlinkingTerminal = BlinkingIcon
 
 /**
  * @component DoubleIconLink
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Inline link with icons on both sides.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string} [label=""] - Link text/label
  * @param {string} [href="#"] - Link URL
@@ -200,11 +196,10 @@ const DoubleIconLink = ({
 
 /**
  * @component GotoLink
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Inline navigation link with icon prefix and label.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string} label - Link text/label
  * @param {string} relativePath - Relative URL path
@@ -241,11 +236,10 @@ const GotoLink = ({
 
 /**
  * @component GotoCard
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Card-style navigation link wrapping Mintlify Card component.
- * @accepts style, className, ...props
  * @aiDiscoverability none
  * @param {string} label - Card title
  * @param {string} relativePath - Relative URL path
@@ -286,11 +280,10 @@ const GotoCard = ({
 
 /**
  * @component TipWithArrow
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Callout box with tip icon and corner arrow indicator.
- * @accepts children, style, className, ...rest
  * @aiDiscoverability none
  * @param {React.ReactNode} children - Content to display in the tip
  * @param {string} [icon="lightbulb"] - Main icon to display on the left
@@ -374,11 +367,10 @@ const TipWithArrow = ({
 
 /**
  * @component LinkArrow
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description External link with arrow icon, optional description, and line break control.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {any} href - href prop.
  * @param {any} label - label prop.
@@ -425,11 +417,10 @@ const LinkArrow = ({
 
 /**
  * @component LinkIcon
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Wraps a Mintlify Icon in an anchor tag. Strips default Mintlify link styling (border-bottom).
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string} href - Link destination URL.
  * @param {string} [icon="arrow-up-right-from-square"] - Font Awesome icon name.
@@ -465,11 +456,10 @@ const LinkIcon = ({
 
 /**
  * @component AddressLinks
- * @type elements
- * @subniche links
+ * @category elements
+ * @subcategory links
  * @status stable
  * @description Copyable contract address with blockchain explorer and GitHub links.
- * @accepts style, className, ...rest
  * @aiDiscoverability none
  * @param {string} address - Contract address to display and copy.
  * @param {string} [blockchainHref] - Blockchain explorer URL (e.g. Arbiscan).

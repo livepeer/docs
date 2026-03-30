@@ -1,0 +1,268 @@
+---
+sidebarTitle: AI Runner
+title: "AI Runner Changelog"
+description: >-
+  Release history for the Livepeer AI Runner, the inference runtime for batch and real-time AI pipelines on the network.
+keywords:
+  - ai-runner
+  - livepeer
+  - changelog
+  - releases
+  - inference
+  - AI pipelines
+  - machine learning
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': "Livepeer AI Runner Docs social preview image"
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: changelog
+purpose: changelog
+audience: everyone
+lastVerified: 2026-03-30
+---
+
+{/*
+  AUTOMATED CHANGELOG: Livepeer AI Runner
+
+  Mode: releases
+  Source: github.com/livepeer/ai-runner
+  Config key: ai-runner
+  Workflow: .github/workflows/update-changelogs.yml
+  Script:   .github/scripts/generate-changelog.js
+*/}
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/ScrollBox.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+
+<Tip>
+  This page is an automated workflow.
+  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--hero-text)", marginTop: "0.25rem" }}>Subscribe to this changelog's <LinkArrow label="RSS Feed" href="/v2/resources/changelog/ai-runner/rss.xml" newline={false} /></div>
+</Tip>
+
+<CustomDivider style={{margin: "-0.5rem 0 -1.5rem 0"}} />
+
+Track releases for <LinkArrow label="AI Runner" href="https://github.com/livepeer/ai-runner/releases" newline={false} /> on GitHub.
+
+<CustomDivider />
+
+{/* ──────────────────────────────────────────────
+  AUTOMATION ZONE -- entries below are populated by workflow.
+  ────────────────────────────────────────────── */}
+
+<LazyLoad height="600px">
+
+<Update label="v0.14.1" tags={["Features", "Fixes"]} rss={{ title: "AI Runner v0.14.1", description: "This release mainly wraps up the support for custom pipelines with docs and final fixes on metadata routes used by th..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
+  ## v0.14.1
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  
+  This release mainly wraps up the support for custom pipelines with docs and final fixes on metadata routes used by the Orchestrator.
+  
+  The `scope` pipeline has been fully moved to the [`daydreamlive/scope-runner`](https://github.com/daydreamlive/scope-runner) repository and can be developed without docker, using only local dev environments if preferred.
+  
+  ### Commits
+  
+  * .github: Add proper tags to base image
+  * live: Remove scope project
+  * docs: Create guide on writing custom pipelines
+  * routes: Fix version and hardware metadata routes
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.14.1" iconLeft="github" />
+</Update>
+
+<Update label="v0.14.0" tags={["Features", "Performance"]} rss={{ title: "AI Runner v0.14.0", description: "- Prompt & Seed Blending: Smooth interpolation between values" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2025</div>}>
+  ## v0.14.0
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  
+  ### 🎬 StreamDiffusion Pipeline — Complete Overhaul
+  
+  - **Prompt & Seed Blending**: Smooth interpolation between values
+  - **ControlNet Support**: Depth, canny, and other controlnets with dynamic scale adjustment
+  - **IPAdapter**: Style transfer from reference images. FaceID version for face-preserving generation
+  - **SD1.5 + SDXL**: Expanded model architecture support
+  - **NSFW Detection**: Freepik-based safety checker
+  - **Dynamic Parameters**: In-place updates for most parameters without requiring pipeline restart (eg t_index_list, controlnets, etc)
+  - **Dynamic Resolution TensorRT**: Single engine with support for different resolutions (still requires a reload)
+  - **TemporalNet ControlNet**: Optical flow-based conditioning for frame-to-frame temporal consistency
+  - **Multi-stage pipeline**: Configurable image or latent, pre and post-processing in the pipeline (e.g.: latent feedback, upscaling, skip diffusion altogether)
+  - **StreamV2V**: Cached attention for even further temporal consistency
+  
+  ### 🔧 Realtime Runtime
+  
+  - **Extensible runner** — Modular pipeline architecture with plugin pattern (#866)
+  - **Loading screen** — Visual feedback during pipeline reloads (#739)
+  - Removed Conda and moved to `uv` (except ComfyUI) (#854)
+  - Higher performance and lower latency
+  - Improve error handling and monitoring
+  
+  ### 📦 Batch Pipelines
+  
+  - **Audio-to-Text**: Added faster-whisper backend (#595)
+  - **LLM**: Bumped vLLM version (#705)
+  
+  ## New Contributors
+  * @vcashwin made their first contribution in https://github.com/livepeer/ai-runner/pull/819
+  * @corey-livepeer made their first contribution in https://github.com/livepeer/ai-runner/pull/837
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.14.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.13.8" tags={["Features", "Fixes", "Performance"]} rss={{ title: "AI Runner v0.13.8", description: "* Support for audio passthrough and Opus encoding *(real-time)*" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>June 2025</div>}>
+  ## v0.13.8
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ### New features & improvements
+  * Support for audio passthrough and Opus encoding *(real-time)*
+  * Faster and more reliable startup & teardown *(real-time)*
+  * Improved logging, metrics, and debugging *(real-time)*
+  * Zero-copy GPU tensor transfer for lower latency *(real-time)*
+  * Streamdiffusion pipeline improvements and re-introduction *(real-time)*
+  
+  ### Performance & stability
+  * Many encoder and decoder fixes *(real-time)*
+  * Better pipeline cleanup and failover handling *(real-time)*
+  * Robust support for multi-stream and resolution changes *(real-time)*
+  * Docker image optimizations and workflow improvements
+  
+  ### Developer & maintenance updates
+  * Moved ai-worker package to go-livepeer
+  * Updated LLM pipeline dependencies to improve performance and fix bugs *(batch)*
+  * Improved CI workflows and build caching
+  * Enhanced checkpoint and model management
+  
+  ### New contributors
+  * @Radovenchyk — first contribution [[#417](https://github.com/livepeer/ai-runner/pull/417)](https://github.com/livepeer/ai-runner/pull/417)
+  * @livepeer-robot — first contribution [[#611](https://github.com/livepeer/ai-runner/pull/611)](https://github.com/livepeer/ai-runner/pull/611)
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.13.8" iconLeft="github" />
+</Update>
+
+<Update label="v0.13.3" tags={["Features"]} rss={{ title: "AI Runner v0.13.3", description: "* Support for JSON string in defaultImage field for overriding pipeline specific images in the mappings  by @RUFFY-36..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2025</div>}>
+  ## v0.13.3
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * Support for JSON string in defaultImage field for overriding pipeline specific images in the mappings
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.13.3" iconLeft="github" />
+</Update>
+
+<Update label="v0.13.2" tags={["Features"]} rss={{ title: "AI Runner v0.13.2", description: "* examples: Add test run for lv2v by @victorges in https://github.com/livepeer/ai-worker/pull/283" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2025</div>}>
+  ## v0.13.2
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * examples: Add test run for lv2v
+  * dl_checkpoints.sh - docker run as a user not the root
+  * dl_checkpoints.sh run as root but chown to current user
+  * refactor(runner): update LLM 'tokens_used' to usage
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.13.2" iconLeft="github" />
+</Update>
+
+<Update label="v0.13.1" tags={["Features", "Fixes"]} rss={{ title: "AI Runner v0.13.1", description: "* feat: update A2T audio conversion by @ad-astra-video in https://github.com/livepeer/ai-worker/pull/389" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>January 2025</div>}>
+  ## v0.13.1
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * feat: update A2T audio conversion
+  * Remove liveportrait
+  * feat: better LLM response format
+  * Fix codegen and some small updates
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.13.1" iconLeft="github" />
+</Update>
+
+<Update label="v0.13.0" tags={["Features", "Fixes", "Performance", "Breaking"]} rss={{ title: "AI Runner v0.13.0", description: "This release introduces several new ComfyUI pipelines, including Florence 2, LivePortrait, and Sam2, alongside signif..." }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2024</div>}>
+  ## v0.13.0
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  This release introduces several new ComfyUI pipelines, including Florence 2, LivePortrait, and Sam2, alongside significant performance optimizations and bug fixes for both the realtime AI stack and non-realtime pipelines like A2T and LLM. These updates enhance processing efficiency, stability, and functionality across the platform.
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.13.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.12.6" tags={["Features", "Fixes"]} rss={{ title: "AI Runner v0.12.6", description: "* live/runner: Increase liveportrait restart threshold by @victorges in https://github.com/livepeer/ai-worker/pull/294" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>December 2024</div>}>
+  ## v0.12.6
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * live/runner: Increase liveportrait restart threshold
+  * Allow running worker on non-GPU machine
+  * fix: prevents nvml runtime error
+  * api: Fix startup of control API
+  * Add error handling to control message handler task
+  * runner: add events url to live video to video
+  * runner: Make control_url and events_url optional
+  * SAM2 video-to-video real-time pipeline
+  * fix: managed containers return after inference completed
+  
+  ## New Contributors
+  * @gioelecerati made their first contribution in https://github.com/livepeer/ai-worker/pull/303
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.12.6" iconLeft="github" />
+</Update>
+
+<Update label="v0.12.5" tags={["Features"]} rss={{ title: "AI Runner v0.12.5", description: "* feat: add hardware info reporting by @ad-astra-video in https://github.com/livepeer/ai-worker/pull/273" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>November 2024</div>}>
+  ## v0.12.5
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * feat: add hardware info reporting
+  * feat(worker): auto pull images if not found
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.12.5" iconLeft="github" />
+</Update>
+
+<Update label="v0.12.4" tags={["Features", "Fixes"]} rss={{ title: "AI Runner v0.12.4", description: "* docker: ComfyUI model downloading/caching by @victorges in https://github.com/livepeer/ai-worker/pull/284" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>November 2024</div>}>
+  ## v0.12.4
+
+  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>
+
+  ## What's Changed
+  * docker: ComfyUI model downloading/caching
+  * worker,runner: Fix lifecycle management of realtime containers
+  * test: add b64 functions tests
+  * worker: Add noop image to map
+  * Fix control_url task runner
+
+  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/ai-runner/releases/tag/v0.12.4" iconLeft="github" />
+</Update>
+
+</LazyLoad>
+

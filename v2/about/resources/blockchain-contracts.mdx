@@ -11,12 +11,13 @@ keywords:
   - contracts
   - overview
   - protocol
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+'og:image': /snippets/assets/site/og-image/en/page-blockchain-contracts.png
+'og:image:alt': Livepeer Docs social preview image for Blockchain Contracts
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
+pageType: concept
 purpose: concept
 lastVerified: 2026-03-28
 ---
@@ -51,7 +52,7 @@ import { LinkArrow, DoubleIconLink, LinkIcon } from '/snippets/components/elemen
 import { Subtitle, CopyText } from '/snippets/components/elements/text/Text.jsx'
 import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
-import { contractAddresses } from '/snippets/data/changelogs/contractAddressesData.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
 import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
 import { AddressLinks } from '/snippets/components/elements/links/Links.jsx'
 import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
@@ -91,6 +92,25 @@ export const treasury = contractAddresses.arbitrumOne.current.find(c => c.name =
 export const l2Migrator = contractAddresses.arbitrumOne.current.find(c => c.name === 'L2Migrator' && c.type === 'proxy')?.address
 export const merkleSnapshot = contractAddresses.arbitrumOne.current.find(c => c.name === 'MerkleSnapshot')?.address
 export const lastVerifiedDate = contractAddresses.meta.lastVerified || "Pending"
+
+{/* Status helper: builds status string from enriched meta fields */}
+export const statusOf = (name, type, chain) => {
+  const c = contractAddresses[chain || 'arbitrumOne'].current.find(e => e.name === name && (!type || e.type === type))
+  if (!c?.meta) return "Verified · Active"
+  const m = c.meta
+  const parts = []
+  if (c.verified) parts.push("Verified")
+  if (m.holderCount) parts.push(`${m.holderCount} holders`)
+  if (m.transactionCount && m.transactionCount < 1000) parts.push(`~${m.transactionCount} transactions`)
+  if (m.statusLabel) parts.push(m.statusLabel)
+  if (m.deployedAt && m.statusLabel !== 'Active') parts.push(`Deployed ${m.deployedAt}`)
+  if (m.deployedBy) parts.push(`Deployed by ${m.deployedBy}`)
+  if (m.lastActiveDate && m.statusLabel !== 'Active') parts.push(`Last active ${m.lastActiveDate}`)
+  if (m.blockscoutLabel && m.blockscoutLabel !== name) parts.push(`"${m.blockscoutLabel}" on Blockscout`)
+  if (m.notes) parts.push(m.notes)
+  if (m.registeredInController) parts.push("Registered in Controller")
+  return parts.join(" · ") || "Active"
+}
 
 <Tip>
   Addresses on this page are automatically updated via a Github Action workflow. <br/>
@@ -234,7 +254,7 @@ graph LR
     RM -.->|"block hash"| TB
 ```
 
----
+<CustomDivider />
 
 #### **Controller** <Subtitle text="Contract Registry" />
 <Badge color="blue">
@@ -249,7 +269,7 @@ The Controller is the central registry for all protocol contracts. Every other c
   githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/Controller.sol"
 />
 {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active · Deployed by Livepeer Deployer_
+<Icon icon="check" color="var(--text)"/> _{statusOf("Controller")}_
 
 **Purpose**:
 
@@ -303,7 +323,7 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
   **Address (Arbitrum One)**:
   <AddressLinks address={bondingManagerProxy} blockchainHref={`${arb}${bondingManagerProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/bonding/BondingManager.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("BondingManager", "proxy")}_
 
   {/* Current target (V11, deployed 16 Feb 2026): 0x4bA7E7531Ab56bC8d78dB4FDc88D21F621f34BB4
       Confirmed via Controller.getContract(keccak256("BondingManagerTarget")) on-chain 18 Mar 2026.
@@ -391,7 +411,7 @@ The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM)
   **Address (Arbitrum One)**:
   <AddressLinks address={ticketBrokerProxy} blockchainHref={`${arb}${ticketBrokerProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/pm/TicketBroker.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("TicketBroker", "proxy")}_
 
 **Purpose**:
 
@@ -454,7 +474,7 @@ The RoundsManager defines the protocol's time unit. A round is a fixed number of
   **Address (Arbitrum One)**:
   <AddressLinks address={roundsManagerProxy} blockchainHref={`${arb}${roundsManagerProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/rounds/RoundsManager.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("RoundsManager", "proxy")}_
 
 **Purpose**:
 
@@ -507,7 +527,7 @@ The Minter controls LPT token inflation. Each round it calculates the mintable t
   **Address (Arbitrum One)**:
   <AddressLinks address={minter} blockchainHref={`${arb}${minter}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/token/Minter.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("Minter")}_
 
 **Purpose**:
 
@@ -570,7 +590,7 @@ The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service
   **Address (Arbitrum One)**:
   <AddressLinks address={serviceRegistryProxy} blockchainHref={`${arb}${serviceRegistryProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/ServiceRegistry.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · ~600 transactions · Last active Jan 2026_
+<Icon icon="check" color="var(--text)"/> _{statusOf("ServiceRegistry", "proxy")}_
 
 **Purpose**:
 
@@ -607,7 +627,7 @@ A standalone ServiceRegistry for AI subnet orchestrators. Detached from the Cont
   **Address (Arbitrum One)**:
   <AddressLinks address={aiServiceRegistry} blockchainHref={`${arb}${aiServiceRegistry}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/ServiceRegistry.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Deployed Apr 2024 · Active · Deployed by AI subnet deployer (different from main Livepeer Deployer)_
+<Icon icon="check" color="var(--text)"/> _{statusOf("AIServiceRegistry")}_
 
 **Purpose**:
 
@@ -650,7 +670,7 @@ graph TB
     L1GW <-.->|"Arbitrum bridge"| L2GW
 ```
 
----
+<CustomDivider />
 
 #### **LivepeerToken (LPT)** <Subtitle text="ERC-20 Token" />
 <Badge color="green">
@@ -663,13 +683,13 @@ The LivepeerToken is the native protocol token. It is an ERC-20 with AccessContr
   **Address (Arbitrum One)**:
   <AddressLinks address={lptArb} blockchainHref={`${arb}${lptArb}`} githubHref="https://github.com/livepeer/arbitrum-lpt-bridge/blob/main/contracts/L2/token/LivepeerToken.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · 261,217 holders · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("LivepeerToken")}_
 
 **Address (Ethereum Mainnet)**:
 
   <AddressLinks address={lptEth} blockchainHref={`${eth}${lptEth}`} githubHref="https://github.com/livepeer/protocol/blob/master/contracts/token/LivepeerToken.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · 1.88M holders · Origin token_
+<Icon icon="check" color="var(--text)"/> _{statusOf("LivepeerToken", null, "ethereumMainnet")}_
 
 **Purpose**:
 
@@ -716,7 +736,7 @@ Holds MINTER_ROLE on the L1 LivepeerToken. Called by the bridge when LPT is tran
 <Accordion title={<CustomCardTitle variant="accordion" icon={<Icon icon="ethereum" color="var(--hero-text)"/>} title="BridgeMinter" />}>
   **Address (Ethereum Mainnet)**:
   <AddressLinks address={bridgeMinter} blockchainHref={`${eth}${bridgeMinter}`} githubHref="https://github.com/livepeer/protocol/blob/streamflow/contracts/token/BridgeMinter.sol" />
-  <Icon icon="check" color="var(--text)"/> _Verified · Active · "Livepeer: Bridge Minter" on Blockscout_
+  <Icon icon="check" color="var(--text)"/> _{statusOf("BridgeMinter", null, "ethereumMainnet")}_
 
 **Purpose**:
 
@@ -766,19 +786,19 @@ Paired bridge gateway contracts on Ethereum Mainnet (L1) and Arbitrum One (L2). 
   **L2LPTGateway (Arbitrum One)**:
   <AddressLinks address={l2Gateway} blockchainHref={`${arb}${l2Gateway}`} githubHref="https://github.com/livepeer/arbitrum-lpt-bridge/blob/main/contracts/L2/gateway/L2LPTGateway.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("L2LPTGateway")}_
 
 **L1LPTGateway (Ethereum Mainnet)**:
 
   <AddressLinks address={l1Gateway} blockchainHref={`${eth}${l1Gateway}`} githubHref="https://github.com/livepeer/arbitrum-lpt-bridge/blob/main/contracts/L1/gateway/L1LPTGateway.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("L1LPTGateway", null, "ethereumMainnet")}_
 
 **L1Escrow (Ethereum Mainnet)**:
 
   <AddressLinks address={l1Escrow} blockchainHref={`${eth}${l1Escrow}`} githubHref="https://github.com/livepeer/arbitrum-lpt-bridge/blob/main/contracts/L1/escrow/L1Escrow.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active · Holds bridged LPT_
+<Icon icon="check" color="var(--text)"/> _{statusOf("L1Escrow", null, "ethereumMainnet")}_
 
 **Contract**
 
@@ -852,7 +872,7 @@ graph LR
     MINT[Minter] -.->|"trustedTransferTokens()"| T
 ```
 
----
+<CustomDivider />
 
 #### **BondingVotes** <Subtitle text="Voting Power Checkpointing" />
 <Badge color="blue">
@@ -864,7 +884,7 @@ BondingVotes implements the ERC-5805 votes interface, storing per-round stake ch
   **Address (Arbitrum One)**:
   <AddressLinks address={bondingVotesProxy} blockchainHref={`${arb}${bondingVotesProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/bonding/BondingVotes.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("BondingVotes", "proxy")}_
 
 **Purpose**:
 
@@ -911,7 +931,7 @@ The original upgrade execution contract. Holds the owner role on the Controller.
   **Address (Arbitrum One)**:
   <AddressLinks address={governor} blockchainHref={`${arb}${governor}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/governance/Governor.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active · Deployed by Livepeer Deployer_
+<Icon icon="check" color="var(--text)"/> _{statusOf("Governor")}_
 
 **Purpose**:
 
@@ -955,7 +975,7 @@ Implements [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/govern
   **Address (Arbitrum One)**:
   <AddressLinks address={livepeerGovernorProxy} blockchainHref={`${arb}${livepeerGovernorProxy}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/treasury/LivepeerGovernor.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("LivepeerGovernor", "proxy")}_
 
 **Purpose**:
 
@@ -1011,7 +1031,7 @@ An [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance#Tim
   **Address (Arbitrum One)**:
   <AddressLinks address={treasury} blockchainHref={`${arb}${treasury}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/treasury/Treasury.sol" />
   {/* CHANGELOG PIPELINE UPDATE */}
-<Icon icon="check" color="var(--text)"/> _Verified · Active_
+<Icon icon="check" color="var(--text)"/> _{statusOf("Treasury")}_
 
 **Purpose**:
 
@@ -1071,7 +1091,7 @@ Facilitated the migration of bonded stake and delegations from Ethereum Mainnet 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="L2Migrator" />}>
   **Address (Arbitrum One)**:
   <AddressLinks address={l2Migrator} blockchainHref={`${arb}${l2Migrator}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/L2/L2Migrator.sol" />
-  <Icon icon="check" color="var(--text)"/> _Verified · Registered in Controller · Last active Feb 2026_
+  <Icon icon="check" color="var(--text)"/> _{statusOf("L2Migrator", "proxy")}_
 
 **Purpose**:
 
@@ -1101,7 +1121,7 @@ Stores Merkle roots used to verify stake snapshots taken at the time of the Conf
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="MerkleSnapshot" />}>
   **Address (Arbitrum One)**:
   <AddressLinks address={merkleSnapshot} blockchainHref={`${arb}${merkleSnapshot}`} githubHref="https://github.com/livepeer/protocol/blob/delta/contracts/snapshots/MerkleSnapshot.sol" />
-  <Icon icon="check" color="var(--text)"/> _Verified · Registered in Controller · No activity since deployment_
+  <Icon icon="check" color="var(--text)"/> _{statusOf("MerkleSnapshot")}_
 
 **Purpose**:
 
@@ -1132,12 +1152,12 @@ Stores Merkle roots used to verify stake snapshots taken at the time of the Conf
 
 ## Full Address Reference
 
-For the complete list of all current and historical contract addresses across Arbitrum One and Ethereum Mainnet, including all historical target/implementation versions, see the [Contract Addresses](/v2/about/resources/contract-addresses) reference page.
+For the complete list of all current and historical contract addresses across Arbitrum One and Ethereum Mainnet, including all historical target and implementation versions, see the [Contract Addresses](/v2/about/resources/livepeer-contract-addresses) reference page.
 
 <Icon icon="check" color="var(--text)"/> <span style={{fontStyle: "italic", color: "var(--text)"}}>Last Verified {lastVerifiedDate}</span>
 
 <Card
-    href="/v2/about/resources/contract-addresses"
+    href="/v2/about/resources/livepeer-contract-addresses"
     icon="file-code"
     title={<> Contract Address Reference Page · Livepeer Docs <br/> <Badge color="surface"> <><Icon icon="user-robot" color="var(--text)"/> Automatically Updated </></Badge></>}
     horizontal

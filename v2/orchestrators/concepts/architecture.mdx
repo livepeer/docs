@@ -27,7 +27,7 @@ keywords:
 'og:image:height': 630
 pageType: 'concept'
 audience: 'orchestrator'
-purpose: 'concept'
+purpose: 'explain'
 status: 'current'
 lastVerified: '2026-03-15'
 ---
@@ -41,25 +41,26 @@ Verify:
 - Headers are concise and technical (aim for max 3 words)
 - CustomDivider uses approved margin patterns
 - Placeholders for Media and Video Resources are in comments with a TODO for a human.
-- Fact-check flags are kept in JSX comments for a human.
+- REVIEW flags are in JSX flags for a human.
 Human
 - Find Media
-- Review fact-check items
+- Review REVIEW items
 */}
 
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<CustomDivider />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-Orchestrators sit between Gateways and the Arbitrum protocol layer. They receive jobs, coordinate GPU
-workers, return results, and handle the staking, registry, and payment flows that keep the node active.
+This page explains where Orchestrators sit in the Livepeer stack, how they interact with Gateways
+and the protocol layer, how a job flows through the system, and the key internal components.
 
 For what Orchestrators *do*, see <LinkArrow href="/v2/orchestrators/concepts/capabilities" label="Capabilities" newline={false} />. For why you would run one, see <LinkArrow href="/v2/orchestrators/concepts/incentive-model" label="Incentive Model" newline={false} />.
 
-<CustomDivider middleText="Layer Position" />
+<CustomDivider middleText="Layer Position" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Orchestrator Layer Context
 
@@ -138,7 +139,7 @@ Orchestrators are the only participants that interact with all layers below the 
 jobs from the Gateway layer, executing them at the compute layer, and transacting with the protocol
 layer for staking, rewards, and payment ticket redemption.
 
-<CustomDivider middleText="System Interactions" />
+<CustomDivider middleText="System Interactions" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Orchestrator Interactions
 
@@ -152,7 +153,7 @@ Gateways are the Orchestrator's job sources. Every job an Orchestrator executes 
 - Jobs arrive as segments (video) or HTTP requests (AI inference), each with a probabilistic
   micropayment ticket attached
 - The Orchestrator processes the job, returns the result, and accumulates payment tickets
-- Slow or failing responses push the Orchestrator down future Gateway rankings
+- If the Orchestrator fails or is slow, the Gateway will deprioritise it in future selection
 
 The Orchestrator does not choose which Gateways to work with - selection runs in the opposite
 direction. Gateways choose Orchestrators based on capability, price, and performance.
@@ -162,7 +163,7 @@ direction. Gateways choose Orchestrators based on capability, price, and perform
 The Orchestrator process coordinates two types of GPU worker:
 
 - **Transcoder** - handles video transcoding. Receives raw segments, applies output profiles (resolution,
-  bitrate, codec), returns encoded segments. Runs either in-process or as a separate `transcoder` process
+  bitrate, codec), returns encoded segments. May run in-process or as a separate `transcoder` process
   in an O-T split configuration.
 - **AI Runner** - handles AI inference. Receives inference requests, routes them to the appropriate
   loaded model (or loads the model on demand), and returns results. Runs as a Docker container managed
@@ -204,10 +205,10 @@ The **AIServiceRegistry** contract (`0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`
 is separate from the primary ServiceRegistry and is used specifically for AI subnet registration.
 Enable it with the `-aiServiceRegistry` flag. The contract is currently detached from the main
 protocol controller - confirm the current integration status with your setup guide.
-{/* TODO: Confirm whether AIServiceRegistry remains detached from the main controller. */}
+{/* REVIEW: Confirm AIServiceRegistry detached-from-controller status is intentional with Mehrdad */}
 </Note>
 
-<CustomDivider middleText="Internal Architecture" />
+<CustomDivider middleText="Internal Architecture" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Dual Pipeline Architecture
 
@@ -320,7 +321,7 @@ flowchart TB
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Job Lifecycle" />
+<CustomDivider middleText="Job Lifecycle" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Request Flow
 
@@ -366,12 +367,12 @@ sequenceDiagram
 7. **On-chain redemption** - Winning tickets are submitted to the TicketBroker contract on Arbitrum,
    releasing ETH to the Orchestrator.
 
-<CustomDivider middleText="Deployment Configurations" />
+<CustomDivider middleText="Deployment Configurations" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Setup Configurations
 
-The go-livepeer binary supports three physical layouts that map to different hardware scale and
-operating requirements.
+The go-livepeer binary can be deployed in several physical configurations depending on hardware
+scale and operational requirements.
 
 <Tabs>
   <Tab title="Combined (solo)" icon="server">
@@ -383,7 +384,7 @@ operating requirements.
     - AI Runner containers managed by the same process
     - Suitable for single-GPU setups
 
-    ```bash icon="terminal" title="Combined single-node startup"
+    ```bash icon="terminal"
     livepeer -orchestrator -transcoder -datadir /path/to/data
     ```
   </Tab>
@@ -396,7 +397,7 @@ operating requirements.
     - Multiple Transcoders can register with a single Orchestrator
     - Reduces resource contention between control-plane and data-plane operations
 
-    ```bash icon="terminal" title="O-T split startup"
+    ```bash icon="terminal"
     # On the Orchestrator machine
     livepeer -orchestrator -datadir /path/to/data
 
@@ -415,7 +416,7 @@ operating requirements.
   </Tab>
 </Tabs>
 
-<CustomDivider middleText="Key Components" />
+<CustomDivider middleText="Key Components" style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Software Components
 
@@ -436,14 +437,14 @@ Source: [github.com/livepeer/go-livepeer](https://github.com/livepeer/go-livepee
 ### AI Runner
 
 A Docker container that handles AI inference workloads. The go-livepeer Orchestrator process spawns
-and manages AI Runner containers for each configured pipeline and model. Containers start on demand,
-and operators should confirm the current warm-state behaviour in the release they deploy.
+and manages AI Runner containers for each configured pipeline and model. Containers are started on
+demand and kept warm while work is flowing.
 
-{/* TODO: Confirm the current AI Runner container lifecycle and warm-state behaviour. */}
+{/* REVIEW: Confirm AI Runner container lifecycle - are containers kept warm between requests? Check with j0sh */}
 
 The `-aiModels` flag specifies which pipelines and models to load on startup:
 
-```bash icon="terminal" title="Example -aiModels startup flag"
+```bash icon="terminal"
 -aiModels "text-to-image:stabilityai/stable-diffusion-3-medium-diffusers,audio-to-text:openai/whisper-large-v3"
 ```
 
@@ -458,9 +459,9 @@ A command-line tool that connects to a running Orchestrator node. Used for:
 
 ### Arbitrum Contracts
 
-See <LinkArrow href="/v2/resources/references/contract-addresses" label="Contract Addresses" newline={false} /> for deployed addresses on Arbitrum Mainnet and Arbitrum Sepolia (testnet).
+See <LinkArrow href="/v2/orchestrators/resources/reference/technical/contract-addresses" label="Contract Addresses" newline={false} /> for deployed addresses on Arbitrum Mainnet and Arbitrum Sepolia (testnet).
 
-<CustomDivider />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Related Pages
 
@@ -474,7 +475,7 @@ See <LinkArrow href="/v2/resources/references/contract-addresses" label="Contrac
   <Card title="Incentive Model" icon="coins" href="/v2/orchestrators/concepts/incentive-model" arrow horizontal>
     Revenue streams, cost structure, and why operating an Orchestrator earns.
   </Card>
-  <Card title="Payment Receipts" icon="credit-card" href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts" arrow horizontal>
-    How probabilistic micropayment tickets reach the Orchestrator and are redeemed.
+  <Card title="Payments" icon="credit-card" href="/v2/orchestrators/guides/payments-and-pricing/payments" arrow horizontal>
+    How probabilistic micropayment tickets work from the Orchestrator's side.
   </Card>
 </CardGroup>

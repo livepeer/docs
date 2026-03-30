@@ -38,11 +38,10 @@
  */
 /**
  * @component HeroSectionContainer
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Full-width hero section wrapper with min-height and gradient background.
- * @accepts {any} children, {string} minHeight, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {string} [minHeight="fit-content"] - min Height prop.
@@ -81,11 +80,10 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
  */
 /**
  * @component HeroImageBackgroundComponent
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Hero background with image overlay and gradient.
- * @accepts {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -128,11 +126,10 @@ const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ..
  */
 /**
  * @component HeroContentContainer
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Centred content container inside hero sections.
- * @accepts {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -159,11 +156,10 @@ const HeroContentContainer = ({ children, className = "", style = {}, ...rest })
 //unused
 /**
  * @component HeroOverviewContent
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Hero content layout with title, icon, subtitle, and CTA slots.
- * @accepts {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -209,11 +205,10 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
  */
 /**
  * @component PortalContentContainer
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Outer container for portal page content below the hero.
- * @accepts {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -250,11 +245,10 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  */
 /**
  * @component PortalHeroContent
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Hero content with logo, title, tagline, description, and card grid.
- * @accepts {boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {boolean} [zIndex=true] - z Index prop.
  * @param {string} [title="Portal Page"] - title prop.
@@ -409,11 +403,10 @@ const PortalHeroContent = ({
 
 /**
  * @component PortalCardsHeader
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Section header with mission label and optional subtitle.
- * @accepts {any} children, {any} title, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} title - title prop.
@@ -439,11 +432,10 @@ const PortalCardsHeader = ({ children, title, className = "", style = {}, ...res
 
 /**
  * @component PortalSectionHeader
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Section header with icon, title, and horizontal rule.
- * @accepts {any} children, {any} title, {any} icon, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
  * @param {any} title - title prop.
@@ -484,11 +476,10 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  */
 /**
  * @component LogoHeroContainer
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Hero banner with centred logo image, title, and subtitle.
- * @accepts {string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {string} [src="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"] - src prop.
  * @param {string} [alt="Livepeer Logo"] - alt prop.
@@ -555,11 +546,10 @@ const LogoHeroContainer = ({
 
 /**
  * @component RefCardContainer
- * @type scaffolding
- * @subniche portals
+ * @category scaffolding
+ * @subcategory portals
  * @status stable
  * @description Container for reference cards with configurable column count.
- * @accepts {any} children, {string} className, {object} style, ...rest
   * @aiDiscoverability none
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.

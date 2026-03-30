@@ -1,11 +1,10 @@
 // FIX THIS - IT SHOULD DYNAMICALLY TAKE UP THE HEIGHT IT HAS
 /**
  * @component CustomDivider
- * @type elements
- * @subniche spacing
+ * @category elements
+ * @subcategory spacing
  * @status stable
  * @description Themed horizontal divider with optional centre text and Livepeer logo accents.
- * @accepts style, className, ...rest
   * @aiDiscoverability none
  * @param {string} [color="var(--border)"] - color prop.
  * @param {string} [middleText=""] - middle Text prop.
@@ -15,6 +14,49 @@
  * <CustomDivider />
   * @param {string} [className=''] - Optional CSS class override.
  */
+/**
+ * @component InlineDivider
+ * @category elements
+ * @subcategory spacing
+ * @status stable
+ * @description Lightweight horizontal rule with controllable margin, padding, colour, and opacity. Use inside accordions, steps, or anywhere markdown `---` gives no spacing control.
+ * @aiDiscoverability none
+ * @param {string} [margin="0.75rem 0"] - Margin around the divider.
+ * @param {string} [padding="0"] - Padding around the divider.
+ * @param {string} [color="var(--border)"] - Line colour.
+ * @param {number} [opacity=0.4] - Line opacity.
+ * @param {string} [height="1px"] - Line thickness.
+ * @param {string} [className=''] - Optional CSS class override.
+ * @param {object} [style={}] - Optional inline style override.
+ * @example
+ * <InlineDivider margin="0.5rem 0" />
+ */
+export const InlineDivider = ({
+  margin = "0.75rem 0",
+  padding = "0",
+  color = "var(--border)",
+  opacity = 0.4,
+  height = "1px",
+  className = "",
+  style = {},
+  ...rest
+}) => (
+  <hr
+    role="separator"
+    className={className}
+    style={{
+      border: "none",
+      margin,
+      padding,
+      height,
+      backgroundColor: color,
+      opacity,
+      ...style,
+    }}
+    {...rest}
+  />
+);
+
 export const CustomDivider = ({
   color = "var(--border)",
   middleText = "",

@@ -22,83 +22,163 @@ lastVerified: 2026-03-17
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CustomCardTitle } from "/snippets/components/elements/text/CustomCardTitle.jsx"
 import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
+import { DoubleIconLink, LinkArrow } from "/snippets/components/elements/links/Links.jsx"
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
+import { SolutionItem } from '/snippets/components/wrappers/custom/SolutionItem.jsx'
 
 {/* DATA */}
 import { daydreamBadges, studioBadges, frameworksBadges, streamplaceBadges, embodyBadges } from './data/badges.jsx'
 import { daydreamInfra, studioInfra, frameworksInfra, streamplaceInfra, embodyInfra } from './data/infra.jsx'
+import { solutionIcons } from "./data/solutionData.jsx"
 
-Livepeer Solutions are ready-to-use video and AI products built on the Livepeer protocol. Stream live video, run AI pipelines, deploy interactive avatars, or add decentralised video to your app — each product handles the infrastructure so you can focus on building.
+<Tip> <div style={{color: "var(--hero-text)", textSize:"0.9rem", marginBottom: "0.2rem"}}>**Are you a Solution Provider?**</div> <span style={{display:"flex", alignContent: "center"}}>  Submit a PR to the <DoubleIconLink label="Livepeer Docs Github" href="https://github.com/livepeer/docs" newline={false} iconRightColor="var(--hero-text)" /> to add your solution here! </span></Tip>
+
+Livepeer Solutions are ready-to-use video and AI products built on the Livepeer protocol. Stream live video, run AI pipelines, deploy interactive avatars, or add decentralised video to your app - each product handles the infrastructure so you can focus on building.
 
 <CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
 
 ## All Solutions
 
-| Solution | Category | Infra | Focus | Links |
-| --- | --- | --- | --- | --- |
-| **Livepeer Studio** | <BadgeWrapper badges={studioBadges} /> | <IconBadgeWrapper items={studioInfra} iconColor="var(--accent)" size={12} /> | Live streaming, VOD, developer APIs | [Docs](/solutions/livepeer-studio/overview) · [App](https://livepeer.studio) |
-| **Daydream** | <BadgeWrapper badges={daydreamBadges} /> | <IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} /> | Real-time AI video, world models | [Docs](/solutions/daydream/overview) · [App](https://daydream.live) |
-| **Frameworks** | <BadgeWrapper badges={frameworksBadges} /> | <IconBadgeWrapper items={frameworksInfra} iconColor="var(--accent)" size={12} /> | Self-hosted video infrastructure | [Docs](/solutions/frameworks/overview) · [App](https://app.frameworks.network) |
-| **Embody** | <BadgeWrapper badges={embodyBadges} /> | <IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} /> | Interactive 3D AI avatars | [Docs](/solutions/embody/overview) · [App](https://embody.zone) |
-| **Streamplace** | <BadgeWrapper badges={streamplaceBadges} /> | <IconBadgeWrapper items={streamplaceInfra} iconColor="var(--accent)" size={12} /> | Decentralised social video | [Docs](/solutions/streamplace/overview) · [App](https://stream.place) |
-
-<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
-
-## By Category
-
-### <Icon icon="video" size={20} /> Video
-
-<BadgeWrapper badges={[{ color: 'blue', label: 'Video' }]} />
-
-| Solution | What it does | Infra | Try it |
-| --- | --- | --- | --- |
-| **Livepeer Studio** | Live streaming, VOD, transcoding API | <IconBadgeWrapper items={studioInfra} iconColor="var(--accent)" size={12} /> | [livepeer.studio](https://livepeer.studio) |
-| **Daydream** | Real-time AI video generation and style transfer | <IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} /> | [daydream.live](https://daydream.live) |
-| **Frameworks** | Full-stack self-hosted video (MistServer) | <IconBadgeWrapper items={frameworksInfra} iconColor="var(--accent)" size={12} /> | [app.frameworks.network](https://app.frameworks.network) |
-| **Streamplace** | Decentralised social video with provenance | <IconBadgeWrapper items={streamplaceInfra} iconColor="var(--accent)" size={12} /> | [stream.place](https://stream.place) |
-
-### <Icon icon="microchip-ai" size={20} /> AI
-
-<BadgeWrapper badges={[{ color: 'purple', label: 'AI' }, { color: 'green', label: 'Realtime AI' }]} />
-
-| Solution | What it does | Infra | Try it |
-| --- | --- | --- | --- |
-| **Daydream** | Real-time AI video, world models, style transfer | <IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} /> | [daydream.live](https://daydream.live) |
-| **Embody** | Interactive 3D AI avatars (Unreal Engine) | <IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} /> | [embody.zone](https://embody.zone) |
-
-### <Icon icon="robot" size={20} /> Agents
-
-<BadgeWrapper badges={[{ color: 'red', label: 'Agents' }]} />
-
-| Solution | What it does | Infra | Try it |
-| --- | --- | --- | --- |
-| **Embody** | AI-driven avatar agents for education and training | <IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} /> | [embody.zone](https://embody.zone) |
+<SearchTable
+  TableComponent={DynamicTable}
+  headerList={["Solution", "Category", "Infra", "Focus", "Links"]}
+  searchPlaceholder="Search solutions..."
+  searchColumns={["Solution", "Focus", "_category"]}
+  categoryColumn="_category"
+  itemsList={[
+    {
+      Solution: <strong>Livepeer Studio</strong>,
+      Category: <BadgeWrapper badges={studioBadges} />,
+      Infra: <IconBadgeWrapper items={studioInfra} iconColor="var(--accent)" size={12} />,
+      Focus: "Live streaming, VOD, developer APIs",
+      Links: <span><a href="/solutions/livepeer-studio/overview">Docs</a> · <a href="https://livepeer.studio">App</a></span>,
+      _category: "Video",
+    },
+    {
+      Solution: <strong>Daydream</strong>,
+      Category: <BadgeWrapper badges={daydreamBadges} />,
+      Infra: <IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} />,
+      Focus: "Real-time AI video, world models",
+      Links: <span><a href="/solutions/daydream/overview">Docs</a> · <a href="https://daydream.live">App</a></span>,
+      _category: "Video, AI",
+    },
+    {
+      Solution: <strong>Frameworks</strong>,
+      Category: <BadgeWrapper badges={frameworksBadges} />,
+      Infra: <IconBadgeWrapper items={frameworksInfra} iconColor="var(--accent)" size={12} />,
+      Focus: "Self-hosted video infrastructure",
+      Links: <span><a href="/solutions/frameworks/overview">Docs</a> · <a href="https://app.frameworks.network">App</a></span>,
+      _category: "Video",
+    },
+    {
+      Solution: <strong>Embody</strong>,
+      Category: <BadgeWrapper badges={embodyBadges} />,
+      Infra: <IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} />,
+      Focus: "Interactive 3D AI avatars",
+      Links: <span><a href="/solutions/embody/overview">Docs</a> · <a href="https://embody.zone">App</a></span>,
+      _category: "AI, Agents",
+    },
+    {
+      Solution: <strong>Streamplace</strong>,
+      Category: <BadgeWrapper badges={streamplaceBadges} />,
+      Infra: <IconBadgeWrapper items={streamplaceInfra} iconColor="var(--accent)" size={12} />,
+      Focus: "Decentralised social video",
+      Links: <span><a href="/solutions/streamplace/overview">Docs</a> · <a href="https://stream.place">App</a></span>,
+      _category: "Video",
+    },
+  ]}
+/>
 
 <CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
 
 ## By Infrastructure Type
 
-### <Icon icon="plug" size={18} /> API
-- **Livepeer Studio** — REST API, TypeScript/Go/Python SDKs ([docs](https://docs.livepeer.org))
-- **Embody** — API for avatar sessions and GPU inference
+<AccordionGroup>
+  <Accordion title="API" icon="plug">
+    - **Livepeer Studio** - REST API, TypeScript/Go/Python SDKs ([docs](https://docs.livepeer.org))
+    - **Embody** - API for avatar sessions and GPU inference
+  </Accordion>
+  <Accordion title="SaaS (hosted)" icon="cloud">
+    - **Livepeer Studio** - Managed gateway, dashboard, billing ([livepeer.studio](https://livepeer.studio))
+    - **Frameworks** - Hosted ingest and transcoding tier ([app.frameworks.network](https://app.frameworks.network))
+    - **Embody** - Hosted avatar platform ([embody.zone](https://embody.zone))
+  </Accordion>
+  <Accordion title="Self-hosted" icon="server">
+    - **Frameworks** - Full MistServer stack, deploy on your own infrastructure ([docs](https://docs.frameworks.network))
+    - **Daydream** - Run pipelines locally or on your own GPU ([GitHub](https://github.com/daydreamlive))
+  </Accordion>
+  <Accordion title="Gateway" icon="torii-gate">
+    - **Livepeer Studio** - Managed gateway routing to the orchestrator network
+    - **Daydream** - Daydream Gateway for real-time AI inference jobs
+    - **Frameworks** - Skipper routing layer for ingest and processing nodes
+  </Accordion>
+  <Accordion title="SDK" icon="toolbox">
+    - **Daydream** - SDK and node-based workflow tools ([docs](https://docs.daydream.live))
+    - **Streamplace** - `@streamplace/sdk` for decentralised video and provenance ([GitHub](https://github.com/streamplace/streamplace))
+    - **Livepeer Studio** - React Player, Broadcast components, `livepeer` npm package
+  </Accordion>
+</AccordionGroup>
 
-### <Icon icon="cloud" size={18} /> SaaS (hosted)
-- **Livepeer Studio** — Managed gateway, dashboard, billing ([livepeer.studio](https://livepeer.studio))
-- **Frameworks** — Hosted ingest and transcoding tier ([app.frameworks.network](https://app.frameworks.network))
-- **Embody** — Hosted avatar platform ([embody.zone](https://embody.zone))
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
 
-### <Icon icon="server" size={18} /> Self-hosted
-- **Frameworks** — Full MistServer stack, deploy on your own infrastructure ([docs](https://docs.frameworks.network))
-- **Daydream** — Run pipelines locally or on your own GPU ([GitHub](https://github.com/daydreamlive))
+## By Category
 
-### <Icon icon="torii-gate" size={18} /> Gateway
-- **Livepeer Studio** — Managed gateway routing to the orchestrator network
-- **Daydream** — Daydream Gateway for real-time AI inference jobs
-- **Frameworks** — Skipper routing layer for ingest and processing nodes
+<BorderedBox variant="accent">
+    <Tabs>
+        <Tab title="Video" icon="video">
+            <BadgeWrapper badges={[{ color: 'blue', label: 'Video' }]} />
 
-### <Icon icon="toolbox" size={18} /> SDK
-- **Daydream** — SDK and node-based workflow tools ([docs](https://docs.daydream.live))
-- **Streamplace** — `@streamplace/sdk` for decentralised video and provenance ([GitHub](https://github.com/streamplace/streamplace))
-- **Livepeer Studio** — React Player, Broadcast components, `livepeer` npm package
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.studio} color="var(--text)"/><LinkArrow href="https://livepeer.studio" label="Livepeer Studio" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={studioInfra} iconColor="var(--accent)" size={12} />}
+              description="Live streaming, VOD, transcoding API"
+            />
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.daydream} color="var(--text)"/><LinkArrow href="https://daydream.live" label="Daydream" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} />}
+              description="Real-time AI video generation and style transfer"
+            />
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.frameworks} color="var(--text)"/><LinkArrow href="https://app.frameworks.network" label="Frameworks" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={frameworksInfra} iconColor="var(--accent)" size={12} />}
+              description="Full-stack self-hosted video (MistServer)"
+            />
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.streamplace} color="var(--text)"/><LinkArrow href="https://stream.place" label="Streamplace" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={streamplaceInfra} iconColor="var(--accent)" size={12} />}
+              description="Decentralised social video with provenance"
+              divider={false}
+            />
+        </Tab>
+        <Tab title="AI" icon="microchip-ai">
+            <BadgeWrapper badges={[{ color: 'purple', label: 'AI' }, { color: 'green', label: 'Realtime AI' }]} />
+
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.daydream} color="var(--text)"/><LinkArrow href="https://daydream.live" label="Daydream" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} />}
+              description="Real-time AI video, world models, style transfer"
+            />
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.embody} color="var(--text)"/><LinkArrow href="https://embody.zone" label="Embody" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} />}
+              description="Interactive 3D AI avatars (Unreal Engine)"
+              divider={false}
+            />
+        </Tab>
+        <Tab title="Agents" icon="robot">
+            <BadgeWrapper badges={[{ color: 'red', label: 'Agents' }]} />
+
+            <SolutionItem
+              title={<><Icon icon={solutionIcons.embody} color="var(--text)"/><LinkArrow href="https://embody.zone" label="Embody" newline={false} /></>}
+              iconWrapper={<IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} />}
+              description="Interactive 3D AI avatars (Unreal Engine)"
+              divider={false}
+            />
+        </Tab>
+    </Tabs>
+</BorderedBox>
 
 <CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
 
@@ -107,10 +187,16 @@ Livepeer Solutions are ready-to-use video and AI products built on the Livepeer 
 Have a product idea that uses Livepeer's video or AI infrastructure? The ecosystem grows through community proposals and open-source contributions.
 
 <CardGroup cols={2}>
-  <Card title={<CustomCardTitle icon="comments" title="Livepeer Forum" />} href="https://forum.livepeer.org/" arrow>
+    <Card title={<CustomCardTitle icon="comments" title="Developer Guide" />} href="../developers/" arrow>
+     Learn how to build custom AI pielines and integrate your own models.
+  </Card>
+  <Card title={<CustomCardTitle icon="github" title="Gateway Applications" />} href="../gateways/" arrow>
+    Build a production application on your own Gateway pipeline.
+  </Card>
+    <Card title={<CustomCardTitle icon="comments" title="Livepeer Forum" />} href="https://forum.livepeer.org/" arrow>
     Propose ideas, discuss with the community, and find collaborators.
   </Card>
   <Card title={<CustomCardTitle icon="github" title="Livepeer GitHub" />} href="https://github.com/livepeer/" arrow>
-    Open-source repos, SDKs, and protocol code.
+    Open-source repos, SDKs, and protocol code to build your ideas on.
   </Card>
 </CardGroup>
