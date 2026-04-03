@@ -1,40 +1,42 @@
-task_id: 20260317
-branch: codex/20260317-merge-readiness-style-root-cause
-base_branch: docs-v2-dev
+task_id: 20260403
+branch: codex/20260403-contracts-docs-v2-migration
+base_branch: docs-v2
 scope_in:
   - .codex/
+  - .github/
+  - .allowlist
+  - .vscode/
   - docs-guide/
   - docs-index.json
-  - snippets/components/layout/
-  - snippets/components/primitives/divider.jsx
-  - snippets/data/gateways/
-  - tasks/reports/merge-readiness/
-  - tests/unit/style-guide.test.js
+  - docs.json
+  - operations/
+  - snippets/components/displays/
+  - snippets/components/integrators/
+  - snippets/components/wrappers/
+  - snippets/composables/pages/canonical/
+  - snippets/data/contract-addresses/
+  - tasks/reports/
+  - tests/
   - tools/scripts/
   - v2/about/
-  - v2/cn/resources/documentation-guide/component-library/
-  - v2/community/
-  - v2/developers/
+  - v2/cn/
   - v2/es/resources/documentation-guide/component-library/
   - v2/fr/resources/documentation-guide/component-library/
   - v2/gateways/
-  - v2/home/
-  - v2/internal/
-  - v2/lpt/
   - v2/orchestrators/
   - v2/resources/
+  - v2/templates/
   - v2/index.mdx
-  - v2/solutions/
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tests/unit/style-guide.test.js --staged
-  - node tests/unit/copy-lint.test.js --staged
-  - node tests/unit/mdx.test.js --staged
-  - node tests/unit/quality.test.js --staged
-  - node tools/scripts/validate-codex-task-contract.js --branch codex/20260317-merge-readiness-style-root-cause
+  - node .github/scripts/fetch-contract-addresses.js --check
+  - node operations/tests/unit/contracts-view-model.test.js
+  - node operations/tests/unit/contracts-addresses-pipeline.test.js
+  - bash lpd test --staged
 risk_flags:
-  - authoring-governance
-  - routed-page-normalization
+  - generated-data-pipeline
+  - routed-page-migration
+  - navigation-governance
 follow_up_issues: []

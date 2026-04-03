@@ -66,6 +66,15 @@ const MISSING_LINK_ALLOWLIST = new Set([
   '/gateways/quickstart/gateway-setup',
   './protocol-economics'
 ]);
+const TEMPLATE_PLACEHOLDER_LINK_PATTERNS = [
+  /^"?glossary or wikipedia link"?$/i,
+  /^\/?path\/to\/page$/i,
+  /^\/v2\/\{path\}\/\{product_key\}\/changelog\/rss\.xml$/i,
+  /^\/v2\/solutions\/\{product_key\}\/changelog\/rss\.xml$/i,
+  /^\{source_url\}(?:\/.*)?$/i,
+  /^url$/i,
+  /^\/v2\/\[tab\](?:\/\[path\])?$/i
+];
 const EXTRA_V2_DIRS = (() => {
   if (!fs.existsSync(LEGACY_V2_PAGES_DIR)) return [];
   const dirs = [];
@@ -95,6 +104,12 @@ function relFromRoot(absPath) {
 function relNoExt(absPath) {
   const rel = relFromRoot(absPath);
   return toPosix(rel.replace(/\.(mdx|md)$/i, ''));
+}
+
+function isAuditableSnippetRel(relPath) {
+  const rel = toPosix(String(relPath || ''));
+  if (!rel.startsWith('snippets/')) return true;
+  return rel.startsWith('snippets/composables/');
 }
 
 function isExcludedV2AbsPath(absPath) {
@@ -497,6 +512,17 @@ function normalizeExternalUrl(raw) {
   }
 }
 
+function isTemplatePlaceholderRef(rawPath, currentFileAbs) {
+  const rel = relFromRoot(currentFileAbs);
+  if (!rel.startsWith('snippets/templates/') && !rel.startsWith('v2/templates/')) {
+    return false;
+  }
+
+  const normalized = normalizeRawPath(rawPath);
+  if (!normalized) return false;
+  return TEMPLATE_PLACEHOLDER_LINK_PATTERNS.some((pattern) => pattern.test(normalized));
+}
+
 function classifyPath(raw) {
   const p = String(raw || '').trim();
   const lower = p.toLowerCase();
@@ -853,6 +879,17 @@ function shouldValidateExternalRef(ref, externalLinkTypes) {
 }
 
 function analyzeRef(ref, currentFileAbs, repoFiles, routeSet, args) {
+  if (isTemplatePlaceholderRef(ref.rawPath, currentFileAbs)) {
+    return {
+      ...ref,
+      linkType: 'template-placeholder',
+      resolvedPath: null,
+      exists: null,
+      status: 'skipped-template-placeholder',
+      movedCandidates: []
+    };
+  }
+
   if (ref.sourceType === 'import-path') {
     const importPath = String(ref.rawPath || '').trim();
     const isPackageImport = importPath && !importPath.startsWith('/') && !importPath.startsWith('./') && !importPath.startsWith('../');
@@ -1045,6 +1082,7 @@ function discoverMdxImports(startTargets) {
       if (!resolved || !resolved.endsWith('.mdx')) continue;
 
       const resolvedRel = relFromRoot(resolved);
+      if (!isAuditableSnippetRel(resolvedRel)) continue;
       if (resolvedRel.startsWith('v2/') && isExcludedV2ExperimentalPath(resolvedRel)) continue;
 
       mdxImports.push(resolved);
@@ -1084,6 +1122,7 @@ function analyzeFiles({ allFiles, rootTargets, importGraph, importedByRoot, stru
   for (const f of allFiles) {
     if (path.basename(f).toLowerCase() === 'index.mdx') continue;
     const rel = relFromRoot(f);
+    if (!isAuditableSnippetRel(rel)) continue;
     if (rel.startsWith('v2/') && isExcludedV2ExperimentalPath(rel)) continue;
     const isRootPage = isActiveV2DocRel(rel);
 
@@ -1990,6 +2029,8 @@ module.exports = {
   deriveJsonReportPath,
   parseArgs,
   normalizeExternalUrl,
+  isAuditableSnippetRel,
+  isTemplatePlaceholderRef,
   shouldValidateExternalRef,
   classifyExternalStatus,
   resolveInternalPath,

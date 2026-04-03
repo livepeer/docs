@@ -1,14 +1,12 @@
 /**
  * @script            fetch-ghost-blog-data
- * @type              automation
- * @concern           content
- * @niche             data/fetching
+ * @category          automation
  * @purpose           infrastructure:data-feeds
- * @description       Fetches Livepeer blog posts via public RSS feed (blog.livepeer.org/rss/). No API key required. Writes to snippets/automations/blog/ghostBlogData.jsx.
- * @mode              generate
- * @pipeline          RSS feed → snippets/automations/blog/ghostBlogData.jsx
- * @scope             .github/scripts, snippets/automations/blog/
- * @policy            PUBLIC RSS only. No API keys.
+ * @scope             generated-output
+ * @domain            docs
+ * @needs             R-R10
+ * @purpose-statement Fetches the Livepeer Ghost RSS feed and writes the generated blog snippets consumed by docs surfaces.
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-ghost-blog-data.js
  */
 const https = require("https");

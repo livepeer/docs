@@ -1,15 +1,13 @@
 /**
  * @script            fetch-rss-blog-data
- * @type              automation
- * @concern           content
- * @niche             data/fetching
+ * @category          automation
  * @purpose           infrastructure:data-feeds
- * @description       Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files.
- * @mode              generate
- * @pipeline          config → RSS feed → snippets/automations/{product}/blogData.jsx
- * @scope             .github/scripts, snippets/automations/
+ * @scope             generated-output
+ * @domain            docs
+ * @needs             R-R10
+ * @purpose-statement Fetches RSS and blog feeds, then writes the generated snippets/automations datasets consumed by docs surfaces.
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-rss-blog-data.js
- * @policy            PUBLIC APIs / RSS only. No API keys for platforms we don't own.
  */
 const https = require("https");
 const http = require("http");

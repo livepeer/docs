@@ -3,20 +3,193 @@
  * @category         integrators
  * @subcategory      feeds
  * @status           experimental
- * @description      Interactive widget to verify Livepeer contract addresses on-chain. Two modes: look up by name (verifies via Controller RPC or Blockscout depending on contract), verify by pasted address. Consumes pipeline data from contractAddressesData.jsx.
- * @dataSource       prop (contractAddressesData.jsx — addresses, keccak hashes, registration status, explorer URLs, RPC URLs) + Arbitrum One RPC (eth_call) + Blockscout API v2 (/api/v2/addresses/)
+ * @description      Interactive widget to verify Livepeer contract addresses on-chain. Two modes: look up by name (verifies via Controller RPC or Blockscout depending on contract), verify by pasted address. Consumes lifecycle-safe pipeline data from contractAddressesData.json.
+ * @dataSource       prop (contractAddressesData.json — active registry rows, lifecycle metadata, keccak hashes, registration state, explorer URLs, RPC URLs) + Arbitrum One RPC (eth_call) + Blockscout API v2 (/api/v2/addresses/)
  * @aiDiscoverability props-extracted
  *
- * // ContractAddresses: see snippets/data/contract-addresses/contractAddressesData.jsx
+ * // ContractAddresses: see snippets/data/contract-addresses/contractAddressesData.json
  * @param {ContractAddresses} data - Pipeline contract addresses data object.
  * @param {string} [className=''] - Optional CSS class override.
  * @param {object} [style={}]     - Optional inline style override.
  */
-export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) => {
+'use client'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { ArbitrumIcon } from '/snippets/components/elements/icons/Icons.jsx'
+
+/**
+ * @component ContractVerifier
+ * @category data
+ * @status experimental
+ * @description Verifies Livepeer contract addresses by contract name or pasted address using pipeline data and chain lookups.
+ * @param {Object} data - Pipeline contract addresses data object.
+ * @param {string} [className=''] - Optional CSS class override.
+ * @param {object} [style={}] - Optional inline style override.
+ */
+export const ContractVerifier = ({
+  data,
+  className = '',
+  style = {},
+  ...rest
+}) => {
+  function buildContractVerifierChainData(innerData = {}, chainKey) {
+    const chainData = (innerData && innerData[chainKey]) || {}
+    const activeEntries = chainData.active || chainData.current || []
+    const inventoryEntries = chainData.inventory || [
+      ...activeEntries,
+      ...(chainData.currentImplementations || []),
+    ]
+    const canonical = {}
+
+    activeEntries.forEach((entry) => {
+      if (!canonical[entry.name]) {
+        canonical[entry.name] = entry
+      } else if ((entry.type || entry.deploymentKind) === 'proxy') {
+        canonical[entry.name] = entry
+      }
+    })
+
+    return { activeEntries, inventoryEntries, canonical }
+  }
+
+  function buildContractVerifierLookupData(innerData = {}) {
+    const chainOrder = ['arbitrumOne', 'ethereumMainnet']
+    const entriesByName = {}
+    const primaryByName = {}
+
+    chainOrder.forEach((chainKey) => {
+      const { canonical } = buildContractVerifierChainData(innerData, chainKey)
+      Object.values(canonical).forEach((entry) => {
+        if (!entriesByName[entry.name]) {
+          entriesByName[entry.name] = []
+        }
+        entriesByName[entry.name].push(entry)
+        if (!primaryByName[entry.name]) {
+          primaryByName[entry.name] = entry
+        }
+      })
+    })
+
+    Object.values(entriesByName).forEach((entries) => {
+      entries.sort((a, b) => {
+        const chainA = chainOrder.indexOf(a.chain || '')
+        const chainB = chainOrder.indexOf(b.chain || '')
+        if (chainA !== chainB) return chainA - chainB
+        return a.name.localeCompare(b.name)
+      })
+    })
+
+    return {
+      entriesByName,
+      lookupEntries: Object.values(primaryByName),
+    }
+  }
+
+  function buildContractVerifierGlobalInventory(innerData = {}) {
+    const chainOrder = ['arbitrumOne', 'ethereumMainnet']
+    const entries = []
+
+    chainOrder.forEach((chainKey) => {
+      const chainData = buildContractVerifierChainData(innerData, chainKey)
+      chainData.inventoryEntries.forEach((entry) => {
+        entries.push(entry)
+      })
+    })
+
+    return entries
+  }
+
+  function normalizeContractVerifierAddress(innerAddress = '') {
+    return String(innerAddress || '').trim().toLowerCase()
+  }
+
+  function findContractVerifierInventoryMatch(
+    innerData = {},
+    innerAddress = ''
+  ) {
+    const needle = normalizeContractVerifierAddress(innerAddress)
+    if (!needle) return null
+
+    return (
+      buildContractVerifierGlobalInventory(innerData).find(
+        (entry) =>
+          normalizeContractVerifierAddress(entry?.address) === needle
+      ) || null
+    )
+  }
+
+  function buildContractVerifierVerifyChains(
+    innerData = {},
+    innerAddress = '',
+    preferredChain = 'arbitrumOne'
+  ) {
+    const chainOrder = ['arbitrumOne', 'ethereumMainnet']
+    const pipelineMatch = findContractVerifierInventoryMatch(
+      innerData,
+      innerAddress
+    )
+    const ordered = []
+
+    if (pipelineMatch?.chain && chainOrder.includes(pipelineMatch.chain)) {
+      ordered.push(pipelineMatch.chain)
+    }
+    if (
+      chainOrder.includes(preferredChain) &&
+      !ordered.includes(preferredChain)
+    ) {
+      ordered.push(preferredChain)
+    }
+    chainOrder.forEach((chainKey) => {
+      if (!ordered.includes(chainKey)) {
+        ordered.push(chainKey)
+      }
+    })
+
+    return ordered
+  }
+
+  function isContractVerifierControllerLookupEligible(entry, hasController) {
+    const entryMeta = (entry && entry.meta) || {}
+    const hash = entryMeta.keccakHash || null
+    const structuredRegistered =
+      entry?.verification?.controller?.controllerRegistered
+    const topLevelRegistered =
+      typeof entry?.controllerRegistered === 'boolean'
+        ? entry.controllerRegistered
+        : null
+    const metaRegistered =
+      typeof entryMeta.controllerRegistered === 'boolean'
+        ? entryMeta.controllerRegistered
+        : null
+    const registrationState =
+      entryMeta.registrationState ||
+      entry?.verification?.controller?.registrationState ||
+      null
+    let isRegistered = null
+
+    if (typeof structuredRegistered === 'boolean') {
+      isRegistered = structuredRegistered
+    } else if (typeof topLevelRegistered === 'boolean') {
+      isRegistered = topLevelRegistered
+    } else if (typeof metaRegistered === 'boolean') {
+      isRegistered = metaRegistered
+    } else if (registrationState === 'registered') {
+      isRegistered = true
+    } else if (
+      registrationState &&
+      registrationState !== 'unknown' &&
+      registrationState !== 'not_applicable'
+    ) {
+      isRegistered = false
+    } else if (typeof entryMeta.registeredInController === 'boolean') {
+      isRegistered = entryMeta.registeredInController
+    }
+
+    return Boolean(hasController && hash && isRegistered === true)
+  }
 
   // ── CONSTANTS ──────────────────────────────────────────────────────────
   const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
-  const SELECTOR  = '0xe16c7d98' // keccak256("getContract(bytes32)")[:4]
+  const SELECTOR = '0xe16c7d98' // keccak256("getContract(bytes32)")[:4]
 
   // ── CHAIN CONFIG (derived from pipeline data.meta) ────────────────────
   const meta = (data && data.meta) || {}
@@ -26,7 +199,8 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
     arbitrumOne: {
       label: 'Arbitrum One',
       rpcUrls: rpcUrls.arbitrumOne || ['https://arb1.arbitrum.io/rpc'],
-      blockscout: explorers.blockscoutArbitrum || 'https://arbitrum.blockscout.com',
+      blockscout:
+        explorers.blockscoutArbitrum || 'https://arbitrum.blockscout.com',
       etherscan: explorers.arbiscan || 'https://arbiscan.io',
       hasController: true,
     },
@@ -40,35 +214,39 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
   }
 
   // ── DERIVE CONTRACT LISTS FROM PIPELINE DATA ──────────────────────────
-  const buildChainData = (chainKey) => {
-    const chainData = data && data[chainKey]
-    const entries = (chainData && chainData.current) || []
-    // Active only: skip historical entries, prefer proxy over standalone over target
-    const canonical = {}
-    entries.forEach(c => {
-      if (c.isHistorical) return
-      if (!canonical[c.name]) {
-        canonical[c.name] = c
-      } else if (c.type === 'proxy') {
-        canonical[c.name] = c
-      }
-    })
-    return { entries, canonical }
-  }
-
   // ── STATE ─────────────────────────────────────────────────────────────
   const [chain, setChain] = useState('arbitrumOne')
   const [tab, setTab] = useState('lookup')
-  const [selectedName, setSelectedName] = useState('BondingManager')
+  const [selectedName, setSelectedName] = useState('')
   const [address, setAddress] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   // ── CHAIN-DERIVED DATA ────────────────────────────────────────────────
-  const chainConfig = CHAINS[chain]
-  const { entries: contracts, canonical: canonicalMap } = buildChainData(chain)
-  const controllerEntry = contracts.find(c => c.name === 'Controller')
+  const getChainBundle = (chainKey) => {
+    const chainData = buildContractVerifierChainData(data, chainKey)
+    const activeContracts = chainData.activeEntries
+    const controller = activeContracts.find((c) => c.name === 'Controller')
+
+    return {
+      chainConfig: CHAINS[chainKey],
+      contracts: activeContracts,
+      inventoryEntries: chainData.inventoryEntries,
+      canonical: chainData.canonical,
+      controllerAddress: controller
+        ? controller.address
+        : '0xD8E8328501E9645d16Cf49539efC04f734606ee4',
+    }
+  }
+
+  const currentChainBundle = getChainBundle(chain)
+  const chainConfig = currentChainBundle.chainConfig
+  const { contracts, inventoryEntries } = currentChainBundle
+  const globalInventoryEntries = buildContractVerifierGlobalInventory(data)
+  const { lookupEntries, entriesByName: lookupEntriesByName } =
+    buildContractVerifierLookupData(data)
+  const controllerEntry = contracts.find((c) => c.name === 'Controller')
   const CONTROLLER = controllerEntry
     ? controllerEntry.address
     : '0xD8E8328501E9645d16Cf49539efC04f734606ee4'
@@ -76,121 +254,159 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
   // Lookup mode: ALL active contracts from pipeline, grouped by category
   // Controller-registered contracts get an RPC on-chain call
   // Non-registered contracts get a Blockscout verify instead
-  const CATEGORY_ORDER = ['core', 'token', 'governance', 'bridge', 'migration', 'utility']
-  const lookupEntries = Object.values(canonicalMap)
-    .sort((a, b) => {
-      const catA = CATEGORY_ORDER.indexOf(a.category || '')
-      const catB = CATEGORY_ORDER.indexOf(b.category || '')
-      if (catA !== catB) return catA - catB
-      return a.name.localeCompare(b.name)
-    })
+  const CATEGORY_ORDER = [
+    'core',
+    'token',
+    'governance',
+    'bridge',
+    'migration',
+    'utility',
+  ]
+  const sortedLookupEntries = lookupEntries.sort((a, b) => {
+    const catA = CATEGORY_ORDER.indexOf(a.category || '')
+    const catB = CATEGORY_ORDER.indexOf(b.category || '')
+    if (catA !== catB) return catA - catB
+    return a.name.localeCompare(b.name)
+  })
 
   // Build grouped options for the dropdown
   const lookupGroups = {}
-  lookupEntries.forEach(c => {
+  sortedLookupEntries.forEach((c) => {
     const cat = c.category || 'other'
     if (!lookupGroups[cat]) lookupGroups[cat] = []
     lookupGroups[cat].push(c.name)
   })
-  const lookupNames = lookupEntries.map(c => c.name)
+  const isLookupReady = selectedName.trim() !== ''
+  const CATEGORY_META = {
+    core: { label: 'Core', icon: 'gear' },
+    token: { label: 'Token', icon: 'coins' },
+    governance: { label: 'Governance', icon: 'landmark' },
+    bridge: { label: 'Bridge', icon: 'bridge' },
+    migration: { label: 'Migration', icon: 'clock-rotate-left' },
+    utility: { label: 'Utility', icon: 'wrench' },
+    other: { label: 'Other', icon: 'circle' },
+  }
+  const TYPE_META = {
+    proxy: { label: 'Proxy', color: 'surface' },
+    target: { label: 'Implementation', color: 'blue' },
+    standalone: { label: 'Direct', color: 'green' },
+  }
 
   // ── HANDLERS ──────────────────────────────────────────────────────────
 
-  const rpcCall = async (calldata) => {
-    const urls = chainConfig.rpcUrls
-    for (const url of urls) {
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_call',
-            params: [{ to: CONTROLLER, data: calldata }, 'latest'],
-            id: 1,
-          }),
-        })
-        const json = await res.json()
-        if (json.error) throw new Error(json.error.message)
-        return json.result
-      } catch (e) {
-        if (url === urls[urls.length - 1]) throw e
-      }
-    }
-  }
-
   const lookupByName = async () => {
+    const chosenName = selectedName.trim()
+    if (!chosenName) {
+      setError('Select a contract first.')
+      setResult(null)
+      return
+    }
+
     setLoading(true)
     setError(null)
     setResult(null)
-    const entry = canonicalMap[selectedName]
-    const entryMeta = (entry && entry.meta) || {}
-    const hash = entryMeta.keccakHash || null
-    const isRegistered = typeof entryMeta.registeredInController === 'boolean'
-      ? entryMeta.registeredInController
-      : null
-    const canRpcLookup = chainConfig.hasController && hash && isRegistered === true
 
     try {
-      // Helper: verify via Blockscout
-      const blockscoutVerify = async (addr) => {
-        const res = await fetch(`${chainConfig.blockscout}/api/v2/addresses/${addr}`)
-        if (!res.ok) throw new Error(`Blockscout returned ${res.status}`)
-        return await res.json()
+      const lookupTargets = lookupEntriesByName[chosenName] || []
+      if (!lookupTargets.length) {
+        setError(`No data available for "${chosenName}".`)
+        return
       }
 
-      if (canRpcLookup) {
-        // Path A: Try Controller RPC call
-        const calldata = SELECTOR + (hash.startsWith('0x') ? hash.slice(2) : hash)
-        const rpcResult = await rpcCall(calldata)
-        const resolved = '0x' + rpcResult.slice(-40)
-        const isZero = resolved.toLowerCase() === ZERO_ADDR
+      const verifyLookupEntry = async (entry) => {
+        const entryChain = entry?.chain || chain
+        const entryChainBundle = getChainBundle(entryChain)
+        const entryChainConfig = entryChainBundle.chainConfig
+        const entryController = entryChainBundle.controllerAddress
+        const canRpcLookup = isContractVerifierControllerLookupEligible(
+          entry,
+          entryChainConfig.hasController
+        )
+        const entryMeta = (entry && entry.meta) || {}
+        const hash = entryMeta.keccakHash || null
 
-        if (isZero && entry) {
-          // Controller doesn't know this contract — fall through to Blockscout
-          const bsData = await blockscoutVerify(entry.address)
-          setResult({
-            mode: 'lookup',
-            resolved: entry.address,
-            isZero: false,
-            matches: null,
-            name: selectedName,
-            expectedAddress: entry.address,
-            verifiedVia: 'blockscout',
-            is_contract: bsData.is_contract,
-            is_verified: bsData.is_verified,
-            explorerName: bsData.name || null,
-            has_logs: bsData.has_logs || false,
-            category: entry.category,
-            type: entry.type,
-          })
-        } else {
-          const expected = entry ? entry.address : null
-          const matches = !isZero && expected
-            && resolved.toLowerCase() === expected.toLowerCase()
-          setResult({
-            mode: 'lookup',
+        const blockscoutVerify = async (addr) => {
+          const res = await fetch(
+            `${entryChainConfig.blockscout}/api/v2/addresses/${addr}`
+          )
+          if (!res.ok) throw new Error(`Blockscout returned ${res.status}`)
+          return await res.json()
+        }
+
+        const rpcCallForEntry = async (calldata) => {
+          const urls = entryChainConfig.rpcUrls
+          for (const url of urls) {
+            try {
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  jsonrpc: '2.0',
+                  method: 'eth_call',
+                  params: [{ to: entryController, data: calldata }, 'latest'],
+                  id: 1,
+                }),
+              })
+              const json = await res.json()
+              if (json.error) throw new Error(json.error.message)
+              return json.result
+            } catch (e) {
+              if (url === urls[urls.length - 1]) throw e
+            }
+          }
+        }
+
+        if (canRpcLookup) {
+          const calldata =
+            SELECTOR + (hash.startsWith('0x') ? hash.slice(2) : hash)
+          const rpcResult = await rpcCallForEntry(calldata)
+          const resolved = '0x' + rpcResult.slice(-40)
+          const isZero = resolved.toLowerCase() === ZERO_ADDR
+
+          if (isZero) {
+            const bsData = await blockscoutVerify(entry.address)
+            return {
+              mode: 'lookup-entry',
+              entry,
+              resolved: entry.address,
+              isZero: false,
+              matches: null,
+              name: chosenName,
+              expectedAddress: entry.address,
+              verifiedVia: 'blockscout',
+              is_contract: bsData.is_contract,
+              is_verified: bsData.is_verified,
+              explorerName: bsData.name || null,
+              has_logs: bsData.has_logs || false,
+              category: entry.category,
+              type: entry.type,
+            }
+          }
+
+          const matches = resolved.toLowerCase() === entry.address.toLowerCase()
+
+          return {
+            mode: 'lookup-entry',
+            entry,
             resolved,
             isZero: false,
             matches,
-            name: selectedName,
-            expectedAddress: expected,
+            name: chosenName,
+            expectedAddress: entry.address,
             verifiedVia: 'controller',
-            category: entry ? entry.category : null,
-            type: entry ? entry.type : null,
-          })
+            category: entry.category,
+            type: entry.type,
+          }
         }
-      } else if (entry) {
-        // Path B: No Controller lookup available, verify via Blockscout
-        const res = await fetch(`${chainConfig.blockscout}/api/v2/addresses/${entry.address}`)
-        if (!res.ok) throw new Error(`Blockscout returned ${res.status}`)
-        const bsData = await res.json()
-        setResult({
-          mode: 'lookup',
+
+        const bsData = await blockscoutVerify(entry.address)
+        return {
+          mode: 'lookup-entry',
+          entry,
           resolved: entry.address,
           isZero: false,
           matches: null,
-          name: selectedName,
+          name: chosenName,
           expectedAddress: entry.address,
           verifiedVia: 'blockscout',
           is_contract: bsData.is_contract,
@@ -199,10 +415,18 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
           has_logs: bsData.has_logs || false,
           category: entry.category,
           type: entry.type,
-        })
-      } else {
-        setError(`No data available for "${selectedName}".`)
+        }
       }
+
+      const lookupResults = await Promise.all(
+        lookupTargets.map((entry) => verifyLookupEntry(entry))
+      )
+
+      setResult({
+        mode: 'lookup',
+        name: chosenName,
+        entries: lookupResults,
+      })
     } catch (e) {
       setError(e.message || 'Verification failed')
     } finally {
@@ -213,34 +437,69 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
   const verifyAddress = async () => {
     const trimmed = address.trim()
     if (!/^0x[0-9a-fA-F]{40}$/.test(trimmed)) {
-      setError('Invalid address format. Expected 0x followed by 40 hex characters.')
+      setError(
+        'Invalid address format. Expected 0x followed by 40 hex characters.'
+      )
       return
     }
     setLoading(true)
     setError(null)
     setResult(null)
     try {
-      const res = await fetch(`${chainConfig.blockscout}/api/v2/addresses/${trimmed}`)
-      if (!res.ok) throw new Error(`Blockscout returned ${res.status}`)
-      const bsData = await res.json()
-      const nameStr = (bsData.name || '').toLowerCase()
-      const isLivepeerNamed = nameStr.includes('livepeer') || nameStr.includes('proxy')
-      // Check if this address is in our pipeline data
-      const pipelineMatch = contracts.find(
-        c => c.address.toLowerCase() === trimmed.toLowerCase()
-      )
+      const pipelineMatch =
+        findContractVerifierInventoryMatch(data, trimmed)
+      const verifyChains = buildContractVerifierVerifyChains(data, trimmed, chain)
+      let explorerResult = null
+      let lastExplorerError = null
+
+      for (const chainKey of verifyChains) {
+        const verifyChainConfig = CHAINS[chainKey]
+        if (!verifyChainConfig?.blockscout) continue
+
+        try {
+          const res = await fetch(
+            `${verifyChainConfig.blockscout}/api/v2/addresses/${trimmed}`
+          )
+          if (!res.ok) throw new Error(`Blockscout returned ${res.status}`)
+          const bsData = await res.json()
+          explorerResult = { chainKey, data: bsData }
+          if (bsData?.is_contract || pipelineMatch?.chain === chainKey) {
+            break
+          }
+        } catch (error_) {
+          lastExplorerError = error_
+        }
+      }
+
+      if (!explorerResult && !pipelineMatch) {
+        throw lastExplorerError || new Error('Explorer verification failed')
+      }
+
+      const bsData = explorerResult?.data || {}
+      const resolvedChain =
+        pipelineMatch?.chain || explorerResult?.chainKey || chain
+      const nameStr = (bsData.name || pipelineMatch?.name || '').toLowerCase()
+      const isLivepeerNamed =
+        Boolean(pipelineMatch) ||
+        nameStr.includes('livepeer') ||
+        nameStr.includes('proxy')
+
       setResult({
         mode: 'verify',
-        is_contract: bsData.is_contract,
-        is_verified: bsData.is_verified,
-        name: bsData.name || null,
+        is_contract: bsData.is_contract ?? Boolean(pipelineMatch),
+        is_verified:
+          bsData.is_verified ??
+          pipelineMatch?.sourceVerified ??
+          null,
+        name: bsData.name || pipelineMatch?.name || null,
         isLivepeerNamed,
         has_logs: bsData.has_logs || false,
         queriedAddress: trimmed,
         pipelineMatch: pipelineMatch || null,
+        resolvedChain,
       })
     } catch (e) {
-      setError(e.message || 'Blockscout query failed')
+      setError(e.message || 'Explorer query failed')
     } finally {
       setLoading(false)
     }
@@ -248,6 +507,94 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
 
   const castFallback = (name) =>
     `cast call ${CONTROLLER} \\\n  "getContract(bytes32)(address)" \\\n  $(cast keccak "${name}") \\\n  --rpc-url ${chainConfig.rpcUrls[0]}`
+
+  const getChainMeta = (chainKey) => {
+    if (chainKey === 'ethereumMainnet') {
+      return {
+        label: 'Ethereum Mainnet',
+        explorerLabel: 'Etherscan',
+        icon: <Icon icon="ethereum" color="var(--hero-text)" size={13} />,
+      }
+    }
+
+    return {
+      label: 'Arbitrum One',
+      explorerLabel: 'Arbiscan',
+      icon: <ArbitrumIcon color="var(--arbitrum)" size={13} />,
+    }
+  }
+
+  const getVerificationBullets = (entry, lookupResult) => {
+    const bullets = []
+    const verification = entry?.verification || {}
+
+    if (lookupResult?.verifiedVia === 'controller' && lookupResult?.matches) {
+      bullets.push('Matches the current on-chain Controller registry entry.')
+    } else if (
+      lookupResult?.verifiedVia === 'blockscout' &&
+      lookupResult?.is_contract
+    ) {
+      bullets.push('Explorer confirms this address is a deployed contract.')
+    }
+
+    if (
+      verification?.controller?.controllerRegistered === true &&
+      lookupResult?.verifiedVia !== 'controller'
+    ) {
+      bullets.push(
+        'This contract family is registered in the current Controller registry.'
+      )
+    }
+
+    if (
+      verification?.proxy?.applicable &&
+      verification?.proxy?.implementationAddress
+    ) {
+      if (verification?.proxy?.implementationMatchesExpected === true) {
+        bullets.push(
+          'Proxy runtime resolves to the expected current implementation.'
+        )
+      } else if (verification?.proxy?.implementationMatchesExpected === false) {
+        bullets.push(
+          'Proxy runtime does not match the expected implementation.'
+        )
+      } else {
+        bullets.push(
+          'Proxy runtime resolves to a current downstream implementation.'
+        )
+      }
+    }
+
+    if (entry?.sourceVerified || lookupResult?.is_verified) {
+      bullets.push('Explorer source code is verified.')
+    }
+
+    return [...new Set(bullets)]
+  }
+
+  const getVerifyBullets = (verifyResult) => {
+    const bullets = []
+    const matchedEntry = verifyResult?.pipelineMatch || null
+
+    if (matchedEntry) {
+      bullets.push(
+        `Matches the published Livepeer registry entry for ${matchedEntry.name}.`
+      )
+    }
+    if (verifyResult?.is_verified) {
+      bullets.push('Explorer source code is verified.')
+    }
+    if (verifyResult?.has_logs) {
+      bullets.push('Explorer shows transaction history for this contract.')
+    }
+    if (verifyResult?.isLivepeerNamed) {
+      bullets.push(
+        'Explorer labelling identifies this address as Livepeer-related.'
+      )
+    }
+
+    return [...new Set(bullets)]
+  }
 
   // ── STYLES ────────────────────────────────────────────────────────────
 
@@ -328,7 +675,56 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
       padding: '1rem',
       display: 'flex',
       flexDirection: 'column',
+      gap: '0.75rem',
+    },
+    identityBlock: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.45rem',
+    },
+    titleRow: {
+      display: 'flex',
+      alignItems: 'center',
       gap: '0.5rem',
+      flexWrap: 'wrap',
+    },
+    chainRow: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.35rem',
+      flexWrap: 'wrap',
+    },
+    titleText: {
+      fontWeight: 700,
+      fontSize: '1rem',
+      lineHeight: 1.3,
+    },
+    chainText: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.35rem',
+      color: 'var(--muted-text)',
+      fontSize: '0.85rem',
+      whiteSpace: 'nowrap',
+    },
+    categoryRow: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      flexWrap: 'wrap',
+    },
+    metaLabel: {
+      fontSize: '0.9rem',
+      fontWeight: 600,
+      color: 'var(--muted-text)',
+    },
+    categoryText: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.35rem',
+      fontSize: '0.9rem',
+      fontWeight: 600,
+      color: 'var(--hero-text)',
     },
     addressText: {
       fontFamily: 'monospace',
@@ -404,175 +800,250 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
       gap: '0.5rem',
       fontSize: '0.9rem',
     },
+    verificationBlock: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.35rem',
+    },
+    sectionTitle: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.4rem',
+      fontSize: '0.9rem',
+      fontWeight: 600,
+      color: 'var(--hero-text)',
+    },
+    verificationList: {
+      margin: 0,
+      paddingLeft: '1.1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.25rem',
+      fontSize: '0.9rem',
+      color: 'var(--foreground)',
+    },
+    addressBlock: {
+      width: '100%',
+      maxWidth: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem',
+    },
     mismatchNote: {
       fontSize: '0.85rem',
       color: 'var(--lp-color-status-warn)',
       marginTop: '0.25rem',
     },
+    resultStack: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.75rem',
+    },
   }
 
   // ── RENDER HELPERS ────────────────────────────────────────────────────
 
+  const renderIdentity = (entry, statusBadge, fallbackName) => {
+    const categoryKey = entry?.category || 'other'
+    const category = CATEGORY_META[categoryKey] || CATEGORY_META.other
+    const typeMeta = TYPE_META[entry?.type || entry?.deploymentKind] || null
+    const chainMeta = getChainMeta(entry?.chain || chain)
+
+    return (
+      <div style={styles.identityBlock}>
+        <div style={styles.titleRow}>
+          {statusBadge}
+          <span style={styles.titleText}>{entry?.name || fallbackName}</span>
+        </div>
+        <div style={styles.chainRow}>
+          <span style={styles.chainText}>
+            {chainMeta.icon}
+            {chainMeta.label}
+          </span>
+        </div>
+        <div style={styles.categoryRow}>
+          <span style={styles.metaLabel}>Category:</span>
+          <span style={styles.categoryText}>
+            <Icon icon={category.icon} color="var(--accent)" size={13} />
+            {category.label}
+          </span>
+        </div>
+        {typeMeta && (
+          <div style={styles.categoryRow}>
+            <span style={styles.metaLabel}>Type:</span>
+            <Badge color={typeMeta.color}>{typeMeta.label}</Badge>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const renderAddressBlock = (address, chainKey) => {
+    if (!address) return null
+
+    return (
+      <div style={styles.addressBlock}>
+        <div style={styles.sectionTitle}>Address</div>
+        <CopyText text={address} style={{ width: '100%' }} />
+        {renderExplorerLinks(address, chainKey)}
+      </div>
+    )
+  }
+
+  const renderVerificationBlock = (bullets) => {
+    if (!bullets.length) return null
+
+    return (
+      <div style={styles.verificationBlock}>
+        <div style={styles.sectionTitle}>
+          <Icon icon="check" color="var(--hero-text)" size={13} />
+          Verification:
+        </div>
+        <ul style={styles.verificationList}>
+          {bullets.map((bullet) => (
+            <li key={bullet}>{bullet}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const renderExplorerLinks = (address, chainKey) => {
+    const chainMeta = getChainMeta(chainKey)
+
+    return (
+      <div style={styles.links}>
+        <a
+          href={`${CHAINS[chainKey].etherscan}/address/${address}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.link}
+        >
+          View on {chainMeta.explorerLabel}
+        </a>
+        <a
+          href={`${CHAINS[chainKey].blockscout}/address/${address}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.link}
+        >
+          View on Blockscout
+        </a>
+      </div>
+    )
+  }
+
+  const renderLookupCard = (lookupResult, index) => {
+    const entry = lookupResult.entry || null
+    const verificationBullets = getVerificationBullets(entry, lookupResult)
+    const statusBadge =
+      lookupResult.verifiedVia === 'controller' ? (
+        <span
+          style={
+            lookupResult.matches ? styles.badgeMatch : styles.badgeMismatch
+          }
+        >
+          {lookupResult.matches ? 'MATCH' : 'MISMATCH'}
+        </span>
+      ) : (
+        <span
+          style={lookupResult.is_contract ? styles.badgeGood : styles.badgeWarn}
+        >
+          {lookupResult.is_contract ? 'VERIFIED' : 'CHECKED'}
+        </span>
+      )
+
+    return (
+      <div
+        key={`${lookupResult.name}-${entry?.chain || chain}-${index}`}
+        style={styles.card}
+      >
+        {renderIdentity(entry, statusBadge, lookupResult.name)}
+        {renderAddressBlock(lookupResult.resolved, entry?.chain || chain)}
+        {renderVerificationBlock(verificationBullets)}
+        {lookupResult.explorerName && (
+          <div style={styles.signalRow}>
+            <span style={{ fontWeight: 600 }}>Explorer label:</span>
+            <span>{lookupResult.explorerName}</span>
+          </div>
+        )}
+        {lookupResult.verifiedVia === 'controller' && !lookupResult.matches && (
+          <div style={styles.mismatchNote}>
+            Mismatch means the page data and current Controller result do not
+            agree. Treat this as a blocking proof-chain mismatch until the
+            canonical registry is refreshed.
+          </div>
+        )}
+      </div>
+    )
+  }
+
   const renderLookupResult = () => {
     if (!result || result.mode !== 'lookup') return null
+    if (!Array.isArray(result.entries) || !result.entries.length) return null
 
-    const addr = result.resolved || result.expectedAddress
-    const categoryLabel = result.category
-      ? result.category.charAt(0).toUpperCase() + result.category.slice(1)
-      : null
-    const typeLabel = result.type || null
-
-    // Path A: Controller RPC result (zero results now auto-fall-through to Blockscout in handler)
-    if (result.verifiedVia === 'controller') {
-      return (
-        <div style={styles.card}>
-          <div style={styles.signalRow}>
-            <span style={result.matches ? styles.badgeMatch : styles.badgeMismatch}>
-              {result.matches ? 'MATCH' : 'MISMATCH'}
-            </span>
-            <span style={{ fontWeight: 600 }}>{result.name}</span>
-            {categoryLabel && (
-              <span style={{ fontSize: '0.85rem', color: 'var(--muted-text)' }}>
-                ({categoryLabel}{typeLabel ? ', ' + typeLabel : ''})
-              </span>
-            )}
-          </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--muted-text)' }}>Verified on-chain via Controller registry</div>
-          <div style={styles.addressText}>{result.resolved}</div>
-          {!result.matches && (
-            <div style={styles.mismatchNote}>
-              MISMATCH may indicate a governance upgrade. Cross-check{' '}
-              <a
-                href="https://github.com/livepeer/governor-scripts/blob/master/updates/addresses.js"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={styles.link}
-              >governor-scripts</a>.
-            </div>
-          )}
-          <div style={styles.links}>
-            <a href={`${chainConfig.etherscan}/address/${result.resolved}`} target="_blank" rel="noopener noreferrer" style={styles.link}>View on Arbiscan</a>
-            <a href={`${chainConfig.blockscout}/address/${result.resolved}`} target="_blank" rel="noopener noreferrer" style={styles.link}>View on Blockscout</a>
-          </div>
-        </div>
-      )
-    }
-
-    // Path B: Blockscout verification (not in Controller)
-    if (result.verifiedVia === 'blockscout') {
-      return (
-        <div style={styles.card}>
-          <div style={styles.signalRow}>
-            <span style={{ fontWeight: 600 }}>{result.name}</span>
-            {categoryLabel && (
-              <span style={{ fontSize: '0.85rem', color: 'var(--muted-text)' }}>
-                ({categoryLabel}{typeLabel ? ', ' + typeLabel : ''})
-              </span>
-            )}
-          </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--muted-text)' }}>Verified via Blockscout explorer</div>
-          <div style={styles.addressText}>{result.resolved}</div>
-          <div style={styles.signalRow}>
-            <span style={{ fontWeight: 600 }}>Contract:</span>
-            {result.is_contract
-              ? <span style={styles.badgeGood}>Yes</span>
-              : <span style={styles.badgeMismatch}>Not a contract</span>
-            }
-          </div>
-          <div style={styles.signalRow}>
-            <span style={{ fontWeight: 600 }}>Source verified:</span>
-            {result.is_verified
-              ? <span style={styles.badgeGood}>Verified</span>
-              : <span style={styles.badgeWarn}>Not verified</span>
-            }
-          </div>
-          {result.explorerName && (
-            <div style={styles.signalRow}>
-              <span style={{ fontWeight: 600 }}>Explorer name:</span>
-              <span>{result.explorerName}</span>
-            </div>
-          )}
-          <div style={styles.links}>
-            <a href={`${chainConfig.etherscan}/address/${result.resolved}`} target="_blank" rel="noopener noreferrer" style={styles.link}>View on Arbiscan</a>
-            <a href={`${chainConfig.blockscout}/address/${result.resolved}`} target="_blank" rel="noopener noreferrer" style={styles.link}>View on Blockscout</a>
-          </div>
-        </div>
-      )
-    }
-
-    return null
+    return (
+      <div style={styles.resultStack}>
+        {result.entries.map((entryResult, index) =>
+          renderLookupCard(entryResult, index)
+        )}
+      </div>
+    )
   }
 
   const renderVerifyResult = () => {
     if (!result || result.mode !== 'verify') return null
+    const matchedEntry = result.pipelineMatch || null
+    const verificationBullets = getVerifyBullets(result)
+    const statusBadge = matchedEntry ? (
+      <span style={styles.badgeMatch}>MATCH</span>
+    ) : (
+      <span style={styles.badgeWarn}>CHECKED</span>
+    )
+
     if (!result.is_contract) {
       return (
         <div style={styles.card}>
           <span style={styles.badgeMismatch}>NOT A CONTRACT</span>
           <span style={{ fontSize: '0.9rem' }}>
-            This address is not a contract on Arbitrum One. It may be an
-            externally owned account (EOA) or does not exist on this chain.
+            This address is not a contract on Arbitrum One or Ethereum
+            Mainnet. It may be an externally owned account (EOA) or does not
+            exist on either supported chain.
           </span>
         </div>
       )
     }
     return (
       <div style={styles.card}>
-        {result.pipelineMatch && (
-          <div style={styles.signalRow}>
-            <span style={styles.badgeGood}>Known Livepeer contract</span>
-            <span style={{ fontWeight: 600 }}>{result.pipelineMatch.name}</span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--muted-text)' }}>
-              ({result.pipelineMatch.type}, {result.pipelineMatch.category})
-            </span>
-          </div>
+        {renderIdentity(
+          matchedEntry || {
+            name: result.name || 'Address lookup',
+            chain: result.resolvedChain || chain,
+          },
+          statusBadge,
+          result.name || 'Address lookup'
         )}
+        {renderAddressBlock(
+          result.queriedAddress,
+          result.resolvedChain || matchedEntry?.chain || chain
+        )}
+        {renderVerificationBlock(verificationBullets)}
         {result.name && (
           <div style={styles.signalRow}>
-            <span style={{ fontWeight: 600 }}>Explorer name:</span>
+            <span style={{ fontWeight: 600 }}>Explorer label:</span>
             <span>{result.name}</span>
             {result.isLivepeerNamed && !result.pipelineMatch && (
               <span style={styles.badgeGood}>Livepeer identified</span>
             )}
           </div>
         )}
-        <div style={styles.signalRow}>
-          <span style={{ fontWeight: 600 }}>Contract:</span>
-          <span style={styles.badgeGood}>Yes</span>
-        </div>
-        <div style={styles.signalRow}>
-          <span style={{ fontWeight: 600 }}>Source verified:</span>
-          {result.is_verified
-            ? <span style={styles.badgeGood}>Verified</span>
-            : <span style={styles.badgeWarn}>Not verified</span>
-          }
-        </div>
-        <div style={styles.signalRow}>
-          <span style={{ fontWeight: 600 }}>Transaction logs:</span>
-          {result.has_logs
-            ? <span style={styles.badgeGood}>Present</span>
-            : <span style={styles.badgeWarn}>None found</span>
-          }
-        </div>
         {!result.pipelineMatch && (
           <div style={styles.signalRow}>
-            <span style={styles.badgeWarn}>Not in Livepeer contract registry</span>
+            <span style={styles.badgeWarn}>
+              Not matched to the published Livepeer registry
+            </span>
           </div>
         )}
-        <div style={styles.links}>
-          <a
-            href={`${chainConfig.etherscan}/address/${result.queriedAddress}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.link}
-          >View on Arbiscan</a>
-          <a
-            href={`${BLOCKSCOUT}/address/${result.queriedAddress}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.link}
-          >View on Blockscout</a>
-        </div>
       </div>
     )
   }
@@ -584,27 +1055,44 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
       {/* Description */}
       {tab === 'lookup' && (
         <div style={{ fontSize: '0.9rem', color: 'var(--muted-text)' }}>
-          Select a contract and verify its address on-chain.
+          Select a published contract and verify its current address against the
+          strongest available on-chain or explorer check.
         </div>
       )}
       {tab === 'verify' && (
         <div style={{ fontSize: '0.9rem', color: 'var(--muted-text)' }}>
-          Paste any address to check whether it is a verified contract on {chainConfig.label}.
+          Paste any address to check bytecode, explorer verification, and
+          whether it matches the published Livepeer contract registry on
+          Arbitrum One or Ethereum Mainnet.
         </div>
       )}
 
       {/* Tab buttons */}
       <div style={styles.tabRow}>
         <button
-          style={{ ...styles.tabBase, ...(tab === 'lookup' ? styles.tabActive : styles.tabInactive) }}
-          onClick={() => { setTab('lookup'); setResult(null); setError(null) }}
+          style={{
+            ...styles.tabBase,
+            ...(tab === 'lookup' ? styles.tabActive : styles.tabInactive),
+          }}
+          onClick={() => {
+            setTab('lookup')
+            setResult(null)
+            setError(null)
+          }}
           aria-pressed={tab === 'lookup'}
         >
           Look up contract
         </button>
         <button
-          style={{ ...styles.tabBase, ...(tab === 'verify' ? styles.tabActive : styles.tabInactive) }}
-          onClick={() => { setTab('verify'); setResult(null); setError(null) }}
+          style={{
+            ...styles.tabBase,
+            ...(tab === 'verify' ? styles.tabActive : styles.tabInactive),
+          }}
+          onClick={() => {
+            setTab('verify')
+            setResult(null)
+            setError(null)
+          }}
           aria-pressed={tab === 'verify'}
         >
           Verify address
@@ -620,18 +1108,29 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
             style={styles.select}
             aria-label="Contract name"
           >
-            {CATEGORY_ORDER.filter(cat => lookupGroups[cat]).map((cat) => (
-              <optgroup key={cat} label={cat.charAt(0).toUpperCase() + cat.slice(1)}>
+            <option value="" disabled>
+              Select a contract
+            </option>
+            {CATEGORY_ORDER.filter((cat) => lookupGroups[cat]).map((cat) => (
+              <optgroup
+                key={cat}
+                label={cat.charAt(0).toUpperCase() + cat.slice(1)}
+              >
                 {lookupGroups[cat].map((name) => (
-                  <option key={name} value={name}>{name}</option>
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
                 ))}
               </optgroup>
             ))}
           </select>
           <button
             onClick={lookupByName}
-            disabled={loading}
-            style={{ ...styles.button, ...(loading ? styles.buttonDisabled : {}) }}
+            disabled={!isLookupReady || loading}
+            style={{
+              ...styles.button,
+              ...(!isLookupReady || loading ? styles.buttonDisabled : {}),
+            }}
           >
             {loading ? 'Querying on-chain...' : 'Look up'}
           </button>
@@ -654,7 +1153,10 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
           <button
             onClick={verifyAddress}
             disabled={loading}
-            style={{ ...styles.button, ...(loading ? styles.buttonDisabled : {}) }}
+            style={{
+              ...styles.button,
+              ...(loading ? styles.buttonDisabled : {}),
+            }}
           >
             {loading ? 'Querying Blockscout...' : 'Verify'}
           </button>
@@ -670,7 +1172,7 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
         {error && (
           <div>
             <div style={styles.errorText}>{error}</div>
-            {tab === 'lookup' && (
+            {tab === 'lookup' && selectedName && (
               <div style={{ marginTop: '0.75rem' }}>
                 <div style={{ fontSize: '0.85rem', marginBottom: '0.5rem' }}>
                   Verify manually with the Foundry CLI:
@@ -682,11 +1184,23 @@ export const ContractVerifier = ({ data, className = "", style = {}, ...rest }) 
               <div style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
                 Try inspecting this address directly on{' '}
                 <a
-                  href={chainConfig.etherscan}
+                  href={CHAINS.arbitrumOne.etherscan}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={styles.link}
-                >Arbiscan</a>.
+                >
+                  Arbiscan
+                </a>{' '}
+                or{' '}
+                <a
+                  href={CHAINS.ethereumMainnet.etherscan}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={styles.link}
+                >
+                  Etherscan
+                </a>
+                .
               </div>
             )}
           </div>

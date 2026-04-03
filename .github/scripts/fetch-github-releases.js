@@ -1,15 +1,13 @@
 /**
  * @script            fetch-github-releases
- * @type              automation
- * @concern           content
- * @niche             data/fetching
+ * @category          automation
  * @purpose           infrastructure:data-feeds
- * @description       Fetches latest GitHub Releases via public REST API, writes per-product JSX data files.
- * @mode              generate
- * @pipeline          config → GitHub REST API → snippets/automations/{product}/githubReleasesData.jsx
- * @scope             .github/scripts, snippets/automations/
+ * @scope             generated-output
+ * @domain            docs
+ * @needs             R-R10
+ * @purpose-statement Fetches GitHub release data and writes the generated snippets/automations datasets consumed by docs surfaces.
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-github-releases.js
- * @policy            Public repos only. No auth needed for public repos. GITHUB_TOKEN optional for rate limits.
  */
 const https = require("https");
 const fs = require("fs");

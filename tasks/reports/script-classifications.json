@@ -70,6 +70,26 @@
     "pipeline": "manual — developer tool"
   },
   {
+    "path": ".github/scripts/fetch-contract-addresses.js",
+    "script": "fetch-contract-addresses",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches and verifies Livepeer contract-address data, then generates the contracts datasets and canonical page inputs consumed by docs-v2.",
+    "pipeline": "P5, P6"
+  },
+  {
+    "path": ".github/scripts/fetch-discord-announcements.js",
+    "script": "fetch-discord-announcements",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches Discord announcement feeds and writes the generated snippets/automations datasets consumed by docs surfaces.",
+    "pipeline": "P5, P6"
+  },
+  {
     "path": ".github/scripts/fetch-forum-data.js",
     "script": "fetch-forum-data",
     "category": "automation",
@@ -84,9 +104,39 @@
     "script": "fetch-ghost-blog-data",
     "category": "automation",
     "purpose": "infrastructure:data-feeds",
-    "scope": ".github/scripts",
-    "needs": "F-R1",
-    "purpose_statement": "Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches the Livepeer Ghost RSS feed and writes the generated blog snippets consumed by docs surfaces.",
+    "pipeline": "P5, P6"
+  },
+  {
+    "path": ".github/scripts/fetch-github-discussions.js",
+    "script": "fetch-github-discussions",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches GitHub Discussions data and writes the generated snippets/automations datasets consumed by docs surfaces.",
+    "pipeline": "P5, P6"
+  },
+  {
+    "path": ".github/scripts/fetch-github-releases.js",
+    "script": "fetch-github-releases",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches GitHub release data and writes the generated snippets/automations datasets consumed by docs surfaces.",
+    "pipeline": "P5, P6"
+  },
+  {
+    "path": ".github/scripts/fetch-rss-blog-data.js",
+    "script": "fetch-rss-blog-data",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Fetches RSS and blog feeds, then writes the generated snippets/automations datasets consumed by docs surfaces.",
     "pipeline": "P5, P6"
   },
   {
@@ -107,6 +157,16 @@
     "scope": ".github/scripts",
     "needs": "F-R1",
     "purpose_statement": "Fetches project showcase data from external source, writes to snippets/automations/showcase/",
+    "pipeline": "P5, P6"
+  },
+  {
+    "path": ".github/scripts/generate-changelog.js",
+    "script": "generate-changelog",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "generated-output",
+    "needs": "R-R10",
+    "purpose_statement": "Generates managed changelog pages from upstream release and commit data for solutions, contracts, and resources surfaces.",
     "pipeline": "P5, P6"
   },
   {
@@ -251,6 +311,16 @@
     "needs": "R-R14, R-R29",
     "purpose_statement": "Validates the AI-tools registry contract, full tracked ai-tools coverage, and the Wave 1 inventory source-of-truth boundary.",
     "pipeline": "P1, P3"
+  },
+  {
+    "path": "tests/unit/authoring-tools.test.js",
+    "script": "authoring-tools.test",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tests/unit, tools/vscode/authoring-tools, tools/scripts/format-mdx.js",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Unit tests for repo-owned authoring tools — verifies MDX formatting and real-path completion/validation helpers.",
+    "pipeline": "P1"
   },
   {
     "path": "tests/unit/audit-script-inventory-repair-rules.test.js",
@@ -1644,6 +1714,16 @@
     "pipeline": "manual — developer tool"
   },
   {
+    "path": "tools/scripts/dev/rename-vscode-codex-chat.js",
+    "script": "rename-vscode-codex-chat",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts/dev/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing.",
+    "pipeline": "manual — interactive developer tool, not suited for automated pipelines"
+  },
+  {
     "path": "tools/scripts/dev/replace-og-image.py",
     "script": "replace-og-image",
     "category": "remediator",
@@ -1805,6 +1885,16 @@
     "pipeline": "manual — not yet in pipeline"
   },
   {
+    "path": "tools/scripts/format-mdx.js",
+    "script": "format-mdx",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts, tools/vscode/authoring-tools, tests/unit",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension.",
+    "pipeline": "manual"
+  },
+  {
     "path": "tools/scripts/generate-ai-sitemap.js",
     "script": "generate-ai-sitemap",
     "category": "generator",
@@ -1833,7 +1923,7 @@
     "scope": "generated-output",
     "needs": "R-R10",
     "purpose_statement": "Generates published component library MDX pages from the registry.",
-    "pipeline": "manual"
+    "pipeline": "indirect, manual"
   },
   {
     "path": "tools/scripts/generate-component-governance-remediation-reports.js",
@@ -2180,6 +2270,16 @@
     "needs": "F-R6, F-R7",
     "purpose_statement": "Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity",
     "pipeline": "P6"
+  },
+  {
+    "path": "tools/scripts/install-authoring-tools-extension.js",
+    "script": "install-authoring-tools-extension",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts, tools/vscode/authoring-tools, .vscode/settings.json",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories.",
+    "pipeline": "manual"
   },
   {
     "path": "tools/scripts/lib/docs-path-sync.js",

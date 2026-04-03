@@ -120,6 +120,20 @@ async function runTests() {
     assert.strictEqual(out, 'https://example.com/docs?tab=one');
   });
 
+  await runCase('Skips placeholder links inside template surfaces', async () => {
+    const root = getRepoRoot();
+    const templateFile = path.join(root, 'snippets', 'templates', 'pages', 'resources', 'changelog-template.mdx');
+    assert.strictEqual(audit.isTemplatePlaceholderRef('/path/to/page', templateFile), true);
+    assert.strictEqual(audit.isTemplatePlaceholderRef('{SOURCE_URL}/releases/tag/vX.Y.Z', templateFile), true);
+    assert.strictEqual(audit.isTemplatePlaceholderRef('/v2/resources/livepeer-contract-addresses', templateFile), false);
+  });
+
+  await runCase('Does not skip real links outside template surfaces', async () => {
+    const root = getRepoRoot();
+    const normalFile = path.join(root, 'v2', 'about', 'resources', 'livepeer-contract-addresses.mdx');
+    assert.strictEqual(audit.isTemplatePlaceholderRef('/path/to/page', normalFile), false);
+  });
+
   await runCase('External eligibility filter handles navigational/media/all', async () => {
     const markdownLink = { sourceType: 'markdown-link' };
     const markdownImage = { sourceType: 'markdown-image' };
@@ -193,8 +207,8 @@ async function runTests() {
       ]
     });
 
-    assert.strictEqual(result.fileCount, 2);
     const analyzedFiles = (result.jsonReport?.files || []).map((file) => file.file || file.filePath || '');
+    assert.strictEqual(result.fileCount, analyzedFiles.length);
     assert(analyzedFiles.some((file) => file.endsWith('v2/orchestrators/quickstart/guide.mdx')));
     assert(analyzedFiles.some((file) => file.endsWith('v2/orchestrators/quickstart/video-transcoding.mdx')));
     assert(analyzedFiles.every((file) => !file.includes('v2/orchestrators/guides/')));
@@ -211,11 +225,20 @@ async function runTests() {
     );
   });
 
+  await runCase('Ignores non-composable snippet imports during audit traversal', async () => {
+    const root = getRepoRoot();
+    const snippetTemplate = path.join(root, 'snippets', 'templates', 'pages', 'resources', 'changelog-template.mdx');
+    const composable = path.join(root, 'snippets', 'composables', 'pages', 'canonical', 'livepeer-contract-addresses.mdx');
+
+    assert.strictEqual(audit.isAuditableSnippetRel(path.relative(root, snippetTemplate).split(path.sep).join('/')), false);
+    assert.strictEqual(audit.isAuditableSnippetRel(path.relative(root, composable).split(path.sep).join('/')), true);
+  });
+
   return {
     errors,
     warnings,
     passed: errors.length === 0,
-    total: 10
+    total: 13
   };
 }
 
