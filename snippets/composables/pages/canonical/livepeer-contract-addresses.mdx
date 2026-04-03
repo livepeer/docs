@@ -191,27 +191,28 @@ Livepeer protocol contracts are deployed on **Arbitrum One** (active) and **Ethe
 This table lists currently active standalone contract entrypoints together with the current implementation targets behind active upgradeable proxies. Active proxy addresses are listed separately below. Paused, migration-residual, and legacy-operational contracts are grouped into a separate section so the main searchable table stays active-only.
 
 <Accordion title="See Workflow Verification Information">
-  This page reads the generated contracts registry `contractAddressesData.jsx`. That file is the canonical persisted contracts dataset in this repo, and it is rebuilt by the contracts workflow rather than maintained by hand.
+  This page is not populated from a hand-maintained address list. It reads the generated contracts registry `contractAddressesData.jsx`, which is the canonical persisted contracts dataset in this repo.
 
   <Steps>
-    <Step title="Workflow Trigger">
-      [`update-contract-addresses.yml`](https://github.com/livepeer/docs/blob/main/.github/workflows/update-contract-addresses.yml) runs daily at `02:00 UTC` (`0 2 * * *`), supports manual dispatch with `dry_run`, `skip_verify`, and `use_test_branch`, and can also be started by `repository_dispatch` events from [`livepeer/protocol`](https://github.com/livepeer/protocol), [`livepeer/arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge), [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer), and [`livepeer/governor-scripts`](https://github.com/livepeer/governor-scripts).
+    <Step title="Trigger Workflow">
+      [`update-contract-addresses.yml`](https://github.com/livepeer/docs/blob/main/.github/workflows/update-contract-addresses.yml) runs daily at `02:00 UTC` (`0 2 * * *`), supports manual dispatch with `dry_run`, `skip_verify`, and `use_test_branch`, and can also be started by `repository_dispatch` events tied to [`livepeer/protocol`](https://github.com/livepeer/protocol), [`livepeer/arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge), [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer), and [`livepeer/governor-scripts`](https://github.com/livepeer/governor-scripts).
     </Step>
 
-    <Step title="Canonical source inputs">
+    <Step title="Load Source Inputs">
       [`fetch-contract-addresses.js`](https://github.com/livepeer/docs/blob/main/.github/scripts/fetch-contract-addresses.js) starts the pipeline. The live implementation then loads:
       - the proof catalog from `operations/scripts/automations/content/data/contracts/spec.js`
       - the governor manifest from `livepeer/governor-scripts/updates/addresses.js`
       - the previous successful generated payload
       - the previous branch-watch snapshot
-      - watched repo metadata, default branches, branch inventories, commits, and file contents via the GitHub REST API endpoints:
-        - `/repos/{repo}`
-        - `/repos/{repo}/branches?per_page=100`
-        - `/repos/{repo}/commits/{branch}`
-        - `/repos/{repo}/contents/{path}?ref={branch}`
+      - source and provenance data from these watched Livepeer repos:
+        - [`livepeer/protocol`](https://github.com/livepeer/protocol)
+        - [`livepeer/arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge)
+        - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer)
+        - [`livepeer/governor-scripts`](https://github.com/livepeer/governor-scripts)
+      - GitHub API reads used to fetch repo metadata, branches, commits, and file contents from those repos
     </Step>
 
-    <Step title="Resolve Contract Set">
+    <Step title="Resolve Contract Families">
       The pipeline resolves the known contract families in its proof catalog from external sources:
       - controller-managed contracts via Ethereum JSON-RPC `eth_call`
       - deployment artefacts and repo-pinned source files from the watched Livepeer repos
@@ -219,7 +220,7 @@ This table lists currently active standalone contract entrypoints together with 
       - governor manifest keys for families that are keyed from `addresses.js`
     </Step>
 
-    <Step title="Verify Published Addresses">
+    <Step title="Verify And Enrich Addresses">
       Before data is published, the current implementation verifies and enriches each row with external checks:
       - `eth_call` to recover controller state and proxy/controller relationships
       - `eth_getLogs` on the Arbitrum controller to rebuild historical `SetContractInfo` entries
@@ -232,16 +233,16 @@ This table lists currently active standalone contract entrypoints together with 
       If validation passes, the workflow writes `snippets/data/contract-addresses/contractAddressesData.jsx`. The JSON mirrors and page-facing companion outputs are derived from that generated dataset rather than authored separately.
     </Step>
 
-    <Step title="Error Handling">
+    <Step title="Fail Safely">
       If blocking validation fails, the workflow writes `_health-checks.json`, anomaly artefacts, and an incident issue payload, uploads those artefacts, creates or updates a GitHub issue, and does not publish replacement contract data.
     </Step>
 
-    <Step title="Run Verification Pass">
+    <Step title="Run Shadow Verification">
       `update-contract-addresses-shadow.yml` runs daily at `02:30 UTC` (`30 2 * * *`) in `--check` mode. It reruns the verification path without publishing changes.
     </Step>
   </Steps>
 
-  **Current limit:** the live pipeline verifies the proof catalog aggressively, but it still resolves the known catalog defined in `spec.js` rather than discovering arbitrary new contract families directly from repo diffs.
+  **Current limit:** the live pipeline verifies the proof catalog aggressively, but it still resolves the known catalog rather than discovering arbitrary new contract families directly from repo diffs.
 </Accordion>
 
 
