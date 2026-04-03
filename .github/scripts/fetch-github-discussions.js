@@ -1,15 +1,13 @@
 /**
  * @script            fetch-github-discussions
- * @type              automation
- * @concern           content
- * @niche             data/fetching
+ * @category          automation
  * @purpose           infrastructure:data-feeds
- * @description       Fetches latest GitHub Discussions via public GraphQL API, writes per-product JSX data files.
- * @mode              generate
- * @pipeline          config → GitHub GraphQL API → snippets/automations/{product}/githubDiscussionsData.jsx
- * @scope             .github/scripts, snippets/automations/
+ * @scope             generated-output
+ * @domain            docs
+ * @needs             R-R10
+ * @purpose-statement Fetches GitHub Discussions data and writes the generated snippets/automations datasets consumed by docs surfaces.
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-github-discussions.js
- * @policy            Public repos only. Uses GITHUB_TOKEN for rate limits (optional for public repos).
  */
 const https = require("https");
 const fs = require("fs");

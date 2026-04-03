@@ -36,9 +36,15 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 
 | Script | Summary | Usage | Domain |
 |---|---|---|---|
+| `.github/scripts/fetch-contract-addresses.js` | Fetches and verifies Livepeer contract-address data, then generates the contracts datasets and canonical page inputs consumed by docs-v2. | `node .github/scripts/fetch-contract-addresses.js [--dry-run] [--check] [--skip-verify]` | docs |
+| `.github/scripts/fetch-discord-announcements.js` | Fetches Discord announcement feeds and writes the generated snippets/automations datasets consumed by docs surfaces. | `node .github/scripts/fetch-discord-announcements.js` | docs |
 | `.github/scripts/fetch-forum-data.js` | Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/ | `node .github/scripts/fetch-forum-data.js [flags]` | docs |
-| `.github/scripts/fetch-ghost-blog-data.js` | Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/ | `node .github/scripts/fetch-ghost-blog-data.js [flags]` | docs |
+| `.github/scripts/fetch-ghost-blog-data.js` | Fetches the Livepeer Ghost RSS feed and writes the generated blog snippets consumed by docs surfaces. | `node .github/scripts/fetch-ghost-blog-data.js` | docs |
+| `.github/scripts/fetch-github-discussions.js` | Fetches GitHub Discussions data and writes the generated snippets/automations datasets consumed by docs surfaces. | `node .github/scripts/fetch-github-discussions.js` | docs |
+| `.github/scripts/fetch-github-releases.js` | Fetches GitHub release data and writes the generated snippets/automations datasets consumed by docs surfaces. | `node .github/scripts/fetch-github-releases.js` | docs |
+| `.github/scripts/fetch-rss-blog-data.js` | Fetches RSS and blog feeds, then writes the generated snippets/automations datasets consumed by docs surfaces. | `node .github/scripts/fetch-rss-blog-data.js` | docs |
 | `.github/scripts/fetch-youtube-data.js` | Fetches video data from YouTube Data API, writes to snippets/automations/youtube/ | `node .github/scripts/fetch-youtube-data.js [flags]` | docs |
+| `.github/scripts/generate-changelog.js` | Generates managed changelog pages from upstream release and commit data for solutions, contracts, and resources surfaces. | `CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract] CHANGELOG_CATEGORY=solutions node .github/scripts/generate-changelog.js [--dry-run] [--enhance] PRODUCT_KEY=daydream node .github/scripts/generate-changelog.js [--dry-run] [--enhance]` | docs |
 | `.github/scripts/project-showcase-sync.js` | Fetches project showcase data from external source, writes to snippets/automations/showcase/ | `node .github/scripts/project-showcase-sync.js [flags]` | docs |
 
 ## tests
@@ -57,6 +63,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tests/run-pr-checks.js` | PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff. | `node tests/run-pr-checks.js [flags]` | docs |
 | `tests/unit/ai-tools-registry.test.js` | Validates the AI-tools registry contract, full tracked ai-tools coverage, and the Wave 1 inventory source-of-truth boundary. | `node tests/unit/ai-tools-registry.test.js [--staged&#124;--files path[,path]]` | docs |
 | `tests/unit/audit-script-inventory-repair-rules.test.js` | Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety. | `node tests/unit/audit-script-inventory-repair-rules.test.js` | docs |
+| `tests/unit/authoring-tools.test.js` | Unit tests for repo-owned authoring tools — verifies MDX formatting and real-path completion/validation helpers. | `node tests/unit/authoring-tools.test.js` | docs |
 | `tests/unit/check-agent-docs-freshness.test.js` | Tests the agent governance freshness validator against the canonical runtime file set. | `node tests/unit/check-agent-docs-freshness.test.js` | docs |
 | `tests/unit/codex-commit.test.js` | Tests codex-commit.js — validates commit message generation and contract compliance | `node tests/unit/codex-commit.test.js [flags]` | docs |
 | `tests/unit/codex-safe-merge-with-stash.test.js` | Tests codex-safe-merge-with-stash.js — asserts the deprecated stash helper hard-fails and points callers to the supported Codex lifecycle | `node tests/unit/codex-safe-merge-with-stash.test.js [flags]` | docs |
@@ -153,6 +160,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tools/scripts/dev/generate-mint-dev-scope.js` | Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages | `node tools/scripts/dev/generate-mint-dev-scope.js [flags]` | docs |
 | `tools/scripts/dev/lib/resolve-scoped-docs-config.js` | Scoped docs config resolver — resolves named scoped navigation configs and explicit docs config paths for mint-dev tooling | `node -e "require('./tools/scripts/dev/lib/resolve-scoped-docs-config')"` | docs |
 | `tools/scripts/dev/mint-custom-loader.sh` | Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source. | `bash tools/scripts/dev/mint-custom-loader.sh [flags]` | docs |
+| `tools/scripts/dev/rename-vscode-codex-chat.js` | VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing. | `node tools/scripts/dev/rename-vscode-codex-chat.js --title "New title" [--workspace &lt;path&gt;]` | docs |
 | `tools/scripts/dev/replace-og-image.py` | Deprecated wrapper for the legacy OG image replacement helper. Use the canonical OG generator workflow instead. | `python3 tools/scripts/dev/replace-og-image.py` | docs |
 | `tools/scripts/dev/seo-generator-safe.js` | Deprecated wrapper for the legacy safe SEO generator. Use the canonical OG generator workflow instead. | `node tools/scripts/dev/seo-generator-safe.js` | docs |
 | `tools/scripts/dev/test-add-callouts.js` | Test for add-callouts.js — validates callout insertion logic against fixtures | `node tools/scripts/dev/test-add-callouts.js [flags]` | docs |
@@ -169,6 +177,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tools/scripts/enforcers/pr/check-component-immutability.js` | Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label. | `node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main` | docs |
 | `tools/scripts/enforcers/pr/check-pr-template.js` | Enforces that PR descriptions include required change and rationale sections before merge | `PR_BODY="..." node tools/scripts/enforcers/pr/check-pr-template.js` | docs |
 | `tools/scripts/export-portable-skills.js` | Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift. | `node tools/scripts/export-portable-skills.js --write&#124;--check [--skills name[,name...]]` | docs |
+| `tools/scripts/format-mdx.js` | MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension. | `node tools/scripts/format-mdx.js [--check&#124;--write] [--files a,b]` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator). | `node tools/scripts/generate-ai-sitemap.js [flags]` | docs |
 | `tools/scripts/generate-ai-skills-indexes.js` | Generates ai-tools/ai-skills inventory.json and content-map.md from the canonical agent-governance surface manifest. | `node tools/scripts/generate-ai-skills-indexes.js [--check&#124;--write]` | docs |
 | `tools/scripts/generate-component-docs.js` | Generates published component library MDX pages from the registry. Replaces update-component-library.sh. | `node tools/scripts/generate-component-docs.js [--dry-run&#124;--fix&#124;--write&#124;--check] [--template-only] [--category &lt;name&gt;]` | docs |
@@ -206,6 +215,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tools/scripts/i18n/test/provider-openrouter.test.js` | Tests OpenRouter provider — validates API call logic and response parsing | `node tools/scripts/i18n/test/provider-openrouter.test.js [flags]` | docs |
 | `tools/scripts/i18n/translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | `node tools/scripts/i18n/translate-docs.js [flags]` | docs |
 | `tools/scripts/i18n/validate-generated.js` | Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity | `node tools/scripts/i18n/validate-generated.js [flags]` | docs |
+| `tools/scripts/install-authoring-tools-extension.js` | VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories. | `node tools/scripts/install-authoring-tools-extension.js [--targets vscode,cursor] [--force]` | docs |
 | `tools/scripts/lib/docs-path-sync.js` | Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates. | `const sync = require('./docs-path-sync');` | docs |
 | `tools/scripts/lint-copy.js` | Enforce banned word and phrase rules on MDX content files. | `node tools/scripts/lint-copy.js [file or glob] [flags]` | docs |
 | `tools/scripts/lint-patterns.js` | Enforce Tier 2 copy pattern rules on MDX content files. | `node tools/scripts/lint-patterns.js [file or glob] [flags]` | docs |

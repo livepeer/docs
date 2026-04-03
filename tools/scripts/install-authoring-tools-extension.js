@@ -4,7 +4,7 @@
  * @category          utility
  * @purpose           tooling:dev-tools
  * @scope             tools/scripts, tools/vscode/authoring-tools, .vscode/settings.json
- * @owner             docs
+ * @domain            docs
  * @needs             E-C6, F-C1
  * @purpose-statement VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories.
  * @pipeline          manual

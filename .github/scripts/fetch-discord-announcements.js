@@ -1,18 +1,13 @@
 /**
  * @script            fetch-discord-announcements
- * @type              automation
- * @concern           content
- * @niche             data/fetching
+ * @category          automation
  * @purpose           infrastructure:data-feeds
- * @description       Fetches announcements from Discord channels via bot token. Writes per-product
- *                    JSX data files from config.products[].discord and per-channel JSX files from
- *                    config.globals.discord[]. Each entry produces a specific output file.
- * @mode              generate
- * @pipeline          config → Discord API → snippets/automations/{product}/discordData.jsx
- *                                        → snippets/automations/discord/discordAnnouncementsData.jsx
- * @scope             .github/scripts, snippets/automations/
+ * @scope             generated-output
+ * @domain            docs
+ * @needs             R-R10
+ * @purpose-statement Fetches Discord announcement feeds and writes the generated snippets/automations datasets consumed by docs surfaces.
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-discord-announcements.js
- * @policy            Announcements channel only. No general chat. Requires DISCORD_BOT_TOKEN.
  */
 const https = require("https");
 const fs = require("fs");

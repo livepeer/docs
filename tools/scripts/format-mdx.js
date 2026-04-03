@@ -4,7 +4,7 @@
  * @category          utility
  * @purpose           tooling:dev-tools
  * @scope             tools/scripts, tools/vscode/authoring-tools, tests/unit
- * @owner             docs
+ * @domain            docs
  * @needs             E-C6, F-C1
  * @purpose-statement MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension.
  * @pipeline          manual

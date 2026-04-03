@@ -4,7 +4,7 @@
  * @category          generator
  * @purpose           governance:index-management
  * @scope             generated-output
- * @owner             docs
+ * @domain            docs
  * @needs             R-R10
  * @purpose-statement Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @pipeline          indirect, manual
@@ -413,7 +413,7 @@ async function renderCategoryPage(category, components, args, cache, warnings) {
   return normalizeFileContent(
     [
       formatGeneratedPreamble(meta),
-      '<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>',
+      '<Card title="Back to Component Library" icon="arrow-left" href="./component-library" arrow>',
       '  Return to the generated component library landing page.',
       '</Card>',
       '',
@@ -677,7 +677,7 @@ function renderLocaleScaffold(locale, slug, registry) {
       formatGeneratedPreamble(meta),
       `<Note>Localized prose refresh for \`${locale}\` is pending. This page preserves the new route and mirrors the English category inventory at a summary level.</Note>`,
       '',
-      '<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>',
+      '<Card title="Back to Component Library" icon="arrow-left" href="./component-library" arrow>',
       '  Return to the localized component-library landing page.',
       '</Card>',
       '',

@@ -1,0 +1,816 @@
+#!/usr/bin/env node
+/**
+ * @script            contracts-addresses-pipeline.test
+ * @category          validator
+ * @purpose           qa:contracts-registry
+ * @scope             tests/unit, .github/scripts/fetch-contract-addresses.js, operations/scripts/automations/content/data/contracts/, .github/workflows/update-contract-addresses*.yml, operations/scripts/generators/content/seo/generate-ai-sitemap.js, snippets/components/integrators/feeds/ContractVerifier.jsx, snippets/data/contract-addresses/, v2/about
+ * @owner             docs
+ * @needs             E-R12, E-R14
+ * @purpose-statement Regression tests for the contracts proof catalog, generated registry output, shared contracts surface wiring, blocking anomaly behavior, workflow cadence alignment, and route freshness dependencies.
+ * @pipeline          P1 (commit, via run-all)
+ * @usage             node operations/tests/unit/contracts-addresses-pipeline.test.js
+ */
+
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+
+const {
+  loadContractProofCatalog,
+  resolveAuthority,
+  buildChainPayload,
+} = require('../../../.github/scripts/fetch-contract-addresses.js');
+const {
+  buildValidationReport,
+} = require('../../../operations/scripts/automations/content/data/contracts/pipeline.js');
+const {
+  BLOCKING_BRANCH_DIFF_TYPES,
+  CONTRACTS_PIPELINE_CADENCE,
+} = require('../../../operations/scripts/automations/content/data/contracts/constants.js');
+const {
+  buildBlockchainContractPageSpec,
+} = require('../../../operations/scripts/automations/content/data/contracts/spec.js');
+const {
+  buildContractVerifierChainData,
+  isContractVerifierControllerLookupEligible,
+} = require('../../../snippets/components/integrators/feeds/contractVerifierData.cjs');
+const {
+  ROUTE_DEPENDENCIES,
+} = require('../../../operations/scripts/generators/content/seo/generate-ai-sitemap.js');
+
+const REPO_ROOT = path.resolve(__dirname, '../../..');
+const GENERATED_JSON_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'contractAddressesData.json'
+);
+const GENERATED_JSX_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'contractAddressesData.jsx'
+);
+const BLOCKCHAIN_PAGE_JSON_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'blockchainContractsPageData.json'
+);
+const BLOCKCHAIN_PAGE_JSX_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'blockchainContractsPageData.jsx'
+);
+const CONTRACTS_DATA_ADAPTER_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'index.jsx'
+);
+const CANONICAL_COMPOSABLE_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'composables',
+  'pages',
+  'canonical',
+  'livepeer-contract-addresses.mdx'
+);
+const VERIFIER_COMPOSABLE_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'composables',
+  'pages',
+  'canonical',
+  'verify-contract-addresses.mdx'
+);
+const VIEW_MODEL_ADAPTER_PATH = path.join(
+  REPO_ROOT,
+  'snippets',
+  'data',
+  'contract-addresses',
+  'view-model.jsx'
+);
+const BLOCKCHAIN_PAGE_SPEC_PATH = path.join(
+  REPO_ROOT,
+  'operations',
+  'scripts',
+  'automations',
+  'content',
+  'data',
+  'contracts',
+  'blockchain-page-spec.js'
+);
+const CANONICAL_PAGE_PATH = path.join(
+  REPO_ROOT,
+  'v2',
+  'about',
+  'resources',
+  'livepeer-contract-addresses.mdx'
+);
+const RESOURCE_HUB_PAGE_PATH = path.join(
+  REPO_ROOT,
+  'v2',
+  'resources',
+  'references',
+  'contract-addresses.mdx'
+);
+const GATEWAYS_PAGE_PATH = path.join(
+  REPO_ROOT,
+  'v2',
+  'gateways',
+  'resources',
+  'reference',
+  'technical',
+  'contract-addresses.mdx'
+);
+const ORCHESTRATORS_PAGE_PATH = path.join(
+  REPO_ROOT,
+  'v2',
+  'orchestrators',
+  'resources',
+  'reference',
+  'technical',
+  'contract-addresses.mdx'
+);
+const BLOCKCHAIN_PAGE_PATH = path.join(
+  REPO_ROOT,
+  'v2',
+  'about',
+  'livepeer-protocol',
+  'blockchain-contracts.mdx'
+);
+const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
+const CONTRACTS_CONSTANTS_PATH = path.join(
+  REPO_ROOT,
+  'operations',
+  'scripts',
+  'automations',
+  'content',
+  'data',
+  'contracts',
+  'constants.js'
+);
+const MAIN_WORKFLOW_PATH = path.join(
+  REPO_ROOT,
+  '.github',
+  'workflows',
+  'update-contract-addresses.yml'
+);
+const SHADOW_WORKFLOW_PATH = path.join(
+  REPO_ROOT,
+  '.github',
+  'workflows',
+  'update-contract-addresses-shadow.yml'
+);
+
+const STALE_ARBITRUM_MINTER_V1 = '0x4969dcCF5186e1c49411638fc8A2a020Fdab752E'.toLowerCase();
+const STALE_BONDING_VOTES_TARGET = '0x1561fC5F7Efc049476224005DFf38256dccfc509'.toLowerCase();
+const EXPECTED_ETH_LEGACY_UTILITY_DETAILS = {
+  GenesisManager: '0x3a9543d4767b2c914ea22fd0b07e17b0901aaebf',
+  MerkleMine: '0x8e306b005773bee6ba6a6e8972bc79d766cc15c8',
+  MultiMerkleMine: '0x182ebf4c80b28efc45ad992ecbb9f730e31e8c7f',
+  Refunder: '0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2',
+  SortedDoublyLL: '0x1a0b2ca69ca2c7f96e2529faa6d63f881655d81a',
+};
+const EXPECTED_ETH_LEGACY_UTILITY_NAMES = Object.keys(EXPECTED_ETH_LEGACY_UTILITY_DETAILS);
+const EXPECTED_ETH_HISTORICAL_GENESIS_ADDRESS = '0x289ba1701c2f088cf0faf8b3705246331cb8a839';
+
+let errors = [];
+let total = 0;
+
+function runCase(name, fn) {
+  total += 1;
+  try {
+    fn();
+    console.log(`   ✓ ${name}`);
+  } catch (error) {
+    errors.push({
+      file: 'operations/tests/unit/contracts-addresses-pipeline.test.js',
+      line: 1,
+      rule: 'contracts-addresses-pipeline',
+      message: `${name}: ${error.message}`,
+    });
+  }
+}
+
+function readText(filePath) {
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+function readJson(filePath) {
+  return JSON.parse(readText(filePath));
+}
+
+function loadGeneratedJson() {
+  assert.ok(fs.existsSync(GENERATED_JSON_PATH), 'generated contractAddressesData.json is missing');
+  return readJson(GENERATED_JSON_PATH);
+}
+
+function loadBlockchainPageJson() {
+  assert.ok(fs.existsSync(BLOCKCHAIN_PAGE_JSON_PATH), 'generated blockchainContractsPageData.json is missing');
+  return readJson(BLOCKCHAIN_PAGE_JSON_PATH);
+}
+
+function runTests() {
+  errors = [];
+  total = 0;
+
+  console.log('🧪 Contracts Addresses Pipeline Unit Tests');
+
+  runCase('proof catalog loads and excludes docs-local fixed address truth', () => {
+    const catalog = loadContractProofCatalog();
+    assert.ok(Array.isArray(catalog.deployments) && catalog.deployments.length > 0, 'catalog should contain deployments');
+    assert.ok(
+      Array.isArray(catalog._meta?.latestResolutionPolicy) && catalog._meta.latestResolutionPolicy.length > 0,
+      'catalog should publish latest-resolution policy'
+    );
+    assert.strictEqual(
+      catalog.deployments.some((deployment) => deployment.addressStrategy?.kind === 'fixed'),
+      false,
+      'proof catalog must not contain fixed local address truth'
+    );
+  });
+
+  runCase('resolveAuthority selects the latest governor version instead of the base key', () => {
+    const governorChain = {
+      minter: '0x1111111111111111111111111111111111111111',
+      minterV2: '0x2222222222222222222222222222222222222222',
+      minterV10: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    };
+
+    const resolved = resolveAuthority(
+      {
+        kind: 'governor-versioned-latest',
+        baseKey: 'minter',
+        baseVersion: 'V1',
+        prefix: 'minterV',
+      },
+      governorChain
+    );
+
+    assert.strictEqual(resolved.address, governorChain.minterV10);
+    assert.strictEqual(resolved.version, 'V10');
+    assert.strictEqual(resolved.authorityKind, 'governor-manifest');
+    assert.strictEqual(resolved.sourceKey, 'minterV10');
+  });
+
+  runCase('buildChainPayload keeps current implementations out of the active table', () => {
+    const payload = buildChainPayload(
+      [
+        {
+          name: 'BondingManager',
+          address: '0x1000000000000000000000000000000000000001',
+          category: 'core',
+          lifecycle: 'active',
+          type: 'proxy',
+        },
+        {
+          name: 'L2Migrator',
+          address: '0x2000000000000000000000000000000000000002',
+          category: 'migration',
+          lifecycle: 'migration_residual',
+          type: 'proxy',
+        },
+        {
+          name: 'Controller',
+          address: '0x3000000000000000000000000000000000000003',
+          category: 'core',
+          lifecycle: 'paused',
+          type: 'standalone',
+        },
+      ],
+      [
+        {
+          name: 'BondingManager',
+          address: '0x4000000000000000000000000000000000000004',
+          category: 'core',
+          lifecycle: 'historical',
+          type: 'target',
+        },
+      ],
+      {},
+      {},
+      'deadbeef'
+    );
+
+    assert.strictEqual(payload.current, payload.active, 'current should remain an alias of active');
+    assert.strictEqual(payload.active.some((entry) => (entry.type || entry.deploymentKind) === 'target'), false);
+    assert.strictEqual(payload.currentImplementations.length, 1);
+    assert.strictEqual(payload.currentImplementations[0].address, '0x4000000000000000000000000000000000000004');
+    assert.strictEqual(payload.migration_residual[0].name, 'L2Migrator');
+    assert.strictEqual(payload.paused[0].name, 'Controller');
+  });
+
+  runCase('generated registry publishes stable root historical payloads without transient diagnostics', () => {
+    const data = loadGeneratedJson();
+    const serialized = JSON.stringify(data);
+
+    assert.ok(data.historical && typeof data.historical === 'object', 'generated registry should publish root historical');
+    assert.ok(data.historical.arbitrumOne && typeof data.historical.arbitrumOne === 'object', 'arbitrumOne root historical should be present');
+    assert.ok(
+      Array.isArray(data.historical.ethereumMainnet?.MerkleProof) && data.historical.ethereumMainnet.MerkleProof.length > 0,
+      'ethereumMainnet root historical should publish externally revalidated MerkleProof history'
+    );
+    assert.strictEqual(
+      String(data.historical.ethereumMainnet.MerkleProof[0].address || '').toLowerCase(),
+      EXPECTED_ETH_HISTORICAL_GENESIS_ADDRESS,
+      'ethereumMainnet root historical should preserve the canonical MerkleProof address'
+    );
+    assert.strictEqual(
+      serialized.includes('"rpcFailures"'),
+      false,
+      'published contracts payload must not serialize transient rpcFailures diagnostics'
+    );
+  });
+
+  runCase('generated registry excludes stale active rows and target rows from arbitrumOne.active', () => {
+    const data = loadGeneratedJson();
+    const active = data.arbitrumOne?.active || [];
+    const implementations = data.arbitrumOne?.currentImplementations || [];
+
+    assert.ok(active.length > 0, 'arbitrumOne.active should not be empty');
+    assert.strictEqual(
+      active.some((entry) => String(entry.address || '').toLowerCase() === STALE_ARBITRUM_MINTER_V1),
+      false,
+      'stale Arbitrum Minter V1 must not appear in active'
+    );
+    assert.strictEqual(
+      active.some((entry) => String(entry.address || '').toLowerCase() === STALE_BONDING_VOTES_TARGET),
+      false,
+      'stale BondingVotes target must not appear in active'
+    );
+    assert.strictEqual(
+      active.some((entry) => (entry.type || entry.deploymentKind) === 'target'),
+      false,
+      'active table must not contain target rows'
+    );
+    assert.strictEqual(
+      active.some((entry) => entry.name === 'L2Migrator'),
+      false,
+      'migration-residual contracts must not appear in active'
+    );
+    assert.ok(
+      implementations.some((entry) => entry.name === 'BondingVotes' && (entry.type || entry.deploymentKind) === 'target'),
+      'currentImplementations should retain BondingVotes target entry'
+    );
+  });
+
+  runCase('generated blockchain page companion resolves explicit contract entries and bans stale copy drifts', () => {
+    const pageData = loadBlockchainPageJson();
+    const serialized = JSON.stringify(pageData);
+    const contractSlugs = Object.keys(pageData.contracts || {});
+    const l2Migrator = pageData.contracts['l2-migrator'];
+    const merkleSnapshot = pageData.contracts['merkle-snapshot'];
+    const faucet = pageData.contracts['livepeer-token-faucet'];
+    const sections = pageData.sections || [];
+    const expectedContracts = [
+      'controller',
+      'bonding-manager',
+      'ticket-broker',
+      'rounds-manager',
+      'minter',
+      'service-registry',
+      'ai-service-registry',
+      'livepeer-token-arbitrum',
+      'livepeer-token-ethereum',
+      'bridge-minter',
+      'l2-lpt-gateway',
+      'l1-lpt-gateway',
+      'l1-escrow',
+      'livepeer-token-faucet',
+      'bonding-votes',
+      'governor',
+      'livepeer-governor',
+      'treasury',
+      'l2-migrator',
+      'merkle-snapshot',
+    ];
+
+    assert.ok(Array.isArray(sections) && sections.length >= 4, 'blockchain page companion should publish section metadata');
+    assert.deepStrictEqual(contractSlugs.sort(), expectedContracts.sort(), 'blockchain page companion should cover the full accordion roster');
+    assert.strictEqual(l2Migrator.type, 'proxy', 'L2Migrator should remain a proxy entry');
+    assert.ok(l2Migrator.proxyAddress, 'L2Migrator should expose proxyAddress');
+    assert.ok(l2Migrator.targetAddress, 'L2Migrator should expose targetAddress');
+    assert.notStrictEqual(l2Migrator.proxyAddress.toLowerCase(), l2Migrator.targetAddress.toLowerCase(), 'L2Migrator proxy and target must stay distinct');
+    assert.strictEqual(l2Migrator.currentAddress.toLowerCase(), l2Migrator.proxyAddress.toLowerCase(), 'currentAddress should equal proxyAddress for proxy rows');
+    assert.strictEqual(merkleSnapshot.supported, true, 'MerkleSnapshot should be a supported canonical page contract');
+    assert.ok(Array.isArray(merkleSnapshot.functions) && merkleSnapshot.functions.length > 0, 'MerkleSnapshot should expose generated functions');
+    assert.strictEqual(faucet.supported, false, 'LivepeerTokenFaucet should remain unsupported as a deployed canonical contract');
+    assert.ok(faucet.unsupportedNote, 'unsupported contracts should expose an explicit note');
+    assert.deepStrictEqual(pageData.contracts.controller.facts, ['Controller registry', 'Active']);
+    assert.deepStrictEqual(
+      pageData.contracts['bonding-manager'].facts,
+      ['Controller registered', 'Active', 'Proxy target resolved', 'Target V13']
+    );
+    assert.deepStrictEqual(
+      pageData.contracts['ai-service-registry'].facts,
+      ['Deployment artifact confirmed', 'Runtime consumer confirmed', 'Active']
+    );
+    assert.deepStrictEqual(pageData.contracts.governor.facts, ['Deployment artifact confirmed', 'Active']);
+    assert.deepStrictEqual(pageData.contracts['livepeer-token-faucet'].facts, []);
+    assert.strictEqual(pageData.contracts['livepeer-token-faucet'].unsupportedNote, 'Local development utility contract.');
+    assert.deepStrictEqual(
+      pageData.contracts['l2-migrator'].facts,
+      ['Controller registered', 'Migration', 'Proxy target resolved']
+    );
+    assert.strictEqual(
+      serialized.includes('snippets/data/changelogs/contractAddressesData.jsx'),
+      false,
+      'blockchain page companion must not reference archived changelog data'
+    );
+    assert.strictEqual(serialized.includes('"weak"'), false, 'generated blockchain data must not emit weak verification language');
+    assert.strictEqual(serialized.includes('Last active'), false, 'generated blockchain data must not emit stale last-active claims');
+    assert.strictEqual(serialized.includes('transactions'), false, 'generated blockchain data must not emit stale transaction-count claims');
+    assert.strictEqual(serialized.includes('residual ETH'), false, 'generated blockchain data must not emit stale residual-ETH claims');
+    assert.strictEqual(serialized.includes('claimDelegatorStake'), false, 'generated blockchain data must not revive stale L2Migrator function names');
+  });
+
+  runCase('blockchain page spec is derived from the canonical contracts catalog', () => {
+    const pageSpec = buildBlockchainContractPageSpec();
+    const pageSpecSource = readText(BLOCKCHAIN_PAGE_SPEC_PATH);
+    const expectedContracts = [
+      'controller',
+      'bonding-manager',
+      'ticket-broker',
+      'rounds-manager',
+      'minter',
+      'service-registry',
+      'ai-service-registry',
+      'livepeer-token-arbitrum',
+      'livepeer-token-ethereum',
+      'bridge-minter',
+      'l2-lpt-gateway',
+      'l1-lpt-gateway',
+      'l1-escrow',
+      'livepeer-token-faucet',
+      'bonding-votes',
+      'governor',
+      'livepeer-governor',
+      'treasury',
+      'l2-migrator',
+      'merkle-snapshot',
+    ];
+
+    assert.deepStrictEqual(
+      pageSpec.contracts.map((contract) => contract.slug).sort(),
+      expectedContracts.sort(),
+      'derived blockchain page spec should cover the full accordion roster'
+    );
+    assert.ok(
+      pageSpecSource.includes('buildBlockchainContractPageSpec'),
+      'blockchain page spec wrapper should derive from the canonical catalog builder'
+    );
+  });
+
+  runCase('generated registry emits historicalSeries without archived changelog references', () => {
+    const data = loadGeneratedJson();
+    const serialized = JSON.stringify(data);
+
+    assert.ok(data.arbitrumOne?.historicalSeries?.core?.length > 0, 'arbitrumOne historicalSeries.core should be present');
+    assert.ok(data.ethereumMainnet?.historicalSeries?.core?.length > 0, 'ethereumMainnet historicalSeries.core should be present');
+    assert.ok(
+      data.arbitrumOne.historicalSeries.core.some((series) => series.canonicalName === 'BondingManager'),
+      'historicalSeries should retain BondingManager history'
+    );
+    assert.ok(
+      data.ethereumMainnet.historicalSeries.genesis.some((series) => series.canonicalName === 'MerkleProof'),
+      'historicalSeries should retain genesis history'
+    );
+    assert.strictEqual(
+      serialized.includes('snippets/data/changelogs/contractAddressesData.jsx'),
+      false,
+      'generated contracts data must not reference the archived changelog path'
+    );
+  });
+
+  runCase('generated registry keeps historical rows out of current state and bans weak verification language', () => {
+    const data = loadGeneratedJson();
+    const historicalRows = [
+      ...(data.arbitrumOne?.historical || []),
+      ...(data.ethereumMainnet?.historical || []),
+    ];
+    const serialized = JSON.stringify(data);
+
+    assert.ok(historicalRows.length > 0, 'generated registry should publish historical rows');
+    assert.strictEqual(
+      historicalRows.some((entry) => entry.meta?.currentImplementation === true),
+      false,
+      'historical rows must not retain currentImplementation=true'
+    );
+    assert.strictEqual(
+      historicalRows.some((entry) => entry.meta?.statusLabel === 'Current'),
+      false,
+      'historical rows must not publish Current status labels'
+    );
+    assert.strictEqual(
+      historicalRows.some((entry) => entry.verification?.status === 'weak'),
+      false,
+      'historical rows must not expose weak verification status'
+    );
+    assert.strictEqual(
+      serialized.includes('"weak"'),
+      false,
+      'generated contracts data must not emit weak verification language anywhere in the published payload'
+    );
+  });
+
+  runCase('generated registry publishes externally proven ethereum legacy utility families and genesis history', () => {
+    const data = loadGeneratedJson();
+    const legacyOperational = data.ethereumMainnet?.legacy_operational || [];
+    const legacyByName = new Map(legacyOperational.map((entry) => [entry.name, entry]));
+    const missing = EXPECTED_ETH_LEGACY_UTILITY_NAMES.filter((name) => !legacyByName.has(name));
+    const genesisSeries = data.ethereumMainnet?.historicalSeries?.genesis || [];
+    const merkleProofGroup = genesisSeries.find((group) => group?.canonicalName === 'MerkleProof');
+
+    assert.deepStrictEqual(
+      missing,
+      [],
+      'ethereumMainnet.legacy_operational should retain the externally proven legacy utility families'
+    );
+    for (const name of EXPECTED_ETH_LEGACY_UTILITY_NAMES) {
+      const entry = legacyByName.get(name);
+      assert.strictEqual(
+        entry?.address,
+        EXPECTED_ETH_LEGACY_UTILITY_DETAILS[name],
+        `${name} should publish the seeded externally proven address`
+      );
+      assert.ok(
+        ['explorer-search', 'verified-seed-address'].includes(entry?.addressSource?.kind),
+        `${name} should resolve from explorer-backed external proof`
+      );
+      assert.strictEqual(
+        entry?.proofChain,
+        'detached',
+        `${name} should remain a detached external-proof contract`
+      );
+    }
+    assert.ok(merkleProofGroup, 'ethereumMainnet historicalSeries.genesis should include MerkleProof');
+    assert.ok(Array.isArray(merkleProofGroup.entries) && merkleProofGroup.entries.length > 0, 'MerkleProof genesis group should contain entries');
+    assert.strictEqual(
+      String(merkleProofGroup.entries[0]?.address || '').toLowerCase(),
+      EXPECTED_ETH_HISTORICAL_GENESIS_ADDRESS,
+      'MerkleProof genesis group should preserve the canonical address'
+    );
+  });
+
+  runCase('ContractVerifier helper consumes lifecycle-safe groups and explicit controller registration', () => {
+    const data = loadGeneratedJson();
+    const { activeEntries, inventoryEntries, canonical } = buildContractVerifierChainData(data, 'arbitrumOne');
+
+    assert.ok(activeEntries.length > 0, 'widget should receive active entries');
+    assert.ok(inventoryEntries.length >= activeEntries.length, 'widget inventory should include at least the active entries');
+    assert.strictEqual(
+      activeEntries.some((entry) => (entry.type || entry.deploymentKind) === 'target'),
+      false,
+      'widget active set must not contain target rows'
+    );
+    assert.strictEqual(canonical.BondingManager?.type || canonical.BondingManager?.deploymentKind, 'proxy');
+    assert.strictEqual(
+      isContractVerifierControllerLookupEligible(canonical.BondingManager, true),
+      true,
+      'controller-managed active contracts should stay RPC-eligible'
+    );
+    assert.strictEqual(
+      isContractVerifierControllerLookupEligible(canonical.AIServiceRegistry, true),
+      false,
+      'non-controller contracts must not be treated as controller lookups'
+    );
+    assert.strictEqual(canonical.BondingManager?.verification?.controller?.controllerRegistered, true);
+    assert.strictEqual(canonical.BondingManager?.verification?.explorer?.host, 'arbiscan.io');
+    assert.ok(
+      canonical.BondingManager?.verification?.proxy?.implementationMatchesExpected !== false,
+      'active proxy rows should not contradict expected implementation metadata'
+    );
+    assert.ok(canonical.BondingManager?.addressSource?.kind, 'generated entries should expose structured address source metadata');
+  });
+
+  runCase('active proxy rows expose runtime-resolved implementation addresses that match expected targets', () => {
+    const data = loadGeneratedJson();
+    const activeProxies = (data.arbitrumOne?.active || []).filter((entry) => (entry.type || entry.deploymentKind) === 'proxy');
+
+    assert.ok(activeProxies.length > 0, 'arbitrumOne should publish active proxy rows');
+    assert.strictEqual(
+      activeProxies.some((entry) => !entry.verification?.proxy?.implementationAddress),
+      false,
+      'every active proxy should expose a runtime implementation address'
+    );
+    assert.strictEqual(
+      activeProxies.some((entry) => entry.verification?.proxy?.controllerMatchesExpected === false),
+      false,
+      'active proxy controller pointers should match the expected chain controller'
+    );
+    assert.strictEqual(
+      activeProxies.some((entry) =>
+        entry.verification?.proxy?.expectedImplementationAddress
+        && entry.verification?.proxy?.implementationMatchesExpected !== true
+      ),
+      false,
+      'runtime proxy implementations should match expected targets where an expected target is defined'
+    );
+  });
+
+  runCase('generated outputs preserve the existing named export contract for current consumers', () => {
+    assert.ok(fs.existsSync(GENERATED_JSX_PATH), 'generated contractAddressesData.jsx is missing');
+    assert.ok(fs.existsSync(BLOCKCHAIN_PAGE_JSX_PATH), 'generated blockchainContractsPageData.jsx is missing');
+
+    const contractsJsx = readText(GENERATED_JSX_PATH);
+    const blockchainJsx = readText(BLOCKCHAIN_PAGE_JSX_PATH);
+
+    assert.ok(
+      contractsJsx.includes('export const contractAddresses ='),
+      'contractAddressesData.jsx must continue exporting contractAddresses'
+    );
+    assert.ok(
+      blockchainJsx.includes('export const blockchainContractsPageData ='),
+      'blockchainContractsPageData.jsx must continue exporting blockchainContractsPageData'
+    );
+  });
+
+  runCase('contracts pages consume the shared contracts data pipeline without a standalone verifier route', () => {
+    const canonicalPage = readText(CANONICAL_PAGE_PATH);
+    const resourceHubPage = readText(RESOURCE_HUB_PAGE_PATH);
+    const gatewaysPage = readText(GATEWAYS_PAGE_PATH);
+    const orchestratorsPage = readText(ORCHESTRATORS_PAGE_PATH);
+    const canonicalComposable = readText(CANONICAL_COMPOSABLE_PATH);
+    const verifierComposable = readText(VERIFIER_COMPOSABLE_PATH);
+    const blockchainPage = readText(BLOCKCHAIN_PAGE_PATH);
+    const contractsAdapter = readText(CONTRACTS_DATA_ADAPTER_PATH);
+    const viewModelAdapter = readText(VIEW_MODEL_ADAPTER_PATH);
+    const registryDataModule = readText(GENERATED_JSX_PATH);
+    const blockchainDataModule = readText(BLOCKCHAIN_PAGE_JSX_PATH);
+
+    assert.ok(canonicalPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'canonical route page should wrap the canonical contracts composable');
+    assert.ok(resourceHubPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'resource hub route page should wrap the canonical contracts composable');
+    assert.ok(gatewaysPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'gateways route page should wrap the canonical contracts composable');
+    assert.ok(orchestratorsPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'orchestrators route page should wrap the canonical contracts composable');
+    assert.ok(canonicalComposable.includes("/snippets/composables/pages/canonical/verify-contract-addresses.mdx"), 'canonical composable should embed the verifier composable');
+    assert.ok(canonicalComposable.includes('/snippets/data/contract-addresses/contractAddressesData.jsx'), 'canonical composable should import the canonical contracts data module');
+    assert.ok(!canonicalComposable.includes('export const '), 'canonical composable should not own data/helper exports in MDX');
+    assert.ok(!canonicalComposable.includes('/snippets/data/changelogs/contractAddressesData.jsx'), 'canonical composable should not import archived historical changelog data');
+    assert.ok(canonicalComposable.includes('SearchTableV2'), 'canonical composable should use the shared SearchTable wrapper');
+    assert.ok(canonicalComposable.includes('DynamicTableV2'), 'canonical composable should use the shared dynamic table wrapper');
+    assert.ok(canonicalComposable.includes('#verifier-widget-verify-contract-address'), 'canonical composable should expose the embedded verifier widget anchor');
+    assert.ok(canonicalComposable.includes('<VerifyContractAddresses />'), 'canonical composable should render the verifier composable inline');
+    assert.ok(!canonicalComposable.includes('contractsRoutes.verifier'), 'canonical composable should not depend on a standalone verifier route helper');
+    assert.ok(canonicalComposable.includes('HistoricalContractTable category="core" sourceData={contractAddresses}'), 'canonical composable should consume generated historical data through the table component');
+
+    assert.ok(verifierComposable.includes('ContractVerifier'), 'verifier composable should host the ContractVerifier widget');
+    assert.ok(verifierComposable.includes('/snippets/data/contract-addresses/contractAddressesData.jsx'), 'verifier composable should import the canonical contracts data module');
+
+    assert.ok(!blockchainPage.includes('/snippets/data/changelogs/contractAddressesData.jsx'), 'blockchain page should not import archived historical changelog data');
+    assert.ok(!blockchainPage.includes('/snippets/composables/pages/canonical/data/blockchain-contracts-data.jsx'), 'blockchain page must not depend on the composable helper data layer');
+    assert.ok(blockchainPage.includes('/snippets/data/contract-addresses/view-model.jsx'), 'blockchain page should import the shared contracts view-model adapter');
+    assert.ok(blockchainPage.includes('/snippets/data/contract-addresses/blockchainContractsPageData.jsx'), 'blockchain page should import the blockchain contracts data module');
+    assert.ok(!blockchainPage.includes('export const '), 'blockchain page should not own data/helper exports in MDX');
+    assert.ok(!blockchainPage.includes('.current.find('), 'blockchain page should not use raw current.find lookups');
+    assert.ok(!blockchainPage.includes('/v2/about/resources/contract-addresses'), 'blockchain page should link to the canonical route');
+    assert.ok(blockchainPage.includes('contractsRoutes.reference'), 'blockchain page should link to the canonical reference page through the shared routes helper');
+    assert.ok(blockchainPage.includes('contractsRoutes.verifier'), 'blockchain page should link to the embedded verifier anchor through the shared routes helper');
+
+    assert.ok(contractsAdapter.includes("from './contractAddressesData.jsx'"), 'contracts index should re-export the canonical contracts data module');
+    assert.ok(contractsAdapter.includes("from './blockchainContractsPageData.jsx'"), 'contracts index should re-export the blockchain page data module');
+    assert.ok(contractsAdapter.includes("export * from './view-model.jsx'"), 'contracts index should re-export the shared view-model adapter');
+    assert.ok(registryDataModule.includes('export const contractAddresses ='), 'contracts data module should export the canonical registry data');
+    assert.ok(blockchainDataModule.includes('export const blockchainContractsPageData ='), 'blockchain data module should export the blockchain contracts data');
+    assert.ok(viewModelAdapter.includes('export const contractsRoutes ='), 'view-model adapter should define the shared contracts helpers directly');
+    assert.ok(viewModelAdapter.includes("verifier: '/v2/about/resources/livepeer-contract-addresses#verifier-widget-verify-contract-address'"), 'view-model adapter should point verifier links at the embedded anchor on the canonical page');
+  });
+
+  runCase('docs navigation exposes the contracts import routes without a standalone verifier page', () => {
+    const docsJson = readText(DOCS_JSON_PATH);
+
+    assert.ok(docsJson.includes('v2/about/resources/livepeer-contract-addresses'), 'docs.json should keep the canonical contracts route');
+    assert.ok(docsJson.includes('v2/resources/references/contract-addresses'), 'docs.json should keep the resource hub contracts route');
+    assert.ok(docsJson.includes('v2/gateways/resources/reference/technical/contract-addresses'), 'docs.json should keep the gateways contracts route');
+    assert.ok(docsJson.includes('v2/orchestrators/resources/reference/technical/contract-addresses'), 'docs.json should keep the orchestrators contracts route');
+    assert.ok(!docsJson.includes('v2/about/resources/verify-contract-addresses'), 'docs.json should not publish a standalone verifier route');
+  });
+
+  runCase('AI sitemap freshness tracks generated contracts data for the canonical and importer contracts routes', () => {
+    const canonicalDependencies = ROUTE_DEPENDENCIES['v2/about/resources/livepeer-contract-addresses'] || [];
+    const resourceHubDependencies = ROUTE_DEPENDENCIES['v2/resources/references/contract-addresses'] || [];
+    const gatewaysDependencies = ROUTE_DEPENDENCIES['v2/gateways/resources/reference/technical/contract-addresses'] || [];
+    const orchestratorsDependencies = ROUTE_DEPENDENCIES['v2/orchestrators/resources/reference/technical/contract-addresses'] || [];
+    const blockchainDependencies = ROUTE_DEPENDENCIES['v2/about/livepeer-protocol/blockchain-contracts'] || [];
+
+    assert.ok(canonicalDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
+    assert.ok(canonicalDependencies.includes('snippets/data/contract-addresses/_health-checks.json'));
+    assert.strictEqual(
+      canonicalDependencies.includes('snippets/composables/pages/canonical/livepeer-contract-addresses-data.json'),
+      false,
+      'route dependencies must not include the stale companion JSON path'
+    );
+    assert.ok(resourceHubDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
+    assert.ok(gatewaysDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
+    assert.ok(orchestratorsDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
+    assert.strictEqual(
+      Object.prototype.hasOwnProperty.call(ROUTE_DEPENDENCIES, 'v2/about/resources/verify-contract-addresses'),
+      false,
+      'AI sitemap should not track a removed standalone verifier route'
+    );
+    assert.ok(blockchainDependencies.includes('snippets/data/contract-addresses/blockchainContractsPageData.json'));
+  });
+
+  runCase('buildValidationReport blocks provenance-affecting branch anomalies instead of downgrading them to warnings', () => {
+    const payload = {
+      arbitrumOne: { inventory: [] },
+      ethereumMainnet: { inventory: [] },
+    };
+    const branchDiffs = BLOCKING_BRANCH_DIFF_TYPES.map((type) => ({
+      type,
+      repo: 'livepeer/protocol',
+      detail: `${type} detected`,
+    }));
+
+    const report = buildValidationReport({
+      catalog: { _meta: {} },
+      payload,
+      branchDiffs,
+      resolutions: [],
+    });
+
+    assert.strictEqual(report.warnings.length, 0, 'blocking branch anomalies must not remain warnings');
+    assert.deepStrictEqual(
+      report.failures.map((failure) => failure.endpoint).sort(),
+      [...BLOCKING_BRANCH_DIFF_TYPES].sort(),
+      'all blocking branch anomaly types should become failures'
+    );
+  });
+
+  runCase('workflow cadence and publish staging align with the pipeline output contract', () => {
+    const mainWorkflow = readText(MAIN_WORKFLOW_PATH);
+    const shadowWorkflow = readText(SHADOW_WORKFLOW_PATH);
+    const constantsText = readText(CONTRACTS_CONSTANTS_PATH);
+
+    assert.ok(
+      mainWorkflow.includes(`- cron: \"${CONTRACTS_PIPELINE_CADENCE.mainScheduleCron}\"`),
+      'main workflow cron must match the canonical cadence contract'
+    );
+    assert.ok(
+      shadowWorkflow.includes(`- cron: \"${CONTRACTS_PIPELINE_CADENCE.shadowScheduleCron}\"`),
+      'shadow workflow cron must match the canonical cadence contract'
+    );
+    assert.ok(
+      mainWorkflow.includes('FLAGS="--check"'),
+      'main workflow should keep the canonical --check validation contract'
+    );
+    assert.ok(
+      shadowWorkflow.includes('FLAGS="--check"'),
+      'shadow workflow should keep the canonical --check validation contract'
+    );
+    assert.strictEqual(
+      constantsText.includes('livepeer-contract-addresses-data.json'),
+      false,
+      'pipeline constants must not publish the stale companion output path'
+    );
+    assert.strictEqual(
+      mainWorkflow.includes('git add snippets/composables/pages/canonical/livepeer-contract-addresses-data.json'),
+      false,
+      'workflow staging must not add the stale companion output path'
+    );
+    assert.strictEqual(
+      mainWorkflow.includes('git add snippets/data/contract-addresses/contractAddressesData.jsx'),
+      true,
+      'workflow staging should add the generated registry JSX artifact'
+    );
+    assert.strictEqual(
+      mainWorkflow.includes('git add snippets/data/contract-addresses/blockchainContractsPageData.jsx'),
+      true,
+      'workflow staging should add the generated blockchain page JSX artifact'
+    );
+    assert.ok(constantsText.includes('contractAddressesData.jsx'), 'pipeline constants should publish the registry JSX output path');
+    assert.ok(constantsText.includes('blockchainContractsPageData.jsx'), 'pipeline constants should publish the blockchain page JSX output path');
+    assert.strictEqual(fs.existsSync(GENERATED_JSX_PATH), true, 'generated contractAddressesData.jsx should exist');
+    assert.strictEqual(fs.existsSync(BLOCKCHAIN_PAGE_JSX_PATH), true, 'generated blockchainContractsPageData.jsx should exist');
+  });
+
+  return {
+    errors,
+    passed: errors.length === 0,
+    total,
+  };
+}
+
+if (require.main === module) {
+  const result = runTests();
+
+  if (result.errors.length > 0) {
+    console.error('\n❌ Contracts addresses pipeline unit test failures:\n');
+    result.errors.forEach((error) => {
+      console.error(`  ${error.file}:${error.line} - ${error.rule}: ${error.message}`);
+    });
+  } else {
+    console.log(`\n✅ Contracts addresses pipeline unit tests passed (${result.total} checks)`);
+  }
+
+  process.exit(result.passed ? 0 : 1);
+}
+
+module.exports = { runTests };

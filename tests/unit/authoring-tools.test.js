@@ -4,10 +4,10 @@
  * @category          validator
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, tools/vscode/authoring-tools, tools/scripts/format-mdx.js
- * @owner             docs
+ * @domain            docs
  * @needs             E-C6, F-C1
  * @purpose-statement Unit tests for repo-owned authoring tools — verifies MDX formatting and real-path completion/validation helpers.
- * @pipeline          P1, P3
+ * @pipeline          P1
  * @usage             node tests/unit/authoring-tools.test.js
  */
 
