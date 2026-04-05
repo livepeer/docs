@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   close-linked-issues:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == vars.DEPLOY_BRANCH
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.base.ref == vars.DEPLOY_BRANCH }}
     runs-on: ubuntu-latest
     steps:
       - name: Close linked same-repo issues
