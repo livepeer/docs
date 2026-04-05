@@ -3,10 +3,9 @@ name: Docs CI - Content Quality Suite
 on:
   push:
     branches:
-      - main
+      - docs-v2
   pull_request:
     branches:
-      - main
       - docs-v2
 
 concurrency:
@@ -114,9 +113,9 @@ jobs:
           echo "| PR Changed-File Checks | ${{ github.event_name == 'pull_request' && (steps.pr-checks.outcome == 'success' && '✅' || '❌') || '⏭️' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Docs-Guide SoT (Advisory) | ${{ steps.docs-guide-sot.outcome == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Browser | ${{ steps.browser-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.pr-checks.outcome }}" = "failure" ] && [ "${{ github.head_ref }}" = "docs-v2" ] && [ "${{ github.base_ref }}" = "main" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ steps.pr-checks.outcome }}" = "failure" ] && [ "${{ github.head_ref }}" = "${{ vars.TEST_BRANCH }}" ] && [ "${{ github.base_ref }}" = "${{ vars.DEPLOY_BRANCH }}" ]; then
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "> Changed-file static check failures are advisory for integration PR \`docs-v2 -> main\`." >> $GITHUB_STEP_SUMMARY
+            echo "> Changed-file static check failures are advisory for integration PR \`${{ vars.TEST_BRANCH }} -> ${{ vars.DEPLOY_BRANCH }}\`." >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Fail if any test failed
@@ -124,7 +123,7 @@ jobs:
           steps.browser-test.outcome == 'failure' ||
           (github.event_name == 'pull_request' &&
           steps.pr-checks.outcome == 'failure' &&
-          !(github.head_ref == 'docs-v2' && github.base_ref == 'main'))
+          !(github.head_ref == vars.TEST_BRANCH && github.base_ref == vars.DEPLOY_BRANCH))
         run: |
           echo "❌ One or more tests failed"
           exit 1
@@ -242,7 +241,7 @@ jobs:
           immutability_outcome="${{ steps.component-immutability.outcome }}"
           integration_exception=false
 
-          if [ "${{ github.head_ref }}" = "docs-v2" ] && [ "${{ github.base_ref }}" = "main" ]; then
+          if [ "${{ github.head_ref }}" = "${{ vars.TEST_BRANCH }}" ] && [ "${{ github.base_ref }}" = "${{ vars.DEPLOY_BRANCH }}" ]; then
             integration_exception=true
           fi
 
@@ -313,7 +312,7 @@ jobs:
 
           if [ "$integration_exception" = "true" ] && [ "$has_changes" = "true" ]; then
             {
-              echo "> Component-enforcement findings are advisory for integration PR \`docs-v2 -> main\`."
+              echo "> Component-enforcement findings are advisory for integration PR \`${{ vars.TEST_BRANCH }} -> ${{ vars.DEPLOY_BRANCH }}\`."
               echo "> Missing prerequisite scripts remain blocking."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -323,7 +322,7 @@ jobs:
           always() &&
           steps.detect-component-changes.outputs.has_changes == 'true' &&
           steps.component-immutability.outcome == 'failure' &&
-          !(github.head_ref == 'docs-v2' && github.base_ref == 'main')
+          !(github.head_ref == vars.TEST_BRANCH && github.base_ref == vars.DEPLOY_BRANCH)
         run: |
           echo "❌ Component immutability violation detected"
           exit 1

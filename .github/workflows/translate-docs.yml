@@ -60,7 +60,7 @@ on:
         type: string
 
 concurrency:
-  group: translate-docs-${{ github.event.inputs.target_branch || 'docs-v2' }}
+  group: translate-docs-${{ github.event.inputs.target_branch || vars.DEPLOY_BRANCH }}
   cancel-in-progress: false
 
 jobs:
@@ -81,7 +81,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.inputs.target_branch || 'docs-v2' }}
+          ref: ${{ github.event.inputs.target_branch || vars.DEPLOY_BRANCH }}
 
       - name: Fetch base ref (changed_since_ref mode)
         if: ${{ inputs.scope_mode == 'changed_since_ref' }}
@@ -273,7 +273,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           branch: automation/i18n-${{ github.run_id }}
-          base: ${{ github.event.inputs.target_branch || 'docs-v2' }}
+          base: ${{ github.event.inputs.target_branch || vars.DEPLOY_BRANCH }}
           title: "chore(i18n): translate docs to ${{ github.event.inputs.languages }}"
           commit-message: "chore(i18n): update translated docs and docs.json [skip ci]"
           add-paths: |
