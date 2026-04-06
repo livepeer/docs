@@ -56,6 +56,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add v2/**/*-data.json
+          find v2 -type f -name '*-data.json' -exec git add -- {} +
           git commit -m "chore(ai-companions): regenerate glossary companion JSONs - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           git push origin HEAD:${{ steps.branch.outputs.name }}
