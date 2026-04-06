@@ -1086,3 +1086,76 @@ Session started: 2026-04-06 23:48:53
 Session started: 2026-04-07 00:13:27
 Session started: 2026-04-07 00:49:28
 Session started: 2026-04-07 01:06:38
+=== 2026-04-07 01:26 AEST ===
+Stream: Gateway Setup Configure Consolidation
+Outcome: Met
+Done:
+- Consolidated the Gateway setup configuration surface into the canonical `v2/gateways/setup/configure.mdx` route with AI, Video, and Dual tabs
+- Moved the active configuration bodies into `v2/gateways/custom/views/setup/configure/`, retired the old routed configure variants from the active surface, and preserved redirects in `docs.json`
+- Repointed active Gateway docs consumers to `/v2/gateways/setup/configure` and confirmed the repo closed clean with no uncommitted work
+Next: Verify the canonical configure route against the human-owned `localhost:3333` preview once that local server responds again
+=== 2026-04-07 01:26 AEST ===
+Stream: Mintlify Component Authoring Guardrails
+Outcome: Partially met
+Done:
+- Re-read the canonical Mintlify, Claude, UI-system, and component-governance rules that govern Livepeer Docs MDX-facing JSX authoring
+- Added a local Codex skill for Livepeer-specific Mintlify/component authoring guardrails without changing the repository
+- Closed the session with a clean repo state and no uncommitted worktree output
+Next: Promote the local skill into `ai-tools/ai-skills/` only if shared repo-level enforcement is wanted
+Session started: 2026-04-07 01:26:32
+Session started: 2026-04-07 01:27:09
+=== 2026-04-07 01:35 AEST ===
+Stream: Gateways — component fix
+Outcome: Met
+Done:
+- Diagnosed BorderedBox accent bar clipping: border-radius tapering with mismatched border widths
+- Replaced inline borderLeft with CSS ::before pseudo-element in Containers.jsx + style.css
+- Committed in 9c70f8fad
+Next: Verify render on live dev server
+=== 2026-04-07 15:00 AEST ===
+Stream: Setup Page Renames — Orchestrators + Gateways
+Outcome: Met
+Done:
+- Renamed 5 orchestrators/setup pages to match sidebarTitles (prepare, install, connect, verify, monitor) + updated guide.mdx sidebarTitle to "Guide"
+- Renamed gateways/setup/run-a-gateway.mdx to guide.mdx
+- Updated all navigation configs (docs.json, docs-index.json, 4 scoped navs), nav pages, component-usage-map, pages-catalog, and cross-tab references. Added 6 redirects
+Next: None — renames complete
+
+=== 2026-04-07 01:30 AEST ===
+Stream: Gateways Monitoring + Prepare + Header Styling
+Outcome: Met
+Done:
+- Built monitor.mdx with Docker/Linux/Windows tabs, Explorer iframe embed with column reference, Prometheus/Grafana setup, alert rules, key metrics by workload type
+- Built prepare.mdx consolidating requirements + on-chain setup into single page with Off-chain/On-chain tabs
+- Standardised h1 headers across all 6 setup pages (icons moved to beginning, configure.mdx got missing h1)
+- Added redirects for old requirement paths, flattened Setup Checklist nav group
+Next: None — all deliverables complete
+
+=== 2026-04-07 01:29 AEST ===
+Stream: Gateways Icon Helper Debugging
+Outcome: Not met
+Done:
+- Identified the real runtime problem: imported helper-module JSX constants that use Mint globals (`Icon`, `Badge`) are not a safe pattern for the Gateway icon helper
+- Verified the live helper/consumer surface in the repo: `v2/gateways/custom/components/iconItems.jsx`, `v2/gateways/setup/install.mdx`, and `v2/gateways/custom/views/install/docker-install-content.mdx`
+- Confirmed the worktree at close is dirty only in unrelated management/governance files plus `pre-tool-guard.js`, not in a repo-verified Gateway deliverable
+Next: Re-open as a narrow Gateway icon-helper thread, choose one implementation pattern, validate it on the real install route, and clean or justify the empty `snippets/composables/pages/gateways/` directory
+
+=== 2026-04-07 14:20 AEST ===
+Stream: Gateways Verify
+Outcome: Met
+Done:
+- Research: 6 parallel agents scanned 30+ source files, produced 393-line research.md collating all verification content from v2/gateways/
+- Built verify.mdx parent page + 3 OS child views (Docker/Linux/Windows) styled after install.mdx
+- Scoped verify (one-time health checks) distinct from monitor (ongoing observability) per user direction
+- Fixed Mintlify constraint violations: duplicate imports, JSX tab titles, parent-scope interpolation, broken Card hrefs, raw HTML replaced with windowsGroup component
+Next: None — verify page complete and committed
+
+=== 2026-04-07 02:15 AEST ===
+Stream: Gateways Connect
+Outcome: Met
+Done:
+- Built holistic connect.mdx at v2/gateways/setup/ with Docker/Linux/Windows tabs matching install/verify/monitor pattern
+- Researched and collated connection content from 8 sources across quickstart, child pages, and advanced ops guides
+- Created 3 OS-specific view files with synced nested Off-Chain/On-Chain tabs, all code blocks titled
+- Registered as flat nav entry (install > configure > connect > verify > monitor), removed old Network Connect group
+Next: None - all deliverables complete

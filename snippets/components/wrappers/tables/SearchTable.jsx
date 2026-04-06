@@ -28,8 +28,81 @@
  * @param {object} [style={}] - Inline style overrides.
  */
 'use client'
-import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
-import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+
+const renderSearchTableCopyText = (text, style = {}) => {
+  const handleCopy = () => {
+    if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
+      return
+    }
+    navigator.clipboard.writeText(text)
+  }
+
+  return (
+    <span
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0.2rem 0.4rem',
+        borderRadius: '4px',
+        fontSize: '0.85rem',
+        fontFamily: 'monospace',
+        backgroundColor: 'var(--card-background)',
+        border: '1px solid var(--border)',
+        minWidth: 0,
+        overflow: 'hidden',
+        ...style,
+      }}
+    >
+      <span
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          flex: 1,
+          minWidth: 0,
+        }}
+      >
+        {text}
+      </span>
+      <button
+        type="button"
+        onClick={handleCopy}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0 0 0 0.4rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          color: 'var(--text)',
+          flexShrink: 0,
+        }}
+        title="Copy to clipboard"
+        aria-label={`Copy ${text}`}
+      >
+        <Icon icon="copy" size={14} />
+      </button>
+    </span>
+  )
+}
+
+const renderSearchTableLinkIcon = (
+  href,
+  color = 'var(--accent)',
+  icon = 'arrow-up-right-from-square',
+  size = 12
+) => {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ borderBottom: 'none', textDecoration: 'none', display: 'inline-flex' }}
+    >
+      <Icon icon={icon} size={size} color={color} />
+    </a>
+  )
+}
 
 export const SearchTable = ({
   TableComponent = null,
@@ -181,8 +254,8 @@ export const SearchTable = ({
             minWidth: 0,
           }}
         >
-          <CopyText text={value} style={{ flex: 1 }} />
-          {href && <LinkIcon href={href} color="var(--accent)" />}
+          {renderSearchTableCopyText(value, { flex: 1 })}
+          {href ? renderSearchTableLinkIcon(href, 'var(--accent)') : null}
         </div>
       )
     }
@@ -496,8 +569,8 @@ export const SearchTableV2 = ({
             minWidth: 0,
           }}
         >
-          <CopyText text={value} style={{ flex: 1 }} />
-          {href && <LinkIcon href={href} color="var(--accent)" />}
+          {renderSearchTableCopyText(value, { flex: 1 })}
+          {href ? renderSearchTableLinkIcon(href, 'var(--accent)') : null}
         </div>
       )
     }

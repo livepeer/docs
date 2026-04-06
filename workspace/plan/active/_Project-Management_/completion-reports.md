@@ -221,6 +221,75 @@ Fresh validation confirmed the fix at the real entrypoints: `mint dev --port 334
 
 ---
 
+## Gateway Setup Configure Consolidation — 2026-04-07
+
+**Plans**: none
+**Scope**: Consolidate the Gateway setup configuration pages into one canonical root `configure.mdx` page with tabs for AI, Video, and Dual configuration.
+**Outcome**: Met
+
+### Summary
+
+The Gateway setup configuration surface was flattened from multiple routed pages into one canonical route at `v2/gateways/setup/configure.mdx`. The AI, Video, and Dual configuration bodies now live as child MDX views under `v2/gateways/custom/views/setup/configure/`, the old routed variants were retired from the active surface, and `docs.json` plus active Gateway links now point at the canonical route with redirects preserved for the previous URLs.
+
+The repo is clean at closeout: `git status` and `git diff --stat HEAD` are empty, no stale worktrees remain under `.claude/worktrees/`, and the canonical configure route exists on disk with the expected child views and redirect contract.
+
+### Completed
+
+**Gateway setup route consolidation**
+- Established `v2/gateways/setup/configure.mdx` as the single active configuration page using tabs for AI, Video, and Dual setup guidance.
+- Moved the three active configuration content bodies into `v2/gateways/custom/views/setup/configure/` and normalized parent/child MDX import ownership so shared dependencies are owned by the parent route.
+- Removed the old routed configuration variants from active navigation and archived the non-canonical overview/alternate pages under `v2/gateways/_workspace/archive/setup/configure/`.
+
+**Navigation and link propagation**
+- Flattened the `Configuration` entry in `docs.json` to the canonical `v2/gateways/setup/configure` route.
+- Added redirects from the previous configuration URLs (`configuration-overview`, `video-configuration`, `ai-configuration`, `dual-configuration`, and related alternates) to `/v2/gateways/setup/configure`.
+- Repointed active Gateway docs consumers so setup, navigator, concepts, install cross-links, and knowledge-hub/tutorial references resolve to the canonical route.
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Keep one routed configure page at `v2/gateways/setup/configure.mdx` | The setup IA is being flattened one page at a time, so configuration needed one canonical landing route instead of a nested route family |
+| Keep child configuration content under `v2/gateways/custom/views/setup/configure/` | The content remains active and reusable, but should not exist as separate routed wrappers |
+| Preserve redirects for retired configure URLs | Existing inbound links and old internal references should continue to resolve during the flattening transition |
+
+### Deferred Items
+
+| Item | Priority | Reason | Dependency |
+|---|---|---|---|
+| Verify the canonical configure route on the human-owned `localhost:3333` preview | P2 | Repeated `curl` probes timed out even though file-level validation and route wiring were correct | Human local preview responsiveness |
+
+### Dependencies & Downstream Effects
+
+- **Gateway setup IA**: Further setup flattening can now build on a single canonical configuration route instead of four active routed pages.
+- **Gateway docs consumers**: Setup and guide pages should link to `/v2/gateways/setup/configure` going forward; the old route names now exist only as redirects.
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| `git status --short` | ✅ Clean | No uncommitted work at closeout |
+| `git diff --stat HEAD` | ✅ Clean | Working tree matches `HEAD` |
+| Canonical configure route presence | ✅ Present | `v2/gateways/setup/configure.mdx` exists with the three child views |
+| `docs.json` configure nav + redirect contract | ✅ Present | Canonical page entry plus old-route redirects verified in-file |
+| `localhost:3333` route probes | ⚠️ Timed out | `curl -I -m 5` returned `000` for the canonical and old configure URLs |
+
+### Recommendations
+
+1. **Confirm the canonical configure route in the human preview once `3333` is responsive** — this is the remaining runtime verification gap after the file-level and nav-level consolidation landed cleanly.
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `v2/gateways/setup/configure.mdx` | canonical route | Single routed configuration page with AI, Video, and Dual tabs |
+| `v2/gateways/custom/views/setup/configure/ai-configuration-content.mdx` | active child view | AI configuration body imported into the canonical route |
+| `v2/gateways/custom/views/setup/configure/video-configuration-content.mdx` | active child view | Video configuration body imported into the canonical route |
+| `v2/gateways/custom/views/setup/configure/dual-configuration-content.mdx` | active child view | Dual configuration body imported into the canonical route |
+| `v2/gateways/_workspace/archive/setup/configure/` | archive | Retired overview and alternate configuration route files |
+
+---
+
 ## Developers Tab Restructure and Content Promotion — 2026-04-06
 
 **Plans**: none
@@ -4678,9 +4747,343 @@ The gateway single-click deployment page now lives at the canonical deployment-d
 | `v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx` | new path | Canonical destination for the moved gateway single-click deployment page |
 | `docs.json` | modified | Nav path updated and redirect added from the old gateway install route |
 | `tools/config/scoped-navigation/docs.json.jsx` | modified | Scoped preview source-of-truth updated to the new route |
+
+---
+
+## BorderedBox Accent Bar Fix — 2026-04-07
+
+**Plans**: none
+**Scope**: Fix left accent bar being visually cut off on BorderedBox component due to CSS border-radius tapering.
+**Outcome**: Met
+
+### Summary
+Diagnosed the root cause of the accent bar clipping on the Gateways prepare page. The `borderLeft: 4px` inline style combined with `borderRadius: 8px` and mismatched border widths (1px top/right/bottom vs 4px left) caused corner tapering. Replaced the inline `borderLeft` approach with a CSS `::before` pseudo-element that inherits the parent's border-radius and follows the curve naturally. No `overflow: hidden` required, so existing Accordion/Tab children in other BorderedBox usages are unaffected.
+
+### Completed
+- Diagnosed border-radius + mismatched border-width tapering as root cause (not overflow clipping)
+- Replaced inline `borderLeft` with CSS custom property (`--accent-bar-color`) + `data-accent-bar` attribute on the component
+- Added `::before` pseudo-element rule in `style.css` with `border-radius: inherit` for clean rounded corners
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `snippets/components/wrappers/containers/Containers.jsx` | modified | Accent bar rendered via data attribute + CSS custom property instead of inline borderLeft |
+| `style.css` | modified | Added `::before` pseudo-element rules for `[data-accent-bar]` on BorderedBox |
 | `tools/config/scoped-navigation/docs-gate-orch.json` | modified | Scoped gateway/orchestrator nav and redirects updated to the new route |
 | `tools/config/scoped-navigation/docs-gate-work.json` | modified | Scoped gateway work nav updated to the new route |
 | `v2/gateways/setup/install/install-overview.mdx` | modified | Active installation cross-link repointed to the new deployment-details page |
 | `v2/gateways/guides/deployment-details/setup-requirements.mdx` | modified | Related-page card repointed to the new deployment-details page |
 | `v2/gateways/index.mdx` | modified | Generated gateways index refreshed to surface the new route |
 | `v2/index.mdx` | modified | Generated root index refreshed to surface the new route |
+
+---
+
+## Mintlify Component Authoring Guardrails — 2026-04-07
+
+**Plans**: none
+**Scope**: Read the canonical Mintlify and component-governance rules, verify the repo-clean state, and capture the correct MDX-facing JSX authoring contract in a local Codex skill rather than a governed repo skill.
+**Outcome**: Partially met
+
+### Summary
+
+The canonical Mintlify, Claude, UI-system, and component-governance sources were re-read and reconciled against the bad JSX/composable patterns that surfaced during the session. A local Codex skill was created under `~/.codex/skills/` to enforce the correct Livepeer Docs authoring behaviour, but the repository itself remains unchanged, so the result is a local runtime guardrail rather than a governed repo deliverable.
+
+### Completed
+
+**Rule audit**
+- Re-read the canonical Mintlify/runtime rules, the Claude repo rules, the component framework, the placement reference, and the UI-system map before defining the authoring contract.
+- Verified that the worktree is clean against the repo, with no uncommitted deliverables, no changed tracked files, and no stale `.claude/worktrees/` entries.
+
+**Codex runtime guardrail**
+- Added a local Codex skill at `~/.codex/skills/livepeer-mintlify-component-authoring/SKILL.md` that enforces named arrow exports, no Mintlify-global imports, repo-component-first composition, route-local placement rules, and scoped preview validation guidance for Livepeer Docs MDX-facing JSX.
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Record this as a local Codex runtime outcome instead of a repo skill change | The requested fix was to change Codex behaviour directly, and a local skill satisfies that without introducing governed repo-skill contract work in this session |
+| Keep the repo clean at close | No governed repo artifact was required to satisfy the request, so closing with zero repo diff is more accurate than staging unrelated skill-system changes |
+
+### Deferred Items
+
+| Item | Priority | Reason | Dependency |
+|---|---|---|---|
+| Promote the local `livepeer-mintlify-component-authoring` skill into a governed repo skill if the team wants shared enforcement | P2 | The current fix only changes this local Codex environment; other agents or contributors will not inherit it automatically | A deliberate `ai-tools/ai-skills/**` skill-design pass plus governed-skill validation |
+
+### Dependencies & Downstream Effects
+
+- **Local Codex runtime**: Future Codex sessions on this machine can trigger the new local skill when authoring or refactoring Livepeer Docs MDX-facing JSX composables.
+- **Repository state**: The repo remains clean, so no downstream repo consumers, generators, or validators were changed by this session.
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| `git status --short` | ✅ Clean | No modified, staged, or untracked repo files at close |
+| `git diff --stat HEAD` | ✅ Clean | No tracked repo diff remained at close |
+| `ls .claude/worktrees/` | ✅ Clean | No stale session worktrees present |
+| Local skill file existence | ✅ Present | `~/.codex/skills/livepeer-mintlify-component-authoring/SKILL.md` exists |
+
+### Recommendations
+
+1. **Use the new local skill for future MDX-facing JSX work** — It encodes the exact Mintlify/component rules that were repeatedly violated during this session and should reduce recurrence immediately.
+2. **Only port this into `ai-tools/ai-skills/` if shared repo enforcement is actually wanted** — That promotion should be a deliberate governed-skill task, not an incidental side effect of one bad component/composable debugging session.
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `~/.codex/skills/livepeer-mintlify-component-authoring/SKILL.md` | local skill | Repo-specific Codex authoring skill for Livepeer Docs MDX-facing JSX composables |
+
+---
+
+## Gateways Setup Pages (Monitor, Prepare, Header Styling) — 2026-04-07
+
+**Plans**: none
+**Scope**: Build holistic monitor.mdx and prepare.mdx pages for the Gateway setup journey, consolidate the Setup Checklist nav group, and standardise h1 header styling across all setup pages.
+**Outcome**: Met
+
+### Summary
+
+Created two new consolidated setup pages: `monitor.mdx` (production observability with Prometheus, Grafana, Explorer embed, alerts, OS-specific tabs) and `prepare.mdx` (requirements + on-chain setup consolidated from two pages into one with Off-chain/On-chain tabs). Standardised h1 styling across all 6 setup pages with icons moved to the beginning. The Setup Checklist nav group was flattened to a single `prepare` entry.
+
+### Completed
+
+**Research phase**
+- Collated monitoring content from 13 source files across `v2/gateways/` into `v2/gateways/setup/monitor/research.md`
+- Identified scope boundary: monitor = ongoing production observability, verify = one-time health checks
+
+**Monitor page**
+- Built `v2/gateways/setup/monitor.mdx` with Docker/Linux/Windows tabs (3 child view files in `custom/views/setup/monitor/`)
+- Sections: OS-specific Prometheus/Grafana/log setup, embedded Explorer iframe with column reference table, key metrics by workload type (Video/AI/Dual), Grafana dashboards, Prometheus alert rules
+- Registered in docs.json nav
+
+**Prepare page**
+- Built `v2/gateways/setup/prepare.mdx` consolidating `requirements/setup.mdx` + `requirements/on-chain-setup/on-chain.mdx`
+- Single page with Off-chain/On-chain tabs (no OS tabs - that axis belongs in Install)
+- Covers hardware, network, OS compatibility, RPC setup, wallet/keystore creation, on-chain flags
+- Original pages preserved, redirects added
+- Setup Checklist nav group replaced with flat entry
+
+**Header styling**
+- Added h1 to `configure.mdx` (had none)
+- Moved icons to beginning of h1 on all 6 setup pages (prepare, install, configure, connect, verify, monitor)
+- `guide.mdx` left untouched per instruction
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Monitor vs verify scope split | Monitor = ongoing observability (Prometheus, Grafana, alerts). Verify = one-time "did it start?" checks. Prevents content duplication |
+| Prepare page: no OS tabs | Requirements and on-chain setup are OS-agnostic. OS axis belongs in Install. Off-chain/On-chain is the relevant axis |
+| Explorer iframe embed | Matches existing pattern in tools-and-dashboards.mdx. Provides live network data directly in the page |
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `v2/gateways/setup/monitor.mdx` | page | Parent monitoring page with OS tabs |
+| `v2/gateways/custom/views/setup/monitor/docker-monitor-content.mdx` | child view | Docker monitoring setup |
+| `v2/gateways/custom/views/setup/monitor/linux-monitor-content.mdx` | child view | Linux monitoring setup |
+| `v2/gateways/custom/views/setup/monitor/windows-monitor-content.mdx` | child view | Windows monitoring setup |
+| `v2/gateways/setup/monitor/research.md` | research | Collated monitoring content from 13 sources |
+| `v2/gateways/setup/prepare.mdx` | page | Consolidated requirements + on-chain setup |
+| `v2/gateways/setup/configure.mdx` | page (modified) | Added h1 header |
+| `v2/gateways/setup/install.mdx` | page (modified) | Icon moved to beginning |
+| `v2/gateways/setup/connect.mdx` | page (modified) | Icon moved to beginning |
+| `v2/gateways/setup/verify.mdx` | page (modified) | Icon moved to beginning |
+
+---
+
+## Gateways Icon Helper Debugging — 2026-04-07
+
+**Plans**: none
+**Scope**: Investigate and stabilise a reusable Gateway icon helper for setup/install MDX pages without inlining the repeated Video, AI, Dual, on-chain/off-chain, and platform badge fragments.
+**Outcome**: Not met
+
+### Summary
+
+The session established the root runtime constraint: Mint does not reliably provide `Icon` and `Badge` to top-level JSX constants in imported helper modules, so the original `{video}` constant pattern is not safe in the current Gateway helper surface. However, the session did not end with a repo-verified replacement pattern, and the current uncommitted diff at close consists of unrelated management/governance files plus an out-of-scope change to `operations/scripts/dispatch/governance/pre-tool-guard.js`.
+
+### Completed
+
+**Diagnosis**
+- Confirmed that the Gateway icon-helper problem is not just an import-path issue. The unstable part is the imported helper-module pattern itself when JSX values using Mint globals are created at file scope.
+- Verified the current active helper surface and consumers in the repo: `v2/gateways/custom/components/iconItems.jsx`, `v2/gateways/setup/install.mdx`, and `v2/gateways/custom/views/install/docker-install-content.mdx`.
+
+**Repo-close verification**
+- Checked `git status --short` and `git diff --stat HEAD`: the only uncommitted diff at close is in `operations/scripts/dispatch/governance/pre-tool-guard.js`, `workspace/plan/active/_Project-Management_/completion-reports.md`, `workspace/plan/active/_Project-Management_/project-state.md`, and `workspace/thread-outputs/sessions/session-log.txt`.
+- Scanned for debris: `snippets/composables/pages/gateways` and `v2/gateways/custom/views/setup/requirements` are empty directories in active repo roots and should be reviewed before the next session.
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Do not treat top-level imported JSX constants that rely on Mint globals as a safe Gateway pattern | The repo evidence and runtime error show `Icon` is not defined at helper-module evaluation time, even though it is available inside MDX and render-time component bodies |
+| Do not claim a fixed reusable icon-helper contract at close | No repo-verified validation proves the current helper pattern works end-to-end |
+
+### Deferred Items
+
+| Item | Priority | Reason | Dependency |
+|---|---|---|---|
+| Choose one governed reusable Gateway icon pattern and validate it on the real install route | P1 | The session produced diagnosis but not a verified stable implementation | A focused follow-up on `v2/gateways/custom/components/iconItems.jsx` plus route-level Mint validation |
+| Clean or justify `snippets/composables/pages/gateways/` empty directory | P2 | It is currently empty and looks like session debris or an abandoned move target | Human review of intended placement |
+| Review the uncommitted `pre-tool-guard.js` change separately from Gateway docs work | P1 | It is outside the Gateway icon-helper scope and currently sits in the worktree at close | Governance-thread review |
+
+### Dependencies & Downstream Effects
+
+- **Gateway setup docs**: The install/setup surfaces still need a single validated reusable icon-helper contract before more Gateway pages adopt it.
+- **Repo close state**: The worktree is not clean at session close, but the remaining diff is outside the Gateway icon-helper files.
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| `git status --short` | ⚠️ Dirty | Uncommitted work exists in 4 non-Gateway files |
+| `git diff --stat HEAD` | ⚠️ Dirty | 4 files changed, 288 insertions, 14 deletions |
+| `ls .claude/worktrees/` | ✅ Clean | No stale worktrees present |
+| `find v2/ snippets/ operations/ -type d -empty` | ⚠️ Review needed | Relevant empty dirs include `snippets/composables/pages/gateways` and `v2/gateways/custom/views/setup/requirements` |
+| Route-level Mint validation for the icon-helper outcome | ❌ Not completed | No clean, final route validation exists at close |
+
+### Recommendations
+
+1. **Re-open this as a narrow Gateway icon-helper thread** — Pick one implementation pattern only, apply it to `install.mdx` first, and validate the real route before propagating it anywhere else.
+2. **Stage or discard the unrelated worktree changes before the next debugging session** — `pre-tool-guard.js` and the project-management files make close-state verification noisier than it should be.
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `v2/gateways/custom/components/iconItems.jsx` | helper surface | Current Gateway icon-helper module under investigation |
+| `v2/gateways/setup/install.mdx` | consumer page | Active setup/install consumer of the helper pattern |
+| `v2/gateways/custom/views/install/docker-install-content.mdx` | child consumer | Install child content using the helper module |
+
+## Setup Page Renames — Orchestrators + Gateways — 2026-04-07
+
+**Plans**: none
+**Scope**: Rename orchestrators/setup and gateways/setup MDX files to match their sidebarTitles, propagate references across navigation configs.
+**Outcome**: Met
+
+### Summary
+Renamed 6 setup pages across orchestrators and gateways tabs so filenames match their sidebar display names. Updated all navigation surfaces (docs.json, docs-index.json, 4 scoped nav configs, component-usage-map, pages-catalog) and cross-tab page references. Added 6 Mintlify redirects for old URLs.
+
+### Completed
+- **Orchestrators setup renames**: `rcs-requirements.mdx` → `prepare.mdx`, `rs-install.mdx` → `install.mdx`, `connect-and-activate.mdx` → `connect.mdx`, `test.mdx` → `verify.mdx`, `r-monitor.mdx` → `monitor.mdx`
+- **Orchestrators sidebarTitle updates**: `guide.mdx` "Setup Overview" → "Guide", `prepare.mdx` "Setup Checklist" → "Prepare"
+- **Gateways setup rename**: `run-a-gateway.mdx` → `guide.mdx`
+- **Navigation propagation**: docs.json, docs-index.json, 4 scoped nav configs, component-usage-map.json, pages-catalog.mdx, 6 redirects
+- **Cross-tab references**: Updated links in navigator.mdx, guide.mdx, index pages, gpu-support, model-demand-reference, developers/running-a-gateway, resources/documentation-overview, gateways/quickstart, gateways/knowledge-hub/guides
+
+### Decisions Made
+| Decision | Rationale |
+|---|---|
+| Filenames match sidebarTitle (lowercase) | User directive — consistency between URL slug and sidebar label |
+| `prepare.mdx` for requirements page | User chose "prepare" over keeping "rcs-requirements" |
+| Navigation-only propagation for batch renames | User directive — only update links on navigation pages for the 4 non-prepare renames |
+
+### Test / Validation State
+| Check | Result | Notes |
+|---|---|---|
+| Files exist on disk | ✅ | All 6 renamed files verified with `ls` |
+| docs.json nav entries | ✅ | All setup groups reference new filenames |
+| Redirects added | ✅ | 6 redirects: old path → new path |
+| git status clean | ✅ | All changes committed in 9c70f8fad and 8ccfa5d3c |
+
+---
+
+## Gateways Verify Page — 2026-04-07
+
+**Plans**: none
+**Scope**: Consolidated gateway verification page for v2/gateways/setup — health checks, end-to-end tests, on-chain verification across Docker/Linux/Windows for video, AI, and dual-mode nodes.
+**Outcome**: Met
+
+### Summary
+Created a holistic verify page at `v2/gateways/setup/verify.mdx` styled after install.mdx, with Docker/Linux/Windows OS tabs and per-node-type (video/AI/dual) sub-tabs for end-to-end testing. Research collated from 30+ source files across the gateways folder into `v2/gateways/setup/verify/research.md`. Scoped verify (one-time "did it work?") as distinct from the monitor page (ongoing production observability). Fixed multiple Mintlify constraint violations: duplicate imports, JSX fragment tab titles, parent-scope interpolation, broken Card hrefs.
+
+### Completed
+- Research collation from 30+ source files into 393-line research.md
+- Parent page + 3 OS child views following install.mdx composition pattern
+- `windowsGroup` export added to iconItems.jsx
+- Mintlify constraint fixes (duplicate imports, JSX tab titles, parent-scope interpolation, broken hrefs)
+- docs.json nav entry added between Network Connect and Monitor
+
+### Decisions Made
+| Decision | Rationale |
+|---|---|
+| Verify = health checks + tests; Monitor = Prometheus/Grafana/alerts | Verify answers "did it work?" (one-time), monitor answers "how is it performing?" (ongoing) |
+| Plain string tab titles, not JSX fragments | Mintlify Tab expects string title prop |
+| Badge globals instead of parent-scope interpolation | Child MDX must not assume parent-scope inheritance for `{value}` interpolation |
+
+### Test / Validation State
+| Check | Result | Notes |
+|---|---|---|
+| Mintlify constraint audit | Pass | No global imports, root-absolute paths with extensions, no parent-scope interpolation |
+| docs.json route validation | Pass | `v2/gateways/setup/verify` exists in nav and resolves to file |
+| `lpd test --staged` | Pass | 0 new errors |
+
+### Artifacts
+| File | Type | Description |
+|---|---|---|
+| `v2/gateways/setup/verify.mdx` | page | Parent verify page with OS tabs |
+| `v2/gateways/custom/views/setup/verify/docker-verify-content.mdx` | view | Docker verification steps |
+| `v2/gateways/custom/views/setup/verify/linux-verify-content.mdx` | view | Linux verification steps |
+| `v2/gateways/custom/views/setup/verify/windows-verify-content.mdx` | view | Windows verification steps (video-only) |
+| `v2/gateways/setup/verify/research.md` | research | Research collation from 30+ source files |
+| `v2/gateways/custom/components/iconItems.jsx` | component | Added `windowsGroup` export |
+
+---
+
+## Gateways Connect Page - 2026-04-07
+
+**Plans**: none
+**Scope**: Holistic connect.mdx page for `v2/gateways/setup/` consolidating connection info from across the gateways section.
+**Outcome**: Met
+
+### Summary
+
+Created a consolidated connect page at `v2/gateways/setup/connect.mdx` following the install/verify/monitor tabbed pattern (Docker/Linux/Windows). Aggregated connection content previously scattered across quickstart views, child pages, and advanced operations guides into a single entry point. Each OS tab covers off-chain and on-chain modes via synced nested tabs, with steps for discovery verification, service publication, and selection tuning.
+
+### Completed
+
+**Research phase:**
+- Collated connection content from 8 sources: quickstart views (6 OS tabs), setup/connect/ child pages (3), advanced operations guides (orchestrator-selection, gateway-discoverability), on-chain-setup, and publish/ pages
+- Research output written to `v2/gateways/setup/connect/research.md`
+
+**Implementation phase:**
+- Created 3 OS-specific view files in `v2/gateways/custom/views/setup/connect/`
+- Built parent `connect.mdx` with BorderedBox/Tabs matching install.mdx/verify.mdx/monitor.mdx pattern
+- Off-chain/on-chain content structured as synced nested Mintlify Tabs (matching titles auto-sync across the page)
+- All code blocks have `title` attributes (filenames)
+- Registered in docs.json as flat entry: install > configure > connect > verify > monitor
+- Removed old Network Connect group and 3 child pages from nav
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Flat nav entry instead of group | Matches install/configure/verify/monitor pattern; connect is a setup step, not a section |
+| Synced nested Tabs for off-chain/on-chain | User requested; Mintlify auto-syncs tabs with matching titles across tab groups |
+| 4-step structure per OS tab | Connect > Verify Discovery > Service Publication > Tune Selection covers the full connect journey without duplicating verify/monitor content |
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| Import path resolution | Pass | All 10 imports resolve to existing files |
+| Em-dash check | Pass | No em-dashes in any MDX content |
+| Mintlify global import check | Pass | No forbidden imports |
+| Live render (scoped dev) | Pass | User confirmed on port 3333 |
+| All files committed | Pass | Committed in 9c70f8fad and 8ccfa5d3c |
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `v2/gateways/setup/connect.mdx` | MDX page | Parent connect page with Docker/Linux/Windows tabs |
+| `v2/gateways/custom/views/setup/connect/docker-connect-content.mdx` | MDX view | Docker-specific connection steps |
+| `v2/gateways/custom/views/setup/connect/linux-connect-content.mdx` | MDX view | Linux-specific connection steps |
+| `v2/gateways/custom/views/setup/connect/windows-connect-content.mdx` | MDX view | Windows-specific connection steps |
+| `v2/gateways/setup/connect/research.md` | Research | Source inventory and architecture decisions |
+
+---

@@ -39,8 +39,9 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Snippets Audit | Full audit of `snippets/automations` and `snippets/data` with creator/consumer/risk report in `snippets/_workspace/reports/automations-data-audit-2026-04-05.md` | Done | 2026-04-05 |
 | Delegators | Canonical `v2/delegators` IA rebuild: live route migration, glossary move, reference pages, nav/redirect propagation, generated surface sync | Done | 2026-04-06 |
 | Gateways Verify | Consolidated verify page (`v2/gateways/setup/verify/test.mdx`) — health checks, end-to-end tests, on-chain verification for video/AI/dual across Docker/Linux/Windows. Research collated, 3 OS child views built. Scoped distinct from monitor (Prometheus/Grafana) | Done | 2026-04-07 |
-| Gateways Monitoring | Holistic `monitor.mdx` for `v2/gateways/setup/monitor/` with Docker/Linux/Windows tabs, Prometheus, Grafana, Explorer, alerts. Research + OS view files + parent page created | Active - page built, awaiting review | 2026-04-07 |
-| Gateways Connect | Holistic `connect.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs. Off-chain/on-chain connection, discovery verification, service publication, selection tuning. Research collated, 3 OS view files + parent page + nav registration | Active - page built, testing | 2026-04-07 |
+| Gateways Monitoring | Holistic `monitor.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs, Prometheus, Grafana, Explorer embed, alerts | Done | 2026-04-07 |
+| Gateways Prepare | Consolidated `prepare.mdx` at `v2/gateways/setup/` replacing Setup Checklist group. Off-chain/On-chain tabs, hardware/network/OS reqs, RPC/wallet/keystore setup | Done | 2026-04-07 |
+| Gateways Connect | Holistic `connect.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs. Off-chain/on-chain synced nested tabs, discovery verification, service publication, selection tuning. Research collated, 3 OS view files + parent page + nav registration | Done | 2026-04-07 |
 
 **Rule:** When you finish a task or change status, update your row in this table before closing. If the master-tasks.md file has a matching item, update that too.
 

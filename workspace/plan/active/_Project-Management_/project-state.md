@@ -1,5 +1,5 @@
 # Project State — Content Writing Pipeline
-> Last updated: 2026-04-06
+> Last updated: 2026-04-07
 > This file must be read at the start of every AI session and updated after every agent batch.
 
 ---
@@ -16,6 +16,7 @@
 
 | Output file | Notes | Unblocks |
 |---|---|---|
+| Gateway setup configure consolidation | `v2/gateways/setup/configure.mdx` is now the canonical Gateway configuration route; AI, Video, and Dual content lives in `v2/gateways/custom/views/setup/configure/`; old configure URLs redirect to the canonical page | Unblocks further Gateway setup flattening without carrying four active configure routes and stale cross-links |
 | Delegators canonical IA rebuild | `v2/delegators/**` now follows the canonical portal/concepts/delegation/guides/resources model; the live Delegators routes were rebuilt, glossary/reference surfaces normalized, and the preview/generator dependencies repaired to support the new IA | Unblocks focused review of the live Delegators tab and a human-owned cleanup commit for any tracked shadow-source removals |
 | Gateway single-click deployment path migration | `v2/gateways/setup/install/community-projects.mdx` was moved to `v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx`; docs.json, scoped navigation mirrors, active gateway cross-links, redirects, and generated page indexes now point at the new canonical route | Unblocks staging/review of the gateway deployment-details move without leaving broken active links on the old route |
 | Production governance cutover | `operations/governance/**` and `operations/config/**` now operate as the production control plane; governance-sensitive PRs require explicit approval labels plus PR-body evidence; active/current governance reports and docs were cleaned to the steady-state architecture; and the ownerless handover report was generated | Unblocks production review of the governance model without relying on bridge-era behavior or undocumented approval process |
