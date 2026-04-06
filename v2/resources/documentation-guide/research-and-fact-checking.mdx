@@ -1,0 +1,154 @@
+---
+title: Research and Fact Checking
+sidebarTitle: Research Workflow
+description: >-
+  How docs contributors and maintainers use the experimental research workflow
+  to verify factual claims, compare related pages, and queue follow-up updates.
+keywords:
+  - livepeer
+  - documentation guide
+  - research workflow
+  - fact checking
+  - docs maintainers
+  - contributor workflow
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: developer
+pageType: how_to
+purpose: how_to
+status: current
+lastVerified: 2026-03-16
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CustomDivider style={{ margin: '-1rem 0 -1rem 0' }} />
+
+Use the research workflow when you need evidence-backed review for documentation that may contain stale, contradictory, or time-sensitive claims.
+
+Unlike the normal MDX, style, and link checks, this workflow focuses on factual accuracy:
+
+- extracting important claims from a page or page cluster
+- checking those claims against current evidence sources
+- comparing repeated claims across related pages
+- surfacing contradictions, time-sensitive wording, and follow-up pages
+
+<Tip>
+This workflow is experimental and advisory-first. It helps maintainers spot factual drift faster, but it does not replace existing quality gates or human review.
+</Tip>
+
+## When to Use It
+
+Use the research workflow when a docs change touches:
+
+- thresholds, limits, or economics
+- hardware or capability requirements
+- setup prerequisites or deployment path advice
+- support or programme availability
+- repeated claims that appear across guides, concepts, reference pages, or glossary surfaces
+
+Choose the workflow shape based on the change:
+
+- **Single-page review** when one page contains the risky claim
+- **Cluster review** when the same claim appears across multiple related pages
+- **PR advisory** when a docs diff touches tracked factual claim families
+
+Do not use this workflow as a replacement for:
+
+- MDX validation
+- style-guide checks
+- link and import validation
+- general navigation QA
+
+## Evidence Sources
+
+The workflow uses ranked evidence sources, including:
+
+- canonical repo docs and tracked claim registries
+- official product pages and release notes
+- GitHub repositories, issues, pull requests, and releases
+- forum topics for governance, support, and programme status
+- repo-available Discord or community signals when relevant
+
+If strong evidence is missing, the output should classify the claim as unresolved, conflicted, or time-sensitive instead of treating it as verified.
+
+## How to Run It
+
+Validate the claim registry first:
+
+```bash icon="terminal"
+node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+```
+
+Run a single-page research pass:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research.js \
+  --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
+  --report-md /tmp/docs-page-research.md \
+  --report-json /tmp/docs-page-research.json
+```
+
+Run a cluster review when the same claim appears in multiple pages:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+  --report-md /tmp/docs-page-research-cluster.md \
+  --report-json /tmp/docs-page-research-cluster.json
+```
+
+Run the PR advisory helper when a docs diff touches tracked factual pages:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research-pr-report.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+  --report-md /tmp/page-content-research-pr.md \
+  --report-json /tmp/page-content-research-pr.json
+```
+
+## What You Get Back
+
+Expected output sections:
+
+- `Claims Reviewed`
+- `Verified Claims`
+- `Conflicted Claims`
+- `Time-Sensitive Claims`
+- `Unverified / Historical Claims`
+- `Cross-Page Contradictions`
+- `Propagation Queue`
+- `Evidence Sources`
+
+These outputs help you decide whether to:
+
+- update the current page immediately
+- verify more before changing published wording
+- queue other pages that repeat the same claim
+- downgrade a statement from “current fact” to more cautious wording
+
+## Current Limits
+
+The workflow is intentionally conservative:
+
+- it only covers tracked claim families
+- evidence matching is still improving for weak or highly varied phrasing
+- PR advisory output is non-blocking
+- some source adapters still need broader coverage across current `docs-v2-dev` page structures
+
+That means you should treat it as a high-signal warning system, not a fully trusted automation layer.
+
+## Maintainer Path
+
+If you need the canonical operator workflow, source-of-truth boundaries, or readiness status for Codex and other agents, use the internal runbook:
+
+- [Research Skill Workflow](/docs-guide/frameworks/research-skill-workflow)
+
+For broader contributor guidance, also see:
+
+- [Guide to Using the Documentation](./documentation-guide)
+- [Features and AI Integrations](./docs-features-and-ai-integrations)
+- [Contribute to the Docs](./contribute-to-the-docs)

@@ -1,0 +1,260 @@
+---
+title: Gateway Capabilities
+sidebarTitle: Capabilities
+description: >-
+  What gateways can route, how they select orchestrators, and the workload types
+  they support across video, AI, and custom pipelines.
+keywords:
+  - livepeer
+  - gateways
+  - gateway capabilities
+  - gateway functions
+  - routing
+  - orchestrator selection
+  - video transcoding
+  - AI inference
+  - BYOC
+  - session management
+  - dual gateway
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: gateway-operator
+purpose: concept
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- ~~Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology~~
+Verify:
+- ~~Terminology is consistent with resources/glossary~~
+Verify:
+- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)~~
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- ~~UK spelling is used~~
+- ~~Headers are concise and technical - no long headers or questions (aim for max 3 words)~~
+- ~~CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+Human
+- Find Media
+- Review REVIEW items
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Gateways route work - they do not perform it. All GPU compute (transcoding, inference, real-time AI) happens on orchestrators. The gateway's job is to get each request to the right orchestrator, at the right price, and return the result.</Tip>
+</CenteredContainer>
+
+<CustomDivider middleText="Core Functions" style={{margin: "0 0 -1rem 0"}} />
+
+## Gateway Functions
+
+A gateway performs five core functions for every job it processes:
+
+1. **Job intake** - accept requests from applications via RTMP (video) or HTTP API (AI, video, BYOC)
+2. **Orchestrator selection** - match each job to the best available orchestrator based on capability, price, latency, and performance history
+3. **Session management** - maintain persistent connections to orchestrators for the duration of a stream or job batch
+4. **Payment handling** - generate probabilistic micropayment tickets per job segment (on-chain operational mode) or delegate payment to a remote signer (off-chain operational mode)
+5. **Result delivery** - return transcoded video (HLS/DASH), inference output (JSON/binary), or stream results to the calling application
+
+<Note>
+Gateways do **not** perform GPU compute, run AI models, transcode video, or execute containers. That work is performed by orchestrators. If you want to provide compute, see <LinkArrow href="/v2/orchestrators/concepts/role" label="Orchestrator Role" newline={false} />.
+</Note>
+
+<CustomDivider middleText="Workload Types" style={{margin: "0 0 -1rem 0"}}/>
+
+## Workload Types
+
+Gateways can route four categories of work into the Livepeer network. Which workloads you can route depends on your operational mode (on-chain or off-chain).
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Workload</TableCell>
+      <TableCell header>What it does</TableCell>
+      <TableCell header>Ingest protocol</TableCell>
+      <TableCell header>On-chain</TableCell>
+      <TableCell header>Off-chain</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Video transcoding**</TableCell>
+      <TableCell>Convert live video streams into multiple resolutions and formats</TableCell>
+      <TableCell>RTMP (port 1935)</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>No</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Batch AI inference**</TableCell>
+      <TableCell>Single-request AI jobs: text-to-image, image-to-video, audio-to-text, captioning, segmentation</TableCell>
+      <TableCell>HTTP API (port 8935)</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Real-time AI (Cascade)**</TableCell>
+      <TableCell>Continuous AI processing on a live video stream - style transfer, avatars, real-time agents</TableCell>
+      <TableCell>HTTP API (port 8935)</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LLM inference**</TableCell>
+      <TableCell>Text generation, chat, instruction-following via large language models</TableCell>
+      <TableCell>HTTP API (port 8935)</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Warning>
+Video transcoding requires RTMP ingest and on-chain payment. Off-chain gateways cannot route video transcoding jobs today. If you need video, you need an on-chain gateway.
+</Warning>
+
+### BYOC (Bring Your Own Container)
+
+BYOC pipelines allow applications to define custom container-based workloads that orchestrators execute. The gateway routes BYOC requests the same way it routes AI inference - via HTTP API - but the orchestrator runs an application-defined container rather than a standard AI model.
+
+BYOC enables use cases like custom ML workflows, enterprise-specific processing, and novel applications (e.g. <LinkArrow href="/v2/solutions/embody" label="Embody AI avatars" newline={false} />).
+
+See <LinkArrow href="/v2/developers/build/byoc" label="BYOC pipelines" newline={false} /> for the developer-side setup.
+
+<CustomDivider middleText="Orchestrator Selection" style={{margin: "0 0 -1rem 0"}}/>
+
+## Orchestrator Selection
+
+When a job arrives, the gateway must decide which orchestrator to send it to. This is the gateway's most important function - it directly affects cost, latency, and reliability for end users.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart TD
+    A["Job arrives at gateway"] --> B["Filter: capability match"]
+    B --> C["Filter: price within maxPricePerUnit"]
+    C --> D["Rank: latency + performance history + stake weight"]
+    D --> E["Select: best orchestrator"]
+    E --> F["Dispatch job + payment ticket"]
+    F --> G{Success?}
+    G -->|Yes| H["Return result to application"]
+    G -->|No| I["Failover: try next ranked orchestrator"]
+    I --> F
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+```
+
+The selection algorithm considers:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Factor</TableCell>
+      <TableCell header>What it means</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Capability**</TableCell>
+      <TableCell>Does the orchestrator support the requested pipeline, model, or transcoding profile?</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Price**</TableCell>
+      <TableCell>Is the orchestrator's advertised price within the gateway's configured `maxPricePerUnit`?</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Latency**</TableCell>
+      <TableCell>How fast has this orchestrator responded to recent jobs?</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Performance history**</TableCell>
+      <TableCell>What is the orchestrator's success rate and error rate over recent sessions?</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Stake weight**</TableCell>
+      <TableCell>How much LPT is staked to this orchestrator? Higher stake implies greater economic commitment to good behaviour</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Discovery Methods
+
+How a gateway discovers available orchestrators depends on the operational mode:
+
+<Tabs>
+  <Tab title="On-chain gateway" icon="link">
+    Queries the **on-chain orchestrator registry** (ServiceRegistry contract on Arbitrum). All registered orchestrators are discoverable automatically. The gateway refreshes this list periodically.
+
+    This is the default discovery method and requires no additional configuration.
+  </Tab>
+  <Tab title="Off-chain gateway" icon="cloud">
+    Off-chain gateways do not query the on-chain registry directly. Orchestrator discovery is handled via:
+
+    - **Orchestrator list from the remote signer** - the signer provides a set of known orchestrators
+    - **Manual configuration** - the operator provides an explicit orchestrator list
+
+    See the <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} /> page for how discovery works in off-chain operational mode.
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Session Management" style={{margin: "0 0 -1rem 0"}} />
+
+## Sessions and Failover
+
+Gateways maintain **sessions** with orchestrators for the duration of a workload. For video transcoding, a session covers an entire livestream (potentially hours). For AI inference, a session may cover a single request or a batch.
+
+Key session behaviours:
+
+- **Session reuse** - the gateway reuses an existing session with an orchestrator when a new segment of the same stream arrives, avoiding repeated orchestrator selection overhead
+- **Automatic failover** - if an orchestrator fails mid-session (timeout, error, disconnect), the gateway automatically selects the next-best orchestrator and retries the segment
+- **Session managers** - the gateway runs separate session managers for video (`BroadcastSessionsManager`) and AI (`AISessionManager`), allowing dual-workload operation from a single node
+- **Price negotiation** - session setup includes price agreement; if an orchestrator's price changes mid-session, the gateway can renegotiate or switch
+
+<Note>
+Running both video and AI workloads from a single gateway node is called **dual-workload configuration**. The gateway handles this through separate session managers - no special setup required beyond enabling both ingest protocols. See <LinkArrow href="/v2/gateways/concepts/architecture" label="Gateway Architecture" newline={false} /> for the internal pipeline view.
+</Note>
+
+<CustomDivider middleText="Marketplace" style={{margin: "0 0 -1rem 0"}} />
+
+## Gateway Marketplace Role
+
+Gateways participate in the Livepeer marketplace as the **demand side**. They create competition among orchestrators by routing jobs based on price, performance, and capability.
+
+This means:
+- **Better orchestrators earn more work** - gateways naturally route to faster, cheaper, more reliable nodes
+- **Gateways compete on routing quality** - application developers choose gateways based on supported features, latency, developer experience, and pricing
+- **New capabilities are instantly routable** - when an orchestrator adds a new AI model or pipeline, gateways can discover and route to it without code changes
+
+The marketplace is not a separate system - it emerges from gateways and orchestrators advertising capabilities and prices, and the selection algorithm matching supply to demand.
+
+See <LinkArrow href="/v2/gateways/concepts/business-model" label="Gateway Business Model" newline={false} /> for how gateway operators set pricing and earn margins within this marketplace.
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Gateway Role" icon="user-gear" href="/v2/gateways/concepts/role" arrow horizontal>
+    What gateways are and how the role has evolved.
+  </Card>
+  <Card title="Gateway Architecture" icon="diagram-project" href="/v2/gateways/concepts/architecture" arrow horizontal>
+    Internal components, request flow, and system interactions.
+  </Card>
+  <Card title="Gateway Business Model" icon="chart-line" href="/v2/gateways/concepts/business-model" arrow horizontal>
+    Revenue models, cost structures, and pricing.
+  </Card>
+  <Card title="Navigator" icon="compass" href="/v2/gateways/navigator" arrow horizontal>
+    Find the right setup path for your goals.
+  </Card>
+</CardGroup>

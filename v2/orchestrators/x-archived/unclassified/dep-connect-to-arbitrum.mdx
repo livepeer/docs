@@ -1,0 +1,64 @@
+---
+title: 'Connect to Arbitrum'
+sidebarTitle: 'Connect to Arbitrum'
+description: 'Connect go-livepeer to Arbitrum: hosted RPC or self-hosted node.'
+keywords: ["livepeer", "orchestrators", "arbitrum", "rpc", "ethUrl"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+{/* Comparison to setup/connect
+Ran terminal command:  diff -u /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/orchestrators/old/setting-up-an-orchestrator/connect-to-arbitrum.mdx /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/orchestrators/setup/sc-connect.mdx | head -60
+
+Here are the main differences between the two Arbitrum connection guides:
+
+- The new file (sc-connect.mdx) is much more detailed, with expanded metadata, prerequisites, and step-by-step instructions.
+- The old file (connect-to-arbitrum.mdx) is concise, focusing on basic hosted/self-hosted RPC setup and supported networks.
+
+Key diff highlights:
+- The new file adds a detailed prerequisites section, including ETH funding and GPU verification.
+- The new file provides a comparison table of RPC providers (Alchemy, Infura, public, self-hosted), with rate limits and sign-up info.
+- The new file uses tabs for provider-specific instructions and includes warnings about public endpoints.
+- The new file explains startup flags, account setup, and verification steps in more detail, including log output and troubleshooting.
+- The new file has explicit warnings about keystore security and links to next steps and FAQ.
+- The old file is shorter, with basic code blocks and links, and less context.
+
+If you want a full line-by-line diff or a specific section comparison, let me know! */}
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+**go-livepeer** needs access to the [Arbitrum](https://arbitrum.io/) network. You can use a **hosted API** (e.g. [Infura](https://infura.io/), [Alchemy](https://www.alchemy.com/)) or a **self-hosted** node.
+
+## Hosted RPC (recommended to start)
+
+<CustomCodeBlock
+  codeString={`livepeer -network arbitrum-one-mainnet -ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID>`}
+  language="bash"
+  icon="terminal"
+/>
+
+Replace `<PROJECT_ID>` with your Infura project ID.
+
+## Self-hosted node
+
+See [Offchain Labs docs](https://developer.offchainlabs.com/docs/running_node). Then:
+
+<CustomCodeBlock
+  codeString={`livepeer -network mainnet -ethUrl http://localhost:8545`}
+  language="bash"
+  icon="terminal"
+/>
+
+## Supported networks
+
+- **Arbitrum One** (production): `-network arbitrum-one-mainnet -ethUrl <RPC_URL>`
+- **Private / offchain:** See [CLI flags](/v2/orchestrators/resources/technical/cli-flags) for `-network` and `-ethController`.
+
+<Note> Use a stable RPC; flaky endpoints can cause missed reward calls.</Note>
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="/v2/orchestrators/setup/rs-install" arrow />
+  <Card title="Quickstart" icon="rocket" href="/v2/orchestrators/quickstart/guide" arrow />
+  <Card title="CLI flags" icon="terminal" href="/v2/orchestrators/resources/technical/cli-flags" arrow />
+</Columns>

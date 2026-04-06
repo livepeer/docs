@@ -1,0 +1,737 @@
+---
+title: FAQ and Troubleshooting
+sidebarTitle: FAQ
+description: >-
+  Answers to common orchestrator questions and step-by-step fixes for the most
+  frequent errors — installation, networking, job routing, AI pipelines, and
+  earnings.
+keywords:
+  - livepeer
+  - orchestrator
+  - troubleshooting
+  - FAQ
+  - not receiving jobs
+  - GPU
+  - serviceAddr
+  - pricePerUnit
+  - AI runner
+  - earnings
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+lastVerified: 2026-03-17
+purpose: faq
+status: review
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This page covers the most common errors orchestrators encounter and answers the questions that come up most often. Find your symptom or question in the relevant section. Each entry is self-contained — you should be able to read one entry and resolve your issue without reading the rest.
+
+If your issue is not covered here, see the [escalation paths](#still-stuck) at the bottom of this page.
+
+<CustomDivider />
+
+## Troubleshooting — Installation and GPU Detection
+
+<AccordionGroup>
+
+<Accordion  title='GPU not detected — the -nvidia flag returns no devices' icon="server">
+
+**Symptom**  
+Running `livepeer -nvidia all` produces no output or logs an error indicating no NVIDIA devices were found.
+
+**Cause**  
+The NVIDIA driver version installed on the host is below the minimum required by the current go-livepeer release, or the NVIDIA Container Toolkit is not installed when running in Docker.
+
+**Fix**
+
+1. Confirm your driver version:
+   ```bash icon="terminal"
+   nvidia-smi
+   ```
+   The output shows `Driver Version`.
+2. If the driver is below the minimum, update it:
+   ```bash icon="terminal"
+   # Ubuntu — replace with your target driver version
+   sudo apt-get install -y nvidia-driver-<version>
+   sudo reboot
+   ```
+
+3. If running via Docker, verify the NVIDIA Container Toolkit is installed:
+   ```bash icon="terminal"
+   docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
+   ```
+   If this command fails, install the toolkit:
+   ```bash icon="terminal"
+   sudo apt-get install -y nvidia-container-toolkit
+   sudo systemctl restart docker
+   ```
+
+4. Re-run go-livepeer with the `-nvidia` flag, passing specific GPU IDs:
+   ```bash icon="terminal"
+   livepeer -nvidia 0 -orchestrator -transcoder ...
+   ```
+   Use `-nvidia all` to target all available GPUs.
+</Accordion>
+
+<Accordion  title='"OrchestratorCapped" error' icon="triangle-exclamation">
+
+**Symptom**  
+Your orchestrator logs show `OrchestratorCapped` and stops accepting new jobs from gateways.
+
+**Cause**  
+Your orchestrator has reached its session limit. This can be caused by the `-maxSessions` flag being set too low, or by hitting the hardware NVENC/NVDEC session limit on your GPU.
+
+**Fix**
+
+If the error appears during normal operation (not at startup):
+
+1. Increase the session limit via `livepeer_cli`:
+   ```bash icon="terminal"
+   livepeer_cli
+   ```
+   Select the option to update the maximum number of sessions and set a higher value.
+
+   Or set it as a startup flag:
+   ```bash icon="terminal"
+   livepeer -maxSessions 10 ...
+   ```
+If the error appears at startup when using the `-nvidia` flag, the GPU itself has reached its hardware encoding/decoding session limit. Different NVIDIA GPU models have different limits — consumer cards (GTX/RTX series) typically cap at 3–5 concurrent NVENC sessions. Search `nvenc nvdec session limit <your GPU model>` to find the limit for your card.
+
+</Accordion>
+
+<Accordion  title='Binary not found after download' icon="triangle-exclamation">
+
+**Symptom**  
+After downloading the go-livepeer binary, running `livepeer` in the terminal returns `command not found`.
+
+**Cause**  
+The binary is not in a directory that is on your system `PATH`, or the file permissions do not allow execution.
+
+**Fix**
+
+1. Make the binary executable:
+   ```bash icon="terminal"
+   chmod +x livepeer livepeer_cli
+   ```
+
+2. Move the binaries to a directory on your `PATH`:
+   ```bash icon="terminal"
+   sudo mv livepeer livepeer_cli /usr/local/bin/
+   ```
+
+3. Verify:
+   ```bash icon="terminal"
+   livepeer --version
+   ```
+
+</Accordion>
+
+<Accordion  title='CUDA mismatch or CUDA library not found' icon="triangle-exclamation">
+
+**Symptom**  
+go-livepeer starts but logs a CUDA error, or GPU transcoding fails immediately with a CUDA library error.
+
+**Cause**  
+The CUDA version installed on your host does not match the version that go-livepeer was compiled against for the current release.
+
+**Fix**
+
+1. Check your CUDA version:
+   ```bash icon="terminal"
+   nvcc --version
+   # or
+   cat /usr/local/cuda/version.txt
+   ```
+
+2. Check the go-livepeer release notes for the current release to identify the required CUDA version.
+3. If using Docker, pull the official go-livepeer image which bundles the correct CUDA version instead of relying on a host CUDA installation.
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Troubleshooting — Networking and Connectivity
+
+<AccordionGroup>
+
+<Accordion  title='"Service address did not match discovered address"' icon="link">
+
+**Symptom**  
+On startup, your orchestrator logs:
+``` icon="terminal"
+Service address https://127.0.0.1:4433 did not match discovered address https://127.1.5.10:8935; set the correct address in livepeer_cli or use -serviceAddr
+```
+(The specific IPs will differ. The pattern is that the locally inferred address does not match the address stored on-chain.)
+
+**Cause**  
+When starting up, go-livepeer checks whether the current public IP matches the address stored on the Livepeer blockchain from your registration. If your server IP has changed, or if you registered with the wrong address, the check fails.
+
+Your node may still start, but gateways cannot route jobs to you if the on-chain address is unreachable.
+
+**Fix**
+
+1. Identify the address currently stored on-chain. You can find this on the [Livepeer Explorer](https://explorer.livepeer.org) — search for your orchestrator's ETH address.
+
+2. If the stored address is wrong, update it via `livepeer_cli`:
+   ```bash icon="terminal"
+   livepeer_cli
+   ```
+   Select the option to update your service URI, and enter the correct `https://YOUR_PUBLIC_IP:8935` (or your domain name if you registered with one).
+
+   Note: Updating a service URI requires a blockchain transaction and costs ETH for gas.
+
+3. If the address is correct but your IP has changed since registration, either update the on-chain registration or override the local check at startup:
+   ```bash icon="terminal"
+   livepeer -serviceAddr YOUR_PUBLIC_IP:8935 ...
+   ```
+
+<Note>
+Use a domain name (e.g. `orch.yourdomain.com:8935`) instead of a bare IP address when registering your service URI. Domain names are easier to update if your server IP changes without requiring a new on-chain registration.
+</Note>
+
+</Accordion>
+
+<Accordion  title='Port 8935 not reachable from outside your network' icon="link">
+
+**Symptom**  
+Your orchestrator starts without errors, but no gateways connect, and the `Service address did not match` error does not appear. Running an external port check against your IP:8935 shows the port as closed.
+
+**Cause**  
+Port 8935 (the default orchestrator port) is blocked by a firewall, a router NAT, or a cloud provider security group. Gateways discover your orchestrator address from the blockchain but cannot reach you.
+
+**Fix**
+
+1. Ensure port 8935 is open in your server's firewall:
+   ```bash icon="terminal"
+   # UFW (Ubuntu)
+   sudo ufw allow 8935/tcp
+   ```
+
+2. If your server is behind a home router or NAT, configure port forwarding on your router to forward external port 8935 to your server's local IP on port 8935.
+
+3. If running in a cloud provider (AWS, GCP, Hetzner, etc.), check and update your security group or firewall rules to allow inbound TCP on port 8935.
+
+4. Verify the port is externally reachable:
+   ```bash icon="terminal"
+   # From a different machine
+   curl -k https://YOUR_PUBLIC_IP:8935/status
+   ```
+   A response (even an error response) confirms the port is reachable.
+
+<Warning>
+Running a publicly accessible server carries security risks. Ensure only port 8935 is exposed to the public internet. Keep your ETH private key and keystore directory secure. The keystore is located at `~/.lpData/arbitrum-one-mainnet/keystore` by default.
+</Warning>
+
+</Accordion>
+
+<Accordion  title='Arbitrum RPC connection failing — node will not start' icon="server">
+
+**Symptom**  
+go-livepeer fails to start or logs repeated connection errors to the Arbitrum RPC endpoint. Example log patterns: `dial tcp: connection refused`, `context deadline exceeded`, or `could not retrieve chain ID`.
+
+**Cause**  
+The `-ethUrl` value is incorrect, the RPC endpoint is rate-limited, or the provider (Alchemy, Infura, etc.) is down or requires API key renewal.
+
+**Fix**
+
+1. Verify your `-ethUrl` value is an Arbitrum One RPC endpoint, not an Ethereum mainnet endpoint:
+   - Arbitrum One endpoint format: `https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY`
+   - Do not use an Ethereum L1 endpoint — go-livepeer operates on Arbitrum.
+
+2. Test the endpoint independently:
+   ```bash icon="terminal"
+   curl -X POST -H "Content-Type: application/json" \
+     --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+     YOUR_ETH_URL
+   ```
+   Arbitrum One should return chain ID `0xa4b1` (42161 in decimal).
+
+3. If rate-limited, switch to a different RPC provider or upgrade your plan. Free-tier RPC endpoints from Alchemy and Infura have request limits that can be hit by active orchestrators.
+
+4. Check your API key has not expired or been rotated.
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Troubleshooting — Not Receiving Jobs
+
+<Note>
+This is the most common question after initial activation. There are four distinct causes — work through each one before concluding there is a network problem.
+</Note>
+
+<AccordionGroup>
+
+<Accordion  title='Not in the active orchestrator set (top 100 by stake)' icon="coins">
+
+**Symptom**  
+Your orchestrator is running, the port is reachable, but you receive no transcoding or AI jobs. Your address does not appear on the [Livepeer Explorer](https://explorer.livepeer.org) active orchestrators list.
+
+**Cause**  
+The active orchestrator set is limited to the top 100 orchestrators by total LPT stake (self-delegated plus delegated). If your stake is below the 100th orchestrator's stake, you are not in the active set and gateways will not route jobs to you.
+
+**Fix**
+
+1. Go to [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator in the list. Note their total stake — that is the current minimum.
+
+2. To enter the active set, your total stake must exceed that figure. You can:
+   - Self-delegate additional LPT
+   - Attract more delegators by adjusting your reward cut to be competitive
+
+3. Once your stake places you in the top 100, your orchestrator must be activated or re-activated via `livepeer_cli`:
+   ```bash icon="terminal"
+   livepeer_cli
+   ```
+   Select the multi-step "become an orchestrator" option.
+
+<Note>
+If your orchestrator drops out of the active set (falls below top-100 rank) and your stake then changes (either up or down), it will be automatically re-entered. However, if you are inactive and your stake remains static while still technically in the top 100, the protocol does not automatically re-add you — you must re-register.
+</Note>
+
+</Accordion>
+
+<Accordion  title='pricePerUnit set too high — gateways are not selecting your node' icon="server">
+
+**Symptom**  
+Your orchestrator is in the active set, is reachable, and is activated — but you receive very few or no jobs. No error messages appear in your logs.
+
+**Cause**  
+`-pricePerUnit` is set too high relative to competing orchestrators. Gateways select orchestrators based on a combination of stake weight and price. If your price is significantly above the market rate, gateways will route jobs to lower-priced orchestrators first.
+
+**Fix**
+
+1. Check the current market rate at [livepeer.tools](https://livepeer.tools) — this shows per-pixel pricing for active orchestrators.
+
+2. Note the unit: `-pricePerUnit` is set in **wei per pixel**, not ETH. A common misconfiguration is setting the value in ETH (e.g. `0.0001`) instead of the equivalent wei value, which produces a price orders of magnitude too high.
+
+   A typical starting value for transcoding is in the range of a few hundred to a few thousand wei per pixel. Check the Explorer for comparable orchestrators' pricing.
+
+3. Update your price via `livepeer_cli`:
+   ```bash icon="terminal"
+   livepeer_cli
+   ```
+   Select the option to update your price per unit and enter the new value in wei.
+
+   Or restart your node with the updated flag:
+   ```bash icon="terminal"
+   livepeer -pricePerUnit 500 ...
+   ```
+
+</Accordion>
+
+<Accordion  title='Node not activated via livepeer_cli' icon="server">
+
+**Symptom**  
+Your orchestrator is running, the port is reachable, and your stake is sufficient — but you still receive no jobs. Your address does not appear in the active orchestrators list on the Explorer.
+
+**Cause**  
+go-livepeer running in orchestrator mode does not automatically register or activate the node on the Livepeer protocol. Activation requires a one-time on-chain transaction via `livepeer_cli`.
+
+**Fix**
+
+1. With your orchestrator running, open a second terminal and run:
+   ```bash icon="terminal"
+   livepeer_cli
+   ```
+
+2. Select the option to invoke the multi-step "become an orchestrator" flow.
+
+3. You will be prompted to set:
+   - Reward cut (percentage of LPT inflation you keep; the remainder goes to delegators)
+   - Fee cut (percentage of ETH fees you keep)
+   - Price per unit (in wei per pixel)
+   - Service address (your public IP:port)
+   - Amount of LPT to stake (in LPTU — note: 1 LPT = 1,000,000,000,000,000,000 LPTU)
+
+4. Each step submits an on-chain transaction. You need ETH on Arbitrum to pay gas.
+
+5. After completion, verify your orchestrator appears on [explorer.livepeer.org](https://explorer.livepeer.org).
+
+</Accordion>
+
+<Accordion  title='serviceAddr not externally reachable after activation' icon="triangle-exclamation">
+
+**Symptom**  
+Your orchestrator is activated and appears on the Explorer, but still receives no jobs. Port check against your registered IP:port shows the port as closed or unreachable.
+
+**Cause**  
+Your service address is registered on-chain, but the actual server at that address is not reachable — either a firewall rule was added after registration, the server moved to a different IP, or a network change broke external access.
+
+**Fix**
+
+See the [Port 8935 not reachable](#port-8935-not-reachable-from-outside-your-network) entry above for step-by-step networking checks.
+
+If your IP address has changed, update your on-chain service URI via `livepeer_cli`. This costs ETH for gas.
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Troubleshooting — AI Pipeline Errors
+
+<AccordionGroup>
+
+<Accordion  title='AI Runner container not starting' icon="microchip">
+
+**Symptom**  
+Your AI Runner Docker container exits immediately or fails to start. Docker logs show errors such as `CUDA error`, `OOM`, `device not found`, or a port binding failure.
+
+**Cause**  
+Common causes: the NVIDIA Container Toolkit is not installed or configured; the GPU has insufficient VRAM for the loaded model; the container image tag does not match the go-livepeer version; a port conflict on the host.
+
+**Fix**
+
+1. Verify Docker can see your GPU:
+   ```bash icon="terminal"
+   docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
+   ```
+   If this fails, install and configure the NVIDIA Container Toolkit:
+   ```bash icon="terminal"
+   sudo apt-get install -y nvidia-container-toolkit
+   sudo systemctl restart docker
+   ```
+
+2. Check your container logs for the specific error:
+   ```bash icon="terminal"
+   docker logs <container_name>
+   ```
+
+3. If the error is out-of-memory (OOM): the model you are loading requires more VRAM than available on the GPU. Either load a smaller model or use a higher-VRAM GPU.
+4. Ensure you are using the AI Runner image that corresponds to your go-livepeer release version. Mismatched versions can cause silent container failures.
+
+5. If the port is already in use, change the host port binding in your Docker run command:
+   ```bash icon="terminal"
+   docker run -p 8000:8000 ...  # change 8000 to an available port
+   ```
+   Update the corresponding `url` field in `aiModels.json` to match.
+
+</Accordion>
+
+<Accordion  title='aiModels.json errors — AI jobs not being received' icon="microchip">
+
+**Symptom**  
+Your AI Runner container is running, but your orchestrator does not receive AI inference jobs. No AI-related errors appear in your orchestrator logs.
+
+**Cause**  
+The most common cause is an incorrect or missing `aiModels.json` configuration. If go-livepeer cannot load a valid pipeline configuration, it will not advertise AI capabilities to gateways and will not receive AI jobs.
+
+**Fix**
+
+1. Verify your `aiModels.json` is correctly formatted. The minimum required fields for each entry are:
+
+   ```json icon="terminal"
+   [
+     {
+       "pipeline": "text-to-image",
+       "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+       "warm": true,
+       "price_per_unit": 4200,
+       "pixels_per_unit": 1
+     }
+   ]
+   ```
+
+   Field reference:
+   - `pipeline` — the inference task type (e.g. `text-to-image`, `image-to-image`, `llm`). Must match a supported pipeline name.
+   - `model_id` — the Hugging Face model ID. Must be in the Livepeer-verified model list.
+   - `warm` loads the model on GPU in advance. If set to `false`, the model loads on first request (slower, but uses no VRAM until needed).
+   - `price_per_unit` — price in wei per unit (unit definition varies by pipeline — for image pipelines, this is per pixel).
+   - `pixels_per_unit` — typically `1`.
+
+2. If using an external container (e.g. a custom AI Runner or Ollama), add the `url` field pointing to the running container:
+
+   ```json icon="terminal"
+   {
+     "pipeline": "llm",
+     "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+     "warm": true,
+     "price_per_unit": 180000000000000,
+     "pixels_per_unit": 1000000,
+     "url": "http://localhost:8000"
+   }
+   ```
+
+3. Validate that your AI Runner container is running and reachable at the `url` you specified:
+   ```bash icon="terminal"
+   curl http://localhost:8000/health
+   ```
+
+4. Restart go-livepeer after modifying `aiModels.json` — changes to this file are not hot-reloaded.
+
+</Accordion>
+
+<Accordion  title='Model fails to load — VRAM or memory errors' icon="server">
+
+**Symptom**  
+The AI Runner container starts, but attempting to serve an inference job produces an out-of-memory error or the job fails immediately.
+
+**Cause**  
+The model you have configured requires more VRAM than your GPU has available, or other models are consuming VRAM and leaving insufficient headroom.
+
+**Fix**
+
+1. Check GPU memory usage:
+   ```bash icon="terminal"
+   nvidia-smi
+   ```
+
+2. If running multiple warm models simultaneously, the total VRAM requirement is additive. Consider setting some models to `"warm": false` to load them on demand instead of preloading.
+
+3. For the LLM pipeline specifically, the Cloud SPE Ollama runner supports GPUs with as little as 8 GB VRAM (using quantised model weights). Diffusion models (text-to-image, image-to-video) typically require 16 GB+ VRAM for full-precision models.
+4. Enable the `DEEPCACHE` or `SFAST` optimisation flags to reduce VRAM usage and improve throughput for diffusion models:
+
+   ```json icon="terminal"
+   {
+     "pipeline": "text-to-image",
+     "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+     "warm": true,
+     "optimization_flags": "SFAST"
+   }
+   ```
+
+   <Warning>
+   Do not use `DEEPCACHE` with Lightning or Turbo model variants — these models are already optimised and DEEPCACHE may significantly reduce image quality. `SFAST` and `DEEPCACHE` cannot be used together.
+   </Warning>
+
+</Accordion>
+
+<Accordion  title='AI jobs routed to wrong pipeline or model' icon="microchip">
+
+**Symptom**  
+You are receiving AI jobs, but they fail or return errors related to pipeline mismatch. Or: you have configured multiple pipelines but only one ever receives jobs.
+
+**Cause**  
+Gateways route jobs based on the pipeline and model ID advertised in your `aiModels.json`. If the requested model ID does not match an entry in your config, the job is rejected. If your model is not in the Livepeer-verified model registry, it will not be matched to gateway requests.
+
+**Fix**
+
+1. Ensure the `model_id` values in your `aiModels.json` exactly match the Hugging Face model IDs in the [Livepeer-verified model list](https://docs.livepeer.org/ai/pipelines/overview).
+
+2. If you want to run a model not on the approved list, submit a feature request on the [go-livepeer GitHub repository](https://github.com/livepeer/go-livepeer/issues) to have it verified and added.
+
+3. Verify your orchestrator is advertising all configured pipelines. Check the Explorer or query your orchestrator's status endpoint:
+   ```bash icon="terminal"
+   curl -k https://YOUR_IP:8935/status
+   ```
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Troubleshooting — Earnings and Payments
+
+<AccordionGroup>
+
+<Accordion  title='Earnings not appearing in the Explorer' icon="coins">
+
+**Symptom**  
+Your orchestrator is running and processing jobs, but earnings are not updating on [explorer.livepeer.org](https://explorer.livepeer.org).
+
+**Cause**  
+There are two types of earnings on Livepeer: transcoding fees (ETH, paid per job) and staking rewards (LPT, minted per round). Explorer indexing can have a delay of a few minutes to hours. Additionally, staking rewards require a reward call to be made each round.
+
+**Fix**
+
+1. Allow up to 24 hours for Explorer indexing before raising an issue — especially for new orchestrators.
+
+2. For staking rewards specifically: these are only minted if a reward call is made during the current round. If no reward call is made, no LPT is minted for that round. Check your logs for reward call transactions.
+
+3. Verify you are checking the correct network. go-livepeer operates on Arbitrum One. If you have connected to a testnet (`rinkeby`, `arbitrum-one-rinkeby`) your earnings will show on Explorer for that network only.
+
+</Accordion>
+
+<Accordion  title='Reward call not being made — missing LPT staking rewards' icon="coins">
+
+**Symptom**  
+Your orchestrator is active and receiving jobs, but LPT staking rewards are not accumulating. No reward call transactions appear in your wallet's Arbitrum transaction history.
+
+**Cause**  
+If you run your orchestrator process and transcoder process as separate instances (split O+T setup), and the wrong process has the `-reward` flag enabled, reward calls may not be made correctly. Also: if ETH balance on Arbitrum is insufficient, reward call transactions will fail.
+
+**Fix**
+
+1. For split orchestrator/transcoder setups, add `-reward=false` to all transcoder launch commands. Only the orchestrator process should make reward calls:
+
+   ```bash icon="terminal"
+   # Transcoder process — reward disabled
+   livepeer -transcoder -reward=false ...
+
+   # Orchestrator process — reward enabled (default)
+   livepeer -orchestrator ...
+   ```
+
+   Also remove the `-ethUrl` option from transcoder processes if they are using the same wallet — this prevents the transcoder from inadvertently submitting on-chain transactions.
+
+2. Ensure your Arbitrum ETH balance is sufficient to pay for reward call gas. Check via `livepeer_cli` or on [arbiscan.io](https://arbiscan.io).
+
+3. If running a single combined orchestrator+transcoder process (the default for most solo operators), reward calls are handled automatically. No additional configuration is needed.
+
+</Accordion>
+
+<Accordion  title='Pool worker earnings not showing' icon="coins">
+
+**Symptom**  
+You are contributing compute to an orchestrator pool (e.g. Titan Node, Video Miner, LivePool) as a transcoder worker, but you cannot see your earnings.
+
+**Cause**  
+Pool earnings are tracked and distributed by the pool operator, not by go-livepeer directly. The Livepeer Explorer shows the pool orchestrator's earnings, not individual worker earnings. Each pool has its own payout mechanism and reporting interface.
+
+**Fix**
+
+1. Check the pool operator's dashboard or reporting tool — each pool provides its own interface.
+
+2. If earnings are not updating there, contact the pool operator via their Discord or forum. Pool-specific issues are outside Livepeer's core go-livepeer documentation.
+
+3. Verify your transcoder process is running correctly and connected to the pool's orchestrator address by checking your logs for successful job processing messages.
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## FAQ — General Questions
+
+<AccordionGroup>
+
+<Accordion  title='What is the difference between an orchestrator and a transcoder?' icon="video">
+
+An **orchestrator** is an on-chain participant. It holds staked LPT, is registered in the Livepeer protocol, receives job routing from gateways, sets pricing, and makes reward calls each round to mint LPT. An orchestrator is your identity and your stake on the network.
+
+A **transcoder** is a compute process. It does the actual video encoding or AI inference work using the GPU. A transcoder has no on-chain identity.
+
+In the most common setup, a single machine runs both roles simultaneously using the `-orchestrator -transcoder` flags. In more advanced setups, operators run one orchestrator process that delegates work to multiple transcoder processes — potentially across different machines.
+
+</Accordion>
+
+<Accordion  title='Do I need to keep livepeer_cli running after activation?' icon="circle-question">
+
+No. `livepeer_cli` is an interactive management tool. You use it to perform one-time or occasional on-chain actions (activate as orchestrator, update pricing, update service address, manage stake). Once an action is submitted, `livepeer_cli` can be closed.
+
+The `livepeer` daemon process is what needs to remain running continuously to receive and process jobs.
+
+</Accordion>
+
+<Accordion  title='How long does it take to appear in the active orchestrator set after activation?' icon="circle-question">
+
+After your activation transaction is confirmed on Arbitrum, your orchestrator is eligible to enter the active set at the start of the next Livepeer round. Rounds are approximately 5,760 Ethereum blocks long (roughly 22–24 hours).
+
+If your stake is in the top 100, you will be included in the active set at the next round boundary. Check [explorer.livepeer.org](https://explorer.livepeer.org) to confirm your status.
+
+</Accordion>
+
+<Accordion  title='What is the minimum LPT stake required to receive jobs?' icon="coins">
+
+There is no fixed minimum in the protocol. The active set is the top 100 orchestrators by total LPT stake (self-staked plus delegated). The effective minimum at any point in time is equal to the stake of the 100th orchestrator on the list.
+
+Check [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator by stake to see the current threshold. This value changes over time as operators enter and leave the network.
+
+</Accordion>
+
+<Accordion  title='Can I run an orchestrator on Windows?' icon="circle-question">
+
+You can run go-livepeer on Windows for video transcoding. The standard orchestrator binary is available for Windows.
+
+However, the AI pipeline functionality (AI Runner containers, aiModels.json configuration, AI inference jobs) requires Linux. If you want to serve AI inference jobs, you must run on a Linux host.
+
+</Accordion>
+
+<Accordion  title='What does "Transcode loop timed out" or "Segment loop timed out" mean in my logs?' icon="video">
+
+These log messages indicate that a transcoding session was cleaned up because no new video segments arrived for a period of time. This is normal behaviour — it occurs when a stream ends or a gateway disconnects. It is not an error requiring any action on your part.
+
+If you see these messages repeatedly when you expect to be processing an active stream, it may indicate the gateway is disconnecting from your node — in which case check your serviceAddr configuration and external reachability.
+
+</Accordion>
+
+<Accordion  title='What does the "ticket parameters" error mean?' icon="triangle-exclamation">
+
+``` icon="terminal"
+Error ticket params
+```
+
+This error appears in your orchestrator logs when a gateway sends a payment ticket with parameters that are considered too old by your node. It is typically caused by a timing difference: the gateway collected your orchestrator info and then took longer than expected before sending the segment, or your node is slow to poll for new Arbitrum blocks.
+
+This error is usually transient. If it occurs occasionally, no action is needed. If it appears persistently, check that your Arbitrum RPC endpoint is responsive and not rate-limited.
+
+</Accordion>
+
+<Accordion  title='Can I run an orchestrator from a home network?' icon="link">
+
+You can, but there are important limitations:
+
+1. Your orchestrator must be publicly reachable on port 8935. Most home routers require you to configure port forwarding to expose a specific machine on your local network to the internet.
+
+2. Home broadband often uses dynamic IP addresses. If your IP changes, your on-chain service URI becomes stale and gateways cannot reach you. Use a dynamic DNS service to maintain a stable hostname, then register with that hostname instead of a bare IP.
+
+3. Home broadband upload speeds may limit your transcoding throughput. Each video segment must be received from a gateway, transcoded, and returned — upload capacity directly affects how many concurrent sessions you can handle.
+
+For production orchestrators, a VPS or data centre is strongly recommended.
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Still Stuck?
+
+If your issue is not covered on this page, the following resources are available:
+
+<CardGroup cols={3}>
+  <Card title="Discord — #orchestrating" icon="discord" href="https://discord.gg/livepeer">
+    The most active real-time support channel. Search before posting — most errors have been discussed before.
+  </Card>
+  <Card title="Livepeer Forum" icon="comments" href="https://forum.livepeer.org/c/transcoding">
+    For longer-form troubleshooting and questions that need a detailed answer. Search the transcoding category first.
+  </Card>
+  <Card title="GitHub Issues" icon="github" href="https://github.com/livepeer/go-livepeer/issues">
+    For confirmed bugs in go-livepeer. Search existing issues before opening a new one.
+  </Card>
+</CardGroup>
+{/*
+  PURPOSE:
+  Frequently asked questions for orchestrator operators.
+  Quick answers to common operational, economic, and technical questions.
+
+  SECTION HOME: Resources
+  CROSS-REFS:
+  - Monitoring & Tools > Troubleshooting - detailed problem solving
+  - All guide sections - detailed answers
+*/}

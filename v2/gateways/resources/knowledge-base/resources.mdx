@@ -1,0 +1,226 @@
+---
+title: 'Gateway resources'
+sidebarTitle: 'Resources'
+description: 'Tools, SDKs, dashboards, reference documentation, and community platforms for Livepeer gateway operators — covering go-livepeer, the Python gateway SDK, monitoring, analytics, and production tooling.'
+purpose: landing
+audience: gateway-operator
+lastVerified: 2026-03-17
+pageType: landing
+keywords: ["livepeer", "gateway", "resources", "tools", "dashboards", "SDK", "go-livepeer", "monitoring", "analytics"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+Reference material, tools, dashboards, SDKs, and community platforms for Livepeer gateway operators. Updated March 2026.
+
+<CustomDivider />
+
+## Official gateway software
+
+<CardGroup cols={2}>
+  <Card title="go-livepeer (Releases)" href="https://github.com/livepeer/go-livepeer/releases" icon="download">
+    The official Go implementation of the Livepeer protocol. Runs gateway, orchestrator, transcoder, and (as of Q4 2025) remote signer modes. Download a tagged release for production.
+  </Card>
+  <Card title="go-livepeer (Source)" href="https://github.com/livepeer/go-livepeer" icon="code">
+    Full source repository. Browse flag definitions in `cmd/livepeer/main.go`, payment logic in `core/`, and the remote signer implementation in `server/`.
+  </Card>
+  <Card title="ai-runner" href="https://github.com/livepeer/ai-runner" icon="microchip">
+    The AI inference runtime that runs on orchestrator nodes. Relevant to gateway operators building custom pipelines: Pipeline interface, BYOC support, Docker base images.
+  </Card>
+  <Card title="Livepeer LPMS" href="https://github.com/livepeer/lpms" icon="server">
+    Low-level media server library: RTMP in, RTMP/HLS out. The underlying media layer used by go-livepeer for video transcoding workloads.
+  </Card>
+  <Card title="Livepeer Catalyst / MistServer" href="https://github.com/livepeer/catalyst" icon="database">
+    Open-source media server powering Livepeer Studio. Relevant for gateway operators building their own ingest layer alongside go-livepeer.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Gateway SDKs and alternative implementations
+
+<CardGroup cols={2}>
+  <Card title="livepeer-python-gateway (j0sh)" href="https://github.com/j0sh/livepeer-python-gateway" icon="python">
+    Reference Python gateway SDK maintained by j0sh (Livepeer). LV2V payments, remote signer integration, BYOC support, orchestrator discovery, session management. The canonical alternative to running go-livepeer directly.
+  </Card>
+  <Card title="Livepeer AI Python SDK" href="https://github.com/livepeer/livepeer-ai-python" icon="python">
+    Official Python SDK for the Livepeer AI API (used through a gateway). `pip install livepeer-ai`. Typed models, retry logic, full pipeline support.
+  </Card>
+  <Card title="Livepeer AI JavaScript SDK (@livepeer/ai)" href="https://github.com/livepeer/livepeer-ai-js" icon="js">
+    Official TypeScript/JavaScript SDK for the Livepeer AI API. `npm install @livepeer/ai`. Text-to-image, image-to-image, image-to-video, LLM pipelines.
+  </Card>
+  <Card title="livepeer.js / @livepeer/react" href="https://github.com/livepeer/livepeer.js" icon="react">
+    React hooks and components for video streaming and uploads. Used by app developers connecting through a gateway.
+  </Card>
+  <Card title="NaaP (Network as a Platform)" href="https://github.com/livepeer/naap" icon="network-wired">
+    Dashboard and SDK for Gateway-as-a-Service operators. Implements JWT issuer service (SIWE → user-scoped JWT), Developer API Keys, and remote signer plugin. Active development by Qiang Han.
+  </Card>
+  <Card title="Scope Runner (Reference BYOC Implementation)" href="https://github.com/livepeer/scope-runner" icon="box">
+    Production BYOC reference implementation. Extends `ai-runner[realtime]`, implements the Pipeline interface, ships as a Docker image. Use as a template for custom pipelines.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Network dashboards and analytics
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Explorer" href="https://explorer.livepeer.org" icon="chart-bar">
+    Official network explorer: orchestrators, delegation, governance votes, protocol metrics, PM redemption activity, and gateway fee data. Real-time on-chain state.
+  </Card>
+  <Card title="Livepeer Arbitrum Dune Dashboard" href="https://dune.com/livepeer" icon="chart-line">
+    Protocol-level analytics on Arbitrum: fees paid, orchestrator activity, LPT flows, gateway demand trends.
+  </Card>
+  <Card title="Livepeer AI Dune Dashboard" href="https://dune.com/livepeer" icon="brain">
+    AI subnet specific: inference volumes by pipeline type, AI fee revenue (72% of total network fees as of Nov 2025), gateway demand breakdown.
+  </Card>
+  <Card title="Livepeer Macro Financial Statements (Messari Dune)" href="https://messari.io/asset/livepeer" icon="file-chart-column">
+    Analytical Dune dashboard: macro financial statements, protocol health metrics, quarterly comparisons. Built by Messari.
+  </Card>
+  <Card title="Web3 Index" href="https://web3index.org" icon="globe">
+    Usage-based fee metrics for web3 infrastructure. Livepeer ranks by observed demand-side revenue. Useful for benchmarking network growth.
+  </Card>
+  <Card title="tools.livepeer.cloud — Gateway Tool Suite" href="https://tools.livepeer.cloud" icon="toolbox">
+    Community tool suite run by the Livepeer.Cloud SPE. Stream tester, orchestrator explorer, performance dashboards, and pricing visibility for gateway operators.
+  </Card>
+  <Card title="Messari State of Livepeer (Quarterly Reports)" href="https://messari.io/asset/livepeer" icon="file-lines">
+    Quarterly protocol metrics, demand trends, and ecosystem health. Gateway fee data included from Q3 2024.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Gateway monitoring tools
+
+<CardGroup cols={2}>
+  <Card title="Loki Gateway Log API" href="https://loki.livepeer.report" icon="magnifying-glass-chart">
+    Community-maintained Loki endpoint at `loki.livepeer.report`. Query gateway and orchestrator logs with pre-built query patterns (session starts, payment failures, errors).
+  </Card>
+  <Card title="Livepeer Exporter (Prometheus)" href="https://github.com/livepeer/awesome-livepeer#tools" icon="chart-simple">
+    Prometheus-compatible metrics exporter for Livepeer nodes. Pairs with Grafana dashboards for production gateway monitoring.
+  </Card>
+  <Card title="Stream Tester" href="https://github.com/livepeer/awesome-livepeer#tools" icon="vial">
+    Benchmarks gateway and orchestrator streaming performance. Useful for validating orchestrator selection and detecting latency regressions.
+  </Card>
+  <Card title="AI Inference Tester" href="https://github.com/livepeer/awesome-livepeer#tools" icon="flask">
+    GPU inference benchmarking for orchestrators connected to your gateway. Validates capability advertisement accuracy.
+  </Card>
+  <Card title="Livepeer Reward Watcher" href="https://github.com/livepeer/awesome-livepeer#tools" icon="bell">
+    Monitors orchestrator reward calls and sends alerts. Relevant for gateway operators also running orchestrators, or monitoring their connected orchestrators.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Reference documentation
+
+<CardGroup cols={2}>
+  <Card title="Configuration Flags Reference" href="https://docs.livepeer.org/gateways/resources/technical/configuration-flags" icon="flag">
+    Full reference for all go-livepeer flags relevant to gateway mode: `-broadcaster`, `-gateway`, `-remoteSignerAddr`, `-orchAddr`, `-maxPricePerUnit`, and all AI gateway flags.
+  </Card>
+  <Card title="CLI Commands Reference" href="https://docs.livepeer.org/gateways/resources/technical/cli-commands" icon="terminal">
+    `livepeer_cli` commands for gateway operators: `setbroadcastconfig`, `setmaxpriceforcapability`, `activateorchestrator`, `rebond`, `reward`, `unbond`, `signmessage`.
+  </Card>
+  <Card title="CLI HTTP API Reference" href="https://docs.livepeer.org/gateways/resources/technical/cli-http-api" icon="code">
+    HTTP endpoints exposed by the go-livepeer CLI. Use for scripting and automation without running `livepeer_cli` interactively.
+  </Card>
+  <Card title="Technical Architecture Reference" href="https://docs.livepeer.org/gateways/resources/technical/technical-architecture" icon="diagram-project">
+    Low-level technical architecture: protocol flows, RPC interfaces, PM ticket structure, segment/capability pricing schemas.
+  </Card>
+  <Card title="AI API Reference (Gateway Endpoints)" href="https://docs.livepeer.org/gateways/resources/technical/ai" icon="robot">
+    Full AI pipeline API reference served by a running gateway: text-to-image, image-to-image, image-to-video, live-video-to-video, LLM, segment-anything-2, upscale, audio-to-text, text-to-speech.
+  </Card>
+  <Card title="Contract Addresses Reference" href="https://docs.livepeer.org/gateways/resources/technical/contract-addresses" icon="file-contract">
+    Livepeer protocol contract addresses on Arbitrum One and Ethereum mainnet. Required for on-chain gateway setup and PM deposit transactions.
+  </Card>
+  <Card title="Arbitrum RPC Reference" href="https://docs.livepeer.org/gateways/resources/technical/arbitrum-rpc" icon="plug">
+    Recommended Arbitrum RPC endpoints and community-maintained alternatives for gateway on-chain operations.
+  </Card>
+  <Card title="Orchestrator Offerings Reference" href="https://docs.livepeer.org/gateways/resources/technical/orchestrator-offerings" icon="list">
+    Schema and semantics of orchestrator capability advertisements. Relevant when configuring capability-based pricing and selection.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Community resources and aggregators
+
+<CardGroup cols={2}>
+  <Card title="Awesome Livepeer (Official)" href="https://github.com/livepeer/awesome-livepeer" icon="star">
+    Community-curated list of tutorials, tools, projects, and resources. Also accessible at `livepeer.cool`. Includes gateway tools, monitoring scripts, and node operator guides.
+  </Card>
+  <Card title="Awesome Livepeer (rickstaa fork)" href="https://github.com/rickstaa/awesome-livepeer" icon="code-fork">
+    Extended fork with additional AI tools, AI Dune Dashboard entries, and infrastructure tooling.
+  </Card>
+  <Card title="Livepeer Subgraph (The Graph)" href="https://thegraph.com/explorer/subgraphs?search=livepeer" icon="database">
+    Official subgraph: query orchestrators, delegators, earning pools, gateway registrations, and staking rounds via GraphQL.
+  </Card>
+  <Card title="Tenderize (Liquid Staking for LPT)" href="https://www.tenderize.me" icon="droplet">
+    Liquid staking protocol for LPT. Gateway operators who also stake can use Tenderize to keep funds active in DeFi while maintaining staked positions.
+  </Card>
+  <Card title="StakingRewards (Livepeer)" href="https://www.stakingrewards.com/earn/livepeer/" icon="percent">
+    Third-party staking APR, total staked LPT, and return estimates. Useful context for gateway operators evaluating the economics of also running an orchestrator.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Key blog posts and reading
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Blog" href="https://blog.livepeer.org" icon="newspaper">
+    Official blog: product updates, ecosystem stories, builder spotlights, and vision posts. The most reliable source for current network direction.
+  </Card>
+  <Card title="A Real-Time Update to the Livepeer Network Vision (Nov 2025)" href="https://blog.livepeer.org/a-real-time-update-to-the-livepeer-network-vision/" icon="newspaper">
+    72% of fees now from AI inference. The clearest statement of the current gateway opportunity and the network's direction.
+  </Card>
+  <Card title="Introducing Livepeer Cascade (Feb 2025)" href="https://blog.livepeer.org/introducing-livepeer-cascade-a-vision-for-livepeers-future-in-the-age-of-real-time-ai-video/" icon="newspaper">
+    The strategic vision post. Gateways are the distribution layer for real-time AI video at global scale.
+  </Card>
+  <Card title="Introducing Daydream Beta (Sep 2025)" href="https://blog.livepeer.org/introducing-daydream/" icon="newspaper">
+    Daydream is the hosted gateway and API layer on top of the network. Understanding what it provides helps operators decide whether to build on top of or alongside it.
+  </Card>
+  <Card title="Remote Signers Design Doc (PR #3791/#3822)" href="https://github.com/livepeer/go-livepeer/pull/3822" icon="file-code">
+    The most important technical document for any gateway operator in 2025–2026. Defines the off-chain gateway model, remote signing protocol, and stateless design goals.
+  </Card>
+  <Card title="j0sh Ecosystem Notes Gist" href="https://gist.github.com/j0sh/0ee58c48ac00739bd10babc44dc293da" icon="note-sticky">
+    Working notes from j0sh on the broader gateway ecosystem: SDK design decisions, clearinghouse architecture, discovery patterns. Updated periodically.
+  </Card>
+  <Card title="AI Subnet Explainer (Coinmonks, Jul 2024)" href="https://medium.com/coinmonks/why-the-livepeer-ai-subnet-is-a-big-deal-454228dc09d3" icon="book-open">
+    Architecture explainer: how gateways, orchestrators, AI workers, and payment flows fit together in the AI subnet.
+  </Card>
+  <Card title="OKX Guide to Livepeer Protocol and LPT (Dec 2025)" href="https://www.okx.com/en-eu/learn/livepeer-guide" icon="book">
+    Comprehensive third-party explainer. Good background reading for gateway operators less familiar with the broader Livepeer protocol and token economics.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Security and funding
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Bug Bounty (Immunefi)" href="https://immunefi.com/bug-bounty/livepeer/information/" icon="shield-halved">
+    Smart contract bug bounty programme. USDC rewards, KYC required. Scope covers the PM protocol and Livepeer contracts. Do not report vulnerabilities via GitHub issues.
+  </Card>
+  <Card title="Livepeer Grants Programme" href="https://livepeer.org/grants" icon="hand-holding-dollar">
+    Open Network and Video Disruptor grant tracks, paid in LPT. Gateway operators building public infrastructure are eligible. Bi-weekly review cycle.
+  </Card>
+  <Card title="SPE Programme (Foundation)" href="https://forum.livepeer.org" icon="building">
+    Strategic Partner Engagements — ongoing funded network infrastructure roles. Examples include Livepeer.Cloud SPE and the LLM SPE. Discuss proposals in #governance on Discord.
+  </Card>
+  <Card title="Developer Accelerator (Dev Hub)" href="https://www.livepeer.org/dev-hub" icon="rocket">
+    Foundation's builder accelerator programme. Quickstarts, office hours, grants, and BD support for gateway operators building products.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+<Note>
+This list was compiled in March 2026. If you find a broken link or know of a resource that should be included, [open an issue](https://github.com/livepeer/docs/issues) in the docs repository.
+</Note>

@@ -52,7 +52,7 @@ function runTests() {
   runCase('collects only real docs routes from docs and scoped navigation', () => {
     const routes = getRealDocsRoutes(REPO_ROOT);
     assert(routes.includes('v2/about/protocol/blockchain-contracts'));
-    assert(!routes.includes('v2/resources/redirect'));
+    assert(!routes.includes('v2/nonexistent/example'));
     assert(!routes.includes(' '));
   });
 
@@ -163,7 +163,7 @@ function runTests() {
                   tabs: [
                     {
                       tab: 'Test',
-                      pages: ['v2/about/protocol/blockchain-contracts', 'v2/resources/redirect']
+                      pages: ['v2/about/protocol/blockchain-contracts', 'v2/nonexistent/example']
                     }
                   ]
                 }
@@ -175,7 +175,7 @@ function runTests() {
     );
 
     assert.strictEqual(findings.length, 1);
-    assert(findings[0].message.includes('v2/resources/redirect'));
+    assert(findings[0].message.includes('v2/nonexistent/example'));
   });
 
   return {

@@ -1,0 +1,169 @@
+---
+title: Technical Architecture
+sidebarTitle: Technical Architecture
+description: Technical Architecture Diagrams and References
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - technical architecture
+  - technical
+  - architecture
+  - diagrams
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+purpose: reference
+---
+
+
+
+
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+
+<Tabs>
+    <Tab title="Network Layers">
+        <ScrollableDiagram title="High Level Network Architecture" maxHeight="900px">
+            <Mermaid
+            chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#00eb88', 'lineColor': '#00eb88', 'secondaryColor': '#2d2d2d', 'tertiaryColor': '#1a1a1a', 'edgeLabelBackground': '#1a1a1a', 'clusterBkg': '#1a1a1a', 'clusterBorder': '#00eb88' }}}%%
+                flowchart TD
+                subgraph AppLayer[Application Layer]
+                    U[User Application]
+                end
+                subgraph GatewayLayer[Gateway Layer]
+                    GI[Job Intake]
+                    GM[Capability Matching]
+                    GP[Pricing Engine]
+                    GR[Routing Engine]
+                end
+                subgraph ComputeLayer[Orchestrator Layer]
+                    OC[Orchestrator Controller]
+                    OG[GPU Workers<br/>Inference, Transcoding, BYOC]
+                end
+                U --> GI --> GM --> GR --> OC --> OG --> OC --> GI --> U`}
+            />
+        </ScrollableDiagram>
+    </Tab>
+    <Tab title="Routing Paths">
+        <ScrollableDiagram title="Routing Path Breakdown" maxHeight="900px">
+            <Mermaid
+                chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#00eb88', 'lineColor': '#00eb88', 'secondaryColor': '#2d2d2d', 'tertiaryColor': '#1a1a1a', 'actorBkg': '#1a1a1a', 'actorBorder': '#00eb88', 'actorTextColor': '#fff', 'signalColor': '#00eb88', 'signalTextColor': '#fff' }}}%%
+                    sequenceDiagram
+                participant App
+                participant Gateway
+                participant Marketplace
+                participant Orchestrator
+
+                    App->>Gateway: Submit job
+                    Gateway->>Marketplace: Query orchestrator capabilities
+                    Marketplace-->>Gateway: Matching candidates
+                    Gateway->>Orchestrator: Dispatch workload
+                    Orchestrator->>Gateway: Return results
+                    Gateway->>App: Deliver output`}
+            />
+        </ScrollableDiagram>
+    </Tab>
+    <Tab title="Gateway Pipelines">
+        <ScrollableDiagram title="Dual Gateway Architecture: Video & AI Pipelines" maxHeight="900px">
+            <Mermaid
+              chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+                flowchart LR
+                subgraph INPUT["Input Sources"]
+                    CAM["Camera / RTMP / WebRTC"]
+                    VID["Video File"]
+                    AIIN["AI Prompt / Model Request"]
+                end
+
+                GATEWAY["Gateway Node<br/>• Ingest (RTMP/HTTP/WebRTC)<br/>• Segment video<br/>• Queue + order jobs<br/>• AI pipeline routing<br/>• Orchestrator selection<br/>• Verification & receipts"]
+
+                CAM -->|"Live stream"| GATEWAY
+                VID -->|"VOD upload"| GATEWAY
+                AIIN -->|"AI job request"| GATEWAY
+
+                subgraph JOBS["Workflows"]
+                    VJ["Video Transcoding Job"]
+                    AIJ["AI Inference Job<br/>(Daydream / ComfyStream / BYOC)"]
+                end
+
+                GATEWAY --> VJ
+                GATEWAY --> AIJ
+
+                subgraph ORCH["Orchestrator Network (GPU Operators)"]
+                    O1["Orchestrator A<br/>GPU Pool"]
+                    O2["Orchestrator B<br/>GPU Pool"]
+                    O3["Orchestrator C<br/>GPU Pool"]
+                end
+
+                VJ -->|"Transcode segments"| O1
+                VJ --> O2
+                AIJ -->|"Run model / inference"| O1
+                AIJ --> O3
+
+                subgraph OUTPUTS["Outputs"]
+                    HLS["Adaptive Bitrate Video (HLS/LL-HLS)"]
+                    AIOUT["AI Frames / Stylized Video"]
+                end
+
+                O1 --> GATEWAY
+                O2 --> GATEWAY
+                O3 --> GATEWAY
+
+                GATEWAY --> HLS
+                GATEWAY --> AIOUT
+
+                ETH[("Arbitrum Blockchain<br/>Payments • Tickets • Rewards")]
+                GATEWAY --> ETH
+                O1 --> ETH
+                O2 --> ETH
+                O3 --> ETH
+
+                classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+                style INPUT fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+                style JOBS fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+                style ORCH fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+                style OUTPUTS fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px`}
+            />
+        </ScrollableDiagram>
+    </Tab>
+
+</Tabs>
+
+{/* ### Marketplace Interaction Model
+
+<Mermaid
+  chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#00eb88', 'lineColor': '#00eb88', 'secondaryColor': '#2d2d2d', 'tertiaryColor': '#1a1a1a', 'edgeLabelBackground': '#1a1a1a', 'clusterBkg': '#1a1a1a', 'clusterBorder': '#00eb88' }}}%%
+    flowchart LR
+    subgraph Operators
+        G[Gateway Operator]
+        O[Orchestrator Operator]
+    end
+    subgraph Marketplace
+        P[Publish Offerings]
+        D[Discovery API]
+        R[Rating & Benchmarks]
+    end
+    subgraph Consumers
+        A[Applications]
+    end
+    G --> P
+    O --> P
+    A --> D
+    P --> R
+    R --> A`}
+/>
+
+### BYOC (Bring Your Own Container) Architecture
+
+<Mermaid
+  chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#00eb88', 'lineColor': '#00eb88', 'secondaryColor': '#2d2d2d', 'tertiaryColor': '#1a1a1a', 'edgeLabelBackground': '#1a1a1a', 'clusterBkg': '#1a1a1a', 'clusterBorder': '#00eb88' }}}%%
+    flowchart TD
+    A[Developer BYOC Container] --> B[Compliant Runtime Spec]
+    B --> C[Gateway Intake]
+    C --> D[Capability Validation]
+    D --> E[Orchestrator Container Runner]
+    E --> F[GPU Execution]
+    F --> C --> A`}
+/> */}

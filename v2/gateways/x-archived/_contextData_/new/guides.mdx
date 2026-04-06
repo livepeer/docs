@@ -1,0 +1,383 @@
+---
+title: 'Gateway Guides'
+sidebarTitle: 'Guides'
+description: 'Curated how-to guides, tutorials, and walkthroughs for running and operating a Livepeer gateway node — from first install through Remote Signer architecture, AI inference routing, and production operations.'
+keywords: ["livepeer", "gateway", "broadcaster", "go-livepeer", "RTMP", "transcoding", "AI gateway", "remote signer", "NaaP", "node setup", "guides"]
+pageType: landing
+purpose: landing
+status: draft
+lastVerified: 2026-03-11
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+Guides are ordered by journey stage — from first install through advanced operations. Sources span the official Livepeer docs, community SPEs (Livepeer Cloud, Titan Node), the go-livepeer repository (44 documented Gateway resources), the Livepeer Forum (600+ topics), and independent contributors. With 72% of Livepeer network fees now coming from AI inference, the AI gateway path is production-relevant today.
+
+<Note>
+The Livepeer Gateway was previously called the Livepeer Broadcaster. Some CLI flags, Docker images, community guides, and forum threads still use the `-broadcaster` name — they refer to the same role. As of go-livepeer v0.8.10, a **Remote Signer** mode allows gateways to operate without holding Ethereum private keys. See the [Remote Signer section](#remote-signer-architecture) below.
+</Note>
+
+---
+
+## Installation and First Setup
+
+<CardGroup cols={2}>
+  <Card
+    title="Gateway Overview — Official Docs"
+    icon="book-open"
+    href="https://docs.livepeer.org/gateways/guides/gateway-overview"
+  >
+    The canonical starting point. Covers installation on Ubuntu Linux, Docker, and Windows, then walks through configuration, ETH account creation, and service registration. Maintained by the Livepeer Foundation.
+  </Card>
+  <Card
+    title="Self-Hosted Livepeer Gateway — Livepeer Cloud SPE"
+    icon="server"
+    href="https://www.livepeer.cloud/self-hosted-livepeer-gateway/"
+  >
+    The most detailed third-party install guide. Full Docker Compose configs with all key flags, Linux systemd service files, and Windows `.bat` templates. Covers ETH account creation, deposit (0.065 ETH) + reserve (0.03 ETH) funding, RTMP ingest via OBS/FFmpeg, and HLS playback. April 2024.
+  </Card>
+  <Card
+    title="Run a Gateway Node in Broadcaster Mode — videoDAC"
+    icon="terminal"
+    href="https://github.com/videoDAC/livepeer-gateway"
+  >
+    Beginner-friendly Mac and Linux walkthrough: download the binary, run the node, verify RTMP ingest and HLS output. Covers `go-livepeer` releases page, extraction, and first-run prompts including password setup.
+  </Card>
+  <Card
+    title="go-livepeer Official Repository"
+    icon="github"
+    href="https://github.com/livepeer/go-livepeer"
+  >
+    Source for all Livepeer node software — Broadcaster (Gateway), Orchestrator, and Transcoder. Contains 44 identified documentation resources for Gateway operation across its `/doc` folder, CHANGELOG, and CLI source. Start here before building from source.
+  </Card>
+  <Card
+    title="go-livepeer CLI Flag Reference"
+    icon="code"
+    href="https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go"
+  >
+    Annotated source listing every CLI flag: `-broadcaster`, `-gateway`, `-maxPricePerUnit`, `-pixelsPerUnit`, `-orchAddr`, `-orchWebhookUrl`, `-orchBlocklist`, `-orchMinLivepeerVersion`, `-selectRandFreq`, `-selectStakeWeight`, `-selectPriceWeight`, `-selectPriceExpFactor`, `-aiServiceRegistry`, and all AI pipeline flags.
+  </Card>
+  <Card
+    title="go-livepeer Releases and Changelogs"
+    icon="tag"
+    href="https://github.com/livepeer/go-livepeer/releases"
+  >
+    All versioned releases with changelogs. Always confirm the `<RELEASE_VERSION>` tag before pulling a Docker image or downloading a binary. v0.8.10 introduced Remote Signer.
+  </Card>
+  <Card
+    title="go-livepeer CHANGELOG"
+    icon="list"
+    href="https://github.com/livepeer/go-livepeer/blob/master/CHANGELOG.md"
+  >
+    Full version history with per-release feature lists and breaking changes. Essential reading before any upgrade — especially when moving to a release that includes Remote Signer or new AI pipeline flags.
+  </Card>
+  <Card
+    title="go-livepeer Dev Tool — Local Test Network"
+    icon="flask"
+    href="https://github.com/livepeer/go-livepeer/blob/master/cmd/devtool/README.md"
+  >
+    Docker-based local development environment with a private Ethereum network and the Livepeer protocol deployed. Generates `run_broadcaster_<ETH_ACCOUNT>.sh` startup scripts automatically. Required for testing payment flows locally.
+  </Card>
+</CardGroup>
+
+---
+
+## Funding, Pricing, and Arbitrum Setup
+
+<CardGroup cols={2}>
+  <Card
+    title="Fund the Gateway — Livepeer Cloud Guide"
+    icon="coins"
+    href="https://www.livepeer.cloud/self-hosted-livepeer-gateway/#fund-the-livepeer-gateway"
+  >
+    Step-by-step: send ETH to your gateway wallet, bridge to Arbitrum, then use `livepeer_cli` to split into Deposit and Reserve. Worked example: 0.1 ETH total (0.065 deposit + 0.03 reserve) as a testing minimum.
+  </Card>
+  <Card
+    title="Bridge LPT and ETH to Arbitrum"
+    icon="bridge"
+    href="https://www.livepeer.cloud/delegators/guides/bridge-lpt-to-arbitrum"
+  >
+    How to bridge ETH from Ethereum Mainnet to Arbitrum One via bridge.arbitrum.io, required before funding a gateway. Also covers using exchanges that support direct L2 transfers.
+  </Card>
+  <Card
+    title="Configure the Encoding Ladder (transcodingOptions.json)"
+    icon="sliders"
+    href="https://www.livepeer.cloud/self-hosted-livepeer-gateway/#configure-transcoding-options"
+  >
+    Create a JSON encoding ladder with named profiles, bitrate, resolution, GOP, and H.264 profile settings. Includes a ready-to-use 480p/720p/1080p template. Required even for AI gateways due to current go-livepeer software requirements.
+  </Card>
+</CardGroup>
+
+---
+
+## Streaming Ingest: OBS, FFmpeg, and RTMP
+
+<CardGroup cols={2}>
+  <Card
+    title="Streaming to Livepeer From Broadcasting Apps — Livepeer Wiki"
+    icon="broadcast-tower"
+    href="https://github.com/livepeer/wiki/wiki/Streaming-to-Livepeer-From-Broadcasting-Apps"
+  >
+    How to point OBS, Manycam (iOS), RTMP Camera (Android), or FFmpeg at a Livepeer gateway. RTMP URL format (`rtmp://localhost:1935/stream`), manifest ID retrieval via `curl http://localhost:7935/manifestID`, and HLS playback from `.m3u8`.
+  </Card>
+  <Card
+    title="Livepeer Cloud + Owncast: Self-Hosted Streaming"
+    icon="video"
+    href="https://www.livepeer.cloud/get-started-text-guide/"
+  >
+    Configure a self-hosted Owncast instance to relay streams to a Livepeer Cloud gateway for transcoding. Covers Docker setup, Stream Relay config in the Owncast admin panel, and Apache reverse proxy. April 2024.
+  </Card>
+  <Card
+    title="Livepeer + Owncast Integration — Release Post"
+    icon="plug"
+    href="https://www.livepeer.cloud/livepeer-owncast-self-hosted-streaming/"
+  >
+    Release post for the Livepeer Cloud × Owncast Stream Relay integration, April 2024. Explains what Stream Relay does and links to the Docker image and full setup guide.
+  </Card>
+  <Card
+    title="Broadcaster Chat App Tutorial — Official GitHub"
+    icon="github"
+    href="https://github.com/livepeer/Broadcaster-Chat-App"
+  >
+    End-to-end tutorial building a dapp on a broadcaster node. Retrieves stream IDs via `curl`, builds a custom HLS.js player, and adds ETH tipping. Shows the full ingest-to-playback stack with React.
+  </Card>
+</CardGroup>
+
+<Warning>
+No dedicated Livepeer Gateway setup video tutorials exist on YouTube. The term "Gateway" only recently replaced "Broadcaster" in the ecosystem. Titan Node is virtually the sole video educator, via grant-funded orchestrator setup series that cover applicable infrastructure knowledge (staking, node eval, rewards). Links are in [Gateway Resources](/v2/gateways/guides-and-resources/resources).
+</Warning>
+
+---
+
+## Remote Signer Architecture
+
+The most significant recent architectural change to the Livepeer Gateway. Introduced in go-livepeer PRs [#3791](https://github.com/livepeer/go-livepeer/pull/3791) and [#3822](https://github.com/livepeer/go-livepeer/pull/3822), Remote Signing separates the gateway's Ethereum payment responsibilities from its media processing responsibilities.
+
+**Why it matters for gateway operators:**
+
+- Gateways can now operate **entirely without holding Ethereum private keys** in the media processing process — a hot key compromised via malicious media input can no longer drain gateway funds
+- Enables gateway implementations in Python, browser, mobile, and other platforms — go-livepeer is currently the only gateway implementation because PM complexity is so high; Remote Signer removes that barrier
+- Enables third-party payment operators ("clearinghouses") to manage crypto custody — media operators can settle in traditional currencies whilst the underlying probabilistic micropayment mechanism stays intact for orchestrators
+- Ethereum price volatility (which has caused Daydream reliability issues due to ETH-USD oracle disagreements between nodes) is absorbed by the signer layer rather than affecting media processing
+- Remote signing is currently implemented for **Live AI (live-video-to-video)** workloads only — transcoding is unaffected
+
+<CardGroup cols={2}>
+  <Card
+    title="Remote Signer: GetOrchestratorInfo — PR #3791"
+    icon="github"
+    href="https://github.com/livepeer/go-livepeer/pull/3791"
+  >
+    Implements remote signing for the GetOrchestratorInfo RPC. The gateway retrieves a signature from the signer once at startup and caches it for the lifetime of the key — orchestrator discovery requires no runtime Ethereum key access.
+  </Card>
+  <Card
+    title="Remote Signer: Payments — PR #3822"
+    icon="github"
+    href="https://github.com/livepeer/go-livepeer/pull/3822"
+  >
+    Implements remote signing for Live AI probabilistic micropayments via the `LivePaymentSender` interface. Gateway sends signer state with each signing request; signer returns updated state and a signed ticket. Stateless design — no external database required. Multiple signer instances can run for redundancy.
+  </Card>
+  <Card
+    title="go-livepeer Multi-Orchestrator Architecture Docs"
+    icon="sitemap"
+    href="https://github.com/livepeer/go-livepeer/blob/master/doc/multi-o.md"
+  >
+    Documents the `-redeemer` pattern for separating ETH key management from media processing — the architectural precursor to Remote Signer. Covers `-ethOrchAddr`, `-redeemerAddr`, and the "coldest" key management setup available today.
+  </Card>
+</CardGroup>
+
+**Remote signing protocol (simplified):**
+
+The gateway makes two types of calls to the signer:
+1. `getOrchInfoSig()` at startup — signature is cached and reused
+2. `signTicket(signerState, ticketParams)` per payment — signer returns `signedTicket` + `signerState`
+
+The gateway carries `signerState` from each call into the next. Because the signer is stateless, state is passed in by the caller rather than persisted server-side. Failure to pass valid state consistently leads to invalid tickets (repeated nonces). The first signing call of a session passes `state=null` — the signer creates a fresh state from the provided orchestrator info.
+
+---
+
+## AI Gateway Setup
+
+With 72% of Livepeer network fees now coming from AI inference, the AI gateway path is the primary growth surface for new operators.
+
+<CardGroup cols={2}>
+  <Card
+    title="AI Gateway: Get Started — Official Docs"
+    icon="brain"
+    href="https://docs.livepeer.org/ai/gateways/get-started"
+  >
+    Official guide for setting up an AI Gateway node. Builds on the mainnet gateway guide with AI-specific steps. Linux only (Windows/macOS coming). Docker and binary install paths both covered.
+  </Card>
+  <Card
+    title="Start an AI Gateway Node (Off-Chain) — Official Docs"
+    icon="circle-play"
+    href="https://docs.livepeer.org/ai/gateways/start-gateway"
+  >
+    Docker and binary commands for starting an off-chain AI Gateway on port 8937. Includes example `curl` request to verify: `POST http://0.0.0.0:8937/text-to-image` with JSON body including `model_id` and `prompt`.
+  </Card>
+  <Card
+    title="Connect AI Gateway On-Chain — Official Docs"
+    icon="link"
+    href="https://docs.livepeer.org/ai/gateways/onchain"
+  >
+    Adds `-aiServiceRegistry`, `-network=arbitrum-one-mainnet`, `-ethKeystorePath`, `-ethAcctAddr`, `-maxPricePerUnit` (defaults to 0 — must be set), and `-ignoreMaxPriceIfNeeded` flags. Also explains `-maxTotalEV=100000000000000` compliance requirement.
+  </Card>
+  <Card
+    title="Available AI Gateways in the Ecosystem — Official Docs"
+    icon="network-wired"
+    href="https://docs.livepeer.org/ai/builders/gateways"
+  >
+    Lists hosted AI gateways in the ecosystem including the Livepeer Cloud community gateway (free). Test AI pipelines against existing gateways before deploying your own AI Gateway node.
+  </Card>
+  <Card
+    title="Titan Node: letsgenerate.ai — Production AI Gateway Example"
+    icon="github"
+    href="https://github.com/Titan-Node/letsgenerate.ai"
+  >
+    Real-world production Docker command: AI Gateway with `-broadcaster`, `-orchAddr`, `-httpAddr`, `-httpIngest`, and a Gunicorn Python auth layer with TLS certificates. The most complete production AI gateway reference in the community.
+  </Card>
+  <Card
+    title="Livepeer AI: Introduction — Official Docs"
+    icon="microchip"
+    href="https://docs.livepeer.org/ai/introduction"
+  >
+    Defines the AI subnet architecture: AI Orchestrator nodes, AI Worker nodes, AI Gateway routing, warm vs. cold model loading, and the selection algorithm (speed, stake, price). Essential background before operating an AI gateway.
+  </Card>
+  <Card
+    title="AI Capability Discovery — Livepeer Forum"
+    icon="magnifying-glass"
+    href="https://forum.livepeer.org/t/ai-capability-discovery/3233"
+  >
+    Community thread (March 2026): how to reliably query the network for available AI models and pipelines from a running gateway. Practical tips for discovering which orchestrators have models warm before routing.
+  </Card>
+</CardGroup>
+
+---
+
+## NaaP: Network-as-a-Product
+
+NaaP is the active development initiative building a unified plugin platform for developer access to the Livepeer network. Gateway operators should understand this roadmap — it will change how billing, authentication, and access to gateway endpoints works.
+
+<CardGroup cols={2}>
+  <Card
+    title="NaaP Repository"
+    icon="github"
+    href="https://github.com/livepeer/naap"
+  >
+    The NaaP repository. Tracks developer API manager, billing provider OAuth (Daydream integration in progress), project creation, and API key management for gateway access.
+  </Card>
+  <Card
+    title="NaaP Developer Dashboard Spec — GitHub Issue #58"
+    icon="github"
+    href="https://github.com/livepeer/naap/issues/58"
+  >
+    Design spec: link Daydream billing via OAuth, create projects, generate API keys per project. Active development as of February 2026.
+  </Card>
+  <Card
+    title="NaaP Metrics and SLA Foundations — Forum"
+    icon="chart-bar"
+    href="https://forum.livepeer.org/t/metrics-and-sla-foundations-for-naap/3189"
+  >
+    Pre-proposal (January 2026) for decentralised uptime SLAs and metrics infrastructure for NaaP gateways. Describes the narrowed MVP architecture and timeline.
+  </Card>
+</CardGroup>
+
+---
+
+## Orchestrator Selection and Routing
+
+<CardGroup cols={2}>
+  <Card
+    title="Orchestrator Selection Flags — go-livepeer CLI Source"
+    icon="sliders"
+    href="https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go"
+  >
+    Every selection control: `-selectRandFreq` (random weight), `-selectStakeWeight` (stake weight), `-selectPriceWeight` (price weight), `-selectPriceExpFactor` (price sensitivity, default 100 — higher means small price differences matter more), `-orchAddr`, `-orchWebhookUrl`, `-orchBlocklist`, `-orchMinLivepeerVersion`, `-orchPerfStatsUrl`.
+  </Card>
+  <Card
+    title="go-livepeer Multi-Orchestrator Architecture"
+    icon="diagram-project"
+    href="https://github.com/livepeer/go-livepeer/blob/master/doc/multi-o.md"
+  >
+    Covers the redeemer pattern for separating Ethereum key management from media processing. Documents `-redeemer`, `-ethOrchAddr`, `-redeemerAddr` flags, and the load balancer requirement when running multiple orchestrator instances.
+  </Card>
+</CardGroup>
+
+---
+
+## Monitoring and Operations
+
+<CardGroup cols={2}>
+  <Card
+    title="Prometheus + Grafana — livepeer-promgraf"
+    icon="chart-line"
+    href="https://github.com/kyriediculous/livepeer-promgraf"
+  >
+    Docker Compose stack wiring Prometheus and Grafana to a Livepeer node on port 7935. Supports separate scrape targets for broadcaster (port 7936, `-cliAddr :7936`) and orchestrator/transcoder (port 7935). One-command start.
+  </Card>
+  <Card
+    title="Guide: Transcoder Monitoring with Prometheus/Grafana — Forum"
+    icon="gauge"
+    href="https://forum.livepeer.org/t/guide-transcoder-monitoring-with-prometheus-grafana/1225"
+  >
+    Detailed community guide with dashboards and Nvidia GPU exporter. February 2021 — dashboards remain applicable for any node running with `-monitor=true`, including gateways.
+  </Card>
+  <Card
+    title="AI Job Tester and Performance Inspector — tools.livepeer.cloud"
+    icon="robot"
+    href="https://tools.livepeer.cloud"
+  >
+    Cloud SPE community tool portal. AI Job Tester benchmarks inference against active orchestrators. Performance Inspector and AI Performance Leaderboard provide visibility into which orchestrators are reliable for routing.
+  </Card>
+  <Card
+    title="Production Log Monitoring and Alerting — Forum"
+    icon="bell"
+    href="https://forum.livepeer.org"
+  >
+    Search "Production Log Monitoring" on the Livepeer Forum for alerting when deposit balance is low or streams fail. Essential for any gateway in production.
+  </Card>
+</CardGroup>
+
+---
+
+## Access Control and Authentication
+
+<CardGroup cols={2}>
+  <Card
+    title="Control Access Using JWTs — Official Docs"
+    icon="lock"
+    href="https://docs.livepeer.org/developers/guides/access-control-jwt"
+  >
+    JWT-gated streams and assets via `@livepeer/react` or REST API. `signAccessJwt` with public/private keypair, `Livepeer-Jwt` header for WebRTC SDP negotiation and HLS.js, and query parameter fallback for plain `m3u8` URLs.
+  </Card>
+  <Card
+    title="Stream with Access Control — Official Docs"
+    icon="shield"
+    href="https://docs.livepeer.org/guides/developing/access-control"
+  >
+    Worked example of token-gated streaming: NFT ownership checks via ethers.js, Next.js API route for JWT signing, and React Player integration. The most complete access control reference.
+  </Card>
+</CardGroup>
+
+---
+
+## Contributing to go-livepeer
+
+<CardGroup cols={2}>
+  <Card
+    title="go-livepeer Contributing Guide"
+    icon="code-pull-request"
+    href="https://github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md"
+  >
+    Commit structure, changelog requirements, rebase-and-merge policy, and PR conventions. If you are fixing a gateway bug or contributing a Remote Signer improvement, read this first.
+  </Card>
+  <Card
+    title="go-livepeer Dev Tool — Local Test Network"
+    icon="flask"
+    href="https://github.com/livepeer/go-livepeer/blob/master/cmd/devtool/README.md"
+  >
+    Docker-based local development environment. Required for testing gateway payment flows, Remote Signer integration, and AI pipeline routing locally without spending ETH.
+  </Card>
+</CardGroup>
+
+<Tip>
+The Livepeer Forum has 600+ topics covering gateway setup, monitoring, payment debugging, and AI routing. Search "broadcaster", "gateway", or "go-livepeer" before posting. The primary Discord channels for gateway operators are **`#developer-lounge`** and **`#orchestrating`**.
+</Tip>

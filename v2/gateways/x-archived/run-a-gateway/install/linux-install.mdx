@@ -1,0 +1,353 @@
+---
+title: Linux Install
+sidebarTitle: Linux Install
+description: How to install a Livepeer Gateway from source binary
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - install
+  - linux install
+  - linux
+  - gateway
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+icon: linux
+---
+
+
+
+
+import { StyledStep, StyledSteps } from '/snippets/components/layout/steps.jsx'
+import { CustomCodeBlock, CodeComponent } from '/snippets/components/content/code.jsx'
+import { DownloadButton } from '/snippets/components/primitives/buttons.jsx'
+import { latestVersion } from '/snippets/automations/globals/globals.mdx'
+
+<Badge color="green"> Dual AI & Video </Badge>
+<Icon icon="linux" />
+<Icon icon="apple" />
+
+{/* Test - remove after verifying: */}
+
+Latest go-livepeer version: <Badge color="green">{latestVersion}</Badge> (dynamically fetched)
+
+This guide covers installing the Livepeer Gateway from source binary on Linux.
+
+<StyledSteps>
+<StyledStep title="Prerequisites">
+ Ensure you have `wget` and `tar` installed & up-to-date on your system.
+  - `tar` is pre-installed on macOS and most linux distributions.
+  <br/>
+ <Icon icon="fast-forward" /> Quick Install `wget` with [Homebrew](https://brew.sh/)
+  ```bash lines icon="terminal" install wget with brew
+  # Check if wget is installed
+  brew list --versions wget
+  # Install wget if not already installed
+  brew install wget
+  ```
+
+ <Icon icon="arrow-down" /> Other `wget` Install Options
+  <Tabs>
+  <Tab title="Linux">
+ You can use brew or your package manager to install `wget`
+
+    <Expandable title=">_ Using Package Manager">
+ **Linux Ubuntu/Debian**
+        ```bash icon="terminal" lines
+        sudo apt-get update && sudo apt-get upgrade wget
+        sudo apt install -y wget
+        ```
+
+ **Alpine**
+        ```bash lines icon="terminal"
+        sudo apk update
+        sudo apk add wget
+        ```
+
+ **Fedora/RHEL/CentOS/Rocky**
+        ```bash lines icon="terminal"
+        sudo dnf update
+        sudo dnf install -y wget
+        ```
+
+ **Arch**
+        ```bash lines icon="terminal"
+        sudo pacman -Syu
+        sudo pacman -S wget
+        ```
+    </Expandable>
+    <Expandable title=">_ Using brew">
+
+      ```bash lines icon="terminal" brew install wrap
+      # Install brew if not already installed
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      ```
+      ```bash lines icon="terminal" version check
+      # Check if wget is installed
+      brew list --versions wget
+      brew list --versions tar
+      ```
+
+      ```bash lines icon="terminal" upgrade wget
+      # Upgrade wget if already installed
+      brew upgrade wget
+      brew upgrade tar
+      ```
+
+      ```bash lines icon="terminal" install wget
+      # Install wget if not already installed
+      brew install wget
+      ```
+
+      ```bash lines icon="terminal" update all brew packages
+      # Update all brew packages
+      brew update && bre upgrade
+      ```
+    </Expandable>
+
+  </Tab>
+  <Tab title="MacOS">
+ MacOS users will also need to install `libx11` and `--cask xquartz`
+
+You can use brew or curl to install `wget`
+
+  <Expandable title=">_ Using brew">
+ Using [brew](https://brew.sh/)
+    ```bash lines icon="terminal" brew wrap
+    # Install brew if not already installed
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Check if wget is installed
+    brew list --versions wget
+
+    # Upgrade wget if already installed
+    brew upgrade wget
+
+    # Install wget if not already installed
+    brew install wget libx11 --cask xquartz
+
+    # Update all brew packages
+    brew update && bre upgrade
+    ```
+
+  </Expandable>
+  <Expandable title=">_ Using curl">
+ Using [curl](https://curl.haxx.se/)
+  <br/>
+  ```bash lines icon="terminal" curl wrap
+  curl -LO https://ftp.gnu.org/gnu/wget/wget-1.21.4.tar.gz
+  tar -xzf wget-1.21.4.tar.gz
+  cd wget-1.21.4
+  ./configure && make && sudo make install
+  ```
+    </Expandable>
+  </Tab>
+  </Tabs>
+
+</StyledStep>
+  <StyledStep title="Download & Install Binary">
+    <Tabs>
+    <Tab title='linux' icon="linux">
+ Note: {'<VERSION>'} is dynamically fetched from the [go-livepeer releases page](https://github.com/livepeer/go-livepeer/releases) via Gtihub API.
+        <CustomCodeBlock
+          codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
+          placeholderValue={latestVersion}
+          language="bash"
+          icon="terminal"
+        />
+        <Expandable title=">_ In case of version fetch issues">
+ In case of fetch issues: Replace {'<VERSION>'} with the latest version number
+        ```bash lines icon="terminal" wrap wget
+        sudo wget https://github.com/livepeer/go-livepeer/releases/download/<VERSION>/livepeer-linux-amd64.tar.gz
+        ```
+        </Expandable>
+
+    </Tab>
+    <Tab title="MacOS" icon="apple">
+ Note: {'<VERSION>'} is dynamically fetched from the [go-livepeer releases page](https://github.com/livepeer/go-livepeer/releases) via Gtihub API.
+
+ Intel
+        <CustomCodeBlock
+          codeString="curl -LO https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-darwin-amd64.tar.gz"
+          placeholderValue={latestVersion}
+          language="bash"
+          icon="terminal"
+        />
+
+        <Expandable title=">_ In case of version fetch issues">
+        ```bash lines icon="terminal" wrap curl
+        curl -LO https://github.com/livepeer/go-livepeer/releases/<VERSION>/download/livepeer-darwin-amd64.tar.gz
+        tar -zxvf livepeer-darwin-amd64.tar.gz
+        sudo mv livepeer-darwin-amd64/* /usr/local/bin/
+        livepeer -gateway
+        ```
+        </Expandable>
+
+ Apple Silicon
+        <CustomCodeBlock
+          codeString="curl -LO https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-darwin-arm64.tar.gz"
+          placeholderValue={latestVersion}
+          language="bash"
+          icon="terminal"
+        />
+
+        <Expandable title=">_ In case of version fetch issues">
+        ```bash lines icon="terminal" wrap curl
+        curl -LO https://github.com/livepeer/go-livepeer/releases/<VERSION>/download/livepeer-darwin-arm64.tar.gz
+        tar -zxvf livepeer-darwin-arm64.tar.gz
+        sudo mv livepeer-darwin-arm64/* /usr/local/bin/
+        livepeer -gateway
+        ```
+        </Expandable>
+
+
+        <CustomCodeBlock
+              codeString="curl -LO https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
+              placeholderValue={latestVersion}
+              language="bash"
+              icon="terminal"
+        />
+        <Expandable title=">_ In case of version fetch issues">
+ In case of fetch issues: Replace {'<VERSION>'} with the latest version number
+        ```bash lines icon="terminal" wrap curl
+        curl -LO https://github.com/livepeer/go-livepeer/releases/download/<VERSION>/livepeer-linux-amd64.tar.gz
+        ```
+        </Expandable>
+    </Tab>
+    </Tabs>
+
+ Unpack and remove the compressed file
+
+    ``` bash icon="terminal" lines
+    sudo tar -zxvf livepeer-linux-amd64.tar.gz
+    sudo rm livepeer-linux-amd64.tar.gz
+    sudo mv livepeer-linux-amd64/* /usr/local/bin/
+    ```
+
+</StyledStep>
+<StyledStep title="Run the Gateway">
+
+<Tabs>
+  <Tab title="Off-Chain Gateways">
+ Off-chain mode is the default network and requires no blockchain connectivity (no wallet or RPC).
+
+    - defaultNetwork := "offchain"
+
+    ```bash icon="terminal" lines run the Gateway
+    # Run the gateway
+    livepeer -gateway
+    ```
+
+  </Tab>
+  <Tab title="On-Chain Gateways">
+
+ You will need to **Generate Keystore File**
+
+    <Warning>
+ When generating a new keystore file, the program will prompt you for a
+ password. This password is used to decrypt the keystore file and access the
+ private key. Make sure to never share or lose access to either the password or
+ the keystore file
+    </Warning>
+
+    ```bash icon="terminal" lines Run the Gateway
+    # Set your Arbitrum RPC URL
+    export RPC_URL="<YOUR_ARBITRUM_RPC_URL>"
+
+    # Run the gateway
+    livepeer -network arbitrum-one-mainnet -ethUrl $RPC_URL -gateway
+    ```
+
+  </Tab>
+</Tabs>
+ **Output Example**
+  ```bash icon="terminal" lines Off-Chain Gateway Example Output
+    >_ livepeer -gateway
+
+    *---------*------*
+    | Gateway | true |
+    *---------*------*
+    I1222 12:37:23.339916   97244 starter.go:537] ***Livepeer is running on the offchain network***
+    I1222 12:37:23.340276   97244 starter.go:554] Creating data dir: /Users/<me>/.lpData/offchain
+    I1222 12:37:23.344584   97244 starter.go:723] ***Livepeer is in off-chain mode***
+    E1222 12:37:23.345022   97244 starter.go:1586] No orchestrator specified; transcoding will not happen
+    I1222 12:37:23.350972   97244 starter.go:1827] ***Livepeer Running in Gateway Mode***
+    I1222 12:37:23.350991   97244 starter.go:1828] Video Ingest Endpoint - rtmp://127.0.0.1:1935
+    I1222 12:37:23.351002   97244 starter.go:1837] Livepeer Node version: 0.8.8
+    I1222 12:37:23.351124   97244 mediaserver.go:247] HTTP Server listening on http://127.0.0.1:9935
+    I1222 12:37:23.351398   97244 webserver.go:20] CLI server listening on 127.0.0.1:5935
+    ```
+
+</StyledStep>
+</StyledSteps>
+
+Jump to [Configuration](/v2/gateways/run-a-gateway/configure/configuration-overview) to
+finish configuring the Gateway
+
+<Expandable title="OLD DOCS ITEMS (move to config)">
+<StyledStep title="Configure Gateway">
+
+# Create a file containing your Gateway Ethereum password
+
+```text
+sudo mkdir /usr/local/bin/lptConfig
+sudo nano /usr/local/bin/lptConfig/node.txt
+```
+
+Enter your password and save the file
+
+</StyledStep>
+<StyledStep title="Create System Service">
+# Create a system service
+
+```text
+sudo nano /etc/systemd/system/livepeer.service
+```
+
+Paste and update the following startup script with your personal info:
+
+```jsx
+[Unit]
+Description=Livepeer
+
+[Service]
+Type=simple
+User=root
+Restart=always
+RestartSec=4
+ExecStart=/usr/local/bin/livepeer -network arbitrum-one-mainnet \
+-ethUrl=<YOUR ARB RPC URL> \
+-cliAddr=127.0.0.1:5935 \
+-ethPassword=/usr/local/bin/lptConfig/node.txt \
+-maxPricePerUnit=300 \
+-broadcaster=true \
+-serviceAddr=<INSERT YOUR IP ADDRESS>:8935 \
+-transcodingOptions=/usr/local/bin/lptConfig/transcodingOptions.json \
+-rtmpAddr=0.0.0.0:1935 \
+-httpAddr=0.0.0.0:8935 \
+-monitor=true \
+-v 6
+
+[Install]
+WantedBy=default.target
+```
+
+Start the system service
+
+```text
+sudo systemctl daemon-reload
+sudo systemctl enable --now livepeer
+```
+
+Open the Livepeer CLI
+
+```text
+livepeer_cli -host 127.0.0.1 -http 5935
+```
+
+</StyledStep>
+</Expandable>

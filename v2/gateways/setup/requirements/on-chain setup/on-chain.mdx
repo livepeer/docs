@@ -1,0 +1,961 @@
+---
+title: On-Chain Setup Requirements
+sidebarTitle: On-Chain Setup
+description: >-
+  This page will take you through setting up the additional requirements for
+  running a Gateway in On-Chain mode including finding an RPC URL, and creating
+  an Ethereum account and keystore.
+pageType: guide
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - requirements
+  - on chain setup
+  - on chain
+  - chain
+  - setup
+  - through
+  - setting
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+lastVerified: 2026-03-17
+purpose: operations
+icon: chain
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { ChainlistRPCs } from '/snippets/data/references/chainlist.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import EthAccountSetup from '/snippets/pages/08_SHARED/eth-account-setup.mdx'
+
+
+{/* ## Quick Links
+<BorderedBox variant="accent" padding="16px">
+<Columns cols={3}>
+    <div>
+ General
+        - [Overview](#on-chain-requirements)
+        - [Security Notes](#security-notes)
+        - [Flags](#required-on-chain-flags)
+        - [Folder Location](#where-your-account-data-is-stored)
+
+    </div>
+    <div>
+ Setup Steps
+        - [RPC URL](#rpc-url)
+        - [ETH Account](#eth-account)
+        - [ETH Password](#eth-password)
+        - [ETH Keystore](#eth-keystore)
+    </div>
+    <div>
+ Related Pages
+        - [Run a Gateway](/v2/gateways/quickstart/gateway-setup)
+        - [Fund Gateway](./fund-gateway)
+        - [Install Gateway](/v2/gateways/setup/install/install-overview)
+        - [RPC Reference](/v2/gateways/resources/technical/arbitrum-rpc)
+    </div>
+
+</Columns>
+</BorderedBox>
+</div> */}
+
+## Overview
+
+Livepeer is currently deployed on the [Arbitrum](https://docs.arbitrum.io/build-decentralized-apps/public-chains#arbitrum-one) L2 network (Arbitrum One).
+
+In order to interact with the [Livepeer smart contracts](../../../../resources/references/contract-addresses) you will need to connect to an Arbitrum RPC.
+
+If you plan to run your Gateway in **On-Chain** mode, you will need:
+
+- An Ethereum account with funds to pay for transaction fees
+- An Ethereum RPC URL to connect to the Arbitrum network where Livepeer is deployed
+
+## ETH Account Setup
+
+<EthAccountSetup />
+
+#### Required On-Chain Flags
+
+ <Icon icon="wifi" /> _Network Configuration_
+
+    <ResponseField name="-network" type="string" default="offchain">
+ Set to the blockchain network <Badge color="green"> `arbitrum-one-mainnet` </Badge>
+    </ResponseField>
+
+ <Icon icon="coins" /> _Account Configuration_
+
+    <ResponseField name="-ethUrl" type="string" default="none">
+ Ethereum JSON-RPC URL
+    </ResponseField>
+    <ResponseField name="-ethAcctAddr" type="string" default="none">
+ Your Ethereum PUBLIC Wallet (Account) Address.
+
+ The `0x` prefix is optional for `-ethAcctAddr`
+ Livepeer accepts addresses both with and without the prefix.
+    </ResponseField>
+    <ResponseField name="-ethPassword" type="string" default="none">
+ Password for your KEYSTORE file or
+
+ Path to your `password.txt` file containing the password for your Keystore Account
+    </ResponseField>
+    <ResponseField name="-ethKeystorePath" type="string" default="none">
+ Path to your encrypted keystore directory or keyfile containing your private key
+    </ResponseField>
+
+## Security Notes
+
+<Warning>
+  - Never share your `keystore` files - they contain your encrypted private keys
+  - Use strong passwords for `keystore` encryption - Back up your `keystore`
+ securely - The `ethPassword` only protects the `keystore` file - your actual
+ private key is stored encrypted within the keystore - Never share your wallet
+ private key. In case of accidental public exposure - remove any funds &
+ change your wallet immediately
+</Warning>
+
+<CustomDivider middleText="EASY SETUP" />
+
+## <Icon icon="fast-forward" size={24} /> Easy Setup with Livepeer Tooling
+
+<Card
+  title="Install Your Gateway Software First"
+  href="/v2/gateways/setup/install/install-overview"
+  icon="tools"
+  horizontal
+  arrow
+>
+ {' '}
+ -> then come back to this guide.{' '}
+</Card>
+
+ Livepeer will automatically create a new wallet & keystore for you if you do not provide an existing wallet address after first [installing your Gateway software](/v2/gateways/setup/install/install-overview).
+
+ The software will detect no keystore exists for that address and ask you to:
+        - Enter your private key
+        - Create an account address (wallet) `-ethAcctAddr`
+        - Set a password for the keystore encryption `-ethPassword`
+        - Create the keystore file `-ethKeystorePath`
+
+ Use the below command to quickstart an on-chain gateway with a new wallet and auto-generate all required parameters.
+
+ See [RPC URL](#rpc-url) for instructions on finding or using an alternative Arbitrum RPC URL.
+
+    ```bash icon="terminal" wrap lines Create New Wallet & Keystore
+    livepeer -gateway \
+    -network arbitrum-one-mainnet \
+    -ethUrl=https://arb1.arbitrum.io/rpc #public RPC: rate-limited
+    \ -ethAcctAddr="" \
+    -ethKeystorePath="" \
+    -ethPassword=""
+    ```
+
+ If you want to bring an existing wallet - put the public address in the `-ethAcctAddr` flag.
+
+    ```bash icon="terminal" wrap lines Exisiting Wallet, New Keystore
+    livepeer -gateway \
+        -network arbitrum-one-mainnet \
+        -ethUrl=https://arb1.arbitrum.io/rpc #public rate-limited RPC
+        \ -ethAcctAddr=<YOUR_WALLET_ADDRESS> \
+        -ethKeystorePath=""
+    ```
+
+### Account Data Default Folders
+
+Account data is stored in the `~/.lpData` directory by default.
+
+Keystore files are by default created in:
+
+<Tabs>
+    <Tab title="Docker" icon="docker" >
+        ```bash Docker icon="docker"
+        #inside container
+        /root/.lpData/
+
+        #on host
+        /var/lib/docker/volumes/gateway-lpData/_data/
+        ```
+    </Tab>
+    <Tab title="Linux / Mac" icon="linux">
+        ```bash Linux/Mac icon="linux"
+        ~/.lpData/arbitrum-one-mainnet/keystore/
+        ```
+    </Tab>
+    <Tab title="Windows" icon="windows">
+        ```bash Windows icon="windows"
+        #C:\Users\YOUR_USERNAME\.lpData\{network}\keystore\
+        %USERPROFILE%\.lpData\arbitrum-one-mainnet\keystore\
+        ```
+    </Tab>
+
+</Tabs>
+
+<Card
+  icon="coins"
+  title="Next Step"
+  arrow
+  href="./fund-gateway"
+>
+ {' '}
+ Fund Your Gateway{' '}
+</Card>
+
+<br />
+
+<CustomDivider middleText="FULL SETUP GUIDE" />
+
+# Comprehensive On-Chain Setup Guide
+
+Full Guide with alternative options for setting up an on-chain Gateway
+
+<StyledSteps>
+<StyledStep title="Network `-network`" titleSize="h2">
+    <BorderedBox variant="accent" padding="0 16px">
+        <ResponseField name="-network" type="string" default="offchain">
+ Set to the blockchain network <Badge color="green">`arbitrum-one-mainnet`</Badge>
+        </ResponseField>
+    </BorderedBox>
+
+</StyledStep>
+<StyledStep title="RPC URL `-ethUrl` flag" titleSize="h2">
+    <BorderedBox variant="accent" padding="0 16px">
+        <ResponseField name="-ethUrl" type="string" default="none">
+ Ethereum JSON-RPC URL
+
+ Example: https://arb1.arbitrum.io/rpc
+        </ResponseField>
+    </BorderedBox>
+
+ You can use any Arbitrum One [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) URL.
+    - Public RPCs
+    - Third-party RPC providers
+    - Self-hosted RPC
+
+ {/* #### <Icon icon="fast-forward" /> Quickstart
+    <Tip>
+ Skip the reading - use the Arbitrum-provided public RPC below
+
+    ```bash icon="terminal" wrap lines Quickstart: Arbitrum-provided public RPC
+    -ethUrl=https://arb1.arbitrum.io/rpc
+    ```
+ </Tip> */}
+    <Accordion title="See All RPC Options" icon="link">
+        <Tabs>
+            <Tab title="Public RPCs">
+            #### Public RPCs
+ Many of the public RPCs apply rate-limits, including the third-party providers.
+ These free-tier RPC's should be sufficient to run a single Gateway with the latest versions of Livepeer.
+
+ Chainlist provides a full list of public Arbitrum One RPCs (including the Arbitrum public RPC):
+            - Original Source <DoubleIconLink label="Chainlist" href="https://chainlist.org/chain/42161" iconLeft="link" />
+            - Dynamically Imported: <DoubleIconLink label="Arbitrum RPC Reference" href="/v2/gateways/resources/technical/arbitrum-rpc" iconLeft="books" />
+            <Expandable title=">_ Chainlist Arbitrum One RPC List">
+                <ChainlistRPCs chainId={42161} />
+            </Expandable>
+ <Tip> You can also check the RPC status on [Chainlist](https://chainlist.org/chain/42161) </Tip>
+
+            </Tab>
+            <Tab title="Third Party RPCs">
+            #### Paid RPCs
+ If scaling beyond one Gateway, or running a large number of concurrent requests, you will need to pay for additional RPC capacity on one of the RPC providers.
+
+ Some popular third-party RPC providers include:
+
+            | Provider | Arbitrum One | Websocket (wss)? | Stylus Tracing? |
+            |----------|----------|------------|-----------------|
+            | [Alchemy](https://www.alchemy.com/docs/reference/arbitrum-api-quickstart) | ✅ | ✅ | Available on paid plans |
+            | [Ankr](https://www.ankr.com/) | ✅ | ✅ | Available on paid plans |
+            | [Chainstack](https://chainstack.com/) | ✅ | ✅ | Available on paid plans |
+            | [Infura](https://www.infura.io/) | ✅ | ✅ | Enabled on request |
+            | [Moralis](https://moralis.com/) | ✅ | | |
+            | [Quicknode](https://www.quicknode.com/) | ✅ | ✅ | Testnet supported in free tier |
+
+ Arbitrum One shares third-party providers in the <DoubleIconLink label="Arbitrum Docs" href="https://docs.arbitrum.io/build-decentralized-apps/reference/node-providers#third-party-rpc-providers" iconLeft="link" />
+            <iframe src="https://docs.arbitrum.io/build-decentralized-apps/reference/node-providers#third-party-rpc-providers" width="100%" height="500px" title="Embedded content from docs.arbitrum.io" />
+
+            </Tab>
+            <Tab title="Self-Hosted RPC">
+            #### Self-Hosted RPC
+ Alternatively, you can also self-host your own Arbitrum node.
+
+ Self-hosting an RPC is covered in the <DoubleIconLink label="Arbitrum Self-Hosting Guide" href="https://docs.arbitrum.io/node-running/how-tos/running-a-full-node" iconLeft="link" />
+            <iframe src="https://docs.arbitrum.io/node-running/how-tos/running-a-full-node" width="100%" height="500px" title="Embedded content from docs.arbitrum.io" />
+            </Tab>
+        </Tabs>
+    </Accordion>
+
+</StyledStep>
+<StyledStep title="ETH Account `-ethAcctAddr`" titleSize="h2">
+ Blockchain wallets (accounts) have both a public account address (starting with "0x...") and a **private** key.
+
+ This field is for your **public** wallet address.
+    <Danger>
+ ONLY use your _**PUBLIC**_ Wallet Address in this field.
+
+ _**NEVER**_ use your PRIVATE key.
+
+ <Icon icon="info-circle" size={20}/> A public address is akin to your bank account number, a private key is like your bank PIN or password.
+    </Danger>
+    <BorderedBox variant="accent" padding="0 16px">
+        <ResponseField name="-ethAcctAddr" type="string" default="none">
+            <Tip>
+ Livepeer automatically creates a wallet for you if this field is empty.
+
+            `-ethAcctAddr=""`
+            </Tip>
+
+ Your **public** wallet address: `0x...`
+
+ Example: 0xc7653d426f2ec8bc33cdde08b15f535e2eb2f523
+
+        </ResponseField>
+    </BorderedBox>
+    <br/>
+    <Accordion title="See All Account Setup Options" icon="wallet">
+ You can
+        - Use an existing Ethereum wallet address (e.g., from MetaMask, hardware wallet, etc.)
+        - Let Livepeer automatically create a new wallet address. See code [accountmanager.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/accountmanager.go#L50-L69)
+
+        <Tabs>
+            <Tab title="Existing Address">
+
+ You can use any existing Ethereum wallet address which can transact on Arbitrum.
+
+ You will use [Arbitrum One Mainnet](https://docs.arbitrum.io/get-started/arbitrum-introduction) to transact on the Livepeer network as this is significantly cheaper than using Ethereum, so ensure your wallet can transact on Arbitrum.
+
+ <Tip> It's advisable to use a wallet you own the private keys for instead of an exchange wallet. </Tip>
+
+ The following guides are provided as a reference only - no recommendation is made for any specific wallet provider.
+                - <DoubleIconLink label="Metamask Guide" href="https://support.metamask.io/configure/accounts/how-to-view-your-account-details-and-public-address" iconLeft="link" />
+                - <DoubleIconLink label="Ledger Guide" href="https://support.ledger.com/article/8978919811485-zd" iconLeft="link" />
+                - <DoubleIconLink label="Trezor Guide" href="https://support.trezor.io/en/articles/360018565096-trezor-faq" iconLeft="link" />
+
+            </Tab>
+            <Tab title="Automatic Wallet">
+ Livepeer will automatically create a new wallet for you if you do not provide an existing wallet address.
+ Simply leave the -ethAcctAddr flag empty and Livepeer will create a new wallet (and keystore) for you.
+
+                ```bash icon="terminal"
+                # Automatic Account Address
+                -ethAcctAddr=""
+                ```
+
+            </Tab>
+        </Tabs>
+    </Accordion>
+
+</StyledStep>
+<StyledStep title="ETH Password `-ethPassword`" titleSize="h2">
+    <Danger>
+ This is **NOT** your wallet private key.
+
+ Choose a **strong** password to secure your keystore file.
+
+ Make sure to <u>never share or lose access</u> to either the password or the keystore
+ file
+    </Danger>
+ Think of this flag as `-keystorePassword` - it is the path to a password.txt file containing a (strong) password chosen by you.
+
+ This password is used to decrypt the `keystore` file and access the (encrypted) private key.
+    <BorderedBox variant="accent" padding="0 16px">
+        <ResponseField name="-ethPassword" type="string" default="none">
+ Path to a password.txt file containing a (strong) password chosen by you.
+
+            ```bash icon="terminal"
+                # Password File
+                -ethPassword=/path/to/password.txt
+            ```
+ <Tip>Livepeer will prompt you for a password and create this automatically on running the Gateway if you leave this flag empty: `-ethPassword=""`</Tip>
+        </ResponseField>
+    </BorderedBox>
+    <br/>
+    <Accordion title="See All Password Setup Options" icon="lock">
+    <Tabs >
+        <Tab title="Linux / Mac" icon="linux">
+            ```bash icon="terminal"
+                # Create keystore directory
+                mkdir -p ~/.lpData/keystore
+
+                # Place your keystore file
+                cp your_keystore_file.json ~/.lpData/keystore/
+
+                # Create password file
+                echo "your_password" > ~/.lpData/password.txt
+            ```
+        </Tab>
+        <Tab title="Windows" icon="windows">
+            ```bash icon="terminal"
+                # Create keystore directory
+                mkdir %USERPROFILE%\.lpData\keystore
+
+                # Place your keystore file in the directory
+                # Create password file
+                echo your_password > %USERPROFILE%\.lpData\password.txt
+            ```
+        </Tab>
+        <Tab title="Docker Setup" icon="docker">
+            ```bash icon="terminal"
+                services:
+                gateway:
+                    volumes:
+                    - ./keystore:/root/.lpData/keystore
+                    - ./password.txt:/root/.lpData/password.txt
+            ```
+        </Tab>
+    </Tabs>
+    </Accordion>
+
+</StyledStep>
+<StyledStep title="ETH Keystore `-ethKeystorePath`" titleSize="h2">
+    <BorderedBox variant="accent" padding="0 16px">
+        <ResponseField name="-ethKeystorePath" type="string" default="none">
+ This is the path to your keystore directory or keyfile.
+
+            ```bash icon="terminal"
+                # Password File
+                -ethKeystorePath=/path/to/keystore
+            ```
+ <Tip>Livepeer will create the keystore automatically on running the Gateway if you leave this flag empty: `-ethKeystorePath=""`</Tip>
+        </ResponseField>
+    </BorderedBox>
+
+ To bring your existing Ethereum account to Livepeer, you need to create a keystore file
+ with your private key and place it in the correct directory structure.
+
+ The keystore files follow Ethereum's UTC-timestamp-address format.
+ These files, often referred to as "UTC / JSON Wallets" or "Web3 Secret Storage Definition" files,
+ are encrypted local files that contain your Ethereum private key, allowing access to your account.
+
+ Livepeer uses standard Ethereum keystore encryption, so any tool that creates Ethereum keystores will work.
+ Create a keystore file using Livepeer devtools or Ethereum tooling.
+
+    ### Create Automatically with Livepeer Tooling
+    <Tip>
+ It's recommended to let Livepeer devtools automatically create the keystore on first run after [installing the Gateway software](/v2/gateways/setup/install/install-overview).
+    </Tip>
+    <Accordion icon="code" title="See Commands to Create Keystore with Livepeer Devtools">
+    <Tabs>
+        <Tab title="Linux/Mac Command">
+ Use the command:
+
+        ```bash icon="terminal" wrap lines
+        livepeer -gateway \
+            -network arbitrum-one-mainnet \
+            -ethUrl=<YOUR_ARBITRUM_RPC_URL> \
+            -ethAcctAddr=0xYOUR_WALLET_ADDRESS \
+            -ethPassword="" #can be omitted
+            \ -ethKeystorePath=""  #can be omitted
+        ```
+ <BlinkingIcon /> Enter your private wallet key and password when prompted
+
+        </Tab>
+        <Tab title="Docker Command">
+
+        ```bash icon="terminal" wrap lines Docker
+        # Run interactively to create keystore
+        docker run -it \
+            -v gateway-lpData:/root/.lpData \
+            livepeer/go-livepeer:latest \
+            -gateway \
+            -network arbitrum-one-mainnet \
+            -ethUrl=<YOUR_ARBITRUM_RPC_URL> \
+            -ethAcctAddr=0xYOUR_WALLET_ADDRESS
+        ```
+ The keystore will be created in the Docker volume at:
+        ```javascript icon="terminal"
+        /var/lib/docker/volumes/gateway-lpData/_data/arbitrum-one-mainnet/keystore/
+        ```
+        </Tab>
+        <Tab title="Windows">
+        ```bash icon="terminal" wrap lines Windows
+            # Create directory
+            mkdir %USERPROFILE%\.lpData\keystore
+
+            # Run Livepeer - it will create account and prompt for password
+            livepeer.exe -gateway -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+            ```
+        </Tab>
+    </Tabs>
+    </Accordion>
+
+    <Accordion icon="folders" title="See Keystore File Location & Format">
+    #### Keystore File Location
+
+    <Tabs>
+        <Tab title="Docker" icon="docker">
+            ```bash Docker icon="docker"
+            #inside container
+            /root/.lpData/
+
+            #on host
+            /var/lib/docker/volumes/gateway-lpData/_data/
+            ```
+        </Tab>
+        <Tab title="Linux / Mac" icon="linux">
+            ```bash Linux/Mac icon="linux"
+            #~/.lpData/{network}/keystore/
+            ~/.lpData/arbitrum-one-mainnet/keystore/
+            ```
+        </Tab>
+        <Tab title="Windows" icon="windows">
+            ```bash Windows icon="windows"
+            #C:\Users\YOUR_USERNAME\.lpData\{network}\keystore\
+            %USERPROFILE%\.lpData\arbitrum-one-mainnet\keystore\
+            ```
+        </Tab>
+    </Tabs>
+
+    #### Keystore File Format
+    ```json wrap lines icon="key" Keystore File Format
+    {
+        "address": "089d8ab6752bac616a1f17246294eb068ee23d3e",
+        "crypto": {
+            "cipher": "aes-128-ctr",
+            "ciphertext": "...",
+            "cipherparams": {"iv": "..."},
+            "kdf": "scrypt",
+            "kdfparams": {...},
+            "mac": "..."
+            },
+        "id": "unique-id",
+        "version": 3
+    }
+    ```
+    </Accordion>
+
+    ### Create Now with Ethereum Tooling
+ Otherwise you can use Ethereum tools to create the keystore - instructions below.
+
+    <Note>
+ If you are here, It is assumed you understand the security implications of exporting your private key and are able to vet & install any required software and convert linux bash commands to your own OS.
+
+ Livepeer does not endorse or recommend any particular site or tools provided.
+    </Note>
+
+
+    <Accordion icon="ethereum" title="See Ethereum Tooling Setup">
+ To create the keystore file, you can use one of the following methods:
+        - Using Docker: Run the container interactively
+        - Using `geth` (Ethereum's development tool)
+        - Using `eth-cli` (Ethereum's command line tool)
+        - Using `node`
+        - Using web-based sites (not recommended)
+
+ You will need to:
+        1. Export your private key from your existing wallet
+        2. Create a keystore file with your private key
+        3. Create a password file with a strong password
+        4. Place the keystore file and password file in the correct directory
+    <Steps>
+        <Step title="Export Private Key">
+ Export your private key from your existing wallet
+
+        </Step>
+        <Step title="Create Keystore File">
+            <Expandable title="Keystore File Format">
+            <ResponseField name="UTC--" type="" >
+ A prefix to indicate the timestamp that follows is in Coordinated Universal Time (UTC).
+            </ResponseField>
+            <ResponseField name="timestamp" type="" >
+ Date and time, in ISO 8601 format (e.g., 2015-11-16T11-52-22.592017989Z), of when the account was created or the keystore file generated
+            </ResponseField>
+            <ResponseField name="public_address" type="" >
+ The public Ethereum address associated with the private key inside the file, typically _without the 0x prefix_.
+            </ResponseField>
+            </Expandable>
+
+            ```json icon="terminal" wrap Example_Keystore.json
+            // Format: UTC--<TIMESTAMP>--<PUBLIC_ADDRESS>.json
+            UTC--2015-11-16T11-52-22.592017989Z--089d8ab6752bac616a1f17246294eb068ee23d3e.json
+            ```
+
+ **Create Keystore File**
+
+                <Expandable title="Using geth">
+ Use Ethereum's development tool -> [geth](https://geth.ethereum.org/docs/)
+
+                    <CodeGroup>
+
+                    ```bash wrap lines icon="linux" Linux/Mac
+                    # Install geth first
+                    sudo apt-get install ethereum  # Ubuntu/Debian
+                    brew install ethereum          # macOS
+
+                    # Create keystore
+                    geth account import --datadir ~/.lpData/arbitrum-one-mainnet/
+                    # Enter private key when prompted
+                    # Set password when prompted
+                    ```
+
+                    ```bash wrap lines icon="docker" Docker
+                    docker run -it ethereum/client-go account import --datadir /keystore
+                    # Enter private key when prompted
+                    # Set password when prompted
+                    # Copy resulting file to ~/.lpData/arbitrum-one-mainnet/keystore/
+                    ```
+
+                    ```bash wrap lines icon="windows" Windows
+                    # Download geth from https://geth.ethereum.org/downloads/
+                    # After installation:
+                    geth account import --datadir C:\Users\%USERNAME%\.lpData\arbitrum-one-mainnet\
+                    # Enter private key when prompted
+                    # Set password when prompted
+                    ```
+                    </CodeGroup>
+
+                </Expandable>
+                <Expandable title="Using eth-cli">
+ Using [eth-cli](https://github.com/ethereum/go-ethereum/tree/master/cmd/ethkey)
+
+                ```bash icon="terminal" wrap lines
+                # Install eth-cli
+                go install github.com/ethereum/go-ethereum/cmd/ethkey@latest
+                # Create directory
+                mkdir -p ~/.lpData/arbitrum-one-mainnet/keystore/
+                # Import private key (will prompt for private key and password)
+                ethkey import --datadir ~/.lpData/arbitrum-one-mainnet/
+                ```
+                </Expandable>
+                <Expandable title="Using Node">
+ If you have Node.js installed - create a keystore file with the following command:
+
+                    ```bash wrap lines icon="node"
+                    npx ethereum-keystore create --private-key YOUR_PRIVATE_KEY --password YOUR_PASSWORD --output ~/.lpData/arbitrum-one-mainnet/keystore/
+                    ```
+                </Expandable>
+                <Expandable title="Web-based Sites">
+ <Warning> Website Tools May not be secure </Warning>
+ Use [Vanity-ETH[(https://vanity-eth.org/)] or [MyEtherWallet](https://www.myetherwallet.com/)
+
+                    - Enter your private key
+                    - Set a password
+                    - Download the keystore JSON
+                    - Save it to the correct directory for your OS
+                    - Create the password text file
+                </Expandable>
+
+        </Step>
+
+        <Step title="Create Password File">
+ Create a password.txt file containing a (strong) password chosen by you.
+ This password is used to decrypt the keystore file and access the private key.
+ <Warning>Make sure to never share or lose access to either the password or the keystore file</Warning>
+
+            <CodeGroup>
+                ```bash wrap lines icon="linux" Linux/Mac
+                # Create password file with the same password you just used
+                echo "YOUR_PASSWORD" > ~/.lpData/eth-secret.txt
+
+                # Secure it (Linux/Mac)
+                chmod 600 ~/.lpData/eth-secret.txt
+                ```
+                ```bash wrap lines icon="windows" Windows
+                # Create password file with the same password you just used
+                echo "YOUR_PASSWORD" > %USERPROFILE%\.lpData\eth-secret.txt
+                ```
+                ```bash wrap lines icon="docker" Docker
+                # Create password file with the same password you just used
+                echo "YOUR_PASSWORD" > /path/to/password.txt
+                ```
+            </CodeGroup>
+
+        </Step>
+        <Step title="Create Password File & Configure Directory">
+ After creating the keystore with `geth` or `eth-cli`, you must manually create the password file.
+
+            ```bash wrap lines icon="terminal"
+            # geth creates the keystore but does NOT save the password
+            geth account import --datadir ~/.lpData/arbitrum-one-mainnet/
+            # Enter private key: xxxxxx
+            # Enter password: yourpassword
+            # ✓ Keystore created
+
+            # YOU must manually create the password file
+            echo "yourpassword" > ~/.lpData/eth-secret.txt
+            ```
+
+ Place it in Livepeer's keystore directory & configure Livepeer to use your account.
+
+            ```bash icon="terminal" wrap lines
+            # Linux/Mac
+            mkdir -p ~/.lpData/arbitrum-one-mainnet/keystore/
+            mv UTC--* ~/.lpData/arbitrum-one-mainnet/keystore/
+            ```
+        </Step>
+    </Steps>
+
+</Accordion>
+
+{/*
+`json wrap Example_Keystore.json
+ UTC--2015-11-16T11-52-22.592017989Z--089d8ab6752bac616a1f17246294eb068ee23d3e.json
+ `
+
+    <ResponseField name="UTC--" type="" >
+ A prefix to indicate the timestamp that follows is in Coordinated Universal Time (UTC).
+    </ResponseField>
+    <ResponseField name="timestamp" type="" >
+ Date and time, in ISO 8601 format (e.g., 2015-11-16T11-52-22.592017989Z), of when the account was created or the keystore file generated
+    </ResponseField>
+    <ResponseField name="public_address" type="" >
+ The public Ethereum address associated with the private key inside the file, typically _without the 0x prefix_.
+ </ResponseField> */}
+
+</StyledStep>
+<StyledStep title="Funding Your Gateway">
+    <Card title="Funding Your Gateway" href="./fund-gateway" icon="piggy-bank" horizontal arrow >
+ Jump to the funding your gateway guide
+    </Card>
+</StyledStep>
+</StyledSteps>
+
+<Expandable title="REMOVE ME: Old Stuff">
+
+ An Ethereum private key is a 256-bit random integer.
+ For user presentation and interoperability across most software,
+ this number is nearly always represented as a 64-character hexadecimal string
+
+
+            ```bash icon="terminal" wrap lines
+            # Private Key Example
+            afdfd9c3d2095ef696594f6cedcae59e72dcd697e2a7521b1578140422a4f890
+            ```
+
+    - _Account Address_: Created and stored in
+        ```bash icon="terminal"
+        # Account Address
+        ~/.lpData/arbitrum-one-mainnet/keystore/
+        ```
+    - _Keystore File_: Located at
+        ```bash icon="terminal" wrap
+        # Keystore file
+        ~/.lpData/arbitrum-one-mainnet/keystore/UTC--{timestamp}--{address}
+        ```
+    - _Password_: Livepeer prompts you to enter and confirm a password
+
+
+    ### ETH Account
+
+ **Docker**
+    <Expandable title="Create ETH Wallet & Keystore">
+ Create Livepeer Gateway ETH account
+
+ In this step we need to start the Gateway in order to create an Ethereum
+ account.
+
+        ```bash icon="terminal"
+        docker compose run -it gateway
+        ```
+
+ When prompted for the ETH password, enter a strong password to secure your
+ Ethereum account. This password is used to decrypt and access the ETH private
+ key. <Warning>Make sure to <u>never share or lose access</u> to either the password or
+ the keystore file.</Warning>
+
+ <Tip>Keep this password handy, we will use it in the following steps.</Tip>
+
+ After you see the message that the Ethereum account has been unlocked, CTRL+C to
+ exit the Livepeer docker instance.
+
+ Using the previously created ETH password, create the eth-secret file
+
+        ```javascript icon="terminal"
+        nano -p /var/lib/docker/volumes/gateway-lpData/_data/eth-secret.txt
+        ```
+
+ Modify Docker compose file to include eth-secret.txt
+
+        ```bash icon="terminal"
+        nano docker-compose.yml
+        ```
+
+ Add the following line below the `-ethKeystorePath` and save
+
+        ```bash icon="terminal"
+        -ethPassword=/root/.lpData/eth-secret.txt
+        ```
+
+ Here is the full modified version of the docker-compose.yml file
+
+        ```bash icon="terminal"
+        version: '3.9'
+
+        services:
+        gateway:
+            image: livepeer/go-livepeer:<RELEASE_VERSION>
+            container_name: "gateway"
+            hostname: "gateway"
+            ports:
+            - 1935:1935
+            - 8935:8935
+            volumes:
+            - gateway-lpData:/root/.lpData
+            command: '-ethUrl=<YOUR ARB APC>
+                    -ethKeystorePath=/root/.lpData
+                    -ethPassword=/root/.lpData/eth-secret.txt
+                    -network=arbitrum-one-mainnet
+                    -cliAddr=gateway:5935
+                    -broadcaster=true
+                    -monitor=true
+                    -v=99
+                    -blockPollingInterval=20
+                    -maxPricePerUnit=300
+                    -pixelsPerUnit=1
+                    -rtmpAddr=0.0.0.0:1935
+                    -httpAddr=0.0.0.0:8935
+                    '
+        volumes:
+        gateway-lpData:
+            external: true
+        ```
+
+ Start Livepeer in the background
+
+        ```bash icon="terminal"
+        docker compose up -d
+        ```
+
+ Launch the livepeer_cli
+
+        ```bash icon="terminal"
+        docker exec -it gateway /bin/bash
+        livepeer_cli -host gateway -http 5935
+        ```
+
+
+
+    </Expandable>
+
+ **Linux**
+    <Expandable title="Create ETH Wallet & Keystore">
+        <StyledSteps>
+            <StyledStep title="Configure Gateway">
+
+
+ Create a file containing your Gateway Ethereum password
+
+            ```text icon="terminal"
+            sudo mkdir /usr/local/bin/lptConfig
+            sudo nano /usr/local/bin/lptConfig/node.txt
+            ```
+
+ Enter your password and save the file
+
+            </StyledStep>
+            <StyledStep title="Create System Service">
+
+
+ Create a system service
+
+            ```text icon="terminal"
+            sudo nano /etc/systemd/system/livepeer.service
+            ```
+
+ Paste and update the following startup script with your personal info:
+
+            ```jsx icon="terminal"
+            [Unit]
+            Description=Livepeer
+
+            [Service]
+            Type=simple
+            User=root
+            Restart=always
+            RestartSec=4
+            ExecStart=/usr/local/bin/livepeer -network arbitrum-one-mainnet \
+            -ethUrl=<YOUR ARB RPC URL> \
+            -cliAddr=127.0.0.1:5935 \
+            -ethPassword=/usr/local/bin/lptConfig/node.txt \
+            -maxPricePerUnit=300 \
+            -broadcaster=true \
+            -serviceAddr=<INSERT YOUR IP ADDRESS>:8935 \
+            -transcodingOptions=/usr/local/bin/lptConfig/transcodingOptions.json \
+            -rtmpAddr=0.0.0.0:1935 \
+            -httpAddr=0.0.0.0:8935 \
+            -monitor=true \
+            -v 6
+
+            [Install]
+            WantedBy=default.target
+            ```
+
+ Start the system service
+
+            ```text icon="terminal"
+            sudo systemctl daemon-reload
+            sudo systemctl enable --now livepeer
+            ```
+
+ Open the Livepeer CLI
+
+            ```text icon="terminal"
+            livepeer_cli -host 127.0.0.1 -http 5935
+            ```
+            </StyledStep>
+        </StyledSteps>
+    </Expandable>
+
+ **Windows**
+    <Expandable title="Create ETH Wallet & Keystore" >
+        <StyledStep title="Run Gateway">
+ When prompted enter and confirm a password.
+
+        <Warning>
+ This password is used to decrypt the keystore file and access the private key.
+ Make sure to <u>never share or lose access</u> to either the password or the keystore
+ file
+        </Warning>
+
+ After confirming your password close the terminal.
+        </StyledStep>
+        <StyledStep title="Configure Gateway">
+
+        ## Create a file containing your Gateway Ethereum password
+
+ In `C:\Users\YOUR_USER_NAME\.lpData` create a txt file named `ethsecret.txt`
+ with the password you created in the previous step.
+
+        ## Add the `-ethPassword` flag to your .bat file
+
+ Add `-ethPassword=C:\Users\YOUR_USER_NAME\.lpData\ethsecret.txt` to the
+ previously created .bat file
+        </StyledStep>
+    </Expandable>
+
+    ### Funding Your ETH Account
+ See <DoubleIconLink label="Fund Your Gateway" href="./fund-gateway" iconLeft="coins" />
+
+
+        - `-ethUrl`: Ethereum JSON-RPC URL (required for on-chain)
+        - `-ethAcctAddr`: Your Ethereum account address
+        - `-ethPassword`: Password for your ETH account or path to password file
+        - `-ethKeystorePath`: Path to your keystore directory or keyfile
+
+
+
+ Development Setup
+ For testing, use the devtool to create keys :
+
+    ```text icon="terminal"
+    func CreateKey(keystoreDir string) string {
+        keyStore := keystore.NewKeyStore(keystoreDir, keystore.StandardScryptN, keystore.StandardScryptP)
+        account, err := keyStore.NewAccount(passphrase)
+        return account.Address.Hex()
+    }
+    ```
+
+</Expandable>

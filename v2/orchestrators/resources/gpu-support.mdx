@@ -1,0 +1,335 @@
+---
+title: GPU Support Matrix
+sidebarTitle: GPU Support
+description: 'NVIDIA GPU compatibility, NVENC/NVDEC session limits, driver requirements, and CUDA versions for Livepeer orchestrators.'
+keywords:
+  - livepeer
+  - orchestrator
+  - GPU
+  - NVIDIA
+  - NVENC
+  - NVDEC
+  - CUDA
+  - session limits
+  - RTX
+  - transcoding
+  - AI inference
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+purpose: reference
+status: review
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Livepeer orchestrators use NVIDIA GPUs for video transcoding (NVENC/NVDEC hardware encoders) and AI inference (CUDA cores / Tensor cores). This page covers GPU compatibility, session limits, and driver requirements.
+
+<CustomDivider />
+
+## Supported GPU Families
+
+go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPUs are not supported.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>GPU Family</TableCell>
+    <TableCell header>Transcoding</TableCell>
+    <TableCell header>AI Inference</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GeForce RTX 40xx** (Ada Lovelace)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Best consumer option. AV1 encode support.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GeForce RTX 30xx** (Ampere)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Widely used by orchestrators. Good price-performance.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GeForce RTX 20xx** (Turing)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Supported but older.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GeForce GTX 16xx** (Turing)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Limited</TableCell>
+    <TableCell>No Tensor cores — AI inference slower or unsupported for some pipelines.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GeForce GTX 10xx** (Pascal)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Limited</TableCell>
+    <TableCell>Legacy. NVENC Gen 6. No Tensor cores.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Tesla T4**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Data centre card. 16 GB VRAM. Common in cloud.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Tesla V100**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Data centre. 16/32 GB VRAM.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A100**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Data centre. 40/80 GB VRAM. Highest throughput.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A10 / A10G**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Cloud-optimised (AWS G5, etc.). 24 GB VRAM.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L4**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Ada Lovelace data centre. 24 GB VRAM. Good for AI.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L40 / L40S**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>48 GB VRAM. High-end AI and transcoding.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**H100**</TableCell>
+    <TableCell>Transcoding works but overkill</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>80 GB VRAM. Primarily for LLM and large model inference.</TableCell>
+  </TableRow>
+</StyledTable>
+<CustomDivider />
+
+## NVENC Session Limits
+
+Consumer NVIDIA GPUs enforce a hard limit on concurrent NVENC encoding sessions. This directly limits how many simultaneous transcoding streams your orchestrator can handle per GPU.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>GPU Class</TableCell>
+    <TableCell header>Default NVENC Session Limit</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GeForce GTX 10xx</TableCell>
+    <TableCell>2</TableCell>
+    <TableCell>Can be patched</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GeForce GTX 16xx</TableCell>
+    <TableCell>3</TableCell>
+    <TableCell>Can be patched</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GeForce RTX 20xx</TableCell>
+    <TableCell>3</TableCell>
+    <TableCell>Can be patched</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GeForce RTX 30xx</TableCell>
+    <TableCell>3–5 (varies by model)</TableCell>
+    <TableCell>Can be patched</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GeForce RTX 40xx</TableCell>
+    <TableCell>3–8 (varies by model)</TableCell>
+    <TableCell>Can be patched</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Tesla / Quadro / A-series</TableCell>
+    <TableCell>Unlimited</TableCell>
+    <TableCell>No session limit on professional and data centre cards</TableCell>
+  </TableRow>
+</StyledTable>
+### Removing the Session Limit
+
+The community-maintained [nvidia-patch](https://github.com/keylase/nvidia-patch) removes the NVENC session limit on consumer GPUs. This is widely used by Livepeer orchestrators and pool operators (Titan Node uses this in their worker setup).
+
+```bash icon="terminal"
+# Example (Linux) — always check the repo for current instructions
+git clone https://github.com/keylase/nvidia-patch.git
+cd nvidia-patch
+bash patch.sh
+```
+
+<Warning>
+  Patching the NVIDIA driver modifies a system binary. This is not officially supported by NVIDIA. After driver updates, you must re-apply the patch. Some cloud providers (AWS, GCP) may not allow driver patching on managed GPU instances.
+</Warning>
+
+<CustomDivider />
+
+## CUDA and Driver Requirements
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Component</TableCell>
+    <TableCell header>Minimum Version</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>NVIDIA Driver</TableCell>
+    <TableCell>525+</TableCell>
+    <TableCell>` `</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>CUDA Toolkit</TableCell>
+    <TableCell>12.0+</TableCell>
+    <TableCell>` `</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>NVIDIA Container Toolkit</TableCell>
+    <TableCell>Latest</TableCell>
+    <TableCell>Required for Docker-based deployments (AI Runner, containerised orchestrator)</TableCell>
+  </TableRow>
+</StyledTable>
+
+### Checking Your Versions
+
+```bash icon="terminal"
+# Driver version
+nvidia-smi
+
+# CUDA version
+nvcc --version
+
+# Docker GPU access
+docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
+```
+
+<CustomDivider />
+
+## VRAM Requirements by Workload
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Workload</TableCell>
+    <TableCell header>Minimum VRAM</TableCell>
+    <TableCell header>Recommended</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Video transcoding only</TableCell>
+    <TableCell>4 GB</TableCell>
+    <TableCell>8 GB</TableCell>
+    <TableCell>NVENC/NVDEC uses minimal VRAM</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Batch AI (single warm model)</TableCell>
+    <TableCell>8 GB</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Depends on model size — SDXL needs ~7 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Batch AI (multiple warm models)</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>24 GB+</TableCell>
+    <TableCell>Each warm model consumes VRAM simultaneously</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>LLM inference (quantised)</TableCell>
+    <TableCell>8 GB</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Via Ollama runner with quantised weights</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>LLM inference (full precision)</TableCell>
+    <TableCell>24 GB+</TableCell>
+    <TableCell>48 GB+</TableCell>
+    <TableCell>Large language models at full precision</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Real-time AI (ComfyStream)</TableCell>
+    <TableCell>12 GB</TableCell>
+    <TableCell>16 GB+</TableCell>
+    <TableCell>Latency-sensitive — VRAM headroom improves stability</TableCell>
+  </TableRow>
+</StyledTable>
+
+For detailed per-pipeline VRAM planning, see the [Model and Demand Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference).
+<CustomDivider />
+
+## GPU Selection Guidance
+
+<Tabs>
+  <Tab  title="Transcoding Only" icon="video">
+    Any supported NVIDIA GPU works. For cost efficiency, an RTX 3060 12GB or RTX 4060 Ti 16GB provides good transcoding throughput at low power draw. Patch the NVENC limit to handle more concurrent sessions.
+
+    **Budget pick:** GTX 1660 Super (6 GB) — cheapest entry for transcoding-only.
+  </Tab>
+
+  <Tab  title="Transcoding + AI" icon="microchip">
+    16 GB VRAM minimum. RTX 4070 Ti Super (16 GB) or RTX 3090 (24 GB) are common choices. 24 GB allows running 2–3 warm AI models alongside transcoding.
+
+    **Best value:** RTX 3090 24 GB — widely available used, high VRAM, strong community track record.
+  </Tab>
+
+  <Tab  title="AI-Heavy / LLM" icon="microchip">
+    24 GB+ VRAM. For LLM inference at reasonable speed, RTX 4090 (24 GB) or data centre cards (A100, L40S). Multiple-GPU setups for serving many warm models.
+
+    **Production pick:** A100 40/80 GB or L40S 48 GB in a data centre.
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## See Also
+
+<CardGroup cols={3}>
+  <Card title="Hardware Requirements" href="/v2/orchestrators/setup/rcs-requirements" icon="microchip" />
+  <Card title="Model and Demand Reference" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" icon="memory" />
+  <Card title="Capacity Planning" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning" icon="gauge-high" />
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Supported GPU hardware reference - which GPUs work with go-livepeer
+  for video transcoding and AI inference.
+
+  SECTION HOME: Resources > Technical Reference
+  CROSS-REFS:
+  - Deployment Details > Requirements - GPU in context of full requirements
+  - Workloads & AI > Model VRAM Reference - VRAM needs per model
+  - Operator Considerations > Benchmarking - testing GPU performance
+*/}

@@ -1,0 +1,406 @@
+---
+title: 'Verify Your Setup'
+sidebarTitle: 'Verify'
+description: 'Verify the orchestrator is on-chain, processing jobs, and healthy - video transcoding test, AI inference test, Explorer check, and basic monitoring confirmation.'
+purpose: how_to
+keywords:
+  - livepeer
+  - orchestrator
+  - verify
+  - test
+  - health check
+  - monitoring
+  - Prometheus
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Tip>
+  Run every check that applies to the configured node mode. A node passes verification when all applicable checks produce expected output. Proceed to Guides only after this page is complete.
+</Tip>
+
+Finish setup by confirming the node is on-chain, processing jobs, and exposing the minimum monitoring signals. Full monitoring setup (Grafana, alerting, DCGM exporter) is in <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting" label="Metrics and Alerting" newline={false} />.
+
+<CustomDivider middleText="Verification Checks" />
+
+<StyledSteps>
+
+  <StyledStep title="Check node status">
+
+    Verify the node process is running and the CLI port is responding:
+
+    ```bash icon="terminal" filename="check-status"
+    curl -s http://localhost:7935/status | python3 -m json.tool
+    ```
+
+    Expected: a JSON response showing `nodeType`, `version`, ETH account address, and ETH balance.
+
+    If no response: the node is not running, or the cliAddr is bound to a different port. Check `docker compose ps` and the configured `-cliAddr`.
+
+    Also verify the GPU is in use:
+
+    ```bash icon="terminal" filename="check-gpu"
+    docker compose logs 2>&1 | grep -i "transcoding on nvidia"
+    ```
+
+    Expected: `Transcoding on Nvidia GPU 0` (or the configured GPU ID).
+
+  </StyledStep>
+
+  <StyledStep title="Verify on Livepeer Explorer">
+
+    Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search by the orchestrator's Ethereum address.
+
+    Check:
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Field</TableCell>
+          <TableCell header>Expected</TableCell>
+          <TableCell header>Action if wrong</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>Status</TableCell>
+          <TableCell>Active (or Registered if activation was recent)</TableCell>
+          <TableCell>Wait one full round (~22 hours). If still not Active, check stake vs top-100 threshold.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Service URI</TableCell>
+          <TableCell>Matches `-serviceAddr` exactly</TableCell>
+          <TableCell>Update via `livepeer_cli` → Set orchestrator config → service URI.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Stake</TableCell>
+          <TableCell>Reflects bonded LPT amount</TableCell>
+          <TableCell>If stake shows 0, the bond transaction may not have confirmed. Check Arbiscan.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Reward cut / Fee cut</TableCell>
+          <TableCell>Match the values set during activation</TableCell>
+          <TableCell>Adjustable via `livepeer_cli` at any time.</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    For AI-enabled nodes, also check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). The configured pipelines should appear with the correct warm/cold status.
+
+  </StyledStep>
+
+  <StyledStep title="Verify port 8935 is publicly reachable">
+
+    Test from a **different machine** (not the same server):
+
+    ```bash icon="terminal" filename="port-check"
+    curl -k https://YOUR_PUBLIC_IP:8935/status
+    ```
+
+    Any response (including a JSON error) confirms port 8935 is open and reachable. A connection timeout means the firewall is blocking the port - gateways cannot route work to an unreachable node.
+
+    If the port is blocked: check firewall rules, NAT/port-forwarding configuration, and cloud security group settings.
+
+  </StyledStep>
+
+  <StyledStep title="Test video transcoding (video and dual mode)">
+
+    Send a test stream to confirm transcoding works on-chain. Use a gateway (or another node as gateway) pointed at the orchestrator, then ffmpeg:
+
+    ```bash icon="terminal" filename="test-stream"
+    ffmpeg -re \
+      -f lavfi -i testsrc=size=1280x720:rate=30 \
+      -c:v libx264 \
+      -preset ultrafast \
+      -tune zerolatency \
+      -f flv \
+      rtmp://localhost:1935/test_stream
+    ```
+
+    Check the orchestrator logs for job confirmation:
+
+    ```bash icon="terminal" filename="check-transcode"
+    docker compose logs 2>&1 | grep -i "got segment\|transcode result" | tail -10
+    ```
+
+    Expected:
+    ```text icon="terminal" filename="expected-transcode-output"
+    Got segment for stream test_stream
+    Transcode result OK
+    ```
+
+    Check HLS output:
+
+    ```bash icon="terminal" filename="check-hls"
+    ffprobe http://localhost:8935/stream/test_stream.m3u8
+    ```
+
+    A valid ffprobe response showing stream metadata confirms the full video path is working.
+
+    <Note>
+      For this test to work, a gateway must be routing the RTMP stream to the orchestrator. If running a standalone orchestrator without a local gateway, skip this test and monitor for `Got segment` messages after the node enters the active set and gateways start routing production traffic.
+    </Note>
+
+  </StyledStep>
+
+  <StyledStep title="Test AI inference (AI and dual mode)">
+
+    Send a test inference request. Ensure the warm model has finished loading before testing (watch logs for "Warm model loaded"):
+
+    ```bash icon="terminal" filename="test-inference"
+    curl -X POST http://localhost:8935/text-to-image \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model_id": "ByteDance/SDXL-Lightning",
+        "prompt": "a test image of a mountain",
+        "width": 512,
+        "height": 512,
+        "num_inference_steps": 4
+      }' \
+      -o verify-output.png \
+      --max-time 30
+    ```
+
+    {/* TODO: Confirm the current direct orchestrator endpoint for text-to-image inference. */}
+
+    Verify the output:
+
+    ```bash icon="terminal" filename="check-inference"
+    file verify-output.png
+    ```
+
+    Expected: `verify-output.png: PNG image data` with a non-zero file size.
+
+    Also confirm the AI runner container is healthy:
+
+    ```bash icon="terminal" filename="check-runner"
+    docker ps | grep -i "ai-runner"
+    # Container should show "Up" status
+    ```
+
+    If the runner is in a restart loop, check its logs:
+
+    ```bash icon="terminal" filename="runner-logs"
+    docker logs <ai-runner-container-name> --tail 30
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Confirm reward calling is active">
+
+    Reward calling distributes LPT inflation to the orchestrator each round (~22 hours). Confirm it is enabled:
+
+    ```bash icon="terminal" filename="check-reward"
+    docker compose config | grep -i "reward"
+    ```
+
+    The startup command should omit `-reward=false`. Its absence means automatic calling is enabled.
+
+    After the first full round completes, verify on Arbiscan that a `reward()` transaction appeared from the orchestrator address. Also check [Livepeer Explorer](https://explorer.livepeer.org) - the Rewards section on the orchestrator page updates after each successful call.
+
+    Check the logs for the reward call message:
+
+    ```bash icon="terminal" filename="reward-log"
+    docker compose logs 2>&1 | grep -i "calling reward\|reward call" | tail -5
+    ```
+
+    {/* TODO: Confirm the current success log line for a reward call in go-livepeer. */}
+
+    Missing reward calls after a round usually mean the node was offline during round initialisation, the Arbitrum ETH balance is too low for gas, or the startup command includes `-reward=false`.
+
+  </StyledStep>
+
+  <StyledStep title="Verify basic monitoring">
+
+    Confirm Prometheus metrics are exposed. This requires `-monitor` in the startup command (add it if missing and restart):
+
+    ```bash icon="terminal" filename="check-metrics"
+    curl -s http://localhost:7935/metrics | head -30
+    ```
+
+    Expected: Prometheus-format metric lines starting with `# HELP` and `# TYPE` followed by metric values.
+
+    Key metrics to spot-check:
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Metric</TableCell>
+          <TableCell header>What it confirms</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>`segment_source_appeared_total`</TableCell>
+          <TableCell>Segments received - confirms jobs are being routed</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`segment_transcoded_total`</TableCell>
+          <TableCell>Successfully transcoded segments</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`reward_call_count`</TableCell>
+          <TableCell>Number of reward calls submitted - should increment once per round</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`current_round`</TableCell>
+          <TableCell>Current Livepeer protocol round - confirms on-chain connectivity</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    For AI nodes, also check `ai_request_count` and `ai_request_latency_seconds`.
+
+    Check GPU health directly:
+
+    ```bash icon="terminal" filename="check-gpu-health"
+    nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu \
+      --format=csv,noheader
+    ```
+
+    Watch for temperature above 85°C (inadequate cooling) or memory utilisation at 100% (VRAM pressure for AI workloads).
+
+    For full monitoring setup including Grafana dashboards and alerting, see <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting" label="Guides > Monitoring and Tools" newline={false} />.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Quick Reference" />
+
+## Quick-reference checklist
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Check</TableCell>
+      <TableCell header>Command</TableCell>
+      <TableCell header>Expected</TableCell>
+      <TableCell header>Mode</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Node status</TableCell>
+      <TableCell>`curl localhost:7935/status`</TableCell>
+      <TableCell>JSON with nodeType, address</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>GPU detected</TableCell>
+      <TableCell>Startup logs</TableCell>
+      <TableCell>`Transcoding on Nvidia GPU 0`</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>RPC connected</TableCell>
+      <TableCell>`curl` → `eth_chainId`</TableCell>
+      <TableCell>`"result":"0xa4b1"`</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Port 8935 open</TableCell>
+      <TableCell>`curl -k https://IP:8935/status` (external)</TableCell>
+      <TableCell>Any response</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Explorer Active</TableCell>
+      <TableCell>explorer.livepeer.org</TableCell>
+      <TableCell>Status: Active</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Service URI correct</TableCell>
+      <TableCell>Explorer profile</TableCell>
+      <TableCell>Matches `-serviceAddr`</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Video transcoding</TableCell>
+      <TableCell>ffmpeg + logs</TableCell>
+      <TableCell>`Got segment` in logs</TableCell>
+      <TableCell>Video, Dual</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI inference</TableCell>
+      <TableCell>`curl` → `/text-to-image`</TableCell>
+      <TableCell>PNG file returned</TableCell>
+      <TableCell>AI, Dual</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI capabilities</TableCell>
+      <TableCell>tools.livepeer.cloud</TableCell>
+      <TableCell>Pipelines listed as Warm</TableCell>
+      <TableCell>AI, Dual</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Reward calling</TableCell>
+      <TableCell>Arbiscan or logs after one round</TableCell>
+      <TableCell>`reward()` transaction visible</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Prometheus metrics</TableCell>
+      <TableCell>`curl localhost:7935/metrics`</TableCell>
+      <TableCell>Metric lines returned</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Common Issues" />
+
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="No transcoding output" icon="film">
+    Check the GPU was detected at startup (`Transcoding on Nvidia GPU` in logs). Confirm the `-nvidia` flag matches the GPU device ID. Confirm port 8935 is open from external machines. Check the orchestrator logs for error messages on job receipt. See <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting" label="Troubleshooting" newline={false} />.
+  </Accordion>
+  <Accordion title="AI inference request returns error" icon="microchip">
+    Check the AI runner container is running (`docker ps`). Check its logs for model loading errors (`docker logs <container>`). Confirm `aiModels.json` is valid JSON with correct field names. Ensure the model_id matches exactly (case-sensitive, including the org prefix). Confirm `/var/run/docker.sock` is mounted in the orchestrator container.
+  </Accordion>
+  <Accordion title="Explorer listing delay" icon="magnifying-glass">
+    Confirm the activation transaction succeeded on Arbiscan. Check the service URI is set and reachable. Verify the stake bonding transactions (both `approve` and `bond`) confirmed. Recent activations appear on Explorer after the next round, because the active set updates once per round (~22 hours).
+  </Accordion>
+  <Accordion title="Reward-call visibility" icon="gift">
+    Confirm the startup command omits `-reward=false`. Check the Arbitrum ETH balance, because reward calls require gas. Confirm the node was online during round initialisation. Check logs for reward call errors. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning" label="Reward Call Tuning" newline={false} /> for low-stake profitability analysis.
+  </Accordion>
+  <Accordion title="No jobs after 48 hours" icon="clock">
+    The #1 cause is port 8935 not reachable from the internet. Re-test from an external machine. The second cause is price above gateway caps - check current rates on tools.livepeer.cloud and compare. Third: not in the active set (for video jobs) - check rank on Explorer. AI jobs route by capability, not stake, so ensure capabilities appear on tools.livepeer.cloud.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Setup complete
+
+<Note>
+  The node is now on-chain, processing jobs, and verified. The setup section is complete. Pricing optimisation, delegation strategy, workload selection, and long-term monitoring are covered in the Guides section.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Staking and Earning" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
+    How orchestrators earn from service fees and LPT inflation rewards.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Set competitive video and AI prices to attract work from gateways.
+  </Card>
+  <Card title="Monitoring and Tools" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox">
+    Full monitoring: Grafana dashboards, alerting, Explorer operations, troubleshooting.
+  </Card>
+  <Card title="Workload Options" icon="list-check" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
+    Expand or change workloads based on hardware and network demand.
+  </Card>
+</CardGroup>

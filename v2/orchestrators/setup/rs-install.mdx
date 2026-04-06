@@ -1,0 +1,285 @@
+---
+title: 'Install go-livepeer'
+sidebarTitle: 'Install'
+description: 'Install go-livepeer via Docker (recommended) or pre-built binary - Linux, Windows, and macOS with GPU support.'
+purpose: how_to
+keywords:
+  - livepeer
+  - orchestrator
+  - install
+  - Docker
+  - go-livepeer
+  - GPU
+  - NVIDIA
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<Tip>
+  Docker is the recommended install path. It matches the quickstart environment, handles GPU passthrough via the NVIDIA Container Toolkit, and simplifies upgrades. Use the binary path when Docker is unavailable.
+</Tip>
+
+<CustomDivider middleText="Install" />
+
+<View title="Docker" icon="docker" iconType="solid">
+
+Docker is supported on Linux, Windows (WSL2), and macOS. The official Docker image includes CUDA 12.0, so no separate CUDA installation is required.
+
+<Steps>
+
+<Step title="Install Docker and NVIDIA Container Toolkit">
+
+Install Docker first on hosts missing it. Follow the [Docker install guide](https://docs.docker.com/engine/install/).
+
+For GPU passthrough, the NVIDIA Container Toolkit is required on Linux:
+
+```bash icon="terminal" filename="install-toolkit"
+# Install NVIDIA Container Toolkit (Ubuntu/Debian)
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+```
+
+Verify GPU passthrough works:
+
+```bash icon="terminal" filename="verify-gpu"
+docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
+```
+
+Expected output shows your GPU with driver and CUDA version:
+```text icon="terminal" filename="expected-gpu-output"
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI ...    Driver Version: 525.60.13    CUDA Version: 12.0           |
+|===============================+======================+======================|
+| GPU  Name           ...       |                      |                      |
+|   0  NVIDIA GeForce RTX ...   |   00%   ...          |   23MiB / 24268MiB   |
++-----------------------------------------------------------------------------+
+```
+
+A failed `nvidia-smi` run inside Docker means the NVIDIA Container Toolkit still needs configuration. Resolve that before continuing.
+
+</Step>
+
+<Step title="Pull the go-livepeer image">
+
+```bash icon="terminal" filename="pull"
+docker pull livepeer/go-livepeer:stable
+```
+
+Pin to a specific release tag in production. The `stable` tag tracks the latest stable release. To pin:
+
+```bash icon="terminal" filename="pin-version"
+docker pull livepeer/go-livepeer:v0.8.9
+```
+
+Check [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases) for the latest release tag.
+
+{/* TODO: Replace v0.8.9 with the current stable tag during the next version refresh. */}
+
+</Step>
+
+<Step title="Pull the AI runner image for AI and dual mode">
+
+For AI inference or dual mode, also pull the AI runner:
+
+```bash icon="terminal" filename="pull-ai"
+docker pull livepeer/ai-runner:latest
+```
+
+The go-livepeer process spawns AI runner containers automatically via Docker-out-of-Docker. The image must be pulled before starting the node.
+
+</Step>
+
+<Step title="Verify installation">
+
+```bash icon="terminal" filename="verify"
+docker run --rm livepeer/go-livepeer:stable livepeer -version
+```
+
+Expected:
+```text icon="terminal" filename="expected-version-output"
+Livepeer Node Version: v0.8.9
+Golang runtime version: go1.25.0
+```
+
+</Step>
+
+</Steps>
+
+</View>
+
+<View title="Linux" icon="linux" iconType="solid">
+
+Use the Linux binary when Docker is unavailable or when the node runs directly under systemd.
+
+<Steps>
+
+<Step title="Download the release archive">
+
+Visit [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases) and download the archive matching your CPU and use case:
+
+```bash icon="terminal" filename="download"
+# GPU build - use when NVIDIA GPU is present (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-gpu-amd64.tar.gz
+
+# CPU build - use for CPU-only transcoding (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-amd64.tar.gz
+
+# GPU build (arm64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-gpu-arm64.tar.gz
+
+# Download checksums
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/v0.8.9_checksums.txt
+```
+
+Use the `livepeer-linux-gpu-*` archive when the host has an NVIDIA GPU and matching CUDA 12 libraries installed. The CPU build works everywhere and skips GPU acceleration.
+
+</Step>
+
+<Step title="Verify the checksum">
+
+```bash icon="terminal" filename="checksum"
+grep '  livepeer-linux-gpu-amd64.tar.gz$' v0.8.9_checksums.txt | sha256sum --check
+```
+
+Expected: `livepeer-linux-gpu-amd64.tar.gz: OK`
+
+</Step>
+
+<Step title="Extract and install">
+
+```bash icon="terminal" filename="install"
+ARCHIVE=livepeer-linux-gpu-amd64.tar.gz
+DIR=$(tar -tzf "$ARCHIVE" | head -1 | cut -f1 -d"/")
+tar -xzf "$ARCHIVE"
+sudo install -m 0755 "$DIR/livepeer" /usr/local/bin/livepeer
+sudo install -m 0755 "$DIR/livepeer_cli" /usr/local/bin/livepeer_cli
+sudo install -m 0755 "$DIR/livepeer_bench" /usr/local/bin/livepeer_bench
+```
+
+</Step>
+
+<Step title="Verify installation">
+
+```bash icon="terminal" filename="verify"
+livepeer --version
+```
+
+Expected: `Livepeer Node Version: v0.8.9`
+
+</Step>
+
+</Steps>
+
+<Note>
+  Production Linux deployments should pin the version. A community-maintained upgrade helper is available at the [Livepeer forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
+</Note>
+
+</View>
+
+<View title="Windows" icon="windows" iconType="solid">
+
+Windows supports video transcoding through Docker (WSL2) or the native Windows binary. The AI runner requires Linux, so Windows AI workloads run through Docker Desktop with WSL2.
+
+<Steps>
+
+<Step title="Download the Windows release">
+
+Visit [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases) and download `livepeer-windows-amd64.zip` for the desired version.
+
+</Step>
+
+<Step title="Extract and verify">
+
+Extract the zip file to a directory of your choice (e.g. `C:\livepeer`).
+
+In PowerShell:
+
+```powershell icon="terminal" filename="verify"
+cd C:\livepeer
+.\livepeer.exe -version
+```
+
+Expected: `Livepeer Node Version: v0.8.x`
+
+</Step>
+
+</Steps>
+
+<Warning>
+  The AI runner requires Linux. Use Docker Desktop with WSL2 for Windows AI workloads. Linux remains the recommended production host for AI nodes, while Windows suits video-only transcoding.
+</Warning>
+
+</View>
+
+<View title="macOS" icon="apple" iconType="solid">
+
+macOS binaries are useful for local development and CLI access. Linux is the supported host for production transcoding and AI workloads.
+
+<Steps>
+
+<Step title="Download the macOS archive">
+
+```bash icon="terminal" filename="download"
+# Apple Silicon (arm64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-darwin-arm64.tar.gz
+
+# Intel (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-darwin-amd64.tar.gz
+```
+
+</Step>
+
+<Step title="Extract and install">
+
+```bash icon="terminal" filename="install"
+# Apple Silicon example
+tar -xzf livepeer-darwin-arm64.tar.gz
+sudo install -m 0755 livepeer-darwin-arm64/livepeer /usr/local/bin/livepeer
+sudo install -m 0755 livepeer-darwin-arm64/livepeer_cli /usr/local/bin/livepeer_cli
+```
+
+</Step>
+
+<Step title="Verify installation">
+
+```bash icon="terminal" filename="verify"
+livepeer --version
+```
+
+</Step>
+
+</Steps>
+
+<Note>
+  macOS GPU transcoding uses the NVIDIA CUDA path and an NVIDIA GPU. Most modern Macs use Apple Silicon, so macOS installs primarily support `livepeer_cli` and local development against a remote node.
+</Note>
+
+</View>
+
+<CustomDivider />
+
+## Next step
+
+<CardGroup cols={1}>
+  <Card title="Configure your orchestrator" icon="sliders" href="/v2/orchestrators/setup/configure" arrow horizontal>
+    Set operational flags for video, AI, or dual mode. Generate a docker-compose file for the chosen configuration.
+  </Card>
+</CardGroup>
