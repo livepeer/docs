@@ -70,6 +70,7 @@ const VALID_CATEGORY_SET = new Set(VALID_CATEGORIES);
 const VALID_PURPOSE_SET = new Set(VALID_PURPOSES);
 const PAGE_INTEGRITY_REPORT = '/tmp/livepeer-page-integrity-pr.md';
 const CODEX_BRANCH_RE = /^codex\//;
+const MERGE_SYNC_BRANCH_RE = /^merge\/.+-into-docs-v2(?:-|$)/;
 const DEFAULT_LANE = 'branch-health';
 const SUPPORTED_LANES = new Set([DEFAULT_LANE]);
 const DEFAULT_CHECK_TIMEOUT_MS = 10 * 60 * 1000;
@@ -393,6 +394,7 @@ function partitionFiles(changedFiles) {
 function rowResult(status) {
   if (status === 'passed') return '✅ Pass';
   if (status === 'failed') return '❌ Fail';
+  if (status === 'advisory') return '⚠️ Advisory';
   return '⏭️ Skipped';
 }
 
@@ -443,11 +445,14 @@ function appendSummaryRow(result) {
 
 function finalizeSummary(results) {
   const failed = results.filter((result) => result.status === 'failed').length;
+  const advisory = results.filter((result) => result.status === 'advisory').length;
   pushSummary([
     '',
     failed > 0
       ? `❌ ${failed} changed-file check(s) failed`
-      : '✅ All applicable changed-file checks passed',
+      : advisory > 0
+        ? `⚠️ ${advisory} advisory changed-file check(s) reported issues`
+        : '✅ All applicable changed-file checks passed',
     ''
   ]);
 }
@@ -483,11 +488,16 @@ function createSkippedResult(label) {
   };
 }
 
-function createCommandCheck({ label, files, args, timeoutMs = DEFAULT_CHECK_TIMEOUT_MS }) {
+function isMergeSyncPrContext(currentBranch, baseRef) {
+  return MERGE_SYNC_BRANCH_RE.test(String(currentBranch || '').trim()) && String(baseRef || '').trim() === 'docs-v2';
+}
+
+function createCommandCheck({ label, files, args, timeoutMs = DEFAULT_CHECK_TIMEOUT_MS, advisoryOnFailure = false }) {
   return {
     label,
     files: countFiles(files),
     timeoutMs,
+    advisoryOnFailure,
     async run() {
       if (countFiles(files) === 0) {
         return createSkippedResult(label);
@@ -498,11 +508,12 @@ function createCommandCheck({ label, files, args, timeoutMs = DEFAULT_CHECK_TIME
   };
 }
 
-function createInlineCheck({ label, files, timeoutMs = DEFAULT_CHECK_TIMEOUT_MS, run }) {
+function createInlineCheck({ label, files, timeoutMs = DEFAULT_CHECK_TIMEOUT_MS, run, advisoryOnFailure = false }) {
   return {
     label,
     files: countFiles(files),
     timeoutMs,
+    advisoryOnFailure,
     async run() {
       return run();
     }
@@ -611,11 +622,17 @@ async function runCheckRegistry(checks) {
 
     const normalized = {
       label: result.label || check.label,
-      status: result.status || 'failed',
+      status:
+        result.status === 'failed' && check.advisoryOnFailure
+          ? 'advisory'
+          : (result.status || 'failed'),
       files: Number.isFinite(result.files) ? result.files : check.files,
       errors: Number.isFinite(result.errors) ? result.errors : null,
       warnings: Number.isFinite(result.warnings) ? result.warnings : null,
-      note: result.note || '',
+      note:
+        result.status === 'failed' && check.advisoryOnFailure
+          ? (result.note ? `${result.note}; advisory for merge-sync PR` : 'advisory for merge-sync PR')
+          : (result.note || ''),
       elapsedMs: Date.now() - startedAt
     };
 
@@ -1208,6 +1225,7 @@ function runCodexTaskContractCheck(branch, changedFiles, baseRef) {
 
 function createBranchHealthRegistry(context) {
   const { args, changedFiles, groups, currentBranch } = context;
+  const advisoryContentDebt = isMergeSyncPrContext(currentBranch, args.baseRef);
 
   return [
     createCommandCheck({
@@ -1221,12 +1239,14 @@ function createBranchHealthRegistry(context) {
     createCommandCheck({
       label: 'Style Guide',
       files: groups.styleFiles,
-      args: ['operations/tests/unit/style-guide.test.js', ...buildFilesArgs(groups.styleFiles)]
+      args: ['operations/tests/unit/style-guide.test.js', ...buildFilesArgs(groups.styleFiles)],
+      advisoryOnFailure: advisoryContentDebt
     }),
     createCommandCheck({
       label: 'Copy Lint',
       files: groups.docsMdxAbs,
-      args: ['operations/tests/unit/copy-lint.test.js', ...buildFilesArgs(groups.docsMdxAbs)]
+      args: ['operations/tests/unit/copy-lint.test.js', ...buildFilesArgs(groups.docsMdxAbs)],
+      advisoryOnFailure: advisoryContentDebt
     }),
     createCommandCheck({
       label: 'MDX Validation',
@@ -1448,11 +1468,18 @@ async function main() {
   finalizeSummary(results);
 
   const failed = results.filter((check) => check.status === 'failed');
+  const advisory = results.filter((check) => check.status === 'advisory');
   if (failed.length > 0) {
-    console.error(`\n❌ ${failed.length} changed-file check(s) failed`);
+    if (advisory.length > 0) {
+      console.error(`\n⚠️ ${advisory.length} advisory check(s) reported issues`);
+    }
+    console.error(`❌ ${failed.length} changed-file check(s) failed`);
     process.exit(1);
   }
 
+  if (advisory.length > 0) {
+    console.log(`\n⚠️ ${advisory.length} advisory check(s) reported issues`);
+  }
   console.log('\n✅ All applicable changed-file checks passed');
 }
 
@@ -1470,6 +1497,7 @@ module.exports = {
   createCheckRegistry,
   finalizeSummary,
   initializeSummary,
+  isMergeSyncPrContext,
   isGeneratedSystemAffectingFile,
   parseArgs,
   runCheckRegistry,
