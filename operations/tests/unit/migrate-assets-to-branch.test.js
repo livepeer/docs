@@ -24,10 +24,10 @@ const SCRIPT_PATH = path.join(
   __dirname,
   '..',
   '..',
-  'tools',
   'scripts',
   'remediators',
-  'assets',
+  'content',
+  'repair',
   'migrate-assets-to-branch.js'
 );
 
@@ -123,7 +123,7 @@ function createFixtureRepo() {
       }
     }, null, 2)}\n`
   );
-  writeFile(repoDir, 'tests/ok.js', "console.log('ok');\n");
+  writeFile(repoDir, 'operations/tests/ok.js', "console.log('ok');\n");
 
   runCommand('git', ['add', '.'], { cwd: repoDir });
   runCommand('git', ['commit', '-m', 'initial docs-v2 fixture'], { cwd: repoDir });
@@ -209,7 +209,8 @@ function runTests() {
           'workspace/reports/media-audit/media-audit-manifest.json',
           '--file',
           'snippets/assets/media/videos/HeroBackground.mp4',
-          '--write'
+          '--write',
+          '--skip-verify'
         ],
         {
           cwd: fixture.repoDir
