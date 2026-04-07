@@ -13,6 +13,8 @@ keywords:
   - session limits
   - RTX
   - transcoding
+  - HEVC
+  - H.265
   - AI inference
 'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
@@ -23,7 +25,7 @@ pageType: reference
 audience: orchestrator
 purpose: reference
 status: review
-lastVerified: 2026-03-13
+lastVerified: 2026-04-07
 ---
 {/* TODO:
 Terminology Validation:
@@ -64,6 +66,7 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
   <TableRow header>
     <TableCell header>GPU Family</TableCell>
     <TableCell header>Transcoding</TableCell>
+    <TableCell header>HEVC Encode</TableCell>
     <TableCell header>AI Inference</TableCell>
     <TableCell header>Notes</TableCell>
   </TableRow>
@@ -71,10 +74,12 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**GeForce RTX 40xx** (Ada Lovelace)</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
-    <TableCell>Best consumer option. AV1 encode support.</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Best consumer option. AV1 and HEVC 10-bit encode support.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce RTX 30xx** (Ampere)</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Widely used by orchestrators. Good price-performance.</TableCell>
@@ -83,16 +88,19 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**GeForce RTX 20xx** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
-    <TableCell>Supported but older.</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Supported but older. HEVC B-frames supported.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce GTX 16xx** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Limited</TableCell>
-    <TableCell>No Tensor cores — AI inference slower or unsupported for some pipelines.</TableCell>
+    <TableCell>No Tensor cores - AI inference slower or unsupported for some pipelines.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce GTX 10xx** (Pascal)</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Limited</TableCell>
     <TableCell>Legacy. NVENC Gen 6. No Tensor cores.</TableCell>
@@ -101,10 +109,12 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**Tesla T4**</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Data centre card. 16 GB VRAM. Common in cloud.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Tesla V100**</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Data centre. 16/32 GB VRAM.</TableCell>
@@ -113,10 +123,12 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**A100**</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Data centre. 40/80 GB VRAM. Highest throughput.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**A10 / A10G**</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Cloud-optimised (AWS G5, etc.). 24 GB VRAM.</TableCell>
@@ -125,10 +137,12 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**L4**</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Ada Lovelace data centre. 24 GB VRAM. Good for AI.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**L40 / L40S**</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>48 GB VRAM. High-end AI and transcoding.</TableCell>
@@ -136,6 +150,7 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
   <TableRow>
     <TableCell>**H100**</TableCell>
     <TableCell>Transcoding works but overkill</TableCell>
+    <TableCell>Yes</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>80 GB VRAM. Primarily for LLM and large model inference.</TableCell>
   </TableRow>
@@ -311,6 +326,96 @@ For detailed per-pipeline VRAM planning, see the [Model and Demand Reference](/v
     **Production pick:** A100 40/80 GB or L40S 48 GB in a data centre.
   </Tab>
 </Tabs>
+
+<CustomDivider />
+
+## Popular GPUs for AI Workloads
+
+The following GPUs are well-suited for AI inference on the Livepeer network. VRAM is the primary constraint - larger models require more VRAM, and running multiple warm models simultaneously multiplies the requirement.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>GPU Model</TableCell>
+    <TableCell header>VRAM</TableCell>
+    <TableCell header>HEVC Encode</TableCell>
+    <TableCell header>Best For</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 4090**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Image/video AI, quantised LLMs</TableCell>
+    <TableCell>Top consumer GPU. High throughput for diffusion models.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 3090 / 3090 Ti**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Image/video AI, quantised LLMs</TableCell>
+    <TableCell>Best value 24 GB option. Widely used in the Livepeer network.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 4070 Ti Super**</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Single warm AI model + transcoding</TableCell>
+    <TableCell>Good balance of price, power, and VRAM.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 4080 Super**</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Single warm AI model + transcoding</TableCell>
+    <TableCell>Higher CUDA core count than 4070 Ti Super.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Tesla T4**</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Cloud AI inference</TableCell>
+    <TableCell>Efficient data centre card. Common in AWS/GCP/Azure.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A10G**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Cloud AI inference + transcoding</TableCell>
+    <TableCell>AWS G5 instance GPU. Strong diffusion model performance.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L4**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Cloud AI inference + transcoding</TableCell>
+    <TableCell>Ada Lovelace. Efficient power draw. Common in GCP.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L40S**</TableCell>
+    <TableCell>48 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Multi-model AI, large LLMs</TableCell>
+    <TableCell>48 GB VRAM allows multiple warm models simultaneously.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A100 SXM/PCIe**</TableCell>
+    <TableCell>40/80 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Large LLMs, high-throughput inference</TableCell>
+    <TableCell>Data centre. Highest AI throughput available at scale.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**H100 SXM/PCIe**</TableCell>
+    <TableCell>80 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Very large LLMs, maximum throughput</TableCell>
+    <TableCell>Data centre. ~3x faster than A100 for LLM inference.</TableCell>
+  </TableRow>
+</StyledTable>
+
+<Info>
+  For orchestrators running both AI pipelines and video transcoding, prioritise VRAM when selecting a GPU. A 24 GB card such as the RTX 3090, A10G, or L4 provides headroom for one or two warm AI models alongside active transcoding sessions.
+</Info>
 
 <CustomDivider />
 
