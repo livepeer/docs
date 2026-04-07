@@ -5087,3 +5087,85 @@ Created a consolidated connect page at `v2/gateways/setup/connect.mdx` following
 | `v2/gateways/setup/connect/research.md` | Research | Source inventory and architecture decisions |
 
 ---
+
+## Content Structure & Templates — 2026-04-07
+
+**Plans**: `workspace/plan/active/CONTENT-STRUCTURE-TEMPLATES/design.md`
+**Scope**: Full page layout & composition framework — research, design, build, iterate.
+**Outcome**: Met
+
+### Summary
+
+The repo had 35+ scattered files governing page structure but no single operational framework. This session researched all sources (5 parallel agents, 100+ files), designed a 3-layer architecture (classify → compose → build), built 24 new files, and reviewed against 7 test criteria. The framework is now usable by AI agents and human authors to lay out any page to gold-standard quality.
+
+### Completed
+
+**Research phase**
+- 5 parallel research agents gathered findings from references, live pages, templates, UX framework docs, and gateways canonical patterns
+- 6 research files collating page anatomy, component mapping, section patterns, gold standard analysis, anti-patterns, and gaps
+
+**Design phase**
+- 3-layer architecture (classify → compose → build → validate) with 7 principles, 4 trade-offs, 7 test criteria
+- 4 decisions locked (template location, composable scope, pageType enum, framework home)
+
+**Build phase**
+- Layer 1: `page-classification.md` — decision tree + 7 per-type cards with dos/don'ts (10/10 classification accuracy)
+- Layer 2: `section-patterns.md` + 13 composable blocks in `pages/gold-standard/`
+- Layer 3: 7 primary templates in `pages/gold-standard-templates/`
+- Layer 4: `page-layout-prompt.md` — 6-step agent prompt
+
+**Iterate phase**
+- 5 pass, 3 fix, 0 redesign, 0 research
+- All 3 fixes applied and re-verified (navigation template dos/don'ts, header-cta RULES section)
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Template location: `snippets/templates/` | Already where composition framework lives; in snippets import path; not publishable |
+| Composable scope: section-level first, sub-section Phase 2 | Pragmatic — main blocks first |
+| PageType enum: 7 canonical from CONTENT-WRITING/Frameworks | CONTENT-WRITING holds the truth |
+| Framework home: `snippets/templates/` initially, `docs-guide/` later | Start where templates live; formalise when stable |
+| Existing templates untouched, new work in `gold-standard/` and `gold-standard-templates/` | Some existing templates are in active use |
+
+### Deferred Items
+
+| Item | Priority | Reason | Dependency |
+|---|---|---|---|
+| Sub-section patterns (code+explanation, warning+workaround) | P2 | Phase 2 of composable scope | Section-level blocks stable first |
+| VS Code snippets/tooling | P3 | End-product, not framework | Framework must be tested on real pages |
+| Golden example annotations (6 missing types) | P1 | Need real pages for tutorial, reference, compendium, portal, resource, changelog | Framework exists; pages need writing |
+| component-layout-profile.json migration to 7-type enum | P1 | JSON uses deprecated names | Separate task |
+| Google Doc research ingestion | P3 | Inaccessible — needs export | User action |
+
+### Dependencies & Downstream Effects
+
+- **CONTENT-WRITING Phase 10 (Layout Pass)**: This framework IS what Phase 10 needs. Ensure alignment when that phase starts.
+- **COMPONENT-GOVERNANCE**: Component import paths in templates will need updating when restructuring completes.
+- **SCRIPT-GOVERNANCE**: Validators may need section-level rules added once the framework stabilises.
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| Classification accuracy (10 real pages) | PASS | 10/10 correct |
+| All 13 blocks have 4 required elements | PASS | Verified by grep |
+| All 7 templates exist and compose from blocks | PASS | Directory listing + cross-reference |
+| No broken import paths | PASS | All paths match COMPONENT-GOVERNANCE structure |
+| Agent prompt covers checks.mdx cat 4-5 | PASS | 20+ checks mapped |
+| 9 phase-gate checkpoints | 9/9 verified | All phases passed |
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `snippets/templates/page-classification.md` | Framework | Decision tree + 7 per-type cards |
+| `snippets/templates/section-patterns.md` | Framework | 13 archetype reference |
+| `snippets/templates/pages/gold-standard/` (13 files) | Blocks | Composable section MDX patterns |
+| `snippets/templates/pages/gold-standard-templates/` (7 files) | Templates | One per canonical pageType |
+| `snippets/templates/supporting/page-layout-prompt.md` | Prompt | 6-step agent layout prompt |
+| `workspace/plan/active/CONTENT-STRUCTURE-TEMPLATES/index.md` | Research | Master collation index |
+| `workspace/plan/active/CONTENT-STRUCTURE-TEMPLATES/01-06*.md` | Research | 6 research findings files |
+| `workspace/plan/active/CONTENT-STRUCTURE-TEMPLATES/design.md` | Design | Architecture doc |
+
+---

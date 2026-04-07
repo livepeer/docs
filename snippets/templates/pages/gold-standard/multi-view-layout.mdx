@@ -1,0 +1,124 @@
+{/*
+SECTION BLOCK: Multi-View Layout
+PURPOSE: Same content structure across 2+ platform/mode variants.
+
+WHEN TO USE:
+- instruction/quickstart pages with platform variants (Docker/Linux/Windows)
+- instruction/setup pages with mode variants (off-chain/on-chain)
+- Any page needing 2+ dimensions of variation
+
+WHEN NOT TO USE:
+- Pages with only one variant (use plain Tabs or no tabs)
+- concept, reference, resource pages (these don't have platform variants)
+
+RULES:
+- Fixed nesting hierarchy: Views (outermost) → Tabs → Steps (innermost)
+- Max 3 dimensions per page — 4+ dimensions = split into separate pages
+- Steps NEVER inside Accordions
+- Tabs NEVER inside Steps (reverse: Steps inside Tabs)
+- If steps are identical across all tabs, use single Steps block outside tabs
+- Import organisation: COMPONENT → DATA → MDX PAGE → MDX COMPOSABLE
+
+DIMENSION GUIDE:
+| Dimensions | Options per dim | Pattern |
+|---|---|---|
+| 1 dim, 2-4 | Tabs |
+| 1 dim, 5+ | Views (dropdown) |
+| 2 dims | Views → Tabs |
+| 3 dims | Views → Tabs → Tabs-in-steps |
+| 4+ dims | SPLIT INTO SEPARATE PAGES |
+*/}
+
+{/*
+─── FILE ARCHITECTURE ───
+
+parent-page.mdx (this file — orchestration point)
+├── views/
+│   ├── docker/
+│   │   ├── dockerOffChainTab.mdx
+│   │   └── dockerOnChainTab.mdx
+│   ├── linux/
+│   │   ├── linuxOffChainTab.mdx
+│   │   └── linuxOnChainTab.mdx
+│   └── windows/
+│       └── windowsTab.mdx
+├── groups/
+│   ├── docker/
+│   │   └── dockerSupport.mdx
+│   └── shared/
+│       └── prerequisiteBlock.mdx
+├── data/
+│   └── docker/
+│       └── code.jsx
+└── components/
+    └── callouts.jsx
+*/}
+
+{/*
+─── IMPORTS (organised by category) ───
+
+{*/}{/* COMPONENT IMPORTS */}{/*}
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { TipWithArrow } from '/snippets/components/elements/links/TipWithArrow.jsx'
+import { WidthCard } from '/snippets/components/wrappers/cards/WidthCard.jsx'
+
+{*/}{/* DATA IMPORTS */}{/*}
+import { DOCKER_INSTALL, LINUX_INSTALL } from './data/code.jsx'
+
+{*/}{/* MDX PAGE IMPORTS (one per view variant) */}{/*}
+import DockerOffChainTab from './views/docker/dockerOffChainTab.mdx'
+import DockerOnChainTab from './views/docker/dockerOnChainTab.mdx'
+import LinuxOffChainTab from './views/linux/linuxOffChainTab.mdx'
+import LinuxOnChainTab from './views/linux/linuxOnChainTab.mdx'
+import WindowsTab from './views/windows/windowsTab.mdx'
+
+{*/}{/* MDX COMPOSABLE IMPORTS (shared across views) */}{/*}
+import DockerSupport from './groups/docker/dockerSupport.mdx'
+import SharedPrereqs from './groups/shared/prerequisiteBlock.mdx'
+
+─── PAGE STRUCTURE ───
+
+## [Section Heading]
+
+<TipWithArrow>
+  [Platform selector guidance — e.g., "Select your operating system and network mode below."]
+</TipWithArrow>
+
+<WidthCard>
+  [Version badge or key info — data-imported, never hardcoded]
+</WidthCard>
+
+<CustomDivider />
+
+<Tabs>
+  <Tab title="Docker" icon="docker">
+    <DockerSupport />
+
+    <Tabs>
+      <Tab title="Off-Chain" icon="link-slash">
+        <DockerOffChainTab />
+      </Tab>
+      <Tab title="On-Chain" icon="link">
+        <DockerOnChainTab />
+      </Tab>
+    </Tabs>
+  </Tab>
+
+  <Tab title="Linux" icon="linux">
+    <Tabs>
+      <Tab title="Off-Chain" icon="link-slash">
+        <LinuxOffChainTab />
+      </Tab>
+      <Tab title="On-Chain" icon="link">
+        <LinuxOnChainTab />
+      </Tab>
+    </Tabs>
+  </Tab>
+
+  <Tab title="Windows" icon="windows">
+    <WindowsTab />
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+*/}

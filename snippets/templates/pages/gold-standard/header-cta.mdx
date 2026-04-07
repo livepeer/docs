@@ -1,0 +1,91 @@
+{/*
+SECTION BLOCK: Header CTA
+PURPOSE: Optional element between frontmatter and introduction for immediate orientation.
+
+WHEN TO USE:
+- concept pages → Quote variant (anchor the mental model)
+- guide/instruction pages → Tip variant (orient the reader)
+- navigation pages → Card variant (route immediately)
+- quickstart pages → CodeBlock variant (show first command)
+- concept pages with mixed audiences → AccordionGroup variant (self-select entry)
+
+WHEN NOT TO USE:
+- Skip entirely if the introduction paragraph does the job alone
+- Never use more than one variant on the same page
+- Never use AccordionGroup as default for all pages — it's for audience disambiguation only
+
+RULES:
+- One variant per page maximum — never combine Quote + Tip or any other pair
+- This zone is optional on all pageTypes — skip if the introduction does the job
+- AccordionGroup variant is for audience disambiguation ONLY, not generic content grouping
+- Card variant links must have working destinations — no placeholder hrefs
+- CodeBlock variant shows ONE command only — the very first thing the reader runs
+*/}
+
+{/* ─── VARIANT 1: Quote (concept pages — anchor definition) ─── */}
+
+{/*
+<Quote>
+  [One-sentence definition of the core concept. This anchors the reader's mental model
+  for everything that follows. Use the canonical terminology from the glossary.]
+</Quote>
+*/}
+
+{/* ─── VARIANT 2: Tip (guide/instruction — orient the reader) ─── */}
+
+{/*
+<Tip>
+  [One-sentence orientation. Tell the reader what this page helps them accomplish
+  and any key context they need. E.g., "This guide covers the three deployment modes
+  and helps you choose the right one for your infrastructure."]
+</Tip>
+*/}
+
+{/* ─── VARIANT 3: Card with CustomCardTitle (navigation — route immediately) ─── */}
+
+{/*
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+
+<Card horizontal>
+  <CustomCardTitle icon="bolt" href="/v2/[section]/[page]">
+    [Action-oriented title — e.g., "Get Started", "View Reference"]
+  </CustomCardTitle>
+  [One sentence describing where this takes the reader.]
+</Card>
+*/}
+
+{/* ─── VARIANT 4: CustomCodeBlock (quickstart — show first command) ─── */}
+
+{/*
+import { CustomCodeBlock } from '/snippets/components/displays/code/CustomCodeBlock.jsx'
+
+<CustomCodeBlock
+  language="bash"
+  icon="terminal"
+  title="[Filename or context — e.g., terminal]"
+>
+{`[The first command the reader will run. One command only.
+ This sets the tone: "you're going to do things on this page."]`}
+</CustomCodeBlock>
+*/}
+
+{/* ─── VARIANT 5: AccordionGroup (concept — audience self-select) ─── */}
+
+{/*
+GUIDANCE: Use this when readers arrive from different backgrounds and need
+different mental models. Each accordion opens a background-specific analogy.
+Do NOT use this as a generic content pattern — it's for audience disambiguation only.
+
+<AccordionGroup>
+  <Accordion title="From a [Background 1] Background?" icon="cloud">
+    [Analogy mapping the concept to Background 1 terminology.
+    Optional: Mermaid diagram showing the parallel.]
+  </Accordion>
+  <Accordion title="From a [Background 2] Background?" icon="ethereum">
+    [Analogy mapping the concept to Background 2 terminology.]
+  </Accordion>
+  <Accordion title="New to [Domain]?" icon="lightbulb">
+    [First-principles explanation without assuming prior knowledge.]
+  </Accordion>
+</AccordionGroup>
+*/}
