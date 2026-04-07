@@ -4778,3 +4778,43 @@ All user-visible issues from the About section QA review have been resolved acro
 | `v2/about/protocol/livepeer-token.mdx` | modified | #TODO, #MOVE THESE, #REVIEW, <Danger> box removed |
 | `v2/about/resources/compendium/livepeer-glossary.mdx` | modified | Internal note + markdown-leak heading removed; etc. lint fixes |
 | `v2/about/resources/x-deprecated/livepeer-glossary.mdx` | modified | Same as compendium counterpart |
+
+## GPU Support HEVC + AI GPU List — 2026-04-07
+
+**Plans**: none
+**Scope**: Update the live GPU Support Matrix page to add HEVC codec support visibility and a popular AI GPU reference list.
+**Outcome**: Met
+
+### Summary
+
+The issue requested adding an HEVC support column to the GPU transcoding table and a short list of popular GPUs for AI workloads. Both were added to `v2/orchestrators/resources/reference/gpu-support.mdx` (the page active in the nav at `v2/orchestrators/resources/reference/gpu-support`). The HEVC column correctly distinguishes GPUs with full NVENC encode+decode support from pure compute cards (V100, A100, H100) that lack NVENC hardware. The new "Popular GPUs for AI Workloads" section gives operators a targeted table for AI deployment planning.
+
+### Completed
+
+- Added "HEVC Support" column to the Supported GPU Families table - all consumer and most data centre GPUs show "Encode + Decode"; V100, A100, and H100 correctly show "Decode only" (no NVENC hardware on these compute cards)
+- Added informational Note under the GPU families table linking to the NVIDIA Video Encode and Decode GPU Support Matrix for full codec details per model
+- Added new "Popular GPUs for AI Workloads" section with a focused table: GPU, VRAM, HEVC Encode capability, best use case, and deployment context - spanning RTX 4090/3090/4070 Ti Super (consumer), A10G/L4/L40S (cloud), A100/H100 (data centre)
+- Added Note under the AI GPU table clarifying A100/H100 lack NVENC entirely and should be paired with a transcoding GPU on multi-workload nodes
+- Updated page description and keywords to include HEVC/H.265
+- Updated lastVerified date to 2026-04-07
+
+### Decisions Made
+
+| Decision | Rationale |
+|---|---|
+| Label V100/A100/H100 as "Decode only" in HEVC column | These are compute-only cards with no NVENC hardware; labelling them correctly prevents operators from buying them expecting full transcoding capability |
+| Add HEVC Encode column to the new AI GPU table | Consistent with the main table; operators selecting AI GPUs also need to know whether they can handle HEVC encode on the same card |
+
+### Test / Validation State
+
+| Check | Result | Notes |
+|---|---|---|
+| `lint-structure.js --check` | PASS | 0 blocking, 0 warnings |
+| Code Review (parallel_validation) | PASS | 2 style comments addressed (note clarity, NVENC scope phrasing); 1 false positive on em-dash (repo convention is hyphens per TODO block) |
+| CodeQL Security Scan | PASS | No analysable code changes (docs-only) |
+
+### Artifacts
+
+| File | Type | Description |
+|---|---|---|
+| `v2/orchestrators/resources/reference/gpu-support.mdx` | modified | HEVC column + AI GPU table added |
