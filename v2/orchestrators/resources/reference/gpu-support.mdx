@@ -1,7 +1,7 @@
 ---
 title: GPU Support Matrix
 sidebarTitle: GPU Support
-description: 'NVIDIA GPU compatibility, NVENC/NVDEC session limits, driver requirements, and CUDA versions for Livepeer orchestrators.'
+description: 'NVIDIA GPU compatibility, HEVC encode/decode support, NVENC/NVDEC session limits, driver requirements, and CUDA versions for Livepeer orchestrators.'
 keywords:
   - livepeer
   - orchestrator
@@ -14,6 +14,8 @@ keywords:
   - RTX
   - transcoding
   - AI inference
+  - HEVC
+  - H.265
 'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
@@ -23,7 +25,7 @@ pageType: reference
 audience: orchestrator
 purpose: reference
 status: review
-lastVerified: 2026-03-13
+lastVerified: 2026-04-07
 ---
 {/* TODO:
 Terminology Validation:
@@ -64,82 +66,99 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
   <TableRow header>
     <TableCell header>GPU Family</TableCell>
     <TableCell header>Transcoding</TableCell>
+    <TableCell header>HEVC Support</TableCell>
     <TableCell header>AI Inference</TableCell>
     <TableCell header>Notes</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce RTX 40xx** (Ada Lovelace)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Best consumer option. AV1 encode support.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce RTX 30xx** (Ampere)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Widely used by orchestrators. Good price-performance.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce RTX 20xx** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Supported but older.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce GTX 16xx** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Limited</TableCell>
-    <TableCell>No Tensor cores — AI inference slower or unsupported for some pipelines.</TableCell>
+    <TableCell>No Tensor cores - AI inference slower or unsupported for some pipelines.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce GTX 10xx** (Pascal)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Limited</TableCell>
     <TableCell>Legacy. NVENC Gen 6. No Tensor cores.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**Tesla T4**</TableCell>
+    <TableCell>**Tesla T4** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Data centre card. 16 GB VRAM. Common in cloud.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**Tesla V100**</TableCell>
+    <TableCell>**Tesla V100** (Volta)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Decode only</TableCell>
     <TableCell>Yes</TableCell>
-    <TableCell>Data centre. 16/32 GB VRAM.</TableCell>
+    <TableCell>Data centre. 16/32 GB VRAM. No NVENC - decode only.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**A100**</TableCell>
+    <TableCell>**A100** (Ampere)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Decode only</TableCell>
     <TableCell>Yes</TableCell>
-    <TableCell>Data centre. 40/80 GB VRAM. Highest throughput.</TableCell>
+    <TableCell>Data centre. 40/80 GB VRAM. No NVENC hardware - decode only.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**A10 / A10G**</TableCell>
+    <TableCell>**A10 / A10G** (Ampere)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Cloud-optimised (AWS G5, etc.). 24 GB VRAM.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**L4**</TableCell>
+    <TableCell>**L4** (Ada Lovelace)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Ada Lovelace data centre. 24 GB VRAM. Good for AI.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**L40 / L40S**</TableCell>
+    <TableCell>**L40 / L40S** (Ada Lovelace)</TableCell>
     <TableCell>Yes</TableCell>
+    <TableCell>Encode + Decode</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>48 GB VRAM. High-end AI and transcoding.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**H100**</TableCell>
-    <TableCell>Transcoding works but overkill</TableCell>
+    <TableCell>**H100** (Hopper)</TableCell>
+    <TableCell>Yes (overkill for transcoding)</TableCell>
+    <TableCell>Decode only</TableCell>
     <TableCell>Yes</TableCell>
-    <TableCell>80 GB VRAM. Primarily for LLM and large model inference.</TableCell>
+    <TableCell>80 GB VRAM. No NVENC on most variants. Primarily for LLM and large model inference.</TableCell>
   </TableRow>
 </StyledTable>
+
+<Note>
+  HEVC (H.265) is an increasingly important codec on the Livepeer network. GPUs that support HEVC encode (NVENC) can handle both encoding and decoding of H.265 streams. GPUs listed as "Decode only" lack NVENC hardware and can transcode HEVC only when used purely as a decoder (output codec must differ). See the [NVIDIA Video Encode and Decode GPU Support Matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new) for full codec details per model.
+</Note>
 <CustomDivider />
 
 ## NVENC Session Limits
@@ -288,6 +307,82 @@ docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
 </StyledTable>
 
 For detailed per-pipeline VRAM planning, see the [Model and Demand Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference).
+<CustomDivider />
+
+## Popular GPUs for AI Workloads
+
+The table below highlights commonly deployed GPUs for AI inference on the Livepeer network. All entries support CUDA and are compatible with the AI Runner.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>GPU</TableCell>
+    <TableCell header>VRAM</TableCell>
+    <TableCell header>HEVC Encode</TableCell>
+    <TableCell header>Best For</TableCell>
+    <TableCell header>Deployment Context</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 4090**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Image generation, high-VRAM consumer AI</TableCell>
+    <TableCell>Consumer / home lab</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 3090**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Value pick for AI inference and transcoding</TableCell>
+    <TableCell>Consumer / home lab</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RTX 4070 Ti Super**</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Mid-tier AI workloads alongside transcoding</TableCell>
+    <TableCell>Consumer / home lab</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A10G**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>AWS G5 cloud AI inference, mixed workloads</TableCell>
+    <TableCell>Cloud (AWS)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L4**</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Cloud AI inference, image generation pipelines</TableCell>
+    <TableCell>Cloud (GCP, AWS)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**L40S**</TableCell>
+    <TableCell>48 GB</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Multiple warm AI models, LLM inference, high-throughput</TableCell>
+    <TableCell>Data centre / cloud</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**A100 (40/80 GB)**</TableCell>
+    <TableCell>40/80 GB</TableCell>
+    <TableCell>No (decode only)</TableCell>
+    <TableCell>Large model inference, LLMs at full precision</TableCell>
+    <TableCell>Data centre / cloud</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**H100 (80 GB)**</TableCell>
+    <TableCell>80 GB</TableCell>
+    <TableCell>No (decode only)</TableCell>
+    <TableCell>Highest-throughput LLM inference</TableCell>
+    <TableCell>Data centre / cloud</TableCell>
+  </TableRow>
+</StyledTable>
+
+<Note>
+  The A100 and H100 lack NVENC hardware (HEVC encode) and are pure compute cards. They are optimal for AI inference but cannot encode video streams directly. Pair with a transcoding-capable GPU if both workloads are required on the same node.
+</Note>
+
 <CustomDivider />
 
 ## GPU Selection Guidance
