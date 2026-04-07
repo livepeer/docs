@@ -105,7 +105,7 @@ docs.json has `"group": "Guides", "pages": []` — an empty section visible in t
 
 For About, guides/ could serve secondary personas:
 - "Evaluating Livepeer for your product" (founder journey)
-- "Contributing to the protocol" (OSS contributor journey)  
+- "Contributing to the protocol" (OSS contributor journey)
 - "Understanding the economic model" (analyst deep-dive)
 
 Currently these are in resources/knowledge-hub/ but they could also be guides/. The distinction: knowledge-hub is curated links and external resources; guides would be authored Livepeer-specific content for secondary journeys.

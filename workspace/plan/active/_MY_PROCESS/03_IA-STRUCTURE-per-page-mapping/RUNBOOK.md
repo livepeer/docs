@@ -2,7 +2,7 @@
 
 > Human role: **DESIGN** content architecture, **APPROVE** IA mapping
 > Automated: Folder position mapping, frontmatter contract generation
-> 
+>
 > **This phase does THREE things, not one:**
 > 1. Maps the product/tech architecture to content sections
 > 2. Maps persona journeys THROUGH that architecture
@@ -150,7 +150,7 @@ resources/           → Position 6 (lookup + discovery)
   └── reference/     → technical specs (APIs, formal specifications)
 ```
 
-**The main persona journey maps to positions 1-4 (linear).** 
+**The main persona journey maps to positions 1-4 (linear).**
 **Edge cases, secondary personas, and depth content go to position 5 (guides/).**
 **Lookup content goes to position 6 (resources/).**
 

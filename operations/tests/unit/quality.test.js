@@ -60,6 +60,12 @@ function countOccurrences(content, token) {
   return count;
 }
 
+function countRequirementOccurrences(content, requirement) {
+  const tokens = [requirement.value, ...(Array.isArray(requirement.alternatives) ? requirement.alternatives : [])]
+    .filter(Boolean);
+  return tokens.reduce((total, token) => total + countOccurrences(content, token), 0);
+}
+
 function report(severity, file, message, rule = 'Frontmatter') {
   const issue = { file, rule, message };
   if (severity === 'error') {
@@ -331,7 +337,7 @@ function checkAssetReferenceIntegrity(files) {
     if (!contractEntry) return;
 
     (contractEntry.requirements || []).forEach((requirement) => {
-      const actualCount = countOccurrences(content, requirement.value);
+      const actualCount = countRequirementOccurrences(content, requirement);
       if (actualCount < requirement.count) {
         report(
           'error',
