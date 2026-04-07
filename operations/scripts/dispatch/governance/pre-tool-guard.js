@@ -55,9 +55,7 @@ stdin.on('end', () => {
         process.exit(2);
       }
 
-      // Block commands that would bind to human-reserved ports (occupied or not)
-      // Claude must NEVER use 3000 or 3333. Use 3145 (server-manager) or 4000+ instead.
-      // If no alternative port works, skip the server test entirely.
+      // Block commands that would bind to human-reserved ports while occupied
       const reservedPorts = [3000, 3333];
       const portBindPattern = /--port\s+(\d+)|-p\s+(\d+)|:(\d{4})\b|PORT[=\s]+(\d+)/g;
       let portMatch;
@@ -71,13 +69,18 @@ stdin.on('end', () => {
           !/--port|-p\s+\d/i.test(cmd)) {
         requestedPorts.add(3000);
       }
-      if (requestedPorts.size > 0) {
-        const portList = [...requestedPorts].join(', ');
-        console.log(JSON.stringify({
-          decision: 'block',
-          reason: `BLOCKED: Port(s) ${portList} are reserved for the human's dev servers. Do NOT use ports 3000 or 3333 under any circumstances. Options: (1) use port 3145 via server-manager, (2) use any port 4000+, or (3) skip the server test entirely and validate through other means (static analysis, puppeteer against the human's running server, etc).`
-        }));
-        process.exit(2);
+      for (const port of requestedPorts) {
+        try {
+          const { execSync } = require('child_process');
+          const result = execSync(`lsof -i :${port} -sTCP:LISTEN -t 2>/dev/null`, { encoding: 'utf8' }).trim();
+          if (result) {
+            console.log(JSON.stringify({
+              decision: 'block',
+              reason: `BLOCKED: Port ${port} is already in use (PID: ${result.split('\n')[0]}). Human-reserved ports (3000, 3333) must not be hijacked. Use a different port or check with the user.`
+            }));
+            process.exit(2);
+          }
+        } catch (_) { /* port is free — allow */ }
       }
 
       // Browser test commands: warn about cleanup

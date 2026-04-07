@@ -1,11 +1,10 @@
 ---
-title: 'Livepeer Protocol Economics'
-sidebarTitle: 'Protocol Economics'
+title: Livepeer Protocol Economics
+sidebarTitle: Protocol Economics
 description: >-
-  How LPT and ETH flow through the Livepeer protocol: staking, inflation rewards, usage fees, and the economic model governing network participation.
+  Learn how LPT, staking, inflation, rewards, fees, and payment flows shape the
+  Livepeer protocol economy.
 pageType: concept
-audience: community
-purpose: explain
 keywords:
   - livepeer
   - about
@@ -13,153 +12,161 @@ keywords:
   - livepeer protocol economics
   - protocol
   - economics
-  - inflation
-  - staking
-  - fees
-'og:image': /snippets/assets/site/og-image/en/about.png
-'og:image:alt': Livepeer Docs social preview image for About
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-status: current
-lastVerified: 2026-04-07
+audience: general
+lastVerified: 2026-03-17
+purpose: concept
 ---
+{/* This page describes:
+6. **Economics**
 
-import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+   * Tokenomics
+   * Inflation model
+   * Staking & delegation
+   * Reward distribution
+   * Slashing
+   * Rounds
 
-<CenteredContainer style={{ width: '90%' }}>
-  <Tip>Livepeer has two income streams: ETH fees from usage, and LPT inflation rewards from the protocol. Both flow through orchestrators to delegators. Fee revenue tracks demand. Inflation rewards bootstrap participation while demand grows.</Tip>
-</CenteredContainer>
 
----
+*/}
 
-Livepeer uses both its native token (LPT) and Ethereum (ETH) to power its network and compensate actors for their contributions. ETH pays for compute work performed. LPT coordinates staking, delegation, governance, and inflation-based participation incentives.
+Livepeer uses both its native token - LPT, and Ethereum (ETH) to power its network and compensate actors for their contributions.
+The Livepeer protocol uses a dynamic inflation rate and stake-for-access model to ensure the network's security and functionality.
 
-The two income streams are distinct in origin and denomination. Fee revenue in ETH reflects actual network usage: video transcoding and AI inference demand. Inflation rewards in LPT reflect the protocol's bootstrapping phase, sustaining security and participation while fee revenue grows toward sufficiency. Protocol parameters governing inflation are adjusted through governance — verify current values at [explorer.livepeer.org](https://explorer.livepeer.org).
+We'll cover the LPT tokenomics and why delegating to orchestrators remains important even as inflation tapers off.
 
-<CustomDivider middleText="Staking Flow" />
+## Money Flow: LPT Token Economics
 
-## 1. Staking flow (Delegators to Orchestrators)
+### 1. **Staking Flow (Delegators → Orchestrators)**
 
-Staking bonds LPT into the BondingManager contract, backing an orchestrator's position in the active set and earning inflation rewards.
+**Step 1: Token Approval**
+Before bonding, delegators must approve the BondingManager to transfer their LPT tokens.
 
-**Token approval**: Delegators approve the BondingManager to transfer their LPT via the standard ERC-20 approval pattern before bonding.
+**Step 2: Bonding**
+Delegators call `Bond(amount, orchestratorAddress)` which:
+- Transfers LPT from delegator to BondingManager
+- Updates orchestrator's delegated stake
+- Calculates pool position hints for gas optimisation
+- Updates the transcoder pool sorted by stake
 
-**Bonding**: Delegators call `Bond(amount, orchestratorAddress)`, which transfers LPT from the delegator to the BondingManager, updates the orchestrator's total delegated stake, and adjusts the orchestrator's position in the transcoder pool. The pool is sorted by delegated stake and maintained as a linked list; callers supply position hints to keep insertions O(1).
+**Step 3: Orchestrator Registration**
+To become an orchestrator, a node must:
+- First bond LPT to itself
+- Call `Transcoder(rewardCut, feeShare)` with commission parameters
+- Register service URI via `SetServiceURI()`
 
-**Orchestrator registration**: To enter the active set, a node bonds LPT to itself, calls `Transcoder(rewardCut, feeShare)` to register commission parameters, and sets a service URI via `SetServiceURI()`. The service URI is how gateways discover and connect to the orchestrator off-chain. The active set size is governance-controlled — verify the current cap at [explorer.livepeer.org](https://explorer.livepeer.org).
+The transcoder pool maintains orchestrators sorted by delegated stake as a linked list, with hints optimizing insertions.
 
-<CustomDivider middleText="Reward Flow" />
+### 2. **Reward Flow (Minter → Orchestrators → Delegators)**
 
-## 2. Reward flow (Minter to Orchestrators to Delegators)
+Each round, active orchestrators can call `Reward()` to mint inflationary tokens:
 
-Each round, active orchestrators call `Reward()` on the BondingManager to mint their share of the round's inflationary token issuance.
+**Reward Calculation Process**:
+1. Orchestrator calls `Reward()` on BondingManager
+2. BondingManager queries `CurrentMintableTokens()` from Minter
+3. Minter calculates: `mintable = inflation * totalSupply / bonded`
+4. Reward distributed proportionally to orchestrator's stake
+5. Orchestrator keeps their commission (rewardCut)
+6. Remaining rewards distributed to delegators proportionally
 
-**Reward calculation**:
+**Claiming Earnings**:
+Delegators must call `ClaimEarnings(endRound)` to realize their accumulated rewards and fees from past rounds.
 
-1. Orchestrator calls `Reward()` on BondingManager.
-2. BondingManager queries `CurrentMintableTokens()` from the Minter.
-3. Minter calculates mintable tokens proportional to the orchestrator's share of total delegated stake.
-4. Reward is distributed to the orchestrator's earnings pool.
-5. Orchestrator retains their `rewardCut` commission.
-6. Remaining rewards accumulate for delegators proportionally.
+### 3. **Payment Flow (Broadcasters → Orchestrators)**
 
-**Claiming earnings**: Delegators call `ClaimEarnings(endRound)` to realise accumulated rewards and fees from past rounds.
+The payment system uses probabilistic micropayments to minimize on-chain transactions:
 
-**Inflation mechanics**: The `currentInflation` rate adjusts each round toward `targetBondingRate`. When the fraction of LPT bonded falls below the target, `currentInflation` rises by `inflationChange` per round. When it exceeds the target, the rate falls.
+**Step 1: Broadcaster Deposits**
+Broadcasters fund their account via `FundDepositAndReserve()`:
+- **Deposit**: Locked collateral (can't be used immediately)
+- **Reserve**: Available pool for ticket redemptions [14](#0-13)
 
-The current `targetBondingRate` is **50%** (500000000 on-chain). As of Q3 2025, staking participation sat at 48.7% — just below the target — causing inflation to tick upward to approximately **28% annualised**. A governance proposal (LIP-107) to reduce `targetBondingRate` to 46% with an accelerated `inflationChange` is under active community discussion as of early 2026 but has **not passed**. A subsequent proposal to introduce `inflationCeiling` and `inflationFloor` bounds (LIP-100) is planned but also not yet enacted. Monitor [forum.livepeer.org](https://forum.livepeer.org) and [explorer.livepeer.org/governance](https://explorer.livepeer.org/governance) for current status.
+**Step 2: Off-Chain Ticket Creation**
+For each video segment processed:
+- Broadcaster creates a signed ticket with faceValue and winProb
+- Ticket sent off-chain to orchestrator via HTTP headers
+- Most tickets don't win (e.g., 1% win probability)
 
-<CustomDivider middleText="Payment Flow" />
+**Step 3: Ticket Validation & Queuing**
+Orchestrator validates ticket:
+- Checks signature and expiration
+- Calculates if ticket wins using `recipientRand`
+- Winning tickets queued in local database
+- Tracks sender's MaxFloat (reserve - pending redemptions)
 
-## 3. Payment flow (Gateways to Orchestrators)
+**Step 4: On-Chain Redemption**
+When sufficient funds available:
+- Orchestrator calls `RedeemWinningTicket(ticket, sig, recipientRand)`
+- TicketBroker validates ticket against on-chain state
+- Transfers `faceValue` from broadcaster's reserve to orchestrator
+- Updates `claimedReserve` in BondingManager
 
-The payment system uses probabilistic micropayments to settle compute fees without a per-segment on-chain transaction.
+This achieves ~99% cost reduction vs. Per-segment on-chain payments while maintaining fair compensation through probabilistic expected value.
 
-**Gateway deposits**: Gateways fund their account via `FundDepositAndReserve()` on the TicketBroker contract:
-- **Deposit**: Locked collateral protecting against front-running; cannot be used immediately.
-- **Reserve**: Available pool from which winning ticket redemptions are paid.
+### 4. **Fee Flow (Broadcasters → Orchestrators → Delegators)**
 
-**Off-chain ticket creation**: For each video segment or AI inference job, the gateway creates a signed ticket with a `faceValue` and `winProbability` and sends it off-chain to the orchestrator alongside the job. Most tickets do not win — a 1% win probability means one in one hundred tickets triggers a redemption.
+Orchestrators earn fees from ticket redemptions:
+- Fees accumulate in orchestrator's earnings pool
+- Orchestrator keeps their commission (feeShare)
+- Remaining fees distributed to delegators
+- Delegators claim via `ClaimEarnings()`
 
-**Ticket validation and queuing**: The orchestrator validates the ticket's signature and expiration, calculates whether it wins using `recipientRand`, and queues winning tickets for redemption. The gateway's available reserve (`MaxFloat`) is tracked to ensure sufficient funds exist.
+### 5. **Withdrawal Flows**
 
-**On-chain redemption**: The orchestrator calls `RedeemWinningTicket(ticket, sig, recipientRand)` on the TicketBroker. The contract validates the ticket, transfers `faceValue` from the gateway's reserve to the orchestrator, and updates `claimedReserve` in BondingManager. This achieves approximately 99% reduction in on-chain transaction volume compared with per-segment settlement.
+**Unstaking (Delegators)**:
+1. Call `Unbond(amount)` - creates unbonding lock
+2. Wait `UnbondingPeriod` rounds (typically 7 rounds)
+3. Call `WithdrawStake(unbondingLockId)` - receive LPT back
 
-<CustomDivider middleText="Fee Flow" />
+**Payment Withdrawal (Broadcasters)**:
+1. Call `Unlock()` on TicketBroker
+2. Wait unlock period
+3. Call `Withdraw()` - receive remaining deposit + reserve
 
-## 4. Fee flow (Orchestrators to Delegators)
+## Client Integration
 
-Fees from ticket redemptions accumulate in the orchestrator's earnings pool each round and distribute to delegators proportionally.
+The go-livepeer client abstracts all contract interactions through the `LivepeerEthClient` interface: [15](#0-14)
 
-- Orchestrator retains their `feeShare` commission.
-- Remaining fees distribute to delegators in proportion to their bonded stake.
-- Delegators claim accumulated fees and rewards together via `ClaimEarnings()`.
+**Contract Address Resolution**:
+All contract addresses are dynamically discovered through the Controller registry using Keccak256 hashes of contract names. This enables contract upgrades without changing client code. [16](#0-15)
 
-<CustomDivider middleText="Withdrawal Flows" />
+## Gas Optimisation Strategies
 
-## 5. Withdrawal flows
+### 1. **Pool Hints**
+When bonding or calling reward, the client calculates "hints" (previous/next positions in the sorted transcoder pool) to enable O(1) insertions instead of O(n) searches on-chain. [17](#0-16)
 
-**Unstaking (delegators)**:
+### 2. **Batch Operations**
+Multiple tickets can be created off-chain in batches, with only winning tickets requiring on-chain transactions.
 
-1. Call `Unbond(amount)` — creates an unbonding lock.
-2. Wait the unbonding period. The current unbonding period is **7 rounds** (approximately 7 days at one round per day); verify at [explorer.livepeer.org](https://explorer.livepeer.org) as this is governance-controlled.
-3. Call `WithdrawStake(unbondingLockId)` — returns LPT to the delegator's wallet.
+### 3. **Dynamic Gas Pricing**
+The client implements sophisticated gas price management, using 2x base fee with user-specified ceilings to balance confirmation speed and cost. [18](#0-17)
 
-**Payment withdrawal (gateways)**:
+## Summary: Complete Money Flow
 
-1. Call `Unlock()` on TicketBroker to begin the unlock period.
-2. Wait the unlock period.
-3. Call `Withdraw()` to receive remaining deposit and reserve balances.
+1. **Token holders** approve and bond LPT → **BondingManager** (staking)
+2. **Minter** mints new LPT → **BondingManager** → **Orchestrators** (inflation rewards)
+3. **Orchestrators** distribute rewards → **Delegators** (minus commission)
+4. **Broadcasters** deposit LPT → **TicketBroker** (payment reserves)
+5. **Orchestrators** redeem tickets → receive LPT from **TicketBroker** (fees)
+6. **Orchestrators** distribute fees → **Delegators** (minus commission)
+7. **Delegators** claim earnings from **BondingManager** (accumulated rewards + fees)
 
-<CustomDivider middleText="Economic Context" />
+This creates a circular economy where:
+- Staking secures the network and earns inflation rewards
+- Active orchestrators earn fees from broadcasters
+- Delegators participate in rewards without running infrastructure
+- Probabilistic payments enable cost-efficient micropayments
+- All flows tracked on-chain with minimal gas overhead
 
-## Economic context
+## Notes
 
-Livepeer's economic health is measured by the trajectory of fee revenue relative to inflation rewards.
-
-**Q3 2025 figures (Messari State of Livepeer Q3 2025)**:
-
-- Total staking rewards: approximately **$18.1M** for the quarter (up 30% QoQ from $13.9M in Q2 2025).
-- AI workloads: over **72% of total protocol fee revenue** in Q3, up from 55% in Q2.
-- 27,845 winning tickets processed — a 37% increase from Q2 — with average fee per ticket rising 69% to approximately **$5.28**.
-- Staking participation: **48.7%**, just below the 50% target.
-- Annualised inflation rate: approximately **28%** at end of Q3.
-
-Fee revenue is growing. AI inference is the dominant demand driver. The inflation-to-fee ratio remains large, and the community is actively debating LIP-107 and related proposals to manage it. The long-run design assumes fee revenue eventually sustains the network without dependence on continuous token dilution — dynamic inflation is the bootstrapping mechanism, not the target state.
-
-<CustomDivider middleText="Summary" />
-
-## Complete money flow
-
-1. Token holders bond LPT through BondingManager (staking).
-2. Minter issues new LPT each round and distributes it to active orchestrators via BondingManager (inflation rewards).
-3. Orchestrators distribute a portion of rewards to delegators after retaining `rewardCut`.
-4. Gateways deposit ETH into TicketBroker (payment reserves).
-5. Orchestrators redeem winning tickets and receive ETH from TicketBroker (usage fees).
-6. Orchestrators distribute a portion of fees to delegators after retaining `feeShare`.
-7. Delegators claim accumulated rewards and fees via `ClaimEarnings()`.
-
-Staking secures the network and earns inflation rewards. Active orchestrators earn ETH fees from gateways. Delegators participate in both streams without running infrastructure. Probabilistic payments enable cost-efficient micropayments at network scale.
-
-<CustomDivider />
-
-## Related pages
-
-<CardGroup cols={2}>
-  <Card title="Core mechanisms" icon="gears" href="/v2/about/livepeer-protocol/core-mechanisms" arrow horizontal>
-    Staking, delegation, probabilistic payments, and round mechanics in full detail.
-  </Card>
-  <Card title="Livepeer token" icon="coin" href="/v2/about/livepeer-protocol/livepeer-token" arrow horizontal>
-    LPT's role in staking, governance, and the L1-to-Arbitrum bridge.
-  </Card>
-  <Card title="Governance model" icon="landmark" href="/v2/about/livepeer-protocol/governance-model" arrow horizontal>
-    How LIPs are proposed, voted on, and how protocol parameters change.
-  </Card>
-  <Card title="Design philosophy" icon="lightbulb" href="/v2/about/livepeer-protocol/design-philosophy" arrow horizontal>
-    The engineering trade-offs behind inflation design, probabilistic payments, and protocol-network separation.
-  </Card>
-</CardGroup>
+- The contracts are deployed on Ethereum mainnet (and Arbitrum for L2)
+- Contract addresses are stored in the Controller registry for upgradeability
+- All token operations use standard ERC20 approval patterns
+- The system supports both L1 and L2 deployments with backward compatibility
+- Round-based operations ensure coordinated protocol upgrades and state transitions
+- The probabilistic payment system reduces on-chain transactions by ~99% while maintaining fair expected value for all parties

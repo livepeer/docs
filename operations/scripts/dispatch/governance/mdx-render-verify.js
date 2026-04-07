@@ -62,6 +62,9 @@ const NOISE_PATTERNS = [
   /\b403\b/,
   /\b500\b/,
   /favicon/i
+  // Hydration and React errors are NOT filtered — they are real render failures.
+  // Pre-existing ones are in console-baseline.json (baseline comparison handles them).
+  // Only NEW hydration errors on previously clean pages will trigger a FAIL.
 ];
 
 // ---------------------------------------------------------------------------
@@ -102,22 +105,29 @@ function extractRoute(filePath) {
   return '/' + match[1];
 }
 
+function extractScopePrefix(filePath) {
+  // v2/gateways/setup/prepare.mdx → v2/gateways
+  const VALID_TABS = ['home', 'about', 'gateways', 'orchestrators', 'developers', 'delegators', 'solutions', 'resources'];
+  const match = filePath.match(/\/?v2\/([^/]+)/);
+  const tab = match ? match[1] : '';
+  return VALID_TABS.includes(tab) ? `v2/${tab}` : 'v2/home';
+}
+
 // ---------------------------------------------------------------------------
-// Server discovery — never skip, always start if needed
+// Server discovery — never skip, start scoped if needed
 // ---------------------------------------------------------------------------
 
-async function getServerUrl() {
+async function getServerUrl(route) {
   // Check session state first
   try {
     const serverState = JSON.parse(fs.readFileSync(getServerStatePath(), 'utf8'));
     if (serverState.running && serverState.url) {
-      // Quick probe to confirm it's still alive
-      const alive = await httpProbe(serverState.url + '/v2/home/mission-control');
+      const alive = await httpProbe(serverState.url + route);
       if (alive) return serverState.url;
     }
   } catch (_) { /* no session state */ }
 
-  // Try server-manager discovery
+  // Try server-manager discovery — probe with the actual route being verified
   let serverManager;
   try {
     const resolved = require.resolve(SERVER_MANAGER_PATH);
@@ -127,18 +137,31 @@ async function getServerUrl() {
     return null;
   }
 
-  const running = await serverManager.isServerRunning({ probePath: '/v2/home/mission-control' });
+  const running = await serverManager.isServerRunning({ probePath: route });
   if (running) {
     return serverManager.getServerUrl();
   }
 
-  // Not running — start it
+  // Not running — start SCOPED server via server-lifecycle.js restart
+  // This uses lpd dev --scoped which only loads the relevant tab (~50 pages, <2 min)
   try {
-    await serverManager.ensureServerRunning({ probePath: '/v2/home/mission-control' });
-    return serverManager.getServerUrl();
-  } catch (_) {
-    return null;
-  }
+    const scope = extractScopePrefix(route);
+    execSync(`node operations/scripts/dispatch/governance/server-lifecycle.js restart ${scope}`, {
+      timeout: 120000,
+      stdio: 'pipe',
+      cwd: REPO_ROOT
+    });
+
+    // Re-check after restart
+    const resolved2 = require.resolve(SERVER_MANAGER_PATH);
+    if (require.cache[resolved2]) delete require.cache[resolved2];
+    const sm2 = require(SERVER_MANAGER_PATH);
+    if (await sm2.isServerRunning({ probePath: route })) {
+      return sm2.getServerUrl();
+    }
+  } catch (_) { /* restart failed */ }
+
+  return null;
 }
 
 function httpProbe(url) {
@@ -258,8 +281,8 @@ stdin.on('end', async () => {
       timestamp: new Date().toISOString()
     });
 
-    // Ensure server is running — NEVER skip
-    const serverUrl = await getServerUrl();
+    // Ensure server is running — NEVER skip. Starts scoped server if needed.
+    const serverUrl = await getServerUrl(route);
     if (!serverUrl) {
       writeState({
         status: 'server-failed',
