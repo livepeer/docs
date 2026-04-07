@@ -33,6 +33,7 @@ const CDN_ASSET_CONTRACT_PATH = path.join(
   'config',
   'cdn-asset-contract.json'
 );
+const UNSAFE_CDN_JSX_IMPORT_RE = /['"]\/snippets\/data\/assets\/cdnAssets\.jsx['"]/;
 const LOCAL_ASSET_REF_RE = /(?:["'`(=:,\s])(\/snippets\/assets\/[^"'`\s)>,]+)(?=["'`\s)>,])/g;
 const RAW_CDN_ASSET_REF_RE = /https:\/\/raw\.githubusercontent\.com\/livepeer\/docs\/docs-v2-assets\/[^"'`\s)>,]+/g;
 
@@ -308,6 +309,15 @@ function checkAssetReferenceIntegrity(files) {
     const repoPath = path.relative(REPO_ROOT, file).split(path.sep).join('/');
     const content = readFile(file);
     if (!content) return;
+
+    if (repoPath.startsWith('v2/') && UNSAFE_CDN_JSX_IMPORT_RE.test(content)) {
+      report(
+        'error',
+        file,
+        'Unsafe CDN asset helper import: use /snippets/data/assets/cdnAssets.js, not the JSX helper.',
+        'CDN Asset Contract'
+      );
+    }
 
     const localRefs = [...content.matchAll(LOCAL_ASSET_REF_RE)].map((match) => match[1]);
     localRefs.forEach((assetPath) => {
