@@ -4739,3 +4739,42 @@ Built three new governance hooks to mechanically enforce behaviour that CLAUDE.m
 | `.claude/CLAUDE.md` | modified | 3 new sections + 3 hard boundary rules |
 | `ai-tools/ai-skills/thread/SKILL.md` | modified | Outcome file write instruction |
 | `.claude/plans/humming-swimming-cake.md` | plan | Full design document |
+
+## QA About Section Fixes — 2026-04-07
+
+**Plans**: none
+**Scope**: Fix all issues identified in the QA review of docs.livepeer.org/v2/about (6 rejected pages).
+**Outcome**: Met
+
+### Summary
+All user-visible issues from the About section QA review have been resolved across 5 files. Internal editorial notes, placeholder text, `#TODO`/`#REVIEW`/`#MOVE THESE` markers, exposed `<Danger>` boxes, a typo, and a markdown-leak heading (`## ====`) have been removed from the affected pages. Pre-existing copy-lint blocking errors in the deprecated glossary files were also fixed as they were in the same files being modified.
+
+### Completed
+- **livepeer-overview.mdx**: Typo `incenticises` → `incentivises` fixed; `<expandable title="Old notes">` section removed (contained `INSERT LIVEPEER ACTOR DIAGRAM HERE` internal note and old draft actor descriptions); pre-existing `etc.` banned-phrase copy-lint error fixed.
+- **mental-model.mdx**: `<Note> image would be good </Note>` removed — was the first visible element on the page.
+- **livepeer-token.mdx**: `#TODO` removed from four section headings (Rewards Distribution, Governance, Treasury, Technical Mechanics); `<Danger>` editorial box ("Move majority of this to token section…") removed; `#MOVE THESE` and `#REVIEW` inline comments removed; incomplete "Economic Flow Diagrams" stub section removed.
+- **compendium/livepeer-glossary.mdx** + **x-deprecated/livepeer-glossary.mdx**: `<Note> A Searchable view would be ideal here </Note>` removed; `## ====` markdown-leak heading removed (was appearing in "On this page" sidebar); three `etc.` banned-phrase copy-lint blocking errors fixed.
+- **portal.mdx**: Verified — Whitepaper card link already correctly points to `/v2/about/resources/knowledge-hub/livepeer-whitepaper`; no change required.
+
+### Decisions Made
+| Decision | Rationale |
+|---|---|
+| Remove `<expandable>` section entirely rather than move content | The section was titled "Old notes" and contained no user-facing content — removal is cleaner than relocation |
+| Fix `etc.` copy-lint errors in deprecated files | Files were being staged; linter runs on all staged files, so blocking errors needed resolution to keep CI green |
+| Leave pre-existing copy warnings (WEAKENED_VALUE) unfixed | Warnings require human sign-off per lint policy; they are pre-existing and out of task scope |
+
+### Test / Validation State
+| Check | Result | Notes |
+|---|---|---|
+| `lint-copy` — 5 changed files | PASS | 0 blocking errors, 2 pre-existing warnings (human sign-off) |
+| Code Review (parallel_validation) | PASS | No review comments |
+| CodeQL Security Scan | PASS | No analysable code changes |
+
+### Artifacts
+| File | Type | Description |
+|---|---|---|
+| `v2/about/concepts/livepeer-overview.mdx` | modified | Typo fix + old-notes expandable removed |
+| `v2/about/concepts/mental-model.mdx` | modified | Exposed internal design note removed |
+| `v2/about/protocol/livepeer-token.mdx` | modified | #TODO, #MOVE THESE, #REVIEW, <Danger> box removed |
+| `v2/about/resources/compendium/livepeer-glossary.mdx` | modified | Internal note + markdown-leak heading removed; etc. lint fixes |
+| `v2/about/resources/x-deprecated/livepeer-glossary.mdx` | modified | Same as compendium counterpart |
