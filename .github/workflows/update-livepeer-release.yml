@@ -32,5 +32,5 @@ jobs:
     with:
       mode: livepeer-release
       use_test_branch: ${{ github.event_name == 'workflow_dispatch' && inputs.use_test_branch || false }}
-      version: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.version || inputs.version || '' }}
+      version: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.version || github.event_name == 'workflow_dispatch' && inputs.version || '' }}
     secrets: inherit
