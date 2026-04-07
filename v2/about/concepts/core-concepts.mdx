@@ -1,148 +1,137 @@
 ---
-title: 'Livepeer Core Concepts'
-sidebarTitle: 'Core Concepts'
+title: Livepeer Core Concepts
+sidebarTitle: Livepeer Core Concepts
 description: >-
-  The three-zone architecture, network actors, compute types, economic model, and governance of the Livepeer decentralised AI and video compute network.
+  A high-level introduction to the key concepts and architecture of the Livepeer
+  Real-time AI & Video Network
 pageType: concept
-audience: community
-purpose: explain
 keywords:
   - livepeer
+  - about
   - core concepts
-  - protocol
-  - network
-  - actors
-  - orchestrators
-  - gateways
-  - delegators
-  - economics
-  - governance
-'og:image': /snippets/assets/site/og-image/en/about.png
-'og:image:alt': Livepeer Docs social preview image for About
+  - livepeer core concepts
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-status: current
-lastVerified: 2026-04-07
+audience: general
+lastVerified: 2026-03-17
+purpose: concept
 ---
 
-import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<CenteredContainer style={{ width: '90%' }}>
-  <Tip>Livepeer separates on-chain coordination (Protocol), off-chain execution (Network), and developer-facing products (Platform) into three distinct zones. Each zone has a hard boundary: the protocol governs, the network executes, the platform exposes.</Tip>
-</CenteredContainer>
+import Protocol from "/snippets/composables/pages/about/concepts/protocol.mdx"
+import Network from "/snippets/composables/pages/about/concepts/network.mdx"
+import Actors from "/snippets/composables/pages/about/concepts/actors.mdx"
 
----
+### Overview and separation
 
-Livepeer is a decentralised AI and video compute network. Its architecture is divided into three zones that interact without overlapping. The Protocol secures and coordinates. The Network executes compute jobs. The Platform exposes the network's capabilities through APIs, SDKs, and managed services.
+Livepeer is designed as a modular video/AI network anchored by a minimal on‑chain protocol. The protocol manages assets and incentives on Ethereum, while the off‑chain network performs the heavy lifting of transcoding and AI processing. Official documents separate these domains:
 
-Understanding these boundaries is what separates the mental model from the deep-dive pages in the protocol/ and network/ sections. This page names each zone, its actors, its compute types, and the economic and governance model that holds it together.
+On‑chain protocol – smart contracts hold ETH deposits from broadcasters and orchestrators; mint and distribute LPT staking tokens; issue probabilistic payment tickets; enforce staking, slashing and reward rules; and manage governance. The protocol does not transcode video or run AI. Its role is to coordinate payments and maintain trustless state.
 
-<CustomDivider middleText="Three-Zone Architecture" />
+Off‑chain network – orchestrator nodes run Livepeer software to perform transcoding and AI workloads. They compete on price, quality and latency. Video/AI jobs and routing happen entirely off‑chain. Services like Livepeer Studio and community gateways sit on top of this layer.
 
-## The three zones
+Bridge – broadcasters deposit ETH into the protocol and send probabilistic tickets with each segment. Orchestrators redeem winning tickets on‑chain for ETH fees, while the work itself is delivered off‑chain. LPT is not used to pay for services; it is only used for staking, delegation and governance.
 
-The **Protocol** is the on-chain coordination, security, and economic layer. Smart contracts deployed on Arbitrum One govern staking, delegation, inflation, reward distribution, probabilistic micropayments, and governance. The protocol sets the rules that all other participants follow. It does not run compute, route jobs, or interact with video data.
+These boundaries ensure that the protocol remains lightweight and censorship‑resistant. Any proposed change must respect this separation-heavy compute must remain off‑chain, while financial rules and governance reside on‑chainU
 
-The **Network** is the execution layer - the running system of GPU nodes and routing logic that performs video transcoding and AI inference. Orchestrators, gateways, and transcoders operate entirely off-chain. The network follows the rules the protocol establishes and settles payment for completed work via on-chain ticket redemption.
+{/* <Frame> */}
+  <Tabs>
+    <Tab title="Overview">
+      <Overview />
+    </Tab>
+    <Tab title="Protocol">
+      <Protocol />
+    </Tab>
+    <Tab title="Network">
+      <Network />
+    </Tab>
+    <Tab title="Actors">
+      <Actors />
+    </Tab>
 
-The **Platform** is the product and developer interface layer. Managed gateways, APIs, SDKs, and community products (Livepeer Studio, Daydream, Streamplace) sit here. Platform services abstract protocol and network complexity into stable developer primitives. They are not part of the protocol and are not part of the network - they are opinions about how to expose the network's capabilities.
+  </Tabs>
+{/* </Frame> */}
 
-<StyledTable variant="bordered">
-  <thead>
-    <TableRow header>
-      <TableCell header>Zone</TableCell>
-      <TableCell header>Runs on</TableCell>
-      <TableCell header>Responsibility</TableCell>
-      <TableCell header>Does NOT</TableCell>
-    </TableRow>
-  </thead>
-  <tbody>
-    <TableRow>
-      <TableCell>**Protocol**</TableCell>
-      <TableCell>Arbitrum One (on-chain)</TableCell>
-      <TableCell>Governance, staking, payments, inflation</TableCell>
-      <TableCell>Run compute or route jobs</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Network**</TableCell>
-      <TableCell>Off-chain (GPU nodes)</TableCell>
-      <TableCell>Execute video and AI workloads</TableCell>
-      <TableCell>Manage economics or issue tokens</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Platform**</TableCell>
-      <TableCell>Applications and APIs</TableCell>
-      <TableCell>Expose network capabilities to developers</TableCell>
-      <TableCell>Govern or execute directly</TableCell>
-    </TableRow>
-  </tbody>
-</StyledTable>
+### Definitions
 
-<CustomDivider middleText="Network Actors" />
+**Livepeer Protocol**
 
-## Actors
+The protocol is the ruleset + on-chain logic governing:
 
-A Livepeer actor is any role or entity that participates in the protocol or network and performs actions defined by the system. Each actor has distinct responsibilities, incentives, and interactions.
+**Livepeer Network**
 
-**Orchestrators** are GPU operators who register with the protocol by staking LPT and run go-livepeer software to process video and AI jobs. They compete on price, latency, and quality. Orchestrators earn ETH fees from completed work and LPT inflation rewards proportional to their delegated stake.
+The network is the actual running system of machines performing work:
 
-**Gateways** are the demand-facing entry points to the network. They accept compute jobs from applications and services, route work to orchestrators, and handle session management. Gateways pay orchestrators using probabilistic micropayment tickets backed by ETH deposits held in the on-chain TicketBroker contract.
+**Livepeer Actors**
 
-**Delegators** are LPT token holders who bond their stake to an orchestrator to support the network's security and earn a share of that orchestrator's inflation rewards. Delegators do not run infrastructure; they participate through stake delegation.
+A Livepeer actor is any role or entity that participates in the Livepeer protocol or network and performs actions defined by the system.
 
-**Builders and end users** are developers who build products on top of the platform layer and users who consume those products. They interact with Livepeer through APIs and managed services and have no direct relationship with orchestrators or the protocol.
 
-<CustomDivider middleText="Compute Types" />
+# Overview
 
-## The two compute types
+Livepeer is a full-stack platform for video streaming & AI. The video streaming software is underpinned by a network of actors that perform the work needed to compute, transcode & orchestrate video & AI jobs in the Livepeer network.
 
-Livepeer supports two distinct workload categories. They are distinct because they have different latency requirements, different hardware profiles, and different demand patterns.
+The Livepeer Protocol is the underlying code that enforces the mechanisms and rules to ensure the reliability, cooperation and coordination of these decentralised actors.
 
-**Video transcoding** converts raw video streams into multiple output formats and bitrates in real time. It is Livepeer's original workload and accounts for the majority of network usage by volume. Transcoding jobs are segment-based: a video stream is broken into short chunks and processed in parallel across orchestrators.
+# Core Concepts
 
-**AI inference** runs machine learning model pipelines on video or audio inputs. AI workloads include image generation, real-time style transfer, video analysis, and multi-step pipelines that chain several models together. AI inference now accounts for the majority of network fee revenue and is the primary growth vector for the network.
+## Livepeer Protocol
 
-The two workload types can run from the same orchestrator infrastructure in a dual-workload configuration. They are distinct categories - not a single unified compute primitive - because their operational profiles, pricing, and client-side tooling differ.
+The protocol is the ruleset + on-chain logic governing:
 
-<CustomDivider middleText="Economics" />
+- staking
+- delegation
+- inflation & rewards
+- orchestrator selection
+- slashing
+- probabilistic payments
+- verification rules
 
-## Economic model
+The economic and coordination layer that enforces correct behavior.
 
-Livepeer's economic model has two income streams, separated by origin and token denomination.
+## Livepeer Network
 
-**ETH fees** flow from usage. When a gateway submits a video or AI job, it attaches probabilistic micropayment tickets denominated in ETH. Orchestrators redeem winning tickets on-chain via the TicketBroker contract. A portion of fees flows to delegators according to the orchestrator's fee-share commission. Fee revenue tracks actual network demand.
+The network is the actual running system of machines performing work:
 
-**LPT inflation rewards** flow from the protocol. Each round, the Minter contract issues new LPT at a governance-controlled rate and distributes it to active orchestrators in proportion to their delegated stake. Orchestrators distribute a portion to their delegators after taking their reward-cut commission. Inflation rewards bootstrap participation when fee revenue is insufficient to sustain the network independently.
+- Orchestrators (GPU nodes)
+- Transcoders / Workers
+- Gateways
+- Broadcasters
+- Verification processes
+- Job routing
+- Real-time AI & video compute
 
-The governance-controlled `targetBondingRate` parameter drives the inflation rate: when the fraction of LPT bonded across the network falls below the target, the inflation rate rises to attract more delegation; when it exceeds the target, the rate falls. Current parameter values are governance-controlled - verify against [explorer.livepeer.org](https://explorer.livepeer.org) for live figures.
+It is the live, operational decentralized GPU mesh running video + AI jobs.
 
-<CustomDivider middleText="Governance" />
+## Protocol vs Network
 
-## Governance model
+| Layer                 | Description                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Livepeer Protocol** | On-chain crypto-economic incentives & coordination; staking; payments.        |
+| **Livepeer Network**  | Off-chain nodes performing real-time work (transcoding, inference, routing).  |
+| **Relationship**      | The network _runs_ the compute; the protocol _governs, secures, and pays_ it. |
 
-Livepeer governance is stake-weighted and community-driven. LPT holders and delegators vote on Livepeer Improvement Proposals (LIPs) via the on-chain Governor contract on Arbitrum. A proposal requires a minimum participation quorum and a majority to pass. The Foundation does not control governance outcomes.
 
-LIPs are the formal mechanism for protocol changes: parameter updates, contract upgrades, treasury spending, and economic adjustments all go through the LIP process. Active proposals are tracked on the [Livepeer Forum](https://forum.livepeer.org). Recent governance activity includes LIP-107 (emissions), LIP-100 (inflation bounds), and LIP-101 (treasury restart).
+# On-chain vs Off-chain
 
-<CustomDivider />
+Livepeer protocol = Arbitrum One (L2)
+Livepeer token (LPT) = Ethereum mainnet (L1)
+Livepeer network (GPU nodes + gateways) = off-chain execution layer
 
-## Related pages
+# Livepeer Actors
 
-<CardGroup cols={2}>
-  <Card title="Protocol overview" icon="shield" href="/v2/about/livepeer-protocol/overview" arrow horizontal>
-    The full mechanism detail: staking, delegation, probabilistic payments, slashing, and governance.
-  </Card>
-  <Card title="Network overview" icon="network-wired" href="/v2/about/livepeer-network/overview" arrow horizontal>
-    The execution layer: orchestrators, gateways, job routing, and the marketplace.
-  </Card>
-  <Card title="Protocol economics" icon="coins" href="/v2/about/livepeer-protocol/economics" arrow horizontal>
-    How ETH fees and LPT inflation flow through the system and who earns each.
-  </Card>
-  <Card title="Governance model" icon="landmark" href="/v2/about/livepeer-protocol/governance-model" arrow horizontal>
-    Stake-weighted voting, LIPs, the Governor contract, and the treasury.
-  </Card>
-</CardGroup>
+A Livepeer actor is any role or entity that participates in the Livepeer protocol or network and performs actions defined by the system.
+In Livepeer architecture, “actor” is a formal category used to describe participants with distinct responsibilities, incentives, and interactions.
+Actors are fundamental to describing how the network functions end-to-end from a systems engineering perspective.
+
+Livepeer’s ecosystem involves both protocol actors (on-chain roles) and community actors (network participants and builders)
+
+<Note>INSERT LIVEPEER ACTOR DIAGRAM HERE \[THIS ONE LOOKS OLD (whitpaper)</Note>
+
+<Note>Actor diagram placeholder removed pending final approved asset.</Note>

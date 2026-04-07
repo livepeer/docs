@@ -17,6 +17,7 @@ const { unified } = require('unified');
 const { isExcludedV2ExperimentalPath } = require('./docs-publishability');
 const { isGeneratedDocsPageContent } = require('./docs-page-scope');
 const { repairCodeBlockMetadata } = require('./docs-authoring-rules');
+const { filterPathsByMintIgnore } = require('../../../operations/tests/utils/mintignore');
 
 function loadPlugin(name) {
   const plugin = require(name);
@@ -139,7 +140,7 @@ function shouldExcludeMarkdownPath(repoPath) {
   if (!relPath) return true;
   if (!isMarkdownFile(relPath)) return true;
 
-  return (
+  if (
     relPath.startsWith('.git/') ||
     relPath.startsWith('node_modules/') ||
     relPath.includes('/.git/') ||
@@ -152,7 +153,22 @@ function shouldExcludeMarkdownPath(repoPath) {
     relPath.includes('/.next/') ||
     relPath.endsWith('.bak') ||
     relPath.endsWith('.disabled')
-  );
+  ) {
+    return true;
+  }
+
+  // Respect .mintignore / non-published exclusions
+  if (relPath.startsWith('workspace/')) return true;
+  if (relPath.startsWith('v2/') && isExcludedV2ExperimentalPath(relPath)) return true;
+
+  const segments = relPath.split('/');
+  for (const segment of segments) {
+    if (segment === '_workspace' || segment === 'x-archived' || segment === '_archive') {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function isEligibleRepoMarkdownPath(repoPath) {
@@ -182,8 +198,9 @@ function walkMarkdownFiles(dirPath, repoRoot, out = []) {
   if (!fs.existsSync(dirPath)) return out;
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
+  const SKIP_DIRS = new Set(['.git', 'node_modules', '.venv', '__pycache__', '.next', '_workspace', 'x-archived', '_archive', 'workspace']);
   for (const entry of entries) {
-    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '.venv' || entry.name === '__pycache__' || entry.name === '.next') {
+    if (SKIP_DIRS.has(entry.name)) {
       continue;
     }
 
@@ -204,7 +221,8 @@ function walkMarkdownFiles(dirPath, repoRoot, out = []) {
 
 function getAllRepoMarkdownFiles(rootDir = REPO_ROOT) {
   const repoRoot = getRepoRoot(rootDir);
-  return walkMarkdownFiles(repoRoot, repoRoot).sort((left, right) =>
+  const files = walkMarkdownFiles(repoRoot, repoRoot);
+  return filterPathsByMintIgnore(files, { rootDir: repoRoot }).sort((left, right) =>
     normalizeRepoPath(path.relative(repoRoot, left)).localeCompare(normalizeRepoPath(path.relative(repoRoot, right)))
   );
 }

@@ -34,7 +34,7 @@ function printHelp() {
   console.log(
     [
       'Usage:',
-      '  node operations/scripts/remediators/content/repair/migrate-assets-to-branch.js [options]',
+      '  node operations/scripts/remediators/assets/migrate-assets-to-branch.js [options]',
       '',
       'Options:',
       `  --manifest <path>   Path to manifest (default: ${DEFAULT_MANIFEST_PATH})`,

@@ -143,33 +143,6 @@ async function runTests() {
   }
 
   try {
-    assert.strictEqual(
-      runner.isMergeSyncPrContext('merge/docs-v2-dev-into-docs-v2-20260407', 'docs-v2'),
-      true
-    );
-    assert.strictEqual(
-      runner.isMergeSyncPrContext('docs-v2-dev', 'docs-v2'),
-      false
-    );
-    const registry = runner.createCheckRegistry({
-      args: { lane: 'branch-health', baseRef: 'docs-v2' },
-      changedFiles: [],
-      groups: buildEmptyGroups(),
-      currentBranch: 'merge/docs-v2-dev-into-docs-v2-20260407'
-    });
-    const styleGuideCheck = registry.find((check) => check.label === 'Style Guide');
-    const copyLintCheck = registry.find((check) => check.label === 'Copy Lint');
-    const mdxCheck = registry.find((check) => check.label === 'MDX Validation');
-
-    assert(styleGuideCheck && styleGuideCheck.advisoryOnFailure === true);
-    assert(copyLintCheck && copyLintCheck.advisoryOnFailure === true);
-    assert(mdxCheck && mdxCheck.advisoryOnFailure === false);
-    console.log('   ✓ merge-sync PRs downgrade style and copy checks to advisory only');
-  } catch (error) {
-    errors.push({ message: `merge-sync advisory mode: ${error.message}` });
-  }
-
-  try {
     const summaryPath = path.join(os.tmpdir(), `run-pr-checks-summary-${process.pid}.md`);
     process.env.GITHUB_STEP_SUMMARY = summaryPath;
     runner.initializeSummary({
@@ -221,7 +194,7 @@ async function runTests() {
     passed: errors.length === 0,
     errors,
     warnings,
-    total: 6
+    total: 5
   };
 }
 

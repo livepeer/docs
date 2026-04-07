@@ -292,9 +292,9 @@ function getCanonicalMap(normalizedRoute) {
   const route = normalizeRoute(normalizedRoute);
   const map = {
     'v2/pages/03_developers/building-on-livepeer/index': ['v2/pages/03_developers/developer-portal'],
-    'v2/resources/redirect': ['v2/resources/resources-portal'],
-    'v2/pages/08_help/redirect': ['v2/pages/08_help/README', 'v2/resources/resources-portal'],
-    'v2/pages/08_help/README': ['v2/resources/resources-portal'],
+    'v2/resources/redirect': ['v2/resources/portal'],
+    'v2/pages/08_help/redirect': ['v2/pages/08_help/README', 'v2/resources/portal'],
+    'v2/pages/08_help/README': ['v2/resources/portal'],
     'v2/resources/changelog/migration-guides': ['v2/resources/changelog/migration-guide'],
     'v2/pages/04_gateways/run-a-gateway/quickstart-a-gateway': ['v2/pages/04_gateways/quickstart/gateway-setup'],
     'v2/pages/04_gateways/run-a-gateway/get-AI-to-setup-the-gateway': ['v2/pages/04_gateways/quickstart/AI-prompt'],

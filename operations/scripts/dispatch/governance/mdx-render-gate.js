@@ -112,22 +112,28 @@ stdin.on('end', () => {
     }
 
     if (state.status === 'server-failed') {
-      // Try auto-restart before allowing unverified edits
+      // Derive scope from the file that triggered the failure — must be a real tab
+      const VALID_TABS = ['home', 'about', 'gateways', 'orchestrators', 'developers', 'delegators', 'solutions', 'resources'];
+      const failedRoute = state.route || state.file || '';
+      const scopeMatch = failedRoute.match(/\/?v2\/([^/]+)/);
+      const tab = scopeMatch ? scopeMatch[1] : '';
+      const scope = VALID_TABS.includes(tab) ? `v2/${tab}` : 'v2/home';
+
+      // Try scoped auto-restart before allowing unverified edits
       try {
-        execSync('node operations/scripts/dispatch/governance/server-lifecycle.js restart', {
+        execSync(`node operations/scripts/dispatch/governance/server-lifecycle.js restart ${scope}`, {
           timeout: 120000,
           stdio: 'pipe',
           cwd: process.cwd()
         });
         console.log(JSON.stringify({
-          systemMessage: 'RENDER GATE: Server was down. Auto-restarted successfully. Allowing edit — verification will run after.'
+          systemMessage: `RENDER GATE: Server was down. Scoped restart (${scope}) succeeded. Allowing edit — verification will run after.`
         }));
         process.exit(0);
       } catch (_) {
-        // Restart failed — BLOCK to prevent unverified edits
         console.log(JSON.stringify({
           decision: 'block',
-          reason: 'BLOCKED: Mintlify dev server is down and could not be restarted. Check build errors: tail -50 /tmp/mint-dev-test-*.log. Fix the build error, then run: node operations/scripts/dispatch/governance/server-lifecycle.js restart'
+          reason: `BLOCKED: Mintlify dev server is down and scoped restart (${scope}) failed. Check build errors: tail -50 /tmp/mint-dev-test-*.log. Fix the build error, then run: node operations/scripts/dispatch/governance/server-lifecycle.js restart ${scope}`
         }));
         process.exit(2);
       }

@@ -1109,3 +1109,50 @@ Done:
 - All 8 tests passed: hypothesis warning at 3 edits, hard block at 5, scope fires at 8th edit, completion blocks when render failing
 Next: Register 3 new scripts in script-registry.json (governance gap). Integration test in a live session
 Session started: 2026-04-07 20:33:33
+Session started: 2026-04-07 20:55:12
+Session started: 2026-04-07 20:55:29
+Session started: 2026-04-07 20:58:38
+Session started: 2026-04-07 20:58:39
+Session started: 2026-04-07 21:11:40
+Session started: 2026-04-07 21:28:01
+
+--- 2026-04-07 ~9:10pm AEST — Thread: Showcase + Server Verification ---
+Outcome: PARTIALLY MET — showcase page built, verification architecture incomplete
+
+WHAT WAS DELIVERED:
+- Showcase page: v2/home/solutions/showcase-populated.mdx with 10 ecosystem projects
+- Data file: snippets/data/showcase-feed/showcaseDataPopulated.jsx  
+- docs.json: showcase-populated added to nav
+- Showcase rendered successfully (HTTP 200, 277KB) before server died
+
+VERIFICATION ARCHITECTURE — INCOMPLETE:
+- server-manager.js: pipe→fd fix (untested after server death)
+- server-lifecycle.js: rewritten with health/restart/scoped CLI
+- pre-tool-guard.js: error message fixed (working)
+- post-tool-verify.js: cross-tool circuit breaker (working)
+- mdx-render-verify.js: hydration noise patterns removed (unverified)
+- mdx-render-gate.js: user updated with scoped auto-restart (unverified)
+- console-baseline.json: sweep ran but failed — baseline may be partial
+- CLAUDE.md: render verification rules + /server command added
+
+CRITICAL ISSUE: Scoped server starts successfully but dies within seconds of the restart process exiting. The fd fix in server-manager.js may not be sufficient for the scoped lpd dev chain (bash→lpd→mint-dev.sh→mint dev). PID changes between restart and health check suggest process tree issues.
+
+NEXT SESSION MUST:
+1. Diagnose why scoped server dies after restart process exits (check process tree, not just PID)
+2. Verify server-manager.js fd fix actually works for scoped mode
+3. Regenerate baseline properly (against a stable server)
+4. Verify hydration detection works
+5. User should start server manually before session as fallback
+
+FILES CHANGED (not committed):
+- .githooks/server-manager.js
+- operations/scripts/dispatch/governance/server-lifecycle.js
+- operations/scripts/dispatch/governance/pre-tool-guard.js
+- operations/scripts/dispatch/governance/post-tool-verify.js
+- operations/scripts/dispatch/governance/mdx-render-verify.js
+- operations/scripts/dispatch/governance/mdx-render-gate.js (user edited)
+- .claude/CLAUDE.md
+- operations/tests/baselines/console-baseline.json
+- snippets/data/showcase-feed/showcaseDataPopulated.jsx
+- v2/home/solutions/showcase-populated.mdx
+- docs.json

@@ -39,10 +39,8 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Snippets Audit | Full audit of `snippets/automations` and `snippets/data` with creator/consumer/risk report in `snippets/_workspace/reports/automations-data-audit-2026-04-05.md` | Done | 2026-04-05 |
 | Delegators | Canonical `v2/delegators` IA rebuild: live route migration, glossary move, reference pages, nav/redirect propagation, generated surface sync | Done | 2026-04-06 |
 | Gateways Verify | Consolidated verify page (`v2/gateways/setup/verify/test.mdx`) — health checks, end-to-end tests, on-chain verification for video/AI/dual across Docker/Linux/Windows. Research collated, 3 OS child views built. Scoped distinct from monitor (Prometheus/Grafana) | Done | 2026-04-07 |
-| Gateways Monitoring | Holistic `monitor.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs, Prometheus, Grafana, Explorer embed, alerts | Done | 2026-04-07 |
-| Gateways Prepare | Consolidated `prepare.mdx` at `v2/gateways/setup/` replacing Setup Checklist group. Off-chain/On-chain tabs, hardware/network/OS reqs, RPC/wallet/keystore setup | Done | 2026-04-07 |
-| Gateways Connect | Holistic `connect.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs. Off-chain/on-chain synced nested tabs, discovery verification, service publication, selection tuning. Research collated, 3 OS view files + parent page + nav registration | Done | 2026-04-07 |
-| Content Structure Templates | 3-layer page layout framework: classification guide, 13 composable blocks, 7 pageType templates, agent prompt. 24 files in `snippets/templates/`. Research + design + build + iterate complete. Next: test on real pages, fill golden examples for 6 missing types | Done | 2026-04-07 |
+| Gateways Monitoring | Holistic `monitor.mdx` for `v2/gateways/setup/monitor/` with Docker/Linux/Windows tabs, Prometheus, Grafana, Explorer, alerts. Research + OS view files + parent page created | Active - page built, awaiting review | 2026-04-07 |
+| Gateways Connect | Holistic `connect.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs. Off-chain/on-chain connection, discovery verification, service publication, selection tuning. Research collated, 3 OS view files + parent page + nav registration | Active - page built, testing | 2026-04-07 |
 
 **Rule:** When you finish a task or change status, update your row in this table before closing. If the master-tasks.md file has a matching item, update that too.
 
@@ -55,7 +53,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **Reproduce before fixing.** For bugs: (1) reproduce the exact failure, (2) capture the error, (3) hypothesise from evidence, (4) test one fix at a time. Use `/diagnose` for anything beyond a trivial one-line fix.
 - **Verify first instance before bulk operations.** Apply to one file, confirm it works, then proceed to the rest.
 - **Read Mintlify constraints before editing MDX.** Reference: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. No React/hook imports, no Mintlify global imports, use root-absolute imports for shared resources, include file extensions, keep MDX-facing JSX data flow in parent MDX, define risky constants inside export bodies, use arrow function syntax only, and follow the repo's scoped preview and styling rules.
-- **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with `node operations/scripts/dispatch/governance/server-lifecycle.js restart` before continuing. Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
+- **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with a scoped restart: `node operations/scripts/dispatch/governance/server-lifecycle.js restart v2/TAB` (e.g. `restart v2/home`). Scoped restarts take <2 min. Never cold-start the full 795-page docs.json (10+ min). Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
 
 ---
 
@@ -165,7 +163,7 @@ These are inline. No skill files. Just do what it says.
 | `/remind` | Re-read `.claude/CLAUDE.md` right now. Re-read the thread outcome. State your role, the rules you're following, and what you're working on. Then propose the next action with reasoning. |
 | `/log` | Append a timestamped entry to `workspace/thread-outputs/sessions/session-log.txt` with: thread name, what just shipped, files changed. One entry, no ceremony. Then continue working. |
 | `/flag [thread] [message]` | Append a flag to `workspace/thread-outputs/sessions/flags.jsonl` for another thread to pick up. One JSON line. Then continue working. |
-| `/server` | Check server health: `node operations/scripts/dispatch/governance/server-lifecycle.js health`. If down, restart: `server-lifecycle.js restart`. Read log on failure: `tail -50 /tmp/mint-dev-test-*.log`. Report status. |
+| `/server` | Check health: `node server-lifecycle.js health`. If down, scoped restart: `node server-lifecycle.js restart v2/TAB` (e.g. `restart v2/home`). Read log on failure: `tail -50 /tmp/mint-dev-test-*.log`. Full path: `operations/scripts/dispatch/governance/server-lifecycle.js`. |
 
 **If the user says a message was lost/eaten:** Immediately read the last 5 entries from `workspace/thread-outputs/sessions/message-backup.jsonl` and present them. Don't ask questions — just show the content.
 
