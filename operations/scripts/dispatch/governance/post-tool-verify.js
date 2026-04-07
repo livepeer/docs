@@ -34,11 +34,20 @@ stdin.on('end', () => {
     if (content.length >= 3) {
       const last3 = content.slice(-3);
       const unique = new Set(last3);
+      // Fire on 3 consecutive failures of ANY tool (not just same tool)
+      // Same-tool gets a more specific message
       if (unique.size === 1) {
         console.log(JSON.stringify({
           hookSpecificOutput: {
             hookEventName: 'PostToolUseFailure',
             additionalContext: 'CIRCUIT BREAKER: 3 consecutive failures of the same tool. STOP retrying the same approach. Root-cause analyse: (1) state what you tried and why it failed each time, (2) list the actual error messages, (3) propose a DIFFERENT approach based on the evidence. Do not retry without approval.'
+          }
+        }));
+      } else {
+        console.log(JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: 'PostToolUseFailure',
+            additionalContext: `CIRCUIT BREAKER: 3 consecutive tool failures (${last3.join(', ')}). STOP. Something is systematically wrong. Root-cause analyse: (1) state what you tried and why it failed each time, (2) list the actual error messages, (3) propose a DIFFERENT approach based on the evidence. Do not retry without approval.`
           }
         }));
       }

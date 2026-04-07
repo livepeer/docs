@@ -46,11 +46,11 @@ stdin.on('end', () => {
     if (toolName === 'Bash') {
       const cmd = toolInput.command || '';
 
-      // Block ad-hoc mintlify dev — use server-manager instead
-      if (/mintlify\s+dev|npx\s+mintlify|mint\s+dev/i.test(cmd) && !/server-manager/i.test(cmd)) {
+      // Block ad-hoc mintlify dev — use server-lifecycle instead
+      if (/mintlify\s+dev|npx\s+mintlify|mint\s+dev/i.test(cmd) && !/server-lifecycle/i.test(cmd)) {
         console.log(JSON.stringify({
           decision: 'block',
-          reason: 'BLOCKED: Do not run mintlify dev directly. Use the server-manager (.githooks/server-manager.js) which runs on port 3145 and handles lifecycle. Ad-hoc mintlify dev leaves zombie processes on port 3333+.'
+          reason: 'BLOCKED: Do not run mintlify dev directly. Use: node operations/scripts/dispatch/governance/server-lifecycle.js restart (to start/restart) or server-lifecycle.js health (to check status). Ad-hoc mintlify dev leaves zombie processes on port 3333+.'
         }));
         process.exit(2);
       }
@@ -116,6 +116,37 @@ stdin.on('end', () => {
     if ((toolName === 'Write' || toolName === 'Edit') && toolInput.file_path) {
       const fp = toolInput.file_path;
 
+      // Session ID — used by edit-loop block and context gate below
+      const sessionId = process.env.CLAUDE_SESSION_ID || 'default';
+
+      // Edit loop block — check if a file has been edited too many times
+      const loopBlockPath = path.join('/tmp', `claude-edit-loop-block-${sessionId}.json`);
+      try {
+        const blockState = JSON.parse(fs.readFileSync(loopBlockPath, 'utf8'));
+        if (blockState.file === fp) {
+          // Check if verification has passed since the block was set
+          const verifyStatePath = path.join('/tmp', `claude-mdx-verification-${sessionId}.json`);
+          let verifyPassedAfterBlock = false;
+          try {
+            const verifyState = JSON.parse(fs.readFileSync(verifyStatePath, 'utf8'));
+            verifyPassedAfterBlock = verifyState.status === 'passed' &&
+              verifyState.file === fp &&
+              new Date(verifyState.timestamp) > new Date(blockState.timestamp);
+          } catch (_) { /* no verify state */ }
+
+          if (!verifyPassedAfterBlock) {
+            console.log(JSON.stringify({
+              decision: 'block',
+              reason: `BLOCKED: Edit loop — ${path.basename(fp)} has been edited ${blockState.count}+ times without verification passing. Run /diagnose or verify the file first.`
+            }));
+            process.exit(2);
+          } else {
+            // Verification passed — clear the block
+            try { fs.unlinkSync(loopBlockPath); } catch (_) { /* already gone */ }
+          }
+        }
+      } catch (_) { /* no block file — proceed */ }
+
       // Auto-generated file block — check first 512 bytes for markers
       try {
         const fd = fs.openSync(fp, 'r');
@@ -132,7 +163,6 @@ stdin.on('end', () => {
         }
       } catch (_) { /* new file or unreadable — allow through */ }
 
-      const sessionId = process.env.CLAUDE_SESSION_ID || 'default';
       const readLogPath = path.join('/tmp', `claude-reads-${sessionId}`);
 
       let readFiles = [];

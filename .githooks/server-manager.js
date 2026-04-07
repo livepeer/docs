@@ -308,10 +308,14 @@ function startServer() {
   }
   
   // Start dev server in background with specific port via environment variable.
-  // Use 'pipe' instead of WriteStream directly to avoid stdio issues.
+  // Write directly to log file descriptor so the child survives parent exit.
+  // Previous approach used stdio: 'pipe' + .pipe(logStream), but pipes break
+  // when the parent process exits (SIGPIPE kills the child). File descriptors
+  // are inherited by the child and remain open independently.
+  const logFd = fs.openSync(LOG_FILE, 'a');
   serverProcess = spawn(command, args, {
     cwd: REPO_ROOT,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['ignore', logFd, logFd],
     detached: true,
     shell: !scopedLaunch,
     env: {
@@ -319,16 +323,8 @@ function startServer() {
       PORT: PORT.toString()
     }
   });
-  
-  // Redirect output to log file
-  const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
-  if (serverProcess.stdout) {
-    serverProcess.stdout.pipe(logStream);
-  }
-  if (serverProcess.stderr) {
-    serverProcess.stderr.pipe(logStream);
-  }
-  
+  fs.closeSync(logFd); // Parent closes its copy; child keeps its inherited copy
+
   serverProcess.unref(); // Allow parent process to exit independently
   
   // Save PID

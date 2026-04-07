@@ -56,6 +56,15 @@
             "statusMessage": "Loading session rules..."
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/server-lifecycle.js",
+            "statusMessage": "Starting render verification server..."
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -103,8 +112,28 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node operations/scripts/dispatch/governance/mdx-render-gate.js",
+            "statusMessage": "Checking render verification state..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
             "command": "node operations/scripts/dispatch/governance/pre-tool-guard.js",
             "statusMessage": "Checking file write..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/completion-gate.js",
+            "statusMessage": "Checking completion prerequisites..."
           }
         ]
       },
@@ -145,8 +174,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node operations/scripts/dispatch/governance/mdx-validate-hook.js",
-            "statusMessage": "Validating MDX..."
+            "command": "node operations/scripts/dispatch/governance/mdx-render-verify.js",
+            "statusMessage": "Verifying MDX render..."
           }
         ]
       },
@@ -177,6 +206,26 @@
             "type": "command",
             "command": "node operations/scripts/dispatch/governance/session-register.js",
             "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/edit-loop-guard.js",
+            "statusMessage": "Checking for edit loops..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/scope-checkpoint.js",
+            "statusMessage": "Scope checkpoint..."
           }
         ]
       },

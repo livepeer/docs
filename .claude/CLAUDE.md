@@ -55,6 +55,16 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **Reproduce before fixing.** For bugs: (1) reproduce the exact failure, (2) capture the error, (3) hypothesise from evidence, (4) test one fix at a time. Use `/diagnose` for anything beyond a trivial one-line fix.
 - **Verify first instance before bulk operations.** Apply to one file, confirm it works, then proceed to the rest.
 - **Read Mintlify constraints before editing MDX.** Reference: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. No React/hook imports, no Mintlify global imports, use root-absolute imports for shared resources, include file extensions, keep MDX-facing JSX data flow in parent MDX, define risky constants inside export bodies, use arrow function syntax only, and follow the repo's scoped preview and styling rules.
+- **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with `node operations/scripts/dispatch/governance/server-lifecycle.js restart` before continuing. Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
+
+---
+
+## Debugging discipline
+
+- **Hypothesis before fix.** Before attempting any fix, state: (1) your hypothesis for the root cause, (2) how this fix tests that hypothesis, (3) what you will conclude if it fails. Do not skip this step
+- **3 edits trigger a hypothesis gate.** If you edit the same file 3 times without verification passing, the edit-loop hook fires. State your hypothesis before continuing — hook enforced
+- **5 edits trigger a hard block.** If you edit the same file 5 times without verification passing, further edits to that file are blocked until you run /diagnose or verification passes — hook enforced
+- **Do not permute.** Trying 5 CSS values, 4 import paths, or 3 MDX patterns is not debugging. It is guessing. Identify the constraint (read the error, read the docs, read the Mintlify constraints reference), then apply the correct fix once
 
 ---
 
@@ -78,6 +88,25 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - No hardcoded data in MDX pages. If a data file exists for the content (addresses, config, feeds), the page MUST import and render from it. Zero exceptions
 - Never inline a component's internals into MDX. Import and use the component. If it doesn't do what you need, propose a prop addition — do not bypass it
 - Never edit files marked DO NOT EDIT, AUTO-GENERATED, or similar. STOP. Re-read CLAUDE.md. Read the architecture docs for the system you're working in. Research what your task actually needs. Then propose an approach
+- Editing the same file 3+ times without verification passing triggers an automatic hypothesis requirement — hook enforced
+- Every 8th edit triggers a scope checkpoint requiring reconnection to the thread outcome — hook enforced
+- Writing to completion artifacts (session-log.txt, completion-reports.md) is blocked while render verification is failing — hook enforced
+
+---
+
+## Platform constraints
+
+- **macOS environment.** Use macOS-compatible flags for CLI tools. `ps` uses `etime` not `etimes`. No GNU-specific flags. No Linux-only paths
+- **Mintlify MDX bundler.** Always read the constraints reference before attempting MDX fixes: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. Do NOT try the same broken pattern twice. The bundler constraints are non-negotiable — they cannot be worked around
+- **Never edit auto-generated files directly.** Trace back to the generator source — hook enforced
+
+---
+
+## Dry-run policy
+
+- Before running any script that writes or modifies data files, check for `--dry-run` support first
+- If no dry-run flag exists, propose the run and wait for approval before executing
+- Always verify script side effects before marking tasks complete
 
 ---
 
@@ -136,6 +165,7 @@ These are inline. No skill files. Just do what it says.
 | `/remind` | Re-read `.claude/CLAUDE.md` right now. Re-read the thread outcome. State your role, the rules you're following, and what you're working on. Then propose the next action with reasoning. |
 | `/log` | Append a timestamped entry to `workspace/thread-outputs/sessions/session-log.txt` with: thread name, what just shipped, files changed. One entry, no ceremony. Then continue working. |
 | `/flag [thread] [message]` | Append a flag to `workspace/thread-outputs/sessions/flags.jsonl` for another thread to pick up. One JSON line. Then continue working. |
+| `/server` | Check server health: `node operations/scripts/dispatch/governance/server-lifecycle.js health`. If down, restart: `server-lifecycle.js restart`. Read log on failure: `tail -50 /tmp/mint-dev-test-*.log`. Report status. |
 
 **If the user says a message was lost/eaten:** Immediately read the last 5 entries from `workspace/thread-outputs/sessions/message-backup.jsonl` and present them. Don't ask questions — just show the content.
 

@@ -150,6 +150,12 @@ The outcome must be:
 
 **Immediately after defining the outcome, create a TodoWrite task list.** This is mandatory — not optional. The task list must include the session outcome as the first item and break down the known tasks below it. Mark the first task `in_progress`. Update task status in real time as work proceeds. At session close, the TodoWrite list is the source of truth for what was attempted.
 
+**Write the outcome to the scope checkpoint file.** After defining the outcome, run:
+```bash
+echo "{outcome text}" > /tmp/claude-thread-outcome-${CLAUDE_SESSION_ID:-default}.txt
+```
+This file is read by the `scope-checkpoint` hook to enforce drift detection mechanically. The hook injects a scope check every 8 edits, restating this outcome and asking you to confirm your current work serves it.
+
 ### Register in CLAUDE.md work streams table
 
 After defining the outcome, update the "Active threads" table in `.claude/CLAUDE.md`:
