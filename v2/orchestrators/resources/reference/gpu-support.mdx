@@ -157,7 +157,9 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
 </StyledTable>
 
 <Note>
-  HEVC (H.265) is an increasingly important codec on the Livepeer network. GPUs that support HEVC encode (NVENC) can handle both encoding and decoding of H.265 streams. GPUs listed as "Decode only" lack NVENC hardware and can transcode HEVC only when used purely as a decoder (output codec must differ). See the [NVIDIA Video Encode and Decode GPU Support Matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new) for full codec details per model.
+  HEVC (H.265) is an increasingly important codec on the Livepeer network. GPUs that support HEVC encode (NVENC) can handle both encoding and decoding of H.265 streams.
+
+  GPUs listed as "Decode only" lack NVENC hardware - they cannot encode HEVC output. See the [NVIDIA Video Encode and Decode GPU Support Matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new) for full codec details per model.
 </Note>
 <CustomDivider />
 
@@ -380,7 +382,7 @@ The table below highlights commonly deployed GPUs for AI inference on the Livepe
 </StyledTable>
 
 <Note>
-  The A100 and H100 lack NVENC hardware (HEVC encode) and are pure compute cards. They are optimal for AI inference but cannot encode video streams directly. Pair with a transcoding-capable GPU if both workloads are required on the same node.
+  The A100 and H100 lack NVENC hardware and cannot encode HEVC or any other codec. They are optimal for AI inference but cannot encode video streams directly. Pair with a transcoding-capable GPU if both workloads are required on the same node.
 </Note>
 
 <CustomDivider />
