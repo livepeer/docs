@@ -1,0 +1,243 @@
+/**
+ * @script            precommit-staged-cache
+ * @category          orchestrator
+ * @purpose           infrastructure:pipeline-orchestration
+ * @scope             .githooks, tests, tools/lib/bootstrap, operations/scripts
+ * @domain            docs
+ * @needs             R-R29
+ * @purpose-statement Shared pre-commit staged-cache helpers — fingerprint staged content plus hook inputs and persist reusable pass markers
+ * @pipeline          indirect -- library module
+ * @usage             const cache = require('../../tools/lib/bootstrap/precommit-staged-cache');
+ */
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const DEFAULT_NAMESPACE = 'pre-commit-expensive-suite';
+const DEFAULT_MAX_ENTRIES = 25;
+const DEFAULT_WATCHED_FILES = Object.freeze([
+  '.githooks/pre-commit',
+  'operations/tests/run-all.js',
+  'operations/tests/integration/v2-link-audit.js',
+  'operations/scripts/audits/content/health/page-links-audit.js',
+  'operations/scripts/audits/content/health/page-imports-audit.js',
+  'operations/scripts/dispatch/content/health/page-integrity-dispatch.js',
+  'operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js',
+  'operations/scripts/remediators/content/repair/repair-page-links.js',
+  'operations/scripts/remediators/content/repair/repair-page-imports.js',
+  'operations/tests/integration/v2-wcag-audit.js',
+  'operations/tests/unit/ai-tools-registry.test.js',
+  'operations/tests/unit/check-agent-docs-freshness.test.js',
+  'operations/tests/unit/component-governance-generators.test.js',
+  'operations/tests/unit/component-governance-utils.test.js',
+  'operations/tests/unit/copy-lint.test.js',
+  'operations/tests/unit/docs-authoring-rules.test.js',
+  'operations/tests/unit/docs-guide-sot.test.js',
+  'operations/tests/unit/docs-navigation.test.js',
+  'operations/tests/unit/docs-page-scope.test.js',
+  'operations/tests/unit/docs-path-sync.test.js',
+  'operations/tests/unit/export-portable-skills.test.js',
+  'operations/tests/unit/frontmatter-taxonomy.test.js',
+  'operations/tests/unit/page-imports-audit.test.js',
+  'operations/tests/unit/page-integrity-dispatch.test.js',
+  'operations/tests/unit/page-integrity-rolling-issue.test.js',
+  'operations/tests/unit/links-imports.test.js',
+  'operations/tests/unit/mdx-guards.test.js',
+  'operations/tests/unit/mdx-safe-markdown.test.js',
+  'operations/tests/unit/mdx.test.js',
+  'operations/tests/unit/ownerless-governance.test.js',
+  'operations/tests/unit/precommit-staged-cache.test.js',
+  'operations/tests/unit/quality.test.js',
+  'operations/tests/unit/root-allowlist-format.test.js',
+  'operations/tests/unit/script-docs.test.js',
+  'operations/tests/unit/skill-docs.test.js',
+  'operations/tests/unit/spelling.test.js',
+  'operations/tests/unit/style-guide.test.js',
+  'operations/tests/unit/ui-template-generator.test.js',
+  'operations/tests/unit/usefulness-journey.test.js',
+  'operations/tests/unit/usefulness-rubric.test.js',
+  'tools/lib/governance/generated-artifacts.js',
+  'tools/lib/bootstrap/precommit-staged-cache.js',
+  'tools/lib/governance/script-governance-config.js',
+  'operations/scripts/validators/content/structure/enforce-generated-file-banners.js',
+  'operations/scripts/generators/components/library/generate-component-registry.js',
+  'operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js',
+  'operations/scripts/generators/content/catalogs/generate-docs-index.js',
+  'operations/scripts/generators/content/catalogs/generate-pages-index.js',
+  'operations/scripts/remediators/components/library/repair-component-metadata.js',
+  'operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js',
+  'operations/scripts/remediators/content/repair/sync-docs-paths.js',
+  'operations/scripts/audits/components/library/scan-component-imports.js',
+  'operations/scripts/automations/ai/agents/sync-codex-skills.js',
+  'operations/scripts/validators/components/library/check-component-css.js',
+  'operations/scripts/validators/components/documentation/check-component-docs.js',
+  'operations/scripts/validators/components/library/check-naming-conventions.js',
+  'operations/scripts/validators/content/structure/check-mdx-safe-markdown.js',
+  'operations/scripts/validators/governance/audit-script-inventory.js'
+]);
+
+function normalizeRepoPath(filePath) {
+  return String(filePath || '').split(path.sep).join('/');
+}
+
+function runGit(repoRoot, args, options = {}) {
+  const result = spawnSync('git', args, {
+    cwd: repoRoot,
+    encoding: 'utf8',
+    env: options.gitEnv || process.env
+  });
+
+  if (result.status !== 0) {
+    throw new Error((result.stderr || result.stdout || `git ${args.join(' ')}`).trim());
+  }
+
+  return String(result.stdout || '').trim();
+}
+
+function resolveGitDir(repoRoot, options = {}) {
+  return path.resolve(repoRoot, runGit(repoRoot, ['rev-parse', '--git-dir'], options));
+}
+
+function getIndexTree(repoRoot, options = {}) {
+  return runGit(repoRoot, ['write-tree'], options);
+}
+
+function hashFileContent(repoRoot, relativePath) {
+  const normalizedPath = normalizeRepoPath(relativePath);
+  const absolutePath = path.join(repoRoot, normalizedPath);
+  if (!fs.existsSync(absolutePath)) return `missing:${normalizedPath}`;
+
+  const hash = crypto.createHash('sha256');
+  hash.update(fs.readFileSync(absolutePath));
+  return hash.digest('hex');
+}
+
+function normalizeWatchedFiles(watchedFiles = DEFAULT_WATCHED_FILES) {
+  return [...new Set((watchedFiles || []).map(normalizeRepoPath).filter(Boolean))].sort();
+}
+
+function getCacheDir({ repoRoot, namespace = DEFAULT_NAMESPACE, gitEnv }) {
+  return path.join(resolveGitDir(repoRoot, { gitEnv }), 'lpd-hook-cache', namespace);
+}
+
+function computeCacheKey({ repoRoot, namespace = DEFAULT_NAMESPACE, watchedFiles = DEFAULT_WATCHED_FILES, gitEnv }) {
+  const normalizedFiles = normalizeWatchedFiles(watchedFiles);
+  const indexTree = getIndexTree(repoRoot, { gitEnv });
+  const digest = crypto.createHash('sha256');
+
+  digest.update(`${namespace}\n${indexTree}\n`);
+  normalizedFiles.forEach((relativePath) => {
+    digest.update(`${relativePath}\0${hashFileContent(repoRoot, relativePath)}\n`);
+  });
+
+  return {
+    namespace,
+    indexTree,
+    watchedFiles: normalizedFiles,
+    key: digest.digest('hex')
+  };
+}
+
+function getCacheFilePath({ repoRoot, namespace = DEFAULT_NAMESPACE, key, gitEnv }) {
+  return path.join(getCacheDir({ repoRoot, namespace, gitEnv }), `${key}.json`);
+}
+
+function pruneCacheDir(cacheDir, maxEntries = DEFAULT_MAX_ENTRIES) {
+  if (!fs.existsSync(cacheDir)) return;
+
+  const entries = fs.readdirSync(cacheDir)
+    .filter((entry) => entry.endsWith('.json'))
+    .map((entry) => {
+      const absolutePath = path.join(cacheDir, entry);
+      const stats = fs.statSync(absolutePath);
+      return {
+        absolutePath,
+        mtimeMs: stats.mtimeMs
+      };
+    })
+    .sort((left, right) => right.mtimeMs - left.mtimeMs);
+
+  entries.slice(Math.max(maxEntries, 0)).forEach((entry) => {
+    fs.rmSync(entry.absolutePath, { force: true });
+  });
+}
+
+function readCache(options) {
+  const fingerprint = computeCacheKey(options);
+  const cacheFilePath = getCacheFilePath({
+    repoRoot: options.repoRoot,
+    namespace: fingerprint.namespace,
+    key: fingerprint.key,
+    gitEnv: options.gitEnv
+  });
+
+  if (!fs.existsSync(cacheFilePath)) {
+    return {
+      ...fingerprint,
+      cacheFilePath,
+      hit: false,
+      entry: null
+    };
+  }
+
+  const entry = JSON.parse(fs.readFileSync(cacheFilePath, 'utf8'));
+  const hit = entry.key === fingerprint.key && entry.indexTree === fingerprint.indexTree;
+
+  return {
+    ...fingerprint,
+    cacheFilePath,
+    hit,
+    entry
+  };
+}
+
+function writeCache({
+  repoRoot,
+  namespace = DEFAULT_NAMESPACE,
+  watchedFiles = DEFAULT_WATCHED_FILES,
+  metadata = {},
+  maxEntries = DEFAULT_MAX_ENTRIES,
+  gitEnv
+}) {
+  const fingerprint = computeCacheKey({ repoRoot, namespace, watchedFiles, gitEnv });
+  const cacheDir = getCacheDir({ repoRoot, namespace, gitEnv });
+  const cacheFilePath = getCacheFilePath({
+    repoRoot,
+    namespace,
+    key: fingerprint.key,
+    gitEnv
+  });
+
+  fs.mkdirSync(cacheDir, { recursive: true });
+
+  const entry = {
+    key: fingerprint.key,
+    namespace,
+    indexTree: fingerprint.indexTree,
+    watchedFiles: fingerprint.watchedFiles,
+    createdAt: new Date().toISOString(),
+    metadata
+  };
+
+  fs.writeFileSync(cacheFilePath, `${JSON.stringify(entry, null, 2)}\n`, 'utf8');
+  pruneCacheDir(cacheDir, maxEntries);
+
+  return {
+    ...fingerprint,
+    cacheFilePath,
+    entry
+  };
+}
+
+module.exports = {
+  DEFAULT_MAX_ENTRIES,
+  DEFAULT_NAMESPACE,
+  DEFAULT_WATCHED_FILES,
+  computeCacheKey,
+  getCacheDir,
+  getCacheFilePath,
+  normalizeWatchedFiles,
+  readCache,
+  writeCache
+};

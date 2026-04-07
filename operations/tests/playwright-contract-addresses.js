@@ -3,8 +3,8 @@
  * @type automation
  * @concern testing
  * @niche render/page
- * @description CP-6: Verifies the canonical contract-addresses reference page, its composable-import wrappers,
- *              the embedded verifier widget, and the legacy redirect against a local Mint preview.
+ * @description CP-6: Verifies the canonical contract-addresses reference page, the dedicated verifier page,
+ *              and the legacy redirect against a local Mint preview.
  * @usage node operations/tests/playwright-contract-addresses.js
  */
 
@@ -13,11 +13,8 @@ const {
   ensureFreshBundleBaseUrl
 } = require('./contracts-validator-contract');
 
-const CANONICAL_ROUTE = '/v2/about/resources/livepeer-contract-addresses';
-const VERIFIER_FRAGMENT = '#verifier-widget-verify-contract-address';
-const RESOURCE_HUB_ROUTE = '/v2/resources/references/contract-addresses';
-const GATEWAYS_ROUTE = '/v2/gateways/resources/reference/technical/contract-addresses';
-const ORCHESTRATORS_ROUTE = '/v2/orchestrators/resources/reference/technical/contract-addresses';
+const CANONICAL_ROUTE = '/v2/about/resources/reference/livepeer-contract-addresses';
+const VERIFIER_ROUTE = '/v2/about/resources/verify-contract-addresses';
 const LEGACY_REDIRECT_ROUTE = '/references/contract-addresses';
 const EXPECTED_LOOKUP_ADDRESSES = {
   arbitrumOne: '0x289ba1701c2f088cf0faf8b3705246331cb8a839',
@@ -123,6 +120,35 @@ async function waitForReferencePage(page) {
   await page.waitForFunction(
     () => document.querySelectorAll('table').length >= 2,
     { timeout: 60000 }
+  );
+}
+
+async function waitForVerifierPage(page) {
+  await page.waitForFunction(
+    () => {
+      const bodyText = document.body?.innerText || '';
+      const h1Text = document.querySelector('h1')?.textContent?.trim() || '';
+      return (
+        h1Text.includes('Verify Contract Addresses') &&
+        bodyText.includes('Browser Verifier') &&
+        bodyText.includes('No-Trust On-Chain Verification')
+      );
+    },
+    { timeout: 60000 }
+  );
+  await page.waitForFunction(
+    () =>
+      Array.from(document.querySelectorAll('button')).some(
+        (button) => button.textContent.trim() === 'Look up contract'
+      ) &&
+      Array.from(document.querySelectorAll('button')).some(
+        (button) => button.textContent.trim() === 'Verify address'
+      ) &&
+      Array.from(document.querySelectorAll('button')).some(
+        (button) => button.textContent.trim() === 'Look up'
+      ) &&
+      Boolean(document.querySelector('select[aria-label="Contract name"]')),
+    { timeout: 90000 }
   );
 }
 
@@ -248,13 +274,12 @@ async function testReferencePage(browser, { name, url, expectRedirect, canonical
         });
       });
       const hasHistoricalSection = bodyText.includes('Historical Contract Addresses');
-      const hasManualVerificationSection = bodyText.includes('No-Trust On-chain Address Verification');
       const hasAddress = /0x[0-9a-fA-F]{10,}/.test(bodyText);
-      const hasVerifierLink = await page.evaluate((verifierFragment) =>
+      const hasVerifierLink = await page.evaluate((verifierRoute) =>
         Array.from(document.querySelectorAll('a[href]')).some((link) =>
-          link.getAttribute('href') === verifierFragment || link.href.endsWith(verifierFragment)
+          link.getAttribute('href') === verifierRoute || link.href.endsWith(verifierRoute)
         ),
-        VERIFIER_FRAGMENT
+        VERIFIER_ROUTE
       );
       const hasWidgetControls = await page.evaluate(() => Boolean(document.querySelector('select[aria-label="Contract name"]')));
       const hasLookUpButton = await page.evaluate(() =>
@@ -262,7 +287,6 @@ async function testReferencePage(browser, { name, url, expectRedirect, canonical
           (button) => button.textContent.trim() === 'Look up'
         )
       );
-      const widget = url === canonicalUrl ? await testWidgetFlows(page) : null;
       const unexpectedErrors = filterNoise(errors);
 
       lastResult = {
@@ -276,15 +300,9 @@ async function testReferencePage(browser, { name, url, expectRedirect, canonical
           hasAddress &&
           hasProxyHeaderContract &&
           hasHistoricalSection &&
-          hasManualVerificationSection &&
           hasVerifierLink &&
-          hasWidgetControls === true &&
-          hasLookUpButton === true &&
-          (widget
-            ? widget.initialLookupDisabled === true &&
-              widget.lookupDualChain === true &&
-              widget.verifyCrossReference === true
-            : true) &&
+          hasWidgetControls === false &&
+          hasLookUpButton === false &&
           redirectOk &&
           unexpectedErrors.length === 0,
         hasContent,
@@ -292,11 +310,9 @@ async function testReferencePage(browser, { name, url, expectRedirect, canonical
         hasAddress,
         hasProxyHeaderContract,
         hasHistoricalSection,
-        hasManualVerificationSection,
         hasVerifierLink,
         hasWidgetControls,
         hasLookUpButton,
-        widget,
         redirectOk,
         bodyLength: bodyText.length,
         unexpectedErrors,
@@ -314,12 +330,84 @@ async function testReferencePage(browser, { name, url, expectRedirect, canonical
         hasAddress: false,
         hasProxyHeaderContract: false,
         hasHistoricalSection: false,
-        hasManualVerificationSection: false,
         hasVerifierLink: false,
         hasWidgetControls: null,
         hasLookUpButton: null,
-        widget: null,
         redirectOk: false,
+        bodyLength: 0,
+        unexpectedErrors: [normalizeError(error.message)],
+        rawErrors: filterNoise(errors),
+      };
+    } finally {
+      await closePageQuietly(page);
+    }
+
+    const timedOut = lastResult.unexpectedErrors.some((message) => message.includes('Waiting failed'));
+    if (lastResult.passed || !timedOut || attempt === 2) {
+      return lastResult;
+    }
+  }
+
+  return lastResult;
+}
+
+async function testVerifierPage(browser, { name, url }) {
+  let lastResult = null;
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { page, errors } = await openPage(browser, url);
+
+    try {
+      await waitForVerifierPage(page);
+
+      const bodyText = await page.$eval('body', (el) => el.textContent || '');
+      const hasContent = bodyText.length > 200;
+      const hasCanonicalLink = await page.evaluate((canonicalRoute) =>
+        Array.from(document.querySelectorAll('a[href]')).some((link) =>
+          link.getAttribute('href') === canonicalRoute || link.href.endsWith(canonicalRoute)
+        ),
+        CANONICAL_ROUTE
+      );
+      const hasManualVerificationSection = bodyText.includes('No-Trust On-Chain Verification');
+      const widget = await testWidgetFlows(page);
+      const unexpectedErrors = filterNoise(errors);
+
+      lastResult = {
+        kind: 'verifier',
+        name,
+        url,
+        finalUrl: page.url(),
+        passed:
+          hasContent &&
+          hasCanonicalLink &&
+          hasManualVerificationSection &&
+          widget.initialLookupDisabled === true &&
+          widget.lookupDualChain === true &&
+          widget.verifyCrossReference === true &&
+          unexpectedErrors.length === 0,
+        hasContent,
+        hasCanonicalLink,
+        hasManualVerificationSection,
+        widget,
+        bodyLength: bodyText.length,
+        unexpectedErrors,
+        rawErrors: filterNoise(errors),
+      };
+    } catch (error) {
+      lastResult = {
+        kind: 'verifier',
+        name,
+        url,
+        finalUrl: null,
+        passed: false,
+        hasContent: false,
+        hasCanonicalLink: false,
+        hasManualVerificationSection: false,
+        widget: {
+          initialLookupDisabled: null,
+          lookupDualChain: false,
+          verifyCrossReference: false,
+        },
         bodyLength: 0,
         unexpectedErrors: [normalizeError(error.message)],
         rawErrors: filterNoise(errors),
@@ -351,25 +439,9 @@ async function main() {
       expectRedirect: false,
     },
     {
-      kind: 'reference',
-      name: 'contract-addresses (resource hub)',
-      url: `${baseUrl}${RESOURCE_HUB_ROUTE}`,
-      canonicalUrl,
-      expectRedirect: false,
-    },
-    {
-      kind: 'reference',
-      name: 'contract-addresses (gateways)',
-      url: `${baseUrl}${GATEWAYS_ROUTE}`,
-      canonicalUrl,
-      expectRedirect: false,
-    },
-    {
-      kind: 'reference',
-      name: 'contract-addresses (orchestrators)',
-      url: `${baseUrl}${ORCHESTRATORS_ROUTE}`,
-      canonicalUrl,
-      expectRedirect: false,
+      kind: 'verifier',
+      name: 'verify-contract-addresses',
+      url: `${baseUrl}${VERIFIER_ROUTE}`,
     },
   ];
 
@@ -393,7 +465,10 @@ async function main() {
     });
 
     try {
-      const result = await testReferencePage(browser, pageSpec);
+      const result =
+        pageSpec.kind === 'verifier'
+          ? await testVerifierPage(browser, pageSpec)
+          : await testReferencePage(browser, pageSpec);
       results.push(result);
     } finally {
       await closeBrowserQuietly(browser);
@@ -414,16 +489,16 @@ async function main() {
       console.log(`  Has address:  ${result.hasAddress}`);
       console.log(`  Proxy header: ${result.hasProxyHeaderContract}`);
       console.log(`  Historical:   ${result.hasHistoricalSection}`);
-      console.log(`  Manual steps: ${result.hasManualVerificationSection}`);
       console.log(`  Verifier link:${result.hasVerifierLink}`);
       console.log(`  Widget select:${result.hasWidgetControls}`);
       console.log(`  Widget button:${result.hasLookUpButton}`);
-      if (result.widget) {
-        console.log(`  Lookup init disabled: ${result.widget.initialLookupDisabled}`);
-        console.log(`  Lookup dual-chain:    ${result.widget.lookupDualChain}`);
-        console.log(`  Verify cross-ref:     ${result.widget.verifyCrossReference}`);
-      }
       console.log(`  Redirect OK:  ${result.redirectOk}`);
+    } else {
+      console.log(`  Canonical link: ${result.hasCanonicalLink}`);
+      console.log(`  Manual steps:   ${result.hasManualVerificationSection}`);
+      console.log(`  Lookup init disabled: ${result.widget.initialLookupDisabled}`);
+      console.log(`  Lookup dual-chain:    ${result.widget.lookupDualChain}`);
+      console.log(`  Verify cross-ref:     ${result.widget.verifyCrossReference}`);
     }
 
     if (result.unexpectedErrors.length > 0) {
@@ -440,7 +515,7 @@ async function main() {
   console.log('\n──────────────────────────────────────────────────');
   console.log(
     allPassed
-      ? 'CP-6 PASS — contracts reference surfaces and embedded verifier render correctly.'
+      ? 'CP-6 PASS — contracts reference and verifier pages render correctly.'
       : 'CP-6 FAIL — see above.'
   );
   process.exit(allPassed ? 0 : 1);

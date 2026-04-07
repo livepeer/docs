@@ -37,12 +37,16 @@ jobs:
       - run: cd tools && npm ci
 
       - name: Generate llms files
-        run: node operations/scripts/generate-llms-files.js --write
+        run: node operations/scripts/generators/ai/llm/generate-llms-files.js --write
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add llms.txt llms-full.txt
+          for file in llms.txt llms-full.txt; do
+            if [ -e "$file" ] || git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+              git add "$file"
+            fi
+          done
           git diff --cached --quiet || git commit -m "chore: regenerate llms.txt [skip ci]"
           git push origin HEAD:${{ steps.branch.outputs.name }}

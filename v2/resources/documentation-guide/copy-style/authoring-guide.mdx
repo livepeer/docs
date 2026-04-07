@@ -67,7 +67,7 @@ Set as an array. Most pages serve one audience. Multi-audience pages are rare by
 
 ### Example Frontmatter Block
 
-```yaml icon="terminal"
+```yaml
 ---
 title: GPU Configuration
 sidebarTitle: GPU Config
@@ -113,7 +113,7 @@ All snippets are workspace-scoped in `.vscode/mdx.code-snippets` and load automa
 
 Import custom components at the top of your MDX file, after the frontmatter block:
 
-```mdx icon="terminal"
+```mdx
 ---
 title: My Page
 ---
@@ -173,7 +173,7 @@ Mintlify provides built-in components that require no import. Use them directly 
 
 Four severity levels for inline notices:
 
-```mdx icon="terminal"
+```mdx
 <Tip>Optimisation advice or best practice.</Tip>
 
 <Note>Supplementary context the reader should be aware of.</Note>
@@ -189,7 +189,7 @@ Use callouts for information that sits outside the main flow. Do not use `<Note>
 
 Group related content by variant, platform, or method:
 
-```mdx icon="terminal"
+```mdx
 <Tabs>
   <Tab title="Linux">
     Linux-specific instructions here.
@@ -204,7 +204,7 @@ Group related content by variant, platform, or method:
 
 Collapsible sections for optional or supplementary detail:
 
-```mdx icon="terminal"
+```mdx
 <AccordionGroup>
   <Accordion title="Advanced configuration" icon="gear">
     Content hidden by default.
@@ -216,7 +216,7 @@ Collapsible sections for optional or supplementary detail:
 
 Navigation and feature cards:
 
-```mdx icon="terminal"
+```mdx
 <CardGroup cols={2}>
   <Card title="Quick Start" icon="rocket" href="/v2/orchestrators/guides/setup">
     Get running in 15 minutes.
@@ -231,7 +231,7 @@ Navigation and feature cards:
 
 Ordered procedures:
 
-```mdx icon="terminal"
+```mdx
 <Steps>
   <Step title="Install dependencies">
     Run `apt install ...`
@@ -246,7 +246,7 @@ Ordered procedures:
 
 Side-by-side code blocks for multiple languages or variants:
 
-~~~mdx icon="terminal"
+````mdx
 <CodeGroup>
 ```bash title="Linux"
 curl -L https://example.com/install.sh | bash
@@ -255,13 +255,13 @@ curl -L https://example.com/install.sh | bash
 Invoke-WebRequest -Uri https://example.com/install.ps1 | powershell
 ```
 </CodeGroup>
-~~~
+````
 
 ### Frame
 
 Image or media container with optional caption:
 
-```mdx icon="terminal"
+```mdx
 <Frame caption="Network architecture overview">
   ![Architecture diagram](/images/architecture.png)
 </Frame>
@@ -324,12 +324,12 @@ Before submitting a page for review:
 3. **Links** - internal links point to existing `.mdx` files; external links are live
 4. **Rendering** - run the scoped dev server to confirm the page renders:
 
-```bash icon="terminal"
+```bash
 lpd dev --scoped --scope-prefix v2/orchestrators
 ```
 
 5. **Smoke test** - run the MDX component runtime smoke test:
 
-```bash icon="terminal"
+```bash
 node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path
 ```

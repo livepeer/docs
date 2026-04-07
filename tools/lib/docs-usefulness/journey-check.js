@@ -8,7 +8,7 @@
  * @needs             R-R14, R-C6
  * @purpose-statement Evaluates docs pages against user journey completeness criteria.
  * @pipeline          indirect -- library module
- * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ * @usage             const { checkJourney } = require('../../tools/lib/docs-usefulness/journey-check');
  */
 /**
  * @script            journey-check
@@ -19,7 +19,7 @@
  * @needs             R-R14, R-C6
  * @purpose-statement Evaluates docs pages against user journey completeness criteria.
  * @pipeline          indirect -- library module
- * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ * @usage             const { checkJourney } = require('../../tools/lib/docs-usefulness/journey-check');
  */
 /**
  * @script            journey-check
@@ -30,7 +30,7 @@
  * @needs             R-R14, R-C6
  * @purpose-statement Evaluates docs pages against user journey completeness criteria.
  * @pipeline          indirect -- library module
- * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ * @usage             const { checkJourney } = require('../../tools/lib/docs-usefulness/journey-check');
  */
 /**
  * @script            journey-check
@@ -41,7 +41,7 @@
  * @needs             R-R14, R-C6
  * @purpose-statement Evaluates docs pages against user journey completeness criteria.
  * @pipeline          indirect -- library module
- * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ * @usage             const { checkJourney } = require('../../tools/lib/docs-usefulness/journey-check');
  */
 /**
  * @script            journey-check
@@ -52,10 +52,10 @@
  * @needs             R-R14, R-C6
  * @purpose-statement Evaluates docs pages against user journey completeness criteria.
  * @pipeline          indirect -- library module
- * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ * @usage             const { checkJourney } = require('../../tools/lib/docs-usefulness/journey-check');
  */
 
-const { minimatch } = require('../load-minimatch');
+const { minimatch } = require('../bootstrap/load-minimatch');
 const { loadJourneys } = require('./rubric-loader');
 
 function chooseBestPage(pages) {

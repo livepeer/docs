@@ -1,0 +1,111 @@
+---
+title: 'Generate Docs Guide Catalogs'
+kind: 'workflow'
+status: 'active'
+concern: 'repo-ops'
+source_path: '.github/workflows/generate-docs-guide-catalogs.yml'
+trigger_mode: 'push + workflow_dispatch'
+risk_level: 'low'
+consolidation_flag: 'review for alignment with `page-ship` while preserving current push + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'page-ship'
+workflow_family: 'docs-catalog-governance'
+cleanup_decision: 'merge'
+usage_status: 'compatibility-wrapper'
+process_fit: 'core-shipping'
+consolidation_target: 'future:docs-catalog-governance-workflow'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Generate Docs Guide Catalogs
+
+## Summary
+
+Generate Docs Guide Catalogs runs on push, workflow_dispatch and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/generate-docs-guide-catalogs.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- push: branches=docs-v2; paths=.github/workflows/**, .github/ISSUE_TEMPLATE/**, .github/pull-request-template-v2.md, .github/pull_request_template.md, docs.json, v2/index.mdx
+- workflow_dispatch: configured in workflow file
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `generate-docs-guide-catalogs` | generate-docs-guide-catalogs | n/a | none | 0 |
+
+### generate-docs-guide-catalogs
+
+- No steps parsed.
+
+## Inputs
+
+- workflow_dispatch:use_test_branch (optional)
+
+## Second Pass Assessment
+
+- Workflow family: `docs-catalog-governance`
+- Usage status: `compatibility-wrapper`
+- Cleanup decision: `merge`
+- Process fit: `core-shipping`
+- Consolidation target: `future:docs-catalog-governance-workflow`
+- Recommended engineering action: Merge this workflow with its sibling family into `future:docs-catalog-governance-workflow` so one workflow owns both check and write modes.
+
+## Outputs
+
+- Generated or refreshed repository data
+
+## Dependencies
+
+- No direct dependencies identified in current repo scan.
+
+## Dependants
+
+- dispatcher:page-ship
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: push + workflow_dispatch"]
+  workflow["Workflow: Generate Docs Guide Catalogs"]
+  trigger --> workflow
+  job1["Job: generate-docs-guide-catalogs"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- No local repo dependencies were detected automatically; verify whether this is truly standalone.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `page-ship`. Second-pass target: `future:docs-catalog-governance-workflow`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This family already has obvious check/generate pairings that likely want one governed workflow with mode flags.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

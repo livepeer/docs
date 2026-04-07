@@ -1,0 +1,274 @@
+---
+title: 'Token-gate videos with Lit Protocol'
+sidebarTitle: 'Token-Gated Video'
+description: >-
+  Gate Livepeer video playback behind NFT ownership using Lit Protocol for decentralised access control. A full tutorial with working code.
+keywords:
+  - token gating
+  - Lit Protocol
+  - NFT access control
+  - livepeer
+  - web3 video
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+purpose: build
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Lit Protocol verifies NFT ownership on-chain without a centralised server. Livepeer enforces access at the CDN edge. Together they create a fully decentralised token-gated video pipeline.</Tip>
+</CenteredContainer>
+
+---
+
+Token-gated video combines Lit Protocol's decentralised access control with Livepeer's JWT playback policy. A viewer proves NFT ownership to Lit; Lit returns a signed JWT; the Livepeer Player presents the JWT to the CDN edge for access.
+
+**What you will build:** A React application where only holders of a specific NFT contract can play a Livepeer-hosted video.
+
+<CustomDivider middleText="Architecture" />
+
+## How it works
+
+```
+Viewer wallet → Lit Network (ownership check) → Signed JWT → Livepeer CDN (JWT verified) → Video playback
+```
+
+Three systems interact:
+- **Lit Protocol** -- verifies on-chain conditions (NFT ownership) and issues access control conditions (ACCs) that gate a symmetric encryption key or a signed payload
+- **Livepeer Studio** -- creates a JWT-protected asset and provides a signing key
+- **Livepeer CDN** -- validates the JWT on every playback request at the edge
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- Node.js 18 or later
+- A deployed NFT contract (ERC-721) on Ethereum mainnet or any supported chain
+- A Livepeer Studio API key with a JWT-protected asset already created
+- Familiarity with React and ethers.js or wagmi
+
+```bash
+npm install livepeer @livepeer/react @lit-protocol/lit-node-client ethers
+```
+
+<CustomDivider middleText="Steps" />
+
+## Build the gate
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Create a JWT-protected Livepeer asset" icon="shield">
+    Create the asset with a JWT playback policy and a signing key. Follow the <a href="/v2/developers/guides/video/access-control">access control guide</a> for full setup.
+
+    ```typescript
+    import { Livepeer } from 'livepeer';
+
+    const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    // Create signing key
+    const { privateKey, id: publicKeyId } = await client.signingKey.create();
+    // Store privateKey in your secrets manager
+
+    // Create gated asset
+    const { asset } = await client.asset.create({
+      name: 'nft-gated-video.mp4',
+      playbackPolicy: { type: 'jwt' },
+    });
+
+    console.log('Playback ID:', asset.playbackId);
+    ```
+  </StyledStep>
+
+  <StyledStep title="Define Lit access control conditions" icon="key">
+    Access control conditions (ACCs) specify what a viewer must prove to get access. This example requires ownership of at least one token from a specific ERC-721 contract:
+
+    ```typescript
+    const accessControlConditions = [
+      {
+        contractAddress: '0xYourNFTContractAddress',
+        standardContractType: 'ERC721',
+        chain: 'ethereum',
+        method: 'balanceOf',
+        parameters: [':userAddress'],
+        returnValueTest: {
+          comparator: '>',
+          value: '0',
+        },
+      },
+    ];
+    ```
+
+    Lit evaluates this condition against the viewer's connected wallet. If `balanceOf(viewerAddress) > 0`, the condition passes and Lit proceeds to issue the access.
+  </StyledStep>
+
+  <StyledStep title="Encrypt the Livepeer signing key with Lit" icon="lock">
+    Encrypt your Livepeer private signing key with the access control conditions so only qualifying wallets can decrypt it:
+
+    ```typescript
+    import * as LitJsSdk from '@lit-protocol/lit-node-client';
+
+    const litClient = new LitJsSdk.LitNodeClient({ litNetwork: 'mainnet' });
+    await litClient.connect();
+
+    // Encrypt the Livepeer private key -- only holders of the NFT can decrypt it
+    const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptString(
+      {
+        accessControlConditions,
+        dataToEncrypt: process.env.ACCESS_CONTROL_PRIVATE_KEY!, // Livepeer signing key
+      },
+      litClient
+    );
+
+    // Store ciphertext and dataToEncryptHash alongside your asset metadata
+    ```
+  </StyledStep>
+
+  <StyledStep title="Decrypt the key and sign a JWT in the browser" icon="unlock">
+    When a viewer connects their wallet, use Lit to decrypt the Livepeer signing key client-side, then sign a JWT:
+
+    ```typescript
+    import { signAccessJwt } from '@livepeer/core/crypto';
+
+    async function getPlaybackJWT(
+      viewerAddress: string,
+      authSig: object,
+      playbackId: string
+    ): Promise<string> {
+      const litClient = new LitJsSdk.LitNodeClient({ litNetwork: 'mainnet' });
+      await litClient.connect();
+
+      // Decrypt the Livepeer private key -- Lit verifies NFT ownership on-chain
+      const { decryptedString: privateKey } = await LitJsSdk.decryptToString(
+        {
+          accessControlConditions,
+          ciphertext,
+          dataToEncryptHash,
+          authSig,
+          chain: 'ethereum',
+        },
+        litClient
+      );
+
+      // Sign a Livepeer JWT with the decrypted key
+      const jwt = await signAccessJwt({
+        privateKey,
+        publicKey: process.env.NEXT_PUBLIC_ACCESS_CONTROL_PUBLIC_KEY!,
+        issuer: 'https://yourapp.com',
+        playbackId,
+        expiration: '1h',
+        custom: { viewer: viewerAddress },
+      });
+
+      return jwt;
+    }
+    ```
+  </StyledStep>
+
+  <StyledStep title="Pass the JWT to the Livepeer Player" icon="play">
+    ```tsx
+    import * as Player from '@livepeer/react/player';
+    import { useAccount, useSignMessage } from 'wagmi';
+
+    export const TokenGatedPlayer = ({ playbackId }: { playbackId: string }) => {
+      const { address } = useAccount();
+      const [jwt, setJwt] = useState<string | null>(null);
+      const { signMessageAsync } = useSignMessage();
+
+      const handleUnlock = async () => {
+        if (!address) return;
+
+        // Get auth signature from the viewer's wallet
+        const authSig = await signMessageAsync({ message: 'Sign to verify NFT ownership' });
+
+        // Get playback JWT (Lit verifies ownership, decrypts key, we sign JWT)
+        const token = await getPlaybackJWT(address, authSig, playbackId);
+        setJwt(token);
+      };
+
+      if (!jwt) {
+        return (
+          <div>
+            <p>This video requires NFT ownership to watch.</p>
+            <button onClick={handleUnlock}>Connect and Verify</button>
+          </div>
+        );
+      }
+
+      return (
+        <Player.Root
+          src={`https://livepeercdn.studio/asset/hls/${playbackId}/index.m3u8`}
+          jwt={jwt}
+        >
+          <Player.Container>
+            <Player.Video />
+            <Player.Controls />
+          </Player.Container>
+        </Player.Root>
+      );
+    };
+    ```
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Extensions" />
+
+## Extending the gate
+
+The access control conditions accept any Lit-supported chain and condition type:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Gate type</TableCell>
+      <TableCell header>Condition method</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>ERC-721 ownership</TableCell>
+      <TableCell>`balanceOf`</TableCell>
+      <TableCell>Any ERC-721; condition shown above</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Specific token ID</TableCell>
+      <TableCell>`ownerOf`</TableCell>
+      <TableCell>Gates on ownership of one specific token ID</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>ERC-20 balance</TableCell>
+      <TableCell>`balanceOf`</TableCell>
+      <TableCell>Gate on holding a minimum token amount</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>ERC-1155 balance</TableCell>
+      <TableCell>`balanceOf`</TableCell>
+      <TableCell>Gates on semi-fungible token ownership</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/video/access-control">
+    JWT and webhook-based access control without Lit Protocol.
+  </Card>
+  <Card title="IPFS Video Integration" icon="cloud" href="/v2/developers/guides/tutorials/ipfs-video-integration">
+    Store video on IPFS and deliver via Livepeer.
+  </Card>
+</CardGroup>

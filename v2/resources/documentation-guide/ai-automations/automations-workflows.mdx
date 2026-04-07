@@ -16,7 +16,7 @@ keywords:
   - n8n
   - pre-commit
   - hooks
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -150,7 +150,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **File:** `.github/workflows/update-livepeer-release.yml`
 
-**Purpose:** Automatically updates the latest Livepeer release version in globals file
+**Purpose:** Automatically updates the latest Livepeer release version in the canonical release data module
 
 **Triggers:**
 - Every 30 minutes (scheduled)
@@ -158,8 +158,8 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **What it does:**
 1. Fetches latest release from `livepeer/go-livepeer` GitHub repository
-2. Compares with current version in `snippets/automations/globals/globals.mdx`
-3. Updates file if new version is available
+2. Runs `.github/scripts/update-livepeer-release.js` to resolve and write the canonical release data
+3. Commits the canonical data file if a new version is available
 4. Commits and pushes changes
 
 **Manual execution:**
@@ -168,9 +168,11 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **Required secrets:** None (uses `GITHUB_TOKEN`)
 
-**Output file:** `snippets/automations/globals/globals.mdx`
+**Script entrypoint:** `.github/scripts/update-livepeer-release.js`
 
-**Audit note:** The March 9, 2026 freshness audit found version drift (`v0.7.7` in `globals.mdx` vs `v0.8.9` upstream) and a path mismatch inside this workflow. Treat the workflow as needing maintainer review before assuming it is healthy.
+**Output file:** `snippets/data/globals/latestRelease.jsx`
+
+**Audit note:** The March 9, 2026 freshness audit found version drift and a path mismatch inside this workflow. `snippets/data/globals/latestRelease.jsx` is now the canonical automation output; legacy globals wrappers must remain thin re-exports instead of second sources of truth.
 
 <CustomDivider />
 
@@ -223,15 +225,15 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 **How to roll out future schema changes safely:**
 1. Add support for the new schema version in `.github/workflows/discord-issue-intake.yml`
 2. Keep the previous schema version accepted until all dispatch senders are upgraded
-3. Update `snippets/automations/scripts/n8n/Discord-Issue-Intake.json` to emit the new version and fields
+3. Update `snippets/assets/data/n8n/Discord-Issue-Intake.json` to emit the new version and fields
 4. Verify a test dispatch creates the expected headings and labels
 
 **Required secrets:**
 - None (uses repository-dispatch caller token and GitHub Actions `GITHUB_TOKEN`)
 
 **Related files:**
-- `snippets/automations/scripts/n8n/Discord-Issue-Intake.json`
-- `snippets/assets/scripts/n8n/README-discord-issue-intake-workflow.md`
+- `snippets/assets/data/n8n/Discord-Issue-Intake.json`
+- `snippets/_workspace/archive/assets-scripts/README-discord-issue-intake-workflow.md`
 - `.github/workflows/issue-auto-label.yml`
 
 <CustomDivider />
@@ -324,7 +326,7 @@ The GitHub Actions implementation is the canonical in-repo path for Ghost, Forum
 
 **What it does:**
 1. Runs `.github/scripts/fetch-forum-data.js`
-2. Updates `snippets/automations/forum/forumData.jsx`
+2. Updates `snippets/data/social-feeds/forumData.jsx`
 3. Commits and pushes if changes detected
 
 **Required secrets:**
@@ -349,7 +351,7 @@ The GitHub Actions implementation is the canonical in-repo path for Ghost, Forum
 
 **What it does:**
 1. Runs `.github/scripts/fetch-ghost-blog-data.js`
-2. Updates `snippets/automations/blog/ghostBlogData.jsx`
+2. Updates `snippets/data/social-feeds/ghostBlogData.jsx`
 3. Commits and pushes if changes detected
 
 **Required secrets:**
@@ -374,7 +376,7 @@ The GitHub Actions implementation is the canonical in-repo path for Ghost, Forum
 **What it does:**
 1. Runs `.github/scripts/fetch-youtube-data.js`
 2. Filters out Shorts (≤60 seconds)
-3. Updates `snippets/automations/youtube/youtubeData.jsx`
+3. Updates `snippets/data/social-feeds/youtubeData.jsx`
 4. Commits and pushes if changes detected
 
 **Required secrets:**
@@ -386,7 +388,7 @@ The GitHub Actions implementation is the canonical in-repo path for Ghost, Forum
 
 ## n8n Automation Workflows
 
-n8n workflows are JSON files located in `snippets/automations/scripts/n8n/`. These workflows run on an external n8n instance and can be imported/configured there. Superseded repo-tracked definitions now also have tracked archive copies under `tasks/staging/deprecated-n8n/`.
+n8n workflows are JSON files located in `snippets/assets/data/n8n/`. These workflows run on an external n8n instance and can be imported/configured there. Superseded repo-tracked definitions now also have tracked archive copies under `tasks/staging/deprecated-n8n/`.
 
 <Warning>
 The repository does not prove where the external n8n instance is hosted or which archived definitions are still deployed remotely. Treat repo JSON state as evidence, not runtime truth.
@@ -396,21 +398,21 @@ The repository does not prove where the external n8n instance is hosted or which
 
 | Workflow | Repo status | Ownership |
 |---|---|---|
-| `Discord_Announce_to_Mintlify.json` | Retained in active directory | Only repo-tracked Discord announcements pipeline; external trigger and hosting still need maintainer confirmation. |
-| `Luma-To-Mintlify.json` | Retained in active directory | Only repo-tracked Luma events pipeline; marked active in JSON but external runtime ownership is undocumented. |
-| `Discord-Issue-Intake.json` | Retained in active directory | Paired with `.github/workflows/discord-issue-intake.yml`; n8n handles Discord interaction intake and GitHub Actions creates the issue. |
-| `Project Showcase Application Workflow.json` | Retained in active directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
-| `Showcase_Project_Pipeline.json` | Retained in active directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
+| `Discord_Announce_to_Mintlify.json` | Retained in repo asset directory | Only repo-tracked Discord announcements pipeline; external trigger and hosting still need maintainer confirmation. |
+| `Luma-To-Mintlify.json` | Retained in repo asset directory | Only repo-tracked Luma events pipeline; marked active in JSON but external runtime ownership is undocumented. |
+| `Discord-Issue-Intake.json` | Retained in repo asset directory | Paired with `.github/workflows/discord-issue-intake.yml`; n8n handles Discord interaction intake and GitHub Actions creates the issue. |
+| `Project Showcase Application Workflow.json` | Retained in repo asset directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
+| `Showcase_Project_Pipeline.json` | Retained in repo asset directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
 
 ### Active n8n Workflows
 
 #### Discord Announcements to Mintlify
 
-**File:** `snippets/automations/scripts/n8n/Discord_Announce_to_Mintlify.json`
+**File:** `snippets/assets/data/n8n/Discord_Announce_to_Mintlify.json`
 
 **Status:** Repo-tracked n8n-only feed
 
-**Purpose:** Generates `snippets/automations/discord/discordAnnouncementsData.jsx`
+**Purpose:** Generates `snippets/data/social-feeds/discordAnnouncementsData.jsx`
 
 **Trigger:** Schedule trigger in n8n
 
@@ -419,11 +421,11 @@ The repository does not prove where the external n8n instance is hosted or which
 2. The JSON workflow targets `docs-v2` and the canonical Discord data output path
 3. The JSON defaults to inactive in the repo, so external activation and hosting must be confirmed outside the repository
 
-**Output:** `snippets/automations/discord/discordAnnouncementsData.jsx`
+**Output:** `snippets/data/social-feeds/discordAnnouncementsData.jsx`
 
 #### Luma Events to Mintlify
 
-**File:** `snippets/automations/scripts/n8n/Luma-To-Mintlify.json`
+**File:** `snippets/assets/data/n8n/Luma-To-Mintlify.json`
 
 **Status:** Repo-tracked n8n-only feed
 
@@ -437,7 +439,7 @@ The repository does not prove where the external n8n instance is hosted or which
 3. Generates JSX data file
 4. Commits to GitHub on `docs-v2` branch
 
-**Output:** `snippets/automations/luma/lumaEventsData.jsx`
+**Output:** `snippets/data/social-feeds/lumaEventsData.jsx`
 
 **How to use:**
 1. Import JSON file into n8n instance
@@ -455,8 +457,8 @@ The repository does not prove where the external n8n instance is hosted or which
 
 The repository currently contains both `.github/workflows/project-showcase-sync.yml` and active showcase-focused n8n JSON assets:
 
-- `snippets/automations/scripts/n8n/Project Showcase Application Workflow.json`
-- `snippets/automations/scripts/n8n/Showcase_Project_Pipeline.json`
+- `snippets/assets/data/n8n/project-showcase-application-workflow.json`
+- `snippets/assets/data/n8n/Showcase_Project_Pipeline.json`
 
 Treat these as overlapping automation surfaces until Alison or Rick confirms which external pipeline is still authoritative. A third showcase JSON (`Showcase_To_Mintlify_Pipeline.json`) remains in the repo and appears to be an older prototype with placeholder paths, but it was intentionally left unchanged in this commit.
 
@@ -464,7 +466,7 @@ Treat these as overlapping automation surfaces until Alison or Rick confirms whi
 
 #### Discord Issue Intake (Phase 1)
 
-**File:** `snippets/automations/scripts/n8n/Discord-Issue-Intake.json`
+**File:** `snippets/assets/data/n8n/Discord-Issue-Intake.json`
 
 **Status:** ✅ Ready to import (defaults to inactive)
 
@@ -517,7 +519,7 @@ The following repo-tracked n8n definitions now have copies in `tasks/staging/dep
 
 #### MP4 to GIF Converter
 
-**File:** `snippets/automations/scripts/n8n/mp4-to-gif.json`
+**File:** `snippets/assets/data/n8n/mp4-to-gif.json`
 
 **Purpose:** Converts MP4 videos to GIF format via webhook
 
@@ -685,21 +687,21 @@ npm --prefix tools run components:docs
 
 #### Fetch External Documentation
 
-**File:** `operations/scripts/snippets/fetch-external-docs.sh`
+**File:** `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`
 
 **Purpose:** Fetches external documentation files from other Livepeer repositories and sanitizes them for MDX compatibility
 
 **Usage:**
 ```bash icon="terminal"
-./operations/scripts/snippets/fetch-external-docs.sh
+./operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
 ```
 
 **What it does:**
 1. Downloads documentation from external repositories
 2. Sanitizes content for MDX compatibility
-3. Saves to `snippets/external/`
+3. Saves to `snippets/composables/pages/shared/`
 
-**Downloads to `snippets/external/`:**
+**Downloads to `snippets/composables/pages/shared/`:**
 - `wiki-readme.mdx` - livepeer/wiki README
 - `awesome-livepeer-readme.mdx` - livepeer/awesome-livepeer README
 - `whitepaper.mdx` - Livepeer Whitepaper
@@ -728,7 +730,7 @@ npm --prefix tools run components:docs
 1. Fetches live data from CoinGecko API for Livepeer token
 2. Generates a styled table of CEX exchanges with volume and trust scores
 3. Appends DEX information and contract addresses
-4. Updates `v2/lpt/resources/exchanges.mdx`
+4. Updates `v2/delegators/resources/compendium/exchanges.mdx`
 
 **When to run:**
 - Periodically to update exchange listings
@@ -873,7 +875,7 @@ git commit --no-verify -m "message"
 - Makes code review harder
 - Can cause issues for other developers
 
-For full details on the hooks, see the [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md).
+For full details on the hooks, see the [Git Hooks Documentation](/docs-guide/contributing/git-hooks).
 
 <CustomDivider />
 
@@ -1022,10 +1024,9 @@ npm run test:v2-pages
 ## Related Documentation
 
 - [Style Guide](../copy-style/style-guide) - Styling conventions and Mintlify gotchas
-- [Component Library](../component-library/overview) - Available components and usage
-- [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md) - Complete pre-commit hook documentation
-- [Scripts Catalog](/docs-guide/catalog/scripts-catalog) - Detailed scripts documentation
-- [Automations README](/snippets/automations/README.mdx) - Automation overview
+- [Component Library](../component-library) - Available components and usage
+- [Git Hooks Documentation](/docs-guide/contributing/git-hooks) - Complete pre-commit hook documentation
+- [Scripts README](/operations/scripts/README.md) - Detailed scripts documentation
 
 <CustomDivider />
 

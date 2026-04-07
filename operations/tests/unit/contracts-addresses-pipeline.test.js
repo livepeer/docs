@@ -74,22 +74,6 @@ const CONTRACTS_DATA_ADAPTER_PATH = path.join(
   'contract-addresses',
   'index.jsx'
 );
-const CANONICAL_COMPOSABLE_PATH = path.join(
-  REPO_ROOT,
-  'snippets',
-  'composables',
-  'pages',
-  'canonical',
-  'livepeer-contract-addresses.mdx'
-);
-const VERIFIER_COMPOSABLE_PATH = path.join(
-  REPO_ROOT,
-  'snippets',
-  'composables',
-  'pages',
-  'canonical',
-  'verify-contract-addresses.mdx'
-);
 const VIEW_MODEL_ADAPTER_PATH = path.join(
   REPO_ROOT,
   'snippets',
@@ -107,43 +91,45 @@ const BLOCKCHAIN_PAGE_SPEC_PATH = path.join(
   'contracts',
   'blockchain-page-spec.js'
 );
-const CANONICAL_PAGE_PATH = path.join(
+const CANONICAL_ROUTE_PATH = path.join(
   REPO_ROOT,
   'v2',
   'about',
   'resources',
+  'reference',
   'livepeer-contract-addresses.mdx'
 );
-const RESOURCE_HUB_PAGE_PATH = path.join(
+const CANONICAL_COMPOSABLE_PATH = path.join(
   REPO_ROOT,
-  'v2',
-  'resources',
-  'references',
-  'contract-addresses.mdx'
+  'snippets',
+  'composables',
+  'pages',
+  'canonical',
+  'livepeer-contract-addresses.mdx'
 );
-const GATEWAYS_PAGE_PATH = path.join(
+const CANONICAL_PAGE_DATA_HELPER_PATH = path.join(
   REPO_ROOT,
-  'v2',
-  'gateways',
-  'resources',
-  'reference',
-  'technical',
-  'contract-addresses.mdx'
+  'snippets',
+  'composables',
+  'pages',
+  'canonical',
+  'data',
+  'livepeer-contract-addresses-page-data.jsx'
 );
-const ORCHESTRATORS_PAGE_PATH = path.join(
+const CANONICAL_PAGE_MODEL_PATH = path.join(
   REPO_ROOT,
-  'v2',
-  'orchestrators',
-  'resources',
-  'reference',
-  'technical',
-  'contract-addresses.mdx'
+  'snippets',
+  'composables',
+  'pages',
+  'canonical',
+  'data',
+  'livepeer-contract-addresses-page-model.jsx'
 );
 const BLOCKCHAIN_PAGE_PATH = path.join(
   REPO_ROOT,
   'v2',
   'about',
-  'livepeer-protocol',
+  'protocol',
   'blockchain-contracts.mdx'
 );
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -172,14 +158,13 @@ const SHADOW_WORKFLOW_PATH = path.join(
 
 const STALE_ARBITRUM_MINTER_V1 = '0x4969dcCF5186e1c49411638fc8A2a020Fdab752E'.toLowerCase();
 const STALE_BONDING_VOTES_TARGET = '0x1561fC5F7Efc049476224005DFf38256dccfc509'.toLowerCase();
-const EXPECTED_ETH_LEGACY_UTILITY_DETAILS = {
-  GenesisManager: '0x3a9543d4767b2c914ea22fd0b07e17b0901aaebf',
-  MerkleMine: '0x8e306b005773bee6ba6a6e8972bc79d766cc15c8',
-  MultiMerkleMine: '0x182ebf4c80b28efc45ad992ecbb9f730e31e8c7f',
-  Refunder: '0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2',
-  SortedDoublyLL: '0x1a0b2ca69ca2c7f96e2529faa6d63f881655d81a',
-};
-const EXPECTED_ETH_LEGACY_UTILITY_NAMES = Object.keys(EXPECTED_ETH_LEGACY_UTILITY_DETAILS);
+const EXPECTED_ETH_LEGACY_UTILITY_NAMES = [
+  'GenesisManager',
+  'MerkleMine',
+  'MultiMerkleMine',
+  'Refunder',
+  'SortedDoublyLL',
+];
 const EXPECTED_ETH_HISTORICAL_GENESIS_ADDRESS = '0x289ba1701c2f088cf0faf8b3705246331cb8a839';
 
 let errors = [];
@@ -535,18 +520,13 @@ function runTests() {
       'ethereumMainnet.legacy_operational should retain the externally proven legacy utility families'
     );
     for (const name of EXPECTED_ETH_LEGACY_UTILITY_NAMES) {
-      const entry = legacyByName.get(name);
       assert.strictEqual(
-        entry?.address,
-        EXPECTED_ETH_LEGACY_UTILITY_DETAILS[name],
-        `${name} should publish the seeded externally proven address`
-      );
-      assert.ok(
-        ['explorer-search', 'verified-seed-address'].includes(entry?.addressSource?.kind),
+        legacyByName.get(name)?.addressSource?.kind,
+        'explorer-search',
         `${name} should resolve from explorer-backed external proof`
       );
       assert.strictEqual(
-        entry?.proofChain,
+        legacyByName.get(name)?.proofChain,
         'detached',
         `${name} should remain a detached external-proof contract`
       );
@@ -633,36 +613,33 @@ function runTests() {
     );
   });
 
-  runCase('contracts pages consume the shared contracts data pipeline without a standalone verifier route', () => {
-    const canonicalPage = readText(CANONICAL_PAGE_PATH);
-    const resourceHubPage = readText(RESOURCE_HUB_PAGE_PATH);
-    const gatewaysPage = readText(GATEWAYS_PAGE_PATH);
-    const orchestratorsPage = readText(ORCHESTRATORS_PAGE_PATH);
+  runCase('contracts pages consume the shared contracts view-model and stable table stack', () => {
+    const canonicalRoute = readText(CANONICAL_ROUTE_PATH);
     const canonicalComposable = readText(CANONICAL_COMPOSABLE_PATH);
-    const verifierComposable = readText(VERIFIER_COMPOSABLE_PATH);
+    const pageDataHelper = readText(CANONICAL_PAGE_DATA_HELPER_PATH);
     const blockchainPage = readText(BLOCKCHAIN_PAGE_PATH);
     const contractsAdapter = readText(CONTRACTS_DATA_ADAPTER_PATH);
     const viewModelAdapter = readText(VIEW_MODEL_ADAPTER_PATH);
     const registryDataModule = readText(GENERATED_JSX_PATH);
     const blockchainDataModule = readText(BLOCKCHAIN_PAGE_JSX_PATH);
 
-    assert.ok(canonicalPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'canonical route page should wrap the canonical contracts composable');
-    assert.ok(resourceHubPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'resource hub route page should wrap the canonical contracts composable');
-    assert.ok(gatewaysPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'gateways route page should wrap the canonical contracts composable');
-    assert.ok(orchestratorsPage.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'orchestrators route page should wrap the canonical contracts composable');
-    assert.ok(canonicalComposable.includes("/snippets/composables/pages/canonical/verify-contract-addresses.mdx"), 'canonical composable should embed the verifier composable');
+    assert.ok(canonicalRoute.includes('/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx'), 'canonical route should delegate rendering to the canonical composable');
+    assert.ok(canonicalComposable.includes('/snippets/data/contract-addresses/view-model.jsx'), 'canonical composable should import the shared contracts view-model adapter');
     assert.ok(canonicalComposable.includes('/snippets/data/contract-addresses/contractAddressesData.jsx'), 'canonical composable should import the canonical contracts data module');
-    assert.ok(!canonicalComposable.includes('export const '), 'canonical composable should not own data/helper exports in MDX');
-    assert.ok(!canonicalComposable.includes('/snippets/data/changelogs/contractAddressesData.jsx'), 'canonical composable should not import archived historical changelog data');
-    assert.ok(canonicalComposable.includes('SearchTableV2'), 'canonical composable should use the shared SearchTable wrapper');
-    assert.ok(canonicalComposable.includes('DynamicTableV2'), 'canonical composable should use the shared dynamic table wrapper');
-    assert.ok(canonicalComposable.includes('#verifier-widget-verify-contract-address'), 'canonical composable should expose the embedded verifier widget anchor');
-    assert.ok(canonicalComposable.includes('<VerifyContractAddresses />'), 'canonical composable should render the verifier composable inline');
-    assert.ok(!canonicalComposable.includes('contractsRoutes.verifier'), 'canonical composable should not depend on a standalone verifier route helper');
-    assert.ok(canonicalComposable.includes('HistoricalContractTable category="core" sourceData={contractAddresses}'), 'canonical composable should consume generated historical data through the table component');
+    assert.ok(!canonicalComposable.includes('/snippets/composables/pages/canonical/data/livepeer-contract-addresses-page-model.jsx'), 'canonical composable should not import the retired page-local selector layer');
+    assert.ok(canonicalComposable.includes('getNonActiveGroups(contractAddresses).map'), 'canonical composable should build non-active sections from shared lifecycle groups');
+    assert.ok(canonicalComposable.includes('getHistoricalCategories(contractAddresses).map'), 'canonical composable should build historical sections from shared category metadata');
+    assert.ok(canonicalComposable.includes('getHistoricalCategoryMeta(group.key)'), 'canonical composable should resolve historical titles and descriptions from the shared view-model');
 
-    assert.ok(verifierComposable.includes('ContractVerifier'), 'verifier composable should host the ContractVerifier widget');
-    assert.ok(verifierComposable.includes('/snippets/data/contract-addresses/contractAddressesData.jsx'), 'verifier composable should import the canonical contracts data module');
+    assert.ok(!pageDataHelper.includes("from './livepeer-contract-addresses-page-model.jsx'"), 'page-local helper should not import the retired page-local selector layer');
+    assert.strictEqual(
+      /getEthereumActiveNameList|getActiveTableItems|getProxyTableItems|getPausedTableItems|getMigrationResidualTableItems|getLegacyOperationalTableItems|historicalCategoryTitle|historicalCategoryDescription/.test(pageDataHelper),
+      false,
+      'page-local helper should not re-export or retain shared selector bindings'
+    );
+    assert.ok(pageDataHelper.includes('export const buildCategoryAccordionRows ='), 'page-local helper should keep the render-only accordion row helper');
+    assert.ok(pageDataHelper.includes('export const historicalCategoryIcon ='), 'page-local helper should keep the render-only historical icon helper');
+    assert.strictEqual(fs.existsSync(CANONICAL_PAGE_MODEL_PATH), false, 'page-local selector layer should be removed');
 
     assert.ok(!blockchainPage.includes('/snippets/data/changelogs/contractAddressesData.jsx'), 'blockchain page should not import archived historical changelog data');
     assert.ok(!blockchainPage.includes('/snippets/composables/pages/canonical/data/blockchain-contracts-data.jsx'), 'blockchain page must not depend on the composable helper data layer');
@@ -672,7 +649,7 @@ function runTests() {
     assert.ok(!blockchainPage.includes('.current.find('), 'blockchain page should not use raw current.find lookups');
     assert.ok(!blockchainPage.includes('/v2/about/resources/contract-addresses'), 'blockchain page should link to the canonical route');
     assert.ok(blockchainPage.includes('contractsRoutes.reference'), 'blockchain page should link to the canonical reference page through the shared routes helper');
-    assert.ok(blockchainPage.includes('contractsRoutes.verifier'), 'blockchain page should link to the embedded verifier anchor through the shared routes helper');
+    assert.ok(blockchainPage.includes('contractsRoutes.verifier'), 'blockchain page should link to the verifier route through the shared routes helper');
 
     assert.ok(contractsAdapter.includes("from './contractAddressesData.jsx'"), 'contracts index should re-export the canonical contracts data module');
     assert.ok(contractsAdapter.includes("from './blockchainContractsPageData.jsx'"), 'contracts index should re-export the blockchain page data module');
@@ -680,41 +657,27 @@ function runTests() {
     assert.ok(registryDataModule.includes('export const contractAddresses ='), 'contracts data module should export the canonical registry data');
     assert.ok(blockchainDataModule.includes('export const blockchainContractsPageData ='), 'blockchain data module should export the blockchain contracts data');
     assert.ok(viewModelAdapter.includes('export const contractsRoutes ='), 'view-model adapter should define the shared contracts helpers directly');
-    assert.ok(viewModelAdapter.includes("verifier: '/v2/about/resources/livepeer-contract-addresses#verifier-widget-verify-contract-address'"), 'view-model adapter should point verifier links at the embedded anchor on the canonical page');
   });
 
-  runCase('docs navigation exposes the contracts import routes without a standalone verifier page', () => {
+  runCase('docs navigation exposes the verifier route next to the contracts reference page', () => {
     const docsJson = readText(DOCS_JSON_PATH);
 
-    assert.ok(docsJson.includes('v2/about/resources/livepeer-contract-addresses'), 'docs.json should keep the canonical contracts route');
-    assert.ok(docsJson.includes('v2/resources/references/contract-addresses'), 'docs.json should keep the resource hub contracts route');
-    assert.ok(docsJson.includes('v2/gateways/resources/reference/technical/contract-addresses'), 'docs.json should keep the gateways contracts route');
-    assert.ok(docsJson.includes('v2/orchestrators/resources/reference/technical/contract-addresses'), 'docs.json should keep the orchestrators contracts route');
-    assert.ok(!docsJson.includes('v2/about/resources/verify-contract-addresses'), 'docs.json should not publish a standalone verifier route');
+    assert.ok(docsJson.includes('v2/about/resources/reference/livepeer-contract-addresses'), 'docs.json should keep the canonical contracts route');
+    assert.ok(docsJson.includes('v2/about/resources/verify-contract-addresses'), 'docs.json should include the verifier route');
   });
 
-  runCase('AI sitemap freshness tracks generated contracts data for the canonical and importer contracts routes', () => {
-    const canonicalDependencies = ROUTE_DEPENDENCIES['v2/about/resources/livepeer-contract-addresses'] || [];
-    const resourceHubDependencies = ROUTE_DEPENDENCIES['v2/resources/references/contract-addresses'] || [];
-    const gatewaysDependencies = ROUTE_DEPENDENCIES['v2/gateways/resources/reference/technical/contract-addresses'] || [];
-    const orchestratorsDependencies = ROUTE_DEPENDENCIES['v2/orchestrators/resources/reference/technical/contract-addresses'] || [];
-    const blockchainDependencies = ROUTE_DEPENDENCIES['v2/about/livepeer-protocol/blockchain-contracts'] || [];
+  runCase('AI sitemap freshness tracks generated contracts data for all contracts routes', () => {
+    const canonicalDependencies = ROUTE_DEPENDENCIES['v2/about/resources/reference/livepeer-contract-addresses'] || [];
+    const verifierDependencies = ROUTE_DEPENDENCIES['v2/about/resources/verify-contract-addresses'] || [];
+    const blockchainDependencies = ROUTE_DEPENDENCIES['v2/about/protocol/blockchain-contracts'] || [];
 
     assert.ok(canonicalDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
-    assert.ok(canonicalDependencies.includes('snippets/data/contract-addresses/_health-checks.json'));
     assert.strictEqual(
       canonicalDependencies.includes('snippets/composables/pages/canonical/livepeer-contract-addresses-data.json'),
       false,
       'route dependencies must not include the stale companion JSON path'
     );
-    assert.ok(resourceHubDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
-    assert.ok(gatewaysDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
-    assert.ok(orchestratorsDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
-    assert.strictEqual(
-      Object.prototype.hasOwnProperty.call(ROUTE_DEPENDENCIES, 'v2/about/resources/verify-contract-addresses'),
-      false,
-      'AI sitemap should not track a removed standalone verifier route'
-    );
+    assert.ok(verifierDependencies.includes('snippets/data/contract-addresses/contractAddressesData.json'));
     assert.ok(blockchainDependencies.includes('snippets/data/contract-addresses/blockchainContractsPageData.json'));
   });
 

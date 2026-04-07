@@ -1,15 +1,25 @@
 ---
-title: 'Pricing Configuration'
-description: 'Configure the maximum price your Livepeer gateway pays orchestrators per compute unit. Covers how price caps work and the flags for video and AI job pricing.'
-sidebarTitle: 'Pricing Configuration'
-keywords: ["livepeer", "gateway", "pricing", "maxPricePerUnit", "orchestrator", "payment", "configuration", "price cap"]
-pageType: 'how_to'
-audience: 'gateway'
-status: 'current'
+title: Pricing Configuration
+sidebarTitle: Pricing Configuration
+description: >-
+  Configure the maximum price your Livepeer gateway pays orchestrators per compute unit.
+  Covers how price caps work and the flags for video and AI job pricing.
+pageType: resource
+audience: gateway
+purpose: orient
+status: current
+keywords:
+  - livepeer
+  - gateway
+  - pricing
+  - maxPricePerUnit
+  - orchestrator
+  - payment
+  - configuration
+  - price cap
 ---
-
 <Note>
-  **The gateway pays orchestrators — it does not charge clients.**
+  **The gateway pays orchestrators - it does not charge clients.**
 
   The flags on this page set the maximum your gateway will pay to orchestrators for compute. They have nothing to do with what you charge your application's end users. If you want to bill clients, you need to implement that in your application layer. See [How Payments Work](/v2/gateways/guides/how-payments-work) for the full payment flow.
 </Note>
@@ -58,7 +68,7 @@ If **all** orchestrators in your list exceed your price cap, the job fails. To a
     -pixelsPerUnit 1000000
     ```
 
-    This is used together with `-maxPricePerUnit` — the effective cap is `maxPricePerUnit` wei per `pixelsPerUnit` pixels.
+    This is used together with `-maxPricePerUnit` - the effective cap is `maxPricePerUnit` wei per `pixelsPerUnit` pixels.
 
     Most operators leave this at the default of `1`.
   </Step>
@@ -135,7 +145,7 @@ livepeer \
   -httpAddr 0.0.0.0:8937 \
   -httpIngest \
   -maxPricePerUnit 5000000 \                          # Global fallback cap: 5,000,000 wei/pixel
-  -pixelsPerUnit 1 \                                  # Default — 1 pixel granularity
+  -pixelsPerUnit 1 \                                  # Default - 1 pixel granularity
   -maxPricePerCapability /etc/livepeer/maxPrices.json  # Per-pipeline AI caps (optional)
 ```
 
@@ -166,7 +176,7 @@ livepeer \
 | `text-to-image`, `image-to-image`, `image-to-video`, `upscale`, `image-to-text`, `segment-anything-2` | Pixels |
 | `audio-to-text`, `text-to-speech` | Milliseconds |
 
-[//]: # (REVIEW: LLM pipeline pricing unit — confirm whether it is tokens or pixels or something else.)
+[//]: # (REVIEW: LLM pipeline pricing unit - confirm whether it is tokens or pixels or something else.)
 [//]: # (Not confirmed from current source. j0sh / Rick to verify.)
 
 ---
@@ -187,7 +197,7 @@ The price cap flags work in both modes, but with a key difference:
 
 <CardGroup cols={2}>
   <Card title="How Payments Work" icon="circle-dollar-to-slot" href="/v2/gateways/guides/how-payments-work">
-    Understand the full payment flow — probabilistic micropayments, ticket mechanics, and ETH redemption.
+    Understand the full payment flow - probabilistic micropayments, ticket mechanics, and ETH redemption.
   </Card>
   <Card title="Configuration Flags Reference" icon="list" href="/v2/gateways/resources/configuration-flags">
     Complete reference for all go-livepeer gateway flags.

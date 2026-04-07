@@ -1,60 +1,196 @@
 ---
-title: Contributor Quickstart
-sidebarTitle: Contributor Quickstart
+title: 'Contributor quickstart'
+sidebarTitle: 'Contributor Quickstart'
 description: >-
-  A fast path for contributors who want to choose the right Livepeer repo, set
-  expectations, and make a first pull request.
+  Get the Livepeer protocol running locally, set up a testnet with one orchestrator and one gateway, and submit your first test job.
 keywords:
-  - livepeer
-  - contributor
-  - quickstart
-  - open source
+  - livepeer contribution
   - go-livepeer
-  - docs
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+  - testnet
+  - OSS
+  - local development
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-pageType: guide
+pageType: tutorial
+purpose: start
 audience: developer
-status: draft
+status: current
+lastVerified: 2026-04-05
 ---
 
-If you want to contribute to Livepeer itself rather than build on top of it, start here. This page helps you choose the right repo, get oriented, and make a useful first change without guessing which part of the stack owns what.
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-## Pick the repo that matches your goal
+<CenteredContainer preset="readable90">
+  <Tip>This quickstart gets you from zero to a running local testnet in approximately 60 minutes. All traffic stays local -- no mainnet funds, no real LPT required.</Tip>
+</CenteredContainer>
 
-<CardGroup cols={3}>
-  <Card title="Core node" icon="server" href="https://github.com/livepeer/go-livepeer">
- Work on gateway, orchestrator, transcoder, and protocol-runtime logic in `go-livepeer`.
+---
+
+The Livepeer protocol node is `go-livepeer`. It is the entry point for all protocol contributions: video transcoding, AI pipeline integration, payment mechanics, and on-chain interactions. The local testnet simulates the full network on your machine.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- **Go 1.21 or later** -- `go version`
+- **Docker** -- required for AI worker development
+- **ffmpeg** -- for generating test video streams
+- **git**
+
+Optional: NVIDIA GPU with CUDA 12+ for AI pipeline testing.
+
+Install ffmpeg:
+
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu / Debian
+sudo apt-get install ffmpeg
+```
+
+<CustomDivider middleText="Steps" />
+
+## Get the codebase running
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Clone and build go-livepeer" icon="download">
+    ```bash
+    git clone https://github.com/livepeer/go-livepeer.git
+    cd go-livepeer
+
+    # Build the binary
+    make
+    # Output: ./livepeer
+    ```
+
+    The build takes 2-5 minutes on first run. Subsequent builds are incremental.
+
+    Verify the build:
+
+    ```bash
+    ./livepeer --version
+    # Livepeer version: v0.8.10
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a local Ethereum node" icon="link">
+    The testnet uses a local Ethereum node (hardhat or geth dev mode). The easiest path is using the provided Docker compose setup:
+
+    ```bash
+    # From the go-livepeer repo root
+    docker compose -f docker/docker-compose.yml up -d eth-node
+    ```
+
+    This starts a local Ethereum node on `http://localhost:8545` pre-funded with test accounts.
+
+    Check it is running:
+
+    ```bash
+    curl -X POST http://localhost:8545 \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    # Expect: {"result":"0x0",...}
+    ```
+  </StyledStep>
+
+  <StyledStep title="Deploy testnet contracts" icon="file-contract">
+    Deploy the Livepeer protocol contracts to your local Ethereum node:
+
+    ```bash
+    cd docker
+    ./deploy-contracts.sh
+    # Outputs contract addresses -- save these
+    ```
+
+    The script deploys the full protocol: BondingManager, RoundsManager, Minter, TicketBroker, and Governor. Contract addresses are written to `deployments/devnet/` in the repo.
+
+    For a full walkthrough of contract deployment options, see the <a href="/v2/developers/guides/local-testnet-deployment">local testnet deployment guide</a>.
+  </StyledStep>
+
+  <StyledStep title="Start an orchestrator" icon="server">
+    Open a new terminal. Start `go-livepeer` in orchestrator mode pointing at your local Ethereum node:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -network devnet \
+      -ethUrl http://localhost:8545 \
+      -ethAcctAddr <your-test-account-address> \
+      -pricePerUnit 1 \
+      -serviceAddr 127.0.0.1:8935
+    ```
+
+    The orchestrator starts on `127.0.0.1:8935` and registers with the local network. You should see:
+
+    ```
+    [INFO] Orchestrator registered: 127.0.0.1:8935
+    [INFO] Waiting for jobs...
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a gateway" icon="gateway">
+    Open a third terminal. Start `go-livepeer` in gateway mode:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -network devnet \
+      -ethUrl http://localhost:8545 \
+      -ethAcctAddr <another-test-account-address> \
+      -orchAddr 127.0.0.1:8935
+    ```
+
+    The gateway connects to the local orchestrator and is ready to accept jobs on `http://127.0.0.1:8935`.
+  </StyledStep>
+
+  <StyledStep title="Submit a test job" icon="flask">
+    Send a test transcoding job to the gateway using ffmpeg:
+
+    ```bash
+    # Generate a 10-second test stream
+    ffmpeg -re -f lavfi -i testsrc=size=640x480:rate=30 \
+      -t 10 -c:v libx264 -preset fast \
+      -f rtmp rtmp://127.0.0.1:1935/live/test
+
+    # The gateway transcodes it and outputs to a local HLS segment
+    ```
+
+    Check the orchestrator terminal -- you should see job processing logs. Check the gateway terminal for segment delivery confirmation.
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="What Next" />
+
+## Next steps
+
+With a running local testnet, three productive paths exist:
+
+**Fix a bug** -- Browse [good first issues](https://github.com/livepeer/go-livepeer/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) in go-livepeer. The local testnet lets you reproduce issues and verify fixes without mainnet funds.
+
+**Add an AI pipeline** -- The `ai-runner` repository (Python) handles AI inference. Clone it separately, test a new pipeline locally, and integrate it with go-livepeer via the AI worker interface.
+
+**Contribute to ComfyStream or PyTrickle** -- Python repositories with lower Go prerequisite. Good entry points for AI pipeline contributors.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Contribution Guide" icon="code-branch" href="/v2/developers/guides/contribution-guide">
+    PR process, coding standards, and how to contribute by repo.
   </Card>
-  <Card title="AI and real-time workflows" icon="wand-magic-sparkles" href="/v2/developers/concepts/oss-stack">
- Use the OSS stack map to choose between `ai-worker`, `comfystream`, `pytrickle`, and related repos.
+  <Card title="Local Testnet Deployment" icon="server" href="/v2/developers/guides/local-testnet-deployment">
+    Full testnet setup with AI worker and advanced configuration.
   </Card>
-  <Card title="Docs and guides" icon="book-open" href="https://github.com/livepeer/docs">
- Contribute to the documentation site, information architecture, and developer guidance in `livepeer/docs`.
-  </Card>
-</CardGroup>
-
-## First contribution checklist
-
-1. Read the [Contribution Guide](/v2/developers/guides/contribution-guide) before changing code or docs.
-2. Use [OSS Stack](/v2/developers/concepts/oss-stack) to confirm which repo actually owns the work you want to do.
-3. Check open issues and recent pull requests before starting anything substantial.
-4. Join the relevant Discord channel if you need to validate direction before you invest time.
-5. Keep the first change small: fix a bug, tighten a doc, or ship one focused improvement end to end.
-
-## Good first paths
-
-<CardGroup cols={3}>
-  <Card title="OSS Stack" icon="books" href="/v2/developers/concepts/oss-stack">
- See how `go-livepeer`, the protocol contracts, AI services, and docs fit together.
-  </Card>
-  <Card title="Contribution Guide" icon="book" href="/v2/developers/guides/contribution-guide">
- Review contribution expectations, coding standards, and review flow.
-  </Card>
-  <Card title="OSS Opportunities" icon="hand-holding-heart" href="/v2/developers/opportunities/oss-contributions">
- See where the ecosystem currently needs contributors, maintainers, and funded builders.
+  <Card title="OSS Contributions" icon="people-group" href="/v2/developers/guides/opportunities/oss-contributions">
+    Open issues, bounties, and contribution paths by repository.
   </Card>
 </CardGroup>

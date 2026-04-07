@@ -22,7 +22,7 @@ All of the following file contents or directory listings were retrieved live via
 
 | Path | Bytes | Used for |
 |---|---|---|
-| `v2/developers/developer-journey.mdx` | 8,122 | Developer section paths, Daydream/Embody/livepeer-ops links confirmed |
+| `v2/developers/navigator.mdx` | 8,122 | Developer section paths, Daydream/Embody/livepeer-ops links confirmed |
 | `v2/developers/ai-pipelines/byoc.mdx` | 8,129 | BYOC guide content, Dockerfile, config.yaml pattern confirmed |
 | `v2/developers/ai-pipelines/comfystream.mdx` | 3,592 | ComfyStream guide content confirmed |
 | `v2/developers/ai-inference-on-livepeer/overview.mdx` | 5,928 | AI inference overview content confirmed |
@@ -82,7 +82,7 @@ These URLs appear in project files, cross-references in confirmed MDX files, or 
 | https://github.com/j0sh/livepeer-python-gateway | gateways-research-report.md + multiple project files |
 | https://signer.eliteencoder.net | Remote_signers.md + Discord export |
 | https://docs.livepeer.org/gateways/payments/remote-signers | docs.json nav (page exists, content not confirmed) |
-| https://docs.livepeer.org/gateways/setup/configure/dual-configuration | docs.json nav |
+| https://docs.livepeer.org/gateways/setup/configure | docs.json nav |
 | https://app.titan-node.com | Titan-Node/Titan-Node-Pool README (confirmed via setup-paths-sources.md) |
 | https://www.youtube.com/@TitanNode | gpu-nodes-ia-planning.md persona research |
 | https://www.youtube.com/@Livepeer | content-brief-template.md |

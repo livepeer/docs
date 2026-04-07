@@ -1,31 +1,15 @@
 ---
 name: docs-review-packet-generation
-version: "1.0"
 description: >-
   Generate dated, report-only docs review packets from live navigation scope so
   copy-framework, authoring-style, and research findings land in reusable
-  trackers, summaries, and section artifact sets.
-tier: 2
-invoke_when:
-  - "generate a docs review packet"
-  - "review this tab or section and create packet reports"
-  - "build copy style and research reports for live docs pages"
-  - "create a tracker and report packet for this docs section"
-primary_paths:
-  - "tools/config/scoped-navigation"
-  - "tasks/reports"
-  - "ai-tools/ai-skills/docs-copy/SKILL.md"
-  - "ai-tools/ai-skills/page-authoring/SKILL.md"
-  - "ai-tools/ai-skills/templates/32-page-content-research-review.template.md"
-  - "docs-guide/tooling/review-packet-plan-template.md"
-primary_commands:
-  - "node tests/unit/copy-lint.test.js --files [csv]"
-  - "node tools/scripts/lint-copy.js [file-or-glob]"
-  - "node tools/scripts/lint-structure.js [file]"
-  - "node tools/scripts/lint-patterns.js [file-or-glob]"
-  - "node tools/scripts/pattern-observer.js --tab [name] --output [file]"
-  - "node tools/scripts/docs-page-research.js --files [csv] --report-md [file] --report-json [file]"
-  - "node tools/scripts/docs-page-research-pr-report.js --files [csv] --report-md [file] --report-json [file]"
+  trackers, summaries, and section artifact sets. Use when generating a docs
+  review packet, reviewing a tab or section to create packet reports, building
+  copy and style reports, or creating a tracker for a docs section.
+metadata:
+  version: "1.3"
+  category: review-pipeline
+  tier: "2"
 ---
 
 SKILL: Docs Review Packet Generation
@@ -37,7 +21,7 @@ Constraints
 - Keep the run report-only. Do not edit page files while generating the packet.
 - Derive page membership from the declared nav source first, not from folder guesses.
 - Include only live pages and exclude deprecated docs, helper notes, review files, and non-nav artifacts.
-- Use `ai-tools/ai-skills/docs-copy/SKILL.md` for copy-framework expectations, `ai-tools/ai-skills/page-authoring/SKILL.md` for authoring-style expectations, and `ai-tools/ai-skills/templates/32-page-content-research-review.template.md` for research routing.
+- Use `ai-tools/ai-skills/docs-copy/SKILL.md` for copy-framework expectations, `ai-tools/ai-skills/page-authoring/SKILL.md` for authoring-style expectations, and `ai-tools/ai-skills/templates/39-page-content-research-review.template.md` for research routing.
 - Preserve raw `authoring-style-findings.json` alongside `02-authoring-style.md`; the raw JSON stays equal source-of-truth when the markdown summary is incomplete.
 - The tracker must start in execution form with exactly one `[copy-framework]` bullet and one `[authoring-style]` bullet per live page, and no per-page research bullets.
 
@@ -50,7 +34,7 @@ When to load references
 Workflow
 1. Confirm the target worktree, branch, nav source, and output root, then load `docs-guide/tooling/review-packet-plan-template.md` if the run still needs a formal packet plan.
 2. Derive section order and live page membership from the declared nav source using `references/scope-derivation.md`; build one nav-ordered file list per section and explicitly exclude helper or deprecated files.
-3. Create a dated packet root under `tasks/reports/<scope>-review/` and create one section directory per nav section.
+3. Create a dated packet root under `workspace/reports/<scope>-review/` and create one section directory per nav section.
 4. Run the copy-framework phase for each section with the current lint and pattern scripts, then summarize the findings in `01-copy-framework.md`.
 5. Run the authoring-style phase for each section with the scoped authoring tests, preserve the raw findings JSON, and summarize the deduplicated page-level action families in `02-authoring-style.md`.
 6. Run the research phase for each section with the current research workflow, then summarize stale, unsupported, contradictory, or volatile claims in `03-research.md`.

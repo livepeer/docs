@@ -1,0 +1,118 @@
+---
+title: 'SEO Metadata Refresh'
+kind: 'workflow'
+status: 'active'
+concern: 'authoring'
+source_path: '.github/workflows/seo-refresh.yml'
+trigger_mode: 'workflow_dispatch'
+risk_level: 'high'
+consolidation_flag: 'review for alignment with `page-ship` while preserving current workflow_dispatch trigger behavior'
+dispatcher_candidate: 'page-ship'
+workflow_family: 'content-publication'
+cleanup_decision: 'consolidate'
+usage_status: 'active-mutating'
+process_fit: 'core-shipping'
+consolidation_target: 'dispatcher:page-ship'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# SEO Metadata Refresh
+
+## Summary
+
+SEO Metadata Refresh runs on workflow_dispatch and primarily produces repository commits or branch updates.
+
+## Why It Exists
+
+Govern the `.github/workflows/seo-refresh.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- workflow_dispatch: configured in workflow file
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `seo` | seo | `ubuntu-latest` | none | 5 |
+
+### seo
+
+- `step-1` | uses actions/checkout@v4
+- `step-2` | uses actions/setup-node@v4
+- `step-3` | runs `cd tools && npm ci`
+- `Generate SEO metadata` | runs `if [ "${{ inputs.dry_run }}" = "true" ]; then`
+- `Commit refreshed SEO metadata` | runs `if git diff --quiet; then`
+
+## Inputs
+
+- workflow_dispatch:dry_run (optional)
+
+## Second Pass Assessment
+
+- Workflow family: `content-publication`
+- Usage status: `active-mutating`
+- Cleanup decision: `consolidate`
+- Process fit: `core-shipping`
+- Consolidation target: `dispatcher:page-ship`
+- Recommended engineering action: Consolidate this workflow under `dispatcher:page-ship` and keep the script or validator layer as the reusable implementation boundary.
+
+## Outputs
+
+- Repository commits or branch updates
+
+## Dependencies
+
+- action:actions/checkout@v4
+- action:actions/setup-node@v4
+- operations/scripts/remediators/content/seo/generate-seo.js
+- secret:GITHUB_TOKEN
+
+## Dependants
+
+- dispatcher:page-ship
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: workflow_dispatch"]
+  workflow["Workflow: SEO Metadata Refresh"]
+  trigger --> workflow
+  job1["Job: seo"]
+  workflow --> job1
+  outputs["Outputs: Repository commits or branch updates"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Mutates repository state from CI, which raises coordination and safety risk.
+- Depends on secrets, so runtime behavior cannot be fully reasoned about from repo state alone.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `page-ship`. Second-pass target: `dispatcher:page-ship`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This workflow writes back to the repository, so its blast radius is higher than a read-only validation workflow.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

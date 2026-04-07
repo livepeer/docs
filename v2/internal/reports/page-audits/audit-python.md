@@ -1,15 +1,15 @@
 ---
 title: 'All Pages Audit (Python)'
 sidebarTitle: 'Audit Python'
-description: 'Generated Python audit report from tasks/scripts/audit-python.py.'
+description: 'Generated Python audit report from operations/scripts/audits/content/quality/audit-python.py.'
 keywords: ["livepeer","internal","reports","page-audits","audit-python"]
-og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-16T15:11:31.531Z`
-Last Generated (UTC Human): `March 16, 2026 15:11 UTC`
-Generator Script: `tasks/scripts/audit-python.py`
-What It Does: Generated Python audit report from tasks/scripts/audit-python.py.
-Audited Scope: `tasks/scripts`
+Last Generated (UTC ISO): `2026-03-31T04:31:17.145Z`
+Last Generated (UTC Human): `March 31, 2026 04:31 UTC`
+Generator Script: `operations/scripts/audits/content/quality/audit-python.py`
+What It Does: Generated Python audit report from operations/scripts/audits/content/quality/audit-python.py.
+Audited Scope: `docs.json, v2, snippets, workspace/reports/page-audits`
 Outputs:
 - _Not documented in script header._
 # Page Audit Report (Python - File Checks Only)

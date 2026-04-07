@@ -5,17 +5,17 @@
 ## Scope
 
 [//]: # (Required for codex/* PRs: list in-scope files/prefixes and any explicit out-of-scope exclusions)
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## Validation
 
 [//]: # (Required for codex/* PRs: list exact commands run and notable outcomes)
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## Follow-up Tasks
 
 [//]: # (Required for codex/* PRs: link follow-up issues, or write "none")
-[//]: # (Tip: node tools/scripts/create-codex-pr.js --create)
+[//]: # (Tip: node operations/scripts/create-codex-pr.js --create)
 
 ## Type of Change
 
@@ -72,6 +72,15 @@ Related to #
 ## Additional Notes
 
 [//]: # (Any additional information, context, or notes for reviewers)
+
+## Governance Approval
+
+[//]: # (Required when governance-sensitive files change. Use one line per field. Write "Not required for this PR." only when no governance approval class applies.)
+
+- Approval class:
+- Approver:
+- Rationale:
+- Evidence / decision record:
 
 ## Copy Governance Gate - L5
 

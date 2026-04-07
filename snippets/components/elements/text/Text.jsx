@@ -12,6 +12,8 @@
  * <Subtitle text="example">Example content</Subtitle>
  * @param {string} [className=''] - Optional CSS class override.
  */
+'use client'
+
 export const Subtitle = ({
   style = {},
   text,

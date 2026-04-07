@@ -1,0 +1,177 @@
+import { windowsGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+
+## <Icon icon="windows" iconType="brands" size={32} /> Windows Verification
+{windowsGroup()}
+
+<Warning>
+    The Livepeer AI Gateway binary is **not available for Windows or macOS (Intel)**. Windows supports <Badge color="blue">Video</Badge> video transcoding only. For <Badge color="purple">AI</Badge> or <Badge color="green">Dual-mode</Badge> gateways, use Docker on a Linux host or Docker Desktop with WSL2. See the Docker tab for AI and Dual verification.
+</Warning>
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Process Health">
+        Confirm the gateway process is running and responding.
+
+        **Check if the process is active (PowerShell):**
+
+        ```powershell
+        Get-Process livepeer -ErrorAction SilentlyContinue
+        ```
+
+        **Check the health endpoint:**
+
+        ```powershell
+        Invoke-RestMethod -Uri http://localhost:8935/health
+        ```
+
+        **Expected response:**
+
+        ```json
+        {"status": "OK"}
+        ```
+
+        HTTP 200 confirms the process is running.
+
+        **If using WSL2:**
+
+        ```bash
+        curl http://localhost:8935/health
+        ```
+
+        If the endpoint does not respond, check the gateway output window or restart with `-v 6` for verbose logging.
+    </StyledStep>
+
+    <StyledStep title="Node Status">
+        Use `livepeer_cli` to inspect node identity, sessions, and on-chain balances.
+
+        **PowerShell:**
+
+        ```powershell
+        .\livepeer_cli.exe -host 127.0.0.1 -http 5935
+        ```
+
+        **WSL2:**
+
+        ```bash
+        livepeer_cli -host 127.0.0.1 -http 5935
+        ```
+
+        Select **Option 1: Get node status**. The output shows:
+
+        - **Version** and network connection
+        - **ETH Account** address
+        - **BROADCASTER STATS** — active sessions, deposit, and reserve balances
+    </StyledStep>
+
+    <StyledStep title="End-to-End Test">
+        Run a test stream to confirm the video pipeline is working.
+
+        <Note>
+            Windows supports <Badge color="blue">Video</Badge> **transcoding only**. For AI or Dual tests, use the Docker tab.
+        </Note>
+
+        Push a test stream via RTMP:
+
+        **PowerShell (with FFmpeg installed):**
+
+        ```powershell
+        ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 `
+          -c:v libx264 -preset ultrafast `
+          -f flv rtmp://localhost:1935/live/test
+        ```
+
+        **WSL2:**
+
+        ```bash
+        ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+          -c:v libx264 -preset ultrafast \
+          -f flv rtmp://localhost:1935/live/test
+        ```
+
+        In a separate terminal, fetch the HLS manifest:
+
+        ```powershell
+        Invoke-RestMethod -Uri http://localhost:8935/stream/test.m3u8
+        ```
+
+        A valid M3U8 playlist confirms transcoding is working end-to-end.
+
+        **Also verify Orchestrator connectivity:**
+
+        ```powershell
+        Invoke-RestMethod -Uri http://localhost:5935/getOrchestrators
+        ```
+
+        The response should list at least one Orchestrator with pricing information.
+    </StyledStep>
+
+    <StyledStep title="On-Chain Verification">
+        <Note>
+            Skip this step for **off-chain** deployments.
+        </Note>
+
+        **Test the Arbitrum RPC connection (PowerShell):**
+
+        ```powershell
+        $body = '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+        Invoke-RestMethod -Uri <YOUR_ETH_URL> -Method POST `
+          -ContentType "application/json" -Body $body
+        ```
+
+        A valid response contains a `result` field with a hex block number.
+
+        **Verify deposit and reserve:**
+
+        ```powershell
+        .\livepeer_cli.exe -host 127.0.0.1 -http 5935
+        ```
+
+        Select **Option 1: Get node status** and check the **BROADCASTER STATS** section:
+
+        - Both **Deposit** and **Reserve** must be non-zero
+        - Minimum recommended for testing: **0.1 ETH total** (~0.07 ETH deposit + 0.03 ETH reserve)
+
+        <Warning>
+            When the deposit reaches zero, the gateway silently stops routing jobs with no client-facing error. Top up via `livepeer_cli` **Option 11: Deposit broadcasting funds**.
+        </Warning>
+
+        **Check your gateway on Arbiscan:**
+
+        Visit `https://arbiscan.io/address/<GATEWAY_ETH_ADDRESS>` to view transaction history and confirm deposits were registered on-chain.
+    </StyledStep>
+
+    <StyledStep title="Port Verification">
+        If you experience connection issues, verify the gateway ports are not blocked.
+
+        **Check port availability (PowerShell):**
+
+        ```powershell
+        netstat -ano | findstr :8935
+        netstat -ano | findstr :1935
+        netstat -ano | findstr :5935
+        ```
+
+        | Port | Service | Purpose |
+        |------|---------|---------|
+        | **8935** | HTTP API | Health, metrics, HLS output |
+        | **1935** | RTMP | Video stream ingest |
+        | **5935** | CLI API | `livepeer_cli` communication |
+
+        If a port is occupied by another process, find and stop it:
+
+        ```powershell
+        taskkill /PID <PID> /F
+        ```
+
+        Or change the gateway port with the corresponding flag (e.g. `-httpAddr 0.0.0.0:9000`).
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Monitor your Gateway"
+  icon="chart-line"
+  href="/v2/gateways/setup/monitor"
+  horizontal
+  arrow
+>
+  Set up Prometheus, Grafana, and alert rules for production observability
+</Card>

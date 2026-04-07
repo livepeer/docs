@@ -1,0 +1,93 @@
+{
+  "version": "governance-approval-policy.v1",
+  "section_heading": "Governance Approval",
+  "section_optional_phrase": "Not required for this PR.",
+  "required_fields": [
+    {
+      "id": "approval_class",
+      "label": "Approval class"
+    },
+    {
+      "id": "approver",
+      "label": "Approver"
+    },
+    {
+      "id": "rationale",
+      "label": "Rationale"
+    },
+    {
+      "id": "evidence",
+      "label": "Evidence / decision record"
+    }
+  ],
+  "required_labels": [
+    "approval:governance-schema",
+    "approval:governance-gate",
+    "approval:workflow-governance",
+    "approval:governance-retirement"
+  ],
+  "rules": [
+    {
+      "id": "governance-schema",
+      "required_label": "approval:governance-schema",
+      "enforcement_mode": "ci-blocking",
+      "path_globs": [
+        "operations/governance/config/*.json",
+        "tools/lib/governance/*.js",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js",
+        "operations/tests/unit/repo-governance-sync.test.js"
+      ],
+      "notes": "Required when canonical governance manifests, enums, path classes, or the approval policy schema change."
+    },
+    {
+      "id": "governance-gate",
+      "required_label": "approval:governance-gate",
+      "enforcement_mode": "ci-blocking",
+      "path_globs": [
+        ".githooks/pre-commit",
+        ".github/workflows/test-suite.yml",
+        ".github/workflows/governance-sync.yml",
+        ".github/workflows/repair-governance.yml",
+        "operations/tests/run-pr-checks.js",
+        "operations/scripts/validators/governance/pr/check-governance-approvals.js",
+        "operations/tests/unit/agent-write-admission.test.js",
+        "operations/tests/unit/governance-approval-policy.test.js"
+      ],
+      "notes": "Required when governance gate behavior, enforcement posture, or PR approval checks change."
+    },
+    {
+      "id": "workflow-governance",
+      "required_label": "approval:workflow-governance",
+      "enforcement_mode": "ci-blocking",
+      "path_globs": [
+        ".github/workspace/framework-canonical.md",
+        ".github/workspace/decisions-log.mdx",
+        ".github/workspace/actions-library/**"
+      ],
+      "watched_registry_path": "operations/governance/config/repo-governance-surfaces.json",
+      "watched_registry_key": "github_workspace_surfaces",
+      "notes": "Required when transitional workflow-governance inputs or their registry classification change."
+    },
+    {
+      "id": "governance-retirement",
+      "required_label": "approval:governance-retirement",
+      "enforcement_mode": "ci-blocking",
+      "path_globs": [
+        "operations/governance/config/**",
+        "operations/config/**",
+        "docs-guide/repo-ops/config/root-governance-map.mdx",
+        "docs-guide/repo-ops/config/repo-governance-map.mdx",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+        "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json",
+        "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md",
+        "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json",
+        "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md"
+      ],
+      "notes": "Required when active governance/runtime config paths or current generated governance outputs are deleted or retired."
+    }
+  ]
+}

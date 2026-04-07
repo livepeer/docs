@@ -1,21 +1,22 @@
 ---
 name: mdx-parent-child-scope-patterns
-version: "1.0"
 description: >-
-  Implement MDX-in-MDX imports and variable scope patterns that align with Mintlify behavior constraints. Use when tasks include mdx child file cannot access variable, fix mdx-in-mdx import issues, duplicate import errors in snippets pages.
-tier: 1
-invoke_when:
-  - "mdx child file cannot access variable"
-  - "fix mdx-in-mdx import issues"
-  - "duplicate import errors in snippets pages"
+  Implement MDX-in-MDX imports and variable scope patterns that align with
+  Mintlify behavior constraints. Use when: mdx child file cannot access
+  variable, fix mdx-in-mdx import issues, duplicate import errors in snippets
+  pages.
+metadata:
+  version: "1.2"
+  category: "authoring"
+  tier: "1"
 primary_paths:
-  - "snippets/snippetsWiki/mintlify-behaviour.mdx"
+  - "docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md"
   - "snippets/pages"
-  - "tests/unit/mdx.test.js"
-  - "tests/unit/links-imports.test.js"
+  - "operations/tests/unit/mdx.test.js"
+  - "operations/tests/unit/links-imports.test.js"
 primary_commands:
   - "rg -n \"import .*\\.mdx\" snippets/pages v2/pages"
-  - "node tests/unit/links-imports.test.js --staged"
+  - "node operations/tests/unit/links-imports.test.js --staged"
 ---
 
 SKILL: MDX Parent-Child Scope Patterns
@@ -38,7 +39,7 @@ Workflow
 Command examples
 ```bash
 rg -n \"import .*\\.mdx\" snippets/pages v2/pages
-node tests/unit/links-imports.test.js --staged
+node operations/tests/unit/links-imports.test.js --staged
 ```
 
 Deliverable Format

@@ -1,0 +1,168 @@
+---
+title: 'Video playback'
+sidebarTitle: 'Playback'
+description: >-
+  Play Livepeer livestreams and video assets via HLS and WebRTC. Covers the React Player, HLS.js, and direct URL construction for custom players.
+keywords:
+  - livepeer playback
+  - HLS
+  - WebRTC
+  - React Player
+  - VOD
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Use the `@livepeer/react` Player for the simplest integration -- it handles HLS, WebRTC fallback, and JWT access control automatically. Use HLS.js or a custom player when you need full control over the player UI.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer delivers content over HLS (3-8 second latency) and WebRTC (sub-second latency). The `@livepeer/react` Player selects the best protocol automatically. For custom players, construct URLs directly from the `playbackId`.
+
+<CustomDivider middleText="React Player" />
+
+## @livepeer/react Player
+
+Install:
+
+```bash
+npm install @livepeer/react
+```
+
+```tsx
+import * as Player from '@livepeer/react/player';
+
+export const VideoPlayer = ({ playbackId }: { playbackId: string }) => (
+  <Player.Root src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8`}>
+    <Player.Container>
+      <Player.Video />
+      <Player.Controls />
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+For JWT-gated content, pass the signed token:
+
+```tsx
+<Player.Root
+  src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8`}
+  jwt={jwtToken}
+>
+  <Player.Container>
+    <Player.Video />
+  </Player.Container>
+</Player.Root>
+```
+
+The Player sends the JWT as the `Livepeer-Jwt` header for WebRTC and HLS, and as the `jwt` query parameter for MP4 playback.
+
+<CustomDivider middleText="Playback URLs" />
+
+## Direct playback URLs
+
+Construct playback URLs using the `playbackId` returned when you create a stream or asset:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Format</TableCell>
+      <TableCell header>URL pattern</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**HLS (live)**</TableCell>
+      <TableCell>`https://livepeercdn.studio/hls/{playbackId}/index.m3u8`</TableCell>
+      <TableCell>Adaptive bitrate, 3-8 second latency</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**WebRTC (live)**</TableCell>
+      <TableCell>`https://livepeercdn.studio/webrtc/{playbackId}`</TableCell>
+      <TableCell>Sub-second latency; requires SDP negotiation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**HLS (asset)**</TableCell>
+      <TableCell>`https://livepeercdn.studio/asset/hls/{playbackId}/index.m3u8`</TableCell>
+      <TableCell>VOD; available once `asset.ready` event fires</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**MP4 (asset)**</TableCell>
+      <TableCell>`https://livepeercdn.studio/asset/mp4/{playbackId}/static360p0.mp4`</TableCell>
+      <TableCell>Static MP4; rendition suffix varies by quality</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="HLS.js" />
+
+## HLS.js integration
+
+```bash
+npm install hls.js
+```
+
+```javascript
+import Hls from 'hls.js';
+
+const videoElement = document.querySelector('video');
+const src = `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
+
+if (Hls.isSupported()) {
+  const hls = new Hls({
+    // For JWT-gated content
+    xhrSetup: (xhr) => {
+      xhr.setRequestHeader('Livepeer-Jwt', jwtToken);
+    },
+  });
+  hls.loadSource(src);
+  hls.attachMedia(videoElement);
+} else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+  // Native HLS (Safari, iOS)
+  videoElement.src = `${src}?jwt=${jwtToken}`;
+}
+```
+
+<CustomDivider middleText="Asset Playback" />
+
+## Confirming asset readiness
+
+VOD assets are not playable until transcoding is complete. Subscribe to the `asset.ready` webhook, or poll the asset status:
+
+```typescript
+const asset = await client.asset.get(assetId);
+
+if (asset.asset.status.phase === 'ready') {
+  const playbackUrl = `https://livepeercdn.studio/asset/hls/${asset.asset.playbackId}/index.m3u8`;
+  // render player
+} else if (asset.asset.status.phase === 'failed') {
+  console.error('Transcoding failed:', asset.asset.status.error);
+}
+```
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Create a Livestream" icon="video" href="/v2/developers/guides/video/create-livestream">
+    Get a playback ID from a new stream.
+  </Card>
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/video/access-control">
+    Sign JWTs for gated content playback.
+  </Card>
+</CardGroup>

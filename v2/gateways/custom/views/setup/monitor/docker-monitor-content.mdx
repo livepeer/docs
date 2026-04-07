@@ -1,0 +1,155 @@
+{/* StyledSteps, StyledStep, StyledTable, TableRow, TableCell, LinkArrow,
+     CustomDivider inherited from parent monitor.mdx scope */}
+import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+
+## <Icon icon="docker" iconType="solid" size={32} /> Docker Monitoring Guide
+{dockerGroup()}
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Enable Metrics">
+        Add the `-monitor` flag to the Gateway's Docker Compose command block. Without it, the `/metrics` endpoint is not exposed.
+
+        ```yaml icon="docker" docker-compose.yml
+        services:
+          gateway:
+            image: livepeer/go-livepeer:master
+            container_name: "gateway"
+            ports:
+              - 8935:8935
+              - 5935:5935
+            command:
+              - "-gateway"
+              - "-monitor"
+              - "-metricsPerStream"
+              - "-httpAddr=0.0.0.0:8935"
+              # ... other flags
+        ```
+
+        **Monitoring flags:**
+
+        <StyledTable>
+          <TableRow header>
+            <TableCell header>Flag</TableCell>
+            <TableCell header>Purpose</TableCell>
+            <TableCell header>Recommendation</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-monitor`</TableCell>
+            <TableCell>Enables the `/metrics` Prometheus endpoint</TableCell>
+            <TableCell>Always enable in production</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsPerStream`</TableCell>
+            <TableCell>Groups metrics by individual stream</TableCell>
+            <TableCell>Enable for per-stream debugging; increases metric cardinality</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsClientIP`</TableCell>
+            <TableCell>Includes client IP as a metric label</TableCell>
+            <TableCell>Enable only for per-client breakdown</TableCell>
+          </TableRow>
+        </StyledTable>
+
+        Verify metrics are exposed:
+
+        ```bash icon="terminal" Verify Metrics
+        curl http://localhost:8935/metrics | head -30
+        ```
+
+        Prometheus-format output with `livepeer_` prefixed metric names confirms the endpoint is active.
+    </StyledStep>
+
+    <StyledStep title="Prometheus and Grafana">
+        The `livepeer/livepeer-monitoring` repository bundles Prometheus, Grafana, and starter dashboard templates in a single Docker deployment.
+
+        ```bash icon="terminal" Start Monitoring Stack
+        git clone https://github.com/livepeer/livepeer-monitoring
+        cd livepeer-monitoring
+        docker compose up -d
+        ```
+
+        The stack starts:
+        - **Prometheus** on port `9090` - scraping the Gateway at `localhost:8935`
+        - **Grafana** on port `3000` - default credentials `admin / admin`
+
+        Update `prometheus.yml` in the repository to point to the Gateway host if it is not on `localhost`. When the Gateway runs in a Docker container, use the container name or Docker network address instead of `localhost`:
+
+        ```yaml icon="terminal" prometheus.yml
+        scrape_configs:
+          - job_name: 'livepeer-gateway'
+            static_configs:
+              - targets: ['gateway:8935']
+            metrics_path: '/metrics'
+            scrape_interval: 15s
+            labels:
+              node_type: 'dual'
+              environment: 'production'
+        ```
+
+        <Tip>
+          Ensure both the monitoring stack and the Gateway container are on the same Docker network so Prometheus can reach the Gateway's metrics endpoint.
+        </Tip>
+
+        **Enhanced monitoring flags** can be added to the Gateway's Docker Compose command:
+
+        ```yaml icon="docker" Additional Compose Flags
+        command:
+          # ... existing flags
+          - "-metricsPerStream=true"
+          - "-metricsClientIP=true"
+        ```
+    </StyledStep>
+
+    <StyledStep title="Log Monitoring">
+        Monitor Gateway logs in real time:
+
+        ```bash icon="terminal" Follow Logs
+        docker logs -f gateway
+        ```
+
+        Enable verbose logging by adding `-v=6` to the Docker Compose command block. Key log events to watch:
+        - `Received live video AI request` - AI job arrived
+        - `Orchestrator selected` - routing decision made
+        - `Transcoding completed` - job finished
+        - Payment processing events
+
+        Save logs to a file for later analysis:
+
+        ```bash icon="terminal" Save Logs
+        docker logs gateway > gateway.log 2>&1
+        ```
+    </StyledStep>
+
+    <StyledStep title="Automated Health Notifications">
+        Add a `HEALTHCHECK` to the Docker Compose service definition or Dockerfile to let Docker monitor the Gateway process:
+
+        ```yaml icon="docker" docker-compose.yml
+        services:
+          gateway:
+            # ... existing config
+            healthcheck:
+              test: ["CMD", "curl", "--silent", "--fail", "http://localhost:8935/health"]
+              interval: 30s
+              timeout: 10s
+              retries: 3
+        ```
+
+        Docker marks the container as `unhealthy` after three consecutive failures. Combine with a restart policy:
+
+        ```yaml icon="docker"
+        restart: unless-stopped
+        ```
+
+        For email or webhook alerts, use the Prometheus alert rules described below the tabs on this page.
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Troubleshooting"
+  icon="triangle-exclamation"
+  href="/v2/gateways/guides/monitoring-and-tooling/troubleshooting"
+  horizontal
+  arrow
+>
+  Fix common Gateway errors by symptom
+</Card>

@@ -1,7 +1,14 @@
 ---
-title: 'Gateway Costs and Revenue'
-sidebarTitle: 'Gateway Economics'
-description: 'How Livepeer gateway payments work, what gateways cost to operate, and how operators earn at the business layer — covering both on-chain and off-chain gateway models.'
+title: Gateway Costs and Revenue
+sidebarTitle: Gateway Economics
+description: >-
+  How Livepeer gateway payments work, what gateways cost to operate, and how operators
+  earn at the business layer - covering both on-chain and off-chain gateway models.
+pageType: guide
+audience: gateway
+purpose: explain
+status: deprecated
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway economics
@@ -13,21 +20,15 @@ keywords:
   - maxPricePerCapability
   - gateway revenue
   - AI inference costs
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: concept
-audience: gateway-operator
-purpose: concepts
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/site/og-image/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-
-Livepeer gateways are consumers of compute services, not earners of protocol fees. Orchestrators earn fees from gateways; gateways earn at the **business layer** — the margin between what they charge customers and what they pay the network.
+Livepeer gateways are consumers of compute services, not earners of protocol fees. Orchestrators earn fees from gateways; gateways earn at the **business layer** - the margin between what they charge customers and what they pay the network.
 
 This page explains how gateway payments work at the protocol level, what costs you control, and how the revenue side works.
 
@@ -71,7 +72,7 @@ This page explains how gateway payments work at the protocol level, what costs y
 
 ## How gateway payments work: probabilistic micropayments
 
-Livepeer uses **probabilistic micropayments (PM)** — a system designed for high-frequency, low-value payments without the gas cost of settling every transaction on-chain.
+Livepeer uses **probabilistic micropayments (PM)** - a system designed for high-frequency, low-value payments without the gas cost of settling every transaction on-chain.
 
 ```mermaid
 sequenceDiagram
@@ -90,7 +91,7 @@ sequenceDiagram
 
 **How tickets work:**
 - Your gateway generates signed payment tickets for each unit of work
-- Tickets have a face value and a winning probability — most tickets lose, but winners pay out the full face value
+- Tickets have a face value and a winning probability - most tickets lose, but winners pay out the full face value
 - The expected value of all tickets equals the price agreed for the work
 - Orchestrators redeem winning tickets on Arbitrum to receive ETH
 - This means most work has zero on-chain cost, while the economic model remains sound
@@ -186,7 +187,7 @@ Gateway payments use ETH on Arbitrum, not LPT. This is a common point of confusi
   <tbody>
     <TableRow>
       <TableCell>**ETH** (Arbitrum One)</TableCell>
-      <TableCell>Service payments — transcoding and AI inference</TableCell>
+      <TableCell>Service payments - transcoding and AI inference</TableCell>
       <TableCell>Gateways pay orchestrators</TableCell>
     </TableRow>
     <TableRow>
@@ -207,7 +208,7 @@ The economic model differs significantly between the two gateway operation modes
 
 <Tabs>
   <Tab title="On-chain (video gateway)">
-    **What you hold:** ETH on Arbitrum — split into deposit and reserve.
+    **What you hold:** ETH on Arbitrum - split into deposit and reserve.
 
     ```
     Deposit: funds used to back payment tickets (consumed as you use the network)
@@ -243,7 +244,7 @@ The economic model differs significantly between the two gateway operation modes
 
 ## What gateways charge customers
 
-Your pricing to customers is entirely at the application layer — the Livepeer protocol has no concept of "gateway fees". You decide what to charge; the protocol only controls what you **pay** orchestrators.
+Your pricing to customers is entirely at the application layer - the Livepeer protocol has no concept of "gateway fees". You decide what to charge; the protocol only controls what you **pay** orchestrators.
 
 Common pricing models used by current gateway operators:
 
@@ -255,7 +256,7 @@ Common pricing models used by current gateway operators:
 | Usage-based | Charge per unit (per pixel, per generation, per token) | Direct API products |
 | Free + SPE-funded | No charge to users; costs covered by treasury grant | Livepeer Cloud SPE |
 
-Your revenue is the difference between what customers pay you and what you pay orchestrators. Pricing discovery — understanding what orchestrators charge on the current network — is available through `livepeer_cli` and the [Livepeer Explorer](https://explorer.livepeer.org).
+Your revenue is the difference between what customers pay you and what you pay orchestrators. Pricing discovery - understanding what orchestrators charge on the current network - is available through `livepeer_cli` and the [Livepeer Explorer](https://explorer.livepeer.org).
 
 ---
 
@@ -266,7 +267,7 @@ Key metrics to watch in production:
 ```bash
 # Check gateway financial status via CLI
 livepeer_cli --host=localhost --http=7935
-# Option 1: Get node status — shows current deposit and reserve balances
+# Option 1: Get node status - shows current deposit and reserve balances
 ```
 
 For a running gateway, these are the critical numbers:
@@ -286,7 +287,7 @@ For a running gateway, these are the critical numbers:
   <Card title="How payments work" icon="circle-dollar-to-slot" href="/v2/gateways/guides/how-payments-work">
     Full PM ticket lifecycle, ETH fee flow, and probabilistic payment model.
   </Card>
-  <Card title="Pricing configuration" icon="sliders" href="/v2/gateways/setup/configure/pricing-configuration">
+  <Card title="Pricing configuration" icon="sliders" href="/v2/gateways/guides/payments-and-pricing/pricing-configuration">
     Configure maxPricePerUnit, maxPricePerCapability, and AI pricing JSON.
   </Card>
   <Card title="Fund your gateway" icon="ethereum" href="/v2/gateways/setup/requirements/on-chain/fund-gateway">

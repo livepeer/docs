@@ -2,21 +2,58 @@
 title: 'Page-structure-template'
 sidebarTitle: Page-structure-template
 description: 'Describe page-structure-template'
-audience: developer
-pageType: landing
-purpose: landing
+audience: community
+persona: internal
+pageType: reference
+pageVariant: specification
+purpose: reference
 status: draft
 keywords:
   - livepeer
   - keyword
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 ---
-{/* IMPORTS */}
-"import { Quote } from '/snippets/components/content/quote.jsx'""
+
+{/*
+COMMENTS:  (comments on this page (leave as comment section), containing: )
+- JOURNEY OF THIS PAGE
+- {REVIEW} items list
+- {any issues or key notes}
+*/}
+
+{/* COMPONENT IMPORTS */}
+{/* COMPONENT IMPORTS. PascalCase. leave comment above this in place */}
+"import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'""
+
+{/* DATA IMPORTS */}
+{/*
+DATA IMPORTS. leave comment above this in place
+Data items should be FULLY_CAPITALISED like constants
+Note must be the relative link unless inside snippets.
+*/}
+"import THIS_DATA from /data/mydata.jsx"
+
+{/* MDX PAGE IMPORTS */}
+{/*
+PAGE IMPORTS - MDX. leave comment above this in place
+Capitalise PageName (PascalCase)
+Note must be the relative link unless inside snippets.
+Note pagename can be anything -> it imports as whatever you import is as here.
+*/}
+"import ThisPage from "/pages/thisPage.mdx"
+
+{/* MDX COMPOSABLE IMPORTS */}
+{/*
+COMPOSABLE IMPORTS - MDX. leave comment above this in place
+Capitalise ComposableName (PascalCase).
+Note must be the relative link unless inside snippets.
+Note composablename can be anything -> it imports as whatever you import is as here.
+*/}
+"import ThisComposable from "/composables/thisComposable.mdx"
 
 {/* ==========================PAGE SECTION: HEADER========================= */}
 {/*
@@ -116,8 +153,6 @@ PAGE ELEMENT: BODY SECTION 1 HEADER
     - DONT: Question, Sentence,
 */}
 
-
-
 {/* ==========================PAGE SECTION: FOOTER========================= */}
 {/*
 [OPT] PAGE ELEMENT: RELATED PAGES
@@ -136,8 +171,6 @@ PAGE ELEMENT: BODY SECTION 1 HEADER
         - description: Rephrase title [instead: remove | offer description]
 */}
 
-
-
 {/* ==========================PAGE TAXONOMY GUIDE========================= */}
 {/*
 DO:
@@ -149,3 +182,77 @@ DONT:
     - ex:
 - Use more than one of the same layout element
 */}
+
+{/* ==========================COMPONENT STRUCTURE RULES========================= */}
+{/*
+COMPONENT STRUCTURE RULES
+Canonical rules for how components must be configured on every page.
+Source: v2/gateways/_workspace/canonical/checks.mdx (checks 5.12-5.15)
+*/}
+
+## Component Structure Rules
+
+### Tabs
+- Every `<Tab>` must include an `icon` prop
+- Use FontAwesome icon names that match the tab content
+- Tabs without icons create visual inconsistency and reduce scannability
+
+```mdx icon="code" title="tab-example.mdx"
+<Tabs>
+  <Tab title="Docker" icon="docker">Content</Tab>
+  <Tab title="Linux" icon="linux">Content</Tab>
+  <Tab title="Windows" icon="windows">Content</Tab>
+</Tabs>
+```
+
+### Code Blocks
+- Every fenced code block must include `icon` and `title` attributes
+- `icon` conveys the tool (e.g. `terminal`, `docker`, `code`)
+- `title` conveys the file or command context (e.g. `start-gateway.sh`, `docker-compose.yml`)
+- Bare code fences without metadata fail quality checks
+
+```mdx icon="code" title="code-block-example.mdx"
+```bash icon="terminal" title="start-gateway.sh"
+livepeer -gateway -network arbitrum-one-mainnet
+```
+```
+
+### Steps
+- Procedural step sequences must use `<StyledSteps>` (not raw `<Steps>`)
+- StyledSteps must include accent styling props
+- Raw numbered lists or unstyled Steps components fail quality checks
+
+```mdx icon="code" title="steps-example.mdx"
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+  <StyledStep title="Install">Content</StyledStep>
+  <StyledStep title="Configure">Content</StyledStep>
+  <StyledStep title="Connect">Content</StyledStep>
+</StyledSteps>
+```
+
+### Accordions
+- Every `<Accordion>` must include an `icon` prop
+- Use FontAwesome icon names that match the accordion content
+- Accordions without icons create visual inconsistency and reduce scannability
+
+```mdx icon="code" title="accordion-example.mdx"
+<AccordionGroup>
+  <Accordion title="On-chain gateway" icon="link">Content</Accordion>
+  <Accordion title="Off-chain gateway" icon="cloud">Content</Accordion>
+</AccordionGroup>
+```
+
+### Cards
+- Every `<Card>` used for navigation must include a title with icon via `<CustomCardTitle>`
+- Cards must include `href` and use `horizontal` layout when in Related Pages sections
+
+```mdx icon="code" title="card-example.mdx"
+<Card
+  title={<CustomCardTitle icon="arrow-right" title="Next Step" />}
+  href="/v2/gateways/setup/install/install-overview"
+  horizontal
+>
+  Short description of destination
+</Card>
+```
+

@@ -1,0 +1,243 @@
+# Relative Link Audit
+
+## Summary
+- Mode: dry-run
+- Files scanned: 631
+- Generated pages scanned: 43
+- Relative href literals scanned: 35
+- Planned rewrites: 0
+- Unresolved links: 35
+- Generator-owned findings: 0
+- Skipped non-page/non-v2 hrefs: 0
+
+## Status Counts
+| status | count |
+| --- | ---: |
+| unresolved | 35 |
+
+## Planned Rewrites
+- None
+
+## Unresolved
+- v2/gateways/portal.mdx
+  - L107: ./concepts/
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/role (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+  - L111: ./concepts/
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/role (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+  - L132: ./setup
+    - suggestion: /v2/gateways/setup/requirements/setup (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/setup/run-a-gateway (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/setup/transcoding (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/navigator (high path similarity, score 0.6667)
+  - L143: ./guides/
+    - suggestion: /v2/community/resources/guides (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/navigator (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/portal (high path similarity, score 0.6667)
+  - L150: ./resources/technical
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/glossary (high path similarity, score 0.6)
+- v2/gateways/quickstart/gateway-setup.mdx
+  - L147: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L192: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L222: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L272: ../resources/faq
+    - suggestion: /v2/community/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+- v2/gateways/setup/run-a-gateway.mdx
+  - L238: ../run-a-gateway/install
+    - suggestion: /v2/gateways/setup/run-a-gateway (high path similarity, score 0.575)
+    - suggestion: /v2/gateways (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.5)
+- v2/home/get-started.mdx
+  - L119: ../developers/_archive/partner-integrations
+    - suggestion: /v2/developers (high path similarity, score 0.5)
+    - suggestion: /v2/developers/build/byoc (high path similarity, score 0.5)
+    - suggestion: /v2/developers/build/comfystream (high path similarity, score 0.5)
+    - suggestion: /v2/developers/build/model-support (high path similarity, score 0.5)
+    - suggestion: /v2/developers/build/sdk-gateway (high path similarity, score 0.5)
+- v2/internal/internal-overview.mdx
+  - L35: ./docs-philosophy
+    - suggestion: /v2/internal/overview/docs-philosophy (same leaf segment match, score 0.65)
+    - suggestion: /v2/internal (high path similarity, score 0.6667)
+    - suggestion: /v2/internal/definitions (high path similarity, score 0.6667)
+    - suggestion: /v2/internal/ecosystem (high path similarity, score 0.6667)
+    - suggestion: /v2/internal/internal-overview (high path similarity, score 0.6667)
+- v2/orchestrators/quickstart/video-transcoding.mdx
+  - L170: ../concepts/job-types
+    - suggestion: /v2/orchestrators/concepts/architecture (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/concepts/capabilities (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/concepts/incentive-model (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/concepts/role (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/concepts/composable/orchestratorRole (high path similarity, score 0.6)
+  - L179: ../resources/cli-flags
+    - suggestion: /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/resources/x-guides (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/resources/x-help (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/resources/x-payments (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, score 0.6)
+- v2/orchestrators/setup/r-monitor.mdx
+  - L67: ./install-go-livepeer
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L68: ../advanced/rewards-and-fees
+    - suggestion: /v2/orchestrators (high path similarity, score 0.5)
+    - suggestion: /v2/orchestrators/concepts/architecture (high path similarity, score 0.5)
+    - suggestion: /v2/orchestrators/concepts/capabilities (high path similarity, score 0.5)
+    - suggestion: /v2/orchestrators/concepts/incentive-model (high path similarity, score 0.5)
+    - suggestion: /v2/orchestrators/concepts/role (high path similarity, score 0.5)
+  - L69: ../resources/faq
+    - suggestion: /v2/community/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/resources/x-guides (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/resources/x-help (high path similarity, score 0.75)
+- v2/orchestrators/setup/rcs-requirements.mdx
+  - L93: ./install-go-livepeer
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L94: ./orchestrator-stats
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L95: ./data-centre-setup
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+- v2/orchestrators/setup/s-guide.mdx
+  - L32: ./hardware-requirements
+    - suggestion: /v2/gateways/resources/reference/go-livepeer/hardware-requirements (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/reference/technical/go-livepeer/hardware-requirements (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+  - L33: ./install-go-livepeer
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L34: ./connect-to-arbitrum
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L35: ./orch-config
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L36: ./orchestrator-stats
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+  - L37: ./publish-offerings
+    - suggestion: /v2/orchestrators/setup/configure (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/connect-and-activate (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/guide (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/r-monitor (high path similarity, score 0.75)
+    - suggestion: /v2/orchestrators/setup/rcs-requirements (high path similarity, score 0.75)
+- v2/resources/changelog/changelog.mdx
+  - L110: ../documentation-guide/contribute-to-the-docs
+    - suggestion: /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, score 0.65)
+- v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx
+  - L597: ./style-guide
+    - suggestion: /v2/resources/documentation-guide/copy-style/style-guide (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources/documentation-guide/contributing/contribute-to-the-docs (high path similarity, score 0.8)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6)
+    - suggestion: /v2/resources/documentation-guide/ai-automations/ai-features (high path similarity, score 0.6)
+    - suggestion: /v2/resources/documentation-guide/ai-automations/automations-workflows (high path similarity, score 0.6)
+  - L600: ./component-library/overview
+    - suggestion: /v2/about/livepeer-network/overview (same leaf segment match, score 0.65)
+    - suggestion: /v2/about/livepeer-protocol/overview (same leaf segment match, score 0.65)
+    - suggestion: /v2/cn/resources/documentation-guide/component-library/overview (same leaf segment match, score 0.65)
+    - suggestion: /v2/developers/opportunities/overview (same leaf segment match, score 0.65)
+    - suggestion: /v2/es/resources/documentation-guide/component-library/overview (same leaf segment match, score 0.65)
+  - L609: ./documentation-guide
+    - suggestion: /v2/resources/documentation-guide (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources/documentation-guide/contributing/contribute-to-the-docs (high path similarity, score 0.8)
+    - suggestion: /v2/resources/documentation-guide/ai-automations/ai-features (high path similarity, score 0.6)
+    - suggestion: /v2/resources/documentation-guide/ai-automations/automations-workflows (high path similarity, score 0.6)
+    - suggestion: /v2/resources/documentation-guide/ai-automations/research-and-fact-checking (high path similarity, score 0.6)
+- v2/resources/documentation-guide/documentation-guide.mdx
+  - L160: ./style-guide
+    - suggestion: /v2/resources/documentation-guide/copy-style/style-guide (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/changelog (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/help-center (high path similarity, score 0.6667)
+  - L163: ./snippets-inventory
+    - suggestion: /v2/resources/documentation-guide/tooling/snippets-inventory (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/changelog (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/help-center (high path similarity, score 0.6667)
+  - L166: ./docs-features-and-ai-integrations#automatic-page-index-generation
+    - suggestion: /v2/resources/documentation-guide/features/docs-features-and-ai-integrations (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/changelog (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/help-center (high path similarity, score 0.6667)
+  - L169: ./automations-workflows
+    - suggestion: /v2/resources/documentation-guide/ai-automations/automations-workflows (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/changelog (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/help-center (high path similarity, score 0.6667)
+  - L172: ./research-and-fact-checking
+    - suggestion: /v2/resources/documentation-guide/ai-automations/research-and-fact-checking (same leaf segment match, score 0.65)
+    - suggestion: /v2/resources (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/changelog (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/documentation-guide (high path similarity, score 0.6667)
+    - suggestion: /v2/resources/help-center (high path similarity, score 0.6667)
+
+## Generator-Owned Findings
+- None
+

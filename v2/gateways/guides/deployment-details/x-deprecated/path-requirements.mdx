@@ -1,7 +1,15 @@
 ---
-title: 'Detailed Requirements by Deployment Path'
-sidebarTitle: 'Path Requirements'
-description: 'Detailed prerequisites for each gateway setup path — what you need, what you do not need, and how to get started for AI off-chain, video on-chain, dual, and SDK-based gateways.'
+title: Detailed Requirements by Deployment Path
+sidebarTitle: Path Requirements
+description: >-
+  Detailed prerequisites for each gateway setup path - what you need, what you do not
+  need, and how to get started for AI off-chain, video on-chain, dual, and SDK-based
+  gateways.
+pageType: guide
+audience: gateway
+purpose: operate
+status: deprecated
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway requirements
@@ -13,20 +21,15 @@ keywords:
   - remote signer setup
   - Arbitrum ETH gateway
   - livepeer-python-gateway
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: guides
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/site/og-image/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
 {/* TODO:
 Verify:
-- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
 - Fontawesome icons are used on accordions and tabs
 - Tables use StyledTable component
 - No em-dashes are used (instead use standard -)
@@ -37,11 +40,11 @@ Verify:
 - REVIEW flags are in JSX flags for a human.
 */}
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { BorderedBox } from '/snippets/components/layout/containers.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
-import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
 
 
 ## Hardware requirements (all paths)
@@ -194,7 +197,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
 
         This signer is operated by Elite Encoder, a community member and active contributor. It is free to use and suitable for development and early production. For high-volume production deployments you may want to operate your own signer.
 
-        <Card title="Remote signers — full documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
+        <Card title="Remote signers - full documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
           How the remote signing protocol works, state management requirements, and how to operate your own signer.
         </Card>
       </StyledStep>
@@ -217,7 +220,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
 
     | Port | Protocol | Purpose |
     |------|----------|---------|
-    | `8937` | HTTP | AI inference API — your application sends requests here |
+    | `8937` | HTTP | AI inference API - your application sends requests here |
     | `8935` | HTTP | General gateway interface |
 
     For production, place a reverse proxy (nginx, Caddy) in front of port `8937` for TLS termination and rate limiting.
@@ -272,7 +275,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
       <StyledStep title="Static IP or domain" icon="globe">
         Orchestrators must be able to reach your gateway to send transcoded segments back. Your gateway must have a publicly accessible address.
 
-        Home internet connections with NAT are problematic — the gateway publishes its `-serviceAddr` to orchestrators and expects inbound connections. Use a VPS, cloud instance, or configure static port forwarding.
+        Home internet connections with NAT are problematic - the gateway publishes its `-serviceAddr` to orchestrators and expects inbound connections. Use a VPS, cloud instance, or configure static port forwarding.
       </StyledStep>
 
       <StyledStep title="ETH on Arbitrum One" icon="ethereum">
@@ -290,13 +293,13 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
           {/* REVIEW: Confirm current amounts with Mehrdad/Rick. Issue #3744 in go-livepeer repo is open to reduce the reserve requirement. Check if merged. */}
         </BorderedBox>
 
-        You do not buy ETH on Arbitrum directly — you buy ETH on Ethereum mainnet and bridge it to Arbitrum.
+        You do not buy ETH on Arbitrum directly - you buy ETH on Ethereum mainnet and bridge it to Arbitrum.
 
         <Accordion title="Step-by-step: get ETH onto Arbitrum" icon="ethereum">
           1. **Buy ETH** on a centralised exchange (Coinbase, Binance, Kraken). Any exchange that supports Ethereum will do.
-          2. **Transfer to a self-custody wallet** (MetaMask, Ledger). You need to own the private key — exchange wallets cannot be used directly.
+          2. **Transfer to a self-custody wallet** (MetaMask, Ledger). You need to own the private key - exchange wallets cannot be used directly.
           3. **Bridge to Arbitrum** via the [official Arbitrum bridge](https://bridge.arbitrum.io). Connect your wallet, select Ethereum → Arbitrum One, and bridge ~0.15 ETH (0.1 ETH for gateway + buffer for gas on both chains).
-          4. **Wait for bridge confirmation** — typically 10–20 minutes.
+          4. **Wait for bridge confirmation** - typically 10–20 minutes.
           5. After bridging, run the gateway binary and use the Livepeer CLI to allocate your deposit and reserve.
 
           <Card title="Full fund gateway guide" icon="ethereum" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway" arrow horizontal>
@@ -430,7 +433,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
 
     ### Configuration: separate pricing per workload type
 
-    The dual gateway uses separate pricing flags for each workload type. These are independent — you can set different max prices for video transcoding and each AI pipeline/model:
+    The dual gateway uses separate pricing flags for each workload type. These are independent - you can set different max prices for video transcoding and each AI pipeline/model:
 
     ```bash
     # Video transcoding pricing
@@ -463,7 +466,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
     For production dual deployments, Docker Compose isolates the service and makes restart/update management easier:
 
     ```yaml
-    # docker-compose.yml — dual AI + video gateway
+    # docker-compose.yml - dual AI + video gateway
     version: '3.8'
 
     services:
@@ -506,10 +509,10 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
     - **AI orchestrators:** Discovered via `-orchAddr` explicit list, discovery URL, or remote signer endpoint. Must support the specific AI pipeline and model you request.
 
     Tools for finding AI-capable orchestrators:
-    - [tools.livepeer.cloud](https://tools.livepeer.cloud) — filter by pipeline and model
-    - [Livepeer Explorer](https://explorer.livepeer.org) — general orchestrator registry
+    - [tools.livepeer.cloud](https://tools.livepeer.cloud) - filter by pipeline and model
+    - [Livepeer Explorer](https://explorer.livepeer.org) - general orchestrator registry
 
-    <Card title="Configure dual gateway" icon="gear" href="/v2/gateways/setup/configure/dual-configuration" arrow horizontal>
+    <Card title="Configure dual gateway" icon="gear" href="/v2/gateways/setup/configure" arrow horizontal>
       Full configuration reference for dual AI + video mode.
     </Card>
 
@@ -524,7 +527,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
 
     > "We only really need one remote signer implementation, but we need many gateway implementations in order to have direct integration with the Livepeer network natively on different platforms."
     >
-    > — Remote Signers design doc (j0sh, Q4 2025)
+    > - Remote Signers design doc (j0sh, Q4 2025)
 
     ### Prerequisites
 
@@ -542,7 +545,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
           - The go-livepeer binary
           - An Ethereum wallet
           - ETH on Arbitrum
-          - Linux specifically — any OS your runtime supports
+          - Linux specifically - any OS your runtime supports
           - Deep knowledge of PM (probabilistic micropayments)
         </div>
       </div>
@@ -568,7 +571,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
     Working examples (including LV2V, orchestrator selection, payment integration):
     `github.com/j0sh/livepeer-python-gateway/tree/main/examples`
 
-    {/* REVIEW: Confirm OrchestratorSession attribution (Elite Encoder PR). Confirm current class names against main branch — these may have changed. Check github.com/j0sh/livepeer-python-gateway. */}
+    {/* REVIEW: Confirm OrchestratorSession attribution (Elite Encoder PR). Confirm current class names against main branch - these may have changed. Check github.com/j0sh/livepeer-python-gateway. */}
 
     ### Orchestrator discovery for off-chain clients
 
@@ -606,7 +609,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
       <tbody>
         <TableRow>
           <TableCell>**Live AI (LV2V)**</TableCell>
-          <TableCell>✅ Fully supported — designed for this first</TableCell>
+          <TableCell>✅ Fully supported - designed for this first</TableCell>
           <TableCell>gRPC `GetOrchestratorInfo` + signer</TableCell>
           <TableCell>Best SDK support. `start_lv2v` is the main SDK entry point.</TableCell>
         </TableRow>
@@ -620,7 +623,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
           <TableCell>**BYOC** (Bring Your Own Compute)</TableCell>
           <TableCell>⚠️ Same mechanism as LV2V</TableCell>
           <TableCell>HTTP only (not gRPC). First-responder selection.</TableCell>
-          <TableCell>Good candidate for browser-based gateway — uses HTTP, not gRPC. Allow/block list supported.</TableCell>
+          <TableCell>Good candidate for browser-based gateway - uses HTTP, not gRPC. Allow/block list supported.</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>**Video transcoding**</TableCell>
@@ -636,15 +639,15 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
     These are confirmed failure modes from the remote signer protocol design. Get them wrong and you generate invalid payment tickets.
 
     <Warning>
-      **Rule 1 — Carry state forward between signing calls.** The remote signer is stateless: it returns updated state with each response. Your client must store that state and send it with the next signing call. Failing to do this causes repeated nonces, which produces invalid tickets that orchestrators will reject.
+      **Rule 1 - Carry state forward between signing calls.** The remote signer is stateless: it returns updated state with each response. Your client must store that state and send it with the next signing call. Failing to do this causes repeated nonces, which produces invalid tickets that orchestrators will reject.
     </Warning>
 
     <Warning>
-      **Rule 2 — No concurrent signing calls for the same session.** Concurrent calls with the same initial state will each succeed locally but produce duplicate nonces. This is not a supported pattern. Calls must be sequential per session.
+      **Rule 2 - No concurrent signing calls for the same session.** Concurrent calls with the same initial state will each succeed locally but produce duplicate nonces. This is not a supported pattern. Calls must be sequential per session.
     </Warning>
 
     <Note>
-      **Rule 3 — Forward updated ticket parameters from orchestrator.** After each payment call, the orchestrator returns updated ticket parameters. Forward these to the signer. Skipping this is not fatal (the signer regenerates from scratch) but it increases unnecessary ticket generation and wastes fees.
+      **Rule 3 - Forward updated ticket parameters from orchestrator.** After each payment call, the orchestrator returns updated ticket parameters. Forward these to the signer. Skipping this is not fatal (the signer regenerates from scratch) but it increases unnecessary ticket generation and wastes fees.
     </Note>
 
     ### Setting up the remote signer
@@ -670,9 +673,9 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
       -v 6
     ```
 
-    {/* REVIEW: Confirm `-remoteSigner` flag name and exact startup command with j0sh or from go-livepeer source. This is inferred from the design doc — verify exact binary flags before publishing. */}
+    {/* REVIEW: Confirm `-remoteSigner` flag name and exact startup command with j0sh or from go-livepeer source. This is inferred from the design doc - verify exact binary flags before publishing. */}
 
-    <Card title="Remote signers — full protocol documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
+    <Card title="Remote signers - full protocol documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
       The full remote signing protocol spec: signing sequence, state machine, bookkeeping, and running your own signer.
     </Card>
 
@@ -683,7 +686,7 @@ All gateway paths use the same underlying machine requirements. Gateways do not 
     | [`#local-gateways` Discord](https://discord.gg/livepeer) | j0sh, Elite Encoder, and SDK builders are active. Best channel for live debugging. |
     | [livepeer-python-gateway](https://github.com/j0sh/livepeer-python-gateway) | Python reference implementation and working examples |
     | [livepeer-python-gateway examples](https://github.com/j0sh/livepeer-python-gateway/tree/main/examples) | Concrete code for LV2V, orchestrator selection, payment integration |
-    | [Elite Encoder remote signer](https://signer.eliteencoder.net) | Community-hosted signer — free for testing and early production |
+    | [Elite Encoder remote signer](https://signer.eliteencoder.net) | Community-hosted signer - free for testing and early production |
 
   </Tab>
 </Tabs>
@@ -698,7 +701,7 @@ Once you have confirmed your requirements, move to install:
   <Card title="Install overview" icon="download" href="/v2/gateways/setup/install/install-overview" arrow>
     Docker, Linux binary, and community install methods.
   </Card>
-  <Card title="Configuration" icon="gear" href="/v2/gateways/setup/configure/configuration-overview" arrow>
+  <Card title="Configuration" icon="gear" href="/v2/gateways/setup/configure" arrow>
     Configure your gateway for your chosen workload type.
   </Card>
   <Card title="Fund your gateway" icon="ethereum" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway" arrow>

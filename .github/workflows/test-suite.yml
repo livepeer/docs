@@ -3,11 +3,12 @@ name: Docs CI - Content Quality Suite
 on:
   push:
     branches:
-      - main
+      - docs-v2
   pull_request:
     branches:
       - main
       - docs-v2
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -57,11 +58,14 @@ jobs:
         continue-on-error: true
         run: npm --prefix tests run test:docs-guide
 
+      - name: Run Mintlify Canonical Sync Check
+        run: node operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js --json
+
       - name: Install Mintlify globally
         run: npm install -g mintlify
 
       - name: Fetch external snippets
-        run: bash tools/scripts/snippets/fetch-external-docs.sh
+        run: bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
 
       - name: Start Mintlify dev server
         continue-on-error: false
@@ -150,17 +154,23 @@ jobs:
         working-directory: tools
         run: npm install
 
+      - name: Component naming conventions
+        run: node operations/scripts/validators/components/library/check-naming-conventions.js
+
+      - name: Component MDX scope isolation
+        run: node operations/scripts/validators/components/library/check-mdx-component-scope.js
+
       - name: Component CSS standards
-        run: node tools/scripts/validators/components/check-component-css.js
+        run: node operations/scripts/validators/components/library/check-component-css.js
         continue-on-error: true
 
       - name: Component documentation
-        run: node tools/scripts/validators/components/check-component-docs.js
+        run: node operations/scripts/validators/components/documentation/check-component-docs.js
         continue-on-error: true
 
       - name: Component immutability
-        run: node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref origin/${{ github.base_ref }}
+        run: node operations/scripts/validators/governance/pr/check-component-immutability.js --base-ref origin/${{ github.base_ref }}
 
       - name: Validate component registry
-        run: node tools/scripts/generate-component-registry.js --validate-only
+        run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
         continue-on-error: true

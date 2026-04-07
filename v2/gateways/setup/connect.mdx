@@ -1,0 +1,120 @@
+---
+title: "Connect a Livepeer Gateway on Docker, Linux, or Windows"
+sidebarTitle: "Connect"
+description: "Connect your Livepeer Gateway to the network. Orchestrator discovery, selection tuning, and service publication for Docker, Linux, and Windows."
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: 2026-04-07T00:00:00.000Z
+keywords:
+  - livepeer
+  - gateways
+  - connect
+  - orchestrator discovery
+  - orchAddr
+  - network
+  - docker
+  - linux
+  - windows
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { video, ai, dual, offChain, onChain } from '/v2/gateways/custom/components/iconItems.jsx'
+
+import DockerConnect from '/v2/gateways/custom/views/setup/connect/docker-connect-content.mdx'
+import LinuxConnect from '/v2/gateways/custom/views/setup/connect/linux-connect-content.mdx'
+import WindowsConnect from '/v2/gateways/custom/views/setup/connect/windows-connect-content.mdx'
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+# <Icon icon="plug" size={26} /> Connect Your Gateway
+Connect your Livepeer Gateway to Orchestrators and the network for {video()}, {ai()} Pipelines, or {dual()} service routing.
+
+*This guide covers:*
+- {offChain()} **manual connection** via `-orchAddr` (pin specific Orchestrators)
+- {onChain()} **automatic discovery** via the Livepeer network on Arbitrum
+- **Verification** that Orchestrators are discovered and reachable
+- **Service publication** to make the Gateway accessible to clients
+- **Selection tuning** for price caps, performance scoring, and blocklists
+
+<Tip>
+  Complete the [Install](/v2/gateways/setup/install) and [Configure](/v2/gateways/setup/configure) steps before connecting. Once connected, proceed to [Verify](/v2/gateways/setup/verify) to confirm end-to-end operation.
+</Tip>
+
+<CustomDivider />
+
+<BorderedBox>
+  <Tabs>
+    <Tab title="Docker" icon="docker">
+      <DockerConnect />
+    </Tab>
+
+    <Tab title="Linux" icon="linux">
+      <LinuxConnect />
+    </Tab>
+
+    <Tab title="Windows" icon="windows">
+      <WindowsConnect />
+    </Tab>
+  </Tabs>
+</BorderedBox>
+
+<CustomDivider />
+
+## Orchestrator Discovery Overview
+
+Gateways discover Orchestrators through two mechanisms, depending on the operational mode.
+
+<Tabs>
+  <Tab title="Off-chain (manual)" icon="floppy-disk">
+    Off-chain Gateways use a static list of known Orchestrators passed via `-orchAddr`. The Gateway round-robins across this list and does not discover others.
+
+    This is the recommended approach for:
+    - Production AI workloads where you need control over which Orchestrators handle inference
+    - Private deployments that do not interact with the public network
+    - Testing environments with a known Orchestrator
+
+    To update the list, restart the Gateway with a modified `-orchAddr` value. For dynamic updates without restarts, use `-orchWebhookUrl` instead.
+  </Tab>
+
+  <Tab title="On-chain (automatic)" icon="link">
+    On-chain Gateways discover Orchestrators automatically by querying the BondingManager smart contract on Arbitrum. The Gateway:
+
+    1. Queries all registered Orchestrators from the contract
+    2. Fetches capabilities, pricing, and performance metrics from each
+    3. Filters by price limits (`-maxPricePerUnit`, `-maxPricePerCapability`)
+    4. Scores candidates using stake, price, and randomness weights
+    5. Updates the pool every 25 minutes
+
+    This requires an Arbitrum RPC connection (`-ethUrl`) and ETH in the Gateway account for transactions.
+
+    For AI workloads, add `-aiServiceRegistry` to register with the on-chain AI service registry and enable automatic AI Orchestrator discovery.
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Orchestrator Selection" icon="sliders" href="/v2/gateways/guides/advanced-operations/orchestrator-selection">
+    Scoring weights, tiering strategies, failover, and blocklists.
+  </Card>
+  <Card title="Gateway Discoverability" icon="satellite-dish" href="/v2/gateways/guides/advanced-operations/gateway-discoverability">
+    DNS, HTTPS, capability advertising, and on-chain registration.
+  </Card>
+  <Card title="Marketplace Overview" icon="store" href="/v2/gateways/setup/connect/lp-marketplace">
+    How Orchestrators publish offerings and Gateways discover them.
+  </Card>
+  <Card title="Configuration Flags" icon="book" href="/v2/gateways/resources/reference/technical/configuration-flags">
+    Full reference for all Gateway configuration flags.
+  </Card>
+</CardGroup>

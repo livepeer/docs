@@ -15,6 +15,9 @@ jobs:
   generate-ai-sitemap:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,7 +43,7 @@ jobs:
         run: cd tools && npm install
 
       - name: Generate AI sitemap
-        run: node operations/scripts/generate-ai-sitemap.js --write
+        run: node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write
 
       - name: Check for changes
         id: git-check
@@ -53,5 +56,5 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add sitemap-ai.xml
-          git commit -m "Update AI sitemap - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          git commit -m "chore(seo): refresh AI sitemap"
           git push origin HEAD:${{ steps.branch.outputs.name }}

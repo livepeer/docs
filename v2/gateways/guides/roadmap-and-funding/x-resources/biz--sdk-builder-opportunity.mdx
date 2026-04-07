@@ -1,7 +1,14 @@
 ---
-title: 'Alternative Gateway Implementations'
-sidebarTitle: 'SDK and Custom Gateways'
-description: 'Build Livepeer gateway clients in Python, browsers, mobile, or embedded systems using the remote signer architecture — without the Go binary or deep Ethereum integration.'
+title: Alternative Gateway Implementations
+sidebarTitle: SDK and Custom Gateways
+description: >-
+  Build Livepeer gateway clients in Python, browsers, mobile, or embedded systems using
+  the remote signer architecture - without the Go binary or deep Ethereum integration.
+pageType: resource
+audience: gateway
+purpose: orient
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - alternative gateway
@@ -13,21 +20,15 @@ keywords:
   - custom gateway implementation
   - remote signer
   - non-Go gateway
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: guides
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-
-Until Q4 2025, writing a Livepeer gateway implementation required deep familiarity with the probabilistic micropayments (PM) protocol — one reason go-livepeer was the only extant gateway. Remote signing changed that. By separating Ethereum payment logic from media routing, it made lightweight gateway implementations viable in any language or runtime.
+Until Q4 2025, writing a Livepeer gateway implementation required deep familiarity with the probabilistic micropayments (PM) protocol - one reason go-livepeer was the only extant gateway. Remote signing changed that. By separating Ethereum payment logic from media routing, it made lightweight gateway implementations viable in any language or runtime.
 
 The Remote Signers design doc states this directly:
 
@@ -55,7 +56,7 @@ What remains in your client:
 - HTTP/gRPC connection to orchestrators
 - Sending jobs and receiving results
 - Calling the remote signer at session start and per payment
-- Passing signer state forward between signing calls (stateless design — the client carries state)
+- Passing signer state forward between signing calls (stateless design - the client carries state)
 
 ---
 
@@ -81,7 +82,7 @@ Key classes:
 | `PaymentSession` | Handles the payment ticket lifecycle with the remote signer |
 | `LiveVideoJob` | Manages a live-video-to-video inference session |
 
-{/* REVIEW: Confirm OrchestratorSession attribution — Elite Encoder PR. Confirm current class names against github.com/j0sh/livepeer-python-gateway main branch. */}
+{/* REVIEW: Confirm OrchestratorSession attribution - Elite Encoder PR. Confirm current class names against github.com/j0sh/livepeer-python-gateway main branch. */}
 
 ---
 
@@ -91,7 +92,7 @@ On-chain gateways use the Arbitrum contract registry. Off-chain clients cannot u
 
 <AccordionGroup>
   <Accordion title="1. Explicit orchestrator list">
-    Pass orchestrator URIs directly in your client configuration. The simplest approach — useful for development and for operators who have a curated, trusted orchestrator set.
+    Pass orchestrator URIs directly in your client configuration. The simplest approach - useful for development and for operators who have a curated, trusted orchestrator set.
 
     ```python
     # livepeer-python-gateway SDK example
@@ -112,7 +113,7 @@ On-chain gateways use the Arbitrum contract registry. Off-chain clients cannot u
   <Accordion title="3. Remote signer discovery endpoint">
     j0sh's remote signer implementation includes a `GetOrchestrators` endpoint that is parameterised by model ID and capability. Your client queries it and receives a filtered list of orchestrators that support the pipeline you need.
 
-    This bundles discovery with payment delegation — one sidecar service handles both.
+    This bundles discovery with payment delegation - one sidecar service handles both.
 
     {/* REVIEW: Confirm GetOrchestrators PR has merged to livepeer-python-gateway main. Check github.com/j0sh/livepeer-python-gateway. If not merged, note as in-progress. */}
   </Accordion>
@@ -136,7 +137,7 @@ Not all workloads are equal for alternative implementations. The remote signer d
   <tbody>
     <TableRow>
       <TableCell>**Live AI (LV2V)**</TableCell>
-      <TableCell>✅ Full — designed for this</TableCell>
+      <TableCell>✅ Full - designed for this</TableCell>
       <TableCell>gRPC `GetOrchestratorInfo` + remote signer</TableCell>
       <TableCell>Primary use case for alternative clients. Best SDK support.</TableCell>
     </TableRow>
@@ -149,14 +150,14 @@ Not all workloads are equal for alternative implementations. The remote signer d
     <TableRow>
       <TableCell>**BYOC** (Bring Your Own Compute)</TableCell>
       <TableCell>⚠️ Same mechanism as LV2V</TableCell>
-      <TableCell>HTTP (not gRPC) — first to respond wins. Explicit allow/block list.</TableCell>
+      <TableCell>HTTP (not gRPC) - first to respond wins. Explicit allow/block list.</TableCell>
       <TableCell>BYOC does not use gRPC for OrchestratorInfo. Good candidate for browser-based gateway implementation.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Video transcoding**</TableCell>
       <TableCell>❌ Explicitly excluded</TableCell>
       <TableCell>On-chain Arbitrum registry</TableCell>
-      <TableCell>Transcoding tickets are signed with segment hash — puts signing in hot path. Zero appetite for risk here per design doc. Not supported for alternative implementations.</TableCell>
+      <TableCell>Transcoding tickets are signed with segment hash - puts signing in hot path. Zero appetite for risk here per design doc. Not supported for alternative implementations.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -168,7 +169,7 @@ Not all workloads are equal for alternative implementations. The remote signer d
 These are confirmed failure modes from the remote signer design doc. Get them wrong and you generate invalid tickets:
 
 <Warning>
-**State must be carried forward between signing calls.** The remote signer is stateless — it returns updated state with each response. Your client must store that state and pass it with the next signing call. Failure to do this causes repeated nonces, which produces invalid tickets.
+**State must be carried forward between signing calls.** The remote signer is stateless - it returns updated state with each response. Your client must store that state and pass it with the next signing call. Failure to do this causes repeated nonces, which produces invalid tickets.
 </Warning>
 
 <Warning>
@@ -176,7 +177,7 @@ These are confirmed failure modes from the remote signer design doc. Get them wr
 </Warning>
 
 <Note>
-**Orchestrator sends updated ticket parameters after each payment.** Forward these to the signer after each payment call. Not doing so is not fatal — the signer regenerates from scratch if needed — but it increases unnecessary ticket generation and wastes fees.
+**Orchestrator sends updated ticket parameters after each payment.** Forward these to the signer after each payment call. Not doing so is not fatal - the signer regenerates from scratch if needed - but it increases unnecessary ticket generation and wastes fees.
 </Note>
 
 ---
@@ -202,12 +203,12 @@ These are confirmed failure modes from the remote signer design doc. Get them wr
     Full protocol specification: the signing sequence, state machine, and implementation requirements.
   </Card>
   <Card title="Off-chain requirements" icon="clipboard-check" href="/v2/gateways/setup/requirements/off-chain">
-    What an off-chain gateway client needs — no ETH, Linux for the signer, explicit orchAddr source.
+    What an off-chain gateway client needs - no ETH, Linux for the signer, explicit orchAddr source.
   </Card>
   <Card title="livepeer-python-gateway examples" icon="code" href="https://github.com/j0sh/livepeer-python-gateway/tree/main/examples">
     Working Python examples for LV2V, orchestrator selection, and payment integration.
   </Card>
   <Card title="Gateway economics" icon="circle-dollar-to-slot" href="/v2/gateways/guides/gateway-economics">
-    How off-chain gateway payments work — what your client needs to handle vs what the signer handles.
+    How off-chain gateway payments work - what your client needs to handle vs what the signer handles.
   </Card>
 </CardGroup>

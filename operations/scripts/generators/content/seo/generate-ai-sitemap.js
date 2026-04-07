@@ -26,30 +26,22 @@ const {
   countWords,
   buildGitLastModifiedMap,
   getLastVerified
-} = require('../../../../../tools/lib/docs-index-utils');
+} = require('../../../../../tools/lib/docs/docs-index-utils');
 
 const BASE_URL = 'https://docs.livepeer.org';
 const DOCS_JSON = 'docs.json';
 const OUTPUT_FILE = 'sitemap-ai.xml';
 const AI_NAMESPACE = 'https://docs.livepeer.org/schemas/ai-sitemap/1.0';
 const ROUTE_DEPENDENCIES = {
-  'v2/about/resources/livepeer-contract-addresses': [
+  'v2/about/resources/reference/livepeer-contract-addresses': [
     'snippets/data/contract-addresses/contractAddressesData.json',
     'snippets/data/contract-addresses/_health-checks.json',
   ],
-  'v2/resources/references/contract-addresses': [
+  'v2/about/resources/verify-contract-addresses': [
     'snippets/data/contract-addresses/contractAddressesData.json',
     'snippets/data/contract-addresses/_health-checks.json',
   ],
-  'v2/gateways/resources/reference/technical/contract-addresses': [
-    'snippets/data/contract-addresses/contractAddressesData.json',
-    'snippets/data/contract-addresses/_health-checks.json',
-  ],
-  'v2/orchestrators/resources/reference/technical/contract-addresses': [
-    'snippets/data/contract-addresses/contractAddressesData.json',
-    'snippets/data/contract-addresses/_health-checks.json',
-  ],
-  'v2/about/livepeer-protocol/blockchain-contracts': [
+  'v2/about/protocol/blockchain-contracts': [
     'snippets/data/contract-addresses/blockchainContractsPageData.json',
     'snippets/data/contract-addresses/contractAddressesData.json',
   ],
@@ -235,6 +227,11 @@ function buildEntries() {
   const docsJsonPath = path.join(REPO_ROOT, DOCS_JSON);
   const docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf8'));
   const rawRoutes = collectV2Routes(docsJson);
+  const redirectRoutes = new Set(
+    (docsJson.redirects || [])
+      .map((entry) => normalizeRoute(entry && entry.source))
+      .filter(Boolean)
+  );
   const gitMap = buildGitLastModifiedMap(REPO_ROOT);
   const missingRoutes = new Set();
   const entriesMap = new Map();
@@ -243,6 +240,7 @@ function buildEntries() {
     if (isExcludedRoute(route)) return;
     const normalized = normalizeRoute(route);
     if (!normalized) return;
+    if (redirectRoutes.has(normalized)) return;
     const mapped = normalized.startsWith('v2/pages/')
       ? mapLegacyRepoPathToModern(normalized)
       : normalized;

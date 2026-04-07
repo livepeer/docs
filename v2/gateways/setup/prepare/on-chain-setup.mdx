@@ -1,0 +1,53 @@
+For on-chain operation, you need additional Ethereum infrastructure and configuration beyond the basic Docker installation.
+
+## Essential Requirements
+
+### 1. Ethereum Node Access
+You must provide an Ethereum node RPC URL via `-ethUrl` [1](#2-0) . The node will exit early without this [2](#2-1) .
+
+### 2. Network Specification
+Specify the blockchain network using `-network` (e.g., `arbitrum-one-mainnet`, `mainnet`) [3](#2-2) .
+
+### 3. Account Credentials
+You need an Ethereum account with:
+- `-ethAcctAddr` - Your Ethereum account address [4](#2-3)
+- `-ethPassword` - Password or path to password file [5](#2-4)
+- `-ethKeystorePath` - Path to keystore directory or keyfile [6](#2-5)
+
+### 4. Smart Contract Controller
+Specify the protocol contract address via `-ethController` [7](#2-6) .
+
+## Orchestrator-Specific Requirements
+
+If running an orchestrator, you must also set:
+- `-pricePerUnit` - Base price per pixel in wei (required for orchestrators) [8](#2-7)
+- `-serviceAddr` - Public URL where your orchestrator can be reached [9](#2-8)
+
+## Example On-Chain Gateway Command
+
+```bash
+docker run --rm -it --name gateway \
+  -p 1935:1935 -p 8935:8935 -p 7935:7935 \
+  livepeer/go-livepeer \
+  -gateway \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb1.arbitrum.io/rpc \
+  -ethPassword <your-password> \
+  -ethAcctAddr <your-address> \
+  -v 6
+```
+
+## Development Setup
+
+For development, you can use the devtool to set up a private Ethereum network with Livepeer protocol deployed [10](#2-9) :
+
+```bash
+docker pull livepeer/geth-with-livepeer-protocol:confluence
+docker run -p 8545:8545 -p 8546:8546 --name geth-with-livepeer-protocol livepeer/geth-with-livepeer-protocol:confluence
+```
+
+## Notes
+
+- On-chain mode requires chain ID validation - the node will exit if the chain is not supported [11](#2-10)
+- Gas configuration options are available: `-gasLimit`, `-minGasPrice`, `-maxGasPrice` [12](#2-11)
+- For production use, consider using a remote signer to separate key custody from media processing [13](#2-12)

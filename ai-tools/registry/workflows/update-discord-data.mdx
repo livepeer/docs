@@ -1,0 +1,112 @@
+---
+title: 'Update Discord Announcements Data'
+kind: 'workflow'
+status: 'active'
+concern: 'authoring'
+source_path: '.github/workflows/update-discord-data.yml'
+trigger_mode: 'schedule + workflow_dispatch'
+risk_level: 'medium'
+consolidation_flag: 'review for alignment with `page-ship` while preserving current schedule + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'page-ship'
+workflow_family: 'data-refresh'
+cleanup_decision: 'merge'
+usage_status: 'compatibility-wrapper'
+process_fit: 'core-shipping'
+consolidation_target: 'data-refresh-governance'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Update Discord Announcements Data
+
+## Summary
+
+Update Discord Announcements Data runs on schedule, workflow_dispatch and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/update-discord-data.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- schedule: default event configuration
+- workflow_dispatch: configured in workflow file
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `update-discord-data` | update-discord-data | n/a | none | 0 |
+
+### update-discord-data
+
+- No steps parsed.
+
+## Inputs
+
+- workflow_dispatch:use_test_branch (optional)
+
+## Second Pass Assessment
+
+- Workflow family: `data-refresh`
+- Usage status: `compatibility-wrapper`
+- Cleanup decision: `merge`
+- Process fit: `core-shipping`
+- Consolidation target: `data-refresh-governance`
+- Recommended engineering action: Merge this workflow with its sibling family into `data-refresh-governance` so one workflow owns both check and write modes.
+
+## Outputs
+
+- Generated or refreshed repository data
+
+## Dependencies
+
+- No direct dependencies identified in current repo scan.
+
+## Dependants
+
+- dispatcher:page-ship
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: schedule + workflow_dispatch"]
+  workflow["Workflow: Update Discord Announcements Data"]
+  trigger --> workflow
+  job1["Job: update-discord-data"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- No local repo dependencies were detected automatically; verify whether this is truly standalone.
+- Scheduled execution can hide drift until the next cron window.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `page-ship`. Second-pass target: `data-refresh-governance`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This belongs to a repeating data-refresh pattern and should not stay as an uncoordinated top-level workflow forever.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

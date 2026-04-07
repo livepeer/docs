@@ -8,7 +8,7 @@ keywords:
   - pipeline
   - audit
   - run order
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -41,19 +41,19 @@ Global AI-tools inventory, lifecycle, and lane assignment now live in:
 
 | Stage | Primary Goal | Canonical Output |
 |---|---|---|
-| script-footprint-and-usage-audit | Detect script sprawl, backups, placeholders, report bloat | `tasks/reports/repo-ops/script-footprint-and-usage-audit.json` |
-| docs-quality-and-freshness-audit | Inventory TODO/TBD/Coming Soon/PreviewCallout and thin content | `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json` |
-| style-and-language-homogenizer-en-gb | Enforce UK English/style profile in EN `v2` scope | `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json` |
-| component-layout-governance | Validate required sections and allowed component usage by page type | `tasks/reports/repo-ops/component-layout-governance.json` |
-| cleanup-quarantine-manager | Produce reversible cleanup manifest and optional quarantine moves | `tasks/reports/repo-ops/cleanup-quarantine-manifest.json` |
+| script-footprint-and-usage-audit | Detect script sprawl, backups, placeholders, report bloat | `workspace/reports/repo-ops/script-footprint-and-usage-audit.json` |
+| docs-quality-and-freshness-audit | Inventory TODO/TBD/Coming Soon/PreviewCallout and thin content | `workspace/reports/repo-ops/docs-quality-and-freshness-audit.json` |
+| style-and-language-homogenizer-en-gb | Enforce UK English/style profile in EN `v2` scope | `workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.json` |
+| component-layout-governance | Validate required sections and allowed component usage by page type | `workspace/reports/repo-ops/component-layout-governance.json` |
+| cleanup-quarantine-manager | Produce reversible cleanup manifest and optional quarantine moves | `workspace/reports/repo-ops/cleanup-quarantine-manifest.json` |
 | cross-agent-packager | Export aligned packs for Codex/Cursor/Claude/Windsurf | `ai-tools/agent-packs/` |
 
 ## Orchestrator CLI
 
 ```bash icon="terminal"
-node tools/scripts/repo-audit-orchestrator.js \
+node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js \
   --mode static \
   --scope full \
-  --output-dir tasks/reports/repo-ops \
+  --output-dir workspace/reports/repo-ops \
   --agent-pack all
 ```

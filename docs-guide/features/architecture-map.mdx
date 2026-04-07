@@ -13,7 +13,7 @@ keywords:
   - tooling
   - validation
   - automation
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -26,9 +26,9 @@ This is an internal systems map for how content, tooling, validation, and automa
 
 - Content source: `v2/pages/**`, `snippets/**`, `docs.json`
 - Runtime UX: Mintlify dev/build + hosted docs deployment
-- Local operator tooling: `lpd`, `.githooks/*`, `tools/scripts/*`, `tests/*`
-- CI/automation: `.github/workflows/*`, `.github/scripts/*`, `snippets/automations/*`
-- Governance docs: `README.md`, `docs-guide/*`, `contribute/CONTRIBUTING/*`
+- Local operator tooling: `lpd`, `.githooks/*`, `operations/scripts/*`, `tests/*`
+- CI/automation: `.github/workflows/*`, `.github/scripts/*`, `snippets/data/*`
+- Governance docs: `README.md`, `docs-guide/*`
 
 ## Data + Control Flow
 
@@ -37,12 +37,12 @@ flowchart TD
   A["Author edits content (v2/pages, snippets)"] --> B["Local commands (lpd dev, lpd test)"]
   B --> C["Pre-commit checks (.githooks/pre-commit)"]
   C --> D["Unit + integration validation (tests/*)"]
-  D --> E["Index and metadata sync (tools/scripts/*)"]
+  D --> E["Index and metadata sync (operations/scripts/*)"]
   E --> F["Pull request + CI workflows (.github/workflows)"]
   F --> G["Deployment + runtime docs experience"]
 
   H["External sources (forum/blog/youtube/releases)"] --> I["Automation scripts/workflows"]
-  I --> J["Generated data in snippets/automations + snippets/data"]
+  I --> J["Generated data in snippets/data"]
   J --> A
 ```
 

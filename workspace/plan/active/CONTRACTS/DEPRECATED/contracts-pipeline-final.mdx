@@ -1,0 +1,146 @@
+
+# Purpose
+{/* Aims of pipeline. scammer */}
+
+# Pipeline Overview
+{/* mermaid simple diagram */}
+{/* Process with description
+Discovery -> Truth -> Provenance -> Presentation  */}
+
+# Discovery Sources
+{/* Aim As close as possible to real-time updating */}
+{/* where does discovery live? */}
+{/* TABLE: tier 1,2  on-chain, repo */}
+
+# Verification Sources
+{/* AIM: 100% verification accuracy */}
+{/* where does truth live? */}
+{/* TABLE: tier 1, 2 eg labels, cross checks */}
+{/*
+Tier 1: high confidence verification (blockchain)
+Tier 2: supplementary cross-checks (labels, verified source etc)
+*/}
+
+# Provenance Sources
+{/* AIM: 100% provenance=Livepeer accuracy */}
+{/* where does provenance live? */}
+{/* tier 1, 2 eg labels, cross checks */}
+
+# Presentation Layer
+{/* AIM: Accurate information is discoverable, SEO, AEO enabled */}
+{/* in repo -> composable design */}
+
+# Pipeline Triggers
+{/* AIM: consistently up to date */}
+{/* cron, repo changes */}
+
+# Pipeline Architecture Diagrams
+{/*
+multiple mermaid diagrams
+1. complete pipeline
+2. discovery pipeline detailed
+3. truth & verification pipeline detailed
+4. provenance pipeline detailed
+5. presentation pipeline detailed
+*/}
+
+# Pipeline Design Details
+{/* Process
+Discovery -> Truth -> Provenance -> Presentation
+
+1. DISCOVERY
+-> 3 Discovery pipelines
+1. Controller-Registered Contacts
+2. Non-Controller Bridge Cluster
+3. Fully Detached
+
+Details
+1. These are registered via setContractInfo() and readable via getContractInfo() / getContract():
+
+Arbitrum: BondingManager, TicketBroker, RoundsManager, ServiceRegistry, BondingVotes, LivepeerGovernor, L2Migrator, Minter, LivepeerToken
+Ethereum: LivepeerToken, Minter (slot resolves to BridgeMinter)
+
+2. BridgeMinter, L1LPTGateway, L1Migrator, L1Escrow, L2LPTGateway — these returned zero as direct controller keys on live RPC. They are not registered in the Controller. Their addresses come from:
+
+Official upstream deployment artefacts in livepeer/arbitrum-lpt-bridge
+Runtime cross-verification via on-chain getters (e.g. BridgeMinter.l1LPTGatewayAddr(), L1LPTGateway.l1LPTEscrow())
+The getter graph is self-confirming: L2LPTGateway's l1Counterpart() must equal L1LPTGateway's address independently derived
+
+3.
+AIServiceRegistry, Governor, Treasury — not in the Controller, no runtime getters pointing to them from the bridge cluster. Their addresses come from:
+
+Official upstream deployment artefacts (livepeer/protocol delta branch)
+Official runtime consumers (go-livepeer hardcodes AIServiceRegistry address)
+Explorer verification and deployer confirmation as supplementary signals
+
+No chain event or getter graph covers these. Discovery and truth are entirely upstream-artefact-based.
+
+=====
+-> Sources that signal a new or changed contract family exists:
+
+SetContractInfo events from both controllers (Arbitrum, Ethereum)
+Full-repo watch on livepeer/protocol, livepeer/arbitrum-lpt-bridge, livepeer/governor-scripts
+Commit diff scanning for new files under contracts/, deploy/, deployments/
+Governor-scripts updates/addresses.js changes as a discovery trigger (not as truth)
+
+output -> report */}
+
+## Pipeline Dependencies
+{/* RPCs.. other ? */}
+
+## Pipeline Error Handling
+{/* writing issue on RPC failue.. etc */}
+
+## Pipeline Self-Remediation Handlers
+{/* how does the pipeline recover from issues? */}
+
+## Pipeline Additional Needs
+{/* AEO, SEO, etc. Mostly presentation layer (scripts exist)*/}
+
+{/*
+PUBLISH FOR STAKEHOLDERS NOTES:
+Since you are strictly using Mintlify, you cannot simply push an MDX file to GitHub Pages and expect it to work; GitHub Pages cannot "render" Mintlify's custom components on its own.
+However, you can achieve exactly what you want—a single, public, standalone page with no navigation to share with a stakeholder—using Mintlify's Custom Mode and its GitHub Preview feature. [1]
+## 1. Hide the Navigation (The "One-Page" Look)
+Add mode: "custom" to the top of your MDX file. This transforms the page into a "blank canvas," removing the sidebar, table of contents, and footer. It will look like a single standalone website rather than a docs page. [2]
+
+---title: "Stakeholder Proposal"mode: "custom"
+---
+
+import { MyCustomComponent } from '/components/MyCustomComponent.js'
+# Hello Stakeholder
+This is your custom preview.
+<MyCustomComponent />
+
+## 2. Make it "Private" from your main Docs
+If you don't want this page to appear in your official documentation site but still want it hosted, simply exclude it from your docs.json file.
+
+* Result: The page is still published and live, but it is "unlisted.".
+* Access: Only people with the direct URL (which you send to the stakeholder) can see it. [3, 4, 5]
+
+## 3. Share the Public URL via GitHub
+Since your repository is public, every time you push this MDX file to GitHub, Mintlify automatically generates a public URL:
+
+* Main Site: your-project.mintlify.app/filename
+* Branch Preview: If you work on a separate branch, the [Mintlify GitHub App](https://www.mintlify.com/docs/deploy/github) generates a unique Preview URL for that branch. You can send this specific link to your stakeholder without merging it into your main site. [6, 7]
+
+## Summary of the "Mintlify on GitHub" Workflow:
+
+   1. Create the .mdx file in your repo.
+   2. Add mode: "custom" to the frontmatter.
+   3. Push to GitHub (to a new branch if you want to keep it away from your main site).
+   4. Copy the preview URL from the Mintlify dashboard or the GitHub PR comment and send it to your stakeholder. [1, 8, 9]
+
+Do you need help setting up the Mintlify GitHub App to enable these automatic preview links?
+
+[1] [https://github.com](https://github.com/gregce/unmint)
+[2] [https://www.mintlify.com](https://www.mintlify.com/docs/organize/pages)
+[3] [https://www.mintlify.com](https://www.mintlify.com/mintlify/docs/organize/hidden-pages)
+[4] [https://www.mintlify.com](https://www.mintlify.com/docs/organize/hidden-pages)
+[5] [https://mintlify.com](https://mintlify.com/live-codes/livecodes/features/deploy)
+[6] [https://www.mintlify.com](https://www.mintlify.com/Mintlify/docs/deploy/preview-deployments)
+[7] [https://www.mintlify.com](https://www.mintlify.com/docs/deploy/github)
+[8] [https://deepdocs.dev](https://deepdocs.dev/create-documentation-site-with-mintlify/)
+[9] [https://deepdocs.dev](https://deepdocs.dev/create-documentation-site-with-mintlify/)
+
+*/}

@@ -1,141 +1,87 @@
 ---
-title: 'Run an Orchestrator'
-sidebarTitle: 'Setup Overview'
-description: 'Complete setup guide for running a Livepeer orchestrator - from installation to on-chain activation and verification.'
-purpose: overview
+title: Setup Overview
+sidebarTitle: Guide
+description: Default setup path for Livepeer orchestrators running go-livepeer, with redirects for pools and non-default deployment patterns.
 keywords:
   - livepeer
   - orchestrator
   - setup
-  - guide
-  - production
-'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+  - go-livepeer
+  - activation
+  - publish
+  - verify
+'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 pageType: overview
 audience: orchestrator
-status: current
-lastVerified: '2026-03-16'
+purpose: guide
+status: draft
+lastVerified: 2026-03-12
 ---
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
-<Tip>
-  Use Setup to get the node installed, configured, staked, and verified. Pricing, delegation strategy, and workload optimisation live in the Guides section.
-</Tip>
+This guide is the default setup path for operators who are running an orchestrator on go-livepeer.
 
-Follow these pages to move from a node decision to an on-chain, verified orchestrator. Each page covers one setup session.
+## What this guide does
 
-<Note>
-  Read <a href="/v2/orchestrators/guides/operator-considerations/operator-rationale">Operator Rationale</a> when you are still deciding whether to operate. Use the <a href="/v2/orchestrators/quickstart/guide">Quickstart</a> first when you still need to validate hardware.
-</Note>
+- Walks through the default setup path most operators should use.
+- Breaks setup into clear install, configure, connect, activate, test, and monitor steps.
+- Links to the detailed current pages for each step.
 
-<CustomDivider middleText="Setup Flow" />
+## What this guide does not do
 
-## Setup flow
+- It does not cover pool participation as the primary path.
+- It does not replace the detailed AI operations guides.
+- It does not cover every split, siphon, or custom deployment pattern in-line.
 
-<StyledSteps>
-
-  <StyledStep title="Install go-livepeer" icon="download">
-    Install the go-livepeer binary. Docker is recommended - it handles GPU passthrough and matches the quickstart environment.
-
-    <a href="/v2/orchestrators/setup/rs-install">→ Install go-livepeer</a>
-  </StyledStep>
-
-  <StyledStep title="Configure" icon="sliders">
-    Set operational flags for the chosen node mode: video transcoding, AI inference, or dual mode. Generates a docker-compose file with all required flags.
-
-    <a href="/v2/orchestrators/setup/configure">→ Configure your orchestrator</a>
-  </StyledStep>
-
-  <StyledStep title="Connect to Arbitrum" icon="link">
-    Connect to Arbitrum One: fund the wallet with arbETH, acquire and stake LPT, register the service URI, and activate on-chain. This is the longest step - LPT acquisition can take hours to days.
-
-    <a href="/v2/orchestrators/setup/connect-and-activate">→ Connect and activate</a>
-  </StyledStep>
-
-  <StyledStep title="Verify" icon="circle-check">
-    Confirm the node is on-chain, transcoding video, running AI inference (if configured), calling reward correctly, and exposing metrics.
-
-    <a href="/v2/orchestrators/setup/test">→ Verify your setup</a>
-  </StyledStep>
-
-</StyledSteps>
-
-<CustomDivider middleText="What You Will Need" />
-
-## What you will need
-
-<StyledTable variant="bordered">
-  <thead>
-    <TableRow header>
-      <TableCell header>Category</TableCell>
-      <TableCell header>Requirement</TableCell>
-      <TableCell header>Notes</TableCell>
-    </TableRow>
-  </thead>
-  <tbody>
-    <TableRow>
-      <TableCell>**Hardware**</TableCell>
-      <TableCell>NVIDIA GPU</TableCell>
-      <TableCell>Any model for video transcoding. 24 GB VRAM for AI diffusion pipelines; 8 GB for LLM via Ollama. See the Requirements guide for per-pipeline VRAM floors.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Software**</TableCell>
-      <TableCell>Docker + NVIDIA Container Toolkit</TableCell>
-      <TableCell>Recommended path. Binary install also supported for Linux, Windows, macOS.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Blockchain**</TableCell>
-      <TableCell>arbETH + LPT on Arbitrum One</TableCell>
-      <TableCell>~0.05 ETH for gas. LPT stake: check current active set threshold on Explorer. AI-only nodes need minimal LPT.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Network**</TableCell>
-      <TableCell>Public IP or domain; port 8935 open</TableCell>
-      <TableCell>Gateways connect on port 8935. Static IP or DNS strongly recommended.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**RPC**</TableCell>
-      <TableCell>Arbitrum One RPC endpoint</TableCell>
-      <TableCell>Free tier from Alchemy or Infura is sufficient for most operators.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Time**</TableCell>
-      <TableCell>2-4 hours for video; 4-8 hours for AI or dual mode</TableCell>
-      <TableCell>LPT acquisition and model download consume most of the elapsed time. Interactive configuration is shorter.</TableCell>
-    </TableRow>
-  </tbody>
-</StyledTable>
-
-For the full hardware and software requirements checklist, see <a href="/v2/orchestrators/guides/operator-considerations/requirements">Guides > Operator Considerations > Requirements</a>.
-
-<CustomDivider middleText="After Setup" />
-
-## After setup
-
-Once the node is on-chain and verified, the Guides section covers everything needed to operate it well.
+## Redirects
 
 <CardGroup cols={2}>
-  <Card title="Staking and Earning" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
-    How orchestrators earn from service fees and LPT inflation rewards.
+  <Card title="Pool redirect" icon="users" href="/v2/orchestrators/guides/join-a-pool" arrow>
+    Use this if you are contributing GPU capacity to an existing operator instead of setting up your own node.
   </Card>
-  <Card title="Config and Optimisation" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
-    Tune pricing, capacity, session limits, and reward calling gas economics.
+  <Card title="Other setups" icon="shuffle" href="/v2/orchestrators/dep-rc-navigator" arrow>
+    Use this for split, siphon, and other non-default setup paths that are still being consolidated.
   </Card>
-  <Card title="Monitoring and Tools" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox">
-    Full monitoring setup: Grafana dashboards, alerting, Explorer operations.
+</CardGroup>
+
+## Setup overview
+
+<CardGroup cols={2}>
+  <Card title="Requirements" icon="microchip" href="/v2/orchestrators/setup/prepare" arrow>
+    Confirm hardware, networking, and operational prerequisites.
   </Card>
-  <Card title="Workloads and AI" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
-    Add or change workloads based on hardware capacity and network demand.
+  <Card title="Install" icon="download" href="/v2/orchestrators/setup/install" arrow>
+    Install go-livepeer using the release path that matches your environment.
   </Card>
-  <Card title="Deployment Details" icon="server" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration">
-    Alternative setups: pool operation, O-T split, siphon mode, dual mode.
+  <Card title="Configure" icon="sliders" href="/v2/orchestrators/setup/r-configure" arrow>
+    Set the runtime flags that define price, GPU selection, network, and service address.
   </Card>
-  <Card title="Troubleshooting" icon="triangle-exclamation" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting">
-    Diagnose and fix common issues after activation.
+  <Card title="Connect" icon="plug" href="/v2/orchestrators/setup/sc-connect" arrow>
+    Connect the node to Arbitrum and verify RPC reliability.
   </Card>
+  <Card title="Test" icon="vial" href="/v2/orchestrators/setup/x-test" arrow>
+    Validate the node before and after activation.
+  </Card>
+  <Card title="Monitor" icon="chart-line" href="/v2/orchestrators/setup/monitor" arrow>
+    Track health, rewards, and operational signals once the node is live.
+  </Card>
+</CardGroup>
+
+## Activation checks
+
+Treat activation as a distinct checkpoint, not just the end of installation.
+
+| Check | Use this page |
+| --- | --- |
+| Connect | `/v2/orchestrators/setup/sc-connect` |
+| Publish and activate | `/v2/orchestrators/unclassified/rcs-connect-activate-publish` |
+| Verify | `/v2/orchestrators/setup/x-test` |
+
+<CardGroup cols={3}>
+  <Card title="Connect" icon="plug" href="/v2/orchestrators/setup/sc-connect" arrow />
+  <Card title="Publish" icon="satellite-dish" href="/v2/orchestrators/unclassified/rcs-connect-activate-publish" arrow />
+  <Card title="Verify" icon="circle-check" href="/v2/orchestrators/setup/x-test" arrow />
 </CardGroup>

@@ -1,14 +1,15 @@
 ---
 name: agentic-project-management-orchestrator
-version: "1.0"
 description: >-
-  Plan Livepeer Docs repo changes through gated discovery, phased scoping, validation mapping, and handover-ready artifacts; not for direct execution or cross-agent packaging.
-tier: 3
-invoke_when:
-  - "review research and plan this repo change"
-  - "break this docs infra work into phases"
-  - "prepare implementation plan and validation gates"
-  - "create a handover-ready task plan"
+  Plan Livepeer Docs repo changes through gated discovery, phased scoping,
+  validation mapping, and handover-ready artifacts; not for direct execution or
+  cross-agent packaging. Use when: review research and plan this repo change,
+  break this docs infra work into phases, prepare implementation plan and
+  validation gates, create a handover-ready task plan.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - "README.md"
   - "docs-guide/overview.mdx"
@@ -18,8 +19,8 @@ primary_paths:
   - "docs-guide/features/architecture-map.mdx"
   - "tests/README.md"
 primary_commands:
-  - "node tools/scripts/generate-docs-guide-indexes.js --check"
-  - "node tests/run-all.js --staged --skip-browser"
+  - "node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check"
+  - "node operations/tests/run-all.js --staged --skip-browser"
 ---
 
 SKILL: Agentic Project Management Orchestrator
@@ -54,8 +55,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generate-docs-guide-indexes.js --check
-node tests/run-all.js --staged --skip-browser
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
+node operations/tests/run-all.js --staged --skip-browser
 ```
 
 Deliverable Format

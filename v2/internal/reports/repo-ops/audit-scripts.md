@@ -91,7 +91,7 @@ All discovered scripts meet the required script template rules.
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `.github/scripts/fetch-forum-data.js`
-- Purpose: Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/
+- Purpose: Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
 - Template compliance: PASS
 - Role tags: ci, sync
 - Run-context tags: scheduled, workflow-dispatch
@@ -99,7 +99,7 @@ All discovered scripts meet the required script template rules.
   - workflow: .github/workflows/update-forum-data.yml#Update Forum Data > update-forum-data > Fetch and process forum data (when: scheduled, workflow-dispatch)
 
 ### `.github/scripts/fetch-ghost-blog-data.js`
-- Purpose: Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/
+- Purpose: Fetches blog posts from Ghost CMS API, writes to snippets/data/social-feeds/
 - Template compliance: PASS
 - Role tags: ci, sync
 - Run-context tags: scheduled, workflow-dispatch
@@ -107,7 +107,7 @@ All discovered scripts meet the required script template rules.
   - workflow: .github/workflows/update-ghost-blog-data.yml#Update Ghost Blog Data > update-ghost-data > Fetch and process Ghost blog data (when: scheduled, workflow-dispatch)
 
 ### `.github/scripts/fetch-youtube-data.js`
-- Purpose: Fetches video data from YouTube Data API, writes to snippets/automations/youtube/
+- Purpose: Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
 - Template compliance: PASS
 - Role tags: ci, sync
 - Run-context tags: scheduled, workflow-dispatch
@@ -115,7 +115,7 @@ All discovered scripts meet the required script template rules.
   - workflow: .github/workflows/update-youtube-data.yml#Update YouTube Data > update-youtube > Fetch and process YouTube videos (when: scheduled, workflow-dispatch)
 
 ### `.github/scripts/project-showcase-sync.js`
-- Purpose: Fetches project showcase data from external source, writes to snippets/automations/showcase/
+- Purpose: Fetches project showcase data from external source, writes to snippets/data/showcase-feed/
 - Template compliance: PASS
 - Role tags: ci, sync
 - Run-context tags: scheduled, workflow-dispatch
@@ -129,7 +129,7 @@ All discovered scripts meet the required script template rules.
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
-### `snippets/automations/youtube/filterVideos.js`
+### `snippets/data/social-feeds/transformers/filterVideos.js`
 - Purpose: YouTube video filter — post-processes fetched YouTube data to filter/sort videos for display
 - Template compliance: PASS
 - Role tags: sync
@@ -1156,7 +1156,7 @@ All discovered scripts meet the required script template rules.
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
-### `tools/scripts/snippets/fetch-external-docs.sh`
+### `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`
 - Purpose: External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds
 - Template compliance: PASS
 - Role tags: ci, enforcement, generator, sync

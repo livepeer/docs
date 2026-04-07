@@ -33,16 +33,15 @@ const HTTP_PROBE_TIMEOUT_MS = Number.parseInt(process.env.CONTRACTS_PROBE_TIMEOU
 const HTTP_PROBE_MAX_ATTEMPTS = Number.parseInt(process.env.CONTRACTS_PROBE_MAX_ATTEMPTS || '10', 10);
 const HTTP_PROBE_RETRY_INTERVAL_MS = Number.parseInt(process.env.CONTRACTS_PROBE_RETRY_INTERVAL_MS || '2000', 10);
 const CONTRACTS_SCOPE_PREFIXES = [
-  'v2/about/resources/livepeer-contract-addresses',
-  'v2/about/livepeer-protocol/blockchain-contracts',
+  'v2/about/resources/reference/livepeer-contract-addresses',
+  'v2/about/resources/verify-contract-addresses',
+  'v2/about/protocol/blockchain-contracts',
   'v2/resources/references/contract-addresses',
-  'v2/gateways/resources/reference/technical/contract-addresses',
-  'v2/orchestrators/resources/reference/technical/contract-addresses',
   'snippets/composables/pages/canonical',
   'snippets/data/contract-addresses',
-  'v2/about/livepeer-protocol/data',
+  'v2/about/protocol/data',
 ].join(',');
-const CONTRACTS_SCOPE_TABS = 'About,Resource HUB,Gateways,Orchestrators';
+const CONTRACTS_SCOPE_TABS = '';
 const SESSION_FILE = path.join(os.tmpdir(), `contracts-validation-session-${REPO_KEY}.json`);
 const PID_FILE = path.join(os.tmpdir(), `mint-dev-test-${REPO_KEY}.pid`);
 const SERVER_MANAGER_PATH = path.join(REPO_ROOT, '.githooks', 'server-manager.js');
@@ -269,6 +268,7 @@ async function ensureFreshBundleBaseUrl(options = {}) {
 }
 
 module.exports = {
+  CONTRACTS_SCOPE_PREFIXES,
   ensureFreshBundleBaseUrl,
   normalizeBaseUrl,
   normalizeProbePath,

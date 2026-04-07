@@ -1,21 +1,21 @@
 ---
 name: v2-link-audit-runbook
-version: "1.0"
 description: >-
-  Run and interpret the comprehensive v2 link/import audit in full, staged, or file-targeted modes. Use when tasks include run strict link audit, find broken internal links in v2, audit mdx imports and hrefs.
-tier: 1
-invoke_when:
-  - "run strict link audit"
-  - "find broken internal links in v2"
-  - "audit mdx imports and hrefs"
+  Run and interpret the comprehensive v2 link/import audit in full, staged, or
+  file-targeted modes. Use when: run strict link audit, find broken internal
+  links in v2, audit mdx imports and hrefs.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "1"
 primary_paths:
-  - "tests/integration/v2-link-audit.js"
-  - "tasks/reports/navigation-links/LINK_TEST_REPORT.md"
+  - "operations/tests/integration/v2-link-audit.js"
+  - "workspace/reports/navigation-links/LINK_TEST_REPORT.md"
   - "snippets/data"
   - "docs.json"
 primary_commands:
-  - "node tests/integration/v2-link-audit.js --full --write-links --strict"
-  - "node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
+  - "node operations/tests/integration/v2-link-audit.js --full --write-links --strict"
+  - "node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
 ---
 
 SKILL: V2 Link Audit Runbook
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tests/integration/v2-link-audit.js --full --write-links --strict
-node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
+node operations/tests/integration/v2-link-audit.js --full --write-links --strict
+node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
 ```
 
 Deliverable Format

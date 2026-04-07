@@ -27,6 +27,9 @@ pnpm-lock.yaml
 # Google OAuth secrets
 **/client_secret*.json
 
+# Chat reconstruction files (may contain secrets)
+workspace/plan/future/BACKLOG/recovery/chat-reconstructions/
+
 # ------------------------------------
 # Logs
 # ------------------------------------
@@ -50,7 +53,8 @@ Thumbs.db
 # ------------------------------------
 # Mintlify / Build Stuff
 # ------------------------------------
-.mintlify/
+.mintlify/*
+!.mintlify/Assistant.md
 .mintlify-cache/
 .out/
 dist/
@@ -98,19 +102,23 @@ tasks/plan/*
 !tasks/plan/repo-ops-reports/**
 
 # Usefulness LLM cache
+.cache/
 .cache/llm-usefulness/
 
 # Codex local lock state (operational, non-tracked)
 .codex/locks-local/
 .codex/pr-body.generated.md
+.playwright-cli/
 
 # --------------------------------------------------
 # Generated data files — produced by scripts at runtime
 # --------------------------------------------------
-docs-index.json
-llms-full.txt
+
+# Contract data pipeline — runtime working files
+snippets/data/contract-addresses/*.bak
 tools/scripts/snippets/generate-data/data/discovered-terms.json
 tools/scripts/snippets/generate-data/data/glossary-terms.json
 
 # Local-only generated report scratch space
 tasks/reports/_local/
+workspace/reports/_local/playwright/

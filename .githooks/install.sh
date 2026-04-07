@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            install
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             .githooks
-# @domain            docs
-# @needs             E-C6, F-C1
-# @purpose-statement Installs git hooks by routing this worktree to .githooks via worktree-local core.hooksPath
-# @pipeline          manual — developer tool
-# @usage             bash .githooks/install.sh [flags]
+# @script      install
+# @type        dispatch
+# @concern     governance
+# @niche       hooks
+# @purpose     tooling:dev-tools
+# @description Installs git hooks by routing this worktree to .githooks via worktree-local core.hooksPath
+# @mode        execute
+# @pipeline    manual — developer tool
+# @scope       .githooks
+# @usage       bash .githooks/install.sh [flags]
+# @policy      E-C6, F-C1
 # Install git hooks
 
 set -euo pipefail

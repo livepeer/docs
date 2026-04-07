@@ -1,11 +1,14 @@
 ---
 title: 'Run a Gateway: Quickstart Guide'
-description: Get a Livepeer dual AI / video Gateway node up and running locally or on the Livepeer network.
-pageType: quickstart
-audience: gateway-operator
-purpose: how_to
+sidebarTitle: Quickstart Guide
+description: >-
+  Get a Livepeer dual AI / video Gateway node up and running locally or on the Livepeer
+  network.
+pageType: instruction
+audience: gateway
+purpose: build
+status: current
 lastVerified: '2026-03-17'
-sidebarTitle: Run a Gateway
 keywords:
   - livepeer
   - gateways
@@ -15,7 +18,7 @@ keywords:
   - gateway
   - guide
   - video
-'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+og:image: /snippets/assets/media/og-images/en/gateways.png
 ---
 {/* TODO:
 Terminology Validation:
@@ -23,7 +26,6 @@ Terminology Validation:
 Verify:
 - Terminology is consistent with resources/glossary
 */}
-
 
 {/* DATA & CODE */}
 {/* These can be moved to the view using them */}
@@ -36,19 +38,18 @@ import { GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNo
 
 {/* COMPONENTS */}
 {/* These can be moved to the view using them */}
-import { ResponseFieldAccordion, ResponseFieldExpandable, CustomResponseField, ValueResponseField } from '/snippets/components/content/responseField.jsx';
-import { CustomCodeBlock, CodeSection, ComplexCodeBlock, } from '/snippets/components/content/code.jsx';
-import { TipWithArrow, DoubleIconLink } from '/snippets/components/primitives/links.jsx';
-import { DownloadButton } from '/snippets/components/primitives/buttons.jsx';
-import { FlexContainer } from '/snippets/components/layout/layout.jsx';
-import { latestVersion } from '/snippets/automations/globals/globals.mdx';
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx';
-import { WidthCard } from '/snippets/components/layout/customCards.jsx';
+import { ResponseFieldAccordion, ResponseFieldExpandable, CustomResponseField, ValueResponseField } from '/snippets/components/displays/response-fields/ResponseField.jsx';
+import { CustomCodeBlock, CodeSection, ComplexCodeBlock, } from '/snippets/components/displays/code/Code.jsx';
+import { TipWithArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx';
+import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.jsx';
+import { latestReleasePageUrl, latestVersion } from '/snippets/data/globals/latestRelease.jsx';
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx';
+import { WidthCard } from '/snippets/components/wrappers/cards/CustomCards.jsx';
 
 {/* LAYOUTS & VIEWS */}
 import DockerOffChainTab from './views/docker/dockerOffChainTab.mdx';
 import DockerOnChainTab from './views/docker/dockerOnChainTab.mdx';
-import LinuxOffChainTab from './views/linux/linuxOffChainTab.mdx';
+import { LinuxOffChainTab } from './views/linux/linuxOffChainTab.mdx';
 import LinuxOnChainTab from './views/linux/linuxOnChainTab.mdx';
 import WindowsOffChainTab from './views/windows/windowsOffChainTab.mdx';
 import WindowsOnChainTab from './views/windows/windowsOnChainTab.mdx';
@@ -57,7 +58,6 @@ import WindowsOnChainTab from './views/windows/windowsOnChainTab.mdx';
 import DockerSupport from './groups/docker/dockerSupport.mdx';
 import LinuxSupport from './groups/linux/linuxSupport.mdx';
 import MacSupport from './groups/linux/macSupport.mdx';
-
 
 <TipWithArrow>
  <span style={{fontSize: '1.0rem'}}> Use the <Icon icon="circle-chevron-down" /> **Dropdown** at the top-right of this page to view the Quickstart Guide
@@ -136,7 +136,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
   <Columns cols={2}>
     <Card
       title="Docker Installation Guide"
-      href="../setup/install/docker-install"
+      href="/v2/gateways/setup/install/docker-install"
       arrow
       horizontal
     >
@@ -144,7 +144,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
     </Card>
     <Card
       title="Configuration Flags Reference"
-      href="../resources/technical/configuration-flags"
+      href="../resources/reference/technical/configuration-flags"
       arrow
       horizontal
     >
@@ -172,7 +172,12 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
 
  _**Choose your Gateway Mode:**_
   <Tabs>
-    <LinuxOffChainTab />
+      <LinuxOffChainTab
+        latestVersion={latestVersion}
+        latestReleasePageUrl={latestReleasePageUrl}
+        GatewayOffChainWarning={GatewayOffChainWarning}
+        CustomCodeBlock={CustomCodeBlock}
+      />
     <LinuxOnChainTab />
   </Tabs>
 
@@ -181,7 +186,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
   <Columns cols={2}>
     <Card
       title="Linux Installation Guide"
-      href="../setup/install/linux-install"
+      href="/v2/gateways/setup/install/linux-install"
       arrow
       horizontal
     >
@@ -189,7 +194,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
     </Card>
     <Card
       title="Configuration Flags Reference"
-      href="../resources/technical/configuration-flags"
+      href="../resources/reference/technical/configuration-flags"
       arrow
       horizontal
     >
@@ -211,7 +216,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
   <Columns cols={2}>
     <Card
       title="Windows Installation Guide"
-      href="../setup/install/windows-install"
+      href="/v2/gateways/setup/install/windows-install"
       arrow
       horizontal
     >
@@ -219,7 +224,7 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
     </Card>
     <Card
       title="Configuration Flags Reference"
-      href="../resources/technical/configuration-flags"
+      href="../resources/reference/technical/configuration-flags"
       arrow
       horizontal
     >
@@ -269,7 +274,7 @@ Use this loop after both your gateway and orchestrator are online.
 
 <Card
   title="Common Issues"
-  href="../resources/faq"
+  href="../resources/reference/faq"
   icon="triangle-exclamation"
   iconType="solid"
   arrow
@@ -281,14 +286,14 @@ Use this loop after both your gateway and orchestrator are online.
 ## Related Pages
 
 <Columns cols={2}>
-  <Card title="Setup Checklist" href="../setup/requirements/setup" arrow horizontal>
+  <Card title="Setup Checklist" href="/v2/gateways/setup/requirements/setup" arrow horizontal>
  {' '}
  See Prerequisites & Requirements.{' '}
   </Card>
-  <Card title="On-Chain Setup" href="../setup/requirements/on-chain%20setup/on-chain" arrow horizontal>
+  <Card title="On-Chain Setup" href="/v2/gateways/setup/requirements/on-chain-setup/on-chain" arrow horizontal>
  See on-chain Setup Checklist.
   </Card>
-  <Card title="Run a Gateway" href="../setup/run-a-gateway" arrow horizontal>
+  <Card title="Run a Gateway" href="/v2/gateways/setup/guide" arrow horizontal>
  See full Gateway Setup Guide.
   </Card>
   <Card
@@ -310,4 +315,4 @@ It shows both off-chain (local) and on-chain (production) modes.
 - You have ETH on Arbitrum L2 Network (or can get it from a faucet)
 -
 
-It uses defaults for all optional parameters. See the [full setup guide](/v2/gateways/setup/run-a-gateway) for more details on customising your Gateway. \*/}
+It uses defaults for all optional parameters. See the [full setup guide](/v2/gateways/setup/guide) for more details on customising your Gateway. \*/}

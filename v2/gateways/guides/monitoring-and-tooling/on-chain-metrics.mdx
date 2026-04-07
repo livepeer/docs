@@ -1,7 +1,15 @@
 ---
-title: 'On-Chain Metrics and Monitoring'
-description: 'Monitor on-chain Gateway activity - TicketBroker contract events, Arbiscan watchlists, deposit and reserve verification, gas price impact, and deposit depletion tracking on Arbitrum.'
-sidebarTitle: 'On-Chain Metrics'
+title: On-Chain Metrics and Monitoring
+sidebarTitle: On-Chain Metrics
+description: >-
+  Monitor on-chain Gateway activity - TicketBroker contract events, Arbiscan watchlists,
+  deposit and reserve verification, gas price impact, and deposit depletion tracking on
+  Arbitrum.
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: '2026-03-15'
 keywords:
   - livepeer
   - gateway
@@ -14,16 +22,11 @@ keywords:
   - reserve
   - gas
   - probabilistic micropayments
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: operations
-status: current
-lastVerified: '2026-03-15'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
 {/* TODO:
 Terminology Validation:
@@ -48,10 +51,10 @@ Human:
 - BROADCASTER STATS legacy note added
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
 
 <Note>
   This page applies to **Gateways running in on-chain operational mode** (<Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>). Off-chain Gateways do not interact with Arbitrum contracts and can skip this page.
@@ -149,7 +152,7 @@ The `TicketBroker` contract emits events for every deposit, reserve, and redempt
 </StyledTable>
 
 To find redemptions against a Gateway: filter Arbiscan events by the TicketBroker contract address, then filter by `RedeemWinningTicket` events where the `sender` field matches the Gateway address.
-For the current TicketBroker address, see <LinkArrow href="/v2/gateways/resources/technical/contract-addresses" label="Contract Addresses" newline={false} />.
+For the current TicketBroker address, see <LinkArrow href="/v2/about/resources/reference/livepeer-contract-addresses" label="Contract Addresses" newline={false} />.
 
 ### Watchlist Alerts
 
@@ -299,7 +302,7 @@ If the Gateway stops routing jobs without clear error messages, work through thi
 ## Related Pages
 
 <CardGroup cols={3}>
-  <Card title="Contract Addresses" icon="file-contract" href="/v2/gateways/resources/technical/contract-addresses">
+  <Card title="Contract Addresses" icon="file-contract" href="/v2/about/resources/reference/livepeer-contract-addresses">
     TicketBroker, BondingManager, and all Livepeer contracts on Arbitrum.
   </Card>
   <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">

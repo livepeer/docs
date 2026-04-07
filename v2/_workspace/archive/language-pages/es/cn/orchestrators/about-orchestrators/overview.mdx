@@ -1,0 +1,77 @@
+---
+title: 协调器解释器
+sidebarTitle: 解释器
+keywords:
+  - livepeer
+  - orchestrators
+  - about orchestrators
+  - overview
+  - orchestrator
+  - explainer
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL2Fib3V0LW9yY2hlc3RyYXRvcnMvb3ZlcnZpZXcubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9vcmNoZXN0cmF0b3JzL2Fib3V0LW9yY2hlc3RyYXRvcnMvb3ZlcnZpZXciLCJzb3VyY2VIYXNoIjoiYTdmMWUzNTYzMDM4NzIyZjEzMDA1MWNkNzQ2ZjMwNzU5ODA3YzAyZGUyZTE4Yjc5Y2U1NDI2NjYwZDUwMTU3OSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNDoyOTowNy4zOTNaIn0= */}
+import { PreviewCallout } from '/snippets/components/elements/callouts/PreviewCallouts.jsx'
+
+<PreviewCallout />
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+
+
+协调器是供应方运营商，他们为网络提供计算资源（主要是GPU资源）。他们接收任务，执行转码或AI推理，并通过LPT奖励 + ETH费用获得报酬。
+
+### 协调器角色
+
+在Livepeer的早期，协调器仅负责视频转码。 
+
+如今，随着Livepeer网络从视频流媒体网络演变为实时AI视频网络，协调器的角色已大大扩展，不再仅仅是“转码”。
+
+如今的协调器是通用GPU计算提供商，他们执行视频转码、运行AI推理管道和自定义工作负载、管理质押和奖励、参与治理投票，甚至托管AI虚拟形象和代理工作负载等创新服务。 
+
+这种多方面的责任使他们成为Livepeer作为实时AI工作负载统一计算层愿景的关键，也是网络战略路线图的重要组成部分，以及开发和部署新生产应用的核心合作伙伴。
+
+_查看更多:_ <LinkArrow label="Orchestrator-Delegate Dual Role" href="https://github.com/shtukaresearch/livepeer-data-geography/blob/651a56e8c8290b30855f1393543ee9e0961c071c/roles/orchestrator-delegate.md" newline={false} />
+
+### 协调器类型
+Livepeer 网络上有两种主要类型的协调器: 
+- 执行视频转码的 GPU 节点  
+- 执行 AI 推理的 AI 节点
+- 自定义工作负载，即 BYOC 流水线或特定于应用程序的工作负载
+
+<Tip> [BYOC](/developers/ai-pipelines/byoc) pipelines are a recent addition to the AI node type that allows AI nodes to run arbitrary containers for processing tasks on the Livepeer network. </Tip>
+
+### 协调器设置选项 
+
+任何拥有GPU的人都可以在Livepeer网络上通过其计算资源获得收益，无论您是想在空闲时间将GPU添加到网络以获得被动收入，还是想运行一个完整的业务。
+
+如果您是爱好者，最好的起点是将您的GPU贡献给一个协调器池。
+如果您是数据中心或希望完全控制您的节点，您可以设置自己的协调器节点。 
+
+{/* If you're from the web3 space, this is roughly similar to running a full chain node on your own infrastructure or simply using an RPC provider who manages that for you.
+
+If you're from a devOps or cloud background, this is similar to either running your own bare metal infrastructure or using a managed service. */}
+
+<Columns cols={2}>
+  <Card
+    title="Add your consumer GPU to a pool"
+    icon="swimming-pool"
+    href="../quickstart/join-a-pool"
+    arrow
+  >
+    See how to add your GPU to an Orchestrator pool. <br/> Best for hobbyists or those with limited technical expertise.
+    <Badge color="green" icon="wand-magic-sparkles">
+      Quick Setup
+    </Badge>
+  </Card>
+  <Card
+    title="Run your own Orchestrator node"
+    icon="microchip"
+    href="/v2/orchestrators/setup/data-centre-setup"
+    arrow
+  >
+    See how to run your own Orchestrator GPU node on the Livepeer Network. <br/> Best for data centers or those who want full control over their node.
+    <Badge color="green" icon="wand-magic-sparkles">
+      Advanced Setup
+    </Badge>
+  </Card>
+</Columns>

@@ -1,7 +1,14 @@
 ---
-title: 'Gateway Requirements'
-sidebarTitle: 'Setup Requirements'
-description: 'Hardware, operating system, network, and skills requirements for running a Livepeer gateway. Covers both off-chain and on-chain deployment modes.'
+title: Gateway Requirements
+sidebarTitle: Setup Requirements
+description: >-
+  Hardware, operating system, network, and skills requirements for running a Livepeer
+  gateway. Covers both off-chain and on-chain deployment modes.
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: '2026-03-14'
 keywords:
   - livepeer
   - gateway requirements
@@ -12,22 +19,17 @@ keywords:
   - on-chain requirements
   - off-chain requirements
   - gateway skills
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: operations
-status: current
-lastVerified: '2026-03-14'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
 {/* TODO:
 Terminology Validation:
 - Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
 Verify:
-- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
 - Fontawesome icons are used on accordions and tabs
 - Tables use StyledTable component
 - No em-dashes are used (instead use standard -)
@@ -38,10 +40,10 @@ Verify:
 - REVIEW flags are in JSX flags for a human.
 */}
 
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { BorderedBox, CenteredContainer } from '/snippets/components/layout/containers.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 <CenteredContainer preset="readable90">
   <Tip>Gateways are software nodes that require network optimisations (bandwidth and latency) and only minimal hardware (CPU and RAM).</Tip>
@@ -259,15 +261,15 @@ On-chain deployment mode requires Ethereum infrastructure. Off-chain operators c
   <tbody>
     <TableRow>
       <TableCell>**Arbitrum RPC URL**</TableCell>
-      <TableCell>Connection to Arbitrum One where Livepeer's smart contracts are deployed. Options: public RPC (`https://arb1.arbitrum.io/rpc`), third-party (Alchemy, Infura, QuickNode), community (`https://arb1.livepeer.community`), or self-hosted. See the [Arbitrum RPC reference](/v2/gateways/resources/technical/arbitrum-rpc).</TableCell>
+      <TableCell>Connection to Arbitrum One where Livepeer's smart contracts are deployed. Options: public RPC (`https://arb1.arbitrum.io/rpc`), third-party (Alchemy, Infura, QuickNode), community (`https://arb1.livepeer.community`), or self-hosted. See the [Arbitrum RPC reference](/v2/gateways/resources/compendium/arbitrum-rpc).</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Ethereum wallet**</TableCell>
-      <TableCell>An Ethereum account on Arbitrum to hold funds and sign payment tickets. go-livepeer can auto-create on first run, or bring an existing wallet via `-ethAcctAddr`. See the [on-chain setup guide](/v2/gateways/setup/requirements/on-chain%20setup/on-chain).</TableCell>
+      <TableCell>An Ethereum account on Arbitrum to hold funds and sign payment tickets. go-livepeer can auto-create on first run, or bring an existing wallet via `-ethAcctAddr`. See the [on-chain setup guide](/v2/gateways/setup/requirements/on-chain-setup/on-chain).</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**ETH on Arbitrum**</TableCell>
-      <TableCell>Minimum for testing: **0.1 ETH**. Production: **0.065 ETH deposit + 0.03 ETH reserve**. Must be bridged from Ethereum mainnet. See [Bridge LPT to Arbitrum](/v2/gateways/setup/requirements/on-chain%20setup/bridge-lpt-to-arbitrum) and the [fund gateway guide](/v2/gateways/setup/requirements/on-chain%20setup/fund-gateway).</TableCell>
+      <TableCell>Minimum for testing: **0.1 ETH**. Production: **0.065 ETH deposit + 0.03 ETH reserve**. Must be bridged from Ethereum mainnet. See [Bridge LPT to Arbitrum](/v2/gateways/setup/requirements/on-chain-setup/bridge-lpt-to-arbitrum) and the [fund gateway guide](/v2/gateways/guides/payments-and-pricing/fund-gateway).</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -374,7 +376,7 @@ Technical skills required depend on your deployment mode and stage.
   <Card title="AI Gateway Quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
     Step-by-step from zero to a running AI gateway, including Docker command and test request.
   </Card>
-  <Card title="Community Install Methods" icon="people-group" href="/v2/gateways/setup/install/community-projects" arrow horizontal>
+  <Card title="Community Install Methods" icon="people-group" href="/v2/gateways/guides/deployment-details/gwid-single-click-deploy" arrow horizontal>
     Ansible, Docker Compose, and community-maintained install scripts.
   </Card>
 </CardGroup>

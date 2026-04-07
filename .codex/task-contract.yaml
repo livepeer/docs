@@ -1,42 +1,42 @@
 task_id: 20260403
-branch: codex/20260403-contracts-docs-v2-migration
-base_branch: docs-v2
+branch: codex/20260403-contracts-surface-redesign
+base_branch: docs-v2-dev
 scope_in:
   - .codex/
+  - .claude/
+  - .cursor/
+  - .githooks/
   - .github/
-  - .allowlist
+  - .playwright-cli/
   - .vscode/
+  - .windsurf/
+  - AGENTS.md
+  - ai-tools/
   - docs-guide/
-  - docs-index.json
   - docs.json
+  - llms.txt
+  - operations/tests/
   - operations/
-  - snippets/components/displays/
-  - snippets/components/integrators/
-  - snippets/components/wrappers/
-  - snippets/composables/pages/canonical/
-  - snippets/data/contract-addresses/
-  - tasks/reports/
-  - tests/
-  - tools/scripts/
-  - v2/about/
-  - v2/cn/
-  - v2/es/resources/documentation-guide/component-library/
-  - v2/fr/resources/documentation-guide/component-library/
-  - v2/gateways/
-  - v2/orchestrators/
-  - v2/resources/
-  - v2/templates/
-  - v2/index.mdx
-scope_out: []
+  - snippets/
+  - tools/
+  - v2/
+  - workspace/
+scope_out:
+  - v1/
 allowed_generated:
   - .codex/pr-body.generated.md
+  - sitemap-ai.xml
 acceptance_checks:
-  - node .github/scripts/fetch-contract-addresses.js --check
-  - node operations/tests/unit/contracts-view-model.test.js
   - node operations/tests/unit/contracts-addresses-pipeline.test.js
-  - bash lpd test --staged
+  - node operations/tests/unit/contracts-view-model.test.js
+  - node operations/tests/playwright-contract-addresses.js
+  - node operations/tests/playwright-blockchain-contracts.js
+  - node operations/tests/contracts-browser-harness.js
+  - lpd test --staged
+  - node operations/scripts/validators/content/structure/lint-structure.js --check
+  - node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/20260403-contracts-surface-redesign
 risk_flags:
-  - generated-data-pipeline
-  - routed-page-migration
-  - navigation-governance
+  - docs-navigation
+  - contracts-reference-surface
+  - mintlify-browser-render
 follow_up_issues: []

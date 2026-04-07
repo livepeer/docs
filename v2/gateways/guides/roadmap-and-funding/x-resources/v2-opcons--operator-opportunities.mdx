@@ -1,7 +1,15 @@
 ---
-title: 'Gateway Operator Opportunities'
-sidebarTitle: 'Operator Opportunities'
-description: 'The business case for running a Livepeer gateway as an application developer — cost structures, revenue models, and what the off-chain AI gateway changes about the economics of building on Livepeer.'
+title: Gateway Operator Opportunities
+sidebarTitle: Operator Opportunities
+description: >-
+  The business case for running a Livepeer gateway as an application developer - cost
+  structures, revenue models, and what the off-chain AI gateway changes about the
+  economics of building on Livepeer.
+pageType: resource
+audience: gateway
+purpose: orient
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway operator
@@ -12,20 +20,14 @@ keywords:
   - inference margin
   - gateway-as-service
   - NaaP
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: guides
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
-
-import { BorderedBox } from '/snippets/components/layout/containers.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 
 Running a Livepeer gateway puts you between application demand and compute supply. Whether you are routing your own workloads or building a service on top of the network, the gateway is where business logic, margins, and customer relationships live.
 
@@ -45,7 +47,7 @@ flowchart LR
 ```
 
 <Note>
-For AI gateways running in off-chain mode, your gateway node itself holds no ETH. A remote signer handles all on-chain payment operations. Your gateway operator costs are whatever you pay the signer — which can be zero if using a community-hosted signer.
+For AI gateways running in off-chain mode, your gateway node itself holds no ETH. A remote signer handles all on-chain payment operations. Your gateway operator costs are whatever you pay the signer - which can be zero if using a community-hosted signer.
 </Note>
 
 ---
@@ -54,14 +56,14 @@ For AI gateways running in off-chain mode, your gateway node itself holds no ETH
 
 <Tabs>
   <Tab title="Route your own workloads">
-    You are building a product and currently using a hosted gateway such as Daydream, Livepeer Studio, or Livepeer Cloud. You pay their service rate on every request. Running your own gateway removes that cost entirely — you pay orchestrators directly at network rates.
+    You are building a product and currently using a hosted gateway such as Daydream, Livepeer Studio, or Livepeer Cloud. You pay their service rate on every request. Running your own gateway removes that cost entirely - you pay orchestrators directly at network rates.
 
     **What you capture:** The service margin you were previously paying to a third-party operator.
 
     **What this requires:**
     - A Linux server (for AI workloads; video also supports Windows)
     - No ETH for AI off-chain mode; ETH deposit for video transcoding
-    - The same application code — only the endpoint changes
+    - The same application code - only the endpoint changes
 
     **Who is doing this:** App developers who scaled past the point where hosted gateway costs exceeded the operational cost of self-hosting.
   </Tab>
@@ -73,12 +75,12 @@ For AI gateways running in off-chain mode, your gateway node itself holds no ETH
     **What this requires:**
     - A production Linux server with stable uptime
     - An auth layer (API keys, rate limiting) built on top of the go-livepeer gateway
-    - Billing integration outside the Livepeer protocol — the protocol only controls what you pay orchestrators, not what you charge customers
+    - Billing integration outside the Livepeer protocol - the protocol only controls what you pay orchestrators, not what you charge customers
 
     **Who is doing this:** Livepeer Cloud SPE (free public inference gateway), Daydream, LLM SPE (LLM inference routing).
   </Tab>
   <Tab title="Embed a gateway in your platform">
-    Your gateway is internal infrastructure — not exposed to users directly, but routing every AI or video request your platform makes. You charge customers for your product; the gateway is the cost layer underneath.
+    Your gateway is internal infrastructure - not exposed to users directly, but routing every AI or video request your platform makes. You charge customers for your product; the gateway is the cost layer underneath.
 
     **What you capture:** Your product margin. The gateway keeps compute costs below what you would pay a hosted inference provider (Replicate, Fal, Mux, AWS) while giving you full routing control.
 
@@ -122,22 +124,22 @@ Before Q4 2025, every gateway required an Ethereum account funded on Arbitrum. T
     <TableRow>
       <TableCell>**Startup cost**</TableCell>
       <TableCell>ETH deposit required (~0.065 ETH + 0.03 reserve on Arbitrum)</TableCell>
-      <TableCell>Zero — community-hosted signer is free</TableCell>
+      <TableCell>Zero - community-hosted signer is free</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Ongoing ETH management**</TableCell>
       <TableCell>Monitor deposit balance; top up as it depletes</TableCell>
-      <TableCell>None — remote signer handles it</TableCell>
+      <TableCell>None - remote signer handles it</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**ETH price exposure**</TableCell>
-      <TableCell>Yes — volatile ETH price affects your effective compute cost</TableCell>
-      <TableCell>None — abstracted by signer or clearinghouse</TableCell>
+      <TableCell>Yes - volatile ETH price affects your effective compute cost</TableCell>
+      <TableCell>None - abstracted by signer or clearinghouse</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Crypto knowledge required**</TableCell>
-      <TableCell>Yes — wallet, keystore, Arbitrum RPC, bridging</TableCell>
-      <TableCell>No — none required at the gateway layer</TableCell>
+      <TableCell>Yes - wallet, keystore, Arbitrum RPC, bridging</TableCell>
+      <TableCell>No - none required at the gateway layer</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Time to first job**</TableCell>
@@ -157,16 +159,16 @@ Beyond routing your own workloads, the go-livepeer gateway is a platform primiti
 
 <AccordionGroup>
   <Accordion title="API key management and auth">
-    Wrap the gateway HTTP interface with standard auth middleware. The gateway itself has no built-in auth — this is intentional; it lives in your application layer. The NaaP project provides a reference implementation using JWT tokens issued via SIWE (Sign-In with Ethereum), but any standard auth pattern works.
+    Wrap the gateway HTTP interface with standard auth middleware. The gateway itself has no built-in auth - this is intentional; it lives in your application layer. The NaaP project provides a reference implementation using JWT tokens issued via SIWE (Sign-In with Ethereum), but any standard auth pattern works.
   </Accordion>
   <Accordion title="Custom orchestrator routing">
-    `-orchAddr` lets you specify exactly which orchestrators receive your jobs. Build orchestrator tiers, geographic routing, or capability-specific pools. `-maxPricePerCapability` accepts a JSON configuration with per-pipeline, per-model price caps — route different job types to different orchestrator tiers with different pricing policies.
+    `-orchAddr` lets you specify exactly which orchestrators receive your jobs. Build orchestrator tiers, geographic routing, or capability-specific pools. `-maxPricePerCapability` accepts a JSON configuration with per-pipeline, per-model price caps - route different job types to different orchestrator tiers with different pricing policies.
   </Accordion>
   <Accordion title="Billing and usage metering">
-    The gateway exposes per-job result data. Build usage accounting outside the protocol and charge customers however your product requires — per generation, per minute of video, subscription, or credits.
+    The gateway exposes per-job result data. Build usage accounting outside the protocol and charge customers however your product requires - per generation, per minute of video, subscription, or credits.
   </Accordion>
   <Accordion title="Alternative gateway implementations">
-    The remote signer architecture means you are not required to use the Go binary. Python, browser, and mobile gateway clients are possible — the signer handles Ethereum complexity. The `livepeer-python-gateway` SDK (`github.com/j0sh/livepeer-python-gateway`) is the reference Python implementation.
+    The remote signer architecture means you are not required to use the Go binary. Python, browser, and mobile gateway clients are possible - the signer handles Ethereum complexity. The `livepeer-python-gateway` SDK (`github.com/j0sh/livepeer-python-gateway`) is the reference Python implementation.
   </Accordion>
 </AccordionGroup>
 

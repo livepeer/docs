@@ -17,7 +17,7 @@ keywords:
   - frame processing
   - streaming ai
   - byoc pipeline
-'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
 'og:image:width': 1200
@@ -30,9 +30,9 @@ lastVerified: 2026-03-13
 ---
 {/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
 
-import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Cascade inference is fundamentally different from batch inference. Instead of processing a discrete request and returning a result, your node continuously transforms live video — receiving frames from a WebRTC stream, running inference on each frame, and streaming processed frames back with sub-100ms latency.
 
@@ -213,7 +213,7 @@ The `live-base` tag is separate from the standard `livepeer/ai-runner` image use
 
 **Pricing and gateway compatibility:** Your `price_per_unit` must stay at or below the gateway's configured `-maxPricePerCapability` for `live-video-to-video`. This is a hard filter — gateways skip nodes priced above that cap, regardless of hardware quality or latency.
 
-For transcoding, the equivalent flag is `-maxPricePerUnit` on the gateway side. Before going live, verify that your transcoding price (set via `-pricePerUnit` or `livepeer_cli`) is below what major gateways have configured as their maximum. See [Gateway Pricing Configuration](/v2/gateways/setup/configure/pricing-configuration) for the full gateway pricing flag reference and the JSON structure used for AI capability pricing.
+For transcoding, the equivalent flag is `-maxPricePerUnit` on the gateway side. Before going live, verify that your transcoding price (set via `-pricePerUnit` or `livepeer_cli`) is below what major gateways have configured as their maximum. See [Gateway Pricing Configuration](/v2/gateways/guides/payments-and-pricing/pricing-configuration) for the full gateway pricing flag reference and the JSON structure used for AI capability pricing.
 </StyledStep>
 
 <StyledStep title="Download the pipeline model weights">

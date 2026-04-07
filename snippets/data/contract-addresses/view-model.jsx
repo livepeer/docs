@@ -1,6 +1,6 @@
 export const contractsRoutes = {
-  reference: '/v2/about/resources/livepeer-contract-addresses',
-  verifier: '/v2/about/resources/livepeer-contract-addresses#verifier-widget-verify-contract-address',
+  reference: '/v2/about/resources/reference/livepeer-contract-addresses',
+  verifier: '/v2/about/resources/verify-contract-addresses',
 }
 
 export const chainLabel = {
@@ -175,18 +175,33 @@ export const getProxyTableItems = (sourceData = {}) => {
 }
 
 export const getLifecycleTableItems = (sourceData = {}, lifecycle = 'paused') =>
-  sortContractsForDisplay(collectLifecycleEntries(sourceData, lifecycle, lifecycle)).map((item) => ({
-    Name: item.Name,
-    Address: item.Address,
-    Chain: item.Chain,
-    Type: item.Type,
-    Category: item.Category,
-    _addressHref: item._addressHref,
-    _chainKey: item._chainKey,
-    _typeKey: item._typeKey,
-    _categoryKey: item._categoryKey,
-    _source: item._source,
-  }))
+  sortContractsForDisplay(collectLifecycleEntries(sourceData, lifecycle, lifecycle)).reduce((rows, item) => {
+    const category = item.Category
+    const lastCategory = rows.length > 0 ? rows[rows.length - 1]._separatorCategory : null
+
+    if (category && category !== lastCategory) {
+      rows.push({
+        __separator: true,
+        Name: String(category).toUpperCase(),
+        _separatorCategory: category,
+      })
+    }
+
+    rows.push({
+      Name: item.Name,
+      Address: item.Address,
+      Chain: item.Chain,
+      Type: item.Type,
+      Category: category,
+      _addressHref: item._addressHref,
+      _chainKey: item._chainKey,
+      _typeKey: item._typeKey,
+      _categoryKey: item._categoryKey,
+      _source: item._source,
+    })
+
+    return rows
+  }, [])
 
 export const getNonActiveGroups = (sourceData = {}) =>
   nonActiveLifecycleOrder

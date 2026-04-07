@@ -1,0 +1,186 @@
+{/* StyledSteps, StyledStep, StyledTable, TableRow, TableCell, LinkArrow,
+     CustomDivider inherited from parent monitor.mdx scope */}
+
+## <Icon icon="windows" iconType="brands" size={32} /> Windows Monitoring Guide
+
+<Badge color="blue">Video Only</Badge> <Icon icon="windows" />
+
+<Note>
+  The AI Gateway binary is not available for Windows. For AI or Dual monitoring on Windows, use <LinkArrow href="/v2/gateways/setup/install" label="Docker via WSL2" newline={false} /> and follow the Docker tab instead.
+</Note>
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Enable Metrics">
+        Add `-monitor=true` to the Gateway `.bat` file or startup command. Without it, the `/metrics` endpoint is not exposed.
+
+        ```batch icon="terminal" gateway.bat
+        livepeer.exe ^
+          -gateway ^
+          -monitor=true ^
+          -metricsPerStream=true ^
+          -httpAddr=0.0.0.0:8935 ^
+          -v=6
+        PAUSE
+        ```
+
+        **Monitoring flags:**
+
+        <StyledTable>
+          <TableRow header>
+            <TableCell header>Flag</TableCell>
+            <TableCell header>Purpose</TableCell>
+            <TableCell header>Recommendation</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-monitor`</TableCell>
+            <TableCell>Enables the `/metrics` Prometheus endpoint</TableCell>
+            <TableCell>Always enable in production</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsPerStream`</TableCell>
+            <TableCell>Groups metrics by individual stream</TableCell>
+            <TableCell>Enable for per-stream debugging; increases metric cardinality</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsClientIP`</TableCell>
+            <TableCell>Includes client IP as a metric label</TableCell>
+            <TableCell>Enable only for per-client breakdown</TableCell>
+          </TableRow>
+        </StyledTable>
+
+        Verify metrics are exposed (PowerShell):
+
+        ```powershell icon="terminal" Verify Metrics
+        Invoke-WebRequest -Uri http://localhost:8935/metrics | Select-Object -First 30
+        ```
+
+        Or via WSL2:
+
+        ```bash icon="terminal" Verify Metrics (WSL2)
+        curl http://localhost:8935/metrics | head -30
+        ```
+
+        Prometheus-format output with `livepeer_` prefixed metric names confirms the endpoint is active.
+    </StyledStep>
+
+    <StyledStep title="Prometheus Setup">
+        Download the Prometheus Windows binary from the [Prometheus releases page](https://github.com/prometheus/prometheus/releases).
+
+        1. Extract the archive to a directory (e.g. `C:\prometheus\`)
+        2. Create or update `prometheus.yml` in that directory:
+
+        ```yaml icon="terminal" prometheus.yml
+        global:
+          scrape_interval: 15s
+          evaluation_interval: 15s
+
+        scrape_configs:
+          - job_name: 'livepeer-gateway'
+            static_configs:
+              - targets: ['localhost:8935']
+            metrics_path: '/metrics'
+            scrape_interval: 15s
+            scrape_timeout: 10s
+            labels:
+              node_type: 'video'
+              environment: 'production'
+        ```
+
+        3. Start Prometheus:
+
+        ```powershell icon="terminal" Start Prometheus
+        cd C:\prometheus
+        .\prometheus.exe --config.file=prometheus.yml
+        ```
+
+        Prometheus runs on port `9090` by default. Confirm the Gateway target appears at `http://localhost:9090/targets`.
+
+        <Tip>
+          To run Prometheus as a Windows service, use [NSSM](https://nssm.cc/):
+          ```powershell icon="terminal"
+          nssm install Prometheus C:\prometheus\prometheus.exe --config.file=C:\prometheus\prometheus.yml
+          nssm start Prometheus
+          ```
+        </Tip>
+    </StyledStep>
+
+    <StyledStep title="Grafana Setup">
+        Download the Grafana Windows installer from the [Grafana downloads page](https://grafana.com/grafana/download?platform=windows).
+
+        Run the installer and start the Grafana service. Access Grafana at `http://localhost:3000` (default credentials `admin / admin`).
+
+        **Add Prometheus as a data source:**
+        1. Navigate to **Configuration > Data Sources > Add data source**
+        2. Select **Prometheus**
+        3. Set the URL to `http://localhost:9090`
+        4. Click **Save & Test**
+
+        Import the Livepeer starter dashboards from the `livepeer/livepeer-monitoring` repository, or build custom panels using the metrics described below the tabs on this page.
+    </StyledStep>
+
+    <StyledStep title="Log Monitoring">
+        If running via `.bat` file, the console window displays logs in real time.
+
+        Redirect output to a log file for later analysis:
+
+        ```batch icon="terminal" gateway-with-logs.bat
+        livepeer.exe -gateway -monitor=true -v=6 > gateway.log 2>&1
+        ```
+
+        Key log events to watch:
+        - `Orchestrator selected` - routing decision made
+        - `Transcoding completed` - job finished
+        - Payment processing events
+
+        **Process monitoring:**
+
+        Check if the Gateway is running via Task Manager or PowerShell:
+
+        ```powershell icon="terminal" Check Process
+        Get-Process livepeer -ErrorAction SilentlyContinue
+        ```
+
+        Check port availability:
+
+        ```powershell icon="terminal" Check Port
+        netstat -ano | findstr :8935
+        ```
+    </StyledStep>
+
+    <StyledStep title="Automated Health Notifications">
+        Use Windows Task Scheduler to run a health check script on a schedule.
+
+        Create `gateway-health.ps1`:
+
+        ```powershell icon="terminal" gateway-health.ps1
+        $port = 8935
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:$port/health" `
+              -TimeoutSec 5 -ErrorAction Stop
+            if ($response.StatusCode -ne 200) { throw "Non-200 response" }
+        } catch {
+            # Replace with your preferred notification method
+            Write-EventLog -LogName Application -Source "Livepeer" `
+              -EventId 1001 -EntryType Error `
+              -Message "Livepeer Gateway on port $port is not responding"
+        }
+        ```
+
+        **Add to Task Scheduler:**
+        1. Open Task Scheduler and select **Create Basic Task**
+        2. Set a trigger to run every 5 minutes
+        3. Set the action to run `powershell.exe -File C:\path\to\gateway-health.ps1`
+
+        For richer alerting (Slack, PagerDuty, webhook), configure Prometheus Alertmanager with the alert rules described below the tabs on this page.
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Troubleshooting"
+  icon="triangle-exclamation"
+  href="/v2/gateways/guides/monitoring-and-tooling/troubleshooting"
+  horizontal
+  arrow
+>
+  Fix common Gateway errors by symptom
+</Card>

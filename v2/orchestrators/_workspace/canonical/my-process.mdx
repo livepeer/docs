@@ -1,0 +1,389 @@
+{/* NOTES FROM HUMAN - NOT FOR AI */}
+
+# REVIEW & WRITE PROCESS
+
+### PERSONAS, AUDIENCE & JOURNEY
+- 1.a [prompt iteration] use claude web to get audience and personas per tab [prompt mostly done]
+- 1.b Also have this output all sources used (to update veracity sources file)
+
+### IA Section Structuring
+- 2.a [prompt iteration] Define the IA general structure with help from claude code with descriptions of sections
+
+### Current Content Mapping & Gaps
+- 3.a [prompt iteration] Research Prompt: gather all information sources & classify by type [and where it fits in general IA]
+- 3.b [prompt iteration] Run veracity checker on all information
+- 3.c [prompt iteration] Run terminology extractor - specific terms used etc. - for glossary and refinement
+
+### IA Pages Structuring & Journeys
+- 4.a [prompt iteration] use current information & personas to help create full section page IA & page journeys with each page having a comment section on its purpose, sections needed (with information type) and frontmatter filled in. need index for this too.
+
+### Find Information & Gaps
+- 5.a [prompt iteration] review content from 3 and place it in a page & page section. -> index.
+
+### Define copy voice, terminology and styles pack & place / update information
+- 6.a [prompt iteration] fill in page sections with high veracity
+- 6.b [prompt iteration] write missing content [claude web]
+
+### Review copy against purpose, voice etc. - semi-manual
+- 7.a [prompt iteration] Run naming checks and quality checks on content & refine
+
+### Layout & style
+- 8.a [prompt iteration] Map content type & style layout options, make composables & templates as they emerge to help
+
+### Semi manual - human reviews and refines style
+- 9.a [prompt iteration] give pack of "whats good and why" pages + UX best practice summary + component index (lp & mintlify) and have AI review style
+- 9.b update style based on review
+
+## LIST OF CURRENT ITEMS THAT AID THE ABOVE PROCESSES
+
+{/* TABLE - MAPPED TO PIPELINE NUMBER */}
+{/* NAME | where it is | type (skill, template, framwork, notes, prompt) | Status (tested? known?) | Purpose (what it does) | Creation Time | Usefulness | Other Notes |)*/}
+
+### 1. Personas, Audience & Journey (1.a / 1.b)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| audience-design-v5.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/audience-design-v5.md` | prompt | Tested/Known-good | Primary persona + arriving question + JTBD generation prompt. Multi-phase sub-prompts (Phase 0–3). | 2026-03-23 | **9** | Current version in use. Requires Phase 0 terminology anchoring as input. Read pack-guide.md first. |
+| pack-guide.md (Phase 1) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/pack-guide.md` | guide | Tested/Known-good | MANDATORY pre-flight checklist for Phase 1. Gates, running order, failure modes, what good output looks like. | 2026-03-23 | **10** | Read before any Phase 1 run. Enforces persona source-grounding and cross-tab gate. |
+| phase-resources.md (Phase 1) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/phase-resources.md` | notes | Known-good | Resource list for Phase 1. Specifies which 2–3 sources to load (not all). | 2026-03-22 | **8** | Do not load full list — creates noise. Select by first-principles reasoning. |
+| veracity-sources.md (per tab) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/{TAB}/input-pack/veracity-sources.md` | reference | Tested/Known-good | Per-tab authority registry: external sources (whitepaper, go-livepeer, LIPs, Explorer, Arbiscan) with T1/T2/T3 tier ratings. | 2026-03-22 | **6** | ⚠️ Path uses `{TAB}` = actual tab name (e.g., `orchestrators`, `lp-token`, `home`). Not a generic template — only exists for specific tabs. Required input for Phase 1 where it exists. |
+| glossary-{tab}.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/{TAB}/input-pack/glossary-{TAB}.md` | reference | Known-good | AI-generated draft glossary per tab from existing docs. Cross-check only — not authoritative. | 2026-03-22 | **5** | ⚠️ Same path caveat as above — only exists for specific tabs (e.g., `glossary-lpt.md`, `glossary-home.md`). Not a generic pattern available for all tabs. |
+| orchestrators-audience-doc.md | `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-audience-doc.md` | output | Known-good | Phase 1 completed output for Orchestrators: personas, arriving questions, JTBDs, journey, section structure. | 2026-03-22 | **7** | Use as reference for pattern. Real personas grounded in Discord/GitHub signals. |
+| terminology-consolidated.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/terminology-consolidated.md` | reference | Known-good | Consolidated terminology across all 5 tabs. Extracted from existing docs. | 2026-03-22 | **7** | Starting point for Phase 3.c (terminology lock). Needs manual SME refinement. |
+| personas.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/personas.md` | notes | Partial | Index of prior persona work. Historical reference. | 2026-03-22 | **5** | Cross-check only. Do not substitute for new source-grounded persona work. |
+
+### 2. IA Section Structuring (2.a)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| structure-audit.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | prompt | Tested/Known-good | Maps Phase 1 arriving question to IA-locked structure. Categorises all existing pages (KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP). Outputs tab map with predecessor/successor links. | 2026-03-23 | **9** | Phase 2.2–2.6 sub-phases. Output requires human approval gate before Phase 3. |
+| content-scan.md (Phase 2) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-content-scan/content-scan.md` | prompt | Tested/Known-good | Inventory prompt: reads entire tab, catalogues pages, identifies orphans and duplicates. Precedes structure-audit.md. | 2026-03-23 | **8** | Output feeds structure-audit.md. Run first in Phase 2. |
+| pack-guide.md (Phase 2) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/pack-guide.md` | guide | Tested/Known-good | Pre-flight checklist for Phase 2. Junction validation, cross-tab ownership, orphan handling. | 2026-03-22 | **10** | Read before running structure-audit.md. |
+| phase-resources.md (Phase 2) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/phase-resources.md` | notes | Known-good | Resources for Phase 2: Phase 1 output, existing IA docs, cross-tab ownership map. | 2026-03-22 | **7** | Load Phase 1 output + ownership map. Do not load competing IAs. |
+| orchestrators-content-scan.md | `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-content-scan.md` | output | Known-good | Phase 2 content-scan output for Orchestrators. Full page inventory with KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP dispositions. 70 mapped + 16 orphans + 2 duplicates. | 2026-03-22 | **7** | Reference for structure audit output pattern. |
+| tab-map.mdx | `v2/orchestrators/_workspace/tab-map.mdx` | output | **DOES NOT EXIST** | IA-locked tab map: page hierarchy, predecessors, successors, persona paths. Should be generated by content-pipeline-tab-map skill. | — | **0** | ⚠️ NOT CREATED YET. This is a real pipeline blocker — Phase 3 (content-pass.md) requires this as input. Must be generated before Phase 3 can run. |
+| REVIEW-REGISTRY.md | `v2/orchestrators/_workspace/canonical/REVIEW-REGISTRY.md` | output | Tested/Known-good | Complete inventory of all 70 IA-mapped Orchestrators pages. Disposition decisions, pageType migrations, deprecated term replacements, validation scores. | 2026-03-24 | **9** | Source of truth for Orchestrators tab structure. Logged in CLAUDE.md session log. |
+| content-pipeline-tab-map (skill) | `ai-tools/ai-skills/content-pipeline-tab-map/SKILL.md` | skill | Known-good | Generates tab-level IA map from Phase 2 structure audit output. Creates page hierarchy + predecessor/successor links. | 2026-03-22 | **8** | Produces tab-map.mdx. Required input for Phase 3 content-pass.md. |
+
+### 3. Content Mapping, Veracity & Terminology (3.a / 3.b / 3.c)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| generate-content-gap-reconciliation.js | `operations/scripts/generators/generate-content-gap-reconciliation.js` | script | Unknown | Phase 3.a output: produces structure gap report showing what content exists vs. what IA expects. Referenced in process-pipeline.js Phase 3 spec. | — | **7** | Verify it exists and confirm output format before using in pipeline. Script-plan lists it as Phase 3 output tool. |
+| veracity-pass.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | prompt | **DRAFT** | Validates all factual claims against source library. Flags unverifiable claims. Does not remove claims. | 2026-03-23 | **8** | ⚠️ DRAFT — must validate on a known-good page before scaling. Not yet production-tested. |
+| pack-guide.md (Phase 7) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/pack-guide.md` | guide | **DRAFT** | Pre-flight guide for veracity pass. Checklist, failure modes. | 2026-03-22 | **8** | ⚠️ DRAFT — read before using veracity-pass.md. |
+| veracity-sources.md (consolidated) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/veracity-sources.md` | reference | Known-good | Master source registry with T1/T2/T3 tier ratings and confidence scores. Explorer, Arbitrum, go-livepeer, whitepapers, LIPs. | 2026-03-22 | **8** | Input for veracity-pass.md. Single source of truth for fact-checking. |
+| accuracy-sources.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/accuracy-sources.md` | reference | Known-good | Source validation framework. T1/T2/T3 tiers, confidence levels, when to cross-check. | 2026-03-22 | **7** | Used to evaluate which sources are authoritative per claim type. |
+| terminology-per-tab.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/terminology-per-tab.md` | reference | Known-good | Terminology extracted per tab from existing content. | 2026-03-22 | **6** | Input for Phase 3.c. Needs SME refinement before lock. |
+| deprecated-terms.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/deprecated-terms.md` | reference | Known-good | Retired/deprecated terms (broadcaster, pool worker old def, hybrid). | 2026-03-22 | **7** | Use in Phase 1+ to catch old terminology. Updated when new term decisions lock. |
+| in-repo-glossaries.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/in-repo-glossaries.md` | reference | Partial | Audit of existing glossaries in repo. Identifies pages with weak definitions. | 2026-03-22 | **5** | Gaps document — not a complete glossary. Use to identify where definitions needed. |
+
+### 4. IA Pages Structuring & Journeys (4.a)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| content-pass.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | prompt | Tested/Known-good | Multi-mode prompt (REVIEW/WRITE/REWRITE/AUDIT) for content audit, writing, and structured output. Core authoring prompt. | 2026-03-23 | **9** | REVIEW mode first. Escalate to WRITE/REWRITE based on verdict. Phase 1–7 sub-phases. |
+| pack-guide.md (Phase 3) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/pack-guide.md` | guide | Tested/Known-good | Pre-flight guide for Phase 3. Running order (8 sub-phases). Mode selection (REVIEW vs WRITE vs REWRITE). | 2026-03-22 | **10** | Read before any content-pass run. |
+| phase-resources.md (Phase 3) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/phase-resources.md` | notes | Known-good | Resources for Phase 3: Brand & Copy Guide, voice-rules per audience, specialist briefs. | 2026-03-22 | **8** | Always load base Brand & Copy Guide + audience voice rules. Note coverage gaps. |
+| Frameworks.mdx | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | framework | Tested/Known-good | **CANONICAL TAXONOMY.** pageType (7), pagePurpose (15), audience tokens (7), voice, banned words, page quality checklist (10 criteria). | 2026-03-24 | **10** | Locked. Single source of truth. Read before every content review or authoring session. |
+| voice-rules.md | `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | reference | Tested/Known-good | Per-audience voice rules: ALL 7 audiences fully specified (28–36 lines each). Includes Who/Register/Do/Don't/Prohibited per audience. UK English table. 4 resolved decisions. | 2026-03-23 | **9** | Load for every page. All audiences covered: gateway, orchestrator, developer, builder, delegator, community, founder. |
+| frontmatter-taxonomy-update.md | `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md` | framework | Partial | Taxonomy updates for 6 new frontmatter fields (complexity, lifecycleStage, industry, niche, informationType, veracityStatus). | 2026-03-22 | **7** | Applied to Orchestrators only. Not yet standardised across tabs. |
+| prompt-input-spec.md | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | framework | Known-good | Context block format for all phase prompts. Required fields (TAB, PERSONA, PURPOSE, etc.). | 2026-03-22 | **7** | Reference for prompt context requirements. |
+
+### 5. Find Information & Gaps (5.a)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| content-pipeline-tab-map (skill) | `ai-tools/ai-skills/content-pipeline-tab-map/SKILL.md` | skill | Known-good | Generates tab-level IA map from Phase 2 output. Page hierarchy, predecessor/successor links, persona path validation. | 2026-03-22 | **8** | Required before Phase 3. Produces tab-map.mdx. |
+| orchestrators-content-scan.md | `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-content-scan.md` | output | Known-good | Phase 2 output: full Orchestrators inventory with dispositions. Pattern reference for other tabs. | 2026-03-22 | **7** | Use as completed example. Run content-scan.md prompt on new tabs. |
+| docs-page-research.js | `operations/scripts/` | script | Unknown | Phase 5 research tool: gathers research packs per section. Listed in process-pipeline.js Phase 5 spec. | — | **7** | Verify path and output format. Script-plan lists alongside `docs-research-packet.js` as Phase 5 tools. |
+| docs-research-packet.js | `operations/scripts/` | script | Unknown | Phase 5: generates research pack output per section. | — | **6** | Verify existence. Paired with docs-page-research.js per script-plan. |
+| docs-coverage-and-route-integrity-audit (skill) | `ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md` | skill | Known-good | Cross-tab link validation, orphan detection, route integrity. Finds unreachable pages and dead links. | 2026-03-22 | **7** | Run to find content gaps and broken navigation. Supports 5.a placement audit. |
+| docs-quality-and-freshness-audit (skill) | `ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md` | skill | Tested/Known-good | Flags TODO/TBD markers, thin content, orphan pages, missing cross-links, staleness. | 2026-03-22 | **8** | Run before placement to identify structural and quality gaps. |
+
+### 6. Copy Writing & Content Fill (6.a / 6.b)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| page-authoring (skill) | `ai-tools/ai-skills/page-authoring/SKILL.md` | skill | Tested/Known-good | WRITE mode wrapper. Takes page brief + context, outputs full page markdown. | 2026-03-22 | **8** | Run content-pass REVIEW first to validate brief. Primary new-page writing tool. |
+| content-pass.md (WRITE mode) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | prompt | Tested/Known-good | WRITE mode: full new page from brief. REWRITE mode: full rewrite from scratch. | 2026-03-23 | **9** | See Stage 4. Read pack-guide.md first. |
+| docs-copy (skill) | `ai-tools/ai-skills/docs-copy/SKILL.md` | skill | Tested/Known-good | Copy quality audit: voice issues, banned words, sentence complexity. | 2026-03-22 | **7** | Use for iterative copy refinement after first draft. |
+| style-and-language-homogenizer-en-gb (skill) | `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` | skill | Tested/Known-good | UK English enforcement: -ise/-our/-re, em-dash removal, hyphen standardisation. | 2026-03-22 | **9** | Run on all final copy. Required for voice compliance. |
+| ORCHS/01-CORE-NEEDS-AND-STANDARDS.md | `workspace/plan/active/ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` | standards | Known-good | Orchestrators copywriting standards, terminology preferences, voice examples, phrases to avoid. | 2026-03-22 | **8** | Use for all operator-audience pages. Updated during Phase 6 review. |
+| voice-rules.md | `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | reference | Tested/Known-good | Per-audience voice rules. See Stage 4. | 2026-03-23 | **9** | Always load. |
+
+### 7. Quality Checks & Refinement (7.a)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| checks-pipeline.js `--cat 2,3,4` | `operations/scripts/dispatch/content/checks-pipeline.js` | script | **PLANNED — NOT BUILT** | Master quality dispatcher, Tier 2 run: Cat 2 (voice/copy) + Cat 3 (headings) + Cat 4 (structure). Called by process-pipeline.js at Phase 7. | — | **9 when built** | ⚠️ Does not exist yet. This is the intended automation for Stage 7. Script-plan defines full architecture (3-tier, --mode check\|fix\|dry-run, --scope file\|tab\|full). |
+| rubric-static-review (skill) | `ai-tools/ai-skills/rubric-static-review/SKILL.md` | skill | Tested/Known-good | Rubric-based scoring against 10+ criteria (headings, prose, links, jargon, veracity flags). | 2026-03-22 | **8** | ⚠️ Current scores may be wrong — rubric-loader.js has schema drift (9 vs 7 audience tokens). Fix rubric-loader.js before relying on scores. |
+| validate-headings.js | `validators/content/structure/validate-headings.js` | script | **PLANNED — NOT BUILT** | Cat 3: 3–6 word heading length, domain-anchor rule, no question forms, 20/25 rubric scoring. Extended from check-double-headers.js. | — | **8 when built** | Per script-plan Priority 4. Replaces/extends `check-double-headers.js`. |
+| validate-voice-copy.js | `validators/content/copy/validate-voice-copy.js` | script | **PLANNED — NOT BUILT** | Cat 2: banned words/constructions, UK English, hedging, register. Merge of lint-copy.js + lint-patterns.js (if 80%+ overlap confirmed). | — | **7 when built** | Per script-plan Cat 2. Audit overlap before merging — if separate coverage, add `--json` to each instead. |
+| validate-structure.js | `validators/content/structure/validate-structure.js` | script | **PLANNED — NOT BUILT** | Cat 4: one-purpose/audience rule, journey adjacency, dead-end detection, prerequisites. Split from lint-structure.js. | — | **7 when built** | Per script-plan Priority 3. Lint-structure.js currently mixes Cat 1 + Cat 3 + Cat 4. |
+| content-pipeline-pass-a (skill) | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | skill | Tested/Known-good | REVIEW mode wrapper. Produces audit report (PASS/NEEDS WORK/REWRITE REQUIRED) + prioritised fix list. | 2026-03-22 | **8** | Primary Phase 3 output. Current best tool until checks-pipeline.js is built. |
+| docs-quality-and-freshness-audit (skill) | `ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md` | skill | Tested/Known-good | TODO/TBD markers, thin content, staleness. | 2026-03-22 | **8** | Also useful in Phase 7 re-check. |
+| docs-review-packet-generation (skill) | `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md` | skill | Tested/Known-good | Generates human review packet: context, rubric scores, flagged issues, before/after diffs. | 2026-03-22 | **7** | Bundles phase outputs for human editorial decision. |
+| docs-review-fix-execution (skill) | `ai-tools/ai-skills/docs-review-fix-execution/SKILL.md` | skill | Tested/Known-good | Applies targeted fixes from review packet. Takes rubric report + approved fixes. | 2026-03-22 | **6** | Use after human approves fix list from docs-review-packet-generation. |
+| veracity-pass.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | prompt | **DRAFT** | Resolves all factual claims against source library. See Stage 3. | 2026-03-23 | **8** | ⚠️ DRAFT — validate before use at scale. |
+
+### 8. Layout & Style (8.a)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| checks-pipeline.js `--cat 5,8` | `operations/scripts/dispatch/content/checks-pipeline.js` | script | **PLANNED — NOT BUILT** | Master quality dispatcher, layout run: Cat 5 (layout/components) + Cat 8 (links/rendering). Called by process-pipeline.js at Phase 8. Gate: all Cat 2–4 flags resolved first. | — | **9 when built** | ⚠️ Does not exist yet. Intended automation for Stage 8. |
+| validate-frontmatter.js | `validators/content/structure/validate-frontmatter.js` | script | **PLANNED — NOT BUILT** | Cat 1: all 10 required frontmatter fields, canonical enum validation, veracityStatus check, deprecated value detection. Emits structured JSON. | — | **9 when built** | Per script-plan Priority 3. Extract from lint-structure.js. Highest-value new script in the plan. |
+| check-mermaid-blocks.js | `validators/content/structure/check-mermaid-blocks.js` | script | **PLANNED — NOT BUILT** | Cat 5: validates mermaid code blocks parse, use correct theme, aren't empty. Currently no script covers this. | — | **7 when built** | Per script-plan style-dispatcher scope. |
+| content-pipeline-pass-b (skill) | `ai-tools/ai-skills/content-pipeline-pass-b/SKILL.md` | skill | Tested/Known-good | Layout + component pass. Takes markdown from Pass A, adds MDX components, frontmatter, component config. | 2026-03-22 | **7** | Current best tool until checks-pipeline.js is built. |
+| component-layout-governance (skill) | `ai-tools/ai-skills/component-layout-governance/SKILL.md` | skill | Tested/Known-good | Validates component usage, props, and nesting. MDX quality gate. Needs update: add pageType→required-template matrix per script-plan Cat 5. | 2026-03-22 | **7** | Run on Pass B output. Update needed before using at scale. |
+| layout-pass.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | prompt | **Partial/Outdated** | Component mapping + MDX template prompt. Maps content sections to Mintlify/LP components. | 2026-03-23 | **5** | ⚠️ Largely superseded by Pass B skill. Resolve ambiguity before using. |
+| pack-guide.md (Phase 4) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/pack-guide.md` | guide | Partial | Phase 4 pre-flight guide. Component library reference, MDX syntax, frontmatter spec. | 2026-03-22 | **6** | ⚠️ Component library outdated. Needs update for current Mintlify + LP component set. |
+| docs.json | `docs.json` | config | Tested/Known-good | Mintlify navigation and routing config. Defines all tab structures, nav entries, component allowances. | — | **8** | Required reference for layout pass. Any new page must have a matching entry here. |
+
+### 9. Semi-Manual Review & Style Refinement (9.a / 9.b)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| checks-pipeline.js `--full` | `operations/scripts/dispatch/content/checks-pipeline.js` | script | **PLANNED — NOT BUILT** | Full quality run: all 9 categories, 3-tier, produces aggregated checks-report.json + checks-report.md. Called by process-pipeline.js at Phase 9. Gate: human sign-off. | — | **10 when built** | ⚠️ Does not exist yet. The intended final gate for Stage 9. |
+| product-thinking (skill) | `ai-tools/ai-skills/product-thinking/SKILL.md` | skill | Tested/Known-good | Strategic review: tab fit, audience alignment, cross-tab positioning. | 2026-03-22 | **7** | Use for editorial review. Run before human sign-off. |
+| repo-audit-orchestrator (skill) | `ai-tools/ai-skills/repo-audit-orchestrator/SKILL.md` | skill | Tested/Known-good | Master audit orchestrator. Runs 6-step static-first pipeline (structure → content → copy → veracity → components → references). | 2026-03-22 | **7** | Entry point for full-tab audits. Current best tool until checks-pipeline.js is built. |
+| rubric-static-review (skill) | `ai-tools/ai-skills/rubric-static-review/SKILL.md` | skill | Tested/Known-good | Final review gate. Rubric scoring against Frameworks.mdx criteria. | 2026-03-22 | **8** | ⚠️ Scores currently unreliable due to rubric-loader.js schema drift. Fix before relying on results. |
+| REVIEW-REGISTRY.md | `v2/orchestrators/_workspace/canonical/REVIEW-REGISTRY.md` | output | Tested/Known-good | Orchestrators review record. Pattern for what a completed tab review looks like. | 2026-03-24 | **9** | Use as reference for what good output looks like per page type. |
+
+---
+
+### Cross-Stage Resources (support multiple stages)
+
+| Name | Where it is | Type | Status | Stages | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|--------|-------------------|-------|
+| CLAUDE.md | `.claude/CLAUDE.md` | rules | Tested/Known-good | ALL | **10** | Project coordinator. Session rules, co-creation rules, domain terms, review standards, voice, key files. Read every session. |
+| PROJECT-MANAGEMENT-CANONICAL.md | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` | plan | Tested/Known-good | ALL | **10** | Session protocol, agent rules, gate definitions. Read at session start (CLAUDE.md says this is mandatory). |
+| project-state.md | `workspace/plan/active/_Project-Management_/project-state.md` | status | Tested/Known-good | ALL | **10** | Current agent state. Read at session start per CLAUDE.md. |
+| decision-registry.md | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | registry | Tested/Known-good | ALL | **10** | Locked decisions — cannot be re-opened. Current: D-NAV-01. |
+| tab-status.md | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | status | Tested/Known-good | ALL | **10** | Real-time per-tab gate status. Gate source of truth. |
+| blocking-items.md | `workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md` | registry | Tested/Known-good | ALL | **9** | Human-decision blockers. ⚠️ NOTE: This file is a symlink pointing to the actual canonical file — if the target moves, the symlink breaks. |
+| plan-canonical.md | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | plan | Tested/Known-good | ALL | **9** | Full execution plan, phase definitions, dependency graph, gates. ⚠️ NOTE: READ-EVERY-TIME versions are symlinks to source files in Prompts-By-Phase — agents must know symlink targets can move. |
+| Frameworks.mdx | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | framework | Tested/Known-good | 4,6,7,9 | **10** | Canonical taxonomy, voice, quality checklist. See Stage 4. |
+| checks.mdx | `v2/orchestrators/_workspace/canonical/checks.mdx` | framework | Tested/Known-good | 7,8,9 | **9** | **IS the Cat 1–9 quality spec** that script-plan.md maps all dispatchers to. 9 categories, 68+ checks: Cat 1 (Frontmatter, 13), Cat 2 (Voice/Copy, 11), Cat 3 (Headings, 7+rubric), Cat 4 (Structure, 10), Cat 5 (Layout/Components, 10+matrix), Cat 6 (Veracity, 9+standards), Cat 7 (Navigation/IA, 9), Cat 8 (Links/Rendering), Cat 9 (TBC). The spec that checks-pipeline.js and all validators implement. |
+| process.mdx | `v2/orchestrators/_workspace/canonical/process.mdx` | process | Known-good | 7,8,9 | **9** | **Page Remediation Process** — 5-step page-level pipeline (check → critical review → CHECKPOINT → remediate → copy edit → layout). Operates WITHIN Stages 7–9 of my-process.mdx. Batch rules: max 3 check agents parallel. Requires checks.mdx + Frameworks.mdx as inputs. |
+| component-library.mdx | `v2/resources/documentation-guide/component-library/component-library.mdx` | reference | Tested/Known-good | 8,9 | **7** | Live Mintlify + LP component catalogue. 3 translations exist. Use as Stage 8 layout reference. Missing: annotated UX patterns gallery (good examples with WHY). |
+| ai-tools agent-pack CLAUDE.md | `ai-tools/agent-packs/claude/CLAUDE.md` | generated | Auto-generated | 3,7,9 | **7** | Contains 6-step static-first audit pipeline. ⚠️ Auto-generated by cross-agent-packager.js — do not edit manually. Different file from `.claude/CLAUDE.md`. |
+| **process-pipeline.js** | `operations/scripts/dispatch/content/process-pipeline.js` | script | **PLANNED — NOT BUILT** | ALL | **10 when built** | ⚠️ The intended orchestration layer for my-process.mdx phases 1–9. Reads tab-status.md, determines current phase gate, tells operator what prompt/script/check to run next, updates tab-status.md. Does NOT run autonomously — human gates remain human-only. Architecture defined in script-plan.md. |
+| **checks-pipeline.js** | `operations/scripts/dispatch/content/checks-pipeline.js` | script | **PLANNED — NOT BUILT** | 7,8,9 | **10 when built** | ⚠️ The intended quality validation dispatcher. 3-tier (structural blocking → content quality → trust/governance). Modes: `--mode check\|fix\|dry-run`. Scope: `--file\|--tab\|--staged\|--full`. Called by process-pipeline.js at Phases 7 (--cat 2,3,4), 8 (--cat 5,8), 9 (--full). Architecture defined in script-plan.md. |
+| pipeline-report.js (lib) | `tools/lib/pipeline-report.js` | script | **PLANNED — NOT BUILT** | 7,8,9 | **8 when built** | Shared output contract library: `normaliseIssue()`, `writeReport()`. All validators import this to emit structured JSON. Required before dispatcher aggregation works. Per script-plan Priority 2. |
+| script-plan.md | `v2/orchestrators/_workspace/canonical/scripts/script-plan.md` | plan | Known-good | 7,8,9 | **9** | Architecture plan for checks-pipeline.js + process-pipeline.js. Defines dispatcher design, dependency graph, risk classification, implementation order. Read before building any of the PLANNED scripts above. |
+
+### Missing Phase 4 Items (not yet fully inventoried)
+
+| Name | Where it is | Type | Status | Purpose | Created | Usefulness (1-10) | Notes |
+|------|-------------|------|--------|---------|---------|-------------------|-------|
+| layout-pass.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | prompt | **Partial/Outdated** | Component mapping + MDX template prompt. Maps content sections to Mintlify/LP components. | 2026-03-23 | **5** | ⚠️ Largely superseded by Pass B skill. Needs reconciliation — either deprecate or update. |
+| pack-guide.md (Phase 4) | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/pack-guide.md` | guide | Partial | Phase 4 pre-flight guide. Component library reference, MDX syntax, frontmatter spec. | 2026-03-22 | **6** | ⚠️ Component library section is outdated. Needs update for current Mintlify + LP component set. |
+
+---
+
+## GAPS, FLAGS & RECOMMENDATIONS
+
+{/* ie is this content superceded, not working, only a partial fit? other issues? What content are we missing to enable this process fully automated with the right outcomes? */}
+
+### Gap 1 — Stage 8/9: No UX best-practice summary (component library EXISTS)
+Stage 9.a requires a "pack of whats good and why pages + UX best practice summary + component index (lp & mintlify)". **A component library exists** at `v2/resources/documentation-guide/component-library/component-library.mdx` (+ 3 translations). However, there is no curated **UX patterns gallery** — good page examples with annotations showing WHY they work.
+
+**Recommendation:** Link existing `component-library.mdx` into Stage 8 resources (see table above). Create `ux-patterns-gallery.mdx` (good page examples with annotations). The component index exists; the gap is the editorial examples pack.
+
+---
+
+### Gap 2 — Stage 3.b: Veracity pass is DRAFT and unvalidated
+`veracity-pass.md` exists but is explicitly flagged DRAFT in its own file. It has not been run against a known-good page to verify output quality. CLAUDE.md states: "Do not use at scale before validating."
+
+**Recommendation:** Before using in the pipeline, run veracity-pass.md against one completed Orchestrators page (e.g., a page with `veracityStatus: verified`), compare output to the expected result, and confirm it flags claims correctly without over-flagging. Update status to Known-good only after this validation.
+
+---
+
+### Gap 3 — Stage 3.c: No automated terminology extraction prompt
+Stage 3.c calls for "Run terminology extractor — specific terms used etc. for glossary and refinement." `terminology-consolidated.md` and `terminology-per-tab.md` exist as static references, but there is no active prompt or skill that reads a tab's pages and extracts new or inconsistent terminology. The closest is `terminology-search.js` in operations/scripts.
+
+**Recommendation:** Either validate that `terminology-search.js` covers this need or write a dedicated Phase 3.c prompt. The gap matters especially for tabs where terminology is unlocked.
+
+---
+
+### Gap 4 — Stage 6.b: No Claude Web prompt pack
+Stage 6.b specifies "[claude web]" for writing missing content — implying a prompt pack prepared for Claude.ai (not Claude Code). No such pack was found. The audience-design prompts are the closest precursor, but they are designed for Claude Code context.
+
+**Recommendation:** Clarify whether Stage 6.b is intended for Claude Code (with web search tools) or literally for claude.ai web interface. If the latter, create a portable prompt pack that works without codebase context.
+
+---
+
+### ~~Gap 5~~ — RESOLVED: Voice rules are COMPLETE (all 7 audiences)
+**CORRECTION:** `voice-rules.md` covers ALL 7 audiences in full detail (28–36 lines each). Each audience has: Who (persona), Register (voice tone), What to do (5–7 directives), What NOT to do (5–7 directives), Prohibited phrases (3–10 specific bans). File also includes UK English table and 4 resolved decisions. The original gap entry was factually wrong — verified by direct file read on 2026-03-26.
+
+---
+
+### Gap 6 — Operations scripts: active/archived breakdown UNKNOWN
+146 operations scripts exist (count verified). Scripts are organised by function category (audits, validators, remediators, automations, dispatch) but **no metadata or directory distinction exists between active and archived scripts**. The original "11 active, 134 archived" claim was unverified and should not be treated as fact. This creates noise and risk (someone could run a deprecated script by mistake).
+
+**Recommendation:** Run `script-footprint-and-usage-audit.js` to classify all 146 scripts. Script-plan.md proposes `@dispatcher` JSDoc tags + `script-registry.json` as the long-term solution. Defer to script-plan implementation order.
+
+---
+
+### Flag — layout-pass.md vs Pass B skill ambiguity
+`layout-pass.md` (Phase 4 prompt) and `content-pipeline-pass-b` (skill) both claim to handle the layout/component pass. This is a conflict. The skill is more current but the prompt is still in the Prompts-By-Phase directory, which may cause confusion.
+
+**Recommendation:** Formally deprecate `layout-pass.md`. Add a DEPRECATED notice at the top pointing to Pass B skill. Update `pack-guide.md (Phase 4)` accordingly.
+
+---
+
+### ~~Gap 7~~ — RESOLVED: rubric-loader.js schema drift was already fixed
+**CORRECTION (verified 2026-03-28):** `tools/lib/docs-usefulness/rubric-loader.js` correctly imports `CANONICAL_AUDIENCES` from `frontmatter-taxonomy.js` — it does NOT hardcode a separate enum. The fix is already in production.
+
+Evidence from file (lines 35–37):
+```javascript
+// Derived from frontmatter-taxonomy.js CANONICAL_AUDIENCES — the single source of truth.
+// Do not hardcode here. If the canonical set changes, update frontmatter-taxonomy.js only.
+const AUDIENCE_ENUM = CANONICAL_AUDIENCES;
+```
+
+`rubric-static-review` scores are not affected by this bug. Stage 7 quality gate is not compromised by this specific issue. The original gap entry described a past issue that has been resolved.
+
+**Still open (separate concern):** `tools/config/usefulness-audience-normalization.json` contains pre-canonical synonym tokens — superseded by `CANONICAL_AUDIENCES`, but safe to leave until confirmed no unique mappings exist. Defer to script-plan implementation order.
+
+---
+
+### Gap 8 — No structured JSON output contract across validators
+Nearly all existing validators emit `console.log` rather than structured `{issues: [], score: n}` JSON. This makes pipeline aggregation impossible — checks-pipeline.js cannot aggregate results across dispatchers without it. The `pipeline-report.js` shared library (PLANNED) solves this, but until it exists, 7 validators need `--json` flag updates as a prerequisite.
+
+**Affected scripts per script-plan:** lint-structure.js, lint-copy.js, lint-patterns.js, check-anchor-usage.js, check-mdx-safe-markdown.js, docs-fact-registry.js.
+
+**Recommendation:** Per script-plan Priority 2, create `tools/lib/pipeline-report.js` first, then update the 6 validators to use it before building any dispatcher.
+
+---
+
+### Gap 9 — Both pipeline dispatchers are PLANNED but not built
+`process-pipeline.js` (workflow orchestrator) and `checks-pipeline.js` (quality validator) are the intended automation backbone for my-process.mdx stages 7–9 and the overall workflow tracking. Neither exists. The full architecture is defined in `script-plan.md` — implementation order, dispatcher design, dependency graph, risk classification, and verification plan are all there.
+
+**Recommendation:** Before starting implementation, read script-plan.md Section 7 (Implementation Order). The order matters: schema drift → pipeline-report.js → validate-frontmatter.js → lint-structure split → missing validators → dispatchers. Do not build dispatchers before the shared output contract exists.
+
+---
+
+### Gap 10 — Two-layer purpose translation: silent data loss risk
+`frontmatter-taxonomy.js` defines 15 canonical purposes. `rubric-loader.js`'s `purposeToRubricPurpose()` maps these to 10 rubric-internal labels. No runtime check verifies all 15 canonical purposes have a mapping. If a new purpose is added to the canonical list, it silently falls through — pages scored as unknown. `check-purpose-rubric-sync.js` (PLANNED) is the fix.
+
+**Recommendation:** Per script-plan Priority 3, create `validators/content/structure/check-purpose-rubric-sync.js` as part of the frontmatter consolidation work.
+
+---
+
+### ~~Flag~~ — RESOLVED: process.mdx is a DISTINCT document (not a duplicate)
+**CORRECTION:** `v2/orchestrators/_workspace/canonical/process.mdx` is the **Page Remediation Process** — a 5-step operational pipeline for moving individual pages from raw to shipped:
+1. Check agent → findings report
+2. Critical review agent → reviewed report → **CHECKPOINT** (human sign-off)
+3. Remediation agent (structural/taxonomy fixes)
+4. Copy edit agent (prose fixes)
+5. Layout agent (MDX/frontmatter completion)
+
+This is complementary to `my-process.mdx` (which describes the tab-level content pipeline stages 1–9). `process.mdx` operates at page-level within Stages 7–9. It includes batch rules (max 3 check agents parallel) and requires checks.mdx + Frameworks.mdx as inputs. Added to Cross-Stage Resources table.
+
+---
+
+### Flag — ia-data.json: purpose and consumer unknown
+`v2/orchestrators/_workspace/canonical/ia-data.json` exists but no script, skill, or prompt was found that reads it. If nothing consumes it, it is dead data.
+
+**Recommendation:** Verify whether any script or skill reads ia-data.json. If not, either connect it to a consumer or remove it.
+
+---
+
+## CRITICAL REVIEW
+
+{/* Independent validation by second agent against actual repo state. */}
+
+**Verdict:** Inventory is ~85% accurate on file existence but contains one critical hallucination, multiple misleading paths, an unverified operations script breakdown, and several important omissions. Corrections have been applied to the tables above. Remaining issues documented below.
+
+---
+
+### Confirmed Accurate ✓
+
+The following were independently verified — paths exist and descriptions match file contents:
+
+- `audience-design-v5.md` + Phase 1 pack-guide ✓
+- `structure-audit.md` + Phase 2 pack-guide ✓
+- `content-pass.md` + Phase 3 pack-guide ✓
+- `veracity-pass.md` + veracity pack-guide (DRAFT status confirmed accurate) ✓
+- `voice-rules.md` (per-audience rules, locked) ✓
+- `Frameworks.mdx` (7 pageTypes, 15 pagePurposes, 7 audience tokens, quality checklist) ✓
+- `REVIEW-REGISTRY.md` (Orchestrators page inventory) ✓
+- `IA.mdx` (Orchestrators IA draft) ✓
+- `decision-registry.md` (D-NAV-01 recorded, open items listed) ✓
+- `tab-status.md` (per-tab gate symbols, current state) ✓
+- `blocking-items.md` (symlink confirmed — see red flags) ✓
+- `veracity-sources.md` (consolidated — 45-source library, T1/T2/T3 tiers confirmed) ✓
+- `terminology-consolidated.md` ✓
+- `orchestrators-audience-doc.md`, `orchestrators-content-scan.md` ✓
+- All 19 skills in `ai-tools/ai-skills/` confirmed to exist ✓
+
+---
+
+### Critical Error — Hallucinated File ✗
+
+**`v2/orchestrators/_workspace/tab-map.mdx` does not exist.**
+
+First agent scored it 8 as "Known-good." It has not been created. This is a real pipeline blocker: `content-pass.md` (Phase 3) requires the tab map as an input. The inventory entry has been corrected to score 0 with a BLOCKER flag.
+
+---
+
+### Path Corrections Applied ✗
+
+**Template wildcard paths** (`[tab]` notation) are misleading. Files only exist for specific named tabs (e.g., `orchestrators`, `lp-token`, `home`, `gateways`, `developers`). They are not generic templates. Scores adjusted and notation corrected to `{TAB}` with caveat.
+
+---
+
+### Unverified Claim — Operations Scripts Breakdown
+
+First agent claimed "145 total, 11 active core, 134 archived." **The 145 total count is correct. The 11/134 active/archived split is unverified.** Scripts are organised by function category (audits, validators, remediators, automations, dispatch) but there is no directory or metadata distinction between active and archived scripts. The breakdown was not supported by evidence. Treat the split as unknown until `script-footprint-and-usage-audit.js` is run.
+
+---
+
+### Symlinks Not Documented
+
+`workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/` contains symlinks pointing to actual canonical files in `Prompts-By-Phase/` and `decisions/`. The symlinks work but:
+- If the target file moves, the symlink breaks silently
+- Agents that follow symlinks may report the wrong path in session logs
+- `blocking-items.md` is a symlink — the authoritative file is in `decisions/`
+
+This is a maintenance risk. The symlink targets should be documented or the READ-EVERY-TIME pattern replaced with direct copies or well-documented symlink maps.
+
+---
+
+### Omissions Added to Inventory
+
+The following important files were missed by the first agent and have been added above:
+1. `workspace/plan/active/_Project-Management_/project-state.md` — session-start mandatory read
+2. `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` — session-start mandatory read
+3. `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` — entire Phase 4 was missing
+4. `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/pack-guide.md`
+5. `v2/orchestrators/_workspace/canonical/checks.mdx` — in canonical directory, purpose unverified
+6. `ai-tools/agent-packs/claude/CLAUDE.md` — auto-generated audit pipeline
+
+---
+
+### Score Challenges
+
+| Item | Original Score | Revised Score | Reason |
+|------|---------------|---------------|--------|
+| `tab-map.mdx` | 8 | **0** | Does not exist — hallucination |
+| `veracity-sources.md (per tab)` | 9 | **6** | Only exists for specific tabs, not a generic pattern |
+| `glossary-{tab}.md` | 6 | **5** | Same path caveat — not universally available |
+| `veracity-pass.md` | 8 | **8 ⚠️ DRAFT** | Score defensible but DRAFT status must be explicit — pack-guide says "awaiting human approval after test runs" |
+| Operations script active/archived split | N/A | **Unknown** | Split unverifiable; do not report as fact |
+
+---
+
+## OUTPUT FORMAT REQUIREMENTS
+
+All pipeline outputs MUST be visual. I need to SEE everything to make decisions. Raw text walls are useless.
+
+**Required formats:**
+- **Repo trees**: file trees showing structure at a glance
+- **Mermaid diagrams**: content relationships, dependencies, flows
+- **Matrix tables**: pages mapped against dimensions (topic, audience, quality, disposition)
+- **Navigation trees**: current vs proposed nav structures side by side
+
+If an output does not include at least one of these, it is not ready for review.

@@ -1,0 +1,106 @@
+/**
+ * @script            common
+ * @category          utility
+ * @purpose           feature:translation
+ * @scope             operations/scripts
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement i18n shared utilities — common helper functions for translation pipeline
+ * @pipeline          indirect — library module
+ * @usage             node operations/scripts/i18n/lib/common.js [flags]
+ */
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+function toPosix(value) {
+  return String(value || '').split(path.sep).join('/');
+}
+
+function normalizeRepoRel(repoRelPath) {
+  return toPosix(String(repoRelPath || '').replace(/^\.\//, '').replace(/^\/+/, ''));
+}
+
+function ensureDir(dirPath) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
+function ensureDirForFile(filePath) {
+  ensureDir(path.dirname(filePath));
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function writeJson(filePath, value) {
+  ensureDirForFile(filePath);
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+function writeTextIfChanged(filePath, nextContent) {
+  let prev = null;
+  try {
+    prev = fs.readFileSync(filePath, 'utf8');
+  } catch (_err) {
+    prev = null;
+  }
+  if (prev === nextContent) return false;
+  ensureDirForFile(filePath);
+  fs.writeFileSync(filePath, nextContent, 'utf8');
+  return true;
+}
+
+function getRepoRoot(cwd = process.cwd()) {
+  try {
+    return execSync('git rev-parse --show-toplevel', { cwd, encoding: 'utf8' }).trim();
+  } catch (_err) {
+    return cwd;
+  }
+}
+
+function chunkArray(items, maxItems, maxChars = Infinity, getSize = (item) => String(item || '').length) {
+  const chunks = [];
+  let current = [];
+  let currentChars = 0;
+
+  for (const item of items) {
+    const size = getSize(item);
+    const wouldOverflowItems = current.length >= maxItems;
+    const wouldOverflowChars = current.length > 0 && currentChars + size > maxChars;
+    if (wouldOverflowItems || wouldOverflowChars) {
+      chunks.push(current);
+      current = [];
+      currentChars = 0;
+    }
+    current.push(item);
+    currentChars += size;
+  }
+  if (current.length > 0) chunks.push(current);
+  return chunks;
+}
+
+function parseCsv(value) {
+  return String(value || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function isExternalHref(href) {
+  return /^(https?:\/\/|mailto:|#)/i.test(String(href || '').trim());
+}
+
+module.exports = {
+  chunkArray,
+  ensureDir,
+  ensureDirForFile,
+  getRepoRoot,
+  isExternalHref,
+  normalizeRepoRel,
+  parseCsv,
+  readJson,
+  toPosix,
+  writeJson,
+  writeTextIfChanged
+};

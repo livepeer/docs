@@ -1,21 +1,21 @@
 ---
 name: pr-changed-file-ci-simulation
-version: "1.0"
 description: >-
-  Simulate pull-request changed-file checks locally to reproduce CI behavior before opening PRs. Use when tasks include simulate ci locally, run pr checks before push, changed-file checks failed in github actions.
-tier: 1
-invoke_when:
-  - "simulate ci locally"
-  - "run pr checks before push"
-  - "changed-file checks failed in github actions"
+  Simulate pull-request changed-file checks locally to reproduce CI behavior
+  before opening PRs. Use when: simulate ci locally, run pr checks before push,
+  changed-file checks failed in github actions.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - "tests/run-pr-checks.js"
   - ".github/workflows/test-suite.yml"
-  - "tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md"
-  - "tests/WHEN-TESTS-RUN.md"
+  - "operations/tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md"
+  - "operations/tests/WHEN-TESTS-RUN.md"
 primary_commands:
-  - "node tests/run-pr-checks.js --base-ref main"
-  - "npm --prefix tests run test:pr"
+  - "node operations/tests/run-pr-checks.js --base-ref main"
+  - "npm --prefix operations/tests run test:pr"
 ---
 
 SKILL: PR Changed-file CI Simulation
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tests/run-pr-checks.js --base-ref main
-npm --prefix tests run test:pr
+node operations/tests/run-pr-checks.js --base-ref main
+npm --prefix operations/tests run test:pr
 ```
 
 Deliverable Format

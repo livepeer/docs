@@ -41,11 +41,6 @@ const docsJsonFr = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -65,53 +60,48 @@ const docsJsonFr = {
               icon: 'graduation-cap',
               pages: [
                 'v2/fr/about/portal',
-                'v2/fr/about/livepeer-overview',
-                'v2/fr/about/core-concepts',
-                'v2/fr/about/mental-model',
+                'v2/fr/about/concepts/livepeer-overview',
+                'v2/fr/about/concepts/core-concepts',
+                'v2/fr/about/concepts/mental-model',
               ],
             },
             {
               group: 'Livepeer Protocol',
               icon: 'cube',
               pages: [
-                'v2/fr/about/livepeer-protocol/overview',
-                'v2/fr/about/livepeer-protocol/core-mechanisms',
-                'v2/fr/about/livepeer-protocol/livepeer-token',
-                'v2/fr/about/livepeer-protocol/governance-model',
-                'v2/fr/about/livepeer-protocol/treasury',
-                'v2/fr/about/livepeer-protocol/economics',
-                'v2/fr/about/livepeer-protocol/technical-architecture',
+                'v2/fr/about/protocol/overview',
+                'v2/fr/about/protocol/core-mechanisms',
+                'v2/fr/about/protocol/livepeer-token',
+                'v2/fr/about/protocol/governance-model',
+                'v2/fr/about/protocol/treasury',
+                'v2/fr/about/protocol/economics',
+                'v2/fr/about/protocol/technical-architecture',
               ],
             },
             {
               group: 'Livepeer Network',
               icon: 'circle-nodes',
               pages: [
-                'v2/fr/about/livepeer-network/overview',
-                'v2/fr/about/livepeer-network/actors',
-                'v2/fr/about/livepeer-network/job-lifecycle',
-                'v2/fr/about/livepeer-network/marketplace',
-                'v2/fr/about/livepeer-network/technical-architecture',
-                'v2/fr/about/livepeer-network/interfaces',
+                'v2/fr/about/network/overview',
+                'v2/fr/about/network/actors',
+                'v2/fr/about/network/job-lifecycle',
+                'v2/fr/about/network/marketplace',
+                'v2/fr/about/network/technical-architecture',
+                'v2/fr/about/network/interfaces',
               ],
             },
             {
               group: 'Resources',
               icon: 'books',
               pages: [
-                'v2/fr/about/resources/livepeer-whitepaper',
+                'v2/fr/about/resources/knowledge-hub/livepeer-whitepaper',
                 'v2/fr/about/resources/livepeer-glossary',
-                'v2/fr/about/resources/blockchain-contracts',
-                'v2/fr/about/resources/technical-roadmap',
-                'v2/fr/about/resources/gateways-vs-orchestrators',
+                'v2/fr/about/protocol/blockchain-contracts',
+                'v2/fr/about/resources/reference/technical-roadmap',
+                'v2/fr/about/resources/knowledge-hub/gateways-vs-orchestrators',
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -151,64 +141,64 @@ const docsJsonFr = {
                 {
                   group: 'Get started',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/get-started/overview',
-                    'v2/fr/solutions/livepeer-studio/quickstart',
-                    'v2/fr/solutions/livepeer-studio/get-started/authentication',
-                    'v2/fr/solutions/livepeer-studio/get-started/studio-cli',
+                    'v2/fr/solutions/livepeer-studio/docs/get-started/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/quickstart',
+                    'v2/fr/solutions/livepeer-studio/docs/get-started/authentication',
+                    'v2/fr/solutions/livepeer-studio/docs/get-started/studio-cli',
                   ],
                 },
                 {
                   group: 'Livestream',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/livestream/overview',
-                    'v2/fr/solutions/livepeer-studio/livestream/create-livestream',
-                    'v2/fr/solutions/livepeer-studio/livestream/playback-livestream',
-                    'v2/fr/solutions/livepeer-studio/livestream/stream-via-obs',
-                    'v2/fr/solutions/livepeer-studio/livestream/livestream-from-browser',
-                    'v2/fr/solutions/livepeer-studio/livestream/multistream',
-                    'v2/fr/solutions/livepeer-studio/livestream/clip-livestream',
-                    'v2/fr/solutions/livepeer-studio/livestream/stream-health',
-                    'v2/fr/solutions/livepeer-studio/livestream/optimize-latency',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/create-livestream',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/playback-livestream',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/stream-via-obs',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/livestream-from-browser',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/multistream',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/clip-livestream',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/stream-health',
+                    'v2/fr/solutions/livepeer-studio/docs/livestream/optimize-latency',
                   ],
                 },
                 {
                   group: 'Video on demand',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/overview',
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/upload-asset',
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/playback-asset',
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/encrypted-assets',
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/thumbnails-vod',
-                    'v2/fr/solutions/livepeer-studio/video-on-demand/transcode-video',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/upload-asset',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/playback-asset',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/encrypted-assets',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/thumbnails-vod',
+                    'v2/fr/solutions/livepeer-studio/docs/video-on-demand/transcode-video',
                   ],
                 },
                 {
                   group: 'Access control & security',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/access-control/overview',
-                    'v2/fr/solutions/livepeer-studio/access-control/webhooks',
-                    'v2/fr/solutions/livepeer-studio/access-control/jwt',
+                    'v2/fr/solutions/livepeer-studio/docs/access-control/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/access-control/webhooks',
+                    'v2/fr/solutions/livepeer-studio/docs/access-control/jwt',
                   ],
                 },
                 {
                   group: 'Events & analytics',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/analytics/webhooks',
-                    'v2/fr/solutions/livepeer-studio/analytics/listen-to-events',
-                    'v2/fr/solutions/livepeer-studio/analytics/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/analytics/webhooks',
+                    'v2/fr/solutions/livepeer-studio/docs/analytics/listen-to-events',
+                    'v2/fr/solutions/livepeer-studio/docs/analytics/overview',
                   ],
                 },
                 {
                   group: 'Player & embed',
-                  pages: ['v2/fr/solutions/livepeer-studio/player'],
+                  pages: ['v2/fr/solutions/livepeer-studio/docs/player'],
                 },
                 {
                   group: 'Reference',
                   pages: [
-                    'v2/fr/solutions/livepeer-studio/reference/api',
-                    'v2/fr/solutions/livepeer-studio/reference/overview',
-                    'v2/fr/solutions/livepeer-studio/reference/sdks',
-                    'v2/fr/solutions/livepeer-studio/reference/managing-projects',
+                    'v2/fr/solutions/livepeer-studio/docs/reference/api',
+                    'v2/fr/solutions/livepeer-studio/docs/reference/overview',
+                    'v2/fr/solutions/livepeer-studio/docs/reference/sdks',
+                    'v2/fr/solutions/livepeer-studio/docs/reference/managing-projects',
                   ],
                 },
                 {
@@ -217,119 +207,119 @@ const docsJsonFr = {
                     {
                       group: 'Assets',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/upload',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/upload-via-url',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/update',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/delete',
-                        'v2/fr/solutions/livepeer-studio/api-reference/assets/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/upload',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/upload-via-url',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/update',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/assets/get-all',
                       ],
                     },
                     {
                       group: 'Streams',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/create',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/get-all',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/update',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/terminate',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/create-clip',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/get-clip',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/add-multistream-target',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/delete-multistream-target',
-                        'v2/fr/solutions/livepeer-studio/api-reference/streams/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/update',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/terminate',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/create-clip',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/get-clip',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/add-multistream-target',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/delete-multistream-target',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/streams/delete',
                       ],
                     },
                     {
                       group: 'Multistream',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/create',
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/get-all',
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/update',
-                        'v2/fr/solutions/livepeer-studio/api-reference/multistream/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/update',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/multistream/delete',
                       ],
                     },
                     {
                       group: 'Playback',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/playback/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/playback/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/playback/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/playback/get',
                       ],
                     },
                     {
                       group: 'Sessions',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/sessions/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/sessions/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/sessions/get-all',
-                        'v2/fr/solutions/livepeer-studio/api-reference/sessions/get-clip',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/sessions/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/sessions/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/sessions/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/sessions/get-clip',
                       ],
                     },
                     {
                       group: 'Tasks',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/tasks/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/tasks/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/tasks/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/tasks/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/tasks/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/tasks/get-all',
                       ],
                     },
                     {
                       group: 'Transcode',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/transcode/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/transcode/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/transcode/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/transcode/create',
                       ],
                     },
                     {
                       group: 'Signing Keys',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/create',
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/get-all',
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/update',
-                        'v2/fr/solutions/livepeer-studio/api-reference/signing-keys/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/update',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/signing-keys/delete',
                       ],
                     },
                     {
                       group: 'Webhooks',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/create',
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/get-all',
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/update',
-                        'v2/fr/solutions/livepeer-studio/api-reference/webhooks/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/get-all',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/update',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/webhooks/delete',
                       ],
                     },
                     {
                       group: 'Rooms',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/create',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/get',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/delete',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/create-user',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/get-user',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/update-user',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/remove-user',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/start-egress',
-                        'v2/fr/solutions/livepeer-studio/api-reference/rooms/stop-egress',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/create',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/get',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/delete',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/create-user',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/get-user',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/update-user',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/remove-user',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/start-egress',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/rooms/stop-egress',
                       ],
                     },
                     {
                       group: 'Viewership',
                       pages: [
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/overview',
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/get-usage-metrics',
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/get-viewership-metrics',
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/get-creators-metrics',
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/get-public-total-views',
-                        'v2/fr/solutions/livepeer-studio/api-reference/viewership/get-realtime-viewership',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/overview',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/get-usage-metrics',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/get-viewership-metrics',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/get-creators-metrics',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/get-public-total-views',
+                        'v2/fr/solutions/livepeer-studio/docs/api-reference/viewership/get-realtime-viewership',
                       ],
                     },
                   ],
@@ -364,11 +354,6 @@ const docsJsonFr = {
               pages: ['v2/fr/solutions/frameworks/overview'],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -444,11 +429,6 @@ const docsJsonFr = {
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -684,11 +664,6 @@ const docsJsonFr = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -814,11 +789,6 @@ const docsJsonFr = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -881,11 +851,6 @@ const docsJsonFr = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -946,11 +911,6 @@ const docsJsonFr = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -969,7 +929,7 @@ const docsJsonFr = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/documentation-guide/documentation-overview'],
             },
             {
               group: 'Documentation Guide',
@@ -1000,9 +960,9 @@ const docsJsonFr = {
               group: 'Livepeer Concepts',
               icon: 'graduation-cap',
               pages: [
-                'v2/fr/about/core-concepts',
+                'v2/fr/about/concepts/core-concepts',
                 'v2/fr/resources/livepeer-glossary',
-                'v2/fr/about/livepeer-network/actors',
+                'v2/fr/about/network/actors',
               ],
             },
             {
@@ -1065,7 +1025,7 @@ const docsJsonFr = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/help-center'],
         },
         {
           anchor: ' ',
@@ -1178,11 +1138,6 @@ const docsJsonCn = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -1202,53 +1157,48 @@ const docsJsonCn = {
               icon: 'graduation-cap',
               pages: [
                 'v2/cn/about/portal',
-                'v2/cn/about/livepeer-overview',
-                'v2/cn/about/core-concepts',
-                'v2/cn/about/mental-model',
+                'v2/cn/about/concepts/livepeer-overview',
+                'v2/cn/about/concepts/core-concepts',
+                'v2/cn/about/concepts/mental-model',
               ],
             },
             {
               group: 'Livepeer Protocol',
               icon: 'cube',
               pages: [
-                'v2/cn/about/livepeer-protocol/overview',
-                'v2/cn/about/livepeer-protocol/core-mechanisms',
-                'v2/cn/about/livepeer-protocol/livepeer-token',
-                'v2/cn/about/livepeer-protocol/governance-model',
-                'v2/cn/about/livepeer-protocol/treasury',
-                'v2/cn/about/livepeer-protocol/economics',
-                'v2/cn/about/livepeer-protocol/technical-architecture',
+                'v2/cn/about/protocol/overview',
+                'v2/cn/about/protocol/core-mechanisms',
+                'v2/cn/about/protocol/livepeer-token',
+                'v2/cn/about/protocol/governance-model',
+                'v2/cn/about/protocol/treasury',
+                'v2/cn/about/protocol/economics',
+                'v2/cn/about/protocol/technical-architecture',
               ],
             },
             {
               group: 'Livepeer Network',
               icon: 'circle-nodes',
               pages: [
-                'v2/cn/about/livepeer-network/overview',
-                'v2/cn/about/livepeer-network/actors',
-                'v2/cn/about/livepeer-network/job-lifecycle',
-                'v2/cn/about/livepeer-network/marketplace',
-                'v2/cn/about/livepeer-network/technical-architecture',
-                'v2/cn/about/livepeer-network/interfaces',
+                'v2/cn/about/network/overview',
+                'v2/cn/about/network/actors',
+                'v2/cn/about/network/job-lifecycle',
+                'v2/cn/about/network/marketplace',
+                'v2/cn/about/network/technical-architecture',
+                'v2/cn/about/network/interfaces',
               ],
             },
             {
               group: 'Resources',
               icon: 'books',
               pages: [
-                'v2/cn/about/resources/livepeer-whitepaper',
+                'v2/cn/about/resources/knowledge-hub/livepeer-whitepaper',
                 'v2/cn/about/resources/livepeer-glossary',
-                'v2/cn/about/resources/blockchain-contracts',
-                'v2/cn/about/resources/technical-roadmap',
-                'v2/cn/about/resources/gateways-vs-orchestrators',
+                'v2/cn/about/protocol/blockchain-contracts',
+                'v2/cn/about/resources/reference/technical-roadmap',
+                'v2/cn/about/resources/knowledge-hub/gateways-vs-orchestrators',
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -1325,64 +1275,64 @@ const docsJsonCn = {
             {
               group: 'Get started',
               pages: [
-                'v2/cn/solutions/livepeer-studio/get-started/overview',
-                'v2/cn/solutions/livepeer-studio/quickstart',
-                'v2/cn/solutions/livepeer-studio/get-started/authentication',
-                'v2/cn/solutions/livepeer-studio/get-started/studio-cli',
+                'v2/cn/solutions/livepeer-studio/docs/get-started/overview',
+                'v2/cn/solutions/livepeer-studio/docs/quickstart',
+                'v2/cn/solutions/livepeer-studio/docs/get-started/authentication',
+                'v2/cn/solutions/livepeer-studio/docs/get-started/studio-cli',
               ],
             },
             {
               group: 'Livestream',
               pages: [
-                'v2/cn/solutions/livepeer-studio/livestream/overview',
-                'v2/cn/solutions/livepeer-studio/livestream/create-livestream',
-                'v2/cn/solutions/livepeer-studio/livestream/playback-livestream',
-                'v2/cn/solutions/livepeer-studio/livestream/stream-via-obs',
-                'v2/cn/solutions/livepeer-studio/livestream/livestream-from-browser',
-                'v2/cn/solutions/livepeer-studio/livestream/multistream',
-                'v2/cn/solutions/livepeer-studio/livestream/clip-livestream',
-                'v2/cn/solutions/livepeer-studio/livestream/stream-health',
-                'v2/cn/solutions/livepeer-studio/livestream/optimize-latency',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/overview',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/create-livestream',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/playback-livestream',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/stream-via-obs',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/livestream-from-browser',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/multistream',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/clip-livestream',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/stream-health',
+                'v2/cn/solutions/livepeer-studio/docs/livestream/optimize-latency',
               ],
             },
             {
               group: 'Video on demand',
               pages: [
-                'v2/cn/solutions/livepeer-studio/video-on-demand/overview',
-                'v2/cn/solutions/livepeer-studio/video-on-demand/upload-asset',
-                'v2/cn/solutions/livepeer-studio/video-on-demand/playback-asset',
-                'v2/cn/solutions/livepeer-studio/video-on-demand/encrypted-assets',
-                'v2/cn/solutions/livepeer-studio/video-on-demand/thumbnails-vod',
-                'v2/cn/solutions/livepeer-studio/video-on-demand/transcode-video',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/overview',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/upload-asset',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/playback-asset',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/encrypted-assets',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/thumbnails-vod',
+                'v2/cn/solutions/livepeer-studio/docs/video-on-demand/transcode-video',
               ],
             },
             {
               group: 'Access control & security',
               pages: [
-                'v2/cn/solutions/livepeer-studio/access-control/overview',
-                'v2/cn/solutions/livepeer-studio/access-control/webhooks',
-                'v2/cn/solutions/livepeer-studio/access-control/jwt',
+                'v2/cn/solutions/livepeer-studio/docs/access-control/overview',
+                'v2/cn/solutions/livepeer-studio/docs/access-control/webhooks',
+                'v2/cn/solutions/livepeer-studio/docs/access-control/jwt',
               ],
             },
             {
               group: 'Events & analytics',
               pages: [
-                'v2/cn/solutions/livepeer-studio/analytics/webhooks',
-                'v2/cn/solutions/livepeer-studio/analytics/listen-to-events',
-                'v2/cn/solutions/livepeer-studio/analytics/overview',
+                'v2/cn/solutions/livepeer-studio/docs/analytics/webhooks',
+                'v2/cn/solutions/livepeer-studio/docs/analytics/listen-to-events',
+                'v2/cn/solutions/livepeer-studio/docs/analytics/overview',
               ],
             },
             {
               group: 'Player & embed',
-              pages: ['v2/cn/solutions/livepeer-studio/player'],
+              pages: ['v2/cn/solutions/livepeer-studio/docs/player'],
             },
             {
               group: 'Reference',
               pages: [
-                'v2/cn/solutions/livepeer-studio/reference/api',
-                'v2/cn/solutions/livepeer-studio/reference/overview',
-                'v2/cn/solutions/livepeer-studio/reference/sdks',
-                'v2/cn/solutions/livepeer-studio/reference/managing-projects',
+                'v2/cn/solutions/livepeer-studio/docs/reference/api',
+                'v2/cn/solutions/livepeer-studio/docs/reference/overview',
+                'v2/cn/solutions/livepeer-studio/docs/reference/sdks',
+                'v2/cn/solutions/livepeer-studio/docs/reference/managing-projects',
               ],
             },
             {
@@ -1391,131 +1341,126 @@ const docsJsonCn = {
                 {
                   group: 'Assets',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/upload',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/upload-via-url',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/update',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/delete',
-                    'v2/cn/solutions/livepeer-studio/api-reference/assets/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/upload',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/upload-via-url',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/update',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/assets/get-all',
                   ],
                 },
                 {
                   group: 'Streams',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/create',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/get-all',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/update',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/terminate',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/create-clip',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/get-clip',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/add-multistream-target',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/delete-multistream-target',
-                    'v2/cn/solutions/livepeer-studio/api-reference/streams/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/update',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/terminate',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/create-clip',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/get-clip',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/add-multistream-target',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/delete-multistream-target',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/streams/delete',
                   ],
                 },
                 {
                   group: 'Multistream',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/create',
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/get-all',
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/update',
-                    'v2/cn/solutions/livepeer-studio/api-reference/multistream/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/update',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/multistream/delete',
                   ],
                 },
                 {
                   group: 'Playback',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/playback/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/playback/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/playback/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/playback/get',
                   ],
                 },
                 {
                   group: 'Sessions',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/sessions/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/sessions/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/sessions/get-all',
-                    'v2/cn/solutions/livepeer-studio/api-reference/sessions/get-clip',
-                    'v2/cn/solutions/livepeer-studio/api-reference/sessions/get-clip',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/sessions/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/sessions/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/sessions/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/sessions/get-clip',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/sessions/get-clip',
                   ],
                 },
                 {
                   group: 'Tasks',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/tasks/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/tasks/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/tasks/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/tasks/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/tasks/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/tasks/get-all',
                   ],
                 },
                 {
                   group: 'Transcode',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/transcode/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/transcode/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/transcode/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/transcode/create',
                   ],
                 },
                 {
                   group: 'Signing Keys',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/create',
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/get-all',
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/update',
-                    'v2/cn/solutions/livepeer-studio/api-reference/signing-keys/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/update',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/signing-keys/delete',
                   ],
                 },
                 {
                   group: 'Webhooks',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/create',
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/get-all',
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/update',
-                    'v2/cn/solutions/livepeer-studio/api-reference/webhooks/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/get-all',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/update',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/webhooks/delete',
                   ],
                 },
                 {
                   group: 'Rooms',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/create',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/get',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/update-user',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/delete',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/create-user',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/get-user',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/update-user',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/remove-user',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/start-egress',
-                    'v2/cn/solutions/livepeer-studio/api-reference/rooms/stop-egress',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/create',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/get',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/update-user',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/delete',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/create-user',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/get-user',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/update-user',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/remove-user',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/start-egress',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/rooms/stop-egress',
                   ],
                 },
                 {
                   group: 'Viewership',
                   pages: [
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/overview',
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/get-usage-metrics',
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/get-viewership-metrics',
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/get-creators-metrics',
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/get-public-total-views',
-                    'v2/cn/solutions/livepeer-studio/api-reference/viewership/get-realtime-viewership',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/overview',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/get-usage-metrics',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/get-viewership-metrics',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/get-creators-metrics',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/get-public-total-views',
+                    'v2/cn/solutions/livepeer-studio/docs/api-reference/viewership/get-realtime-viewership',
                   ],
                 },
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -1591,11 +1536,6 @@ const docsJsonCn = {
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -1838,11 +1778,6 @@ const docsJsonCn = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -1968,11 +1903,6 @@ const docsJsonCn = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2035,11 +1965,6 @@ const docsJsonCn = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2100,11 +2025,6 @@ const docsJsonCn = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2123,7 +2043,7 @@ const docsJsonCn = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/documentation-guide/documentation-overview'],
             },
             {
               group: 'Documentation Guide',
@@ -2154,9 +2074,9 @@ const docsJsonCn = {
               group: 'Livepeer Concepts',
               icon: 'graduation-cap',
               pages: [
-                'v2/cn/about/core-concepts',
+                'v2/cn/about/concepts/core-concepts',
                 'v2/cn/resources/livepeer-glossary',
-                'v2/cn/about/livepeer-network/actors',
+                'v2/cn/about/network/actors',
               ],
             },
             {
@@ -2219,7 +2139,7 @@ const docsJsonCn = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/help-center'],
         },
         {
           anchor: ' ',
@@ -2338,11 +2258,6 @@ const docsJsonEs = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2362,53 +2277,48 @@ const docsJsonEs = {
               icon: 'graduation-cap',
               pages: [
                 'v2/es/about/portal',
-                'v2/es/about/livepeer-overview',
-                'v2/es/about/core-concepts',
-                'v2/es/about/mental-model',
+                'v2/es/about/concepts/livepeer-overview',
+                'v2/es/about/concepts/core-concepts',
+                'v2/es/about/concepts/mental-model',
               ],
             },
             {
               group: 'Livepeer Protocol',
               icon: 'cube',
               pages: [
-                'v2/es/about/livepeer-protocol/overview',
-                'v2/es/about/livepeer-protocol/core-mechanisms',
-                'v2/es/about/livepeer-protocol/livepeer-token',
-                'v2/es/about/livepeer-protocol/governance-model',
-                'v2/es/about/livepeer-protocol/treasury',
-                'v2/es/about/livepeer-protocol/economics',
-                'v2/es/about/livepeer-protocol/technical-architecture',
+                'v2/es/about/protocol/overview',
+                'v2/es/about/protocol/core-mechanisms',
+                'v2/es/about/protocol/livepeer-token',
+                'v2/es/about/protocol/governance-model',
+                'v2/es/about/protocol/treasury',
+                'v2/es/about/protocol/economics',
+                'v2/es/about/protocol/technical-architecture',
               ],
             },
             {
               group: 'Livepeer Network',
               icon: 'circle-nodes',
               pages: [
-                'v2/es/about/livepeer-network/overview',
-                'v2/es/about/livepeer-network/actors',
-                'v2/es/about/livepeer-network/job-lifecycle',
-                'v2/es/about/livepeer-network/marketplace',
-                'v2/es/about/livepeer-network/technical-architecture',
-                'v2/es/about/livepeer-network/interfaces',
+                'v2/es/about/network/overview',
+                'v2/es/about/network/actors',
+                'v2/es/about/network/job-lifecycle',
+                'v2/es/about/network/marketplace',
+                'v2/es/about/network/technical-architecture',
+                'v2/es/about/network/interfaces',
               ],
             },
             {
               group: 'Resources',
               icon: 'books',
               pages: [
-                'v2/es/about/resources/livepeer-whitepaper',
+                'v2/es/about/resources/knowledge-hub/livepeer-whitepaper',
                 'v2/es/about/resources/livepeer-glossary',
-                'v2/es/about/resources/blockchain-contracts',
-                'v2/es/about/resources/technical-roadmap',
-                'v2/es/about/resources/gateways-vs-orchestrators',
+                'v2/es/about/protocol/blockchain-contracts',
+                'v2/es/about/resources/reference/technical-roadmap',
+                'v2/es/about/resources/knowledge-hub/gateways-vs-orchestrators',
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -2483,11 +2393,6 @@ const docsJsonEs = {
               ],
             },
           ],
-        },
-        {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
         },
         {
           anchor: ' ',
@@ -2722,11 +2627,6 @@ const docsJsonEs = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2852,11 +2752,6 @@ const docsJsonEs = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2919,11 +2814,6 @@ const docsJsonEs = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -2984,11 +2874,6 @@ const docsJsonEs = {
           ],
         },
         {
-          anchor: 'Resource HUB',
-          icon: 'books',
-          pages: ['v2/resources/redirect'],
-        },
-        {
           anchor: ' ',
           icon: 'horizontal-rule',
           pages: [' '],
@@ -3007,7 +2892,7 @@ const docsJsonEs = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/documentation-guide/documentation-overview'],
             },
             {
               group: 'Documentation Guide',
@@ -3038,9 +2923,9 @@ const docsJsonEs = {
               group: 'Livepeer Concepts',
               icon: 'graduation-cap',
               pages: [
-                'v2/es/about/core-concepts',
+                'v2/es/about/concepts/core-concepts',
                 'v2/es/resources/livepeer-glossary',
-                'v2/es/about/livepeer-network/actors',
+                'v2/es/about/network/actors',
               ],
             },
             {
@@ -3103,7 +2988,7 @@ const docsJsonEs = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/help-center'],
         },
         {
           anchor: ' ',
@@ -5245,14 +5130,13 @@ const gatewaysNew = {
           "group": "Gateway Setup Guide",
           "expanded": true,
           "pages": [
-            "v2/gateways/setup/run-a-gateway",
+            "v2/gateways/setup/guide",
             "v2/gateways/setup/transcoding",
             {
               "group": "Setup Checklist",
               "pages": [
                 "v2/gateways/setup/requirements/setup",
-                "v2/gateways/setup/requirements/on-chain setup/on-chain",
-                "v2/gateways/setup/requirements/on-chain setup/fund-gateway"
+                "v2/gateways/setup/requirements/on-chain-setup/on-chain"
               ]
             },
             {
@@ -5261,8 +5145,7 @@ const gatewaysNew = {
                 "v2/gateways/setup/install/install-overview",
                 "v2/gateways/setup/install/docker-install",
                 "v2/gateways/setup/install/linux-install",
-                "v2/gateways/setup/install/windows-install",
-                "v2/gateways/setup/install/community-projects"
+                "v2/gateways/setup/install/windows-install"
               ]
             },
             {
@@ -5271,8 +5154,7 @@ const gatewaysNew = {
                 "v2/gateways/setup/configure/configuration-overview",
                 "v2/gateways/setup/configure/video-configuration",
                 "v2/gateways/setup/configure/ai-configuration",
-                "v2/gateways/setup/configure/dual-configuration",
-                "v2/gateways/setup/configure/pricing-configuration"
+                "v2/gateways/setup/configure/dual-configuration"
               ]
             },
             {
@@ -5317,7 +5199,8 @@ const gatewaysNew = {
           "group": "Deployment Options",
           "pages": [
             "v2/gateways/guides/deployment-details/setup-options",
-            "v2/gateways/guides/deployment-details/setup-requirements"
+            "v2/gateways/guides/deployment-details/setup-requirements",
+            "v2/gateways/guides/deployment-details/gwid-single-click-deploy"
           ]
         },
         {
@@ -5335,7 +5218,9 @@ const gatewaysNew = {
           "pages": [
             "v2/gateways/guides/payments-and-pricing/payment-guide",
             "v2/gateways/guides/payments-and-pricing/funding-guide",
+            "v2/gateways/guides/payments-and-pricing/fund-gateway",
             "v2/gateways/guides/payments-and-pricing/pricing-strategy",
+            "v2/gateways/guides/payments-and-pricing/pricing-configuration",
             "v2/gateways/guides/payments-and-pricing/remote-signers",
             "v2/gateways/guides/payments-and-pricing/clearinghouse-guide"
           ]
@@ -5382,74 +5267,86 @@ const gatewaysNew = {
       "group": "Resources",
       "icon": "code",
       "pages": [
-        "v2/gateways/resources/faq",
-        "v2/gateways/resources/glossary",
+        "v2/gateways/resources/reference/faq",
+        "v2/gateways/resources/reference/glossary",
+        "v2/gateways/resources/compendium/glossary",
         {
-          "group": "Technical Reference",
+          "group": "Reference",
           "pages": [
-            "v2/gateways/resources/technical/technical-architecture",
-            "v2/gateways/resources/technical/configuration-flags",
-            "v2/gateways/resources/technical/contract-addresses",
-            "v2/gateways/resources/technical/cli-commands",
             {
-              "group": "AI API",
+              "group": "Technical Reference",
               "pages": [
-                "v2/gateways/resources/technical/api-reference/AI-API/ai",
-                "v2/gateways/resources/technical/api-reference/AI-API/text-to-image",
-                "v2/gateways/resources/technical/api-reference/AI-API/image-to-image",
-                "v2/gateways/resources/technical/api-reference/AI-API/image-to-video",
-                "v2/gateways/resources/technical/api-reference/AI-API/upscale",
-                "v2/gateways/resources/technical/api-reference/AI-API/audio-to-text",
-                "v2/gateways/resources/technical/api-reference/AI-API/segment-anything-2",
-                "v2/gateways/resources/technical/api-reference/AI-API/llm",
-                "v2/gateways/resources/technical/api-reference/AI-API/image-to-text",
-                "v2/gateways/resources/technical/api-reference/AI-API/live-video-to-video",
-                "v2/gateways/resources/technical/api-reference/AI-API/text-to-speech",
-                "v2/gateways/resources/technical/api-reference/AI-API/health",
-                "v2/gateways/resources/technical/api-reference/AI-API/hardware-info",
-                "v2/gateways/resources/technical/api-reference/AI-API/hardware-stats"
+                "v2/gateways/resources/reference/technical/technical-architecture",
+                "v2/gateways/resources/reference/technical/configuration-flags",
+                "v2/gateways/resources/reference/technical/contract-addresses",
+                "v2/gateways/resources/reference/technical/cli-commands",
+                {
+                  "group": "AI API",
+                  "pages": [
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/ai",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/text-to-image",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/image-to-image",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/image-to-video",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/upscale",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/audio-to-text",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/segment-anything-2",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/llm",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/image-to-text",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/live-video-to-video",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/text-to-speech",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/health",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/hardware-info",
+                    "v2/gateways/resources/reference/technical/api-reference/AI-API/hardware-stats"
+                  ]
+                },
+                {
+                  "group": "CLI HTTP API",
+                  "pages": [
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/cli-http-api",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/unbond",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/rebond",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/activateorchestrator",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/setbroadcastconfig",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/setmaxpriceforcapability",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/reward",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/transfertokens",
+                    "v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/signmessage"
+                  ]
+                }
               ]
             },
             {
-              "group": "CLI HTTP API",
+              "group": "go-livepeer Reference",
               "pages": [
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/cli-http-api",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/unbond",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/rebond",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/activateorchestrator",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/setbroadcastconfig",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/setmaxpriceforcapability",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/reward",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/transfertokens",
-                "v2/gateways/resources/technical/api-reference/CLI-HTTP/signmessage"
+                "v2/gateways/resources/reference/go-livepeer/bandwidth-requirements",
+                "v2/gateways/resources/reference/go-livepeer/hardware-requirements",
+                "v2/gateways/resources/reference/go-livepeer/gpu-support",
+                "v2/gateways/resources/reference/go-livepeer/cli-reference",
+                "v2/gateways/resources/reference/go-livepeer/prometheus-metrics"
               ]
             },
             {
-              "group": "Exchanges & RPCs",
+              "group": "Compendium",
               "pages": [
-                "v2/gateways/resources/technical/livepeer-exchanges",
-                "v2/gateways/resources/technical/arbitrum-exchanges",
-                "v2/gateways/resources/technical/arbitrum-rpc"
+                "v2/gateways/resources/compendium/glossary",
+                {
+                  "group": "Exchanges & RPCs",
+                  "pages": [
+                    "v2/gateways/resources/compendium/livepeer-exchanges",
+                    "v2/gateways/resources/compendium/arbitrum-exchanges",
+                    "v2/gateways/resources/compendium/arbitrum-rpc"
+                  ]
+                }
+              ]
+            },
+            {
+              "group": "Knowledge Hub",
+              "pages": [
+                "v2/gateways/resources/knowledge-hub/guides",
+                "v2/gateways/resources/knowledge-hub/resources",
+                "v2/gateways/resources/knowledge-hub/help"
               ]
             }
-          ]
-        },
-        {
-          "group": "go-livepeer Reference",
-          "pages": [
-            "v2/gateways/resources/go-livepeer/bandwidth-requirements",
-            "v2/gateways/resources/go-livepeer/hardware-requirements",
-            "v2/gateways/resources/go-livepeer/gpu-support",
-            "v2/gateways/resources/go-livepeer/cli-reference",
-            "v2/gateways/resources/go-livepeer/prometheus-metrics"
-          ]
-        },
-        {
-          "group": "More Resources",
-          "pages": [
-            "v2/gateways/resources/knowledge-base/guides",
-            "v2/gateways/resources/knowledge-base/resources",
-            "v2/gateways/resources/knowledge-base/help"
           ]
         }
       ]
@@ -5489,13 +5386,13 @@ const orchNew = {
       icon: 'gear',
       pages: [
         'v2/orchestrators/setup/guide',
-        'v2/orchestrators/setup/rcs-requirements',
-        'v2/orchestrators/setup/rs-install',
+        'v2/orchestrators/setup/prepare',
+        'v2/orchestrators/setup/install',
         'v2/orchestrators/setup/r-configure',
         'v2/orchestrators/setup/sc-connect',
         'v2/orchestrators/setup/activate',
-        'v2/orchestrators/setup/test',
-        'v2/orchestrators/setup/r-monitor',
+        'v2/orchestrators/setup/verify',
+        'v2/orchestrators/setup/monitor',
       ],
     },
     {

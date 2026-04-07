@@ -1,0 +1,174 @@
+---
+title: 'Tutorial: Delegate Your LPT'
+sidebarTitle: Delegate Your LPT
+description: >-
+  A step-by-step tutorial that ends with a confirmed, on-chain LPT delegation — connect your wallet, sign two transactions, and verify your position.
+keywords:
+  - livepeer
+  - delegate LPT tutorial
+  - how to stake LPT
+  - bonding
+  - arbitrum
+  - livepeer explorer
+  - getting started
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: delegator
+purpose: start
+status: current
+lastVerified: 2026-04-06
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+This tutorial walks you through a complete first delegation from a connected wallet to a confirmed on-chain bond. By the end you will have LPT actively staked to an orchestrator and know exactly what to do next.
+
+<Info>
+  This tutorial is adapted from the delegation guide in the Livepeer docs repository. The step structure mirrors the [Choose an Orchestrator](/v2/delegators/delegation/choose-an-orchestrator) guide — read that first if you have not yet selected an orchestrator.
+</Info>
+
+---
+
+## Before you start
+
+<BorderedBox variant="accent" padding="16px">
+
+**Checklist before opening the Explorer:**
+
+- [ ] LPT is in a self-custody wallet on **Arbitrum One** (not Ethereum mainnet, not a centralised exchange)
+- [ ] You have a small ETH balance on Arbitrum One — under $0.10 covers both transactions
+- [ ] You have a compatible wallet connected: MetaMask, Coinbase Wallet, or any WalletConnect-compatible wallet
+- [ ] You have identified the orchestrator you want to delegate to (see [Choose an Orchestrator](/v2/delegators/delegation/choose-an-orchestrator))
+
+If your LPT is on Ethereum mainnet or a CEX, start at [Bridge LPT to Arbitrum](/v2/delegators/delegation/bridge-lpt-to-arbitrum).
+
+</BorderedBox>
+
+---
+
+## The delegation transaction
+
+Two transactions are required: an ERC-20 approval and the bond itself. Both cost a few cents on Arbitrum One.
+
+<StyledSteps>
+
+<StyledStep title="Go to explorer.livepeer.org and connect your wallet">
+  Navigate to [explorer.livepeer.org](https://explorer.livepeer.org). Click **Connect Wallet** in the top right and select your wallet provider.
+
+  After connecting, your wallet address appears in the navigation bar. Your LPT balance on Arbitrum One is visible from your account page.
+</StyledStep>
+
+<StyledStep title="Navigate to your chosen orchestrator's profile">
+  Use the orchestrators list to find the operator you selected during evaluation. Click their address or name to open their profile page.
+
+  Before proceeding, confirm:
+  - Their status shows as **Active** (they are in the current round's active set)
+  - Their reward call history is consistent — most rounds called
+
+  If their status shows **Inactive**, do not delegate to them yet. Return to [Choose an Orchestrator](/v2/delegators/delegation/choose-an-orchestrator) and select a different operator.
+</StyledStep>
+
+<StyledStep title="Click Delegate and enter your amount">
+  On the orchestrator's profile page, click the **Delegate** button. An input appears for the amount of LPT you want to bond.
+
+  You do not have to delegate your entire balance. Starting with a partial amount is reasonable — you can add more later by repeating the bond process from the same wallet without unbonding first.
+
+  <Tip>
+    Unbonded LPT earns nothing and is diluted each round as inflation goes to active stakers. Any amount you leave unbonded loses proportional ownership over time.
+  </Tip>
+</StyledStep>
+
+<StyledStep title="Sign the Approve transaction">
+  The first transaction is an ERC-20 approval. It authorises the BondingManager contract to transfer the LPT amount you specified. No tokens move at this step.
+
+  Your wallet displays the approval request. Review the spender address — it is the BondingManager contract. Confirm and sign.
+
+  **Gas cost:** a few cents on Arbitrum One.
+
+  Wait for the transaction to confirm (visible as a success notification in your wallet and in the Explorer) before proceeding to the next step.
+</StyledStep>
+
+<StyledStep title="Sign the Bond transaction">
+  The second transaction executes the delegation. Your LPT transfers into the BondingManager contract and your stake is attributed to the orchestrator you chose.
+
+  Confirm and sign in your wallet.
+
+  **Gas cost:** a few cents on Arbitrum One.
+
+  Wait for confirmation. The Explorer page refreshes to show your updated position once the transaction is included in a block.
+</StyledStep>
+
+<StyledStep title="Verify your delegation is confirmed">
+  After the Bond transaction confirms, navigate to your account page in the Explorer (click your connected wallet address).
+
+  You should see:
+  - **Bonded balance** — the LPT amount you delegated
+  - **Orchestrator** — the address your stake is attributed to
+  - **Pending rewards** — initially zero; this increases each round your orchestrator calls `Reward()`
+
+  For on-chain verification: go to [arbiscan.io](https://arbiscan.io), enter your wallet address, and check the transaction history. The Bond transaction appears as a call to the BondingManager contract.
+</StyledStep>
+
+</StyledSteps>
+
+---
+
+## What happens next
+
+Rewards accrue automatically each round when your orchestrator calls `Reward()`. You do not need to take any further action for rewards to accumulate — but you need to claim them to compound or withdraw.
+
+<Warning>
+  **Claim timing matters — read this before you claim anything.**
+
+  When you call `claimEarnings`, the contract records your `lastClaimRound` as the current round. If your orchestrator has not yet called `Reward()` for that round when you claim, you forfeit that round's rewards and fees entirely. The contract does not retroactively credit you.
+
+  **Claim at the end of a round, after your orchestrator has already called `Reward()` — not at the beginning of a round.**
+
+  The Livepeer Explorer is adding a warning to surface this timing risk directly in the UI. Check the Explorer before claiming until that warning is deployed.
+</Warning>
+
+Your next steps are in [Manage Your Delegation](/v2/delegators/delegation/manage-your-delegation): how to claim earnings, compound your position, switch orchestrators without unbonding, and exit when you're ready.
+
+---
+
+## Frequently asked questions
+
+<AccordionGroup>
+
+<Accordion title="I signed both transactions but see no rewards — is something wrong?">
+  Rewards begin accruing from the next round after you delegated, when your orchestrator calls `Reward()`. If you delegated mid-round, wait until the following round to see your first accrual. If two or three rounds pass with no reward growth, check your orchestrator's reward call history in the Explorer.
+</Accordion>
+
+<Accordion title="Can I undo this immediately if I change my mind?">
+  You cannot withdraw immediately. Exiting delegation requires initiating unbonding, then waiting for the thawing period before tokens become withdrawable. You can redelegate to a different orchestrator at any time with no waiting period — only full withdrawal requires the unbonding process.
+</Accordion>
+
+<Accordion title="Can I add more LPT to this delegation later?">
+  Yes. Click Delegate on the same orchestrator's profile page and enter an additional amount. Your new LPT is added to your existing bonded balance attributed to the same orchestrator. The Approve and Bond transactions are required again for each addition.
+</Accordion>
+
+<Accordion title="I only have ETH on Ethereum mainnet, not Arbitrum — what do I do?">
+  Bridge a small amount of ETH to Arbitrum using the [Arbitrum Bridge](https://bridge.arbitrum.io). Under $1 of ETH is more than enough for delegation gas costs. LPT must also be on Arbitrum — see [Bridge LPT to Arbitrum](/v2/delegators/delegation/bridge-lpt-to-arbitrum).
+</Accordion>
+
+<Accordion title="The Explorer shows my delegation but my orchestrator is now inactive — what do I do?">
+  Redelegate to an active orchestrator immediately. From the new orchestrator's profile page, click Delegate and sign the Bond transaction. This reassigns your stake attribution without going through the unbonding period. Your bonded balance stays in the contract — only the orchestrator it points to changes.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claim earnings, compound your position, switch orchestrators, and exit.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    How rewards accumulate and what determines your returns.
+  </Card>
+</CardGroup>

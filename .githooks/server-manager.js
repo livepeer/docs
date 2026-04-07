@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            server-manager
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             .githooks
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
- * @pipeline          indirect — legacy browser-validation module imported by .githooks/verify-browser.js
- * @usage             node .githooks/server-manager.js [flags]
+ * @script      server-manager
+ * @type        dispatch
+ * @concern     governance
+ * @niche       hooks
+ * @purpose     tooling:dev-tools
+ * @description Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
+ * @mode        execute
+ * @pipeline    manual — legacy browser-validation module imported by .githooks/verify-browser.js
+ * @scope       .githooks
+ * @usage       node .githooks/server-manager.js [flags]
+ * @policy      E-C6, F-C1
  */
 /**
  * Server management utility for browser tests
@@ -42,11 +44,53 @@ const BASE_URL = process.env.MINT_BASE_URL || `http://localhost:${TEST_PORT}`;
 const PORT = new URL(BASE_URL).port || TEST_PORT;
 const PID_FILE = path.join(os.tmpdir(), `mint-dev-test-${REPO_KEY}.pid`);
 const LOG_FILE = path.join(os.tmpdir(), `mint-dev-test-${REPO_KEY}.log`);
+const SERVER_START_MAX_ATTEMPTS = Number.parseInt(process.env.MINT_SERVER_MAX_ATTEMPTS || '150', 10);
+const SERVER_START_INTERVAL_MS = Number.parseInt(process.env.MINT_SERVER_START_INTERVAL_MS || '2000', 10);
+const SERVER_PROBE_TIMEOUT_MS = Number.parseInt(process.env.MINT_SERVER_PROBE_TIMEOUT_MS || '30000', 10);
 
 let serverProcess = null;
 let serverStartedByUs = false;
 let actualServerUrl = BASE_URL; // Will be updated if port is detected from log
 let detectedServerPort = null; // Port where server was actually found
+
+function signalManagedProcess(pid, signal) {
+  if (!Number.isInteger(pid) || pid <= 0) {
+    return false;
+  }
+
+  if (process.platform === 'win32') {
+    try {
+      process.kill(pid, signal);
+      return true;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  try {
+    process.kill(-pid, signal);
+    return true;
+  } catch (_groupError) {
+    try {
+      process.kill(pid, signal);
+      return true;
+    } catch (_pidError) {
+      return false;
+    }
+  }
+}
+
+function reapStaleManagedProcessGroup(pid) {
+  if (!Number.isInteger(pid) || pid <= 0 || process.platform === 'win32') {
+    return;
+  }
+
+  try {
+    process.kill(-pid, 'SIGKILL');
+  } catch (_error) {
+    // Ignore already-dead or non-existent stale groups.
+  }
+}
 
 /**
  * Check if server is already running for this worktree.
@@ -138,14 +182,17 @@ async function isServerRunningOnPort(port, probePath) {
   const pathSuffix = normalizeProbePath(probePath);
   const url = `http://localhost:${port}${pathSuffix}`;
   return new Promise((resolve) => {
-    const req = http.get(url, { timeout: 2000 }, (res) => {
+    const req = http.get(url, { timeout: SERVER_PROBE_TIMEOUT_MS }, (res) => {
       if (!Number.isInteger(res.statusCode)) {
         resolve(false);
         return;
       }
       if (pathSuffix) {
-        // Treat 404 on probe paths as a mismatch (not the expected server).
-        resolve(res.statusCode !== 404);
+        // A probe path is expected to represent the route the caller intends to
+        // validate next. Treat 404 and 5xx responses as not-ready so browser
+        // harnesses do not attach to a listening server that still cannot serve
+        // the target page.
+        resolve(res.statusCode !== 404 && res.statusCode < 500);
         return;
       }
       // Any HTTP response means the server is up (Mint may return redirects during startup).
@@ -217,6 +264,7 @@ function startServer() {
         serverStartedByUs = false;
         return existingPid;
       } catch (e) {
+        reapStaleManagedProcessGroup(existingPid);
         // Process doesn't exist, remove stale PID file
         fs.unlinkSync(PID_FILE);
       }
@@ -225,29 +273,58 @@ function startServer() {
     }
   }
 
-  console.log(`🚀 Starting mint dev server on port ${PORT}...`);
+  const scopePrefixes = String(process.env.MINT_SCOPE_PREFIXES || '').trim();
+  const scopeTabs = String(process.env.MINT_SCOPE_TABS || '').trim();
+  const scopedLaunch = Boolean(scopeTabs || scopePrefixes);
+  const command = scopedLaunch ? 'bash' : 'mint';
+  const args = scopedLaunch
+    ? [
+        path.join(REPO_ROOT, 'tools', 'lpd'),
+        'dev',
+        '--scoped',
+        ...(scopeTabs ? ['--scope-tab', scopeTabs] : ['--scope-prefix', scopePrefixes]),
+        '--skip-external-fetch',
+        '--disable-openapi',
+        '--',
+        '--port',
+        PORT.toString(),
+        '--no-open',
+      ]
+    : ['dev', '--port', PORT.toString(), '--no-open'];
+
+  console.log(`🚀 Starting ${scopedLaunch ? 'scoped lpd dev' : 'mint dev'} server on port ${PORT}...`);
+  if (scopedLaunch) {
+    if (scopeTabs) {
+      console.log(`   Scope tabs: ${scopeTabs}`);
+    } else {
+      console.log(`   Scope prefixes: ${scopePrefixes}`);
+    }
+  }
+
+  try {
+    fs.writeFileSync(LOG_FILE, '');
+  } catch (_error) {
+    // Ignore log reset failures and continue with append-only process output.
+  }
   
-  // Start mint dev in background with specific port via environment variable
-  // Use 'pipe' instead of WriteStream directly to avoid stdio issues
-  serverProcess = spawn('mint', ['dev', '--port', PORT.toString(), '--no-open'], {
-    stdio: ['ignore', 'pipe', 'pipe'],
+  // Start dev server in background with specific port via environment variable.
+  // Write directly to log file descriptor so the child survives parent exit.
+  // Previous approach used stdio: 'pipe' + .pipe(logStream), but pipes break
+  // when the parent process exits (SIGPIPE kills the child). File descriptors
+  // are inherited by the child and remain open independently.
+  const logFd = fs.openSync(LOG_FILE, 'a');
+  serverProcess = spawn(command, args, {
+    cwd: REPO_ROOT,
+    stdio: ['ignore', logFd, logFd],
     detached: true,
-    shell: true,
+    shell: !scopedLaunch,
     env: {
       ...process.env,
       PORT: PORT.toString()
     }
   });
-  
-  // Redirect output to log file
-  const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
-  if (serverProcess.stdout) {
-    serverProcess.stdout.pipe(logStream);
-  }
-  if (serverProcess.stderr) {
-    serverProcess.stderr.pipe(logStream);
-  }
-  
+  fs.closeSync(logFd); // Parent closes its copy; child keeps its inherited copy
+
   serverProcess.unref(); // Allow parent process to exit independently
   
   // Save PID
@@ -264,7 +341,8 @@ function startServer() {
  * Stop mint dev server (if we started it)
  */
 function stopServer() {
-  if (!serverStartedByUs) {
+  const hasManagedPid = fs.existsSync(PID_FILE);
+  if (!serverStartedByUs && !hasManagedPid) {
     return; // Don't kill server we didn't start
   }
   
@@ -278,12 +356,12 @@ function stopServer() {
         if (process.platform === 'win32') {
           execSync(`taskkill /PID ${pid} /T /F`, { stdio: 'ignore' });
         } else {
-          process.kill(pid, 'SIGTERM');
+          signalManagedProcess(pid, 'SIGTERM');
           // Wait a bit, then force kill if still running
           setTimeout(() => {
             try {
-              process.kill(pid, 'SIGKILL');
-            } catch (e) {
+              signalManagedProcess(pid, 'SIGKILL');
+            } catch (_error) {
               // Process already dead
             }
           }, 2000);
@@ -324,11 +402,12 @@ async function ensureServerRunning(options = {}) {
   startServer();
   
   // Wait for it to be ready (checks common ports 3000-3010, not just 3145)
-  console.log(`⏳ Waiting for server to be ready (max 2 minutes)...`);
-  const ready = await waitForServer(60, 2000, { probePath, allowCommonPorts });
+  const maxWaitSeconds = Math.round((SERVER_START_MAX_ATTEMPTS * SERVER_START_INTERVAL_MS) / 1000);
+  console.log(`⏳ Waiting for server to be ready (max ${maxWaitSeconds} seconds)...`);
+  const ready = await waitForServer(SERVER_START_MAX_ATTEMPTS, SERVER_START_INTERVAL_MS, { probePath, allowCommonPorts });
   
   if (!ready) {
-    console.error(`❌ Server failed to start within 2 minutes`);
+    console.error(`❌ Server failed to start within ${maxWaitSeconds} seconds`);
     console.error(`   Check logs: ${LOG_FILE}`);
     stopServer();
     throw new Error('Server failed to start');

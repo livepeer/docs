@@ -1,0 +1,329 @@
+# GitHub Actions Governance: Decisions Log
+
+> Thread: GitHub Actions Governance
+> Updated: 2026-03-31
+> Rule: Every decision recorded at the time it is made. No batch updates.
+
+---
+
+## Decisions
+
+### D-ACT-01: Issue/PR interfaces is a 7th type
+
+**Date:** 2026-03-31
+**Status:** Confirmed (renamed from `lifecycle` to `interface` on 2026-03-31)
+**Decision:** The 5 issue/PR management workflows become their own type `interface`, not a subtype of `automation`.
+**Workflows affected:** issue-auto-label, docs-v2-issue-indexer, discord-issue-intake, close-linked-issues-docs-v2, auto-assign-docs-reviewers
+**Reasoning:** These are event-reactive (fired by issue/PR events or repository_dispatch), not pipeline-shaped (fetch, transform, commit). They do not fit the automation pattern. `interface` describes what they are: they interface between external events (issues, PRs, Discord) and repo actions (labelling, indexing, assignment).
+**Impact:** Type taxonomy expands from 6 to 7 types. Audit classifications updated.
+
+### D-ACT-02: P5-auto is a distinct pipeline tag
+
+**Date:** 2026-03-31
+**Status:** Confirmed
+**Decision:** `P5-auto` is a separate pipeline tag from `P5`. P5 = scheduled, read-only (monitors and reports). P5-auto = scheduled, read-write (fetches external data and commits to repo).
+**Workflows affected (P5-auto):** update-discord-data, update-forum-data, update-ghost-blog-data, update-github-data, update-rss-blog-data, update-youtube-data, update-contract-addresses, update-changelogs, update-livepeer-release, project-showcase-sync, sync-large-assets, sdk_generation
+**Workflows affected (P5):** content-health, freshness-monitor, v2-external-link-audit, openapi-reference-validation
+**Reasoning:** P5-auto workflows need concurrency control, bot identity config, commit message conventions, and error-on-push handling. P5 workflows need none of that. Different operational requirements = different tag.
+**Impact:** Pipeline tag taxonomy has 8 tags. Framework standards section specifies different error handling and operational requirements per tag.
+
+### D-ACT-03: Data-fetch consolidation approved
+
+**Date:** 2026-03-31
+**Status:** Confirmed
+**Decision:** The 7 identical social data-fetch workflows will be consolidated into a single `update-data-feeds.yml` using a matrix strategy. Separate workflows stay separate where complexity justifies it.
+**Merge targets (7 into 1):** update-discord-data, update-forum-data, update-ghost-blog-data, update-github-data, update-rss-blog-data, update-youtube-data, update-blog-data (broken, remove)
+**Stay separate:** update-contract-addresses (gold standard, complex verification), update-changelogs (LLM integration), update-livepeer-release (inline sed, no script), project-showcase-sync (multi-service), sync-large-assets (git LFS), sdk_generation (Speakeasy)
+**Reasoning:** All 7 social data workflows have identical structure (checkout, setup node, run script, diff check, commit, push). 3 have missing permissions bugs. Consolidation fixes all 7 at once and reduces maintenance surface 7x.
+**Impact:** Phase 6 execution. Not blocking current documentation work. Consolidation happens after governance framework and library are in place.
+
+---
+
+## Framework Snapshots
+
+### Pipeline Tags (confirmed)
+
+| Tag | When | What | Authority | Count |
+|---|---|---|---|---|
+| **P2** | PR (required check) | Blocks merge | Hard gate | 2 |
+| **P3** | PR (non-required) | Reports, no block | Soft gate | 8 |
+| **P4** | Push to deploy branch | Post-merge generators | Auto-commit | 8 |
+| **P5** | Schedule (read-only) | Monitor and report | Advisory | 4 |
+| **P5-auto** | Schedule + auto-commit | Fetch data, commit | Writes on schedule | 10 |
+| **P6** | Schedule + auto-fix | Self-heal broken state | Writes + may PR | 1 |
+| **manual** | workflow_dispatch only | Human-triggered | User decides | 4 |
+| **event-driven** | repository_dispatch / issues | React to external events | Event-specific | 3 |
+
+**Status:** All confirmed (D-ACT-02).
+
+### Type Taxonomy (7 types)
+
+| Type | Purpose | Count |
+|---|---|---|
+| `integrator` | Pulls external data into the repo | 12 |
+| `generator` | Produces files from internal repo data | 7 |
+| `validator` | Enforce rules with pass/fail on PR | 10 |
+| `audit` | Read-only scheduled monitoring | 3 |
+| `remediator` | Auto-fix with optional commit | 3 |
+| `dispatch` | Orchestrate multiple scripts/workflows | 1 |
+| `interface` | Issue/PR event handling and triage | 5 |
+
+**Status:** Confirmed (D-ACT-01 added interface, D-ACT-07 renamed automation to integrator).
+
+### Concern Taxonomy (7 concerns, confirmed D-ACT-05)
+
+| Concern | What it covers | Count |
+|---|---|---|
+| `integrations` | External data feeds, APIs, structured data pipelines | 11 |
+| `copy` | Written text, data standards, spelling, grammar | 2 |
+| `maintenance` | Indexes, catalogs, documentation, registries, changelogs | 6 |
+| `health` | Site integrity, links, rendering, freshness, assets | 8 |
+| `discoverability` | SEO, AEO, AI indexing, translation | 7 |
+| `governance` | System rules, compliance, issue/PR management | 8 |
+| `brand` | Style, formatting, page structure, voice | 1 |
+
+**Status:** Confirmed.
+
+---
+
+### D-ACT-04: Workflow naming convention with function verb enum
+
+**Date:** 2026-03-31
+**Status:** Confirmed
+**Decision:** All workflow files follow the pattern `type-concern-function-name.yml`. Function verbs are a closed enum of 11 verbs.
+
+**Naming pattern:** `type-concern-function-name.yml`
+- type: `automation`, `audit`, `dispatch`, `generator`, `remediator`, `validator`, `interface`
+- concern: `integrations`, `copy`, `maintenance`, `health`, `discoverability`, `governance` (+ `brand` reserved)
+- function: one of the 11 verbs below
+- name: descriptive slug
+
+**Function verb enum (11 verbs):**
+
+| Verb | Absorbs | Used by types |
+|---|---|---|
+| `update` | `sync` | automation |
+| `generate` | (none) | generator |
+| `check` | `verify`, `test` | validator |
+| `scan` | `audit`, `monitor` | audit |
+| `repair` | `fix`, `refresh`, `homogenise` | remediator |
+| `dispatch` | (none) | dispatch |
+| `label` | (none) | interface |
+| `index` | (none) | interface |
+| `intake` | (none) | interface |
+| `close` | (none) | interface |
+| `assign` | (none) | interface |
+
+**Reasoning:** GitHub Actions requires all workflows flat in `.github/workflows/`. Subfolder grouping is impossible. The naming prefix replaces folder structure for discoverability. The verb enum was consolidated from 17 to 11 by merging synonymous verbs (sync into update, verify/test into check, audit/monitor into scan, fix/refresh/homogenise into repair). No industry standard exists for CI/CD verb taxonomies so this is domain-specific to documentation infrastructure.
+**Impact:** All 41 active workflows will be renamed in Phase 6. The naming convention applies immediately to any new workflows.
+
+### D-ACT-05: Concern taxonomy expanded from 4 to 7
+
+**Date:** 2026-03-31
+**Status:** Confirmed
+**Decision:** The original 4 concerns (`content`, `components`, `governance`, `ai`) are replaced with 7 concerns that name the part of the system each workflow operates on.
+
+**Concern enum (7 values):**
+
+| Concern | What it covers | Replaces | Count |
+|---|---|---|---|
+| `integrations` | External data feeds, APIs, structured data pipelines | content (data-fetch subset) | 11 |
+| `copy` | Written text, data standards, spelling, grammar | content (copy subset) | 2 |
+| `maintenance` | Indexes, catalogs, documentation, registries, changelogs | content (catalogs subset) + components | 6 |
+| `health` | Site integrity, links, rendering, freshness, assets | content (quality subset) | 8 |
+| `discoverability` | SEO, AEO, AI indexing, translation | ai + content (SEO subset) | 7 |
+| `governance` | System rules, compliance, issue/PR management | governance (unchanged) | 8 |
+
+**Reserved:** `brand` (style, formatting, page structure, voice). No workflows currently, but a real concern that may get workflows later.
+
+**Reasoning:** The original `content` concern carried 26 of 45 workflows, making it useless for grouping. The concern should name what part of the system the workflow operates on, not what kind of output it produces. `ai` and `components` were absorbed into concerns that describe function: AI companions/sitemap/LLM files are about discoverability; component registry is maintenance.
+**Impact:** D-ACT-04 naming convention updated (concern segment uses new 7-value enum). All workflow renames in Phase 6 use the new concerns. Framework document updated.
+
+### D-ACT-06: Migrate .github/scripts/ into operations/scripts/ governance
+
+**Date:** 2026-04-01
+**Status:** Confirmed
+**Decision:** The 10 scripts in `.github/scripts/` will be migrated to `operations/scripts/` under the existing script governance framework (6-type, 4-concern, 11-tag JSDoc). Workflow YAML files become pure dispatchers (trigger + environment + orchestration). Scripts become independently runnable and governed.
+**Scope:** 10 scripts currently in `.github/scripts/`. The 6 workflows with inline scripts (80-400 lines) are extraction candidates in the same pass.
+**Execution:** After actions governance Phases 3-5 complete. Before Phase 6 workflow renames, a companion "Scripts Governance Audit" thread runs the same flow (audit, framework co-design, library pages) for `operations/scripts/`. The script migration merges both threads.
+**Reasoning:** Scripts can live anywhere; the workflow just calls `node path/to/script.js`. The only scripts outside the governed `operations/scripts/` tree are these 10 in `.github/scripts/`. Moving them under governance gives: independent runnability, JSDoc tag coverage, catalog generation, reuse by other tools, and clean separation of when/where (workflow) from what/how (script).
+**Impact:** Phase 6 scope expands. New thread: "Scripts Governance Audit" to be opened after this thread's Phase 5.
+
+### D-ACT-07: Rename automation to integrator
+
+**Date:** 2026-04-01
+**Status:** Confirmed
+**Decision:** `automation` becomes `integrator` (pulls external data into the repo). `generator` stays as is (aligned to scripts framework).
+
+**Type enum (7 values, updated):**
+
+| Type | What it does | Change |
+|---|---|---|
+| `integrator` | Pulls external data into the repo | renamed from `automation` |
+| `generator` | Produces files from internal repo data | unchanged |
+| `validator` | Checks rules, returns pass/fail | unchanged |
+| `audit` | Scheduled read-only observation | unchanged |
+| `remediator` | Fixes broken state | unchanged |
+| `interface` | Reacts to issue/PR/external events | unchanged |
+| `dispatch` | Orchestrates child workflows | unchanged |
+
+**Reasoning:** `automation` was vague and described every workflow equally. The actual distinction is source: external API vs internal repo. `integrator` names that. With `integrator` as the type, the concern carries the domain (maintenance, health, etc.) instead of redundantly saying `integrations`.
+**Impact:** D-ACT-04 naming convention updated. Integrator workflows use domain concerns since their type already signals external source. All prior references to `automation` in framework docs need updating.
+
+### D-ACT-08: Workflows are dispatchers, type reflects the script
+
+**Date:** 2026-04-01
+**Status:** Confirmed
+**Decision:** Architecturally, all workflow YAML files are dispatchers. They handle when, where, permissions, and orchestration. The typed work (integrating, generating, validating, etc.) lives in the script. The type prefix in the workflow filename reflects the script's type, not the workflow's role.
+
+**Implications:**
+- Naming convention unchanged: `type-concern-verb-name.yml`. The type prefix stays for visual grouping in the flat `.github/workflows/` folder
+- D-ACT-06 (inline script extraction) is now architecturally necessary, not just cleanup. Workflows with inline scripts (6 workflows, 80-400 lines) violate this separation
+- The action-library documents the full pipeline (workflow + script), but the type classification comes from what the script does
+- The consolidated data-feed workflow (D-ACT-03) is the cleanest expression of this: one dispatcher YAML, matrix of integrator scripts
+
+**Reasoning:** Every workflow does the same thing: checkout, setup, run script, handle output. The only difference is what the script does. Making this separation explicit means workflows become thin, standardised shells and the interesting logic lives in governed, independently runnable scripts.
+**Impact:** Strengthens D-ACT-06. No changes to naming convention or type enum.
+
+---
+
+---
+
+## Type-by-Type Review: Confirmed Names
+
+### Integrators (12 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1-6 | update-discord-data, update-forum-data, update-ghost-blog-data, update-github-data, update-rss-blog-data, update-youtube-data | `integrator-copy-update-social-feeds.yml` (single matrix) | copy | D-ACT-03: merge 7 into 1. 3 have missing permissions bugs. github-data has zero consumers (flag for wiring up) |
+| 7 | update-blog-data.yml | **DELETE** | - | Broken: hardcoded API key placeholder |
+| 8 | update-contract-addresses.yml | **Deferred** | - | Pipeline changes in progress. Do not rename yet |
+| 9 | update-changelogs.yml | `integrator-copy-update-changelogs.yml` | copy | LLM integration, no concurrency control |
+| 10 | update-livepeer-release.yml | `integrator-maintenance-update-release-version.yml` | maintenance | Inline script (60 lines), extraction candidate. GNU grep incompatible |
+| 11 | project-showcase-sync.yml | `integrator-copy-update-showcase-submissions.yml` | copy | Disable for now, not working. Flag for follow-up |
+| 12 | sync-large-assets.yml | `integrator-maintenance-update-large-assets.yml` | maintenance | Clean, has dry-run |
+| 13 | translate-docs.yml | `integrator-copy-update-translations.yml` | copy | Path mismatch bug (es,fr,cn vs es,fr,de) |
+
+### Generators (7 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | generate-ai-companions.yml | `generator-discoverability-generate-glossary-companions.yml` | discoverability | No concurrency control |
+| 2 | generate-ai-sitemap.yml | `generator-discoverability-generate-ai-sitemap.yml` | discoverability | Broad push trigger, no concurrency |
+| 3 | generate-component-registry.yml | `generator-maintenance-generate-component-registry.yml` | maintenance | Missing verify pair, no concurrency |
+| 4 | generate-docs-guide-catalogs.yml | `generator-maintenance-generate-docs-guide-catalogs.yml` | maintenance | Overly broad git add, no concurrency |
+| 5 | generate-docs-index.yml | `generator-maintenance-generate-docs-index.yml` | maintenance | Broad push trigger, no concurrency |
+| 6 | generate-llms-files.yml | `generator-discoverability-generate-llms-files.yml` | discoverability | No concurrency |
+| 7 | sdk_generation.yaml | `generator-maintenance-generate-sdk-clients.yml` | maintenance | Fix .yaml extension. Current name "Generate" is useless |
+
+**Systemic:** All 7 lack concurrency control and error handling. Fix in Phase 6.
+
+### Validators (10 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | test-suite.yml | `validator-copy-check-content-quality-suite.yml` | copy | Hard gate (P2) |
+| 2 | codex-governance.yml | `validator-governance-check-codex-compliance.yml` | governance | Hard gate (P2). Script path may be stale |
+| 3 | broken-links.yml | `validator-health-check-broken-links.yml` | health | |
+| 4 | test-v2-pages.yml | `validator-health-check-page-rendering.yml` | health | |
+| 5 | openapi-reference-validation.yml | `validator-health-check-openapi-reference.yml` | health | Uses create-pull-request@v6 (others @v7) |
+| 6 | check-ai-companions.yml | `validator-discoverability-check-glossary-companions.yml` | discoverability | Verify pair for generate-ai-companions |
+| 7 | check-docs-guide-catalogs.yml | `validator-maintenance-check-docs-guide-catalogs.yml` | maintenance | Verify pair for generate-docs-guide-catalogs |
+| 8 | check-docs-index.yml | `validator-maintenance-check-docs-index.yml` | maintenance | Verify pair for generate-docs-index |
+| 9 | verify-ai-sitemap.yml | `validator-discoverability-check-ai-sitemap.yml` | discoverability | Hardcoded branch. Verify pair for generate-ai-sitemap |
+| 10 | verify-llms-files.yml | `validator-discoverability-check-llms-files.yml` | discoverability | Hardcoded branch. Verify pair for generate-llms-files |
+
+---
+
+### Auditors (3 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | content-health.yml | `audit-health-scan-content-quality.yml` | health | All 6 steps have continue-on-error masking failures. Script paths may be stale |
+| 2 | freshness-monitor.yml | `audit-health-scan-data-freshness.yml` | health | Inline script (80 lines), extraction candidate. Hardcoded file list + thresholds |
+| 3 | v2-external-link-audit.yml | `audit-health-scan-external-links.yml` | health | Clean |
+
+---
+
+### Remediators (3 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | repair-governance.yml | `remediator-governance-repair-pipelines.yml` | governance | Dead code referencing undefined input |
+| 2 | seo-refresh.yml | `remediator-discoverability-repair-seo-metadata.yml` | discoverability | **P0: no commit step, writes vanish** |
+| 3 | style-homogenise.yml | `remediator-brand-repair-en-gb-style.yml` | brand | First workflow using `brand` concern. Script path may be stale |
+
+---
+
+### Interfaces (5 workflows, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | auto-assign-docs-reviewers.yml | `interface-governance-assign-reviewers.yml` | governance | Hardcoded branch. 80 lines inline |
+| 2 | close-linked-issues-docs-v2.yml | `interface-governance-close-linked-issues.yml` | governance | 141 lines inline |
+| 3 | discord-issue-intake.yml | `interface-governance-intake-discord-issues.yml` | governance | 261 lines inline |
+| 4 | docs-v2-issue-indexer.yml | `interface-governance-index-issues.yml` | governance | 403 lines inline |
+| 5 | issue-auto-label.yml | `interface-governance-label-issues.yml` | governance | Hardcoded label metadata. 339 lines inline |
+
+**Systemic:** All 5 are inline-only (1,224 total lines). All extraction candidates for D-ACT-06.
+
+---
+
+### Dispatchers (1 workflow, reviewed 2026-04-01)
+
+| # | Current name | New name | Concern | Flags |
+|---|---|---|---|---|
+| 1 | governance-sync.yml | `dispatch-governance-post-merge-sync.yml` | governance | Dead code (undefined input). Python3 dependency for JSON parsing |
+
+---
+
+### D-ACT-09: Pipeline output locations
+
+**Date:** 2026-04-04
+**Status:** Confirmed
+**Decision:** Every pipeline output has a canonical location based on its type.
+
+| # | Output type | Where it goes | Example | Notes |
+|---|---|---|---|---|
+| 1 | Reports (audit results, scan findings, repair summaries, remediations taken) | `workspace/reports/{concern}/` | REPAIR_REPORT_LATEST.json, contract-pipeline-anomaly-report.md | Full picture: scanned, found, fixed, needs human. Remediations always included in the audit report |
+| 2 | Data files (consumed by pages) | `snippets/data/{domain}/` | contractAddressesData.jsx, forumData.jsx | |
+| 3 | Generated indexes | Per-folder (in the folder they index). Top-level registry in `docs-guide/` only | scripts/script-index.md (per-folder), docs-guide/registry.mdx (top-level aggregation) | Per-folder indexes live with their content. docs-guide aggregates canonical registry at repo level only |
+| 4 | Generated config (registries, manifests) | `operations/` or the folder the config serves. docs-guide has a setup reference showing where config lives | script-registry.json, component-registry.json | Location depends on config type. docs-guide documents where to find it, doesn't host it |
+| 5 | Errors/incidents | `operations/reports/errors/{type}/` + GitHub issue (create or update) | Contract pipeline incident, broken external links | Errors persisted locally AND escalated to GitHub issue |
+| 6 | Artifacts (CI-only, not committed) | GitHub Actions artifact upload | Test results, health check snapshots | CI-only. Downloadable from workflow run. Not committed to repo |
+| 7 | Step summaries (CI-only, in workflow run) | Part of the report (`operations/reports/{type}/`) | Pass/fail per check | Step summaries are a report output, go to operations/reports |
+| 8 | State files (pipeline state between runs) | `snippets/data/{domain}/` | _branch-watch-state.json, _health-checks.json | |
+| 9 | PR (auto-fix that needs review) | GitHub PR | governance repair PR, openapi spec drift PR | |
+
+**Reasoning:** Outputs were scattered with no consistent convention. Each pipeline needs to know where its outputs go without guessing.
+**Impact:** All pipelines must follow these conventions. Existing outputs that don't conform need migrating.
+
+### D-ACT-10: Unified governance registry replaces ownerless-governance-surfaces.json
+
+**Date:** 2026-04-05
+**Status:** Confirmed
+**Decision:** One canonical governance registry at `operations/governance/config/repo-governance-surfaces.json` replaces the former legacy ownerless-governance manifest path. 11 surfaces registered. Specialised manifests (root-governance.json, generated-artifacts.json, script-registry.json) remain but are referenced from the unified registry.
+
+**Surfaces registered (11):**
+- root-governance (root placement, Class A-F)
+- generated-artifacts (16 artifacts, 4 classes)
+- workflow-governance (workflows + pipeline framework)
+- ai-tools-registry
+- portable-skills
+- docs-guide-generated
+- ui-templates
+- github-contributor-governance
+- script-governance (358 scripts, 7 types, 7 concerns)
+- component-governance (6 categories, 7-tag JSDoc)
+- frontmatter-contract (page metadata)
+
+**New fields added:** name, manifest, policy, write_policy, escalation_mode
+
+**Reasoning:** Ownerless self-governance audit (2026-04-05) found multiple overlapping control planes that contradict each other. One registry, one truth. Specialised manifests stay for detail; the unified registry is the index.
+**Impact:** The former legacy ownerless-governance manifest path is superseded. All governance queries start from `operations/governance/config/`.
+
+---
+
+## Pending Decisions
+
+None at this time. All decisions confirmed.

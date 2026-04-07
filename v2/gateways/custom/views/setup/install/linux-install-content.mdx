@@ -1,0 +1,103 @@
+import { linuxGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+import { LinuxSupport } from '/v2/gateways/custom/composables/linux/linuxSupport.jsx'
+import { LinuxPrerequisites, LinuxInstallBinary, LinuxInstallCheck } from '/v2/gateways/custom/composables/linux/linuxSteps.jsx'
+import { LINUX_CODE } from '/v2/gateways/custom/data/linux/code.jsx'
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+
+## <Icon icon="linux" iconType="solid" size={32} /> Linux & macOS Binary Guide
+{linuxGroup()}
+
+<LinuxSupport />
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Prerequisites">
+        <LinuxPrerequisites />
+    </StyledStep>
+    <StyledStep title="Download & Install Binary">
+        <LinuxInstallBinary />
+    </StyledStep>
+    <StyledStep title="Quick Test">
+        <LinuxInstallCheck />
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Configure the Gateway"
+  icon="gear"
+  href="/v2/gateways/setup/configure"
+  horizontal
+  arrow
+>
+ View all available configuration options for the gateway
+</Card>
+
+{/*
+    ── Preserved content: on-chain run + systemd service ──────────
+
+    <StyledStep title="Run the Gateway">
+    <Tabs>
+      <Tab title="Off-Chain Gateways">
+        Off-chain mode is the default network and requires no blockchain connectivity (no wallet or RPC).
+
+        ```bash icon="terminal" lines run the Gateway
+        livepeer -gateway
+        ```
+      </Tab>
+      <Tab title="On-Chain Gateways">
+        You will need to **Generate Keystore File**
+
+        <Warning>
+          When generating a new keystore file, the program will prompt you for a
+          password. This password is used to decrypt the keystore file and access the
+          private key. Make sure to never share or lose access to either the password or
+          the keystore file
+        </Warning>
+
+        ```bash icon="terminal" lines Run the Gateway
+        # Set your Arbitrum RPC URL
+        export RPC_URL="<YOUR_ARBITRUM_RPC_URL>"
+
+        # Run the gateway
+        livepeer -network arbitrum-one-mainnet -ethUrl $RPC_URL -gateway
+        ```
+      </Tab>
+    </Tabs>
+    </StyledStep>
+
+    <StyledStep title="Configure Gateway">
+        sudo mkdir /usr/local/bin/lptConfig
+        sudo nano /usr/local/bin/lptConfig/node.txt
+    </StyledStep>
+
+    <StyledStep title="Create System Service">
+        sudo nano /etc/systemd/system/livepeer.service
+
+        [Unit]
+        Description=Livepeer
+
+        [Service]
+        Type=simple
+        User=root
+        Restart=always
+        RestartSec=4
+        ExecStart=/usr/local/bin/livepeer -network arbitrum-one-mainnet \
+        -ethUrl=<YOUR ARB RPC URL> \
+        -cliAddr=127.0.0.1:5935 \
+        -ethPassword=/usr/local/bin/lptConfig/node.txt \
+        -maxPricePerUnit=300 \
+        -broadcaster=true \
+        -serviceAddr=<INSERT YOUR IP ADDRESS>:8935 \
+        -transcodingOptions=/usr/local/bin/lptConfig/transcodingOptions.json \
+        -rtmpAddr=0.0.0.0:1935 \
+        -httpAddr=0.0.0.0:8935 \
+        -monitor=true \
+        -v 6
+
+        [Install]
+        WantedBy=default.target
+
+        sudo systemctl daemon-reload
+        sudo systemctl enable --now livepeer
+    </StyledStep>
+*/}

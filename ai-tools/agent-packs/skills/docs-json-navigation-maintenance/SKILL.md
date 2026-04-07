@@ -1,21 +1,21 @@
 ---
 name: docs-json-navigation-maintenance
-version: "1.0"
 description: >-
-  Maintain docs.json navigation structures safely and consistently with route/file reality. Use when tasks include update docs navigation, add page to docs.json, fix docs.json route warnings.
-tier: 1
-invoke_when:
-  - "update docs navigation"
-  - "add page to docs.json"
-  - "fix docs.json route warnings"
+  Maintain docs.json navigation structures safely and consistently with
+  route/file reality. Use when: update docs navigation, add page to docs.json,
+  fix docs.json route warnings.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "docs.json"
-  - "tests/utils/file-walker.js"
-  - "tools/scripts/generate-pages-index.js"
-  - "tests/integration/v2-link-audit.js"
+  - "operations/tests/utils/file-walker.js"
+  - "operations/scripts/generators/content/catalogs/generate-pages-index.js"
+  - "operations/tests/integration/v2-link-audit.js"
 primary_commands:
-  - "node tools/scripts/generate-pages-index.js"
-  - "node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
+  - "node operations/scripts/generators/content/catalogs/generate-pages-index.js"
+  - "node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
 ---
 
 SKILL: docs.json Navigation Maintenance
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generate-pages-index.js
-node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
+node operations/scripts/generators/content/catalogs/generate-pages-index.js
+node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
 ```
 
 Deliverable Format

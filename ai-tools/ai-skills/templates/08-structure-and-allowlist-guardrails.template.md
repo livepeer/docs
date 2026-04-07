@@ -1,18 +1,18 @@
 ---
 name: structure-and-allowlist-guardrails
-version: "1.0"
 description: >-
-  Apply repository structure rules and root allowlist constraints before committing changes. Use when tasks include pre-commit blocked unauthorized root files, where should this file be moved, allowlist or structure violation.
-tier: 1
-invoke_when:
-  - "pre-commit blocked unauthorized root files"
-  - "where should this file be moved"
-  - "allowlist or structure violation"
+  Apply repository structure rules and root allowlist constraints before
+  committing changes. Use when: pre-commit blocked unauthorized root files,
+  where should this file be moved, allowlist or structure violation.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "1"
 primary_paths:
   - "README.md"
   - ".allowlist"
   - ".githooks/pre-commit"
-  - "tasks/plan/migration-plan.md"
+  - "workspace/plan/migration-plan.md"
 primary_commands:
   - "bash lpd hooks info"
   - "git diff --cached --name-only"
@@ -45,7 +45,7 @@ Deliverable Format
 - Clean staged file list aligned to structure rules.
 
 Failure Modes / Fallback
-- If unsure about file home, prefer existing neighboring conventions under `tools/`, `snippets/`, `tasks/`, or `contribute/`.
+- If unsure about file home, prefer existing neighboring conventions under `tools/`, `snippets/`, `workspace/`, or `contribute/`.
 - Never bypass hook protections for `.allowlist` edits unless explicitly human-approved.
 
 Validation Checklist

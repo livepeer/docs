@@ -1,0 +1,166 @@
+---
+mode: wide
+title: '[PRODUCT_NAME] Recent Announcements'
+sidebarTitle: 'Recent Activity'
+description: 'Latest videos, socials, and community activity for [PRODUCT_NAME].'
+snippetPrefix: lp-social-data
+snippetLabel: Social data page scaffold
+previewTitle: Social Data Page Template
+purpose: orient
+pageType: resource
+pageVariant: overview
+keywords:
+  - '__PRODUCT_SLUG__'
+  - livepeer
+  - community
+  - updates
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': '[PRODUCT_NAME] Docs social preview image'
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: builder
+status: draft
+lastVerified: YYYY-MM-DD
+---
+
+{/* COMPONENTS */}
+import { SocialLinks } from '/snippets/components/elements/social/SocialLinks.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx'
+import { RssBlogCard, RssBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/Data.jsx'
+import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/ScrollBox.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+export const socialPageTemplateSocials = [
+  { icon: 'globe', href: 'https://__PRODUCT_URL__', label: '[PRODUCT_NAME] Website' },
+  { icon: 'github', href: 'https://github.com/__ORG__/__REPO__', label: '[PRODUCT_NAME] GitHub' },
+  { icon: 'youtube', href: 'https://www.youtube.com/channel/__CHANNEL_ID__', label: '[PRODUCT_NAME] YouTube' },
+  { icon: 'discord', href: '__DISCORD_INVITE_URL__', label: '[PRODUCT_NAME] Discord' },
+]
+
+{/* DATA CONTRACT — replace these stub values after copying this scaffold into a routable page.
+    Keep placeholder tokens inert at rest. Do not use placeholder syntax inside live JSX expressions.
+    If you prefer external data files, replace the stub export above with a valid import, for example:
+    import { productSocials } from './data/socials.jsx'
+*/}
+
+{/* ─── SOCIALS BAR ──────────────────────────────────────────────────────── */}
+{/* Replace the stub data above with the product's actual socials list. Remove icons that do not apply. */}
+
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox style={{margin: 0, padding: "0.5rem 1rem 1rem 1rem"}} variant="muted">
+      <SocialLinks iconColor="var(--hero-text)" links={socialPageTemplateSocials} />
+  </BorderedBox>
+</CenteredContainer>
+
+<br/>
+<CenteredContainer width="80%" minWidth="fit-content" >
+    <Tip>
+    This page is an automated workflow.
+    </Tip>
+    {/* DO NOT change this Tip text. It is locked. */}
+</CenteredContainer>
+
+{/* ─── HERO (MANDATORY) ─────────────────────────────────────────────────── */}
+{/* REQUIRED — every product page MUST have a hero asset. Pick ONE:
+    1. YouTubeVideo embed (preferred) — use a DIFFERENT video than the Videos feed below
+    2. Product website screenshot or OG image via <Frame><img src="..." /></Frame>
+    3. GIF or static image via <Frame><img src="..." /></Frame>
+    4. Product site embed via <Frame><iframe src="..." /></Frame>
+
+    RULES:
+    - NEVER use local .mp4 files — they bloat the repo and break scoped builds.
+    - NEVER duplicate the same asset used elsewhere on this page.
+    - Source from product-social-config.json heroVideo.selected or heroVideo.candidates.
+    - If no video/image exists, use the product's OG image from their website.
+*/}
+
+{/* REPLACE THIS with the product's hero asset */}
+<Frame caption="[PRODUCT_NAME]">
+  <img src="__PRODUCT_OG_IMAGE_URL__" alt="[PRODUCT_NAME]" style={{width: "100%", borderRadius: "8px"}} />
+</Frame>
+
+{/* ─── YOUTUBE VIDEOS ──────────────────────────────────────────────────── */}
+{/* Conditional — include only if product has a YouTube channel.
+    - NEVER reuse the hero video here. This section shows the automated feed.
+    - If no YouTube channel exists, omit this entire section.
+*/}
+
+## <Icon icon="camera-movie" size={24} /> Videos
+
+Watch the latest on the <LinkArrow label="[PRODUCT_NAME] YouTube Channel" href="https://www.youtube.com/channel/__CHANNEL_ID__" newline={false} />
+
+{/* <YouTubeVideoData items={youtubeData} limit={4} /> */}
+
+<CustomDivider style={{margin: "0.5rem 0 -2.5rem 0"}}/>
+
+{/* ─── BLOG ────────────────────────────────────────────────────────────── */}
+{/* Conditional — include only if product has a blog with public RSS */}
+
+{/*
+## <Icon icon="pencil-line" size={24} /> Blog
+
+Read recent posts from the <LinkArrow label="{Product} Blog" href="{BLOG_URL}" newline={false} />
+
+<RssBlogCardLayout items={productBlogData} limit={2} />
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+*/}
+
+{/* ─── DISCORD ANNOUNCEMENTS ──────────────────────────────────────────── */}
+{/* Conditional — include only if product has a Discord announcements forwarding channel */}
+
+{/*
+## <Icon icon="discord" size={24} /> Discord Announcements
+
+Latest from the <LinkArrow label="{Product} Discord" href="{DISCORD_INVITE_URL}" newline={false} />
+
+<DiscordAnnouncements serverName="[PRODUCT_NAME]" items={productDiscordData} limit={4} ScrollBox={ScrollBox} scrollMaxHeight={200} />
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+*/}
+
+{/* ─── GITHUB README ───────────────────────────────────────────────────── */}
+{/* Outer BorderedBox (default) for container. Inner BorderedBox (accent) for header with link.
+    ScrollBox limits height. MarkdownEmbed fetches README client-side. */}
+
+{/*
+## <Icon icon="github" size={24} /> GitHub
+
+<BorderedBox>
+  <ScrollBox maxHeight={600}>
+    <BorderedBox variant="accent">
+        [PRODUCT_NAME] GitHub
+        <LinkArrow label="View [PRODUCT_NAME] on GitHub" href="https://github.com/__ORG__/__REPO__" newline={true} />
+    </BorderedBox>
+    <MarkdownEmbed url="https://raw.githubusercontent.com/__ORG__/__REPO__/__BRANCH__/README.md" />
+  </ScrollBox>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+*/}
+
+{/* ─── X / TWITTER / BLUESKY ──────────────────────────────────────────── */}
+{/* X syndication iframe is rate-limited and unreliable. DO NOT USE.
+    Options:
+    1. Static link via SocialLinks bar (already at top of page) — preferred.
+    2. If product has X, add a LinkArrow in a standalone section.
+    3. Bluesky — no free embed available. Use static link only.
+    NEVER use mikle.com, sociablekit.com, or syndication.twitter.com widgets.
+*/}
+
+{/* ─── RELATED PAGES ──────────────────────────────────────────────────── */}
+{/* Point to overview + changelog. Match style from overview page CardGroup. */}
+
+{/*
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="[PRODUCT_NAME] Overview" icon="book-open" href="/solutions/__PRODUCT_SLUG__/overview" />
+  <Card title="[PRODUCT_NAME] Changelog" icon="clock" href="/solutions/__PRODUCT_SLUG__/changelog" />
+</CardGroup>
+*/}

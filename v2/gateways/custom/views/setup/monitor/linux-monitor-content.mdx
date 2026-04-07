@@ -1,0 +1,200 @@
+{/* StyledSteps, StyledStep, StyledTable, TableRow, TableCell, LinkArrow,
+     CustomDivider inherited from parent monitor.mdx scope */}
+import { linuxGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+
+## <Icon icon="linux" iconType="solid" size={32} /> Linux Monitoring Guide
+{linuxGroup()}
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Enable Metrics">
+        Add the `-monitor` flag when starting the Gateway. Without it, the `/metrics` endpoint is not exposed.
+
+        ```bash icon="terminal" Start with Monitoring
+        ./livepeer \
+          -gateway \
+          -monitor \
+          -metricsPerStream \
+          -httpAddr 0.0.0.0:8935 \
+          [other flags...]
+        ```
+
+        If the Gateway runs as a **systemd service**, add `-monitor` to the `ExecStart` line:
+
+        ```ini icon="terminal" /etc/systemd/system/livepeer.service
+        [Unit]
+        Description=Livepeer Gateway
+
+        [Service]
+        Type=simple
+        User=livepeer
+        Restart=always
+        RestartSec=4
+        ExecStart=/usr/local/bin/livepeer \
+          -gateway \
+          -monitor \
+          -metricsPerStream \
+          -httpAddr=0.0.0.0:8935 \
+          -v 6
+
+        [Install]
+        WantedBy=default.target
+        ```
+
+        ```bash icon="terminal" Reload and Restart
+        sudo systemctl daemon-reload
+        sudo systemctl restart livepeer
+        ```
+
+        **Monitoring flags:**
+
+        <StyledTable>
+          <TableRow header>
+            <TableCell header>Flag</TableCell>
+            <TableCell header>Purpose</TableCell>
+            <TableCell header>Recommendation</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-monitor`</TableCell>
+            <TableCell>Enables the `/metrics` Prometheus endpoint</TableCell>
+            <TableCell>Always enable in production</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsPerStream`</TableCell>
+            <TableCell>Groups metrics by individual stream</TableCell>
+            <TableCell>Enable for per-stream debugging; increases metric cardinality</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>`-metricsClientIP`</TableCell>
+            <TableCell>Includes client IP as a metric label</TableCell>
+            <TableCell>Enable only for per-client breakdown</TableCell>
+          </TableRow>
+        </StyledTable>
+
+        Verify metrics are exposed:
+
+        ```bash icon="terminal" Verify Metrics
+        curl http://localhost:8935/metrics | head -30
+        ```
+
+        Prometheus-format output with `livepeer_` prefixed metric names confirms the endpoint is active.
+    </StyledStep>
+
+    <StyledStep title="Prometheus Setup">
+        Install Prometheus via the package manager or download the binary.
+
+        **Ubuntu/Debian:**
+        ```bash icon="terminal" Install Prometheus
+        sudo apt update && sudo apt install -y prometheus
+        ```
+
+        **Binary (any distro):**
+        ```bash icon="terminal" Download Prometheus
+        wget https://github.com/prometheus/prometheus/releases/latest/download/prometheus-*.linux-amd64.tar.gz
+        tar xvfz prometheus-*.linux-amd64.tar.gz
+        cd prometheus-*
+        ```
+
+        Create or update `/etc/prometheus/prometheus.yml` to scrape the Gateway:
+
+        ```yaml icon="terminal" prometheus.yml
+        global:
+          scrape_interval: 15s
+          evaluation_interval: 15s
+
+        scrape_configs:
+          - job_name: 'livepeer-gateway'
+            static_configs:
+              - targets: ['localhost:8935']
+            metrics_path: '/metrics'
+            scrape_interval: 15s
+            scrape_timeout: 10s
+            labels:
+              node_type: 'dual'
+              environment: 'production'
+        ```
+
+        Adjust the `node_type` label to match the deployment: `video`, `ai`, or `dual`.
+
+        ```bash icon="terminal" Start Prometheus
+        sudo systemctl enable --now prometheus
+        ```
+
+        Prometheus runs on port `9090` by default. Confirm the Gateway target appears at `http://localhost:9090/targets`.
+    </StyledStep>
+
+    <StyledStep title="Grafana Setup">
+        **Ubuntu/Debian:**
+        ```bash icon="terminal" Install Grafana
+        sudo apt install -y apt-transport-https software-properties-common
+        wget -q -O - https://apt.grafana.com/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/grafana.gpg
+        echo "deb [signed-by=/usr/share/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
+        sudo apt update && sudo apt install -y grafana
+        sudo systemctl enable --now grafana-server
+        ```
+
+        Access Grafana at `http://localhost:3000` (default credentials `admin / admin`).
+
+        **Add Prometheus as a data source:**
+        1. Navigate to **Configuration > Data Sources > Add data source**
+        2. Select **Prometheus**
+        3. Set the URL to `http://localhost:9090`
+        4. Click **Save & Test**
+
+        Import the Livepeer starter dashboards from the `livepeer/livepeer-monitoring` repository, or build custom panels using the metrics described below the tabs on this page.
+    </StyledStep>
+
+    <StyledStep title="Log Monitoring">
+        If the Gateway runs as a **systemd service**, use `journalctl`:
+
+        ```bash icon="terminal" Follow Logs
+        journalctl -u livepeer -f
+        ```
+
+        If running the binary directly, pipe output to a log file:
+
+        ```bash icon="terminal" Log to File
+        ./livepeer -gateway -monitor [flags] 2>&1 | tee /var/log/livepeer-gateway.log
+        ```
+
+        Enable verbose logging with `-v 6`. Key log events to watch:
+        - `Received live video AI request` - AI job arrived
+        - `Orchestrator selected` - routing decision made
+        - `Transcoding completed` - job finished
+        - Payment processing events
+    </StyledStep>
+
+    <StyledStep title="Automated Health Notifications">
+        Create a health check script that runs on a schedule via cron:
+
+        ```bash icon="terminal" /usr/local/bin/gateway-health.sh
+        #!/usr/bin/env bash
+        # gateway-health.sh - run every 5 minutes via cron
+        GATEWAY_PORT="${1:-8935}"
+        ALERT_EMAIL="ops@example.com"
+
+        if ! curl --silent --fail --max-time 5 \
+          http://localhost:${GATEWAY_PORT}/health > /dev/null 2>&1; then
+          echo "Gateway on port ${GATEWAY_PORT} is not responding" | \
+            mail -s "ALERT: Livepeer Gateway Down" "$ALERT_EMAIL"
+        fi
+        ```
+
+        ```bash icon="terminal" Add to Crontab
+        chmod +x /usr/local/bin/gateway-health.sh
+        # Add to crontab
+        (crontab -l 2>/dev/null; echo "*/5 * * * * /usr/local/bin/gateway-health.sh 8935") | crontab -
+        ```
+
+        For richer alerting (Slack, PagerDuty, webhook), configure Prometheus Alertmanager with the alert rules described below the tabs on this page.
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Troubleshooting"
+  icon="triangle-exclamation"
+  href="/v2/gateways/guides/monitoring-and-tooling/troubleshooting"
+  horizontal
+  arrow
+>
+  Fix common Gateway errors by symptom
+</Card>

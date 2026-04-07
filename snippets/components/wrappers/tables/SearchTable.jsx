@@ -28,35 +28,82 @@
  * @param {object} [style={}] - Inline style overrides.
  */
 'use client'
-import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
-import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 
-/**
- * @component SearchTable
- * @category content
- * @status stable
- * @description Generic filterable table wrapper with search input, dropdown filters, and optional separator rows.
- * @param {Function} [TableComponent=null] - Table renderer component.
- * @param {React.ReactNode} [tableTitle=null] - Table title.
- * @param {Array} [headerList=[]] - Column header names.
- * @param {Array} [itemsList=[]] - Row data objects.
- * @param {Array} [monospaceColumns=[]] - Column indices to render in monospace.
- * @param {string} margin - Margin passed to TableComponent.
- * @param {string} [searchPlaceholder='Search...'] - Placeholder text for the search input.
- * @param {Array} [searchColumns=[]] - Column names to search against.
- * @param {string} [categoryColumn='Category'] - Field name the first dropdown filters on.
- * @param {Array} [filterColumns=[]] - Additional dropdown filter columns.
- * @param {object} [columnWidths={}] - Column width overrides keyed by header name.
- * @param {Array} [contentFitColumns=[]] - Column names that should size to their contents.
- * @param {object} [columnVariant={}] - Column display variants keyed by header name.
- * @param {Array} [categoryBadges=[]] - Badge definitions for badge-style cells.
- * @param {Array} [textIcons=[]] - Icon definitions for textIcon-style cells.
- * @param {boolean} [showSeparators=false] - When true, inserts category separator rows.
- * @param {string} [separatorColumn=null] - Override which column drives separators.
- * @param {boolean} [boldFirstColumn=true] - Wrap plain-string values in the first column with strong emphasis.
- * @param {string} [className=''] - CSS class name.
- * @param {object} [style={}] - Inline style overrides.
- */
+const renderSearchTableCopyText = (text, style = {}) => {
+  const handleCopy = () => {
+    if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
+      return
+    }
+    navigator.clipboard.writeText(text)
+  }
+
+  return (
+    <span
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0.2rem 0.4rem',
+        borderRadius: '4px',
+        fontSize: '0.85rem',
+        fontFamily: 'monospace',
+        backgroundColor: 'var(--card-background)',
+        border: '1px solid var(--border)',
+        minWidth: 0,
+        overflow: 'hidden',
+        ...style,
+      }}
+    >
+      <span
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          flex: 1,
+          minWidth: 0,
+        }}
+      >
+        {text}
+      </span>
+      <button
+        type="button"
+        onClick={handleCopy}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0 0 0 0.4rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          color: 'var(--text)',
+          flexShrink: 0,
+        }}
+        title="Copy to clipboard"
+        aria-label={`Copy ${text}`}
+      >
+        <Icon icon="copy" size={14} />
+      </button>
+    </span>
+  )
+}
+
+const renderSearchTableLinkIcon = (
+  href,
+  color = 'var(--accent)',
+  icon = 'arrow-up-right-from-square',
+  size = 12
+) => {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ borderBottom: 'none', textDecoration: 'none', display: 'inline-flex' }}
+    >
+      <Icon icon={icon} size={size} color={color} />
+    </a>
+  )
+}
+
 export const SearchTable = ({
   TableComponent = null,
   tableTitle = null,
@@ -207,8 +254,8 @@ export const SearchTable = ({
             minWidth: 0,
           }}
         >
-          <CopyText text={value} style={{ flex: 1 }} />
-          {href && <LinkIcon href={href} color="var(--accent)" />}
+          {renderSearchTableCopyText(value, { flex: 1 })}
+          {href ? renderSearchTableLinkIcon(href, 'var(--accent)') : null}
         </div>
       )
     }
@@ -343,7 +390,7 @@ export const SearchTable = ({
 
 /**
  * @component SearchTableV2
- * @category content
+ * @category wrappers
  * @subcategory tables
  * @status experimental
  * @description Generic filterable table wrapper with intrinsic-width sizing for badge, icon, and primary text columns.
@@ -522,8 +569,8 @@ export const SearchTableV2 = ({
             minWidth: 0,
           }}
         >
-          <CopyText text={value} style={{ flex: 1 }} />
-          {href && <LinkIcon href={href} color="var(--accent)" />}
+          {renderSearchTableCopyText(value, { flex: 1 })}
+          {href ? renderSearchTableLinkIcon(href, 'var(--accent)') : null}
         </div>
       )
     }

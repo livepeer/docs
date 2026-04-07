@@ -1,0 +1,82 @@
+---
+title: 'Auto Assign Docs Reviewers'
+sidebarTitle: 'Auto Assign Docs Reviewers'
+description: 'Auto Assign Docs Reviewers'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - interface
+  - governance
+  - auto-assign-docs-reviewers
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/auto-assign-docs-reviewers.yml` |
+| **New name** | `interface-governance-assign-reviewers.yml` |
+| **Type** | `interface` |
+| **Concern** | `governance` |
+| **Pipeline tag** | P3 (soft gate, advisory) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["pull_request"] --> WF["auto-assign-docs-reviewers"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `pull_request` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+None (inline only)
+
+<CustomDivider />
+
+## Known Issues
+
+- Branch docs-v2 hardcoded instead of vars.DEPLOY_BRANCH
+
+**Review flags:** Hardcoded branch. 80 lines inline
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Stays separate |
+| **Dry-run** | No |
+| **Concurrency** | No |
+| **Error reporting** | robust |
+| **Auto-commit** | No |

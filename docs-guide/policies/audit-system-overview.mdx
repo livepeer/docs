@@ -11,7 +11,7 @@ keywords:
   - quality
   - performance
   - maintainability
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -34,7 +34,7 @@ This audit system provides one repeatable command for repository-wide docs healt
 Use static and report-synthesis mode first. It is faster, deterministic and safe for routine use.
 
 ```bash icon="terminal"
-node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
+node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
 ```
 
 ## Canonical Inputs and Outputs
@@ -47,13 +47,13 @@ Inputs:
 - `ai-tools/ai-skills/catalog/skill-catalog.json`
 - `ai-tools/ai-skills/catalog/execution-manifest.json`
 - `docs.json`
-- existing reports under `tasks/reports/`
+- existing reports under `workspace/reports/`
 
 Outputs:
 
-- `tasks/reports/repo-ops/repo-audit-summary.json`
-- `tasks/reports/repo-ops/repo-audit-summary.md`
-- per-stage reports in `tasks/reports/repo-ops/`
+- `workspace/reports/repo-ops/repo-audit-summary.json`
+- `workspace/reports/repo-ops/repo-audit-summary.md`
+- per-stage reports in `workspace/reports/repo-ops/`
 
 ## Policy Defaults
 
@@ -63,7 +63,7 @@ Outputs:
 
 ## Entry Points
 
-- Orchestrator: `tools/scripts/repo-audit-orchestrator.js`
+- Orchestrator: `operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js`
 - Pipeline manifest: `ai-tools/ai-skills/catalog/execution-manifest.json` (audit subsystem only)
 - Skill catalogue: `ai-tools/ai-skills/catalog/skill-catalog.json` (audit subsystem only)
 - Global AI-tools registry: `ai-tools/registry/ai-tools-registry.json`

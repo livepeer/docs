@@ -1,7 +1,15 @@
 ---
-title: 'Pipeline Configuration'
-sidebarTitle: 'Pipeline Configuration'
-description: 'Post-setup tuning for Livepeer gateway pipelines - video transcoding profiles (JSON encoding ladder, presets, recipes) and AI inference tuning (retry timeouts, model selection, warm vs cold behaviour).'
+title: Pipeline Configuration
+sidebarTitle: Pipeline Configuration
+description: >-
+  Post-setup tuning for Livepeer gateway pipelines - video transcoding profiles (JSON
+  encoding ladder, presets, recipes) and AI inference tuning (retry timeouts, model
+  selection, warm vs cold behaviour).
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: '2026-03-15'
 keywords:
   - livepeer
   - gateway
@@ -13,12 +21,7 @@ keywords:
   - aiProcessingRetryTimeout
   - warm model
   - inference steps
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: guide
-audience: gateway-operator
-purpose: operations
-status: current
-lastVerified: '2026-03-15'
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
@@ -36,14 +39,14 @@ Verify:
 Human:
 - Pricing sections moved to pricing-strategy.mdx (see payments-and-pricing/to-include.md for gaps)
 - AI routing flags (orchAddr, discovery) covered in ai-pipelines.mdx
-- Dual gateway resource allocation covered in setup/configure/dual-configuration.mdx and advanced-operations/scaling.mdx
+- Dual gateway resource allocation covered in setup/configure.mdx and advanced-operations/scaling.mdx
 - Port 8935 used as standard per quickstart code.jsx (all AI and video endpoints share the -httpAddr port)
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { BorderedBox, CenteredContainer } from "/snippets/components/layout/containers.jsx"
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx"
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -320,7 +323,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/layout/cont
             AI tuning focuses on retry behaviour, model selection, and inference parameters.
 
             <Note>
- For AI routing architecture and orchestrator discovery, see <LinkArrow href="./ai-pipelines" label="AI Pipelines" newline={false} />. This section explains the tuning parameters you adjust after your AI gateway is running.
+ For AI routing architecture and orchestrator discovery, see <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines" label="AI Pipelines" newline={false} />. This section explains the tuning parameters you adjust after your AI gateway is running.
             </Note>
 
             ### Retry Timeouts
@@ -435,7 +438,7 @@ AI gateways do not use RTMP, do not need `-transcodingOptions`, and require `-ht
   </TableRow>
 </StyledTable>
 
-For the full side-by-side comparison, see <LinkArrow href="./ai-pipelines#ai-vs-video-comparison" label="AI vs Video Comparison" newline={false} />.
+For the full side-by-side comparison, see <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines#ai-vs-video-comparison" label="AI vs Video Comparison" newline={false} />.
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -516,22 +519,22 @@ For the full side-by-side comparison, see <LinkArrow href="./ai-pipelines#ai-vs-
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="AI Pipelines" icon="brain" href="./ai-pipelines">
+  <Card title="AI Pipelines" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
     AI routing architecture, orchestrator discovery, and capability matching.
   </Card>
-  <Card title="Video Pipelines" icon="video" href="./video-pipelines">
+  <Card title="Video Pipelines" icon="video" href="/v2/gateways/guides/node-pipelines/video-pipelines">
     Video transcoding pipeline flow, RTMP/HTTP ingest, and orchestrator selection.
   </Card>
-  <Card title="Pricing Strategy" icon="tag" href="../payments-and-pricing/pricing-strategy">
+  <Card title="Pricing Strategy" icon="tag" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
     Price caps for video and AI, competitive positioning, and ETH volatility handling.
   </Card>
-  <Card title="Dual Configuration" icon="clone" href="/v2/gateways/setup/configure/dual-configuration">
+  <Card title="Dual Configuration" icon="clone" href="/v2/gateways/setup/configure">
     Architecture, port setup, and session management for dual gateways.
   </Card>
-  <Card title="Scaling" icon="arrow-up-right-dots" href="../advanced-operations/scaling">
+  <Card title="Scaling" icon="arrow-up-right-dots" href="/v2/gateways/guides/advanced-operations/scaling">
     Resource contention signals, GPU memory pressure, and when to split workloads.
   </Card>
-  <Card title="Configuration Flags" icon="list" href="/v2/gateways/resources/technical/configuration-flags">
+  <Card title="Configuration Flags" icon="list" href="/v2/gateways/resources/reference/technical/configuration-flags">
     Complete flag reference for all go-livepeer gateway flags.
   </Card>
 </CardGroup>

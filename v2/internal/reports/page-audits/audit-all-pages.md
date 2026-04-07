@@ -1,15 +1,15 @@
 ---
 title: 'All Pages Audit (Legacy Browser Script)'
 sidebarTitle: 'Audit All Pages'
-description: 'Generated audit report from tools/scripts/audit-all-pages.js.'
+description: 'Generated audit report from operations/scripts/archive/legacy/audit-all-pages.js.'
 keywords: ["livepeer","internal","reports","page-audits","audit-all-pages"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
-Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
-Generator Script: `tools/scripts/audit-all-pages.js`
-What It Does: Generated audit report from tools/scripts/audit-all-pages.js.
-Audited Scope: `tasks/scripts`
+Last Generated (UTC ISO): `2026-03-31T04:31:17.145Z`
+Last Generated (UTC Human): `March 31, 2026 04:31 UTC`
+Generator Script: `operations/scripts/archive/legacy/audit-all-pages.js`
+What It Does: Generated audit report from operations/scripts/archive/legacy/audit-all-pages.js.
+Audited Scope: `workspace/scripts`
 Outputs:
 - _Not documented in script header._
 # Page Audit Report

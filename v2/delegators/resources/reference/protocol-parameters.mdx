@@ -1,0 +1,73 @@
+---
+title: Protocol Parameters
+sidebarTitle: Protocol Parameters
+description: >-
+  Governance-controlled protocol values that matter most to delegators:
+  unbonding, inflation settings, treasury allocation, and governance
+  thresholds.
+keywords:
+  - livepeer
+  - protocol parameters
+  - unbonding period
+  - treasury reward cut
+  - proposal threshold
+  - quorum
+  - voting period
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: delegator
+purpose: reference
+lifecycleStage: operate
+status: current
+lastVerified: 2026-04-06
+---
+
+These values are governance-controlled. They can change without a new docs release if governance updates them on-chain.
+
+The values below were re-checked on 6 April 2026 against current on-chain state or the current public Livepeer governance sources.
+
+## Delegator-relevant protocol values
+
+| Parameter | Current value | Where it comes from | Why it matters |
+|---|---|---|---|
+| Unbonding period | `7` rounds | `BondingManager.unbondingPeriod()` | Full exit is delayed after you unbond |
+| Treasury reward cut | `10%` | `BondingManager.treasuryRewardCutRate()` and LIP-92 | Reduces the round issuance shared by orchestrators and delegators |
+| Target bonding rate | `50%` | `Minter.targetBondingRate()` | The inflation model adjusts around this target |
+| Inflation adjustment step | protocol step value `500` | `Minter.inflationChange()` | Controls how quickly inflation moves toward the target bonding rate |
+| Current inflation rate | variable, changes over time | `Minter.inflation()` | Use live state, not a stale static number |
+
+## Governance thresholds
+
+| Parameter | Current value | Where it comes from |
+|---|---|---|
+| Proposal threshold | `100 LPT` bonded | `LivepeerGovernor.proposalThreshold()` |
+| Quorum | `33.33%` of voting power | `LivepeerGovernor.quorumNumerator()` / `quorumDenominator()` |
+| Voting delay | `1` round | `LivepeerGovernor.votingDelay()` |
+| Voting period | `10` rounds | `LivepeerGovernor.votingPeriod()` |
+| Timelock minimum delay | `0` | `Treasury.getMinDelay()` |
+
+## Active set note
+
+Current Livepeer public product surfaces still describe the active set as **100 orchestrators**. If you need the value for operational automation rather than reader guidance, re-check `numActiveTranscoders()` directly before using it.
+
+## How to verify these values yourself
+
+Use the live contracts on Arbitrum One:
+
+- [BondingManager on Arbiscan](https://arbiscan.io/address/0x35bcf3c30594191d53231e4ff333e8a770453e40)
+- [Minter on Arbiscan](https://arbiscan.io/address/0xc20de37170b45774e6cd3d2304017fc962f27252)
+- [LivepeerGovernor on Arbiscan](https://arbiscan.io/address/0xcfe4e2879b786c3aa075813f0e364bb5accb6aa0)
+- [Treasury on Arbiscan](https://arbiscan.io/address/0xf82c1ff415f1fcf582554fdba790e27019c8e8c4)
+
+<CardGroup cols={2}>
+  <Card title="Contract Addresses" icon="file-contract" href="/v2/delegators/resources/reference/contracts" arrow>
+    Canonical deployed addresses for the contracts named above.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    See how these parameter values affect reader-facing outcomes.
+  </Card>
+</CardGroup>

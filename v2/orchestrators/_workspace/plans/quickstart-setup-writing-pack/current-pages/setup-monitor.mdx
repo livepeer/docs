@@ -4,6 +4,7 @@ sidebarTitle: Monitor
 description: >-
   Enable Prometheus metrics, track key health signals, and verify your
   orchestrator is earning — the minimum monitoring setup for a new node.
+purpose: how_to
 keywords:
   - livepeer
   - orchestrator
@@ -24,34 +25,10 @@ audience: orchestrator
 status: current
 lastVerified: 2026-03-13
 ---
-{/* TODO:
-Terminology Validation:
-- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
-- Voice converted to entity-led
-- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
-Verify:
-- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
-- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
-- Tables use StyledTable component
-- Tabs should be surrounded by BorderedBox variant="accent"
-- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
-- All tabs and accordions should have icons
-- No em-dashes are used (instead use standard -)
-- UK spelling is used
-- Headers are concise and technical
-- CustomDivider is used
-- Placeholders for Media and Video Resources are in comments with a TODO for a human
-- REVIEW flags are in JSX comments for a human
-- Accuracy is verified across repo as much as possible
-Human:
-- REVIEW flags
-- Review Page Layout
-*/}
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-
-This page covers the minimum monitoring you should have in place once your orchestrator is live. For full observability (Grafana dashboards, alerting, DCGM exporter), see the [Metrics & Monitoring guide](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+Enable `-monitor`, confirm the key health signals, and check that the node is earning. For full observability (Grafana dashboards, alerting, DCGM exporter), see the [Metrics & Monitoring guide](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
 
 <CustomDivider />
 
@@ -59,7 +36,7 @@ This page covers the minimum monitoring you should have in place once your orche
 
 Add `-monitor` to your go-livepeer startup command:
 
-```bash icon="terminal"
+```bash icon="terminal" filename="enable-monitor"
 livepeer \
   -network arbitrum-one-mainnet \
   -ethUrl <YOUR_RPC_URL> \
@@ -72,13 +49,13 @@ livepeer \
 
 Metrics are exposed at:
 
-``` icon="terminal"
+```text icon="terminal" filename="metrics-endpoint"
 http://localhost:7935/metrics
 ```
 
 Verify with:
 
-```bash icon="terminal"
+```bash icon="terminal" filename="check-metrics"
 curl -s http://localhost:7935/metrics | head -20
 ```
 
@@ -105,7 +82,7 @@ curl -s http://localhost:7935/metrics | head -20
   </TableRow>
   <TableRow>
     <TableCell>`transcode_latency_seconds`</TableCell>
-    <TableCell>Time to transcode each segment — should stay well under real-time</TableCell>
+    <TableCell>Time to transcode each segment - keep it well under the segment duration</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>`current_round`</TableCell>
@@ -129,9 +106,9 @@ After each round (~24 hours), verify on [Livepeer Explorer](https://explorer.liv
 2. **Reward calls** — should show a reward for each round your node was online
 3. **Fees earned** — will appear after you process transcoding or AI jobs
 
-If reward calls are missing, check:
+Missing reward calls usually point to one of these causes:
 - Your node was online and connected during the round
-- You did **not** start with `-reward=false`
+- The startup command omits `-reward=false`
 - Your Arbitrum ETH balance is sufficient for gas
 
 <CustomDivider />
@@ -140,7 +117,7 @@ If reward calls are missing, check:
 
 Check GPU health and utilisation:
 
-```bash icon="terminal"
+```bash icon="terminal" filename="gpu-health"
 # Current status
 nvidia-smi
 
@@ -153,7 +130,7 @@ nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.used,memory.tot
 
 Watch for:
 - **Temperature** above 85°C — indicates inadequate cooling
-- **Memory utilisation** near 100% — may cause out-of-memory errors for AI workloads
+- **Memory utilisation** near 100% — often causes out-of-memory errors for AI workloads
 - **GPU utilisation** at 0% when you should be processing jobs — check go-livepeer logs
 
 <CustomDivider />
@@ -199,9 +176,9 @@ For detailed troubleshooting, see the [FAQ](/v2/orchestrators/resources/faq).
 
 ## Minimal Prometheus setup
 
-If you want to scrape and store metrics, add a `prometheus.yml`:
+To scrape and store metrics, add a `prometheus.yml`:
 
-```yaml icon="terminal"
+```yaml icon="code" filename="prometheus.yml"
 global:
   scrape_interval: 15s
 
@@ -213,7 +190,7 @@ scrape_configs:
 
 Run Prometheus with Docker:
 
-```bash icon="terminal"
+```bash icon="terminal" filename="run-prometheus"
 docker run -d \
   --name prometheus \
   --network host \

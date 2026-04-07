@@ -85,7 +85,7 @@ Each tranche must record:
 
 Packet root:
 
-- `tasks/reports/<scope>-review/<packet-root>/`
+- `workspace/reports/<scope>-review/<packet-root>/`
 
 Required top-level files:
 
@@ -187,7 +187,7 @@ For each tranche:
 - Nav source: `tools/config/scoped-navigation/docs-gate-work.json`
 - Scope mode: `nav`
 - Selector: `v2 / en / Orchestrators / Guides`
-- Output root: `tasks/reports/orchestrator-guides-review/research-guides-review`
+- Output root: `workspace/reports/orchestrator-guides-review/research-guides-review`
 
 ### Folder or file example
 
@@ -199,7 +199,7 @@ For each tranche:
 ### Manifest example
 
 - Scope mode: `manifest`
-- Manifest: `tasks/reports/gateway-guides-review/research-packet-manifest.json`
+- Manifest: `workspace/reports/gateway-guides-review/research-packet-manifest.json`
 - Output root: manifest-defined or explicit `--out`
 
 [//]: # (mdx-safe-markdown:divider)

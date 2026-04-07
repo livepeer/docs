@@ -17,22 +17,6 @@
  */
 'use client'
 
-/**
- * @component DynamicTable
- * @category content
- * @status stable
- * @description Renders structured data as a scrollable table with optional separator rows.
- * @param {any} [tableTitle=null] - Table title.
- * @param {Array} [headerList=[]] - Column header names.
- * @param {Array} [itemsList=[]] - Row data objects.
- * @param {Array} [monospaceColumns=[]] - Column indices to render in monospace.
- * @param {object} [columnWidths={}] - Preferred widths keyed by header.
- * @param {Array} [contentFitColumns=[]] - Column names that should size to their contents.
- * @param {boolean} [showSeparators=false] - When true, renders separator rows from `__separator` items.
- * @param {any} margin - Optional margin applied to the scroll container.
- * @param {string} [className=''] - Optional CSS class override.
- * @param {object} [style={}] - Optional inline style override.
- */
 export const DynamicTable = ({
   tableTitle = null,
   headerList = [],
@@ -183,7 +167,7 @@ export const DynamicTable = ({
 
 /**
  * @component DynamicTableV2
- * @category content
+ * @category wrappers
  * @subcategory tables
  * @status experimental
  * @description Renders structured data as a scrollable table with separator rows and intrinsic-width support for fit-to-content columns.
@@ -194,7 +178,6 @@ export const DynamicTable = ({
  * @param {Array} [monospaceColumns=[]] - monospace Columns prop.
  * @param {object} [columnWidths={}] - Preferred minimum widths keyed by header.
  * @param {object} [columnConfig={}] - Per-column layout flags keyed by header.
- * @param {boolean} [showSeparators=false] - When true, renders separator rows from `__separator` items.
  * @param {any} margin - margin prop.
  * @param {string} [className=''] - Optional CSS class override.
  * @param {object} [style={}] - Optional inline style override.

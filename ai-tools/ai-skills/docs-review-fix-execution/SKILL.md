@@ -1,31 +1,15 @@
 ---
 name: docs-review-fix-execution
-version: "1.0"
 description: >-
-  Execute approved docs review packet fixes section by section so copy and
-  style tasks close in tracker order, validations rerun, and completion state
-  stays trustworthy.
-tier: 2
-invoke_when:
-  - "execute fixes from this review packet"
-  - "work through the tracker section by section"
-  - "apply copy and style fixes from the packet"
-  - "close out review packet tasks and update the tracker"
-primary_paths:
-  - "tasks/reports"
-  - "ai-tools/ai-skills/docs-copy/SKILL.md"
-  - "ai-tools/ai-skills/page-authoring/SKILL.md"
-  - "docs-guide/tooling/review-packet-plan-template.md"
-  - "tools/scripts/lint-copy.js"
-  - "tools/scripts/lint-structure.js"
-  - "tools/scripts/lint-patterns.js"
-primary_commands:
-  - "node tools/scripts/lint-copy.js [file-or-glob]"
-  - "node tools/scripts/lint-structure.js [file]"
-  - "node tools/scripts/lint-patterns.js [file-or-glob]"
-  - "node tests/unit/copy-lint.test.js --files [csv]"
-  - "bash .githooks/pre-commit"
-  - "node tests/run-pr-checks.js --base-ref docs-v2-dev"
+  Execute approved docs review packet fixes section by section so copy and style
+  tasks close in tracker order, validations rerun, and completion state stays
+  trustworthy. Use when executing fixes from a review packet, working through a
+  tracker section by section, applying copy and style fixes, or closing out
+  review packet tasks.
+metadata:
+  version: "1.3"
+  category: review-pipeline
+  tier: "2"
 ---
 
 SKILL: Docs Review Fix Execution

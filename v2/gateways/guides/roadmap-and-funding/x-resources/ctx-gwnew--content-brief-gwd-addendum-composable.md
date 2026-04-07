@@ -182,8 +182,8 @@ Three items with links:
 
 | Card title | Target path | One-sentence description |
 |------------|------------|--------------------------|
-| Configure your gateway | `setup/configure/ai-configuration.mdx` | Set flags for multiple orchestrators, pricing, and middleware |
-| Add video transcoding | `setup/configure/dual-configuration.mdx` | Run transcoding and AI inference from the same gateway node |
+| Configure your gateway | `setup/configure.mdx` | Set flags for multiple orchestrators, pricing, and middleware |
+| Add video transcoding | `setup/configure.mdx` | Run transcoding and AI inference from the same gateway node |
 | Set up a remote signer | `advanced/remote-signers.mdx` | Separate key custody from your gateway process |
 
 `[//]: # (REVIEW: Verify all three target paths exist in the docs-v2 IA before publishing.)`

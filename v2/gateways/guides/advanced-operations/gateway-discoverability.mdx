@@ -1,14 +1,25 @@
 ---
-title: 'Publishing a Gateway'
-sidebarTitle: 'Discoverability'
-description: 'Make a Livepeer Gateway discoverable - service URI configuration, DNS setup, capability advertising, community presence, and current discoverability options.'
-keywords: ['livepeer', 'gateway', 'publishing', 'discoverability', 'serviceAddr', 'gatewayHost', 'DNS', 'marketplace', 'capability advertising']
-og:image: '/snippets/assets/site/og-image/fallback.png'
-pageType: 'guide'
-audience: 'gateway-operator'
-purpose: operations
-status: 'current'
+title: Publishing a Gateway
+sidebarTitle: Discoverability
+description: >-
+  Make a Livepeer Gateway discoverable - service URI configuration, DNS setup,
+  capability advertising, community presence, and current discoverability options.
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
 lastVerified: '2026-03-15'
+keywords:
+  - livepeer
+  - gateway
+  - publishing
+  - discoverability
+  - serviceAddr
+  - gatewayHost
+  - DNS
+  - marketplace
+  - capability advertising
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
@@ -30,11 +41,11 @@ Human:
 - production-hardening link already replaced with gateway-middleware
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { BorderedBox } from "/snippets/components/layout/containers.jsx"
-import { StyledSteps, StyledStep } from "/snippets/components/layout/steps.jsx"
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
+import { StyledSteps, StyledStep } from "/snippets/components/wrappers/steps/Steps.jsx"
 
 <Tip>
 AI Gateways can register on-chain via the [`AIServiceRegistry`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract using the `-aiServiceRegistry` flag. Video/transcoding Gateways do not yet have an equivalent on-chain registry - discoverability for video is currently manual and community-driven.
@@ -150,7 +161,7 @@ These are the mechanisms developers use today to find public Gateways.
     <Tab title="Direct integration" icon="plug">
         For developers building applications, the most common path is direct integration: they find the Gateway through one of the channels above and hardcode the endpoint. Make it easy by providing:
 
-        - A clear API reference (the Gateway endpoint + the standard <LinkArrow href="/v2/gateways/resources/technical/api-reference/AI-API/ai" label="AI API reference" newline={false} />)
+        - A clear API reference (the Gateway endpoint + the standard <LinkArrow href="/v2/gateways/resources/reference/technical/api-reference/AI-API/ai" label="AI API reference" newline={false} />)
         - A working quickstart curl command
         - A stable versioned endpoint URL
     </Tab>
@@ -245,7 +256,7 @@ RTMP ingest (port 1935) is separate from the service address and is what video s
   <Card title="NaaP Multi-Tenancy" icon="users" href="/v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy">
     Network as a Platform architecture for multi-tenant operation.
   </Card>
-  <Card title="Technical Architecture" icon="diagram-project" href="/v2/gateways/resources/technical/technical-architecture">
+  <Card title="Technical Architecture" icon="diagram-project" href="/v2/gateways/resources/reference/technical/technical-architecture">
     Network architecture context for how Gateways fit into the ecosystem.
   </Card>
 </CardGroup>

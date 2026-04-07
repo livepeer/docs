@@ -1,21 +1,21 @@
 ---
 name: script-header-and-index-sync
-version: "1.0"
 description: >-
-  Enforce script header schema and synchronize group/aggregate script indexes. Use when tasks include script-docs test failed, regenerate script index files, autofill missing script headers.
-tier: 2
-invoke_when:
-  - "script-docs test failed"
-  - "regenerate script index files"
-  - "autofill missing script headers"
+  Enforce script header schema and synchronize group/aggregate script indexes.
+  Use when: script-docs test failed, regenerate script index files, autofill
+  missing script headers.
+metadata:
+  version: "1.2"
+  category: "governance"
+  tier: "2"
 primary_paths:
-  - "tests/unit/script-docs.test.js"
+  - "operations/tests/unit/script-docs.test.js"
   - "tools/script-index.md"
-  - "tests/script-index.md"
+  - "operations/tests/script-index.md"
   - "docs-guide/catalog/scripts-catalog.mdx"
 primary_commands:
-  - "node tests/unit/script-docs.test.js --staged --write --stage --autofill"
-  - "node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes"
+  - "node operations/tests/unit/script-docs.test.js --staged --write --stage --autofill"
+  - "node operations/tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes"
 ---
 
 SKILL: Script Header and Index Sync
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tests/unit/script-docs.test.js --staged --write --stage --autofill
-node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
+node operations/tests/unit/script-docs.test.js --staged --write --stage --autofill
+node operations/tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
 ```
 
 Deliverable Format

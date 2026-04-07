@@ -1,7 +1,14 @@
 ---
-title: 'AI and Job Pipelines Overview'
+title: AI and Job Pipelines Overview
 sidebarTitle: Pipelines Guide
-description: 'What a gateway pipeline is, the three job types your gateway can route (video transcoding, AI inference, BYOC), and how pipeline selection maps to gateway type.'
+description: >-
+  What a gateway pipeline is, the three job types your gateway can route (video
+  transcoding, AI inference, BYOC), and how pipeline selection maps to gateway type.
+pageType: guide
+audience: gateway
+purpose: orient
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway
@@ -12,18 +19,13 @@ keywords:
   - byoc
   - routing
   - overview
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: overview
-audience: gateway-operator
-purpose: orientation
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - ~~Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology~~
 Verify:
-- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)~~
+- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)~~
 - ~~Fontawesome icons are used on accordions and tabs~~
 - ~~Tables use StyledTable component~~
 - ~~No em-dashes are used (instead use standard -)~~
@@ -36,9 +38,9 @@ Human
 - Review REVIEW items
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -256,16 +258,16 @@ How your gateway finds orchestrators depends on your operational mode and busine
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Video Transcoding Pipeline" icon="film" href="./video-pipelines">
+  <Card title="Video Transcoding Pipeline" icon="film" href="/v2/gateways/guides/node-pipelines/video-pipelines">
     How video jobs flow through your gateway - ingest, segmentation, orchestrator selection, and payment.
   </Card>
-  <Card title="AI Inference Pipeline" icon="brain" href="./ai-pipelines">
+  <Card title="AI Inference Pipeline" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
     How AI inference requests are routed - orchestrator discovery, model matching, pipeline types, and platform limits.
   </Card>
-  <Card title="BYOC Pipelines" icon="box" href="./byoc-pipelines">
+  <Card title="BYOC Pipelines" icon="box" href="/v2/gateways/guides/node-pipelines/byoc-pipelines">
     Routing custom container workloads by capability - operator responsibilities, model fit, and health tracking.
   </Card>
-  <Card title="Pipeline Configuration" icon="sliders" href="./pipeline-configuration">
+  <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
     Transcoding profiles, AI routing flags, and per-pipeline tuning.
   </Card>
   <Card title="Workload Fit" icon="bullseye" href="/v2/developers/build/workload-fit">
@@ -278,7 +280,7 @@ How your gateway finds orchestrators depends on your operational mode and busine
 
 {/* ---
 title: 'Pipeline Overview'
-description: 'Understand the three gateway job pipeline types — video transcoding, AI inference, and BYOC — and how your gateway routes work to orchestrators.'
+description: 'Understand the three gateway job pipeline types - video transcoding, AI inference, and BYOC - and how your gateway routes work to orchestrators.'
 sidebarTitle: 'Pipeline Overview'
 pageType: 'overview'
 audience: 'gateway'
@@ -299,23 +301,23 @@ status: 'stub'
   SECTION HOME: Guides → AI and Job Pipelines
 
   JOURNEY POSITION:
-  1. Pipeline Overview (this page) — "What workloads can my gateway route?"
-  2. Video Transcoding Pipeline — "How do video jobs flow?"
-  3. AI Inference Pipeline — "How do AI jobs flow?"
-  4. BYOC Pipelines — "Custom containers on the network"
-  5. Pipeline Configuration — "Configure transcoding profiles and AI routing"
+  1. Pipeline Overview (this page) - "What workloads can my gateway route?"
+  2. Video Transcoding Pipeline - "How do video jobs flow?"
+  3. AI Inference Pipeline - "How do AI jobs flow?"
+  4. BYOC Pipelines - "Custom containers on the network"
+  5. Pipeline Configuration - "Configure transcoding profiles and AI routing"
 
   RELATED FILES (draw from):
-  - all-resources/v2-guidesres--overview.mdx                — PRIMARY (95%): Existing pipeline overview. 67 lines, complete. Job pipeline responsibilities, 3 pipeline types, gateway vs orchestrator roles.
-  - all-resources/v2-orch--job-types.mdx                    — PRIMARY (80%): 3 job categories from orchestrator POV (Transcoding, Realtime AI, Batch AI). Reframe for gateway operator.
-  - all-resources/v2-dev--ai-pipelines-overview.mdx          — SECONDARY (40%): 3 integration patterns (Standard API, ComfyStream, BYOC). Developer-focused but useful for pattern descriptions.
-  - all-resources/v2-run--transcoding.mdx                    — Placeholder (5%): Reserved page, planned structure only.
+  - all-resources/v2-guidesres--overview.mdx                - PRIMARY (95%): Existing pipeline overview. 67 lines, complete. Job pipeline responsibilities, 3 pipeline types, gateway vs orchestrator roles.
+  - all-resources/v2-orch--job-types.mdx                    - PRIMARY (80%): 3 job categories from orchestrator POV (Transcoding, Realtime AI, Batch AI). Reframe for gateway operator.
+  - all-resources/v2-dev--ai-pipelines-overview.mdx          - SECONDARY (40%): 3 integration patterns (Standard API, ComfyStream, BYOC). Developer-focused but useful for pattern descriptions.
+  - all-resources/v2-run--transcoding.mdx                    - Placeholder (5%): Reserved page, planned structure only.
 
   CROSS-REFS:
-  - Setup → Configuration (video, AI, dual) — "how to set up" vs this section's "how it works"
-  - Concepts → Capabilities — high-level capability overview
-  - Concepts → Architecture — network architecture context
-  - Resources → Technical Architecture — architecture diagrams
+  - Setup → Configuration (video, AI, dual) - "how to set up" vs this section's "how it works"
+  - Concepts → Capabilities - high-level capability overview
+  - Concepts → Architecture - network architecture context
+  - Resources → Technical Architecture - architecture diagrams
 */}
 
 {/* # Pipeline Overview

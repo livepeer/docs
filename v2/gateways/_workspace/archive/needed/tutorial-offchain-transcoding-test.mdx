@@ -1,0 +1,68 @@
+---
+title: "Your First Gateway: Off-chain Transcoding Test"
+description: "Prove the gateway-orchestrator pipeline works in ~15 minutes — CPU only, no ETH, no GPU"
+status: stub
+tutorial: 1-of-3
+---
+
+# Your First Gateway: Off-chain Transcoding Test
+
+<Note>This page is a stub. Content to be developed.</Note>
+
+## Outline
+
+### What you'll build
+- A local gateway → orchestrator pipeline that transcodes a test video stream
+- Proves the full job lifecycle: request → route → process → return
+- ~15 minutes, single machine, zero cost
+
+### Prerequisites
+- Docker (or go-livepeer binary)
+- ffmpeg installed
+- No ETH wallet, no GPU, no network registration needed
+
+### Step 1 — Start a local orchestrator
+- `go-livepeer -orchestrator -transcoder -network offchain -serviceAddr 127.0.0.1:8936`
+- No `-nvidia` flag = CPU transcoding
+- Explain what `-network offchain` means (no Arbitrum, no staking, local only)
+
+### Step 2 — Start your gateway
+- `go-livepeer -gateway -network offchain -orchAddr 127.0.0.1:8936`
+- Point directly at local orchestrator (no discovery needed)
+- Explain the gateway-orchestrator relationship
+
+### Step 3 — Send a test stream
+- `ffmpeg -re -i <test-file> -c:v libx264 -f flv rtmp://127.0.0.1:1935/test_stream`
+- Or use a test pattern: `ffmpeg -f lavfi -i testsrc=duration=30:size=1280x720:rate=30 -c:v libx264 -f flv rtmp://127.0.0.1:1935/test`
+
+### Step 4 — Verify the output
+- Check HLS output at gateway HTTP port
+- Confirm transcoded renditions exist
+- Read the gateway logs to understand the job flow
+
+### What just happened
+- Diagram: ffmpeg → gateway (RTMP in) → orchestrator (transcode) → gateway (HLS out)
+- Map to concepts: session, segment, ticket (even in offchain mode)
+
+### Next steps
+- → Page 2: Add AI with a BYOC pipeline
+- → Configuration guide: customise transcoding profiles
+- → Setup Paths: decide on-chain vs off-chain for production
+
+---
+
+## Reference files to draw from
+
+### Primary sources
+- `_contextData_/Gateways_new/gw/content-brief-gwd-offchain-quickstart.md` — off-chain gateway quickstart brief (~30 min flow)
+- `_contextData_/Orchestrators_new/03-job-types-output.md` — job types with CPU/GPU requirements
+- `v2/gateways/run-a-gateway/configure/video-configuration.mdx` — video config flags
+- `v2/gateways/run-a-gateway/install/docker-install.mdx` — Docker install steps
+
+### Supporting sources
+- `livepeer/test-harness` (GitHub) — Docker cluster pattern for local orchestrator+gateway
+- `v2/gateways/run-a-gateway/run-a-gateway.mdx` — gateway overview
+- `v2/gateways/run-a-gateway/transcoding.mdx` — transcoding concepts
+- `v2/orchestrators/quickstart/guide.mdx` — orchestrator quickstart (cross-tab reference)
+- `v2/orchestrators/quickstart/video-transcoding.mdx` — orchestrator video transcoding setup
+- go-livepeer CLI reference for flag documentation

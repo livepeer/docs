@@ -1,20 +1,20 @@
 ---
 name: n8n-workflow-maintenance
-version: "1.0"
 description: >-
-  Audit and maintain n8n automation JSON workflows and their output contracts for docs data feeds. Use when tasks include update n8n automation json, n8n workflow drift from docs outputs, audit active vs inactive n8n flows.
-tier: 3
-invoke_when:
-  - "update n8n automation json"
-  - "n8n workflow drift from docs outputs"
-  - "audit active vs inactive n8n flows"
+  Audit and maintain n8n automation JSON workflows and their output contracts
+  for docs data feeds. Use when: update n8n automation json, n8n workflow drift
+  from docs outputs, audit active vs inactive n8n flows.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
-  - "snippets/automations/scripts/n8n"
+  - "snippets/assets/data/n8n"
   - "v2/resources/documentation-guide/automations-workflows.mdx"
-  - "snippets/automations"
+  - "snippets/data"
 primary_commands:
-  - "find snippets/automations/scripts/n8n -maxdepth 1 -name \"*.json\" | sort"
-  - "node -e \"JSON.parse(require(\"fs\").readFileSync(\"snippets/automations/scripts/n8n/Luma-To-Mintlify.json\",\"utf8\")); console.log(\"ok\")\""
+  - "find snippets/assets/data/n8n -maxdepth 1 -name \"*.json\" | sort"
+  - "node -e \"JSON.parse(require(\"fs\").readFileSync(\"snippets/assets/data/n8n/Luma-To-Mintlify.json\",\"utf8\")); console.log(\"ok\")\""
 ---
 
 SKILL: n8n Workflow Maintenance
@@ -30,13 +30,13 @@ Constraints
 
 Workflow
 1. Enumerate workflow JSON files and parse-validate each target workflow.
-2. Check output file destinations against current snippets/automations structure.
+2. Check output file destinations against the current `snippets/data/**` structure.
 3. Document active/inactive status and maintenance priority.
 
 Command examples
 ```bash
-find snippets/automations/scripts/n8n -maxdepth 1 -name \"*.json\" | sort
-node -e \"JSON.parse(require(\"fs\").readFileSync(\"snippets/automations/scripts/n8n/Luma-To-Mintlify.json\",\"utf8\")); console.log(\"ok\")\"
+find snippets/assets/data/n8n -maxdepth 1 -name \"*.json\" | sort
+node -e \"JSON.parse(require(\"fs\").readFileSync(\"snippets/assets/data/n8n/Luma-To-Mintlify.json\",\"utf8\")); console.log(\"ok\")\"
 ```
 
 Deliverable Format

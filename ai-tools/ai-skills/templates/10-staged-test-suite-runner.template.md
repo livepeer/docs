@@ -1,21 +1,21 @@
 ---
 name: staged-test-suite-runner
-version: "1.0"
 description: >-
-  Run staged-scope validation flow to check only changed docs and scripts before commit. Use when tasks include run only staged tests, quick pre-commit checks locally, validate changed files only.
-tier: 1
-invoke_when:
-  - "run only staged tests"
-  - "quick pre-commit checks locally"
-  - "validate changed files only"
+  Run staged-scope validation flow to check only changed docs and scripts
+  before commit. Use when: run only staged tests, quick pre-commit checks
+  locally, validate changed files only.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "1"
 primary_paths:
   - "tests/run-all.js"
   - "tests/README.md"
-  - "tests/WHEN-TESTS-RUN.md"
+  - "operations/tests/WHEN-TESTS-RUN.md"
   - ".githooks/pre-commit"
 primary_commands:
-  - "node tests/run-all.js --staged --skip-browser"
-  - "node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
+  - "node operations/tests/run-all.js --staged --skip-browser"
+  - "node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
 ---
 
 SKILL: Staged Test Suite Runner
@@ -36,8 +36,8 @@ Workflow
 
 Command examples
 ```bash
-node tests/run-all.js --staged --skip-browser
-node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
+node operations/tests/run-all.js --staged --skip-browser
+node operations/tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
 ```
 
 Deliverable Format

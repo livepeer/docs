@@ -1,0 +1,305 @@
+import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+import { DockerSupport } from '/v2/gateways/custom/composables/docker/dockerSupport.jsx'
+import { DockerUpdate, DockerPull, DockerInstallCheck } from '/v2/gateways/custom/composables/docker/dockerSteps.jsx'
+import { DOCKER_CODE } from '/v2/gateways/custom/data/docker/code.jsx';
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+
+## <Icon icon="docker" iconType="solid" size={32} /> Docker Guide
+{dockerGroup()}
+
+<DockerSupport />
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Prerequisites">
+        <DockerUpdate />
+    </StyledStep>
+    <StyledStep title="Pull Docker Image">
+        <DockerPull />
+    </StyledStep>
+    <StyledStep title="Quick Test">
+        <DockerInstallCheck />
+        {/*
+        When running the gateway, you should see several types of log output indicating successful startup:
+
+## Expected Log Messages
+
+### 1. Version and Configuration
+```
+Livepeer Node version: [version]
+Golang runtime version: [compiler] [go version]
+Architecture: [arch]
+Operating system: [os]
+```
+This comes from the version check in `main()` [1](#1-0)
+
+### 2. Configuration Table
+A formatted table showing non-default configuration values you've set. This is printed by `cfg.PrintConfig()` [2](#1-1)
+
+### 3. Service Startup Messages
+```
+Starting Gateway...
+```
+From the box script when using the box setup [3](#1-2)
+
+### 4. Network Binding
+You should see messages about which ports the gateway is binding to:
+- RTMP port (default 1935)
+- HTTP API port (default 8935)
+- CLI port (default 7935)
+
+### 5. Node Information
+```
+Livepeer Node version: [version]
+```
+Printed during startup in `StartLivepeer()` [4](#1-3)
+
+## Troubleshooting Logs
+
+With `-v 6` (verbose logging), you'll see detailed debug information including:
+- Component initialization
+- Network connection attempts
+- Service discovery processes
+
+## Error Indicators
+
+The gateway will exit early if:
+- No services are enabled (missing `-gateway` flag) [5](#1-4)
+- Invalid configuration parameters
+- Port binding failures
+
+## Notes
+
+- In off-chain mode (default without `-network` flag), the gateway creates an `offchain` directory [6](#1-5)
+- Logs are written to stdout and can be redirected to a file by using `tee` as shown in the box script
+- The verbosity level `-v` controls how much detail you see (6 being most verbose)
+         */}
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Configure the Gateway"
+  icon="gear"
+  href="/v2/gateways/setup/configure"
+  horizontal
+  arrow
+>
+ View all available configuration options for the gateway
+</Card>
+
+{/*
+     <StyledStep title="Start Gateway">
+        Start the gateway container in the background:
+
+            ```bash icon="terminal"
+            docker compose up -d
+            ```
+
+        Verify the gateway is running:
+
+            ```bash icon="terminal"
+            docker logs gateway
+            ```
+
+        The gateway is ready when logs show it binding to the configured ports and
+        connecting to orchestrators on the network.
+
+        <Note>
+            **On-chain mode only:** The gateway must be funded with ETH before
+            orchestrators will accept transcoding jobs. If streams produce no output,
+            check that your gateway account has sufficient ETH. See
+            [Fund your gateway](/v2/gateways/guides/payments-and-pricing/fund-gateway).
+        </Note>
+    </StyledStep>
+    <StyledStep title="Configure Gateway">
+            {/* Create a working directory and a `docker-compose.yml` file. Choose the
+        configuration that matches your deployment target:
+
+        <Tabs>
+            <Tab title="On-Chain (Production)">
+        On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
+        Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
+        See [On-Chain Setup Requirements](/v2/gateways/setup/requirements/on-chain-setup/on-chain)
+        for prerequisites.
+
+                ```yaml icon="terminal" docker-compose.yml
+                services:
+                gateway:
+                    image: livepeer/go-livepeer:master
+                    container_name: "gateway"
+                    restart: unless-stopped
+                    ports:
+                    - 1935:1935   # RTMP ingest
+                    - 8935:8935   # HTTP API / HLS output
+                    - 5935:5935   # CLI
+                    volumes:
+                    - ./data/gateway:/root/.lpData
+                    command:
+                    - "-gateway"
+                    - "-network=arbitrum-one-mainnet"
+                    - "-ethUrl=<YOUR_ARB_RPC_URL>"
+                    - "-ethKeystorePath=/root/.lpData/keystore"
+                    - "-ethPassword=/root/.lpData/eth-secret.txt"
+                    - "-rtmpAddr=0.0.0.0:1935"
+                    - "-httpAddr=0.0.0.0:8935"
+                    - "-cliAddr=0.0.0.0:5935"
+                    - "-httpIngest=true"
+                    - "-blockPollingInterval=10"
+                    - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+                    - "-monitor"
+                    - "-v=6"
+                ```
+
+        Replace `<YOUR_ARB_RPC_URL>` with your Arbitrum One RPC endpoint.
+            </Tab>
+            <Tab title="Development (Off-Chain)">
+        Off-chain mode runs without blockchain connectivity and is intended for
+        local development. You must supply the address of a running orchestrator
+        node via `-orchAddr`.
+
+                <Warning>
+        You need access to a running orchestrator node. For local testing, run
+        your own orchestrator or point to a known development node.
+                </Warning>
+
+                ```yaml icon="terminal" docker-compose.yml
+                services:
+                gateway:
+                    image: livepeer/go-livepeer:master
+                    container_name: "gateway"
+                    restart: unless-stopped
+                    ports:
+                    - 1935:1935   # RTMP ingest
+                    - 8935:8935   # HTTP API / HLS output
+                    - 5935:5935   # CLI
+                    volumes:
+                    - ./data/gateway:/root/.lpData
+                    command:
+                    - "-gateway"
+                    - "-network=offchain"
+                    - "-orchAddr=<YOUR_ORCHESTRATOR_ADDRESS>"
+                    - "-rtmpAddr=0.0.0.0:1935"
+                    - "-httpAddr=0.0.0.0:8935"
+                    - "-cliAddr=0.0.0.0:5935"
+                    - "-httpIngest=true"
+                    - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+                    - "-v=6"
+                ```
+
+        Replace `<YOUR_ORCHESTRATOR_ADDRESS>` with the service address of your
+        orchestrator, for example `https://my-orch:8935`.
+            </Tab>
+        </Tabs>
+    </StyledStep>
+    <StyledStep title="Create ETH Account">
+            <Note>
+        This step applies to the **On-Chain** configuration only. Skip it if you are
+        using development (off-chain) mode.
+            </Note>
+
+        Before the gateway can sign transactions on-chain, it needs an Ethereum
+        account. Run the gateway interactively once to generate one:
+
+            ```bash icon="terminal"
+            mkdir -p ./data/gateway
+            docker compose run -it gateway
+            ```
+
+        When prompted, enter a strong password to protect your Ethereum private key.
+
+            <Warning>
+        Never share or lose your keystore file or password. Both are required to
+        recover your ETH account.
+            </Warning>
+
+        After the log output confirms the Ethereum account has been unlocked, press
+        `Ctrl+C` to exit, then write the same password to the file that the gateway
+        reads on startup:
+
+            ```bash icon="terminal"
+            echo "your_password" > ./data/gateway/eth-secret.txt
+            ```
+
+        The keystore file is stored at `./data/gateway/keystore/`. Back it up
+        securely before going to production. Losing this file means losing access
+        to any ETH held in the account.
+    </StyledStep>
+    <StyledStep title="Stream Live Video">
+        The gateway accepts RTMP ingest on port `1935`. Transcoded HLS output is
+        available on port `8935` at `/stream/<manifest-id>.m3u8`.
+
+        <Tabs>
+            <Tab title="FFmpeg">
+                Push a file or live source to the gateway using FFmpeg:
+
+                ```bash icon="terminal"
+                ffmpeg -re -i input.mp4 -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/live/stream
+                ```
+
+                Replace `input.mp4` with a local file or a live source URL. The path segment
+                after `/live/` (`stream` in the example above) becomes the manifest ID used to
+                retrieve the HLS output.
+
+                The transcoded HLS output will be available at:
+
+                ```text icon="terminal"
+                http://localhost:8935/stream/stream.m3u8
+                ```
+            </Tab>
+            <Tab title="OBS Studio">
+                [OBS Studio](https://obsproject.com/) is a common choice for RTMP
+                broadcasting.
+
+                        1. Open OBS and go to **Settings > Stream**
+                        2. Set **Service** to **Custom...**
+                        3. Set **Server** to `rtmp://localhost:1935/live`
+                        4. Set **Stream Key** to `stream` (or any identifier you choose)
+                        5. Go to **Settings > Output** and set **Output Mode** to **Advanced**
+                        6. Set **Keyframe Interval** to `2` seconds
+                        7. Click **OK** and press **Start Streaming**
+
+                The transcoded HLS output will be available at:
+
+                        ```text icon="terminal"
+                        http://localhost:8935/stream/stream.m3u8
+                        ```
+            </Tab>
+        </Tabs>
+
+        <Tip>
+            If running on a cloud server, ensure ports `1935` and `8935` are open in your
+            firewall or security group rules.
+        </Tip>
+    </StyledStep>
+    <StyledStep title="Stream Authentication">
+        By default, the gateway accepts any incoming RTMP stream. To restrict access,
+        use the `-authWebhookUrl` flag to point the gateway at an authentication
+        endpoint you control.
+
+        When an incoming stream arrives, the gateway sends a `POST` request to the
+        webhook URL with the stream URL as a JSON payload:
+
+        ```json icon="terminal"
+        {
+        "url": "rtmp://localhost:1935/live/stream"
+        }
+        ```
+
+        Your server responds with HTTP `200` to allow the stream, or any other status
+        code to reject it.
+
+        Add the flag to your `docker-compose.yml` command block:
+
+            ```yaml icon="terminal"
+            - "-authWebhookUrl=https://your-auth-server.com/auth"
+            ```
+
+        The stream key in the RTMP path, for example `stream` in
+        `rtmp://localhost/live/stream`, is included in the webhook payload URL. Your
+        webhook implementation can use this value to authenticate incoming callers.
+
+        For full webhook response options including custom `manifestID`, `streamKey`
+        override, and per-stream transcoding profiles, see the
+        [RTMP Webhook Authentication reference](https://github.com/livepeer/go-livepeer/blob/master/doc/rtmpwebhookauth.md).
+    </StyledStep>
+*/}

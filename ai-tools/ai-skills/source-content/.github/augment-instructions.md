@@ -39,7 +39,7 @@
 
 **BEFORE making any styling, component, or documentation changes, you MUST read:**
 
-1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `tasks/plan/migration-plan.md` Section 4
+1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `workspace/plan/migration-plan.md` Section 4
    - Repository structure and file organization rules
    - Directory purposes and file placement guidelines
    - Enforcement mechanisms
@@ -69,7 +69,7 @@
 
 **BEFORE creating, moving, or organizing files, you MUST read:**
 - `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
-- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+- `workspace/plan/migration-plan.md` - Detailed structure documentation (Section 4)
 
 ### Critical Structure Rules
 
@@ -79,7 +79,7 @@
    - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
 
 2. **File Locations** - Files must be in correct directories:
-   - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
+   - Scripts → `operations/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
    - Config files → `tools/config/` **EXCEPT**:
      - `.prettierrc.yaml` → **ROOT** (Prettier convention)
    - `.speakeasy/` → `tools/config/.speakeasy/` (Speakeasy API docs tool config)
@@ -92,7 +92,7 @@
 3. **Snippets Directory** - MUST follow Mintlify conventions:
    - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
    - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
-   - ❌ Forbidden: Scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
+   - ❌ Forbidden: Scripts (→ `operations/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
    - ✅ All imports must be absolute paths from root: `/snippets/components/...`
    - ❌ Components cannot import other components
 
@@ -114,14 +114,14 @@
 - `snippets/pages/` - REQUIRED for MDX sub-views (MDX-in-MDX pattern)
 - `snippets/assets/` - Static assets for docs content
 - `snippets/automations/` - Dynamic/AI/data-fetching logic
-- `tools/scripts/` - All scripts (organized by purpose)
+- `operations/scripts/` - All scripts (organized by purpose)
 - `tools/config/` - Tool configurations
 - `tools/ai-rules/` - AI guidelines and rules
 - `api/` - Consolidated OpenAPI specifications
 - `contribute/` - Contribution documentation
 - `favicon.png` and `logo/` - Public assets in `snippets/assets/` (referenced in docs.json)
 - `ai-tools/` - AI tool setup guides
-- `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
+- `workspace/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 - `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
 
 ### Important Files

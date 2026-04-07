@@ -1,0 +1,393 @@
+# ACTUAL CONTRACTS PAGES REFERENCE
+
+Generated: 2026-04-02 21:13:57 +1100
+Purpose: inline source-of-truth reference for the two contracts pages after the failed recovery cycle
+Authority: this file records the page contract derived from the chat, not from git history and not from stray backup files
+
+---
+
+## Scope
+
+This file covers only these two pages:
+
+- [livepeer-contract-addresses.mdx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx)
+- [blockchain-contracts.mdx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/about/livepeer-protocol/blockchain-contracts.mdx)
+
+Public routes:
+
+- `/v2/about/resources/livepeer-contract-addresses`
+- `/v2/about/livepeer-protocol/blockchain-contracts`
+
+This file exists because:
+
+- the approved page state was not safely preserved
+- git history is not the authoritative target
+- random backup/archive files are not authoritative
+- the user-approved contract in chat is authoritative
+
+---
+
+## Hard Rules
+
+These are not optional.
+
+- No `export const` blocks belong in either MDX page.
+- No page-local truth data belongs in either MDX page.
+- Shared components are not to be changed to solve page-local presentation issues.
+- Script or pipeline changes must not be used as a bandaid for page presentation regressions.
+- No guessed copy, layout, widths, or semantics should be presented as if they were confirmed facts.
+- The pages must preserve approved visual output while data is moved out.
+
+---
+
+## Data Ownership
+
+### Canonical shared generated data
+
+Shared contracts data belongs under:
+
+- [contract-addresses](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/data/contract-addresses)
+
+Relevant generated files:
+
+- [contractAddressesData.json](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/data/contract-addresses/contractAddressesData.json)
+- [contractAddressesData.jsx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/data/contract-addresses/contractAddressesData.jsx)
+- [blockchainContractsPageData.json](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/data/contract-addresses/blockchainContractsPageData.json)
+- [blockchainContractsPageData.jsx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/data/contract-addresses/blockchainContractsPageData.jsx)
+
+### Page-local data shaping only
+
+If page-local shaping is needed, it belongs in plain data-only modules under:
+
+- [data](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/composables/pages/canonical/data)
+
+Allowed:
+
+- plain arrays
+- plain objects
+- plain selectors
+- plain mapping/normalization helpers
+
+Not allowed:
+
+- JSX
+- UI imports
+- rendering helpers
+- page-level presentational logic
+
+Current plain data modules in play:
+
+- [livepeer-contract-addresses-page-data.js](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/composables/pages/canonical/data/livepeer-contract-addresses-page-data.js)
+- [blockchain-contracts-data.js](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/composables/pages/canonical/data/blockchain-contracts-data.js)
+
+---
+
+## Page 1: Contracts Addresses
+
+Path:
+
+- [livepeer-contract-addresses.mdx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx)
+
+### Required imports on the page
+
+The page is allowed to import UI components directly. These are page-layer imports, not data-layer imports.
+
+Current required component/data import surface:
+
+```mdx
+import { CustomDivider, InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink, LinkIcon } from '/snippets/components/elements/links/Links.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { ContractVerifier } from '/snippets/components/integrators/feeds/ContractVerifier.jsx'
+import { CustomCardTitle, AccordionTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+import { ArbitrumIcon, LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { HistoricalContractTable } from '/snippets/components/displays/tables/HistoricalContractTable.jsx'
+import { DataWrap } from '/snippets/components/wrappers/data/workflows.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+import {
+  getActiveTableItems,
+  getProxyTableItems,
+  getPausedTableItems,
+  getMigrationResidualTableItems,
+  getLegacyOperationalTableItems,
+} from '/snippets/composables/pages/canonical/data/livepeer-contract-addresses-page-data.js'
+```
+
+### Data contract for the page
+
+The page should consume:
+
+- `contractAddresses`
+- `getActiveTableItems()`
+- `getProxyTableItems()`
+- `getPausedTableItems()`
+- `getMigrationResidualTableItems()`
+- `getLegacyOperationalTableItems()`
+
+The page should not define:
+
+- chain maps
+- lifecycle maps
+- explorer base maps
+- table normalization functions
+- derived table datasets
+
+Those belong in the plain `.js` data module.
+
+### Copy contract
+
+The approved copy expectations from chat:
+
+- The tip is the newer pipeline/provenance wording, not the older governor-scripts-only wording.
+- The “How this widget works” accordion is the newer direct-browser / RPC / Blockscout explanation.
+- Workflow verification copy uses a daily cadence.
+- The page heading in this section is:
+  - `## Livepeer Contract Overview`
+
+### Style and layout contract
+
+#### Active contracts table
+
+Structure:
+
+- `Name | Address | Type | Chain`
+
+Style expectations:
+
+- `Type` is narrower than before
+- `Chain` is wider than before
+- address cells are styled address cells, not plain strings
+- chain cells render with chain icon + label
+- type cells render as badges
+
+Known literal widths recovered from the later approved table shape:
+
+- `Type: 12%`
+- `Chain: 28%`
+
+#### Active proxy contracts table
+
+Structure:
+
+- `Name | Proxy | Proxy Address | Chain | Target | Target Address`
+
+Style expectations:
+
+- `Proxy` is a narrow badge column
+- `Target` is a narrow badge column
+- `Proxy Address` is a styled address cell
+- `Target Address` is a styled address cell
+- `Chain` is wide enough for `Arbitrum One`
+- this table replaces the older split proxy/implementation presentation
+
+Known literal widths recovered from the later approved shape:
+
+- `Name: 16%`
+- `Proxy: 5%`
+- `Proxy Address: 26%`
+- `Chain: 22%`
+- `Target: 5%`
+- `Target Address: 26%`
+
+#### Non-active section
+
+Style expectations:
+
+- published as a searchable table, not the older three separate accordions
+- includes paused, migration-residual, and legacy-operational rows
+
+#### Historical section
+
+Structure:
+
+- accordions:
+  - `Core`
+  - `Governance`
+  - `Migration`
+  - `Genesis`
+
+Style expectations:
+
+- latest first
+- current contracts excluded
+- split by chain
+- `Genesis` is present
+
+Historical component behavior already known to survive in the component layer:
+
+- latest first
+- no current rows
+- split by chain
+
+### What does not belong on this page anymore
+
+- page-local `export const`
+- page-local normalization helpers
+- page-local dataset assembly
+- recovery comments
+- guessed widths presented as facts
+
+---
+
+## Page 2: Blockchain Contracts
+
+Path:
+
+- [blockchain-contracts.mdx](/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/about/livepeer-protocol/blockchain-contracts.mdx)
+
+### Required imports on the page
+
+The page may import components directly. The data/selector layer should come from a plain `.js` module.
+
+Current intended import shape:
+
+```mdx
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink, LinkIcon } from '/snippets/components/elements/links/Links.jsx'
+import { Subtitle, CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+import { AddressLinks } from '/snippets/components/elements/links/Links.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+import { ArbitrumIcon, ArbitrumSVG, LivepeerIcon, LivepeerSVG } from '/snippets/components/elements/icons/Icons.jsx'
+import { SolidityEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { FunctionField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
+import { DataWrap } from '/snippets/components/wrappers/data/workflows.jsx'
+import {
+  arb,
+  eth,
+  getCodeHref,
+  getExplorerHref,
+  toRawGitHubUrl,
+  controller,
+  bondingManagerProxy,
+  ticketBrokerProxy,
+  roundsManagerProxy,
+  minter,
+  serviceRegistryProxy,
+  aiServiceRegistry,
+  lptArb,
+  lptEth,
+  bridgeMinter,
+  l2Gateway,
+  l1Gateway,
+  l1Escrow,
+  bondingVotesProxy,
+  governor,
+  livepeerGovernorProxy,
+  treasury,
+  l2MigratorProxy as l2Migrator,
+  merkleSnapshot,
+} from '/snippets/composables/pages/canonical/data/blockchain-contracts-data.js'
+```
+
+### Data contract for the page
+
+This page should not define:
+
+- page-local address selectors
+- page-local chain inventory functions
+- page-local explorer URL helpers
+- page-local `export const` blocks
+
+Those belong in the plain `.js` module or in generated page companion data.
+
+### Copy and fact-line contract
+
+Approved/locked expectations from chat and generated data:
+
+- no user-facing `Verification weak`
+- `LivepeerTokenFaucet` should say:
+  - `Local development utility contract.`
+- stale hardcoded status lines should be removed, including:
+  - `~600 transactions`
+  - `Last active Feb 2026`
+  - `No activity since deployment`
+
+Approved fact examples from generated/tested blockchain page data:
+
+- `Controller`: `Controller registry · Active`
+- `BondingManager`: `Controller registered · Active · Proxy target resolved · Target V13`
+- `AIServiceRegistry`: `Deployment artifact confirmed · Runtime consumer confirmed · Active`
+- `Governor`: `Deployment artifact confirmed · Active`
+- `LivepeerTokenFaucet`: unsupported note only, rendered as `Local development utility contract.`
+
+### Style contract
+
+- keep the page’s established section and accordion structure
+- do not collapse into a new renderer abstraction
+- keep the page visually stable while data is moved out
+- keep direct component imports on the page
+- remove stale wording without reworking the whole layout
+
+### Special blockchain expectations
+
+- `L2Migrator` proxy/target handling must be explicitly corrected
+- `MerkleSnapshot` wording should not reintroduce the stale “no activity since deployment” line
+- the page should remain visually coherent while consuming externalized data/selectors
+
+---
+
+## What Went Wrong
+
+This section is here so the next recovery attempt does not repeat the same failure mode.
+
+- Shared components were touched for a page-local problem.
+- New JSX helper/render layers were introduced before proving Mint would accept them.
+- The wrong authority was used during recovery:
+  - not the user-approved in-chat contract
+  - sometimes git `HEAD`
+  - sometimes stray backup/archive files
+- Style recovery was treated as if it were only about widths. It was not.
+
+---
+
+## Style Means More Than Widths
+
+Style regressions for these pages include:
+
+- copyable address presentation
+- icon usage and placement
+- badge colors and capitalization
+- divider spacing
+- card labels and badges
+- section headings
+- accordion title + description rendering
+- grouping/separator behavior
+- which tables exist and how they are split
+- how proxy vs target addresses are visually presented
+
+Widths are only one part of the style contract.
+
+---
+
+## Recovery Order
+
+If these pages are repaired again, do it in this order:
+
+1. Restore page output contract first.
+2. Keep fixes page-local.
+3. Do not change shared components to solve local page issues.
+4. Keep data modules plain `.js`, data-only.
+5. Verify rendering before claiming done.
+6. Audit scripts and generated data separately, after page recovery.
+
+---
+
+## Non-Authoritative Sources
+
+These are not valid authorities for “the approved state”:
+
+- git `HEAD`
+- any random backup file
+- any archive page
+- any guessed width/copy/layout
+
+The authoritative target is the user-approved contract described in chat and recorded here.

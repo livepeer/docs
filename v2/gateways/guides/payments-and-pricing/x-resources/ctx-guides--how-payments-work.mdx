@@ -2,9 +2,13 @@
 title: How Payments Work
 sidebarTitle: How Payments Work
 description: >-
-  Understand Livepeer's probabilistic micropayment system and what it means for
-  gateway operators managing payment signing keys, ETH balances, and on-chain
-  settlement.
+  Understand Livepeer's probabilistic micropayment system and what it means for gateway
+  operators managing payment signing keys, ETH balances, and on-chain settlement.
+pageType: resource
+audience: gateway
+purpose: orient
+status: production
+lastVerified: '2026-02-01'
 keywords:
   - livepeer
   - new
@@ -16,23 +20,16 @@ keywords:
   - understand
   - probabilistic
   - micropayment
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-purpose: concept
-pageType: concept
-audience:
-  - gateway-operator
-status: production
-lastVerified: '2026-02-01'
-sourceOfTruth: 'https://github.com/livepeer/go-livepeer'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
+sourceOfTruth: https://github.com/livepeer/go-livepeer
 ---
-
 # How Payments Work
 
-Livepeer uses **probabilistic micropayments (PM)** to settle fees between gateways and orchestrators. Understanding this system is essential to operating a gateway responsibly — it determines your ETH obligations, your signing key security requirements, and whether you run fully on-chain or off-chain.
+Livepeer uses **probabilistic micropayments (PM)** to settle fees between gateways and orchestrators. Understanding this system is essential to operating a gateway responsibly - it determines your ETH obligations, your signing key security requirements, and whether you run fully on-chain or off-chain.
 
 ## Why Probabilistic Micropayments?
 
@@ -42,7 +39,7 @@ Paying for every individual AI inference job or transcoded segment on-chain woul
 - Each ticket has a small probability of being a "winning ticket" worth a larger face value.
 - Orchestrators redeem winning tickets on-chain via the `TicketBroker` contract on Arbitrum.
 
-Over time, the expected value of tickets matches what would have been paid directly — but most individual exchanges happen entirely off-chain, with only winning tickets touching the blockchain.
+Over time, the expected value of tickets matches what would have been paid directly - but most individual exchanges happen entirely off-chain, with only winning tickets touching the blockchain.
 
 <Callout type="info">
 PM significantly reduces gas costs compared to per-transaction settlement. A gateway processing thousands of jobs per hour may only trigger a handful of on-chain redemptions.
@@ -62,7 +59,7 @@ Your gateway must maintain a funded deposit in the `TicketBroker` contract. This
 
 ### 2. Payment Signing Key
 
-Each ticket must be signed with your gateway's Ethereum private key. By default this key lives inside the same `go-livepeer` process handling untrusted media — a security risk if a malicious input were to exploit a vulnerability.
+Each ticket must be signed with your gateway's Ethereum private key. By default this key lives inside the same `go-livepeer` process handling untrusted media - a security risk if a malicious input were to exploit a vulnerability.
 
 <Callout type="warning">
 **Security concern:** A compromised gateway process could expose your signing key and drain your ETH deposit. For production deployments, consider using a [Remote Signer](/v2/gateways/payments/remote-signers) to isolate signing from media handling.
@@ -80,7 +77,7 @@ In addition to a deposit, gateways maintain a **reserve** balance as a penalty b
 
 | Mode | Description | Use case |
 |------|-------------|----------|
-| **On-chain** | Full Ethereum integration — gateway manages key, signs tickets, calls reward | Production transcoding, established gateways |
+| **On-chain** | Full Ethereum integration - gateway manages key, signs tickets, calls reward | Production transcoding, established gateways |
 | **Off-chain (Live AI)** | Remote Signer handles all Ethereum operations; gateway contains no private key | Live AI workloads, embedded gateways, clearinghouse architecture |
 
 For Live AI specifically, go-livepeer can operate **entirely in off-chain mode** for media handling, delegating all signing to a separately run Remote Signer service. No orchestrator changes are required.
@@ -89,7 +86,7 @@ For Live AI specifically, go-livepeer can operate **entirely in off-chain mode**
 
 When your gateway starts a Live AI session with an orchestrator:
 
-1. The orchestrator returns `ticketParams` — parameters defining valid ticket shape and pricing.
+1. The orchestrator returns `ticketParams` - parameters defining valid ticket shape and pricing.
 2. Your gateway (or Remote Signer) generates and signs tickets at regular intervals.
 3. Orchestrators accumulate tickets and redeem winning ones on Arbitrum.
 4. Updated `ticketParams` are returned after each payment round, refreshing the session.

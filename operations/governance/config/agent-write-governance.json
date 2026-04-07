@@ -1,0 +1,166 @@
+{
+  "version": "agent-write-governance.v1",
+  "canonical_home": "operations/governance",
+  "bridge_mode": "staged",
+  "default_policy": "scratch_by_default",
+  "root_policy": {
+    "undeclared_root_writes": "forbidden",
+    "admitted_root_surfaces": [
+      ".allowlist",
+      "docs-index.json",
+      "llms.txt",
+      "sitemap-ai.xml",
+      "ai-tools"
+    ],
+    "notes": "Agents must not create ad hoc root files or folders. Root writes are allowed only when the destination is already a governed root surface."
+  },
+  "path_classes": [
+    {
+      "id": "canonical-docs",
+      "allowed_paths": [
+        "v2/**",
+        "docs-guide/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Canonical user-facing docs and internal governance docs."
+    },
+    {
+      "id": "canonical-doc-support",
+      "allowed_paths": [
+        "snippets/**",
+        "api/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Governed doc-supporting content, APIs, snippets, and shared content assets."
+    },
+    {
+      "id": "legacy-docs-frozen",
+      "allowed_paths": [
+        "v1/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Legacy docs tree remains path-classified for governance coverage, while separate freeze rules continue to block edits."
+    },
+    {
+      "id": "canonical-operations",
+      "allowed_paths": [
+        "operations/**",
+        ".github/**",
+        ".githooks/**",
+        "ai-tools/**",
+        ".mintlify/**",
+        ".codex/**",
+        ".claude/**",
+        ".cursor/**",
+        ".windsurf/**",
+        ".augment/**",
+        ".vscode/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Canonical repo operations, automation, and AI-first subsystem paths."
+    },
+    {
+      "id": "canonical-tooling",
+      "allowed_paths": [
+        "tools/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Shared helper code and non-canonical supporting tooling."
+    },
+    {
+      "id": "workspace-governed",
+      "allowed_paths": [
+        "workspace/plan/**",
+        "workspace/research/**",
+        "workspace/scripts/**",
+        "workspace/staging/**",
+        "workspace/errors/**"
+      ],
+      "commit_policy": "task_dependent",
+      "notes": "Tracked workspace planning, research, scripts, and staged working material with explicit task scope."
+    },
+    {
+      "id": "workspace-report",
+      "allowed_paths": [
+        "workspace/reports/**"
+      ],
+      "commit_policy": "task_dependent",
+      "notes": "Tracked reports are allowed only when the task explicitly requires a committed report."
+    },
+    {
+      "id": "workspace-local",
+      "allowed_paths": [
+        "workspace/reports/_local/**",
+        "workspace/tmp/**"
+      ],
+      "commit_policy": "forbidden",
+      "notes": "Local-only scratch, captures, and diagnostics must not be committed."
+    },
+    {
+      "id": "thread-state",
+      "allowed_paths": [
+        "workspace/thread-outputs/**"
+      ],
+      "commit_policy": "tracked",
+      "notes": "Thread/session state is governed workspace state, not ad hoc scratch."
+    }
+  ],
+  "output_classes": [
+    {
+      "id": "canonical",
+      "default_destination": "declared governed surface paths only",
+      "path_class": "canonical-docs",
+      "commit_policy": "tracked",
+      "notes": "Canonical repo changes must target admitted governed surfaces."
+    },
+    {
+      "id": "governed-workspace",
+      "default_destination": "workspace/plan/** or other governed workspace paths",
+      "path_class": "workspace-governed",
+      "commit_policy": "task_dependent",
+      "notes": "Tracked workspace material is allowed only in declared governed workspace paths."
+    },
+    {
+      "id": "generated",
+      "default_destination": "manifest-declared generated outputs only",
+      "path_class": "canonical-operations",
+      "commit_policy": "tracked",
+      "notes": "Generated tracked outputs are allowed only when declared in a governance or generated-artifacts manifest."
+    },
+    {
+      "id": "report",
+      "default_destination": "workspace/reports/**",
+      "path_class": "workspace-report",
+      "commit_policy": "task_dependent",
+      "notes": "Tracked reports are task-scoped, not a default landing zone for diagnostics."
+    },
+    {
+      "id": "scratch",
+      "default_destination": "workspace/reports/_local/**",
+      "path_class": "workspace-local",
+      "commit_policy": "forbidden",
+      "notes": "Default class for temporary diagnostics and one-off exploratory outputs."
+    },
+    {
+      "id": "capture",
+      "default_destination": "workspace/reports/_local/**",
+      "path_class": "workspace-local",
+      "commit_policy": "forbidden",
+      "notes": "Screenshots, browser captures, and automation artifacts remain local-only unless explicitly promoted."
+    },
+    {
+      "id": "task-state",
+      "default_destination": "workspace/thread-outputs/**",
+      "path_class": "thread-state",
+      "commit_policy": "tracked",
+      "notes": "Thread and session state belongs in the governed thread-output tree."
+    },
+    {
+      "id": "forbidden",
+      "default_destination": "repo root or ad hoc top-level paths",
+      "path_class": "none",
+      "commit_policy": "forbidden",
+      "notes": "Undeclared root writes and ad hoc top-level outputs are forbidden."
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+
+
+{/* TABLE HERE */}
+
+{/* AGENT 1 */}
+## TABLE INDEX - CURRENT SCRIPT STATUS
+
+| Location | Function/Purpose | Status | Schema Version | Issues |
+|----------|-----------------|--------|----------------|--------|
+| `tools/lib/frontmatter-taxonomy.js` | Canonical source of truth for all frontmatter enums. Defines CANONICAL_PAGE_TYPES (7), CANONICAL_PURPOSES (15), CANONICAL_PAGE_STATUSES, and all deprecated alias maps. Exports normalizers, validators, and advisory helpers used by every downstream script. | Current | v2 (7-type pageType, 15-value purpose) | No audience tokens defined here — audience is scoped entirely to `rubric-loader.js`. The `PAGE_TYPE_ALLOWED_PURPOSES` map excludes `start` and `integrate` from `guide` and `verify` from `guide`, which may need revisiting as the content evolves. |
+| `tools/lib/docs-usefulness/rubric-loader.js` | Scoring system entry point. Defines `PURPOSE_ENUM` (10 rubric-internal labels), `AUDIENCE_ENUM` (9 tokens), and `SECTION_DEFAULT_AUDIENCE`. Resolves page purpose/audience for scoring via `resolvePurpose()` and `resolveAudience()`. | Mixed — outdated audience tokens, outdated purpose enum | Rubric-internal labels = pre-Phase-1 (landing, overview, how_to, faq, etc.); audience = 9-token set (gateway-operator, platform-builder, general, everyone — NOT the current canonical 7-token set) | `AUDIENCE_ENUM` uses `gateway-operator`, `platform-builder`, `general`, `everyone`, `internal` — not the canonical 7 tokens (`founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`). `PURPOSE_ENUM` intentionally uses rubric-internal labels (old schema) mapped from canonical via `purposeToRubricPurpose()`, but this creates a two-layer translation risk: any script reading `purpose` from frontmatter against `PURPOSE_ENUM` directly will silently reject valid canonical values. |
+| `tools/config/usefulness-audience-normalization.json` | Config file. Maps audience synonyms/raw strings to canonical values. Defines `canonical_audiences`, `section_defaults`, `deterministic_precedence`, and `synonyms`. | Outdated | Old 9-token audience set | `canonical_audiences` lists `gateway-operator`, `platform-builder`, `general`, `everyone`, `internal` — not the canonical 7-token set (`founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`). Synonyms do not map `founder`, `builder`, or `gateway` (short form) to the new tokens. Section defaults also use old tokens. |
+| `operations/scripts/remediators/content/classification/add-pagetype-mechanical.js` | Remediator. Mechanically assigns `pageType` to v2 MDX pages without the field. Uses `frontmatter-taxonomy.js` for canonicalisation. Classification logic maps filename/path patterns to pageType values. | Mixed — uses current taxonomy library, but internal classification rules assign old-schema labels | Imports `CANONICAL_PAGE_TYPES` and `normalizePageType` from `frontmatter-taxonomy.js` (v2, correct). But `classifyFile()` internally assigns `landing`, `quickstart`, `glossary`, `faq`, `troubleshooting`, `overview` as intermediate labels — then normalises through the deprecated alias map. | Internal `SUMMARY_TYPES` array on line 26 lists deprecated labels: `reference`, `landing`, `quickstart`, `glossary`, `overview`, `faq`, `troubleshooting`. The script relies on the deprecated alias path rather than assigning canonical types directly. If the alias map in `frontmatter-taxonomy.js` were tightened, this script would break silently. Rule 10 assigns `overview` to `overview.mdx`/`index.mdx` — `overview` has no alias in the taxonomy (intentionally un-aliased). This will cause a classification error for those files. |
+| `operations/scripts/remediators/content/classification/assign-purpose-metadata.js` | Remediator. Assigns `purpose` and `audience` frontmatter fields to routable v2 pages. Supports LLM-assisted classification. Uses `rubric-loader.js` for `AUDIENCE_ENUM` and `PURPOSE_ENUM`. | Outdated — uses old audience and purpose enums from `rubric-loader.js` | Writes old-schema audience tokens (`gateway-operator`, `platform-builder`, `general`, `everyone`) directly to frontmatter. Writes old-schema purpose labels (`landing`, `tutorial`, `faq`, `how_to`, `glossary`, `changelog`, `troubleshooting`, `overview`, `concept`, `reference`) directly to frontmatter. | When this script runs with `--classify-with-llm`, the LLM prompt explicitly lists the 10 old-schema purpose values. Any frontmatter written by this script will need a second normalisation pass to reach canonical values. Audience tokens written will be unrecognised by any downstream validator that checks against the 7-token canonical set. `PURPOSE_RULES` on lines 123–138 assign deprecated purpose labels (`landing`, `tutorial`, `faq`, `glossary`, `changelog`, `troubleshooting`, `overview`, `reference`) as first-class values — not canonical aliases. |
+| `operations/scripts/validators/content/structure/lint-structure.js` | Validator. Checks required frontmatter fields (`title`, `pageType`, `audience`, `lastVerified`), `lastVerified` staleness (90-day threshold), REVIEW flags, empty decision-table cells, accordion URL gating, and hedge notes. | Partially current — requires `pageType` but does not validate its value; does not validate `audience` value | Does not use `frontmatter-taxonomy.js`. Does not check whether `pageType` is a canonical value — only presence. `getEnforcementDepth()` on line 84 uses a hard-coded depth map with `guide`, `evaluation`, `concept`, `reference`, `how-to`, `landing` — mixing canonical and deprecated labels. `REQUIRED_FRONTMATTER` does not include `purpose`. | No value-level validation of `pageType`. No validation of `audience` against any enum. `how-to` and `landing` in the enforcement depth map are deprecated aliases. `evaluation` is not in any schema. Missing `purpose` from required fields. Does not check `veracityStatus`. |
+| `operations/scripts/audits/content/quality/audit-v2-usefulness.js` | Audit. Scores v2 pages on usefulness via the rubric system. Reads `purpose` and `audience` from frontmatter and routes to scoring rules via `getRulesForPage()` in `rubric-loader.js`. Purpose-aware by default. | Outdated for audience tokens; purpose routing is bridged via `purposeToRubricPurpose()` | Canonical purpose values written to frontmatter are correctly translated to rubric labels via `taxonomy.purposeToRubricPurpose()`. Audience resolution goes through `rubric-loader.js` which uses the old 9-token set. | A page with `audience: gateway` (canonical) will resolve to null in `rubric-loader.js` because `gateway` is not in `AUDIENCE_ENUM`. Section-default fallback (`gateway-operator`) kicks in, masking the mismatch. Canonical audience tokens will silently fall through to section defaults — no warning, no error, no visibility. |
+| `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | Audit. Checks for TODO/TBD/Coming Soon markers, thin pages, stale content. Does not inspect frontmatter taxonomy fields. | Not applicable (no schema dependency) | n/a | No frontmatter taxonomy validation. Does not flag missing `veracityStatus`, missing `pageType`, or missing `purpose`. |
+| `operations/scripts/validators/content/structure/check-description-quality.js` | Validator. Checks frontmatter `description` field for SEO length, boilerplate openings, duplicate reuse. | Not applicable (no schema dependency) | n/a | Reads `description` only. Does not check any taxonomy fields. |
+| `operations/scripts/remediators/content/seo/generate-seo.js` | Remediator. Generates SEO metadata (title, description, keywords) from content analysis. Reads frontmatter but only writes SEO fields. | Not applicable (no schema dependency) | n/a | Does not read or validate taxonomy fields. |
+| `operations/scripts/automations/content/language-translation/lib/frontmatter.js` | Library. Parses and writes MDX frontmatter for translation. Does not validate taxonomy fields — passes through all existing frontmatter values. | Not applicable (no schema dependency) | n/a | Passes through all frontmatter fields without validation. Could propagate invalid `audience`/`purpose` values into translated copies. |
+| `operations/scripts/automations/content/language-translation/validate-generated.js` | Validator for translated MDX outputs. Checks provenance and integrity of generated localised files. Does not inspect taxonomy frontmatter fields. | Not applicable (no schema dependency) | n/a | Does not validate `pageType`, `audience`, `purpose`, or `veracityStatus` in translated files. |
+| `operations/scripts/generators/content/catalogs/generate-docs-index.js` | Generator. Produces `docs-index.json` from v2 frontmatter and `docs.json`. Reads `difficulty`, `lastVerified`, `title`, `description` from frontmatter. No taxonomy field handling. | Partial — reads frontmatter but ignores taxonomy fields | n/a | Does not read or validate `pageType`, `audience`, `purpose`, or `veracityStatus`. |
+| `operations/scripts/generators/ai/llm/generate-llms-files.js` | Generator. Produces `llms.txt` and `llms-full.txt` for AI consumption. Reads `title`, `description` from frontmatter. | Not applicable (no schema dependency) | n/a | Does not handle taxonomy fields. |
+| `operations/scripts/generators/content/seo/generate-ai-sitemap.js` | Generator. Produces AI sitemap. Reads basic frontmatter fields only. | Not applicable (no schema dependency) | n/a | No taxonomy validation. |
+| `operations/scripts/archive/legacy/audit-all-v2-pages.js` | Legacy browser-based audit. Checks page render via Puppeteer. No frontmatter inspection. | Archived/legacy — not in active pipeline | Legacy | No frontmatter checks. Archived. Do not use. |
+| `ai-tools/agent-packs/skills/seo-frontmatter-generation/SKILL.md` | AI skill. Generates SEO metadata fields in MDX frontmatter using `generate-seo.js`. References deprecated script path (`operations/scripts/snippets/generate-seo.js`). | Outdated path reference | n/a | References `operations/scripts/snippets/generate-seo.js` — this path does not exist. Canonical path is `operations/scripts/remediators/content/seo/generate-seo.js`. No taxonomy field logic. |
+
+### Notes
+
+**Two-layer purpose translation.** `frontmatter-taxonomy.js` defines 15 canonical purpose values. `rubric-loader.js` defines a separate 10-value `PURPOSE_ENUM` for internal rubric scoring, using pre-Phase-1 labels. `purposeToRubricPurpose()` bridges them. Any script that reads `purpose` from frontmatter directly against `PURPOSE_ENUM` (rather than normalising through `frontmatter-taxonomy.js` first) will silently fail on canonical values like `orient`, `choose`, `evaluate`, `integrate`, `optimise`, `verify`, `update`.
+
+**Audience token split.** The canonical 7-token audience set (`founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`) defined in `Frameworks.mdx` does not match any existing script enum. `rubric-loader.js` and `usefulness-audience-normalization.json` both use a 9-token set built around `gateway-operator`, `platform-builder`, `general`, `everyone`, `internal`. No migration path exists yet. Scripts that write audience tokens to frontmatter will write old-schema values.
+
+**`overview` is not aliased.** `frontmatter-taxonomy.js` explicitly excludes `overview` from `DEPRECATED_PAGE_TYPE_ALIASES` with a comment stating pages must be explicitly migrated. But `add-pagetype-mechanical.js` rule 10 assigns `overview` as a pageType to `overview.mdx` and `index.mdx` files, then passes it through `normalizePageType()`. This will result in an invalid canonical: `normalizePageType('overview')` returns `valid: false` — causing a thrown error at line 281.
+
+**No script checks `veracityStatus`.** The field added to all 70 orchestrator pages during the 2026-03-24 content pass has zero script coverage. No validator, audit, or remediator reads, validates, or enforces it.
+
+{/* AGENT 2 */}
+## SCRIPTS, PROMPTS, SKILLS, TEMPLATES, FRAMEWORKS TO USE TO REMEDIATE CONTENT
+
+All entries derived from a full audit of `operations/scripts/`, `ai-tools/ai-skills/`, `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/`, `snippets/templates/`, `docs-guide/`, and `tools/` as of 2026-03-24.
+
+Check categories from `checks.mdx`:U
+- **Cat 1**: Frontmatter & Taxonomy
+- **Cat 2**: Voice & Copy
+- **Cat 3**: Section Naming & Headings
+- **Cat 4**: Page Structure & Content Architecture
+- **Cat 5**: Layout, Components & Template
+- **Cat 6**: Veracity & Factual Accuracy
+- **Cat 7**: Navigation & Information Architecture
+- **Cat 8**: Links & Rendering
+- **Cat 9**: Process & Governance
+
+---
+
+### SCRIPTS
+
+| Location | Type | Function / Purpose | Fixes Which Check Category | Status | Issues |
+|----------|------|--------------------|---------------------------|--------|--------|
+| `operations/scripts/remediators/content/classification/add-pagetype-mechanical.js` | script | Mechanically assigns `pageType` frontmatter to eligible v2 MDX pages using the 7-type canonical schema | Cat 1 (1.2 pageType) | CURRENT | Writes `pageType` via deprecated alias path; `overview` files will throw at runtime (see TABLE INDEX notes) |
+| `operations/scripts/remediators/content/classification/assign-purpose-metadata.js` | script | Fills `purpose` and `audience` frontmatter for routable v2 pages | Cat 1 (1.4 purpose, 1.5 audience) | OUTDATED | Writes old-schema audience tokens and old-schema purpose labels directly to frontmatter; requires a second normalisation pass |
+| `operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js` | script | Auto-repairs deterministic MDX-unsafe markdown patterns (unclosed tags, bad syntax) | Cat 5 (5.6 MDX renders clean), Cat 8 (8.5 no render errors) | CURRENT | Deterministic/safe patterns only; does not catch all JSX errors |
+| `operations/scripts/remediators/content/repair/repair-spelling.js` | script | Auto-corrects spelling errors using shared cspell config; dictionary-based corrections only | Cat 2 (2.1 UK English, typos) | CURRENT | Safe patterns only; does not enforce US→UK style rules beyond dictionary |
+| `operations/scripts/remediators/content/repair/sync-docs-paths.js` | script | Applies deterministic docs.json and governed reference rewrites for moved docs pages | Cat 7 (7.1 docs.json sync, 7.2 nav matches filesystem) | CURRENT | Requires staged changes; --dry-run recommended before --write |
+| `operations/scripts/remediators/content/repair/quarantine-manager.js` | script | Classifies files for quarantine or applies quarantine moves; removes stale workspace artifacts | Cat 7 (7.9 workspace TTL), Cat 9 (governance cleanup) | CURRENT | Moves files; approve dry-run output before --apply |
+| `operations/scripts/remediators/content/repair/migrate-assets-to-branch.js` | script | Migrates assets to correct branch/directory | Cat 8 (8.4 images load) | CURRENT | No known issues |
+| `operations/scripts/remediators/content/seo/generate-seo.js` | script | Generates SEO metadata (title, description, keywords, OG image) for v2 pages from content analysis | Cat 1 (1.11 description, 1.12 OG image block) | CURRENT | AI-generated descriptions need human review for subject-first and non-boilerplate compliance |
+| `operations/scripts/remediators/content/style/repair-ownerless-language.js` | script | Applies deterministic wording repairs to remove human-owner dependency from governed surfaces (AGENTS.md, CLAUDE.md, CONTRIBUTING) | Cat 9 (governance surfaces only) | CURRENT | Scoped to governance files only; not applicable to content pages |
+| `operations/scripts/remediators/content/style/wcag-repair-common.js` | script | Applies WCAG accessibility repairs to common patterns | Cat 5 (accessibility/rendering) | UNKNOWN | Scope requires deeper inspection; advisory use only |
+| `operations/scripts/remediators/components/library/repair-component-metadata.js` | script | Auto-repairs derived JSDoc metadata fields on component files; safe fields only | Cat 5 (5.10 component naming/import conventions) | CURRENT | Components only; not applicable to content MDX pages |
+| `operations/scripts/validators/content/copy/lint-copy.js` | script | Enforces banned word and phrase rules on MDX content files using `tools/lib/copy-governance/banned-words.txt` and `banned-phrases.txt` | Cat 2 (2.2 banned words, 2.3 banned phrases) | CURRENT | Reports violations only; no --fix flag; manual repair required |
+| `operations/scripts/validators/content/copy/lint-patterns.js` | script | Enforces Tier 2 copy pattern rules: `if` in body prose, conditional gatekeeping, not-constructions | Cat 2 (2.4 banned constructions) | CURRENT | Reports violations only; no --fix flag |
+| `operations/scripts/validators/content/grammar/check-grammar-en-gb.js` | script | Deterministic UK English grammar checker; optional conservative autofix for safe rules (double-space, repeated words, `an` before consonant, sentence casing) | Cat 2 (2.1 UK English) | CURRENT | Does not catch all US-to-UK spelling variants (e.g., -ize/-ise); use alongside `style-and-language-homogenizer-en-gb.js` |
+| `operations/scripts/validators/content/grammar/check-proper-nouns.js` | script | Validates proper noun capitalisation in prose | Cat 2 (2.1 UK English, proper nouns) | CURRENT | Advisory only; no autofix |
+| `operations/scripts/validators/content/structure/lint-structure.js` | script | Enforces structural rules: required frontmatter presence (4 fields), staleness flags, REVIEW flags, hedge notes | Cat 1 (1.1 partial — 4 of 10 fields), Cat 6 (6.8 staleness) | CURRENT | Does not validate field values; `REQUIRED_FRONTMATTER` is 4 fields, not 10; does not check `veracityStatus`; see TABLE INDEX for full issues |
+| `operations/scripts/validators/content/structure/check-description-quality.js` | script | Validates frontmatter descriptions for SEO length, boilerplate openings ("This page…"), and duplicate reuse | Cat 1 (1.11 description), Cat 2 (2.4 banned constructions in description) | CURRENT | Reports only; no autofix |
+| `operations/scripts/validators/content/structure/check-double-headers.js` | script | Detects duplicate body H1 headings and opening paragraphs that restate the frontmatter title or description; optional --fix | Cat 2 (2.4 "This page" self-reference), Cat 3 (3.6 title well-formed) | CURRENT | --fix appends removal comment; human must apply prose fix |
+| `operations/scripts/validators/content/structure/check-page-endings.js` | script | Validates that English v2 MDX pages end with an approved navigational or closing element; --fix appends TODO comment | Cat 4 (4.4 no dead ends) | CURRENT | --fix only adds a TODO placeholder; human must write the actual ending |
+| `operations/scripts/validators/content/structure/check-docs-path-sync.js` | script | Detects staged page moves that require docs.json or governed path reference rewrites | Cat 7 (7.1 docs.json sync, 7.2 nav matches filesystem) | CURRENT | Staged scope only; pair with `sync-docs-paths.js` for remediation |
+| `operations/scripts/validators/content/structure/check-mdx-safe-markdown.js` | script | Validates MDX content for MDX-safe syntax: parse failures and deterministic unsafe patterns | Cat 5 (5.6 MDX renders clean), Cat 8 (8.5 no render errors) | CURRENT | Read-only; use `repair-mdx-safe-markdown.js` to fix |
+| `operations/scripts/validators/content/structure/check-anchor-usage.js` | script | Validates same-page anchor links against heading IDs on the same page | Cat 8 (8.1 internal links resolve — same-page only) | CURRENT | Currently advisory — 100 errors at baseline 2026-03-09; not blocking |
+| `operations/scripts/validators/content/structure/enforce-generated-file-banners.js` | script | Validates "do not edit" banners and i18n parity on generated MDX files | Cat 5 (5.9 generated file banners intact) | CURRENT | No known issues |
+| `operations/scripts/validators/content/veracity/docs-fact-registry.js` | script | Validates repo-native research claim registries; provides normalised claim-family data for the manual research runner | Cat 6 (6.1 every claim citable, 6.6 veracityStatus honest) | CURRENT | Experimental; requires pre-built claim registry in `workspace/research/claims` |
+| `operations/scripts/validators/components/library/component-layout-governance.js` | script | Checks v2 page layouts against approved component contracts in `tools/config/component-layout-profile.json` | Cat 5 (5.1 correct template, 5.3 approved components, 5.4 avoided components absent) | CURRENT | Profile may use old 12-type schema; cross-check output against canonical 7-type |
+| `operations/scripts/validators/components/library/check-component-css.js` | script | Validates component files against styling rules: no hardcoded hex, no `!important`, no ThemeData; optional --fix for token replacements | Cat 5 (5.8 CSS uses custom properties only) | CURRENT | Component files only; not applicable to page-level MDX |
+| `operations/scripts/validators/components/library/check-mdx-component-scope.js` | script | Validates MDX-facing component modules for private scope dependency issues | Cat 5 (5.10 component naming/import conventions) | CURRENT | Advisory; no autofix |
+| `operations/scripts/validators/components/library/check-naming-conventions.js` | script | Validates component filenames for PascalCase and directory-aware naming under `snippets/components/` | Cat 5 (5.10 component naming) | CURRENT | No known issues |
+| `operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js` | script | Audits US→UK English violations across `v2/**/*.mdx` English routes; outputs MD + JSON report | Cat 2 (2.1 UK English) | CURRENT | Audit only; no autofix; manual repair required after report |
+| `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | script | Audits TODO, TBD, Coming Soon, PreviewCallout markers; thin-content pages; freshness-risk markers | Cat 5 (5.4 avoided components absent), Cat 8 (8.6 no TODO/TBD in published content) | CURRENT | Audit only; no autofix |
+| `operations/scripts/audits/content/quality/audit-copy-patterns.js` | script | Aggregates copy pattern violations across a tab or full v2 tree: NOT constructions, passive value statements | Cat 2 (2.4 banned constructions, 2.9 no passive value statements) | CURRENT | Audit/diagnostic only; no autofix |
+| `operations/scripts/audits/content/quality/audit-v2-usefulness.js` | script | Scores v2 MDX pages on human and agent usefulness; source-weighted accuracy verification | Cat 4 (one purpose/job), Cat 6 (veracity signals) | CURRENT | Experimental LLM-based scoring; audience resolution silently falls back on section defaults for canonical audience tokens — see TABLE INDEX |
+| `operations/scripts/audits/content/veracity/docs-page-research.js` | script | Extracts factual claims from docs pages; checks evidence sources; detects contradictions across related pages; emits manual-first research reports | Cat 6 (6.1 claims citable, 6.9 no open-ended research tasks) | CURRENT | Experimental; requires pre-built claim registry; manual-first pipeline |
+| `operations/scripts/audits/content/veracity/docs-research-adjudication.js` | script | Adjudicates research findings from claim registry | Cat 6 (6.6 veracityStatus honest) | CURRENT | Experimental; paired with `docs-page-research.js` |
+| `operations/scripts/audits/content/reference/terminology-search.js` | script | Searches glossary/terminology data for definitions; discovers undefined jargon across MDX pages | Cat 2 (2.11 terminology locked), Cat 6 (6.7 authoritative glossary) | CURRENT | Not yet in pipeline; manual/on-demand only |
+| `operations/scripts/audits/content/reference/audit-glossary-gaps.js` | script | Audits glossary for gaps between terms used in content and terms defined | Cat 2 (2.11 terminology), Cat 6 (6.7 authoritative vs AI glossary) | CURRENT | Audit only |
+| `operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js` | script | Generates content gap reconciliation report between v1 and v2 | Cat 4 (4.8 no content duplication), Cat 7 (gap detection) | CURRENT | Audit only; no autofix |
+| `tools/lib/copy-governance/banned-words.txt` | policy | Source list of banned words used by `lint-copy.js` | Cat 2 (2.2) | CURRENT | Must be updated when new banned words are decided |
+| `tools/lib/copy-governance/banned-phrases.txt` | policy | Source list of banned phrases used by `lint-copy.js` | Cat 2 (2.3) | CURRENT | Must be updated when new banned phrases are decided |
+| `tools/lib/frontmatter-taxonomy.js` | script | Shared library of canonical enum values: pageType (7), purpose (15), audience (7), complexity, lifecycleStage; deprecated alias migration map | Cat 1 (all frontmatter checks) | CURRENT | Library is updated to 7-type schema; note the two-layer purpose translation risk with `rubric-loader.js` |
+| `tools/config/component-layout-profile.json` | policy | Machine-readable layout rules used by `component-layout-governance.js` | Cat 5 (5.1, 5.3, 5.4) | UNKNOWN | Verify whether this uses the old 12-type pageType schema before running at scale |
+
+---
+
+### SKILLS
+
+| Location | Type | Function / Purpose | Fixes Which Check Category | Status | Issues |
+|----------|------|--------------------|---------------------------|--------|--------|
+| `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | skill | Level 2 Pass A: content review or write for a single page — audience fit, purpose delivery, information types, voice rules, veracity flags, section structure | Cat 2, Cat 3, Cat 4, Cat 6 | CURRENT | Requires tab map, Phase 1 audience design, and terminology lock before use; validate on known-good page before batch use |
+| `ai-tools/ai-skills/content-pipeline-pass-b/SKILL.md` | skill | Level 2 Pass B: layout and style application — template selection, component placement, frontmatter completion, section naming, render validation | Cat 1, Cat 3, Cat 5 | CURRENT | Requires approved Pass A output; will not run on unapproved content |
+| `ai-tools/ai-skills/docs-copy/SKILL.md` | skill | Routes documentation copy work: copy-plan, copy-rewrite, copy-review, claim-update, section-strategy; UK English; banned words/phrases enforcement | Cat 2 (voice, banned words/phrases, UK English) | CURRENT | Version 1.4; validate on known-good page before batch use; routes repo-wide normalisation to `style-and-language-homogenizer` |
+| `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` | skill | Enforces UK English usage across English v2 docs; runs `style-and-language-homogenizer-en-gb.js` | Cat 2 (2.1 UK English) | CURRENT | Audit output only; no autofix; manual repair required after report |
+| `ai-tools/ai-skills/component-layout-governance/SKILL.md` | skill | Validates page-type layout contracts and allowed component patterns; runs `component-layout-governance.js` | Cat 5 (5.1, 5.3, 5.4) | CURRENT | Component profile may use old schema; verify output against canonical 7-type |
+| `ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md` | skill | Audits TODO/TBD/Coming Soon markers, thin-content pages, freshness risk; runs `docs-quality-and-freshness-audit.js` | Cat 5 (5.4), Cat 8 (8.6) | CURRENT | Audit only; no autofix |
+| `ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md` | skill | Audits navigation coverage, route integrity, orphaned files | Cat 7 (7.1, 7.2, 7.4) | OUTDATED | Script not yet implemented — planned path only noted in SKILL.md; skill cannot run |
+| `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md` | skill | Generates dated three-phase review packets (copy-framework, authoring-style, research findings) from live navigation scope; report-only | Cat 2, Cat 4, Cat 6 (findings generation) | CURRENT | Version 1.3; requires nav source + approved scope before running |
+| `ai-tools/ai-skills/docs-review-fix-execution/SKILL.md` | skill | Executes approved review packet fixes section by section; updates tracker; closes sections after scoped validation | Cat 2, Cat 3, Cat 4, Cat 5 (fix execution from packet) | CURRENT | Version 1.3; requires an approved packet as input; will not rebuild scope |
+| `ai-tools/ai-skills/page-authoring/SKILL.md` | skill | Canonical guidance for authoring new v2 pages: frontmatter, page-type/purpose alignment, MDX constraints, pre-writing process (5 Whys, tier questions), anti-patterns | Cat 1, Cat 2, Cat 3, Cat 4, Cat 5 | CURRENT | Version 1.3; PageType/Purpose table in skill uses old labels — use `tools/lib/frontmatter-taxonomy.js` as ground truth for enums |
+| `ai-tools/ai-skills/rubric-static-review/SKILL.md` | skill | Rubric-based static review scored 0–100 across 5–10 categories; static analysis only; generic code review skill adaptable to docs quality | Cat 1–Cat 9 (as a scoring framework) | CURRENT | Version 1.2; not docs-native; categories must be redefined for docs context before use |
+| `ai-tools/ai-skills/product-thinking/SKILL.md` | skill | Product management framework applied to IA and content strategy: 9-step review covering journeys, gaps, navigation, cross-references | Cat 4 (4.1–4.10), Cat 7 | CURRENT | Version 1.2; strategic/diagnostic only; no page-level repair |
+| `ai-tools/ai-skills/templates/33-docs-source-verification.template.md` | skill | Verifies documentation claims against ranked primary sources; records evidence; assesses freshness risk; classifies contradictions | Cat 6 (6.1, 6.2, 6.4, 6.6, 6.8, 6.9) | CURRENT | Version 1.2; requires claim registry at `workspace/research/claims`; experimental research system |
+| `ai-tools/ai-skills/templates/34-docs-change-review.template.md` | skill | Reviews docs pages or diffs for factual contradictions, overstatement, ownership overlap, historical drift, evidence gaps | Cat 6 (6.1, 6.6), Cat 4 (4.8 duplication) | CURRENT | Version 1.2; findings-first; factual risk over copy polish |
+| `ai-tools/ai-skills/templates/35-docs-impact-propagation.template.md` | skill | Maps changed claim families to every dependent page, glossary, example, comparison, and reference surface | Cat 6 (6.9 no open-ended research tasks), Cat 4 (4.8 content duplication across pages) | CURRENT | Version 1.2; propagation by entity/workflow/API, not just direct links |
+| `ai-tools/ai-skills/cleanup-quarantine-manager/SKILL.md` | skill | Classifies files for quarantine and applies moves; removes stale workspace artifacts | Cat 7 (7.9 workspace TTL), Cat 9 (governance cleanup) | CURRENT | Approve dry-run before --apply |
+| `ai-tools/ai-skills/generated-mdx-banners-governance/SKILL.md` | skill | Governs generated file banners; pairs with `enforce-generated-file-banners.js` | Cat 5 (5.9 generated file banners intact) | CURRENT | No known issues |
+
+---
+
+### PROMPTS
+
+| Location | Type | Function / Purpose | Fixes Which Check Category | Status | Issues |
+|----------|------|--------------------|---------------------------|--------|--------|
+| `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | prompt | Full content pass prompt (Pass A): audience fit, purpose, information types, voice, veracity, section structure; REVIEW / WRITE / REWRITE / AUDIT modes | Cat 2, Cat 3, Cat 4, Cat 6 | CURRENT | Read `pack-guide.md` before use; requires pre-flight (tab map, Phase 1 output, terminology lock) |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | prompt | Full layout pass prompt (Pass B): template selection, section structure, component placement, frontmatter completion, section naming, render validation | Cat 1, Cat 3, Cat 5 | CURRENT | Requires approved Pass A output; read `pack-guide.md` before use |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | prompt | Phase 7 veracity pass: 25 claim types mapped to 45 authoritative sources; auto-resolve rules, staleness matrix, confidence scoring | Cat 6 (all checks 6.1–6.9) | DRAFT | Status: DRAFT — awaiting human approval after test runs; do not use at scale before validation |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-content-scan/content-scan.md` | prompt | Phase 2 content scan: read-only inventory of all existing pages per tab | Cat 4 (structure audit foundation), Cat 7 (orphan detection) | CURRENT | Read-only; produces inventory not fixes |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | prompt | Phase 3 structure audit / tab map: categorises pages as KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP | Cat 4 (4.1–4.10), Cat 7 | CURRENT | Produces disposition decisions; does not execute changes |
+| `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | prompt | Voice rules for all 7 audiences: per-audience prohibited phrases, UK English, register, banned constructions | Cat 2 (all voice/copy checks) | CURRENT | Referenced by Pass A and Pass B; must be loaded alongside `content-pass.md` |
+
+---
+
+### FRAMEWORKS
+
+| Location | Type | Function / Purpose | Fixes Which Check Category | Status | Issues |
+|----------|------|--------------------|---------------------------|--------|--------|
+| `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | framework | Full canonical taxonomy/voice/content framework: pageType (7), purpose (15), audience (7), veracity standards, information types, section naming rubric | Cat 1, Cat 2, Cat 3, Cat 4, Cat 6 | CURRENT | Locked source of truth; do not edit without decision registry entry |
+| `workspace/plan/active/CONTENT-WRITING/framework-index-canonical.md` | framework | Master list of all locked enum values for frontmatter | Cat 1 (all frontmatter checks) | CURRENT | Cross-reference with `tools/lib/frontmatter-taxonomy.js` |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | framework | Veracity standards per information type; blocking rules; what "verified" means for each type | Cat 6 (6.1–6.9) | CURRENT — LOCKED | Locked; do not modify without decision registry entry |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | framework | 45 authoritative sources with tier, staleness risk, and update frequency | Cat 6 (6.1 every claim citable, 6.8 staleness check) | CURRENT | Sources must be re-verified as live; staleness risk flags are estimates |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md` | framework | Deprecated alias migration map: 12→7 pageType, old purpose aliases → canonical purpose values | Cat 1 (1.2, 1.3, 1.4, 1.5) | CURRENT | Use alongside `tools/lib/frontmatter-taxonomy.js` |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | framework | Title rules and WRITE/REVIEW/REWRITE/AUDIT mode definitions for layout pass | Cat 3 (3.6 title well-formed), Cat 5 (content-pass mode selection) | CURRENT | Referenced by `layout-pass.md` |
+| `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md` | framework | Locked and disputed terminology for all tabs | Cat 2 (2.11 terminology locked and consistent) | CURRENT | Must be updated as new terms are locked or disputed |
+| `docs-guide/policies/component-layout-decisions.mdx` | policy | Full pageType → sections → components → avoid matrix | Cat 5 (5.1–5.10) | CURRENT | Human-readable policy; machine-readable version is `tools/config/component-layout-profile.json` |
+| `docs-guide/frameworks/component-framework-canonical.mdx` | framework | Component taxonomy, naming, JSDoc standards, semantic subdirectory rules | Cat 5 (5.10) | CURRENT | No known issues |
+| `docs-guide/frameworks/page-taxonomy-framework.mdx` | framework | Frontmatter field schema (older version — predates 7-type schema) | Cat 1 | OUTDATED | Use `Frameworks.mdx` or `frontmatter-taxonomy.js` for current enums; keep for historical lineage only |
+| `docs-guide/frameworks/page-composition-framework.mdx` | framework | Page composition rules and structure guidance | Cat 4, Cat 5 | CURRENT | No known issues |
+| `docs-guide/policies/quality-gates.mdx` | policy | CI validation layers: pre-commit, PR, scheduled | Cat 8, Cat 9 | CURRENT | No known issues |
+| `docs-guide/policies/v2-folder-governance.mdx` | policy | Publishable vs workspace lanes; TTL rules | Cat 7 (7.7, 7.8, 7.9) | CURRENT | No known issues |
+| `docs-guide/policies/workspace-lifecycle-policy.mdx` | policy | Retention and cleanup rules for workspace files | Cat 7 (7.9), Cat 9 | CURRENT | No known issues |
+| `docs-guide/policies/snippets-assets-policy.mdx` | policy | Image size limits, directory structure for snippets and assets | Cat 8 (8.4 images load) | CURRENT | No known issues |
+| `docs-guide/source-of-truth-guide.mdx` | policy | Source of truth hierarchy for all factual claims | Cat 6 (6.1, 6.7) | CURRENT | No known issues |
+| `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | policy | Authoritative decision record for all structural decisions | Cat 9 (9.2 decisions in registry) | CURRENT | Must be updated after every decision; does not self-update |
+| `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | policy | Per-tab gate tracking | Cat 9 (9.3 gate prerequisites met) | CURRENT | Human-maintained; must be updated at session end |
+| `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | policy | Correction → standards routing map | Cat 9 (9.6 feedback routed) | CURRENT | No known issues |
+| `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` | policy | Session protocol, agent rules, gate definitions, 12 hard prohibitions | Cat 9 (all process checks) | CURRENT | Mandatory pre-session reading |
+
+---
+
+### TEMPLATES
+
+| Location | Type | Function / Purpose | Fixes Which Check Category | Status | Issues |
+|----------|------|--------------------|---------------------------|--------|--------|
+| `snippets/templates/pages/how-to-page.mdx` | template | Structural template for `instruction` pageType (quickstart/setup variants) | Cat 5 (5.1, 5.2 required sections for instruction) | CURRENT | Used by `layout-pass.md` Phase 1 |
+| `snippets/templates/pages/overview-page.mdx` | template | Structural template for overview-variant pages | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/reference-page.mdx` | template | Structural template for `reference` pageType | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/tutorial-page.mdx` | template | Structural template for `tutorial` pageType | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/tutorial-and-guides/tutorial.mdx` | template | Full tutorial template with prerequisites, steps, next steps | Cat 5 (5.2 required sections for tutorial) | CURRENT | No known issues |
+| `snippets/templates/pages/landing-and-navigation/navigation-page.mdx` | template | Structural template for `navigation` pageType | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/landing-and-navigation/portal-page.mdx` | template | Portal page template for tab entry pages | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/troubleshooting-page.mdx` | template | Template for troubleshooting-variant pages | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/faq-page.mdx` | template | FAQ page template | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/reference-and-api/changelog-template.mdx` | template | Changelog page template | Cat 5 | CURRENT | No known issues |
+| `snippets/templates/blocks/comparison-matrix.mdx` | template | Reusable comparison matrix block for multi-option pages | Cat 5 (component choice for evaluative sections) | CURRENT | No known issues |
+| `snippets/templates/blocks/related-pages-cards.mdx` | template | Reusable related-pages card block for page endings | Cat 4 (4.4 no dead ends), Cat 5 | CURRENT | No known issues |
+| `snippets/templates/pages/page-composition-framework.mdx` | template | Composable page framework template | Cat 4, Cat 5 | CURRENT | Newly added — verify content before use in production |
+
+---
+
+## CHECK & REMEDIATION GAPS
+
+### Script Coverage Gaps
+
+The following frontmatter checks do not exist in any script in the repo but should, based on the audit above.
+
+**`pageType` value validation**
+No script enforces that `pageType` is a canonical value from the 7-type set. `lint-structure.js` requires the field to be present but does not check its value. A page with `pageType: quickstart` (deprecated) passes the validator without any warning.
+
+**`audience` value validation against the canonical 7-token set**
+No script validates that `audience` matches the current canonical set (`founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`). `lint-structure.js` requires the field but does not check its value. `rubric-loader.js` and `usefulness-audience-normalization.json` validate against the old 9-token set (`gateway-operator`, `platform-builder`, `general`, `everyone`, `internal`) — these tokens are not canonical.
+
+**`purpose` value validation against the 15-value canonical set**
+No script in the active pipeline validates that `purpose` is a canonical value from the 15-value set (`orient`, `explain`, `learn`, `choose`, `evaluate`, `start`, `build`, `configure`, `operate`, `troubleshoot`, `verify`, `integrate`, `optimise`, `reference`, `update`). `assign-purpose-metadata.js` writes old-schema labels directly. `rubric-loader.js` validates against the rubric-internal 10-value set only.
+
+**`veracityStatus` presence and value check**
+No script checks for the presence or validity of `veracityStatus`. The field is present on orchestrator pages from the 2026-03-24 pass but is entirely unguarded — no validator flags pages where it is missing or set to an unrecognised value.
+
+**`pageType`/`purpose` combination validation**
+`frontmatter-taxonomy.js` defines `PAGE_TYPE_ALLOWED_PURPOSES` mapping each pageType to its permitted purpose values. No script enforces this mapping. A page with `pageType: navigation` and `purpose: build` is invalid per the taxonomy but will pass every existing validator.
+
+**Deprecated audience token detection**
+No script flags `audience: gateway-operator` or `audience: platform-builder` as deprecated. Pages using old audience tokens from the `assign-purpose-metadata.js` remediator will silently persist with invalid values. No migration remediator exists for audience tokens.
+
+**`overview` pageType classification error in `add-pagetype-mechanical.js`**
+Rule 10 in `classifyFile()` assigns `overview` to `overview.mdx` and `index.mdx`. `normalizePageType('overview')` returns `valid: false` because `overview` is explicitly excluded from the alias map. This will throw at line 281 for any file matched by rule 10. No test covers this path. Field: `pageType`. Validation: absent. Risk: runtime error on classification run.
+
+**`lastVerified` format validation**
+`lint-structure.js` parses `lastVerified` as a `Date` but does not validate the format. An invalid date string (e.g. `lastVerified: TBD`) will produce `NaN` for `daysDiff`, which is `> 90` evaluates to false — the stale check silently passes. Field: `lastVerified`. Validation: absent for format errors.
+
+**Absence of `purpose` from `lint-structure.js` required fields**
+`REQUIRED_FRONTMATTER` in `lint-structure.js` is `['title', 'pageType', 'audience', 'lastVerified']`. `purpose` is not required. Pages without a `purpose` field pass the validator. This is the field the entire rubric scoring system runs on.
+
+**Deprecated pageType aliases written by `add-pagetype-mechanical.js`**
+The script successfully normalises deprecated aliases to canonical values before writing — but its own `SUMMARY_TYPES` counter array and summary printout use the deprecated label names, not the canonical ones. This means the summary output is misleading and the counter keys (`landing`, `quickstart`, etc.) will never increment correctly because the written values are canonical (`navigation`, `instruction`, etc.).
+
+---
+
+### Remediation Tool Gaps
+
+Check categories from `checks.mdx` where issues can be found but no tool exists to fix them, or where the existing tool is insufficient for the task.
+
+---
+
+**Cat 1 — Frontmatter & Taxonomy**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 1.1 — All 10 required fields present | `lint-structure.js` checks only 4 of 10 required fields. No script checks all 10 canonical fields or the full OG image block. | A single-command frontmatter completeness validator covering all 10 fields and all 5 OG sub-fields. |
+| 1.3 — `pageVariant` valid if present | No validator checks `pageVariant` against its 7-value canonical set. | Addition to `frontmatter-taxonomy.js` + `lint-structure.js` or a dedicated frontmatter enum validator. |
+| 1.5 — `audience` canonical value | `lint-structure.js` requires presence but does not validate the value. Old tokens pass silently. | A validator that checks `audience` against the 7-token canonical set and flags deprecated tokens. |
+| 1.6 — `complexity` canonical value | No validator checks `complexity`. | Addition to frontmatter validator. |
+| 1.7 — `lifecycleStage` canonical value | No validator checks `lifecycleStage`. | Addition to frontmatter validator. |
+| 1.8 — `veracityStatus` present and honest | No automated check confirms `veracityStatus` is set, valid, or consistent with REVIEW flag presence. | A validator that (a) flags missing `veracityStatus`, (b) flags `verified` on pages still containing `{/* REVIEW: */}` inline comments. |
+| 1.9 / 1.10 — `industry` and `niche` arrays valid | No validator checks these arrays against their enum sets. | Addition to frontmatter validator. |
+| 1.12 — OG image block complete | `generate-seo.js` generates OG fields but does not validate all 5 sub-fields are present and correct. | A focused validator for OG image block completeness. |
+
+---
+
+**Cat 2 — Voice & Copy**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 2.1 — UK English throughout | `style-and-language-homogenizer-en-gb.js` is audit-only. `check-grammar-en-gb.js` autofix is conservative and misses -ize/-ise, -our/-or variants. | A remediator that applies all US→UK replacements from Frameworks.mdx §2.3, not just dictionary-safe subset. |
+| 2.5 — Opening order correct | No automated check. Requires prose reasoning. | Not automatable as a script; checked only via content-pipeline-pass-a skill with voice-rules.md loaded. |
+| 2.6 — Paragraph discipline | No automated check for lead sentences or final-sentence hedging. | Not automatable as a script; requires Pass A content review. |
+| 2.7 — Audience register correct | No script checks that voice matches the page's `audience` token. | Only checkable via Pass A with voice-rules.md loaded. |
+| 2.8 — Per-audience prohibited phrases absent | `lint-copy.js` uses a single shared `banned-phrases.txt`. No per-audience phrase checking. | Per-audience banned phrase files (one per audience token) in `tools/lib/copy-governance/` + `--audience` flag added to `lint-copy.js`. |
+| 2.9 — No passive value statements | `audit-copy-patterns.js` covers some constructions but unquantified value adjectives ("cost-effective", "fast") in claims are not flagged. | A pattern rule in `lint-patterns.js` for unquantified value adjectives in non-procedural sentences. |
+
+---
+
+**Cat 3 — Section Naming & Headings**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 3.1–3.7 — Heading rubric checks (full) | No script evaluates headings against the 5-dimension, 25-point naming rubric. Only H1 duplication is caught. | A heading scorer that applies all 5 rubric dimensions per heading and flags below 20/25. Requires prose reasoning — only the Pass B section naming phase can do this. No script equivalent. |
+| 3.2 — No generic descriptors | No static check for standalone generic heading words ("Types", "Overview", "Basics", "Details", "Getting Started"). | A regex-based rule in `lint-structure.js` or a new `check-headings.js` validator. Buildable. |
+| 3.3 — No literal contrast labels | No static check for `X vs Y` heading patterns. | A regex rule addition to `lint-structure.js` or new validator. Buildable. |
+
+---
+
+**Cat 4 — Page Structure & Content Architecture**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 4.1–4.2 — One purpose, one audience | No automated check. Purpose-statement test requires prose reasoning. | Only checkable via Pass A; not automatable as a script. |
+| 4.3 — PREV_PAGE / NEXT_PAGE adjacency correct | No automated check for journey adjacency. | Requires tab-map data and human judgment; not automatable. |
+| 4.7 — Information type per section correct | No script checks that section information types match the page's `purpose` against the Purpose→InfoType mapping. | Requires section-level classification; prompt-based check only (Pass A Phase 4). |
+| 4.8 — No inter-page content duplication | `generate-content-gap-reconciliation.js` compares v1→v2; no tool detects duplication between live v2 pages. | A content similarity checker that flags duplicate paragraphs or claims across pages within the same tab. Not currently built. |
+| 4.9 — Section orientation page present | No automated check that every section has an entry/orientation page. | A docs.json-aware validator that checks for an orientation page at each nav section level. |
+| 4.10 — Cross-tab links at journey intersections | No automated check for cross-tab link presence or minimum count. | A validator that reads `decisions/cross-tab-journeys.md` and confirms defined graduation paths exist as internal links on the relevant pages. |
+
+---
+
+**Cat 5 — Layout, Components & Template**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 5.1 — Correct template for pageType + pageVariant | `component-layout-governance.js` checks component usage but does not verify the correct template skeleton is in use. | A structural diff tool that compares a page's H2 structure against the required sections for its pageType. |
+| 5.2 — Required sections present | No automated check for required section presence per pageType (e.g., `instruction` must have Prerequisites, Steps, Next Steps). | A validator that reads `pageType` from frontmatter and checks for required H2 headings. Buildable as a deterministic script. |
+
+---
+
+**Cat 6 — Veracity & Factual Accuracy**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 6.2 — Code/commands tested | No automated check or tracking of which code blocks have been executed. | Manual process only; cannot be automated. `TESTED:` / `NOT-TESTED:` inline markers are the current convention. |
+| 6.3 — No deprecated API usage | No automated check for deprecated CLI flags, endpoints, or SDK methods in content. | A validator that cross-references CLI flags and endpoint names against a maintained deprecated-API registry. Requires keeping the registry current — high maintenance. |
+| 6.4 — Numbers are real | No automated check for unsourced numbers. `docs-page-research.js` covers claims but is experimental and not production-wired. | Requires the claim registry pipeline to be fully operational. Currently the most significant gap in the veracity pipeline. |
+| 6.5 — REVIEW flags for unverified claims | No automated check that high-volatility claims (governance parameters, contract addresses, version numbers, pricing data) carry `{/* REVIEW: */}` flags. | A linter that flags claims matching high-volatility patterns and checks whether they have a REVIEW comment within ±2 lines. |
+
+---
+
+**Cat 7 — Navigation & Information Architecture**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 7.5 — Audience journey complete | No automated check for journey completeness. | Requires tab map and audience design outputs; prompt-based check (product-thinking skill) only. |
+| 7.6 — Cross-tab graduation paths exist | No automated check. `decisions/cross-tab-journeys.md` defines paths but no validator confirms they are implemented. | A validator that reads `cross-tab-journeys.md` and checks defined graduation paths exist as internal links on the relevant pages. |
+| 7.8 — File naming conventions | No automated validator for the `s-`, `r-`, `rs-`, `rcs-`, `x-`, `dep-` prefix rules or the no-`-index.mdx` rule. | A naming convention validator for v2 content files. Buildable as a deterministic script. |
+
+---
+
+**Cat 8 — Links & Rendering**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 8.1 — All internal links resolve | `check-anchor-usage.js` covers same-page anchors only. `check-docs-path-sync.js` covers staged moves only. No on-demand full internal link resolver exists. | A full internal link resolver that validates all `[text](/path)` links in v2 MDX against docs.json and the file system at any time, not just on staged changes. |
+| 8.2 — All external links live | No automated script for external link health checking. | An external link checker script. Common tools (linkchecker, custom crawler) could cover this. Not currently built. |
+| 8.3 — All snippet imports resolve | No dedicated validator for snippet import resolution; `check-mdx-safe-markdown.js` catches parse errors but not missing import targets. | A snippet import resolver that validates every `<Snippet file="..." />` path against the snippets directory. |
+| 8.4 — All images load | No automated image asset health check (path resolution, file size). | An image asset validator checking path resolution and file size against the 2MB limit from `snippets-assets-policy.mdx`. |
+
+---
+
+**Cat 9 — Process & Governance**
+
+| Check | Gap | What Is Missing |
+|-------|-----|-----------------|
+| 9.1 — Human sign-off recorded | No automated check. | Structural; cannot be automated. Enforced by process only. |
+| 9.4 — Phase ordering respected | No automated check that Phase 8 (naming) ran before Phase 7 (veracity). | A pipeline state tracker that records which phases have been completed per page. Currently tracked manually in `00-TRACKER.md`. |
+
+## DESIGN FRAMEWORK GAPS
+
+{/* WHAT GAPS EXIST WITH LIMITED  */}
+
+## FINAL SCRIPT PIPELINE
+
+{  /* SCRIPT TO USE FOR WHAT PURPOSE IN WHAT ORDER */}
+

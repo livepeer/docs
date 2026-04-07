@@ -1,60 +1,36 @@
 name: Update Livepeer Release Version
 
+# Primary trigger: repository_dispatch fired by livepeer/go-livepeer when a release is published.
+# Fallback:        daily schedule (safety net — catches any missed dispatch events).
+# Manual:          workflow_dispatch with optional version override.
+#
+# Companion workflow required in livepeer/go-livepeer:
+#   workspace/plan/active/AUTOMATIONS-RESTRUCTURE/go-livepeer-notify-docs.yml
+#   Requires DOCS_DISPATCH_TOKEN secret in go-livepeer (fine-grained PAT:
+#   actions:write scoped to livepeer/docs).
+
 on:
+  repository_dispatch:
+    types: [go-livepeer-release]
+
   schedule:
-    # Run every 30 minutes
-    - cron: "*/30 * * * *"
+    - cron: "0 6 * * *" # Daily fallback at 06:00 UTC
+
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to set (e.g. v0.7.8). Leave blank to fetch latest from GitHub API."
+        required: false
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 jobs:
-  check-and-update:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout docs repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get latest go-livepeer release
-        id: get_release
-        run: |
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/livepeer/go-livepeer/releases/latest | jq -r .tag_name)
-          echo "release=${LATEST_RELEASE}" >> $GITHUB_OUTPUT
-          echo "Latest release: ${LATEST_RELEASE}"
-
-      - name: Read current version from globals.mdx
-        id: current_version
-        run: |
-          CURRENT=$(grep -oP 'latestVersion\s*=\s*["'"'"']?\K[^"'"'"']+' snippets/automationData/globals/globals.mdx || echo "")
-          echo "current=${CURRENT}" >> $GITHUB_OUTPUT
-          echo "Current version: ${CURRENT}"
-
-      - name: Update globals.mdx if needed
-        if:
-          steps.get_release.outputs.release !=
-          steps.current_version.outputs.current
-        run: |
-          # Create backup
-          cp snippets/automationData/globals/globals.mdx snippets/automationData/globals/globals.mdx.bak
-
-          # Update the latestVersion value
-          sed -i "s/latestVersion[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']/latestVersion = \"${{ steps.get_release.outputs.release }}\"/" snippets/automationData/globals/globals.mdx
-
-          # Update the latestVersionUrl value
-          sed -i "s|latestVersionUrl[[:space:]]*=[[:space:]]*[\"'][^\"']*[\"']|latestVersionUrl = \"https://github.com/livepeer/go-livepeer/releases/download/${{ steps.get_release.outputs.release }}\"|" snippets/automationData/globals/globals.mdx
-
-          # Verify the changes
-          echo "Updated content:"
-          grep "latestVersion" snippets/automationData/globals/globals.mdx
-
-      - name: Commit and push if changed
-        if:
-          steps.get_release.outputs.release !=
-          steps.current_version.outputs.current
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add snippets/automationData/globals/globals.mdx
-          git commit -m "chore: update latest release to ${{ steps.get_release.outputs.release }}"
-          git push
+  update-release:
+    uses: ./.github/workflows/data-refresh-governance.yml
+    with:
+      mode: livepeer-release
+      use_test_branch: ${{ github.event_name == 'workflow_dispatch' && inputs.use_test_branch || false }}
+      version: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.version || github.event_name == 'workflow_dispatch' && inputs.version || '' }}
+    secrets: inherit

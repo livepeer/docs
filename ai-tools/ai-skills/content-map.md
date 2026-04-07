@@ -1,8 +1,8 @@
 # Content Map
 
-- Generated: 2026-03-16T18:08:53.396Z
+- Generated: 2026-04-05T07:11:26.270Z
 - Inventory: `ai-tools/ai-skills/inventory.json`
-- Files catalogued: 32
+- Files catalogued: 31
 
 ## Canonical Runtime Governance
 
@@ -16,19 +16,20 @@
 | `.allowlist` | active | yes | text | Defines the machine-readable allowlist of governed repo-root entries. |
 | `docs-guide/policies/agent-governance-framework.mdx` | active | yes | mdx | Documents the canonical supported-agent layout, taxonomy, and retirement policy. |
 | `docs-guide/policies/root-allowlist-governance.mdx` | active | yes | mdx | Documents root-entry policy, allowlist authoring rules, and parser constraints. |
-| `tools/scripts/validators/governance/check-agent-docs-freshness.js` | active | yes | javascript | Validates the canonical agent runtime surfaces and governance docs for existence and freshness. |
+| `operations/scripts/validators/governance/check-agent-docs-freshness.js` | active | no | javascript | Validates the canonical agent runtime surfaces and governance docs for existence and freshness. |
 | `.codex/README.md` | active | yes | markdown | Documents Codex task isolation, lock lifecycle, and local operational conventions. |
 | `.codex/task-contract.yaml` | active | yes | yaml | Defines task-scope metadata and acceptance contracts for codex implementation branches. |
+| `.github/AGENTS.md` | active | yes | markdown | Defines the Codex-specific task-layer extension that augments the canonical root AGENTS baseline. |
 
 ## Contributor and Localized Documentation
 
 | Path | Status | Exists | Format | Purpose |
 |---|---|---|---|---|
 | `README.md` | active | yes | markdown | Provides high-level repo orientation and links to the canonical governance surfaces. |
-| `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | yes | markdown | Provides contributor-facing agent workflow guidance and hook expectations. |
-| `v2/cn/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | yes | markdown | Localized Chinese contributor guidance for the canonical agent workflow. |
-| `v2/es/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | yes | markdown | Localized Spanish contributor guidance for the canonical agent workflow. |
-| `v2/fr/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | yes | markdown | Localized French contributor guidance for the canonical agent workflow. |
+| `docs-guide/contributing/agent-instructions.mdx` | active | yes | mdx | Provides contributor-facing agent workflow guidance and hook expectations. |
+| `v2/cn/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | no | markdown | Localized Chinese contributor guidance for the canonical agent workflow. |
+| `v2/es/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | no | markdown | Localized Spanish contributor guidance for the canonical agent workflow. |
+| `v2/fr/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | active | no | markdown | Localized French contributor guidance for the canonical agent workflow. |
 
 ## Agent Setup Guides
 
@@ -61,9 +62,7 @@
 
 | Path | Status | Exists | Format | Purpose |
 |---|---|---|---|---|
-| `.github/AGENTS.md` | retired | yes | markdown | Retired repo-wide agent baseline replaced by the canonical root AGENTS.md. |
-| `.cursorrules` | retired | yes | text | Retired Cursor root rule file replaced by .cursor/rules/repo-governance.mdc. |
-| `ASSISTANT.md` | retired | yes | markdown | Retired assistant contract merged into the canonical root AGENTS.md. |
+| `ASSISTANT.md` | retired | no | markdown | Retired assistant contract merged into the canonical root AGENTS.md. |
 | `.github/augment-instructions.md` | retired | yes | markdown | Retired Augment-specific instruction file removed from the supported agent matrix. |
 
 These paths are tracked for migration and audit history only. They must not be recreated as active governance sources.

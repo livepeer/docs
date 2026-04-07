@@ -8,82 +8,46 @@
  * @needs             R-R14
  * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
  * @pipeline          indirect -- library module
- * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
- */
-/**
- * @script            rubric-loader
- * @category          utility
- * @purpose           qa:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R14
- * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
- * @pipeline          indirect -- library module
- * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
- */
-/**
- * @script            rubric-loader
- * @category          utility
- * @purpose           qa:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R14
- * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
- * @pipeline          indirect -- library module
- * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
- */
-/**
- * @script            rubric-loader
- * @category          utility
- * @purpose           qa:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R14
- * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
- * @pipeline          indirect -- library module
- * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
- */
-/**
- * @script            rubric-loader
- * @category          utility
- * @purpose           qa:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R14
- * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
- * @pipeline          indirect -- library module
- * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
+ * @usage             const { loadRubric } = require('../../tools/lib/docs-usefulness/rubric-loader');
  */
 
 const fs = require('fs');
 const path = require('path');
-const taxonomy = require('../frontmatter-taxonomy');
+const taxonomy = require('../docs/frontmatter-taxonomy');
+const { CANONICAL_AUDIENCES } = taxonomy;
 
-const PURPOSE_ENUM = taxonomy.CANONICAL_PURPOSES;
+// Rubric-internal purpose labels — intentionally uses pre-Phase-1 names that key
+// into the rubric config JSON and prompts/. New taxonomy canonicals are mapped to
+// these via taxonomy.purposeToRubricPurpose(). Do NOT derive from CANONICAL_PURPOSES.
+const PURPOSE_ENUM = Object.freeze([
+  'landing',
+  'overview',
+  'concept',
+  'how_to',
+  'tutorial',
+  'reference',
+  'faq',
+  'troubleshooting',
+  'glossary',
+  'changelog'
+]);
 
-const AUDIENCE_ENUM = [
-  'developer',
-  'gateway-operator',
-  'orchestrator',
-  'delegator',
-  'platform-builder',
-  'community',
-  'internal',
-  'general',
-  'everyone'
-];
+// Derived from frontmatter-taxonomy.js CANONICAL_AUDIENCES — the single source of truth.
+// Do not hardcode here. If the canonical set changes, update frontmatter-taxonomy.js only.
+const AUDIENCE_ENUM = CANONICAL_AUDIENCES;
 
+// Updated 2026-03-24: gateway-operator → gateway, platform-builder → builder,
+// general/everyone → community, internal section removed (not audience-typed).
 const SECTION_DEFAULT_AUDIENCE = {
-  home: 'everyone',
-  about: 'general',
+  home: 'community',
+  about: 'community',
   developers: 'developer',
-  gateways: 'gateway-operator',
+  gateways: 'gateway',
   orchestrators: 'orchestrator',
   lpt: 'delegator',
   community: 'community',
-  solutions: 'platform-builder',
-  internal: 'internal',
-  resources: 'everyone'
+  solutions: 'builder',
+  resources: 'community'
 };
 
 const cache = new Map();
@@ -111,7 +75,7 @@ function getFrontmatterValues(page) {
 }
 
 function configPath(relativePath) {
-  return path.join(__dirname, '../../config', relativePath);
+  return path.join(__dirname, '../../config/quality', relativePath);
 }
 
 function loadRubric(filePath = configPath('usefulness-rubric.json')) {
@@ -193,10 +157,11 @@ function resolveAudience(page, normalization = loadAudienceNormalization()) {
     };
   }
 
+  // Updated 2026-03-24: fallback was 'everyone' (deprecated); now 'community' (canonical).
   const fallback =
     (normalization?.section_defaults && normalization.section_defaults[page.section]) ||
     SECTION_DEFAULT_AUDIENCE[page.section] ||
-    'everyone';
+    'community';
   return {
     audience: fallback,
     source: 'inferred',
@@ -211,8 +176,12 @@ function resolvePurpose(page) {
   if (frontmatterPurpose) {
     const normalized = taxonomy.normalizePurpose(frontmatterPurpose);
     if (normalized.valid) {
+      // Convert taxonomy canonical → rubric label so downstream scoring can look
+      // up the correct rubric config entry and prompt.
+      const rubricLabel =
+        taxonomy.purposeToRubricPurpose(normalized.canonical) || normalized.canonical;
       return {
-        purpose: normalized.canonical,
+        purpose: rubricLabel,
         source: 'frontmatter',
         invalid: false,
         deprecatedAlias: normalized.deprecatedAlias

@@ -12,37 +12,8 @@ on:
 
 jobs:
   update-rss-data:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Fetch RSS blog data
-        run: |
-          node .github/scripts/fetch-rss-blog-data.js
-
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code snippets/automations/ || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit and push if changed
-        if: steps.git-check.outputs.changed == 'true'
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add snippets/automations/*/blogData.jsx
-          git commit -m "chore: update RSS blog data [skip ci]"
-          git push
+    uses: ./.github/workflows/data-refresh-governance.yml
+    with:
+      mode: rss-blog
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

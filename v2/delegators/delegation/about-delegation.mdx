@@ -1,0 +1,106 @@
+---
+title: What Bonding LPT Means
+sidebarTitle: About Delegation
+description: >-
+  What delegators are actually doing when they bond LPT: non-custodial stake
+  attribution, dilution protection, rewards, governance weight, and unbonding.
+keywords:
+  - livepeer
+  - lpt
+  - bonding
+  - delegation
+  - staking
+  - reward cut
+  - fee share
+  - unbonding
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: explain
+lifecycleStage: evaluate
+status: current
+lastVerified: 2026-04-06
+---
+
+Bonding LPT means attributing your stake to one orchestrator so that your capital helps secure the protocol, earns a share of round rewards, and carries voting weight in Livepeer governance. It does not mean lending tokens to an operator or transferring ownership of the tokens to them.
+
+## Delegation is stake attribution, not custody transfer
+
+When you bond:
+
+- your LPT is held by the BondingManager contract on Arbitrum One
+- the orchestrator cannot move or spend your tokens
+- your wallet remains the party that can unbond, withdraw, or redelegate
+- your bonded balance carries governance weight
+
+What changes is the stake attribution. Your balance now counts toward a specific orchestrator's total bonded stake.
+
+## Why unbonded LPT gets diluted
+
+Livepeer issues new LPT each round to bonded stake. If you stay unbonded, you do not receive any of that issuance while active delegators do.
+
+That means "doing nothing" is not a neutral position. Your share of total supply shrinks relative to bonded holders until you either bond or exit the asset.
+
+<Note>
+  As of 6 April 2026, the treasury reward cut remains 10% on-chain. Delegators and orchestrators share the other 90% of round issuance.
+</Note>
+
+## What you earn when bonded
+
+Bonded delegators can earn:
+
+- inflationary LPT, subject to round issuance and the orchestrator's `rewardCut`
+- ETH fees, subject to the orchestrator's workload and `feeShare`
+- governance voting power derived from bonded stake
+
+Those outcomes are not guaranteed by bonding alone. They also depend on whether the orchestrator remains active and keeps calling `reward()` reliably.
+
+## What bonding commits you to
+
+| Commitment | What it means |
+|---|---|
+| One orchestrator per wallet | A single bonded position points to one orchestrator at a time |
+| Arbitrum One only | Delegation happens on Arbitrum One, not Ethereum mainnet |
+| Exit delay | Full withdrawal requires unbonding and waiting through the protocol unbonding period |
+| Ongoing monitoring | You should periodically check reward reliability and commission changes |
+
+## Switching is different from exiting
+
+There are two distinct ways to change your position:
+
+- **Redelegate**: move your bonded stake attribution to another orchestrator without going through the unbonding wait
+- **Unbond and withdraw**: stop participating and wait for the unbonding period before tokens can return to your wallet
+
+If your issue is the operator, redelegation is usually the correct action. If your issue is that you want liquid tokens back, unbonding is the correct action.
+
+## What risk you are actually taking
+
+For current Livepeer mainnet conditions, the main delegator risks are:
+
+- choosing an orchestrator that misses reward calls
+- choosing an operator that later changes commission terms unfavourably
+- needing liquidity before the unbonding period has passed
+- contributing to stake concentration if you always choose already-dominant operators
+
+The main risk is not orchestrator custody. The tokens are in the protocol contract, not their wallet.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Use this once the bonding model is clear and you are ready to compare operators.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    See how reward cut, fee share, and treasury allocation affect outcomes.
+  </Card>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claim, compound, redelegate, or exit after you are already bonded.
+  </Card>
+  <Card title="Protocol Parameters" icon="sliders" href="/v2/delegators/resources/reference/protocol-parameters" arrow>
+    Check the live unbonding period and other governance-controlled values.
+  </Card>
+</CardGroup>

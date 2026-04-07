@@ -1,0 +1,162 @@
+---
+title: Choose an Orchestrator
+sidebarTitle: Choose an Orchestrator
+description: >-
+  How to evaluate Livepeer orchestrators and pick one that fits your goals
+  before you execute the delegation transaction.
+keywords:
+  - livepeer
+  - delegate lpt
+  - staking
+  - orchestrator selection
+  - reward cut
+  - fee share
+  - reward call
+  - bonding
+  - livepeer explorer
+  - arbitrum
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: delegator
+purpose: choose
+lifecycleStage: setup
+status: current
+lastVerified: 2026-04-06
+---
+
+Choosing an orchestrator is the most consequential decision you make as a delegator. A well-run orchestrator with consistent reward calls and fair commission settings earns you meaningful returns. A poorly run one can earn you nothing even if its headline commission looks attractive.
+
+This page is for the decision. Once you have chosen an orchestrator, move to [Delegate Your LPT](./delegate-your-lpt) for the wallet flow.
+
+## Before you start
+
+You need:
+
+- LPT on Arbitrum One
+- a small ETH balance on Arbitrum One for transactions
+- a compatible wallet connected to [Livepeer Explorer](https://explorer.livepeer.org)
+
+<CardGroup cols={2}>
+  <Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/delegators/delegation/bridge-lpt-to-arbitrum" arrow>
+    Move or acquire LPT on Arbitrum One before you try to delegate it.
+  </Card>
+  <Card title="What bonding means" icon="circle-question" href="/v2/delegators/delegation/about-delegation" arrow>
+    Review the risk model and stake mechanics before you compare operators.
+  </Card>
+</CardGroup>
+
+## Step 1: Confirm active-set status
+
+Start in [Livepeer Explorer](https://explorer.livepeer.org). Filter the orchestrator list to currently active operators, then open each candidate profile you are seriously considering.
+
+If an operator is not active now, your stake helps them compete for activation but does not earn round rewards until they are active.
+
+## Step 2: Check reward-call reliability
+
+This is the first real quality gate. Before commission, before branding, before social presence, check the recent reward-call history.
+
+Strong signal:
+
+- near-perfect reward calling across recent rounds
+- no recent streak of missed rounds
+- no sign that the operator is underfunded for gas or operationally absent
+
+Weak signal:
+
+- frequent missed rounds
+- long gaps
+- recent inactivity with no visible recovery
+
+<AccordionGroup>
+  <Accordion title="Why missed reward calls matter more than a tiny commission difference">
+    Missing `reward()` means the delegator pool simply misses that round's inflation. There is no catch-up call in the next round.
+  </Accordion>
+  <Accordion title="What usually causes misses">
+    The common causes are operator downtime, poor automation, or running out of ETH for transaction gas.
+  </Accordion>
+</AccordionGroup>
+
+## Step 3: Compare commission terms
+
+### `rewardCut`
+
+This is the percentage of inflationary LPT the orchestrator keeps before the rest is shared with delegators.
+
+- lower is better for delegators
+- `10%` means delegators share the other `90%`
+
+### `feeShare`
+
+This is the percentage of ETH fees the orchestrator passes to delegators.
+
+- higher is better for delegators
+- `80%` means delegators share `80%` of the fee revenue
+
+<Warning>
+  As of 6 April 2026, current Explorer product surfaces use **Fee Share**, not **Fee Cut**. `feeShare` and `rewardCut` move in opposite directions for delegators: higher fee share is better, lower reward cut is better.
+</Warning>
+
+## Step 4: Check concentration and resilience
+
+After reliability and commission, look at how much of total bonded stake the operator already controls.
+
+Questions worth asking:
+
+- are they comfortably active or just above the cutoff?
+- are they already highly dominant?
+- are you comfortable contributing more stake concentration to that operator?
+
+From a pure-yield perspective, big operators are not automatically better. From a network-health perspective, delegating only to already dominant operators can worsen concentration.
+
+## Step 5: Look for signs of durability
+
+Optional, but useful for meaningful positions:
+
+- how long they have been active
+- whether they have visible governance participation
+- whether they communicate publicly
+- whether their recent history shows consistency instead of one good month
+
+## Selection checklist
+
+- [ ] currently active
+- [ ] reliable recent reward-call history
+- [ ] acceptable `rewardCut`
+- [ ] acceptable `feeShare`
+- [ ] not uncomfortably concentrated
+- [ ] durable enough for your risk tolerance
+
+## After you choose
+
+Once the checklist is complete:
+
+1. open the chosen orchestrator's profile in Explorer
+2. confirm they are still active
+3. follow the approval and bond flow in [Delegate Your LPT](./delegate-your-lpt)
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Can I delegate to more than one orchestrator from one wallet?">
+    No. One bonded position maps to one orchestrator per wallet.
+  </Accordion>
+  <Accordion title="What if my orchestrator later becomes inactive?">
+    Your stake remains bonded, but it stops earning active-round rewards until the operator returns or you redelegate.
+  </Accordion>
+  <Accordion title="How much ETH should I keep for gas?">
+    Keep a small Arbitrum ETH balance available for the initial delegation plus later claim, redelegation, or unbonding actions. Use "small reusable balance" as the rule, not a fixed dollar amount.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Delegate Your LPT" icon="play" href="./delegate-your-lpt" arrow>
+    Execute the approval and bond flow now that you have chosen an operator.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="./delegation-economics" arrow>
+    Use the reward model to compare the practical impact of these operator choices.
+  </Card>
+</CardGroup>

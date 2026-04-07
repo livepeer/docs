@@ -1,37 +1,43 @@
+/* Mintlify dev server injects <style>body { padding: 24px }</style>.
+   Not present in production builds. Safe no-op in prod. */
+body {
+  padding: 0 !important;
+}
+
 /* Colors Used
-3CB540 - Jade Green
-2b9a66 - Light Green
-18794E - Dark Green
+#3CB540 - Jade Green
+#2b9a66 - Light Green
+#18794E - Dark Green
 
 Complementary Greens
 See https://coolors.co/004225-1a794e-08a045-3cb540-62ba4f
-004225 - Deep Forrest
-1A794E - Turf Green
-08A045 - Medium Jungle
-3CB540 - Jade Green
-6BBF59 - Moss Green
+#004225 - Deep Forrest
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#3CB540 - Jade Green
+#6BBF59 - Moss Green
 
 See https://coolors.co/0c0c0c-073b3a-1a794e-08a045-6bbf59
-0C0C0C - Onyx Black
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#0C0C0C - Onyx Black
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 
 See https://coolors.co/fffffa-073b3a-1a794e-08a045-6bbf59
-FFFFFA - Porcelain
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#FFFFFA - Porcelain
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 
 Pink Offset Colour
 See https://coolors.co/073b3a-1a794e-f61067-08a045-6bbf59
-F61067 - Razzmatazz Pink
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#F61067 - Razzmatazz Pink
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 */
 
 /* ============================================
@@ -45,6 +51,7 @@ F61067 - Razzmatazz Pink
   --lp-color-accent-soft: #6bbf59;
   --lp-color-accent-bright: #5dd662;
   --lp-color-accent-brightest: #a0f0a5;
+  --lp-color-arbitrum: #3ea6f8;
   --lp-color-text-primary: #181c18;
   --lp-color-text-secondary: #717571;
   --lp-color-text-muted: #9ca3af;
@@ -63,6 +70,11 @@ F61067 - Razzmatazz Pink
   --lp-color-brand-forum: #00aeef;
   --lp-color-brand-github: #181c18;
   --lp-color-brand-x: #181c18;
+  --lp-color-brand-globe: #00c0ff;
+  --lp-color-brand-twitch: #9048ff;
+  --lp-color-brand-youtube: #ff0034;
+  --lp-color-brand-instagram: #dc2275;
+  --lp-color-brand-linkedin: #0189df;
   --lp-color-brand-preview: #b636dd;
   --lp-color-brand-coming-soon: #ef1a73;
   --lp-color-status-good: #22c55e;
@@ -74,8 +86,8 @@ F61067 - Razzmatazz Pink
   --lp-spacing-4: 1rem;
   --lp-spacing-6: 1.5rem;
   --lp-spacing-8: 2rem;
-  --lp-font-sans: "Inter", "Segoe UI", sans-serif;
-  --lp-font-mono: "SFMono-Regular", "SF Mono", "Menlo", monospace;
+  --lp-font-sans: 'Inter', 'Segoe UI', sans-serif;
+  --lp-font-mono: 'SFMono-Regular', 'SF Mono', 'Menlo', monospace;
   --lp-radius-sm: 0.25rem;
   --lp-radius-md: 0.5rem;
   --lp-radius-lg: 0.75rem;
@@ -97,6 +109,7 @@ F61067 - Razzmatazz Pink
   --border: var(--lp-color-border-default);
   --button-text: var(--lp-color-on-accent);
   --page-header-description-color: var(--lp-color-text-secondary);
+  --arbitrum: var(--lp-color-arbitrum);
 }
 
 .dark {
@@ -134,6 +147,7 @@ F61067 - Razzmatazz Pink
   --border: var(--lp-color-border-default);
   --button-text: var(--lp-color-on-accent);
   --page-header-description-color: var(--lp-color-text-secondary);
+  --arbitrum: var(--lp-color-arbitrum);
 }
 /* ============================================ */
 
@@ -178,10 +192,33 @@ a.nav-tabs-item[href="/pages/08_help/README"] {
   justify-content: flex-start;
 }
 
-/* Make the nav-tabs container full width */
-.nav-tabs {
-  width: 100%;
-  justify-content: flex-start;
+/* Fix Mintlify content width and centering.
+   Regular pages: balance padding + widen inner cap.
+   Portal/frame pages: balance padding (smaller) + widen inner cap for full-width hero. */
+@media (min-width: 1024px) {
+  /* Regular pages */
+  #content-container:not(:has(.frame-mode-hero-full)):not(
+      :has(.frame-mode-container)
+    ) {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+  #content-container:not(:has(.frame-mode-hero-full)):not(
+      :has(.frame-mode-container)
+    )
+    > .max-w-5xl {
+    max-width: 72rem !important;
+  }
+  /* Portal/frame pages — tighter balanced padding, wider inner cap */
+  #content-container:has(.frame-mode-hero-full),
+  #content-container:has(.frame-mode-container) {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+  #content-container:has(.frame-mode-hero-full) > .max-w-5xl,
+  #content-container:has(.frame-mode-container) > .max-w-5xl {
+    max-width: 80rem !important;
+  }
 }
 
 #navbar > div.z-10.mx-auto.relative > div.hidden.lg\:flex.px-12.h-12 > div {
@@ -403,7 +440,7 @@ img[alt="US"][src*="flags/US.svg"]::before {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-image: url("/snippets/assets/site/united-kingdom-flag-icon.svg") !important;
+  background-image: url("/snippets/assets/media/images/site/united-kingdom-flag-icon.svg") !important;
   background-size: cover !important;
   background-position: center !important;
   border-radius: 50% !important;
@@ -415,6 +452,12 @@ img[alt="US"][src*="flags/US.svg"]::before {
 #table-of-contents-layout:empty,
 #content-side-layout:has(#table-of-contents-layout:empty) {
   display: none;
+}
+
+/* DynamicTable: force fixed layout so columnWidths prop values take effect.
+   Mintlify's Tailwind prose resets table-layout to auto — !important required. */
+[data-docs-dynamic-table] {
+  table-layout: fixed !important;
 }
 
 /* StyledTable should sit flush inside its own border shell.
@@ -436,6 +479,19 @@ img[alt="US"][src*="flags/US.svg"]::before {
 
 [data-docs-bordered-box] > :last-child {
   margin-bottom: 0 !important;
+}
+
+[data-docs-bordered-box][data-accent-bar]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: var(--accent-bar-color);
+  border-radius: inherit;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* Frame mode container - 80% of #content-container width, centered */

@@ -1,20 +1,22 @@
 ---
 name: docs-change-review
-version: "1.0"
-description: Review Livepeer Docs pages or diffs for factual contradictions, overstatement, ownership overlap, historical drift, unresolved evidence gaps, and reader-facing claim quality.
-tier: 2
-invoke_when:
-  - "review this docs diff"
-  - "check this page for clarity and correctness"
-  - "give a docs review verdict on these changes"
+description: >-
+  Review Livepeer Docs pages or diffs for factual contradictions, overstatement,
+  ownership overlap, historical drift, unresolved evidence gaps, and
+  reader-facing claim quality. Use when: review this docs diff, check this page
+  for clarity and correctness, give a docs review verdict on these changes.
+metadata:
+  version: "1.2"
+  category: "review-pipeline"
+  tier: "2"
 primary_paths:
   - "v2"
-  - "tasks/research/claims"
-  - "tools/scripts/docs-page-research.js"
+  - "workspace/research/claims"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
   - "docs-guide/policies/quality-gates.mdx"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
-  - "node tools/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Docs Change Review

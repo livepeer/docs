@@ -1,0 +1,67 @@
+---
+title: Local Preview
+sidebarTitle: Local Preview
+description: Set up and run a scoped local docs preview using the lpd CLI.
+keywords:
+  - livepeer
+  - lpd
+  - local development
+  - scoped preview
+  - contributing
+  - getting started
+audience: internal
+pageType: quickstart
+purpose: onboarding
+status: current
+lastVerified: 2026-03-29T00:00:00.000Z
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Local docs preview — scoped mode
+
+This repo has 770+ pages. Scoped mode filters down to just the tab you are working on so the dev server starts fast.
+
+### Setup (one time)
+
+```bash
+git clone https://github.com/livepeer/docs.git
+cd docs
+git checkout docs-v2-dev
+bash lpd setup --yes
+```
+
+### Check your environment
+
+```bash
+lpd doctor
+```
+
+### See available tabs
+
+```bash
+lpd dev --scoped --scope-list
+```
+
+### Start a scoped preview
+
+```bash
+lpd dev --scoped --scope-tab Orchestrators
+```
+
+Tab names are fuzzy — `Orch` works. Multiple tabs: `--scope-tab About --scope-tab Solutions`. Custom port: add `-- --port 3333` at the end.
+
+### Not sure what to pick?
+
+```bash
+lpd dev --scoped --scope-interactive
+```
+
+Setup once, scope to your tab, preview locally in under a minute.
+
+<Note>
+For the full CLI reference, see [LPD CLI](/docs-guide/tooling/lpd-cli).
+</Note>

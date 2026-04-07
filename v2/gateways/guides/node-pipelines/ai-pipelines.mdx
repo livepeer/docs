@@ -1,7 +1,16 @@
 ---
-title: 'AI Pipelines on Livepeer'
-sidebarTitle: 'AI Pipelines'
-description: 'How AI inference jobs flow through your gateway - HTTP request routing, orchestrator discovery via -orchAddr, capability and model matching via AISessionManager, retry logic, available pipeline types (Standard API, ComfyStream, BYOC), and platform limitations.'
+title: AI Pipelines on Livepeer
+sidebarTitle: AI Pipelines
+description: >-
+  How AI inference jobs flow through your gateway - HTTP request routing, orchestrator
+  discovery via -orchAddr, capability and model matching via AISessionManager, retry
+  logic, available pipeline types (Standard API, ComfyStream, BYOC), and platform
+  limitations.
+pageType: guide
+audience: gateway
+purpose: explain
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway
@@ -15,18 +24,13 @@ keywords:
   - off-chain
   - orchAddr
   - ai gateway
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: guide
-audience: gateway-operator
-purpose: concept
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
 Verify:
-- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
 - ~~Fontawesome icons are used on accordions and tabs~~
 - ~~Tables use StyledTable component~~
 - ~~No em-dashes are used (instead use standard -)~~
@@ -39,9 +43,9 @@ Human
 - Review REVIEW items
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -264,19 +268,19 @@ The JSON uses the `capabilities_prices` array format:
 }
 ```
 
-Use `"model_id": "default"` to set a fallback cap for all models in a pipeline. Specific model entries take precedence over the default. Without this flag, the gateway accepts any price the orchestrator advertises. For full pricing details, see <LinkArrow href="../payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} />.
+Use `"model_id": "default"` to set a fallback cap for all models in a pipeline. Specific model entries take precedence over the default. Without this flag, the gateway accepts any price the orchestrator advertises. For full pricing details, see <LinkArrow href="/v2/gateways/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} />.
 
 ### Other Pipelines
 
 <Note>
-  The `live-video-to-video` pipeline (real-time AI via ComfyStream) uses the trickle streaming protocol, not the REST API described above. From a gateway operator perspective, ComfyStream workers appear as AI-capable orchestrators connected via `-orchAddr`. See <LinkArrow href="./guide" label="Pipelines Guide" newline={false} /> for how real-time AI fits into the pipeline taxonomy.
+  The `live-video-to-video` pipeline (real-time AI via ComfyStream) uses the trickle streaming protocol, not the REST API described above. From a gateway operator perspective, ComfyStream workers appear as AI-capable orchestrators connected via `-orchAddr`. See <LinkArrow href="/v2/gateways/guides/node-pipelines/guide" label="Pipelines Guide" newline={false} /> for how real-time AI fits into the pipeline taxonomy.
 </Note>
 
 <CardGroup cols={2}>
   <Card title="ComfyStream" icon="wand-magic-sparkles" href="/v2/developers/build/comfystream">
     Build real-time AI video workflows with ComfyUI nodes.
   </Card>
-  <Card title="BYOC Pipelines" icon="box" href="./byoc-pipelines">
+  <Card title="BYOC Pipelines" icon="box" href="/v2/gateways/guides/node-pipelines/byoc-pipelines">
     Route custom container workloads by capability - operator responsibilities, model fit, and health tracking.
   </Card>
 </CardGroup>
@@ -540,13 +544,13 @@ There is no single registry that lets operators query all available models and p
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Pipelines Guide" icon="diagram-project" href="./guide">
+  <Card title="Pipelines Guide" icon="diagram-project" href="/v2/gateways/guides/node-pipelines/guide">
     Pipeline taxonomy - video, batch AI, real-time AI, and BYOC.
   </Card>
-  <Card title="BYOC Pipelines" icon="box" href="./byoc-pipelines">
+  <Card title="BYOC Pipelines" icon="box" href="/v2/gateways/guides/node-pipelines/byoc-pipelines">
     Route custom container workloads by capability - operator responsibilities, model fit, and health tracking.
   </Card>
-  <Card title="Pipeline Configuration" icon="sliders" href="./pipeline-configuration">
+  <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
     AI routing flags, retry timeouts, and per-pipeline pricing reference.
   </Card>
   <Card title="Model Support" icon="microchip-ai" href="/v2/developers/build/model-support">
@@ -555,14 +559,14 @@ There is no single registry that lets operators query all available models and p
   <Card title="Workload Fit" icon="bullseye" href="/v2/developers/build/workload-fit">
     Decision framework for evaluating whether your AI workload belongs on Livepeer.
   </Card>
-  <Card title="AI API Reference" icon="code" href="/v2/gateways/resources/technical/api-reference/AI-API/text-to-image">
+  <Card title="AI API Reference" icon="code" href="/v2/gateways/resources/reference/technical/api-reference/AI-API/text-to-image">
     Full endpoint reference for all AI pipelines.
   </Card>
 </CardGroup>
 
 {/* ---
 title: 'AI Inference Pipeline'
-description: 'How AI jobs flow through your gateway — HTTP requests, orchestrator discovery, model routing, retry logic, and available pipeline types (Standard API, ComfyStream, BYOC).'
+description: 'How AI jobs flow through your gateway - HTTP requests, orchestrator discovery, model routing, retry logic, and available pipeline types (Standard API, ComfyStream, BYOC).'
 sidebarTitle: 'AI Inference'
 pageType: 'guide'
 audience: 'gateway'
@@ -582,28 +586,28 @@ status: 'stub'
   SECTION HOME: Guides → AI and Job Pipelines
 
   JOURNEY POSITION:
-  1. Pipeline Overview — "What workloads can my gateway route?"
-  2. Video Transcoding Pipeline — "How do video jobs flow?"
-  3. AI Inference Pipeline (this page) — "How do AI jobs flow?"
-  4. BYOC Pipelines — "Custom containers on the network"
-  5. Pipeline Configuration — "Configure transcoding profiles and AI routing"
+  1. Pipeline Overview - "What workloads can my gateway route?"
+  2. Video Transcoding Pipeline - "How do video jobs flow?"
+  3. AI Inference Pipeline (this page) - "How do AI jobs flow?"
+  4. BYOC Pipelines - "Custom containers on the network"
+  5. Pipeline Configuration - "Configure transcoding profiles and AI routing"
 
   RELATED FILES (draw from):
-  - all-resources/ctx-gwnew--ai-configuration.mdx            — PRIMARY (90%): 196 lines. Comprehensive AI gateway config: flag audit, orchAddr, HTTP ingest, Docker examples, verification steps, on-chain mode flags.
-  - all-resources/ctx-new--ai-configuration.mdx               — PRIMARY (85%): 190 lines. AI deployment walkthrough: off-chain vs on-chain, Docker/binary, component descriptions (AISessionManager, MediaMTX, Trickle Protocol, ai_process.go).
-  - all-resources/v2-dev--ai-pipelines-overview.mdx            — PRIMARY (70%): 262 lines. 3 integration patterns (Standard API, ComfyStream, BYOC). Developer-focused but describes pipeline types.
-  - all-resources/v1--ai-worker.mdx                            — SECONDARY (40%): 139 lines. Remote AI worker setup. Helps explain what orchestrators expose.
-  - all-resources/v1--models-config.mdx                        — SECONDARY (40%): 172 lines. aiModels.json format, pricing. Helps explain what models are available.
-  - all-resources/v1--ai-builders-gateways.mdx                 — SECONDARY (20%): 723 lines. AI gateway ecosystem overview. Context for available gateways.
-  - all-resources/v2-dev--ai-pipelines-model-support.mdx       — SECONDARY (30%): 250 lines. Model compatibility matrix. Useful for "what models work" section.
+  - all-resources/ctx-gwnew--ai-configuration.mdx            - PRIMARY (90%): 196 lines. Comprehensive AI gateway config: flag audit, orchAddr, HTTP ingest, Docker examples, verification steps, on-chain mode flags.
+  - all-resources/ctx-new--ai-configuration.mdx               - PRIMARY (85%): 190 lines. AI deployment walkthrough: off-chain vs on-chain, Docker/binary, component descriptions (AISessionManager, MediaMTX, Trickle Protocol, ai_process.go).
+  - all-resources/v2-dev--ai-pipelines-overview.mdx            - PRIMARY (70%): 262 lines. 3 integration patterns (Standard API, ComfyStream, BYOC). Developer-focused but describes pipeline types.
+  - all-resources/v1--ai-worker.mdx                            - SECONDARY (40%): 139 lines. Remote AI worker setup. Helps explain what orchestrators expose.
+  - all-resources/v1--models-config.mdx                        - SECONDARY (40%): 172 lines. aiModels.json format, pricing. Helps explain what models are available.
+  - all-resources/v1--ai-builders-gateways.mdx                 - SECONDARY (20%): 723 lines. AI gateway ecosystem overview. Context for available gateways.
+  - all-resources/v2-dev--ai-pipelines-model-support.mdx       - SECONDARY (30%): 250 lines. Model compatibility matrix. Useful for "what models work" section.
 
   CROSS-REFS:
-  - Setup → AI Configuration — initial setup vs this guide's pipeline understanding
-  - BYOC Pipelines (this section) — custom container details
-  - Payments & Pricing → Pricing Strategy — AI pricing model (no on-chain cost for off-chain AI)
-  - Monitoring → Health Checks — AI pipeline health (/health on port 8935)
-  - Resources → AI API Reference — full endpoint documentation
-  - FAQ — "How do I find which AI models/pipelines are available?"
+  - Setup → AI Configuration - initial setup vs this guide's pipeline understanding
+  - BYOC Pipelines (this section) - custom container details
+  - Payments & Pricing → Pricing Strategy - AI pricing model (no on-chain cost for off-chain AI)
+  - Monitoring → Health Checks - AI pipeline health (/health on port 8935)
+  - Resources → AI API Reference - full endpoint documentation
+  - FAQ - "How do I find which AI models/pipelines are available?"
 */}
 {/*
 # AI Inference Pipeline
@@ -631,7 +635,7 @@ and model-dependent.
 | ComfyStream | Real-time video frame processing | Live video AI effects | Route stream frames to ComfyUI worker |
 | BYOC | Custom inference containers | Custom diffusion, vision | Route by capability contract |
 
-Brief intro to each — detailed BYOC coverage in next page.
+Brief intro to each - detailed BYOC coverage in next page.
 
 ### 3. Orchestrator Discovery
 - `-orchAddr` flag: direct orchestrator specification

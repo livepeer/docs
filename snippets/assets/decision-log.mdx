@@ -1,0 +1,117 @@
+---
+title: Assets Restructure Decision Log
+description: Implementation record for the `/site` migration and the staged `/domain` audit.
+status: active
+lastUpdated: "2026-04-04"
+---
+
+# Assets Restructure Decision Log
+
+## Outcome
+
+The `/site` phase is implemented.
+
+- favicon assets are now canonical in `snippets/assets/logos/favicon/`
+- generated OG assets are now canonical in `snippets/assets/media/og-images/`
+- site-scoped images are now canonical in `snippets/assets/media/images/site/`
+- the duplicate asset copy of `sitemap-ai.xml` was removed; repo root `sitemap-ai.xml` remains canonical
+
+The `/domain` phase has not been moved yet. Its audit is staged in `snippets/_workspace/audit.md`.
+
+## Current Structure
+
+<Tree>
+  <Tree.Folder name="assets" defaultOpen>
+    <Tree.File name="README.mdx" />
+    <Tree.File name="decision-log.mdx" />
+    <Tree.Folder name="data" />
+    <Tree.Folder name="domain" />
+    <Tree.Folder name="logos" defaultOpen>
+      <Tree.Folder name="Arbitrum" />
+      <Tree.Folder name="favicon" defaultOpen>
+        <Tree.File name="apple-touch-icon.png" />
+        <Tree.File name="favicon-96x96.png" />
+        <Tree.File name="favicon.ico" />
+        <Tree.File name="favicon.png" />
+        <Tree.File name="favicon.svg" />
+        <Tree.File name="site.webmanifest" />
+        <Tree.File name="web-app-manifest-192x192.png" />
+        <Tree.File name="web-app-manifest-512x512.png" />
+      </Tree.Folder>
+      <Tree.Folder name="products" />
+    </Tree.Folder>
+    <Tree.Folder name="media" defaultOpen>
+      <Tree.Folder name="heros" />
+      <Tree.Folder name="images" defaultOpen>
+        <Tree.Folder name="showcase" />
+        <Tree.Folder name="site" defaultOpen>
+          <Tree.File name="layered-image.webp" />
+          <Tree.File name="united-kingdom-flag-icon.svg" />
+        </Tree.Folder>
+      </Tree.Folder>
+      <Tree.Folder name="og-images" defaultOpen>
+        <Tree.Folder name="cn" />
+        <Tree.Folder name="en" />
+        <Tree.Folder name="es" />
+        <Tree.Folder name="fr" />
+        <Tree.File name="fallback.png" />
+        <Tree.File name="manifest.json" />
+      </Tree.Folder>
+      <Tree.Folder name="videos" />
+    </Tree.Folder>
+    <Tree.Folder name="scripts">
+      <Tree.Folder name="n8n" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+
+## Current To Final Mapping Table
+
+Classification vocabulary in this table is limited to `MOVE` and `ARCHIVE`.
+
+| Name | Top level folder | Full location | Summary | Classification | Final location |
+| --- | --- | --- | --- | --- | --- |
+| `favicon.png` | root | `assets/` | root runtime favicon; file matched the former `site/favicon.png` exactly | MOVE | `assets/logos/favicon/favicon.png` |
+| `site/favicon.png` | site | `assets/site/` | duplicate site-root favicon png | MOVE | `assets/logos/favicon/favicon.png` |
+| `site/favicon/*` | site | `assets/site/favicon/` | favicon bundle and web manifest set | MOVE | `assets/logos/favicon/` |
+| `site/og-image/<locale>/*` | site | `assets/site/og-image/` | generated OG images with active config, docs, and href consumers | MOVE | `assets/media/og-images/<locale>/` |
+| `site/og-image/fallback.png` | site | `assets/site/og-image/` | shared fallback OG image | MOVE | `assets/media/og-images/fallback.png` |
+| `site/og-image/manifest.json` | site | `assets/site/og-image/` | OG manifest used by tooling and tests | MOVE | `assets/media/og-images/manifest.json` |
+| `site/images/layered-image.webp` | site | `assets/site/images/` | site-scoped image asset | MOVE | `assets/media/images/site/layered-image.webp` |
+| `site/united-kingdom-flag-icon.svg` | site | `assets/site/` | CSS-consumed site flag asset | MOVE | `assets/media/images/site/united-kingdom-flag-icon.svg` |
+| `site/sitemap-ai.xml` | site | `assets/site/` | stale duplicate of the root AI sitemap | ARCHIVE | remove from assets; canonical remains at repo root `sitemap-ai.xml` |
+
+## Executive Summary
+
+1. The favicon bundle is no longer split across root and `site/`; `snippets/assets/logos/favicon/favicon.png` is now the single canonical runtime favicon.
+2. All active `/site` OG consumers were repointed to `snippets/assets/media/og-images/`.
+3. `style.css` now points at `snippets/assets/media/images/site/united-kingdom-flag-icon.svg`.
+4. The stale asset copy of `sitemap-ai.xml` is gone; root `sitemap-ai.xml` remains the only canonical sitemap.
+5. `domain/` remains in place until the phase-two audit is approved.
+
+## Consumer Updates
+
+- runtime and nav config: `docs.json`, `tools/config/scoped-navigation/*`
+- style surface: `style.css`
+- OG pipeline: `operations/scripts/config/og-image-policy.js`, `operations/scripts/generators/content/seo/generate-og-images.js`
+- tests: `operations/tests/unit/og-image-policy.test.js`, `operations/tests/unit/lpd-scoped-mint-dev.test.js`
+- sitemap consumer cleanup: `operations/scripts/automations/content/studio-docs-migration.js`
+- governance docs: `snippets/assets/README.mdx`, `docs-guide/policies/snippets-assets-policy.mdx`, `snippets/snippets-registry.mdx`
+
+## Validation
+
+Validation results for this phase are recorded after the implementation commands are run:
+
+- old active `/site` references must resolve to zero outside approved historical and archive surfaces
+- MDX and style tests must pass for the updated governance docs
+- OG policy tests must pass with the new `media/og-images/` path
+- structure lint must pass with the new favicon and OG locations
+
+## Next Phase
+
+The next approved step is the `/domain` audit only.
+
+- audit every file under `snippets/assets/domain/`
+- classify each file as `MOVE` or `ARCHIVE`
+- map active assets into `logos/livepeer/`, `media/heros/`, `media/images/`, or `media/videos/`
+- do not move `/domain` until the audit is reviewed

@@ -1,45 +1,20 @@
-# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
-
 name: Generate Docs Index
 
 on:
   push:
     branches:
-      - main
+      - docs-v2
   workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
 
 jobs:
   generate-docs-index:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install dependencies
-        run: cd tools && npm install
-
-      - name: Generate docs index
-        run: node tools/scripts/generate-docs-index.js --write
-
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code docs-index.json || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit and push if changed
-        if: steps.git-check.outputs.changed == 'true'
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add docs-index.json
-          git commit -m "Update docs index - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          git push
+    uses: ./.github/workflows/docs-catalog-governance.yml
+    with:
+      mode: generate-docs-index
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

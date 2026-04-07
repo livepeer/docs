@@ -1,17 +1,16 @@
 ---
 name: page-authoring
-version: "1.1"
 description: >-
-  Canonical guidance for authoring new v2 documentation pages. Covers frontmatter, page-type and purpose alignment, MDX/component constraints, and repo-backed validation without collapsing copy quality into rigid templates.
-invoke_when:
-  - "write a new v2 docs page"
-  - "draft mdx content for livepeer docs"
-  - "apply repo authoring rules to a docs page"
+  Canonical guidance for authoring new v2 documentation pages. Covers frontmatter, page-type and purpose alignment, MDX/component constraints, and repo-backed validation without collapsing copy quality into rigid templates. Use when writing a new v2 docs page, drafting MDX content for Livepeer docs, or applying repo authoring rules to an existing page.
+metadata:
+  version: "1.3"
+  category: authoring
 ---
 
 # SKILL: Page Authoring for Livepeer v2 Docs
 
 Use this skill for page structure, frontmatter, MDX constraints, and repo-backed authoring rules.
+For current Mintlify/runtime behaviour, read `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`.
 Use `docs-copy` skills for prose decisions. This file does not assume every editorial preference is auto-enforced.
 
 <CustomDivider />
@@ -32,11 +31,13 @@ Do not treat all guidance here as a pre-commit blocker.
 
 ### Imports and MDX constraints
 
-- Use absolute snippet imports such as `/snippets/components/...`
+- Use root-absolute snippet imports such as `/snippets/components/...` (relative paths work but absolute preferred)
 - Include file extensions for local imports: `.jsx` or `.js`
-- Do not import Mintlify globals like `Card`, `Tabs`, `Accordion`, `Note`, `Steps`, or `Columns`
-- Do not import React hooks in MDX
+- Do not import Mintlify globals (35 platform components — see full list in constraints reference)
+- Do not import React or hooks — they are globally available
 - Keep JSX composition MDX-safe; pass data through MDX rather than chaining JSX-to-JSX imports
+- Use arrow function syntax only in JSX snippets (`export const Foo = () => {}` not `export function Foo`)
+- Do not define constants at file scope in JSX — define inside function bodies
 
 ### Styling constraints
 
@@ -73,7 +74,7 @@ lastVerified: YYYY-MM-DD
 
 Canonical `pageType` and `purpose` values live in:
 
-- `tools/lib/frontmatter-taxonomy.js`
+- `tools/lib/docs/frontmatter-taxonomy.js`
 
 Do not hardcode your own enum list in local docs or prompts.
 

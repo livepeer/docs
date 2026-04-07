@@ -1,0 +1,119 @@
+---
+title: Bridge LPT between Ethereum and Arbitrum
+sidebarTitle: Bridge LPT
+description: >-
+  Move or acquire LPT on Arbitrum One so it can be delegated through the
+  Livepeer protocol.
+keywords:
+  - livepeer
+  - lpt
+  - bridge
+  - arbitrum
+  - ethereum
+  - l1
+  - l2
+  - token transfer
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: instruction
+purpose: build
+audience: delegator
+lifecycleStage: setup
+status: current
+lastVerified: 2026-04-06
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+
+export const lptL1 = contractAddresses.ethereumMainnet.inventory.find((c) => c.name === 'LivepeerToken' && c.lifecycle === 'active')?.address
+export const lptL2 = contractAddresses.arbitrumOne.inventory.find((c) => c.name === 'LivepeerToken' && c.lifecycle === 'active')?.address
+export const l2Gateway = contractAddresses.arbitrumOne.inventory.find((c) => c.name === 'L2LPTGateway' && c.lifecycle === 'active')?.address
+export const l1Escrow = contractAddresses.ethereumMainnet.inventory.find((c) => c.name === 'L1Escrow' && c.lifecycle === 'active')?.address
+
+<Warning>
+  This page applies only to unbonded LPT. If your LPT is already bonded, unbond it and wait through the protocol unbonding period before you try to bridge or withdraw it.
+</Warning>
+
+<Tip>
+  You always need ETH on the chain where you are signing transactions. For a canonical bridge deposit, that means Ethereum mainnet gas first and then a small Arbitrum balance for later delegation actions.
+</Tip>
+
+## What counts as "ready to delegate"
+
+Your LPT is ready once all of these are true:
+
+- the token is in a self-custody wallet on **Arbitrum One**
+- you have a small ETH balance on **Arbitrum One** for future protocol transactions
+- the wallet is one you can connect to [Livepeer Explorer](https://explorer.livepeer.org)
+
+<BorderedBox variant="accent">
+The canonical trust-minimised route is the official Arbitrum bridge. Exchange withdrawals and DEX swaps can also get you to the same end state, but they introduce exchange or liquidity-pool risk and change over time.
+</BorderedBox>
+
+## Canonical bridge route: Ethereum mainnet to Arbitrum One
+
+Use this path if you already hold LPT on Ethereum mainnet and want the protocol-native bridge flow.
+
+<StyledSteps>
+  <StyledStep title="Open the official Arbitrum bridge on Ethereum mainnet">
+    Go to [bridge.arbitrum.io](https://bridge.arbitrum.io/) and connect the wallet that currently holds your Ethereum-mainnet LPT.
+  </StyledStep>
+  <StyledStep title="Select LPT as the token">
+    Search for `LPT`. If the token selector does not surface it, paste the Ethereum-mainnet token address directly: `{lptL1}`.
+  </StyledStep>
+  <StyledStep title="Set Arbitrum One as the destination and approve">
+    Confirm the destination network is **Arbitrum One**, enter the amount, and sign the approval transaction when prompted.
+  </StyledStep>
+  <StyledStep title="Confirm the bridge deposit">
+    Sign the deposit transaction. The bridge locks mainnet LPT and mints the Arbitrum-side representation. Track the transfer in the bridge UI or on the [retryable dashboard](https://retryable-dashboard.arbitrum.io/).
+  </StyledStep>
+  <StyledStep title="Verify Arbitrum receipt before delegating">
+    Confirm the Arbitrum wallet now holds LPT at `{lptL2}`. You are ready for the Livepeer Explorer once the tokens are visible on Arbitrum One.
+  </StyledStep>
+</StyledSteps>
+
+## Other practical routes
+
+### Buy or withdraw directly to Arbitrum One
+
+If you are acquiring LPT on an exchange, the fastest route is often a direct withdrawal to Arbitrum One. Do not rely on any static exchange-support list here; verify the exchange's current network selector at the moment you withdraw.
+
+### Swap on Arbitrum One
+
+If you are already on Arbitrum One with ETH, WETH, or stablecoins, swapping into LPT can be simpler than bridging LPT itself. The key requirement is still the same: after the swap, the LPT must be in your own Arbitrum wallet.
+
+## Bridge-specific details worth knowing
+
+<AccordionGroup>
+  <Accordion title="Why third-party bridges are risky for LPT">
+    LPT uses dedicated bridge contracts rather than the generic ERC-20 gateway flow. If a third-party bridge does not explicitly support LPT's route, do not assume it is safe.
+  </Accordion>
+  <Accordion title="The contracts involved">
+    Canonical bridge flows touch the mainnet `L1Escrow` contract at `{l1Escrow}` and the Arbitrum `L2LPTGateway` contract at `{l2Gateway}`.
+  </Accordion>
+  <Accordion title="What you cannot bridge">
+    Bonded LPT cannot be bridged. Unbond and withdraw first.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Compare active-set status, reward reliability, and commission terms before you bond.
+  </Card>
+  <Card title="Delegate Your LPT" icon="play" href="/v2/delegators/delegation/delegate-your-lpt" arrow>
+    Follow the wallet flow once your LPT is visible on Arbitrum One.
+  </Card>
+  <Card title="Contract Addresses" icon="file-contract" href="/v2/delegators/resources/reference/contracts" arrow>
+    Check the canonical deployed bridge and protocol contracts.
+  </Card>
+  <Card title="Exchanges with LPT listed" icon="coins" href="/v2/delegators/resources/compendium/exchanges" arrow>
+    Use the compendium page as a jumping-off point if you are sourcing LPT rather than bridging it.
+  </Card>
+</CardGroup>

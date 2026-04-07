@@ -1,7 +1,15 @@
 ---
-title: 'Video & Transcoding Pipelines'
-sidebarTitle: 'Video Pipelines'
-description: 'How video jobs flow through your gateway - RTMP and HTTP ingest, source segmentation, orchestrator selection via BroadcastSessionsManager, transcoding profiles, on-chain payment per segment, and output delivery as HLS.'
+title: Video & Transcoding Pipelines
+sidebarTitle: Video Pipelines
+description: >-
+  How video jobs flow through your gateway - RTMP and HTTP ingest, source segmentation,
+  orchestrator selection via BroadcastSessionsManager, transcoding profiles, on-chain
+  payment per segment, and output delivery as HLS.
+pageType: guide
+audience: gateway
+purpose: explain
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway
@@ -13,18 +21,13 @@ keywords:
   - transcoding profiles
   - on-chain payment
   - pipeline
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: guide
-audience: gateway-operator
-purpose: concept
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - ~~Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology~~
 Verify:
-- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)~~
+- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)~~
 - ~~Fontawesome icons are used on accordions and tabs~~
 - ~~Tables use StyledTable component~~
 - ~~No em-dashes are used (instead use standard -)~~
@@ -37,8 +40,8 @@ Human
 - Review REVIEW items
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 
 <Note>
   This is a conceptual and tuning guide, not a setup guide. For initial installation and startup, see Setup. For transcoding profile JSON and flag reference, see Pipeline Configuration.
@@ -405,29 +408,29 @@ For Prometheus setup and alert YAML, see Monitoring Setup.
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Pipelines Guide" icon="compass" href="./guide">
+  <Card title="Pipelines Guide" icon="compass" href="/v2/gateways/guides/node-pipelines/guide">
     All pipeline types, node types, and orchestrator discovery patterns.
   </Card>
-  <Card title="Pipeline Configuration" icon="sliders" href="./pipeline-configuration">
+  <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
     Full JSON transcoding profile reference, per-platform setup (Docker, Linux, Windows), and AI routing parameters.
   </Card>
-  <Card title="Pricing Strategy" icon="tag" href="../payments-and-pricing/pricing-strategy">
+  <Card title="Pricing Strategy" icon="tag" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
     How to set -maxPricePerUnit, estimate costs, and position competitively against orchestrator rates.
   </Card>
-  <Card title="Monitoring Setup" icon="chart-line" href="../monitoring-and-tooling/monitoring-setup">
+  <Card title="Monitoring Setup" icon="chart-line" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup">
     Prometheus metrics, Grafana dashboards, and alert configuration for video workloads.
   </Card>
-  <Card title="AI Inference Pipeline" icon="brain" href="./ai-pipelines">
+  <Card title="AI Inference Pipeline" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
     How AI inference requests are routed - orchestrator discovery, model matching, pipeline types, and platform limits.
   </Card>
-  <Card title="BYOC" icon="cube" href="../../../developers/build/byoc">
+  <Card title="BYOC" icon="cube" href="/v2/developers/build/byoc">
     How to build and implement BYOC Pipelines and Workloads.
   </Card>
 </CardGroup>
 
 {/* ---
 title: 'Video Transcoding Pipeline'
-description: 'How video jobs flow through your gateway — RTMP/HTTP ingest, segmentation, orchestrator selection, transcoding profiles, and output delivery.'
+description: 'How video jobs flow through your gateway - RTMP/HTTP ingest, segmentation, orchestrator selection, transcoding profiles, and output delivery.'
 sidebarTitle: 'Video Transcoding'
 pageType: 'guide'
 audience: 'gateway'
@@ -438,32 +441,32 @@ status: 'stub'
   PURPOSE:
   Journey step: "How do video jobs flow through my gateway?"
   Gateway-side video pipeline guide. NOT a setup guide (that's in Setup → Configuration).
-  This is "understand and tune your video pipeline" — how data flows, what happens at
+  This is "understand and tune your video pipeline" - how data flows, what happens at
   each stage, how to configure transcoding profiles, and how to optimise.
 
   SECTION HOME: Guides → AI and Job Pipelines
 
   JOURNEY POSITION:
-  1. Pipeline Overview — "What workloads can my gateway route?"
-  2. Video Transcoding Pipeline (this page) — "How do video jobs flow?"
-  3. AI Inference Pipeline — "How do AI jobs flow?"
-  4. BYOC Pipelines — "Custom containers on the network"
-  5. Pipeline Configuration — "Configure transcoding profiles and AI routing"
+  1. Pipeline Overview - "What workloads can my gateway route?"
+  2. Video Transcoding Pipeline (this page) - "How do video jobs flow?"
+  3. AI Inference Pipeline - "How do AI jobs flow?"
+  4. BYOC Pipelines - "Custom containers on the network"
+  5. Pipeline Configuration - "Configure transcoding profiles and AI routing"
 
   RELATED FILES (draw from):
-  - all-resources/ctx-new--video-configuration.mdx           — PRIMARY (90%): 745 lines. Comprehensive video config with Mermaid architecture diagram, essential flags, transcoding options JSON, Docker/CLI/binary examples, production considerations.
-  - all-resources/v1--transcoding-options.mdx                 — PRIMARY (80%): 93 lines. V1 transcoding config guide: JSON template, platform-specific instructions (Docker, Linux, Windows).
-  - all-resources/v2-setup--transcoding-options.mdx            — PRIMARY (80%): 109 lines. V2 copy of transcoding options with platform-specific config.
-  - all-resources/ctx-new--video-configuration-view.mdx       — SECONDARY (30%): 193 lines. Tabbed view alternative with Mermaid diagram, quickstart, config flags.
-  - all-resources/v2-run--video-configuration.mdx              — SECONDARY (40%): Run-a-gateway video configuration (if different from _contextData_ version).
-  - all-resources/v2-run--transcoding.mdx                      — Placeholder (5%): 38 lines. Reserved page, planned structure only.
+  - all-resources/ctx-new--video-configuration.mdx           - PRIMARY (90%): 745 lines. Comprehensive video config with Mermaid architecture diagram, essential flags, transcoding options JSON, Docker/CLI/binary examples, production considerations.
+  - all-resources/v1--transcoding-options.mdx                 - PRIMARY (80%): 93 lines. V1 transcoding config guide: JSON template, platform-specific instructions (Docker, Linux, Windows).
+  - all-resources/v2-setup--transcoding-options.mdx            - PRIMARY (80%): 109 lines. V2 copy of transcoding options with platform-specific config.
+  - all-resources/ctx-new--video-configuration-view.mdx       - SECONDARY (30%): 193 lines. Tabbed view alternative with Mermaid diagram, quickstart, config flags.
+  - all-resources/v2-run--video-configuration.mdx              - SECONDARY (40%): Run-a-gateway video configuration (if different from _contextData_ version).
+  - all-resources/v2-run--transcoding.mdx                      - Placeholder (5%): 38 lines. Reserved page, planned structure only.
 
   CROSS-REFS:
-  - Setup → Video Configuration — initial setup vs this guide's "how it works and how to tune"
-  - Payments & Pricing → Pricing Strategy — per-pixel pricing for video transcoding
-  - Monitoring → Health Checks — video pipeline health verification
-  - Resources → Configuration Flags — full flag reference for video flags
-  - Resources → Prometheus Metrics — video-specific metrics (success_rate, transcode_latency)
+  - Setup → Video Configuration - initial setup vs this guide's "how it works and how to tune"
+  - Payments & Pricing → Pricing Strategy - per-pixel pricing for video transcoding
+  - Monitoring → Health Checks - video pipeline health verification
+  - Resources → Configuration Flags - full flag reference for video flags
+  - Resources → Prometheus Metrics - video-specific metrics (success_rate, transcode_latency)
 */}
 
 {/* # Video Transcoding Pipeline

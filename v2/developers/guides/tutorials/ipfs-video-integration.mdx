@@ -1,0 +1,174 @@
+---
+title: 'Store and play videos on IPFS'
+sidebarTitle: 'IPFS Video Integration'
+description: >-
+  Upload a video to IPFS and play it back via Livepeer. Covers web3.storage integration, asset creation, and decentralised video delivery.
+keywords:
+  - livepeer IPFS
+  - web3.storage
+  - decentralised video
+  - VOD
+  - NFT video
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+purpose: build
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Livepeer transcodes IPFS-hosted videos on demand and returns a playback-optimised HLS stream. The original file stays on IPFS; Livepeer handles adaptive bitrate encoding and delivery.</Tip>
+</CenteredContainer>
+
+---
+
+Combining IPFS with Livepeer creates a fully decentralised video pipeline: content-addressed storage on IPFS with Livepeer transcoding for adaptive playback. This pattern is common in NFT video projects and decentralised social applications.
+
+**What you will build:** A workflow that uploads a video to IPFS via web3.storage, creates a Livepeer asset from the IPFS URL, and plays it back using the Livepeer Player.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- Node.js 18 or later
+- A Livepeer Studio API key from [livepeer.studio](https://livepeer.studio)
+- A web3.storage account and API token from [web3.storage](https://web3.storage)
+
+```bash
+npm install livepeer @web3-storage/w3up-client
+```
+
+<CustomDivider middleText="Steps" />
+
+## Build the pipeline
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Upload the video to IPFS" icon="cloud-arrow-up">
+    ```typescript
+    import * as Client from '@web3-storage/w3up-client';
+
+    const w3Client = await Client.create();
+
+    // Authenticate with your web3.storage account
+    await w3Client.login('your-email@example.com');
+    await w3Client.setCurrentSpace(/* your space DID */);
+
+    // Upload the video file
+    const file = new File(
+      [await fs.promises.readFile('./my-video.mp4')],
+      'my-video.mp4',
+      { type: 'video/mp4' }
+    );
+
+    const cid = await w3Client.uploadFile(file);
+
+    // Construct the IPFS gateway URL
+    const ipfsUrl = `https://w3s.link/ipfs/${cid}`;
+    console.log('IPFS URL:', ipfsUrl);
+    // e.g. https://w3s.link/ipfs/bafybei...
+    ```
+
+    The `cid` is the content identifier -- a cryptographic hash of the file. The URL `https://w3s.link/ipfs/<cid>` is a public IPFS HTTP gateway URL that Livepeer can fetch.
+  </StyledStep>
+
+  <StyledStep title="Create a Livepeer asset from the IPFS URL" icon="wand-magic-sparkles">
+    ```typescript
+    import { Livepeer } from 'livepeer';
+
+    const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    // Import the IPFS-hosted video into Livepeer for transcoding
+    const response = await client.asset.create({
+      name: 'my-ipfs-video',
+      url: ipfsUrl, // the IPFS gateway URL from step 1
+    });
+
+    const assetId = response.asset.id;
+    console.log('Asset ID:', assetId);
+    ```
+
+    Livepeer fetches the file from IPFS, transcodes it to adaptive bitrate HLS, and stores the renditions. The original file remains on IPFS.
+  </StyledStep>
+
+  <StyledStep title="Wait for transcoding" icon="clock">
+    ```typescript
+    // Poll until the asset is ready
+    let asset;
+    do {
+      await new Promise(r => setTimeout(r, 5000));
+      const response = await client.asset.get(assetId);
+      asset = response.asset;
+      console.log('Status:', asset.status.phase);
+    } while (asset.status.phase === 'processing' || asset.status.phase === 'waiting');
+
+    if (asset.status.phase !== 'ready') {
+      throw new Error(`Asset failed: ${asset.status.error}`);
+    }
+
+    const playbackId = asset.playbackId;
+    console.log('Playback ID:', playbackId);
+    ```
+
+    Alternatively, subscribe to the `asset.ready` webhook to avoid polling -- see the <a href="/v2/developers/guides/video/webhooks">webhooks guide</a>.
+  </StyledStep>
+
+  <StyledStep title="Play back with the Livepeer Player" icon="play">
+    ```tsx
+    import * as Player from '@livepeer/react/player';
+
+    export const IPFSVideoPlayer = ({ playbackId }: { playbackId: string }) => (
+      <Player.Root src={`https://livepeercdn.studio/asset/hls/${playbackId}/index.m3u8`}>
+        <Player.Container>
+          <Player.Video />
+          <Player.Controls />
+        </Player.Container>
+      </Player.Root>
+    );
+    ```
+
+    The Player delivers the Livepeer-transcoded HLS stream, not the raw IPFS file. Viewers get adaptive bitrate streaming with no IPFS gateway latency on playback.
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Storing Metadata On-chain" />
+
+## Storing the CID on-chain (optional)
+
+For NFT video projects, store the IPFS CID in the NFT metadata to establish provenance. The Livepeer `playbackId` can be stored alongside it for delivery:
+
+```json
+{
+  "name": "My NFT Video",
+  "description": "A video NFT with decentralised storage and delivery.",
+  "animation_url": "ipfs://bafybei...",
+  "properties": {
+    "livepeer_playback_id": "pla_abc123"
+  }
+}
+```
+
+The `animation_url` field (ERC-721 metadata standard) points to the IPFS CID. The `livepeer_playback_id` is a convenience property for applications that want to serve the transcoded stream instead of the raw IPFS file.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Upload a Video Asset" icon="upload" href="/v2/developers/guides/video/upload-asset">
+    Direct upload and URL-based import for video assets.
+  </Card>
+  <Card title="Token-Gated Video" icon="lock" href="/v2/developers/guides/tutorials/token-gated-video">
+    Gate video access with NFT ownership using Lit Protocol.
+  </Card>
+</CardGroup>

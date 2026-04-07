@@ -12,6 +12,8 @@
  * @param {string} [className=""] - Optional CSS class override.
  * @param {object} [style={}] - Optional inline style override.
  */
+'use client'
+
 export const LazyLoad = ({ children, height = "200px", offset = "200px", fadeDuration = 400, className = "", style = {}, ...rest }) => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);

@@ -1,0 +1,65 @@
+---
+title: "Verify your Livepeer Gateway on Docker, Linux, or Windows"
+sidebarTitle: "Verify"
+description: "Confirm your Livepeer Gateway is running correctly. Health checks, end-to-end tests, and on-chain verification for video, AI, and dual-mode nodes."
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: 2026-04-07T00:00:00.000Z
+keywords:
+  - livepeer
+  - gateways
+  - verify
+  - health check
+  - test
+  - docker
+  - linux
+  - windows
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { video, ai, dual, offChain, onChain } from '/v2/gateways/custom/components/iconItems.jsx'
+
+import DockerVerify from '/v2/gateways/custom/views/setup/verify/docker-verify-content.mdx'
+import LinuxVerify from '/v2/gateways/custom/views/setup/verify/linux-verify-content.mdx'
+import WindowsVerify from '/v2/gateways/custom/views/setup/verify/windows-verify-content.mdx'
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+# <Icon icon="circle-check" size={26} /> Verify Your Gateway
+Confirm your Livepeer Gateway is alive, connected, and routing jobs for {video()}, {ai()} Pipelines, or {dual()} service.
+
+*This guide covers:*
+- Health checks for {onChain()} and {offChain()} Livepeer Gateway nodes
+- End-to-end tests for <span>{video()} **Video transcoding**, </span><span> {ai()} **AI inference**, </span> and <span>{dual()} **Dual-mode** </span> gateways
+- On-chain deposit and Arbitrum RPC verification
+
+<Tip>
+  Run these checks immediately after completing the [Install](/v2/gateways/setup/install) and [Configure](/v2/gateways/setup/configure) steps. Once verification passes, proceed to [Monitor](/v2/gateways/setup/monitor) to set up production observability with Prometheus and Grafana.
+</Tip>
+
+<CustomDivider />
+
+<BorderedBox>
+  <Tabs>
+    <Tab title="Docker" icon="docker">
+      <DockerVerify />
+    </Tab>
+
+    <Tab title="Linux" icon="linux">
+      <LinuxVerify />
+    </Tab>
+
+    <Tab title="Windows" icon="windows">
+      <WindowsVerify />
+    </Tab>
+  </Tabs>
+</BorderedBox>

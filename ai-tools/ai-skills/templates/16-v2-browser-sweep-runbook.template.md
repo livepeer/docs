@@ -1,20 +1,20 @@
 ---
 name: v2-browser-sweep-runbook
-version: "1.0"
 description: >-
-  Execute full v2 browser sweep against docs.json routes and analyze console/render failures. Use when tasks include run full browser sweep for v2 pages, console errors across docs pages, validate all docs.json routes render.
-tier: 1
-invoke_when:
-  - "run full browser sweep for v2 pages"
-  - "console errors across docs pages"
-  - "validate all docs.json routes render"
+  Execute full v2 browser sweep against docs.json routes and analyze
+  console/render failures. Use when: run full browser sweep for v2 pages,
+  console errors across docs pages, validate all docs.json routes render.
+metadata:
+  version: "1.3"
+  category: "audit"
+  tier: "1"
 primary_paths:
-  - "tools/scripts/test-v2-pages.js"
+  - "operations/scripts/validators/content/structure/test-v2-pages.js"
   - ".github/workflows/test-v2-pages.yml"
   - "tools/v2-page-test-report.json"
   - "docs.json"
 primary_commands:
-  - "node tools/scripts/test-v2-pages.js"
+  - "node operations/scripts/validators/content/structure/test-v2-pages.js"
   - "npm --prefix tools run test:v2-pages"
 ---
 
@@ -28,27 +28,33 @@ Constraints
 - Do not modify `v1/` content; it is frozen/immutable.
 - Keep edits within requested scope and avoid protected root changes like `.allowlist` unless explicitly requested.
 - Use only repository-backed commands and paths listed in this template.
+- Any local dev server or Puppeteer browser process started for the sweep must be shut down before handoff.
 
 Workflow
-1. Ensure local mint server availability for sweep command.
+1. Ensure local mint server availability for sweep command, starting `lpd dev` only in a session you can stop cleanly after the sweep.
 2. Run full sweep over docs.json routes and capture report JSON.
 3. Triage failed pages by navigation/error/request-failure signals.
+4. Stop the local dev server and confirm the Puppeteer run exited cleanly before handing the task back.
 
 Command examples
 ```bash
-node tools/scripts/test-v2-pages.js
+node operations/scripts/validators/content/structure/test-v2-pages.js
 npm --prefix tools run test:v2-pages
 ```
 
 Deliverable Format
 - Browser sweep summary (passed/failed/total).
+- Confirmation that any local dev server started for the sweep was stopped afterward.
 - Per-page failure details with suggested next checks.
 
 Failure Modes / Fallback
 - If server is unreachable, resolve local dev server state before retesting.
 - If failures are environment-specific, note reproducibility conditions explicitly.
+- If the sweep is interrupted or hangs, terminate leftover Puppeteer/browser processes before rerunning or finishing.
 
 Validation Checklist
 - [ ] Sweep command executes with generated JSON report.
 - [ ] Failed pages are enumerated with errors.
+- [ ] Any local dev server started for the sweep was stopped before finish.
+- [ ] No orphaned Puppeteer/browser process remains from the sweep run.
 - [ ] No unsafe bypass recommendations are present.

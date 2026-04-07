@@ -11,7 +11,7 @@ keywords:
   - video transcoding
   - AI inference
   - batch AI
-  - live AI
+  - real-time AI
   - Cascade
   - BYOC
   - job types
@@ -19,14 +19,14 @@ keywords:
   - capability advertisement
   - orchestrator selection
   - active set
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 pageType: 'concept'
 audience: 'orchestrator'
-purpose: 'concept'
+purpose: 'explain'
 status: 'current'
 lastVerified: '2026-03-15'
 ---
@@ -41,28 +41,28 @@ Verify:
 - Headers are concise and technical (aim for max 3 words)
 - CustomDivider uses approved margin patterns
 - Placeholders for Media and Video Resources are in comments with a TODO for a human.
-- Fact-check flags are kept in JSX comments for a human.
+- REVIEW flags are in JSX flags for a human.
 Human
 - Find Media
-- Review fact-check items
+- Review REVIEW items
 */}
 
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
-import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<CenteredContainer maxWidth="900px">
-  <Tip>Orchestrators execute compute workloads and publish the capability set that Gateways use for selection. Gateways send the jobs, and Orchestrators run them on GPU hardware and return the result. Every exposed capability must be declared on registration so Gateways can discover and rank the node correctly.</Tip>
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Orchestrators perform compute - they do not route or discover work. Gateways send jobs; Orchestrators execute them on GPU hardware and return results. Every capability an Orchestrator exposes must be declared on registration so Gateways can discover and select it.</Tip>
 </CenteredContainer>
 
-<CustomDivider middleText="Workload Types" />
+<CustomDivider middleText="Workload Types" style={{margin: "0 0 -1rem 0"}} />
 
 ## Workload Types
 
-Orchestrators execute four categories of compute workload. Accepted workloads follow the hardware,
-the loaded pipelines and models, and the node configuration.
+Orchestrators can execute four categories of compute workload. Which workloads a node accepts depends
+on its hardware, the pipelines and models it has loaded, and how it is configured.
 
 <StyledTable variant="bordered">
   <thead>
@@ -87,8 +87,8 @@ the loaded pipelines and models, and the node configuration.
       <TableCell>Yes (VRAM requirements vary by model)</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Live AI (Cascade)**</TableCell>
-      <TableCell>Apply continuous AI processing to a live video stream - style transfer, avatar rendering, and generative overlays</TableCell>
+      <TableCell>**Real-time AI (Cascade)**</TableCell>
+      <TableCell>Apply continuous AI processing to a live video stream - style transfer, avatar rendering, real-time generative overlays</TableCell>
       <TableCell>Per interval during stream duration</TableCell>
       <TableCell>Yes (high VRAM; dedicated GPU strongly recommended)</TableCell>
     </TableRow>
@@ -96,18 +96,18 @@ the loaded pipelines and models, and the node configuration.
       <TableCell>**BYOC containers**</TableCell>
       <TableCell>Execute application-defined Docker containers on Orchestrator hardware for custom ML workflows or novel compute tasks</TableCell>
       <TableCell>Per request or per interval (defined by pipeline)</TableCell>
-      <TableCell>Container-specific</TableCell>
+      <TableCell>Depends on container</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
 <Note>
 An Orchestrator running both video transcoding and AI inference is described as operating in a
-**dual-workload configuration**. It is the same Orchestrator process
+**dual-workload configuration**. This is not a separate mode - it is the same Orchestrator process
 with both pipelines enabled. See <LinkArrow href="/v2/orchestrators/concepts/architecture" label="Orchestrator Architecture" newline={false} /> for the pipeline internals.
 </Note>
 
-<CustomDivider middleText="AI Pipelines" />
+<CustomDivider middleText="AI Pipelines" style={{margin: "0 0 -1rem 0"}} />
 
 ## Supported AI Pipelines
 
@@ -169,13 +169,13 @@ to a category of inference task and a compatible set of models.
   </tbody>
 </StyledTable>
 
-{/* TODO: Confirm the pipeline list against the current AI subnet and go-livepeer AI runner. */}
+{/* REVIEW: Confirm pipeline list is complete and up-to-date with AI subnet - check go-livepeer AI runner for current list */}
 
-An Orchestrator supports any subset of pipelines and models. Each combination of pipeline and model
+An Orchestrator can support any subset of pipelines and models. Each combination of pipeline and model
 is independently priced and advertised. Gateways discover these via the AIServiceRegistry contract or
 from the Orchestrator's capability response during session negotiation.
 
-<CustomDivider middleText="Capability Advertisement" />
+<CustomDivider middleText="Capability Advertisement" style={{margin: "0 0 -1rem 0"}} />
 
 ## How Capabilities Are Advertised
 
@@ -208,15 +208,15 @@ When a Gateway establishes a session with an Orchestrator, the Orchestrator retu
 manifest** - the full list of pipelines it supports, the models it has loaded, and its price per unit
 for each. The Gateway uses this to decide whether to proceed with the session.
 
-Advertised capabilities must match the models that are actually loaded and available. When the declared
-capability set drifts from the live node state, Gateways send jobs the Orchestrator cannot complete.
+Capabilities that are advertised but not actually available (e.g. models not yet loaded into VRAM) will
+result in job failures. Keep declared capabilities in sync with loaded models.
 
-<CustomDivider middleText="Gateway Selection" />
+<CustomDivider middleText="Gateway Selection" style={{margin: "0 0 -1rem 0"}} />
 
 ## How Gateways Select Orchestrators
 
-Gateway selection determines whether an Orchestrator attracts work. Gateways rank
-every session with a multi-factor selection algorithm.
+Understanding Gateway selection is essential for Orchestrators that want to attract work. Gateways do
+not randomly assign jobs - they apply a multi-factor ranking algorithm to every session.
 
 <StyledTable variant="bordered">
   <thead>
@@ -259,14 +259,14 @@ A Gateway that sends a job and receives an error or timeout will deprioritise yo
 subsequent sessions. Sustained availability and accurate capability declaration are the strongest
 signals for consistent job flow.
 
-See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" label="Pricing Strategy" newline={false} /> for how to configure competitive prices.
+See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} /> for how to configure competitive prices.
 
-<CustomDivider middleText="Role Boundaries" />
+<CustomDivider middleText="What Orchestrators Don't Do" style={{margin: "0 0 -1rem 0"}} />
 
 ## Capability Boundaries
 
-Orchestrators execute compute and receive payment tickets. Gateways handle routing, application
-integration, and business-layer workflows.
+Orchestrators handle compute and payment receipt. They do not handle job routing, application
+integration, or business-layer concerns.
 
 <StyledTable variant="bordered">
   <thead>
@@ -299,10 +299,10 @@ integration, and business-layer workflows.
   </tbody>
 </StyledTable>
 
-Use a Gateway when you need to aggregate application demand and route work across multiple Orchestrators.
-See <LinkArrow href="/v2/gateways/concepts/role" label="Gateway Role" newline={false} /> for that path.
+If you want to aggregate application demand and route work across multiple Orchestrators, that is
+the Gateway role. See <LinkArrow href="/v2/gateways/concepts/role" label="Gateway Role" newline={false} /> for that path.
 
-<CustomDivider />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Related Pages
 
@@ -316,7 +316,7 @@ See <LinkArrow href="/v2/gateways/concepts/role" label="Gateway Role" newline={f
   <Card title="Incentive Model" icon="coins" href="/v2/orchestrators/concepts/incentive-model" arrow horizontal>
     Revenue streams, cost structure, and earnings potential.
   </Card>
-  <Card title="Workloads and AI" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options" arrow horizontal>
+  <Card title="Workloads and AI" icon="microchip" href="/v2/orchestrators/guides/workloads-and-ai/job-types" arrow horizontal>
     Detailed setup guides for video, AI, and BYOC workloads.
   </Card>
 </CardGroup>

@@ -1,0 +1,824 @@
+# Glossary Gap Report
+
+Generated: 2026-03-20
+Known terms: 460 | Files scanned: 768 | Min occurrences: 5
+
+**756 gap candidates** — terms appearing in docs but not in any glossary.
+
+> This is a flagging report only. No definitions are auto-written. Review candidates and add to the relevant per-tab glossary MD source files.
+
+## Top Candidates
+
+| Term | Type | Occurrences | Example Pages |
+|---|---|---|---|
+| `book-open` | hyphenated | 1181 | v2/about/resources/compendium/glossary.mdx, v2/community/livepeer-community/governance-and-foundation.mdx |
+| `GB` | acronym | 424 | v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx |
+| `YC` | acronym | 409 | v2/internal/assets/transcripts/ycomb.mdx |
+| `GMT` | acronym | 297 | v2/internal/assets/transcripts/ycomb.mdx |
+| `CPU` | acronym | 153 | v2/about/livepeer-network/marketplace.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx |
+| `USD` | acronym | 135 | v2/about/livepeer-network/marketplace.mdx, v2/community/livepeer-community/governance-and-foundation.mdx |
+| `RTX` | acronym | 124 | v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx |
+| `payments-and-pricing` | hyphenated | 117 | v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx |
+| `ai-and-job` | hyphenated | 109 | v2/index.mdx, v2/orchestrators/concepts/capabilities.mdx |
+| `network-capabilities` | hyphenated | 106 | v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx |
+| `get-started` | hyphenated | 105 | v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_archive/quickstart-ai-hub.mdx |
+| `monitoring-and-tooling` | hyphenated | 97 | v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/advanced-operations/scaling.mdx |
+| `open-source` | hyphenated | 93 | v2/about/core-concepts/concepts/actors.mdx, v2/about/livepeer-protocol/governance-model.mdx |
+| `CEO` | acronym | 93 | v2/home/about-livepeer/ecosystem.mdx, v2/home/solutions/landscape.mdx |
+| `live-video-to` | hyphenated | 76 | v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/ai-pipelines-overview-old.mdx |
+| `advanced-operations` | hyphenated | 75 | v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx |
+| `deployment-details` | hyphenated | 70 | v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/business-case.mdx |
+| `USDT` | acronym | 69 | v2/lpt/resources/exchanges.mdx |
+| `ai-runner` | hyphenated | 67 | v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx |
+| `chart-line` | hyphenated | 62 | v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/treasury.mdx |
+| `ai-pipelines` | hyphenated | 60 | v2/community/resources/guides.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx |
+| `long-term` | hyphenated | 58 | v2/about/core-concepts/concepts/actors.mdx, v2/about/livepeer-protocol/governance-model.mdx |
+| `livepeer-network` | hyphenated | 58 | v2/about/faq-about.mdx, v2/about/index.mdx |
+| `repo-ops` | hyphenated | 58 | v2/index.mdx, v2/internal/index.mdx |
+| `CustomCodeBlock` | camelcase | 55 | v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx |
+| `livepeer-python-gateway` | hyphenated | 54 | v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx |
+| `remote-signers` | hyphenated | 53 | v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/capabilities.mdx |
+| `operator-considerations` | hyphenated | 52 | v2/developers/concepts/developer-stack.mdx, v2/developers/developer-journey.mdx |
+| `circle-question` | hyphenated | 51 | v2/about/resources/compendium/glossary.mdx, v2/community/livepeer-community/community-guidelines.mdx |
+| `staking-and-rewards` | hyphenated | 51 | v2/index.mdx, v2/orchestrators/concepts/incentive-model.mdx |
+| `third-party` | hyphenated | 50 | v2/community/resources/compendium/glossary.mdx, v2/developers/guides/developer-guides.mdx |
+| `video-on-demand` | hyphenated | 50 | v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx |
+| `roadmap-and-funding` | hyphenated | 50 | v2/developers/developer-journey.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx |
+| `JavaScript` | camelcase | 48 | v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx |
+| `GTX` | acronym | 48 | v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--cloud-spe-gateway.mdx |
+| `config-and-optimisation` | hyphenated | 48 | v2/index.mdx, v2/orchestrators/concepts/capabilities.mdx |
+| `SLA` | acronym | 47 | v2/developers/developer-journey.mdx, v2/developers/resources/compendium/glossary.mdx |
+| `self-hosted` | hyphenated | 46 | v2/developers/_archive/developer-platforms/streamplace/streamplace-integration.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx |
+| `stake-weighted` | hyphenated | 45 | v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/treasury.mdx |
+| `GeForce` | camelcase | 45 | v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/resources/go-livepeer/gpu-support.mdx |
+| `DoubleIconLink` | camelcase | 45 | v2/gateways/guides/advanced-operations/x-resources/v2-run--dual-configuration.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--monitor-and-optimise.mdx |
+| `FAQ` | acronym | 44 | v2/about/faq-about.mdx, v2/about/index.mdx |
+| `audit-tasks-folders` | hyphenated | 44 | v2/index.mdx, v2/internal/index.mdx |
+| `MathBlock` | camelcase | 43 | v2/lpt/about/mechanics.mdx, v2/lpt/about/overview.mdx |
+| `IA` | acronym | 42 | v2/README.mdx, v2/about/faq-about.mdx |
+| `low-latency` | hyphenated | 41 | v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/job-lifecycle.mdx |
+| `end-to-end` | hyphenated | 40 | v2/about/core-concepts.mdx, v2/about/livepeer-network/actors.mdx |
+| `CenteredContainer` | camelcase | 40 | v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx |
+| `per-round` | hyphenated | 39 | v2/about/resources/blockchain-contracts.mdx, v2/about/resources/compendium/glossary.mdx |
+| `get-all` | hyphenated | 38 | v2/index.mdx, v2/solutions/index.mdx |
+
+_...and 706 more — see full JSON report._
+
+## Full Candidate List
+
+- **book-open** (hyphenated, 1181×) — v2/about/resources/compendium/glossary.mdx, v2/community/livepeer-community/governance-and-foundation.mdx, v2/community/resources/compendium/glossary.mdx
+- **GB** (acronym, 424×) — v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx
+- **YC** (acronym, 409×) — v2/internal/assets/transcripts/ycomb.mdx
+- **GMT** (acronym, 297×) — v2/internal/assets/transcripts/ycomb.mdx
+- **CPU** (acronym, 153×) — v2/about/livepeer-network/marketplace.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx
+- **USD** (acronym, 135×) — v2/about/livepeer-network/marketplace.mdx, v2/community/livepeer-community/governance-and-foundation.mdx, v2/community/livepeer-community/livepeer-latest-topics.mdx
+- **RTX** (acronym, 124×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/build/comfystream.mdx
+- **payments-and-pricing** (hyphenated, 117×) — v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx
+- **ai-and-job** (hyphenated, 109×) — v2/index.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx
+- **network-capabilities** (hyphenated, 106×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+- **get-started** (hyphenated, 105×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_archive/quickstart-ai-hub.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx
+- **monitoring-and-tooling** (hyphenated, 97×) — v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx
+- **open-source** (hyphenated, 93×) — v2/about/core-concepts/concepts/actors.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/mental-model.mdx
+- **CEO** (acronym, 93×) — v2/home/about-livepeer/ecosystem.mdx, v2/home/solutions/landscape.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **live-video-to** (hyphenated, 76×) — v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx
+- **advanced-operations** (hyphenated, 75×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx
+- **deployment-details** (hyphenated, 70×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **USDT** (acronym, 69×) — v2/lpt/resources/exchanges.mdx
+- **ai-runner** (hyphenated, 67×) — v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx, v2/community/resources/guides.mdx
+- **chart-line** (hyphenated, 62×) — v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/community/community-portal.mdx
+- **ai-pipelines** (hyphenated, 60×) — v2/community/resources/guides.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-overview-old.mdx
+- **long-term** (hyphenated, 58×) — v2/about/core-concepts/concepts/actors.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/treasury.mdx
+- **livepeer-network** (hyphenated, 58×) — v2/about/faq-about.mdx, v2/about/index.mdx, v2/about/portal.mdx
+- **repo-ops** (hyphenated, 58×) — v2/index.mdx, v2/internal/index.mdx
+- **CustomCodeBlock** (camelcase, 55×) — v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx, v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx
+- **livepeer-python-gateway** (hyphenated, 54×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx
+- **remote-signers** (hyphenated, 53×) — v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/guides/deployment-details/setup-options.mdx
+- **operator-considerations** (hyphenated, 52×) — v2/developers/concepts/developer-stack.mdx, v2/developers/developer-journey.mdx, v2/gateways/guides/deployment-details/setup-options.mdx
+- **circle-question** (hyphenated, 51×) — v2/about/resources/compendium/glossary.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/community/livepeer-connect/forums-and-discussions.mdx
+- **staking-and-rewards** (hyphenated, 51×) — v2/index.mdx, v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx
+- **third-party** (hyphenated, 50×) — v2/community/resources/compendium/glossary.mdx, v2/developers/guides/developer-guides.mdx, v2/developers/guides/resources.mdx
+- **video-on-demand** (hyphenated, 50×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **roadmap-and-funding** (hyphenated, 50×) — v2/developers/developer-journey.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/operator-considerations/business-case.mdx
+- **JavaScript** (camelcase, 48×) — v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **GTX** (acronym, 48×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--cloud-spe-gateway.mdx, v2/gateways/resources/go-livepeer/gpu-support.mdx
+- **config-and-optimisation** (hyphenated, 48×) — v2/index.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/incentive-model.mdx
+- **SLA** (acronym, 47×) — v2/developers/developer-journey.mdx, v2/developers/resources/compendium/glossary.mdx, v2/gateways/concepts/business-model.mdx
+- **self-hosted** (hyphenated, 46×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-integration.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/_contextData/Developers_new/running-a-gateway-draft.mdx
+- **stake-weighted** (hyphenated, 45×) — v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/about/mental-model.mdx
+- **GeForce** (camelcase, 45×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/resources/go-livepeer/gpu-support.mdx, v2/gateways/resources/technical/go-livepeer/gpu-support.mdx
+- **DoubleIconLink** (camelcase, 45×) — v2/gateways/guides/advanced-operations/x-resources/v2-run--dual-configuration.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--monitor-and-optimise.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-monitor--monitor-and-optimise.mdx
+- **FAQ** (acronym, 44×) — v2/about/faq-about.mdx, v2/about/index.mdx, v2/about/resources/compendium/glossary.mdx
+- **audit-tasks-folders** (hyphenated, 44×) — v2/index.mdx, v2/internal/index.mdx
+- **MathBlock** (camelcase, 43×) — v2/lpt/about/mechanics.mdx, v2/lpt/about/overview.mdx, v2/lpt/about/tokenomics.mdx
+- **IA** (acronym, 42×) — v2/README.mdx, v2/about/faq-about.mdx, v2/index.mdx
+- **low-latency** (hyphenated, 41×) — v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/job-lifecycle.mdx, v2/about/mental-model.mdx
+- **end-to-end** (hyphenated, 40×) — v2/about/core-concepts.mdx, v2/about/livepeer-network/actors.mdx, v2/about/livepeer-overview.mdx
+- **CenteredContainer** (camelcase, 40×) — v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx
+- **per-round** (hyphenated, 39×) — v2/about/resources/blockchain-contracts.mdx, v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx
+- **get-all** (hyphenated, 38×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/assets/overview.mdx
+- **HuggingFace** (camelcase, 37×) — v2/gateways/guides/node-pipelines/x-resources/v1--models-download.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **live-video** (hyphenated, 37×) — v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx
+- **gateway-setup** (hyphenated, 36×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/concepts/running-a-gateway.mdx, v2/developers/developer-journey.mdx
+- **pricing-strategy** (hyphenated, 35×) — v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx
+- **US** (acronym, 34×) — v2/about/livepeer-network/marketplace.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx
+- **contract-addresses** (hyphenated, 34×) — v2/about/livepeer-protocol/overview.mdx, v2/about/resources/blockchain-contracts.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx
+- **segment-anything** (hyphenated, 33×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/concepts/ai-on-livepeer.mdx
+- **developer-tools** (hyphenated, 33×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/index.mdx
+- **access-control** (hyphenated, 33×) — v2/index.mdx, v2/resources/livepeer-glossary.mdx, v2/solutions/index.mdx
+- **LivepeerToken** (camelcase, 32×) — v2/about/resources/blockchain-contracts.mdx, v2/about/resources/dep-blockchain-contracts.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-about--blockchain-contracts.mdx
+- **livepeer-community** (hyphenated, 32×) — v2/community/community-portal.mdx, v2/community/faq.mdx, v2/community/index.mdx
+- **diagram-project** (hyphenated, 32×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx
+- **built-in** (hyphenated, 31×) — v2/about/resources/livepeer-whitepaper.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/community/resources/compendium/glossary.mdx
+- **TypeScript** (camelcase, 31×) — v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **technical-references** (hyphenated, 31×) — v2/community/resources/guides.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx
+- **signing-keys** (hyphenated, 31×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/reference/overview.mdx
+- **co-founder** (hyphenated, 31×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **SEO** (acronym, 31×) — v2/internal/assets/transcripts/ycomb.mdx, v2/internal/docs-philosophy.mdx, v2/internal/overview/docs-philosophy.mdx
+- **per-pixel** (hyphenated, 30×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/awesome-livepeer.mdx, v2/community/resources/compendium/glossary.mdx
+- **self-hosting** (hyphenated, 30×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/_contextData/Developers_new/running-a-gateway-draft.mdx
+- **user-images** (hyphenated, 30×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **MCP** (acronym, 30×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/internal/rfp/aims.mdx, v2/resources/documentation-guide/ai-features.mdx
+- **about-livepeer** (hyphenated, 29×) — v2/about/livepeer-protocol/governance-model.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/get-started.mdx
+- **builder-opportunities** (hyphenated, 29×) — v2/developers/_archive/index-generated.mdx, v2/index.mdx
+- **guides-and-resources** (hyphenated, 29×) — v2/developers/_archive/index-generated.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx
+- **per-pipeline** (hyphenated, 29×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+- **dev-hub** (hyphenated, 28×) — v2/developers/_archive/developer-guide.mdx, v2/developers/guides/developer-guides.mdx, v2/developers/guides/developer-help.mdx
+- **AWS** (acronym, 27×) — v2/about/livepeer-network/technical-architecture.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **building-columns** (hyphenated, 27×) — v2/about/livepeer-protocol/governance-model.mdx, v2/about/portal.mdx, v2/community/community-portal.mdx
+- **hand-holding-dollar** (hyphenated, 27×) — v2/about/livepeer-protocol/livepeer-token.mdx, v2/developers/guides/contribution-guide.mdx, v2/developers/guides/developer-help.mdx
+- **docker-compose** (hyphenated, 27×) — v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/get-started/comfystream-quickstart.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **AT** (acronym, 26×) — v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx
+- **self-stake** (hyphenated, 26×) — v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/moved-to-about/livepeer-token-economics.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx
+- **triangle-exclamation** (hyphenated, 26×) — v2/developers/opportunities/bug-bounties.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **wand-magic-sparkles** (hyphenated, 25×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx
+- **SD** (acronym, 25×) — v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx
+- **layer-group** (hyphenated, 25×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/advanced-operations/scaling.mdx
+- **local-gateways** (hyphenated, 25×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx
+- **SUS** (acronym, 25×) — v2/internal/assets/transcripts/ycomb.mdx
+- **technical-architecture** (hyphenated, 24×) — v2/about/faq-about.mdx, v2/about/index.mdx, v2/about/livepeer-network/interfaces.mdx
+- **protocol-level** (hyphenated, 24×) — v2/about/livepeer-network/livepeer-actors/orchestrators.mdx, v2/about/resources/livepeer-glossary.mdx, v2/community/faq.mdx
+- **ERC** (acronym, 24×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/resources/blockchain-contracts.mdx, v2/about/resources/compendium/glossary.mdx
+- **on-demand** (hyphenated, 24×) — v2/about/livepeer-protocol/overview.mdx, v2/about/mental-model.mdx, v2/about/portal.mdx
+- **ai-quickstart** (hyphenated, 24×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_archive/quickstart-ai-hub.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx
+- **FrameQuote** (camelcase, 23×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx
+- **DeepWiki** (camelcase, 23×) — v2/developers/_archive/ai-pipelines-comfystream-old.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/_archive/quickstart-ai-hub.mdx
+- **OSS** (acronym, 23×) — v2/developers/_archive/developer-guide.mdx, v2/developers/_archive/journey-mapping.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **GotoLink** (camelcase, 23×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/resources/documentation-guide/snippets-inventory.mdx, v2/solutions/product-hub.mdx
+- **USDC** (acronym, 23×) — v2/developers/guides/developer-help.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/bug-bounties.mdx
+- **setting-up-an** (hyphenated, 23×) — v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/index.mdx
+- **node-pipelines** (hyphenated, 23×) — v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx
+- **demand-side** (hyphenated, 22×) — v2/about/core-concepts/concepts/actors.mdx, v2/about/index.mdx, v2/about/livepeer-network/actors.mdx
+- **video-to-video** (hyphenated, 22×) — v2/about/livepeer-overview.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx
+- **by-step** (hyphenated, 22×) — v2/community/resources/guides.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_contextData/Developers_new/oss-stack-draft.mdx
+- **community-hosted** (hyphenated, 22×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx
+- **arbitrum-exchanges** (hyphenated, 22×) — v2/gateways/guides/payments-and-pricing/funding-guide.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx
+- **gateway-tools** (hyphenated, 22×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-payments--payment-clearinghouse.mdx
+- **livepeer-docs** (hyphenated, 22×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **ai-inference-operations** (hyphenated, 22×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **LP** (acronym, 21×) — v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx
+- **per-frame** (hyphenated, 21×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx
+- **RAM** (acronym, 21×) — v2/developers/resources/compendium/glossary.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--monitor-and-optimise.mdx
+- **monitoring-setup** (hyphenated, 21×) — v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx
+- **metrics-and-alerting** (hyphenated, 21×) — v2/gateways/resources/go-livepeer/prometheus-metrics.mdx, v2/index.mdx, v2/orchestrators/guides/advanced-operations/scale-operations.mdx
+- **diffusion-pipeline-setup** (hyphenated, 21×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines.mdx
+- **model-demand-reference** (hyphenated, 21×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **MVP** (acronym, 21×) — v2/internal/assets/transcripts/ycomb.mdx
+- **supply-side** (hyphenated, 20×) — v2/about/index.mdx, v2/about/livepeer-network/actors.mdx, v2/about/livepeer-network/livepeer-actors/orchestrators.mdx
+- **livepeer-glossary** (hyphenated, 20×) — v2/about/index.mdx, v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx
+- **cold-start** (hyphenated, 20×) — v2/about/resources/compendium/glossary.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/model-support.mdx
+- **using-gateways** (hyphenated, 20×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--byoc.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--overview.mdx
+- **developer-journey** (hyphenated, 20×) — v2/developers/_archive/developer-guide.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **multi-tenant** (hyphenated, 20×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx
+- **clearinghouse-guide** (hyphenated, 20×) — v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx, v2/gateways/guides/payments-and-pricing/payment-guide.mdx
+- **fund-gateway** (hyphenated, 20×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/pricing-configuration.mdx
+- **ParamField** (camelcase, 20×) — v2/gateways/guides/node-pipelines/x-resources/v1--models-config.mdx
+- **join-a-pool** (hyphenated, 20×) — v2/index.mdx, v2/orchestrators/concepts/role.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx
+- **VLM** (acronym, 20×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx
+- **end-users** (hyphenated, 19×) — v2/about/index.mdx, v2/about/livepeer-network/actors.mdx, v2/about/resources/livepeer-glossary.mdx
+- **livepeer-contribute** (hyphenated, 19×) — v2/community/index.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **frame-by-frame** (hyphenated, 19×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-comfystream-old.mdx
+- **high-quality** (hyphenated, 19×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **guides-and-tools** (hyphenated, 19×) — v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/new/developers-new/portal.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx
+- **clipboard-check** (hyphenated, 19×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **gateway-providers** (hyphenated, 19×) — v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--byoc.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--overview.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx
+- **setup-options** (hyphenated, 19×) — v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx
+- **OrchestratorSiphon** (camelcase, 19×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/orchestrators/guides/advanced-operations/scale-operations.mdx, v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx
+- **earning-model** (hyphenated, 19×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx, v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx
+- **HeroSectionContainer** (camelcase, 18×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **HeroImageBackgroundComponent** (camelcase, 18×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **HeroContentContainer** (camelcase, 18×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **PortalContentContainer** (camelcase, 18×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **PortalCardsHeader** (camelcase, 18×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **workload-fit** (hyphenated, 18×) — v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/developers/_archive/index-generated.mdx
+- **contribution-guide** (hyphenated, 18×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/Developers_new/oss-stack-draft.mdx
+- **as-a** (hyphenated, 18×) — v2/developers/resources/compendium/glossary.mdx, v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx, v2/gateways/guides/tutorials/byoc-cpu-tutorial.mdx
+- **SIWE** (acronym, 18×) — v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/payments-and-pricing/remote-signers.mdx
+- **CEX** (acronym, 18×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **BLM** (acronym, 18×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx
+- **IPFS** (acronym, 17×) — v2/about/mental-model.mdx, v2/community/resources/guides.mdx, v2/developers/_archive/partner-integrations.mdx
+- **BridgeMinter** (camelcase, 17×) — v2/about/resources/blockchain-contracts.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx
+- **livepeer-connect** (hyphenated, 17×) — v2/community/index.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/index.mdx
+- **ai-worker** (hyphenated, 17×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/_contextData/Developers_new/oss-stack-draft.mdx
+- **RunPod** (camelcase, 17×) — v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **payment-guide** (hyphenated, 17×) — v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx
+- **funding-guide** (hyphenated, 17×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **advanced-setup** (hyphenated, 17×) — v2/gateways/guides/node-pipelines/x-resources/v2-dev--ai-pipelines-byoc.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/index.mdx
+- **CoinGecko** (camelcase, 17×) — v2/gateways/guides/payments-and-pricing/funding-guide.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--arbitrum-exchanges.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx
+- **InlineImageCard** (camelcase, 17×) — v2/resources/documentation-guide/component-library/wrappers.mdx, v2/resources/media-kit.mdx
+- **livepeer-actors** (hyphenated, 16×) — v2/about/index.mdx, v2/about/livepeer-network/actors.mdx, v2/developers/_archive/index-generated.mdx
+- **per-segment** (hyphenated, 16×) — v2/about/livepeer-network/job-lifecycle.mdx, v2/about/resources/blockchain-contracts.mdx, v2/about/resources/compendium/glossary.mdx
+- **arrow-up-right** (hyphenated, 16×) — v2/about/livepeer-protocol/governance-model.mdx, v2/community/community-portal.mdx, v2/developers/_archive/developer-journey-3path.mdx
+- **treasury-funded** (hyphenated, 16×) — v2/about/livepeer-protocol/treasury.mdx, v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx
+- **PortalHeroContent** (camelcase, 16×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **circle-play** (hyphenated, 16×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx
+- **step-by-step** (hyphenated, 16×) — v2/community/faq.mdx, v2/developers/resources/compendium/glossary.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--ai-builder-opportunity.mdx
+- **ASR** (acronym, 16×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx
+- **PNG** (acronym, 16×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+- **streamplace-provenance** (hyphenated, 16×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-funding-model.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-guide.mdx
+- **streamplace-integration** (hyphenated, 16×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-funding-model.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-guide.mdx
+- **streamplace-architecture** (hyphenated, 16×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-funding-model.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-guide.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-integration.mdx
+- **ai-on-livepeer** (hyphenated, 16×) — v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/model-support.mdx, v2/developers/build/workload-fit.mdx
+- **style-guide** (hyphenated, 16×) — v2/developers/guides/contribution-guide.mdx, v2/index.mdx, v2/internal/rfp/aims.mdx
+- **NAT** (acronym, 16×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v1--troubleshoot.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--video-transcoding-opportunity.mdx
+- **form-data** (hyphenated, 16×) — v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--monitor-and-optimise.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-monitor--monitor-and-optimise.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-setup--monitor-and-optimise.mdx
+- **delegating-guides** (hyphenated, 16×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx
+- **reports-quality-accessibility** (hyphenated, 16×) — v2/index.mdx, v2/internal/index.mdx
+- **operator-rationale** (hyphenated, 16×) — v2/index.mdx, v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx, v2/orchestrators/guides/deployment-details/setup-options.mdx
+- **JobsManager** (camelcase, 15×) — v2/about/livepeer-network/job-lifecycle.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx
+- **user-facing** (hyphenated, 15×) — v2/about/livepeer-overview.mdx, v2/about/resources/livepeer-glossary.mdx, v2/developers/get-started/ai-quickstart.mdx
+- **shield-check** (hyphenated, 15×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx
+- **sub-second** (hyphenated, 15×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx
+- **consensus-mechanisms** (hyphenated, 15×) — v2/about/resources/compendium/glossary.mdx, v2/home/resources/compendium/glossary.mdx, v2/lpt/resources/compendium/glossary.mdx
+- **network-wired** (hyphenated, 15×) — v2/community/livepeer-community/governance-and-foundation.mdx, v2/developers/guides/developer-guides.mdx, v2/developers/resources/apis.mdx
+- **network-wide** (hyphenated, 15×) — v2/community/resources/awesome-livepeer.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx
+- **model-support** (hyphenated, 15×) — v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/index-generated.mdx
+- **oss-contributions** (hyphenated, 15×) — v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/Developers_new/oss-stack-draft.mdx, v2/developers/concepts/oss-stack.mdx
+- **stream-via-obs** (hyphenated, 15×) — v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/index.mdx
+- **command-line** (hyphenated, 15×) — v2/gateways/concepts/architecture.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **dual-configuration** (hyphenated, 15×) — v2/gateways/concepts/role.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-gwnew--ai-configuration.mdx
+- **configuration-flags** (hyphenated, 15×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx
+- **DNS** (acronym, 15×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v1--troubleshoot.mdx
+- **OOM** (acronym, 15×) — v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/node-pipelines/video-pipelines.mdx, v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx
+- **PollCreator** (camelcase, 15×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **MerkleSnapshot** (camelcase, 15×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **pricing-configuration** (hyphenated, 15×) — v2/gateways/guides/node-pipelines/x-resources/ctx-gwnew--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--video-configuration.mdx
+- **CustomResponseField** (camelcase, 15×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--video-configuration.mdx, v2/resources/documentation-guide/component-library/displays.mdx
+- **orchestrator-tools-and** (hyphenated, 15×) — v2/index.mdx
+- **TUS** (acronym, 15×) — v2/resources/livepeer-glossary.mdx, v2/solutions/livepeer-studio/overview.mdx, v2/solutions/livepeer-studio/video-on-demand/encrypted-assets.mdx
+- **HUB** (acronym, 14×) — v2/README.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/index-generated.mdx
+- **of-contents** (hyphenated, 14×) — v2/about/index.mdx, v2/community/index.mdx, v2/developers/_archive/index-generated.mdx
+- **puzzle-piece** (hyphenated, 14×) — v2/community/resources/guides.mdx, v2/developers/_archive/partner-integrations.mdx, v2/developers/_archive/x-unstaged/partner-integrations.mdx
+- **bolt-lightning** (hyphenated, 14×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **streamplace-guide** (hyphenated, 14×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-integration.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-provenance.mdx
+- **streamplace-funding-model** (hyphenated, 14×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-integration.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-provenance.mdx
+- **comfystream-quickstart** (hyphenated, 14×) — v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **self-host** (hyphenated, 14×) — v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/_contextData/Developers_new/running-a-gateway-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **CTA** (acronym, 14×) — v2/developers/developer-journey.mdx, v2/resources/documentation-guide/contribute-to-the-docs.mdx, v2/resources/documentation-guide/snippets-inventory.mdx
+- **business-case** (hyphenated, 14×) — v2/developers/developer-journey.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx
+- **operator-support** (hyphenated, 14×) — v2/developers/developer-journey.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx
+- **bug-bounty** (hyphenated, 14×) — v2/developers/guides/developer-help.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/bug-bounties.mdx
+- **contribute-to-the** (hyphenated, 14×) — v2/developers/opportunities/oss-contributions.mdx, v2/index.mdx, v2/resources/changelog/changelog.mdx
+- **scale-balanced** (hyphenated, 14×) — v2/developers/opportunities/rfps-and-proposals.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx
+- **business-model** (hyphenated, 14×) — v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx
+- **GW** (acronym, 14×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/restructure.mdx
+- **gateway-middleware** (hyphenated, 14×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/advanced-operations/scaling.mdx
+- **gauge-high** (hyphenated, 14×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/advanced-operations/scaling.mdx
+- **arbitrum-rpc** (hyphenated, 14×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/tutorials/byoc-cpu-tutorial.mdx, v2/gateways/index.mdx
+- **connect-with-offerings** (hyphenated, 14×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--video-configuration.mdx, v2/gateways/index.mdx
+- **per-user** (hyphenated, 14×) — v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx
+- **payment-clearinghouse** (hyphenated, 14×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-guides--how-payments-work.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--remote-signers.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/how-payments-work.mdx
+- **scope-runner** (hyphenated, 14×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/help.mdx
+- **floppy-disk** (hyphenated, 14×) — v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx, v2/gateways/quickstart/views/linux/linuxOffChainTab.mdx
+- **real-world** (hyphenated, 14×) — v2/home/get-started.mdx, v2/home/resources/compendium/glossary.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **capacity-planning** (hyphenated, 14×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx, v2/orchestrators/guides/config-and-optimisation/ai-model-management.mdx
+- **reward-mechanics** (hyphenated, 14×) — v2/index.mdx, v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/guides/config-and-optimisation/reward-call-tuning.mdx
+- **frame-mode** (hyphenated, 14×) — v2/resources/documentation-guide/component-library/component-library.mdx, v2/resources/documentation-guide/component-library/overview.mdx, v2/resources/documentation-guide/component-library/scaffolding.mdx
+- **crypto-economic** (hyphenated, 13×) — v2/about/core-concepts.mdx, v2/about/livepeer-overview.mdx, v2/about/livepeer-protocol/overview.mdx
+- **BlinkingIcon** (camelcase, 13×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **DevOps** (camelcase, 13×) — v2/community/resources/compendium/glossary.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/index.mdx
+- **GotoCard** (camelcase, 13×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--explorer.mdx
+- **ai-inference-on** (hyphenated, 13×) — v2/developers/_archive/ai-pipelines-comfystream-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/developers/_archive/index-generated.mdx
+- **DeFine** (camelcase, 13×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/developer-journey.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **user-robot** (hyphenated, 13×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_contextData/new/developers-new/portal.mdx, v2/developers/portal.mdx
+- **to-image** (hyphenated, 13×) — v2/developers/_archive/quickstart-ai-hub.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/comfystream.mdx
+- **source-of-truth** (hyphenated, 13×) — v2/developers/get-started/ai-quickstart.mdx, v2/developers/get-started/transcoding-quickstart.mdx, v2/index.mdx
+- **shield-halved** (hyphenated, 13×) — v2/developers/guides/resources.mdx, v2/developers/opportunities/bug-bounties.mdx, v2/developers/opportunities/overview.mdx
+- **per-capability** (hyphenated, 13×) — v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--byoc.mdx
+- **per-model** (hyphenated, 13×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx
+- **VR** (acronym, 13×) — v2/home/primer.mdx, v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **workload-options** (hyphenated, 13×) — v2/index.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx
+- **WIP** (acronym, 12×) — v2/README.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/x-unstaged/developer-tools/livepeer-cloud.mdx
+- **up-to-date** (hyphenated, 12×) — v2/README.mdx, v2/developers/opportunities/overview.mdx, v2/gateways/setup/install/linux-install.mdx
+- **NEW** (acronym, 12×) — v2/about/faq-about.mdx, v2/orchestrators/guides/tutorials/add-ai-to-video-node.mdx, v2/restructure.mdx
+- **JS** (acronym, 12×) — v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/mental-model.mdx
+- **to-end** (hyphenated, 12×) — v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/developers/_archive/quickstart-ai-hub.mdx
+- **CardTitleTextWithArrow** (camelcase, 12×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx
+- **pre-proposals** (hyphenated, 12×) — v2/about/livepeer-protocol/governance-model.mdx, v2/community/livepeer-community/livepeer-latest-topics.mdx, v2/community/livepeer-connect/forums-and-discussions.mdx
+- **one-time** (hyphenated, 12×) — v2/about/resources/blockchain-contracts.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/oss-stack-draft.mdx
+- **UTC** (acronym, 12×) — v2/about/resources/livepeer-glossary.mdx, v2/gateways/setup/requirements/on-chain setup/on-chain.mdx, v2/internal/overview/governance-pipeline.mdx
+- **code-branch** (hyphenated, 12×) — v2/community/livepeer-community/community-guidelines.mdx, v2/developers/_archive/developer-journey-3path.mdx, v2/developers/developer-journey.mdx
+- **community-maintained** (hyphenated, 12×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/comfystream.mdx
+- **per-orchestrator** (hyphenated, 12×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/guides/resources.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx
+- **developer-platforms** (hyphenated, 12×) — v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **developer-guides** (hyphenated, 12×) — v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/new/developers-new/portal.mdx, v2/developers/index.mdx
+- **video-streaming** (hyphenated, 12×) — v2/developers/_archive/index-generated.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **warm-up** (hyphenated, 12×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/comfystream.mdx
+- **pre-commit** (hyphenated, 12×) — v2/developers/guides/contribution-guide.mdx, v2/internal/overview/governance-pipeline.mdx, v2/internal/rfp/aims.mdx
+- **incentive-model** (hyphenated, 12×) — v2/gateways/concepts/business-model.mdx, v2/index.mdx, v2/orchestrators/concepts/architecture.mdx
+- **list-check** (hyphenated, 12×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/help.mdx
+- **SSD** (acronym, 12×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/setup/requirements/setup.mdx, v2/orchestrators/guides/operator-considerations/requirements.mdx
+- **community-projects** (hyphenated, 12×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/index.mdx
+- **non-zero** (hyphenated, 12×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/gateways/guides/node-pipelines/video-pipelines.mdx
+- **SFAST** (acronym, 12×) — v2/gateways/guides/node-pipelines/x-resources/v1--models-config.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx
+- **livepeer-tools** (hyphenated, 12×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-payments--payment-clearinghouse.mdx
+- **ExternalContent** (camelcase, 12×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **TAB** (acronym, 12×) — v2/gateways/index.mdx, v2/index.mdx
+- **VIEW** (acronym, 12×) — v2/gateways/index.mdx, v2/index.mdx
+- **video-configuration** (hyphenated, 12×) — v2/gateways/index.mdx, v2/gateways/navigator.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **AGI** (acronym, 12×) — v2/home/solutions/verticals.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **about-gateways** (hyphenated, 12×) — v2/index.mdx
+- **about-orchestrators** (hyphenated, 12×) — v2/index.mdx
+- **get-clip** (hyphenated, 12×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/streams/overview.mdx
+- **realtime-ai-setup** (hyphenated, 12×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **delegate-operations** (hyphenated, 12×) — v2/index.mdx, v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/guides/monitoring-and-tooling/explorer-operations.mdx
+- **OpenClaw** (camelcase, 12×) — v2/internal/assets/transcripts/ycomb.mdx, v2/internal/docs-philosophy.mdx, v2/internal/overview/docs-philosophy.mdx
+- **studio-team** (hyphenated, 12×) — v2/internal/overview/governance.mdx
+- **usage-based** (hyphenated, 11×) — v2/about/core-concepts/concepts/actors.mdx, v2/about/faq-about.mdx, v2/about/livepeer-protocol/overview.mdx
+- **blockchain-contracts** (hyphenated, 11×) — v2/about/faq-about.mdx, v2/about/index.mdx, v2/about/livepeer-network/interfaces.mdx
+- **peer-to-peer** (hyphenated, 11×) — v2/about/faq-about.mdx, v2/developers/resources/compendium/glossary.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **core-concepts** (hyphenated, 11×) — v2/about/index.mdx, v2/community/resources/compendium/glossary.mdx, v2/home/resources/compendium/glossary.mdx
+- **job-lifecycle** (hyphenated, 11×) — v2/about/index.mdx, v2/about/livepeer-network/actors.mdx, v2/about/livepeer-network/interfaces.mdx
+- **multi-step** (hyphenated, 11×) — v2/about/livepeer-network/job-lifecycle.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx
+- **TCP** (acronym, 11×) — v2/about/mental-model.mdx, v2/about/resources/compendium/glossary.mdx, v2/developers/resources/compendium/glossary.mdx
+- **UDP** (acronym, 11×) — v2/about/mental-model.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx
+- **YouTubeVideo** (camelcase, 11×) — v2/community/community-portal.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/setup/install/community-projects.mdx
+- **livepeer-monitoring** (hyphenated, 11×) — v2/community/resources/awesome-livepeer.mdx, v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v1--monitor-metrics.mdx
+- **grants-and-programmes** (hyphenated, 11×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/developers/opportunities/oss-contributions.mdx
+- **moved-to-about** (hyphenated, 11×) — v2/developers/_archive/index-generated.mdx
+- **production-ready** (hyphenated, 11×) — v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/ai-on-livepeer.mdx
+- **mid-stream** (hyphenated, 11×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/comfystream.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--prometheus-metrics.mdx
+- **comma-separated** (hyphenated, 11×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/comfystream.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx
+- **oss-stack** (hyphenated, 11×) — v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx, v2/developers/developer-journey.mdx
+- **file-contract** (hyphenated, 11×) — v2/developers/developer-journey.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/grants-and-programmes.mdx
+- **EVM** (acronym, 11×) — v2/developers/opportunities/rfps-and-proposals.mdx, v2/developers/resources/compendium/glossary.mdx, v2/developers/resources/example-applications.mdx
+- **cumulo-autumn** (hyphenated, 11×) — v2/developers/resources/compendium/glossary.mdx, v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx, v2/orchestrators/resources/compendium/glossary.mdx
+- **naap-multi-tenancy** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx
+- **gpu-support** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx, v2/gateways/index.mdx
+- **video-encode-and** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **decode-gpu-support** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **matrix-new** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--gpu-support.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **OG** (acronym, 11×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx, v2/resources/documentation-guide/authoring-standard.mdx
+- **stroke-width** (hyphenated, 11×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx, v2/gateways/setup/run-a-gateway.mdx
+- **install-overview** (hyphenated, 11×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/index.mdx, v2/gateways/navigator.mdx
+- **STATS** (acronym, 11×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **pipeline-configuration** (hyphenated, 11×) — v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+- **per-request** (hyphenated, 11×) — v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx
+- **GOP** (acronym, 11×) — v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/guides/node-pipelines/video-pipelines.mdx, v2/gateways/resources/compendium/glossary.mdx
+- **interval-based** (hyphenated, 11×) — v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/pricing-configuration.mdx
+- **spe-grant-model** (hyphenated, 11×) — v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx, v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx
+- **hardware-requirements** (hyphenated, 11×) — v2/gateways/guides/tutorials/tutorial-3-go-production.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx
+- **FlexContainer** (camelcase, 11×) — v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/setup/run-a-gateway.mdx, v2/resources/media-kit.mdx
+- **livestream-from-browser** (hyphenated, 11×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/create-livestream.mdx
+- **playback-livestream** (hyphenated, 11×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/create-livestream.mdx
+- **dual-mode-configuration** (hyphenated, 11×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx
+- **out-of** (hyphenated, 11×) — v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx, v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx, v2/orchestrators/guides/tutorials/add-ai-to-video-node.mdx
+- **OSI** (acronym, 10×) — v2/about/faq-about.mdx, v2/about/livepeer-overview.mdx, v2/about/mental-model.mdx
+- **ValueResponseField** (camelcase, 10×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/gateways/setup/configure/video-configuration.mdx, v2/resources/documentation-guide/component-library/displays.mdx
+- **cost-efficient** (hyphenated, 10×) — v2/about/livepeer-protocol/economics.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/community/resources/guides.mdx
+- **livepeer-foundation** (hyphenated, 10×) — v2/about/livepeer-protocol/governance-model.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx
+- **LogoHeroContainer** (camelcase, 10×) — v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/_contextData/new/developers-new/portal.mdx
+- **pencil-line** (hyphenated, 10×) — v2/community/community-portal.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
+- **magnifying-glass** (hyphenated, 10×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/opportunities/overview.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx
+- **microchip-ai** (hyphenated, 10×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx
+- **bug-bounties** (hyphenated, 10×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/developers/opportunities/grants-and-programmes.mdx
+- **livepeer-explorer** (hyphenated, 10×) — v2/developers/_archive/index-generated.mdx, v2/developers/_archive/x-unstaged/developer-tools/tooling-hub.mdx, v2/developers/developer-tools/tooling-hub.mdx
+- **developer-help** (hyphenated, 10×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/index.mdx
+- **LL** (acronym, 10×) — v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx
+- **data-channel** (hyphenated, 10×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/build/comfystream.mdx
+- **XL** (acronym, 10×) — v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/model-support.mdx, v2/developers/resources/compendium/glossary.mdx
+- **top-level** (hyphenated, 10×) — v2/developers/get-started/transcoding-quickstart.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/problem-statements.mdx
+- **machine-readable** (hyphenated, 10×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/internal/docs-philosophy.mdx, v2/internal/overview/docs-philosophy.mdx
+- **MPS** (acronym, 10×) — v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx
+- **auto-create** (hyphenated, 10×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--video-configuration.mdx
+- **on-chain-metrics** (hyphenated, 10×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/index.mdx
+- **cli-commands** (hyphenated, 10×) — v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--cli-http-api.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--cli-http-api.mdx, v2/gateways/index.mdx
+- **cli-reference** (hyphenated, 10×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/gateways/index.mdx
+- **gateway-showcase** (hyphenated, 10×) — v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx, v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx
+- **how-payments-work** (hyphenated, 10×) — v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-gwnew--pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--remote-signers.mdx
+- **arbitrum-bridge** (hyphenated, 10×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **BD** (acronym, 10×) — v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--ai-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/ai-builder-opportunity.mdx
+- **ROI** (acronym, 10×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/internal/assets/transcripts/ycomb.mdx, v2/lpt/delegation/TO-ADD/delegation-rewards.mdx
+- **ai-configuration** (hyphenated, 10×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **rs-install** (hyphenated, 10×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/setup/configure/ai-configuration.mdx, v2/index.mdx
+- **capability-based** (hyphenated, 10×) — v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx, v2/gateways/resources/knowledge-base/resources.mdx
+- **community-pools** (hyphenated, 10×) — v2/index.mdx, v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx, v2/orchestrators/index.mdx
+- **docs-features-and** (hyphenated, 10×) — v2/index.mdx, v2/resources/documentation-guide/documentation-guide.mdx, v2/resources/documentation-guide/documentation-overview.mdx
+- **ai-integrations** (hyphenated, 10×) — v2/index.mdx, v2/resources/documentation-guide/documentation-guide.mdx, v2/resources/documentation-guide/documentation-overview.mdx
+- **listen-to-events** (hyphenated, 10×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/analytics/webhooks.mdx
+- **optimize-latency** (hyphenated, 10×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/livestream-from-browser.mdx
+- **upload-asset** (hyphenated, 10×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/quickstart.mdx
+- **page-audits** (hyphenated, 10×) — v2/index.mdx, v2/internal/index.mdx
+- **pool-operators** (hyphenated, 10×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/scale-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx
+- **scale-operations** (hyphenated, 10×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **siphon-setup** (hyphenated, 10×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx, v2/orchestrators/guides/advanced-operations/scale-operations.mdx
+- **STUB** (acronym, 10×) — v2/restructure.mdx
+- **full-stack** (hyphenated, 9×) — v2/about/core-concepts.mdx, v2/about/livepeer-overview.mdx, v2/community/resources/guides.mdx
+- **VJ** (acronym, 9×) — v2/about/livepeer-network/interfaces.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx
+- **per-job** (hyphenated, 9×) — v2/about/livepeer-network/marketplace.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--operator-opportunities.mdx
+- **real-time-ai** (hyphenated, 9×) — v2/about/livepeer-network/marketplace.mdx, v2/about/resources/technical-roadmap.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx
+- **token-portal** (hyphenated, 9×) — v2/about/livepeer-overview.mdx, v2/home/mission-control.mdx, v2/index.mdx
+- **developer-friendly** (hyphenated, 9×) — v2/about/livepeer-overview.mdx, v2/about/mental-model.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx
+- **OpenZeppelin** (camelcase, 9×) — v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/about/resources/blockchain-contracts.mdx
+- **ballot-check** (hyphenated, 9×) — v2/about/livepeer-protocol/governance-model.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/developers/guides/contribution-guide.mdx
+- **decision-making** (hyphenated, 9×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx, v2/developers/guides/developer-help.mdx
+- **arbitrum-gentle-introduction** (hyphenated, 9×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx, v2/developers/resources/compendium/glossary.mdx
+- **credit-card** (hyphenated, 9×) — v2/community/livepeer-community/livepeer-latest-topics.mdx, v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx
+- **en-us** (hyphenated, 9×) — v2/community/livepeer-community/roadmap.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx
+- **well-defined** (hyphenated, 9×) — v2/community/resources/compendium/glossary.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+- **digital-to-digital** (hyphenated, 9×) — v2/community/resources/compendium/glossary.mdx, v2/developers/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx
+- **livepeer-real-time** (hyphenated, 9×) — v2/developers/_archive/developer-guide.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/_archive/quickstart-video-hub.mdx
+- **rfps-and-proposals** (hyphenated, 9×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/developers/opportunities/grants-and-programmes.mdx
+- **ui-kit** (hyphenated, 9×) — v2/developers/_contextData/Developers_new/oss-stack-draft.mdx, v2/developers/concepts/oss-stack.mdx, v2/developers/opportunities/oss-contributions.mdx
+- **TLS** (acronym, 9×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx
+- **orchestrator-offerings** (hyphenated, 9×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/index.mdx
+- **bridge-lpt-to** (hyphenated, 9×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--fund-gateway.mdx
+- **docker-install** (hyphenated, 9×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx
+- **per-stream** (hyphenated, 9×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/node-pipelines/video-pipelines.mdx, v2/gateways/setup/install/docker-install.mdx
+- **DeepCache** (camelcase, 9×) — v2/gateways/guides/node-pipelines/x-resources/v1--models-config.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx
+- **discover-offerings** (hyphenated, 9×) — v2/gateways/guides/node-pipelines/x-resources/v2-guidesres--overview.mdx, v2/gateways/index.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **how-to-run** (hyphenated, 9×) — v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--ecosystem-projects.mdx
+- **a-livepeer-gateway** (hyphenated, 9×) — v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--ecosystem-projects.mdx
+- **self-managed** (hyphenated, 9×) — v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx, v2/gateways/guides/payments-and-pricing/payment-guide.mdx
+- **trade-off** (hyphenated, 9×) — v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--why-run-a-gateway.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx
+- **hardware-info** (hyphenated, 9×) — v2/gateways/index.mdx, v2/gateways/resources/technical/api-reference/AI-API/ai.mdx, v2/gateways/resources/technical/api-reference/_delete-all-api.mdx
+- **hardware-stats** (hyphenated, 9×) — v2/gateways/index.mdx, v2/gateways/resources/technical/api-reference/AI-API/ai.mdx, v2/gateways/resources/technical/api-reference/_delete-all-api.mdx
+- **configuration-overview** (hyphenated, 9×) — v2/gateways/index.mdx, v2/gateways/setup/install/docker-install.mdx, v2/gateways/setup/install/linux-install.mdx
+- **how-to** (hyphenated, 9×) — v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx, v2/internal/docs-philosophy.mdx
+- **documentation-overview** (hyphenated, 9×) — v2/index.mdx, v2/internal/internal-overview.mdx, v2/internal/overview/about.mdx
+- **create-livestream** (hyphenated, 9×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/overview.mdx
+- **playback-asset** (hyphenated, 9×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/player.mdx
+- **gateway-relationships** (hyphenated, 9×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface.mdx, v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx
+- **ai-model-management** (hyphenated, 9×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines.mdx, v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup.mdx
+- **operator-toolbox** (hyphenated, 9×) — v2/index.mdx, v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx, v2/orchestrators/index.mdx
+- **payment-receipts** (hyphenated, 9×) — v2/index.mdx, v2/orchestrators/concepts/architecture.mdx, v2/orchestrators/guides/config-and-optimisation/reward-call-tuning.mdx
+- **co-founders** (hyphenated, 9×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **DeveloperAlly** (camelcase, 9×) — v2/internal/overview/governance.mdx
+- **high-volume** (hyphenated, 9×) — v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx
+- **data-centre** (hyphenated, 9×) — v2/orchestrators/guides/advanced-operations/pool-operators.mdx, v2/orchestrators/guides/advanced-operations/scale-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx
+- **SVG** (acronym, 9×) — v2/resources/documentation-guide/authoring-standard.mdx, v2/resources/media-kit.mdx
+- **component-registry** (hyphenated, 9×) — v2/resources/documentation-guide/component-library/component-library.mdx, v2/resources/documentation-guide/component-library/config.mdx, v2/resources/documentation-guide/component-library/displays.mdx
+- **AES** (acronym, 9×) — v2/resources/livepeer-glossary.mdx, v2/solutions/livepeer-studio/video-on-demand/encrypted-assets.mdx, v2/solutions/livepeer-studio/video-on-demand/overview.mdx
+- **non-profit** (hyphenated, 8×) — v2/about/core-concepts/concepts/actors.mdx, v2/community/faq.mdx, v2/community/livepeer-community/governance-and-foundation.mdx
+- **community-run** (hyphenated, 8×) — v2/about/core-concepts/concepts/actors.mdx, v2/community/community-portal.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx
+- **production-grade** (hyphenated, 8×) — v2/about/core-concepts/concepts/actors.mdx, v2/community/resources/awesome-livepeer.mdx, v2/community/resources/guides.mdx
+- **governance-model** (hyphenated, 8×) — v2/about/index.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/overview.mdx
+- **QuadGrid** (camelcase, 8×) — v2/about/livepeer-overview.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx
+- **LivepeerVerifier** (camelcase, 8×) — v2/about/livepeer-protocol/governance-model.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx
+- **cost-effective** (hyphenated, 8×) — v2/about/livepeer-protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/primer.mdx
+- **network-facing** (hyphenated, 8×) — v2/about/mental-model.mdx, v2/developers/resources/apis.mdx, v2/developers/resources/sdks.mdx
+- **latency-sensitive** (hyphenated, 8×) — v2/about/resources/compendium/glossary.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx
+- **the-age-of** (hyphenated, 8×) — v2/about/resources/technical-roadmap.mdx, v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **data-option** (hyphenated, 8×) — v2/community/_move_me/livepeer-hubs/livepeer-partner-hub.mdx, v2/community/_move_me/livepeer-partners/livepeer-partner-hub.mdx
+- **governance-and-foundation** (hyphenated, 8×) — v2/community/community-portal.mdx, v2/community/faq.mdx, v2/community/index.mdx
+- **community-portal** (hyphenated, 8×) — v2/community/index.mdx, v2/home/mission-control.mdx, v2/home/primer.mdx
+- **arrow-right** (hyphenated, 8×) — v2/community/livepeer-community/governance-and-foundation.mdx, v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/gateways/guides/operator-considerations/business-case.mdx
+- **no-code** (hyphenated, 8×) — v2/community/resources/awesome-livepeer.mdx, v2/community/resources/guides.mdx, v2/developers/guides/resources.mdx
+- **graduation-cap** (hyphenated, 8×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/grants-and-programmes.mdx
+- **video-streaming-on** (hyphenated, 8×) — v2/developers/_archive/developer-guide.mdx, v2/developers/_archive/index-generated.mdx, v2/developers/_archive/quickstart-video-hub.mdx
+- **livepeer-ops** (hyphenated, 8×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/developer-journey.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx
+- **livepeer-cloud** (hyphenated, 8×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/home/about-livepeer/ecosystem.mdx
+- **MediaLive** (camelcase, 8×) — v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/gateways/guides/deployment-details/setup-options.mdx
+- **people-group** (hyphenated, 8×) — v2/developers/_archive/partner-integrations.mdx, v2/developers/_archive/x-unstaged/partner-integrations.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx
+- **TD** (acronym, 8×) — v2/developers/_archive/quickstart-video-hub.mdx, v2/developers/get-started/transcoding-quickstart.mdx, v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx
+- **AudioTranscription** (camelcase, 8×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/build/comfystream.mdx
+- **cutting-edge** (hyphenated, 8×) — v2/developers/guides/contribution-guide.mdx, v2/developers/opportunities/grants-and-programmes.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v1--ai-builders-get-started.mdx
+- **DAG** (acronym, 8×) — v2/developers/guides/developer-guides.mdx, v2/developers/opportunities/oss-contributions.mdx, v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx
+- **rectangle-terminal** (hyphenated, 8×) — v2/developers/guides/developer-guides.mdx, v2/developers/resources/compendium/glossary.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--cli-http-api.mdx
+- **OKX** (acronym, 8×) — v2/developers/guides/resources.mdx, v2/gateways/guides/tutorials/tutorial-3-go-production.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx
+- **file-lines** (hyphenated, 8×) — v2/developers/opportunities/oss-contributions.mdx, v2/developers/opportunities/rfps-and-proposals.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx
+- **product-hub** (hyphenated, 8×) — v2/developers/portal.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/index.mdx
+- **first-class** (hyphenated, 8×) — v2/developers/resources/compendium/glossary.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/evolution.mdx
+- **dual-workload** (hyphenated, 8×) — v2/gateways/concepts/capabilities.mdx, v2/orchestrators/concepts/architecture.mdx, v2/orchestrators/concepts/capabilities.mdx
+- **explorer-arbitrum-one** (hyphenated, 8×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--explorer.mdx
+- **git-feat-add** (hyphenated, 8×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--explorer.mdx
+- **customer-facing** (hyphenated, 8×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx
+- **orchestrator-selection** (hyphenated, 8×) — v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/index.mdx
+- **NetworkCapabilities** (camelcase, 8×) — v2/gateways/guides/advanced-operations/x-resources/ctx-new--connect-with-offerings-publish.mdx, v2/gateways/guides/advanced-operations/x-resources/ctx-new--connect-with-offerings.mdx, v2/gateways/guides/advanced-operations/x-resources/ctx-new--discover-offerings.mdx
+- **AIJ** (acronym, 8×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx
+- **VPS** (acronym, 8×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx
+- **linux-install** (hyphenated, 8×) — v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/index.mdx, v2/gateways/quickstart/gateway-setup.mdx
+- **prometheus-metrics** (hyphenated, 8×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v1--monitor-metrics.mdx, v2/gateways/index.mdx
+- **cli-http-api** (hyphenated, 8×) — v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/index.mdx, v2/gateways/resources/knowledge-base/resources.mdx
+- **monitor-and-optimise** (hyphenated, 8×) — v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--prometheus-metrics.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--prometheus-metrics.mdx, v2/gateways/index.mdx
+- **retryable-tx-panel** (hyphenated, 8×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/funding-guide.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx
+- **ONLY** (acronym, 8×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **byoc-pipelines** (hyphenated, 8×) — v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/dep-ai-inference.mdx, v2/gateways/guides/node-pipelines/guide.mdx
+- **DEX** (acronym, 8×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **auto-adjustment** (hyphenated, 8×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-configure--pricing-configuration.mdx
+- **OrchestratorSession** (camelcase, 8×) — v2/gateways/guides/roadmap-and-funding/x-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/sdk-builder-opportunity.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **knowledge-base** (hyphenated, 8×) — v2/gateways/index.mdx, v2/index.mdx
+- **windows-install** (hyphenated, 8×) — v2/gateways/index.mdx, v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/setup/install/install-overview.mdx
+- **WidthCard** (camelcase, 8×) — v2/gateways/quickstart/gateway-setup.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/roadmap.mdx
+- **AR** (acronym, 8×) — v2/home/solutions/verticals.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **GIT** (acronym, 8×) — v2/index.mdx, v2/resources/documentation-guide/automations-workflows.mdx
+- **HOOKS** (acronym, 8×) — v2/index.mdx, v2/resources/documentation-guide/automations-workflows.mdx
+- **cli-flags** (hyphenated, 8×) — v2/index.mdx, v2/orchestrators/index.mdx, v2/orchestrators/resources/community-guides.mdx
+- **create-clip** (hyphenated, 8×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/streams/overview.mdx
+- **get-viewership-metrics** (hyphenated, 8×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/analytics/overview.mdx
+- **encrypted-assets** (hyphenated, 8×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/video-on-demand/overview.mdx
+- **thumbnails-vod** (hyphenated, 8×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/player.mdx
+- **GPT** (acronym, 8×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx, v2/internal/assets/transcripts/ycomb.mdx
+- **CTO** (acronym, 8×) — v2/internal/assets/transcripts/ycomb.mdx
+- **active-set** (hyphenated, 8×) — v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx
+- **break-even** (hyphenated, 8×) — v2/orchestrators/guides/config-and-optimisation/reward-call-tuning.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx
+- **IETF** (acronym, 8×) — v2/resources/documentation-guide/authoring-standard.mdx, v2/resources/livepeer-glossary.mdx, v2/resources/resources/compendium/glossary.mdx
+- **PUT** (acronym, 8×) — v2/resources/livepeer-glossary.mdx, v2/solutions/livepeer-studio/api-reference/rooms/update-user.mdx, v2/solutions/livepeer-studio/api-reference/webhooks/update.mdx
+- **SDP** (acronym, 8×) — v2/resources/livepeer-glossary.mdx, v2/resources/resources/compendium/glossary.mdx, v2/solutions/livepeer-studio/livestream/livestream-from-browser.mdx
+- **ResponseMetaField** (camelcase, 8×) — v2/solutions/livepeer-studio/api-reference/playback/overview.mdx
+- **core-mechanisms** (hyphenated, 7×) — v2/about/faq-about.mdx, v2/about/index.mdx, v2/about/livepeer-protocol/overview.mdx
+- **livepeer-token** (hyphenated, 7×) — v2/about/index.mdx, v2/about/livepeer-network/livepeer-actors/delegators.mdx, v2/about/livepeer-protocol/overview.mdx
+- **livepeer-whitepaper** (hyphenated, 7×) — v2/about/index.mdx, v2/about/livepeer-protocol/overview.mdx, v2/developers/_archive/index-generated.mdx
+- **technical-roadmap** (hyphenated, 7×) — v2/about/index.mdx, v2/about/livepeer-network/marketplace.mdx, v2/developers/_archive/index-generated.mdx
+- **developer-facing** (hyphenated, 7×) — v2/about/livepeer-network/technical-architecture.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **end-user** (hyphenated, 7×) — v2/about/livepeer-overview.mdx, v2/about/mental-model.mdx, v2/about/resources/compendium/glossary.mdx
+- **ABI** (acronym, 7×) — v2/about/livepeer-protocol/treasury.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-dev--ai-pipelines-byoc.mdx
+- **governance-controlled** (hyphenated, 7×) — v2/about/livepeer-protocol/treasury.mdx, v2/community/resources/compendium/glossary.mdx, v2/lpt/about/overview.mdx
+- **community-approved** (hyphenated, 7×) — v2/about/resources/compendium/glossary.mdx, v2/community/faq.mdx, v2/community/resources/compendium/glossary.mdx
+- **a-real-time** (hyphenated, 7×) — v2/about/resources/technical-roadmap.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **update-to-the** (hyphenated, 7×) — v2/about/resources/technical-roadmap.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **livepeer-network-vision** (hyphenated, 7×) — v2/about/resources/technical-roadmap.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **in-person** (hyphenated, 7×) — v2/community/community-portal.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/community/livepeer-connect/events-and-community-streams.mdx
+- **GIF** (acronym, 7×) — v2/community/livepeer-community/community-guidelines.mdx, v2/home/primer.mdx, v2/resources/documentation-guide/automations-workflows.mdx
+- **EUR** (acronym, 7×) — v2/community/livepeer-community/governance-and-foundation.mdx, v2/community/livepeer-community/livepeer-latest-topics.mdx, v2/lpt/resources/exchanges.mdx
+- **chart-bar** (hyphenated, 7×) — v2/community/resources/awesome-livepeer.mdx, v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **chart-mixed** (hyphenated, 7×) — v2/community/resources/awesome-livepeer.mdx, v2/community/resources/guides.mdx, v2/developers/guides/resources.mdx
+- **non-technical** (hyphenated, 7×) — v2/community/resources/awesome-livepeer.mdx, v2/orchestrators/setup/rcs-requirements.mdx, v2/resources/documentation-guide/contribute-to-the-docs.mdx
+- **MerkleMine** (camelcase, 7×) — v2/community/resources/compendium/glossary.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx
+- **diffusion-based** (hyphenated, 7×) — v2/community/resources/compendium/glossary.mdx, v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/concepts/ai-on-livepeer.mdx
+- **time-series** (hyphenated, 7×) — v2/community/resources/compendium/glossary.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx
+- **PreviewCallout** (camelcase, 7×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx
+- **setup-paths** (hyphenated, 7×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/developer-journey-3path.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx
+- **file-based** (hyphenated, 7×) — v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/build/workload-fit.mdx, v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx
+- **frame-based** (hyphenated, 7×) — v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx
+- **lock-in** (hyphenated, 7×) — v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-dev--ai-pipelines-byoc.mdx, v2/lpt/delegation/TO-ADD/choose-a-delegate.mdx
+- **fine-tuned** (hyphenated, 7×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx
+- **SKILL** (acronym, 7×) — v2/developers/_archive/developer-journey-3path.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/solutions/frameworks/overview1.mdx
+- **tower-broadcast** (hyphenated, 7×) — v2/developers/_archive/developer-journey-3path.mdx, v2/developers/developer-journey.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **video-arrow-up** (hyphenated, 7×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **tooling-hub** (hyphenated, 7×) — v2/developers/_archive/index-generated.mdx, v2/developers/index.mdx, v2/index.mdx
+- **day-to-day** (hyphenated, 7×) — v2/developers/_archive/partner-integrations.mdx, v2/developers/_archive/x-unstaged/partner-integrations.mdx, v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx
+- **node-based** (hyphenated, 7×) — v2/developers/_contextData/Developers_new/build-byoc-draft.mdx, v2/developers/build/byoc.mdx, v2/developers/resources/compendium/glossary.mdx
+- **building-real-time** (hyphenated, 7×) — v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/get-started/comfystream-quickstart.mdx, v2/developers/guides/developer-guides.mdx
+- **ai-video-effects** (hyphenated, 7×) — v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/get-started/comfystream-quickstart.mdx, v2/developers/guides/developer-guides.mdx
+- **with-comfystream** (hyphenated, 7×) — v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx, v2/developers/get-started/comfystream-quickstart.mdx, v2/developers/guides/developer-guides.mdx
+- **trade-offs** (hyphenated, 7×) — v2/developers/_contextData/Developers_new/running-a-gateway-draft.mdx, v2/developers/concepts/running-a-gateway.mdx, v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx
+- **production-gateways** (hyphenated, 7×) — v2/developers/concepts/developer-stack.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/business-case.mdx
+- **video-quickstart** (hyphenated, 7×) — v2/developers/developer-journey.mdx, v2/developers/index.mdx, v2/developers/portal.mdx
+- **multi-region** (hyphenated, 7×) — v2/developers/developer-journey.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/tutorials/stubs/tutorial-go-production.mdx
+- **stakeholder-focused** (hyphenated, 7×) — v2/developers/opportunities/rfps-and-proposals.mdx, v2/internal/docs-philosophy.mdx, v2/internal/rfp/aims.mdx
+- **OpenMetal** (camelcase, 7×) — v2/developers/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **cold-start-latency** (hyphenated, 7×) — v2/developers/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **private-ai-inference** (hyphenated, 7×) — v2/developers/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **whisper-large** (hyphenated, 7×) — v2/developers/resources/compendium/glossary.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **per-minute** (hyphenated, 7×) — v2/gateways/concepts/business-model.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **arrow-left** (hyphenated, 7×) — v2/gateways/guides/advanced-operations/dep-production-hardening.mdx, v2/resources/documentation-guide/component-library/config.mdx, v2/resources/documentation-guide/component-library/displays.mdx
+- **multi-factor** (hyphenated, 7×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--orchestrator-offerings.mdx, v2/gateways/resources/technical/orchestrator-offerings.mdx, v2/orchestrators/concepts/capabilities.mdx
+- **setup-requirements** (hyphenated, 7×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx
+- **rate-limited** (hyphenated, 7×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/orchestrators/resources/arbitrum-rpc.mdx
+- **video-only** (hyphenated, 7×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--video-transcoding-opportunity.mdx
+- **orchestrators-portal** (hyphenated, 7×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-guidesres--faq.mdx, v2/index.mdx
+- **DelegatorPool** (camelcase, 7×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **MerkleProof** (camelcase, 7×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **JobLib** (camelcase, 7×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **PdfEmbed** (camelcase, 7×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/payment-clearinghouse.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-payments--payment-clearinghouse.mdx
+- **GetOrchestratorInfo** (camelcase, 7×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-new--remote-signers.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/remote-signers.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-payments--remote-signers.mdx
+- **fastest-growing** (hyphenated, 7×) — v2/gateways/guides/roadmap-and-funding/x-resources/biz--ai-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/ai-builder-opportunity.mdx, v2/home/about-livepeer/benefits.mdx
+- **why-run-a** (hyphenated, 7×) — v2/gateways/guides/roadmap-and-funding/x-resources/ctx-new--gateway-operator-opportunities.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--ecosystem-projects.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx
+- **brackets-curly** (hyphenated, 7×) — v2/gateways/guides/roadmap-and-funding/x-resources/v1--ai-builders-get-started.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx, v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx
+- **byoc-cpu-pipeline** (hyphenated, 7×) — v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorial-3-go-production.mdx, v2/gateways/index.mdx
+- **byoc-cpu-tutorial** (hyphenated, 7×) — v2/gateways/index.mdx, v2/gateways/navigator.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **lp-marketplace** (hyphenated, 7×) — v2/gateways/index.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx, v2/index.mdx
+- **WCAG** (acronym, 7×) — v2/index.mdx, v2/internal/index.mdx, v2/internal/overview/about.mdx
+- **automations-workflows** (hyphenated, 7×) — v2/index.mdx, v2/resources/documentation-guide/documentation-guide.mdx, v2/resources/index.mdx
+- **snippets-inventory** (hyphenated, 7×) — v2/index.mdx, v2/resources/documentation-guide/documentation-guide.mdx, v2/resources/index.mdx
+- **upload-via-url** (hyphenated, 7×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/assets/overview.mdx
+- **add-multistream-target** (hyphenated, 7×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/streams/overview.mdx
+- **delete-multistream-target** (hyphenated, 7×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/api-reference/streams/overview.mdx
+- **clip-livestream** (hyphenated, 7×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/overview.mdx
+- **stream-health** (hyphenated, 7×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/livestream/overview.mdx
+- **llm-pipeline-setup** (hyphenated, 7×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx
+- **VLLM** (acronym, 7×) — v2/internal/assets/transcripts/a16z/2026-01-22-inferact-building-the-infrastructure-that-runs-modern-ai.mdx
+- **ARC** (acronym, 7×) — v2/internal/assets/transcripts/ycomb.mdx
+- **VC** (acronym, 7×) — v2/internal/assets/transcripts/ycomb.mdx
+- **HubSpot** (camelcase, 7×) — v2/internal/assets/transcripts/ycomb.mdx
+- **at-the** (hyphenated, 7×) — v2/internal/assets/transcripts/ycomb.mdx
+- **AEO** (acronym, 7×) — v2/internal/docs-philosophy.mdx, v2/internal/overview/docs-philosophy.mdx, v2/internal/rfp/aims.mdx
+- **RFC** (acronym, 7×) — v2/internal/rfp/report.mdx, v2/resources/documentation-guide/authoring-standard.mdx, v2/resources/livepeer-glossary.mdx
+- **self-bonded** (hyphenated, 7×) — v2/lpt/delegation/about-delegators.mdx, v2/lpt/delegation/overview.mdx, v2/orchestrators/guides/staking-and-rewards/delegate-operations.mdx
+- **multi-stream** (hyphenated, 7×) — v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx, v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx, v2/orchestrators/guides/tutorials/realtime-ai-tutorial.mdx
+- **CMS** (acronym, 7×) — v2/resources/documentation-guide/automations-workflows.mdx, v2/resources/documentation-guide/contribute-to-the-docs.mdx
+- **StreamCrafter** (camelcase, 7×) — v2/solutions/frameworks/overview.mdx, v2/solutions/frameworks/overview1.mdx, v2/solutions/frameworks/quickstart.mdx
+- **signing-key** (hyphenated, 7×) — v2/solutions/livepeer-studio/access-control/jwt.mdx, v2/solutions/livepeer-studio/api-reference/signing-keys/create.mdx, v2/solutions/livepeer-studio/api-reference/signing-keys/delete.mdx
+- **mental-model** (hyphenated, 6×) — v2/about/index.mdx, v2/about/livepeer-overview.mdx, v2/index.mdx
+- **gateway-side** (hyphenated, 6×) — v2/about/livepeer-network/marketplace.mdx, v2/developers/resources/sdks.mdx, v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx
+- **round-based** (hyphenated, 6×) — v2/about/livepeer-protocol/core-mechanisms.mdx, v2/lpt/resources/compendium/glossary.mdx, v2/orchestrators/resources/compendium/glossary.mdx
+- **stake-based** (hyphenated, 6×) — v2/about/livepeer-protocol/governance-model.mdx, v2/gateways/guides/payments-and-pricing/funding-guide.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-guides--how-payments-work.mdx
+- **APR** (acronym, 6×) — v2/about/livepeer-protocol/livepeer-token.mdx, v2/community/resources/awesome-livepeer.mdx, v2/developers/guides/resources.mdx
+- **merkle-mine** (hyphenated, 6×) — v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/resources/livepeer-whitepaper.mdx
+- **LivepeerTokenFaucet** (camelcase, 6×) — v2/about/resources/blockchain-contracts.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/dep-new-contract-addresses.mdx
+- **non-winning** (hyphenated, 6×) — v2/about/resources/compendium/glossary.mdx, v2/orchestrators/resources/compendium/glossary.mdx, v2/orchestrators/resources/glossary.mdx
+- **an-overview-of** (hyphenated, 6×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx, v2/lpt/resources/delegator-videos-and-blogs.mdx
+- **introducing-livepeer-cascade** (hyphenated, 6×) — v2/about/resources/technical-roadmap.mdx, v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **a-vision-for** (hyphenated, 6×) — v2/about/resources/technical-roadmap.mdx, v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **livepeers-future-in** (hyphenated, 6×) — v2/about/resources/technical-roadmap.mdx, v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **meta-governance** (hyphenated, 6×) — v2/community/faq.mdx, v2/community/livepeer-community/governance-and-foundation.mdx, v2/community/livepeer-connect/forums-and-discussions.mdx
+- **community-guidelines** (hyphenated, 6×) — v2/community/index.mdx, v2/developers/opportunities/oss-contributions.mdx, v2/index.mdx
+- **trending-topics** (hyphenated, 6×) — v2/community/index.mdx, v2/home/get-started.mdx, v2/index.mdx
+- **events-and-community** (hyphenated, 6×) — v2/community/index.mdx, v2/index.mdx, v2/orchestrators/resources/community-guides.mdx
+- **forums-and-discussions** (hyphenated, 6×) — v2/community/index.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/index.mdx
+- **TL** (acronym, 6×) — v2/community/livepeer-community/community-guidelines.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration-view.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx
+- **DR** (acronym, 6×) — v2/community/livepeer-community/community-guidelines.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration-view.mdx, v2/gateways/guides/node-pipelines/x-resources/ctx-new--video-configuration.mdx
+- **longer-form** (hyphenated, 6×) — v2/community/livepeer-community/community-guidelines.mdx, v2/community/livepeer-connect/forums-and-discussions.mdx, v2/gateways/resources/knowledge-base/help.mdx
+- **livepeer-governance-process** (hyphenated, 6×) — v2/community/livepeer-community/governance-and-foundation.mdx, v2/community/livepeer-connect/forums-and-discussions.mdx, v2/community/resources/guides.mdx
+- **TS** (acronym, 6×) — v2/community/resources/compendium/glossary.mdx, v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx
+- **choosing-a-gateway** (hyphenated, 6×) — v2/developers/_archive/ai-inference-overview-old.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--cloud-spe-gateway.mdx, v2/index.mdx
+- **to-file** (hyphenated, 6×) — v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/build/workload-fit.mdx
+- **stream-based** (hyphenated, 6×) — v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/gateways/guides/node-pipelines/guide.mdx
+- **cloud-binary** (hyphenated, 6×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx, v2/solutions/frameworks/overview.mdx
+- **public-goods** (hyphenated, 6×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-funding-model.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace.mdx
+- **rights-aware** (hyphenated, 6×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-guide.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-provenance.mdx
+- **tamper-evident** (hyphenated, 6×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-provenance.mdx, v2/resources/livepeer-glossary.mdx, v2/solutions/resources/compendium/glossary.mdx
+- **partner-integrations** (hyphenated, 6×) — v2/developers/_archive/index-generated.mdx, v2/home/get-started.mdx, v2/index.mdx
+- **transcoding-jobs** (hyphenated, 6×) — v2/developers/_archive/index-generated.mdx, v2/developers/_archive/quickstart-video-hub.mdx, v2/index.mdx
+- **MPEG** (acronym, 6×) — v2/developers/_archive/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/_archive/quickstart-video-101.mdx, v2/resources/changelog/go-livepeer.mdx
+- **non-standard** (hyphenated, 6×) — v2/developers/_contextData/Developers_new/build-byoc-draft.mdx, v2/developers/build/byoc.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
+- **SuperResolution** (camelcase, 6×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/_contextData/Developers_new/comfystream-quickstart-draft.mdx
+- **to-video** (hyphenated, 6×) — v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/comfystream.mdx, v2/gateways/guides/node-pipelines/x-resources/v1--models-config.mdx
+- **XT** (acronym, 6×) — v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/model-support.mdx, v2/lpt/resources/exchanges.mdx
+- **SAM** (acronym, 6×) — v2/developers/_contextData/Developers_new/build-model-support-draft.mdx, v2/developers/build/model-support.mdx, v2/developers/resources/compendium/glossary.mdx
+- **introducing-daydream** (hyphenated, 6×) — v2/developers/guides/resources.mdx, v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx
+- **user-gear** (hyphenated, 6×) — v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx
+- **t-rex** (hyphenated, 6×) — v2/gateways/guides/advanced-operations/x-resources/v1--dual-mine.mdx
+- **GI** (acronym, 6×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx
+- **OC** (acronym, 6×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--technical-architecture.mdx, v2/gateways/resources/technical/technical-architecture.mdx
+- **tools-and-dashboards** (hyphenated, 6×) — v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/index.mdx
+- **CMC** (acronym, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **BridgeClickToken** (camelcase, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **BridgeChooseToken** (camelcase, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **BridgeApprove** (camelcase, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **arbitrum-retry-ui** (hyphenated, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-onchain--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--bridge-lpt-to-arbitrum.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--bridge-lpt-to-arbitrum.mdx
+- **GenesisManager** (camelcase, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **MultiMerkleMine** (camelcase, 6×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--contract-addresses.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--contract-addresses.mdx, v2/gateways/resources/technical/contract-addresses.mdx
+- **out-of-memory** (hyphenated, 6×) — v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx
+- **install-go-livepeer** (hyphenated, 6×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/orchestrators/setup/s-guide.mdx
+- **install-using-a** (hyphenated, 6×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/gateways/setup/configure/ai-configuration.mdx
+- **binary-release** (hyphenated, 6×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/gateways/setup/configure/ai-configuration.mdx
+- **stable-fast** (hyphenated, 6×) — v2/gateways/guides/node-pipelines/x-resources/v1--models-config.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx
+- **data-feeds** (hyphenated, 6×) — v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/set-pricing.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--set-pricing.mdx
+- **price-feeds** (hyphenated, 6×) — v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/set-pricing.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v1--set-pricing.mdx
+- **per-gateway** (hyphenated, 6×) — v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx, v2/orchestrators/navigator.mdx
+- **circle-dollar-to** (hyphenated, 6×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-gwnew--pricing-configuration.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/sdk-builder-opportunity.mdx
+- **purpose-built** (hyphenated, 6×) — v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/support-ops--spe-grant-model.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/support-ops/spe-grant-model.mdx
+- **livepeer-studio-gateway** (hyphenated, 6×) — v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--cloud-spe-gateway.mdx, v2/index.mdx
+- **whisper-tiny** (hyphenated, 6×) — v2/gateways/guides/tutorials/stubs/tutorial-byoc-cpu-pipeline.mdx, v2/orchestrators/guides/tutorials/gateway-tutorial-composable-pages/stubs/tutorial-byoc-cpu-pipeline.mdx
+- **green-tint** (hyphenated, 6×) — v2/gateways/guides/tutorials/stubs/tutorial-byoc-cpu-pipeline.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx, v2/orchestrators/guides/tutorials/gateway-tutorial-composable-pages/stubs/tutorial-byoc-cpu-pipeline.mdx
+- **go-production** (hyphenated, 6×) — v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx, v2/gateways/index.mdx
+- **offchain-transcoding-test** (hyphenated, 6×) — v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx, v2/gateways/guides/tutorials/tutorial-3-go-production.mdx, v2/gateways/index.mdx
+- **orchestrator-stats** (hyphenated, 6×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/index.mdx, v2/orchestrators/setup/s-guide.mdx
+- **ResponseFieldAccordion** (camelcase, 6×) — v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx, v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx, v2/resources/documentation-guide/component-library/displays.mdx
+- **community-guides** (hyphenated, 6×) — v2/index.mdx, v2/orchestrators/index.mdx, v2/restructure.mdx
+- **media-kit** (hyphenated, 6×) — v2/index.mdx, v2/resources/index.mdx, v2/resources/media-kit.mdx
+- **solution-providers** (hyphenated, 6×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/product-hub.mdx
+- **client-use-cases** (hyphenated, 6×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/overview.mdx
+- **studio-cli** (hyphenated, 6×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/overview.mdx
+- **managing-projects** (hyphenated, 6×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/quickstart.mdx
+- **transcode-video** (hyphenated, 6×) — v2/index.mdx, v2/solutions/index.mdx, v2/solutions/livepeer-studio/video-on-demand/overview.mdx
+- **docs-philosophy** (hyphenated, 6×) — v2/index.mdx, v2/internal/index.mdx, v2/internal/internal-overview.mdx
+- **audit-all-pages** (hyphenated, 6×) — v2/index.mdx, v2/internal/index.mdx, v2/internal/rfp/aims.mdx
+- **quality-accessibility** (hyphenated, 6×) — v2/index.mdx, v2/internal/index.mdx
+- **network-participation** (hyphenated, 6×) — v2/index.mdx, v2/orchestrators/guides/operator-considerations/operator-impact.mdx, v2/orchestrators/guides/staking-and-rewards/earning-model.mdx
+- **gateway-tutorial-composable** (hyphenated, 6×) — v2/index.mdx, v2/orchestrators/index.mdx
+- **rcs-requirements** (hyphenated, 6×) — v2/index.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx, v2/orchestrators/index.mdx
+- **landing-and-navigation** (hyphenated, 6×) — v2/index.mdx, v2/templates/index.mdx
+- **reference-and-api** (hyphenated, 6×) — v2/index.mdx, v2/templates/index.mdx
+- **USDS** (acronym, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **COO** (acronym, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **McGrew** (camelcase, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **StartupSchool** (camelcase, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **AptDeco** (camelcase, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **and-the** (hyphenated, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **hard-tech** (hyphenated, 6×) — v2/internal/assets/transcripts/ycomb.mdx
+- **clipboard-write** (hyphenated, 6×) — v2/lpt/delegation/TO-ADD/choose-a-delegate.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **encrypted-media** (hyphenated, 6×) — v2/lpt/delegation/TO-ADD/choose-a-delegate.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **picture-in-picture** (hyphenated, 6×) — v2/lpt/delegation/TO-ADD/choose-a-delegate.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **TRY** (acronym, 6×) — v2/lpt/resources/exchanges.mdx
+- **UK** (acronym, 5×) — v2/README.mdx, v2/developers/guides/contribution-guide.mdx, v2/developers/guides/resources.mdx
+- **low-lift** (hyphenated, 5×) — v2/README.mdx, v2/home/primer.mdx, v2/internal/overview/strategic-alignment.mdx
+- **livepeer-overview** (hyphenated, 5×) — v2/about/index.mdx, v2/index.mdx
+- **gateways-vs-orchestrators** (hyphenated, 5×) — v2/about/index.mdx, v2/index.mdx
+- **torii-gate** (hyphenated, 5×) — v2/about/livepeer-overview.mdx, v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/resources/gateways-vs-orchestrators.mdx
+- **laptop-code** (hyphenated, 5×) — v2/about/livepeer-overview.mdx, v2/developers/_contextData/new/developers-new/portal.mdx, v2/developers/portal.mdx
+- **community-driven** (hyphenated, 5×) — v2/about/livepeer-protocol/governance-model.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/home/about-livepeer/vision.mdx
+- **special-purpose-entities** (hyphenated, 5×) — v2/about/livepeer-protocol/governance-model.mdx, v2/home/about-livepeer/ecosystem.mdx
+- **community-governed** (hyphenated, 5×) — v2/about/livepeer-protocol/treasury.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/developers/opportunities/rfps-and-proposals.mdx
+- **EIP** (acronym, 5×) — v2/about/resources/blockchain-contracts.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--cli-commands.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--cli-commands.mdx
+- **token-weighted** (hyphenated, 5×) — v2/about/resources/compendium/glossary.mdx, v2/community/resources/compendium/glossary.mdx, v2/lpt/resources/compendium/glossary.mdx
+- **time-sliced** (hyphenated, 5×) — v2/about/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/orchestrators/resources/compendium/glossary.mdx
+- **per-transaction** (hyphenated, 5×) — v2/about/resources/compendium/glossary.mdx, v2/gateways/guides/payments-and-pricing/x-resources/ctx-guides--how-payments-work.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/how-payments-work.mdx
+- **lottery-based** (hyphenated, 5×) — v2/about/resources/compendium/glossary.mdx, v2/gateways/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **follow-up** (hyphenated, 5×) — v2/community/faq.mdx, v2/internal/assets/transcripts/ycomb.mdx, v2/resources/documentation-guide/automations-workflows.mdx
+- **bi-weekly** (hyphenated, 5×) — v2/community/faq.mdx, v2/developers/guides/contribution-guide.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **livepeer-latest-topics** (hyphenated, 5×) — v2/community/index.mdx, v2/index.mdx
+- **news-and-socials** (hyphenated, 5×) — v2/community/index.mdx, v2/index.mdx
+- **build-livepeer** (hyphenated, 5×) — v2/community/index.mdx, v2/index.mdx
+- **community-hub** (hyphenated, 5×) — v2/community/livepeer-community/community-guidelines.mdx, v2/developers/guides/developer-help.mdx, v2/developers/opportunities/grants-and-programmes.mdx
+- **well-scoped** (hyphenated, 5×) — v2/community/livepeer-community/community-guidelines.mdx, v2/developers/guides/contribution-guide.mdx, v2/developers/opportunities/oss-contributions.mdx
+- **camera-movie** (hyphenated, 5×) — v2/community/livepeer-community/trending-topics.mdx, v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx, v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx
+- **server-side** (hyphenated, 5×) — v2/community/resources/compendium/glossary.mdx, v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/resources/livepeer-glossary.mdx
+- **general-purpose** (hyphenated, 5×) — v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/build/workload-fit.mdx, v2/developers/developer-tools/dashboards.mdx
+- **box-open** (hyphenated, 5×) — v2/developers/_archive/ai-pipelines-overview-old.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-dev--ai-pipelines-overview.mdx, v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx
+- **arrow-progress** (hyphenated, 5×) — v2/developers/_archive/developer-guide.mdx, v2/internal/rfp/problem-statements.mdx
+- **censorship-resistant** (hyphenated, 5×) — v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/_archive/developer-platforms/streamplace/streamplace-architecture.mdx, v2/solutions/portal.mdx
+- **mission-driven** (hyphenated, 5×) — v2/developers/_archive/developer-platforms/streamplace/streamplace-funding-model.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/solutions/streamplace/introduction/streamplace-funding-model.mdx
+- **journey-mapping** (hyphenated, 5×) — v2/developers/_archive/index-generated.mdx, v2/developers/_contextData/new/developers-new/index.mdx, v2/index.mdx
+- **livepeer-rfps** (hyphenated, 5×) — v2/developers/_archive/index-generated.mdx, v2/index.mdx
+- **x-unstaged** (hyphenated, 5×) — v2/developers/_archive/index-generated.mdx
+- **low-resolution** (hyphenated, 5×) — v2/developers/_contextData/Developers_new/ai-on-livepeer-draft.mdx, v2/developers/concepts/ai-on-livepeer.mdx, v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx
+- **SCOPE** (acronym, 5×) — v2/developers/_contextData/Developers_new/build-byoc-draft.mdx, v2/developers/_contextData/Developers_new/build-comfystream-draft.mdx, v2/developers/build/byoc.mdx
+- **running-a-gateway** (hyphenated, 5×) — v2/developers/_contextData/Developers_new/developer-stack-draft.mdx, v2/developers/concepts/developer-stack.mdx, v2/developers/developer-journey.mdx
+- **TouchDesigner** (camelcase, 5×) — v2/developers/guides/developer-guides.mdx, v2/gateways/resources/knowledge-base/guides.mdx, v2/gateways/resources/knowledge-base/resources-master-list.mdx
+- **sdk-gateway** (hyphenated, 5×) — v2/developers/index.mdx, v2/developers/resources/apis.mdx, v2/developers/resources/sdks.mdx
+- **circle-exclamation** (hyphenated, 5×) — v2/developers/opportunities/bug-bounties.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/tutorials/tutorial-3-go-production.mdx
+- **PATH** (acronym, 5×) — v2/developers/opportunities/overview.mdx, v2/orchestrators/guides/config-and-optimisation/capacity-planning.mdx, v2/orchestrators/guides/operator-considerations/requirements.mdx
+- **x-contract-addresses** (hyphenated, 5×) — v2/gateways/concepts/architecture.mdx, v2/index.mdx, v2/orchestrators/index.mdx
+- **mid-session** (hyphenated, 5×) — v2/gateways/concepts/capabilities.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/orchestrators/guides/advanced-operations/pool-operators.mdx
+- **human-readable** (hyphenated, 5×) — v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/resources/livepeer-glossary.mdx
+- **circle-xmark** (hyphenated, 5×) — v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx
+- **AMQP** (acronym, 5×) — v2/gateways/guides/advanced-operations/x-resources/v2-refs--configuration-flags.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--cli-reference.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-refs--cli-reference.mdx
+- **surface-destructive** (hyphenated, 5×) — v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/guides/operator-considerations/production-gateways.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx
+- **health-checks** (hyphenated, 5×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/index.mdx, v2/gateways/navigator.mdx
+- **pre-configured** (hyphenated, 5×) — v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/orchestrators/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **TicketParams** (camelcase, 5×) — v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v1--troubleshoot.mdx, v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx
+- **plug-circle-xmark** (hyphenated, 5×) — v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx
+- **w-full** (hyphenated, 5×) — v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--explorer.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--livepeer-tools.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-tools--explorer.mdx
+- **rounded-xl** (hyphenated, 5×) — v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--explorer.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/ctx-new--livepeer-tools.mdx, v2/gateways/guides/monitoring-and-tooling/x-resources/v2-tools--explorer.mdx
+- **MB** (acronym, 5×) — v2/gateways/guides/monitoring-and-tooling/x-resources/v1--troubleshoot.mdx, v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx, v2/orchestrators/guides/deployment-details/siphon-setup.mdx
+- **video-pipelines** (hyphenated, 5×) — v2/gateways/guides/node-pipelines/guide.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/index.mdx
+- **blockchain-based** (hyphenated, 5×) — v2/gateways/guides/node-pipelines/x-resources/ctx-new--ai-configuration.mdx, v2/gateways/guides/node-pipelines/x-resources/v2-run--ai-configuration.mdx, v2/gateways/setup/configure/ai-configuration.mdx
+- **low-friction** (hyphenated, 5×) — v2/gateways/guides/operator-considerations/business-case.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--why-run-a-gateway.mdx, v2/internal/rfp/aims.mdx
+- **browser-based** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/dep-payment-guide.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/sdk-builder-opportunity.mdx
+- **question-circle** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **binance-buy-eth** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **how-to-buy** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **coinbase-buy-eth** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **to-buy** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **well-regarded** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-onchain--fund-gateway.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-opcon--fund-gateway.mdx
+- **model-specific** (hyphenated, 5×) — v2/gateways/guides/payments-and-pricing/x-resources/ctx-setup--pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/related/pricing-configuration.mdx, v2/gateways/guides/payments-and-pricing/x-resources/v2-configure--pricing-configuration.mdx
+- **gateway-economics** (hyphenated, 5×) — v2/gateways/guides/roadmap-and-funding/x-resources/biz--sdk-builder-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/sdk-builder-opportunity.mdx, v2/index.mdx
+- **gateway-requirements** (hyphenated, 5×) — v2/gateways/guides/roadmap-and-funding/x-resources/biz--video-transcoding-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/business-ops/video-transcoding-opportunity.mdx, v2/gateways/guides/roadmap-and-funding/x-resources/v2-opcons--ecosystem-projects.mdx
+- **cloud-spe-gateway** (hyphenated, 5×) — v2/gateways/guides/roadmap-and-funding/x-resources/v2-providers--choosing-a-gateway.mdx, v2/index.mdx, v2/restructure.mdx
+- **custom-pipeline** (hyphenated, 5×) — v2/gateways/guides/tutorials/byoc-cpu-tutorial.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx, v2/gateways/resources/knowledge-base/guides.mdx
+- **gateway-orchestrator** (hyphenated, 5×) — v2/gateways/guides/tutorials/stubs/tutorial-offchain-transcoding-test.mdx, v2/gateways/navigator.mdx, v2/orchestrators/guides/tutorials/gateway-tutorial-composable-pages/stubs/tutorial-offchain-transcoding-test.mdx
+- **tutorial-byoc-cpu** (hyphenated, 5×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx, v2/index.mdx
+- **tutorial-offchain-transcoding** (hyphenated, 5×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx, v2/index.mdx
+- **tutorial-go-production** (hyphenated, 5×) — v2/gateways/guides/tutorials/tutorials-resources.mdx, v2/gateways/index.mdx, v2/index.mdx
+- **livepeer-exchanges** (hyphenated, 5×) — v2/gateways/index.mdx, v2/index.mdx
+- **transcoding-options** (hyphenated, 5×) — v2/gateways/index.mdx, v2/index.mdx, v2/restructure.mdx
+- **video-rendition** (hyphenated, 5×) — v2/gateways/resources/compendium/glossary.mdx, v2/orchestrators/resources/compendium/glossary.mdx, v2/resources/livepeer-glossary.mdx
+- **what-is-ether** (hyphenated, 5×) — v2/gateways/resources/compendium/glossary.mdx, v2/home/resources/compendium/glossary.mdx, v2/orchestrators/resources/compendium/glossary.mdx
+- **mission-control** (hyphenated, 5×) — v2/home/index.mdx, v2/index.mdx
+- **scripts-catalog** (hyphenated, 5×) — v2/index.mdx, v2/internal/rfp/aims.mdx
+- **architecture-map** (hyphenated, 5×) — v2/index.mdx, v2/internal/rfp/aims.mdx
+- **data-integrations** (hyphenated, 5×) — v2/index.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/problem-statements.mdx
+- **feature-map** (hyphenated, 5×) — v2/index.mdx, v2/internal/rfp/aims.mdx
+- **content-system** (hyphenated, 5×) — v2/index.mdx, v2/internal/rfp/aims.mdx
+- **about-delegators** (hyphenated, 5×) — v2/index.mdx, v2/lpt/index.mdx
+- **delegation-guide** (hyphenated, 5×) — v2/index.mdx, v2/lpt/index.mdx
+- **lpt-eth-usage** (hyphenated, 5×) — v2/index.mdx, v2/lpt/index.mdx
+- **resources-portal** (hyphenated, 5×) — v2/index.mdx, v2/resources/index.mdx
+- **migration-guide** (hyphenated, 5×) — v2/index.mdx, v2/resources/index.mdx
+- **create-user** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **get-user** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **remove-user** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **start-egress** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **stop-egress** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **update-user** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **get-creators-metrics** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **get-public-total** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **get-realtime-viewership** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **get-usage-metrics** (hyphenated, 5×) — v2/index.mdx, v2/solutions/index.mdx
+- **delegation-economics** (hyphenated, 5×) — v2/index.mdx, v2/lpt/delegation/TO-ADD/choose-a-delegate.mdx, v2/lpt/delegation/TO-ADD/delegation-management.mdx
+- **reward-call-tuning** (hyphenated, 5×) — v2/index.mdx, v2/orchestrators/guides/tutorials/zero-to-first-reward.mdx, v2/orchestrators/index.mdx
+- **explorer-operations** (hyphenated, 5×) — v2/index.mdx, v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox.mdx, v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx
+- **zero-to-first** (hyphenated, 5×) — v2/index.mdx, v2/orchestrators/guides/tutorials/add-ai-to-video-node.mdx, v2/orchestrators/guides/tutorials/byoc-cpu-smoke-test.mdx
+- **video-transcoding** (hyphenated, 5×) — v2/index.mdx, v2/orchestrators/index.mdx, v2/orchestrators/quickstart/guide.mdx
+- **connect-and-activate** (hyphenated, 5×) — v2/index.mdx, v2/orchestrators/index.mdx, v2/orchestrators/resources/arbitrum-exchanges.mdx
+- **research-and-fact** (hyphenated, 5×) — v2/index.mdx, v2/resources/documentation-guide/docs-features-and-ai-integrations.mdx, v2/resources/documentation-guide/documentation-guide.mdx
+- **AlphaFold** (camelcase, 5×) — v2/internal/assets/transcripts/ycomb.mdx
+- **ZeroDown** (camelcase, 5×) — v2/internal/assets/transcripts/ycomb.mdx
+- **CoinList** (camelcase, 5×) — v2/internal/assets/transcripts/ycomb.mdx
+- **self-routing** (hyphenated, 5×) — v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface.mdx, v2/orchestrators/guides/tutorials/full-ai-pipeline-tutorial.mdx
+- **per-unit** (hyphenated, 5×) — v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx, v2/orchestrators/resources/compendium/glossary.mdx
+- **case-sensitive** (hyphenated, 5×) — v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx, v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx, v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx
+- **low-stake** (hyphenated, 5×) — v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx, v2/orchestrators/guides/config-and-optimisation/reward-call-tuning.mdx, v2/orchestrators/guides/staking-and-rewards/delegate-operations.mdx
+- **CBC** (acronym, 5×) — v2/resources/livepeer-glossary.mdx, v2/solutions/livepeer-studio/video-on-demand/encrypted-assets.mdx, v2/solutions/livepeer-studio/video-on-demand/overview.mdx

@@ -1,0 +1,173 @@
+---
+title: Instalación en Windows
+description: Cómo instalar una puerta de enlace Livepeer usando Windows
+sidebarTitle: Instalación en Windows
+icon: windows
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - install
+  - windows install
+  - windows
+  - gateway
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2luc3RhbGwvd2luZG93cy1pbnN0YWxsLm1keCIsInNvdXJjZVJvdXRlIjoidjIvZ2F0ZXdheXMvcnVuLWEtZ2F0ZXdheS9pbnN0YWxsL3dpbmRvd3MtaW5zdGFsbCIsInNvdXJjZUhhc2giOiJjNWY5YzI3NmI3OTU3MTYyNjM3YzA5M2NkYjVmYmQ2NjgwYTYyODc4ZDA0YThlYmU2YmRmNDE0Y2U3ODZhMTlmIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE0OjA4OjAxLjg4OVoifQ== */}
+<Warning> Complete: needs review </Warning>
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+import { latestVersion as version} from '/snippets/data/gateways/version.jsx'
+
+<Warning>
+  This content is referenced from the [current docs windows install
+  guide](https://docs.livepeer.org/gateways/guides/windows-install) **TODO** - [
+  ] UNVERIFIED INSTALL DOCS - VERIFY CONTENT - [ ] MOVE ETH WALLET SETUP CONTENT
+</Warning>
+
+<Badge color="blue"> Video Only </Badge>
+<Icon icon="windows" />
+
+Última versión de go-livepeer: <Badge color="green">{version}</Badge> (obtenida dinámicamente)
+
+Este guía cubre la instalación del Livepeer Gateway desde el binario fuente en Windows.
+
+<Note>This is a Linux distribution operating in WSL2</Note>
+
+<StyledSteps>
+  <StyledStep title="Prerequisites">
+  Install WSL2 (Windows host)
+
+    ```bash icon="terminal" lines In Powershell(Admin)
+    wsl --install
+    # Reboot when prompted.
+    ```
+
+    ```bash icon="terminal" wrap lines Check
+      wsl --status
+      # Output: Version: WSL 2
+      # Output:Default distro: Ubuntu
+    ```
+
+    ```bash icon="terminal" wrap lines Enter WSL
+      wsl
+    ```
+
+  </StyledStep>
+  <StyledStep title="Download & Unzip Binary">
+  ## Download and unzip the Livepeer binary
+  <CustomCodeBlock
+    codeString="https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-windows-amd64.zip"
+    placeholderValue={version}
+    language="bash"
+    icon="terminal"
+  />
+
+  <Expandable title=">_ In case of version fetch issues">
+  In case of fetch issues: Replace {'<VERSION>'} with the latest [go-livepeer release](https://github.com/livepeer/go-livepeer/releases) number
+  ```bash icon="terminal" wrap lines
+  https://github.com/livepeer/go-livepeer/releases/download/<VERSION>/livepeer-windows-amd64.zip
+  ```
+  </Expandable>
+
+  </StyledStep>
+  <StyledStep title="Create .bat File">
+  ## Create a bat file to launch Livepeer.
+
+Create a file named gateway.bat:
+
+```bash icon="terminal" wrap lines
+  touch gateway.bat
+```
+
+Use the following as a template, adding your personal info where needed (on-chain) and save a .bat file
+in the same directory as the Livepeer executable.
+
+  <Tabs>
+    <Tab title="Off-Chain">
+      ```bash icon="terminal" wrap lines
+      livepeer.exe -network=offchain -gateway -cliAddr=127.0.0.1:5935 -monitor=true -v=6 -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935  
+  
+      PAUSE
+      ```
+    </Tab>
+    <Tab title="On-Chain">
+    ```bash icon="terminal" wrap lines
+      livepeer.exe  -network=arbitrum-one-mainnet -ethUrl=<YOUR_ARB_RPC_URL>  -ethAcctAddr=<YOUR_ETH_ADDRESS>  -ethPassword=<YOUR_PASSWORD>  -ethKeystorePath=<KEYSTORE_PATH> -gateway -cliAddr=127.0.0.1:5935 -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -maxPricePerUnit=300 -monitor=true -v=6  
+  
+    PAUSE
+      ```
+
+    **Required On-Chain Parameters**
+
+      Network Configuration
+      - `-network`: Must be set to the blockchain network `arbitrum-one-mainnet`
+
+      Ethereum Configuration
+      - `-ethUrl`: Ethereum JSON-RPC URL (required for on-chain)
+      - `-ethAcctAddr`: Your Ethereum account address
+      - `-ethPassword`: Password for your ETH account or path to password file
+      - `-ethKeystorePath`: Path to your keystore directory or keyfile
+
+    </Tab>
+
+  </Tabs>
+  </StyledStep>
+  <StyledStep title="Start Gateway">
+
+## Start the Livepeer Gateway
+
+Start the Livepeer Gateway using the .bat file.
+
+    ```bash icon="terminal" wrap lines
+    livepeer_cli.exe -host 127.0.0.1 -http 5935
+    ```
+
+  </StyledStep>
+  <StyledStep title="Tip: Start with Windows">
+  _If you'd like the Gateway to start with Windows you can create a System service
+  using [NSSM](https://nssm.cc/) or the Windows Task Scheduler._
+  </StyledStep>
+</StyledSteps>
+
+{' '}
+<br />
+<Card
+  title="Next Step: Configure the Gateway"
+  icon="gear"
+  href="/v2/es/gateways/run-a-gateway/configure/configuration-overview"
+  horizontal
+  arrow
+>
+  Open the Livepeer CLI, then Jump to [Configuration
+  Options](/v2/es/gateways/run-a-gateway/configure/configuration-overview) to finish
+  configuring the Gateway
+</Card>
+
+<Expandable title="OLD DOCS ITEMS (move to config)">
+    <StyledStep title="Run Gateway">
+    When prompted enter and confirm a password.
+
+    <Warning>
+      This password is used to decrypt the keystore file and access the private key.
+      Make sure to never share or lose access to either the password or the keystore
+      file
+    </Warning>
+
+    After confirming your password close the terminal.
+    </StyledStep>
+    <StyledStep title="Configure Gateway">
+
+    ## Create a file containing your Gateway Ethereum password
+
+    In `C:\Users\YOUR_USER_NAME\.lpData` create a txt file named `ethsecret.txt`
+    with the password you created in the previous step.
+
+    ## Add the `-ethPassword` flag to your .bat file
+
+    Add `-ethPassword=C:\Users\YOUR_USER_NAME\.lpData\ethsecret.txt` to the
+    previously created .bat file
+    </StyledStep>
+
+</Expandable>

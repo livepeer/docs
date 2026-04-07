@@ -1,0 +1,196 @@
+import { linuxGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+
+## <Icon icon="linux" iconType="brands" size={32} /> Linux Verification
+{linuxGroup()}
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Process Health">
+        Confirm the gateway process is running and responding.
+
+        **Check if the process is active:**
+
+        ```bash
+        pgrep -a livepeer
+        ```
+
+        **Check the health endpoint:**
+
+        ```bash
+        curl http://localhost:8935/health
+        ```
+
+        **Expected response:**
+
+        ```json
+        {"status": "OK"}
+        ```
+
+        HTTP 200 confirms the process is running. If the endpoint does not respond, check your startup logs or run with `-v 6` for verbose output:
+
+        ```bash
+        ./livepeer -gateway [flags] -v 6 2>&1 | tee livepeer.log
+        ```
+
+        <Tip>
+            Set up a cron job to monitor gateway health automatically:
+
+            ```bash
+            #!/usr/bin/env bash
+            # gateway-health.sh — run every 5 minutes via cron
+            GATEWAY_PORT="${1:-8935}"
+            ALERT_EMAIL="ops@example.com"
+
+            if ! curl --silent --fail --max-time 5 \
+              http://localhost:${GATEWAY_PORT}/health > /dev/null 2>&1; then
+              echo "Gateway on port ${GATEWAY_PORT} is not responding" | \
+                mail -s "ALERT: Livepeer Gateway Down" "$ALERT_EMAIL"
+            fi
+            ```
+
+            Crontab entry: `*/5 * * * * /path/to/gateway-health.sh 8935`
+        </Tip>
+    </StyledStep>
+
+    <StyledStep title="Node Status">
+        Use `livepeer_cli` to inspect node identity, sessions, and on-chain balances.
+
+        ```bash
+        livepeer_cli -host 127.0.0.1 -http 5935
+        ```
+
+        Select **Option 1: Get node status**. The output shows:
+
+        - **Version** and network connection
+        - **ETH Account** address
+        - **BROADCASTER STATS** — active sessions, deposit, and reserve balances
+
+        **Hardware check** (for nodes with GPU resources):
+
+        ```bash
+        curl -s http://localhost:8935/hardware/stats | python3 -m json.tool
+        ```
+
+        Returns GPU utilisation, memory, and temperature.
+    </StyledStep>
+
+    <StyledStep title="End-to-End Test">
+        Run a test job through the gateway to confirm full pipeline operation.
+
+        <Tabs>
+            <Tab title="Video">
+                Push a test stream via RTMP and check HLS output:
+
+                ```bash
+                ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+                  -c:v libx264 -preset ultrafast \
+                  -f flv rtmp://localhost:1935/live/test
+                ```
+
+                In a separate terminal, fetch the HLS manifest:
+
+                ```bash
+                curl http://localhost:8935/stream/test.m3u8
+                ```
+
+                A valid M3U8 playlist confirms transcoding is working end-to-end.
+
+                **Also verify Orchestrator connectivity:**
+
+                ```bash
+                curl http://localhost:5935/getOrchestrators
+                ```
+
+                The response should list at least one Orchestrator with pricing information.
+            </Tab>
+            <Tab title="AI">
+                Submit a test inference job:
+
+                ```bash
+                curl -X POST http://localhost:8935/text-to-image \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                    "model_id": "ByteDance/SDXL-Lightning",
+                    "prompt": "a simple geometric test pattern",
+                    "width": 512,
+                    "height": 512,
+                    "num_images_per_prompt": 1
+                  }'
+                ```
+
+                A successful response contains image data.
+
+                **If the request fails, verify:**
+                1. The Orchestrator supports the requested pipeline (`text-to-image`)
+                2. The `model_id` exactly matches the Orchestrator's available models (case-sensitive)
+
+                **Off-chain mode** — confirm Orchestrators in `-orchAddr` are reachable:
+
+                ```bash
+                curl https://<orchestrator-address>:<port>/getOrchestratorInfo
+                ```
+
+                **On-chain mode** — the node uses `-aiServiceRegistry` for automatic discovery. Confirm via `livepeer_cli` Option 1 that sessions are available.
+            </Tab>
+            <Tab title="Dual">
+                Dual gateways must pass **both** the video RTMP test and the AI inference test. Both endpoints respond on port **8935** (single port architecture).
+
+                1. Run the video RTMP test from the Video tab
+                2. Run the AI inference test from the AI tab
+                3. Both must succeed
+
+                **Monitor GPU during the tests:**
+
+                ```bash
+                watch -n 10 'curl -s http://localhost:8935/hardware/stats'
+                ```
+
+                Watch for `gpu_memory_used` approaching `gpu_memory_total`. If GPU memory is consistently above 85%, consider separating video and AI onto dedicated nodes.
+            </Tab>
+        </Tabs>
+    </StyledStep>
+
+    <StyledStep title="On-Chain Verification">
+        <Note>
+            Skip this step for **off-chain** deployments.
+        </Note>
+
+        **Test the Arbitrum RPC connection:**
+
+        ```bash
+        curl -X POST <YOUR_ETH_URL> \
+          -H "Content-Type: application/json" \
+          -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+        ```
+
+        A valid response contains a `result` field with a hex block number.
+
+        **Verify deposit and reserve:**
+
+        ```bash
+        livepeer_cli -host 127.0.0.1 -http 5935
+        ```
+
+        Select **Option 1: Get node status** and check the **BROADCASTER STATS** section:
+
+        - Both **Deposit** and **Reserve** must be non-zero
+        - Minimum recommended for testing: **0.1 ETH total** (~0.07 ETH deposit + 0.03 ETH reserve)
+
+        <Warning>
+            When the deposit reaches zero, the gateway silently stops routing jobs with no client-facing error. Top up via `livepeer_cli` **Option 11: Deposit broadcasting funds**.
+        </Warning>
+
+        **Check your gateway on Arbiscan:**
+
+        Visit `https://arbiscan.io/address/<GATEWAY_ETH_ADDRESS>` to view transaction history and confirm deposits were registered on-chain.
+    </StyledStep>
+</StyledSteps>
+
+<Card
+  title="Next Step: Monitor your Gateway"
+  icon="chart-line"
+  href="/v2/gateways/setup/monitor"
+  horizontal
+  arrow
+>
+  Set up Prometheus, Grafana, and alert rules for production observability
+</Card>

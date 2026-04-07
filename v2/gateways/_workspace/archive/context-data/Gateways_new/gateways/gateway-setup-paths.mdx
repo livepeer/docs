@@ -1,0 +1,142 @@
+---
+title: 'Gateway Setup Paths'
+description: 'Choose your installation path for a Livepeer gateway: video, AI (off-chain), or dual. Includes OS requirements and links to the correct quickstart guide.'
+sidebarTitle: 'Setup Paths'
+keywords: ["livepeer", "gateway", "setup", "install", "video gateway", "AI gateway", "off-chain", "quickstart", "paths"]
+pageType: 'overview'
+audience: 'gateway'
+status: 'current'
+---
+
+Pick your setup path based on your gateway type. If you have not yet chosen a gateway type, start at [Choose Your Gateway Type](/v2/gateways/gateway-path).
+
+<Tabs>
+  <Tab title="Video Gateway">
+
+    ## Video Gateway setup path
+
+    | | |
+    |---|---|
+    | **OS** | Linux, Windows, macOS |
+    | **ETH required** | Yes — funded wallet on Arbitrum One |
+    | **Binary** | Standard `go-livepeer` binary |
+    | **Estimated setup time** | 30–60 minutes (including ETH funding) |
+
+    The video gateway runs on-chain. Before starting, you need:
+    - An Ethereum wallet with ETH on Arbitrum One (for probabilistic micropayment deposits)
+    - A Linux, Windows, or macOS machine
+
+    ### Install methods
+
+    <CardGroup cols={2}>
+      <Card title="Docker (recommended)" icon="docker" href="/v2/gateways/setup/install/docker-install">
+        Fastest way to get running. No Go environment needed. Recommended for most operators.
+      </Card>
+      <Card title="Linux binary" icon="linux" href="/v2/gateways/setup/install/linux-install">
+        Download and run the pre-built binary directly. Suitable for production Linux deployments.
+      </Card>
+    </CardGroup>
+
+    <CardGroup cols={2}>
+      <Card title="Windows binary" icon="windows" href="/v2/gateways/setup/install/windows-install">
+        Pre-built binary for Windows. Video gateway only — AI mode is not available on Windows.
+      </Card>
+      <Card title="Community install scripts" icon="users" href="/v2/gateways/setup/install/community-projects">
+        Community-maintained install scripts and CI/CD tools for automated deployments.
+      </Card>
+    </CardGroup>
+
+    <Note>
+      Once installed, your next step is funding your gateway with ETH on Arbitrum. See [Fund the Gateway](/v2/gateways/setup/requirements/fund-gateway).
+    </Note>
+
+  </Tab>
+
+  <Tab title="AI Gateway">
+
+    <Warning>
+      The AI gateway binary is not available for Windows or macOS. Linux is required.
+    </Warning>
+
+    ## AI Gateway setup path
+
+    | | |
+    |---|---|
+    | **OS** | Linux only |
+    | **ETH required** | No |
+    | **Binary** | Standard `go-livepeer` binary (same binary, off-chain mode) |
+    | **Estimated setup time** | 10–20 minutes |
+
+    The AI gateway runs off-chain. No ETH wallet, no Arbitrum setup, no on-chain transactions. You need:
+    - A Linux machine (amd64)
+    - A list of AI-capable orchestrator addresses (`-orchAddr`)
+
+    This is the fastest onboarding path for any gateway type.
+
+    ### Install methods
+
+    <CardGroup cols={2}>
+      <Card title="Docker (recommended)" icon="docker" href="/v2/gateways/get-started/ai-gateway-quickstart">
+        The simplest path. Pull the `livepeer/go-livepeer:master` image and start routing AI jobs in minutes.
+      </Card>
+      <Card title="Linux binary" icon="linux" href="/v2/gateways/get-started/ai-gateway-quickstart">
+        Download the pre-built Linux binary and run with the `-gateway` and `-httpIngest` flags.
+      </Card>
+    </CardGroup>
+
+    <Note>
+      The off-chain AI gateway does not interact with any smart contracts. You do not need an Ethereum wallet to get started.
+    </Note>
+
+  </Tab>
+
+  <Tab title="Dual Gateway">
+
+    <Warning>
+      The dual gateway requires Linux. The AI components are not available on Windows or macOS.
+    </Warning>
+
+    ## Dual Gateway setup path
+
+    | | |
+    |---|---|
+    | **OS** | Linux only |
+    | **ETH required** | Yes — for the video (transcoding) workload |
+    | **Binary** | Standard `go-livepeer` binary |
+    | **Estimated setup time** | 45–90 minutes |
+
+    The dual gateway routes both transcoding and AI inference jobs from a single node. It uses the same binary as the video and AI gateways but requires both on-chain setup (for video) and off-chain orchestrator configuration (for AI).
+
+    ### Install methods
+
+    <CardGroup cols={2}>
+      <Card title="Docker (recommended)" icon="docker" href="/v2/gateways/setup/install/docker-install">
+        Recommended. Docker simplifies managing the combined configuration.
+      </Card>
+      <Card title="Linux binary" icon="linux" href="/v2/gateways/setup/install/linux-install">
+        Pre-built Linux binary with dual-mode configuration flags.
+      </Card>
+    </CardGroup>
+
+    After installing, configure both workload types. See [Dual Gateway Configuration](/v2/gateways/setup/configure/dual-configuration).
+
+  </Tab>
+</Tabs>
+
+---
+
+## Comparison at a glance
+
+| | Video Gateway | AI Gateway | Dual Gateway |
+|---|---|---|---|
+| OS | Linux, Windows, macOS | **Linux only** | **Linux only** |
+| ETH required | Yes | **No** | Yes |
+| Fastest to first job | No | **Yes** | No |
+| Binary | `go-livepeer` | `go-livepeer` | `go-livepeer` |
+| Workloads | Transcoding | AI inference | Both |
+
+---
+
+## Not sure which type you need?
+
+Go back to [Choose Your Gateway Type](/v2/gateways/gateway-path) to decide before proceeding.

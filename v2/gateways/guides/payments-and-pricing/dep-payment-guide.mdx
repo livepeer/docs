@@ -1,20 +1,33 @@
 ---
-title: 'Payment Paths for Gateway Operators'
-sidebarTitle: 'Payments Guide'
-description: 'Understand which payment model your Livepeer gateway needs. Covers on-chain ETH, remote signing, and clearinghouse options by gateway type, with a decision guide for choosing the right path.'
-keywords: ["livepeer", "gateway", "payments", "ETH", "on-chain", "off-chain", "remote signer", "clearinghouse", "probabilistic micropayments", "Arbitrum"]
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: 'guide'
-audience: 'gateway-operator'
-purpose: 'orientation'
-status: 'current'
+title: Payment Paths for Gateway Operators
+sidebarTitle: Payments Guide
+description: >-
+  Understand which payment model your Livepeer gateway needs. Covers on-chain ETH,
+  remote signing, and clearinghouse options by gateway type, with a decision guide for
+  choosing the right path.
+pageType: guide
+audience: gateway
+purpose: orient
+status: current
 lastVerified: '2026-03-13'
+keywords:
+  - livepeer
+  - gateway
+  - payments
+  - ETH
+  - on-chain
+  - off-chain
+  - remote signer
+  - clearinghouse
+  - probabilistic micropayments
+  - Arbitrum
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
 Verify:
-- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
 - Fontawesome icons are used on accordions and tabs
 - Tables use StyledTable component
 - No em-dashes are used (instead use standard -)
@@ -30,7 +43,7 @@ Verify:
   Livepeer payments use **ETH on Arbitrum One**, not LPT. All fees between gateways and orchestrators are denominated in ETH via the probabilistic micropayment (PM) system. LPT is the staking and governance token; it plays no role in day-to-day payment flows.
 </Note>
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -41,7 +54,7 @@ Livepeer uses a **probabilistic micropayment (PM)** system to settle fees betwee
 The result: thousands of jobs generate only a handful of on-chain transactions, keeping gas costs negligible while orchestrators receive statistically fair compensation over time.
 
 <Tip>
-  For a full explanation of the PM mechanism, including deposit and reserve mechanics, see [How Payments Work](/v2/gateways/guides/payments-and-pricing/related/how-payments-work) in the Concepts section.
+  For the current operator path map, see [Payment Paths](/v2/gateways/guides/payments-and-pricing/payment-guide).
 </Tip>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -59,7 +72,7 @@ Your gateway type determines your payment obligations before you write a single 
 | **Gateway-as-a-Service** | No (held by clearinghouse) | No | Clearinghouse |
 | **SDK / alternative gateway** | No | No | Remote signer via SDK |
 
-{/* REVIEW: Confirm that the AI off-chain gateway truly has zero payment obligation in current go-livepeer builds — j0sh to verify. The design doc implies gateways operating entirely off-chain still use PM tickets via remote signer. Clarify whether "off-chain" here means "no Ethereum integration in the gateway process" or "no payments at all". */}
+{/* REVIEW: Confirm that the AI off-chain gateway truly has zero payment obligation in current go-livepeer builds - j0sh to verify. The design doc implies gateways operating entirely off-chain still use PM tickets via remote signer. Clarify whether "off-chain" here means "no Ethereum integration in the gateway process" or "no payments at all". */}
 
 <Note>
   **AI gateways and off-chain operation:** When running an AI gateway in off-chain mode, the gateway process itself holds no Ethereum key. Payments are either handled by a connected remote signer (which holds the key and funds separately) or managed entirely by a clearinghouse. Either way, the gateway binary has no direct Arbitrum dependency.
@@ -83,7 +96,7 @@ Your gateway type determines your payment obligations before you write a single 
 
     This path is appropriate for **Video Gateways** and **Dual Gateways** that need full control and do not want to depend on third-party services.
 
-    Next step: [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/fund-your-gateway)
+    Next step: [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/funding-guide)
   </Tab>
 
   <Tab title="Remote signer">
@@ -129,7 +142,7 @@ Your gateway type determines your payment obligations before you write a single 
   </Accordion>
 
   <Accordion title="I am running video transcoding">
-    You need the **self-managed on-chain path**. Video transcoding uses a different payment flow from AI inference and does not support remote signers. You will need ETH on Arbitrum, a funded deposit, and a reserve in the `TicketBroker` contract. Start with [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/fund-your-gateway).
+    You need the **self-managed on-chain path**. Video transcoding uses a different payment flow from AI inference and does not support remote signers. You will need ETH on Arbitrum, a funded deposit, and a reserve in the `TicketBroker` contract. Start with [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/funding-guide).
   </Accordion>
 
   <Accordion title="I am running a Live AI pipeline and want key isolation">
@@ -164,7 +177,7 @@ Setting prices correctly determines which orchestrators the Gateway can access a
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Fund Your Gateway" icon="coins" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway">
+  <Card title="Fund Your Gateway" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
     Deposit ETH into the TicketBroker contract and set your reserve. Required for on-chain video and dual gateways.
   </Card>
   <Card title="Pricing Strategy" icon="chart-line" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
@@ -180,7 +193,7 @@ Setting prices correctly determines which orchestrators the Gateway can access a
 
 {/* ---
 title: 'Payment Paths for Gateway Operators'
-description: 'Decide how your gateway handles payments — on-chain with ETH, off-chain via remote signer, or fully managed via clearinghouse. Decision guide by gateway type.'
+description: 'Decide how your gateway handles payments - on-chain with ETH, off-chain via remote signer, or fully managed via clearinghouse. Decision guide by gateway type.'
 sidebarTitle: 'Payment Paths'
 pageType: 'guide'
 audience: 'gateway'
@@ -189,36 +202,36 @@ status: 'stub'
 
 {/*
   PURPOSE:
-  Journey step: "Do I need to pay?" — the entry point for the Payments & Pricing guide section.
+  Journey step: "Do I need to pay?" - the entry point for the Payments & Pricing guide section.
   Decision guide that maps each gateway type (AI off-chain, Video on-chain, Dual,
   Gateway-as-Service, SDK) to the payment model it uses.
   Answers: Do I need ETH? Do I need a wallet? What's a remote signer? What's a clearinghouse?
   Replaces the retired payments/overview.mdx stub.
 
   SECTION HOME: Guides → Payments & Pricing
-  (There is NO standalone payments/ nav section — all payment content lives here or in Concepts)
+  (There is NO standalone payments/ nav section - all payment content lives here or in Concepts)
 
   JOURNEY POSITION:
-  1. Payment Paths (this page) — "Do I need ETH?"
-  2. Fund Your Gateway — "How do I get ETH into my gateway?"
-  3. Pricing Strategy — "How much should I pay/charge?"
-  4. Remote Signers — "How do I separate key management from my gateway?"
-  5. Clearinghouse Guide — "How do I avoid managing crypto entirely?"
+  1. Payment Paths (this page) - "Do I need ETH?"
+  2. Fund Your Gateway - "How do I get ETH into my gateway?"
+  3. Pricing Strategy - "How much should I pay/charge?"
+  4. Remote Signers - "How do I separate key management from my gateway?"
+  5. Clearinghouse Guide - "How do I avoid managing crypto entirely?"
 
   RELATED FILES (draw from):
-  - all-resources/v2-payments--how-payments-work.mdx       — PM system explainer (90%) — to be folded into Concepts economics/business model page
-  - all-resources/v2-payments--overview.mdx                 — retired stub this replaces
-  - all-resources/v2-payments--remote-signers.mdx           — remote signer concept+how-to (85%) — absorbed into remote-signers.mdx in this section
-  - all-resources/v2-payments--payment-clearinghouse.mdx    — clearinghouse concept (85%) — absorbed into clearinghouse-guide.mdx in this section
-  - all-resources/ctx-gwnew--GW-04-remote-signers-architecture.md — research report with architecture diagrams
-  - all-resources/ctx-gw--content-brief-clearinghouse-middleware.md — clearinghouse content brief
-  - all-resources/v2-about--economics.mdx                   — gateway economics overview
-  - all-resources/ctx-concepts--economics.mdx               — economics concept page
+  - all-resources/v2-payments--how-payments-work.mdx       - PM system explainer (90%) - to be folded into Concepts economics/business model page
+  - all-resources/v2-payments--overview.mdx                 - retired stub this replaces
+  - all-resources/v2-payments--remote-signers.mdx           - remote signer concept+how-to (85%) - absorbed into remote-signers.mdx in this section
+  - all-resources/v2-payments--payment-clearinghouse.mdx    - clearinghouse concept (85%) - absorbed into clearinghouse-guide.mdx in this section
+  - all-resources/ctx-gwnew--GW-04-remote-signers-architecture.md - research report with architecture diagrams
+  - all-resources/ctx-gw--content-brief-clearinghouse-middleware.md - clearinghouse content brief
+  - all-resources/v2-about--economics.mdx                   - gateway economics overview
+  - all-resources/ctx-concepts--economics.mdx               - economics concept page
 
   CROSS-REFS:
   - Concepts → economics/business model (where "how payments work" PM explainer lives)
-  - Setup Paths guide — links back here for "what about payments?"
-  - Requirements pages — link here for ETH/wallet requirements
+  - Setup Paths guide - links back here for "what about payments?"
+  - Requirements pages - link here for ETH/wallet requirements
 */}
 {/*
 # Payment Paths for Gateway Operators
@@ -236,16 +249,16 @@ Decision matrix table:
 - SDK / Alternative Gateway → Remote signer, no local ETH
 
 ### 2. How Livepeer Payments Work (summary)
-Brief PM explainer (2-3 paragraphs) — link to Concepts economics page for full detail.
+Brief PM explainer (2-3 paragraphs) - link to Concepts economics page for full detail.
 - Lottery-style tickets, most exchanges off-chain
 - Winning tickets redeemed on Arbitrum
 - Gateway needs deposit + reserve (on-chain only)
 
 ### 3. Three Payment Architectures
 Cards or tabs:
-- **Self-managed** — You hold ETH, your node signs tickets → Fund Your Gateway
-- **Remote signer** — Separate service holds key, gateway stays keyless → Remote Signers guide
-- **Clearinghouse** — Third party manages everything, you get an API key → Clearinghouse Guide
+- **Self-managed** - You hold ETH, your node signs tickets → Fund Your Gateway
+- **Remote signer** - Separate service holds key, gateway stays keyless → Remote Signers guide
+- **Clearinghouse** - Third party manages everything, you get an API key → Clearinghouse Guide
 
 ### 4. Which Path Should I Choose?
 Accordion or decision tree:

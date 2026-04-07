@@ -1,0 +1,68 @@
+---
+title: COMPONENT-GOVERNANCE — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Restructure, classify, and govern all JSX components in `snippets/components/`. Covers: taxonomy design (5 top-level categories, 30+ sub-niches), duplicate elimination, naming convention enforcement, JSDoc standardisation, registry CI, governance pipeline implementation, and catalog generation. 118 components governed. Branch: `docs-v2-dev-components` (merged to `docs-v2-dev` at commit `be1e2d55`).
+
+## Verified Done
+
+Confirmed by `plan.md` (`Tasks 1–15, 17, 18, 19 complete`) and `completion-report.md` (date 2026-03-22):
+
+**Structural work:**
+- Taxonomy finalised: 5 top-level categories (elements, wrappers, displays, scaffolding, integrators) with 30+ sub-niches. Documented in `component-framework-canonical.md`.
+- 118 components governed. `catalog.md` confirmed: 44 files, 118 exports, 2,438 total imports across v2 pages.
+- Duplicates resolved (6 kebab/camelCase pairs, 7 cross-category duplicates, `display/` folder content redistributed).
+- Naming convention: all components use PascalCase exports, consistent file naming.
+
+**Registry and CI (completion-report.md P1 items confirmed):**
+- **P1-A**: 111 components `aiDiscoverability` fields filled, 63/53 `@param` entries added. Registry: 0 errors, 0 warnings, 121 components.
+- **P1-B**: `CATALOG.md` archived to `x-archive/`. `README.md` updated.
+- **P1-C**: `.github/workflows/generate-component-registry.yml` created (triggers on `main` push for component changes, auto-commits registry JSON). `check-docs-guide-catalogs.yml` updated with `--validate-only` check on every PR.
+
+**Framework documents:**
+- `component-framework-canonical.md` — full taxonomy with per-component file listing.
+- `catalog.md` — auto-generated reference (44 files, 118 exports, 2,438 imports).
+- `changelog.md` — present.
+- `Frameworks/jsdoc-reference.md` — JSDoc reference.
+- `Research/composables-research.md` — research artefact.
+
+**Governance pipeline:**
+- `Tasks/governance-pipeline-subplan.md` — subplan present.
+- `Tasks/doc-recommendation.md` — documentation recommendations.
+- `Tasks/script-thread-sync-note.md` — coordination note with SCRIPT-GOVERNANCE.
+
+## Claimed Done — Unverified or Incomplete
+
+- **Task 16 (test suite pass)** — the all-plans-audit-2026-03-24.md identifies T16 as "in progress" and the primary remaining blocker ("T16 test suite pass"). The `plan.md` states "Tasks 1–15, 17, 18, 19 complete. Remaining: T16, T20, T21."
+- `Audits/audit-report.md`, `Audits/component-docs.md`, `Audits/pipeline-audit.md` — audit artefacts present. Not read in full; they are likely completed source material rather than outstanding work.
+- The `plan.md` does not contain T20 or T21 task definitions in the sections read — their content is unknown but they are flagged as remaining.
+
+## In Progress
+
+Task 16 (test suite pass) — described as "in progress" in all-plans-audit-2026-03-24.md. Current status of the test run is unknown.
+
+## Not Started / Still To Do
+
+- **Task 16** — complete test suite pass. If it passes, the plan moves to near-done.
+- **Task 20** — cleanup (content unknown — not defined in plan sections read).
+- **Task 21** — merge (likely final merge/confirmation step).
+
+## Blockers
+
+- **Task 16 test suite pass** — this is the current gate. Once T16 passes, T20 and T21 are cleanup and merge. The all-plans-audit rates this as "95% / ACTIVE — 3 tasks left / Low risk."
+
+## File Inventory Flags
+
+- `catalog.md` is described as "auto-generated" in its own header but exists in the plan workspace folder rather than in a generated output location. This is appropriate for the plan's working context.
+- `completion-report.md` covers P1/P2/P3 items — this is an intermediate report, not the final plan completion report. A final report post-T21 would be expected.
+- No `decision-log.md` in this plan folder — decisions appear to be tracked inline in `plan.md` and via the `component-framework-canonical.md`. This is a gap if architectural decisions were made during the later tasks.
+
+## Audit Notes
+
+- The all-plans-audit's "95% / Low risk" assessment is accurate. The core work is done and merged. Three tasks remain: a test pass (T16), cleanup (T20), and merge (T21).
+- The `catalog.md` confirms 118 components governed across 44 files with 2,438 imports — this is substantive production state, not mock data.
+- The SCRIPT-GOVERNANCE sync note (`Tasks/script-thread-sync-note.md`) indicates `component-governance-utils.js` was updated in this branch and is not yet merged to `docs-v2-dev`. Verify whether the merge (`be1e2d55`) included this file.
+- T16 (test suite) is the only real unknown. The completion report shows the P1 registry test passing cleanly, but broader test suite results post-restructure are not confirmed.

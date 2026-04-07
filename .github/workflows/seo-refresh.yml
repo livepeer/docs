@@ -11,10 +11,13 @@ on:
 jobs:
   seo:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -27,3 +30,16 @@ jobs:
           else
             node operations/scripts/remediators/content/seo/generate-seo.js
           fi
+
+      - name: Commit refreshed SEO metadata
+        if: inputs.dry_run != 'true'
+        run: |
+          if git diff --quiet; then
+            echo "No SEO changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git commit -m "chore(seo): refresh metadata"
+          git push origin HEAD:${{ vars.DEPLOY_BRANCH }}

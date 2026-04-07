@@ -1,0 +1,121 @@
+---
+title: 'Project Showcase Sync'
+kind: 'workflow'
+status: 'active'
+concern: 'review'
+source_path: '.github/workflows/project-showcase-sync.yml'
+trigger_mode: 'repository_dispatch + schedule + workflow_dispatch'
+risk_level: 'high'
+consolidation_flag: 'review for alignment with `research-review-packet` while preserving current repository_dispatch + schedule + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'research-review-packet'
+workflow_family: 'issue-intake-and-triage'
+cleanup_decision: 'needs-investigation'
+usage_status: 'active-mutating'
+process_fit: 'legacy-or-unclear'
+consolidation_target: 'dispatcher:research-review-packet'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Project Showcase Sync
+
+## Summary
+
+Project Showcase Sync runs on repository_dispatch, schedule, workflow_dispatch and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/project-showcase-sync.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- repository_dispatch: types=showcase-review-submitted
+- schedule: default event configuration
+- workflow_dispatch: configured in workflow file
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `sync-showcase` | sync-showcase | `ubuntu-latest` | none | 3 |
+
+### sync-showcase
+
+- `Checkout repository` | uses actions/checkout@v4
+- `Setup Node.js` | uses actions/setup-node@v4
+- `Run project showcase sync` | runs `node .github/scripts/project-showcase-sync.js`
+
+## Inputs
+
+- workflow_dispatch:mode (required)
+
+## Second Pass Assessment
+
+- Workflow family: `issue-intake-and-triage`
+- Usage status: `active-mutating`
+- Cleanup decision: `needs-investigation`
+- Process fit: `legacy-or-unclear`
+- Consolidation target: `dispatcher:research-review-packet`
+- Recommended engineering action: Trace actual runtime use, owner, and downstream dependencies before deciding whether to keep, merge, or retire it. Current nearest dispatcher: `research-review-packet`.
+
+## Outputs
+
+- Generated or refreshed repository data
+
+## Dependencies
+
+- .github/scripts/project-showcase-sync.js
+- action:actions/checkout@v4
+- action:actions/setup-node@v4
+- secret:GITHUB_TOKEN
+- secret:SHOWCASE_DISCORD_BOT_TOKEN
+- secret:SHOWCASE_GOOGLE_SERVICE_ACCOUNT_JSON
+
+## Dependants
+
+- dispatcher:research-review-packet
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: repository_dispatch + schedule + workflow_dispatch"]
+  workflow["Workflow: Project Showcase Sync"]
+  trigger --> workflow
+  job1["Job: sync-showcase"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Depends on secrets, so runtime behavior cannot be fully reasoned about from repo state alone.
+- Scheduled execution can hide drift until the next cron window.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `research-review-packet`. Second-pass target: `dispatcher:research-review-packet`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- Current repo evidence is not strong enough to justify either deletion or consolidation without tracing real usage first.
+- This workflow writes back to the repository, so its blast radius is higher than a read-only validation workflow.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

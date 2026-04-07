@@ -1,0 +1,133 @@
+---
+title: Descubra y Conéctese al Mercado de Servicios de Cómputo
+description: >-
+  Esta página explica cómo encontrar y negociar Ofertas de IA y Video de
+  Orchestrator a través de su Gateway para la consumición de la Aplicación
+  Livepeer.
+sidebarTitle: Descubra y Conéctese a los Servicios
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - connect
+  - connect with offerings
+  - discover
+  - marketplace
+  - compute
+  - services
+  - explains
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2Nvbm5lY3QvY29ubmVjdC13aXRoLW9mZmVyaW5ncy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL3J1bi1hLWdhdGV3YXkvY29ubmVjdC9jb25uZWN0LXdpdGgtb2ZmZXJpbmdzIiwic291cmNlSGFzaCI6IjA2ZjA4NmExMTUzOTRmOTM1OThiMTJmZWE2OTk1ZTIyMjdkNTc3NzhlNDc4YzM1MzdjOWVjYTJkMTZjOWFiZjgiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MTQ6NDEuNjI1WiJ9 */}
+import { CustomCallout } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+
+<Danger>
+  This page should be streamlined.
+
+Options are:
+
+- on-chain vs off-chain
+- ai vs video vs dual
+
+What it explains:
+
+- Discovery
+- Filtering
+- Routing
+
+This page is a work in progress. Needs a lot of edits.
+<Expandable title="TODO">
+TODO: - [ ] Overview, - [ ] Edit (A LOT) - [ ] Streamline, - [ ] Format, - [ ] Style, - [ ] Link to github / otherresources
+</Expandable>
+
+</Danger>
+
+# Cómo descubrir y conectar ofertas de la tienda
+
+Esta página explica cómo los Gateways pueden descubrir y ofrecer Servicios de Orquestador, disponibles en la Tienda, a Aplicaciones y Constructores.
+
+## Proceso de descubrimiento
+
+Los Gateways descubren orquestadores a través del grupo de orquestadores en `discovery/discovery.go` [discovery.go:64-111](https://github.com/livepeer/go-livepeer/blob/5691cb48/discovery/discovery.go#L64-L111)
+
+1. **Consultar orquestadores**: Obtener `OrchestratorInfo`de cada orquestador
+2. **Capacidades y precio**: Comparar con las capacidades y límites de precios requeridos y, opcionalmente, clasificar los resultados
+3. **Exponer los resultados**: Hacer disponibles los servicios de orquestador mediante puntos finales HTTP
+4. **Ruta de solicitudes**: Redirigir las solicitudes entrantes a los orquestadores seleccionados
+
+## Buscar todos los orquestadores y ofertas
+
+El endpoint`/getNetworkCapabilities` en[server/handlers.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/handlers.go#L275-L295)
+expone todas las ofertas de orquestador disponibles
+
+```go
+func (s *LivepeerServer) getNetworkCapabilitiesHandler() http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Returns orchestrators with their capabilities, pricing, and hardware
+    })
+}
+```
+
+**Estructura de datos de respuesta**
+
+La respuesta utiliza la estructura NetworkCapabilities desde `common/types.go` [types.go:166-176](https://github.com/livepeer/go-livepeer/blob/5691cb48/common/types.go#L166-L176)
+
+```go
+type NetworkCapabilities struct {
+    Orchestrators []*OrchNetworkCapabilities `json:"orchestrators"`
+}
+
+type OrchNetworkCapabilities struct {
+    Address            string                     `json:"address"`
+    LocalAddress       string                     `json:"local_address"`
+    OrchURI            string                     `json:"orch_uri"`
+    Capabilities       *net.Capabilities          `json:"capabilities"`
+    CapabilitiesPrices []*net.PriceInfo           `json:"capabilities_prices"`
+    Hardware           []*net.HardwareInformation `json:"hardware"`
+}
+```
+
+## Puerta de enlace
+
+Las puertas de enlace expone ofertas que describen:
+
+### **1. Modelos compatibles**
+
+Ejemplo:
+
+- `stable-diffusion-v1.5`
+- `depth-anything`
+- `controlnet_lineart`
+- `ip_adapter`
+
+### **2. Flujos de trabajo compatibles**
+
+- Transferencia de estilo en tiempo real estilo Daydream
+- Flujos de trabajo de ComfyStream
+- Contenedores BYOC
+- Gráficos de inferencia personalizados
+
+### **3. Precios**
+
+Una puerta de enlace puede establecer precios:
+
+- `$0.004 / frame`
+- `$0.06 / second`
+- `$0.0005 / inference token`
+
+### **4. Regiones**
+
+Ejemplo:
+
+- `us-east`
+- `eu-central`
+- `ap-southeast`
+
+### **5. Puntuaciones de confiabilidad**
+
+Los gateways pueden publicar:
+
+- Disponibilidad %
+- Latencia promedio de inferencia
+- Configuración de conmutación por error

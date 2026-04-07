@@ -1,0 +1,38 @@
+# Recovery Log
+
+- timestamp: 2026-04-03T04:25:41+11:00
+- command: backup generated-output batch
+- purpose: Snapshot generated contracts outputs before regeneration
+- files_read:
+  - snippets/data/contract-addresses/contractAddressesData.jsx
+  - snippets/data/contract-addresses/contractAddressesData.json
+  - snippets/data/contract-addresses/blockchainContractsPageData.jsx
+  - snippets/data/contract-addresses/blockchainContractsPageData.json
+  - snippets/composables/pages/canonical/livepeer-contract-addresses-data.json
+- files_changed: []
+- validation_result: backup created
+- next_action: run contracts pipeline dry-run, write, then --check
+
+- timestamp: 2026-04-03T04:46:00+11:00
+- command: generator proof run
+- purpose: regenerate canonical contracts outputs and close the pipeline proof gate
+- files_read:
+  - snippets/data/contract-addresses/contractAddressesData.jsx
+  - snippets/data/contract-addresses/contractAddressesData.json
+  - snippets/data/contract-addresses/blockchainContractsPageData.jsx
+  - snippets/data/contract-addresses/blockchainContractsPageData.json
+  - snippets/composables/pages/canonical/livepeer-contract-addresses-data.json
+- files_changed:
+  - snippets/data/contract-addresses/contractAddressesData.jsx
+  - snippets/data/contract-addresses/contractAddressesData.json
+  - snippets/data/contract-addresses/blockchainContractsPageData.jsx
+  - snippets/data/contract-addresses/blockchainContractsPageData.json
+  - snippets/composables/pages/canonical/livepeer-contract-addresses-data.json
+  - snippets/data/contract-addresses/_health-checks.json
+  - snippets/data/contract-addresses/_branch-watch-state.json
+- validation_result:
+  - `node .github/scripts/fetch-contract-addresses.js --dry-run` passed
+  - `node .github/scripts/fetch-contract-addresses.js` passed
+  - `node .github/scripts/fetch-contract-addresses.js --check` passed after removing transient `rpcFailures` from published outputs
+  - `node operations/tests/unit/contracts-addresses-pipeline.test.js` passed
+- next_action: hand back the pipeline-only change set with no MDX mutations

@@ -5,7 +5,7 @@
  * @scope             .github/scripts
  * @owner             docs
  * @needs             F-R1
- * @purpose-statement Fetches video data from YouTube Data API, writes to snippets/automations/youtube/
+ * @purpose-statement Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
  * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-youtube-data.js [flags]
  */
@@ -193,8 +193,8 @@ async function main() {
 
   for (const { key, channelId } of channels) {
     const outputPath = key
-      ? `snippets/automations/solutions/${key}/youtubeData.jsx`
-      : "snippets/automations/youtube/youtubeData.jsx";
+      ? `snippets/data/social-feed-solutions/${key}/youtubeData.jsx`
+      : "snippets/data/social-feeds/youtubeData.jsx";
     await fetchChannel(channelId, outputPath);
   }
 }

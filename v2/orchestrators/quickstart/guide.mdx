@@ -1,16 +1,18 @@
 ---
-title: 'Orchestrator Quickstart'
-sidebarTitle: 'Overview'
-description: 'Verify Livepeer works on your hardware - off-chain video and AI smoke tests that run in under an hour with no financial commitment.'
-purpose: overview
+title: Orchestrator Quickstart
+sidebarTitle: Overview
+description: >-
+  Choose your quickstart path — video transcoding, AI inference, or join a pool —
+  and get your first orchestrator node running.
 keywords:
   - livepeer
   - orchestrator
   - quickstart
-  - smoke test
-  - verify
+  - transcoding
+  - AI
+  - go-livepeer
   - GPU
-'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
 'og:image:width': 1200
@@ -18,57 +20,126 @@ keywords:
 pageType: overview
 audience: orchestrator
 status: current
-lastVerified: '2026-03-16'
+lastVerified: 2026-03-13
 ---
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 
-<Tip>
-  The quickstart is an off-chain hardware verification pass. It ends before production setup, staking, or revenue configuration.
-</Tip>
+{/* REVIEW: THIS SHOULD NOT BE IN QUICKSTART - BE VERBOSE ABOUT THE EASIEST SETUP PATH FOR QUICKSTART. */}
 
-The quickstart runs two off-chain smoke tests: a video transcoding test and an AI inference test. Both run locally with Docker. No LPT, no ETH, and no Arbitrum. You only need your GPU and a few commands.
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-<CustomDivider middleText="Choose Your Test" />
+The quickstart gets you from zero to a working orchestrator node as fast as possible. Pick the path that matches your goal.
 
-## Choose your test
+<CustomDivider />
+
+## Choose your path
 
 <CardGroup cols={2}>
-  <Card title="Video Transcoding Test" icon="video" href="/v2/orchestrators/quickstart/video-transcoding">
-    **20-30 min.** Verify GPU transcoding works. Runs an orchestrator and gateway on the same machine, sends a test stream via ffmpeg, confirms HLS output.
+  <Card title="Video Transcoding" icon="film" href="/v2/orchestrators/quickstart/video-transcoding" arrow>
+    The default path. Run a transcoding orchestrator with Docker in under 30 minutes. Requires an NVIDIA GPU.
   </Card>
-  <Card title="AI Inference Test" icon="microchip" href="/v2/orchestrators/quickstart/video-transcoding#ai-inference-test">
-    **35-65 min.** Verify AI inference works. Runs an orchestrator and AI runner with one warm model, sends a test prompt, confirms an image is returned. Requires 24 GB VRAM for diffusion; 8 GB for LLM alternative.
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/setup-paths/join-a-pool" arrow>
+    Contribute your GPU to an existing orchestrator pool. No staking, no activation — just install and connect.
   </Card>
 </CardGroup>
 
-Both tests are on the same page. Complete the video test first - the prerequisites and Docker setup are shared.
+<Note>
+**AI quickstart coming soon.** To add AI inference pipelines to your node today, complete the video transcoding quickstart first, then follow the [AI Workloads Guide](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide).
+</Note>
 
-<CustomDivider middleText="What You Need" />
+<CustomDivider />
 
-## What you need
+## What you will need
 
-- **NVIDIA GPU** — any model for the video test; 24 GB VRAM for AI diffusion (or 8-16 GB for the LLM alternative)
-- **Docker Engine** — with NVIDIA Container Toolkit for GPU passthrough
-- **ffmpeg** — for the video test only (`ffmpeg -version` to check)
-- **Linux** — required for the AI test (video test also works on WSL2 or macOS Docker)
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Requirement</TableCell>
+    <TableCell header>Details</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GPU**</TableCell>
+    <TableCell>NVIDIA with NVENC support (GTX 1060+ for transcoding, RTX 3090+ for AI)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**OS**</TableCell>
+    <TableCell>Linux recommended. macOS/Windows for development only.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Docker**</TableCell>
+    <TableCell>Docker Engine + NVIDIA Container Toolkit</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Wallet**</TableCell>
+    <TableCell>Ethereum account with ETH and LPT on Arbitrum One</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Port**</TableCell>
+    <TableCell>8935 TCP open to the public internet</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RPC**</TableCell>
+    <TableCell>Arbitrum One endpoint (Alchemy or Infura free tier)</TableCell>
+  </TableRow>
+</StyledTable>
 
-No Arbitrum wallet, no LPT, no ETH.
+For detailed hardware guidance, see [Hardware Reference](/v2/orchestrators/guides/feasibility-and-hardware/hardware-reference).
 
-<CustomDivider middleText="After the Quickstart" />
+<CustomDivider />
+
+## Quickstart vs Setup guide
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header></TableCell>
+    <TableCell header>Quickstart</TableCell>
+    <TableCell header>Setup Guide</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Goal**</TableCell>
+    <TableCell>First working node, fast</TableCell>
+    <TableCell>Production-ready deployment</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Install method**</TableCell>
+    <TableCell>Docker only</TableCell>
+    <TableCell>Docker, binary, or source</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Decisions**</TableCell>
+    <TableCell>Opinionated defaults</TableCell>
+    <TableCell>You choose every flag</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Time**</TableCell>
+    <TableCell>~30 minutes</TableCell>
+    <TableCell>~1–2 hours</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Best for**</TableCell>
+    <TableCell>First-time operators, evaluation</TableCell>
+    <TableCell>Production, custom configurations</TableCell>
+  </TableRow>
+</StyledTable>
+
+If you need more control — custom binary installs, split orchestrator/transcoder, advanced pricing, or AI pipelines — use the [Setup Guide](/v2/orchestrators/setup/guide) instead.
+
+<CustomDivider />
 
 ## After the quickstart
 
+Once your node is running and you have received your first job:
+
 <CardGroup cols={2}>
-  <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide">
-    Configure for production: on-chain, staking, reward calling. The setup section takes a verified GPU to an earning node.
+  <Card title="Add AI Workloads" icon="microchip-ai" href="/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide" arrow>
+    Add AI inference pipelines alongside transcoding.
   </Card>
-  <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale">
-    Still evaluating? Review the cost-benefit analysis before committing to the full setup.
+  <Card title="Optimise Earnings" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earnings" arrow>
+    Understand your revenue streams and tune your parameters.
   </Card>
-  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool">
-    The fastest path to earning without full setup - contribute GPU capacity to an existing operator pool.
+  <Card title="Set Up Monitoring" icon="chart-line" href="/v2/orchestrators/setup/r-monitor" arrow>
+    Enable Prometheus metrics and track node health.
   </Card>
-  <Card title="Workload Options" icon="list-check" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
-    See which workloads earn and which fit your hardware before committing.
+  <Card title="Attract Delegates" icon="users" href="/v2/orchestrators/guides/staking-and-rewards/attracting-delegates" arrow>
+    Increase your stake and job selection probability.
   </Card>
 </CardGroup>

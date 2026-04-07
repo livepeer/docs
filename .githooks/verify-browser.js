@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            verify-browser
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             .githooks
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Verifies browser availability for Puppeteer-based integration tests
- * @pipeline          manual — developer tool
- * @usage             node .githooks/verify-browser.js [flags]
+ * @script      verify-browser
+ * @type        dispatch
+ * @concern     governance
+ * @niche       hooks
+ * @purpose     tooling:dev-tools
+ * @description Verifies browser availability for Puppeteer-based integration tests
+ * @mode        execute
+ * @pipeline    manual — developer tool
+ * @scope       .githooks
+ * @usage       node .githooks/verify-browser.js [flags]
+ * @policy      E-C6, F-C1
  */
 /**
  * Headless browser validation for staged MDX files

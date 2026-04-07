@@ -1,12 +1,20 @@
 /**
  * @script            generate-changelog
- * @category          automation
+ * @type              automation
+ * @concern           content
+ * @niche             data/changelog
  * @purpose           infrastructure:data-feeds
- * @scope             generated-output
- * @domain            docs
- * @needs             R-R10
- * @purpose-statement Generates managed changelog pages from upstream release and commit data for solutions, contracts, and resources surfaces.
- * @pipeline          P5, P6
+ * @description       Unified changelog generator for all changelog targets (solutions, contracts, resources).
+ *                    Fetches GitHub/GitLab releases (mode: releases) or commit history (mode: commits).
+ *                    Config-driven via product-social-config.json changelogs{} section. With --enhance,
+ *                    uses an LLM to summarise release notes. With --contract, fetches governor-scripts
+ *                    commits and verifies deployed addresses on-chain via Arbiscan/Etherscan.
+ *                    Falls back to raw extraction on LLM failure. Supports dual-source (GitHub + GitLab)
+ *                    with deduplication by tag_name. Backwards-compatible: falls back to legacy
+ *                    products{} scanning if changelogs{} section is absent from config.
+ * @mode              generate
+ * @pipeline          config → GitHub/GitLab REST API → [LLM optional] → [on-chain verify optional] → changelog.mdx
+ * @scope             .github/scripts, v2/solutions/, v2/resources/changelog/
  * @usage             CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]
  *                    CHANGELOG_CATEGORY=solutions node .github/scripts/generate-changelog.js [--dry-run] [--enhance]
  *                    PRODUCT_KEY=daydream node .github/scripts/generate-changelog.js [--dry-run] [--enhance]

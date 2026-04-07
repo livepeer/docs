@@ -1,0 +1,389 @@
+---
+title: "Prepare to Run a Livepeer Gateway"
+sidebarTitle: "Prepare"
+description: "Hardware, network, and software requirements for running a Livepeer Gateway. Choose off-chain or on-chain deployment and prepare your environment."
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: 2026-04-07T00:00:00.000Z
+keywords:
+  - livepeer
+  - gateways
+  - requirements
+  - prepare
+  - hardware
+  - network
+  - rpc
+  - wallet
+  - keystore
+  - off-chain
+  - on-chain
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
+---
+
+import { DoubleIconLink, LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { ChainlistRPCs } from '/snippets/data/references/chainlist.jsx'
+import { video, ai, dual } from '/v2/gateways/custom/components/iconItems.jsx'
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+# <Icon icon="clipboard-check" size={26} /> Prepare Your Environment
+
+Before installing, confirm your system meets the requirements and choose a deployment mode. This page covers hardware, network, OS compatibility, and on-chain wallet setup.
+
+<BorderedBox variant="accent" accentBar="positive" style={{margin: "0 1rem"}}>
+  **Deployment mode:**
+  - <Icon icon="floppy-disk" size={16} /> **Off-chain** - direct Orchestrator connection, no blockchain interaction
+  - <Icon icon="link" size={16} /> **On-chain** - connects to the Livepeer protocol on Arbitrum
+
+  **Node type (workload):**
+  - {video()} transcoding
+  - {ai()} inference
+  - {dual()} both video and AI
+</BorderedBox>
+
+<Note>
+  Gateway nodes do not require NVIDIA GPU drivers. Driver setup is only required on systems running GPU workloads (Orchestrators or AI workers).
+</Note>
+
+<CustomDivider />
+
+## Hardware Requirements
+
+Gateways are lightweight routing nodes. Minimum specs are sufficient for development and low-traffic deployments.
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Component</TableCell>
+    <TableCell header>Minimum</TableCell>
+    <TableCell header>Recommended</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>CPU</TableCell>
+    <TableCell>2 cores</TableCell>
+    <TableCell>4-8 cores</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>RAM</TableCell>
+    <TableCell>4 GB</TableCell>
+    <TableCell>16-32 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Storage</TableCell>
+    <TableCell>20 GB SSD</TableCell>
+    <TableCell>100 GB NVMe SSD</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Network</TableCell>
+    <TableCell>50 Mbps symmetric</TableCell>
+    <TableCell>1 Gbps symmetric</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+## Network Requirements
+
+- Low-latency connectivity to Orchestrators
+- Ability to handle high request throughput
+
+For **on-chain production** deployments:
+- Public HTTPS endpoint
+- Static IP or domain name
+- Multi-region deployment or failover (recommended)
+
+<CustomDivider />
+
+## OS Compatibility
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>OS</TableCell>
+    <TableCell header>Install Method</TableCell>
+    <TableCell header>Video Gateway</TableCell>
+    <TableCell header>AI / Dual Gateway</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Linux (Ubuntu recommended)</TableCell>
+    <TableCell>Docker or binary</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Recommended for all production deployments</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Windows (WSL2 + Docker)</TableCell>
+    <TableCell>Docker via WSL2</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Limited</TableCell>
+    <TableCell>Linux in WSL2. NVIDIA + CUDA only for GPU workloads</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Windows (native)</TableCell>
+    <TableCell>Pre-built binary</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>No</TableCell>
+    <TableCell>Video only. No AI binary available for Windows</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>macOS (Intel / Apple)</TableCell>
+    <TableCell>Build from source</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>No</TableCell>
+    <TableCell>Development and routing only. Docker often unreliable on macOS</TableCell>
+  </TableRow>
+</StyledTable>
+
+All Gateways install the <DoubleIconLink label="go-livepeer" href="https://github.com/livepeer/go-livepeer" iconLeft="github" /> software. Root or sudo access is required.
+
+<CustomDivider />
+
+## Choose Deployment Mode
+
+<BorderedBox variant="accent">
+  <Tabs>
+    <Tab title="Off-Chain" icon="floppy-disk">
+      Off-chain mode connects directly to Orchestrators without blockchain interaction. No wallet, RPC, or ETH required.
+
+      **You will need:**
+      - An Orchestrator node address to connect to (local or remote)
+      - A CPU-only Orchestrator is sufficient for basic jobs
+      - AI inference requires a GPU-equipped Orchestrator
+
+      Off-chain mode is ideal for:
+      - Local development and testing
+      - Learning Gateway functionality
+      - Prototyping without financial commitments
+      - Running private transcoding infrastructure
+
+      <Card
+        title="Next Step: Install go-livepeer"
+        icon="download"
+        href="/v2/gateways/setup/install"
+        horizontal
+        arrow
+      >
+        No further preparation needed for off-chain mode
+      </Card>
+    </Tab>
+
+    <Tab title="On-Chain" icon="link">
+      On-chain mode connects to the Livepeer protocol on Arbitrum One. Required for production Gateways.
+
+      **You will need:**
+      - An Arbitrum One RPC URL
+      - A funded Ethereum account (wallet) with ETH for gas and deposits
+
+      On-chain mode is for:
+      - Public production Gateways
+      - Running a business on the Livepeer network
+
+      Complete the on-chain setup steps below before proceeding to install.
+
+      <CustomDivider />
+
+      ### RPC URL
+
+      The Gateway requires an Arbitrum One RPC URL (`-ethUrl` flag) to interact with Livepeer smart contracts.
+
+      **Quick start (rate-limited, suitable for testing):**
+
+      ```bash
+      -ethUrl=https://arb1.arbitrum.io/rpc
+      ```
+
+      <Accordion title="See all RPC options" icon="link">
+        <Tabs>
+          <Tab title="Public RPCs">
+            Free-tier public RPCs are sufficient for a single Gateway.
+
+            Chainlist provides a full list of public Arbitrum One RPCs:
+            - <DoubleIconLink label="Chainlist" href="https://chainlist.org/chain/42161" iconLeft="link" />
+            - <DoubleIconLink label="Arbitrum RPC Reference" href="/v2/gateways/resources/compendium/arbitrum-rpc" iconLeft="books" />
+
+            <Expandable title="Chainlist Arbitrum One RPC List">
+              <ChainlistRPCs chainId={42161} />
+            </Expandable>
+          </Tab>
+          <Tab title="Paid Providers">
+            For production or multiple Gateways, use a paid RPC provider:
+
+            | Provider | Arbitrum One | Websocket | Notes |
+            |---|---|---|---|
+            | [Alchemy](https://www.alchemy.com) | Yes | Yes | Free tier available |
+            | [Infura](https://www.infura.io) | Yes | Yes | Free tier available |
+            | [Ankr](https://www.ankr.com) | Yes | Yes | |
+            | [Chainstack](https://chainstack.com) | Yes | Yes | |
+            | [Quicknode](https://www.quicknode.com) | Yes | Yes | |
+          </Tab>
+          <Tab title="Self-Hosted">
+            Self-host an Arbitrum node for maximum reliability and no rate limits.
+
+            See the <DoubleIconLink label="Arbitrum Full Node Guide" href="https://docs.arbitrum.io/node-running/how-tos/running-a-full-node" iconLeft="link" />.
+          </Tab>
+        </Tabs>
+      </Accordion>
+
+      <CustomDivider />
+
+      ### ETH Account and Keystore
+
+      The Gateway needs an Ethereum account to sign transactions on Arbitrum.
+
+      <Tip>
+        Livepeer auto-generates a wallet and keystore on first run if no existing account is provided. Run the Gateway once with empty account flags and follow the prompts.
+      </Tip>
+
+      <Accordion title="Account setup options" icon="wallet">
+        <Tabs>
+          <Tab title="Auto-Generate (Recommended)">
+            Run go-livepeer with empty account flags. The software creates a new wallet and keystore, then prompts for a password:
+
+            ```bash
+            livepeer -gateway \
+              -network arbitrum-one-mainnet \
+              -ethUrl=https://arb1.arbitrum.io/rpc \
+              -ethAcctAddr="" \
+              -ethKeystorePath="" \
+              -ethPassword=""
+            ```
+
+            The keystore is created in `~/.lpData/arbitrum-one-mainnet/keystore/`.
+          </Tab>
+          <Tab title="Existing Wallet">
+            Use any Ethereum wallet that can transact on Arbitrum One. Provide the public address:
+
+            ```bash
+            livepeer -gateway \
+              -network arbitrum-one-mainnet \
+              -ethUrl=https://arb1.arbitrum.io/rpc \
+              -ethAcctAddr=<YOUR_WALLET_ADDRESS> \
+              -ethKeystorePath=~/.lpData/keystore \
+              -ethPassword=/path/to/password.txt
+            ```
+
+            Wallet guides for reference:
+            - <DoubleIconLink label="MetaMask" href="https://support.metamask.io/configure/accounts/how-to-view-your-account-details-and-public-address" iconLeft="link" />
+            - <DoubleIconLink label="Ledger" href="https://support.ledger.com/article/8978919811485-zd" iconLeft="link" />
+            - <DoubleIconLink label="Trezor" href="https://support.trezor.io/en/articles/360018565096-trezor-faq" iconLeft="link" />
+          </Tab>
+        </Tabs>
+      </Accordion>
+
+      <Danger>
+        Use ONLY your **public** wallet address in `-ethAcctAddr`. Never use your private key. A public address is like a bank account number. A private key is like your PIN.
+      </Danger>
+
+      **Keystore default locations:**
+
+      | Environment | Path |
+      |---|---|
+      | Linux / macOS | `~/.lpData/arbitrum-one-mainnet/keystore/` |
+      | Docker (inside container) | `/root/.lpData/arbitrum-one-mainnet/keystore/` |
+      | Docker (host volume mount) | `./data/gateway/arbitrum-one-mainnet/keystore/` |
+      | Windows | `%USERPROFILE%\.lpData\arbitrum-one-mainnet\keystore\` |
+
+      <CustomDivider />
+
+      ### Fund the Account
+
+      Add ETH to the account on Arbitrum One for gas fees and Gateway deposits.
+
+      - Minimum recommended to start: **0.1 ETH**
+      - Bridge option: [Arbitrum Bridge](https://bridge.arbitrum.io/)
+      - Exchange options: <LinkArrow href="/v2/gateways/resources/compendium/arbitrum-exchanges" label="Arbitrum Exchanges" newline={false} />
+
+      <Card
+        title="Fund Your Gateway"
+        icon="coins"
+        href="/v2/gateways/guides/payments-and-pricing/fund-gateway"
+        horizontal
+        arrow
+      >
+        Deposit and reserve setup via livepeer_cli
+      </Card>
+
+      <CustomDivider />
+
+      ### Required On-Chain Flags
+
+      <StyledTable>
+        <TableRow header>
+          <TableCell header>Flag</TableCell>
+          <TableCell header>Purpose</TableCell>
+          <TableCell header>Example</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`-network`</TableCell>
+          <TableCell>Blockchain network</TableCell>
+          <TableCell>`arbitrum-one-mainnet`</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`-ethUrl`</TableCell>
+          <TableCell>Arbitrum One RPC URL</TableCell>
+          <TableCell>`https://arb1.arbitrum.io/rpc`</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`-ethAcctAddr`</TableCell>
+          <TableCell>Ethereum wallet address (0x prefix optional)</TableCell>
+          <TableCell>`0xYOUR_ADDRESS`</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`-ethPassword`</TableCell>
+          <TableCell>Password or path to password file</TableCell>
+          <TableCell>`/path/to/password.txt`</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`-ethKeystorePath`</TableCell>
+          <TableCell>Path to keystore directory or file</TableCell>
+          <TableCell>`~/.lpData/keystore`</TableCell>
+        </TableRow>
+      </StyledTable>
+
+      <Warning>
+        Never share keystore files. They contain encrypted private keys. Use strong passwords and back up keystore files securely. If the password is lost, the account cannot be recovered.
+      </Warning>
+
+      <Card
+        title="Next Step: Install go-livepeer"
+        icon="download"
+        href="/v2/gateways/setup/install"
+        horizontal
+        arrow
+      >
+        On-chain preparation complete - proceed to installation
+      </Card>
+    </Tab>
+  </Tabs>
+</BorderedBox>
+
+{/*
+  PURPOSE:
+  Setup journey step: "What do I need before installing?"
+  Consolidates requirements/setup.mdx + requirements/on-chain-setup/on-chain.mdx
+  into a single page. Off-chain/On-chain tabs for deployment-specific preparation.
+  No OS tabs - that axis belongs in Install.
+
+  JOURNEY POSITION:
+  1. Prepare (this page) - "What do I need?"
+  2. Install - "How do I install the software?"
+  3. Configure - "How do I configure it?"
+  4. Connect - "How do I connect to Orchestrators?"
+  5. Verify - "Did it work?"
+  6. Monitor - "How do I watch it in production?"
+
+  CROSS-REFS:
+  - Install (/v2/gateways/setup/install) - next step
+  - Fund Gateway (/v2/gateways/guides/payments-and-pricing/fund-gateway) - funding after wallet setup
+  - Arbitrum RPC Reference (/v2/gateways/resources/compendium/arbitrum-rpc) - full RPC list
+  - Contract Addresses (/v2/about/resources/reference/livepeer-contract-addresses) - Livepeer contracts
+*/}

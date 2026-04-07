@@ -4,7 +4,7 @@ Use this contract whenever the skill generates a packet root.
 
 ## Packet Root
 
-- Write into `tasks/reports/<scope>-review/<date>-copy-review-packet/` unless the user explicitly requests a different naming pattern.
+- Write into `workspace/reports/<scope>-review/<date>-copy-review-packet/` unless the user explicitly requests a different naming pattern.
 - Keep packet roots dated so historical review runs remain diffable and reusable.
 - Treat the packet root as report-only output. Do not mix content edits into the same run.
 

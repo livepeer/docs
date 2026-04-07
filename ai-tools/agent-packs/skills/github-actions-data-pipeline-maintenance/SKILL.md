@@ -1,13 +1,13 @@
 ---
 name: github-actions-data-pipeline-maintenance
-version: "1.0"
 description: >-
-  Maintain forum/ghost/youtube data update workflows and associated fetch scripts. Use when tasks include forum or blog data workflow failing, youtube automation not updating snippets data, maintain github actions data fetch scripts.
-tier: 3
-invoke_when:
-  - "forum or blog data workflow failing"
-  - "youtube automation not updating snippets data"
-  - "maintain github actions data fetch scripts"
+  Maintain forum/ghost/youtube data update workflows and associated fetch
+  scripts. Use when: forum or blog data workflow failing, youtube automation not
+  updating snippets data, maintain github actions data fetch scripts.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".github/workflows/update-forum-data.yml"
   - ".github/workflows/update-ghost-blog-data.yml"
@@ -32,7 +32,7 @@ Constraints
 Workflow
 1. Run fetch scripts locally to validate output schema and file targets.
 2. Cross-check workflow triggers, branch refs, and secret names.
-3. Align script outputs with expected snippets/automations destinations.
+3. Align script outputs with expected `snippets/data/**` destinations.
 
 Command examples
 ```bash

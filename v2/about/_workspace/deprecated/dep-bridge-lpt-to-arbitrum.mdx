@@ -1,0 +1,294 @@
+---
+title: Bridge LPT between Ethereum and Arbitrum
+sidebarTitle: Bridge LPT
+description: >-
+  How to get LPT onto Arbitrum One: via the official Arbitrum bridge or by
+  withdrawing directly from a CEX that supports Arbitrum One.
+keywords:
+  - livepeer
+  - LPT
+  - bridge
+  - arbitrum
+  - ethereum
+  - token transfer
+  - L1
+  - L2
+  - CEX
+  - exchange
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+purpose: how_to
+audience: delegator
+lastVerified: 2026-03-28
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+
+There are two ways to get LPT onto Arbitrum One: bridge it yourself using the official Arbitrum bridge, or use a centralised exchange (CEX) that supports LPT withdrawals directly to Arbitrum One. The CEX route skips the bridge entirely and is often the simpler path if you are buying LPT fresh.
+
+<Tip>
+  You need ETH in your wallet on the source chain to pay gas for every on-chain transaction. For deposits via the bridge (Ethereum to Arbitrum), ETH is required on Ethereum Mainnet. For withdrawals via the bridge (Arbitrum to Ethereum), ETH is required on Arbitrum One. The CEX route only requires ETH on Arbitrum One to interact with the protocol after withdrawal.
+</Tip>
+
+<Warning>
+  This guide applies only if your LPT is **not** currently bonded to an orchestrator. If your LPT is staked, you must unbond and wait out the unbonding period before moving it.
+</Warning>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Bridging LPT
+
+LPT can only currently be bridged from Ethereum L1 to Arbitrum L2 via the official [Arbitrum bridge](https://portal.arbitrum.io/bridge).
+
+For withdrawing from Arbitrum L2 to Ethereum, a manual approval step is required first — see [Withdrawal: Arbitrum One to Ethereum](#withdrawal-arbitrum-one-to-ethereum) below.
+
+<Warning> Third-party bridges (Hop, Across, Jumper, Stargate) do not currently support LPT, as their implementation is not currently compatible with LPT's custom gateway contracts (`L1LPTGateway` / `L2LPTGateway`). </Warning>
+
+<Frame>
+<iframe src="https://portal.arbitrum.io/bridge" maxHeight="700px" />
+</Frame>
+
+<Columns cols={2}>
+  <Card
+    href="https://bridge.arbitrum.io/"
+    icon="bridge"
+    title="Ethereum L1 → Arbitrum L2"
+    horizontal
+  >
+    Official bridge.
+  </Card>
+  <Card
+    href="https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839#writeContract"
+    icon="file-contract"
+    title="Arbitrum L2 → Ethereum L1"
+    horizontal
+  >
+    Arbiscan approval.
+  </Card>
+</Columns>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Deposits: Ethereum to Arbitrum One
+
+Deposits are done via the [Official Arbitrum Bridge](https://docs.arbitrum.io/arbitrum-bridge/quickstart). The bridge locks your LPT in `L1Escrow` on Ethereum and mints an equivalent amount on Arbitrum One via `BridgeMinter`. Deposits typically arrive within 15-30 minutes.
+
+<StyledSteps>
+  <StyledStep title="Connect to Ethereum Mainnet">
+    Open [bridge.arbitrum.io](https://bridge.arbitrum.io/) and connect your wallet. Make sure it is set to **Ethereum Mainnet** as the source network. The bridge will prompt you to switch if needed.
+  </StyledStep>
+  <StyledStep title="Select LPT as the token">
+    Click the token selector and search for **LPT**. If it does not appear, paste the L1 LPT contract address directly:
+
+    ```
+    0x58b6a8a3302369daec383334672404ee733ab239
+    ```
+
+    Your Ethereum Mainnet LPT balance will appear once the token is selected.
+  </StyledStep>
+  <StyledStep title="Set Arbitrum One as the destination">
+    Confirm the destination is **Arbitrum One**. Enter the amount of LPT you want to deposit.
+  </StyledStep>
+  <StyledStep title="Approve LPT spending">
+    Click **Move funds**. Your wallet will first prompt you to approve the bridge contract to spend your LPT. Confirm this transaction. It takes approximately 10-15 minutes to confirm on Ethereum Mainnet.
+  </StyledStep>
+  <StyledStep title="Confirm the deposit">
+    Once the approval confirms, a second transaction prompt will appear for the actual deposit. Confirm it. Your LPT will appear in your Arbitrum One wallet within 15-30 minutes.
+
+    You can track the status of your deposit in the **Transaction History** tab on the bridge, or use the [Arbitrum crosschain message dashboard](https://retryable-dashboard.arbitrum.io/) with your deposit transaction hash.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Centralised Exchange (CEX) Conversions
+
+If you are buying LPT fresh rather than moving existing holdings, withdrawing directly from a CEX to Arbitrum One is the simplest route. You skip the bridge, the manual approval step, and the 7-day challenge period entirely.
+
+Most exchanges list LPT but only support Ethereum Mainnet withdrawals for it. As of March 2026, the exchanges confirmed to support **LPT withdrawals on Arbitrum One** are:
+
+<Columns cols={2}>
+  <Card
+    href="https://www.binance.com/en/trade/LPT_USDT"
+    icon="building-columns"
+    title="Binance"
+    horizontal
+  >
+    LPT/USDT and LPT/BTC. Arbitrum One withdrawal fee: 0.033 LPT. Added February 2025.
+  </Card>
+  <Card
+    href="https://www.okx.com/trade-spot/lpt-usdt"
+    icon="building-columns"
+    title="OKX"
+    horizontal
+  >
+    LPT/USDT. Supports Arbitrum One network for LPT deposits and withdrawals.
+  </Card>
+</Columns>
+
+<Note>
+  Livepeer does not recommend any specific exchange. Coinbase and Kraken list LPT but currently only support Ethereum Mainnet withdrawals for it — you would still need to bridge after withdrawing. Always verify network support in your exchange's withdrawal UI before depositing funds, as this changes without notice.
+</Note>
+
+<Warning>
+  Always check the network selector before confirming a withdrawal. Sending LPT to an Arbitrum One address via the Ethereum network (or vice versa) will result in tokens that appear to be lost. They can be recovered but require additional steps.
+</Warning>
+
+<StyledSteps>
+  <StyledStep title="Purchase LPT on Binance or OKX">
+    Buy LPT using your preferred trading pair (LPT/USDT is the most liquid on both exchanges) or the exchange's convert feature.
+  </StyledStep>
+  <StyledStep title="Withdraw to your Arbitrum One wallet">
+    Navigate to the withdrawal flow. Enter your Arbitrum One wallet address and in the **Network** selector choose **Arbitrum One**. Confirm the destination address and amount.
+
+    Withdrawals typically arrive within a few minutes.
+  </StyledStep>
+  <StyledStep title="Confirm receipt">
+    Your LPT will appear at your Arbitrum One wallet address, ready to stake via the Livepeer Explorer. No bridging is required.
+  </StyledStep>
+</StyledSteps>
+
+Not all exchanges that list LPT support Arbitrum One withdrawals. You need an exchange that appears on **both** lists below.
+
+<Columns cols={2}>
+  <Card
+    href="/v2/gateways/resources/reference/technical/livepeer-exchanges"
+    icon="coins"
+    title="Exchanges listing LPT"
+    horizontal
+  >
+    Live CoinGecko feed of all exchanges trading LPT.
+  </Card>
+  <Card
+    href="/v2/gateways/resources/reference/technical/arbitrum-exchanges"
+    icon="layer-group"
+    title="Exchanges supporting Arbitrum One"
+    horizontal
+  >
+    Live CoinGecko feed of all exchanges with Arbitrum One network support.
+  </Card>
+</Columns>
+
+<Info>
+  If you use Coinbase or Kraken and they only offer Ethereum Mainnet for LPT withdrawals, withdraw to an Ethereum wallet first and then follow the deposit steps above to bridge it to Arbitrum One.
+</Info>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+<Info>
+  If your exchange only supports Ethereum Mainnet withdrawals for LPT, withdraw to an Ethereum wallet first and then follow the deposit steps above to bridge it to Arbitrum One.
+</Info>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Withdrawals: Arbitrum One to Ethereum
+
+Withdrawals require an extra manual approval step because LPT on Arbitrum uses a custom bridge rather than the standard token bridge. You must approve the `L2LPTGateway` contract to spend your LPT on Arbitrum before the bridge UI will process the withdrawal.
+
+<Warning>
+  Withdrawals from Arbitrum One to Ethereum Mainnet are subject to Arbitrum's 7-day challenge period. Your LPT will not be claimable on Ethereum until this period has elapsed. Plan accordingly.
+</Warning>
+
+<StyledSteps>
+  <StyledStep title="Approve the L2LPTGateway on Arbiscan">
+    Before using the bridge UI, you must manually approve the `L2LPTGateway` contract to spend your LPT. Open the [LPT write contract on Arbiscan](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839#writeContract) and connect your wallet.
+
+    Scroll to the **approve** function and enter:
+
+    - **Spender address**: `0x6D2457a4ad276000A615295f7A80F79E48CcD318` (L2LPTGateway)
+    - **Amount**: your LPT amount in wei (18 decimal places)
+
+    Use a unit converter if needed: 1 LPT = `1000000000000000000` wei. For example, 100 LPT = `100000000000000000000`.
+
+    Click **Write** and confirm the transaction in your wallet.
+
+    <Info>
+      This approval step exists because LPT uses a custom gateway. The standard Arbitrum bridge UI handles approvals automatically for tokens on the standard gateway, but LPT's custom gateway requires this manual step.
+    </Info>
+  </StyledStep>
+  <StyledStep title="Connect to Arbitrum One on the bridge">
+    Open [bridge.arbitrum.io](https://bridge.arbitrum.io/) and connect your wallet. Make sure it is set to **Arbitrum One** as the source network.
+  </StyledStep>
+  <StyledStep title="Select LPT and set Ethereum as destination">
+    Select LPT from the token list. If it does not appear, paste the Arbitrum One LPT address:
+
+    ```
+    0x289ba1701C2F088cf0faf8B3705246331cB8A839
+    ```
+
+    Set the destination to **Ethereum Mainnet** and enter the amount to withdraw.
+  </StyledStep>
+  <StyledStep title="Initiate the withdrawal">
+    Click **Move funds** and confirm the transaction. This initiates the withdrawal on Arbitrum One.
+  </StyledStep>
+  <StyledStep title="Wait out the 7-day challenge period">
+    After the transaction confirms on Arbitrum, a 7-day challenge period begins. This is a security property of Arbitrum's optimistic rollup design and cannot be shortened. You will see a countdown in the **Transaction History** tab on the bridge.
+  </StyledStep>
+  <StyledStep title="Claim your LPT on Ethereum">
+    Once the 7-day period elapses, switch your wallet to **Ethereum Mainnet**, return to [bridge.arbitrum.io](https://bridge.arbitrum.io/), open **Transaction History**, and click **Claim** next to your completed withdrawal. Confirm the transaction to receive your LPT on Ethereum Mainnet.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Failed Deposits: Recovery
+
+Deposit transactions can fail to execute on Arbitrum if gas prices spike between when the original Ethereum transaction was submitted and when it is sequenced on Arbitrum. If your LPT has not arrived on Arbitrum One after an hour, check the status of your deposit.
+
+<StyledSteps>
+  <StyledStep title="Check the retryable dashboard">
+    Go to the [Arbitrum crosschain message dashboard](https://retryable-dashboard.arbitrum.io/) and paste your Ethereum deposit transaction hash. The dashboard will show whether your retryable ticket is pending, failed, or expired.
+  </StyledStep>
+  <StyledStep title="Resubmit if failed">
+    If the ticket shows as failed, connect your wallet and click to resubmit. This retries the L2 execution using current gas prices.
+
+    <Warning>
+      Act promptly. Retryable tickets expire after 7 days. If a ticket expires without being successfully redeemed, the funds associated with the execution (not the LPT itself, which remains in escrow) may be lost. The LPT locked in `L1Escrow` on Ethereum is safe, but you would need to contact Livepeer support to recover it if the ticket expires.
+    </Warning>
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Contract References
+
+The bridge contracts involved in LPT transfers are documented in full on the Blockchain Contracts page. For quick reference:
+
+<DynamicTable
+  headerList={["Contract", "Chain", "Address"]}
+  monospaceColumns={["Address"]}
+  itemsList={[
+    { Contract: <a href="https://etherscan.io/address/0x58b6a8a3302369daec383334672404ee733ab239" target="_blank" rel="noopener noreferrer">LivepeerToken (L1)</a>, Chain: "Ethereum Mainnet", Address: "0x58b6a8a3302369daec383334672404ee733ab239" },
+    { Contract: <a href="https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839" target="_blank" rel="noopener noreferrer">LivepeerToken (L2)</a>, Chain: "Arbitrum One", Address: "0x289ba1701C2F088cf0faf8B3705246331cB8A839" },
+    { Contract: <a href="https://etherscan.io/address/0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676" target="_blank" rel="noopener noreferrer">L1LPTGateway</a>, Chain: "Ethereum Mainnet", Address: "0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676" },
+    { Contract: <a href="https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318" target="_blank" rel="noopener noreferrer">L2LPTGateway</a>, Chain: "Arbitrum One", Address: "0x6D2457a4ad276000A615295f7A80F79E48CcD318" },
+    { Contract: <a href="https://etherscan.io/address/0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A" target="_blank" rel="noopener noreferrer">L1Escrow</a>, Chain: "Ethereum Mainnet", Address: "0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A" },
+    { Contract: <a href="https://etherscan.io/address/0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405" target="_blank" rel="noopener noreferrer">BridgeMinter</a>, Chain: "Ethereum Mainnet", Address: "0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405" },
+  ]}
+/>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Blockchain Contracts" icon="file-contract" href="/v2/about/blockchain-contracts" arrow>
+    Full technical reference for the LPT bridge contracts, including gateway source code.
+  </Card>
+  <Card title="Contract Addresses" icon="address-card" href="/v2/resources/references/contract-addresses" arrow>
+    Complete address list for all Livepeer protocol contracts across Arbitrum One and Ethereum Mainnet.
+  </Card>
+  <Card title="Exchanges listing LPT" icon="coins" href="/v2/gateways/resources/reference/technical/livepeer-exchanges" arrow>
+    Live CoinGecko feed of all exchanges trading LPT.
+  </Card>
+  <Card title="Exchanges supporting Arbitrum One" icon="layer-group" href="/v2/gateways/resources/reference/technical/arbitrum-exchanges" arrow>
+    Live CoinGecko feed of all exchanges with Arbitrum One network support.
+  </Card>
+</CardGroup>

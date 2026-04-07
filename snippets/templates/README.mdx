@@ -11,7 +11,7 @@ pageType: reference
 purpose: reference
 status: current
 lastVerified: 2026-03-12
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -36,3 +36,9 @@ Use this folder for copy-ready authoring scaffolds that contributors can duplica
 1. Copy the closest template into the target docs path.
 2. Replace the placeholder title, description, and body content.
 3. Keep the canonical OG metadata and update `status` and `lastVerified` when the page becomes current.
+
+## Template Safety Contract
+
+- Templates in `snippets/templates/**` must parse as valid MDX at rest.
+- Placeholder text must stay inert in prose, strings, comments, or exported stub data. Do not use placeholder syntax inside live JSX expressions.
+- If a template needs companion data, provide a valid stub export or a real import that resolves from the template source tree.

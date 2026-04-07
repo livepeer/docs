@@ -1,7 +1,6 @@
-# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH.
-# N8N IS BEING USING AS AN ALTERNATIVE UNTIL THEN.
-# N8N workflow is in /snippets/automations/n8n-workflows/youtube-to-mintlify.json
-# You will need to Add YOUTUBE_API_KEY secret in repo settings (Settings → Secrets → Actions) for this github action to work.
+# Retains generated YouTube data under snippets/data/social-feeds/youtubeData.jsx.
+# Legacy entrypoint kept as a compatibility wrapper during workflow consolidation.
+# Requires YOUTUBE_API_KEY secret in repo settings (Settings -> Secrets -> Actions).
 
 name: Update YouTube Data
 
@@ -17,37 +16,8 @@ on:
 
 jobs:
   update-youtube:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Fetch and process YouTube videos
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          CHANNEL_ID: UCzfHtZnmUzMbJDxGCwIgY2g
-        run: |
-          node .github/scripts/fetch-youtube-data.js
-
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code snippets/automations/youtube/youtubeData.jsx || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit and push if changed
-        if: steps.git-check.outputs.changed == 'true'
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add snippets/automations/youtube/youtubeData.jsx
-          git commit -m "Update YouTube videos - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          git push
+    uses: ./.github/workflows/data-refresh-governance.yml
+    with:
+      mode: youtube
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

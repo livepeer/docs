@@ -34,15 +34,15 @@ jobs:
 
       - name: Update Ghost data file
         run: |
-          echo "export const ghostData = " > snippets/automations/blog/ghostBlogData.jsx
-          cat ghost-data.json >> snippets/automations/blog/ghostBlogData.jsx
-          echo ";" >> snippets/automations/blog/ghostBlogData.jsx
+          echo "export const ghostData = " > snippets/data/social-feeds/ghostBlogData.jsx
+          cat ghost-data.json >> snippets/data/social-feeds/ghostBlogData.jsx
+          echo ";" >> snippets/data/social-feeds/ghostBlogData.jsx
 
       - name: Update Forum data file
         run: |
-          echo "export const forumData = " > snippets/automations/forum/forumData.jsx
-          cat forum-data.json >> snippets/automations/forum/forumData.jsx
-          echo ";" >> snippets/automations/forum/forumData.jsx
+          echo "export const forumData = " > snippets/data/social-feeds/forumData.jsx
+          cat forum-data.json >> snippets/data/social-feeds/forumData.jsx
+          echo ";" >> snippets/data/social-feeds/forumData.jsx
 
       - name: Check for changes
         id: git-check
@@ -54,8 +54,8 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add snippets/automations/blog/ghostBlogData.jsx
-          git add snippets/automations/forum/forumData.jsx
+          git add snippets/data/social-feeds/ghostBlogData.jsx
+          git add snippets/data/social-feeds/forumData.jsx
           git commit -m "chore: update blog and forum data [skip ci]"
           git push
 

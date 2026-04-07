@@ -1,0 +1,235 @@
+---
+title: 运行网关
+sidebarTitle: 运行一个网关
+description: |-
+  通过运行自己的网关，将应用程序与视频和 AI 服务连接起来！
+  本页面概述了运行网关节点的步骤。
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - gateway
+  - connect
+  - applications
+  - video
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L3J1bi1hLWdhdGV3YXkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L3J1bi1hLWdhdGV3YXkiLCJzb3VyY2VIYXNoIjoiNGU0YjZiYjhmNjBmNjExNDk2MTRjMzcwMGFkMmI3MmE1M2IwNGIxMzJjZjQyOTMzZGI3NWZkOTFkMGI3ZTk3MiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDAzOjE1OjQ3LjAyN1oifQ== */}
+<Warning> Complete: needs review. Steps need update </Warning>
+
+import { GotoLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.jsx'
+
+<br />
+## 介绍：网关是 Livepeer 网络中必不可少的基础设施。它们
+提供服务协调层（路由与验证），将应用程序
+连接到去中心化 GPU 计算层（DePIN）。
+本指南解释了运行网关节点的需求、设置步骤和最佳实践。
+
+## 网关模式
+
+你可以运行一个网关
+
+- <Icon icon="floppy-disk" size={18} /> **链下** -> 开发或本地模式
+- <Icon icon="link" size={18} /> **链上** -> 生产模式连接到
+基于区块链的 Livepeer 网络（在 Arbitrum 上）。{' '}
+
+## 网关功能
+
+您可以为以下用途运行网关：
+
+- <Badge color="blue"> Video Only </Badge> -> 传统转码服务
+- <Badge color="purple"> AI Only </Badge> -> AI 推理服务
+- <Badge color="green"> Dual: AI & Video </Badge> -> 同时提供视频转码和 AI
+推理服务
+
+## 网关架构
+
+<ScrollableDiagram title="Dual Gateway Architecture: Video & AI Pipelines" maxHeight="600px">
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart LR
+    subgraph INPUT["Input Sources"]
+        CAM["Camera / RTMP / WebRTC"]
+        VID["Video File"]
+        AIIN["AI Prompt / Model Request"]
+    end
+
+    GATEWAY["Gateway Node<br/>• Ingest (RTMP/HTTP/WebRTC)<br/>• Segment video<br/>• Queue + order jobs<br/>• AI pipeline routing<br/>• Orchestrator selection<br/>• Verification & receipts"]
+
+    CAM -->|"Live stream"| GATEWAY
+    VID -->|"VOD upload"| GATEWAY
+    AIIN -->|"AI job request"| GATEWAY
+
+    subgraph JOBS["Workflows"]
+        VJ["Video Transcoding Job"]
+        AIJ["AI Inference Job<br/>(Daydream / ComfyStream / BYOC)"]
+    end
+
+    GATEWAY --> VJ
+    GATEWAY --> AIJ
+
+    subgraph ORCH["Orchestrator Network (GPU Operators)"]
+        O1["Orchestrator A<br/>GPU Pool"]
+        O2["Orchestrator B<br/>GPU Pool"]
+        O3["Orchestrator C<br/>GPU Pool"]
+    end
+
+    VJ -->|"Transcode segments"| O1
+    VJ --> O2
+    AIJ -->|"Run model / inference"| O1
+    AIJ --> O3
+
+    subgraph OUTPUTS["Outputs"]
+        HLS["Adaptive Bitrate Video (HLS/LL-HLS)"]
+        AIOUT["AI Frames / Stylized Video"]
+    end
+
+    O1 --> GATEWAY
+    O2 --> GATEWAY
+    O3 --> GATEWAY
+
+    GATEWAY --> HLS
+    GATEWAY --> AIOUT
+
+    ETH[("Arbitrum Blockchain<br/>Payments • Tickets • Rewards")]
+    GATEWAY --> ETH
+    O1 --> ETH
+    O2 --> ETH
+    O3 --> ETH
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    style INPUT fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    style JOBS fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    style ORCH fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    style OUTPUTS fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+
+```
+</ScrollableDiagram>
+
+<br/>
+
+## 网关运营者之旅
+
+<Columns cols={2}>
+<FlexContainer justify="center">
+  <Mermaid
+    chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': '#0d0d0d', 'clusterBorder': '#2d9a67' }}}%%
+      flowchart TB
+      subgraph check["Check"]
+          A["Check network & hardware requirements"]
+      end
+
+      subgraph install["Install"]
+          B["Install go-livepeer on your OS"]
+      end
+
+      subgraph configure["Configure"]
+          C1["Configure AI, transcoding, or both"]
+          C2["Configure pricing, funding, & regions"]
+      end
+
+      subgraph test["Test"]
+          D["Test & troubleshoot"]
+      end
+
+      subgraph connect["Connect"]
+          E1["Connect with orchestrators"]
+          E2["Route jobs"]
+      end
+
+      subgraph monitor["Monitor"]
+          F["Monitor & optimise"]
+      end
+
+      A --> B
+      B --> C1
+      C1 --> C2
+      C2 --> D
+      D --> E1
+      E1 --> E2
+      E2 --> F
+
+      classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px`}
+  />
+</FlexContainer>
+
+<FlexContainer justify="center" style={{ marginTop: '-2.5rem' }}>
+<StyledSteps>
+  <StyledStep title="Requirements Check">
+    Check hardware, network, and software requirements. <br/>
+    <GotoLink
+      label="Requirements"
+      relativePath="./requirements"
+    />
+  </StyledStep>
+  <StyledStep title="Install Gateway">
+    Install the Livepeer Gateway software. <br/>
+    <GotoLink
+      label="Installation Guide"
+      relativePath="./install"
+    />
+  </StyledStep>
+  <StyledStep title="Configure & Fund Gateway">
+    Configure transcoding options, models, pipelines & pricing <br />
+    <GotoLink
+      label="Configuration Guide"
+      relativePath="./configure"
+    />
+  </StyledStep>
+  <StyledStep title="Test Gatway">
+    Price & publish offerings to the Marketplace. <br/>
+    <GotoLink
+      label="Testing Guide"
+      relativePath="./test"
+    />
+  </StyledStep>
+  <StyledStep title="Connect Gatway">
+    Connect with Orchestrators, price & route offerings in the Marketplace. <br/>
+    <GotoLink
+      label="Connect to the Livepeer Network"
+      relativePath="./connect"
+  />
+  </StyledStep>
+    <StyledStep title="Monitor & Optimize">
+    Monitor performance, optimize routing & service quality. <br/>
+    <GotoLink
+      label="Monitor & Optimise your Gateway"
+      relativePath="./monitor"
+    />
+  </StyledStep>
+</StyledSteps>
+
+</FlexContainer>
+</Columns>
+
+## 相关页面
+<Card
+    title="Gateway Economics"
+    href="../about/economics"
+    icon="hand-holding-dollar"
+    horizontal
+    arrow
+    >
+    Looking for information on how gateways earn fees for services?
+    <GotoLink
+      label="Read the 'Gateway Economics' section"
+      relativePath="../about/economics"
+    />
+</Card>
+<Card
+    title="Gateway Installation"
+    href="../run-a-gateway/install/install-overview"
+    icon="sign-posts-wrench"
+    horizontal
+    arrow
+    >
+    Just want to get started?
+    <GotoLink
+      label="Get Started with Installation"
+      relativePath="../run-a-gateway/install/install-overview"
+    />
+</Card>
+```

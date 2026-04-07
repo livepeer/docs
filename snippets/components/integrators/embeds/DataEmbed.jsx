@@ -10,7 +10,9 @@
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
  */
+'use client'
 import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 /**
  * @component SolidityEmbed

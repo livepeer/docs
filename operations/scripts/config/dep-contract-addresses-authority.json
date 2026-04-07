@@ -1,0 +1,1018 @@
+{
+  "_meta": {
+    "description": "NOT CANONICAL, NOT TRUTH, DO NOT USE Authority catalog for the Livepeer contract registry. This file defines how each published contract family resolves its canonical address, code path, runtime verification source, lifecycle, and historical versions.",
+    "canonicalManifest": "livepeer/governor-scripts/updates/addresses.js",
+    "latestResolutionPolicy": [
+      "Do not discover latest branches dynamically.",
+      "Address truth comes from governor-scripts when a governor key is declared.",
+      "Non-governor addresses must be explicitly fixed in this catalog.",
+      "Current implementation targets must come from an explicit authority rule or proxy runtime metadata.",
+      "Historical groups may use explicit governor-key series only when the family is explicitly authorized here."
+    ]
+  },
+  "deployments": [
+    {
+      "id": "arbitrumOne.controller",
+      "canonicalName": "Controller",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "controller" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/Controller.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.livepeerToken",
+      "canonicalName": "LivepeerToken",
+      "chain": "arbitrumOne",
+      "category": "token",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "livepeerToken" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "LivepeerToken"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L2/token/LivepeerToken.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.minter",
+      "canonicalName": "Minter",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "governor-versioned-latest",
+        "baseKey": "minter",
+        "baseVersion": "V1",
+        "prefix": "minterV"
+      },
+      "runtimeAuthority": { "kind": "controller", "controllerSlot": "Minter" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/token/Minter.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "historyStrategy": {
+        "group": "Minter",
+        "sources": [
+          { "kind": "governor-key", "key": "minter", "version": "V1" },
+          { "kind": "governor-series", "prefix": "minterV" }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "arbitrumOne.bondingManager",
+      "canonicalName": "BondingManager",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "bondingManager" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "BondingManager"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/bonding/BondingManager.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "governor-key",
+        "key": "bondingManagerTargetV13",
+        "version": "V13"
+      },
+      "historyStrategy": {
+        "group": "BondingManager (Target)",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6"
+          },
+          { "kind": "governor-series", "prefix": "bondingManagerTargetV" }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "arbitrumOne.ticketBroker",
+      "canonicalName": "TicketBroker",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xa8bB618B1520E284046F3dFc448851A1Ff26e41B"
+      },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "TicketBroker"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/pm/TicketBroker.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "proxy-meta"
+      },
+      "historyStrategy": {
+        "group": "TicketBroker (Target)",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0x7Beb84c52ce96DFd90431FAA97378994a8baa6df"
+          },
+          { "kind": "governor-series", "prefix": "ticketBrokerTargetV" }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "arbitrumOne.roundsManager",
+      "canonicalName": "RoundsManager",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "roundsManager" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "RoundsManager"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/rounds/RoundsManager.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "proxy-meta",
+        "fallbackAuthority": {
+          "kind": "fixed",
+          "address": "0x92d804Ed49D92438aEA6fe552BD9163aacb7E841"
+        }
+      }
+    },
+    {
+      "id": "arbitrumOne.serviceRegistry",
+      "canonicalName": "ServiceRegistry",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xC92d3A360b8f9e083bA64DE15d95Cf8180897431"
+      },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "ServiceRegistry"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/ServiceRegistry.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "proxy-meta",
+        "fallbackAuthority": {
+          "kind": "fixed",
+          "address": "0x38093CDca43aeCd7bb474983519A246e93A3b0a7"
+        }
+      }
+    },
+    {
+      "id": "arbitrumOne.aiServiceRegistry",
+      "canonicalName": "AIServiceRegistry",
+      "chain": "arbitrumOne",
+      "category": "core",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x04C0b249740175999E5BF5c9ac1dA92431EF34C5"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": null,
+      "statusLabel": "Active",
+      "notes": "Detached from Controller. Public repo source path could not be confirmed."
+    },
+    {
+      "id": "arbitrumOne.governor",
+      "canonicalName": "Governor",
+      "chain": "arbitrumOne",
+      "category": "governance",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/governance/Governor.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.bondingVotes",
+      "canonicalName": "BondingVotes",
+      "chain": "arbitrumOne",
+      "category": "governance",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "bondingVotes" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "BondingVotes"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/bonding/BondingVotes.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "governor-key",
+        "key": "bondingVotesTargetV2",
+        "version": "V2"
+      },
+      "historyStrategy": {
+        "group": "BondingVotes (Target)",
+        "sources": [
+          {
+            "kind": "governor-key",
+            "key": "bondingVotesTarget",
+            "version": "V1"
+          },
+          { "kind": "governor-series", "prefix": "bondingVotesTargetV" }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "arbitrumOne.livepeerGovernor",
+      "canonicalName": "LivepeerGovernor",
+      "chain": "arbitrumOne",
+      "category": "governance",
+      "deploymentKind": "proxy",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "livepeerGovernor" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "LivepeerGovernor"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/treasury/LivepeerGovernor.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null,
+      "currentImplementationStrategy": {
+        "kind": "governor-key",
+        "key": "livepeerGovernorTarget"
+      }
+    },
+    {
+      "id": "arbitrumOne.treasury",
+      "canonicalName": "Treasury",
+      "chain": "arbitrumOne",
+      "category": "governance",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "treasury" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "Treasury"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/treasury/Treasury.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.l2LPTGateway",
+      "canonicalName": "L2LPTGateway",
+      "chain": "arbitrumOne",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "l2LPTGateway" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L2/gateway/L2LPTGateway.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.l2LPTDataCache",
+      "canonicalName": "L2LPTDataCache",
+      "chain": "arbitrumOne",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "l2LPTDataCache" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "L2LPTDataCache"
+      },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L2/gateway/L2LPTDataCache.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.l2Migrator",
+      "canonicalName": "L2Migrator",
+      "chain": "arbitrumOne",
+      "category": "migration",
+      "deploymentKind": "proxy",
+      "lifecycle": "migration_residual",
+      "addressAuthority": { "kind": "governor-key", "key": "l2Migrator" },
+      "runtimeAuthority": {
+        "kind": "controller",
+        "controllerSlot": "L2Migrator"
+      },
+      "codeAuthority": null,
+      "statusLabel": "Migration complete",
+      "notes": "Still processes pending claimStake calls. Public repo source path was removed.",
+      "currentImplementationStrategy": {
+        "kind": "fixed",
+        "address": "0x93BB030735747708b4D33093A98d4c804Cd6B58C"
+      },
+      "historyStrategy": {
+        "group": "L2Migrator (Target)",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0x4F59b39e2ea628fe8371BDfd51B063319339c7EE"
+          }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "arbitrumOne.delegatorPool",
+      "canonicalName": "DelegatorPool",
+      "chain": "arbitrumOne",
+      "category": "migration",
+      "deploymentKind": "standalone",
+      "lifecycle": "migration_residual",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": null,
+      "statusLabel": "Migration complete",
+      "notes": "Public repo source path could not be confirmed."
+    },
+    {
+      "id": "arbitrumOne.merkleSnapshot",
+      "canonicalName": "MerkleSnapshot",
+      "chain": "arbitrumOne",
+      "category": "migration",
+      "deploymentKind": "standalone",
+      "lifecycle": "migration_residual",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x10736ffaCe687658F88a46D042631d182C7757f7"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/snapshots/MerkleSnapshot.sol"
+      },
+      "statusLabel": "Migration complete",
+      "notes": null
+    },
+    {
+      "id": "arbitrumOne.pollCreator",
+      "canonicalName": "PollCreator",
+      "chain": "arbitrumOne",
+      "category": "governance",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/polling/PollCreator.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Secondary governance helper; excluded from the main active table."
+    },
+    {
+      "id": "arbitrumOne.sortedDoublyLL",
+      "canonicalName": "SortedDoublyLL",
+      "chain": "arbitrumOne",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "delta",
+        "path": "contracts/libraries/SortedDoublyLL.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Support library; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.controller",
+      "canonicalName": "Controller",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "standalone",
+      "lifecycle": "paused",
+      "addressAuthority": { "kind": "governor-key", "key": "controller" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/Controller.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration."
+    },
+    {
+      "id": "ethereumMainnet.minter",
+      "canonicalName": "Minter",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "standalone",
+      "lifecycle": "paused",
+      "addressAuthority": { "kind": "governor-key", "key": "minter" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/token/Minter.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration.",
+      "historyStrategy": {
+        "group": "Minter",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0x8573f2f5a3bd960eee3d998473e50c75cdbe6828"
+          }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "ethereumMainnet.livepeerToken",
+      "canonicalName": "LivepeerToken",
+      "chain": "ethereumMainnet",
+      "category": "token",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x58b6a8a3302369daec383334672404ee733ab239"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/token/LivepeerToken.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Origin token."
+    },
+    {
+      "id": "ethereumMainnet.bridgeMinter",
+      "canonicalName": "BridgeMinter",
+      "chain": "ethereumMainnet",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "bridgeMinter" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/token/BridgeMinter.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "ethereumMainnet.l1LPTGateway",
+      "canonicalName": "L1LPTGateway",
+      "chain": "ethereumMainnet",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": { "kind": "governor-key", "key": "l1LPTGateway" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L1/gateway/L1LPTGateway.sol"
+      },
+      "statusLabel": "Active",
+      "notes": null
+    },
+    {
+      "id": "ethereumMainnet.l1Escrow",
+      "canonicalName": "L1Escrow",
+      "chain": "ethereumMainnet",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "active",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L1/escrow/L1Escrow.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Holds bridged LPT."
+    },
+    {
+      "id": "ethereumMainnet.l1LPTDataCache",
+      "canonicalName": "L1LPTDataCache",
+      "chain": "ethereumMainnet",
+      "category": "bridge",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": { "kind": "governor-key", "key": "l1LPTDataCache" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/arbitrum-lpt-bridge",
+        "branch": "main",
+        "path": "contracts/L1/gateway/L1LPTDataCache.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Bridge support contract; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.l1Migrator",
+      "canonicalName": "L1Migrator",
+      "chain": "ethereumMainnet",
+      "category": "migration",
+      "deploymentKind": "standalone",
+      "lifecycle": "migration_residual",
+      "addressAuthority": { "kind": "governor-key", "key": "l1Migrator" },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": null,
+      "statusLabel": "Migration complete",
+      "notes": "Public repo source path was removed."
+    },
+    {
+      "id": "ethereumMainnet.bondingManager",
+      "canonicalName": "BondingManager",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "paused",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x511bc4556d823ae99630ae8de28b9b80df90ea2e"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/bonding/BondingManager.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration.",
+      "currentImplementationStrategy": {
+        "kind": "fixed",
+        "address": "0x5FE3565dB7F1Dd8d6A9E968D45BD2Aee3836a1D4"
+      },
+      "historyStrategy": {
+        "group": "BondingManager (Target)",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0x81eb0b10ff8703905904e4d91cf6aa575d59736f"
+          },
+          {
+            "kind": "fixed",
+            "version": "V2",
+            "address": "0x5A9512826EAAF1FE4190f89443314E95A515fE24"
+          },
+          {
+            "kind": "fixed",
+            "version": "V3",
+            "address": "0x633101b3f15f93c5f415830d48e56b9b1f7ba584"
+          },
+          {
+            "kind": "fixed",
+            "version": "V4",
+            "address": "0x05C03EA0039f2e828A725A82939fc1e90de38B44"
+          },
+          {
+            "kind": "fixed",
+            "version": "V5",
+            "address": "0xCBAa6eA4886b535FC7ABACe3F3985Ed03b3b80a0"
+          },
+          {
+            "kind": "fixed",
+            "version": "V6",
+            "address": "0xDC6eE74A18994caD3876a078B6fa4920FD9C507d"
+          },
+          {
+            "kind": "fixed",
+            "version": "V7",
+            "address": "0x1a6007d1D0583452Bd6f45a4e1a9190B15Fbd7E3"
+          },
+          {
+            "kind": "fixed",
+            "version": "V8",
+            "address": "0xef5E170b679ddaF5e22ADC10fD23DDdB79E3C0c5"
+          },
+          {
+            "kind": "fixed",
+            "version": "V9",
+            "address": "0xc8a695155648F18B0cfd6989498B6f8b2c4cc56A"
+          },
+          {
+            "kind": "fixed",
+            "version": "V10",
+            "address": "0x35F99F326681FE4F38719491be48Ab4950795013"
+          },
+          {
+            "kind": "fixed",
+            "version": "V11",
+            "address": "0xAC0153a8C5227e43506901a4f3f83FD000c8178f"
+          },
+          {
+            "kind": "fixed",
+            "version": "V12",
+            "address": "0x246edEBae14b186a67e3d466A485321169a8bcD5"
+          },
+          {
+            "kind": "fixed",
+            "version": "V13",
+            "address": "0x223398d0BF9cc24960b3886CC481dBf5276EdeD2"
+          },
+          {
+            "kind": "fixed",
+            "version": "V14",
+            "address": "0x0da7c263eCF5cD3ddba275b9A2D63320E28fD287"
+          }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "ethereumMainnet.ticketBroker",
+      "canonicalName": "TicketBroker",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "paused",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x5b1ce829384eebfa30286f12d1e7a695ca45f5d2"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/pm/TicketBroker.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration.",
+      "currentImplementationStrategy": {
+        "kind": "fixed",
+        "address": "0x6F582E2bB19ac31D4B1e6eDD0c2eFEabD700f808"
+      }
+    },
+    {
+      "id": "ethereumMainnet.roundsManager",
+      "canonicalName": "RoundsManager",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "paused",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x3984fc4ceeef1739135476f625d36d6c35c40dc3"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/rounds/RoundsManager.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration.",
+      "currentImplementationStrategy": {
+        "kind": "fixed",
+        "address": "0xC89fE48382F8fda6992dC590786A84275bCD1C57"
+      },
+      "historyStrategy": {
+        "group": "RoundsManager (Target)",
+        "sources": [
+          {
+            "kind": "fixed",
+            "version": "V1",
+            "address": "0xa3aa52ce79e85a21d9ccda705c57e426b160112c"
+          },
+          {
+            "kind": "fixed",
+            "version": "V2",
+            "address": "0x857d4bf18a80f03d3d11f438825cd3d0aa0d9d68"
+          }
+        ],
+        "excludeResolvedCurrent": true
+      }
+    },
+    {
+      "id": "ethereumMainnet.serviceRegistry",
+      "canonicalName": "ServiceRegistry",
+      "chain": "ethereumMainnet",
+      "category": "core",
+      "deploymentKind": "proxy",
+      "lifecycle": "paused",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x406a112f3218b988c66778fd72fc8467f2601366"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/ServiceRegistry.sol"
+      },
+      "statusLabel": "Paused",
+      "notes": "Paused since the Confluence migration.",
+      "currentImplementationStrategy": {
+        "kind": "fixed",
+        "address": "0x72d9dfa25f75a5f2c27b7336e643a559ae6aeb8e"
+      }
+    },
+    {
+      "id": "ethereumMainnet.governor",
+      "canonicalName": "Governor",
+      "chain": "ethereumMainnet",
+      "category": "governance",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xFC3CBed6A3476F7616CC70f078397700136eEBFd"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/governance/Governor.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Legacy governance helper; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.pollCreator",
+      "canonicalName": "PollCreator",
+      "chain": "ethereumMainnet",
+      "category": "governance",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0xBf824EDb6b94D9B52d972d5B25bCc19b4e6E3F3C"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/polling/PollCreator.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Legacy governance helper; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.merkleSnapshot",
+      "canonicalName": "MerkleSnapshot",
+      "chain": "ethereumMainnet",
+      "category": "migration",
+      "deploymentKind": "standalone",
+      "lifecycle": "migration_residual",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x24ebEd82c681f435E944BEEbFAEEAaE443D08438"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/snapshots/MerkleSnapshot.sol"
+      },
+      "statusLabel": "Migration complete",
+      "notes": null
+    },
+    {
+      "id": "ethereumMainnet.genesisManager",
+      "canonicalName": "GenesisManager",
+      "chain": "ethereumMainnet",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x3a9543d4767b2c914ea22fd0b07e17b0901aaebf"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/GenesisManager.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Genesis-era support contract; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.merkleMine",
+      "canonicalName": "MerkleMine",
+      "chain": "ethereumMainnet",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x8e306b005773bee6ba6a6e8972bc79d766cc15c8"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/token/MerkleMine.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Genesis-era support contract; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.multiMerkleMine",
+      "canonicalName": "MultiMerkleMine",
+      "chain": "ethereumMainnet",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x182ebf4c80b28efc45ad992ecbb9f730e31e8c7f"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": null,
+      "statusLabel": "Active",
+      "notes": "Genesis-era support contract; public repo source path could not be confirmed."
+    },
+    {
+      "id": "ethereumMainnet.sortedDoublyLL",
+      "canonicalName": "SortedDoublyLL",
+      "chain": "ethereumMainnet",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x1a0b2ca69ca2c7f96e2529faa6d63f881655d81a"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "master",
+        "path": "contracts/libraries/SortedDoublyLL.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Support library; excluded from the main active table."
+    },
+    {
+      "id": "ethereumMainnet.refunder",
+      "canonicalName": "Refunder",
+      "chain": "ethereumMainnet",
+      "category": "utility",
+      "deploymentKind": "standalone",
+      "lifecycle": "legacy_operational",
+      "addressAuthority": {
+        "kind": "fixed",
+        "address": "0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2"
+      },
+      "runtimeAuthority": { "kind": "explorer" },
+      "codeAuthority": {
+        "repo": "livepeer/protocol",
+        "branch": "streamflow",
+        "path": "contracts/refund/Refunder.sol"
+      },
+      "statusLabel": "Active",
+      "notes": "Legacy support contract; excluded from the main active table."
+    }
+  ],
+  "historicalOnlyGroups": [
+    {
+      "chain": "ethereumMainnet",
+      "group": "LivepeerVerifier",
+      "sources": [
+        {
+          "kind": "fixed",
+          "version": "V1",
+          "address": "0xf623811b08b45792d0223d77d9c922dae29712ec"
+        },
+        {
+          "kind": "fixed",
+          "version": "V2",
+          "address": "0xe4be2a35dec0063f9dfccb9b740b1acb7eefefec"
+        }
+      ]
+    },
+    {
+      "chain": "ethereumMainnet",
+      "group": "JobsManager (Proxy)",
+      "sources": [
+        {
+          "kind": "fixed",
+          "version": "V1",
+          "address": "0xbf07ff45f14c9ff0571b9fbdc7e2b62d29931224"
+        }
+      ]
+    },
+    {
+      "chain": "ethereumMainnet",
+      "group": "JobsManager (Target)",
+      "sources": [
+        {
+          "kind": "fixed",
+          "version": "V1",
+          "address": "0x68b463bca7d561118636e9f028ff0f2e8398dd6a"
+        },
+        {
+          "kind": "fixed",
+          "version": "V2",
+          "address": "0xB620c762dd4bC350602936d7401BB8393Ee6687c"
+        },
+        {
+          "kind": "fixed",
+          "version": "V3",
+          "address": "0x8eade5eec609572bf53deadb88d36f862ddec517"
+        }
+      ]
+    }
+  ]
+}

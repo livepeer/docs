@@ -2,29 +2,6 @@ import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 import { ArbitrumIcon, LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
 
-import {
-  getEthereumActiveNameList,
-  getActiveTableItems,
-  getProxyTableItems,
-  getPausedTableItems,
-  getMigrationResidualTableItems,
-  getLegacyOperationalTableItems,
-  historicalCategoryTitle,
-  historicalCategoryDescription,
-  historicalCategoryIconName as historicalCategoryIconNameModel,
-} from './livepeer-contract-addresses-page-model.jsx'
-
-export {
-  getEthereumActiveNameList,
-  getActiveTableItems,
-  getProxyTableItems,
-  getPausedTableItems,
-  getMigrationResidualTableItems,
-  getLegacyOperationalTableItems,
-  historicalCategoryTitle,
-  historicalCategoryDescription,
-}
-
 export const buildCategoryAccordionRows = (
   items = [],
   { includeType = true, includeVersion = false } = {},

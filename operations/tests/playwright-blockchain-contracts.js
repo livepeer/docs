@@ -110,9 +110,9 @@ async function waitForPage(page) {
 
 async function main() {
   const baseUrl = await ensureFreshBundleBaseUrl({
-    probePath: '/v2/about/livepeer-protocol/blockchain-contracts'
+    probePath: '/v2/about/protocol/blockchain-contracts'
   });
-  const pageUrl = `${baseUrl}/v2/about/livepeer-protocol/blockchain-contracts`;
+  const pageUrl = `${baseUrl}/v2/about/protocol/blockchain-contracts`;
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   const errors = [];

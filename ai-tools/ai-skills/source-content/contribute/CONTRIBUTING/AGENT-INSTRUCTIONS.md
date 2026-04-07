@@ -2,6 +2,12 @@
 
 This document provides specific instructions for AI agents working on this repository.
 
+Canonical policy sources:
+
+- `AGENTS.md`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+- `docs-guide/policies/agent-governance-framework.mdx`
+
 ## MANDATORY: Install Git Hooks
 
 Before making any changes, agents MUST ensure git hooks are installed:
@@ -9,6 +15,10 @@ Before making any changes, agents MUST ensure git hooks are installed:
 ```bash
 ./.githooks/install.sh
 ```
+
+## MANDATORY: Local Preview Port Rule
+
+Agents must not use port `3000` for local Mintlify, preview, or browser-validation sessions in this repository. Choose a non-3000 port explicitly.
 
 ## Codex Task Isolation Standard (Implementation Tasks)
 
@@ -29,20 +39,20 @@ Recommended lifecycle:
 
 ```bash
 # Start task scaffold (branch + contract + local lock)
-node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
+node operations/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
 
 # Validate local lock + scope before commit
-node tools/scripts/codex/validate-locks.js --staged
+node operations/scripts/codex/validate-locks.js --staged
 
 # Finalize before PR, then release lock when done
-node tools/scripts/codex/task-finalize.js
-node tools/scripts/codex/lock-release.js
+node operations/scripts/codex/task-finalize.js
+node operations/scripts/codex/lock-release.js
 ```
 
 PR autofill command:
 
 ```bash
-node tools/scripts/create-codex-pr.js --create
+node operations/scripts/create-codex-pr.js --create
 ```
 
 The command generates `.codex/pr-body.generated.md` from task-contract fields and uses it as `gh pr create --body-file`.
@@ -90,6 +100,13 @@ The pre-commit hook runs automatically when you attempt to commit. It:
 - Browser render failures → **BLOCKED** (if `mint dev` is running)
 
 ## Agent Workflow
+
+### Tracked File Moves and Renames
+
+- Use `git mv` for every tracked file rename or relocation so Git records the move instead of presenting it as a delete plus add.
+- Do not emulate a move by creating a new file and deleting the old tracked path manually.
+- If you intentionally keep both old and new paths during a compatibility window, document that the old path is an alias and keep both files staged intentionally.
+- Do not delete the old tracked path until references/imports have been validated and the deletion is covered by the existing `allow-deletions=true` trailer flow.
 
 ### Before Committing
 
@@ -187,6 +204,10 @@ If a human explicitly needs to edit `.allowlist`, they must commit with:
 git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
 ```
 
+For root-entry decisions, parser behavior, and the current keep/move criteria,
+use the canonical policy in `docs-guide/policies/root-allowlist-governance.mdx`
+instead of encoding decisions directly in `.allowlist`.
+
 If a human explicitly needs to allow file deletions, they must commit with:
 
 ```bash
@@ -220,7 +241,7 @@ git reset HEAD test-violation.jsx
 
 ```bash
 # Start mint dev in one terminal
-mint dev
+mint dev --port 3001
 
 # In another terminal, create a test MDX file
 echo '---\ntitle: Test\n---\n# Test' > v2/pages/test.mdx

@@ -8,22 +8,33 @@ keywords:
   - livepeer
   - real-time AI
   - Daydream
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 ---
 
-import { PostCard, BlogCard, CardBlogDataLayout, CardColumnsPostLayout, ColumnsBlogCardLayout, ForumLatestLayout, DiscordAnnouncements, } from '/snippets/components/data/data.jsx'
-import { TwitterTimeline } from '/snippets/components/data/embed.jsx'
-import { YouTubeVideo } from '/snippets/components/content/video.jsx';
-import { YouTubeVideoData } from '/snippets/components/data/videoData.jsx';
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { forumData } from '/snippets/automations/forum/forumData.jsx'
-import { ghostData } from '/snippets/automations/blog/ghostBlogData.jsx'
-import { youtubeData } from '/snippets/automations/youtube/youtubeData.jsx'
-import { discordAnnouncementsData } from '/snippets/automations/discord/discordAnnouncementsData.jsx'
+{/*
+  @aiDiscoverability — page-level assessment
+  YouTube:  static data at /snippets/data/social-feeds/youtubeData.jsx
+  Forum:    static data at /snippets/data/social-feeds/forumData.jsx
+  Blog:     static data at /snippets/data/social-feeds/ghostBlogData.jsx
+  Discord:  static data at /snippets/data/social-feeds/discordAnnouncementsData.jsx
+  Twitter:  TwitterTimeline is a 3rd-party iframe widget (mikle.com) — no static data,
+            no API access, content not crawlable. @aiDiscoverability none. No companion possible.
+*/}
+
+import { PostCard, BlogCard, CardBlogDataLayout, CardColumnsPostLayout, ColumnsBlogCardLayout, ForumLatestLayout, DiscordAnnouncements, } from '/snippets/components/integrators/blog/Data.jsx'
+import { TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/ScrollBox.jsx'
+import { forumData } from '/snippets/data/social-feeds/forumData.jsx'
+import { ghostData } from '/snippets/data/social-feeds/ghostBlogData.jsx'
+import { youtubeData } from '/snippets/data/social-feeds/youtubeData.jsx'
+import { discordAnnouncementsData } from '/snippets/data/social-feeds/discordAnnouncementsData.jsx'
 
 <Tip>
  Uses automations to pull in the latest youtube videos, forum posts and blogs
@@ -31,7 +42,7 @@ import { discordAnnouncementsData } from '/snippets/automations/discord/discordA
 
 ## <Icon icon="camera-movie" size={24} /> Videos
 Watch the latest videos on the <LinkArrow label="Livepeer Youtube Channel" href="https://www.youtube.com/@livepeer" newline={false} />
-{/* { DownloadButton } from "/snippets/components/primitives/buttons.jsx"; */}
+{/* { DownloadButton } from "/snippets/components/elements/buttons/Buttons.jsx"; */}
 <YouTubeVideoData items={youtubeData} limit={2} />
 
 ## <Icon icon="messages" size={24} /> Forum
@@ -41,7 +52,7 @@ Contribute to trending <LinkArrow label="Forum Discussions" href="https://forum.
 
 ## <Icon icon="discord" size={24} /> Discord
 Add your voice to the latest <LinkArrow label="Discord Discussions" href="https://discord.livepeer.org/" newline={false} />
-<DiscordAnnouncements items={discordAnnouncementsData} limit={2} />
+<DiscordAnnouncements serverName="Livepeer" items={discordAnnouncementsData} limit={2} ScrollBox={ScrollBox} scrollMaxHeight={200} />
 
 ## <Icon icon="twitter" size={24} /> X Posts
 Follow, Like, Comment & Share on the latest <LinkArrow label="Livepeer X posts" href="https://x.com/Livepeer" newline={false} />

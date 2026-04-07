@@ -1,21 +1,24 @@
 ---
 name: docs-impact-propagation
-version: "1.0"
-description: Map changed claim families to every dependent page, glossary, example, comparison, and reference surface that should be verified or updated.
-tier: 2
-invoke_when:
-  - "find every page affected by this docs change"
-  - "propagate this claim update across the docs"
-  - "identify downstream pages that depend on this statement"
+description: >-
+  Map changed claim families to every dependent page, glossary, example,
+  comparison, and reference surface that should be verified or updated. Use
+  when: find every page affected by this docs change, propagate this claim
+  update across the docs, identify downstream pages that depend on this
+  statement.
+metadata:
+  version: "1.2"
+  category: "review-pipeline"
+  tier: "2"
 primary_paths:
   - "v2"
-  - "tools/scripts/docs-fact-registry.js"
-  - "tools/scripts/docs-page-research.js"
-  - "tasks/research/claims"
-  - "tasks/reports"
+  - "operations/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "operations/scripts/audits/content/veracity/docs-page-research.js"
+  - "workspace/research/claims"
+  - "workspace/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
-  - "node tools/scripts/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
+  - "node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims"
+  - "node operations/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 
 SKILL: Docs Impact Propagation
@@ -37,7 +40,7 @@ Canonical docs-guide source
 When to load references
 - Load `references/claim-map-method.md` before searching so the impact pass is claim-family-led rather than route-led.
 - Load `references/propagation-checklist.md` while finishing the task so dependent page classes are not missed.
-- Consult `tasks/research/claims/*.json` first when the changed claim family is already tracked.
+- Consult `workspace/research/claims/*.json` first when the changed claim family is already tracked.
 
 Workflow
 1. State the changed claim in one sentence and identify its owning entity, workflow, or term.

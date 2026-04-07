@@ -1,0 +1,150 @@
+---
+title: 'Page-structure-template'
+sidebarTitle: Page-structure-template
+description: 'Describe page-structure-template'
+audience: community
+persona: internal
+pageType: reference
+pageVariant: specification
+purpose: reference
+status: draft
+keywords:
+  - livepeer
+  - keyword
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/_ PAGE STRUCTURE TEMPLATE _/}
+{/\*
+This is a template for page structure and style. It includes the common elements and layout used across
+COMMENTS: (comments on this page (leave as comment section), containing: )
+
+- JOURNEY OF THIS PAGE
+- {REVIEW} items list
+- {any issues or key notes}
+  \*/}
+
+{/_ COMPONENT IMPORTS _/}
+{/_ COMPONENT IMPORTS. PascalCase. leave comment above this in place _/}
+"import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'""
+
+{/_ DATA IMPORTS _/}
+{/_
+DATA IMPORTS. leave comment above this in place
+Data items should be FULLY_CAPITALISED like constants
+Note must be the relative link unless inside snippets.
+_/}
+"import THIS_DATA from /data/mydata.jsx"
+
+{/_ MDX PAGE IMPORTS _/}
+{/_
+PAGE IMPORTS - MDX. leave comment above this in place
+Capitalise PageName (PascalCase)
+Note must be the relative link unless inside snippets.
+Note pagename can be anything -> it imports as whatever you import is as here.
+_/}
+"import ThisPage from "/pages/thisPage.mdx"
+
+{/_ MDX COMPOSABLE IMPORTS _/}
+{/_
+COMPOSABLE IMPORTS - MDX. leave comment above this in place
+Capitalise ComposableName (PascalCase).
+Note must be the relative link unless inside snippets.
+Note composablename can be anything -> it imports as whatever you import is as here.
+_/}
+"import ThisComposable from "/composables/thisComposable.mdx"
+
+{/_ ==========================PAGE SECTION: HEADER========================= _/}
+{/\*
+PAGE SECTION: HEADER:
+
+- PAGE ELEMENT: Frontmatter Title
+- PAGE ELEMENT: Frontmatter Description
+- PAGE ELEMENT: [OPT] Header CTA
+  _/}
+  {/_
+  PAGE ELEMENT: Header CTA
+- WRAP ELEMENT IN <CENTEREDCONTAINER style={{width: "85%", minWidth: "fit-content"}}/>
+  Header CTA OPTIONS
+- DEFINITION OR VALUE PROP: <QUOTE>,
+- CLARITY CALLOUT: <TIP>
+- CTA OR DIRECT REFERENCE LINK: <CARD props: [REQ] title={CUSTOMCARDTITLE(prop: [REQ] title="", [REQ] icon=)}, [REQ]href="" [REQ]horizontal/> NO CHILDREN
+- CODE START: <CODEBLOCK props: [REQ] filename="", [REQ] icon="default: terminal">
+- MENTAL MODEL: <ACCORDIONGROUP><ACCORDION props: [REQ] icon="">Markdown + Components</ACCORDION></ACCORDIONGROUP>
+- PAGE HELP: <CUSTOMCALLOUT> Views at top right! </CUSTOMCALLOUT>
+  \*/}
+  <Quote> Definition: Page Taxonomy helps create a clear flow and homogenise style for readers. </Quote>
+  <Tip> Clarity Callout: This is a major point in this page that is often confused or needs highlighting </Tip>
+  <Card title={<CustomCardTitle icon="github" title="Source Reference" style={{}} />} arrow horizontal />
+  <CustomCodeBlock filename="Run Page Composition" icon="terminal" />
+
+{/_ PAGE ELEMENT: CUSTOM DIVIDER _/}
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+{/_ ==========================PAGE SECTION: INTRODUCTION========================= _/}
+{/\*
+PAGE SECTION: INTRODUCTION:
+
+- PAGE ELEMENT: Overview
+  _/}
+  {/_
+  PAGE ELEMENT: OVERVIEW
+- Style: normal text
+- Content:
+  - Value Prop
+  - Context
+  - Outline
+  - What this is.
+  - Why it matters to you.
+- Do:
+  - DECODE JARGON
+  - Lead with the value proposition
+  -
+- Dont: - Use jargon, Livepeer or web3 - specific Abbreviations (unless technical - but link to definition ex: [HLS]("glossary or wikipedia link") - Use qualifiers, explanation by negation,
+  \*/}
+  What this is.
+  Why it matters to you.
+
+{/_ ==========================PAGE SECTION: BODY========================= _/}
+{/\*
+PAGE ELEMENT: BODY SECTION 1 HEADER
+
+- Style: H1
+- Content: Concept Terminology - Purpose: Concise Descriptor name for the section contents - Concise Terminology for / Descriptor of Section Content - Can act as a discoverability key for section contents - ✔ User knows exactly what is in the section without even seeing it - ✔ An AI would know what question this section answered. - DO: - USe Governing-Concept Content descriptors, - Technical, Professional Descriptors - Under 3 words - DONT: - Use questions - Use Question Frame words: "What, How, When, Why" - Use a sentence - or other descriptors (eg What You Earn), Numbers (eg: Three Reasons), First Person, Negation - Use Quantified/Numbered Framing or Number-led headings (eg: Three Choices, Two Setup Options) - Use Numbers - Use Comparators (Differences, vs,) - Use Literal Labels - Use Generic Descriptors, - Use Taxonomy Mismatches - EXAMPLES: - ✘ How Pools Work | ✔ Pool Mechanics - ✘ What You Earn | ✔ Rewards, Incentives, Profitability, Reward Model - ✘ Before You Start | ✔ Setup Checklist, Requirements, Prerequisites - ✘ What Changes | ✔ Deployment Modes, Node Modes, Runtime Types - NOTE: Name says nothing about the content Reader has no idea what this section is about. This title is not a descriptor - ✘ When to use this setup | ✔ - ✘ Three Setup Paths | ~ Setup Options (better) | ✔ Deployment Types (best) -> gives clarity, provides terminology definition - ✘ The Two Workload Types | ~ Workload Types | ✔ AI Runtime Pipelines (best) | ✔ AI Modality Pipelines | ~ AI Processing Modalities | ✔ AI Modality Workflows | ~Execution/Runtime Modalities, ✔ AI Modality Workflows | AI Execution Workflows | AI Modality Profiles - ✘ | ✔ - ✘ | ✔ - ✘ | ✔
+  \*/}
+
+{/\*
+PAGE ELEMENT: BODY SECTION 1 HEADER
+
+- Style: H1
+- Content: Concept Terminology - DO: Technical, Professional, Under 3 words - DONT: Question, Sentence,
+  \*/}
+
+{/_ ==========================PAGE SECTION: FOOTER========================= _/}
+{/\*
+[OPT] PAGE ELEMENT: RELATED PAGES
+
+- Purpose:
+  - concise routing to related resources
+  - navigation for rest of a section
+- Style: COLUMN with CARD
+- Component: <COLUMNS cols={2}><CARD props: [REQ] title={CUSTOMCARDTITLE(prop: [REQ] title="", [REQ] icon=)}, [REQ]href="" [REQ]horizontal>description</Card></COLUMN>
+- Content: - DO: - title: 1-3 words - description: ONE SENTENCE MAX 10 WORDS - description: description of link content - DONT: - description: Repeat title [instead: remove | offer description] - description: Rephrase title [instead: remove | offer description]
+  \*/}
+
+{/_ ==========================PAGE TAXONOMY GUIDE========================= _/}
+{/\*
+DO:
+
+- Use Colored Badges or icons to provide major category differentiation
+  _/}
+  {/_
+  DONT:
+- Use more than one major layout element [Table, Steps] per page (if not nested)
+  - ex:
+- Use more than one of the same layout element
+  \*/}

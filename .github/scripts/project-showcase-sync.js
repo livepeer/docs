@@ -6,7 +6,7 @@
  * @scope             .github/scripts
  * @owner             docs
  * @needs             F-R1
- * @purpose-statement Fetches project showcase data from external source, writes to snippets/automations/showcase/
+ * @purpose-statement Fetches project showcase data from external source, writes to snippets/data/showcase-feed/
  * @pipeline          P5, P6
  * @usage             node .github/scripts/project-showcase-sync.js [flags]
  */
@@ -42,7 +42,7 @@ const cfg = {
   githubDataBranch: process.env.GITHUB_DATA_BRANCH || 'docs-v2-preview',
   githubAssetsBranch: process.env.GITHUB_ASSETS_BRANCH || 'docs-v2-assets',
   showcaseDataPath:
-    process.env.SHOWCASE_DATA_FILE_PATH || 'snippets/automations/showcase/showcaseData.jsx',
+    process.env.SHOWCASE_DATA_FILE_PATH || 'snippets/data/showcase-feed/showcaseData.jsx',
   showcaseAssetsBasePath:
     process.env.SHOWCASE_ASSETS_BASE_PATH || 'snippets/assets/domain/00_HOME/showcase',
   discordApiBaseUrl: process.env.DISCORD_API_BASE_URL || 'https://discord.com/api/v10',

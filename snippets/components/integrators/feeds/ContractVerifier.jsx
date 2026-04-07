@@ -16,15 +16,6 @@
 import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 import { ArbitrumIcon } from '/snippets/components/elements/icons/Icons.jsx'
 
-/**
- * @component ContractVerifier
- * @category data
- * @status experimental
- * @description Verifies Livepeer contract addresses by contract name or pasted address using pipeline data and chain lookups.
- * @param {Object} data - Pipeline contract addresses data object.
- * @param {string} [className=''] - Optional CSS class override.
- * @param {object} [style={}] - Optional inline style override.
- */
 export const ContractVerifier = ({
   data,
   className = '',

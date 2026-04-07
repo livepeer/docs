@@ -1,0 +1,308 @@
+---
+title: 'Set Your Pricing and Cuts'
+sidebarTitle: 'Pricing and Cuts'
+description: 'Configure competitive video and AI pricing, set reward cut and fee cut from the operator perspective, and verify pricing is within gateway acceptance thresholds.'
+pageType: guide
+audience: orchestrator
+purpose: configure
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - pricing
+  - pricePerUnit
+  - reward cut
+  - fee cut
+  - aiModels.json
+  - AI pricing
+  - gateway MaxPrice
+lastVerified: '2026-03-23'
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+
+<Tip>
+  Gateways filter orchestrators by price before routing jobs. An orchestrator priced above a gateway's cap receives no work from that gateway. An orchestrator priced below operating costs earns less than it spends. Both extremes produce zero net income.
+</Tip>
+
+Pricing operates in two domains: **video transcoding** (a single global price per pixel) and **AI inference** (per-pipeline, per-model pricing in `aiModels.json`). Reward cut and fee cut determine how inflation rewards and job fees are split between the operator and delegators.
+
+<CustomDivider middleText="Video Pricing" />
+
+## Video transcoding price
+
+Video transcoding is priced in **wei per pixel**. The pixel count for a job is `width x height x output_renditions`.
+
+Set `-pricePerUnit` at startup:
+
+```bash icon="terminal" filename="video-price"
+livepeer \
+  -orchestrator \
+  -transcoder \
+  -pricePerUnit 1000 \
+  -pixelsPerUnit 1 \
+  ...
+```
+
+{/* VERIFY: Current active network price range at tools.livepeer.cloud. The 500-2,000 wei range is from March 2026 research and may have shifted. */}
+
+`-pixelsPerUnit` is the denominator. Leave it at `1` unless expressing price over a larger pixel batch for readability.
+
+### USD-denominated video pricing
+
+Append the `USD` suffix to price in dollars. go-livepeer converts to wei at runtime using a Chainlink ETH/USD price feed on Arbitrum:
+
+```bash icon="terminal" filename="usd-video-price"
+-pixelsPerUnit 1000000000000 \
+-pricePerUnit 0.41USD
+```
+
+This sets $0.41 per trillion pixels. Adjust `pixelsPerUnit` to keep `pricePerUnit` as a readable decimal.
+
+### autoAdjustPrice
+
+By default, go-livepeer adjusts the advertised price based on estimated ticket redemption overhead. When gas prices rise, the adjustment compensates:
+
+| Overhead | Base price 1,000 wei | Advertised price |
+|----------|---------------------|-----------------|
+| 1% | 1,000 wei | 1,010 wei |
+| 20% | 1,000 wei | 1,200 wei |
+| 50% | 1,000 wei | 1,500 wei |
+
+Disable with `-autoAdjustPrice=false` when advertising a fixed rate for commercial relationships. For general network participation, keep the default on.
+
+### Surveying the market
+
+Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) for the current price distribution across the active set. Start in the lower half of currently active prices, then adjust upward after confirming that job volume holds.
+
+<CustomDivider middleText="AI Pricing" />
+
+## AI inference pricing
+
+AI pricing is configured per pipeline and per model in `aiModels.json`. Each entry sets its own `price_per_unit` independently of the video transcoding price.
+
+### Pricing units by pipeline
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Pricing unit</TableCell>
+      <TableCell header>Typical price_per_unit</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-video`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~9,536,742 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>Per millisecond of audio</TableCell>
+      <TableCell>~12,882,811 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text`</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>~1,192,093 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`llm`</TableCell>
+      <TableCell>Per custom unit (typically per 1M tokens)</TableCell>
+      <TableCell>USD-denominated</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* VERIFY: Current pipeline price ranges at tools.livepeer.cloud/ai/network-capabilities. The wei figures above are illustrative baselines from March 2026. */}
+
+### aiModels.json pricing example
+
+```json icon="code" filename="aiModels.json"
+{
+  "pipeline": "text-to-image",
+  "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+  "price_per_unit": 4768371,
+  "pixels_per_unit": 1,
+  "warm": true
+}
+```
+
+The `price_per_unit` field accepts an integer (wei) or a USD string (e.g. `"0.5e-3USD"` with `"currency": "USD"`).
+
+### LLM pricing
+
+LLM pricing uses USD notation with `pixels_per_unit` as a token-count proxy:
+
+```json icon="code" filename="llm-pricing"
+{
+  "pipeline": "llm",
+  "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "price_per_unit": 0.18,
+  "currency": "USD",
+  "pixels_per_unit": 1000000,
+  "url": "http://llm_runner:8000",
+  "warm": true
+}
+```
+
+This sets $0.18 per million tokens -- a competitive rate for 8B parameter models.
+
+### Checking competitive AI rates
+
+Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and filter by pipeline. Orchestrators priced above gateway caps receive no work for that pipeline. Start at or below the median, then adjust based on job volume.
+
+<CustomDivider middleText="Reward Cut and Fee Cut" />
+
+## Reward cut and fee cut
+
+These two on-chain settings control how inflation rewards and job fees are split between the operator and delegators.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Setting</TableCell>
+      <TableCell header>What it controls</TableCell>
+      <TableCell header>Operator perspective</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Reward cut**</TableCell>
+      <TableCell>Percentage of LPT inflation the orchestrator keeps before distributing the remainder to delegators</TableCell>
+      <TableCell>Higher reward cut = more LPT retained per round. Lower reward cut = more attractive to delegators, increasing total stake and active set rank.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Fee cut**</TableCell>
+      <TableCell>Percentage of ETH service fees the orchestrator keeps before distributing the remainder to delegators</TableCell>
+      <TableCell>Most operators set fee cut high (90-100%) because ETH fees compensate for operational costs. Delegators prioritise reward cut over fee cut.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Setting cuts at activation
+
+Cuts are set during the `livepeer_cli` activation flow. Starting values:
+
+| Setting | Recommended start | Reasoning |
+|---------|------------------|-----------|
+| Reward cut | 10% | Keeps 10% of minted LPT; delegates 90% to attract stake |
+| Fee cut | 95% | Retains most ETH fees to cover operating costs |
+
+### Adjusting cuts after activation
+
+Change cuts at any time via `livepeer_cli`:
+
+```bash icon="terminal" filename="update-cuts"
+docker exec -it livepeer-orchestrator livepeer_cli
+# Select: Set orchestrator config
+```
+
+{/* VERIFY: Confirm whether cut changes take effect immediately or at the next round boundary against https://github.com/livepeer/go-livepeer */}
+
+### The operator's trade-off
+
+Cuts balance two competing goals:
+
+1. **Maximise personal retention** -- higher cuts mean more LPT and ETH per round.
+2. **Attract delegation** -- lower reward cuts attract delegators, increasing total stake, improving active set rank, and increasing the absolute value of the operator's share (a smaller percentage of a larger reward pool).
+
+For video transcoding, where routing favours higher-stake nodes, attracting delegation through competitive reward cuts directly increases job volume. For AI inference, where routing is capability-based, delegation matters less for job acquisition but still affects LPT inflation income.
+
+<Note>
+  Check competing orchestrators' cuts on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) before setting yours. A reward cut far above the network median deters delegators; a reward cut far below leaves earnings on the table.
+</Note>
+
+<CustomDivider middleText="Gateway Price Gate" />
+
+## Checking against gateway MaxPrice
+
+Gateways configure a maximum price they will pay per capability. An orchestrator priced above a gateway's cap receives zero jobs from that gateway, regardless of hardware quality or stake position.
+
+For video: check your `-pricePerUnit` against prices listed on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Active orchestrators receiving work are priced within gateway acceptance ranges.
+
+For AI: check your per-pipeline `price_per_unit` against the pricing column on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Pipelines with no job volume at your price tier indicate pricing above the gateway cap.
+
+<CustomDivider />
+
+## Pricing flag reference
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag / field</TableCell>
+      <TableCell header>Scope</TableCell>
+      <TableCell header>Default</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-pricePerUnit`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>Required</TableCell>
+      <TableCell>Wei per pixel, or USD string</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-pixelsPerUnit`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>`1`</TableCell>
+      <TableCell>Denominator for readability</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-autoAdjustPrice`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>`true`</TableCell>
+      <TableCell>Adjusts for ticket redemption overhead</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-pricePerGateway`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>Custom rate per gateway address (commercial relationships)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`price_per_unit` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>Required per entry</TableCell>
+      <TableCell>Integer (wei) or USD string</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`pixels_per_unit` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>`1`</TableCell>
+      <TableCell>Pricing granularity per entry</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`currency` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>None (wei)</TableCell>
+      <TableCell>Set to `"USD"` for USD notation</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Reward Call Tuning" icon="rotate" href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning">
+    Calculate whether reward calling is profitable at your stake level.
+  </Card>
+  <Card title="Earning Model" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
+    How pricing decisions translate into fee earnings alongside LPT inflation rewards.
+  </Card>
+</CardGroup>

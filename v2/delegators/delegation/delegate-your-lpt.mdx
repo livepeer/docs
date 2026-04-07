@@ -1,0 +1,104 @@
+---
+title: Delegate Your LPT
+sidebarTitle: Delegate Your LPT
+description: >-
+  Complete the initial Livepeer delegation flow on Arbitrum One: connect your
+  wallet, approve LPT, bond to an orchestrator, and verify the position.
+keywords:
+  - livepeer
+  - delegate lpt
+  - how to bond lpt
+  - livepeer explorer
+  - arbitrum
+  - staking tutorial
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: delegator
+purpose: start
+lifecycleStage: setup
+status: current
+lastVerified: 2026-04-06
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+This tutorial takes you from "wallet with LPT on Arbitrum One" to "confirmed bonded delegator position". It assumes you have already chosen your orchestrator.
+
+<BorderedBox variant="accent">
+Before you start:
+
+- your LPT is already on **Arbitrum One**
+- your wallet holds a small ETH balance on **Arbitrum One**
+- you have already completed the comparison work in [Choose an Orchestrator](/v2/delegators/delegation/choose-an-orchestrator)
+</BorderedBox>
+
+## Delegation tutorial
+
+<StyledSteps>
+  <StyledStep title="Open Livepeer Explorer and connect your wallet">
+    Go to [explorer.livepeer.org](https://explorer.livepeer.org), click **Connect Wallet**, and connect the wallet that holds your Arbitrum-side LPT.
+  </StyledStep>
+  <StyledStep title="Open your chosen orchestrator">
+    Navigate to the orchestrator's Explorer profile and confirm they are still **Active** before you continue.
+  </StyledStep>
+  <StyledStep title="Start the Delegate flow">
+    Click **Delegate** on the orchestrator profile and enter the amount of LPT you want to bond. You do not need to bond your full balance.
+  </StyledStep>
+  <StyledStep title="Sign the ERC-20 approval">
+    The first transaction authorises the BondingManager contract to move the LPT amount you entered. No stake is bonded yet at this step.
+  </StyledStep>
+  <StyledStep title="Sign the bond transaction">
+    The second transaction actually bonds the LPT and attributes your stake to the chosen orchestrator.
+  </StyledStep>
+  <StyledStep title="Verify the position">
+    Return to your account page in Explorer and confirm the bonded balance, delegate address, and pending rewards section are now present.
+  </StyledStep>
+</StyledSteps>
+
+## What success looks like
+
+After the bond transaction confirms, you should be able to verify:
+
+- a bonded LPT balance on your Explorer account page
+- the orchestrator address your stake points to
+- a pending rewards area that will update in later rounds
+
+If you delegated mid-round, do not expect immediate reward growth. First visible accrual may appear in the next round after the orchestrator calls `reward()`.
+
+## Important warning before your first claim
+
+<Warning>
+  As of 6 April 2026, Explorer PR `#613` is still open. Do not assume the UI will warn you about claim timing.
+
+  If you call `claimEarnings()` before your orchestrator has already called `reward()` for the current round, you can skip that round's rewards entirely.
+</Warning>
+
+Your next page should be [Manage Your Delegation](/v2/delegators/delegation/manage-your-delegation), which explains when to claim, when to redelegate, and how to exit.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Can I bond only part of my balance?">
+    Yes. You can start with a partial amount and add more later from the same wallet.
+  </Accordion>
+  <Accordion title="Can I undo the bond immediately?">
+    You can redelegate quickly, but full withdrawal requires unbonding and waiting through the protocol's unbonding period.
+  </Accordion>
+  <Accordion title="I do not see rewards yet. Is something broken?">
+    Not necessarily. Wait for the next round and confirm that your orchestrator has called `reward()` for that round.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claim, compound, redelegate, unbond, and withdraw after the initial bond.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    Understand what determines the return on the position you just opened.
+  </Card>
+</CardGroup>

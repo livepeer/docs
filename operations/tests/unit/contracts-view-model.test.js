@@ -20,7 +20,7 @@ const VIEW_MODEL_PATH = path.join(
   'snippets',
   'data',
   'contract-addresses',
-  'view-model.js'
+  'view-model.jsx'
 );
 const CONTRACTS_JSON_PATH = path.join(
   REPO_ROOT,
@@ -96,6 +96,10 @@ function run() {
   assert.ok(
     nonActiveGroups.find((group) => group.key === 'paused')?.items.some((row) => row.Name === 'Controller'),
     'paused group should include paused controller-era contracts'
+  );
+  assert.ok(
+    nonActiveGroups.every((group) => group.items.some((row) => row.__separator === true)),
+    'non-active groups should retain category separator rows for accordion tables'
   );
 
   assert.strictEqual(

@@ -1,7 +1,15 @@
 ---
-title: 'BYOC Pipelines'
-sidebarTitle: 'BYOC Pipelines'
-description: 'Gateway-operator guide for routing BYOC (Bring Your Own Container) workloads on Livepeer - capability-as-contract routing, operator responsibilities, health tracking, and the handoff to orchestrator-side implementation.'
+title: BYOC Pipelines
+sidebarTitle: BYOC Pipelines
+description: >-
+  Gateway-operator guide for routing BYOC (Bring Your Own Container) workloads on
+  Livepeer - capability-as-contract routing, operator responsibilities, health tracking,
+  and the handoff to orchestrator-side implementation.
+pageType: guide
+audience: gateway
+purpose: explain
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - gateway
@@ -11,18 +19,13 @@ keywords:
   - custom inference
   - ai pipeline
   - operator
-og:image: /snippets/assets/site/og-image/fallback.png
-pageType: guide
-audience: gateway-operator
-purpose: concept
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
 Verify:
-- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)~~
+- ~~Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)~~
 - ~~Fontawesome icons are used on accordions and tabs~~
 - ~~Tables use StyledTable component~~ (no tables remaining - fit table removed, discovery cross-referenced)
 - ~~No em-dashes are used (instead use standard -)~~
@@ -35,8 +38,8 @@ Human
 - Review cross-references to ai-pipelines.mdx discovery sections
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
@@ -129,7 +132,7 @@ BYOC capabilities on the network fall into broad latency profiles. Understanding
   </Accordion>
 </AccordionGroup>
 
-BYOC works best for frame-based, stream-based, and short-lived GPU workloads. See <LinkArrow href="/v2/developers/build/workload-fit" label="Workload Fit" newline={false} /> for the full decision framework and <LinkArrow href="./guide" label="Pipelines Guide" newline={false} /> for how BYOC fits the pipeline taxonomy.
+BYOC works best for frame-based, stream-based, and short-lived GPU workloads. See <LinkArrow href="/v2/developers/build/workload-fit" label="Workload Fit" newline={false} /> for the full decision framework and <LinkArrow href="/v2/gateways/guides/node-pipelines/guide" label="Pipelines Guide" newline={false} /> for how BYOC fits the pipeline taxonomy.
 
 {/* ============================================================
     6. BYOC REQUIREMENTS
@@ -166,7 +169,7 @@ These constraints apply to BYOC containers on the network. Gateway operators enf
 
 BYOC routing requires per-capability health tracking instead of per-orchestrator tracking. An orchestrator may serve `image-to-image` perfectly while its `depth` capability is degraded. Track them independently.
 
-BYOC containers may have longer cold-start times than standard `ai-runner` pipelines. See <LinkArrow href="./pipeline-configuration" label="Pipeline Configuration" newline={false} /> for retry timeout settings (`-aiProcessingRetryTimeout`).
+BYOC containers may have longer cold-start times than standard `ai-runner` pipelines. See <LinkArrow href="/v2/gateways/guides/node-pipelines/pipeline-configuration" label="Pipeline Configuration" newline={false} /> for retry timeout settings (`-aiProcessingRetryTimeout`).
 
 **Failure modes specific to BYOC:**
 
@@ -183,7 +186,7 @@ For each failure mode, the `AISessionManager` will attempt to route to an altern
 
 ## Capability Discovery
 
-BYOC capability discovery uses the same mechanisms as standard AI discovery. See <LinkArrow href="./ai-pipelines#orchestrator-discovery" label="AI Pipelines - Orchestrator Discovery" newline={false} /> and <LinkArrow href="./ai-pipelines#finding-ai-models" label="AI Pipelines - Finding AI Models" newline={false} /> for the full list of discovery methods and tools.
+BYOC capability discovery uses the same mechanisms as standard AI discovery. See <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines#orchestrator-discovery" label="AI Pipelines - Orchestrator Discovery" newline={false} /> and <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines#finding-ai-models" label="AI Pipelines - Finding AI Models" newline={false} /> for the full list of discovery methods and tools.
 
 When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list. The `AISessionManager` will route BYOC requests to them when their advertised capability matches the request.
 
@@ -192,13 +195,13 @@ When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Pipelines Guide" icon="diagram-project" href="./guide">
+  <Card title="Pipelines Guide" icon="diagram-project" href="/v2/gateways/guides/node-pipelines/guide">
     Pipeline taxonomy - video, batch AI, real-time AI, and BYOC.
   </Card>
-  <Card title="AI Pipelines" icon="brain" href="./ai-pipelines">
+  <Card title="AI Pipelines" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
     Standard AI pipeline routing, orchestrator discovery, and AISessionManager details.
   </Card>
-  <Card title="Pipeline Configuration" icon="sliders" href="./pipeline-configuration">
+  <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
     Retry timeouts, AI routing flags, and per-capability price ceiling configuration.
   </Card>
   <Card title="Workload Fit" icon="bullseye" href="/v2/developers/build/workload-fit">
@@ -207,7 +210,7 @@ When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list
   <Card title="Developer BYOC Guide" icon="code" href="/v2/developers/build/byoc">
     Full architecture, container requirements, and setup for teams building BYOC containers.
   </Card>
-  <Card title="Monitoring Setup" icon="chart-line" href="../monitoring-and-tooling/monitoring-setup">
+  <Card title="Monitoring Setup" icon="chart-line" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup">
     Per-capability health tracking, discovery error metrics, and alert configuration.
   </Card>
 </CardGroup>
@@ -215,7 +218,7 @@ When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list
 
 {/* ---
 title: 'BYOC Pipelines'
-description: 'Run custom inference containers on the Livepeer network — capability-based routing, operator responsibilities, model fit, and the BYOC gateway workflow.'
+description: 'Run custom inference containers on the Livepeer network - capability-based routing, operator responsibilities, model fit, and the BYOC gateway workflow.'
 sidebarTitle: 'BYOC Pipelines'
 pageType: 'guide'
 audience: 'gateway'
@@ -226,7 +229,7 @@ status: 'stub'
   PURPOSE:
   Journey step: "Custom containers on the network"
   Gateway-operator guide for BYOC (Bring Your Own Container) routing and service policy.
-  Focuses on what the gateway operator needs to know and do — NOT how to build BYOC
+  Focuses on what the gateway operator needs to know and do - NOT how to build BYOC
   containers (that's developer/orchestrator territory).
 
   Key framing: capabilities as API contracts, not model names. The gateway routes by
@@ -235,23 +238,23 @@ status: 'stub'
   SECTION HOME: Guides → AI and Job Pipelines
 
   JOURNEY POSITION:
-  1. Pipeline Overview — "What workloads can my gateway route?"
-  2. Video Transcoding Pipeline — "How do video jobs flow?"
-  3. AI Inference Pipeline — "How do AI jobs flow?"
-  4. BYOC Pipelines (this page) — "Custom containers on the network"
-  5. Pipeline Configuration — "Configure transcoding profiles and AI routing"
+  1. Pipeline Overview - "What workloads can my gateway route?"
+  2. Video Transcoding Pipeline - "How do video jobs flow?"
+  3. AI Inference Pipeline - "How do AI jobs flow?"
+  4. BYOC Pipelines (this page) - "Custom containers on the network"
+  5. Pipeline Configuration - "Configure transcoding profiles and AI routing"
 
   RELATED FILES (draw from):
-  - all-resources/v2-guidesres--byoc.mdx                      — PRIMARY (95%): 68 lines. Gateway-operator BYOC guide. Routing by capability/policy, health monitoring, retry config. Capability-as-contract framing.
-  - all-resources/v2-dev--ai-pipelines-byoc.mdx                — PRIMARY (80%): 256 lines. Detailed BYOC implementation: what BYOC is/isn't, model fit matrix, capability routing philosophy, 3 implementation patterns (real-time diffusion, vision utility, etc.).
-  - all-resources/v2-dev--ai-pipelines-model-support.mdx       — SECONDARY (60%): 250 lines. Model compatibility matrix: diffusion, control/conditioning, vision models. Three-tier ratings (green/yellow/red).
-  - all-resources/v2-dev--ai-pipelines-overview.mdx            — SECONDARY (30%): 262 lines. BYOC as one of 3 integration patterns. Context for where BYOC fits.
+  - all-resources/v2-guidesres--byoc.mdx                      - PRIMARY (95%): 68 lines. Gateway-operator BYOC guide. Routing by capability/policy, health monitoring, retry config. Capability-as-contract framing.
+  - all-resources/v2-dev--ai-pipelines-byoc.mdx                - PRIMARY (80%): 256 lines. Detailed BYOC implementation: what BYOC is/isn't, model fit matrix, capability routing philosophy, 3 implementation patterns (real-time diffusion, vision utility, etc.).
+  - all-resources/v2-dev--ai-pipelines-model-support.mdx       - SECONDARY (60%): 250 lines. Model compatibility matrix: diffusion, control/conditioning, vision models. Three-tier ratings (green/yellow/red).
+  - all-resources/v2-dev--ai-pipelines-overview.mdx            - SECONDARY (30%): 262 lines. BYOC as one of 3 integration patterns. Context for where BYOC fits.
 
   CROSS-REFS:
-  - AI Inference Pipeline (this section) — BYOC is a pipeline type within AI inference
-  - Advanced Operations → Gateway Middleware — middleware can add custom routing for BYOC
-  - Setup → AI Configuration — base AI config that BYOC builds on
-  - Resources → AI API Reference — endpoints used for BYOC requests
+  - AI Inference Pipeline (this section) - BYOC is a pipeline type within AI inference
+  - Advanced Operations → Gateway Middleware - middleware can add custom routing for BYOC
+  - Setup → AI Configuration - base AI config that BYOC builds on
+  - Resources → AI API Reference - endpoints used for BYOC requests
 */}
 {/*
 # BYOC Pipelines
@@ -305,9 +308,9 @@ From the model-support compatibility matrix:
 
 ### 5. BYOC Implementation Patterns
 Three patterns from developer docs (gateway operator needs to understand what's coming):
-1. **Real-time diffusion** — frame-by-frame processing, low-latency requirement
-2. **Vision utility node** — single-frame processing, higher latency tolerance
-3. **Batch processing** — queue-based, highest latency tolerance
+1. **Real-time diffusion** - frame-by-frame processing, low-latency requirement
+2. **Vision utility node** - single-frame processing, higher latency tolerance
+3. **Batch processing** - queue-based, highest latency tolerance
 
 ### 6. Discovering BYOC Capabilities
 - How to find orchestrators with BYOC capabilities

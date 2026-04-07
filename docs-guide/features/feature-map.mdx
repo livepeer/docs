@@ -9,7 +9,7 @@ keywords:
   - map
   - repository
   - capabilities
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -21,18 +21,18 @@ keywords:
 - Mintlify-based documentation site with role-oriented navigation in `docs.json`.
 - Shared component system in `snippets/components/`.
 - Structural/style enforcement through style-guide tests and hook checks.
-- Route and page index synchronization via `tools/scripts/generate-pages-index.js`.
+- Route and page index synchronization via `operations/scripts/generators/content/catalogs/generate-pages-index.js`.
 
 Primary references:
 
 - `v2/resources/documentation-guide/style-guide.mdx`
 - `v2/resources/documentation-guide/component-library.mdx`
-- `tools/scripts/generate-pages-index.js`
+- `operations/scripts/generators/content/catalogs/generate-pages-index.js`
 
 ## 2) Backend-Like Operational Layer (Docs Ops)
 
 - Unified CLI entrypoint: `lpd`.
-- Validation and enforcement scripts across `tests/`, `.githooks/`, and `tools/scripts/`.
+- Validation and enforcement scripts across `operations/tests/`, `.githooks/`, and `operations/scripts/`.
 - Staged and full WCAG accessibility audits for `v2/` docs with conservative autofix support for common raw-tag issues.
 - Intake and governance artifacts:
   - issue templates in `.github/ISSUE_TEMPLATE/`
@@ -55,7 +55,7 @@ Primary references:
 
 - [`automations.md`](./automations.mdx)
 - `v2/resources/documentation-guide/automations-workflows.mdx`
-- `snippets/automations/`
+- `snippets/data/`
 
 ## 4) Product + Content System
 
@@ -67,7 +67,7 @@ Primary references:
 
 - [`content-system.md`](../frameworks/content-system.mdx)
 - `v2/resources/documentation-guide/documentation-guide.mdx`
-- `contribute/CONTRIBUTING/README.md`
+- `docs-guide/contributing/contributing.mdx`
 
 ## 5) Technical Guides + Domain Coverage
 
@@ -85,14 +85,14 @@ Primary references:
 
 - Script templates enforce self-documenting headers.
 - Script inventory and audit generation are automated.
-- Index generation and SEO/AEO/glossary-supporting scripts live under `tools/scripts/`.
+- Index generation and SEO/AEO/glossary-supporting scripts live under `operations/scripts/`.
 
 Primary references:
 
-- `tools/scripts/new-script.js`
-- `tools/scripts/audit-scripts.js`
-- `tools/scripts/snippets/generate-seo.js`
-- `tools/scripts/snippets/generate-data/scripts/generate-glossary.js`
+- `operations/scripts/generators/governance/scaffold/new-script.js`
+- `operations/scripts/audits/governance/scripts/audit-script-categories.js`
+- `operations/scripts/snippets/generate-seo.js`
+- `operations/scripts/snippets/generate-data/scripts/generate-glossary.js`
 
 ## 7) Data Integrations and APIs
 
@@ -109,12 +109,12 @@ Primary references:
 ## 8) Documentation Automation About Documentation
 
 - Generated script/workflow/template indexes in `docs-guide/`.
-- Generated template preview routes and authoring snippets via `tools/scripts/generate-ui-templates.js`.
+- Generated template preview routes and authoring snippets via `operations/scripts/generators/components/library/generate-ui-templates.js`.
 - Guardrail checks for docs-guide coverage and README pointers.
 
 Primary references:
 
 - [`source-of-truth-policy.md`](../policies/source-of-truth-policy.mdx)
-- `tests/unit/docs-guide-sot.test.js`
-- `tools/scripts/generate-docs-guide-indexes.js`
-- `tools/scripts/generate-ui-templates.js`
+- `operations/tests/unit/docs-guide-sot.test.js`
+- `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`
+- `operations/scripts/generators/components/library/generate-ui-templates.js`

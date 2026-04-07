@@ -1,0 +1,52 @@
+---
+title: AUTOMATIONS-RESTRUCTURE — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Reorganise `snippets/automations/` from a flat mix of data files, scripts, assets, and n8n JSONs into semantically clear groups (`socials-data/`, `showcase-data/`, `product-data/`, `globals/`). Includes updating all MDX page imports, GHA workflow output paths, fetch script hardcoded paths, and n8n workflow filePaths in the n8n UI — all in a coordinated single-day operation.
+
+## Verified Done
+
+- `plan.md` — execution plan is complete and detailed. Contains: current state, target state, dependency map covering 7 MDX pages, 7 GHA workflows, 8 fetch scripts, 4 n8n workflows, and other ancillary references. 9-step execution order defined with risk mitigations.
+- `go-livepeer-notify-docs.yml` — a GHA workflow file present in this folder. Note: its placement here (inside a plan folder rather than `.github/workflows/`) suggests it is a draft or reference copy, not the live workflow. This needs verification.
+
+## Claimed Done — Unverified or Incomplete
+
+- The all-plans-audit-2026-03-24.md states this plan is "Not started / 0% / PARK — waiting on SCRIPT-GOVERNANCE Task 15c." This is confirmed by `plan.md` which explicitly states `> **Status**: Not started`.
+- The plan.md itself is thorough and execution-ready, but **zero execution steps have been taken**.
+
+## In Progress
+
+Nothing. Plan is fully designed but not yet executed.
+
+## Not Started / Still To Do
+
+All 9 execution steps remain:
+1. Update all writers (GHA scripts + workflows) to new output paths.
+2. Update all MDX page imports to new paths.
+3. `git mv` all subfolders atomically.
+4. Move misplaced files (`filterVideos.js`, `Hero_Livepeer_Forum.png`, PDF).
+5. Remove `globals.jsx` duplicate after confirming no live imports.
+6. Update ancillary references (`.mintignore`, `README.mdx`, `script-index.md`).
+7. n8n UI updates — coordinate same day as Step 3 (manual, out-of-repo).
+8. Tests + validation.
+9. CHECKPOINT and merge.
+
+## Blockers
+
+- **SCRIPT-GOVERNANCE Task 15c** — the plan explicitly blocks on this. The all-plans-audit confirms this dependency. Task 15c is part of the "full cleanup" phase of SCRIPT-GOVERNANCE (Task 15), which has not yet started.
+- n8n workflow update (Step 7) requires manual out-of-repo coordination — highest risk step, must happen same day as repo file moves.
+
+## File Inventory Flags
+
+- `go-livepeer-notify-docs.yml` in the plan folder root is unusual. GHA workflows live in `.github/workflows/`. This is either a reference copy or a draft being staged for deployment. It should be either moved to `.github/workflows/` or documented clearly as a reference draft. If it is a working workflow meant to be live, it is misplaced.
+- No tracker, README, or decision log in this folder beyond `plan.md` and the YML file.
+
+## Audit Notes
+
+- The plan.md is exceptionally thorough — the dependency map covers every affected file (MDX pages, GHA scripts, GHA workflows, n8n workflows, ancillary references). When execution starts, this plan is ready.
+- The primary risk is the n8n coordination window: the plan correctly identifies that n8n must be updated the same day as the repo file moves (Step 3) to prevent n8n writing to old (now moved) paths. This is a manual step that cannot be automated.
+- The `go-livepeer-notify-docs.yml` file warrants clarification before execution — it may be an artefact from prior SCRIPT-GOVERNANCE work (n8n JSON configs were in scope for that plan as well).
+- Status is accurately reflected in the all-plans-audit: 0% complete, parked on SCRIPT-GOVERNANCE Task 15c.

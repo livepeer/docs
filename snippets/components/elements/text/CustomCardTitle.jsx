@@ -35,14 +35,14 @@
  * <AccordionTitle icon="gear" title="Core" description="Staking, payments, and service discovery" />
  */
 export const AccordionTitle = ({ icon, title, description, descriptionColor = "var(--text)", descriptionSize = "0.85em", style = {}, className = "", ...rest }) => (
-  <div className={className} style={style} {...rest}>
+  <span className={className} style={{ display: "block", ...style }} {...rest}>
     <CustomCardTitle variant="accordion" icon={icon} title={title} />
     {description && (
-      <div style={{ color: descriptionColor, fontStyle: "italic", fontSize: descriptionSize, fontWeight: 400, marginTop: "0.2rem" }}>
+      <span style={{ display: "block", color: descriptionColor, fontStyle: "italic", fontSize: descriptionSize, fontWeight: 400, marginTop: "0.2rem" }}>
         {description}
-      </div>
+      </span>
     )}
-  </div>
+  </span>
 );
 
 export const CustomCardTitle = ({ icon, title, variant = "card", iconSize, style = {}, className = "", ...rest }) => {

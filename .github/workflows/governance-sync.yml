@@ -4,24 +4,40 @@ on:
   push:
     branches: [docs-v2]
     paths:
-      - 'tools/scripts/**'
+      - '.allowlist'
+      - 'README.md'
+      - 'operations/scripts/**'
+      - 'operations/governance/config/**'
+      - 'operations/config/**'
       - 'tools/lib/**'
-      - 'tools/notion/**'
+      - 'tools/dev/**'
       - 'tools/config/**'
-      - 'tests/unit/**'
-      - 'tests/integration/**'
-      - 'tests/utils/**'
-      - 'tests/run-all.js'
-      - 'tests/run-pr-checks.js'
+      - 'operations/tests/unit/**'
+      - 'operations/tests/integration/**'
+      - 'operations/tests/utils/**'
+      - 'operations/tests/run-all.js'
+      - 'operations/tests/run-pr-checks.js'
       - '.githooks/**'
       - '.github/scripts/**'
       - '.github/workflows/**'
-      - 'tasks/scripts/**'
-      - 'snippets/automations/**'
-      - 'tasks/reports/script-classifications.json'
+      - '.github/pull_request_template.md'
+      - '.github/workspace/framework-canonical.md'
+      - '.github/workspace/decisions-log.mdx'
+      - '.github/workspace/actions-library/**'
+      - 'docs-guide/policies/root-allowlist-governance.mdx'
+      - 'docs-guide/policies/generated-artifact-and-hook-governance.mdx'
+      - 'docs-guide/policies/ownerless-governance.mdx'
+      - 'docs-guide/policies/governance-index.mdx'
+      - 'docs-guide/repo-ops/config/root-governance-map.mdx'
+      - 'docs-guide/repo-ops/config/repo-governance-map.mdx'
+      - 'docs-guide/repo-ops/config/repo-config-map.mdx'
+      - 'docs-guide/contributing/agent-instructions.mdx'
+      - 'workspace/scripts/**'
+      - 'workspace/reports/script-classifications.json'
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
@@ -30,36 +46,78 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: docs-v2
+          ref: ${{ vars.DEPLOY_BRANCH }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Ensure governance approval labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: 'approval:governance-schema', color: '5319e7', description: 'Human approval recorded for canonical governance schema changes' },
+              { name: 'approval:governance-gate', color: 'b60205', description: 'Human approval recorded for governance gate or enforcement changes' },
+              { name: 'approval:workflow-governance', color: '1d76db', description: 'Human approval recorded for transitional workflow-governance changes' },
+              { name: 'approval:governance-retirement', color: 'd93f0b', description: 'Human approval recorded for governance/runtime retirement changes' },
+            ];
+            for (const label of labels) {
+              try {
+                await github.rest.issues.getLabel({ owner: context.repo.owner, repo: context.repo.repo, name: label.name });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                await github.rest.issues.createLabel({ owner: context.repo.owner, repo: context.repo.repo, ...label });
+              }
+            }
+
       - run: cd tools && npm ci
-      - run: cd tests && npm ci
+      - run: node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write
+      - run: node operations/scripts/validators/governance/compliance/check-root-governance-sync.js
+      - run: node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write
+      - run: node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js
 
       - name: Run governance repair
         id: repair
         run: |
-          node tools/scripts/orchestrators/repair-governance.js 2>&1 | tee /tmp/repair.log
-          FIXES=$(python3 -c "
-          import json
-          d = json.load(open('tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json'))
-          print(d.get('repairs_applied', {}).get('total_fixes', 0))
+          node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js 2>&1 | tee /tmp/repair.log
+          FIXES=$(node -e "
+          try {
+            const d = require('./workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json');
+            console.log((d.repairs_applied || {}).total_fixes || 0);
+          } catch { console.log(0); }
           " 2>/dev/null || echo "0")
           echo "fixes=$FIXES" >> $GITHUB_OUTPUT
 
+      - name: Revalidate active governance outputs
+        run: |
+          node operations/scripts/validators/governance/compliance/check-root-governance-sync.js
+          node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js
+
+      - name: Detect changed governance outputs
+        id: changed
+        shell: bash
+        run: |
+          FILES="$(git diff --name-only)"
+          COUNT="$(printf '%s\n' "$FILES" | sed '/^$/d' | wc -l | tr -d ' ')"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "$FILES" | sed '/^$/d'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create PR if fixes applied
-        if: steps.repair.outputs.fixes != '0'
+        if: steps.changed.outputs.count != '0'
         uses: peter-evans/create-pull-request@v7
         with:
           branch: automation/governance-sync
           title: 'chore(governance): post-merge sync -- ${{ steps.repair.outputs.fixes }} fixes'
           body: |
             Automated post-merge governance sync triggered by ${{ github.sha }}.
-            See `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md` for details.
+            See `workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md`, `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md`, `workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md`, and `workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md` for details.
           base: docs-v2
           delete-branch: true
           labels: governance, automated
+          add-paths: ${{ steps.changed.outputs.files }}

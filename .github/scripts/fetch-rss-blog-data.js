@@ -1,13 +1,19 @@
 /**
  * @script            fetch-rss-blog-data
  * @category          automation
+ * @type              automation
+ * @concern           content
+ * @niche             data/fetching
  * @purpose           infrastructure:data-feeds
- * @scope             generated-output
+ * @description       Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files.
  * @domain            docs
- * @needs             R-R10
- * @purpose-statement Fetches RSS and blog feeds, then writes the generated snippets/automations datasets consumed by docs surfaces.
- * @pipeline          P5, P6
+ * @needs             F-R1
+ * @purpose-statement Fetches product RSS feeds from config and writes per-solution blog data modules under snippets/data/social-feed-solutions/.
+ * @mode              generate
+ * @pipeline          config → RSS feed → snippets/data/social-feed-solutions/{product}/blogData.jsx
+ * @scope             .github/scripts, snippets/data/social-feed-solutions/
  * @usage             node .github/scripts/fetch-rss-blog-data.js
+ * @policy            PUBLIC APIs / RSS only. No API keys for platforms we don't own.
  */
 const https = require("https");
 const http = require("http");
@@ -221,7 +227,7 @@ async function main() {
       });
       jsx += `];\n`;
 
-      const outDir = `snippets/automations/solutions/${productKey}`;
+      const outDir = `snippets/data/social-feed-solutions/${productKey}`;
       fs.mkdirSync(outDir, { recursive: true });
       const outPath = path.join(outDir, "blogData.jsx");
       fs.writeFileSync(outPath, jsx);

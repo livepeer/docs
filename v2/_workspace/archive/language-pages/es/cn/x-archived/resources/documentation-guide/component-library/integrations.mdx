@@ -1,0 +1,71 @@
+---
+title: 集成组件
+sidebarTitle: 集成
+description: 与外部服务和API集成的组件：CoinGecko交易所数据、社交媒体集成和其他第三方服务连接器
+keywords:
+  - livepeer
+  - components
+  - integrations
+  - coingecko
+  - external
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9pbnRlZ3JhdGlvbnMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9pbnRlZ3JhdGlvbnMiLCJzb3VyY2VIYXNoIjoiMjIzMTk4MGZjMjhhOGJjYzZhMTI2ZGNhZGNlMGU4OWMzYzIxYzM1MzZmNWUwYTAwNWYzNGM1NTUwMGYwYmY5NSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMzo1NTozMS44MzJaIn0= */}
+import { CoinGeckoExchanges } from '/snippets/components/integrators/feeds/Coingecko.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
+
+<CustomDivider middleText="CoinGecko Integration" />
+
+## CoinGecko 集成
+
+### CoinGeckoExchanges
+
+动态从 CoinGecko API 获取并显示支持该代币的交易所。显示一个可排序的交易所（中心化交易所和去中心化交易所）表格，包含交易对、信任评分和链接。
+
+**导入：**
+```jsx
+import { CoinGeckoExchanges } from "/snippets/components/integrators/feeds/Coingecko.jsx";
+```
+
+**属性：**
+
+| 属性 | 类型 | 默认值 | 必填 | 描述 |
+|------|------|---------|----------|-------------|
+| `coinId` | `string` | `"arbitrum"` | 否 | CoinGecko 币种 ID（例如："arbitrum"、"ethereum"、"bitcoin"） |
+
+**功能:**
+- 自动从 CoinGecko API 获取交易所数据
+- 以可排序的表格显示交易所
+- 显示交易所类型 (CEX/DEX)、交易对和信任评分
+- 包含交易页面的链接
+- 支持按名称或类型排序
+- 加载和错误状态
+
+**示例:**
+
+<Tabs>
+  <Tab title="Default (Arbitrum)">
+    <CoinGeckoExchanges />
+  </Tab>
+  <Tab title="Ethereum">
+    <CoinGeckoExchanges coinId="ethereum" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<CoinGeckoExchanges coinId="arbitrum" />
+<CoinGeckoExchanges coinId="ethereum" />
+<CoinGeckoExchanges coinId="bitcoin" />
+```
+  </Tab>
+</Tabs>
+
+**注意:** 此组件会向 CoinGecko 发起实时 API 调用。如果在页面上使用多个实例，请确保不要超过速率限制。
+
+---
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>

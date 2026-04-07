@@ -1,27 +1,26 @@
 ---
 name: release-version-workflow-maintenance
-version: "1.0"
 description: >-
-  Maintain the release-version updater workflow and related globals file path/value logic. Use when tasks include latest release automation is broken, globals latestVersion not updating, fix update-livepeer-release workflow.
-tier: 3
-invoke_when:
-  - "latest release automation is broken"
-  - "globals latestVersion not updating"
-  - "fix update-livepeer-release workflow"
+  Maintain the release-version updater workflow and related globals file
+  path/value logic. Use when: latest release automation is broken, globals
+  latestVersion not updating, fix update-livepeer-release workflow.
+metadata:
+  version: "1.2"
+  category: "meta"
+  tier: "2"
 primary_paths:
   - ".github/workflows/update-livepeer-release.yml"
-  - "snippets/automations/globals/globals.mdx"
-  - "snippets/automations/globals/globals.jsx"
+  - "snippets/data/globals/latestRelease.jsx"
   - "v2/resources/documentation-guide/automations-workflows.mdx"
 primary_commands:
   - "sed -n \"1,220p\" .github/workflows/update-livepeer-release.yml"
-  - "rg -n \"latestVersion|LatestRelease\" snippets/automations/globals"
+  - "rg -n \"latestVersion|latestReleasePageUrl\" snippets/data/globals"
 ---
 
 SKILL: Release Version Workflow Maintenance
 
 Goal
-Ensure release automation updates the correct globals fields and file paths without drift.
+Ensure release automation updates the correct canonical release data fields and file paths without drift.
 
 Constraints
 - Do not bypass hooks (`--no-verify` or `-n`).
@@ -31,13 +30,13 @@ Constraints
 
 Workflow
 1. Inspect workflow step logic for source release fetch and target-file updates.
-2. Verify referenced globals file paths and key names exist in repo.
+2. Verify referenced canonical release file paths and key names exist in repo.
 3. Document and patch path/key mismatches before re-enabling automation confidence.
 
 Command examples
 ```bash
 sed -n \"1,220p\" .github/workflows/update-livepeer-release.yml
-rg -n \"latestVersion|LatestRelease\" snippets/automations/globals
+rg -n \"latestVersion|latestReleasePageUrl\" snippets/data/globals
 ```
 
 Deliverable Format

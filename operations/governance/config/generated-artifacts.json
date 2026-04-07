@@ -1,0 +1,487 @@
+{
+  "version": "generated-artifacts.v1",
+  "artifacts": [
+    {
+      "path": ".allowlist",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write",
+      "sources": [
+        "operations/governance/config/root-governance.json",
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "tools/lib/governance/root-governance.js"
+      ],
+      "class": "committed_authoritative",
+      "commit_policy": "required",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Generated root-allowlist projection. Human review happens by editing the manifest, not by hand-editing .allowlist."
+    },
+    {
+      "path": "docs-index.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/catalogs/generate-docs-index.js --write",
+      "sources": [
+        "docs.json",
+        "v1/**/*.md",
+        "v1/**/*.mdx",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "snippets/**/*.md",
+        "snippets/**/*.mdx"
+      ],
+      "class": "committed_authoritative",
+      "commit_policy": "required",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "staged",
+      "notes": "Repo-wide machine-readable navigation index used by runtime- and governance-adjacent tooling. Pre-commit must check freshness but not auto-stage."
+    },
+    {
+      "path": "llms.txt",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/ai/llm/generate-llms-files.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/ai/llm/generate-llms-files.js"
+      ],
+      "class": "committed_authoritative",
+      "commit_policy": "required",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "staged",
+      "notes": "Ratified AI-first public root artifact for LLM discovery."
+    },
+    {
+      "path": "sitemap-ai.xml",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+      ],
+      "class": "committed_authoritative",
+      "commit_policy": "required",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "staged",
+      "notes": "Ratified AI-first public root artifact for AI sitemap discovery."
+    },
+    {
+      "path": "docs-guide/catalog/components-catalog.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write",
+      "sources": [
+        "snippets/components/**/*.js",
+        "snippets/components/**/*.jsx",
+        "snippets/components/**/*.ts",
+        "snippets/components/**/*.tsx",
+        "snippets/components/**/*.mdx",
+        "docs-guide/**/*.mdx",
+        "operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated maintainer catalog. Fail with a targeted regeneration command instead of expanding commit scope in pre-commit."
+    },
+    {
+      "path": "docs-guide/catalog/pages-catalog.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "docs-guide/**/*.mdx",
+        "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated from docs.json and current v2 page inventory."
+    },
+    {
+      "path": "docs-guide/catalog/scripts-catalog.mdx",
+      "owner": "docs",
+      "generator": "node operations/tests/unit/script-docs.test.js --write --rebuild-indexes",
+      "sources": [
+        ".githooks/**/*",
+        "operations/tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh",
+        "tools/**/*.py",
+        "docs-guide/**/*.mdx"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated script inventory for maintainers."
+    },
+    {
+      "path": "docs-guide/repo-ops/config/root-governance-map.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write",
+      "sources": [
+        "operations/governance/config/root-governance.json",
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "tools/lib/governance/root-governance.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Generated live inventory and taxonomy map for the governed repo root."
+    },
+    {
+      "path": "docs-guide/catalog/templates-catalog.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write",
+      "sources": [
+        ".github/**/*.md",
+        ".github/**/*.yml",
+        ".github/**/*.yaml",
+        "docs-guide/**/*.mdx",
+        "operations/tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated docs-guide template catalog."
+    },
+    {
+      "path": "docs-guide/catalog/workflows-catalog.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write",
+      "sources": [
+        ".github/workflows/**/*.yml",
+        ".github/workflows/**/*.yaml",
+        "docs-guide/**/*.mdx",
+        "operations/tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated docs-guide workflow catalog."
+    },
+    {
+      "path": "v2/index.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/catalogs/generate-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/content/catalogs/generate-pages-index.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated v2 root index page."
+    },
+    {
+      "path": "v2/*/index.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/catalogs/generate-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/content/catalogs/generate-pages-index.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated section index pages."
+    },
+    {
+      "path": "v2/resources/documentation-guide/component-library/*.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/components/documentation/generate-component-docs.js --fix --template-only",
+      "sources": [
+        "snippets/components/**/*.js",
+        "snippets/components/**/*.jsx",
+        "snippets/components/**/*.ts",
+        "snippets/components/**/*.tsx",
+        "snippets/components/**/*.mdx",
+        "operations/scripts/generators/components/documentation/generate-component-docs.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated public component-library docs."
+    },
+    {
+      "path": "v2/*/resources/glossary-data.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/reference/generate-glossary-companions.js",
+      "sources": [
+        "v2/*/resources/glossary.mdx"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Per-tab glossary companion JSON files at canonical root-level resources/glossary routes. Extracted from SearchTable itemsList props at build time. Required for AI/crawler discoverability (@aiDiscoverability tier-2). Regenerate with: node operations/scripts/generators/content/reference/generate-glossary-companions.js"
+    },
+    {
+      "path": "v2/resources/resource-hub-terms-data.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/reference/generate-glossary-companions.js",
+      "sources": [
+        "v2/resources/resource-hub-terms.mdx"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Resource Hub-specific glossary companion JSON for the Resources tab sibling terms page. Regenerate with: node operations/scripts/generators/content/reference/generate-glossary-companions.js"
+    },
+    {
+      "path": "v2/resources/glossary-data.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/content/reference/generate-glossary-companions.js",
+      "sources": [
+        "v2/resources/glossary.mdx"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Consolidated glossary companion JSON (all tabs) at the canonical /v2/resources/glossary route. Extracted from SearchTable itemsList. Required for AI/crawler discoverability (@aiDiscoverability tier-2). Regenerate with: node operations/scripts/generators/content/reference/generate-glossary-companions.js"
+    },
+    {
+      "path": "snippets/snippets-registry.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/catalogs/generate-snippets-registry.js --write",
+      "sources": [
+        "snippets/**",
+        "operations/scripts/generators/governance/catalogs/generate-snippets-registry.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated snippets root registry built from the live snippets tree plus guide-owned folder metadata."
+    },
+    {
+      "path": "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write",
+      "sources": [
+        "operations/governance/config/root-governance.json",
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "tools/lib/governance/root-governance.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Latest machine-readable root-governance sync report."
+    },
+    {
+      "path": "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write",
+      "sources": [
+        "operations/governance/config/root-governance.json",
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "tools/lib/governance/root-governance.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Latest Markdown root-governance sync report."
+    },
+    {
+      "path": "docs-guide/repo-ops/config/repo-governance-map.mdx",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+      "sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "tools/lib/governance/repo-governance.js",
+        "tools/lib/governance/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Generated top-level repo-governance control-plane map."
+    },
+    {
+      "path": "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+      "sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "tools/lib/governance/repo-governance.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Latest machine-readable repo-governance status report."
+    },
+    {
+      "path": "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+      "sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "tools/lib/governance/repo-governance.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Latest Markdown repo-governance status report."
+    },
+    {
+      "path": "workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md",
+      "owner": "docs",
+      "generator": "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+      "sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/governance/config/governance-approval-policy.json",
+        "operations/config/**",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "tools/lib/governance/repo-governance.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Current ownerless handover summary for the production governance control plane."
+    },
+    {
+      "path": "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js --report-only",
+      "sources": [
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js",
+        "operations/scripts/validators/governance/pr/audit-script-inventory.js",
+        "operations/config/**",
+        "operations/governance/config/**"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Current machine-readable governance repair report. Historical dated reports are archival only."
+    },
+    {
+      "path": "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md",
+      "owner": "docs",
+      "generator": "node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js --report-only",
+      "sources": [
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js",
+        "operations/scripts/validators/governance/pr/audit-script-inventory.js",
+        "operations/config/**",
+        "operations/governance/config/**"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Current Markdown governance repair report. Historical dated reports are archival only."
+    },
+    {
+      "path": "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json",
+      "owner": "docs",
+      "generator": "node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js --report-only",
+      "sources": [
+        "operations/scripts/validators/governance/pr/audit-script-inventory.js",
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js",
+        "operations/config/**",
+        "operations/governance/config/**",
+        "tools/lib/**",
+        "operations/tests/**"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Current machine-readable script inventory report used by the governance pipeline. Historical/diff reports are archival only."
+    },
+    {
+      "path": "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md",
+      "owner": "docs",
+      "generator": "node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js --report-only",
+      "sources": [
+        "operations/scripts/validators/governance/pr/audit-script-inventory.js",
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js",
+        "operations/config/**",
+        "operations/governance/config/**",
+        "tools/lib/**",
+        "operations/tests/**"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "full",
+      "notes": "Current Markdown script inventory report used by the governance pipeline. Historical/diff reports are archival only."
+    },
+    {
+      "path": "workspace/reports/_local/**",
+      "owner": "docs",
+      "generator": "local-only report generators and scratch audits",
+      "sources": [
+        "workspace/reports/_local/**"
+      ],
+      "class": "ephemeral_local",
+      "commit_policy": "forbidden",
+      "hook_policy": "ignore",
+      "ci_policy": "ignore",
+      "delta_strategy": "none",
+      "notes": "Local-only report scratch space. These outputs are not source of truth and must never be auto-staged by pre-commit."
+    }
+  ]
+}

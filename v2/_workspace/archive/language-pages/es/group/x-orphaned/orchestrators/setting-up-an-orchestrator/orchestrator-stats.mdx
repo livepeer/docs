@@ -1,0 +1,64 @@
+---
+title: Estadísticas y monitoreo del orquestador
+sidebarTitle: Estadísticas del orquestador
+description: >-
+  Monitorea la salud del nodo, el rendimiento de la GPU y los ingresos con
+  Prometheus y el Explorador Livepeer.
+keywords:
+  - livepeer
+  - orchestrators
+  - monitoring
+  - stats
+  - prometheus
+  - metrics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL29yY2hlc3RyYXRvci1zdGF0cy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL29yY2hlc3RyYXRvcnMvc2V0dGluZy11cC1hbi1vcmNoZXN0cmF0b3Ivb3JjaGVzdHJhdG9yLXN0YXRzIiwic291cmNlSGFzaCI6IjNjMTFmODhlMmVmMzlhZjY3YzJkNGQ1MWVmODZhYzk0NDc5ZDMwNTI0OWUxMWY0ZGMwNDgyNmUxM2M3ODc2MjMiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MjI6MTUuNzg1WiJ9 */}
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+
+Operar un orchestrator significa mantener el nodo en línea, procesar correctamente los trabajos, llamar a las recompensas cada ronda y canjear los boletos. El monitoreo te ayuda a detectar fallas antes de que te cuesten ingresos o reputación.
+
+## Métricas integradas
+
+Con `-monitor=true`, go-livepeer expone métricas compatibles con Prometheus en:
+
+<CustomCodeBlock
+  codeString={`http://localhost:7935/metrics`}
+  language="text"
+  icon="gauge"
+/>
+
+## Qué seguir
+
+| Capa | Qué monitorear |
+|--------|------------------|
+| **Hardware** | Utilización de la GPU, VRAM, temperatura (`nvidia-smi`) |
+| **Aplicación** | Salud de go-livepeer, tasa de éxito de segmentos/tareas |
+| **Red** | Latencia, pérdida de paquetes |
+| **En cadena** | Stake vinculado, estado del conjunto activo, llamadas de recompensa |
+| **Economía** | ETH tarifas, LPT recompensas |
+
+Métricas clave incluyen: `livepeer_segment_processed_total`, `livepeer_segment_errors_total`, `livepeer_transcode_latency_seconds`, y (para IA) la cantidad de trabajos de inferencia y la latencia. Las altas tasas de error reducen la probabilidad de selección.
+
+<Warning> If you do not call **reward()** every round, you stop earning inflation rewards. Automate reward calls or use a service that does.</Warning>
+
+## Explorador
+
+Usa el [Livepeer Explorer](https://explorer.livepeer.org) para verificar:
+
+- Estado del conjunto activo
+- Vinculado y delegado LPT
+- Llamadas de recompensa y ganancias de tarifas
+- Rendimiento histórico
+
+## Prometheus y Grafana
+
+Para producción, ejecute Prometheus con una configuración de scrape para su nodo(s), y use o construya dashboards de Grafana. Agregue "**Node exporter** y **NVIDIA DCGM exporter** para métricas de host y GPU.
+
+## Ver también
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../advanced-setup/rewards-and-fees" arrow />
+  <Card title="FAQ" icon="circle-question" href="../references/faq" arrow />
+</Columns>

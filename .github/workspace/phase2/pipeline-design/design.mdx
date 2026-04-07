@@ -1,0 +1,308 @@
+# Pipeline Design: Master Index
+
+> Design all pipelines, prioritise by impact/effort, fix the most important first.
+> Most pipelines will be designed but not live yet. That's fine. Design is the deliverable.
+
+---
+
+## Approach
+
+1. Design every pipeline the repo needs (full spec per concern)
+2. Prioritise: impact/effort matrix determines build order
+3. Fix the highest-impact, lowest-effort ones first
+4. The rest are designed and ready for implementation when capacity allows
+
+---
+
+## Priority Order (by concern)
+
+1. **Health** - can the site function? Links, rendering, structure, integrity
+2. **Maintenance** - are indexes, catalogs, registries current?
+3. **Governance** - does the system enforce its own rules?
+4. **Brand/Copy** - is content consistent?
+5. **Discoverability** - can AI/search find things?
+6. **Data importers** - is external data fresh?
+
+---
+
+## Design Docs
+
+| Concern | File | Status |
+|---|---|---|
+| Health | [health.md](health.md) | Pending |
+| Maintenance | [maintenance.md](maintenance.md) | Pending |
+| Governance | [governance.md](governance.md) | Pending |
+| Brand/Copy | [brand-copy.md](brand-copy.md) | Pending |
+| Discoverability | [discoverability.md](discoverability.md) | Pending |
+| Data importers | [data-importers.md](data-importers.md) | Pending |
+
+---
+
+## Product-Level Framing
+
+Each design doc answers these questions for its concern:
+1. **What capability does the product need?** (from locked-pipelines.md Product Capabilities)
+2. **What exists today?** (from agent research)
+3. **Does what exists actually serve the need properly?** (or is it half-baked, wrong approach, outdated)
+4. **What is the correct pipeline?** (may reuse, rewrite, or discard existing scripts)
+5. **What is the impact/effort of building it?**
+
+The 6 critical gaps driving priority (from locked-pipelines.md):
+1. No closed-loop monitoring (scanners report into the void)
+2. No copy/brand enforcement in CI (8 scripts, no workflow)
+3. No working SEO pipeline (P0 bug + missing workflows)
+4. Fragile data pipelines (3 missing permissions, no error handling)
+5. 1,224 lines of inline JS in governance (can't test, can't govern)
+6. No single entry point (201 scripts, 45+ workflows, no map)
+
+## Key Discoveries from Agent Research
+
+| Discovery | Impact |
+|---|---|
+| `data-refresh-governance.yml` reusable workflow exists | Social feed consolidation partially done already |
+| `page-integrity-health.yml` workflow exists | Page repair chain IS wired (not disconnected as thought) |
+| `docs-catalog-governance.yml` workflow exists | Catalog governance enforcement already in place |
+| `update-contract-addresses-shadow.yml` exists | Shadow/test version of contracts pipeline |
+| 4 n8n workflows being migrated to GH Actions | Legacy migration in progress |
+| `AUTOMATIONS-RESTRUCTURE` plan exists (not started) | snippets/automations/ reorg already planned |
+| 317+ terminology terms harvested, blocked on review | Brand/copy needs human decision to proceed |
+| `llms-full.txt` not generated despite script support | Quick discoverability win |
+| Anti-scam SEO/AEO plan in active execution | Discoverability has live priority work |
+| governance-pipeline.js is master orchestrator | Chains audit, repair, verification, reporting |
+
+---
+
+## Impact/Effort Matrix
+
+All 6 design docs complete. Sorted by: quick wins first, then high-impact builds.
+
+### Quick wins
+
+#### 1. Unblind content-health scanner
+
+**File:** `.github/workflows/content-health.yml`
+**What it does today:** Runs 6 health scripts every Monday at 06:00 UTC: quality audit, component usage audit, component registry rebuild, component import scan, component metadata repair, and layout governance check. But every single step has `continue-on-error: true`, so all failures are silently swallowed. The repair script (step 5) is in the chain but its output is masked.
+**What to change:** Remove `continue-on-error: true` from all 6 steps. Failures become visible in step summary and workflow status.
+**Why:** This is the repo's main scheduled health check. Right now it runs blind every week and nobody knows if it's passing or failing.
+**Concern:** Health
+
+#### 2. Fix social feed permissions (3 workflows)
+
+**Files:** `update-forum-data.yml`, `update-ghost-blog-data.yml`, `update-youtube-data.yml`
+**What they do today:** Fetch external data on a daily cron (forum topics from Discourse, blog posts from Ghost CMS, YouTube videos from YouTube Data API), write JSX data files to `snippets/automations/`, then try to commit and push.
+**What's broken:** These 3 workflows are missing `permissions: contents: write`. The `git push` step silently fails because the GITHUB_TOKEN doesn't have write permission. The other 3 social feed workflows (discord, github, rss) have the permission and work fine.
+**What to change:** Add `permissions: contents: write` to each workflow's job.
+**Why:** Forum, Ghost blog, and YouTube data may not have updated in the repo for months because pushes fail silently.
+**Concern:** Data importers
+
+#### 3. Fix SEO refresh commit step
+
+**File:** `.github/workflows/seo-refresh.yml`
+**What it does today:** Manual dispatch workflow. Runs `generate-seo.js` which reads v2 page content and generates/updates SEO metadata (title, description, keywords) in frontmatter. Supports `--dry-run`.
+**What's broken:** After the script writes updated frontmatter, there is no `git add`, `git commit`, or `git push` step. The changes exist in the runner's filesystem and are discarded when the job ends.
+**What to change:** Add a standard check-for-changes + commit + push block (same pattern as update-contract-addresses.yml).
+**Why:** SEO metadata cannot be updated at all. The workflow runs, does the work, then throws it away.
+**Concern:** Discoverability
+
+#### 4. Fix YouTube workflow inconsistencies
+
+**File:** `.github/workflows/update-youtube-data.yml`
+**What it does today:** Fetches YouTube video data via the YouTube Data API and writes per-product youtubeData.jsx files.
+**What's broken:** Uses a different git bot identity than all other workflows, and an inconsistent commit message format. All other social feed workflows use `github-actions[bot]` and `chore(scope): description [skip ci]`.
+**What to change:** Align bot identity and commit message to match the other social feed workflows.
+**Why:** Inconsistency. When investigating git history, YouTube commits look different from all other automated commits.
+**Concern:** Data importers
+
+#### 5. Enable llms-full.txt generation
+
+**File:** `.github/workflows/generate-llms-files.yml`
+**What it does today:** Runs `generate-llms-files.js --write` on push to deploy branch. Generates `llms.txt` (summary version) and commits it. The script supports a `--full` flag that also generates `llms-full.txt` (complete content version), but the workflow doesn't pass this flag.
+**What to change:** Add `--full` to the script invocation.
+**Why:** `llms-full.txt` is the comprehensive LLM discovery file (per the llms.txt spec). AI crawlers that want the complete content can't get it because we generate the summary but not the full version.
+**Concern:** Discoverability
+
+#### 6. Fix hardcoded branches in verify workflows
+
+**Files:** `.github/workflows/verify-ai-sitemap.yml`, `.github/workflows/verify-llms-files.yml`
+**What they do today:** PR-time validators that run the AI sitemap and llms.txt generators in `--check` mode to verify the committed files match what the generator would produce.
+**What's broken:** Branch `docs-v2` is hardcoded in the checkout step instead of using `vars.DEPLOY_BRANCH`. If the deploy branch changes (or for testing on other branches), these workflows check out the wrong branch.
+**What to change:** Replace hardcoded `docs-v2` with `${{ vars.DEPLOY_BRANCH }}`.
+**Why:** All other workflows use `vars.DEPLOY_BRANCH`. These two are the exceptions.
+**Concern:** Discoverability
+
+#### 7. Fix hardcoded branch in PR reviewer assignment
+
+**File:** `.github/workflows/auto-assign-docs-reviewers.yml`
+**What it does today:** When a PR is opened targeting the deploy branch, auto-assigns reviewers based on file paths changed.
+**What's broken:** The job's `if` condition hardcodes `docs-v2` as the base branch instead of using `vars.DEPLOY_BRANCH`.
+**What to change:** Replace hardcoded branch with `vars.DEPLOY_BRANCH`.
+**Concern:** Governance
+
+#### 8. Fix SDK generation naming
+
+**File:** `.github/workflows/sdk_generation.yaml`
+**What it does today:** Runs Speakeasy SDK generation on a schedule. Produces SDK client libraries from the OpenAPI spec.
+**What's broken:** Two naming issues: (a) file uses `.yaml` extension when all other workflows use `.yml`, (b) the `name:` field is just "Generate" with no description of what it generates.
+**What to change:** Rename to `sdk_generation.yml` (or the confirmed new name). Update `name:` to "Generate SDK Clients".
+**Concern:** Maintenance
+
+#### 9. Delete broken blog data workflow
+
+**File:** `.github/workflows/update-blog-data.yml`
+**What it does today:** Manual dispatch workflow that was supposed to fetch blog and forum data.
+**What's broken:** Contains a hardcoded `YOUR_CONTENT_API_KEY` placeholder instead of an actual secret. Has never worked. Superseded by the individual social feed workflows (update-ghost-blog-data, update-forum-data, update-rss-blog-data).
+**What to change:** Delete the file.
+**Concern:** Data importers
+
+#### 10. Disable broken showcase sync
+
+**File:** `.github/workflows/project-showcase-sync.yml`
+**What it does today:** Runs every 15 minutes (plus repo dispatch) to sync showcase project submissions from a Google Sheets/n8n integration.
+**What's broken:** Not working (reason unclear). The 15-minute cron is excessively aggressive for a showcase that updates rarely.
+**What to change:** Disable the workflow (comment out the schedule trigger, keep workflow_dispatch for future investigation).
+**Concern:** Data importers
+
+#### 11. Move and retag style homogeniser script
+
+**File:** `operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js`
+**What it does today:** Finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content. Tagged `@type audit` but `@mode edit` (it modifies files).
+**What's broken:** Script is in the `audits/` folder but it's a remediator (it edits files). The `@type` tag says `audit` but `@mode` says `edit`. The `@usage` path in the JSDoc already points to `remediators/content/style/`.
+**What to change:** Move to `remediators/brand/style/` (or `remediators/copy/style/`). Update `@type` to `remediator`. Update `@concern` from `content` to `brand`.
+**Concern:** Brand
+
+---
+
+### Low-effort, high-impact (new workflows wiring existing scripts)
+
+#### 12. Wire copy/brand lint scripts to PR workflow
+
+**Scripts that exist:** `lint-copy.js` (banned words/phrases), `lint-patterns.js` (hedging, conditionals, not-constructions), `check-grammar-en-gb.js` (UK English grammar with autofix), `check-proper-nouns.js` (Livepeer, Ethereum, GitHub capitalisation)
+**What they do:** Each reads v2 MDX files and reports violations. They're fully functional, tested, and governed with JSDoc headers. They just have no workflow calling them.
+**What to build:** A new P3 (advisory) PR workflow that triggers on v2 MDX changes, runs all 4 in a matrix, and reports pass/fail per check in the step summary.
+**Why:** Currently any PR can merge content with American spellings, banned words, hedging language, or wrong proper noun capitalisation. Zero enforcement.
+**Concern:** Brand
+
+#### 13. Wire structure validators to PR workflow
+
+**Scripts that exist:** `lint-structure.js`, `check-double-headers.js`, `check-anchor-usage.js`, `check-mdx-safe-markdown.js`, `check-page-endings.js`, `check-description-quality.js`, `verify-all-pages.js`, `check-docs-path-sync.js`, `enforce-generated-file-banners.js`
+**What they do:** Each validates a different aspect of page structure: heading hierarchy, anchor links, markdown safety, page endings, description quality, path sync, generated file banners. All are functional scripts with no workflow.
+**What to build:** A new P3 (advisory) PR workflow that runs these in a matrix. Advisory initially because some (like check-anchor-usage) have a baseline of ~100 existing violations that need clearing before it can be a hard gate.
+**Why:** Page structure issues (double headers, broken anchors, unsafe markdown) currently pass unchecked.
+**Concern:** Health
+
+#### 14. Add issue creation to external link audit
+
+**File:** `.github/workflows/v2-external-link-audit.yml`
+**What it does today:** Runs daily at 04:00 UTC. Scans all external links across v2 pages. Produces a step summary and artifact listing broken links. Then nothing happens.
+**What to change:** Add an `actions/github-script` step after the scan that reads the output, and if broken links are found, creates or updates a GitHub issue with the findings (modelled on openapi-reference-validation which already does this).
+**Why:** Broken external links get reported into a step summary that nobody reads. An issue makes them visible and trackable.
+**Concern:** Health
+
+#### 15. Add re-dispatch to freshness monitor
+
+**File:** `.github/workflows/freshness-monitor.yml`
+**What it does today:** Runs daily at 08:00 UTC. Checks timestamps on data feed files (discord, forum, ghost, youtube, etc.) against hardcoded staleness thresholds. Reports which are stale. Then nothing happens.
+**What to change:** After detecting a stale feed, dispatch the relevant update workflow via `repository_dispatch` or `workflow_dispatch`. For example, if discordData.jsx is stale, trigger update-discord-data.yml.
+**Why:** An ownerless repo needs auto-recovery. Reporting that data is stale without doing anything about it is monitoring theatre.
+**Concern:** Health
+
+#### 16. Create component registry verify pair
+
+**File:** `.github/workflows/generate-component-registry.yml` (generator exists, no verifier)
+**What it does today:** Post-merge (P4), runs `generate-component-registry.js` which scans component JSDoc and writes `component-registry.json`.
+**What's missing:** Every other generator (docs-index, docs-guide-catalogs, ai-sitemap, llms-files, ai-companions) has a matching PR-time verify workflow that runs the generator with `--check` to confirm the committed file matches what the generator would produce. Component registry is the only one without this.
+**What to build:** A P3 PR workflow that runs `generate-component-registry.js --check`.
+**Concern:** Maintenance
+
+#### 17. Add concurrency and error handling to social feed workflows
+
+**Files:** All 6 social feed workflows (update-discord-data, update-forum-data, update-ghost-blog-data, update-github-data, update-rss-blog-data, update-youtube-data)
+**What they do today:** Fetch and commit data on a cron schedule. None have concurrency control (two runs can race and cause push conflicts). None have error handling (failures are silent).
+**What to change:** Add `concurrency: group: ${{ github.workflow }}` to prevent races. Add a failure step that creates a GitHub issue when the fetch fails.
+**Concern:** Data importers
+
+#### 18. Wire PR template check to PR gate
+
+**Script:** `operations/scripts/validators/governance/pr/check-pr-template.js`
+**What it does:** Validates that PR descriptions follow the required template (Scope, Validation, Follow-up sections). Functional script, no workflow.
+**What to build:** Add as a step in the PR health gate or codex-governance workflow.
+**Concern:** Governance
+
+---
+
+### Medium-effort builds
+
+#### 19. Extract 5 inline governance scripts
+
+**Files:** 5 interface workflows with inline JavaScript (auto-assign-docs-reviewers: 80 lines, close-linked-issues: 141 lines, discord-issue-intake: 261 lines, docs-v2-issue-indexer: 403 lines, issue-auto-label: 339 lines)
+**What they do today:** Each workflow has its logic written directly in the YAML `run:` block. The JS calls the GitHub API to label, assign, index, close, or create issues.
+**What to change:** Extract each inline script verbatim to `operations/scripts/interfaces/governance/{name}.js`. Add 11-tag JSDoc headers. Update the workflow to `node operations/scripts/interfaces/governance/{name}.js`. Test that behaviour is identical.
+**Why:** Inline scripts can't be tested, can't be run locally, can't get JSDoc governance, and can't be reused. This is architecturally necessary per D-ACT-08 (workflows are dispatchers, scripts do the work).
+**Concern:** Governance
+
+#### 20. Extract shared modules from social feed scripts
+
+**Files:** All 10 scripts in `.github/scripts/`
+**What they share:** Every script duplicates an HTTPS request wrapper, a JSX data file writer, a product-social-config.json loader, and basic error handling.
+**What to build:** Shared modules in `operations/scripts/config/shared/` (or similar): `http-client.js`, `jsx-writer.js`, `config-loader.js`, `github-client.js`.
+**Why:** Prerequisite for the matrix dispatcher consolidation (#24). Also reduces duplication and makes each script shorter and more focused.
+**Concern:** Data importers
+
+#### 21. Wire disconnected maintenance generators
+
+**Scripts:** `generate-pages-index.js`, `generate-ai-skills-indexes.js`, `generate-ai-tools-visual-library.js`, `generate-ai-tools-inventory.js`, `generate-script-registry.js`, `generate-docs-guide-components-index.js`
+**What they do:** Each generates a catalog, index, or registry from repo state. All functional, all have JSDoc, none are dispatched by any workflow.
+**What to build:** Add these to the post-merge generator matrix (#25) so they auto-run when content changes.
+**Concern:** Maintenance
+
+#### 22. Wire OG image generation workflow
+
+**Script:** `operations/scripts/generators/content/seo/generate-og-images.js`
+**What it does:** Generates canonical OG images per section using Puppeteer (1200x630 PNG). Supports 4 locales. Uses `og-image-policy.js` for routing rules.
+**What to build:** A manual dispatch workflow (Puppeteer needs a browser, so it requires `ubuntu-latest` runner). May also add to post-merge for section-level defaults.
+**Concern:** Discoverability
+
+#### 23. Expand style-homogenise to include spelling and ownerless repairs
+
+**File:** `.github/workflows/style-homogenise.yml`
+**What it does today:** Dispatches only the EN-GB homogeniser script.
+**What to change:** Add `repair-spelling.js` (auto-corrects from cspell dictionary) and `repair-ownerless-language.js` (removes human-owner dependency language like "maintained by" or "owned by") as additional steps.
+**Why:** All three are brand remediation scripts that should run together. Currently only the homogeniser has a workflow.
+**Concern:** Brand
+
+---
+
+### High-effort consolidation (after fixes land)
+
+#### 24. Consolidate 6 social feed workflows into 1 matrix
+
+**Current:** 6 separate workflows with identical structure (checkout, setup node, run script, diff, commit, push). Only the script name and cron schedule differ.
+**Target:** One `integrator-copy-update-social-feeds.yml` with a matrix of 6 sources. Builds on existing `data-refresh-governance.yml` reusable workflow.
+**Prerequisite:** #20 (shared modules) so scripts are composable.
+**Concern:** Data importers
+
+#### 25. Consolidate 6 P4 generators into 1 matrix
+
+**Current:** 6 separate post-merge workflows (ai-companions, ai-sitemap, llms-files, component-registry, docs-guide-catalogs, docs-index). All identical: push trigger, run generator, diff, commit.
+**Target:** One matrix dispatcher with 6+ entries (plus disconnected generators from #21).
+**Concern:** Maintenance + Discoverability
+
+#### 26. Consolidate 5 verify-pair validators into 1 matrix
+
+**Current:** 5 separate PR workflows (check-ai-companions, verify-ai-sitemap, verify-llms-files, check-docs-guide-catalogs, check-docs-index). All identical: PR trigger, run generator with --check, report.
+**Target:** One matrix validator with 5+ entries (plus component registry verify from #16).
+**Concern:** Maintenance + Discoverability
+
+#### 27. Consolidate health scanners into 1 dispatcher
+
+**Current:** 3 separate scheduled workflows (content-health, freshness-monitor, v2-external-link-audit). All P5 cron + workflow_dispatch.
+**Target:** One health scanner dispatcher with scan-to-act routing (auto-remediate, create issue, or re-dispatch based on finding type). Modelled on openapi-reference-validation.
+**Prerequisite:** #1 (unblind content-health), #14 (add issue creation), #15 (add re-dispatch).
+**Concern:** Health
+
+#### 28. Rename all workflows to confirmed names
+
+**Scope:** 41 active workflows renamed to the `type-concern-verb-name.yml` convention confirmed in Phase 1 type-by-type review.
+**Prerequisite:** All other structural changes (consolidation, extraction) complete. Renaming a file that's about to be deleted or merged is wasted work.
+**Post-rename:** Scan all file types for stale references. Regenerate documentation pages.
+**Concern:** All

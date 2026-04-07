@@ -1,0 +1,120 @@
+---
+title: 'Generate llms.txt'
+kind: 'workflow'
+status: 'active'
+concern: 'agent-runtime'
+source_path: '.github/workflows/generate-llms-files.yml'
+trigger_mode: 'push + workflow_dispatch'
+risk_level: 'high'
+consolidation_flag: 'review for alignment with `handover-readiness` while preserving current push + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'handover-readiness'
+workflow_family: 'ai-runtime-artifacts'
+cleanup_decision: 'merge'
+usage_status: 'active-mutating'
+process_fit: 'handover-support'
+consolidation_target: 'future:ai-runtime-artifacts-workflow'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Generate llms.txt
+
+## Summary
+
+Generate llms.txt runs on push, workflow_dispatch and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/generate-llms-files.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- push: branches=docs-v2
+- workflow_dispatch: configured in workflow file
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `generate` | generate | `ubuntu-latest` | none | 6 |
+
+### generate
+
+- `step-1` | uses actions/checkout@v4
+- `Resolve target branch` | runs `if [ "${{ inputs.use_test_branch }}" = "true" ]; then`
+- `step-3` | uses actions/setup-node@v4
+- `step-4` | runs `cd tools && npm ci`
+- `Generate llms files` | runs `node operations/scripts/generators/ai/llm/generate-llms-files.js --write`
+- `Commit if changed` | runs `git config user.name "github-actions[bot]"`
+
+## Inputs
+
+- workflow_dispatch:use_test_branch (optional)
+
+## Second Pass Assessment
+
+- Workflow family: `ai-runtime-artifacts`
+- Usage status: `active-mutating`
+- Cleanup decision: `merge`
+- Process fit: `handover-support`
+- Consolidation target: `future:ai-runtime-artifacts-workflow`
+- Recommended engineering action: Merge this workflow with its sibling family into `future:ai-runtime-artifacts-workflow` so one workflow owns both check and write modes.
+
+## Outputs
+
+- Generated or refreshed repository data
+- Repository commits or branch updates
+
+## Dependencies
+
+- action:actions/checkout@v4
+- action:actions/setup-node@v4
+- operations/scripts/generators/ai/llm/generate-llms-files.js
+
+## Dependants
+
+- dispatcher:handover-readiness
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: push + workflow_dispatch"]
+  workflow["Workflow: Generate llms.txt"]
+  trigger --> workflow
+  job1["Job: generate"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data, Repository commits or branch updates"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Mutates repository state from CI, which raises coordination and safety risk.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `handover-readiness`. Second-pass target: `future:ai-runtime-artifacts-workflow`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This family already has obvious check/generate pairings that likely want one governed workflow with mode flags.
+- This workflow writes back to the repository, so its blast radius is higher than a read-only validation workflow.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

@@ -2,9 +2,14 @@
 title: Remote Signers
 sidebarTitle: Remote Signers
 description: >-
-  Run Ethereum payment signing as a standalone service, separate from your
-  gateway's media handling. Improves security and enables gateways on platforms
-  without native Ethereum support.
+  Run Ethereum payment signing as a standalone service, separate from your gateway's
+  media handling. Improves security and enables gateways on platforms without native
+  Ethereum support.
+pageType: resource
+audience: gateway
+purpose: orient
+status: coming-soon
+lastVerified: '2026-02-01'
 keywords:
   - livepeer
   - new
@@ -16,27 +21,20 @@ keywords:
   - ethereum
   - payment
   - signing
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: concept
-audience:
-  - gateway-operator
-  - developer
-status: coming-soon
-lastVerified: '2026-02-01'
-sourceOfTruth: 'https://github.com/livepeer/go-livepeer/pull/3822'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
+sourceOfTruth: https://github.com/livepeer/go-livepeer/pull/3822
 ---
-
 # Remote Signers
 
 <Callout type="warning">
 **Status: Active development.** Remote signer support is implemented for Live AI workloads via [PR #3791](https://github.com/livepeer/go-livepeer/pull/3791) and [PR #3822](https://github.com/livepeer/go-livepeer/pull/3822). CLI startup flags are subject to change. Refer to the go-livepeer release notes and `livepeer -help` for the most current flag names before deploying to production.
 </Callout>
 
-A **remote signer** is a standalone go-livepeer mode that handles all Ethereum-related gateway responsibilities — signing payment tickets, managing session bookkeeping, and providing GetOrchestratorInfo signatures — as a separate network service. Your gateway communicates with the signer over the network and contains no Ethereum private key.
+A **remote signer** is a standalone go-livepeer mode that handles all Ethereum-related gateway responsibilities - signing payment tickets, managing session bookkeeping, and providing GetOrchestratorInfo signatures - as a separate network service. Your gateway communicates with the signer over the network and contains no Ethereum private key.
 
 ## Why Use a Remote Signer?
 
@@ -53,12 +51,12 @@ Beyond individual gateway security, all gateway instances behind a shared PM key
 Currently, go-livepeer is the only gateway implementation because building one requires deep familiarity with Livepeer's probabilistic micropayment (PM) mechanism. Remote signers change this:
 
 - A Python, browser, or mobile gateway can use the remote signer without implementing PM.
-- The signer handles all PM bookkeeping — fee calculation, nonce tracking, ticket generation.
+- The signer handles all PM bookkeeping - fee calculation, nonce tracking, ticket generation.
 - Gateway implementors interact with a simple signing RPC rather than raw Arbitrum contracts.
 
 ### Clearinghouse Support
 
-Remote signers are the building block for [payment clearinghouses](/v2/gateways/payments/payment-clearinghouse) — third-party services that manage ETH custody on behalf of multiple gateway operators.
+Remote signers are the building block for [payment clearinghouses](/v2/gateways/payments/payment-clearinghouse) - third-party services that manage ETH custody on behalf of multiple gateway operators.
 
 ## Scope: Live AI Only
 
@@ -107,7 +105,7 @@ sequenceDiagram
     end
 ```
 
-The gateway threads state forward — the signer stores nothing between calls. This avoids any shared state dependency across signer instances and means you can restart a signer without losing coordination.
+The gateway threads state forward - the signer stores nothing between calls. This avoids any shared state dependency across signer instances and means you can restart a signer without losing coordination.
 
 <Callout type="info">
 **No shared database required.** The stateless design lets you run multiple signer instances for redundancy without synchronisation infrastructure.
@@ -117,7 +115,7 @@ The gateway threads state forward — the signer stores nothing between calls. T
 
 ### Run Multiple Instances
 
-For production reliability, run two or more signer instances. They can sit behind a simple load balancer. Because no persistent state lives in the signer, failover is seamless — the gateway begins a new state chain from the next signer it contacts.
+For production reliability, run two or more signer instances. They can sit behind a simple load balancer. Because no persistent state lives in the signer, failover is seamless - the gateway begins a new state chain from the next signer it contacts.
 
 ### Never Reuse Tickets
 
@@ -129,7 +127,7 @@ High-frequency or concurrent signing requests for the same session will produce 
 
 ### Orchestrator Discovery
 
-The remote signer does not handle orchestrator discovery. For off-chain Live AI gateways, discovery must be arranged separately — either by providing orchestrator URIs directly, using a discovery endpoint, or using a future clearinghouse discovery service.
+The remote signer does not handle orchestrator discovery. For off-chain Live AI gateways, discovery must be arranged separately - either by providing orchestrator URIs directly, using a discovery endpoint, or using a future clearinghouse discovery service.
 
 ## Community Remote Signer
 
@@ -142,11 +140,11 @@ This instance provides free ETH for testing purposes. It should not be used for 
 ## CLI Startup
 
 <Callout type="warning">
-**SME confirmation required.** The CLI flags for starting go-livepeer in signer mode are subject to change as the feature matures. Consult the go-livepeer release notes or run `livepeer -help | grep signer` to confirm current flag names before deploying. The placeholder below reflects the intended interface — verify against your installed version.
+**SME confirmation required.** The CLI flags for starting go-livepeer in signer mode are subject to change as the feature matures. Consult the go-livepeer release notes or run `livepeer -help | grep signer` to confirm current flag names before deploying. The placeholder below reflects the intended interface - verify against your installed version.
 </Callout>
 
 ```bash
-# Start the remote signer (flag names subject to change — verify with livepeer -help)
+# Start the remote signer (flag names subject to change - verify with livepeer -help)
 livepeer \
   -signer \
   -network arbitrum-one-mainnet \

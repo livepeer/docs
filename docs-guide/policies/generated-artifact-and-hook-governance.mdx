@@ -18,7 +18,7 @@ keywords:
 
 This policy defines how generated artifacts are classified, where they belong, and what hooks are allowed to do with them.
 
-The canonical configuration lives in `tools/config/generated-artifacts.json`. Hooks and supporting utilities must read from that manifest instead of embedding path-specific generated-file rules directly in shell logic.
+The canonical configuration lives in `operations/governance/config/generated-artifacts.json`. Hooks and supporting utilities must read from that manifest instead of embedding path-specific generated-file rules directly in shell logic.
 
 ## Artifact Classes
 
@@ -32,7 +32,7 @@ The canonical configuration lives in `tools/config/generated-artifacts.json`. Ho
 
 1. If an artifact is needed by runtime, tests, or repo contracts, it may be committed.
 2. If an artifact only supports human inspection, it must not be hook-staged and should usually be ignored.
-3. Hooks must act only on artifacts listed in `tools/config/generated-artifacts.json`.
+3. Hooks must act only on artifacts listed in `operations/governance/config/generated-artifacts.json`.
 4. Auto-staging is exceptional and allowed only for small deterministic artifacts with bounded diffs.
 5. Broad repo-wide regeneration is not allowed in `pre-commit`; use `check_only` and fail with a targeted command instead.
 6. Every generated artifact must declare its upstream sources and delta strategy.
@@ -81,9 +81,9 @@ For managed generated artifacts:
 ## Placement Rules
 
 - Authoritative committed artifacts stay in their canonical runtime or contract path.
-- Human-authored governance docs live in `docs-guide/policies/` or `tasks/reports/repo-ops/`.
-- Machine-generated reports live in `tasks/reports/**`.
-- Local scratch outputs belong in ignored local-only buckets such as `tasks/reports/_local/`.
+- Human-authored governance docs live in `docs-guide/policies/` or `workspace/reports/repo-ops/`.
+- Machine-generated reports live in `workspace/reports/**`.
+- Local scratch outputs belong in ignored local-only buckets such as `workspace/reports/_local/`.
 
 ## Maintainer Workflow
 

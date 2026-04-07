@@ -7,43 +7,44 @@ pageType: overview
 
 {/*
 generated-file-banner: generated-file-banner:v1
-Generation Script: tools/scripts/generate-component-docs.js
-Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Generation Script: operations/scripts/generators/components/documentation/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/config/component-registry.json.
 Run when: Component governance metadata, registry outputs, or published component-library templates change.
-Run command: node tools/scripts/generate-component-docs.js --fix --template-only
+Run command: node operations/scripts/generators/components/documentation/generate-component-docs.js --fix --template-only
 */}
 
 <Note>
-**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
-**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/components/documentation/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/config/component-registry.json. <br/>
 **Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
-**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only`. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/components/documentation/generate-component-docs.js --fix --template-only`. <br/>
 </Note>
 
 ## Governance Snapshot
 
-The governed component library currently exposes **127** named export(s) across five active categories.
+The governed component library currently exposes **117** named export(s) across five active categories.
 
 ### Category Matrix
 
 | Category | Purpose | Exports |
 | --- | --- | --- |
-| [Primitives](./primitives) | Standalone visual atoms | 30 |
-| [Layout](./layout) | Spatial arrangement containers | 31 |
-| [Content](./content) | Content formatting and rendering | 24 |
-| [Data](./data) | Data-bound feed renderers | 17 |
-| [Page Structure](./page-structure) | Frame-mode and portal scaffolding | 25 |
+| [Elements](/v2/resources/documentation-guide/component-library/elements) | Smallest visual atoms — no children, no fetching, no arrangement | 27 |
+| [Wrappers](/v2/resources/documentation-guide/component-library/wrappers) | Holds, groups, or spatially arranges other components | 31 |
+| [Displays](/v2/resources/documentation-guide/component-library/displays) | Renders authored content into a specific visual format | 20 |
+| [Scaffolding](/v2/resources/documentation-guide/component-library/scaffolding) | One-per-page structural skeleton — heroes, portals, frame-mode | 20 |
+| [Integrators](/v2/resources/documentation-guide/component-library/integrators) | Fetches, embeds, or binds to external/third-party data | 18 |
+| [Config](/v2/resources/documentation-guide/component-library/config) | Non-component config objects | 1 |
 
 ### Classification Decision Tree
 
-1. Bound to an external data source or automation pipeline? `data/`
-2. Only makes sense on frame-mode or portal pages? `page-structure/`
-3. Accepts children and arranges them spatially? `layout/`
-4. Formats or renders content for the reader? `content/`
-5. Otherwise: `primitives/`
+1. Fetches, embeds, or binds to external/third-party data? → `integrators/`
+2. Part of the page's outer structure, typically used once? → `scaffolding/`
+3. Takes content and presents it in a formatted way? → `displays/`
+4. Exists to hold, group, or arrange other things? → `wrappers/`
+5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`
 
 ### Canonical Sources
 
-- Registry JSON: [`docs-guide/component-registry.json`](/docs-guide/component-registry.json)
-- Usage map: [`docs-guide/component-usage-map.json`](/docs-guide/component-usage-map.json)
+- Registry JSON: [`docs-guide/config/component-registry.json`](/docs-guide/config/component-registry.json)
+- Usage map: [`docs-guide/config/component-usage-map.json`](/docs-guide/config/component-usage-map.json)
 - Docs-guide index: [`docs-guide/catalog/components-catalog.mdx`](/docs-guide/catalog/components-catalog.mdx)

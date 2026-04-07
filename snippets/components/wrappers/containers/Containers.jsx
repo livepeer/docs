@@ -45,13 +45,14 @@ export const BorderedBox = ({
   return (
     <div
       data-docs-bordered-box=""
+      data-accent-bar={accentBarColors[accentBar] ? "" : undefined}
       className={className}
       style={{
         ...variants[variant],
         padding: padding,
         borderRadius: borderRadius,
         ...(accentBarColors[accentBar]
-          ? { borderLeft: `4px solid ${accentBarColors[accentBar]}` }
+          ? { position: "relative", '--accent-bar-color': accentBarColors[accentBar] }
           : {}),
         ...style,
       }}

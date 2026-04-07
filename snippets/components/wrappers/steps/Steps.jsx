@@ -23,24 +23,27 @@ export const StyledSteps = ({
   style = {},
   ...rest
 }) => {
-  const stepsId = `styled-steps-${Math.random().toString(36).substr(2, 9)}`
   const resolvedIconColor = iconColor || 'var(--accent-dark, #18794E)'
   const resolvedTitleColor = titleColor || 'var(--accent)'
   const resolvedLineColor = lineColor || 'var(--accent)'
 
   return (
-    <div className={className} style={style} {...rest}>
+    <div
+      className={['docs-styled-steps', className].filter(Boolean).join(' ')}
+      style={style}
+      {...rest}
+    >
       <style>{`
-        #${stepsId} .steps > div > div.absolute > div {
+        .docs-styled-steps .steps > div > div.absolute > div {
           background-color: ${resolvedIconColor};
         }
-        #${stepsId} .steps > div > div.w-full > p {
+        .docs-styled-steps .steps > div > div.w-full > p {
           color: ${resolvedTitleColor};
         }
-        #${stepsId} > div > div > div.absolute.w-px {
+        .docs-styled-steps .steps > div > div.absolute.w-px {
           background-color: ${resolvedLineColor};
         }
-        #${stepsId} .steps > div:last-child > div.absolute.w-px::after {
+        .docs-styled-steps .steps > div:last-child > div.absolute.w-px::after {
           content: '';
           position: absolute;
           bottom: 0;
@@ -52,7 +55,7 @@ export const StyledSteps = ({
           transform: translateX(-50%) rotate(45deg);
         }
       `}</style>
-      <div id={stepsId}>
+      <div>
         <Steps>{children}</Steps>
       </div>
     </div>

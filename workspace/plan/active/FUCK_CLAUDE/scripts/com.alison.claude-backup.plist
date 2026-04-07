@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.alison.claude-backup</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/FUCK_CLAUDE/scripts/backup-vscode-state.sh</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>1800</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/alisonhaire/.claude/backups/vscode-state/backup.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/alisonhaire/.claude/backups/vscode-state/backup-error.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+<!--
+INSTALL:
+  cp workspace/plan/active/FUCK_CLAUDE/scripts/com.alison.claude-backup.plist ~/Library/LaunchAgents/
+  launchctl load ~/Library/LaunchAgents/com.alison.claude-backup.plist
+
+UNINSTALL:
+  launchctl unload ~/Library/LaunchAgents/com.alison.claude-backup.plist
+  rm ~/Library/LaunchAgents/com.alison.claude-backup.plist
+
+VERIFY:
+  launchctl list | grep claude-backup
+  cat ~/.claude/backups/vscode-state/backup.log
+-->

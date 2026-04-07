@@ -1,0 +1,230 @@
+---
+title: Governance Index
+sidebarTitle: Governance Index
+description: Canonical single entry point for all governed surfaces in this repo. Defines what is governed, where the rules live, and what to read before writing anything.
+owner: "@livepeer/docs-team"
+status: active
+version: "2.0"
+created: 2026-03-25
+lastUpdated: 2026-03-26
+---
+
+# Governance Index
+
+> Single entry point for all governed surfaces. Every framework, placement rule, and constraint reference lives here. Read this before creating or moving any file.
+
+---
+
+## Governed Surfaces
+
+Ten areas of this repo are governed. Each has a canonical framework document, a root path, and a staleness status.
+
+| # | Area | Root path | Framework | Status |
+|---|------|-----------|-----------|--------|
+| 1 | Components | `snippets/components/` | `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` | Partially stale |
+| 2 | Scripts | `operations/scripts/` | `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` | Partially stale |
+| 3 | AI Tools and Skills | `ai-tools/ai-skills/` | `workspace/plan/active/AI-TOOLS-GOVERNANCE/structure.md` | Current |
+| 4 | Repo Structure | Root folders | `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` | Current (LOCKED) |
+| 5 | Content Writing | `v2/` | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Active |
+| 6 | Documentation | `docs-guide/` | `workspace/plan/active/DOCUMENTATION/Frameworks/doc-item-model.md` | Frozen |
+| 7 | Snippets Root Governance | `snippets/` | `snippets/guide.mdx` | Current |
+| 8 | Mintlify Platform Constraints | Platform-wide | Reference files (see below) | Current |
+| 9 | File Placement | Cross-cutting | Reference file (see below) | Current |
+| 10 | GitHub Actions | `.github/workflows/` | `.github/workspace/framework-canonical.md` | Current |
+
+---
+
+## 1. Components
+
+**Root path:** `snippets/components/`
+
+**Framework:** `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md`
+
+Six categories organise all components: elements, wrappers, displays, scaffolding, integrators, config. Every component file requires a 7-tag JSDoc header.
+
+**Status:** Partially stale. The badges sub-niche is undocumented. Component counts in the framework are aspirational, not actual. Validate against the filesystem before relying on counts.
+
+---
+
+## 2. Scripts
+
+**Root path:** `operations/scripts/`
+
+**Framework:** `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md`
+
+The taxonomy covers 6 types, 4 concerns, and approximately 25 niches. Every script file requires an 11-tag JSDoc header.
+
+**Status:** Partially stale. 15 references to the old `tools/scripts/` path remain in the framework. Some niches are undocumented. Cross-reference against `operations/scripts/` for the actual inventory.
+
+---
+
+## 3. AI Tools and Skills
+
+**Root path:** `ai-tools/ai-skills/`
+
+**Framework:** `workspace/plan/active/AI-TOOLS-GOVERNANCE/structure.md`
+
+Six skill categories across 2 tiers. Each skill folder contains a `SKILL.md` file conforming to the standard template.
+
+**Status:** Current. 95% complete, in maintenance mode.
+
+---
+
+## 4. Repo Structure
+
+**Root path:** All root folders.
+
+**Framework:** `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` (LOCKED)
+
+This framework is locked. No structural changes to root-level folders without a policy update.
+
+**Status:** Current. Phase 0 complete. Phases 1 and 2 heavily executed.
+
+---
+
+## 5. Content Writing
+
+**Root path:** `v2/`
+
+**Framework:** `workspace/plan/active/CONTENT-WRITING/plan-canonical.md`
+
+Governs page taxonomy (7 pageTypes, 15 pagePurposes, 7 audience tokens), voice rules, and the content pipeline (10+ phases from audience design through layout pass).
+
+**Supporting files:**
+- Voice rules: `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
+- Page taxonomy: `v2/orchestrators/_workspace/canonical/Frameworks.mdx`
+- Content pass prompt: `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md`
+- Veracity pass prompt: `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md`
+
+**Status:** Active. Five tabs in the pipeline. Orchestrators is priority 1.
+
+---
+
+## 6. Documentation
+
+**Root path:** `docs-guide/`
+
+**Framework:** `workspace/plan/active/DOCUMENTATION/Frameworks/doc-item-model.md` (FROZEN)
+
+The doc-item model is locked. Execution is blocked on human review.
+
+**Status:** Model locked. No new doc-item types without explicit approval.
+
+---
+
+## 7. Snippets Root Governance
+
+**Root path:** `snippets/`
+
+**Framework:** `snippets/guide.mdx`
+
+This governs the canonical snippets taxonomy, placement rules, and generated root registry contract for `snippets/snippets-registry.mdx`.
+
+**Status:** Current. `snippets/automations/` is a legacy compatibility surface pending governed deletion and is intentionally excluded from the root registry.
+
+---
+
+## 8. Mintlify Platform Constraints
+
+**References:**
+- `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/thread-outputs/research/mintlify-constraints-reference.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/snippets/snippetsWiki/mintlify-behaviour.mdx`
+
+Read `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` first. Use the research note as supporting evidence and the snippets wiki page as historical discovery context. If they conflict, the canonical Mintlify file wins unless runtime or validators prove otherwise.
+
+---
+
+## 9. File Placement
+
+**Reference:** `workspace/thread-outputs/research/component-script-placement-reference.md`
+
+Cross-cutting placement rules for components and scripts. Defines which folders accept which file types and the naming conventions for each.
+
+---
+
+## 10. GitHub Actions
+
+**Root path:** `.github/workflows/` (workflows), `.github/scripts/` (supporting scripts)
+
+**Framework:** `.github/workspace/framework-canonical.md`
+
+Not all of `.github/workspace/` is active runtime governance. Under the current steady-state governance model:
+- `.github/workspace/framework-canonical.md` and `.github/workspace/decisions-log.mdx` are transitional runtime support
+- `.github/workspace/actions-library/` is generated/supporting reference material
+- `.github/workspace/design/**`, `.github/workspace/phase2/**`, `.github/workspace/outcomes.md`, and `.github/workspace/reports-audits/**` are design/history context, not canonical runtime governance
+- the two transitional runtime files are reviewed on a 90-day cadence declared in `operations/governance/config/repo-governance-surfaces.json`
+
+The live classification is maintained in `operations/governance/config/repo-governance-surfaces.json` and rendered in `docs-guide/repo-ops/config/repo-governance-map.mdx`.
+
+Governance-sensitive workflow PRs also require the production approval gate:
+- policy: `operations/governance/config/governance-approval-policy.json`
+- PR section: `## Governance Approval`
+- label: `approval:workflow-governance`
+
+45 workflows governed under a 7-type, 7-concern taxonomy aligned to the script framework. All workflows are architecturally dispatchers; the type classification reflects the script's purpose (D-ACT-08). Naming convention: `type-concern-verb-name.yml` with an 11-verb closed enum. Eight pipeline tags classify when a workflow runs and what authority it has.
+
+**Supporting files:**
+- Audit data: `.github/workspace/actions-library/actions-audit.json`
+- Decisions log: `.github/workspace/decisions-log.mdx` (D-ACT-01 through D-ACT-08)
+- Actions library: `.github/workspace/actions-library/` (41 per-action documentation pages)
+- Archived context: `.github/workspace/outcomes.md` (visual maps and Mermaid diagrams)
+
+**Status:** Current. Phases 1-5 complete. Phase 6 (workflow renames, inline script extraction, consolidation) pending.
+
+---
+
+## Decision Rules
+
+Before writing or moving any governed file, read the required documents listed below.
+
+### Before Writing a Component
+
+1. `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` - category taxonomy, JSDoc header requirements
+2. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - platform constraints, preview rules, and repo-safe JSX/MDX patterns
+3. `workspace/thread-outputs/research/component-script-placement-reference.md` - folder placement rules
+
+### Before Writing a Script
+
+1. `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` - type/concern/niche taxonomy, JSDoc header requirements
+2. `workspace/thread-outputs/research/component-script-placement-reference.md` - folder placement rules
+
+### Before Writing a Docs Page
+
+1. `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` - pipeline phases, page taxonomy, gate definitions
+2. `ai-tools/ai-skills/page-authoring/SKILL.md` - page authoring skill
+3. `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` - per-audience voice rules
+4. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - Mintlify platform and repo behaviour rules
+
+### Before Writing a Workflow
+
+1. `.github/workspace/framework-canonical.md` - type/concern taxonomy, naming convention, pipeline tags, required standards
+2. `.github/workspace/actions-library/action-template.mdx` - page template with full enum reference
+3. `.github/workspace/decisions-log.mdx` - locked decisions (D-ACT-01 through D-ACT-08)
+4. `operations/governance/config/governance-approval-policy.json` - required approval labels and PR-body evidence for governance-sensitive workflow changes
+
+### Before Moving Files
+
+1. `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` - root folder structure (LOCKED)
+2. `workspace/thread-outputs/research/component-script-placement-reference.md` - component and script placement
+3. `docs-guide/policies/docs-guide-structure-policy.mdx` - docs-guide folder rules
+
+---
+
+## Staleness Protocol
+
+Frameworks marked "Partially stale" or "Frozen" are still binding for their non-stale sections. When a stale section is encountered:
+
+1. Note the specific stale claim (count mismatch, missing niche, old path).
+2. Cross-reference against the filesystem for the actual state.
+3. Do not update the framework without explicit approval.
+4. Flag the discrepancy in session output.
+
+---
+
+## Related
+
+- [Docs Guide Structure Policy](docs-guide-structure-policy)
+- [V2 Folder Governance](v2-folder-governance)
+- [Root Allowlist Governance](root-allowlist-governance)
+- [Generated Artifact and Hook Governance](generated-artifact-and-hook-governance)

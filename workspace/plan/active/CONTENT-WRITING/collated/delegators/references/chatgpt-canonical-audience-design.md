@@ -1,0 +1,1 @@
+/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/chatgpt-canonical-delegators-lp-token-audience-design.md

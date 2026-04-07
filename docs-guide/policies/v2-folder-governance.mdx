@@ -10,7 +10,7 @@ keywords:
   - publishable pages
   - mintignore
   - cleanup matrix
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -51,12 +51,22 @@ Approved subfolders:
 
 | Subfolder | Use |
 | --- | --- |
+| `notes/` | Loose planning notes, todo files, and ad hoc reference material. |
 | `plans/` | Active restructuring plans, execution plans, migration matrices, and implementation notes. |
 | `research/` | Research notes, evidence packs, claim inventories, and working references. |
 | `research/sources/` | Source bundles, imported references, verification snapshots, and supporting evidence files. |
 | `reviews/` | Review notes, critique passes, and cleanup recommendations. |
 | `drafts/` | Page-shaped prototypes not yet promoted into the publishable tree. |
 | `handoff/` | Product, stakeholder, or authoring handoff material. |
+| `context-data/` | Contextual data files imported from external tools or prior migrations (e.g. renamed from `_contextData_/`). |
+| `staging/` | Content under active evaluation before promotion or deletion (e.g. renamed from `_move_me/`). |
+| `archive/` | Retired pages and reference material no longer actively maintained. 90-day TTL. |
+| `deprecated/` | Previously publishable pages pending redirect, migration, or removal. |
+
+**Naming rules inside `_workspace/`:**
+- Use plain kebab-case directory names (e.g. `context-data/`, not `_contextData_/`)
+- Legacy names (`_archive/`, `_contextData/`, `_contextData_/`, `_move_me/`, `x-archived/`, `x-deprecated/`) must not be introduced again; existing instances are migrated through approved rename waves
+- Loose files directly inside `_workspace/` (not in a subfolder) are acceptable only as temporary scratch; they should be moved into the appropriate subfolder within 30 days
 
 ## File-Type Rules
 
@@ -96,15 +106,24 @@ This policy starts with documentation plus a recommendation-only cleanup matrix.
 Generator:
 
 ```bash icon="terminal"
-node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js --as-of 2026-03-16
+node operations/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --as-of 2026-03-16
 ```
 
 Generated artifacts:
 
-- `tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.md`
-- `tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.json`
+- `workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md`
+- `workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json`
 
 The matrix inventories current `v2/` legacy workspace buckets, stray `.md` files, deprecated/archive folders, and similar non-publishable material. Locale trees are governed now but default to later move-wave review unless a human explicitly promotes them.
+
+## i18n Trees
+
+`v2/cn/`, `v2/es/`, `v2/fr/` are translation mirror trees governed separately from the standard content section rules.
+
+- i18n trees do **not** have `_workspace/` directories. Do not create them.
+- i18n content is not subject to standard `_workspace/` normalisation passes.
+- Stale or incomplete translations follow the same deprecation path as their English counterparts, governed by the English page lifecycle.
+- These trees are not touched by standard workspace governance unless a specific i18n migration is explicitly approved.
 
 ## Follow-on Workstreams
 

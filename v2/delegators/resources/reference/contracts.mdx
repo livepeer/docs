@@ -1,0 +1,113 @@
+---
+title: Contract Addresses
+sidebarTitle: Contract Addresses
+description: >-
+  Canonical deployed Livepeer protocol and bridge contracts relevant to
+  delegators, rendered from the repository's address data.
+keywords:
+  - livepeer
+  - contract addresses
+  - bonding manager
+  - minter
+  - governor
+  - lpt gateway
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: delegator
+purpose: reference
+lifecycleStage: operate
+status: current
+lastVerified: 2026-04-06
+---
+
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+
+export const arbitrumContracts = [
+  'BondingManager',
+  'Minter',
+  'RoundsManager',
+  'BondingVotes',
+  'LivepeerGovernor',
+  'L2LPTGateway',
+  'LivepeerToken'
+]
+  .map((name) => contractAddresses.arbitrumOne.inventory.find((entry) => entry.name === name && entry.lifecycle === 'active'))
+  .filter(Boolean)
+
+export const ethereumContracts = [
+  'L1Escrow',
+  'LivepeerToken'
+]
+  .map((name) => contractAddresses.ethereumMainnet.inventory.find((entry) => entry.name === name && entry.lifecycle === 'active'))
+  .filter(Boolean)
+
+<Warning>
+  This page renders from the repo's generated contract-address dataset. If you need to verify a value before signing a transaction, open the linked block explorer entry and check the tagged contract there as well.
+</Warning>
+
+## Arbitrum One contracts
+
+<table>
+  <thead>
+    <tr>
+      <th>Contract</th>
+      <th>Address</th>
+      <th>Why delegators care</th>
+    </tr>
+  </thead>
+  <tbody>
+    {arbitrumContracts.map((contract) => (
+      <tr key={contract.id}>
+        <td><a href={contract.blockchainHref}>{contract.name}</a></td>
+        <td><code>{contract.address}</code></td>
+        <td>
+          {contract.name === 'BondingManager' ? 'Bond, unbond, redelegate, claim earnings, and stake accounting.' :
+           contract.name === 'Minter' ? 'Current inflation state and reward-minting support.' :
+           contract.name === 'RoundsManager' ? 'Round timing and progression.' :
+           contract.name === 'BondingVotes' ? 'Governance voting power snapshots.' :
+           contract.name === 'LivepeerGovernor' ? 'Proposal creation and voting.' :
+           contract.name === 'L2LPTGateway' ? 'Bridge-side LPT gateway on Arbitrum.' :
+           'Arbitrum-side LPT token contract.'}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Ethereum mainnet contracts
+
+<table>
+  <thead>
+    <tr>
+      <th>Contract</th>
+      <th>Address</th>
+      <th>Why delegators care</th>
+    </tr>
+  </thead>
+  <tbody>
+    {ethereumContracts.map((contract) => (
+      <tr key={contract.id}>
+        <td><a href={contract.blockchainHref}>{contract.name}</a></td>
+        <td><code>{contract.address}</code></td>
+        <td>
+          {contract.name === 'L1Escrow'
+            ? 'Canonical escrow used when LPT is bridged between mainnet and Arbitrum.'
+            : 'Ethereum-mainnet LPT token contract.'}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<CardGroup cols={2}>
+  <Card title="Protocol Parameters" icon="sliders" href="/v2/delegators/resources/reference/protocol-parameters" arrow>
+    Check current governance-controlled values on the contracts listed above.
+  </Card>
+  <Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/delegators/delegation/bridge-lpt-to-arbitrum" arrow>
+    Use the bridge page when you need the practical wallet flow rather than the raw addresses.
+  </Card>
+</CardGroup>

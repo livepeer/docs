@@ -752,7 +752,7 @@ export const CardInCardLayout = ({
       className={className}
       style={style}
       {...rest}
-      img="/snippets/automations/forum/Hero_Livepeer_Forum.png"
+      img="/snippets/assets/media/heros/Hero_Livepeer_Forum.png"
       href="https://forum.livepeer.org"
       arrow={false}
     >
@@ -789,7 +789,7 @@ export const ForumLatestLayout = ({
         rel="noopener noreferrer"
       >
         <img
-          src="/snippets/automations/forum/Hero_Livepeer_Forum.png"
+          src="/snippets/assets/media/heros/Hero_Livepeer_Forum.png"
           alt="Livepeer Forum"
           noZoom
           style={{

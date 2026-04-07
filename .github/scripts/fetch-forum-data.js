@@ -5,7 +5,7 @@
  * @scope             .github/scripts
  * @owner             docs
  * @needs             F-R1
- * @purpose-statement Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/
+ * @purpose-statement Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
  * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-forum-data.js [flags]
  */
@@ -199,8 +199,8 @@ async function main() {
   jsExport += "];\n";
 
   // Write to file
-  const outputPath = "snippets/automations/forum/forumData.jsx";
-  fs.mkdirSync("snippets/automations/forum", { recursive: true });
+  const outputPath = "snippets/data/social-feeds/forumData.jsx";
+  fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
   fs.writeFileSync(outputPath, jsExport);
   console.log(`Written to ${outputPath}`);
 }

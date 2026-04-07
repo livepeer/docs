@@ -1,0 +1,195 @@
+---
+title: 'Contributor quickstart'
+sidebarTitle: 'Contributor Quickstart'
+description: >-
+  Get the Livepeer protocol running locally, set up a testnet with one orchestrator and one gateway, and submit your first test job.
+keywords:
+  - livepeer contribution
+  - go-livepeer
+  - testnet
+  - OSS
+  - local development
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>This quickstart gets you from zero to a running local testnet in approximately 60 minutes. All traffic stays local -- no mainnet funds, no real LPT required.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer protocol node is `go-livepeer`. It is the entry point for all protocol contributions: video transcoding, AI pipeline integration, payment mechanics, and on-chain interactions. The local testnet simulates the full network on your machine.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- **Go 1.21 or later** -- `go version`
+- **Docker** -- required for AI worker development
+- **ffmpeg** -- for generating test video streams
+- **git**
+
+Optional: NVIDIA GPU with CUDA 12+ for AI pipeline testing.
+
+Install ffmpeg:
+
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu / Debian
+sudo apt-get install ffmpeg
+```
+
+<CustomDivider middleText="Steps" />
+
+## Get the codebase running
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Clone and build go-livepeer" icon="download">
+    ```bash
+    git clone https://github.com/livepeer/go-livepeer.git
+    cd go-livepeer
+
+    # Build the binary
+    make
+    # Output: ./livepeer
+    ```
+
+    The build takes 2-5 minutes on first run. Subsequent builds are incremental.
+
+    Verify the build:
+
+    ```bash
+    ./livepeer --version
+    # Livepeer version: v0.8.10
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a local Ethereum node" icon="link">
+    The testnet uses a local Ethereum node (hardhat or geth dev mode). The easiest path is using the provided Docker compose setup:
+
+    ```bash
+    # From the go-livepeer repo root
+    docker compose -f docker/docker-compose.yml up -d eth-node
+    ```
+
+    This starts a local Ethereum node on `http://localhost:8545` pre-funded with test accounts.
+
+    Check it is running:
+
+    ```bash
+    curl -X POST http://localhost:8545 \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    # Expect: {"result":"0x0",...}
+    ```
+  </StyledStep>
+
+  <StyledStep title="Deploy testnet contracts" icon="file-contract">
+    Deploy the Livepeer protocol contracts to your local Ethereum node:
+
+    ```bash
+    cd docker
+    ./deploy-contracts.sh
+    # Outputs contract addresses -- save these
+    ```
+
+    The script deploys the full protocol: BondingManager, RoundsManager, Minter, TicketBroker, and Governor. Contract addresses are written to `deployments/devnet/` in the repo.
+
+    For a full walkthrough of contract deployment options, see the <a href="/v2/developers/guides/testnet-contract-deployment">testnet contract deployment guide</a>.
+  </StyledStep>
+
+  <StyledStep title="Start an orchestrator" icon="server">
+    Open a new terminal. Start `go-livepeer` in orchestrator mode pointing at your local Ethereum node:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -network devnet \
+      -ethUrl http://localhost:8545 \
+      -ethAcctAddr <your-test-account-address> \
+      -pricePerUnit 1 \
+      -serviceAddr 127.0.0.1:8935
+    ```
+
+    The orchestrator starts on `127.0.0.1:8935` and registers with the local network. You should see:
+
+    ```
+    [INFO] Orchestrator registered: 127.0.0.1:8935
+    [INFO] Waiting for jobs...
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a gateway" icon="gateway">
+    Open a third terminal. Start `go-livepeer` in gateway mode:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -network devnet \
+      -ethUrl http://localhost:8545 \
+      -ethAcctAddr <another-test-account-address> \
+      -orchAddr 127.0.0.1:8935
+    ```
+
+    The gateway connects to the local orchestrator and is ready to accept jobs on `http://127.0.0.1:8935`.
+  </StyledStep>
+
+  <StyledStep title="Submit a test job" icon="flask">
+    Send a test transcoding job to the gateway using ffmpeg:
+
+    ```bash
+    # Generate a 10-second test stream
+    ffmpeg -re -f lavfi -i testsrc=size=640x480:rate=30 \
+      -t 10 -c:v libx264 -preset fast \
+      -f rtmp rtmp://127.0.0.1:1935/live/test
+
+    # The gateway transcodes it and outputs to a local HLS segment
+    ```
+
+    Check the orchestrator terminal -- you should see job processing logs. Check the gateway terminal for segment delivery confirmation.
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="What Next" />
+
+## Next steps
+
+With a running local testnet, three productive paths exist:
+
+**Fix a bug** -- Browse [good first issues](https://github.com/livepeer/go-livepeer/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) in go-livepeer. The local testnet lets you reproduce issues and verify fixes without mainnet funds.
+
+**Add an AI pipeline** -- The `ai-runner` repository (Python) handles AI inference. Clone it separately, test a new pipeline locally, and integrate it with go-livepeer via the AI worker interface.
+
+**Contribute to ComfyStream or PyTrickle** -- Python repositories with lower Go prerequisite. Good entry points for AI pipeline contributors.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Contribution Guide" icon="code-branch" href="/v2/developers/guides/contribution-guide">
+    PR process, coding standards, and how to contribute by repo.
+  </Card>
+  <Card title="Local Testnet Deployment" icon="server" href="/v2/developers/guides/local-testnet-deployment">
+    Full testnet setup with AI worker and advanced configuration.
+  </Card>
+  <Card title="OSS Contributions" icon="people-group" href="/v2/developers/opportunities/oss-contributions">
+    Open issues, bounties, and contribution paths by repository.
+  </Card>
+</CardGroup>

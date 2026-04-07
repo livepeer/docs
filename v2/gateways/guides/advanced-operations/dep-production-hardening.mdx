@@ -1,20 +1,33 @@
 ---
-title: 'Orchestrator Selection & Tiering'
-sidebarTitle: 'Orchestrator Selection'
-description: 'Choose the best orchestrators for your gateway workloads: selection criteria, performance scoring, capability-based routing, allow/deny lists, and failover strategies.'
-keywords: ['livepeer', 'gateway', 'orchestrator selection', 'tiering', 'performance score', 'blocklist', 'failover', 'capability routing', 'orchAddr', 'orchBlocklist']
-og:image: '/snippets/assets/site/og-image/fallback.png'
-pageType: 'guide'
-audience: 'gateway'
-purpose: 'guides'
-status: 'current'
+title: Orchestrator Selection & Tiering
+sidebarTitle: Orchestrator Selection
+description: >-
+  Choose the best orchestrators for your gateway workloads: selection criteria,
+  performance scoring, capability-based routing, allow/deny lists, and failover
+  strategies.
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
 lastVerified: '2026-03-13'
+keywords:
+  - livepeer
+  - gateway
+  - orchestrator selection
+  - tiering
+  - performance score
+  - blocklist
+  - failover
+  - capability routing
+  - orchAddr
+  - orchBlocklist
+og:image: /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
 - Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
 Verify:
-- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
 - Fontawesome icons are used on accordions and tabs
 - Tables use StyledTable component
 - No em-dashes are used (instead use standard -)
@@ -89,8 +102,8 @@ For off-chain AI gateways, the most reliable approach is to maintain an explicit
 This trades the flexibility of network-wide discovery for predictability: you know exactly which orchestrators your jobs go to, and you can vet each one before adding it. It is the recommended approach for production AI workloads.
 
 To find AI-capable orchestrators to add to your list, use:
-- The [Livepeer Explorer](https://explorer.livepeer.org) AI leaderboard {/* REVIEW: Confirm AI leaderboard is live on Explorer and what metrics it shows — Rick to verify */}
-- [tools.livepeer.cloud](https://tools.livepeer.cloud) — community tool suite with orchestrator performance data
+- The [Livepeer Explorer](https://explorer.livepeer.org) AI leaderboard {/* REVIEW: Confirm AI leaderboard is live on Explorer and what metrics it shows - Rick to verify */}
+- [tools.livepeer.cloud](https://tools.livepeer.cloud) - community tool suite with orchestrator performance data
 - The `/getNetworkCapabilities` endpoint on your own gateway, filtered by the pipeline and model you need
 
 ---
@@ -122,7 +135,7 @@ Beyond the built-in selection weights, the gateway can use an external performan
 
 `-orchPerfStatsUrl` points to a service that returns per-orchestrator performance statistics. The Livepeer community leaderboard provides this data. `-minPerfScore` sets a minimum acceptable score; orchestrators below this threshold are excluded from selection regardless of price.
 
-{/* REVIEW: Confirm the leaderboard API endpoint URL and response format — Rick to verify current URL is `https://leaderboard.livepeer.org/api/aggregated_stats` */}
+{/* REVIEW: Confirm the leaderboard API endpoint URL and response format - Rick to verify current URL is `https://leaderboard.livepeer.org/api/aggregated_stats` */}
 
 Performance scores are calculated from real transcoding tests run by the leaderboard against each registered orchestrator. Scores range from 0 to 1, where 1 represents consistently correct transcoding output within latency targets. For production video transcoding, a minimum score of 0.8 or higher is recommended.
 
@@ -161,7 +174,7 @@ Tier 2 (standard) → gateway instance B
 
 Tier 3 (budget) → gateway instance C
     -maxPricePerUnit 500
-    # No minPerfScore — accepts wider range
+    # No minPerfScore - accepts wider range
 ```
 
 Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-operations/gateway-middleware)) routes incoming requests to the correct gateway instance based on the customer's tier.
@@ -176,7 +189,7 @@ Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-ope
 
     The number of retry attempts before the job fails is controlled by `-maxAttempts` (video transcoding). For AI jobs, the retry behaviour depends on the pipeline.
 
-    {/* REVIEW: Confirm `-maxAttempts` applies to gateway retry on orchestrator failure, not just transcoding attempts — Rick to verify. Also confirm AI inference retry count/flag */}
+    {/* REVIEW: Confirm `-maxAttempts` applies to gateway retry on orchestrator failure, not just transcoding attempts - Rick to verify. Also confirm AI inference retry count/flag */}
   </Accordion>
   <Accordion title="Reducing swap frequency">
     High orchestrator swap rates indicate instability in your orchestrator pool, such as under-resourced machines or network issues. To reduce swaps:
@@ -187,7 +200,7 @@ Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-ope
 
     Monitor the `livepeer_orchestrator_swaps` Prometheus counter to track swap frequency over time.
 
-    {/* REVIEW: Confirm Prometheus metric name is `livepeer_orchestrator_swaps` — Rick to verify */}
+    {/* REVIEW: Confirm Prometheus metric name is `livepeer_orchestrator_swaps` - Rick to verify */}
   </Accordion>
   <Accordion title="Discovery timeout">
     If the gateway cannot find a suitable orchestrator within the discovery window, the job fails. The timeout is configurable:
@@ -239,21 +252,21 @@ Track selection health in production using these metrics and endpoints.
 | Orchestrator status | `livepeer_cli` status command | Active connection and pricing |
 | Performance scores | leaderboard.livepeer.org | Comparison vs network |
 
-{/* REVIEW: Confirm Prometheus metric names `livepeer_success_rate` — Rick to verify exact metric names in current go-livepeer */}
+{/* REVIEW: Confirm Prometheus metric names `livepeer_success_rate` - Rick to verify exact metric names in current go-livepeer */}
 
 ---
 
 <CardGroup cols={2}>
-  <Card title="Production Hardening" icon="arrow-left" href="/v2/gateways/guides/advanced-operations/production-hardening">
-    Security, TLS, and HA — covered before this guide.
+  <Card title="Gateway Middleware" icon="arrow-left" href="/v2/gateways/guides/advanced-operations/gateway-middleware">
+    Add request filtering, auth, and gateway-specific routing logic.
   </Card>
   <Card title="Scaling & Resource Management" icon="arrow-right" href="/v2/gateways/guides/advanced-operations/scaling">
     Session limits and when to scale horizontally.
   </Card>
-  <Card title="Orchestrator Offerings Reference" icon="book" href="/v2/gateways/resources/technical/orchestrator-offerings">
+  <Card title="Orchestrator Offerings Reference" icon="book" href="/v2/gateways/resources/reference/technical/orchestrator-offerings">
     Full OrchestratorInfo data structure and discovery API reference.
   </Card>
-  <Card title="Configuration Flags" icon="sliders" href="/v2/gateways/resources/technical/configuration-flags">
+  <Card title="Configuration Flags" icon="sliders" href="/v2/gateways/resources/reference/technical/configuration-flags">
     All selection and scoring flags in one place.
   </Card>
 </CardGroup>
@@ -261,7 +274,7 @@ Track selection health in production using these metrics and endpoints.
 
 {/* ---
 title: 'Production Hardening'
-description: 'Make your gateway production-ready — multi-region deployment, load balancing, TLS, security hardening, high availability, and disaster recovery.'
+description: 'Make your gateway production-ready - multi-region deployment, load balancing, TLS, security hardening, high availability, and disaster recovery.'
 sidebarTitle: 'Production Hardening'
 pageType: 'guide'
 audience: 'gateway'
@@ -277,24 +290,24 @@ status: 'stub'
   SECTION HOME: Guides → Advanced Operations
 
   JOURNEY POSITION:
-  1. Production Hardening (this page) — "Make it production-ready"
-  2. Orchestrator Selection — "Choose the best orchestrators"
-  3. Scaling & Resource Management — "When and how to scale"
-  4. Gateway Middleware — "Custom middleware and integrations"
-  5. Publishing Your Gateway — "Make your gateway discoverable"
+  1. Production Hardening (this page) - "Make it production-ready"
+  2. Orchestrator Selection - "Choose the best orchestrators"
+  3. Scaling & Resource Management - "When and how to scale"
+  4. Gateway Middleware - "Custom middleware and integrations"
+  5. Publishing Your Gateway - "Make your gateway discoverable"
 
   RELATED FILES (draw from):
-  - all-resources/v2-advops--production-ops.mdx               — EXISTING STUB (5%): 17 lines. Topic list: multi-region, LB, security, HA, DR.
-  - all-resources/ctx-gwnew--content-brief-gwoq5-publish-gateway.md — SECONDARY (30%): 569 lines. Research on gateway discoverability — production infra aspects.
-  - all-resources/v2-setup--connect-with-offerings.mdx         — SECONDARY (20%): 351 lines. Marketplace connection — production deployment aspects.
-  - all-resources/v2-refs--configuration-flags.mdx             — REFERENCE: 525 lines. Production-relevant flags.
-  - all-resources/v2-refs--technical-architecture.mdx          — REFERENCE: 165 lines. Architecture diagrams for deployment context.
+  - all-resources/v2-advops--production-ops.mdx               - EXISTING STUB (5%): 17 lines. Topic list: multi-region, LB, security, HA, DR.
+  - all-resources/ctx-gwnew--content-brief-gwoq5-publish-gateway.md - SECONDARY (30%): 569 lines. Research on gateway discoverability - production infra aspects.
+  - all-resources/v2-setup--connect-with-offerings.mdx         - SECONDARY (20%): 351 lines. Marketplace connection - production deployment aspects.
+  - all-resources/v2-refs--configuration-flags.mdx             - REFERENCE: 525 lines. Production-relevant flags.
+  - all-resources/v2-refs--technical-architecture.mdx          - REFERENCE: 165 lines. Architecture diagrams for deployment context.
 
   CROSS-REFS:
-  - Setup → Configuration — initial setup; this is post-setup hardening
-  - Monitoring → Monitoring Setup — production monitoring is a prerequisite
-  - Payments → Fund Your Gateway — deposit management across multi-region
-  - Resources → Configuration Flags — production flags reference
+  - Setup → Configuration - initial setup; this is post-setup hardening
+  - Monitoring → Monitoring Setup - production monitoring is a prerequisite
+  - Payments → Fund Your Gateway - deposit management across multi-region
+  - Resources → Configuration Flags - production flags reference
 */}
 {/*
 # Production Hardening

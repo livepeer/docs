@@ -12,7 +12,7 @@ keywords:
   - fact checking
   - docs operators
   - codex
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -42,17 +42,17 @@ Do not use rollout reports or `tests/README.md` as the canonical narrative sourc
 Canonical sources:
 
 - skill behavior: `ai-tools/ai-skills/templates/*.template.md`
-- fact storage: `tasks/research/claims/`
-- adjudication ledger: `tasks/research/adjudication/page-content-research-outcomes.json`
-- registry validation: `tools/scripts/docs-fact-registry.js`
-- manual fact runner: `tools/scripts/docs-page-research.js`
-- PR advisory runner: `tools/scripts/docs-page-research-pr-report.js`
-- packet runner: `tools/scripts/docs-research-packet.js`
-- adjudication workflow: `tools/scripts/docs-research-adjudication.js`
+- fact storage: `workspace/research/claims/`
+- adjudication ledger: `workspace/research/adjudication/page-content-research-outcomes.json`
+- registry validation: `operations/scripts/validators/content/veracity/docs-fact-registry.js`
+- manual fact runner: `operations/scripts/audits/content/veracity/docs-page-research.js`
+- PR advisory runner: `operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js`
+- packet runner: `operations/scripts/dispatch/content/veracity/docs-research-packet.js`
+- adjudication workflow: `operations/scripts/audits/content/veracity/docs-research-adjudication.js`
 - research-to-plan template: `docs-guide/tooling/research-to-implementation-plan-template.md`
-- local/manual PR prep integration: `tools/scripts/create-codex-pr.js --advisory-research`
+- local/manual PR prep integration: `operations/scripts/dispatch/ai/codex/create-codex-pr.js --advisory-research`
 - packet planning template: `docs-guide/tooling/research-review-packet-plan-template.md`
-- forward plan: `tasks/plan/future/page-content-research-trust-roadmap.md`
+- forward plan: `workspace/plan/future/page-content-research-trust-roadmap.md`
 
 Generated or derived:
 
@@ -61,7 +61,7 @@ Generated or derived:
 
 Historical only:
 
-- rollout evidence and exploratory pilots under `tasks/plan/repo-ops-reports/`
+- rollout evidence and exploratory pilots under `workspace/plan/repo-ops-reports/`
 
 Legacy:
 
@@ -107,13 +107,13 @@ Interpretation:
 Validate the registry:
 
 ```bash icon="terminal"
-node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+node operations/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry workspace/research/claims
 ```
 
 Run a single-page pass:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research.js \
+node operations/scripts/audits/content/veracity/docs-page-research.js \
   --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
   --report-md /tmp/docs-page-research.md \
   --report-json /tmp/docs-page-research.json
@@ -122,8 +122,8 @@ node tools/scripts/docs-page-research.js \
 Run a cluster review:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research.js \
-  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+node operations/scripts/audits/content/veracity/docs-page-research.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/prepare.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
   --report-md /tmp/docs-page-research-cluster.md \
   --report-json /tmp/docs-page-research-cluster.json
 ```
@@ -131,38 +131,38 @@ node tools/scripts/docs-page-research.js \
 Run a nav-based research packet:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-packet.js \
+node operations/scripts/dispatch/content/veracity/docs-research-packet.js \
   --nav tools/config/scoped-navigation/docs-gate-work.json \
   --version v2 \
   --language en \
   --tab Orchestrators \
   --group Guides \
-  --out tasks/reports/orchestrator-guides-review/research-guides-review
+  --out workspace/reports/orchestrator-guides-review/research-guides-review
 ```
 
 Run a files and folders packet:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-packet.js \
+node operations/scripts/dispatch/content/veracity/docs-research-packet.js \
   --folders v2/gateways/guides/payments-and-pricing,v2/gateways/guides/monitoring-and-tooling \
   --files v2/gateways/guides/support-and-operations/funding-and-support.mdx \
   --split-by dir \
-  --out tasks/reports/gateway-guides-review/research-guides-review
+  --out workspace/reports/gateway-guides-review/research-guides-review
 ```
 
 Run a manifest-defined packet:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-packet.js \
-  --manifest tasks/reports/repo-ops/research-packet-manifest.json \
-  --out tasks/reports/repo-ops/research-packet
+node operations/scripts/dispatch/content/veracity/docs-research-packet.js \
+  --manifest workspace/reports/repo-ops/research-packet-manifest.json \
+  --out workspace/reports/repo-ops/research-packet
 ```
 
 Run the PR advisory helper:
 
 ```bash icon="terminal"
-node tools/scripts/docs-page-research-pr-report.js \
-  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+node operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/prepare.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
   --report-md /tmp/page-content-research-pr.md \
   --report-json /tmp/page-content-research-pr.json
 ```
@@ -170,26 +170,26 @@ node tools/scripts/docs-page-research-pr-report.js \
 Run PR prep with advisory research:
 
 ```bash icon="terminal"
-node tools/scripts/create-codex-pr.js \
+node operations/scripts/dispatch/ai/codex/create-codex-pr.js \
   --advisory-research \
-  --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
+  --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/prepare.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
 ```
 
 Validate the adjudication ledger:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-adjudication.js \
+node operations/scripts/audits/content/veracity/docs-research-adjudication.js \
   --validate \
-  --ledger tasks/research/adjudication/page-content-research-outcomes.json
+  --ledger workspace/research/adjudication/page-content-research-outcomes.json
 ```
 
 Record one adjudicated outcome from a report artifact:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-adjudication.js \
+node operations/scripts/audits/content/veracity/docs-research-adjudication.js \
   --record \
-  --ledger tasks/research/adjudication/page-content-research-outcomes.json \
-  --report-json tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-trust-hardening.json \
+  --ledger workspace/research/adjudication/page-content-research-outcomes.json \
+  --report-json workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-trust-hardening.json \
   --reviewer codex \
   --claim-id gw-startup-program-current \
   --human-verdict time-sensitive \
@@ -201,10 +201,10 @@ node tools/scripts/docs-research-adjudication.js \
 Record a missing-coverage outcome that was not detected in the report:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-adjudication.js \
+node operations/scripts/audits/content/veracity/docs-research-adjudication.js \
   --record \
-  --ledger tasks/research/adjudication/page-content-research-outcomes.json \
-  --report-json tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-trust-hardening.json \
+  --ledger workspace/research/adjudication/page-content-research-outcomes.json \
+  --report-json workspace/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-trust-hardening.json \
   --reviewer codex \
   --claim-family gateway-support-contact-channel \
   --human-verdict time-sensitive \
@@ -216,9 +216,9 @@ node tools/scripts/docs-research-adjudication.js \
 Write a trust summary from adjudicated outcomes:
 
 ```bash icon="terminal"
-node tools/scripts/docs-research-adjudication.js \
+node operations/scripts/audits/content/veracity/docs-research-adjudication.js \
   --summary \
-  --ledger tasks/research/adjudication/page-content-research-outcomes.json \
+  --ledger workspace/research/adjudication/page-content-research-outcomes.json \
   --report-md /tmp/page-content-research-adjudication.md \
   --report-out-json /tmp/page-content-research-adjudication.json
 ```
@@ -297,8 +297,8 @@ Use this split consistently:
 
 - public contributor usage: `v2/resources/documentation-guide/`
 - internal operator workflow: this runbook in `docs-guide/frameworks/`
-- rollout/adoption record: `tasks/plan/repo-ops-reports/`
-- future hardening plan: `tasks/plan/future/`
+- rollout/adoption record: `workspace/plan/repo-ops-reports/`
+- future hardening plan: `workspace/plan/future/`
 - executable behavior: scripts, templates, tests, and claim registries
 
 If these sources disagree:
@@ -312,7 +312,7 @@ If these sources disagree:
 
 When improving the research skill:
 
-1. expand claim-family coverage in `tasks/research/claims/`
+1. expand claim-family coverage in `workspace/research/claims/`
 2. improve evidence matching and classification logic in the runner
 3. validate on real orchestrator and gateway page clusters
 4. run PR advisory on tracked factual docs pages
@@ -393,6 +393,6 @@ Do not:
 ## Related Docs
 
 - Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
-- AI tools index: `/docs-guide/catalog/ai-tools`
+- AI tools index: `/docs-guide/tooling/ai-tools`
 - Source of truth policy: `/docs-guide/policies/source-of-truth-policy`
-- Trust roadmap: `tasks/plan/future/page-content-research-trust-roadmap.md`
+- Trust roadmap: `workspace/plan/future/page-content-research-trust-roadmap.md`

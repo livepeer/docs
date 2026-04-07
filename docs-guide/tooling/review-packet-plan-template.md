@@ -35,7 +35,7 @@ Exclude:
 
 Packet root:
 
-- `tasks/reports/<scope>-review/<date>-copy-review-packet/`
+- `workspace/reports/<scope>-review/<date>-copy-review-packet/`
 
 Required top-level files:
 

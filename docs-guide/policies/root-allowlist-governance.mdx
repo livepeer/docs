@@ -10,7 +10,7 @@ keywords:
   - root files
   - pre-commit
   - cleanup
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -19,254 +19,162 @@ keywords:
 
 # Root Allowlist Governance
 
-This document is the canonical policy for repo-root governance and `.allowlist` authoring.
+This document is the normative policy for repo-root governance.
 
-`.allowlist` is not a notes file, a migration plan, or a report sink. It is machine-readable input to the root-structure gate in `.githooks/pre-commit`.
+The live inventory is generated, not maintained here. Use these surfaces together:
 
-The current governance contract uses the canonical agent root layout and keeps `.allowlist` machine-readable and root-only.
+- Canonical contract: `operations/governance/config/root-governance.json`
+- Generated root projection: `.allowlist`
+- Generated live map: `docs-guide/repo-ops/config/root-governance-map.mdx`
+- Generated sync reports: `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.{json,md}`
 
-## Canonical Policy
+## Policy
 
-`.allowlist` exists to answer one question only:
+`.allowlist` is machine-readable input to the root-structure gate in `.githooks/pre-commit`.
 
-- which root-level files and directories are intentionally allowed to exist in this repository
+It must never be used as:
 
-Canonical enforcement source:
+- a notes file
+- a migration plan
+- a report sink
+- a place to pre-allow future paths
 
-- `.githooks/pre-commit`
+Human-authored root decisions belong in `operations/governance/config/root-governance.json`. `.allowlist` is a generated projection.
 
-Canonical authoring rules:
+## Root Admission Rules
 
-1. `.allowlist` must contain only root entries plus `#` comment lines.
-2. HTML comments, embedded reports, and prose paragraphs are not safe in `.allowlist`.
-3. Nested paths do not belong in `.allowlist`; the hook enforces root entries only.
-4. Future target paths should be documented in governance docs, not pre-allowed in `.allowlist` before they exist.
-5. Root clutter (`.DS_Store`, debug logs, caches, backups) should be cleaned or ignored, not allowlisted.
-
-## Historical Verification Snapshot
-
-Verification date:
-
-- `2026-03-16`
-
-Reviewed commits:
-
-- `9677f551` - `.allowlist`
-- `9befbcf4` - `clean up allowlist`
-- `8be19f17` - `fix config`
-
-Findings:
-
-- No currently existing root item that is clearly still needed was accidentally removed across the last 3 `.allowlist` commits.
-- Removed legacy entries `docs.json.jsx`, `docs-orch-work.json`, `todo.txt`, and `scripts` do not exist in the current worktree.
-- Current root items `SECURITY.md`, `docs-index.json`, `contribute/`, `tools/`, `docs-guide/`, `v1/`, and `v2/` were not removed from the allowlist history reviewed.
-- `ASSISTANT.md` exists at repo root but is still omitted from the current `.allowlist`.
-- The current `.allowlist` contains parser-visible report prose and HTML comment blocks, which the hook does not safely ignore.
-
-## Current Root Inventory
-
-Current root inventory observed during this review:
-
-### Governed root state
-
-- `.allowlist`
-- `.claude/`
-- `.codex/`
-- `.cursor/`
-- `.editorconfig`
-- `.gitattributes`
-- `.githooks/`
-- `.github/`
-- `.gitignore`
-- `.lpdignore`
-- `.mintignore`
-- `.prettierrc`
-- `.vscode/`
-- `.windsurf/`
-- `AGENTS.md`
-- `ai-tools/`
-- `api/`
-- `contribute/`
-- `Dockerfile`
-- `docs-guide/`
-- `docs-index.json`
-- `docs.json`
-- `LICENSE`
-- `llms-full.txt`
-- `llms.txt`
-- `lpd`
-- `Makefile`
-- `README.md`
-- `SECURITY.md`
-- `sitemap-ai.xml`
-- `snippets/`
-- `style.css`
-- `tasks/`
-- `tests/`
-- `tools/`
-- `v1/`
-- `v2/`
-
-### Root clutter or unresolved root state
-
-- `.DS_Store`
-- `.cache/`
-- `docs/`
-- `docs.json.bak`
-- `mint-debug.log`
-
-## Current `.allowlist` Mismatches
-
-### Remaining unresolved root items present outside the governed allowlist scope
-
-| Entry | Current state | Notes |
-|---|---|---|
-| `docs/` | present | Root directory not covered by current governance notes; requires separate cleanup decision. |
-| `docs.json.bak` | present | Backup artifact; should be cleaned or explicitly governed outside `.allowlist`. |
-| `mint-debug.log` | present | Runtime/debug artifact; should not be allowlisted. |
-| `.DS_Store` | present | OS noise; should not be allowlisted. |
-| `.cache/` | present | Local cache; should not be allowlisted. |
-
-### Retired invalid or legacy entries removed during governance rollout
-
-| Entry | Status | Why this is a problem |
-|---|---|---|
-| `.claude/CLAUDE.md` | removed from `.allowlist` | Nested path; `.allowlist` is root-only. |
-| `.cursor/rules/` | removed from `.allowlist` | Nested path; the valid root entry is `.cursor`. |
-| `.windsurf/rules/` | removed from `.allowlist` | Nested path; the valid root entry is `.windsurf`. |
-| `.github/copilot-instructions.md` | removed from `.allowlist` | `.github` is the governed root entry. |
-| `.mintlify` | removed from `.allowlist` | Not implemented in this repo. |
-| `.cursorrules` | retired | Replaced by `.cursor/rules/repo-governance.mdc`. |
-| `Assistant.md` | removed | Wrong casing and replaced by the canonical `AGENTS.md` baseline. |
-| embedded report prose / HTML comments | removed | Parser-visible junk that broke machine-readable enforcement. |
-
-## Why HTML Comments and Report Prose Are Unsafe
-
-Current parser behavior in `.githooks/pre-commit`:
-
-```bash icon="terminal"
-ALLOWLIST=$(grep -v '^#' .allowlist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
-```
-
-Root detection behavior in the same hook:
-
-- new root files are matched with `^[^/]+$`
-- new root directories are reduced to the first path segment via `cut -d'/' -f1`
-
-Implications:
-
-- only `#` comments are safely ignored
-- HTML comments are not ignored
-- nested file paths are not meaningful allowlist entries
-- pasted reports and free-form prose become parser-visible junk
-
-## Implemented Agent Path Decisions and Allowlist Impact
-
-Implemented target locations for agent governance:
-
-- `AGENTS.md`
-- `.github/copilot-instructions.md`
-- `.claude/CLAUDE.md`
-- `.cursor/rules/`
-- `.windsurf/rules/`
-
-Allowlist implications:
-
-| Approved path | Future allowlist behavior |
-|---|---|
-| `AGENTS.md` | Listed directly as a root file. |
-| `.github/copilot-instructions.md` | Not listed separately; `.github` covers it. |
-| `.claude/CLAUDE.md` | `.allowlist` lists `.claude` only. |
-| `.cursor/rules/` | `.allowlist` lists `.cursor` only. |
-| `.windsurf/rules/` | `.allowlist` lists `.windsurf` only. |
-
-## Prior Reports Incorporated
-
-This policy incorporates the following prior reports and decisions:
-
-### Prior report: Root entry re-review (`2026-03-16`)
-
-Preserved conclusions:
-
-- strong move candidates for a cleaner root were identified as `docs-index.json`, `tasks/`, `ai-tools/`, `contribute/`, and the custom `llms*.txt` plus root `ASSISTANT.md` setup
-- keep-at-root decisions were identified for `docs.json`, `.github/`, `.allowlist`, `.githooks/`, `.codex/`, `style.css`, `.mintignore`, `.lpdignore`, the main content trees, and `api/`
-- `SECURITY.md` was identified as movable in principle, even though it remains present at root today
-
-Preserved decision matrix:
-
-| Entry | Essential at root? | Could move? | Current recommendation |
-|---|---|---:|---|
-| `.allowlist` | yes | no | Keep at root. |
-| `.github/` | yes | no | Keep at root. |
-| `.githooks/` | no | yes | Keep at root until tooling changes. |
-| `docs.json` | yes | no | Keep at root. |
-| `style.css` | yes | possible | Keep at root. |
-| `.mintignore` | yes | no | Keep at root. |
-| `snippets/`, `v1/`, `v2/` | yes | yes | Keep at root. |
-| `tools/`, `tests/` | no | yes | Keep at root. |
-| `tasks/` | no | yes | Move candidate. |
-| `docs-guide/` | no | yes | Keep as the single top-level internal docs tree. |
-| `ai-tools/` | no | yes | Move candidate. |
-| `api/` | no | yes | Keep at root under current contracts. |
-| `lpd` | no | yes | Keep a root shim under current workflow. |
-| `.lpdignore` | yes | no | Keep at root. |
-| `docs-index.json` | no | yes | Move candidate. |
-| `sitemap-ai.xml` | conditional | conditional | Keep at root only if the public root URL is still required. |
-| `llms.txt`, `llms-full.txt` | no | not usefully | Delete custom overrides unless they are intentionally curated. |
-| `ASSISTANT.md` | no | yes | Legacy root file; move or retire under the current governance contract. |
-| `.codex/` | yes in current repo | yes | Keep at root under current Codex workflow. |
-| `contribute/` | no | yes | Move candidate with dependency mapping first. |
-
-### Prior report: Agent root file decision set (`2026-03-16`)
-
-Preserved decisions:
-
-- use `AGENTS.md` as the canonical repo-wide baseline
-- use `.github/copilot-instructions.md` for GitHub Copilot
-- use `.claude/CLAUDE.md` for Claude Code
-- use `.cursor/rules/` for Cursor
-- use `.windsurf/rules/` for Windsurf
-
-## Keep / Move / Remove Criteria
-
-Keep an entry at root only if at least one of the following is true:
+An entry may remain at repo root only when at least one of these is true:
 
 - the platform discovers it by fixed root path
 - the repo uses it as a root entrypoint or contract
-- the public URL contract depends on the root path
-- local tooling hardcodes the root path and the migration is not yet approved
+- the published URL contract depends on the root path
+- the repo has explicitly approved it as a root subsystem
 
-Mark an entry as a move candidate when all of the following are true:
+Everything else must live in an existing governed subtree such as:
 
-- it is an internal artifact, guide, report, or adapter
-- it is not platform-discovered by fixed root path
-- it can be namespaced under an existing governed subtree
-- migration dependencies can be mapped and updated safely
+- `docs-guide/**` for policy and maintainer docs
+- `operations/**` and `tools/**` for scripts and runtime logic
+- `workspace/**` for plans, audits, reports, and local scratch outputs
 
-Remove an entry from `.allowlist` when any of the following is true:
+## Generated Governance Model
 
-- the file or directory does not currently exist
-- the entry is a nested path instead of a root path
-- the entry is a backup, debug artifact, cache, or OS noise
-- the entry exists only inside a pasted report or HTML comment block
+The root-governance generator must deterministically write:
 
-## Report Sources
+- `.allowlist`
+- `docs-guide/repo-ops/config/root-governance-map.mdx`
+- `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json`
+- `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md`
 
-### Repo evidence
+The validator `operations/scripts/validators/governance/compliance/check-root-governance-sync.js` must fail when those outputs drift from `operations/governance/config/root-governance.json`.
 
-- `.githooks/pre-commit`
-- `lpd`
-- `README.md`
-- `.github/AGENTS.md`
-- `docs.json`
-- `tools/scripts/generate-docs-index.js`
-- `tools/scripts/generate-llms-files.js`
-- `tools/scripts/generate-ai-sitemap.js`
-- `tools/lib/docs-index-utils.js`
-- `tools/scripts/i18n/translate-docs.js`
-- `contribute/CONTRIBUTING.mdx`
-- `contribute/CONTRIBUTING/GIT-HOOKS.md`
-- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md`
+## Root Hygiene Rules
+
+`.allowlist` may contain only:
+
+- root-level entries
+- blank lines
+- `#` comment lines
+
+It may not contain:
+
+- nested paths
+- HTML comments
+- prose paragraphs
+- report output
+- retired entries
+
+Root clutter is forbidden. Examples:
+
+- `.DS_Store`
+- `.cache/`
+- `.playwright-cli/`
+- backup files
+- debug logs
+
+Local browser captures must go to `workspace/reports/_local/playwright/**`.
+
+Local `.env` compatibility is allowed only as an untracked root file. It is not part of the governed root set.
+
+## Approved Root Decisions In This Model
+
+The following decisions are locked into the current governance contract:
+
+- `ai-tools/` is an approved root subsystem and must not be treated as accidental root drift in this pass.
+- `docs-index.json`, `llms.txt`, and `sitemap-ai.xml` are ratified AI-first public root artifacts.
+- `llms-full.txt` is retired and must not be regenerated or documented as active.
+- `.cursorrules` is retired and must not be recreated as a governed root surface.
+
+## Change Process
+
+When root governance changes:
+
+1. Edit `operations/governance/config/root-governance.json`.
+2. Regenerate root-governance outputs.
+3. Update manual policy docs that describe the rules, not the live inventory.
+4. Run the root-governance validator and affected generated-artifact checks.
+
+Do not hand-edit `.allowlist` as the primary source of truth.
+
+## Related
+
+- [`docs-guide/repo-ops/config/root-governance-map.mdx`](/docs-guide/repo-ops/config/root-governance-map)
+- [`docs-guide/repo-ops/config/repo-config-map.mdx`](/docs-guide/repo-ops/config/repo-config-map)
+- [`docs-guide/policies/agent-governance-framework.mdx`](/docs-guide/policies/agent-governance-framework)
+- `operations/scripts/generators/content/catalogs/generate-docs-index.js`
+- `operations/scripts/generators/ai/llm/generate-llms-files.js`
+- `operations/scripts/generators/content/seo/generate-ai-sitemap.js`
+- `tools/lib/docs/docs-index-utils.js`
+- `operations/scripts/automations/content/language-translation/translate-docs.js`
+- `docs-guide/contributing/contributing.mdx`
+- `docs-guide/contributing/git-hooks.mdx`
+- `docs-guide/contributing/agent-instructions.mdx`
+
+## `api/` Governance
+
+`api/` is a schema-only directory. It contains OpenAPI specification files referenced by the docs platform for API reference rendering.
+
+Rules:
+
+1. **Spec files only** — `api/` must contain only OpenAPI/JSON schema files (`.yaml`, `.json`). No `.mdx` page content, no `.backup` files, no partial mirrors.
+2. **No backup files** — `openapi.yaml.backup` and similar were removed as part of Phase 0 cleanup (2026-03-21). Future backups belong in `_workspace/archive/` if they exist at all.
+3. **No duplicate subdirs** — `api/worker/` was removed (2026-03-21) as it was an exact mirror of `api/` root files. If worker-specific specs diverge in the future, they get their own named spec file in `api/`, not a subdirectory mirror.
+4. **Size** — specs are schema-only; they should remain small. If a spec exceeds 500 KB, review for consolidation.
+
+Current spec inventory:
+
+| File | Purpose |
+|------|---------|
+| `api/gateway.openapi.yaml` | Gateway API spec |
+| `api/openapi.yaml` | Primary public API spec |
+| `api/openapi.json` | JSON mirror of openapi.yaml |
+| `api/ai-worker.yaml` | AI Worker API spec |
+| `api/cli-http.yaml` | CLI HTTP API spec |
+| `api/studio.yaml` | Studio API spec |
+
+---
+
+## `_workspace/` Standard for Root Folders
+
+Every named root folder (excluding dot-dirs, `v1/`, and `v2/`) may contain a `_workspace/` subdirectory for maintainer-only scratch, planning, and archive material.
+
+**Folders with `_workspace/` (created 2026-03-21):**
+
+| Folder | `_workspace/` subdirs |
+|--------|-----------------------|
+| `ai-tools/` | `skill-research/`, `rule-drafts/`, `archive/` |
+| `api/` | (root — use for spec-related scratch only) |
+| `docs-guide/` | `archive/`, `drafts/` |
+| `snippets/` | (root — use for component/asset scratch) |
+| `tools/` | (root — use for tooling scratch) |
+| `workspace/` | N/A — the folder is itself the workspace |
+
+**Rules:**
+1. `_workspace/` under a root folder must not appear in `docs.json` navigation.
+2. All root-folder `_workspace/` dirs are covered by `.mintignore` patterns (`/ai-tools/_workspace/**`, `/api/_workspace/**`, `/snippets/_workspace/**`, `/tools/_workspace/**`).
+3. The approved subdir names match the `v2/` section `_workspace/` contract: `notes/`, `plans/`, `research/`, `reviews/`, `drafts/`, `handoff/`, `archive/`, `deprecated/`, `context-data/`, `staging/`.
+4. Root-folder `_workspace/` content follows the same TTL rules as `docs-guide/_workspace/`: 30-day TTL for scratch (notes, drafts, research, reviews), 90-day TTL for archive.
+
+---
 
 ### Official external sources
 

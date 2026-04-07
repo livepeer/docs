@@ -1,0 +1,162 @@
+# Relative Link Audit
+
+## Summary
+- Mode: write
+- Files scanned: 140
+- Generated pages scanned: 1
+- Relative href literals scanned: 69
+- Planned rewrites: 59
+- Unresolved links: 10
+- Generator-owned findings: 0
+- Skipped non-page/non-v2 hrefs: 0
+
+## Status Counts
+| status | count |
+| --- | ---: |
+| direct | 59 |
+| unresolved | 10 |
+
+## Planned Rewrites
+- v2/gateways/guides/node-pipelines/ai-pipelines.mdx
+  - L267: ../payments-and-pricing/pricing-strategy -> /v2/gateways/guides/payments-and-pricing/pricing-strategy [direct]
+  - L272: ./guide -> /v2/gateways/guides/node-pipelines/guide [direct]
+  - L279: ./byoc-pipelines -> /v2/gateways/guides/node-pipelines/byoc-pipelines [direct]
+  - L543: ./guide -> /v2/gateways/guides/node-pipelines/guide [direct]
+  - L546: ./byoc-pipelines -> /v2/gateways/guides/node-pipelines/byoc-pipelines [direct]
+  - L549: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+- v2/gateways/guides/node-pipelines/byoc-pipelines.mdx
+  - L132: ./guide -> /v2/gateways/guides/node-pipelines/guide [direct]
+  - L169: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+  - L186: ./ai-pipelines#orchestrator-discovery -> /v2/gateways/guides/node-pipelines/ai-pipelines#orchestrator-discovery [direct]
+  - L186: ./ai-pipelines#finding-ai-models -> /v2/gateways/guides/node-pipelines/ai-pipelines#finding-ai-models [direct]
+  - L195: ./guide -> /v2/gateways/guides/node-pipelines/guide [direct]
+  - L198: ./ai-pipelines -> /v2/gateways/guides/node-pipelines/ai-pipelines [direct]
+  - L201: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+  - L210: ../monitoring-and-tooling/monitoring-setup -> /v2/gateways/guides/monitoring-and-tooling/monitoring-setup [direct]
+- v2/gateways/guides/node-pipelines/dep-ai-inference.mdx
+  - L385: ./byoc-pipelines -> /v2/gateways/guides/node-pipelines/byoc-pipelines [direct]
+  - L388: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+  - L391: ../monitoring-and-tooling/monitoring-setup -> /v2/gateways/guides/monitoring-and-tooling/monitoring-setup [direct]
+- v2/gateways/guides/node-pipelines/guide.mdx
+  - L259: ./video-pipelines -> /v2/gateways/guides/node-pipelines/video-pipelines [direct]
+  - L262: ./ai-pipelines -> /v2/gateways/guides/node-pipelines/ai-pipelines [direct]
+  - L265: ./byoc-pipelines -> /v2/gateways/guides/node-pipelines/byoc-pipelines [direct]
+  - L268: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+- v2/gateways/guides/node-pipelines/pipeline-configuration.mdx
+  - L323: ./ai-pipelines -> /v2/gateways/guides/node-pipelines/ai-pipelines [direct]
+  - L438: ./ai-pipelines#ai-vs-video-comparison -> /v2/gateways/guides/node-pipelines/ai-pipelines#ai-vs-video-comparison [direct]
+  - L519: ./ai-pipelines -> /v2/gateways/guides/node-pipelines/ai-pipelines [direct]
+  - L522: ./video-pipelines -> /v2/gateways/guides/node-pipelines/video-pipelines [direct]
+  - L525: ../payments-and-pricing/pricing-strategy -> /v2/gateways/guides/payments-and-pricing/pricing-strategy [direct]
+  - L531: ../advanced-operations/scaling -> /v2/gateways/guides/advanced-operations/scaling [direct]
+- v2/gateways/guides/node-pipelines/video-pipelines.mdx
+  - L408: ./guide -> /v2/gateways/guides/node-pipelines/guide [direct]
+  - L411: ./pipeline-configuration -> /v2/gateways/guides/node-pipelines/pipeline-configuration [direct]
+  - L414: ../payments-and-pricing/pricing-strategy -> /v2/gateways/guides/payments-and-pricing/pricing-strategy [direct]
+  - L417: ../monitoring-and-tooling/monitoring-setup -> /v2/gateways/guides/monitoring-and-tooling/monitoring-setup [direct]
+  - L420: ./ai-pipelines -> /v2/gateways/guides/node-pipelines/ai-pipelines [direct]
+  - L423: ../../../developers/build/byoc -> /v2/developers/build/byoc [direct]
+- v2/gateways/portal.mdx
+  - L115: ./navigator -> /v2/gateways/navigator [direct]
+  - L119: ./navigator -> /v2/gateways/navigator [direct]
+  - L123: ./quickstart/gateway-setup -> /v2/gateways/quickstart/gateway-setup [direct]
+  - L128: ./guides/tutorials/tutorial-1-offchain-transcoding-test -> /v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test [direct]
+- v2/gateways/quickstart/gateway-setup.mdx
+  - L139: ../setup/install/docker-install -> /v2/gateways/setup/install/docker-install [direct]
+  - L184: ../setup/install/linux-install -> /v2/gateways/setup/install/linux-install [direct]
+  - L214: ../setup/install/windows-install -> /v2/gateways/setup/install/windows-install [direct]
+  - L284: ../setup/requirements/setup -> /v2/gateways/setup/requirements/setup [direct]
+  - L288: ../setup/requirements/on-chain%20setup/on-chain -> /v2/gateways/setup/requirements/on-chain%20setup/on-chain [direct]
+  - L291: ../setup/run-a-gateway -> /v2/gateways/setup/run-a-gateway [direct]
+- v2/gateways/setup/configure/configuration-overview.mdx
+  - L77: ./video-configuration -> /v2/gateways/setup/configure/video-configuration [direct]
+  - L85: ./ai-configuration -> /v2/gateways/setup/configure/ai-configuration [direct]
+  - L93: ./dual-configuration -> /v2/gateways/setup/configure/dual-configuration [direct]
+  - L101: ./pricing-configuration -> /v2/gateways/setup/configure/pricing-configuration [direct]
+- v2/gateways/setup/configure/pricing-configuration.mdx
+  - L369: ../../concepts/business-model -> /v2/gateways/concepts/business-model [direct]
+  - L378: ../requirements/on-chain%20setup/fund-gateway -> /v2/gateways/setup/requirements/on-chain%20setup/fund-gateway [direct]
+- v2/gateways/setup/configure/video-configuration.mdx
+  - L467: ./pricing-configuration -> /v2/gateways/setup/configure/pricing-configuration [direct]
+- v2/gateways/setup/install/install-overview.mdx
+  - L96: ./docker-install -> /v2/gateways/setup/install/docker-install [direct]
+  - L112: ./linux-install -> /v2/gateways/setup/install/linux-install [direct]
+  - L128: ./windows-install -> /v2/gateways/setup/install/windows-install [direct]
+  - L142: ./community-projects -> /v2/gateways/setup/install/community-projects [direct]
+- v2/gateways/setup/requirements/on-chain setup/on-chain.mdx
+  - L211: ./fund-gateway -> /v2/gateways/setup/requirements/on-chain%20setup/fund-gateway [direct]
+  - L720: ./fund-gateway -> /v2/gateways/setup/requirements/on-chain%20setup/fund-gateway [direct]
+  - L940: ./fund-gateway -> /v2/gateways/setup/requirements/on-chain%20setup/fund-gateway [direct]
+- v2/gateways/setup/run-a-gateway.mdx
+  - L225: ../concepts/business-model -> /v2/gateways/concepts/business-model [direct]
+- v2/gateways/setup/transcoding.mdx
+  - L49: ../quickstart/gateway-setup -> /v2/gateways/quickstart/gateway-setup [direct]
+
+## Unresolved
+- v2/gateways/portal.mdx
+  - L107: ./concepts/
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/role (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+  - L111: ./concepts/
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/concepts/role (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+  - L132: ./setup
+    - suggestion: /v2/gateways/setup/requirements/setup (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/setup/run-a-gateway (high path similarity, score 0.75)
+    - suggestion: /v2/gateways/setup/transcoding (high path similarity, score 0.75)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/navigator (high path similarity, score 0.6667)
+  - L143: ./guides/
+    - suggestion: /v2/community/resources/guides (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/navigator (high path similarity, score 0.6667)
+    - suggestion: /v2/gateways/portal (high path similarity, score 0.6667)
+  - L150: ./resources/technical
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/glossary (high path similarity, score 0.6)
+- v2/gateways/quickstart/gateway-setup.mdx
+  - L147: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L192: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L222: ../resources/technical/configuration-flags
+    - suggestion: /v2/gateways/resources/reference/technical/configuration-flags (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/knowledge-hub/help (high path similarity, score 0.6)
+    - suggestion: /v2/gateways/resources/reference/faq (high path similarity, score 0.6)
+  - L272: ../resources/faq
+    - suggestion: /v2/community/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/orchestrators/resources/reference/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/gateways/resources/knowledge-hub/resources (high path similarity, score 0.66)
+    - suggestion: /v2/gateways/resources/knowledge-hub/guides (high path similarity, score 0.6)
+- v2/gateways/setup/run-a-gateway.mdx
+  - L238: ../run-a-gateway/install
+    - suggestion: /v2/gateways/setup/run-a-gateway (high path similarity, score 0.575)
+    - suggestion: /v2/gateways (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/architecture (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/business-model (high path similarity, score 0.5)
+    - suggestion: /v2/gateways/concepts/capabilities (high path similarity, score 0.5)
+
+## Generator-Owned Findings
+- None
+

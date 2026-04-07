@@ -1,0 +1,222 @@
+---
+title: 'Gateway Help'
+sidebarTitle: 'Help'
+description: 'Support channels, Discord, Forum, GitHub issues, and community resources for Livepeer gateway operators. ~19,500 Discord members, 600+ forum topics, bi-weekly developer office hours, and multiple SPE providers offering free gateway services and setup tooling.'
+keywords: ["livepeer", "gateway", "support", "discord", "forum", "help", "community", "github issues"]
+audience: developer
+pageType: landing
+purpose: landing
+status: draft
+lastVerified: 2026-03-11
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+
+Livepeer's primary help channel is Discord (~19,500 members). The Livepeer Forum is the second layer for substantive technical questions. SPE providers (Livepeer Cloud, Titan Node) offer direct gateway support and free hosted gateway access. Developer Office Hours run bi-weekly and cover gateway and AI topics.
+
+---
+
+## Where to Go for What
+
+| Question type | Best channel |
+|---|---|
+| First install failing, binary won't start | `#developer-lounge` on Discord |
+| AI gateway routing, model discovery | `#developer-lounge` or `#orchestrating` on Discord |
+| ETH deposit / reserve / Arbitrum | `#developer-lounge` on Discord |
+| Remote Signer implementation | `#developer-lounge` + GitHub PR #3791/#3822 |
+| OBS / RTMP ingest problems | `#developer-lounge` on Discord |
+| Orchestrator selection, pricing | `#orchestrating` on Discord |
+| Prometheus/Grafana monitoring setup | Forum ("Transcoder Monitoring" thread) |
+| Production alerting, log parsing | Forum (search "Production Log Monitoring") |
+| NaaP, billing, API keys | `#developer-lounge` + github.com/livepeer/naap |
+| Security vulnerabilities | Immunefi — never GitHub Issues |
+| Grants / bounties | `#developer-lounge` + livepeer.org/grants |
+| Governance, treasury proposals | `#governance` on Discord + forum.livepeer.org |
+
+---
+
+## Discord
+
+Livepeer Discord has ~19,500 members. The primary channels for gateway operators are **`#developer-lounge`** and **`#orchestrating`**.
+
+<AccordionGroup>
+  <Accordion title="#developer-lounge">
+    The main developer help channel. Gateway setup questions (go-livepeer binary, Docker Compose, ETH deposit, `-broadcaster` / `-gateway` flags), AI gateway configuration, RTMP/HLS ingest debugging, and SDK questions all belong here. The Livepeer Cloud SPE support team monitors this channel. Response time is typically under a few hours during weekday business hours.
+  </Accordion>
+  <Accordion title="#orchestrating">
+    Orchestrator and gateway operator channel. Orchestrator selection strategies, `-orchAddr` / `-orchWebhookUrl` configuration, pricing discussions (`-maxPricePerUnit`, `-selectPriceWeight`), network performance analysis, and NaaP ecosystem discussion. The most experienced node operators are active here.
+  </Accordion>
+  <Accordion title="#lounge">
+    General community discussion, ecosystem news, announcements, and off-topic conversation. Protocol updates and new SPE announcements typically appear here first.
+  </Accordion>
+  <Accordion title="#delegating">
+    Delegation, staking, LPT economics, and orchestrator evaluation from a delegator perspective. Gateway operators who also hold LPT use this channel for staking strategy discussion.
+  </Accordion>
+  <Accordion title="#governance">
+    Treasury proposals, LIP (Livepeer Improvement Proposals) discussion, on-chain voting coordination, and SPE grant pre-proposals. Relevant to gateway operators considering submitting a grant proposal for tooling work.
+  </Accordion>
+  <Accordion title="#ai-research">
+    Real-time AI model research, Live AI pipeline updates, ComfyUI / StreamDiffusion integration, AI runner developments, and AI gateway capability discussions. Particularly relevant for gateway operators running AI inference workloads.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+To join the Livepeer Discord, visit [livepeer.org](https://livepeer.org) or use the invite linked from docs.livepeer.org. The server has ~19,500 members. Livepeer Cloud SPE support and Titan Node support representatives are both active in Discord.
+</Note>
+
+---
+
+## Livepeer Forum
+
+[forum.livepeer.org](https://forum.livepeer.org) has 600+ topics. Most gateway operational questions have existing threads — search before posting.
+
+<AccordionGroup>
+  <Accordion title="Recommended searches for gateway operators">
+    - **"broadcaster"** — hundreds of threads covering early gateway setup under the old name
+    - **"go-livepeer"** — binary, Docker, build issues, flag reference questions
+    - **"deposit"** / **"reserve"** — ETH funding and Arbitrum deposit questions
+    - **"Prometheus"** / **"Grafana"** — monitoring setup (see the February 2021 guide thread)
+    - **"Production Log Monitoring"** — alerting and log parsing for production gateways
+    - **"maxPricePerUnit"** — orchestrator pricing configuration
+    - **"AI capability discovery"** — March 2026 thread on querying available AI models
+    - **"NaaP"** — Network-as-a-Product development threads and pre-proposals
+    - **"metrics"** / **"SLA"** — Cloud SPE reliability infrastructure proposals
+  </Accordion>
+  <Accordion title="Key threads to bookmark">
+    - [Guide: Transcoder Monitoring with Prometheus/Grafana](https://forum.livepeer.org/t/guide-transcoder-monitoring-with-prometheus-grafana/1225) — Feb 2021, still applicable
+    - [NaaP Metrics and SLA Foundations](https://forum.livepeer.org/t/metrics-and-sla-foundations-for-naap/3189) — Jan 2026
+    - [Decentralised Metrics Pre-Proposal](https://forum.livepeer.org/t/decentralized-metrics-and-sla-foundations-for-livepeer/3165) — Dec 2025
+    - [AI Capability Discovery](https://forum.livepeer.org/t/ai-capability-discovery/3233) — Mar 2026
+    - [Livepeer Cloud SPE 2024 End-of-Year Update](https://forum.livepeer.org/t/2024-end-of-year-update-livepeer-cloud-spe/2678)
+    - [Expanding Live Video Metrics](https://forum.livepeer.org/t/update-expanding-live-video-metrics-and-testing-capabilities-across-the-livepeer-network/3114)
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Developer Office Hours
+
+Bi-weekly video calls covering the Livepeer protocol, gateway and orchestrator questions, AI subnet updates, and SDK development.
+
+- **Cadence:** Bi-weekly (check [livepeer.org/dev-hub](https://www.livepeer.org/dev-hub) for the current calendar link)
+- **Format:** Open Q&A — bring gateway setup questions, architecture questions, and AI routing questions directly to the core team
+- **Topics covered:** go-livepeer releases, AI pipeline updates, NaaP progress, Remote Signer architecture, SPE roadmaps
+
+---
+
+## Community SPE Support
+
+Two SPE providers offer direct gateway support and free hosted gateway infrastructure:
+
+<CardGroup cols={2}>
+  <Card
+    title="Livepeer Cloud SPE"
+    icon="cloud"
+    href="https://www.livepeer.cloud"
+  >
+    The primary community gateway SPE. Offers free RTMP and AI gateway endpoints by region, the tools.livepeer.cloud monitoring portal (AI Job Tester, Performance Inspector, AI Performance Leaderboard), and the most comprehensive self-hosted gateway guides. SPE support staff active in `#developer-lounge` on Discord. Grew the community gateway network from 8 to 35+ nodes in 2024.
+  </Card>
+  <Card
+    title="Titan Node SPE"
+    icon="shield-halved"
+    href="https://titan-node.com"
+  >
+    Grant-funded orchestrator and gateway SPE. Maintains the letsgenerate.ai AI gateway Docker example (the most complete production AI gateway reference in the community). Runs orchestrator-focused community calls quarterly. Also the primary source of Livepeer video content — orchestrator setup series videos cover applicable gateway infrastructure knowledge.
+  </Card>
+</CardGroup>
+
+---
+
+## GitHub Issue Trackers
+
+For confirmed bugs and feature requests — not for setup help (use Discord or Forum for that).
+
+<CardGroup cols={2}>
+  <Card
+    title="go-livepeer Issues"
+    icon="github"
+    href="https://github.com/livepeer/go-livepeer/issues"
+  >
+    The primary issue tracker for gateway node bugs. Before filing: search existing issues and check the CHANGELOG for known issues in your version. Tag gateway-specific bugs with the `broadcaster` or `gateway` label if available.
+  </Card>
+  <Card
+    title="go-livepeer Discussions"
+    icon="comment"
+    href="https://github.com/livepeer/go-livepeer/discussions"
+  >
+    GitHub Discussions for architecture questions, Remote Signer design, and feature proposals that are not yet issues. Better for open-ended questions than the issue tracker.
+  </Card>
+  <Card
+    title="NaaP Issues"
+    icon="github"
+    href="https://github.com/livepeer/naap/issues"
+  >
+    NaaP development: API manager, billing OAuth, API key management, and gateway access control. Active development — gateway operators interested in NaaP integration should watch this repo.
+  </Card>
+  <Card
+    title="Livepeer Studio Issues"
+    icon="github"
+    href="https://github.com/livepeer/studio/issues"
+  >
+    Bugs and feature requests for the Livepeer Studio hosted gateway. If you are comparing self-hosted behaviour against Studio behaviour, this tracker is the reference.
+  </Card>
+  <Card
+    title="Livepeer AI Runner Issues"
+    icon="github"
+    href="https://github.com/livepeer/ai-runner/issues"
+  >
+    AI pipeline container bugs and feature requests. If your AI gateway is successfully routing jobs but inference is failing or returning errors, the issue is likely here rather than in go-livepeer.
+  </Card>
+  <Card
+    title="Livepeer Docs Issues"
+    icon="github"
+    href="https://github.com/livepeer/docs/issues"
+  >
+    Documentation corrections, missing guides, and inaccurate CLI flag references. Gateway-specific documentation gaps belong here — particularly for Remote Signer documentation which is still sparse.
+  </Card>
+</CardGroup>
+
+---
+
+## Security Vulnerabilities
+
+<Warning>
+**Never report security vulnerabilities via GitHub Issues.** Livepeer's official bug bounty programme is on Immunefi. Smart contract scope includes the **TicketBroker** (payment channels) and **AIServiceRegistry** — both directly relevant to gateway operators. Rewards paid in USDC. KYC required.
+
+[Report via Immunefi →](https://immunefi.com/bug-bounty/livepeer/information/)
+</Warning>
+
+---
+
+## Community and Social
+
+<CardGroup cols={2}>
+  <Card
+    title="Livepeer Forum"
+    icon="comments"
+    href="https://forum.livepeer.org"
+  >
+    600+ topics. Gateway setup, monitoring, payment debugging, AI routing, governance, and SPE updates. The most complete searchable record of community technical knowledge.
+  </Card>
+  <Card
+    title="Livepeer Blog"
+    icon="pen"
+    href="https://blog.livepeer.org"
+  >
+    Official protocol updates, builder spotlights, AI subnet developments, and gateway ecosystem news.
+  </Card>
+  <Card
+    title="Livepeer on X (Twitter)"
+    icon="x-twitter"
+    href="https://x.com/LivepeerOrg"
+  >
+    Official announcements, ecosystem news, and SPE updates. Follow for real-time protocol news.
+  </Card>
+  <Card
+    title="Livepeer on Mirror"
+    icon="globe"
+    href="https://mirror.xyz/livepeer.eth"
+  >
+    Longer-form ecosystem posts, treasury reviews, and AI vision writing. The AI architecture overview and treasury 2024 review are both published here.
+  </Card>
+</CardGroup>

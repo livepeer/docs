@@ -20,13 +20,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_BRANCH }}
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - run: cd tools && npm ci
 
       - name: Run style homogeniser
-        run: node tools/scripts/style-and-language-homogenizer-en-gb.js --scope ${{ inputs.scope }}
+        run: node operations/scripts/style-and-language-homogenizer-en-gb.js --scope ${{ inputs.scope }}
 
       - name: Create PR with changes
         uses: peter-evans/create-pull-request@v7

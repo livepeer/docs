@@ -1,0 +1,197 @@
+---
+title: Protocol Parameters
+sidebarTitle: Protocol Parameters
+description: >-
+  Governance-controlled Livepeer protocol parameters relevant to delegation — active set size, unbonding period, inflation targets, and governance thresholds — verified against on-chain state.
+keywords:
+  - livepeer
+  - protocol parameters
+  - active set
+  - unbonding period
+  - inflation rate
+  - treasury reward cut rate
+  - governance parameters
+  - BondingManager
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: delegator
+purpose: reference
+status: current
+lastVerified: 2026-04-06
+---
+
+All parameters on this page are governance-controlled. They can be changed by an approved Livepeer Improvement Proposal without a code deployment. **Never rely on values cached in secondary sources** — verify against the primary sources linked for each parameter.
+
+---
+
+## How to verify parameters on-chain
+
+All parameters are readable from the deployed contracts on Arbitrum One via [Arbiscan](https://arbiscan.io/accounts/label/livepeer). The canonical address list is in [governor-scripts/updates/addresses.js](https://github.com/livepeer/governor-scripts/blob/master/updates/addresses.js) — cross-check against Arbiscan to confirm addresses are live.
+
+For each parameter below, the contract and function name are provided for direct on-chain verification.
+
+---
+
+## Staking and delegation parameters
+
+### Active set size
+
+**What it controls:** The maximum number of orchestrators eligible to earn inflation rewards and receive routed jobs each round.
+
+**Protocol source:** `BondingManager.numActiveTranscoders()`
+
+**Historical value:** 100 (has been 100 since the Streamflow upgrade in 2020; governance has not changed it since)
+
+**Why it matters to delegators:** Your orchestrator must rank within the active set by total bonded stake to earn anything. Delegating to an orchestrator outside the top N means your stake contributes to their potential activation but earns no rewards until they enter.
+
+**Verify live:** [BondingManager on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `numActiveTranscoders`
+
+---
+
+### Unbonding period (thawing period)
+
+**What it controls:** The number of rounds you must wait after calling `unbond()` before your LPT becomes withdrawable.
+
+**Protocol source:** `BondingManager.unbondingPeriod()`
+
+**Historical value:** 7 rounds (approximately 7 days at one round per day on Arbitrum One)
+
+**Why it matters to delegators:** During the thawing period, your LPT earns no rewards and cannot be withdrawn. You can cancel and rebond during this window. Plan exits around this delay.
+
+**Verify live:** [BondingManager on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `unbondingPeriod`
+
+---
+
+## Inflation parameters
+
+### Target bonding rate
+
+**What it controls:** The bonding participation target the inflation mechanism adjusts toward. If actual bonding is below this rate, inflation increases each round; if above, it decreases.
+
+**Protocol source:** `BondingManager.targetBondingRate()`
+
+**Historical value:** 50% (0.5 as a fraction)
+
+**Why it matters to delegators:** Sets the equilibrium point of the inflation model. Inflation rates are highest when participation is furthest below 50%.
+
+**Verify live:** [BondingManager on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `targetBondingRate`
+
+---
+
+### Inflation adjustment rate (alpha)
+
+**What it controls:** The fixed per-round rate by which the inflation rate increases or decreases, depending on whether bonding is below or above target.
+
+**Protocol source:** `BondingManager.inflationChange()`
+
+**Historical value:** 0.00005 (0.00005% per round)
+
+**Why it matters to delegators:** Determines how quickly inflation converges toward equilibrium. At this rate, changes accumulate slowly — a material shift in inflation rate requires many rounds.
+
+**Verify live:** [BondingManager on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `inflationChange`
+
+---
+
+### Current inflation rate
+
+**What it controls:** The per-round percentage of total LPT supply currently being minted.
+
+**Protocol source:** `Minter.inflation()`
+
+**Value:** Changes every round — do not use any static figure.
+
+**Verify live:** [Livepeer Explorer](https://explorer.livepeer.org) → Protocol stats, or [Minter on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `inflation`
+
+---
+
+## Treasury parameters
+
+### Treasury Reward Cut Rate
+
+**What it controls:** The percentage of each round's inflation issuance diverted to the Community Treasury before distribution to orchestrators and delegators.
+
+**Protocol source:** `BondingManager.treasuryRewardCutRate()`
+
+**Governance basis:** LIP-92
+
+**Historical value:** 10% (0.1 as a fraction)
+
+**Why it matters to delegators:** This deduction applies before your rewards are calculated. A 10% treasury cut means 90% of each round's issuance flows to participants.
+
+**Verify live:** [BondingManager on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `treasuryRewardCutRate`; cross-check with [LIP-92](https://github.com/livepeer/LIPs)
+
+---
+
+## Governance parameters
+
+### Proposer bond minimum
+
+**What it controls:** The minimum bonded LPT balance required to submit a formal on-chain governance proposal.
+
+**Protocol source:** `LivepeerGovernor.proposalThreshold()`
+
+**Historical value:** 100 LPT bonded (not locked separately — the proposer needs 100 LPT bonded at time of submission)
+
+**Why it matters:** The Proposer Bond deters spam proposals by requiring skin in the game. It does not lock additional tokens.
+
+**Verify live:** [LivepeerGovernor on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `proposalThreshold`
+
+---
+
+### Quorum threshold
+
+**What it controls:** The minimum percentage of total participating bonded stake required for a governance vote to produce a binding outcome.
+
+**Protocol source:** `LivepeerGovernor.quorumNumerator()` / `quorumDenominator()`
+
+**Governance basis:** Set in LivepeerGovernor deployment; changeable via governance
+
+**Verify live:** [LivepeerGovernor on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → quorum functions
+
+---
+
+### Voting period
+
+**What it controls:** Duration (in blocks) of the on-chain voting window for proposals.
+
+**Protocol source:** `LivepeerGovernor.votingPeriod()`
+
+**Verify live:** [LivepeerGovernor on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `votingPeriod`
+
+---
+
+### Timelock delay
+
+**What it controls:** Mandatory delay between a proposal passing and its execution on-chain.
+
+**Protocol source:** `TimelockController.getMinDelay()`
+
+**Verify live:** [TimelockController on Arbiscan](https://arbiscan.io/accounts/label/livepeer) → read contract → `getMinDelay`
+
+---
+
+## Live state dashboards
+
+| Dashboard | What it shows |
+|---|---|
+| [Livepeer Explorer](https://explorer.livepeer.org) | Active set, current inflation rate, bonding ratio, delegator positions |
+| [Explorer Treasury](https://explorer.livepeer.org/treasury) | Treasury balance, active proposals |
+| [Arbiscan — Livepeer label](https://arbiscan.io/accounts/label/livepeer) | All deployed contracts; direct read access to parameter values |
+
+---
+
+## Governance change history
+
+Material parameter changes are enacted through approved LIPs. The canonical record is the [LIPs repository](https://github.com/livepeer/LIPs). Key LIPs affecting delegator parameters:
+
+| LIP | What changed |
+|---|---|
+| LIP-89 | Introduced LivepeerGovernor on-chain governance, stake-weighted voting, vote detachment |
+| LIP-91 | Established the Community Treasury |
+| LIP-92 | Set the Treasury Reward Cut Rate |
+
+For any other parameter change, search the LIPs repo by parameter name.

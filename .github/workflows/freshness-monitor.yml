@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ vars.DEPLOY_BRANCH }}
 
       - name: Check pipeline freshness
         id: freshness
@@ -32,13 +33,13 @@ jobs:
           now_epoch=$(date +%s)
 
           for file in \
-            snippets/automations/blog/ghostBlogData.jsx \
-            snippets/automations/discord/discordAnnouncementsData.jsx \
-            snippets/automations/forum/forumData.jsx \
-            snippets/automations/luma/lumaEventsData.jsx \
-            snippets/automations/showcase/showcaseData.jsx \
-            snippets/automations/youtube/youtubeData.jsx \
-            snippets/automations/globals/globals.mdx; do
+            snippets/data/social-feeds/ghostBlogData.jsx \
+            snippets/data/social-feeds/discordAnnouncementsData.jsx \
+            snippets/data/social-feeds/forumData.jsx \
+            snippets/data/social-feeds/lumaEventsData.jsx \
+            snippets/data/showcase-feed/showcaseData.jsx \
+            snippets/data/social-feeds/youtubeData.jsx \
+            snippets/data/globals/latestRelease.jsx; do
 
             if [ ! -f "$file" ]; then
               echo "| $file | FILE MISSING | — | 🔴 MISSING |" >> "$GITHUB_STEP_SUMMARY"

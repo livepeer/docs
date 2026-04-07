@@ -1,17 +1,22 @@
 ---
-title: 'Configure Your Orchestrator'
+title: 'Configuring Your Orchestrator'
 sidebarTitle: 'Configure'
-description: 'Set operational flags for video transcoding, AI inference, or dual mode - docker-compose templates, pricing, networking, and GPU assignment.'
+description: >-
+  Set the go-livepeer flags needed to run as an Orchestrator - GPU selection,
+  pricing, session limits, networking, and AI worker configuration.
 keywords:
   - livepeer
+  - go-livepeer
   - orchestrator
-  - configure
-  - docker-compose
+  - configuration
   - flags
-  - video
-  - AI
-  - dual mode
-'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+  - pricePerUnit
+  - maxSessions
+  - serviceAddr
+  - nvidia
+  - AI worker
+  - CLI
+'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
 'og:image:width': 1200
@@ -19,412 +24,468 @@ keywords:
 pageType: how_to
 audience: orchestrator
 status: current
-lastVerified: '2026-03-16'
+lastVerified: '2026-03-15'
 ---
 
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+{/* TODO:
+Verify:
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- Accordion icons are meaningful (not circle-question)
+- REVIEW flags below for SME
+Human:
+- REVIEW: testnet network flag name - arbitrum-one-rinkeby is deprecated. Rick to confirm current testnet flag value.
+- REVIEW: confirm -ethPassword or equivalent flag for keystore passphrase in systemd (Rick, re issue #2047)
+- REVIEW: confirm native -config file flag added to go-livepeer (Rick, re issue #2047)
+*/}
 
-<Tip>
-  Choose the tab that matches the intended workload. All three modes use the same binary and differ only by flags. Keep Arbitrum connection and staking flags for the `connect-and-activate` step.
-</Tip>
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Build the docker-compose file that will carry the node through the rest of setup. Pick one operating mode: video transcoding, AI inference, or dual mode.
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-<CustomDivider middleText="Node Mode Configuration" />
+This page covers the go-livepeer flags needed to run as an Orchestrator. By the end, a working
+startup command is ready and each flag is understood.
 
-<BorderedBox variant="accent">
-<Tabs>
-  <Tab title="Video" icon="video">
+**Prerequisites:**
+- go-livepeer installed and GPU detected. See <LinkArrow href="/v2/orchestrators/setup/rs-install" label="Install go-livepeer" newline={false} />.
+- Arbitrum wallet with ETH for gas. See <LinkArrow href="/v2/orchestrators/setup/sc-connect" label="Connect to Arbitrum" newline={false} />.
+- The hardware session limit number from the `livepeer_bench` test in <LinkArrow href="/v2/orchestrators/guides/deployment-details/requirements" label="Requirements" newline={false} />.
 
-## Video transcoding configuration
+<CustomDivider middleText="Essential Flags" style={{margin: "-1rem 0 -2rem 0"}} />
 
-Video transcoding is the baseline mode. The orchestrator accepts video segments from gateways, transcodes them on the GPU via NVENC/NVDEC, and returns HLS output.
+## Essential Flags
 
-**docker-compose template:**
+These flags must be set every time go-livepeer starts as an Orchestrator.
 
-```yaml icon="code" filename="docker-compose.yml"
-services:
-  orchestrator:
-    image: livepeer/go-livepeer:stable
-    container_name: livepeer-orchestrator
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ~/.lpData:/root/.lpData
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    command:
-      - -network=arbitrum-one-mainnet
-      - -ethUrl=https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
-      - -orchestrator
-      - -transcoder
-      - -nvidia=0
-      - -maxSessions=10
-      - -pricePerUnit=1000
-      - -serviceAddr=YOUR_PUBLIC_IP:8935
-      - -monitor
-      - -v=6
+<Steps>
+
+<Step title="Set the network">
+
+```text icon="terminal"
+-network arbitrum-one-mainnet
 ```
 
-Replace:
-- `YOUR_API_KEY` with your Alchemy or Infura Arbitrum One API key
-- `YOUR_PUBLIC_IP` with the machine's public IP address or domain name
-- `-nvidia=0` with the GPU device ID(s) from `nvidia-smi -L`
-- `-maxSessions=10` with your calculated session limit (see <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning" label="Capacity Planning" newline={false} />)
-- `-pricePerUnit=1000` with a competitive price in wei per pixel
+Tells go-livepeer which network to connect to. The default is `offchain` - without this flag the
+node does not participate in the Livepeer protocol at all.
 
-**Flag reference:**
+**Options:**
+- `arbitrum-one-mainnet` - production network
+- `offchain` - local or dev only, no on-chain participation
+
+{/* REVIEW: Confirm current testnet network flag value - arbitrum-one-rinkeby is deprecated. Rick to advise replacement. */}
+
+</Step>
+
+<Step title="Connect to Arbitrum RPC">
+
+```text icon="terminal"
+-ethUrl <YOUR_ARBITRUM_RPC_URL>
+```
+
+Points go-livepeer at an Arbitrum One RPC endpoint to read and write on-chain state - Orchestrator
+registration, reward calls, ticket redemption.
+
+```bash icon="terminal"
+-ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+```
+
+This must be an **Arbitrum One** endpoint, not an Ethereum L1 endpoint. See
+<LinkArrow href="/v2/orchestrators/setup/sc-connect" label="Connect to Arbitrum" newline={false} /> for how to set up a reliable RPC.
+
+</Step>
+
+<Step title="Set the Ethereum account (optional)">
+
+```text icon="terminal"
+-ethAcctAddr <YOUR_ETH_ADDRESS>
+```
+
+Specifies which ETH account acts as the Orchestrator identity on the network. This account holds
+staked LPT, receives ETH fee payments, and signs on-chain transactions.
+
+If omitted, go-livepeer creates a new account and prompts for a passphrase to encrypt the keystore.
+The key is stored at `~/.lpData/arbitrum-one-mainnet/keystore` by default.
+
+<Warning>
+The private key controls the wallet and all funds on it. Back it up securely before proceeding.
+A lost keystore cannot be recovered.
+</Warning>
+
+</Step>
+
+<Step title="Enable Orchestrator and Transcoder mode">
+
+```text icon="terminal"
+-orchestrator -transcoder
+```
+
+`-orchestrator` enables the on-chain protocol role - the node participates in job routing, makes
+reward calls, and is visible to Gateways.
+
+`-transcoder` enables local GPU transcoding - the node processes jobs using its GPU.
+
+Use both together for the standard combined setup where one machine handles all roles. For
+alternate configurations:
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
-      <TableCell header>Flag</TableCell>
-      <TableCell header>Required</TableCell>
-      <TableCell header>Notes</TableCell>
+      <TableCell header>Mode</TableCell>
+      <TableCell header>Flags</TableCell>
+      <TableCell header>Use when</TableCell>
     </TableRow>
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>`-network`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>`arbitrum-one-mainnet` for production. `offchain` for local testing only.</TableCell>
+      <TableCell>**Combined** (most common)</TableCell>
+      <TableCell>`-orchestrator -transcoder`</TableCell>
+      <TableCell>One machine handles all roles</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>`-ethUrl`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>Arbitrum One RPC endpoint. Must be Arbitrum, not Ethereum L1.</TableCell>
-    </TableRow>
-    <TableRow>
+      <TableCell>**Orchestrator-only**</TableCell>
       <TableCell>`-orchestrator`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>Enables the on-chain protocol role.</TableCell>
+      <TableCell>Remote Transcoder workers are connected via `-orchSecret`</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>`-transcoder`</TableCell>
-      <TableCell>Yes (video)</TableCell>
-      <TableCell>Enables local GPU transcoding.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-nvidia`</TableCell>
-      <TableCell>Yes (GPU)</TableCell>
-      <TableCell>GPU device IDs. Omit for CPU fallback (not recommended).</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-maxSessions`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>Max concurrent transcoding sessions. Default 10 - set to your benchmarked limit.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-pricePerUnit`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>Price in wei per pixel. Typical range: 500-2,000. Check current rates at tools.livepeer.cloud.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-serviceAddr`</TableCell>
-      <TableCell>Yes</TableCell>
-      <TableCell>Public address gateways connect to. Must be reachable from the internet on port 8935.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-monitor`</TableCell>
-      <TableCell>Recommended</TableCell>
-      <TableCell>Enables Prometheus metrics at `localhost:7935/metrics`.</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>`-v=6`</TableCell>
-      <TableCell>Initial setup only</TableCell>
-      <TableCell>Verbose logging for setup. Reduce the level after startup issues are resolved.</TableCell>
+      <TableCell>**Transcoder-only**</TableCell>
+      <TableCell>`-transcoder -orchAddr <host:port>`</TableCell>
+      <TableCell>Contributing GPU to another Orchestrator's pool</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
-  </Tab>
+See <LinkArrow href="/v2/orchestrators/guides/deployment-details/setup-options" label="Alternate Deployments" newline={false} /> for the O-T split and Siphon configurations.
 
-  <Tab title="AI" icon="microchip">
+</Step>
 
-## AI inference configuration
+<Step title="Select the GPU">
 
-AI inference serves inference requests (text-to-image, audio-to-text, LLM, and other pipelines) from gateways and applications. AI routing is capability-based - no top-100 stake required to receive AI jobs.
-
-**docker-compose template:**
-
-```yaml icon="code" filename="docker-compose.yml"
-services:
-  orchestrator:
-    image: livepeer/go-livepeer:stable
-    container_name: livepeer-ai-orchestrator
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ~/.lpData:/root/.lpData
-      - /var/run/docker.sock:/var/run/docker.sock
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    command:
-      - -network=arbitrum-one-mainnet
-      - -ethUrl=https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
-      - -orchestrator
-      - -transcoder
-      - -nvidia=0
-      - -pricePerUnit=1000
-      - -serviceAddr=YOUR_PUBLIC_IP:8935
-      - -aiWorker
-      - -aiModels=/root/.lpData/aiModels.json
-      - -aiModelsDir=/root/.lpData/models
-      - -monitor
-      - -v=6
+```text icon="terminal"
+-nvidia <GPU_IDs>
 ```
 
-**Required: create `~/.lpData/aiModels.json`** before starting:
+Specifies which NVIDIA GPUs go-livepeer uses for transcoding. Omitting this flag falls back to
+CPU transcoding, which is significantly slower and not competitive on the network.
 
-```json icon="code" filename="~/.lpData/aiModels.json"
-[
-  {
-    "pipeline": "text-to-image",
-    "model_id": "ByteDance/SDXL-Lightning",
-    "price_per_unit": 4768371,
-    "warm": true
-  }
-]
+```bash icon="terminal"
+-nvidia 0        # Single GPU - device ID 0
+-nvidia 0,1      # Two GPUs
+-nvidia all      # All available GPUs
 ```
 
-Check current demand and pricing at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before setting `price_per_unit`. Gateways skip orchestrators priced above their cap.
+Check GPU IDs before starting:
 
-**AI-specific flags:**
+```bash icon="terminal"
+nvidia-smi -L
+```
+
+<Note>
+For AI-only operation (no video transcoding), `-transcoder` is not required but `-nvidia` is
+still needed to expose the GPU to AI runner containers. See [Adding AI inference](#adding-ai-inference) below.
+</Note>
+
+</Step>
+
+<Step title="Set the session limit">
+
+```text icon="terminal"
+-maxSessions <VALUE>
+```
+
+Sets the maximum concurrent transcoding sessions the node accepts. The default is 10. Set it
+to the **minimum of the hardware limit and the bandwidth limit**.
+
+**Hardware limit:** the last session count from the `livepeer_bench` test in
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/requirements" label="Requirements" newline={false} /> where Real-Time Duration Ratio was ≤ 0.8.
+
+**Bandwidth limit:** available symmetric bandwidth (Mbps) ÷ 6 Mbps per stream × 0.8 margin.
+
+```text icon="terminal"
+session limit = min(hardware limit, bandwidth limit)
+```
+
+Example: hardware limit 12, bandwidth 100 Mbps → bandwidth limit ~13 → use `-maxSessions 12`.
+
+<Note>
+`-maxSessions` applies to video transcoding only. AI inference capacity is controlled per pipeline
+by the `capacity` field in `aiModels.json`. See [Adding AI inference](#adding-ai-inference) below.
+</Note>
+
+</Step>
+
+<Step title="Set the price">
+
+```text icon="terminal"
+-pricePerUnit <VALUE_IN_WEI>
+```
+
+Sets the price charged per unit of transcoding work. The unit is **wei per pixel**, not ETH.
+
+- 1 ETH = 1,000,000,000,000,000,000 wei
+- A typical starting price is **500-2,000 wei per pixel**
+- Check current market rates at [tools.livepeer.cloud](https://tools.livepeer.cloud/ai/network-capabilities)
+
+Setting this in ETH rather than wei results in a price orders of magnitude below market rate.
+Setting it too high means Gateways route jobs to lower-priced Orchestrators instead.
+
+```bash icon="terminal"
+-pricePerUnit 1000
+```
+
+<Note>
+`-pricePerUnit` sets the startup price. The on-chain registered price used for discovery is set
+separately during activation via `livepeer_cli`. Both can be adjusted independently later.
+</Note>
+
+</Step>
+
+<Step title="Set the service address">
+
+```text icon="terminal"
+-serviceAddr <YOUR_PUBLIC_IP_OR_HOSTNAME>:<PORT>
+```
+
+Declares the public address at which Gateways reach the Orchestrator. This is stored on-chain
+during activation and is how the network discovers the node.
+
+```bash icon="terminal"
+-serviceAddr 203.0.113.42:8935
+# or with a domain name (preferred):
+-serviceAddr orch.yourdomain.com:8935
+```
+
+**Common mistakes:**
+- Using an internal IP (`192.168.x.x`, `10.x.x.x`) - not routable from the internet
+- Using `0.0.0.0` - binds locally but is not a network address
+- Changing the IP without updating on-chain registration - Gateways lose contact
+
+A domain name is preferable to a bare IP. If the server's IP changes, a DNS record can be updated
+without a new on-chain registration transaction.
+
+</Step>
+
+</Steps>
+
+<CustomDivider middleText="Full Command" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Full Startup Command
+
+Replace every placeholder with actual values:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -ethAcctAddr YOUR_ETH_ADDRESS \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+On first run with a new account (omitting `-ethAcctAddr`), go-livepeer prompts for a passphrase
+to create and encrypt a new keystore. This passphrase is required on every subsequent start.
+
+For verbose logging while getting started:
+
+```bash icon="terminal"
+livepeer ... -v 6
+```
+
+This outputs detailed logs including transcoding activity, RPC calls, and session events.
+
+<CustomDivider middleText="Adding AI Inference" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Adding AI Inference
+
+To serve AI inference jobs alongside or instead of transcoding, three additional flags are needed.
+
+<Accordion title="AI worker flags" icon="microchip">
+
+```bash icon="terminal"
+-aiWorker \
+-aiModels /path/to/aiModels.json \
+-aiModelsDir /path/to/models/
+```
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
       <TableCell header>Flag</TableCell>
-      <TableCell header>Notes</TableCell>
+      <TableCell header>What it does</TableCell>
     </TableRow>
   </thead>
   <tbody>
     <TableRow>
       <TableCell>`-aiWorker`</TableCell>
-      <TableCell>Enables the AI inference worker. go-livepeer ignores AI configuration when this flag is absent.</TableCell>
+      <TableCell>Enables the AI worker component. Without this flag, go-livepeer ignores all AI configuration.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>`-aiModels`</TableCell>
-      <TableCell>Path to `aiModels.json` inside the container. Default: `~/.lpData/aiModels.json`.</TableCell>
+      <TableCell>Path to `aiModels.json` - defines which pipelines and models to serve. Default: `~/.lpData/aiModels.json`</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>`-aiModelsDir`</TableCell>
-      <TableCell>Host path to model weights directory. Must be a **host** path - Docker mounts this into AI runner containers.</TableCell>
+      <TableCell>Path to the directory where go-livepeer looks for cached model weights. Default: `~/.lpData/models/`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-aiRunnerImage`</TableCell>
+      <TableCell>Optional. The Docker image for AI runner containers. Defaults to `livepeer/ai-runner:latest`. Pin to a specific tag in production.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
+
+**When running in Docker**, the AI Orchestrator needs access to the Docker socket to manage AI
+runner containers:
+
+```bash icon="terminal"
+docker run \
+  --name livepeer_ai_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:master \
+  -orchestrator \
+  -serviceAddr 0.0.0.0:8936 \
+  -nvidia 0 \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+<Note>
+The AI Orchestrator uses port **8936** by default to avoid conflict with a transcoding Orchestrator
+on the same machine (which uses 8935). Set `-serviceAddr` accordingly.
+</Note>
 
 <Warning>
-  The Docker socket mount (`/var/run/docker.sock:/var/run/docker.sock`) is required. go-livepeer uses Docker-out-of-Docker to spawn and manage AI runner containers. Missing this mount prevents AI pipeline startup.
+With Docker-out-of-Docker, the `-aiModelsDir` path must be a path on the **host machine**, not
+inside the container. Docker uses this path to mount model files into AI runner containers it spawns.
 </Warning>
 
-**First start downloads model weights** from HuggingFace. A 6 GB model like SDXL-Lightning takes 5-30 minutes depending on connection speed. The AI runner starts serving requests after the download completes.
+For the full guide to configuring `aiModels.json` and receiving the first AI job, see
+<LinkArrow href="/v2/orchestrators/guides/workloads-and-ai/batch-ai-setup" label="Batch AI Setup" newline={false} />.
 
-**For the LLM pipeline (8-16 GB VRAM):** the `llm` pipeline uses the Ollama runner instead of `livepeer/ai-runner`. See <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup" label="LLM Pipeline Setup" newline={false} /> for the full Ollama docker-compose setup.
+</Accordion>
 
-  </Tab>
+<CustomDivider middleText="Variants" style={{margin: "-1rem 0 -2rem 0"}} />
 
-  <Tab title="Dual Mode" icon="layer-group">
+## Variants
 
-## Dual mode configuration (video + AI)
+<AccordionGroup>
 
-Dual mode serves both video transcoding and AI inference from one go-livepeer process. Video uses NVENC/NVDEC dedicated hardware. AI uses CUDA compute cores. VRAM is the shared capacity limit.
+<Accordion title="Docker - full Orchestrator in a container" icon="docker">
 
-**docker-compose template:**
-
-```yaml icon="code" filename="docker-compose.yml"
-services:
-  orchestrator:
-    image: livepeer/go-livepeer:stable
-    container_name: livepeer-dual-orchestrator
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ~/.lpData:/root/.lpData
-      - /var/run/docker.sock:/var/run/docker.sock
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    command:
-      - -network=arbitrum-one-mainnet
-      - -ethUrl=https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
-      - -orchestrator
-      - -transcoder
-      - -nvidia=0
-      - -maxSessions=10
-      - -pricePerUnit=1000
-      - -serviceAddr=YOUR_PUBLIC_IP:8935
-      - -aiWorker
-      - -aiModels=/root/.lpData/aiModels.json
-      - -aiModelsDir=/root/.lpData/models
-      - -monitor
-      - -v=6
+```bash icon="terminal"
+docker run \
+  --name livepeer_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:latest \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
 ```
 
-**Create `~/.lpData/aiModels.json`** with at least one pipeline entry before starting. Same format as the AI tab above.
+Mount `~/.lpData/` so the keystore and data persist between container restarts. Without this
+mount, a new ETH account is created on every run.
 
-**VRAM planning:** NVENC/NVDEC use dedicated silicon and consume negligible VRAM. AI model weights set the practical limit. A 24 GB GPU leaves room for video sessions alongside one warm SDXL-Lightning model (~12-18 GB).
+</Accordion>
 
-<StyledTable variant="bordered">
-  <thead>
-    <TableRow header>
-      <TableCell header>GPU VRAM</TableCell>
-      <TableCell header>AI pipelines viable alongside video</TableCell>
-    </TableRow>
-  </thead>
-  <tbody>
-    <TableRow>
-      <TableCell>24 GB (RTX 4090)</TableCell>
-      <TableCell>`text-to-image`, `image-to-image`, `audio-to-text` (warm)</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>16 GB (RTX 4080)</TableCell>
-      <TableCell>`audio-to-text` (warm), `image-to-text` (warm), light diffusion models</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>8-12 GB (RTX 3060/3070)</TableCell>
-      <TableCell>`audio-to-text`, `image-to-text`, `llm` via Ollama (8B quantised)</TableCell>
-    </TableRow>
-  </tbody>
-</StyledTable>
+<Accordion title="systemd service" icon="server">
 
-For full VRAM budgeting and the warm model strategy, see <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning" label="Capacity Planning" newline={false} />.
+Create `/etc/systemd/system/livepeer.service`:
 
-{/* TODO: Recheck the VRAM figures against model-demand-reference.mdx during the next AI capacity review. */}
+```ini icon="code" title="/etc/systemd/system/livepeer.service"
+[Unit]
+Description=Livepeer Orchestrator
+After=network.target
 
-  </Tab>
-</Tabs>
-</BorderedBox>
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/usr/local/bin/livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+Restart=on-failure
+RestartSec=10
 
-<CustomDivider middleText="Common Configuration" />
-
-## Common configuration
-
-### Networking
-
-The `-serviceAddr` flag declares the public address gateways connect to. This address must be reachable from the internet:
-
-```bash icon="terminal" filename="serviceAddr-examples"
-# IP address
--serviceAddr 203.0.113.42:8935
-
-# Domain name (preferred - survives IP changes without re-registration)
--serviceAddr orch.yourdomain.com:8935
+[Install]
+WantedBy=multi-user.target
 ```
 
-Port 8935 must be open inbound on the firewall. Test reachability **from a different machine** before connecting on-chain:
+Enable and start:
 
-```bash icon="terminal" filename="port-check"
-curl -k https://YOUR_PUBLIC_IP:8935/status
+```bash icon="terminal"
+sudo systemctl daemon-reload
+sudo systemctl enable livepeer
+sudo systemctl start livepeer
+journalctl -u livepeer -f
 ```
 
-Any response (including a JSON error) confirms the port is open. A connection timeout means the firewall is blocking it.
+{/* REVIEW: If the ETH passphrase is required at startup and the node runs as a systemd service, confirm the correct passphrase-file flag name - check go-livepeer for -ethPassword or similar. Rick to advise. */}
 
-Port 7935 (`-cliAddr`) is for local CLI access and Prometheus metrics. Keep it bound to localhost unless external monitoring is configured.
+</Accordion>
 
-### GPU selection
+<Accordion title="Config file pattern" icon="file-code">
 
-```bash icon="terminal" filename="nvidia-list"
-nvidia-smi -L
+go-livepeer does not have a native config file flag. The standard pattern stores flags in a plain
+text file and expands them at startup:
+
+```bash icon="code" title="/etc/livepeer/livepeer.conf"
+-network arbitrum-one-mainnet
+-ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+-orchestrator
+-transcoder
+-nvidia 0
+-maxSessions 10
+-pricePerUnit 1000
+-serviceAddr YOUR_PUBLIC_IP:8935
 ```
 
-This lists GPU device IDs:
-```text icon="terminal" filename="expected-gpu-list"
-GPU 0: NVIDIA GeForce RTX 4090 (UUID: GPU-...)
-GPU 1: NVIDIA GeForce RTX 3090 (UUID: GPU-...)
+```bash icon="terminal"
+livepeer $(< /etc/livepeer/livepeer.conf)
 ```
 
-Use the device index in `-nvidia`:
-```bash icon="terminal" filename="nvidia-examples"
--nvidia 0        # Single GPU
--nvidia 0,1      # Two GPUs
--nvidia all      # All available GPUs
-```
+In a systemd unit file, this requires an `ExecStart` wrapper shell script rather than calling the
+binary directly - systemd does not perform shell expansion in `ExecStart`.
 
-For mixed GPU configurations (different VRAM sizes), assign specific GPU IDs to specific pipelines in `aiModels.json` using the `gpu` field.
+{/* REVIEW: Confirm whether a native -config flag was added to go-livepeer after issue #2047. If so, replace this section with the native approach. Rick to check. */}
 
-### Pricing
+</Accordion>
 
-`-pricePerUnit` sets video transcoding price in **wei per pixel** (not ETH). A typical starting range is 500-2,000 wei per pixel. Set it below 1,000 wei per pixel initially and adjust based on job volume.
+</AccordionGroup>
 
-For AI pricing, set `price_per_unit` per pipeline in `aiModels.json`. Values are in wei per output pixel (or per ms for audio, per token for LLM).
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
-For competitive positioning guidance, see <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" label="Pricing Strategy" newline={false} />.
+## Next Steps
 
-### Persistent data
-
-Always mount the data directory so the keystore and data survive container restarts:
-
-```yaml icon="code" filename="volume-mount"
-volumes:
-  - ~/.lpData:/root/.lpData
-```
-
-Without this mount, go-livepeer creates a new Ethereum account on every container start, losing the previous keystore and all bonded LPT.
-
-For AI workloads, also mount the models directory:
-
-```yaml icon="code" filename="models-mount"
-volumes:
-  - ~/.lpData:/root/.lpData
-  - /var/run/docker.sock:/var/run/docker.sock
-```
-
-The `aiModelsDir` must be a **host path**. Docker mounts that path into AI runner containers.
-
-<CustomDivider middleText="Verify Configuration" />
-
-## Verify configuration before connecting on-chain
-
-Start the node and confirm it initialises cleanly before proceeding to the Connect step:
-
-```bash icon="terminal" filename="start"
-docker compose up -d
-```
-
-Check for clean startup:
-
-```bash icon="terminal" filename="check-logs"
-docker compose logs -f 2>&1 | grep -iE "gpu|transcode|ai-runner|error|FATAL" | head -20
-```
-
-Expected for video mode:
-```text icon="terminal" filename="expected-video-startup"
-Transcoding on Nvidia GPU 0
-Listening for RPC on :8935
-```
-
-Expected for AI mode (after model download):
-```text icon="terminal" filename="expected-ai-startup"
-Starting AI worker
-Warm model loaded: ByteDance/SDXL-Lightning
-```
-
-Resolve `FATAL` or repeated error lines before connecting on-chain.
-
-<CustomDivider />
-
-## Next step
-
-<CardGroup cols={1}>
-  <Card title="Connect to Arbitrum" icon="link" href="/v2/orchestrators/setup/connect-and-activate" arrow horizontal>
-    Fund the wallet, stake LPT, register on-chain, and activate the orchestrator on the Livepeer protocol.
+<CardGroup cols={3}>
+  <Card title="Connect to Arbitrum" icon="link" href="/v2/orchestrators/setup/sc-connect" arrow horizontal>
+    Set up the Arbitrum RPC endpoint and fund the wallet with ETH for gas.
+  </Card>
+  <Card title="Activate on the network" icon="circle-check" href="/v2/orchestrators/setup/activate" arrow horizontal>
+    Register the Orchestrator on-chain and enter the active set via `livepeer_cli`.
+  </Card>
+  <Card title="CLI reference" icon="terminal" href="/v2/orchestrators/resources/technical/cli-flags" arrow horizontal>
+    Every flag, its type, default, and description.
   </Card>
 </CardGroup>

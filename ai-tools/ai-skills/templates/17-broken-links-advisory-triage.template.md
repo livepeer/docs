@@ -1,21 +1,21 @@
 ---
 name: broken-links-advisory-triage
-version: "1.0"
 description: >-
-  Triage advisory broken-links workflow output and convert findings into actionable fix queues. Use when tasks include broken-links workflow reported issues, advisory link cleanup planning, mintlify broken-links triage.
-tier: 2
-invoke_when:
-  - "broken-links workflow reported issues"
-  - "advisory link cleanup planning"
-  - "mintlify broken-links triage"
+  Triage advisory broken-links workflow output and convert findings into
+  actionable fix queues. Use when: broken-links workflow reported issues,
+  advisory link cleanup planning, mintlify broken-links triage.
+metadata:
+  version: "1.2"
+  category: "audit"
+  tier: "2"
 primary_paths:
   - ".github/workflows/broken-links.yml"
-  - "tasks/reports/LINK_FIX_QUEUE.md"
-  - "tasks/reports/navigation-links/LINK_TEST_REPORT.md"
-  - "tests/integration/v2-link-audit.js"
+  - "workspace/reports/LINK_FIX_QUEUE.md"
+  - "workspace/reports/navigation-links/LINK_TEST_REPORT.md"
+  - "operations/tests/integration/v2-link-audit.js"
 primary_commands:
   - "npx mintlify broken-links"
-  - "node tests/integration/v2-link-audit.js --full --strict --report tasks/reports/navigation-links/LINK_TEST_REPORT.md"
+  - "node operations/tests/integration/v2-link-audit.js --full --strict --report workspace/reports/navigation-links/LINK_TEST_REPORT.md"
 ---
 
 SKILL: Broken Links Advisory Triage
@@ -37,7 +37,7 @@ Workflow
 Command examples
 ```bash
 npx mintlify broken-links
-node tests/integration/v2-link-audit.js --full --strict --report tasks/reports/navigation-links/LINK_TEST_REPORT.md
+node operations/tests/integration/v2-link-audit.js --full --strict --report workspace/reports/navigation-links/LINK_TEST_REPORT.md
 ```
 
 Deliverable Format

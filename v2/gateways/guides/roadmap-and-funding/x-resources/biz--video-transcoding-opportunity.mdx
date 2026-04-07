@@ -1,7 +1,15 @@
 ---
 title: 'Video Transcoding: Replace Your Cloud Provider'
-sidebarTitle: 'Video Transcoding'
-description: 'The business case for using Livepeer as a replacement for cloud video transcoding — cost comparison with Mux, AWS MediaLive, and Wowza, and what the switch actually involves.'
+sidebarTitle: Video Transcoding
+description: >-
+  The business case for using Livepeer as a replacement for cloud video transcoding -
+  cost comparison with Mux, AWS MediaLive, and Wowza, and what the switch actually
+  involves.
+pageType: resource
+audience: gateway
+purpose: orient
+status: current
+lastVerified: '2026-03-13'
 keywords:
   - livepeer
   - video transcoding
@@ -13,20 +21,14 @@ keywords:
   - cheaper video transcoding
   - self-hosted streaming
   - Owncast Livepeer
-'og:image': /snippets/assets/site/og-image/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-pageType: guide
-audience: gateway-operator
-purpose: guides
-status: current
-lastVerified: '2026-03-13'
+og:image: /snippets/assets/media/og-images/fallback.png
+og:image:alt: Livepeer Docs social preview image
+og:image:type: image/png
+og:image:width: 1200
+og:image:height: 630
 ---
-
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
-import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 If you are using Mux, AWS MediaLive, Wowza, or a similar service for live video transcoding, the Livepeer network offers a decentralised alternative at significantly lower per-minute cost. Your existing encoder (OBS, FFmpeg, hardware encoder) connects via RTMP. Transcoded output returns as HLS. The switch is largely transparent to your viewers.
 
@@ -38,7 +40,7 @@ This page explains the economics, what the switch involves, and where it fits we
 
 Cloud transcoding services charge per minute of output, per resolution tier. Costs scale directly with usage and there is no self-hosting option.
 
-Livepeer gateways pay GPU operators (orchestrators) at network rates — rates that are set competitively by supply and demand, not by a corporate pricing team. The practical difference at scale is significant.
+Livepeer gateways pay GPU operators (orchestrators) at network rates - rates that are set competitively by supply and demand, not by a corporate pricing team. The practical difference at scale is significant.
 
 {/* REVIEW: Get specific cost comparison figures from Livepeer Foundation or Cloud SPE. The "significant savings vs cloud providers" claim is widely referenced in community content (livepeer.cloud blog, Mirror posts) but specific per-minute numbers vs Mux/AWS MediaLive have not been independently verified in this research pass. Assign to Foundation or Cloud SPE team to provide a citable benchmark. */}
 
@@ -76,10 +78,10 @@ Your viewers receive the same HLS output they would from any transcoding service
 
 <Tabs>
   <Tab title="What stays the same">
-    - RTMP ingest from OBS, FFmpeg, or any standard encoder — no changes to your stream source
-    - HLS output for viewer delivery — same format as Mux, AWS, Wowza
-    - Transcoding profiles (resolution, bitrate, codec) — fully configurable
-    - Standard monitoring tooling — the gateway exposes Prometheus metrics and log endpoints
+    - RTMP ingest from OBS, FFmpeg, or any standard encoder - no changes to your stream source
+    - HLS output for viewer delivery - same format as Mux, AWS, Wowza
+    - Transcoding profiles (resolution, bitrate, codec) - fully configurable
+    - Standard monitoring tooling - the gateway exposes Prometheus metrics and log endpoints
   </Tab>
   <Tab title="What is different">
     **On-chain setup required:** Unlike a SaaS platform, you manage your own ETH wallet and Arbitrum deposit. This is a one-time setup step but it is the main friction point for non-crypto users.
@@ -136,7 +138,7 @@ If you see `-broadcaster=true` in a guide, replace it with `-gateway`. The old f
 
 OBS Studio can push RTMP directly to a Livepeer gateway endpoint. Set the OBS stream server to `rtmp://YOUR_GATEWAY_IP:1935/live` and the stream key to your desired stream ID.
 
-No plugin or modification required — OBS treats the gateway like any other RTMP server.
+No plugin or modification required - OBS treats the gateway like any other RTMP server.
 
 ---
 
@@ -148,7 +150,7 @@ No plugin or modification required — OBS treats the gateway like any other RTM
 - "livepeer transcoding setup"
 Embed the most recent relevant video (2023 or later) here once URL confirmed. */}
 
-{/* REVIEW: livepeer.cloud/blog — check for any video walkthroughs alongside the Owncast integration guide. */}
+{/* REVIEW: livepeer.cloud/blog - check for any video walkthroughs alongside the Owncast integration guide. */}
 
 ---
 
@@ -156,10 +158,10 @@ Embed the most recent relevant video (2023 or later) here once URL confirmed. */
 
 Before committing to the switch, be honest about these scenarios:
 
-- **You need a managed SLA and support contract** — Livepeer is self-hosted infrastructure; there is no SLA guarantee
-- **Your viewers are on mobile and require specific HLS packaging** — verify your required output format against what the gateway produces before switching production
-- **You have strict geographic processing requirements** — orchestrator routing can be filtered by region, but it is your responsibility to configure this correctly
-- **You are not comfortable managing an ETH wallet and deposit** — the on-chain setup is a real friction point; if crypto infrastructure is genuinely not something your team can manage, a hosted gateway like Livepeer Studio is available
+- **You need a managed SLA and support contract** - Livepeer is self-hosted infrastructure; there is no SLA guarantee
+- **Your viewers are on mobile and require specific HLS packaging** - verify your required output format against what the gateway produces before switching production
+- **You have strict geographic processing requirements** - orchestrator routing can be filtered by region, but it is your responsibility to configure this correctly
+- **You are not comfortable managing an ETH wallet and deposit** - the on-chain setup is a real friction point; if crypto infrastructure is genuinely not something your team can manage, a hosted gateway like Livepeer Studio is available
 
 ---
 

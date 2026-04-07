@@ -1,0 +1,348 @@
+---
+title: Active Plans — Master Summary
+lastAudited: 2026-03-24
+auditMethod: Agent-verified against actual file content + session log cross-check
+---
+
+## How This Was Generated
+
+Three agents read every plan folder, verified claimed status against actual file content, cross-checked against the `.claude/CLAUDE.md` session log and `project-state.md`, and wrote `master-status.mdx` into each plan root. This file compiles their findings.
+
+---
+
+## Status at a Glance — All 19 Plans
+
+| Plan | Status | Blockers | Outstanding Decisions | Risk |
+|---|---|---|---|---|
+| CONTENT-WRITING | Active — infra complete, execution blocked | 13 | 11 | HIGH — blocking-items.md empty despite blockers |
+| CONTENTI-PIPLEINE | Phases 1–6 done, Phase 7 active | 7 | 3 | HIGH — veracity-pass.md is DRAFT, no test runs |
+| ORCHS | Pre-execution staging | 4 | 1 | MED — relationship to CONTENTI-PIPLEINE undefined |
+| ORCHESTRATOR-CONTENT-WRITING | Content written, not gate-compliant | 6 | 2 | HIGH — 9,482 words of gateways content unreviewed |
+| DOCUMENTATION | Phases 1–2 done, human gate blocking 3–5 | 2 | 0 | LOW |
+| SCRIPT-GOVERNANCE | 60% active | 2 | 0 | MED — 7 broken GHA workflows untracked |
+| TERMINOLOGY-COLLATE | 50% gated | 1 | 0 | MED — blocks all downstream tab phases |
+| AI-TOOLS-GOVERNANCE | 95% — maintenance mode | 3 | 0 | LOW |
+| REPO-STRUCTURE-GOV | 80% active | 1 | 0 | MED — TTL deadline 2026-04-21 |
+| COMPONENT-GOVERNANCE | 95% — sole gate is T16 test pass | 1 | 0 | LOW |
+| OSS-OWNERLESS-REPO-GOVERNANCE | 85% — waiting on others | 2 | 0 | LOW |
+| _Project-Management_ | Active infrastructure | 0 | 0 | LOW — 2 stale CLAUDE.md drafts to archive |
+| AUTOMATIONS-RESTRUCTURE | Execution-ready, not started | 1 | 0 | LOW |
+| CONTENT-STRUCTURE-TEMPLATES | 30% pre-research, parked | 2 | 0 | LOW |
+| TOOLING | Complete, parked | 0 | 0 | NONE |
+| SCRIPT WORKFLOW AUDIT | Complete, parked | 0 | 0 | NONE |
+| SNIPPETS | Complete | 0 | 0 | NONE |
+| SOLUTIONS-SOCIAL-DATA | Complete — CREDENTIALS RISK | 0 | 0 | **HIGH — .env file in plan folder** |
+| CANONICAL-TRUTH-GUIDES | Stub — recommend delete | 0 | 0 | LOW |
+
+---
+
+## Immediate Actions Required
+
+### 1. CREDENTIALS RISK — SOLUTIONS-SOCIAL-DATA `.env` file
+`workspace/plan/active/SOLUTIONS-SOCIAL-DATA/.env` — a file with this name in a plan folder likely contains credentials. Inspect immediately and remove or secure before any commit.
+
+### 2. veracity-pass.md must be tested and approved before Phase 7 runs
+The current top priority (Orchestrators veracity pass, S01–S12) is running against a DRAFT prompt with zero recorded test runs. `veracity-pass.md` requires 3 test runs and Alison sign-off before production use. This is the single highest-leverage unblocking action across all plans.
+
+### 3. Dual-track Orchestrators conflict must be resolved
+- **CONTENTI-PIPLEINE** has written 12 fresh S01–S12 pages for Orchestrators
+- **ORCHS** contains 118 existing pages staged for improvement
+These are two different approaches to the same output. Which is canonical for `v2/orchestrators/` is undefined. This blocks both.
+
+### 4. blocking-items.md is empty
+`workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md` has zero entries. The actual blockers (13+) are scattered across project-state.md, decision-registry.md, and CLAUDE.md. This tracker is broken as an operational tool.
+
+### 5. REPO-STRUCTURE-GOV TTL deadline: 2026-04-21
+`_dep-docs-todo-notes.md` has a 30-day TTL from 2026-03-21. Phase 1.1 must run before then.
+
+### 6. CANONICAL-TRUTH-GUIDES should be deleted
+Single 3-line stub. Scope entirely covered by DOCUMENTATION and REPO-STRUCTURE-GOV. No plan, no phases, no artefacts.
+
+---
+
+## Plan-by-Plan Detail
+
+---
+
+### CONTENT-WRITING
+**Status:** Active infrastructure complete — execution blocked on all tabs
+
+**Verified done:**
+- Full PM infrastructure: context packs, prompts by phase, voice rules, decision registry, tab-status, plan-canonical all exist with real content
+- Audience design complete for all 5 tabs
+- Content scans complete for Gateways, About, Delegators; in progress for Orchestrators and Developers
+- Research packs built per tab
+- Phase 3 (content-pass) and Phase 7 (veracity-pass) prompts exist
+
+**Not done — no tab has:**
+- Formally locked IA in decision-registry.md
+- Locked terminology
+- Any content written through this pipeline's gates
+- Gate 3 (structure audit / tab map) signed off
+
+**Critical finding:** blocking-items.md is empty. 13+ documented blockers live scattered across three files. The plan's designated blocker tracker is non-functional.
+
+**11 outstanding human decisions** spanning all 5 tabs (see decision-registry.md).
+
+**Master status:** `workspace/plan/active/CONTENT-WRITING/master-status.mdx`
+
+---
+
+### CONTENTI-PIPLEINE
+**Status:** Phases 1–6 done, Phase 7 active (blocked)
+
+**Verified done:**
+- All pipeline phase definition files exist with real content (01 through 04.5)
+- 12 Orchestrators section pages written in proper MDX with components (S01–S12 in `content/`)
+- Pages have real written content — not stubs or templates
+
+**In progress / blocked:**
+- Phase 7 (veracity pass) is the current active priority — blocked on veracity-pass.md prompt not tested or approved
+- No formal gate compliance with CONTENT-WRITING decision-registry.md
+- Reconsolidation from these pages into `v2/orchestrators/` has not been planned or approved
+
+**Relationship to ORCHS:** Undefined. Both are producing Orchestrators content via different approaches.
+
+**Master status:** `workspace/plan/active/CONTENTI-PIPLEINE/master-status.mdx`
+
+---
+
+### ORCHS
+**Status:** Pre-execution staging area — no content improved yet
+
+**Verified done:**
+- `01-CORE-NEEDS-AND-STANDARDS.md` — detailed Orchestrators copywriting standards (real content)
+- `02-CRITICAL-ANALYSIS.md` — honest critical analysis of current docs quality
+- `03-AUTONOMOUS-PRODUCTION-OPTIONS.md` — production approach options documented
+- 118 pages copied from `v2/orchestrators/` into this staging folder
+
+**Critical finding:** `01-CORE-NEEDS-AND-STANDARDS.md` contains a fatally incorrect frontmatter schema — lists deprecated `pageType` values (`landing`, `overview`, `faq`, `troubleshooting`) not in the canonical 7-type taxonomy. Any agent using this as authority produces taxonomy violations.
+
+**Not done:** No production approach selected, no content improved, no relationship to CONTENTI-PIPLEINE defined.
+
+**Master status:** `workspace/plan/active/ORCHS/master-status.mdx`
+
+---
+
+### ORCHESTRATOR-CONTENT-WRITING
+**Status:** Content written — not gate-compliant
+
+**Verified done:**
+- 13 Gateways section pages written with real content (S01–S13 in `gateways/`)
+- MASTER-STATE.md and EXECUTION-PLAN.md exist with real content
+- 9,482 words of Gateways content exists
+- REVIEW markers present in pages
+
+**Not done:**
+- None of the 13 pages have been through: naming audit, veracity pass, layout pass, or human review
+- IA lock for Gateways not recorded in decision-registry.md
+- Folder name is misleading — named "ORCHESTRATOR-CONTENT-WRITING" but contains Gateways content
+
+**Note:** This plan also contains Orchestrators planning docs (EXECUTION-PLAN, MASTER-STATE) alongside Gateways content pages — structural confusion.
+
+**Master status:** `workspace/plan/active/ORCHESTRATOR-CONTENT-WRITING/master-status.mdx`
+
+---
+
+### DOCUMENTATION
+**Status:** Partially executed — human gates blocking Phases 3–5
+
+**Verified done:**
+- Phase 1 (model/design) complete with commit evidence
+- Phase 2 (5 immediate fixes) complete with commit evidence
+
+**Blocked:**
+- Phases 3–5 require Alison to assign consumer/maintenance roles to documentation types
+- Two parallel human review gates — both waiting
+
+**Master status:** `workspace/plan/active/DOCUMENTATION/master-status.mdx`
+
+---
+
+### SCRIPT-GOVERNANCE
+**Status:** 60% active
+
+**Verified done:** Tasks 1–14 complete (operations root creation, x-archive audit, etc.)
+
+**Not done:**
+- Task 15 cleanup: not started
+- Task 9b docs guide (docs/): not started
+- 7 broken GHA workflows identified in audit but not tracked in this plan
+
+**Master status:** `workspace/plan/active/SCRIPT-GOVERNANCE/master-status.mdx`
+
+---
+
+### TERMINOLOGY-COLLATE
+**Status:** 50% — hard gate on human review
+
+**Verified done:** 317 terms harvested, per-tab glossaries built
+
+**Blocked:** Entire downstream (terminology lock for all 5 tabs) blocked on human review and approval of harvest.md. This gate blocks Phase 3.5 for every tab.
+
+**Master status:** `workspace/plan/active/TERMINOLOGY-COLLATE/master-status.mdx`
+
+---
+
+### AI-TOOLS-GOVERNANCE
+**Status:** 95% — maintenance mode
+
+**Verified done:** Core governance, agentskills.io alignment complete
+
+**Remaining:** 3 open decision gates — skill consolidation, llms.txt regen, docs.json Resource HUB stubs
+
+**Master status:** `workspace/plan/active/AI-TOOLS-GOVERNANCE/master-status.mdx`
+
+---
+
+### REPO-STRUCTURE-GOV
+**Status:** 80% active — deadline approaching
+
+**Verified done:** Phase 0 + workspace verification complete
+
+**Not done:** Phase 1.1 (V-OP verification checklist), operations verification
+
+**Deadline:** `_dep-docs-todo-notes.md` TTL expires 2026-04-21
+
+**Unblocking opportunity:** Phase 1.1 can run now — SCRIPT-GOVERNANCE Task 14 is confirmed complete. No decision needed.
+
+**Master status:** `workspace/plan/active/REPO-STRUCTURE-GOV/master-status.mdx`
+
+---
+
+### COMPONENT-GOVERNANCE
+**Status:** 95% — one gate remaining
+
+**Verified done:** 118 components governed and merged, Tasks T1–T15 complete
+
+**Sole gate:** Task T16 — test suite must pass before T20/T21 can run
+
+**Master status:** `workspace/plan/active/COMPONENT-GOVERNANCE/master-status.mdx`
+
+---
+
+### OSS-OWNERLESS-REPO-GOVERNANCE
+**Status:** 85% — waiting on SCRIPT-GOVERNANCE + COMPONENT-GOVERNANCE
+
+**Verified done:** Phases 0–1 implemented
+
+**Blocked:** Phases 3–4 require SCRIPT-GOVERNANCE and COMPONENT-GOVERNANCE schema migrations to complete first
+
+**Master status:** `workspace/plan/active/OSS-OWNERLESS-REPO-GOVERNANCE/master-status.mdx`
+
+---
+
+### _Project-Management_
+**Status:** Active infrastructure — current and well-maintained
+
+**Finding:** Two stale CLAUDE.md draft files exist (`CLAUDE-md-draft.md`, `CLAUDE-md-draft-v2.md`) — should be archived now that the live `.claude/CLAUDE.md` is merged and active.
+
+**Master status:** `workspace/plan/active/_Project-Management_/master-status.mdx`
+
+---
+
+### AUTOMATIONS-RESTRUCTURE
+**Status:** Execution-ready — not started
+
+**Finding:** Fully designed, 0% executed. Blocked on SCRIPT-GOVERNANCE Task 15c completing. The GHA workflow file (`go-livepeer-notify-docs.yml`) is sitting in the plan folder — needs to move to `.github/workflows/` or be classified as a reference draft.
+
+**Master status:** `workspace/plan/active/AUTOMATIONS-RESTRUCTURE/master-status.mdx`
+
+---
+
+### CONTENT-STRUCTURE-TEMPLATES
+**Status:** 30% pre-research — parked
+
+**Blocked:** CONTENT-WRITING taxonomy lock (not yet done) + inaccessible Google Doc with 5 unanswered open questions. Cannot progress until both resolved.
+
+**Master status:** `workspace/plan/active/CONTENT-STRUCTURE-TEMPLATES/master-status.mdx`
+
+---
+
+### TOOLING
+**Status:** Complete, parked
+
+All lpd path fixes applied, documentation updated, validator created. Optional Layer 2/3 enhancements remain but are not blocking.
+
+**Master status:** `workspace/plan/active/TOOLING/master-status.mdx`
+
+---
+
+### SCRIPT WORKFLOW AUDIT
+**Status:** Complete, parked
+
+Read-only audit produced 2 substantive reports that informed SCRIPT-GOVERNANCE and other plans. No further work needed.
+
+**Master status:** `workspace/plan/active/SCRIPT WORKFLOW AUDIT/master-status.mdx`
+
+---
+
+### SNIPPETS
+**Status:** Complete
+
+All 5 phases executed. Generator cleaned, v2 templates deleted, source files fixed, icon map extended.
+
+**Master status:** `workspace/plan/active/SNIPPETS/master-status.mdx`
+
+---
+
+### SOLUTIONS-SOCIAL-DATA
+**Status:** Complete — **CREDENTIALS RISK**
+
+All 4 phases done. 5 community pages live. Pipelines built.
+
+**URGENT:** `.env` file exists at `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/.env`. Inspect and remove before any commit touches this folder.
+
+**Master status:** `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/master-status.mdx`
+
+---
+
+### CANONICAL-TRUTH-GUIDES
+**Status:** Stub — recommend delete
+
+Single 3-line notes file. No plan, no phases, no artefacts. Scope fully covered by DOCUMENTATION and REPO-STRUCTURE-GOV. No reason for this plan to continue existing.
+
+**Master status:** `workspace/plan/active/CANONICAL-TRUTH-GUIDES/master-status.mdx`
+
+---
+
+## Cross-Plan Dependency Map
+
+```
+SCRIPT-GOVERNANCE (Task 15c)
+  └── blocks AUTOMATIONS-RESTRUCTURE (execution)
+  └── blocks OSS-OWNERLESS-REPO-GOVERNANCE (Phase 3-4)
+
+COMPONENT-GOVERNANCE (T16 test pass)
+  └── blocks OSS-OWNERLESS-REPO-GOVERNANCE (Phase 3-4)
+
+REPO-STRUCTURE-GOV (Phase 1.1 — can run NOW)
+  └── unblocked by SCRIPT-GOVERNANCE Task 14 ✓
+
+TERMINOLOGY-COLLATE (human review of harvest.md)
+  └── blocks all 5 tabs Phase 3.5 (terminology lock)
+
+veracity-pass.md (3 test runs + Alison sign-off)
+  └── blocks CONTENTI-PIPLEINE Phase 7
+  └── blocks ORCHESTRATOR-CONTENT-WRITING veracity pass
+
+CONTENT-WRITING IA lock (Alison)
+  └── blocks all downstream phases for all 5 tabs
+  └── blocks CONTENT-STRUCTURE-TEMPLATES
+```
+
+---
+
+## Summary
+
+**19 plans total. 5 complete/parked. 14 active or partially executed.**
+
+The project is not stuck — substantial work has been done across all fronts. The critical path is:
+
+1. Verify and approve `veracity-pass.md` (unblocks Phase 7 for Orchestrators + Gateways)
+2. Resolve dual-track Orchestrators conflict (CONTENTI-PIPLEINE vs ORCHS)
+3. Alison reviews and locks IAs for Orchestrators and Gateways (unblocks all downstream phases)
+4. Human review of TERMINOLOGY-COLLATE harvest.md (unblocks Phase 3.5 for all tabs)
+5. Inspect and remove SOLUTIONS-SOCIAL-DATA `.env` file
+
+_Compiled 2026-03-24. Each plan has a `master-status.mdx` at its root with full detail._

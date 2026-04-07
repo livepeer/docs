@@ -1,0 +1,40 @@
+# ============================================================================
+# COMPANION WORKFLOW — add this to livepeer/go-livepeer
+# Path in that repo: .github/workflows/notify-docs-release.yml
+#
+# PURPOSE
+#   Fires a repository_dispatch event to livepeer/docs whenever a release is
+#   published in go-livepeer. The docs workflow (update-livepeer-release.yml)
+#   listens for this event and updates globals/globals.mdx with the new version.
+#
+# SETUP REQUIRED IN livepeer/go-livepeer
+#   1. Create a fine-grained PAT (GitHub → Settings → Developer Settings → Fine-grained PATs)
+#      Permissions: Actions → Read and write  (scoped to livepeer/docs only)
+#   2. Add the PAT as a secret in livepeer/go-livepeer:
+#      Settings → Secrets and variables → Actions → New repository secret
+#      Name: DOCS_DISPATCH_TOKEN
+#      Value: <the PAT>
+#
+# VERIFY
+#   After setup: publish a pre-release in go-livepeer, check the Actions tab of
+#   livepeer/docs to confirm the "Update Livepeer Release Version" workflow ran.
+# ============================================================================
+
+name: Notify livepeer/docs of new release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dispatch release event to livepeer/docs
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.DOCS_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/livepeer/docs/dispatches" \
+            -d "{\"event_type\":\"go-livepeer-release\",\"client_payload\":{\"version\":\"${{ github.event.release.tag_name }}\"}}"

@@ -1,0 +1,266 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(npx puppeteer:*)",
+      "Bash(node tools/dev/generate-mint-dev-scope.js --tabs \"About,Delegators\" --print-only)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(find ~/.claude -name *.db -o -name *.sqlite -o -name state*)",
+      "Bash(chmod +x /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/FUCK_CLAUDE/scripts/*.sh)",
+      "Bash(./workspace/plan/active/FUCK_CLAUDE/scripts/patch-extension.sh --dry-run)",
+      "Read(//Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/$HOME/.claude/projects/-Users-alisonhaire-Documents-Livepeer-Docs-v2-dev/**)",
+      "Bash(find /Users/alisonhaire/.claude/ -name *.jsonl -newer /Users/alisonhaire/.claude/plans/misty-rolling-starfish.md)",
+      "Bash(ls -la /Users/alisonhaire/.claude/plans/misty-rolling-starfish-agent-*.md)",
+      "Bash(chmod +x workspace/plan/active/FUCK_CLAUDE/scripts/fix-title-overwrite.sh)",
+      "mcp__plugin_claude-mem_mcp-search__timeline",
+      "mcp__claude_ai_Github_MCP__search_issues",
+      "mcp__claude_ai_Github_MCP__create_repository"
+    ],
+    "additionalDirectories": [
+      "/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/thread-outputs/sessions"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pkill -f 'Chromium.*--headless' 2>/dev/null; pkill -f 'chrome.*--headless' 2>/dev/null; pkill -f 'playwright.*BrowserServer' 2>/dev/null; pkill -f 'mintlify.*dev.*--port' 2>/dev/null; pkill -f '@mintlify/cli.*start.*dev' 2>/dev/null; echo '{\"systemMessage\":\"Cleaned up stale headless browsers and Mintlify dev servers.\"}'",
+            "statusMessage": "Cleaning up stale processes..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/session-state.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/session-register.js",
+            "statusMessage": "Checking for parallel sessions..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p workspace/thread-outputs/sessions && echo \"Session started: $(date '+%Y-%m-%d %H:%M:%S')\" >> workspace/thread-outputs/sessions/session-log.txt && echo '{\"systemMessage\":\"SESSION START — CLAUDE.md is the source of truth for all rules. Match this session to the correct work stream (multiple run in parallel). NEVER destroy uncommitted work. NEVER run destructive git commands. Explore before executing — Read/Grep/Glob first, Write/Edit only after understanding. UK English. No em dashes. Offer to commit after completing work.\"}'",
+            "statusMessage": "Loading session rules..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/server-lifecycle.js",
+            "statusMessage": "Starting render verification server..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/message-backup.js",
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/mdx-constraints-injector.js",
+            "statusMessage": "Checking for MDX context..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/friction-logger.js",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/pre-tool-guard.js",
+            "statusMessage": "Checking command safety..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/mdx-render-gate.js",
+            "statusMessage": "Checking render verification state..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/pre-tool-guard.js",
+            "statusMessage": "Checking file write..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/completion-gate.js",
+            "statusMessage": "Checking completion prerequisites..."
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/pre-tool-guard.js",
+            "statusMessage": "Checking agent spawn approval..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/read-logger.js",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/grep-loop-guard.js",
+            "statusMessage": "Checking for search loops..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/mdx-render-verify.js",
+            "statusMessage": "Verifying MDX render..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/blast-radius-scanner.js",
+            "statusMessage": "Scanning for consumers..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/phase-gate-hook.js",
+            "statusMessage": "Checking phase checkpoints..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/session-register.js",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/edit-loop-guard.js",
+            "statusMessage": "Checking for edit loops..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/scope-checkpoint.js",
+            "statusMessage": "Scope checkpoint..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/move-detect-hook.js",
+            "statusMessage": "Checking for file moves..."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/pre-compact-checkpoint.js",
+            "statusMessage": "Writing mid-session checkpoint..."
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node operations/scripts/dispatch/governance/post-tool-verify.js",
+            "statusMessage": "Tracking consecutive failures..."
+          }
+        ]
+      }
+    ]
+  }
+}

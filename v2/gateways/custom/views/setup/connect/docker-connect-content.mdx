@@ -1,0 +1,209 @@
+import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
+
+## <Icon icon="docker" iconType="solid" size={32} /> Docker Connection
+{dockerGroup()}
+
+<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+    <StyledStep title="Connect to Orchestrators">
+        Choose how the Gateway discovers Orchestrators based on your operational mode.
+
+        <Tabs>
+            <Tab title="Off-Chain" icon="floppy-disk">
+                Off-chain Gateways connect to Orchestrators manually via the `-orchAddr` flag.
+
+                Add the flag to your `docker-compose.yml` under the `command` section:
+
+                ```yaml icon="docker" title="docker-compose.yml"
+                command:
+                  - -gateway
+                  - -orchAddr=https://orch1.example.com:8935,https://orch2.example.com:8935
+                  - -httpAddr=0.0.0.0:8935
+                  - -rtmpAddr=0.0.0.0:1935
+                ```
+
+                The Gateway round-robins across the listed Orchestrators and does not discover others. This trades flexibility for predictability: you know exactly which Orchestrators handle jobs and can vet each one before adding it.
+
+                **Finding AI-capable Orchestrators:**
+                - [Livepeer Explorer AI Leaderboard](https://explorer.livepeer.org/leaderboard) for live performance data
+                - [Livepeer Tools](https://tools.livepeer.cloud) for community dashboard with Orchestrator capabilities
+                - The `/getNetworkCapabilities` endpoint on any on-chain Gateway, filtered by pipeline and model
+
+                <Tip>
+                    For production AI workloads, pinning Orchestrators with `-orchAddr` is the recommended approach. It gives full control over which Orchestrators handle inference jobs.
+                </Tip>
+            </Tab>
+
+            <Tab title="On-Chain" icon="link">
+                On-chain Gateways discover Orchestrators automatically from the Livepeer network on Arbitrum.
+
+                Set the network and Ethereum RPC in your `docker-compose.yml`:
+
+                ```yaml icon="docker" title="docker-compose.yml"
+                command:
+                  - -gateway
+                  - -network=arbitrum-one-mainnet
+                  - -ethUrl=https://arb1.arbitrum.io/rpc
+                  - -ethKeystorePath=/root/.lpData/keystore
+                  - -httpAddr=0.0.0.0:8935
+                  - -rtmpAddr=0.0.0.0:1935
+                ```
+
+                The Gateway creates a `DBOrchestratorPoolCache` that:
+                - Queries the BondingManager smart contract for all registered Orchestrators
+                - Fetches their capabilities, pricing, and performance metrics
+                - Updates the list every 25 minutes
+                - Handles failures by trying alternative Orchestrators
+
+                <Note>
+                    On-chain discovery requires ETH in the Gateway account for transactions. Without funds, the Gateway shows "No orchestrator specified; transcoding will not happen".
+                </Note>
+
+                **For AI workloads on-chain**, add the `-aiServiceRegistry` flag to register with the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract:
+
+                ```yaml icon="docker" title="docker-compose.yml (AI registry)"
+                command:
+                  - -gateway
+                  - -network=arbitrum-one-mainnet
+                  - -ethUrl=https://arb1.arbitrum.io/rpc
+                  - -ethKeystorePath=/root/.lpData/keystore
+                  - -aiServiceRegistry
+                  - -httpAddr=0.0.0.0:8935
+                ```
+
+                This enables automatic Orchestrator discovery for AI workloads without maintaining a manual `-orchAddr` list.
+            </Tab>
+        </Tabs>
+    </StyledStep>
+
+    <StyledStep title="Verify Discovery">
+        After starting the Gateway, confirm Orchestrators are discovered.
+
+        **Check discovered Orchestrators:**
+
+        ```bash icon="terminal" title="List Orchestrators"
+        curl http://localhost:5935/getOrchestrators
+        ```
+
+        The response should list at least one Orchestrator with pricing information. An empty list means discovery has not completed or no Orchestrators match the price filters.
+
+        **Check network capabilities (AI models and pipelines):**
+
+        ```bash icon="terminal" title="Network Capabilities"
+        curl http://localhost:8935/getNetworkCapabilities | python3 -m json.tool
+        ```
+
+        **Filter for a specific AI model:**
+
+        ```bash icon="terminal" title="Filter by Model"
+        curl -s http://localhost:8935/getNetworkCapabilities | \
+          jq '.orchestrators[] | select(.capabilities_prices[].model_id == "ByteDance/SDXL-Lightning")'
+        ```
+
+        <Tabs>
+            <Tab title="Off-Chain" icon="floppy-disk">
+                <Warning>
+                    If no Orchestrators appear, verify each `-orchAddr` URL is reachable:
+
+                    ```bash icon="terminal" title="Test Orchestrator Reachability"
+                    curl https://orch.example.com:8935/getOrchestratorInfo
+                    ```
+                </Warning>
+            </Tab>
+
+            <Tab title="On-Chain" icon="link">
+                <Warning>
+                    If no Orchestrators appear after 2 minutes, check container logs for Ethereum connection errors:
+
+                    ```bash icon="terminal" title="Check Gateway Logs"
+                    docker logs <container_name> --tail 50
+                    ```
+                </Warning>
+            </Tab>
+        </Tabs>
+    </StyledStep>
+
+    <StyledStep title="Service Publication">
+        To make the Gateway reachable by external clients and applications, configure the advertised service address.
+
+        ```yaml icon="docker" title="docker-compose.yml"
+        command:
+          - -gateway
+          - -serviceAddr=gateway.example.com:8935
+          - -gatewayHost=gateway.example.com
+        ```
+
+        - `-serviceAddr` is the address the Gateway advertises to Orchestrators and clients
+        - `-gatewayHost` is the external hostname used in API responses
+
+        For a public Gateway, this must be an externally resolvable DNS name, not `localhost` or an internal IP.
+
+        <Note>
+            **Video Gateways:** `-serviceAddr` is the address Orchestrators use to report transcoded results back. It must be publicly reachable on port 8935.
+
+            **AI Gateways:** register on-chain with `-aiServiceRegistry` for automatic discovery by AI Orchestrators.
+        </Note>
+
+        **DNS setup:**
+
+        Point a subdomain at the Gateway server's public IP:
+
+        ```txt icon="wrench" title="DNS Record"
+        ai-gateway.yourdomain.com.   A   <server-ip>
+        ```
+
+        External clients must reach the Gateway over HTTPS. Set up TLS termination via a reverse proxy (Caddy, Nginx, or a cloud load balancer) before the service port.
+    </StyledStep>
+
+    <StyledStep title="Tune Selection">
+        The default selection algorithm works out of the box. For production workloads, these flags give more control.
+
+        **Performance scoring:**
+
+        ```yaml icon="docker" title="docker-compose.yml (scoring)"
+        command:
+          - -orchPerfStatsUrl=https://leaderboard.livepeer.org/api/aggregated_stats
+          - -minPerfScore=0.8
+        ```
+
+        Excludes Orchestrators below the minimum score. Scores come from live transcoding tests on the community leaderboard.
+
+        **Price caps:**
+
+        ```yaml icon="docker" title="docker-compose.yml (price caps)"
+        command:
+          # Video
+          - -maxPricePerUnit=5000
+          # AI (per-capability)
+          - -maxPricePerCapability=[{"pipeline":"text-to-image","model_id":"black-forest-labs/FLUX.1-dev","price_per_unit":100,"pixels_per_unit":1000000}]
+        ```
+
+        **Blocklist:**
+
+        ```yaml icon="docker" title="docker-compose.yml (blocklist)"
+        command:
+          - -orchBlocklist=0xAbCd1234...,0xEfGh5678...
+        ```
+
+        Excludes specific Orchestrators from all routing.
+
+        <Card
+            title="Orchestrator Selection Guide"
+            icon="sliders"
+            href="/v2/gateways/guides/advanced-operations/orchestrator-selection"
+            horizontal
+            arrow
+        >
+            Full guide to scoring weights, tiering strategies, and failover configuration.
+        </Card>
+    </StyledStep>
+</StyledSteps>
+
+<Card
+    title="Next: Verify your Gateway"
+    icon="circle-check"
+    href="/v2/gateways/setup/verify"
+    horizontal
+    arrow
+>
+    Run health checks and end-to-end tests to confirm the Gateway is routing jobs.
+</Card>

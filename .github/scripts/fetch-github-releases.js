@@ -1,13 +1,19 @@
 /**
  * @script            fetch-github-releases
  * @category          automation
+ * @type              automation
+ * @concern           content
+ * @niche             data/fetching
  * @purpose           infrastructure:data-feeds
- * @scope             generated-output
+ * @description       Fetches latest GitHub Releases via public REST API, writes per-product JSX data files.
  * @domain            docs
- * @needs             R-R10
- * @purpose-statement Fetches GitHub release data and writes the generated snippets/automations datasets consumed by docs surfaces.
- * @pipeline          P5, P6
+ * @needs             F-R1
+ * @purpose-statement Fetches GitHub Releases for configured solutions and writes per-solution release data modules under snippets/data/social-feed-solutions/.
+ * @mode              generate
+ * @pipeline          config → GitHub REST API → snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx
+ * @scope             .github/scripts, snippets/data/social-feed-solutions/
  * @usage             node .github/scripts/fetch-github-releases.js
+ * @policy            Public repos only. No auth needed for public repos. GITHUB_TOKEN optional for rate limits.
  */
 const https = require("https");
 const fs = require("fs");
@@ -117,7 +123,7 @@ async function main() {
       });
       jsx += `];\n`;
 
-      const outDir = `snippets/automations/solutions/${productKey}`;
+      const outDir = `snippets/data/social-feed-solutions/${productKey}`;
       fs.mkdirSync(outDir, { recursive: true });
       const outPath = path.join(outDir, "githubReleasesData.jsx");
       fs.writeFileSync(outPath, jsx);

@@ -15,7 +15,7 @@ keywords:
   - aims
   - documentation philosophy
   - rfp aim delivery
-'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
@@ -23,10 +23,10 @@ keywords:
 audience: internal
 lastVerified: 2026-03-17
 ---
-import { Quote } from "/snippets/components/content/quote.jsx";
-import { TabsContainer } from "/snippets/components/layout/containers.jsx";
-import { YouTubeVideo } from "/snippets/components/content/video.jsx";
-import { PdfEmbed } from "/snippets/components/data/embed.jsx";
+import { Quote } from "/snippets/components/displays/quotes/Quote.jsx";
+
+import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx";
 
 {/* # Aims - Documentation Philosophy & RFP Aim Delivery */}
 <Quote author="Livepeer Foundation RFP" source="September 2024">
@@ -38,7 +38,7 @@ import { PdfEmbed } from "/snippets/components/data/embed.jsx";
 <br/>
 
 
-<TabsContainer>
+<Tabs>
     <Tab title="AI-first" icon="user-robot">
         AI-first documentation is a term that risks being interpreted superficially - adding an AI chatbot, or writing in shorter sentences.
         The v2 engagement implemented **AI-first at every layer** of the system: structural, content, discovery, tooling, and operational.
@@ -102,7 +102,7 @@ import { PdfEmbed } from "/snippets/components/data/embed.jsx";
         Documentation discoverability for AI systems requires more than well-structured HTML. LLM crawlers, retrieval-augmented generation (RAG) systems, and AI search engines require clean, parseable content without the navigation chrome, JavaScript rendering, and layout noise of a production documentation site. v2 addresses this at two levels: platform-native and system-level.
         - **[Technical]** Mintlify natively serves all MDX pages as clean, parseable content accessible at predictable URLs. The MDX source files in v2/pages/ are structured to be fetched and read directly - clean semantic markup, no extraneous UI scaffolding - providing a de-facto parallel readable format for bot consumers alongside the rendered human UI.
 
-        - **[Scripts]** Pages index generator (tools/scripts/generate-pages-index.js) produces and validates section-level index.mdx files for all v2/pages/ folders plus a root aggregate index. This index is machine-readable and provides AI systems with a flat, navigable inventory of all documentation surfaces without requiring a site crawl.
+        - **[Scripts]** Pages index generator (operations/scripts/generate-pages-index.js) produces and validates section-level index.mdx files for all v2/pages/ folders plus a root aggregate index. This index is machine-readable and provides AI systems with a flat, navigable inventory of all documentation surfaces without requiring a site crawl.
 
  - **[Scripts]** generate-seo.js produces structured metadata (title, description, keywords, og:image) across all pages in a consistent schema - making frontmatter reliably parseable as structured data. AI systems extracting page-level metadata receive a consistent, complete signal instead of ad-hoc per-page variations.
 
@@ -271,7 +271,7 @@ import { PdfEmbed } from "/snippets/components/data/embed.jsx";
         A comprehensive brand strategy analysis examined Livepeer's messaging framework, voice, competitive positioning, and product differentiation - producing the "Mission Control" framing, the "Open AI-Infrastructure for Real-Time Interactive Video" positioning, and the zero-to-hero progression model that structures the v2 homepage.
 
         ### Implementation: How v2 Delivers Stakeholder-Focus
-        - **[IA]** Persona-first information architecture with nine top-level sections: Home, About, Platforms, Developers, Gateways, GPU Nodes, LP Token, Community, Resource HUB - each mapping directly to a stakeholder group or functional area. Navigation is organised by who you are, not by internal team structure.
+        - **[IA]** Persona-first information architecture with nine top-level sections: Home, About, Platforms, Developers, Gateways, GPU Nodes, Delegators, Community, Resource HUB - each mapping directly to a stakeholder group or functional area. Navigation is organised by who you are, not by internal team structure.
         - **[UI/UX]** Hero card navigation on the homepage routes each stakeholder type directly to their entry point. "Mission Control" framing with a role-selector pattern replaces the v1 toggle-based navigation that hid user journeys behind sliders.
         - **[UX]** Three IA options were evaluated before selection: persona-first with Diátaxis structure, job-type-first navigation, and System Map + Reference Bible. Persona-first was selected based on stakeholder interview evidence that users identify with their role, not their task type.
         - **[Copy/Product Positioning]** "Open AI-Infrastructure for Real-Time Interactive Video" positioning established as primary headline, with secondary value propositions tailored per persona. Developers see API-first messaging; Orchestrators see earnings and operational focus; Delegators see participation and governance framing.
@@ -299,4 +299,4 @@ import { PdfEmbed } from "/snippets/components/data/embed.jsx";
         The consolidated changelog remains incomplete. No canonical, machine-maintained changelog feed was in place in v1, and the required sources (Livepeer Studio, AI worker, network contracts, gateway releases) are owned by separate teams with no common release process. Building this requires cross-team coordination beyond documentation scope. The infrastructure for it exists; the content ownership model does not yet.
 
     </Tab>
-</TabsContainer>
+</Tabs>

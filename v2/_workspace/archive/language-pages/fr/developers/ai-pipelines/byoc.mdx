@@ -1,0 +1,136 @@
+---
+title: BYOC (Apportez votre propre calcul)
+sidebarTitle: BYOC
+description: >-
+  Exécutez vos propres modèles d'IA ou votre infrastructure GPU sur le réseau
+  d'inférence IA Livepeer : configuration, paramétrage et enregistrement.
+keywords:
+  - livepeer
+  - developers
+  - ai pipelines
+  - byoc
+  - bring your own compute
+  - comfystream
+  - workers
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL2FpLXBpcGVsaW5lcy9ieW9jLm1keCIsInNvdXJjZVJvdXRlIjoidjIvZGV2ZWxvcGVycy9haS1waXBlbGluZXMvYnlvYyIsInNvdXJjZUhhc2giOiI4OWEwYTgxZTg1YTNhZDk5MTdlMTE0ZmJlYzdhODdlYjA2YTViNjFkNDc0MDQ0MTU1ZTdiZTE1NTJiODEyMGEwIiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDEyOjI1OjQ1LjAxOFoifQ== */}
+import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+
+Ce guide explique comment intégrer vos propres modèles d'IA ou votre infrastructure GPU au réseau d'inférence d'IA Livepeer. BYOC vous permet d'exécuter des tâches d'inférence avec des modèles personnalisés (par exemple, ControlNet, Whisper, SegFormer), de déployer des nœuds sur des environnements cloud, edge ou sur site, et de servir des charges de travail d'inférence Livepeer avec des incitations économiques.
+
+<Note>
+For full BYOC architecture, Gateway/Orchestrator roles, container lifecycle, and Protocol vs AI BYOC concepts, see the [BYOC full guide](/v2/fr/developers/ai-pipelines/byoc).
+</Note>
+
+## Conditions requises
+
+- Machine Linux ou capable de Docker avec GPU (CUDA 11+)
+- IP accessible sur Internet ou trou de NAT
+- Git, Python 3.9+ ; ComfyUI facultatif pour les tâches modulaires
+- Identifiants du portail Livepeer ou clé API pour l'enregistrement des travailleurs
+
+## Étape 1 - Cloner et configurer
+
+```bash
+git clone https://github.com/livepeer/comfystream
+cd comfystream
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Installez votre modèle d'inférence souhaité(s) :
+
+```bash
+python scripts/download.py --model whisper-large
+python scripts/download.py --model sdxl
+```
+
+## Étape 2 - Configurer le nœud
+
+Modifiez votre `config.yaml`:
+
+```yaml
+publicKey: "0xYourEthereumAddress"
+gatewayURL: "wss://gateway.livepeer.org"
+models:
+  - whisper-large
+  - sdxl
+heartbeat: true
+```
+
+Optionnel : exécuter en tant que Docker ; ajouter des adaptateurs de plug-in (par exemple, segment-anything, blip2).
+
+## Étape 3 - Démarrer le nœud de passerelle
+
+```bash
+python run.py --adapter grpc --gpu --model whisper-large
+```
+
+Vous devriez voir les journaux des battements de cœur vers le Livepeer Gateway, les demandes de tâches et l'exécution des modèles, ainsi que les téléchargements de résultats ou les webhooks.
+
+## Étape 4 - S'inscrire (optionnel)
+
+Inscrivez votre nœud sur la blockchain (Arbitrum) afin que les Gateways puissent vous découvrir et vous attribuer du travail :
+
+```bash
+livepeer-cli gateway register \
+  --addr=1.2.3.4:5040 \
+  --models=whisper-large,sdxl \
+  --bond=100LPT \
+  --region=NA1
+```
+
+Les références aux contrats et à l'ABI se trouvent dans les documents des contrats blockchain sous À propos / Ressources.
+
+## Exemples de pipeline
+
+**Whisper + superposition de légendes :**
+
+```yaml
+pipeline:
+  - task: whisper-transcribe
+  - task: overlay
+    type: caption
+```
+
+**Flou des visages + YOLO :**
+
+```yaml
+pipeline:
+  - task: object-detection
+    model: yolov8
+  - task: segment-blur
+    target: faces
+```
+
+## Dépannage
+
+<DynamicTable
+  headerList={["Issue", "Fix"]}
+  itemsList={[
+    { "Issue": "Node not receiving tasks", "Fix": "Check gatewayURL and firewall rules" },
+    { "Issue": "Models not loading", "Fix": "Confirm model paths and weights are present" },
+    { "Issue": "No GPU visible", "Fix": "Use nvidia-smi and check CUDA drivers" }
+  ]}
+/>
+
+## Notes pour les développeurs
+
+- Les workers BYOC utilisent le même protocole de passerelle que le reste du réseau Livepeer. Voir l'architecture technique du réseau sous À propos.
+- Vous pouvez servir depuis plusieurs régions géographiques.
+- Les récompenses de contribution peuvent être offertes en LPT ou en crédits ; consultez le Forum et les opportunités pour les développeurs.
+
+## Voir également
+
+- [Aperçu des pipelines IA](./overview)
+- [ComfyStream](./comfystream)
+- [Guide complet BYOC](/v2/fr/developers/ai-pipelines/byoc) - Architecture, Gateway/Orchestrator, cycle de vie du conteneur
+- [Interfaces de réseau](/v2/fr/about/livepeer-network/interfaces)
+
+## Ressources
+
+- [ComfyStream GitHub](https://github.com/livepeer/comfystream)
+- [Registre de modèles (Forum)](https://forum.livepeer.org/t/model-registry)
+- [Livepeer Studio AI docs](https://livepeer.studio/docs/ai)

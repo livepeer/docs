@@ -1,15 +1,26 @@
 ---
 title: 'Go Production: On-chain, GPU, and Network'
 sidebarTitle: 'Tutorial 3: Go Production'
-description: 'Graduate the tested Gateway to the live Livepeer network - on-chain registration, GPU pipelines, and public Orchestrator discovery.'
-status: current
-tutorial: 3-of-3
-keywords: ["livepeer", "gateway", "production", "on-chain", "GPU", "Arbitrum", "ETH", "orchestrator", "network"]
-og:image: /snippets/assets/site/og-image/fallback.png
+description: >-
+  Graduate the tested Gateway to the live Livepeer network - on-chain registration, GPU
+  pipelines, and public Orchestrator discovery.
 pageType: tutorial
-audience: gateway-operator
-purpose: tutorial
+audience: gateway
+purpose: learn
+status: current
 lastVerified: '2026-03-15'
+keywords:
+  - livepeer
+  - gateway
+  - production
+  - on-chain
+  - GPU
+  - Arbitrum
+  - ETH
+  - orchestrator
+  - network
+og:image: /snippets/assets/media/og-images/fallback.png
+tutorial: 3-of-3
 ---
 {/* TODO:
 Terminology Validation:
@@ -23,9 +34,9 @@ REVIEW:
 - `-network arbitrum-one-mainnet` confirmed correct per quickstart code.jsx.
 */}
 
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
-import { LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 
 <Note>
 This is Tutorial 3 of 3.
@@ -91,7 +102,7 @@ You need ETH on Arbitrum One (not Ethereum mainnet). The approximate requirement
 | **Total** | **~0.1 ETH** | Safe starting amount |
 
 <Warning>
-ETH price volatility affects these amounts - a Livepeer deposit of a given USD value buys more or fewer tickets as the ETH/USD rate moves. Check current requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain%20setup/on-chain) before depositing.
+ETH price volatility affects these amounts - a Livepeer deposit of a given USD value buys more or fewer tickets as the ETH/USD rate moves. Check current requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain-setup/on-chain) before depositing.
 </Warning>
 
 **Options for getting ETH on Arbitrum One:**
@@ -154,7 +165,7 @@ After depositing, confirm your balance:
 ```
 
 <Tip>
-You can also fund your gateway using `cast send` directly to the Livepeer `TicketBroker` contract on Arbitrum One. The contract address is in the [Contract Addresses reference](/v2/gateways/resources/technical/contract-addresses). This is useful for scripting gateway fund management in CI/CD pipelines.
+You can also fund your gateway using `cast send` directly to the Livepeer `TicketBroker` contract on Arbitrum One. The contract address is in the [Contract Addresses reference](/v2/about/resources/reference/livepeer-contract-addresses). This is useful for scripting gateway fund management in CI/CD pipelines.
 </Tip>
 
 ### 1.4 - Start your gateway on-chain
@@ -213,7 +224,7 @@ As the gateway operator, **you do not need a GPU** unless you are also running y
 | Video transcoding (NVENC) | Any CUDA | - |
 
 <Warning>
-GPU VRAM requirements are per active pipeline. Running multiple concurrent pipeline types on a single GPU requires enough VRAM for the largest model loaded. Check the [hardware requirements reference](/v2/gateways/resources/technical/go-livepeer/hardware-requirements) for the current model matrix before purchasing hardware.
+GPU VRAM requirements are per active pipeline. Running multiple concurrent pipeline types on a single GPU requires enough VRAM for the largest model loaded. Check the [hardware requirements reference](/v2/gateways/resources/reference/go-livepeer/hardware-requirements) for the current model matrix before purchasing hardware.
 </Warning>
 
 ### 2.2 - Enable GPU on the orchestrator
