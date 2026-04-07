@@ -35,6 +35,9 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest
 
+    env:
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,7 +54,7 @@ jobs:
         run: |
           set -euo pipefail
           FLAGS=""
-          if [[ "${{ inputs.dry_run }}" == "true" ]]; then FLAGS="--dry-run"; fi
+          if [[ "$DRY_RUN" == "true" ]]; then FLAGS="--dry-run"; fi
           node .github/workspace/generate-action-pages.js $FLAGS
 
       - name: Check for changes
@@ -67,7 +70,7 @@ jobs:
           fi
 
       - name: Commit and push
-        if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+        if: steps.changes.outputs.changed == 'true' && env.DRY_RUN != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -84,6 +87,6 @@ jobs:
           else
             echo "No changes detected. Pages are up to date." >> $GITHUB_STEP_SUMMARY
           fi
-          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+          if [[ "$DRY_RUN" == "true" ]]; then
             echo "*(dry-run mode, no files written)*" >> $GITHUB_STEP_SUMMARY
           fi
