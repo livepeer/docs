@@ -1,4 +1,4 @@
-import { DOCKER_CODE } from '../../data/docker/code'
+import { DOCKER_CODE } from '../../data/docker/code.jsx'
 
 export const DockerPull = () => {
   return (

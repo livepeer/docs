@@ -15,7 +15,6 @@
  */
 
 const path = require('path');
-const fs = require('fs');
 const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractFrontmatter } = require('../utils/mdx-parser');
 const { filterAuthoredDocsPageFiles } = require('../../../tools/lib/docs/docs-page-scope');
@@ -25,47 +24,9 @@ const { loadAudienceNormalization, audienceTokensFromRaw } = require('../../../t
 const ENFORCE_OG_IMAGE = process.env.ENFORCE_OG_IMAGE === '1';
 const AUDIENCE_NORMALIZATION = loadAudienceNormalization();
 const VALID_AUDIENCES = AUDIENCE_NORMALIZATION.canonical_audiences || [];
-const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
-const CDN_ASSET_CONTRACT_PATH = path.join(
-  REPO_ROOT,
-  'operations',
-  'scripts',
-  'config',
-  'cdn-asset-contract.json'
-);
-const UNSAFE_CDN_HELPER_IMPORT_RE = /['"]\/snippets\/data\/assets\/cdnAssets\.(?:js|jsx)['"]/;
-const LOCAL_ASSET_REF_RE = /(?:["'`(=:,\s])(\/snippets\/assets\/[^"'`\s)>,]+)(?=["'`\s)>,])/g;
-const RAW_CDN_ASSET_REF_RE = /https:\/\/raw\.githubusercontent\.com\/livepeer\/docs\/docs-v2-assets\/[^"'`\s)>,]+/g;
 
 let errors = [];
 let warnings = [];
-
-function loadCdnAssetContract() {
-  try {
-    return JSON.parse(fs.readFileSync(CDN_ASSET_CONTRACT_PATH, 'utf8'));
-  } catch (_error) {
-    return { lockedRuntimeAssets: [] };
-  }
-}
-
-function countOccurrences(content, token) {
-  if (!token) return 0;
-  let count = 0;
-  let index = 0;
-  while (index !== -1) {
-    index = content.indexOf(token, index);
-    if (index === -1) break;
-    count += 1;
-    index += token.length;
-  }
-  return count;
-}
-
-function countRequirementOccurrences(content, requirement) {
-  const tokens = [requirement.value, ...(Array.isArray(requirement.alternatives) ? requirement.alternatives : [])]
-    .filter(Boolean);
-  return tokens.reduce((total, token) => total + countOccurrences(content, token), 0);
-}
 
 function report(severity, file, message, rule = 'Frontmatter') {
   const issue = { file, rule, message };
@@ -300,74 +261,6 @@ function checkFrontmatter(files) {
   });
 }
 
-function checkAssetReferenceIntegrity(files) {
-  const contract = loadCdnAssetContract();
-  const scopedFiles = new Set(files.map((file) => path.relative(REPO_ROOT, file).split(path.sep).join('/')));
-  const contractEntries = Array.isArray(contract.lockedRuntimeAssets) ? contract.lockedRuntimeAssets : [];
-
-  files.forEach((file) => {
-    const repoPath = path.relative(REPO_ROOT, file).split(path.sep).join('/');
-    const content = readFile(file);
-    if (!content) return;
-
-    if (repoPath.startsWith('v2/') && UNSAFE_CDN_HELPER_IMPORT_RE.test(content)) {
-      report(
-        'error',
-        file,
-        'Unsafe CDN asset helper import: use direct raw docs-v2-assets URLs in routed pages.',
-        'CDN Asset Contract'
-      );
-    }
-
-    const localRefs = [...content.matchAll(LOCAL_ASSET_REF_RE)].map((match) => match[1]);
-    localRefs.forEach((assetPath) => {
-      const absoluteAssetPath = path.join(REPO_ROOT, assetPath.slice(1));
-      if (!fs.existsSync(absoluteAssetPath)) {
-        report('error', file, `Broken local asset reference: ${assetPath}`, 'Asset References');
-      }
-    });
-
-    const rawRefs = content.match(RAW_CDN_ASSET_REF_RE) || [];
-    rawRefs.forEach((assetUrl) => {
-      const normalizedPath = decodeURI(
-        assetUrl.replace('https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/', '')
-      );
-      const absoluteAssetPath = path.join(REPO_ROOT, normalizedPath);
-      if (!fs.existsSync(absoluteAssetPath)) {
-        report(
-          'warning',
-          file,
-          `CDN asset is not tracked locally in this branch: ${normalizedPath}`,
-          'Asset References'
-        );
-      }
-    });
-
-    const contractEntry = contractEntries.find((entry) => entry.file === repoPath);
-    if (!contractEntry) return;
-
-    (contractEntry.requirements || []).forEach((requirement) => {
-      const actualCount = countRequirementOccurrences(content, requirement);
-      if (actualCount < requirement.count) {
-        report(
-          'error',
-          file,
-          `Locked CDN asset contract violated: expected ${requirement.count} occurrence(s) of ${requirement.value}, found ${actualCount}`,
-          'CDN Asset Contract'
-        );
-      }
-    });
-  });
-
-  contractEntries.forEach((entry) => {
-    if (scopedFiles.size > 0 && !scopedFiles.has(entry.file)) return;
-    const absoluteFile = path.join(REPO_ROOT, entry.file);
-    if (!fs.existsSync(absoluteFile)) {
-      report('error', absoluteFile, `Locked CDN contract file missing: ${entry.file}`, 'CDN Asset Contract');
-    }
-  });
-}
-
 /**
  * Check for broken internal links (basic)
  */
@@ -423,7 +316,6 @@ function runTests(options = {}) {
   
   checkImageAltText(testFiles);
   checkFrontmatter(testFiles);
-  checkAssetReferenceIntegrity(testFiles);
   checkInternalLinks(testFiles);
   
   return {

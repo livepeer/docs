@@ -1,5 +1,5 @@
 import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
-import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
 
 import {
   linux,

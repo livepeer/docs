@@ -1,4 +1,4 @@
-import { LINUX_CODE } from '../../data/linux/code'
+import { LINUX_CODE } from '../../data/linux/code.jsx'
 
 export const LinuxPrerequisites = () => {
   return (
