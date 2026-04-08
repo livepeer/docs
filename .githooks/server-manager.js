@@ -6,7 +6,7 @@
  * @niche       hooks
  * @purpose     tooling:dev-tools
  * @description Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
- * @mode        execute
+ * @mode        dispatch
  * @pipeline    manual — legacy browser-validation module imported by .githooks/verify-browser.js
  * @scope       .githooks
  * @usage       node .githooks/server-manager.js [flags]

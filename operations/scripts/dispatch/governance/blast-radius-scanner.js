@@ -1,11 +1,11 @@
 /**
  * @script      blast-radius-scanner
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Scans for consumers after editing shared files (components, templates, config)
+ * @purpose     
  * @description PostToolUse hook for Edit/Write. When a file in snippets/components/,
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → reads stdin → path check → grep consumers → emit list
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

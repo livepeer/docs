@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-snippets-registry
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     
  * @description Generates the snippets root registry from the live snippets filesystem plus structured folder metadata embedded in snippets/guide.mdx.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, P3
  * @scope       operations/scripts, snippets/guide.mdx, snippets/snippets-registry.mdx, operations/governance/config/generated-artifacts.json
  * @usage       node operations/scripts/generators/governance/catalogs/generate-snippets-registry.js [--write|--check]

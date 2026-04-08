@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-ai-skills-indexes
- * @type        
- * @concern     
- * @niche       
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
  * @purpose     
- * @description 
- * @mode        read-only
+ * @description * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, ci
  * @scope       operations/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, docs-guide/contributing, v2
  * @usage       node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]

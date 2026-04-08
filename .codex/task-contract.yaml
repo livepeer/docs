@@ -4,37 +4,33 @@ base_branch: docs-v2
 scope_in:
   - .codex/
   - .claude/
+  - .cursor/
   - .githooks/
   - .github/
+  - .playwright-cli/
   - .vscode/
-  - .allowlist
+  - .windsurf/
+  - AGENTS.md
   - ai-tools/
   - docs-guide/
-  - docs-index.json
   - docs.json
-  - jsconfig.json
+  - llms.txt
+  - operations/tests/
   - operations/
   - snippets/
-  - style.css
   - tools/
   - v2/
   - workspace/
-  - .codex/task-contract.yaml
 scope_out:
   - v1/
 allowed_generated:
   - .codex/pr-body.generated.md
   - sitemap-ai.xml
 acceptance_checks:
-  - bash tools/lpd hooks status
-  - bash tools/lpd doctor --strict
-  - bash tools/lpd dev --scoped --scope-prefix v2 -- --port 3334
-  - browser validation against scoped lpd dev on port 3334
+  - mint validate
   - node operations/tests/run-pr-checks.js --base-ref docs-v2
-  - node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/20260409-docs-v2-dev-into-docs-v2 --require-pr-body
 risk_flags:
   - docs-navigation
-  - merge-integration
-  - github-actions
+  - merge-surface
   - mintlify-browser-render
 follow_up_issues: []

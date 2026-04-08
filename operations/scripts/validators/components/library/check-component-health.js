@@ -2,11 +2,11 @@
 /**
  * @script      check-component-health
  * @type        validator
- * @concern     components
+ * @concern     maintenance
  * @niche       library
  * @purpose     governance:quality-gate
  * @description Checks component library health: imports, exports, registry sync, and usage patterns
- * @mode        read-only
+ * @mode        check
  * @pipeline    pr-workflow -> component-registry.json, snippets/components/ -> exit-code, stdout:violations
  * @scope       snippets/components/
  * @usage       node operations/scripts/validators/components/library/check-component-health.js [--check] [--report]

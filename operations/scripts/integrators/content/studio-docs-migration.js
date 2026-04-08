@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      studio-docs-migration
- * @type        
- * @concern     
+ * @type        integrator
+ * @concern     copy
  * @niche       
  * @purpose     
  * @description Migrates livepeer-studio subfolder path references after moving
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual
- * @scope       
- * @usage       node operations/scripts/integrators/content/studio-docs-migration.js [--write]
+ * @scope       * @usage       node operations/scripts/integrators/content/studio-docs-migration.js [--write]
+ * @usage       
  */
 
 const fs = require('fs');

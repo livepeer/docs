@@ -16,6 +16,9 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 jobs:
   generate-component-registry:
     uses: ./.github/workflows/dispatch-maintenance-check-catalogs.yml

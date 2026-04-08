@@ -1,11 +1,13 @@
 ---
-title: 'Model Hosting'
-sidebarTitle: 'Model Hosting'
+title: Model Hosting
+sidebarTitle: Model Hosting
 description: >-
-  Source, download, and store AI models for Livepeer orchestrator pipelines.
-  Covers HuggingFace model IDs, automatic vs manual download, storage layout,
-  gated model access via tokens, and the Livepeer verified model list.
-Keywords:
+  Source, download, and store AI models for Livepeer orchestrator pipelines. Covers HuggingFace model IDs, automatic vs
+  manual download, storage layout, gated model access via tokens, and the Livepeer verified model list.
+lifecycleStage: operate
+complexity: intermediate
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - model hosting
@@ -29,7 +31,7 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <Tip>
   The model_id in aiModels.json must match the HuggingFace model ID exactly, including capitalisation and the organisation prefix. A single character mismatch causes the container to fail at model load time.
@@ -48,10 +50,10 @@ Model hosting covers how AI models reach your GPU: where they come from, how the
 The primary source for all standard Livepeer AI pipelines is [HuggingFace](https://huggingface.co/models). The `model_id` field in `aiModels.json` is a HuggingFace model identifier in the format `organisation/model-name`.
 
 Examples:
-- `SG161222/RealVisXL_V4.0_Lightning` — text-to-image diffusion model
-- `openai/whisper-large-v3` — audio-to-text transcription model
-- `Salesforce/blip-image-captioning-large` — image-to-text vision model
-- `meta-llama/Meta-Llama-3.1-8B-Instruct` — LLM (served via Ollama runner)
+- `SG161222/RealVisXL_V4.0_Lightning` – text-to-image diffusion model
+- `openai/whisper-large-v3` – audio-to-text transcription model
+- `Salesforce/blip-image-captioning-large` – image-to-text vision model
+- `meta-llama/Meta-Llama-3.1-8B-Instruct` – LLM (served via Ollama runner)
 
 The `model_id` is case-sensitive, including the organisation prefix. A typo here causes the container to fail silently at model load time with no user-facing warning beyond a startup error in the container logs.
 
@@ -86,7 +88,7 @@ External containers must expose a `/health` endpoint returning HTTP 200. Load th
 For standard pipelines, the `livepeer/ai-runner` container downloads model weights from HuggingFace automatically on first use. The download triggers when:
 
 - The container starts with a cold model configured (no `"warm": true`), and a job arrives for that model
-- The container starts with `"warm": true` set — download happens immediately at container startup
+- The container starts with `"warm": true` set – download happens immediately at container startup
 
 Download time varies by model size and network speed. Large diffusion models often take a few minutes to download on the first run. The container waits until the model is ready before serving requests.
 
@@ -163,7 +165,7 @@ livepeer \
   </tbody>
 </StyledTable>
 
-Plan for NVMe storage on the model directory — loading weights from spinning disk into VRAM is significantly slower and affects warm model startup time and cold model first-request latency.
+Plan for NVMe storage on the model directory – loading weights from spinning disk into VRAM is significantly slower and affects warm model startup time and cold model first-request latency.
 
 <Note>
   When using Docker-out-of-Docker, the `-aiModelsDir` path must point to the **host machine**. Docker uses that path to mount model files into spawned AI Runner containers, so a host path keeps the mount target resolvable.
@@ -173,7 +175,7 @@ Plan for NVMe storage on the model directory — loading weights from spinning d
 
 ## Gated model access
 
-Some HuggingFace models require authentication before download. These are called **gated models** — the model creator requires HuggingFace account acceptance before granting access.
+Some HuggingFace models require authentication before download. These are called **gated models** – the model creator requires HuggingFace account acceptance before granting access.
 
 ### Getting access
 
@@ -230,9 +232,9 @@ docker logs <container_name> --tail 100
 ```
 
 Common error messages:
-- `OOM` or `CUDA out of memory` — the model exceeds available VRAM; reduce warm model count or switch to a smaller model variant
-- `Failed to load model` — model_id mismatch or network error during download
-- `model lookup failed` — HuggingFace cannot find the model_id, or gated-model access is missing
+- `OOM` or `CUDA out of memory` – the model exceeds available VRAM; reduce warm model count or switch to a smaller model variant
+- `Failed to load model` – model_id mismatch or network error during download
+- `model lookup failed` – HuggingFace cannot find the model_id, or gated-model access is missing
 
 ### Network registration
 

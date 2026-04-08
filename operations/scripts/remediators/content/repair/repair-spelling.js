@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-spelling
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        remediator
+ * @concern     health
+ * @niche       repair
+ * @purpose     
  * @description Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual
  * @scope       v2-content
  * @usage       node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run
@@ -57,7 +57,8 @@ function parseArgs(argv) {
     mode: 'dry-run',
     stagedOnly: false,
     files: [],
-    help: false
+    help: false,
+    verify: false
   };
 
   let explicitModeCount = 0;
@@ -104,7 +105,9 @@ function parseArgs(argv) {
       continue;
     }
 
-    throw new Error(`Unknown argument: ${token}`);
+    if (token === '--verify') { args.verify = true; continue; }
+
+        throw new Error(`Unknown argument: ${token}`);
   }
 
   if (explicitModeCount > 1) {

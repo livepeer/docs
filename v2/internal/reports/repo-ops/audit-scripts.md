@@ -947,13 +947,6 @@ _Tabular data omitted in the published page. Use the repository report artifact 
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
-### `.githooks/server-manager.js`
-- Purpose: Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
-- Template compliance: PASS
-- Role tags: enforcement, hook
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
 ### `.githooks/verify-browser.js`
 - Purpose: tooling:dev-tools
 - Template compliance: FAIL (missing @category, @owner, @needs, @purpose-statement)

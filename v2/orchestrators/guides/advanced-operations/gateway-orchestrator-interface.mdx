@@ -1,11 +1,13 @@
 ---
-title: 'Gateway and Orchestrator Interface'
-sidebarTitle: 'Gateway Interface'
+title: Gateway and Orchestrator Interface
+sidebarTitle: Gateway Interface
 description: >-
-  Configure a node running both a gateway and an orchestrator on Livepeer.
-  Covers deployment architecture, port allocation, self-routing behaviour,
-  pricing alignment, and the off-chain gateway with on-chain orchestrator pattern.
-Keywords:
+  Configure a node running both a gateway and an orchestrator on Livepeer. Covers deployment architecture, port
+  allocation, self-routing behaviour, pricing alignment, and the off-chain gateway with on-chain orchestrator pattern.
+lifecycleStage: operate
+complexity: advanced
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - gateway
@@ -29,7 +31,7 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
@@ -51,7 +53,7 @@ Three deployment patterns cover most use cases:
 <BorderedBox variant="accent">
   <Tabs>
     <Tab title="Off-chain gateway + on-chain orchestrator" icon="cloud">
-      **The most common pattern.** The gateway runs without on-chain participation — it holds no ETH, no keystore, and connects to your orchestrator directly via `-orchAddr`. The orchestrator runs with full on-chain registration and stake.
+      **The most common pattern.** The gateway runs without on-chain participation – it holds no ETH, no keystore, and connects to your orchestrator directly via `-orchAddr`. The orchestrator runs with full on-chain registration and stake.
 
       The gateway routes jobs to the orchestrator via direct address specification, bypassing protocol discovery. Payment is handled by a remote signer or clearinghouse connected to the gateway.
 
@@ -131,7 +133,7 @@ ss -tlnp | grep -E ':7935|:8935|:1935|:7936'
 
 Self-routing is when a gateway you control routes jobs to an orchestrator you also control.
 
-**Off-chain gateway to own orchestrator:** Configure the gateway with `-orchAddr <your-orchestrator-ip>:8935`. The gateway routes all jobs to the specified address. This is explicit self-routing — the gateway sends all work to your orchestrator.
+**Off-chain gateway to own orchestrator:** Configure the gateway with `-orchAddr <your-orchestrator-ip>:8935`. The gateway routes all jobs to the specified address. This is explicit self-routing – the gateway sends all work to your orchestrator.
 
 **On-chain gateway discovering own orchestrator:** If both your gateway and orchestrator are on-chain, the gateway discovers your orchestrator through the normal protocol selection process, alongside all other active orchestrators. Your orchestrator competes on price and stake like any other.
 
@@ -175,13 +177,13 @@ Example video pricing alignment:
 Each role produces its own Prometheus metrics. On a single machine, ensure both processes export to different ports to avoid metric collisions.
 
 **Orchestrator metrics to watch:**
-- `livepeer_transcode_duration_seconds` — transcoding latency
-- `livepeer_winning_ticket_count` — PM ticket win frequency
-- `livepeer_reward_call_success` — reward call outcome per round
+- `livepeer_transcode_duration_seconds` – transcoding latency
+- `livepeer_winning_ticket_count` – PM ticket win frequency
+- `livepeer_reward_call_success` – reward call outcome per round
 
 **Gateway metrics to watch:**
-- `livepeer_broadcaster_sessions_total` — active inbound sessions
-- `livepeer_broadcaster_upload_errors` — upload failures (may indicate orchestrator issues)
+- `livepeer_broadcaster_sessions_total` – active inbound sessions
+- `livepeer_broadcaster_upload_errors` – upload failures (may indicate orchestrator issues)
 
 {/* FACT CHECK: Confirm the exact Prometheus metric names for gateway (broadcaster) metrics in the current go-livepeer release. The names above follow older documentation patterns and should be verified against the current metrics export. */}
 
@@ -205,7 +207,7 @@ journalctl -u livepeer-orchestrator -f
     Full gateway configuration guide including payment mode selection and pipeline configuration.
   </Card>
   <Card title="Gateway Relationships" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
-    How gateways discover and select orchestrators — selection criteria from the orchestrator side.
+    How gateways discover and select orchestrators – selection criteria from the orchestrator side.
   </Card>
   <Card title="Dual Mode Configuration" icon="layer-group" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow horizontal>
     Running video transcoding and AI inference from a single go-livepeer process.

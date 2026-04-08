@@ -29,14 +29,14 @@ const SENTINEL_ROUTES = [
   '/v2/about/portal',
   '/v2/developers/portal',
   '/v2/gateways/portal',
-  '/v2/resources/documentation-guide/component-library/primitives'
+  '/v2/resources/documentation-guide/component-library/elements'
 ];
 const SENTINEL_ROUTE_FILES = new Set([
   'v2/home/mission-control.mdx',
   'v2/about/portal.mdx',
   'v2/developers/portal.mdx',
   'v2/gateways/portal.mdx',
-  'v2/resources/documentation-guide/component-library/primitives.mdx'
+  'v2/resources/documentation-guide/component-library/elements.mdx'
 ]);
 const BLOCKING_CONSOLE_PATTERNS = [
   /ReferenceError/i,

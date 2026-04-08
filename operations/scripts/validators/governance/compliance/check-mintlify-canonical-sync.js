@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-mintlify-canonical-sync
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Enforce the Mintlify canonical-sync contract so archived legacy sources stay moved, registered consumers stay updated, and retained-source logs match the registry.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, ci
  * @scope       docs-guide/canonical/collation-data/Mintlify, docs-guide/contributing, AGENTS.md, .github, .claude, ai-tools, snippets, v2/resources/documentation-guide, workspace/plan/active
  * @usage       node operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js [--staged] [--json]
@@ -18,15 +18,19 @@ const sync = require('../../../config/mintlify-canonical-sync');
 function parseArgs(argv) {
   const args = {
     stagedOnly: false,
-    json: false
+    json: false,
+    files: []
   };
 
-  argv.forEach((token) => {
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
     if (token === '--staged') args.stagedOnly = true;
     else if (token === '--json') args.json = true;
     else if (token === '--help' || token === '-h') args.help = true;
+    else if (token === '--files' && argv[i + 1]) { argv[++i].split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); }
+    else if (token.startsWith('--files=')) { token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); }
     else throw new Error(`Unknown argument: ${token}`);
-  });
+  }
 
   return args;
 }

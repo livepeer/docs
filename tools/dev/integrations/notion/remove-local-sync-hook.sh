@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      remove-local-sync-hook
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Removes the managed local Notion post-commit hook when it is present.
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual
 # @scope       single-file
 # @usage       bash tools/dev/integrations/notion/remove-local-sync-hook.sh [flags]

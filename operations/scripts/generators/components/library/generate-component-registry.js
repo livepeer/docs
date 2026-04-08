@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-component-registry
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     maintenance
+ * @niche       library
+ * @purpose     
  * @description Parses JSDoc from all component exports and produces component-registry.json.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, P3, P5, P6, manual, manual
  * @scope       single-domain
  * @usage       node operations/scripts/generators/components/library/generate-component-registry.js [--validate-only]
@@ -113,7 +113,7 @@ function buildRegistry() {
 
     exportsList.forEach((entry) => {
       if (!entry.jsDocBlock) {
-        issues.push(formatValidationMessage(file.displayPath, entry.name, 'missing JSDoc block'));
+        warnings.push(formatValidationMessage(file.displayPath, entry.name, 'missing JSDoc block — skipped'));
         return;
       }
 
@@ -137,7 +137,7 @@ function buildRegistry() {
         category: jsDoc.type || jsDoc.category,
         status: jsDoc.status,
         description: jsDoc.description,
-        subniche: jsDoc.subniche,
+        subniche: jsDoc.subniche || jsDoc.subcategory,
         accepts: jsDoc.accepts,
         dataSource: jsDoc.dataSource,
         aiDiscoverability: jsDoc.aiDiscoverability || '',

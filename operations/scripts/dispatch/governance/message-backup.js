@@ -1,11 +1,11 @@
 /**
  * @script      message-backup
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Backs up substantial user messages to prevent data loss from command typos
+ * @purpose     
  * @description UserPromptSubmit hook. If a message is longer than 200 chars, saves it to
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin → saves long messages → exits
  * @scope       .claude/settings.json UserPromptSubmit hook
  * @usage       Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.

@@ -4922,3 +4922,50 @@ Built a 3-layer governance spine (published in docs-guide/, enforcement in opera
 | .github/workflows/generator-discoverability-generate-og-images.yml | workflow | OG image generation (P4, post-merge) |
 | */GOVERNANCE.md (18 files) | markers | Folder governance markers |
 | .claude/plans/spicy-percolating-conway.md | plan | Full 3-phase plan with architecture diagrams |
+
+---
+
+## Agent Creation Skills — 2026-04-08
+
+**Plans**: `.claude/plans/zany-petting-wind.md`
+**Scope**: Three agent skills for scaffolding governed components, scripts, and GitHub Actions workflows, plus a VS Code snippet generator.
+**Outcome**: Met
+
+### Summary
+The repo had mature governance frameworks for components (7-tag JSDoc), scripts (11-tag JSDoc), and GitHub Actions (dispatcher model) — but no skills existed for creating new instances. Agents had to read 50KB+ framework docs to scaffold a compliant artifact. This session created three skills that encode all governance rules into step-by-step procedures with input validation, correct scaffolding, self-documenting pipeline triggers, and tooling updates. A new snippet generator script replaces manual maintenance of 1,245-line VS Code snippets file.
+
+### Completed
+- **Research phase**: Parallel exploration of all three governance surfaces — component framework, script framework, GitHub Actions framework. Verified Mintlify constraints externally (arrow function exports confirmed mandatory by Mintlify docs)
+- **Design phase**: Plan agent designed skill architecture with input tables, validation rules, scaffold templates, pipeline integration, and composability model (`/create-action` dispatches `/create-script`)
+- **Implementation**: 5 deliverables — 3 SKILL.md files, 1 generator script, 1 config update
+- **Validation**: Snippet generator passes `--check`/`--write`, `script-docs.test.js` passes, all skill frontmatter valid
+
+### Decisions Made
+| Decision | Rationale |
+|---|---|
+| VS Code snippets auto-generated from registry | Manual maintenance of 110+ entries does not scale; self-documenting pipeline keeps snippets in sync with component JSDoc |
+| `/create-action` mandates `actions-audit.json` update | Fills identified gap where the published framework does not mandate doc registration |
+| Concurrency groups included by default in workflow scaffold | All 7 existing generator workflows lack concurrency control — new skill prevents this gap from recurring |
+| Constants inside function body enforced in component scaffold | Mintlify runtime constraint (2026-03-28 discovery) — top-level constants outside exports throw ReferenceError |
+
+### Dependencies & Downstream Effects
+- **VS Code snippets**: Now auto-generated. Any future component creation should run `generate-component-snippets.js --write` to keep snippets current
+- **Action library**: New workflows created via `/create-action` will automatically appear in the action catalog — previously a manual step that was frequently skipped
+
+### Test / Validation State
+| Check | Result | Notes |
+|---|---|---|
+| generate-component-snippets.js --write | Pass | 114 snippets written |
+| generate-component-snippets.js --check | Pass | Snippets match registry |
+| script-docs.test.js | Pass | New generator script has valid 11-tag header |
+| Skill frontmatter validation | Pass | All 3 skills match repo pattern (name, description, metadata.version/category/status) |
+
+### Artifacts
+| File | Type | Description |
+|---|---|---|
+| ai-tools/ai-skills/create-component/SKILL.md | skill | Component scaffold skill — 7-tag JSDoc, Mintlify constraints, category decision tree, snippet pipeline |
+| ai-tools/ai-skills/create-script/SKILL.md | skill | Script scaffold skill — 11-tag JSDoc, type/concern/niche taxonomy, file layout standard, catalog pipeline |
+| ai-tools/ai-skills/create-action/SKILL.md | skill | Actions scaffold skill — dispatcher model, backing script via /create-script, audit.json, generate/verify pairs |
+| operations/scripts/generators/components/library/generate-component-snippets.js | script | VS Code snippet generator — reads component-registry.json, writes .vscode/components.code-snippets |
+| operations/governance/config/generated-artifacts.json | config | Updated — .vscode/components.code-snippets registered as generated artifact |
+| .claude/plans/zany-petting-wind.md | plan | Full implementation plan with research findings and critical file references |

@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 /**
  * @script      wcag-repair-common
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        remediator
+ * @concern     brand
+ * @niche       style
+ * @purpose     
  * @description WCAG repair shared logic — common repair functions used by WCAG audit fix mode
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, operations/tests/integration, workspace/reports, v2
  * @usage       node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]
  */
 
+// Post-remediation verification support (D-GOV-03)
+const VERIFY_MODE = process.argv.includes('--verify');
 const path = require('path');
 
 const REPO_ROOT = process.cwd();

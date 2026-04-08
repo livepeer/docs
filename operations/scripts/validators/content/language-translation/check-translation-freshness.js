@@ -2,11 +2,11 @@
 /**
  * @script      check-translation-freshness
  * @type        validator
- * @concern     content
+ * @concern     integrations
  * @niche       language-translation
  * @purpose     content:translation-staleness
  * @description Compares modification dates of source pages to translations, flags stale translations
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, cron -> v2/, v2/es/, v2/fr/, v2/cn/ -> exit-code, stdout:stale-translations
  * @scope       v2/
  * @usage       node operations/scripts/validators/content/language-translation/check-translation-freshness.js [--json]

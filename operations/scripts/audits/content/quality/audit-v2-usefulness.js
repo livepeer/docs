@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-v2-usefulness
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        audit
+ * @concern     health
+ * @niche       quality
+ * @purpose     
  * @description Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       operations/scripts, v2, workspace/reports, tools/config
  * @usage       node operations/scripts/audits/content/quality/audit-v2-usefulness.js [flags]

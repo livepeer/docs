@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      validate-generated
- * @type        
- * @concern     
- * @niche       
- * @purpose     feature:translation
+ * @type        integrator
+ * @concern     integrations
+ * @niche       language-translation
+ * @purpose     
  * @description Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual
  * @scope       operations/scripts/i18n, v2
  * @usage       node operations/scripts/integrators/content/language-translation/validate-generated.js [flags]

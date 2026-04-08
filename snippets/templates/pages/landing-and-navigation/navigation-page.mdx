@@ -23,9 +23,104 @@ status: draft
 
 {/* Copy this template into a routable docs path and replace the placeholder content. */}
 
-# Navigation Page Title
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+{/* ==========================PAGE SECTION: HEADER========================= */}
 
 Use this page to orient readers quickly, explain the section structure, and route them to the right next page.
+
+<CustomDivider />
+
+{/* ==========================PAGE SECTION: JOURNEY MAP========================= */}
+{/*
+PAGE SECTION: JOURNEY MAP
+- Purpose: Show the reader the full documentation path as a numbered visual sequence.
+  Each step represents a top-level section of the tab's IA (e.g. Concepts, Setup, Guides, Resources).
+  The reader should be able to see the entire journey at a glance and jump to any section.
+- Component: <STYLEDSTEPS iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
+    <STYLEDSTEP title="" icon="">
+      **Bold one-line value statement.**
+      1-2 sentence description of what this section contains and who benefits.
+      <LINKARROW href="" label="CTA text" newline={false} />
+    </STYLEDSTEP>
+  </STYLEDSTEPS>
+- Content per step:
+    - title: The section name from the tab IA (e.g. "Concepts", "Setup", "Guides")
+    - icon: FontAwesome icon matching the section purpose
+    - Bold line: What the reader will achieve (not what the section contains)
+    - Description: 1-2 sentences. What is covered, who should start here, what prerequisite it satisfies
+    - LinkArrow: Points to the section's entry page. Label ends with arrow character
+- Step count: One step per top-level IA section. Typically 4-7 steps. Mirror the tab's actual nav structure
+- Step order: Must match the intended reading order (not alphabetical, not by importance)
+- DO:
+    - Derive steps from the tab's IA (not invented categories)
+    - Each step should tell the reader whether to skip or read based on their experience level
+    - Lead with the outcome ("Get a gateway running") not the content type ("Installation instructions")
+    - Use consistent sentence structure across all steps
+- DONT:
+    - Hardcode placeholder section names. Read the actual tab IA and use real section names
+    - Include more than one LinkArrow per step
+    - Repeat the section title in the bold line
+    - Use generic descriptions ("Learn about X"). Be specific about what the reader gains
+- REFERENCE: v2/gateways/navigator.mdx lines 173-225 for a complete production example
+*/}
+
+## Journey Map
+
+<StyledSteps iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
+  <StyledStep title="[Section Name]" icon="[icon]">
+    **[One-line outcome statement for this section.]**
+
+    [1-2 sentences: what this section covers, who should start here.]
+
+    <LinkArrow href="/v2/[tab]/[section]/[entry-page]" label="[CTA]" newline={false} />
+  </StyledStep>
+</StyledSteps>
+
+{/* ==========================PAGE SECTION: GUIDES BY TOPIC========================= */}
+{/*
+PAGE SECTION: GUIDES BY TOPIC
+- Purpose: Expandable index of the tab's guide subsections. Each accordion represents one guide
+  category and lists its child pages as LinkArrow items. Lets the reader scan all available
+  guides without leaving the navigator page.
+- Component: <ACCORDIONGROUP>
+    <ACCORDION title="" icon="">
+      1-sentence description of what this guide category covers.
+      - <LINKARROW href="" label="" newline={false} />
+      - <LINKARROW href="" label="" newline={false} />
+    </ACCORDION>
+  </ACCORDIONGROUP>
+- Content per accordion:
+    - title: The guide subsection name from the tab IA (e.g. "Payments and Pricing", "Monitoring and Tooling")
+    - icon: FontAwesome icon matching the guide topic
+    - Description: One sentence explaining the scope. What questions does this subsection answer?
+    - LinkArrow list: One per child page in the subsection. Label is the page title (not a CTA)
+- Accordion count: One per guide subsection in the tab's IA. Typically 4-8 accordions
+- Accordion order: Match the nav order in docs.json
+- DO:
+    - Derive accordion titles and links from the actual tab IA and docs.json nav
+    - Include every child page in each accordion (complete index, not a curated selection)
+    - Keep descriptions factual and specific to the subsection content
+    - Use consistent description structure across all accordions
+- DONT:
+    - Hardcode placeholder guide names. Read the actual tab IA and use real subsection names
+    - Mix pages from different subsections into one accordion
+    - Use the description to repeat the title
+    - Add LinkArrow items that do not correspond to real pages in the nav
+- REFERENCE: v2/gateways/navigator.mdx lines 229-296 for a complete production example
+*/}
+
+## Topic Guides
+
+<AccordionGroup>
+  <Accordion title="[Subsection Name]" icon="[icon]">
+    [One sentence describing the scope of this guide subsection.]
+
+    - <LinkArrow href="/v2/[tab]/guides/[subsection]/[page]" label="[Page title]" newline={false} />
+  </Accordion>
+</AccordionGroup>
 
 ## Section Map
 

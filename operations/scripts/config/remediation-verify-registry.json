@@ -1,0 +1,200 @@
+{
+  "_meta": {
+    "description": "Remediate/verify pair registry. Maps each remediator to the validator(s) that verify its output post-repair. Consumed by post-remediation-verify.js.",
+    "policy": "D-GOV-03 (every detection must self-repair or escalate → verify)",
+    "updated": "2026-04-09"
+  },
+  "pairs": [
+    {
+      "remediator": "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/check-mdx-safe-markdown.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/repair-page-links.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/check-docs-path-sync.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/repair-page-imports.js",
+      "validators": [
+        { "script": "operations/scripts/validators/components/library/check-mdx-component-scope.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/check-docs-path-sync.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/repair-spelling.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/grammar/check-proper-nouns.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/sync-docs-paths.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/check-docs-path-sync.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/quarantine-manager.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": false
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/repair/migrate-assets-to-branch.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": false
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/style/repair-ownerless-language.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/copy/lint-copy.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/style/wcag-repair-common.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/style/remediate-em-dashes.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/grammar/check-grammar-en-gb.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/style/remediate-us-spelling.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/grammar/check-grammar-en-gb.js", "args": ["--files", "{files}"], "scope": "affected-files" },
+        { "script": "operations/scripts/validators/content/grammar/check-proper-nouns.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/copy/remediate-voice-violations.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/copy/check-voice-register.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/seo/generate-seo.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/check-description-quality.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/classification/add-framework-headers.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/pr/audit-script-inventory.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/classification/add-pagetype-mechanical.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/classification/assign-purpose-metadata.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/content/classification/normalise-frontmatter-keys.js",
+      "validators": [
+        { "script": "operations/scripts/validators/content/structure/lint-structure.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/components/library/repair-component-metadata.js",
+      "validators": [
+        { "script": "operations/scripts/validators/components/library/check-component-health.js", "args": [], "scope": "full" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/components/library/repair-component-styles.js",
+      "validators": [
+        { "script": "operations/scripts/validators/components/library/check-component-health.js", "args": [], "scope": "full" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/components/library/repair-ai-discoverability.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/ai/check-companion-manifest.js", "args": ["--check"], "scope": "full" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/compliance/check-root-governance-sync.js", "args": [], "scope": "full" },
+        { "script": "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js", "args": [], "scope": "full" }
+      ],
+      "revert_on_regression": false
+    },
+    {
+      "remediator": "operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/compliance/check-workflow-headers.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/governance/scripts/repair-script-inventory.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/pr/audit-script-inventory.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/compliance/check-jsdoc-headers.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    },
+    {
+      "remediator": "operations/scripts/remediators/governance/scaffold/fix-usage-paths.js",
+      "validators": [
+        { "script": "operations/scripts/validators/governance/pr/audit-script-inventory.js", "args": ["--files", "{files}"], "scope": "affected-files" }
+      ],
+      "revert_on_regression": true
+    }
+  ]
+}

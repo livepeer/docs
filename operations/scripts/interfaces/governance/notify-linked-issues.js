@@ -1,16 +1,15 @@
 /**
- * @script            notify-linked-issues
- * @type              interface
- * @concern           governance
- * @niche             issue-lifecycle
- * @purpose           Notifies linked issues when a PR is opened against docs-v2
- * @description       Parses PR body for closing keywords and Task: #N patterns,
- *                    then adds a notification comment to each referenced open issue
- *                    (idempotent via marker comment).
- * @mode              interface
- * @scope             .github/workflows/interface-governance-close-linked-issues.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      notify-linked-issues
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Notifies linked issues when a PR is opened against docs-v2
+ * @description Parses PR body for closing keywords and Task: #N patterns,
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-close-linked-issues.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

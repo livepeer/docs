@@ -74,6 +74,7 @@ jobs:
               node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
               node operations/scripts/generators/components/documentation/generate-component-docs.js --check
               node operations/scripts/validators/components/library/check-component-health.js --check
+              node operations/scripts/validators/components/library/validate-component-creation.js --check
               node operations/scripts/generators/components/library/generate-component-examples.js --check
               node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
               node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --check
@@ -132,7 +133,10 @@ jobs:
         run: |
           case "${{ inputs.mode }}" in
             generate-component-registry)
+              node operations/scripts/remediators/components/library/repair-component-metadata.js --fix
               node operations/scripts/generators/components/library/generate-component-registry.js
+              node operations/scripts/generators/components/library/generate-component-library.js
+              node operations/scripts/generators/components/library/generate-component-index.js
               ;;
             generate-docs-guide-catalogs)
               node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
@@ -156,6 +160,7 @@ jobs:
               git diff --exit-code \
                 docs-guide/config/component-registry.json \
                 docs-guide/config/component-registry-schema.json \
+                snippets/components/ \
               || echo "changed=true" >> "$GITHUB_OUTPUT"
               ;;
             generate-docs-guide-catalogs)
@@ -181,8 +186,9 @@ jobs:
             generate-component-registry)
               git add \
                 docs-guide/config/component-registry.json \
-                docs-guide/config/component-registry-schema.json
-              git commit -m "chore(components): regenerate component registry - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                docs-guide/config/component-registry-schema.json \
+                snippets/components/
+              git commit -m "chore(components): regenerate component registry + library - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
               ;;
             generate-docs-guide-catalogs)
               git add \
@@ -203,3 +209,10 @@ jobs:
           esac
 
           git push origin HEAD:${{ steps.branch.outputs.name }}
+
+      - name: Auto-issue non-remediable component problems
+        if: ${{ steps.git-check.outputs.changed == 'true' && inputs.mode == 'generate-component-registry' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node operations/scripts/remediators/components/library/repair-component-metadata.js --auto-issue || true

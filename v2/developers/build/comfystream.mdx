@@ -2,10 +2,11 @@
 title: Build with ComfyStream
 sidebarTitle: ComfyStream
 description: >-
-  Reference for ComfyStream pipeline modes, custom nodes, workflow format,
-  data-channel output, and performance tuning for developers building real-time
-  AI video applications on Livepeer.
-Purpose: build
+  Reference for ComfyStream pipeline modes, custom nodes, workflow format, data-channel output, and performance tuning
+  for developers building real-time AI video applications on Livepeer.
+lifecycleStage: build
+complexity: intermediate
+purpose: build
 keywords:
   - comfystream
   - livepeer
@@ -24,7 +25,7 @@ keywords:
 'og:image:height': 630
 pageType: guide
 audience: developer
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 status: draft
 ---
 [//]: # (SCOPE: This is a guide page for developers who have completed the ComfyStream quickstart and are deepening their usage. It does not repeat installation or first-run steps.)
@@ -68,13 +69,13 @@ These nodes handle real-time tensor input and output. They are required for Comf
 
 ### Real-time control nodes
 
-These nodes update their output on every workflow execution — designed specifically for real-time video loops.
+These nodes update their output on every workflow execution – designed specifically for real-time video loops.
 
 [//]: # (REVIEW: Verify the canonical repo for these nodes. Ryanontheinside/ComfyUI_RealtimeNodes appears to be the primary source. Confirm whether these are officially endorsed for the Livepeer ComfyStream ecosystem or community-maintained.)
 
 | Node | Source | Purpose |
 |------|--------|---------|
-| `FloatControl` | ComfyUI_RealtimeNodes | Outputs a float that changes over time (sine, bounce, random) — use to animate parameters |
+| `FloatControl` | ComfyUI_RealtimeNodes | Outputs a float that changes over time (sine, bounce, random) – use to animate parameters |
 | `IntControl` | ComfyUI_RealtimeNodes | Same as FloatControl for integer values |
 | `StringControl` | ComfyUI_RealtimeNodes | Cycles through a list of strings per-frame |
 | `FloatSequence` | ComfyUI_RealtimeNodes | Cycles through comma-separated float values |
@@ -107,8 +108,8 @@ Real-time video upscaling. Input: standard-resolution frame; output: upscaled fr
 
 Whisper-based real-time speech transcription. Two output modes:
 
-- **Video output with SRT subtitles** — captions are burned into the video segments
-- **Data-channel text output** — transcript text delivered to the application separately via WebRTC data channel; no visual overlay
+- **Video output with SRT subtitles** – captions are burned into the video segments
+- **Data-channel text output** – transcript text delivered to the application separately via WebRTC data channel; no visual overlay
 
 [//]: # (REVIEW: Confirm node names from muxionlabs/comfystream. Phase 4 confirms these were shipped as "AudioTranscription + SRT" node set.)
 
@@ -127,7 +128,7 @@ ComfyStream requires workflows in **ComfyUI API format**. This is not the same a
 
 To export a workflow in API format from ComfyUI:
 1. Enable Developer Mode in ComfyUI settings
-2. Use **Save (API Format)** — this produces the JSON file ComfyStream accepts
+2. Use **Save (API Format)** – this produces the JSON file ComfyStream accepts
 
 <Warning>
 Workflows saved from ComfyUI in the default format (with UI layout data) will not load correctly in ComfyStream. Always use API format.
@@ -169,7 +170,7 @@ For ComfyStream Docker deployments, Phase 4 added a config-based method to speci
 
 ## Data-Channel Output
 
-The data-channel output type (Phase 4) allows ComfyStream to produce structured text data alongside video — without requiring it to be embedded in the video frames.
+The data-channel output type (Phase 4) allows ComfyStream to produce structured text data alongside video – without requiring it to be embedded in the video frames.
 
 **Use cases:**
 - Real-time audio transcription delivered as text to a downstream application
@@ -203,7 +204,7 @@ Achievable frame rate depends on model complexity, GPU, and image resolution. Re
 - SD1.5 + DMD one-step + DepthControlNet workflow: ~14–15 fps at 640×360 input
 - StreamDiffusion with TensorRT: higher throughput at same resolution (exact figures vary by LoRA and ControlNet load)
 
-[//]: # (REVIEW: Verify these reference figures from docs.comfystream.org benchmark section or an official Livepeer performance report. Current figures are from community gists — confirm before publication.)
+[//]: # (REVIEW: Verify these reference figures from docs.comfystream.org benchmark section or an official Livepeer performance report. Current figures are from community gists – confirm before publication.)
 
 ### Dynamic warm-up (Phase 4)
 
@@ -233,6 +234,6 @@ ComfyStream now supports dynamic warm-up, allowing new workflows to load mid-str
     Full install reference, hardware requirements, and troubleshooting at the canonical ComfyStream docs.
   </Card>
   <Card title="ComfyStream quickstart" icon="rocket" href="/v2/developers/get-started/comfystream-quickstart">
-    Back to getting started — if you need to revisit installation or first-run setup.
+    Back to getting started – if you need to revisit installation or first-run setup.
   </Card>
 </CardGroup>

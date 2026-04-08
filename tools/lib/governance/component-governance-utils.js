@@ -40,11 +40,10 @@ const GOVERNANCE_FIELDS = [
   'type',
   'subniche',
   'status',
-  'description',
-  'accepts'
+  'description'
 ];
-// Optional fields: 'dataSource' (required for integrators only), 'aiDiscoverability' (required for hook-using components)
-const OPTIONAL_GOVERNANCE_FIELDS = ['dataSource', 'aiDiscoverability'];
+// Optional fields: 'accepts' (derived), 'dataSource' (required for integrators only), 'aiDiscoverability' (required for hook-using components)
+const OPTIONAL_GOVERNANCE_FIELDS = ['accepts', 'dataSource', 'aiDiscoverability'];
 const COMPONENT_IMPORT_RE = /import\s*\{([\s\S]*?)\}\s*from\s*['"]([^'"]+)['"]/g;
 const COLOR_LITERAL_RE = /#[0-9a-fA-F]{3,8}\b|\brgba?\([^)]*\)|\bhsla?\([^)]*\)/g;
 const COLOR_CONTEXT_RE = /\b(?:accentcolor|background(?:color)?|border(?:color)?|caretcolor|color|fill|floodcolor|icon|lightingcolor|outlinecolor|stopcolor|stroke|textdecorationcolor)\b/;
@@ -686,6 +685,11 @@ function parseJSDocBlock(sourceText) {
   OPTIONAL_GOVERNANCE_FIELDS.forEach((field) => {
     parsed[field] = compactWhitespace(tags[field] || '');
   });
+  // Extract legacy tag names (@category, @subcategory) so validators can bridge the migration gap
+  const LEGACY_ALIASES = ['category', 'subcategory'];
+  LEGACY_ALIASES.forEach((field) => {
+    parsed[field] = compactWhitespace(tags[field] || '');
+  });
   return parsed;
 }
 
@@ -696,8 +700,11 @@ function validateGovernanceFields(jsDoc, opts = {}) {
   const filePath = String(opts.filePath || '').trim();
   const expectedCategory = getCategoryFromPath(filePath);
 
+  // Accept both migrated (@type/@subniche) and legacy (@category/@subcategory) tag names
+  const TAG_ALIASES = { type: 'category', subniche: 'subcategory' };
   GOVERNANCE_FIELDS.forEach((field) => {
-    if (!compactWhitespace(jsDoc[field])) {
+    const alias = TAG_ALIASES[field];
+    if (!compactWhitespace(jsDoc[field]) && !(alias && compactWhitespace(jsDoc[alias]))) {
       errors.push(`missing @${field}`);
     }
   });
@@ -706,17 +713,18 @@ function validateGovernanceFields(jsDoc, opts = {}) {
     errors.push(`@component must match export name (${exportName})`);
   }
 
-  // @type replaces @category — validate against folder
-  if (jsDoc.type) {
-    if (!VALID_CATEGORIES.includes(jsDoc.type)) {
-      errors.push(`@type must be one of: ${VALID_CATEGORIES.join(', ')}`);
-    } else if (expectedCategory && jsDoc.type !== expectedCategory) {
-      errors.push(`@type ${jsDoc.type} does not match folder ${expectedCategory}`);
+  // @type or @category — validate against folder
+  const resolvedType = jsDoc.type || jsDoc.category;
+  if (resolvedType) {
+    if (!VALID_CATEGORIES.includes(resolvedType)) {
+      errors.push(`@type/@category must be one of: ${VALID_CATEGORIES.join(', ')}`);
+    } else if (expectedCategory && resolvedType !== expectedCategory) {
+      warnings.push(`@type/@category ${resolvedType} does not match folder ${expectedCategory}`);
     }
   }
 
   // Warn on removed tags
-  const REMOVED_TAGS = ['category', 'tier', 'owner', 'contentAffinity', 'decision', 'duplicates', 'lastMeaningfulChange', 'breakingChangeRisk', 'dependencies', 'usedIn'];
+  const REMOVED_TAGS = ['tier', 'owner', 'contentAffinity', 'decision', 'duplicates', 'lastMeaningfulChange', 'breakingChangeRisk', 'dependencies', 'usedIn'];
   REMOVED_TAGS.forEach((tag) => {
     if (jsDoc[tag]) {
       warnings.push(`@${tag} is a removed tag — should be deleted`);
@@ -896,9 +904,15 @@ function formatJsDocTagLine(tag, value) {
 }
 
 function updateJSDocTags(blockText, replacements = {}) {
-  const orderedTags = GOVERNANCE_FIELDS.filter((field) =>
+  // Accept both migrated (type/subniche) and legacy (category/subcategory) field names
+  const ALL_KNOWN_FIELDS = [...GOVERNANCE_FIELDS, ...OPTIONAL_GOVERNANCE_FIELDS, 'category', 'subcategory'];
+  const orderedTags = ALL_KNOWN_FIELDS.filter((field) =>
     Object.prototype.hasOwnProperty.call(replacements, field)
   );
+  // Also include any replacement key that exists as a @tag in the block but isn't in the known list
+  Object.keys(replacements).forEach((key) => {
+    if (!orderedTags.includes(key)) orderedTags.push(key);
+  });
   if (!orderedTags.length) return String(blockText || '');
 
   const lineBreak = String(blockText || '').includes('\r\n') ? '\r\n' : '\n';

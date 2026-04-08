@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-glossary-gaps
- * @type        
- * @concern     
- * @niche       
- * @purpose     tooling:dev-tools
+ * @type        audit
+ * @concern     maintenance
+ * @niche       reference
+ * @purpose     
  * @description Glossary gap auditor — scans v2 MDX pages for terminology candidates not
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual | post-PR | cron
  * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]

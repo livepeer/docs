@@ -6,6 +6,8 @@
  * @description Displays the latest release version string from automation data.
  * @dataSource release-version workflow
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-03-29
  * @param {any} version - version prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.

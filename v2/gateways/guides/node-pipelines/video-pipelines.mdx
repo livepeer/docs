@@ -2,10 +2,11 @@
 title: Video & Transcoding Pipelines
 sidebarTitle: Video Pipelines
 description: >-
-  How video jobs flow through your gateway - RTMP and HTTP ingest, source segmentation,
-  orchestrator selection via BroadcastSessionsManager, transcoding profiles, on-chain
-  payment per segment, and output delivery as HLS.
-PageType: guide
+  How video jobs flow through your gateway - RTMP and HTTP ingest, source segmentation, orchestrator selection via
+  BroadcastSessionsManager, transcoding profiles, on-chain payment per segment, and output delivery as HLS.
+lifecycleStage: operate
+complexity: intermediate
+pageType: guide
 audience: gateway
 purpose: explain
 status: current
@@ -21,7 +22,7 @@ keywords:
   - transcoding profiles
   - on-chain payment
   - pipeline
-og:image: /snippets/assets/media/og-images/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
@@ -41,7 +42,7 @@ Human
 */}
 
 import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <Note>
   This is a conceptual and tuning guide, not a setup guide. For initial installation and startup, see Setup. For transcoding profile JSON and flag reference, see Pipeline Configuration.
@@ -66,7 +67,7 @@ What happens at each stage and how to tune it.
 ## Architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     subgraph INPUT["Video Input"]
         direction LR

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-script-registry
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     
  * @description Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual
  * @scope       operations/scripts, operations/tests, workspace/scripts, .githooks, .github/scripts
  * @usage       node operations/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]

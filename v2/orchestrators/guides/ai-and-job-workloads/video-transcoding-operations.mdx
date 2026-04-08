@@ -2,10 +2,11 @@
 title: Video Transcoding Operations
 sidebarTitle: Video Transcoding
 description: >-
-  Configure video transcoding on your Livepeer orchestrator — wei and
-  USD pricing, automatic price adjustment, session limits, bandwidth
-  calculation, NVENC session caps, and output rendition profiles.
-Keywords:
+  Configure video transcoding on your Livepeer orchestrator — wei and USD pricing, automatic price adjustment, session
+  limits, bandwidth calculation, NVENC session caps, and output rendition profiles.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - video transcoding
@@ -31,12 +32,12 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
 
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Video transcoding configuration turns on three operator decisions: price, safe concurrency, and output profile coverage. For hardware benchmarking, see the dedicated [Benchmarking Guide](/v2/orchestrators/guides/config-and-optimisation/capacity-planning).
@@ -45,10 +46,10 @@ Video transcoding configuration turns on three operator decisions: price, safe c
 
 ## How transcoding works
 
-When a broadcaster sends a live stream to a Livepeer gateway, the gateway segments the stream into roughly 2-second chunks and routes each segment to an orchestrator. Your node receives the raw segment, decodes it with NVDEC, re-encodes it to multiple output renditions using NVENC, and returns the results. The session persists for the duration of the stream — potentially hours. Your node processes dozens or hundreds of segments per session continuously.
+When a broadcaster sends a live stream to a Livepeer gateway, the gateway segments the stream into roughly 2-second chunks and routes each segment to an orchestrator. Your node receives the raw segment, decodes it with NVDEC, re-encodes it to multiple output renditions using NVENC, and returns the results. The session persists for the duration of the stream – potentially hours. Your node processes dozens or hundreds of segments per session continuously.
 
 ```mermaid title="Video transcoding flow"
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 sequenceDiagram
     participant GW as Gateway
     participant O as Orchestrator
@@ -61,17 +62,17 @@ sequenceDiagram
     Note over GW,O: Repeat every ~2 seconds per active session
 ```
 
-**GPU vs CPU:** NVIDIA GPU-accelerated transcoding via NVENC/NVDEC is strongly recommended. CPU transcoding is possible but rarely competitive on the open market — GPU nodes are faster and cheaper per pixel, which means CPU-only nodes typically price themselves into no-work territory or operate at a loss on electricity.
+**GPU vs CPU:** NVIDIA GPU-accelerated transcoding via NVENC/NVDEC is strongly recommended. CPU transcoding is possible but rarely competitive on the open market – GPU nodes are faster and cheaper per pixel, which means CPU-only nodes typically price themselves into no-work territory or operate at a loss on electricity.
 
 <CustomDivider />
 
 ## Pricing
 
-Transcoding is priced in **wei per pixel**. A "pixel" here is one pixel of output video — width × height × number of output frames across all renditions. You set your price with the `-pricePerUnit` flag; by default `-pixelsPerUnit` is 1, meaning you charge in wei per individual output pixel.
+Transcoding is priced in **wei per pixel**. A "pixel" here is one pixel of output video – width × height × number of output frames across all renditions. You set your price with the `-pricePerUnit` flag; by default `-pixelsPerUnit` is 1, meaning you charge in wei per individual output pixel.
 
 ### Option A: Wei pricing
 
-The simplest and most explicit approach — you set a fixed wei amount and it stays fixed until you change it.
+The simplest and most explicit approach – you set a fixed wei amount and it stays fixed until you change it.
 
 ```bash icon="terminal" title="Start transcoding with a fixed wei price"
 livepeer \
@@ -119,7 +120,7 @@ livepeer \
 **Tips for USD pricing:**
 - `-pixelsPerUnit` supports exponential notation (`1e12`); `-pricePerUnit` does not
 - Use `-pixelsPerUnit` to keep `-pricePerUnit` as a readable decimal
-- The Chainlink ETH/USD feed on Arbitrum is auto-configured for mainnet — no additional setup required
+- The Chainlink ETH/USD feed on Arbitrum is auto-configured for mainnet – no additional setup required
 - Livepeer Studio pegs its `-maxPricePerUnit` to USD, so USD pricing on your node stays in sync with the gateway side automatically
 
 **Custom currency or non-Arbitrum networks:**
@@ -138,7 +139,7 @@ Override the Chainlink feed with `-priceFeedAddr` when you need a different quot
 
 ### Automatic price adjustment
 
-By default, go-livepeer automatically adjusts your advertised price upward to account for ticket redemption overhead. Ticket redemption is a gas transaction on Arbitrum — when gas prices rise, the overhead as a percentage of ticket face value rises, which makes tickets less profitable to redeem. The auto-adjustment compensates:
+By default, go-livepeer automatically adjusts your advertised price upward to account for ticket redemption overhead. Ticket redemption is a gas transaction on Arbitrum – when gas prices rise, the overhead as a percentage of ticket face value rises, which makes tickets less profitable to redeem. The auto-adjustment compensates:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -200,20 +201,20 @@ Enter your wei price. To use USD, append the suffix: `0.41USD`.
 </StyledStep>
 
 <StyledStep title="Verify">
-Check your node logs — the updated price appears in the startup or config log output.
+Check your node logs – the updated price appears in the startup or config log output.
 </StyledStep>
 
 </StyledSteps>
 
-### What gateways pay — and what you need to know
+### What gateways pay – and what you need to know
 
-Gateways set a maximum price they will pay via `-maxPricePerUnit`. Any orchestrator with a price above that maximum receives zero work from that gateway. This threshold is a hard binary — above it you are invisible to that gateway, below it you are in the pool.
+Gateways set a maximum price they will pay via `-maxPricePerUnit`. Any orchestrator with a price above that maximum receives zero work from that gateway. This threshold is a hard binary – above it you are invisible to that gateway, below it you are in the pool.
 
 Within the pool, gateways weigh price, stake, and performance score. Lower prices increase your selection probability. Being above the ceiling guarantees no work.
 
 **Checking current market rates:**
 
-Compare your price to active orchestrators on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Filter by active set members and look at advertised price. The median active price is a reasonable starting anchor — price competitively while staying above your cost floor.
+Compare your price to active orchestrators on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Filter by active set members and look at advertised price. The median active price is a reasonable starting anchor – price competitively while staying above your cost floor.
 
 <CustomDivider />
 
@@ -293,7 +294,7 @@ The standard ABR output ladder consumes predictable bandwidth per session:
 Bandwidth limit = min(connection_download_Mbps ÷ 6, connection_upload_Mbps ÷ 5.6)
 ```
 
-**Example — 100 Mbps symmetric connection:**
+**Example – 100 Mbps symmetric connection:**
 
 ``` icon="terminal"
 Download limit: 100 ÷ 6 ≈ 16 sessions
@@ -312,7 +313,7 @@ maxSessions = min(hardware_capacity, bandwidth_capacity)
 This is the starting point. Monitor your Duration Ratio in production (via Prometheus metrics) and back off once it exceeds 0.8 under load.
 
 <Note>
-  **CPU transcoding caveat:** CPU-only transcoding has a much lower hardware ceiling — approximately 3–5 sessions on modern CPU hardware. GPU-backed nodes set the network pace, so CPU transcoding fits testing and edge cases while GPU-backed nodes handle sustained production volume.
+  **CPU transcoding caveat:** CPU-only transcoding has a much lower hardware ceiling – approximately 3–5 sessions on modern CPU hardware. GPU-backed nodes set the network pace, so CPU transcoding fits testing and edge cases while GPU-backed nodes handle sustained production volume.
 </Note>
 
 <CustomDivider />
@@ -346,7 +347,7 @@ Consumer NVIDIA GPUs (GTX/RTX series) have a hardware-enforced cap on the number
 
 Look up your specific card on the [NVIDIA Video Encode and Decode GPU Support Matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new), or search for "nvenc nvdec session limit `<your GPU model>`".
 
-**Workaround — driver patching:**
+**Workaround – driver patching:**
 
 The NVIDIA driver enforces the NVENC session cap. An open-source patch removes that limit. Titan Node documents this approach for their pool workers. The patch modifies the driver binary and remains outside NVIDIA support, so operators should read the relevant terms before applying it.
 
@@ -356,7 +357,7 @@ The NVIDIA driver enforces the NVENC session cap. An open-source patch removes t
 
 ## Output rendition profiles
 
-The standard ABR (Adaptive Bitrate) ladder on the Livepeer network assumes a 1080p30fps source input. The default `transcodingOptions.json` used by `livepeer_bench` — and the profile most gateways request — is:
+The standard ABR (Adaptive Bitrate) ladder on the Livepeer network assumes a 1080p30fps source input. The default `transcodingOptions.json` used by `livepeer_bench` – and the profile most gateways request – is:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -418,7 +419,7 @@ The default of 10 is arbitrary. On an RTX 4090, the correct value often lands ab
 </Accordion>
 
 <Accordion  title="Monitor Duration Ratio in production" icon="gear">
-Set up Prometheus metrics (`-monitor` flag) and watch the Duration Ratio under production load. Lower `-maxSessions` once it climbs above 0.8 during peak periods. The benchmark is an approximation — production stream properties vary, so the final tuned value usually differs from the lab result.
+Set up Prometheus metrics (`-monitor` flag) and watch the Duration Ratio under production load. Lower `-maxSessions` once it climbs above 0.8 during peak periods. The benchmark is an approximation – production stream properties vary, so the final tuned value usually differs from the lab result.
 </Accordion>
 
 <Accordion  title="Use a domain name for serviceAddr" icon="microchip">
@@ -439,7 +440,7 @@ The auto-adjustment mechanism exists for Arbitrum gas spikes. Disabling it with 
 
 <CardGroup cols={2}>
   <Card title="Benchmarking Guide" icon="gauge-high" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning">
-    Full livepeer_bench walkthrough — test stream download, concurrent session sweep, CSV output analysis.
+    Full livepeer_bench walkthrough – test stream download, concurrent session sweep, CSV output analysis.
   </Card>
   <Card title="Session Limits" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning">
     Detailed bandwidth and hardware capacity methodology with worked examples.

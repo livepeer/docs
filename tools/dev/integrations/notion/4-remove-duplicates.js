@@ -1,11 +1,11 @@
 /**
  * @script      4-remove-duplicates
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Archives duplicate Notion pages from the duplicate report while keeping the first record in each group.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/4-remove-duplicates.js [flags]

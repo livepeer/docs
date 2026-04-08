@@ -1,11 +1,11 @@
 /**
  * @script      2-read-docs-to-csv
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Parses docs.json v2 navigation and writes CSV/JSON exports with section-group metadata for Notion sync.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/2-read-docs-to-csv.js [flags]

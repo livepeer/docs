@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # @script      check-no-ai-stash
-# @type        
-# @concern     
-# @niche       
-# @purpose     governance:agent-governance
+# @type        validator
+# @concern     discoverability
+# @niche       codex
+# @purpose     
 # @description AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
-# @mode        read-only
+# @mode        check
 # @pipeline    manual
 # @scope       operations/scripts/validators/ai/codex, .githooks/pre-commit
 # @usage       bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]

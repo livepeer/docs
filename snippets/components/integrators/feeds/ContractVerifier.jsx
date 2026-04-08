@@ -504,14 +504,14 @@ export const ContractVerifier = ({
       return {
         label: 'Ethereum Mainnet',
         explorerLabel: 'Etherscan',
-        icon: <Icon icon="ethereum" color="var(--hero-text)" size={13} />,
+        icon: <Icon icon="ethereum" color="var(--lp-color-text-primary)" size={13} />,
       }
     }
 
     return {
       label: 'Arbitrum One',
       explorerLabel: 'Arbiscan',
-      icon: <ArbitrumIcon color="var(--arbitrum)" size={13} />,
+      icon: <ArbitrumIcon color="var(--lp-color-arbitrum)" size={13} />,
     }
   }
 
@@ -593,27 +593,27 @@ export const ContractVerifier = ({
     wrapper: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '1rem',
+      gap: "var(--lp-spacing-4)",
       color: 'var(--foreground)',
       ...style,
     },
     tabRow: {
       display: 'flex',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
     },
     tabBase: {
       padding: '0.5rem 1rem',
-      border: '1px solid var(--border)',
-      borderRadius: '4px',
+      border: '1px solid var(--lp-color-border-default)',
+      borderRadius: "4px",
       cursor: 'pointer',
       fontSize: '0.9rem',
       fontWeight: 600,
       transition: 'background 0.15s, color 0.15s',
     },
     tabActive: {
-      background: 'var(--accent)',
+      background: 'var(--lp-color-accent)',
       color: 'var(--lp-color-on-accent)',
-      borderColor: 'var(--accent)',
+      borderColor: 'var(--lp-color-accent)',
     },
     tabInactive: {
       background: 'transparent',
@@ -621,24 +621,24 @@ export const ContractVerifier = ({
     },
     formRow: {
       display: 'flex',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
       alignItems: 'center',
       flexWrap: 'wrap',
     },
     select: {
       padding: '0.5rem 0.75rem',
-      border: '1px solid var(--border)',
-      borderRadius: '4px',
-      background: 'var(--background)',
+      border: '1px solid var(--lp-color-border-default)',
+      borderRadius: "4px",
+      background: 'var(--lp-color-bg-page)',
       color: 'var(--foreground)',
       fontSize: '0.9rem',
       minWidth: '200px',
     },
     input: {
       padding: '0.5rem 0.75rem',
-      border: '1px solid var(--border)',
-      borderRadius: '4px',
-      background: 'var(--background)',
+      border: '1px solid var(--lp-color-border-default)',
+      borderRadius: "4px",
+      background: 'var(--lp-color-bg-page)',
       color: 'var(--foreground)',
       fontSize: '0.9rem',
       fontFamily: 'monospace',
@@ -648,8 +648,8 @@ export const ContractVerifier = ({
     button: {
       padding: '0.5rem 1.25rem',
       border: 'none',
-      borderRadius: '4px',
-      background: 'var(--accent)',
+      borderRadius: "4px",
+      background: 'var(--lp-color-accent)',
       color: 'var(--lp-color-on-accent)',
       fontSize: '0.9rem',
       fontWeight: 600,
@@ -661,12 +661,12 @@ export const ContractVerifier = ({
       cursor: 'not-allowed',
     },
     card: {
-      border: '1px solid var(--border)',
-      borderRadius: '4px',
-      padding: '1rem',
+      border: '1px solid var(--lp-color-border-default)',
+      borderRadius: "4px",
+      padding: "var(--lp-spacing-4)",
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.75rem',
+      gap: "var(--lp-spacing-3)",
     },
     identityBlock: {
       display: 'flex',
@@ -676,7 +676,7 @@ export const ContractVerifier = ({
     titleRow: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
       flexWrap: 'wrap',
     },
     chainRow: {
@@ -687,27 +687,27 @@ export const ContractVerifier = ({
     },
     titleText: {
       fontWeight: 700,
-      fontSize: '1rem',
+      fontSize: "1rem",
       lineHeight: 1.3,
     },
     chainText: {
       display: 'inline-flex',
       alignItems: 'center',
       gap: '0.35rem',
-      color: 'var(--muted-text)',
+      color: 'var(--lp-color-text-muted)',
       fontSize: '0.85rem',
       whiteSpace: 'nowrap',
     },
     categoryRow: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
       flexWrap: 'wrap',
     },
     metaLabel: {
       fontSize: '0.9rem',
       fontWeight: 600,
-      color: 'var(--muted-text)',
+      color: 'var(--lp-color-text-muted)',
     },
     categoryText: {
       display: 'inline-flex',
@@ -715,7 +715,7 @@ export const ContractVerifier = ({
       gap: '0.35rem',
       fontSize: '0.9rem',
       fontWeight: 600,
-      color: 'var(--hero-text)',
+      color: 'var(--lp-color-text-primary)',
     },
     addressText: {
       fontFamily: 'monospace',
@@ -725,7 +725,7 @@ export const ContractVerifier = ({
     badgeMatch: {
       display: 'inline-block',
       padding: '0.15rem 0.5rem',
-      borderRadius: '4px',
+      borderRadius: "4px",
       fontSize: '0.8rem',
       fontWeight: 700,
       background: 'var(--lp-color-status-good)',
@@ -734,7 +734,7 @@ export const ContractVerifier = ({
     badgeMismatch: {
       display: 'inline-block',
       padding: '0.15rem 0.5rem',
-      borderRadius: '4px',
+      borderRadius: "4px",
       fontSize: '0.8rem',
       fontWeight: 700,
       background: 'var(--lp-color-status-bad)',
@@ -743,7 +743,7 @@ export const ContractVerifier = ({
     badgeWarn: {
       display: 'inline-block',
       padding: '0.15rem 0.5rem',
-      borderRadius: '4px',
+      borderRadius: "4px",
       fontSize: '0.8rem',
       fontWeight: 700,
       background: 'var(--lp-color-status-warn)',
@@ -752,7 +752,7 @@ export const ContractVerifier = ({
     badgeGood: {
       display: 'inline-block',
       padding: '0.15rem 0.5rem',
-      borderRadius: '4px',
+      borderRadius: "4px",
       fontSize: '0.8rem',
       fontWeight: 700,
       background: 'var(--lp-color-status-good)',
@@ -760,20 +760,20 @@ export const ContractVerifier = ({
     },
     links: {
       display: 'flex',
-      gap: '1rem',
+      gap: "var(--lp-spacing-4)",
       flexWrap: 'wrap',
       fontSize: '0.85rem',
-      marginTop: '0.25rem',
+      marginTop: "var(--lp-spacing-1)",
     },
     link: {
-      color: 'var(--accent)',
+      color: 'var(--lp-color-accent)',
       textDecoration: 'none',
     },
     pre: {
-      background: 'var(--background)',
+      background: 'var(--lp-color-bg-page)',
       color: 'var(--foreground)',
-      border: '1px solid var(--border)',
-      borderRadius: '4px',
+      border: '1px solid var(--lp-color-border-default)',
+      borderRadius: "4px",
       padding: '0.75rem 1rem',
       fontSize: '0.85rem',
       fontFamily: 'monospace',
@@ -788,7 +788,7 @@ export const ContractVerifier = ({
     signalRow: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
       fontSize: '0.9rem',
     },
     verificationBlock: {
@@ -802,14 +802,14 @@ export const ContractVerifier = ({
       gap: '0.4rem',
       fontSize: '0.9rem',
       fontWeight: 600,
-      color: 'var(--hero-text)',
+      color: 'var(--lp-color-text-primary)',
     },
     verificationList: {
       margin: 0,
       paddingLeft: '1.1rem',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.25rem',
+      gap: "var(--lp-spacing-1)",
       fontSize: '0.9rem',
       color: 'var(--foreground)',
     },
@@ -818,17 +818,17 @@ export const ContractVerifier = ({
       maxWidth: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.5rem',
+      gap: "var(--lp-spacing-2)",
     },
     mismatchNote: {
       fontSize: '0.85rem',
       color: 'var(--lp-color-status-warn)',
-      marginTop: '0.25rem',
+      marginTop: "var(--lp-spacing-1)",
     },
     resultStack: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.75rem',
+      gap: "var(--lp-spacing-3)",
     },
   }
 
@@ -855,7 +855,7 @@ export const ContractVerifier = ({
         <div style={styles.categoryRow}>
           <span style={styles.metaLabel}>Category:</span>
           <span style={styles.categoryText}>
-            <Icon icon={category.icon} color="var(--accent)" size={13} />
+            <Icon icon={category.icon} color="var(--lp-color-accent)" size={13} />
             {category.label}
           </span>
         </div>
@@ -887,7 +887,7 @@ export const ContractVerifier = ({
     return (
       <div style={styles.verificationBlock}>
         <div style={styles.sectionTitle}>
-          <Icon icon="check" color="var(--hero-text)" size={13} />
+          <Icon icon="check" color="var(--lp-color-text-primary)" size={13} />
           Verification:
         </div>
         <ul style={styles.verificationList}>
@@ -1045,13 +1045,13 @@ export const ContractVerifier = ({
     <div style={styles.wrapper} className={className} {...rest}>
       {/* Description */}
       {tab === 'lookup' && (
-        <div style={{ fontSize: '0.9rem', color: 'var(--muted-text)' }}>
+        <div style={{ fontSize: '0.9rem', color: 'var(--lp-color-text-muted)' }}>
           Select a published contract and verify its current address against the
           strongest available on-chain or explorer check.
         </div>
       )}
       {tab === 'verify' && (
-        <div style={{ fontSize: '0.9rem', color: 'var(--muted-text)' }}>
+        <div style={{ fontSize: '0.9rem', color: 'var(--lp-color-text-muted)' }}>
           Paste any address to check bytecode, explorer verification, and
           whether it matches the published Livepeer contract registry on
           Arbitrum One or Ethereum Mainnet.
@@ -1164,15 +1164,15 @@ export const ContractVerifier = ({
           <div>
             <div style={styles.errorText}>{error}</div>
             {tab === 'lookup' && selectedName && (
-              <div style={{ marginTop: '0.75rem' }}>
-                <div style={{ fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+              <div style={{ marginTop: "var(--lp-spacing-3)" }}>
+                <div style={{ fontSize: '0.85rem', marginBottom: "var(--lp-spacing-2)" }}>
                   Verify manually with the Foundry CLI:
                 </div>
                 <pre style={styles.pre}>{castFallback(selectedName)}</pre>
               </div>
             )}
             {tab === 'verify' && (
-              <div style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
+              <div style={{ marginTop: "var(--lp-spacing-2)", fontSize: '0.85rem' }}>
                 Try inspecting this address directly on{' '}
                 <a
                   href={CHAINS.arbitrumOne.etherscan}

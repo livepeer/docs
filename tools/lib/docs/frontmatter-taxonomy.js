@@ -70,6 +70,24 @@ const CANONICAL_AUDIENCES = Object.freeze([
   'community'
 ]);
 
+// Decision 3 (2026-04-08): 3-value complexity scale
+const CANONICAL_COMPLEXITIES = Object.freeze([
+  'beginner',
+  'intermediate',
+  'advanced'
+]);
+
+// Decision 4 (2026-04-08): 7-stage reader lifecycle
+const CANONICAL_LIFECYCLE_STAGES = Object.freeze([
+  'discover',
+  'evaluate',
+  'setup',
+  'build',
+  'operate',
+  'troubleshoot',
+  'optimise'
+]);
+
 const LAST_VERIFIED_REQUIRED_STATUSES = Object.freeze([
   'current',
   'published',
@@ -384,6 +402,8 @@ module.exports = {
   CANONICAL_PURPOSES,
   CANONICAL_PAGE_STATUSES,
   CANONICAL_AUDIENCES,
+  CANONICAL_COMPLEXITIES,
+  CANONICAL_LIFECYCLE_STAGES,
   LAST_VERIFIED_REQUIRED_STATUSES,
   DEPRECATED_PAGE_TYPE_ALIASES,
   DEPRECATED_PURPOSE_ALIASES: DEPRECATED_PURPOSE_ALIASES_FINAL,

@@ -21,6 +21,9 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 jobs:
   generate-docs-guide-catalogs:
     uses: ./.github/workflows/dispatch-maintenance-check-catalogs.yml

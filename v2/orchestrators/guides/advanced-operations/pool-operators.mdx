@@ -2,10 +2,11 @@
 title: Pool Operators
 sidebarTitle: Pool Operators
 description: >-
-  How to operate a Livepeer GPU pool — accept external worker connections,
-  manage job routing across multiple GPUs, handle off-chain fee distribution,
-  and maintain operational transparency.
-Keywords:
+  How to operate a Livepeer GPU pool — accept external worker connections, manage job routing across multiple GPUs,
+  handle off-chain fee distribution, and maintain operational transparency.
+lifecycleStage: operate
+complexity: advanced
+keywords:
   - livepeer
   - orchestrator
   - pool
@@ -25,12 +26,12 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep this page focused on pool architecture, worker management, and off-chain payout responsibility; route unresolved fact checks to internal comments only. */}
 
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 A Livepeer pool is a single orchestrator node that routes jobs to multiple external GPU workers. You hold the on-chain identity and LPT stake; workers contribute GPU compute and earn payouts managed off-chain by you, the operator. This page is for experienced orchestrators who want to expand beyond their own hardware by accepting external worker connections.
@@ -43,10 +44,10 @@ Workers joining an existing pool should start with [Join a Pool](/v2/orchestrato
 
 The Livepeer protocol sees only one entity: your orchestrator. It has a single on-chain address, a single stake, and a single service URI. Everything behind that address is your architecture to design.
 
-In a pool, the orchestrator node accepts connections from remote transcoders (workers). When a gateway routes a job to your orchestrator, go-livepeer dispatches it to an available worker via gRPC streaming RPC. Workers process the segment and return results — the orchestrator handles all protocol-level interaction, the workers handle the compute.
+In a pool, the orchestrator node accepts connections from remote transcoders (workers). When a gateway routes a job to your orchestrator, go-livepeer dispatches it to an available worker via gRPC streaming RPC. Workers process the segment and return results – the orchestrator handles all protocol-level interaction, the workers handle the compute.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 graph LR
   G["Gateway"] --> O["Orchestrator\n(on-chain, LPT staked)"]
   O --> W1["Worker 1\nGPU"]
@@ -63,7 +64,7 @@ Workers have no on-chain presence. Delegators and Explorer see only your orchest
 <BorderedBox variant="accent" padding="16px">
 <Tabs>
   <Tab  title="BYO Container" icon="microchip">
-    Workers run go-livepeer in `-transcoder` mode directly — on bare Linux, in Docker, or in a VM — and connect using the `-orchSecret` you configure.
+    Workers run go-livepeer in `-transcoder` mode directly – on bare Linux, in Docker, or in a VM – and connect using the `-orchSecret` you configure.
 
     **Who it suits:** Technically capable workers who want full control over their environment. Best for Linux operators already comfortable with GPU workloads.
 
@@ -99,7 +100,7 @@ Workers have no on-chain presence. Delegators and Explorer see only your orchest
   </Tab>
 
   <Tab  title="Cloud GPU" icon="server">
-    Workers provision a cloud GPU instance (Vast.ai, Lambda Labs, CoreWeave, RunPod) and connect it as a remote transcoder. This requires no owned hardware — workers pay for GPU time and earn back through transcoding fees.
+    Workers provision a cloud GPU instance (Vast.ai, Lambda Labs, CoreWeave, RunPod) and connect it as a remote transcoder. This requires no owned hardware – workers pay for GPU time and earn back through transcoding fees.
 
     **Who it suits:** Workers without dedicated hardware. Also useful for pool operators who need temporary capacity bursts.
 
@@ -150,7 +151,7 @@ When a worker connects successfully, your orchestrator logs will show:
 Got a RegisterTranscoder request from transcoder=10.3.27.1 capacity=10
 ```
 
-The `capacity` field is the worker's `-maxSessions` value — how many concurrent jobs it can handle.
+The `capacity` field is the worker's `-maxSessions` value – how many concurrent jobs it can handle.
 
 <CustomDivider />
 
@@ -196,7 +197,7 @@ Payout protocols remain operator-specific. Existing pools have each implemented 
 Your pool is represented entirely by your orchestrator's Ethereum address. On [Livepeer Explorer](https://explorer.livepeer.org):
 
 - **Delegators** see your total stake, reward cut, fee cut, and historical performance
-- **Explorer shows only the orchestrator** — worker-level data stays in your off-chain systems.
+- **Explorer shows only the orchestrator** – worker-level data stays in your off-chain systems.
 - **Pool performance** (sessions, fees) reflects aggregate work done by all connected workers combined
 
 If you are running a public pool, building delegator trust requires transparency work beyond go-livepeer configuration. Titan Node does this via a public website, regular Livepeer Forum campaign posts, and a public payout dashboard. Consider documenting your pool's architecture, hardware footprint, uptime history, and payout record.
@@ -214,13 +215,13 @@ Workers reconnect automatically on restart. You will see a new `Got a RegisterTr
 </Accordion>
 
 <Accordion  title="NVENC session caps on consumer GPUs" icon="server">
-Consumer NVIDIA GPUs (GTX/RTX series) have a hardware-enforced limit on concurrent NVENC encoding sessions — typically 3–8 per card depending on the model. Workers hitting this limit will reject new segments.
+Consumer NVIDIA GPUs (GTX/RTX series) have a hardware-enforced limit on concurrent NVENC encoding sessions – typically 3–8 per card depending on the model. Workers hitting this limit will reject new segments.
 
 Titan Node patches the NVIDIA driver on worker machines to remove this cap. Operators who want higher worker concurrency should either communicate this limitation early or provide driver-patching instructions.
 </Accordion>
 
 <Accordion  title="Session routing and load balancing" icon="circle-question">
-go-livepeer distributes sessions across connected workers internally. No manual load balancing is required for basic deployments. For large pools, a load balancer in front of multiple orchestrator instances is possible — see `doc/multi-o.md` in the go-livepeer repository for the multi-orchestrator architecture.
+go-livepeer distributes sessions across connected workers internally. No manual load balancing is required for basic deployments. For large pools, a load balancer in front of multiple orchestrator instances is possible – see `doc/multi-o.md` in the go-livepeer repository for the multi-orchestrator architecture.
 </Accordion>
 
 <Accordion  title="Node updates and downtime" icon="server">
@@ -230,7 +231,7 @@ For pools with SLA commitments, coordinate updates during low-traffic periods an
 </Accordion>
 
 <Accordion  title="Payout and worker communication" icon="circle-question">
-Establish a clear communication channel with your workers — a Discord server, Telegram group, or mailing list. Workers need timely notice of: planned downtime, payout schedule, fee changes, and how to report connection issues.
+Establish a clear communication channel with your workers – a Discord server, Telegram group, or mailing list. Workers need timely notice of: planned downtime, payout schedule, fee changes, and how to report connection issues.
 
 Poor communication is the most common cause of worker churn in community pools.
 </Accordion>
@@ -271,7 +272,7 @@ There is no zero-downtime rotation mechanism. Communicate the new secret to all 
 
 <CardGroup cols={2}>
   <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool">
-    The worker perspective — connecting your GPU to an existing pool.
+    The worker perspective – connecting your GPU to an existing pool.
   </Card>
   <Card title="Split O-T Setup" icon="plug" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
     The orchestrator-transcoder split that underpins pool architecture.

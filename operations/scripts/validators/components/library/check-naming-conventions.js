@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-naming-conventions
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        validator
+ * @concern     maintenance
+ * @niche       library
+ * @purpose     
  * @description Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components
  * @usage       node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]

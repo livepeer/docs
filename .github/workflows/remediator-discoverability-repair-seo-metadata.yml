@@ -34,15 +34,29 @@ jobs:
             node operations/scripts/remediators/content/seo/generate-seo.js
           fi
 
-      - name: Commit refreshed SEO metadata
+      - name: Collect changed files
+        id: changes
         if: inputs.dry_run != 'true'
         run: |
-          if git diff --quiet; then
-            echo "No SEO changes."
-            exit 0
-          fi
+          FILES=$(git diff --name-only | tr '\n' ',' | sed 's/,$//')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "has_changes=$( [ -n "$FILES" ] && echo true || echo false )" >> "$GITHUB_OUTPUT"
+
+      - name: Post-remediation verification
+        id: verify
+        if: inputs.dry_run != 'true' && steps.changes.outputs.has_changes == 'true'
+        run: |
+          node operations/scripts/dispatch/governance/post-remediation-verify.js \
+            --remediator operations/scripts/remediators/content/seo/generate-seo.js \
+            --files "${{ steps.changes.outputs.files }}" \
+            --json | tee /tmp/verify-result.json || true
+          echo "passed=$(node -e "try{console.log(JSON.parse(require('fs').readFileSync('/tmp/verify-result.json','utf8')).passed)}catch(e){console.log('true')}")" >> "$GITHUB_OUTPUT"
+
+      - name: Commit refreshed SEO metadata
+        if: inputs.dry_run != 'true' && steps.changes.outputs.has_changes == 'true'
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -u
-          git commit -m "chore(seo): refresh metadata"
+          git commit -m "chore(seo): refresh metadata${{ steps.verify.outputs.passed == 'false' && ' [needs-review]' || '' }}"
           git push origin HEAD:${{ vars.DEPLOY_BRANCH }}

@@ -1,16 +1,15 @@
 /**
- * @script            issue-indexer
- * @type              interface
- * @concern           governance
- * @niche             issue-lifecycle
- * @purpose           Builds and maintains a rolling docs-v2 issue governance index
- * @description       Searches all docs-v2 labelled issues, sorts by classification/priority,
- *                    renders breakdown tables, tracks Copilot queue, maps closing PRs via
- *                    timeline events, and creates/updates a rolling index issue.
- * @mode              interface
- * @scope             .github/workflows/interface-governance-index-issues.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      issue-indexer
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Builds and maintains a rolling docs-v2 issue governance index
+ * @description Searches all docs-v2 labelled issues, sorts by classification/priority,
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-index-issues.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

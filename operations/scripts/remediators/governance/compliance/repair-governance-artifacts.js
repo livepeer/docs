@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-governance-artifacts
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:self-remediation
+ * @type        remediator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual, post-merge -> governance markers, frameworks -> GOVERNANCE_MAP_LATEST.json, framework frontmatter
  * @scope       all GOVERNANCE.md markers, docs-guide/frameworks/, workspace/reports/repo-ops/
  * @usage       node operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js [--dry-run|--write]
@@ -22,7 +22,8 @@ const FRAMEWORKS_DIR = path.join(REPO_ROOT, 'docs-guide/frameworks');
 
 // ── Args ────────────────────────────────
 function parseArgs(argv) {
-  const args = { mode: 'dry-run', help: false };
+  const args = { mode: 'dry-run', help: false,
+    verify: false };
   argv.forEach((token) => {
     if (token === '--write') { args.mode = 'write'; return; }
     if (token === '--dry-run') { args.mode = 'dry-run'; return; }

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-glossary-companions
- * @type        
- * @concern     
- * @niche       
- * @purpose     tooling:dev-tools
+ * @type        generator
+ * @concern     maintenance
+ * @niche       reference
+ * @purpose     
  * @description Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages
- * @mode        read-only
+ * @mode        generate
  * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual
  * @scope       operations/scripts/generators/content/reference
  * @usage       node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]

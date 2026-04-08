@@ -1,0 +1,216 @@
+---
+title: Styles Engineering Guide
+sidebarTitle: Styles Engineering
+description: Internal engineering reference for the styles governance system — audit scripts, remediator, pipelines, component authoring checklist.
+keywords:
+  - livepeer
+  - styles
+  - engineering
+  - governance
+  - audit
+  - remediator
+  - pipeline
+audience: internal
+pageType: reference
+purpose: operations
+status: current
+lastVerified: 2026-04-08
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Note>
+Internal engineering reference. For the user-facing style guide, see the [Documentation Style Guide](/v2/resources/documentation-guide/style-guide).
+</Note>
+
+## Pipeline Architecture
+
+The styles governance system follows the repo's standard pipeline pattern: **Config → Script → Data → Display → Enforcement**.
+
+```
+┌─────────────────────────────────────────────────────┐
+│  P1 (pre-commit)                                     │
+│  audit-styles.js --staged --exit-code                │
+│  → blocks commits with NEW high-severity violations  │
+├─────────────────────────────────────────────────────┤
+│  P3 (PR check)                                       │
+│  audit-styles.js --json --exit-code                  │
+│  → gates PR merge                                    │
+├─────────────────────────────────────────────────────┤
+│  P5 (weekly cron)                                    │
+│  styles-governance.yml → full audit report            │
+│  → artifact upload for review                        │
+├─────────────────────────────────────────────────────┤
+│  P6 (on-demand)                                      │
+│  styles-governance.yml → manual dispatch              │
+│  → audit OR remediate-dry-run OR remediate-write     │
+│  → remediate-write creates PR via peter-evans         │
+└─────────────────────────────────────────────────────┘
+```
+
+<CustomDivider />
+
+## Scripts Reference
+
+### Audit Validator
+
+**Path:** `tools/scripts/validators/styles/audit-styles.js`
+
+**Purpose:** Scans MDX and JSX files for 6 categories of style violations.
+
+**Usage:**
+```bash
+# Full audit with report
+node tools/scripts/validators/styles/audit-styles.js --verbose --json
+
+# Staged files only (for pre-commit)
+node tools/scripts/validators/styles/audit-styles.js --staged --exit-code
+
+# Filter to specific category
+node tools/scripts/validators/styles/audit-styles.js --category inline-style-mdx --verbose
+
+# Specific files
+node tools/scripts/validators/styles/audit-styles.js --files v2/about/mental-model.mdx --verbose
+```
+
+**Categories:**
+
+| ID | Severity | What it detects |
+|---|---|---|
+| `inline-style-mdx` | high | `style={{}}` in MDX (causes layout shift) |
+| `legacy-token` | medium | `var(--accent)` instead of `var(--lp-color-accent)` |
+| `hardcoded-hex-mdx` | medium | Hex colours outside code blocks in MDX |
+| `literal-spacing` | low | Literal rem/px values instead of `--lp-spacing-*` tokens |
+| `mermaid-hardcoded` | medium | Mermaid init directives not matching standard signature |
+| `outline-removal` | high | `outline: none` or `outline: 0` (WCAG violation) |
+
+**Context awareness:** Skips code blocks, inline code, frontmatter, and mermaid blocks. Uses relative paths for exclude matching (safe in worktrees).
+
+**Report output:** `workspace/reports/styles/styles-audit-report.json`
+
+### Remediator
+
+**Path:** `tools/scripts/remediators/styles/remediate-styles.js`
+
+**Purpose:** Safe, deterministic auto-fixes for style violations. Idempotent (running twice produces zero changes).
+
+**Usage:**
+```bash
+# Preview fixes
+node tools/scripts/remediators/styles/remediate-styles.js --dry-run
+
+# Apply fixes
+node tools/scripts/remediators/styles/remediate-styles.js --write
+
+# Fix specific category only
+node tools/scripts/remediators/styles/remediate-styles.js --write --category legacy-token
+
+# Fix specific files
+node tools/scripts/remediators/styles/remediate-styles.js --write --files snippets/components/display/quote.jsx
+```
+
+**What it fixes (14 capabilities):**
+
+| Type | Before | After | Scope |
+|---|---|---|---|
+| `legacy-token` | `var(--accent)` | `var(--lp-color-accent)` | JSX |
+| `outline-removal` | `outline: "none"` | `outline: "revert"` | JSX |
+| `mermaid-hardcoded` | Custom init directive | Standard MermaidColours init | MDX |
+| `hardcoded-hex` | `"#3CB540"` | `"var(--lp-color-accent)"` | JSX + MDX |
+| `literal-spacing` | `"1rem"`, `"4px"` | `"var(--lp-spacing-4)"`, `"var(--lp-spacing-px-4)"` | JSX |
+| `flex-center-to-component` | `<div style={{display: "flex", justifyContent: "center"}}>` | `<FlexContainer justify="center">` | MDX |
+| `flex-column-to-component` | `<div style={{display: "flex", flexDirection: "column"}}>` | `<FlexContainer direction="column">` | MDX |
+| `centered-fit-to-component` | `<div style={{...width: "fit-content", margin: "0 auto"}}>` | `<CenteredContainer preset="fitContent">` | MDX |
+| `span-divider-to-component` | `<span style={{display: "block", borderBottom: ...}} />` | `<InlineDivider margin="1rem 0" />` | MDX |
+| `bordered-div-to-component` | `<div style={{border: "1px solid ...", borderRadius: "8px"}}>` | `<BorderedBox variant="accent">` | MDX |
+| `styledsteps-fallback` | `var(--accent-dark, #18794E)` | `var(--lp-color-accent-strong)` | MDX |
+| `icon-label-to-customcardtitle` | `<span style={{...flex...}}><Icon.../> Text</span>` | `<CustomCardTitle variant="tab" icon="X" title="Text" />` | MDX |
+| `bold-text-to-subtitle` | `<span style={{color: "var(--hero-text)", fontWeight: "bold"}}>` | `<Subtitle variant="changelog">` | MDX |
+| `date-label-to-subtitle` | `<div style={{fontSize: "0.8rem", fontWeight: 700}}>` | `<Subtitle variant="changelog">` | MDX |
+
+**Verification (`--verify` flag):**
+
+```bash
+# Apply fixes + verify no regressions
+node tools/scripts/remediators/styles/remediate-styles.js --write --verify
+```
+
+When `--verify` is passed with `--write`:
+1. After applying fixes, re-runs audit on modified files only
+2. Checks MDX files for parse issues (conflict markers, missing import blank lines)
+3. If any check fails, reverts ALL changes and exits non-zero
+
+**Safety:**
+- Reverse-offset replacement (processes matches from end to start)
+- Never modifies code blocks, inline code, JSX comments, frontmatter
+- Skips exempt files (MermaidColours.jsx, style.css)
+- Skips non-layout properties for spacing (fontSize, borderRadius, width, height, etc.)
+- Standard mermaid signature check prevents re-processing compliant inits
+- Component migration finds matching closing tags via depth-aware parser
+- Dynamic replacement extracts icon names and text content from regex captures
+
+**Self-documenting:** Run `node tools/scripts/generators/styles/generate-styles-docs.js --check` to verify documentation matches source code.
+
+<CustomDivider />
+
+## Data Pipelines
+
+### CoinGecko Exchanges
+
+**Script:** `.github/scripts/fetch-exchanges-data.js`
+**Workflow:** `.github/workflows/update-exchanges-data.yml`
+**Output:** `snippets/data/exchanges/exchangesData.jsx`
+**Schedule:** Weekly Monday 03:00 UTC
+**API:** CoinGecko `/coins/livepeer/tickers` (no API key required for free tier)
+
+### go-livepeer Configuration Flags
+
+**Script:** `.github/scripts/fetch-config-flags.js`
+**Workflow:** `.github/workflows/update-config-flags.yml`
+**Output:** `snippets/data/gateways/configFlagsData.jsx`
+**Schedule:** Weekly Monday 04:00 UTC
+**Source:** Parses `cmd/livepeer/starter/flags.go` from GitHub raw content
+
+Both scripts support `--dry-run` mode.
+
+<CustomDivider />
+
+## Component Authoring Checklist (Styles)
+
+When creating or modifying components, verify:
+
+- [ ] Uses `var(--lp-color-*)` tokens, not legacy aliases or hardcoded hex
+- [ ] Accepts `style={}` and `className=""` props with merge pattern (`{...defaultStyle, ...style}`)
+- [ ] Uses `var(--lp-spacing-*)` tokens for standard spacing (0.25rem–2rem)
+- [ ] No `outline: none` — use `:focus-visible` in a scoped `<style>` block if custom focus needed
+- [ ] Dark mode works via CSS variables (no JS theme detection)
+- [ ] `data-docs-*` attribute if style.css needs to target the component
+- [ ] Responsive: uses Tailwind responsive classes or `<style>` media queries
+- [ ] Tested at 375px, 768px, and 1024px viewports
+
+<CustomDivider />
+
+## Mintlify CLI Tools
+
+| Command | Purpose | When to use |
+|---|---|---|
+| `mint a11y` | Colour contrast + alt text | After any colour or image changes |
+| `mint broken-links` | Link validation | After file moves or new links |
+| `mint validate` | Full build validation | Before creating PRs |
+| `mint dev` | Local preview | During development |
+
+<CustomDivider />
+
+## Baseline Metrics
+
+| Metric | Initial (2026-04-07) | Final (2026-04-08) | Reduction |
+|---|---|---|---|
+| Total violations | 3,986 | 74 | 98.1% |
+| Inline styles in MDX | 2,115 | 5 | 99.8% |
+| Legacy CSS tokens | 262 | 0 | 100% |
+| Hardcoded hex in MDX | 1,045 | 0 | 100% |
+| Outline removal (WCAG) | 4 | 0 | 100% |
+| Literal spacing | 474 | 0 | 100% |
+| Mermaid hardcoded | 86 | 69 | 19.8% (deferred) |
+
+**Remaining 74:** 5 irreducible inline styles (single-prop CSS vars in composable files without import scope) + 69 mermaid variant colour schemes (non-standard palettes, deferred for individual review).

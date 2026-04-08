@@ -1,22 +1,15 @@
 /**
- * @script            fetch-discord-announcements
- * @category          integrator
- * @type              integrator
- * @concern           content
- * @niche             data/fetching
- * @purpose           infrastructure:data-feeds
- * @description       Fetches announcements from Discord channels via bot token. Writes per-product
- *                    JSX data files from config.products[].discord and per-channel JSX files from
- *                    config.globals.discord[]. Each entry produces a specific output file.
- * @domain            docs
- * @needs             F-R1
- * @purpose-statement Fetches Discord announcements for product and shared community feeds, writing per-product outputs plus the shared social feed module under snippets/data/social-feeds/.
- * @mode              generate
- * @pipeline          config → Discord API → snippets/data/social-feed-solutions/{product}/discordData.jsx
- *                                        → snippets/data/social-feeds/discordAnnouncementsData.jsx
- * @scope             .github/scripts, snippets/data/social-feed-solutions/, snippets/data/social-feeds/
- * @usage             node .github/scripts/fetch-discord-announcements.js
- * @policy            Announcements channel only. No general chat. Requires DISCORD_BOT_TOKEN.
+ * @script      fetch-discord-announcements
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches Discord announcements for product and shared community feeds, writing per-product outputs plus the shared social feed module under snippets/data/social-feeds/.
+ * @mode        integrate
+ * @pipeline    config → Discord API → snippets/data/social-feed-solutions/{product}/discordData.jsx
+ * @scope       .github/scripts, snippets/data/social-feed-solutions/, snippets/data/social-feeds/
+ * @usage       node .github/scripts/fetch-discord-announcements.js
+ * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");

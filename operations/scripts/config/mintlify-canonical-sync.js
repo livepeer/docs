@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      mintlify-canonical-sync
- * @type        
+ * @type        config
  * @concern     
  * @niche       
- * @purpose     governance:agent-governance
+ * @purpose     
  * @description Shared Mintlify canonical sync library — validates archived-source cleanup, consumer references, and deterministic rewrite plans for the canonical Mintlify governance surface.
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual -- library module
  * @scope       docs-guide/canonical/collation-data/Mintlify, operations/scripts/validators/governance, operations/scripts/remediators/content/repair
  * @usage       const sync = require('./mintlify-canonical-sync');

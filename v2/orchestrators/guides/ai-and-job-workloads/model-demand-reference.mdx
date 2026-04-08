@@ -2,10 +2,11 @@
 title: Model and Demand Reference
 sidebarTitle: Model Reference
 description: >-
-  Operator reference for GPU memory planning on Livepeer — VRAM requirements by
-  pipeline, warm model strategy, multi-GPU configuration, aiModels.json complete
-  schema, pricing reference, and earnings optimisation.
-Keywords:
+  Operator reference for GPU memory planning on Livepeer — VRAM requirements by pipeline, warm model strategy, multi-GPU
+  configuration, aiModels.json complete schema, pricing reference, and earnings optimisation.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - models
@@ -27,11 +28,11 @@ pageType: reference
 audience: orchestrator
 purpose: reference
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 GPU memory (VRAM) is the primary constraint for AI inference operators on Livepeer. The models you run, the number of pipelines you keep warm simultaneously, and your latency profile all follow from that VRAM budget.
@@ -181,30 +182,30 @@ These figures are production estimates based on operator deployments and communi
 RTX 2060 (6 GB), RTX 3060 12 GB, RTX 2060 Super (8 GB), RTX 3060 Ti (8 GB)
 
 **Viable pipelines:**
-- `llm` — Llama 8B Q4 via Ollama (~6–8 GB)
-- `image-to-text` — BLIP large (~2 GB)
-- `audio-to-text` — Whisper large-v3 (~3 GB) ✅ fits on 8 GB cards
-- `segment-anything-2` — SAM2 base model (~4–6 GB)
+- `llm` – Llama 8B Q4 via Ollama (~6–8 GB)
+- `image-to-text` – BLIP large (~2 GB)
+- `audio-to-text` – Whisper large-v3 (~3 GB) ✅ fits on 8 GB cards
+- `segment-anything-2` – SAM2 base model (~4–6 GB)
 
 **Leave off this tier:** `text-to-image`, `image-to-image`, `image-to-video`, `live-video-to-video`
 
-**Strategy for this tier:** Run `audio-to-text` and `image-to-text` warm simultaneously — both fit easily in 8 GB and together give you two income streams. Add `llm` on a separate GPU when one is available.
+**Strategy for this tier:** Run `audio-to-text` and `image-to-text` warm simultaneously – both fit easily in 8 GB and together give you two income streams. Add `llm` on a separate GPU when one is available.
 
 <CustomDivider />
 
 ### Mid tier (16–20 GB VRAM)
 
-RTX 3090 (24 GB, but close in practice with overheads), RTX 3080 Ti (12 GB — insufficient), A5000 (24 GB)
+RTX 3090 (24 GB, but close in practice with overheads), RTX 3080 Ti (12 GB – insufficient), A5000 (24 GB)
 
 **Note:** The effective threshold for diffusion pipelines is 24 GB. A nominal 16 GB card leaves insufficient headroom for SDXL warm + inference peaks.
 
 **Viable pipelines on 24 GB:**
-- `text-to-image` — SDXL Lightning warm ✅
-- `image-to-image` — SDXL Lightning cold (warm clashes with text-to-image)
-- `audio-to-text` — Whisper warm simultaneously (only 3 GB — fits alongside diffusion)
-- `upscale` — SD x4 upscaler warm
+- `text-to-image` – SDXL Lightning warm ✅
+- `image-to-image` – SDXL Lightning cold (warm clashes with text-to-image)
+- `audio-to-text` – Whisper warm simultaneously (only 3 GB – fits alongside diffusion)
+- `upscale` – SD x4 upscaler warm
 
-**Strategy:** Warm `text-to-image` as the primary pipeline. Co-warm `audio-to-text` as a secondary — they barely overlap in VRAM. Cold-load `image-to-image` on demand.
+**Strategy:** Warm `text-to-image` as the primary pipeline. Co-warm `audio-to-text` as a secondary – they barely overlap in VRAM. Cold-load `image-to-image` on demand.
 
 <CustomDivider />
 
@@ -219,19 +220,19 @@ RTX 4090 (24 GB), A100 40/80 GB, H100 80 GB
 
 <CustomDivider />
 
-## Warm vs cold — when it matters
+## Warm vs cold – when it matters
 
 ### Pipelines where warm is competitively critical
 
-- **`text-to-image`** — cold load on SDXL takes 30–90 seconds. Gateways route to warm competitors first. Running cold puts the node out of contention.
-- **`live-video-to-video`** — cold loading mid-stream causes noticeable interruption. Keep this pipeline warm.
-- **`image-to-image`** — competitive warm advantage, though less severe than text-to-image.
+- **`text-to-image`** – cold load on SDXL takes 30–90 seconds. Gateways route to warm competitors first. Running cold puts the node out of contention.
+- **`live-video-to-video`** – cold loading mid-stream causes noticeable interruption. Keep this pipeline warm.
+- **`image-to-image`** – competitive warm advantage, though less severe than text-to-image.
 
 ### Pipelines where cold loading is acceptable
 
-- **`audio-to-text`** — Whisper loads in ~3–5 seconds. First-request latency is tolerable for transcription use cases.
-- **`image-to-text`** — BLIP is very fast to load. Cold loading is acceptable.
-- **`segment-anything-2`** — keep it warm for segmentation workloads that need uninterrupted response.
+- **`audio-to-text`** – Whisper loads in ~3–5 seconds. First-request latency is tolerable for transcription use cases.
+- **`image-to-text`** – BLIP is very fast to load. Cold loading is acceptable.
+- **`segment-anything-2`** – keep it warm for segmentation workloads that need uninterrupted response.
 
 ### The Beta warm model constraint
 
@@ -239,7 +240,7 @@ During the Beta phase, only **one warm model per GPU** is supported. Setting `wa
 
 **Example of what works:**
 
-One RTX 4090, two entries — one warm slot available:
+One RTX 4090, two entries – one warm slot available:
 
 ```json icon="terminal" title="Single-GPU warm and cold example"
 [
@@ -355,12 +356,12 @@ For `llm` pipeline, use the HuggingFace ID (`meta-llama/Meta-Llama-3.1-8B-Instru
 **Type:** integer or string
 **Description:** Price per unit of work.
 
-**Integer format** — value in Wei:
+**Integer format** – value in Wei:
 ```json icon="terminal" title="Wei price_per_unit example"
 "price_per_unit": 4768371
 ```
 
-**USD string format** — scientific notation with USD suffix:
+**USD string format** – scientific notation with USD suffix:
 ```json icon="terminal" title="USD price_per_unit example"
 "price_per_unit": "0.5e-3USD",
 "currency": "USD"
@@ -511,17 +512,17 @@ For Ollama with multiple loaded models or hardware built for parallel inference,
 
 Model earnings diverge for four clear reasons:
 
-1. **Pipeline demand** — some pipelines receive more jobs from gateways
-2. **Model match** — gateways often request specific model IDs; running the requested model gets you the job
-3. **Warm status** — warm models win latency-competitive pipelines
-4. **Pricing competitiveness** — prices above the gateway's `maxPricePerUnit` receive zero jobs
+1. **Pipeline demand** – some pipelines receive more jobs from gateways
+2. **Model match** – gateways often request specific model IDs; running the requested model gets you the job
+3. **Warm status** – warm models win latency-competitive pipelines
+4. **Pricing competitiveness** – prices above the gateway's `maxPricePerUnit` receive zero jobs
 
 ### Tracking performance
 
-- **[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** — current capability visibility across all orchestrators
-- **[explorer.livepeer.org](https://explorer.livepeer.org)** — per-orchestrator fee earnings and job count
+- **[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** – current capability visibility across all orchestrators
+- **[explorer.livepeer.org](https://explorer.livepeer.org)** – per-orchestrator fee earnings and job count
 
-Use the Explorer AI leaderboard to compare your earnings against similar nodes. Nodes with identical hardware but different warm model selections often show significantly different earnings — the warm pipeline choice matters more than raw GPU performance.
+Use the Explorer AI leaderboard to compare your earnings against similar nodes. Nodes with identical hardware but different warm model selections often show significantly different earnings – the warm pipeline choice matters more than raw GPU performance.
 
 ### Model selection heuristics
 

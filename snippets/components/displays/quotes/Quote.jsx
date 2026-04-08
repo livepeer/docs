@@ -5,20 +5,23 @@
  * @status stable
  * @description Styled blockquote with accent border and centred italic text.
   * @aiDiscoverability none
+ * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/governance-model.mdx, v2/about/protocol/livepeer-token.mdx, v2/about/protocol/overview.mdx, v2/about/protocol/technical-architecture.mdx, v2/about/protocol/treasury.mdx, v2/gateways/setup/guide.mdx, v2/home/about-livepeer/roadmap.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/report.mdx, v2/orchestrators/guides/deployment-details/join-a-pool.mdx, v2/orchestrators/guides/deployment-details/setup-options.mdx
+ * @breakingChangeRisk medium
+ * @lastMeaningfulChange 2026-04-08
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
  */
 export const Quote = ({ children, className = "", style = {}, ...rest }) => {
   const quoteStyle = {
-    fontSize: '1rem',
+    fontSize: "1rem",
     textAlign: 'center',
     opacity: 1,
     fontStyle: 'italic',
-    color: 'var(--accent)',
-    border: '1px solid var(--border)',
-    borderRadius: '8px',
-    padding: '1rem',
+    color: 'var(--lp-color-accent)',
+    border: '1px solid var(--lp-color-border-default)',
+    borderRadius: "8px",
+    padding: "var(--lp-spacing-4)",
     margin: '1rem 0',
     ...style,
   }
@@ -32,6 +35,9 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @status stable
  * @description Framed blockquote with optional author, source link, and image.
   * @aiDiscoverability none
+ * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {any} children - children prop.
  * @param {any} author - author prop.
  * @param {any} source - source prop.
@@ -71,14 +77,14 @@ export const FrameQuote = ({
         display: 'flex',
         flexDirection: 'column',
         padding: '0.75rem 1rem 0.25rem 1rem',
-        gap: '0.25rem',
+        gap: "var(--lp-spacing-1)",
         margin: 0,
       }}
     >
       <div
         style={{
-          borderLeft: `4px solid var(--accent)`,
-          paddingLeft: '1rem',
+          borderLeft: `4px solid var(--lp-color-accent)`,
+          paddingLeft: "var(--lp-spacing-4)",
           fontStyle: 'italic',
         }}
       >
@@ -89,7 +95,7 @@ export const FrameQuote = ({
           style={{
             display: 'flex',
             justifyContent: alignmentMap[align] || 'flex-end',
-            marginLeft: align === 'left' ? '1.5rem' : 0,
+            marginLeft: align === 'left' ? "var(--lp-spacing-6)" : 0,
           }}
         >
           <div style={{ textAlign: align === 'center' ? 'center' : 'left' }}>
@@ -109,20 +115,20 @@ export const FrameQuote = ({
                     style={{
                       opacity: 0.7,
                       fontStyle: 'italic',
-                      borderBottom: '1px solid var(--accent)',
-                      fontSize: '1rem',
+                      borderBottom: '1px solid var(--lp-color-accent)',
+                      fontSize: "1rem",
                     }}
                   >
                     {source}
                   </span>{' '}
-                  <Icon icon="arrow-up-right" size={12} color="var(--accent)" />
+                  <Icon icon="arrow-up-right" size={12} color="var(--lp-color-accent)" />
                 </a>
               ) : (
                 <span
                   style={{
                     opacity: 0.7,
                     fontStyle: 'italic',
-                    fontSize: '1rem',
+                    fontSize: "1rem",
                   }}
                 >
                   {source}
@@ -139,7 +145,7 @@ export const FrameQuote = ({
       className={className}
       style={{
         border: borderColor ? `1px solid ${borderColor}` : 'none',
-        borderRadius: '8px',
+        borderRadius: "8px",
         overflow: 'hidden',
         ...style,
       }}

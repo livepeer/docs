@@ -1,7 +1,11 @@
 ---
 title: Resource Hub Terms
 sidebarTitle: Resource Hub Terms
-description: 'Key terms from the Livepeer Resources section — protocol references, external tools, research, community resources, and cross-network concepts.'
+description: >-
+  Key terms from the Livepeer Resources section — protocol references, external tools, research, community resources,
+  and cross-network concepts.
+lifecycleStage: discover
+complexity: intermediate
 keywords:
   - livepeer
   - glossary
@@ -12,7 +16,7 @@ pageType: reference
 pageVariant: compendium
 purpose: reference
 status: draft
-lastVerified: '2026-03'
+lastVerified: 2026-03
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
@@ -31,17 +35,19 @@ lastVerified: '2026-03'
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
-import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { SearchTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
-import { glossaryBadges } from '/v2/solutions/data/badges.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { glossaryBadges } from '/snippets/data/glossary-badges.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 
 {/* ==========================SECTION: SEARCH TIP========================= */}
 <Tip>
 **Finding terms quickly**
-- **Cmd+K** (Mac) / **Ctrl+K** (Windows) — search all Livepeer docs
-- **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
+- **Cmd+K** (Mac) / **Ctrl+K** (Windows) – search all Livepeer docs
+- **Cmd+F** (Mac) / **Ctrl+F** (Windows) – search within this page
 - Use the category filter below to narrow by topic
 </Tip>
 
@@ -50,10 +56,10 @@ import { glossaryBadges } from '/v2/solutions/data/badges.jsx'
 </Note>
 
 {/* ==========================SECTION: INTRO========================= */}
-Key terms used across the Livepeer Resources section — spanning protocol mechanics, smart contracts, AI infrastructure, video encoding, web3 economics, and external tooling.
+Key terms used across the Livepeer Resources section – spanning protocol mechanics, smart contracts, AI infrastructure, video encoding, web3 economics, and external tooling.
 
 <Note>
-  **Scope**: Terms scoped to the Resources section. For the complete Livepeer protocol glossary across all tabs, see the [Livepeer Glossary](/v2/resources/glossary). For internal contributor and governance terms, see `docs-guide/docs-glossary.md` (internal contributors and agents only — not publicly served).
+  **Scope**: Terms scoped to the Resources section. For the complete Livepeer protocol glossary across all tabs, see the [Livepeer Glossary](/v2/resources/glossary). For internal contributor and governance terms, see `docs-guide/docs-glossary.md` (internal contributors and agents only – not publicly served).
 </Note>
 
 <CustomDivider />
@@ -72,7 +78,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   itemsList={[
     { Term: "Active Set", Category: "livepeer", Niche: "protocol", Definition: "The top 100 orchestrators by total bonded stake eligible to receive work each round." },
     { Term: "Agent", Category: "ai", Niche: "concept", Definition: "A system that perceives its environment and acts autonomously to achieve goals, often powered by large language models with tool access." },
-    { Term: "AI", Category: "ai", Niche: "concept", Definition: "The simulation of human intelligence processes by machines — including learning, reasoning, and problem-solving — using statistical models trained on large datasets." },
+    { Term: "AI", Category: "ai", Niche: "concept", Definition: "The simulation of human intelligence processes by machines – including learning, reasoning, and problem-solving – using statistical models trained on large datasets." },
     { Term: "Arbitrum", Category: "web3", Niche: "chain", Definition: "A Layer-2 Optimistic Rollup settling to Ethereum that processes transactions off-chain while inheriting Ethereum-grade security." },
     { Term: "Bitrate", Category: "video", Niche: "encoding", Definition: "The number of bits conveyed or processed per unit of time; in video it determines the data per second of content, affecting quality and file size." },
     { Term: "Block Timestamps", Category: "web3", Niche: "identity", Definition: "Unix timestamps embedded in each Ethereum or Arbitrum block header, used by smart contracts for time-dependent functions such as round boundaries." },
@@ -81,7 +87,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Bridging", Category: "web3", Niche: "concept", Definition: "The mechanism connecting two blockchain ecosystems to enable token or information transfer between them." },
     { Term: "Broadcaster (deprecated)", Category: "livepeer", Niche: "role", Definition: "The legacy Livepeer term for a node that published streams and submitted video for transcoding; now replaced by the term 'Gateway.'" },
     { Term: "BYOC", Category: "livepeer", Niche: "deployment", Definition: "A deployment pattern allowing teams to supply custom Docker containers running Python workloads for Livepeer AI streaming pipelines." },
-    { Term: "Capability", Category: "livepeer", Niche: "protocol", Definition: "An AI service or job type — defined as a pipeline and model pair — that an orchestrator advertises as available to gateways." },
+    { Term: "Capability", Category: "livepeer", Niche: "protocol", Definition: "An AI service or job type – defined as a pipeline and model pair – that an orchestrator advertises as available to gateways." },
     { Term: "CDN", Category: "technical", Niche: "infra", Definition: "A geographically distributed network of servers caching and delivering content with high availability and low latency to end users." },
     { Term: "CPU (Central Processing Unit)", Category: "technical", Niche: "hardware", Definition: "The primary general-purpose processor in a computer; in Livepeer, CPU handles node software overhead while GPU handles intensive transcoding and AI inference workloads." },
     { Term: "CLI", Category: "technical", Niche: "dev", Definition: "A text-based interface for interacting with software by typing commands, used to configure and operate Livepeer gateway and orchestrator nodes." },
@@ -89,7 +95,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Cold Start", Category: "ai", Niche: "concept", Definition: "The latency incurred when an AI model must be loaded from storage into GPU memory before it can serve its first inference request, typically 5–90 seconds." },
     { Term: "ComfyStream", Category: "livepeer", Niche: "product", Definition: "A Livepeer project implementing a ComfyUI custom node that runs real-time media workflows for AI-powered video and audio processing on live streams." },
     { Term: "Configuration Parameters", Category: "livepeer", Niche: "config", Definition: "CLI flags and environment variables that control node behavior including payment settings, pricing, preferred orchestrators, and network mode." },
-    { Term: "ControlNet", Category: "ai", Niche: "model", Definition: "A neural network architecture that adds spatial conditioning controls — such as edge maps, depth, or pose — to pretrained diffusion models." },
+    { Term: "ControlNet", Category: "ai", Niche: "model", Definition: "A neural network architecture that adds spatial conditioning controls – such as edge maps, depth, or pose – to pretrained diffusion models." },
     { Term: "Controller", Category: "livepeer", Niche: "contract", Definition: "The Livepeer registry smart contract managing all protocol contract addresses and coordinating protocol upgrades on Arbitrum." },
     { Term: "DAO", Category: "web3", Niche: "concept", Definition: "An organization governed by smart contracts in which rules are encoded in code and members vote on proposals via a decentralized ledger." },
     { Term: "DASH", Category: "video", Niche: "protocol", Definition: "An adaptive bitrate streaming protocol that breaks content into small HTTP-served segments at multiple bitrate levels, allowing clients to switch quality dynamically." },
@@ -99,7 +105,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Delivery", Category: "video", Niche: "processing", Definition: "The stage in the video pipeline where encoded content is transmitted from origin servers or CDNs to end-user devices for playback." },
     { Term: "DePIN", Category: "web3", Niche: "concept", Definition: "A category of blockchain systems that incentivize communities to collectively build and operate physical or computational infrastructure using token rewards." },
     { Term: "Developer", Category: "livepeer", Niche: "role", Definition: "Anyone building applications using Livepeer, typically through hosted services such as Livepeer Studio, Daydream, or Streamplace, or via library SDKs." },
-    { Term: "Developer Platform", Category: "livepeer", Niche: "product", Definition: "The abstraction layer providing tools, APIs, dashboards, and hosted services — including Livepeer Studio, Daydream, and Streamplace — for building applications on top of Livepeer." },
+    { Term: "Developer Platform", Category: "livepeer", Niche: "product", Definition: "The abstraction layer providing tools, APIs, dashboards, and hosted services – including Livepeer Studio, Daydream, and Streamplace – for building applications on top of Livepeer." },
     { Term: "Diffusion Model", Category: "ai", Niche: "concept", Definition: "A class of generative neural networks that learn to produce data by iteratively reversing a gradual noising process applied during training." },
     { Term: "ETH", Category: "web3", Niche: "token", Definition: "The native cryptocurrency of Ethereum, used to pay transaction fees (gas) and as the settlement currency for Livepeer transcoding and AI inference fees." },
     { Term: "Ethereum Address", Category: "web3", Niche: "identity", Definition: "A 42-character hexadecimal string beginning with '0x,' derived from the last 20 bytes of a public key hash, used to send and receive funds and interact with smart contracts." },
@@ -120,7 +126,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "Latency", Category: "video", Niche: "playback", Definition: "The delay between video capture at the source and display on the viewer's device, accumulating at every stage of the pipeline." },
     { Term: "Low-Latency", Category: "video", Niche: "streaming", Definition: "A system characteristic where the delay between an event occurring and a response being delivered is minimised; in Livepeer, sub-500ms round-trip times are targeted for real-time AI video pipelines." },
     { Term: "Layer 2", Category: "web3", Niche: "chain", Definition: "A separate blockchain built on top of a Layer-1 base chain (such as Ethereum) that handles transactions off-chain while inheriting the security guarantees of the base layer." },
-    { Term: "Livepeer Actor", Category: "livepeer", Niche: "role", Definition: "A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system." },
+    { Term: "Livepeer Actor", Category: "livepeer", Niche: "role", Definition: "A participant in the Livepeer protocol or network – human or machine – that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system." },
     { Term: "Livepeer Ecosystem", Category: "livepeer", Niche: "entity", Definition: "The full set of projects, tools, participants, and organizations building on or contributing to the Livepeer network, including SPEs, community tools, integrated applications, and partner services." },
     { Term: "Livepeer Explorer", Category: "livepeer", Niche: "tool", Definition: "The official protocol explorer web interface for viewing network state, orchestrator information, staking data, and governance proposals." },
     { Term: "Livepeer Foundation", Category: "livepeer", Niche: "entity", Definition: "A non-profit Cayman Islands Foundation Company stewarding the long-term vision, ecosystem growth, and core development of the Livepeer network." },
@@ -130,9 +136,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "LPT", Category: "livepeer", Niche: "protocol", Definition: "The ERC-20 governance and staking token used for orchestrator selection, delegation, reward distribution, and protocol security." },
     { Term: "Merkle Mine", Category: "web3", Niche: "concept", Definition: "Livepeer's algorithm for decentralized token distribution at genesis using Merkle proofs to fairly distribute initial LPT supply." },
     { Term: "Minter", Category: "livepeer", Niche: "contract", Definition: "The Livepeer smart contract responsible for minting new LPT tokens during reward calls and holding ETH collected from winning payment tickets." },
-    { Term: "Model", Category: "ai", Niche: "concept", Definition: "A mathematical structure — a neural network with learned weights — enabling predictions or content generation for new inputs." },
+    { Term: "Model", Category: "ai", Niche: "concept", Definition: "A mathematical structure – a neural network with learned weights – enabling predictions or content generation for new inputs." },
     { Term: "Network Effects", Category: "economic", Niche: "business", Definition: "The phenomenon where a network's value increases as more participants join, creating compounding benefits for all existing members." },
-    { Term: "Node", Category: "technical", Niche: "infra", Definition: "Any computing device running Livepeer software and participating in protocol operations — gateway nodes, orchestrator nodes, or worker nodes." },
+    { Term: "Node", Category: "technical", Niche: "infra", Definition: "Any computing device running Livepeer software and participating in protocol operations – gateway nodes, orchestrator nodes, or worker nodes." },
     { Term: "Off-chain", Category: "web3", Niche: "concept", Definition: "Activities, computations, or data exchanges that occur outside the main blockchain and are not directly recorded on-chain." },
     { Term: "On-chain", Category: "web3", Niche: "concept", Definition: "Actions, computations, or data that are directly recorded, executed, and verified on the blockchain with full transparency." },
     { Term: "On-chain Treasury", Category: "livepeer", Niche: "protocol", Definition: "A protocol-governed smart contract pool of LPT funded by a portion of each round's inflation, allocated to ecosystem development through community-approved proposals." },
@@ -163,7 +169,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
     { Term: "TAM", Category: "economic", Niche: "business", Definition: "The total potential revenue opportunity available to a product or service if it captured 100% of its target market." },
     { Term: "TensorRT", Category: "ai", Niche: "framework", Definition: "NVIDIA's inference SDK that optimizes trained models through quantization, layer fusion, and kernel tuning to deliver low-latency GPU inference." },
     { Term: "Tokenomics", Category: "web3", Niche: "tokenomics", Definition: "The economic design of a token system encompassing supply, distribution, incentive structures, staking mechanics, inflation curves, and governance rights." },
-    { Term: "Transcoding", Category: "video", Niche: "processing", Definition: "Direct digital-to-digital conversion of video from one encoding to another — changing format, resolution, bitrate, or codec — to produce multiple adaptive renditions." },
+    { Term: "Transcoding", Category: "video", Niche: "processing", Definition: "Direct digital-to-digital conversion of video from one encoding to another – changing format, resolution, bitrate, or codec – to produce multiple adaptive renditions." },
     { Term: "Transformer", Category: "ai", Niche: "concept", Definition: "A neural network architecture that uses self-attention mechanisms to process sequential data in parallel, forming the basis of most modern large language models and many vision models." },
     { Term: "Treasury", Category: "economic", Niche: "treasury", Definition: "The pool of LPT and ETH held on-chain for funding public goods, ecosystem development, and community-approved initiatives." },
     { Term: "Verifier", Category: "livepeer", Niche: "protocol", Definition: "A network component responsible for validating work performed by orchestrators, confirming that transcoded or AI-processed output matches expected results." },
@@ -237,7 +243,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Capability" icon="book-open">
-    **Definition**: An AI service or job type — defined as a pipeline and model pair — that an orchestrator advertises as available to gateways.
+    **Definition**: An AI service or job type – defined as a pipeline and model pair – that an orchestrator advertises as available to gateways.
 
     **Context**: When an orchestrator registers capabilities, gateways use this information during discovery to route AI inference requests only to nodes that can handle the requested pipeline and model combination.
 
@@ -257,7 +263,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Configuration Parameters" icon="book-open">
-    **Definition**: CLI flags and environment variables that control node behavior including payment settings, pricing, preferred orchestrators, and network mode.
+    **Definition**: CLI flags and environment variables that control node behaviour including payment settings, pricing, preferred orchestrators, and network mode.
 
     **Context**: Livepeer node configuration is managed entirely through command-line flags passed to go-livepeer at startup, covering everything from pricePerUnit and MaxPrice to orchSecret and operational mode settings.
 
@@ -279,7 +285,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Decentralized GPU Network" icon="book-open">
     **Definition**: A marketplace of GPU resources contributed by orchestrators worldwide, coordinated through crypto-economic incentives for video transcoding and AI inference.
 
-    **Context**: Livepeer's decentralized GPU network is the supply side of the protocol — thousands of orchestrator-operated machines offering compute capacity that gateways route jobs to based on price, performance, and capability.
+    **Context**: Livepeer's decentralised GPU network is the supply side of the protocol – thousands of orchestrator-operated machines offering compute capacity that gateways route jobs to based on price, performance, and capability.
 
     **Status**: current
 
@@ -307,9 +313,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Developer Platform" icon="book-open">
-    **Definition**: The abstraction layer providing tools, APIs, dashboards, and hosted services — including Livepeer Studio, Daydream, and Streamplace — for building applications on top of Livepeer.
+    **Definition**: The abstraction layer providing tools, APIs, dashboards, and hosted services – including Livepeer Studio, Daydream, and Streamplace – for building applications on top of Livepeer.
 
-    **Context**: The Developer Platform shields application builders from low-level protocol mechanics (staking, ticket redemption, orchestrator discovery) while still routing jobs through the decentralized network.
+    **Context**: The Developer Platform shields application builders from low-level protocol mechanics (staking, ticket redemption, orchestrator discovery) while still routing jobs through the decentralised network.
 
     **Status**: current
 
@@ -319,7 +325,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Gateway" icon="book-open">
     **Definition**: A Livepeer node that submits jobs, routes work to orchestrators, manages payment flows, and provides a direct interface to the protocol.
 
-    **Context**: Gateways are the demand-side actors in the Livepeer protocol — they hold ETH deposits for probabilistic micropayments, discover and select orchestrators, and receive transcoded or AI-processed output to forward to end users or applications.
+    **Context**: Gateways are the demand-side actors in the Livepeer protocol – they hold ETH deposits for probabilistic micropayments, discover and select orchestrators, and receive transcoded or AI-processed output to forward to end users or applications.
 
     **Status**: current
 
@@ -339,7 +345,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Inflation" icon="book-open">
-    **Definition**: The dynamic issuance of new LPT each round, distributed to orchestrators and delegators based on their participation, designed to incentivize staking toward a 50% target bonding rate.
+    **Definition**: The dynamic issuance of new LPT each round, distributed to orchestrators and delegators based on their participation, designed to incentivise staking toward a 50% target bonding rate.
 
     **Status**: current
 
@@ -347,7 +353,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Livepeer Actor" icon="book-open">
-    **Definition**: A participant in the Livepeer protocol or network — human or machine — that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system.
+    **Definition**: A participant in the Livepeer protocol or network – human or machine – that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system.
 
     **Context**: The term "Livepeer Actor" is the broadest participant category, encompassing Protocol Actors (gateways, orchestrators, delegators) as well as ecosystem contributors, developers, and tooling operators.
 
@@ -357,9 +363,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Livepeer Ecosystem" icon="book-open">
-    **Definition**: The full set of projects, tools, participants, and organizations building on or contributing to the Livepeer network, including SPEs, community tools, integrated applications, and partner services.
+    **Definition**: The full set of projects, tools, participants, and organisations building on or contributing to the Livepeer network, including SPEs, community tools, integrated applications, and partner services.
 
-    **Context**: The Livepeer Ecosystem is broader than the protocol itself — it includes third-party tooling, community programs, governance participants, and complementary infrastructure providers that extend the network's capabilities.
+    **Context**: The Livepeer Ecosystem is broader than the protocol itself – it includes third-party tooling, community programs, governance participants, and complementary infrastructure providers that extend the network's capabilities.
 
     **Status**: current
 
@@ -387,9 +393,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Livepeer Network" icon="book-open">
-    **Definition**: The live, operational decentralized system of orchestrators, workers, gateways, and broadcasters performing video transcoding and AI inference jobs.
+    **Definition**: The live, operational decentralised system of orchestrators, workers, gateways, and broadcasters performing video transcoding and AI inference jobs.
 
-    **Context**: "Livepeer Network" refers to the running infrastructure layer — distinct from the Livepeer Protocol, which is the on-chain rule set. The network is the mesh of machines; the protocol governs their behavior.
+    **Context**: "Livepeer Network" refers to the running infrastructure layer – distinct from the Livepeer Protocol, which is the on-chain rule set. The network is the mesh of machines; the protocol governs their behaviour.
 
     **Status**: current
 
@@ -399,7 +405,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Livepeer Protocol" icon="book-open">
     **Definition**: The on-chain ruleset and smart contract logic governing staking, delegation, inflation, orchestrator selection, slashing, and probabilistic payments.
 
-    **Context**: The Livepeer Protocol is the coordination and incentive layer — it does not perform video or AI compute itself but enforces correct behavior, reward distribution, and economic security for the network.
+    **Context**: The Livepeer Protocol is the coordination and incentive layer – it does not perform video or AI compute itself but enforces correct behaviour, reward distribution, and economic security for the network.
 
     **Status**: current
 
@@ -467,7 +473,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Ticket
 
-    **Context**: Payment Tickets are Livepeer's probabilistic micropayment mechanism — rather than settling every small payment on-chain (which would be prohibitively expensive), tickets function like lottery tickets, with winners redeemed via the TicketBroker contract.
+    **Context**: Payment Tickets are Livepeer's probabilistic micropayment mechanism – rather than settling every small payment on-chain (which would be prohibitively expensive), tickets function like lottery tickets, with winners redeemed via the TicketBroker contract.
 
     **Status**: current
 
@@ -477,7 +483,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Protocol" icon="book-open">
     **Definition**: The on-chain governance and incentive layer that coordinates orchestrators, staking rewards, inflation, slashing, and job payments via smart contracts on Arbitrum.
 
-    **Context**: In Livepeer documentation, "Protocol" specifically refers to the smart contract system — as distinct from the "Network," which is the off-chain operational layer of running nodes.
+    **Context**: In Livepeer documentation, "Protocol" specifically refers to the smart contract system – as distinct from the "Network," which is the off-chain operational layer of running nodes.
 
     **Status**: current
 
@@ -487,7 +493,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Protocol Actor" icon="book-open">
     **Definition**: A main participant performing a core function in the Livepeer protocol: gateways, orchestrators, and delegators.
 
-    **Context**: Protocol Actors interact directly with Livepeer smart contracts — gateways submit jobs and manage payment deposits, orchestrators bond stake and call rewards, delegators bond stake to orchestrators. Developers using hosted services are not Protocol Actors unless they also run a gateway.
+    **Context**: Protocol Actors interact directly with Livepeer smart contracts – gateways submit jobs and manage payment deposits, orchestrators bond stake and call rewards, delegators bond stake to orchestrators. Developers using hosted services are not Protocol Actors unless they also run a gateway.
 
     **Status**: current
 
@@ -497,7 +503,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Reputation" icon="book-open">
     **Definition**: A measure of an orchestrator's performance, reliability, and trustworthiness that influences job routing priority and payment selection by gateways.
 
-    **Context**: Reputation in Livepeer is not a single on-chain score but a composite of off-chain performance metrics — success rate, latency, and transcode fail rate — that gateways use in their orchestrator selection weighting.
+    **Context**: Reputation in Livepeer is not a single on-chain score but a composite of off-chain performance metrics – success rate, latency, and transcode fail rate – that gateways use in their orchestrator selection weighting.
 
     **Status**: current
 
@@ -533,7 +539,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="SPE (Special Purpose Entity)" icon="book-open">
-    **Definition**: A treasury-funded team or organization with a defined scope, budget, and accountability structure, funded by the Livepeer on-chain treasury to deliver specific protocol or ecosystem objectives.
+    **Definition**: A treasury-funded team or organisation with a defined scope, budget, and accountability structure, funded by the Livepeer on-chain treasury to deliver specific protocol or ecosystem objectives.
 
     **Also known as**: Special Purpose Entity
 
@@ -585,7 +591,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Agent" icon="book-open">
     **Definition**: A system that perceives its environment and acts autonomously to achieve goals, often powered by large language models with tool access.
 
-    **External**: [Intelligent agent — Wikipedia](https://en.wikipedia.org/wiki/Intelligent_agent)
+    **External**: [Intelligent agent – Wikipedia](https://en.wikipedia.org/wiki/Intelligent_agent)
 
     **Status**: current
 
@@ -593,11 +599,11 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="AI (Artificial Intelligence)" icon="book-open">
-    **Definition**: The simulation of human intelligence processes by machines — including learning, reasoning, and problem-solving — using statistical models trained on large datasets.
+    **Definition**: The simulation of human intelligence processes by machines – including learning, reasoning, and problem-solving – using statistical models trained on large datasets.
 
     **Also known as**: Artificial Intelligence
 
-    **External**: [Artificial intelligence — Wikipedia](https://en.wikipedia.org/wiki/Artificial_intelligence)
+    **External**: [Artificial intelligence – Wikipedia](https://en.wikipedia.org/wiki/Artificial_intelligence)
 
     **Status**: current
 
@@ -609,7 +615,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Cold model
 
-    **External**: [Cold start latency — OpenMetal](https://openmetal.io/resources/blog/cold-start-latency-private-ai-inference/)
+    **External**: [Cold start latency – OpenMetal](https://openmetal.io/resources/blog/cold-start-latency-private-ai-inference/)
 
     **Status**: current
 
@@ -617,9 +623,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="ControlNet" icon="book-open">
-    **Definition**: A neural network architecture that adds spatial conditioning controls — such as edge maps, depth, or pose — to pretrained diffusion models.
+    **Definition**: A neural network architecture that adds spatial conditioning controls – such as edge maps, depth, or pose – to pretrained diffusion models.
 
-    **External**: [ControlNet — Hugging Face](https://huggingface.co/lllyasviel/ControlNet)
+    **External**: [ControlNet – Hugging Face](https://huggingface.co/lllyasviel/ControlNet)
 
     **Status**: current
 
@@ -631,7 +637,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Diffusion
 
-    **External**: [Diffusion model — Wikipedia](https://en.wikipedia.org/wiki/Diffusion_model)
+    **External**: [Diffusion model – Wikipedia](https://en.wikipedia.org/wiki/Diffusion_model)
 
     **Status**: current
 
@@ -655,7 +661,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Inference" icon="book-open">
     **Definition**: Running a trained machine learning model on new input data to produce predictions, classifications, or generated outputs.
 
-    **External**: [Inference engine — Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
+    **External**: [Inference engine – Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
 
     **Status**: current
 
@@ -663,9 +669,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Model" icon="book-open">
-    **Definition**: A mathematical structure — a neural network with learned weights — enabling predictions or content generation for new inputs.
+    **Definition**: A mathematical structure – a neural network with learned weights – enabling predictions or content generation for new inputs.
 
-    **External**: [Machine learning — Wikipedia](https://en.wikipedia.org/wiki/Machine_learning)
+    **External**: [Machine learning – Wikipedia](https://en.wikipedia.org/wiki/Machine_learning)
 
     **Status**: current
 
@@ -685,7 +691,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Real-Time AI" icon="book-open">
     **Definition**: Running machine learning models on live streaming input with latency low enough for interactive speeds, typically under 100 milliseconds.
 
-    **External**: [Real-time inference — Ultralytics](https://www.ultralytics.com/glossary/real-time-inference)
+    **External**: [Real-time inference – Ultralytics](https://www.ultralytics.com/glossary/real-time-inference)
 
     **Status**: current
 
@@ -697,7 +703,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Stable Diffusion XL
 
-    **External**: [Stable Diffusion XL — Hugging Face](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0)
+    **External**: [Stable Diffusion XL – Hugging Face](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0)
 
     **Status**: current
 
@@ -707,7 +713,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="TensorRT" icon="book-open">
     **Definition**: NVIDIA's inference SDK that optimizes trained models through quantization, layer fusion, and kernel tuning to deliver low-latency GPU inference.
 
-    **External**: [TensorRT — NVIDIA developer](https://developer.nvidia.com/tensorrt)
+    **External**: [TensorRT – NVIDIA developer](https://developer.nvidia.com/tensorrt)
 
     **Status**: current
 
@@ -717,7 +723,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Transformer" icon="book-open">
     **Definition**: A neural network architecture that uses self-attention mechanisms to process sequential data in parallel, forming the basis of most modern large language models and many vision models.
 
-    **External**: [Transformer (machine learning) — Wikipedia](https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture))
+    **External**: [Transformer (machine learning) – Wikipedia](https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture))
 
     **Status**: current
 
@@ -727,7 +733,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Warm Model" icon="book-open">
     **Definition**: An AI model already loaded into GPU memory and ready to serve inference requests immediately without cold-start delay.
 
-    **External**: [Cold start latency — OpenMetal](https://openmetal.io/resources/blog/cold-start-latency-private-ai-inference/)
+    **External**: [Cold start latency – OpenMetal](https://openmetal.io/resources/blog/cold-start-latency-private-ai-inference/)
 
     **Status**: current
 
@@ -737,7 +743,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="World Model" icon="book-open">
     **Definition**: A neural network that represents and predicts environment dynamics, enabling an agent to plan future actions by simulating outcomes without interacting with the real environment.
 
-    **External**: [Generative AI — Wikipedia](https://en.wikipedia.org/wiki/Generative_artificial_intelligence)
+    **External**: [Generative AI – Wikipedia](https://en.wikipedia.org/wiki/Generative_artificial_intelligence)
 
     **Status**: current
 
@@ -753,7 +759,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Bitrate" icon="book-open">
     **Definition**: The number of bits conveyed or processed per unit of time; in video it determines the data per second of content, affecting quality and file size.
 
-    **External**: [Bit rate — Wikipedia](https://en.wikipedia.org/wiki/Bit_rate)
+    **External**: [Bit rate – Wikipedia](https://en.wikipedia.org/wiki/Bit_rate)
 
     **Status**: current
 
@@ -763,7 +769,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Codec" icon="book-open">
     **Definition**: Software or hardware that compresses and decompresses digital video using a defined algorithm, typically employing lossy compression.
 
-    **External**: [Video codec — Wikipedia](https://en.wikipedia.org/wiki/Video_codec)
+    **External**: [Video codec – Wikipedia](https://en.wikipedia.org/wiki/Video_codec)
 
     **Status**: current
 
@@ -775,7 +781,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Dynamic Adaptive Streaming over HTTP
 
-    **External**: [DASH — Wikipedia](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP)
+    **External**: [DASH – Wikipedia](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP)
 
     **Status**: current
 
@@ -785,7 +791,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Delivery" icon="book-open">
     **Definition**: The stage in the video pipeline where encoded content is transmitted from origin servers or CDNs to end-user devices for playback.
 
-    **External**: [Streaming media — Wikipedia](https://en.wikipedia.org/wiki/Streaming_media)
+    **External**: [Streaming media – Wikipedia](https://en.wikipedia.org/wiki/Streaming_media)
 
     **Status**: current
 
@@ -797,7 +803,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: HTTP Live Streaming
 
-    **External**: [HTTP Live Streaming — Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
+    **External**: [HTTP Live Streaming – Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
 
     **Status**: current
 
@@ -807,7 +813,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Ingest" icon="book-open">
     **Definition**: The process of receiving a live video stream from a broadcaster's encoder into a media server, typically via RTMP, SRT, or WebRTC.
 
-    **External**: [Real-Time Messaging Protocol — Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
+    **External**: [Real-Time Messaging Protocol – Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
     **Status**: current
 
@@ -817,7 +823,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Latency" icon="book-open">
     **Definition**: The delay between video capture at the source and display on the viewer's device, accumulating at every stage of the pipeline.
 
-    **External**: [Latency — Wikipedia](https://en.wikipedia.org/wiki/Latency_(audio))
+    **External**: [Latency – Wikipedia](https://en.wikipedia.org/wiki/Latency_(audio))
 
     **Status**: current
 
@@ -829,7 +835,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Tags**: `video:streaming`
 
-    **Context**: Critical for interactive AI video applications — high latency breaks the real-time feedback loop between user input and AI-transformed output.
+    **Context**: Critical for interactive AI video applications – high latency breaks the real-time feedback loop between user input and AI-transformed output.
 
     **Status**: current
 
@@ -839,7 +845,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Quality Ladder" icon="book-open">
     **Definition**: An ordered set of encoding profiles from lowest to highest quality used for adaptive bitrate rendition selection in video delivery.
 
-    **External**: [Encoding ladder — Cloudinary glossary](https://cloudinary.com/glossary/encoding-ladder)
+    **External**: [Encoding ladder – Cloudinary glossary](https://cloudinary.com/glossary/encoding-ladder)
 
     **Status**: current
 
@@ -849,7 +855,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Rendition" icon="book-open">
     **Definition**: A single encoded version of a source video at a specific resolution, bitrate, and codec configuration.
 
-    **External**: [Video rendition — Cloudinary glossary](https://cloudinary.com/glossary/video-rendition)
+    **External**: [Video rendition – Cloudinary glossary](https://cloudinary.com/glossary/video-rendition)
 
     **Status**: current
 
@@ -861,7 +867,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Real-Time Messaging Protocol
 
-    **External**: [Real-Time Messaging Protocol — Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
+    **External**: [Real-Time Messaging Protocol – Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
     **Status**: current
 
@@ -871,7 +877,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Segment" icon="book-open">
     **Definition**: A short time-sliced chunk of multiplexed audio and video that is independently transcoded, enabling parallel processing across multiple orchestrators.
 
-    **External**: [HTTP Live Streaming — Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
+    **External**: [HTTP Live Streaming – Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
 
     **Status**: current
 
@@ -881,7 +887,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Streaming" icon="book-open">
     **Definition**: Continuous delivery of audio and video content over a network, rendered in real time as it is received rather than requiring a full download before playback.
 
-    **External**: [Streaming media — Wikipedia](https://en.wikipedia.org/wiki/Streaming_media)
+    **External**: [Streaming media – Wikipedia](https://en.wikipedia.org/wiki/Streaming_media)
 
     **Status**: current
 
@@ -889,9 +895,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Transcoding" icon="book-open">
-    **Definition**: Direct digital-to-digital conversion of video from one encoding to another — changing format, resolution, bitrate, or codec — to produce multiple adaptive renditions.
+    **Definition**: Direct digital-to-digital conversion of video from one encoding to another – changing format, resolution, bitrate, or codec – to produce multiple adaptive renditions.
 
-    **External**: [Transcoding — Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
+    **External**: [Transcoding – Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
 
     **Status**: current
 
@@ -915,7 +921,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="WebRTC" icon="book-open">
     **Definition**: An open-source project and W3C standard providing browsers and mobile apps with real-time peer-to-peer audio, video, and data exchange without plugins.
 
-    **External**: [WebRTC — Wikipedia](https://en.wikipedia.org/wiki/WebRTC)
+    **External**: [WebRTC – Wikipedia](https://en.wikipedia.org/wiki/WebRTC)
 
     **Status**: current
 
@@ -927,7 +933,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: WebRTC-HTTP Egress Protocol
 
-    **External**: [WHEP — IETF draft](https://datatracker.ietf.org/doc/draft-ietf-wish-whep/)
+    **External**: [WHEP – IETF draft](https://datatracker.ietf.org/doc/draft-ietf-wish-whep/)
 
     **Status**: current
 
@@ -945,7 +951,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Arbitrum One
 
-    **External**: [Arbitrum — docs.arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
+    **External**: [Arbitrum – docs.arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
 
     **Status**: current
 
@@ -955,7 +961,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Block Timestamps" icon="book-open">
     **Definition**: Unix timestamps embedded in each Ethereum or Arbitrum block header, used by smart contracts for time-dependent functions such as round boundaries.
 
-    **External**: [Ethereum glossary — ethereum.org](https://ethereum.org/glossary/)
+    **External**: [Ethereum glossary – ethereum.org](https://ethereum.org/glossary/)
 
     **Status**: draft
 
@@ -967,7 +973,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Bridge
 
-    **External**: [Blockchain bridge — Ethereum docs](https://ethereum.org/developers/docs/bridges/)
+    **External**: [Blockchain bridge – Ethereum docs](https://ethereum.org/developers/docs/bridges/)
 
     **Status**: current
 
@@ -975,11 +981,11 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="DAO (Decentralized Autonomous Organization)" icon="book-open">
-    **Definition**: An organization governed by smart contracts in which rules are encoded in code and members vote on proposals via a decentralized ledger.
+    **Definition**: An organisation governed by smart contracts in which rules are encoded in code and members vote on proposals via a decentralised ledger.
 
-    **Also known as**: Decentralized Autonomous Organization
+    **Also known as**: Decentralised Autonomous Organisation
 
-    **External**: [Decentralized autonomous organization — Wikipedia](https://en.wikipedia.org/wiki/Decentralized_autonomous_organization)
+    **External**: [Decentralised autonomous organisation – Wikipedia](https://en.wikipedia.org/wiki/Decentralized_autonomous_organization)
 
     **Status**: current
 
@@ -989,7 +995,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Delegation" icon="book-open">
     **Definition**: The act of LPT holders staking their tokens toward an orchestrator they trust, sharing in rewards without needing to run infrastructure themselves.
 
-    **External**: [Delegated proof of stake — Wikipedia](https://en.wikipedia.org/wiki/Proof_of_stake)
+    **External**: [Delegated proof of stake – Wikipedia](https://en.wikipedia.org/wiki/Proof_of_stake)
 
     **Status**: current
 
@@ -997,11 +1003,11 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="DePIN (Decentralized Physical Infrastructure Networks)" icon="book-open">
-    **Definition**: A category of blockchain systems that incentivize communities to collectively build and operate physical or computational infrastructure using token rewards.
+    **Definition**: A category of blockchain systems that incentivise communities to collectively build and operate physical or computational infrastructure using token rewards.
 
-    **Also known as**: Decentralized Physical Infrastructure Networks
+    **Also known as**: Decentralised Physical Infrastructure Networks
 
-    **External**: [DePIN — Wikipedia](https://en.wikipedia.org/wiki/Decentralized_physical_infrastructure_network)
+    **External**: [DePIN – Wikipedia](https://en.wikipedia.org/wiki/Decentralized_physical_infrastructure_network)
 
     **Status**: current
 
@@ -1013,7 +1019,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Ether
 
-    **External**: [What is ether? — Ethereum.org](https://ethereum.org/what-is-ether/)
+    **External**: [What is ether? – Ethereum.org](https://ethereum.org/what-is-ether/)
 
     **Status**: current
 
@@ -1025,7 +1031,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Wallet Public Address
 
-    **External**: [Ethereum accounts — Ethereum docs](https://ethereum.org/developers/docs/accounts/)
+    **External**: [Ethereum accounts – Ethereum docs](https://ethereum.org/developers/docs/accounts/)
 
     **Status**: draft
 
@@ -1035,7 +1041,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Gas" icon="book-open">
     **Definition**: The unit measuring computational effort required to execute operations on Ethereum or Arbitrum; users pay gas fees in ETH to cover execution costs.
 
-    **External**: [Gas — Ethereum docs](https://ethereum.org/developers/docs/gas/)
+    **External**: [Gas – Ethereum docs](https://ethereum.org/developers/docs/gas/)
 
     **Status**: current
 
@@ -1045,7 +1051,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Governance" icon="book-open">
     **Definition**: The on-chain system of rules and processes for protocol decision-making, including LIP proposals, stake-weighted voting, and treasury allocation.
 
-    **External**: [Decentralized governance — Wikipedia](https://en.wikipedia.org/wiki/Decentralized_autonomous_organization)
+    **External**: [Decentralised governance – Wikipedia](https://en.wikipedia.org/wiki/Decentralized_autonomous_organization)
 
     **Status**: current
 
@@ -1057,7 +1063,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Initial Coin Offering
 
-    **External**: [Initial coin offering — Wikipedia](https://en.wikipedia.org/wiki/Initial_coin_offering)
+    **External**: [Initial coin offering – Wikipedia](https://en.wikipedia.org/wiki/Initial_coin_offering)
 
     **Status**: draft
 
@@ -1067,7 +1073,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Layer 2" icon="book-open">
     **Definition**: A separate blockchain built on top of a Layer-1 base chain (such as Ethereum) that handles transactions off-chain while inheriting the security guarantees of the base layer.
 
-    **External**: [Layer 2 — Ethereum.org](https://ethereum.org/layer-2/)
+    **External**: [Layer 2 – Ethereum.org](https://ethereum.org/layer-2/)
 
     **Status**: current
 
@@ -1075,7 +1081,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Merkle Mine" icon="book-open">
-    **Definition**: Livepeer's algorithm for decentralized token distribution at genesis using Merkle proofs to fairly distribute initial LPT supply.
+    **Definition**: Livepeer's algorithm for decentralised token distribution at genesis using Merkle proofs to fairly distribute initial LPT supply.
 
     **Context**: Merkle Mine was the mechanism used at Livepeer's 2018 mainnet launch to distribute tokens to existing Ethereum addresses without an ICO, using a Merkle tree of eligible addresses and on-chain proof verification.
 
@@ -1087,7 +1093,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Off-chain" icon="book-open">
     **Definition**: Activities, computations, or data exchanges that occur outside the main blockchain and are not directly recorded on-chain.
 
-    **External**: [Off-chain — Ethereum glossary](https://ethereum.org/glossary/)
+    **External**: [Off-chain – Ethereum glossary](https://ethereum.org/glossary/)
 
     **Status**: current
 
@@ -1097,7 +1103,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="On-chain" icon="book-open">
     **Definition**: Actions, computations, or data that are directly recorded, executed, and verified on the blockchain with full transparency.
 
-    **External**: [On-chain — Ethereum glossary](https://ethereum.org/glossary/)
+    **External**: [On-chain – Ethereum glossary](https://ethereum.org/glossary/)
 
     **Status**: current
 
@@ -1107,7 +1113,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Open Source" icon="book-open">
     **Definition**: Software whose source code is freely available for anyone to view, use, modify, and redistribute.
 
-    **External**: [Open-source software — Wikipedia](https://en.wikipedia.org/wiki/Open-source_software)
+    **External**: [Open-source software – Wikipedia](https://en.wikipedia.org/wiki/Open-source_software)
 
     **Status**: current
 
@@ -1117,7 +1123,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Rollups" icon="book-open">
     **Definition**: Layer-2 scaling solutions that execute transactions off-chain and post compressed data or proofs to Layer 1 to inherit its security guarantees.
 
-    **External**: [Rollups — Ethereum docs](https://ethereum.org/developers/docs/scaling/)
+    **External**: [Rollups – Ethereum docs](https://ethereum.org/developers/docs/scaling/)
 
     **Status**: current
 
@@ -1129,7 +1135,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Bonded Stake
 
-    **Context**: Stake is the core Sybil-resistance mechanism in Livepeer — orchestrators with more bonded stake have higher probability of active set inclusion and larger reward shares, while delegators' stakes earn proportional passive rewards.
+    **Context**: Stake is the core Sybil-resistance mechanism in Livepeer – orchestrators with more bonded stake have higher probability of active set inclusion and larger reward shares, while delegators' stakes earn proportional passive rewards.
 
     **Status**: current
 
@@ -1139,7 +1145,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Staking" icon="book-open">
     **Definition**: Locking tokens in a proof-of-stake protocol to participate in network security, governance, and earn rewards.
 
-    **External**: [Proof of stake — Ethereum docs](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – Ethereum docs](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -1151,7 +1157,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Token Economics
 
-    **External**: [Cryptoeconomics — Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
+    **External**: [Cryptoeconomics – Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
 
     **Status**: current
 
@@ -1187,7 +1193,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Network Effects" icon="book-open">
     **Definition**: The phenomenon where a network's value increases as more participants join, creating compounding benefits for all existing members.
 
-    **External**: [Network effect — Wikipedia](https://en.wikipedia.org/wiki/Network_effect)
+    **External**: [Network effect – Wikipedia](https://en.wikipedia.org/wiki/Network_effect)
 
     **Status**: current
 
@@ -1209,7 +1215,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Total Addressable Market
 
-    **External**: [Total addressable market — Wikipedia](https://en.wikipedia.org/wiki/Total_addressable_market)
+    **External**: [Total addressable market – Wikipedia](https://en.wikipedia.org/wiki/Total_addressable_market)
 
     **Status**: current
 
@@ -1237,7 +1243,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Content Delivery Network
 
-    **External**: [Content delivery network — Wikipedia](https://en.wikipedia.org/wiki/Content_delivery_network)
+    **External**: [Content delivery network – Wikipedia](https://en.wikipedia.org/wiki/Content_delivery_network)
 
     **Status**: current
 
@@ -1249,7 +1255,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Command-Line Interface
 
-    **External**: [Command-line interface — Wikipedia](https://en.wikipedia.org/wiki/Command_line_interface)
+    **External**: [Command-line interface – Wikipedia](https://en.wikipedia.org/wiki/Command_line_interface)
 
     **Status**: current
 
@@ -1273,7 +1279,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
 
     **Also known as**: Graphics Processing Unit
 
-    **External**: [Graphics processing unit — Wikipedia](https://en.wikipedia.org/wiki/Graphics_processing_unit)
+    **External**: [Graphics processing unit – Wikipedia](https://en.wikipedia.org/wiki/Graphics_processing_unit)
 
     **Status**: current
 
@@ -1295,9 +1301,9 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   </Accordion>
 
   <Accordion title="Node" icon="book-open">
-    **Definition**: Any computing device running Livepeer software and participating in protocol operations — gateway nodes, orchestrator nodes, or worker nodes.
+    **Definition**: Any computing device running Livepeer software and participating in protocol operations – gateway nodes, orchestrator nodes, or worker nodes.
 
-    **External**: [Node (networking) — Wikipedia](https://en.wikipedia.org/wiki/Node_(networking))
+    **External**: [Node (networking) – Wikipedia](https://en.wikipedia.org/wiki/Node_(networking))
 
     **Status**: current
 
@@ -1307,7 +1313,7 @@ Key terms used across the Livepeer Resources section — spanning protocol mecha
   <Accordion title="Remote Signer" icon="book-open">
     **Definition**: A service that holds private keys securely in an isolated environment and signs transactions on behalf of a Livepeer gateway or orchestrator node.
 
-    **External**: [Remote signing — Ethereum docs](https://ethereum.org/developers/docs/consensus-mechanisms/pos/keys/)
+    **External**: [Remote signing – Ethereum docs](https://ethereum.org/developers/docs/consensus-mechanisms/pos/keys/)
 
     **Status**: current
 

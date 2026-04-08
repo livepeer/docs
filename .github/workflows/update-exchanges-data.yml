@@ -1,0 +1,51 @@
+# type: integrator
+# concern: maintenance
+# pipeline: P5-auto
+name: Update Exchanges Data
+on:
+  schedule:
+    # Weekly Monday 03:00 UTC
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview changes without writing'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  update-exchanges:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch exchanges data
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            FLAGS="--dry-run"
+          fi
+          node .github/scripts/fetch-exchanges-data.js $FLAGS
+
+      - name: Check for changes
+        if: inputs.dry_run != 'true'
+        id: git-check
+        run: |
+          git diff --exit-code snippets/data/exchanges/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add snippets/data/exchanges/
+          git commit -m "chore: update exchanges data - $(date -u +'%Y-%m-%dT%H:%M:%SZ') [skip ci]"
+          git push

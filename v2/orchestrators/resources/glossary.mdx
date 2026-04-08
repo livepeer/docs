@@ -1,7 +1,11 @@
 ---
 title: Orchestrator Glossary
 sidebarTitle: Glossary
-description: "Key terms for Livepeer orchestrator operators — GPU setup, AI pipelines, staking, payment mechanics, monitoring, and protocol roles."
+description: >-
+  Key terms for Livepeer orchestrator operators — GPU setup, AI pipelines, staking, payment mechanics, monitoring, and
+  protocol roles.
+lifecycleStage: discover
+complexity: beginner
 keywords:
   - livepeer
   - glossary
@@ -12,7 +16,7 @@ pageType: reference
 pageVariant: compendium
 purpose: reference
 status: draft
-lastVerified: '2026-03'
+lastVerified: 2026-03
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
@@ -31,17 +35,19 @@ lastVerified: '2026-03'
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
-import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { SearchTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
-import { glossaryBadges } from '/v2/solutions/data/badges.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { glossaryBadges } from '/snippets/data/glossary-badges.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 
 {/* ==========================SECTION: SEARCH TIP========================= */}
 <Tip>
 **Finding terms quickly**
-- **Cmd+K** (Mac) / **Ctrl+K** (Windows) — search all Livepeer docs
-- **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
+- **Cmd+K** (Mac) / **Ctrl+K** (Windows) – search all Livepeer docs
+- **Cmd+F** (Mac) / **Ctrl+F** (Windows) – search within this page
 - Use the category filter below to narrow by topic
 </Tip>
 
@@ -187,7 +193,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
     { Term: "Whisper", Category: "ai", Niche: "model", Definition: "OpenAI's encoder-decoder transformer model for speech recognition and translation, pretrained on 680,000 hours of multilingual audio." },
     { Term: "Win Probability", Category: "economic", Niche: "payment", Definition: "The configured likelihood that any given micropayment ticket is a winning ticket; a lower probability means larger face values per winning ticket." },
     { Term: "Winning Ticket", Category: "economic", Niche: "payment", Definition: "Probabilistic payment ticket whose random outcome meets the configured threshold, entitling the holder to redeem its face value in ETH on-chain." },
-    { Term: "Workload", Category: "operational", Niche: "process", Definition: "Total amount of work assigned to an orchestrator — the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time." },
+    { Term: "Workload", Category: "operational", Niche: "process", Definition: "Total amount of work assigned to an orchestrator – the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time." },
     { Term: "Yield", Category: "economic", Niche: "reward", Definition: "Return earned from staking LPT and performing work, expressed as an annual percentage combining inflationary LPT rewards and ETH service fees." },
   ]}
 />
@@ -203,7 +209,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Active Set" icon="book-open">
     **Definition**: The top 100 orchestrators by total bonded stake eligible to receive video transcoding work in the current round.
 
-    **Context**: Active set membership is determined at round start by ranking orchestrators by total bonded LPT (self-stake plus delegated stake). AI inference routing does not require active set membership — it prioritises capability and price over stake position.
+    **Context**: Active set membership is determined at round start by ranking orchestrators by total bonded LPT (self-stake plus delegated stake). AI inference routing does not require active set membership – it prioritises capability and price over stake position.
 
     **Status**: current
 
@@ -253,7 +259,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="BondingManager" icon="book-open">
     **Definition**: Core smart contract managing bonding, delegation, staking logic, and fund ownership on the Livepeer protocol.
 
-    **Context**: The central contract for all LPT stake operations — bonding, unbonding, delegation, reward distribution, and slash execution.
+    **Context**: The central contract for all LPT stake operations – bonding, unbonding, delegation, reward distribution, and slash execution.
 
     **Status**: current
 
@@ -343,7 +349,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Dual Mode" icon="book-open">
     **Definition**: Deployment configuration where a single orchestrator process handles both video transcoding and AI inference simultaneously.
 
-    **Context**: The most common production configuration for operators with capable hardware (24 GB+ VRAM). Dual mode is a workload configuration, not a separate protocol mode — the same go-livepeer binary supports all modes via flag combinations.
+    **Context**: The most common production configuration for operators with capable hardware (24 GB+ VRAM). Dual mode is a workload configuration, not a separate protocol mode – the same go-livepeer binary supports all modes via flag combinations.
 
     **Status**: current
 
@@ -383,7 +389,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Hard Gate" icon="book-open">
     **Definition**: Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold.
 
-    **Context**: Unlike soft scoring factors, a hard gate is binary — the orchestrator is excluded from consideration entirely if the condition is not met. MaxPrice is the most common hard gate in practice.
+    **Context**: Unlike soft scoring factors, a hard gate is binary – the orchestrator is excluded from consideration entirely if the condition is not met. MaxPrice is the most common hard gate in practice.
 
     **Status**: current
 
@@ -495,7 +501,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
 
     **Also known as**: Pool node
 
-    **Context**: Pool workers do not hold LPT or interact with the protocol directly — the pool operator stakes on their behalf. Workers connect to the orchestrator using the `-orchAddr` and `-orchSecret` flags.
+    **Context**: Pool workers do not hold LPT or interact with the protocol directly – the pool operator stakes on their behalf. Workers connect to the orchestrator using the `-orchAddr` and `-orchSecret` flags.
 
     **Status**: current
 
@@ -701,7 +707,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="AI Inference" icon="book-open">
     **Definition**: Running a trained neural network model on new input data to produce predictions or generated outputs.
 
-    **External**: [Inference engine — Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
+    **External**: [Inference engine – Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
 
     **Status**: current
 
@@ -711,7 +717,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Audio-to-Text" icon="book-open">
     **Definition**: AI pipeline converting spoken language audio into written text using deep neural networks.
 
-    **External**: [Speech recognition — Wikipedia](https://en.wikipedia.org/wiki/Speech_recognition)
+    **External**: [Speech recognition – Wikipedia](https://en.wikipedia.org/wiki/Speech_recognition)
 
     **Status**: current
 
@@ -721,7 +727,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Batch AI Inference" icon="book-open">
     **Definition**: Running a trained model on a group of inputs asynchronously, optimising GPU utilisation through parallelisation.
 
-    **External**: [Batch inference — Google Cloud](https://cloud.google.com/discover/what-is-batch-inference)
+    **External**: [Batch inference – Google Cloud](https://cloud.google.com/discover/what-is-batch-inference)
 
     **Status**: current
 
@@ -731,7 +737,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="BLIP" icon="book-open">
     **Definition**: Vision-language model by Salesforce using bootstrapped captioning and filtering for image understanding tasks including captioning and visual QA.
 
-    **External**: [BLIP — Hugging Face](https://huggingface.co/docs/transformers/model_doc/blip)
+    **External**: [BLIP – Hugging Face](https://huggingface.co/docs/transformers/model_doc/blip)
 
     **Status**: current
 
@@ -751,7 +757,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="ComfyUI" icon="book-open">
     **Definition**: Open-source node-based graphical interface for building and executing AI image and video generation workflows.
 
-    **External**: [ComfyUI — GitHub](https://github.com/Comfy-Org/ComfyUI)
+    **External**: [ComfyUI – GitHub](https://github.com/Comfy-Org/ComfyUI)
 
     **Status**: current
 
@@ -761,7 +767,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="ControlNet" icon="book-open">
     **Definition**: Neural network architecture adding spatial conditioning controls such as edge maps, depth, and pose signals to pretrained diffusion models.
 
-    **External**: [ControlNet — Hugging Face](https://huggingface.co/lllyasviel/ControlNet)
+    **External**: [ControlNet – Hugging Face](https://huggingface.co/lllyasviel/ControlNet)
 
     **Status**: current
 
@@ -771,7 +777,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="CUDA (Compute Unified Device Architecture)" icon="book-open">
     **Definition**: NVIDIA's parallel computing platform and programming API enabling GPUs to be used for general-purpose processing and deep learning.
 
-    **External**: [CUDA — Wikipedia](https://en.wikipedia.org/wiki/CUDA)
+    **External**: [CUDA – Wikipedia](https://en.wikipedia.org/wiki/CUDA)
 
     **Status**: current
 
@@ -781,7 +787,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Diffusion" icon="book-open">
     **Definition**: Class of generative models that learn to produce data by reversing a gradual noising process applied during training.
 
-    **External**: [Diffusion model — Wikipedia](https://en.wikipedia.org/wiki/Diffusion_model)
+    **External**: [Diffusion model – Wikipedia](https://en.wikipedia.org/wiki/Diffusion_model)
 
     **Status**: current
 
@@ -803,7 +809,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Image-to-Image" icon="book-open">
     **Definition**: AI pipeline transforming an input image into a modified output image, guided by a text prompt or conditioning signal.
 
-    **External**: [Image translation — Wikipedia](https://en.wikipedia.org/wiki/Image_translation)
+    **External**: [Image translation – Wikipedia](https://en.wikipedia.org/wiki/Image_translation)
 
     **Status**: current
 
@@ -813,7 +819,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Image-to-Text" icon="book-open">
     **Definition**: AI pipeline generating a textual description from an input image, encompassing captioning and OCR tasks.
 
-    **External**: [Image-to-text — Hugging Face](https://huggingface.co/tasks/image-to-text)
+    **External**: [Image-to-text – Hugging Face](https://huggingface.co/tasks/image-to-text)
 
     **Status**: current
 
@@ -823,7 +829,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Image-to-Video" icon="book-open">
     **Definition**: AI pipeline generating a short video clip conditioned on a single input image, animating a still frame into motion.
 
-    **External**: [Image-to-video — Hugging Face](https://huggingface.co/tasks/image-to-video)
+    **External**: [Image-to-video – Hugging Face](https://huggingface.co/tasks/image-to-video)
 
     **Status**: current
 
@@ -833,7 +839,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Live-Video-to-Video" icon="book-open">
     **Definition**: AI pipeline applying generative models to a continuous video stream frame-by-frame at interactive frame rates.
 
-    **External**: [StreamDiffusion — GitHub](https://github.com/cumulo-autumn/StreamDiffusion)
+    **External**: [StreamDiffusion – GitHub](https://github.com/cumulo-autumn/StreamDiffusion)
 
     **Status**: current
 
@@ -843,7 +849,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="LLM (Large Language Model)" icon="book-open">
     **Definition**: Neural network trained on massive text corpora to understand and generate human language for tasks including text generation, reasoning, and conversation.
 
-    **External**: [LLM — Wikipedia](https://en.wikipedia.org/wiki/Large_language_model)
+    **External**: [LLM – Wikipedia](https://en.wikipedia.org/wiki/Large_language_model)
 
     **Status**: current
 
@@ -863,7 +869,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Ollama" icon="book-open">
     **Definition**: Open-source tool for running large language models locally with a CLI and OpenAI-compatible REST API.
 
-    **External**: [Ollama — ollama.com](https://ollama.com/)
+    **External**: [Ollama – ollama.com](https://ollama.com/)
 
     **Status**: current
 
@@ -873,7 +879,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="PyTorch (Torch)" icon="book-open">
     **Definition**: Open-source deep learning framework providing GPU-accelerated tensor computation and automatic differentiation, used to build and run AI models on orchestrator nodes.
 
-    **External**: [PyTorch — Wikipedia](https://en.wikipedia.org/wiki/PyTorch)
+    **External**: [PyTorch – Wikipedia](https://en.wikipedia.org/wiki/PyTorch)
 
     **Status**: current
 
@@ -883,7 +889,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Segmentation (AI)" icon="book-open">
     **Definition**: AI task partitioning a digital image into regions by assigning a label to every pixel, identifying and outlining objects or areas.
 
-    **External**: [Image segmentation — Wikipedia](https://en.wikipedia.org/wiki/Image_segmentation)
+    **External**: [Image segmentation – Wikipedia](https://en.wikipedia.org/wiki/Image_segmentation)
 
     **Status**: current
 
@@ -893,7 +899,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Stable Diffusion" icon="book-open">
     **Definition**: Open-source latent diffusion model for text-to-image generation, operating in a compressed latent space for efficient high-quality image synthesis.
 
-    **External**: [Stable Diffusion — Wikipedia](https://en.wikipedia.org/wiki/Stable_Diffusion)
+    **External**: [Stable Diffusion – Wikipedia](https://en.wikipedia.org/wiki/Stable_Diffusion)
 
     **Status**: current
 
@@ -903,7 +909,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="StreamDiffusion" icon="book-open">
     **Definition**: Optimised real-time diffusion pipeline using stream batching and stochastic similarity filtering to achieve interactive frame rates for live video transformation.
 
-    **External**: [StreamDiffusion — GitHub](https://github.com/cumulo-autumn/StreamDiffusion)
+    **External**: [StreamDiffusion – GitHub](https://github.com/cumulo-autumn/StreamDiffusion)
 
     **Status**: current
 
@@ -913,7 +919,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Text-to-Image" icon="book-open">
     **Definition**: AI pipeline generating an image from a natural language text prompt using a language encoder and diffusion model.
 
-    **External**: [Text-to-image model — Wikipedia](https://en.wikipedia.org/wiki/Text-to-image_model)
+    **External**: [Text-to-image model – Wikipedia](https://en.wikipedia.org/wiki/Text-to-image_model)
 
     **Status**: current
 
@@ -923,7 +929,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Text-to-Speech" icon="book-open">
     **Definition**: AI pipeline synthesising spoken audio from written text input via phonetic conversion and neural audio synthesis.
 
-    **External**: [Speech synthesis — Wikipedia](https://en.wikipedia.org/wiki/Speech_synthesis)
+    **External**: [Speech synthesis – Wikipedia](https://en.wikipedia.org/wiki/Speech_synthesis)
 
     **Status**: current
 
@@ -933,7 +939,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Upscale / Upscaling" icon="book-open">
     **Definition**: AI pipeline increasing the resolution of an image or video frame using neural models that predict high-frequency detail not present in the source.
 
-    **External**: [Image scaling — Wikipedia](https://en.wikipedia.org/wiki/Image_scaling)
+    **External**: [Image scaling – Wikipedia](https://en.wikipedia.org/wiki/Image_scaling)
 
     **Status**: current
 
@@ -953,7 +959,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Whisper" icon="book-open">
     **Definition**: OpenAI's encoder-decoder transformer model for speech recognition and translation, pretrained on 680,000 hours of multilingual audio.
 
-    **External**: [Whisper — Hugging Face](https://huggingface.co/openai/whisper-large-v3)
+    **External**: [Whisper – Hugging Face](https://huggingface.co/openai/whisper-large-v3)
 
     **Status**: current
 
@@ -1009,7 +1015,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Micropayment" icon="book-open">
     **Definition**: Small-value payment represented as a signed probabilistic ticket with a chance of being a winner redeemable for ETH.
 
-    **External**: [Micropayment — Wikipedia](https://en.wikipedia.org/wiki/Micropayment)
+    **External**: [Micropayment – Wikipedia](https://en.wikipedia.org/wiki/Micropayment)
 
     **Status**: current
 
@@ -1125,7 +1131,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="HLS (HTTP Live Streaming)" icon="book-open">
     **Definition**: Streaming protocol by Apple that encodes video into multiple quality levels and delivers them via standard HTTP with an M3U8 index playlist.
 
-    **External**: [HLS — Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
+    **External**: [HLS – Wikipedia](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
 
     **Status**: current
 
@@ -1135,7 +1141,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Output Profile" icon="book-open">
     **Definition**: Predefined set of encoding parameters (resolution, bitrate, codec, frame rate) defining a single rendition of a transcoded video.
 
-    **External**: [Video codec — Wikipedia](https://en.wikipedia.org/wiki/Video_codec)
+    **External**: [Video codec – Wikipedia](https://en.wikipedia.org/wiki/Video_codec)
 
     **Status**: current
 
@@ -1145,7 +1151,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Pixel" icon="book-open">
     **Definition**: Single point in a video frame used as the fundamental pricing unit for transcoding work on the Livepeer network.
 
-    **External**: [Pixel — Wikipedia](https://en.wikipedia.org/wiki/Pixel)
+    **External**: [Pixel – Wikipedia](https://en.wikipedia.org/wiki/Pixel)
 
     **Status**: current
 
@@ -1155,7 +1161,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Rendition" icon="book-open">
     **Definition**: Single encoded version of a source video at a specific resolution, bitrate, and codec configuration produced by a transcoding job.
 
-    **External**: [Video rendition — Cloudinary Glossary](https://cloudinary.com/glossary/video-rendition)
+    **External**: [Video rendition – Cloudinary Glossary](https://cloudinary.com/glossary/video-rendition)
 
     **Status**: current
 
@@ -1165,7 +1171,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="RTMP (Real-Time Messaging Protocol)" icon="book-open">
     **Definition**: Protocol for streaming audio, video, and data over TCP on port 1935, used as the primary ingest protocol for live video submitted to Livepeer orchestrators.
 
-    **External**: [RTMP — Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
+    **External**: [RTMP – Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
     **Status**: current
 
@@ -1175,7 +1181,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Transcoding" icon="book-open">
     **Definition**: Direct digital-to-digital conversion of video from one encoding to another, producing multiple adaptive renditions at different resolutions and bitrates.
 
-    **External**: [Transcoding — Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
+    **External**: [Transcoding – Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
 
     **Status**: current
 
@@ -1191,7 +1197,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Arbitrum" icon="book-open">
     **Definition**: A Layer 2 Optimistic Rollup settling to Ethereum, processing transactions off-chain while inheriting Ethereum-grade security.
 
-    **External**: [Arbitrum — docs.arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
+    **External**: [Arbitrum – docs.arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
 
     **Status**: current
 
@@ -1201,7 +1207,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Bonding" icon="book-open">
     **Definition**: Staking (locking) LPT tokens to an orchestrator in Livepeer's delegated proof-of-stake system.
 
-    **External**: [Proof-of-stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof-of-stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -1211,7 +1217,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="ETH" icon="book-open">
     **Definition**: The native cryptocurrency of Ethereum, used to pay transaction fees (gas) and as the settlement currency for orchestrator service fee payments.
 
-    **External**: [Ether — ethereum.org](https://ethereum.org/what-is-ether/)
+    **External**: [Ether – ethereum.org](https://ethereum.org/what-is-ether/)
 
     **Status**: current
 
@@ -1221,7 +1227,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Mainnet" icon="book-open">
     **Definition**: The primary public production blockchain where actual-value transactions occur on the distributed ledger.
 
-    **External**: [Mainnet — ethereum.org](https://ethereum.org/glossary/)
+    **External**: [Mainnet – ethereum.org](https://ethereum.org/glossary/)
 
     **Status**: current
 
@@ -1231,7 +1237,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Subgraph" icon="book-open">
     **Definition**: Custom open API defining how Livepeer on-chain data is indexed and queried via GraphQL, built on The Graph protocol.
 
-    **External**: [Subgraphs — The Graph](https://thegraph.com/docs/en/subgraphs/developing/subgraphs/)
+    **External**: [Subgraphs – The Graph](https://thegraph.com/docs/en/subgraphs/developing/subgraphs/)
 
     **Status**: current
 
@@ -1241,7 +1247,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Wei" icon="book-open">
     **Definition**: The smallest denomination of Ether, where 1 ETH equals 10^18 Wei; used in on-chain calculations and Livepeer pricing parameters.
 
-    **External**: [Wei — ethereum.org](https://ethereum.org/glossary/)
+    **External**: [Wei – ethereum.org](https://ethereum.org/glossary/)
 
     **Status**: current
 
@@ -1327,7 +1333,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="CLI (Command-Line Interface)" icon="book-open">
     **Definition**: Text-based interface for interacting with software by typing commands; in Livepeer, the primary method for configuring and running go-livepeer nodes.
 
-    **External**: [CLI — Wikipedia](https://en.wikipedia.org/wiki/Command_line_interface)
+    **External**: [CLI – Wikipedia](https://en.wikipedia.org/wiki/Command_line_interface)
 
     **Status**: current
 
@@ -1337,7 +1343,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="GPU (Graphics Processing Unit)" icon="book-open">
     **Definition**: Specialised processor designed for parallel computation, used in Livepeer for both video transcoding and AI model inference.
 
-    **External**: [GPU — Wikipedia](https://en.wikipedia.org/wiki/Graphics_processing_unit)
+    **External**: [GPU – Wikipedia](https://en.wikipedia.org/wiki/Graphics_processing_unit)
 
     **Status**: current
 
@@ -1347,7 +1353,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="gRPC" icon="book-open">
     **Definition**: High-performance remote procedure call framework using HTTP/2 and Protocol Buffers for efficient binary communication between services.
 
-    **External**: [gRPC — Wikipedia](https://en.wikipedia.org/wiki/GRPC)
+    **External**: [gRPC – Wikipedia](https://en.wikipedia.org/wiki/GRPC)
 
     **Status**: current
 
@@ -1357,7 +1363,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="NVDEC" icon="book-open">
     **Definition**: NVIDIA hardware video decoder that offloads video decoding from the CPU to dedicated silicon on NVIDIA GPUs.
 
-    **External**: [NVDEC — Wikipedia](https://en.wikipedia.org/wiki/NVDEC)
+    **External**: [NVDEC – Wikipedia](https://en.wikipedia.org/wiki/NVDEC)
 
     **Status**: current
 
@@ -1367,7 +1373,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="NVENC" icon="book-open">
     **Definition**: NVIDIA hardware video encoder that offloads H.264 and H.265 encoding from the CPU to dedicated silicon on NVIDIA GPUs.
 
-    **External**: [NVENC — Wikipedia](https://en.wikipedia.org/wiki/NVENC)
+    **External**: [NVENC – Wikipedia](https://en.wikipedia.org/wiki/NVENC)
 
     **Status**: current
 
@@ -1377,7 +1383,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Remote Signer" icon="book-open">
     **Definition**: External service that holds private keys securely and signs Ethereum transactions on behalf of a node, allowing the node to operate without direct access to the signing key.
 
-    **External**: [Remote signing — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/keys/)
+    **External**: [Remote signing – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/keys/)
 
     **Status**: current
 
@@ -1387,7 +1393,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="VRAM (Video RAM)" icon="book-open">
     **Definition**: Dedicated memory on a GPU used to store graphics data, AI model weights, intermediate tensors, and video frames during processing.
 
-    **External**: [VRAM — Wikipedia](https://en.wikipedia.org/wiki/Video_random-access_memory)
+    **External**: [VRAM – Wikipedia](https://en.wikipedia.org/wiki/Video_random-access_memory)
 
     **Status**: current
 
@@ -1397,7 +1403,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Webhook" icon="book-open">
     **Definition**: HTTP callback mechanism triggered by an event, sending a POST request to a configured URL to notify external services of state changes.
 
-    **External**: [Webhook — Wikipedia](https://en.wikipedia.org/wiki/Webhook)
+    **External**: [Webhook – Wikipedia](https://en.wikipedia.org/wiki/Webhook)
 
     **Status**: current
 
@@ -1443,7 +1449,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Loki" icon="book-open">
     **Definition**: Horizontally scalable log aggregation system by Grafana Labs, used in Livepeer orchestrator monitoring stacks.
 
-    **External**: [Loki — Grafana Labs](https://grafana.com/oss/loki/)
+    **External**: [Loki – Grafana Labs](https://grafana.com/oss/loki/)
 
     **Status**: current
 
@@ -1453,7 +1459,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Smoke Test" icon="book-open">
     **Definition**: Preliminary test verifying that an AI pipeline or node configuration is working correctly before deploying to production or accepting live traffic.
 
-    **External**: [Smoke testing — Wikipedia](https://en.wikipedia.org/wiki/Smoke_testing_(software))
+    **External**: [Smoke testing – Wikipedia](https://en.wikipedia.org/wiki/Smoke_testing_(software))
 
     **Status**: current
 
@@ -1463,7 +1469,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Throughput" icon="book-open">
     **Definition**: Rate of successful data processing per unit time, measuring the volume of work an orchestrator can complete (segments transcoded per second, or AI requests per minute).
 
-    **External**: [Throughput — Wikipedia](https://en.wikipedia.org/wiki/Throughput)
+    **External**: [Throughput – Wikipedia](https://en.wikipedia.org/wiki/Throughput)
 
     **Status**: current
 
@@ -1481,7 +1487,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Workload" icon="book-open">
-    **Definition**: Total amount of work assigned to an orchestrator — the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time.
+    **Definition**: Total amount of work assigned to an orchestrator – the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time.
 
     **Context**: Workload determines whether an orchestrator is at capacity. The `-maxSessions` flag caps the maximum concurrent workload. Monitoring workload against capacity helps operators tune pricing and hardware scaling decisions.
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      regression-bisect
- * @type        
- * @concern     
- * @niche       
- * @purpose     Finds the exact commit that introduced a console error on a given route
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Uses git bisect with an automated Puppeteer test to binary-search
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual diagnostic tool
  * @scope       single route
  * @usage       node operations/scripts/validators/content/structure/regression-bisect.js --route /v2/path --error "ReferenceError" [--good abc123] [--bad HEAD]

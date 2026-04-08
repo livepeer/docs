@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-governance
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        dispatch
+ * @concern     governance
+ * @niche       pipelines
+ * @purpose     
  * @description Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual, P6, manual, manual
  * @scope       full-repo
  * @usage       node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]

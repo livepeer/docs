@@ -1,11 +1,11 @@
 /**
  * @script      mdx-render-gate
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Blocks Edit/Write when the last MDX edit introduced console errors
+ * @purpose     
  * @description PreToolUse hook for Write/Edit. Reads the verification state written by
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PreToolUse hook → read state → allow or block
  * @scope       .claude/settings.json PreToolUse hook (Write|Edit matcher)
  * @usage       Called automatically by Claude Code PreToolUse hook. Not invoked directly.
@@ -86,122 +86,122 @@ const ERROR_TO_REMEDIATOR = [
     pattern: /import|unused.*import|cannot.*find.*module/i,
     script: 'operations/scripts/remediators/content/repair/repair-page-imports.js',
     label: 'Unused import remediator',
-    usage: 'node operations/scripts/remediators/content/repair/repair-page-imports.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/repair/repair-page-imports.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /markdown|html.*comment|br.*tag|angle.*bracket/i,
     script: 'operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js',
     label: 'MDX-safe markdown repair',
-    usage: 'node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /href|link|relative.*path|page.*not.*found/i,
     script: 'operations/scripts/remediators/content/repair/repair-page-links.js',
     label: 'Page link repair',
-    usage: 'node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /spell|typo/i,
     script: 'operations/scripts/remediators/content/repair/repair-spelling.js',
     label: 'Spelling repair',
-    usage: 'node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /governance|GOVERNANCE\.md|lastVerified/i,
     script: 'operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js',
     label: 'Governance artifact repair',
-    usage: 'node operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js --dry-run'
+    usage: 'node operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js --dry-run (add --verify for post-repair validation)'
   },
   // --- Remediators added 2026-04-08 (render-gate-remediation-gap-report.md Gap A) ---
   {
     pattern: /relative.*href|\.\/|\.\.\/|href.*relative/i,
     script: 'operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js',
     label: 'Relative href canonicalisation',
-    usage: 'node operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js'
+    usage: 'node operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js (add --verify for post-repair validation)'
   },
   {
     pattern: /docs-path|moved|renamed|stale.*path/i,
     script: 'operations/scripts/remediators/content/repair/sync-docs-paths.js',
     label: 'Docs-path sync after file moves',
-    usage: 'node operations/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run'
+    usage: 'node operations/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /mintlify.*consumer|registry.*drift|canonical.*sync/i,
     script: 'operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js',
     label: 'Mintlify consumer registry sync',
-    usage: 'node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js --check'
+    usage: 'node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js --check (add --verify for post-repair validation)'
   },
   {
     pattern: /ownerless|passive.*voice|unclear.*ownership/i,
     script: 'operations/scripts/remediators/content/style/repair-ownerless-language.js',
     label: 'Ownerless language repair',
-    usage: 'node operations/scripts/remediators/content/style/repair-ownerless-language.js --check --files <file>'
+    usage: 'node operations/scripts/remediators/content/style/repair-ownerless-language.js --check --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /accessibility|wcag|aria|alt.*text|contrast/i,
     script: 'operations/scripts/remediators/content/style/wcag-repair-common.js',
     label: 'WCAG accessibility repair',
-    usage: 'node operations/scripts/remediators/content/style/wcag-repair-common.js --files <file>'
+    usage: 'node operations/scripts/remediators/content/style/wcag-repair-common.js --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /seo|og:image|meta.*description|open.*graph/i,
     script: 'operations/scripts/remediators/content/seo/generate-seo.js',
     label: 'SEO metadata generation',
-    usage: 'node operations/scripts/remediators/content/seo/generate-seo.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/seo/generate-seo.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /component.*registry|component.*metadata|export.*not.*found/i,
     script: 'operations/scripts/remediators/components/library/repair-component-metadata.js',
     label: 'Component metadata repair',
-    usage: 'node operations/scripts/remediators/components/library/repair-component-metadata.js --dry-run'
+    usage: 'node operations/scripts/remediators/components/library/repair-component-metadata.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /framework.*header|missing.*classification/i,
     script: 'operations/scripts/remediators/content/classification/add-framework-headers.js',
     label: 'Framework classification header repair',
-    usage: 'node operations/scripts/remediators/content/classification/add-framework-headers.js --dry-run'
+    usage: 'node operations/scripts/remediators/content/classification/add-framework-headers.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /pageType|missing.*frontmatter.*type/i,
     script: 'operations/scripts/remediators/content/classification/add-pagetype-mechanical.js',
     label: 'pageType frontmatter repair',
-    usage: 'node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js --dry-run'
+    usage: 'node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /purpose|missing.*metadata|classification/i,
     script: 'operations/scripts/remediators/content/classification/assign-purpose-metadata.js',
     label: 'Purpose metadata assignment',
-    usage: 'node operations/scripts/remediators/content/classification/assign-purpose-metadata.js --dry-run --files <file>'
+    usage: 'node operations/scripts/remediators/content/classification/assign-purpose-metadata.js --dry-run --files <file> (add --verify for post-repair validation)'
   },
   {
     pattern: /workflow.*header|workflow.*governance/i,
     script: 'operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js',
     label: 'Workflow governance header repair',
-    usage: 'node operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js --dry-run'
+    usage: 'node operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /jsdoc|script.*header|missing.*@script/i,
     script: 'operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js',
     label: 'JSDoc header repair',
-    usage: 'node operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js --dry-run'
+    usage: 'node operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /usage.*path|scaffold|broken.*reference/i,
     script: 'operations/scripts/remediators/governance/scaffold/fix-usage-paths.js',
     label: 'Usage path repair',
-    usage: 'node operations/scripts/remediators/governance/scaffold/fix-usage-paths.js'
+    usage: 'node operations/scripts/remediators/governance/scaffold/fix-usage-paths.js (add --verify for post-repair validation)'
   },
   {
     pattern: /script.*inventory|registry.*mismatch/i,
     script: 'operations/scripts/remediators/governance/scripts/repair-script-inventory.js',
     label: 'Script inventory repair',
-    usage: 'node operations/scripts/remediators/governance/scripts/repair-script-inventory.js --dry-run'
+    usage: 'node operations/scripts/remediators/governance/scripts/repair-script-inventory.js --dry-run (add --verify for post-repair validation)'
   },
   {
     pattern: /quarantine|deprecated|cleanup.*risk/i,
     script: 'operations/scripts/remediators/content/repair/quarantine-manager.js',
     label: 'Quarantine manager (safe cleanup)',
-    usage: 'node operations/scripts/remediators/content/repair/quarantine-manager.js'
+    usage: 'node operations/scripts/remediators/content/repair/quarantine-manager.js (add --verify for post-repair validation)'
   }
 ];
 

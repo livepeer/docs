@@ -2,9 +2,11 @@
 title: Deploy a local testnet
 sidebarTitle: Local testnet
 description: >-
-  Deploy the full Livepeer protocol stack locally using Hardhat and connect
-  go-livepeer nodes to your own contracts for development and testing.
-Keywords:
+  Deploy the full Livepeer protocol stack locally using Hardhat and connect go-livepeer nodes to your own contracts for
+  development and testing.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - testnet
   - local development
@@ -20,7 +22,7 @@ Keywords:
 pageType: instruction
 purpose: build
 audience: developer
-lastVerified: 2026-03-28
+lastVerified: 2026-03-28T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -29,7 +31,7 @@ import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 Running a local Livepeer stack lets you develop against real protocol contracts without spending ETH or affecting mainnet state. The protocol repo ships a Hardhat deploy script that deploys every contract automatically, seeds the faucet with test LPT, and writes a deployments JSON you can point go-livepeer at.
 
 <Tip>
-  local Hardhat deployment only. For Arbitrum Sepolia testnet deployment the same deploy script applies — swap the Hardhat network target for `arbitrumSepolia` and provide a funded Sepolia wallet.
+  local Hardhat deployment only. For Arbitrum Sepolia testnet deployment the same deploy script applies – swap the Hardhat network target for `arbitrumSepolia` and provide a funded Sepolia wallet.
 </Tip>
 
 <CustomDivider />
@@ -41,7 +43,7 @@ You need the following installed before starting:
 - **Node.js** v18 or later and **yarn**
 - **Go** 1.21 or later (for building go-livepeer)
 - **git**
-- An Ethereum wallet with a private key (for Hardhat, the default accounts are pre-funded — no setup needed)
+- An Ethereum wallet with a private key (for Hardhat, the default accounts are pre-funded – no setup needed)
 
 <CustomDivider />
 
@@ -255,7 +257,7 @@ export PRIVATE_KEY=0x...
 yarn hardhat deploy --network arbitrumSepolia
 ```
 
-Add an `arbitrumSepolia` entry to `hardhat.config.ts` pointing at your RPC URL, then use the `defaultConfig` from `migrations.config.ts` as your parameter baseline. The faucet deploys and is seeded the same as local — `crowdSupply` worth of test LPT.
+Add an `arbitrumSepolia` entry to `hardhat.config.ts` pointing at your RPC URL, then use the `defaultConfig` from `migrations.config.ts` as your parameter baseline. The faucet deploys and is seeded the same as local – `crowdSupply` worth of test LPT.
 
 <Warning>
   `arbitrumSepolia` is not a named network in `migrations.config.ts` as of the current delta branch. It falls through to `defaultConfig`, which has sensible testnet defaults. Confirm `roundLength: 5760` is acceptable for your testing cadence before deploying.

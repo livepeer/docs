@@ -4,6 +4,8 @@ sidebarTitle: 'BYOC CPU tutorial'
 description: 'Run a complete Livepeer gateway and orchestrator on one machine using a CPU Docker container as a BYOC pipeline, test end-to-end with off-chain payments via a remote signer, then graduate to a production on-chain setup.'
 keywords: ["livepeer", "BYOC", "gateway", "orchestrator", "CPU", "tutorial", "off-chain", "remote signer", "Docker"]
 og:image: "/snippets/assets/media/og-images/en/orchestrators.png"
+complexity: intermediate
+lifecycleStage: operate
 ---
 
 This tutorial walks through a complete end-to-end test of the Livepeer gateway + orchestrator pipeline using BYOC (Bring Your Own Container) with a CPU-only Docker container. No GPU is required.
@@ -20,7 +22,7 @@ This tutorial uses the **off-chain gateway mode** (remote signer) for simplicity
 </Warning>
 
 <Note>
-**BYOC vs LV2V:** BYOC uses a different job flow from LV2V (live-video-to-video). BYOC does not use gRPC to fetch OrchestratorInfo — discovery is done by HTTP capability query. The gateway's start-stream request can explicitly set an allow-list or block-list of orchestrators. This makes BYOC well-suited to browser and CPU-only deployments where gRPC dependencies are undesirable.
+**BYOC vs LV2V:** BYOC uses a different job flow from LV2V (live-video-to-video). BYOC does not use gRPC to fetch OrchestratorInfo – discovery is done by HTTP capability query. The gateway's start-stream request can explicitly set an allow-list or block-list of orchestrators. This makes BYOC well-suited to browser and CPU-only deployments where gRPC dependencies are undesirable.
 </Note>
 
 ---
@@ -38,7 +40,7 @@ This tutorial uses the **off-chain gateway mode** (remote signer) for simplicity
     Required if you want to use the Python gateway SDK for sending test jobs. Optional for the go-livepeer-only path.
   </Card>
   <Card title="Free ports" icon="plug">
-    The following ports must be free on your machine: `7935` (orchestrator HTTP), `8935` (gateway AI API), `9090` (orchestrator metrics — optional).
+    The following ports must be free on your machine: `7935` (orchestrator HTTP), `8935` (gateway AI API), `9090` (orchestrator metrics – optional).
   </Card>
 </CardGroup>
 
@@ -73,13 +75,13 @@ Your machine
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-The gateway handles no Ethereum operations itself. All payment signing is delegated to the community remote signer. The orchestrator is registered locally only — no on-chain registration needed for this smoke test.
+The gateway handles no Ethereum operations itself. All payment signing is delegated to the community remote signer. The orchestrator is registered locally only – no on-chain registration needed for this smoke test.
 
 ---
 
 ## Part 1: Build the CPU BYOC container
 
-We will use a minimal Python image that echoes video frames back — a CPU-only passthrough pipeline useful for testing the full job flow without any GPU or model inference.
+We will use a minimal Python image that echoes video frames back – a CPU-only passthrough pipeline useful for testing the full job flow without any GPU or model inference.
 
 <Steps>
   <Step title="Create the pipeline directory">
@@ -250,15 +252,15 @@ The orchestrator accepts jobs from the gateway and routes them to the BYOC conta
     ```
 
     **Flag explanation:**
-    - `-orchestrator` — run in orchestrator mode
-    - `-serviceAddr` — the address the gateway will connect to
-    - `-cliAddr` — local CLI management port
-    - `-byoc` — enable BYOC mode
-    - `-byocContainerURL` — URL of the running BYOC Docker container
-    - `-byocModelID` — must match the `name` in your pipeline's `PipelineSpec`
-    - `-pricePerUnit 1` — set a nominal price (1 wei equivalent) for testing
-    - `-network offchain` — no Ethereum dependency, local registration only
-    - `-datadir` — separate data directory from the gateway
+    - `-orchestrator` – run in orchestrator mode
+    - `-serviceAddr` – the address the gateway will connect to
+    - `-cliAddr` – local CLI management port
+    - `-byoc` – enable BYOC mode
+    - `-byocContainerURL` – URL of the running BYOC Docker container
+    - `-byocModelID` – must match the `name` in your pipeline's `PipelineSpec`
+    - `-pricePerUnit 1` – set a nominal price (1 wei equivalent) for testing
+    - `-network offchain` – no Ethereum dependency, local registration only
+    - `-datadir` – separate data directory from the gateway
 
     Successful startup logs include:
     ```
@@ -288,13 +290,13 @@ The orchestrator accepts jobs from the gateway and routes them to the BYOC conta
     ```
 
     **Flag explanation:**
-    - `-gateway` — run in gateway mode
-    - `-cliAddr` — separate CLI port from the orchestrator (must differ)
-    - `-httpAddr` — AI API port that your applications will call
-    - `-orchAddr` — point directly at your local orchestrator
-    - `-remoteSignerAddr` — the community-hosted remote signer (provides free ETH for testing)
-    - `-network offchain` — no Arbitrum RPC required
-    - `-datadir` — separate data directory
+    - `-gateway` – run in gateway mode
+    - `-cliAddr` – separate CLI port from the orchestrator (must differ)
+    - `-httpAddr` – AI API port that your applications will call
+    - `-orchAddr` – point directly at your local orchestrator
+    - `-remoteSignerAddr` – the community-hosted remote signer (provides free ETH for testing)
+    - `-network offchain` – no Arbitrum RPC required
+    - `-datadir` – separate data directory
 
     Successful startup logs include:
     ```
@@ -420,7 +422,7 @@ The orchestrator accepts jobs from the gateway and routes them to the BYOC conta
     ```bash
     curl https://signer.eliteencoder.net/health
     ```
-    If this fails, post in [#local-gateways on Discord](https://discord.gg/livepeer) — the signer may be down or the URL may have changed. As a fallback, you can run your own remote signer from the go-livepeer source using the `-remoteSigner` flag with your own Ethereum key.
+    If this fails, post in [#local-gateways on Discord](https://discord.gg/livepeer) – the signer may be down or the URL may have changed. As a fallback, you can run your own remote signer from the go-livepeer source using the `-remoteSigner` flag with your own Ethereum key.
   </Accordion>
 
   <Accordion title="Orchestrator not registering the BYOC capability">
@@ -474,7 +476,7 @@ Once your off-chain smoke test passes, follow this path to move to a production 
     - Buy on a CEX (Coinbase, Binance) and withdraw directly to Arbitrum One
 
     <Warning>
-    Confirm current ETH deposit requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain-setup/on-chain) before depositing — amounts can change as ETH/USD rates shift.
+    Confirm current ETH deposit requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain-setup/on-chain) before depositing – amounts can change as ETH/USD rates shift.
     </Warning>
   </Step>
 
@@ -493,8 +495,8 @@ Once your off-chain smoke test passes, follow this path to move to a production 
 
   <Step title="Set up an Arbitrum RPC endpoint">
     Your on-chain gateway needs a reliable Arbitrum One RPC. Options:
-    - [Infura](https://infura.io) — `https://arbitrum-mainnet.infura.io/v3/YOUR_KEY`
-    - [Alchemy](https://alchemy.com) — `https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY`
+    - [Infura](https://infura.io) – `https://arbitrum-mainnet.infura.io/v3/YOUR_KEY`
+    - [Alchemy](https://alchemy.com) – `https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY`
     - Community Arbitrum RPC (see [Arbitrum RPC reference](/v2/gateways/resources/compendium/arbitrum-rpc))
 
     Test your RPC:
@@ -516,7 +518,7 @@ Once your off-chain smoke test passes, follow this path to move to a production 
     ```
 
     From the CLI menu, select:
-    1. **Deposit broadcasting funds (ETH)** — deposit approximately 0.065 ETH
+    1. **Deposit broadcasting funds (ETH)** – deposit approximately 0.065 ETH
     2. **Request unlock broadcasting funds** is not needed yet; this is for withdrawal
 
     After depositing, confirm your balance:
@@ -581,7 +583,7 @@ Once your off-chain smoke test passes, follow this path to move to a production 
 
     1. Visit [explorer.livepeer.org](https://explorer.livepeer.org) and search for your gateway address
     2. Check that PM tickets are being sent via the gateway logs: look for `Ticket sent` lines
-    3. Monitor your ETH balance — it should decrease slowly as PM deposits fund tickets
+    3. Monitor your ETH balance – it should decrease slowly as PM deposits fund tickets
     4. Use [tools.livepeer.cloud](https://tools.livepeer.cloud) to check your orchestrator's visibility and performance
   </Step>
 </Steps>

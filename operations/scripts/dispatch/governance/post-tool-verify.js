@@ -1,11 +1,11 @@
 /**
  * @script      post-tool-verify
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Post-tool verification for Claude Code sessions
+ * @purpose     
  * @description Tracks consecutive failures for circuit breaker. Fires after tool use failures.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUseFailure hook → reads stdin → tracks failures → triggers circuit breaker at 3
  * @scope       .claude/settings.json PostToolUseFailure hook
  * @usage       Called automatically by Claude Code PostToolUseFailure hook. Not invoked directly.

@@ -2,10 +2,11 @@
 title: FAQ and Troubleshooting
 sidebarTitle: FAQ
 description: >-
-  Answers to common orchestrator questions and step-by-step fixes for the most
-  frequent errors — installation, networking, job routing, AI pipelines, and
-  earnings.
-Keywords:
+  Answers to common orchestrator questions and step-by-step fixes for the most frequent errors — installation,
+  networking, job routing, AI pipelines, and earnings.
+lifecycleStage: troubleshoot
+complexity: beginner
+keywords:
   - livepeer
   - orchestrator
   - troubleshooting
@@ -23,7 +24,7 @@ Keywords:
 'og:image:height': 630
 pageType: reference
 audience: orchestrator
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: faq
 status: review
 ---
@@ -53,13 +54,13 @@ Human:
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-the most common errors orchestrators encounter and answers the questions that come up most often. Find your symptom or question in the relevant section. Each entry is self-contained — you should be able to read one entry and resolve your issue without reading the rest.
+the most common errors orchestrators encounter and answers the questions that come up most often. Find your symptom or question in the relevant section. Each entry is self-contained – you should be able to read one entry and resolve your issue without reading the rest.
 
 If your issue is not covered here, see the [escalation paths](#still-stuck) at the bottom of this page.
 
 <CustomDivider />
 
-## Troubleshooting — Installation and GPU Detection
+## Troubleshooting – Installation and GPU Detection
 
 <AccordionGroup>
 
@@ -124,7 +125,7 @@ If the error appears during normal operation (not at startup):
    ```bash icon="terminal"
    livepeer -maxSessions 10 ...
    ```
-If the error appears at startup when using the `-nvidia` flag, the GPU itself has reached its hardware encoding/decoding session limit. Different NVIDIA GPU models have different limits — consumer cards (GTX/RTX series) typically cap at 3–5 concurrent NVENC sessions. Search `nvenc nvdec session limit <your GPU model>` to find the limit for your card.
+If the error appears at startup when using the `-nvidia` flag, the GPU itself has reached its hardware encoding/decoding session limit. Different NVIDIA GPU models have different limits – consumer cards (GTX/RTX series) typically cap at 3–5 concurrent NVENC sessions. Search `nvenc nvdec session limit <your GPU model>` to find the limit for your card.
 
 </Accordion>
 
@@ -181,7 +182,7 @@ The CUDA version installed on your host does not match the version that go-livep
 
 <CustomDivider />
 
-## Troubleshooting — Networking and Connectivity
+## Troubleshooting – Networking and Connectivity
 
 <AccordionGroup>
 
@@ -201,7 +202,7 @@ Your node may still start, but gateways cannot route jobs to you if the on-chain
 
 **Fix**
 
-1. Identify the address currently stored on-chain. You can find this on the [Livepeer Explorer](https://explorer.livepeer.org) — search for your orchestrator's ETH address.
+1. Identify the address currently stored on-chain. You can find this on the [Livepeer Explorer](https://explorer.livepeer.org) – search for your orchestrator's ETH address.
 
 2. If the stored address is wrong, update it via `livepeer_cli`:
    ```bash icon="terminal"
@@ -267,7 +268,7 @@ The `-ethUrl` value is incorrect, the RPC endpoint is rate-limited, or the provi
 
 1. Verify your `-ethUrl` value is an Arbitrum One RPC endpoint, not an Ethereum mainnet endpoint:
    - Arbitrum One endpoint format: `https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY`
-   - Do not use an Ethereum L1 endpoint — go-livepeer operates on Arbitrum.
+   - Do not use an Ethereum L1 endpoint – go-livepeer operates on Arbitrum.
 
 2. Test the endpoint independently:
    ```bash icon="terminal"
@@ -287,10 +288,10 @@ The `-ethUrl` value is incorrect, the RPC endpoint is rate-limited, or the provi
 
 <CustomDivider />
 
-## Troubleshooting — Not Receiving Jobs
+## Troubleshooting – Not Receiving Jobs
 
 <Note>
-This is the most common question after initial activation. There are four distinct causes — work through each one before concluding there is a network problem.
+This is the most common question after initial activation. There are four distinct causes – work through each one before concluding there is a network problem.
 </Note>
 
 <AccordionGroup>
@@ -305,7 +306,7 @@ The active orchestrator set is limited to the top 100 orchestrators by total LPT
 
 **Fix**
 
-1. Go to [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator in the list. Note their total stake — that is the current minimum.
+1. Go to [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator in the list. Note their total stake – that is the current minimum.
 
 2. To enter the active set, your total stake must exceed that figure. You can:
    - Self-delegate additional LPT
@@ -318,7 +319,7 @@ The active orchestrator set is limited to the top 100 orchestrators by total LPT
    Select the multi-step "become an orchestrator" option.
 
 <Note>
-If your orchestrator drops out of the active set (falls below top-100 rank) and your stake then changes (either up or down), it will be automatically re-entered. However, if you are inactive and your stake remains static while still technically in the top 100, the protocol does not automatically re-add you — you must re-register.
+If your orchestrator drops out of the active set (falls below top-100 rank) and your stake then changes (either up or down), it will be automatically re-entered. However, if you are inactive and your stake remains static while still technically in the top 100, the protocol does not automatically re-add you – you must re-register.
 </Note>
 
 </Accordion>
@@ -326,14 +327,14 @@ If your orchestrator drops out of the active set (falls below top-100 rank) and 
 <Accordion  title='pricePerUnit set too high — gateways are not selecting your node' icon="server">
 
 **Symptom**  
-Your orchestrator is in the active set, is reachable, and is activated — but you receive very few or no jobs. No error messages appear in your logs.
+Your orchestrator is in the active set, is reachable, and is activated – but you receive very few or no jobs. No error messages appear in your logs.
 
 **Cause**  
 `-pricePerUnit` is set too high relative to competing orchestrators. Gateways select orchestrators based on a combination of stake weight and price. If your price is significantly above the market rate, gateways will route jobs to lower-priced orchestrators first.
 
 **Fix**
 
-1. Check the current market rate at [livepeer.tools](https://livepeer.tools) — this shows per-pixel pricing for active orchestrators.
+1. Check the current market rate at [livepeer.tools](https://livepeer.tools) – this shows per-pixel pricing for active orchestrators.
 
 2. Note the unit: `-pricePerUnit` is set in **wei per pixel**, not ETH. A common misconfiguration is setting the value in ETH (e.g. `0.0001`) instead of the equivalent wei value, which produces a price orders of magnitude too high.
 
@@ -355,7 +356,7 @@ Your orchestrator is in the active set, is reachable, and is activated — but y
 <Accordion  title='Node not activated via livepeer_cli' icon="server">
 
 **Symptom**  
-Your orchestrator is running, the port is reachable, and your stake is sufficient — but you still receive no jobs. Your address does not appear in the active orchestrators list on the Explorer.
+Your orchestrator is running, the port is reachable, and your stake is sufficient – but you still receive no jobs. Your address does not appear in the active orchestrators list on the Explorer.
 
 **Cause**  
 go-livepeer running in orchestrator mode does not automatically register or activate the node on the Livepeer protocol. Activation requires a one-time on-chain transaction via `livepeer_cli`.
@@ -374,7 +375,7 @@ go-livepeer running in orchestrator mode does not automatically register or acti
    - Fee cut (percentage of ETH fees you keep)
    - Price per unit (in wei per pixel)
    - Service address (your public IP:port)
-   - Amount of LPT to stake (in LPTU — note: 1 LPT = 1,000,000,000,000,000,000 LPTU)
+   - Amount of LPT to stake (in LPTU – note: 1 LPT = 1,000,000,000,000,000,000 LPTU)
 
 4. Each step submits an on-chain transaction. You need ETH on Arbitrum to pay gas.
 
@@ -388,7 +389,7 @@ go-livepeer running in orchestrator mode does not automatically register or acti
 Your orchestrator is activated and appears on the Explorer, but still receives no jobs. Port check against your registered IP:port shows the port as closed or unreachable.
 
 **Cause**  
-Your service address is registered on-chain, but the actual server at that address is not reachable — either a firewall rule was added after registration, the server moved to a different IP, or a network change broke external access.
+Your service address is registered on-chain, but the actual server at that address is not reachable – either a firewall rule was added after registration, the server moved to a different IP, or a network change broke external access.
 
 **Fix**
 
@@ -402,7 +403,7 @@ If your IP address has changed, update your on-chain service URI via `livepeer_c
 
 <CustomDivider />
 
-## Troubleshooting — AI Pipeline Errors
+## Troubleshooting – AI Pipeline Errors
 
 <AccordionGroup>
 
@@ -467,11 +468,11 @@ The most common cause is an incorrect or missing `aiModels.json` configuration. 
    ```
 
    Field reference:
-   - `pipeline` — the inference task type (e.g. `text-to-image`, `image-to-image`, `llm`). Must match a supported pipeline name.
-   - `model_id` — the Hugging Face model ID. Must be in the Livepeer-verified model list.
+   - `pipeline` – the inference task type (e.g. `text-to-image`, `image-to-image`, `llm`). Must match a supported pipeline name.
+   - `model_id` – the Hugging Face model ID. Must be in the Livepeer-verified model list.
    - `warm` loads the model on GPU in advance. If set to `false`, the model loads on first request (slower, but uses no VRAM until needed).
-   - `price_per_unit` — price in wei per unit (unit definition varies by pipeline — for image pipelines, this is per pixel).
-   - `pixels_per_unit` — typically `1`.
+   - `price_per_unit` – price in wei per unit (unit definition varies by pipeline – for image pipelines, this is per pixel).
+   - `pixels_per_unit` – typically `1`.
 
 2. If using an external container (e.g. A custom AI Runner or Ollama), add the `url` field pointing to the running container:
 
@@ -491,7 +492,7 @@ The most common cause is an incorrect or missing `aiModels.json` configuration. 
    curl http://localhost:8000/health
    ```
 
-4. Restart go-livepeer after modifying `aiModels.json` — changes to this file are not hot-reloaded.
+4. Restart go-livepeer after modifying `aiModels.json` – changes to this file are not hot-reloaded.
 
 </Accordion>
 
@@ -525,7 +526,7 @@ The model you have configured requires more VRAM than your GPU has available, or
    ```
 
    <Warning>
-   Do not use `DEEPCACHE` with Lightning or Turbo model variants — these models are already optimised and DEEPCACHE may significantly reduce image quality. `SFAST` and `DEEPCACHE` cannot be used together.
+   Do not use `DEEPCACHE` with Lightning or Turbo model variants – these models are already optimised and DEEPCACHE may significantly reduce image quality. `SFAST` and `DEEPCACHE` cannot be used together.
    </Warning>
 
 </Accordion>
@@ -555,7 +556,7 @@ Gateways route jobs based on the pipeline and model ID advertised in your `aiMod
 
 <CustomDivider />
 
-## Troubleshooting — Earnings and Payments
+## Troubleshooting – Earnings and Payments
 
 <AccordionGroup>
 
@@ -569,7 +570,7 @@ There are two types of earnings on Livepeer: transcoding fees (ETH, paid per job
 
 **Fix**
 
-1. Allow up to 24 hours for Explorer indexing before raising an issue — especially for new orchestrators.
+1. Allow up to 24 hours for Explorer indexing before raising an issue – especially for new orchestrators.
 
 2. For staking rewards specifically: these are only minted if a reward call is made during the current round. If no reward call is made, no LPT is minted for that round. Check your logs for reward call transactions.
 
@@ -597,7 +598,7 @@ If you run your orchestrator process and transcoder process as separate instance
    livepeer -orchestrator ...
    ```
 
-   Also remove the `-ethUrl` option from transcoder processes if they are using the same wallet — this prevents the transcoder from inadvertently submitting on-chain transactions.
+   Also remove the `-ethUrl` option from transcoder processes if they are using the same wallet – this prevents the transcoder from inadvertently submitting on-chain transactions.
 
 2. Ensure your Arbitrum ETH balance is sufficient to pay for reward call gas. Check via `livepeer_cli` or on [arbiscan.io](https://arbiscan.io).
 
@@ -615,7 +616,7 @@ Pool earnings are tracked and distributed by the pool operator, not by go-livepe
 
 **Fix**
 
-1. Check the pool operator's dashboard or reporting tool — each pool provides its own interface.
+1. Check the pool operator's dashboard or reporting tool – each pool provides its own interface.
 
 2. If earnings are not updating there, contact the pool operator via their Discord or forum. Pool-specific issues are outside Livepeer's core go-livepeer documentation.
 
@@ -626,7 +627,7 @@ Pool earnings are tracked and distributed by the pool operator, not by go-livepe
 
 <CustomDivider />
 
-## FAQ — General Questions
+## FAQ – General Questions
 
 <AccordionGroup>
 
@@ -636,7 +637,7 @@ An **orchestrator** is an on-chain participant. It holds staked LPT, is register
 
 A **transcoder** is a compute process. It does the actual video encoding or AI inference work using the GPU. A transcoder has no on-chain identity.
 
-In the most common setup, a single machine runs both roles simultaneously using the `-orchestrator -transcoder` flags. In more advanced setups, operators run one orchestrator process that delegates work to multiple transcoder processes — potentially across different machines.
+In the most common setup, a single machine runs both roles simultaneously using the `-orchestrator -transcoder` flags. In more advanced setups, operators run one orchestrator process that delegates work to multiple transcoder processes – potentially across different machines.
 
 </Accordion>
 
@@ -674,9 +675,9 @@ However, the AI pipeline functionality (AI Runner containers, aiModels.json conf
 
 <Accordion  title='What does "Transcode loop timed out" or "Segment loop timed out" mean in my logs?' icon="video">
 
-These log messages indicate that a transcoding session was cleaned up because no new video segments arrived for a period of time. This is normal behaviour — it occurs when a stream ends or a gateway disconnects. It is not an error requiring any action on your part.
+These log messages indicate that a transcoding session was cleaned up because no new video segments arrived for a period of time. This is normal behaviour – it occurs when a stream ends or a gateway disconnects. It is not an error requiring any action on your part.
 
-If you see these messages repeatedly when you expect to be processing an active stream, it may indicate the gateway is disconnecting from your node — in which case check your serviceAddr configuration and external reachability.
+If you see these messages repeatedly when you expect to be processing an active stream, it may indicate the gateway is disconnecting from your node – in which case check your serviceAddr configuration and external reachability.
 
 </Accordion>
 
@@ -700,7 +701,7 @@ You can, but there are important limitations:
 
 2. Home broadband often uses dynamic IP addresses. If your IP changes, your on-chain service URI becomes stale and gateways cannot reach you. Use a dynamic DNS service to maintain a stable hostname, then register with that hostname instead of a bare IP.
 
-3. Home broadband upload speeds may limit your transcoding throughput. Each video segment must be received from a gateway, transcoded, and returned — upload capacity directly affects how many concurrent sessions you can handle.
+3. Home broadband upload speeds may limit your transcoding throughput. Each video segment must be received from a gateway, transcoded, and returned – upload capacity directly affects how many concurrent sessions you can handle.
 
 For production orchestrators, a VPS or data centre is strongly recommended.
 
@@ -716,7 +717,7 @@ If your issue is not covered on this page, the following resources are available
 
 <CardGroup cols={3}>
   <Card title="Discord — #orchestrating" icon="discord" href="https://discord.gg/livepeer">
-    The most active real-time support channel. Search before posting — most errors have been discussed before.
+    The most active real-time support channel. Search before posting – most errors have been discussed before.
   </Card>
   <Card title="Livepeer Forum" icon="comments" href="https://forum.livepeer.org/c/transcoding">
     For longer-form troubleshooting and questions that need a detailed answer. Search the transcoding category first.

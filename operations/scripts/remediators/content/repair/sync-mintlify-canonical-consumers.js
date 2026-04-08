@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sync-mintlify-canonical-consumers
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        remediator
+ * @concern     health
+ * @niche       repair
+ * @purpose     
  * @description Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual
  * @scope       docs-guide/canonical/collation-data/Mintlify, docs-guide/contributing, AGENTS.md, .github, .claude, ai-tools, snippets, workspace/plan/active
  * @usage       node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js [--staged] [--check|--write] [--stage] [--json]
@@ -20,6 +20,7 @@ function parseArgs(argv) {
     mode: 'check',
     stagedOnly: false,
     stage: false,
+    verify: false,
     json: false
   };
   let explicitModeCount = 0;

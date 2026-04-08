@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      page-integrity-dispatch
- * @type        
- * @concern     
- * @niche       
- * @purpose     infrastructure:pipeline-orchestration
+ * @type        dispatch
+ * @concern     health
+ * @niche       health
+ * @purpose     
  * @description Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual, P6
  * @scope       operations/scripts, operations/reports/health/page-integrity, .github/workflows
  * @usage       node operations/scripts/dispatch/content/health/page-integrity-dispatch.js [--staged|--files <paths>|--tab <tab>] [--strict] [--no-repair] [--issue-mode off|plan] [--output-dir <dir>]

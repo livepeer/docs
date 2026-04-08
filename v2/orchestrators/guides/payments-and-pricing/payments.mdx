@@ -2,10 +2,11 @@
 title: Payments
 sidebarTitle: Payments
 description: >-
-  How ETH moves from gateway to your orchestrator wallet — probabilistic
-  micropayments, winning ticket mechanics, the Redeemer, on-chain redemption
-  on Arbitrum, and keeping your node funded for transactions.
-Keywords:
+  How ETH moves from gateway to your orchestrator wallet — probabilistic micropayments, winning ticket mechanics, the
+  Redeemer, on-chain redemption on Arbitrum, and keeping your node funded for transactions.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - payments
@@ -25,12 +26,12 @@ pageType: concept
 audience: orchestrator
 purpose: explain
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep copy direct, retain receiver-side mechanics in payment-receipts, and route unresolved factual checks to internal comments only. */}
 
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Gateways pay orchestrators in ETH for every job completed through **probabilistic micropayments (PM)**. Gateways send lightweight signed tickets, a fraction of which are winners redeemable for a larger ETH payout. This keeps payment traffic efficient even when a node is processing thousands of segments or inference jobs.
@@ -75,9 +76,9 @@ Expected value:        1/1000 × 1000 × fee = fee per segment
 ```
 
 This means:
-- **Only winning tickets trigger on-chain action** — the Redeemer submits winners
-- **Winning tickets are infrequent but larger** — each represents many segments' worth of payment
-- **Gas costs are batched implicitly** — one redemption transaction covers hundreds or thousands of segments
+- **Only winning tickets trigger on-chain action** – the Redeemer submits winners
+- **Winning tickets are infrequent but larger** – each represents many segments' worth of payment
+- **Gas costs are batched implicitly** – one redemption transaction covers hundreds or thousands of segments
 
 The result is that a busy orchestrator usually redeems ETH in a few batched submissions per day. Gas overhead stays negligible relative to earnings.
 
@@ -171,7 +172,7 @@ Redemption transactions run on Arbitrum One (L2). Gas costs are low, but your wa
   </TableRow>
 </StyledTable>
 
-Keep a minimum of **0.01 ETH on Arbitrum** in your orchestrator wallet to prevent redemption failures. A depleted wallet means winning tickets expire unsubmitted — that ETH is permanently lost.
+Keep a minimum of **0.01 ETH on Arbitrum** in your orchestrator wallet to prevent redemption failures. A depleted wallet means winning tickets expire unsubmitted – that ETH is permanently lost.
 
 <Warning>
   A wallet without ETH on Arbitrum lets winning tickets expire before redemption. The gateway's deposit stays intact, and the loss sits entirely with your node. Monitor your ETH balance and top it up regularly. See [Funding Your Node](#funding-your-node) below.
@@ -187,7 +188,7 @@ The probabilistic payment system is the same for both workload types, but the fe
 
 <Accordion  title="Video transcoding payments" icon="video">
 
-Transcoding is paid per segment — approximately every 2 seconds of video processed.
+Transcoding is paid per segment – approximately every 2 seconds of video processed.
 
 - **Pricing unit:** per segment (or per pixel, depending on configuration)
 - **Job frequency:** continuous for active live streams
@@ -201,7 +202,7 @@ The transcoding fee rate is set by your `-pricePerUnit` flag in Wei per pixel. G
 
 <Accordion  title="AI inference payments" icon="microchip">
 
-AI inference is paid per inference job — one ticket per job request.
+AI inference is paid per inference job – one ticket per job request.
 
 - **Pricing unit:** per output pixel (image pipelines), per ms of audio (audio-to-text), per token (LLM), or per frame (live video)
 - **Job frequency:** per-request bursts
@@ -209,7 +210,7 @@ AI inference is paid per inference job — one ticket per job request.
 - **Selection factor:** capability first, price second; stake weight is a secondary factor
 - **Typical fee level:** higher per-job than transcoding (GPU-intensive work)
 
-AI fees are configured in `aiModels.json` via the `price_per_unit` field. The pricing unit varies by pipeline — see [Model and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for per-pipeline pricing units.
+AI fees are configured in `aiModels.json` via the `price_per_unit` field. The pricing unit varies by pipeline – see [Model and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for per-pipeline pricing units.
 
 </Accordion>
 
@@ -239,7 +240,7 @@ Clearinghouses exist to enable:
 - Enterprise gateways that want to settle in fiat while still using Livepeer orchestrators
 - Separation of media processing concerns from payment logistics
 
-This is a gateway-side concern. You receive valid signed tickets and redeem them — the clearinghouse arrangement is transparent to you.
+This is a gateway-side concern. You receive valid signed tickets and redeem them – the clearinghouse arrangement is transparent to you.
 
 For the gateway-side detail, see [Payment Clearinghouses](/v2/gateways/guides/payments-and-pricing/clearinghouse-guide).
 
@@ -293,7 +294,7 @@ Bridge ETH from Ethereum mainnet to Arbitrum One when your operating wallet star
 </StyledStep>
 
 <StyledStep title="Set up balance monitoring">
-  Add your orchestrator wallet address to a balance monitoring tool. Alert when balance drops below your threshold. Most operators use Prometheus + Grafana for this — see [Metrics and Monitoring](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+  Add your orchestrator wallet address to a balance monitoring tool. Alert when balance drops below your threshold. Most operators use Prometheus + Grafana for this – see [Metrics and Monitoring](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
 </StyledStep>
 
 </StyledSteps>

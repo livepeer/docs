@@ -172,5 +172,13 @@ jobs:
       - name: Component immutability
         run: node operations/scripts/validators/governance/pr/check-component-immutability.js --base-ref origin/${{ github.base_ref }}
 
+      - name: Component style patterns (advisory)
+        continue-on-error: true
+        run: node operations/scripts/audits/components/library/audit-component-styles.js
+
+      - name: AI discoverability compliance (advisory)
+        continue-on-error: true
+        run: node operations/scripts/audits/components/library/audit-ai-discoverability.js
+
       - name: Validate component registry
         run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only

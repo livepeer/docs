@@ -5,7 +5,7 @@
 # @niche       hooks
 # @purpose     tooling:dev-tools
 # @description Installs git hooks by routing this worktree to .githooks via worktree-local core.hooksPath
-# @mode        execute
+# @mode        dispatch
 # @pipeline    manual — developer tool
 # @scope       .githooks
 # @usage       bash .githooks/install.sh [flags]

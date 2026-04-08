@@ -2,9 +2,11 @@
 title: Livepeer Treasury
 sidebarTitle: Treasury
 description: >-
-  This page outlines how the treasury accumulates funds, how disbursements are
-  authorised, and how its role is evolving across the protocol’s roadmap.
-PageType: concept
+  This page outlines how the treasury accumulates funds, how disbursements are authorised, and how its role is evolving
+  across the protocol’s roadmap.
+lifecycleStage: discover
+complexity: intermediate
+pageType: concept
 keywords:
   - livepeer
   - about
@@ -18,11 +20,9 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: concept
-definition: >-
-  The Livepeer Treasury is an on-chain community fund designed to finance public
-  goods and ecosystem development.
+definition: The Livepeer Treasury is an on-chain community fund designed to finance public goods and ecosystem development.
 ---
 {/*
 This page describes:
@@ -39,11 +39,11 @@ BUT - only briefly - it lives in token.
 import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 
-<div style={{ display: "flex", justifyContent: "center", padding: 0, margin: 0}}>
+<FlexContainer justify="center" style={{padding: 0, margin: 0}}>
  <CardTitleTextWithArrow icon="piggy-bank" horizontal href="https://explorer.livepeer.org/treasury"> Livepeer Treasury </CardTitleTextWithArrow>
-</div>
+</FlexContainer>
 <CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
 
 <Quote>
@@ -67,7 +67,7 @@ In late 2023, the community passed multiple proposals creating the Livepeer Trea
 
 <div sytle={{ display: "flex", justifyContent: "center", margin: "0 1rem" }}>
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart LR
     Inflation("New LPT - Inflation") -->|LIP-92| Treasury
     Donations & Grants --> Treasury
@@ -135,7 +135,7 @@ This includes development, grants, security audits, research, operational initia
 {/* Examples include grants for improving monitoring infrastructure, research into verifiable transcoding and support for builders. */}
 
 <DynamicTable
-  tableTitle={<span style={{fontSize: '1rem'}}>Fund Use Cases</span>}
+  tableTitle={<Subtitle style={{fontSize: '1rem'}}>Fund Use Cases</Subtitle>}
   headerList={["Category", "Examples"]}
   itemsList={[
     { "Category": "Core Development", "Examples": "Protocol upgrades, contract rewrites, Arbitrum migrations" },
@@ -158,7 +158,7 @@ The treasury uses the same [governance model & processes](governance-model) as t
 {/* Compound-style Governor contract customized for Livepeer. */}
 - **Proposals**: Stake 100 LPT to propose.
 - **Voting**: Any staked tokens (orchestrators + delegators) can vote on the grant. Delegators normally let their operator vote on their behalf, but may detach to vote separately.
-- **Quorum/Threshold**: Same as protocol: 33% of stake must participate, with a majority in favor.
+- **Quorum/Threshold**: Same as protocol: 33% of stake must participate, with a majority in favour.
 - **Execution**: If passed, the Governor releases funds immediately. If failed, the stake is returned, and funds remain untouched.
 
 ### Reporting & Transparency

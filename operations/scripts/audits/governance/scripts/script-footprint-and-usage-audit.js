@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      script-footprint-and-usage-audit
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        audit
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     
  * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, operations/tests, workspace/reports, ai-tools/ai-skills
  * @usage       node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      translate-docs
- * @type        
- * @concern     
- * @niche       
- * @purpose     feature:translation
+ * @type        integrator
+ * @concern     integrations
+ * @niche       language-translation
+ * @purpose     
  * @description Translation generator — translates v2 MDX pages to target languages via OpenRouter API
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    on-demand, translation pipeline)
  * @scope       operations/scripts/i18n, docs.json, v2
  * @usage       node operations/scripts/integrators/content/language-translation/translate-docs.js [flags]

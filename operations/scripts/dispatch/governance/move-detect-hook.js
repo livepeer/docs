@@ -1,11 +1,11 @@
 /**
  * @script      move-detect-hook
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     governance:move-propagation
+ * @purpose     
  * @description PostToolUse hook on Bash. Detects mv/git mv commands targeting v2/ paths,
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook (Bash) -> parse command -> store moves -> dry-run -> systemMessage
  * @scope       .claude/settings.json PostToolUse hook (Bash matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

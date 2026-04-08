@@ -1,19 +1,15 @@
 /**
- * @script            fetch-ghost-blog-data
- * @category          integrator
- * @type              integrator
- * @concern           content
- * @niche             data/fetching
- * @purpose           infrastructure:data-feeds
- * @description       Fetches Livepeer blog posts via public RSS feed (blog.livepeer.org/rss/). No API key required. Writes to snippets/data/social-feeds/ghostBlogData.jsx.
- * @domain            docs
- * @needs             F-R1
- * @purpose-statement Fetches Livepeer blog posts via public RSS feed and writes the shared social feed module under snippets/data/social-feeds/.
- * @mode              generate
- * @pipeline          RSS feed → snippets/data/social-feeds/ghostBlogData.jsx
- * @scope             .github/scripts, snippets/data/social-feeds/
- * @policy            PUBLIC RSS only. No API keys.
- * @usage             node .github/scripts/fetch-ghost-blog-data.js
+ * @script      fetch-ghost-blog-data
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches Livepeer blog posts via public RSS feed and writes the shared social feed module under snippets/data/social-feeds/.
+ * @mode        integrate
+ * @pipeline    RSS feed → snippets/data/social-feeds/ghostBlogData.jsx
+ * @scope       .github/scripts, snippets/data/social-feeds/
+ * @usage       node .github/scripts/fetch-ghost-blog-data.js
+ * @policy      F-R1
  */
 const https = require("https");
 const http = require("http");

@@ -1,10 +1,13 @@
 ---
-title: 'AI Model Management'
-sidebarTitle: 'Model Management'
+title: AI Model Management
+sidebarTitle: Model Management
 description: >-
-  Manage warm and cold model strategy, VRAM allocation, model rotation by demand,
-  and optimisation flags for diffusion pipelines on a Livepeer orchestrator.
-Keywords:
+  Manage warm and cold model strategy, VRAM allocation, model rotation by demand, and optimisation flags for diffusion
+  pipelines on a Livepeer orchestrator.
+lifecycleStage: operate
+complexity: intermediate
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - AI model management
@@ -29,11 +32,11 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
-  Warm the model gateways request most often on the pipeline with the highest demand. Check tools.livepeer.cloud weekly — demand shifts as new models are listed and gateways update their routing preferences.
+  Warm the model gateways request most often on the pipeline with the highest demand. Check tools.livepeer.cloud weekly – demand shifts as new models are listed and gateways update their routing preferences.
 </Tip>
 
 ---
@@ -48,11 +51,11 @@ Model sourcing and downloading is covered separately in <LinkArrow href="/v2/orc
 
 **Warm** means the model weights are loaded into GPU VRAM at container startup. Job requests are served immediately with no loading latency.
 
-**Cold** keeps the container available while leaving the weights out of VRAM. The first request triggers a model load — typically 10 to 60 seconds depending on model size and NVMe storage speed — before inference begins.
+**Cold** keeps the container available while leaving the weights out of VRAM. The first request triggers a model load – typically 10 to 60 seconds depending on model size and NVMe storage speed – before inference begins.
 
 ### Impact on job routing
 
-Gateways track first-response latency per orchestrator. Nodes with fast first responses win more jobs. For latency-sensitive pipelines — particularly `text-to-image` and `image-to-image` — cold loading creates a competitive disadvantage on the first request of each session.
+Gateways track first-response latency per orchestrator. Nodes with fast first responses win more jobs. For latency-sensitive pipelines – particularly `text-to-image` and `image-to-image` – cold loading creates a competitive disadvantage on the first request of each session.
 
 The practical rule: warm your primary revenue pipeline. Keep secondary pipelines cold until VRAM capacity allows warming them.
 
@@ -124,7 +127,7 @@ The `Error loading warm model` message indicates a warm model conflict. Reduce `
   </tbody>
 </StyledTable>
 
-A 24 GB GPU holds one large diffusion model warm, with a small pipeline (Whisper or BLIP) warm on the same card when using a multi-GPU system. Keep multiple large diffusion models off a single 24 GB GPU — the Beta constraint blocks it, and VRAM is insufficient anyway.
+A 24 GB GPU holds one large diffusion model warm, with a small pipeline (Whisper or BLIP) warm on the same card when using a multi-GPU system. Keep multiple large diffusion models off a single 24 GB GPU – the Beta constraint blocks it, and VRAM is insufficient anyway.
 
 <CustomDivider middleText="Model Rotation" />
 
@@ -173,7 +176,7 @@ docker restart <ai-runner-container-name>
 
 ## Optimisation flags
 
-Optimisation flags apply to **warm diffusion models only** — `text-to-image`, `image-to-image`, and `upscale` entries with `"warm": true`. They have no effect on cold models or on non-diffusion pipelines.
+Optimisation flags apply to **warm diffusion models only** – `text-to-image`, `image-to-image`, and `upscale` entries with `"warm": true`. They have no effect on cold models or on non-diffusion pipelines.
 
 Both flags are experimental. Apply one at a time and verify output quality before serving jobs.
 
@@ -182,7 +185,7 @@ Both flags are experimental. Apply one at a time and verify output quality befor
     <Tab title="SFAST" icon="bolt">
       **SFAST (Stable Fast)** compiles the diffusion model's compute graph on first run. Subsequent inferences skip redundant operations, delivering up to 25% faster inference with no measurable quality reduction.
 
-      The first inference after startup is slower than normal — compilation overhead applies once. Subsequent requests are faster.
+      The first inference after startup is slower than normal – compilation overhead applies once. Subsequent requests are faster.
 
       ```json icon="code" title="Enabling SFAST"
       {
@@ -237,9 +240,9 @@ Then confirm via the network registry. Your orchestrator should appear under the
 [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
 
 A warm model missing from the registry after 5 minutes usually indicates one of these causes:
-- `Error loading warm model` — warm model conflict (too many `"warm": true` entries for available GPUs)
-- Container restart loops — check `docker ps` for restart counts
-- Model download still in progress — warm models must finish downloading before the container loads them
+- `Error loading warm model` – warm model conflict (too many `"warm": true` entries for available GPUs)
+- Container restart loops – check `docker ps` for restart counts
+- Model download still in progress – warm models must finish downloading before the container loads them
 
 <CustomDivider />
 

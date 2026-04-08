@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sync-codex-skills
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        integrator
+ * @concern     discoverability
+ * @niche       agents
+ * @purpose     
  * @description Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, ai-tools/ai-skills/templates operations/tests/unit/codex-skill-sync.test.js
  * @usage       node operations/scripts/integrators/ai/agents/sync-codex-skills.js [flags]

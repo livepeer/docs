@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      validate-ai-tools-registry
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual -- bounded validator CLI
  * @scope       operations/scripts, tools/lib/ai/ai-tools-registry.js, ai-tools/registry, operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js, operations/tests/unit/ai-tools-registry.test.js, operations/governance/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
  * @usage       node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]

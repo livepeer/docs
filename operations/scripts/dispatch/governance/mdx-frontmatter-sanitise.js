@@ -1,11 +1,11 @@
 /**
  * @script      mdx-frontmatter-sanitise
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Auto-fixes known frontmatter errors in MDX files after edit
+ * @purpose     
  * @description PostToolUse hook for Edit/Write on ANY .mdx file (not just v2/).
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → parse frontmatter → detect errors → auto-fix → rewrite
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

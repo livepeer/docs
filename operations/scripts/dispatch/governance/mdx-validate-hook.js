@@ -1,11 +1,11 @@
 /**
  * @script      mdx-validate-hook
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Validates MDX files after edit using the server-manager (port 3145)
+ * @purpose     
  * @description PostToolUse hook for Edit/Write on .mdx files. Uses the shared
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → reads stdin → checks if .mdx → hits server-manager → reports
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

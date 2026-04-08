@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      ${params.scriptName}`,
- * @type        
- * @concern     
- * @niche       
+ * @type        generator
+ * @concern     governance
+ * @niche       scaffold
  * @purpose     tooling:dev-tools',
  * @description ${params.summary}`,
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines',
  * @scope       ${params.scope}`,
  * @usage       ${cmd} [flags]`,

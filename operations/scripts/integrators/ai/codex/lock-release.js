@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      codex/lock-release
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        integrator
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex lock release utility — releases stale codex lock files
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
  * @usage       node operations/scripts/integrators/ai/codex/lock-release.js [flags]

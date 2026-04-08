@@ -441,8 +441,9 @@ const livepeerComponents = {
     </a>`;
   },
 
+  /** @deprecated BlinkingTerminal removed — alias to BlinkingIcon for backwards compat in preview */
   BlinkingTerminal(props) {
-    return '<span class="icon-badge" style="animation: pulse 1.5s ease-in-out infinite;">[terminal]</span>';
+    return this.BlinkingIcon ? this.BlinkingIcon(props) : '<span class="icon-badge" style="animation: pulse 1.5s ease-in-out infinite;">[terminal]</span>';
   },
 
   // ─── Portal / Hero Components ─── //

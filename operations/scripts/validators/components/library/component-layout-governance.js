@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      component-layout-governance
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        validator
+ * @concern     maintenance
+ * @niche       library
+ * @purpose     
  * @description Component layout governance validator — checks v2 page layouts against approved component contracts
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       operations/scripts, v2, tools/config/quality/component-layout-profile.json
  * @usage       node operations/scripts/validators/components/library/component-layout-governance.js [flags]
@@ -265,6 +265,68 @@ function analyzeFile(issues, file, pageType, governedComponents) {
       recommendation: 'Replace placeholder or disallowed pattern with production-ready content.'
     });
   });
+
+  // Check 5.21: Raw <Steps> without <StyledSteps> wrapper
+  const rawStepsCount = (content.match(/<Steps\b/g) || []).length;
+  const styledStepsCount = (content.match(/<StyledSteps\b/g) || []).length;
+  if (rawStepsCount > styledStepsCount) {
+    addIssue(issues, {
+      id: 'layout-raw-steps-not-styled',
+      check: '5.21',
+      title: 'Raw <Steps> used without <StyledSteps> wrapper',
+      severity: 'high',
+      path: file.relPath,
+      evidence: `Found ${rawStepsCount} <Steps> but only ${styledStepsCount} <StyledSteps>. ${rawStepsCount - styledStepsCount} unwrapped.`,
+      recommendation: 'Wrap procedural steps in <StyledSteps iconColor="..." titleColor="var(--accent)"> per page-composition-framework.mdx.'
+    });
+  }
+
+  // Check 5.23: Raw markdown tables (not <StyledTable>)
+  // Strip code blocks before checking to avoid false positives
+  const contentNoCode = content.replace(/```[\s\S]*?```/g, (m) => '\n'.repeat((m.match(/\n/g) || []).length));
+  const rawTableMatches = contentNoCode.match(/^\|[^\n]*\|[\s]*\n\|[\s]*[-:]+/gm);
+  if (rawTableMatches && rawTableMatches.length > 0) {
+    addIssue(issues, {
+      id: 'layout-raw-markdown-table',
+      check: '5.23',
+      title: 'Raw markdown table used instead of StyledTable',
+      severity: 'high',
+      path: file.relPath,
+      evidence: `Found ${rawTableMatches.length} raw markdown table(s). Use <StyledTable> for consistent styling.`,
+      recommendation: 'Replace markdown tables with <StyledTable> component. Raw markdown tables are acceptable only in non-published _workspace files.'
+    });
+  }
+
+  // Check 5.25: Major layout element density
+  const maxMajor = Number(pageType.max_major_layout_elements) || 1;
+  const styledTableCount = (content.match(/<StyledTable\b/g) || []).length;
+  const majorCount = styledTableCount + styledStepsCount;
+  if (majorCount > maxMajor) {
+    addIssue(issues, {
+      id: 'layout-major-element-density',
+      check: '5.25',
+      title: 'Too many major layout elements on one page',
+      severity: 'medium',
+      path: file.relPath,
+      evidence: `Found ${majorCount} major layout elements (${styledTableCount} StyledTable + ${styledStepsCount} StyledSteps). Max allowed: ${maxMajor}.`,
+      recommendation: 'Reduce to 1 major layout element per page unless nested inside Tabs or Accordions. Consider splitting the page.'
+    });
+  }
+
+  // Check 5.24: Table density (max 2 tables per page)
+  const maxTables = Number(pageType.max_tables) || 2;
+  const totalTables = styledTableCount + (rawTableMatches ? rawTableMatches.length : 0);
+  if (totalTables > maxTables) {
+    addIssue(issues, {
+      id: 'layout-table-density',
+      check: '5.24',
+      title: 'Too many tables on one page',
+      severity: 'low',
+      path: file.relPath,
+      evidence: `Found ${totalTables} tables (${styledTableCount} StyledTable + ${rawTableMatches ? rawTableMatches.length : 0} markdown). Max allowed: ${maxTables}.`,
+      recommendation: 'Tables support prose, they do not replace it. Consider cards, accordions, or bordered boxes. Never stack consecutive tables.'
+    });
+  }
 }
 
 function markdownTableRows(issues, maxRows = 350) {

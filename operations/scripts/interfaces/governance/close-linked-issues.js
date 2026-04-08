@@ -1,16 +1,15 @@
 /**
- * @script            close-linked-issues
- * @type              interface
- * @concern           governance
- * @niche             issue-lifecycle
- * @purpose           Closes issues linked to a merged docs-v2 PR via closing keywords
- * @description       Parses PR body for closing keywords (fixes/closes/resolves #N),
- *                    Task: #N patterns, and codex markers. Closes referenced issues,
- *                    adds resolution comments, and writes a step summary.
- * @mode              interface
- * @scope             .github/workflows/interface-governance-close-linked-issues.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      close-linked-issues
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Closes issues linked to a merged docs-v2 PR via closing keywords
+ * @description Parses PR body for closing keywords (fixes/closes/resolves #N),
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-close-linked-issues.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

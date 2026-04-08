@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-docs-guide-components-index
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     
  * @description Generates components-catalog.mdx in docs-guide/catalog/ from component-registry.json and component-usage-map.json.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    commit — auto-regenerated when components staged)
  * @scope       generated-output
  * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix|--write|--check]

@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      local-post-commit-sync
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled.
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual
 # @scope       external
 # @usage       bash tools/dev/integrations/notion/local-post-commit-sync.sh [flags]

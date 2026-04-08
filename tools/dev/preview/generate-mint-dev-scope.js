@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-mint-dev-scope
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts/dev, docs.json, .mintignore
  * @usage       node tools/dev/preview/generate-mint-dev-scope.js [flags]

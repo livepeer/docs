@@ -27,6 +27,9 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 jobs:
   validate:
     name: Validate OG Image Config

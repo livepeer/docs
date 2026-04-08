@@ -1,33 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * generate-hero-image.js
- *
- * Generates a hero image by compositing a Font Awesome icon and Inter Bold
- * uppercase text onto any background image. Uses Puppeteer to screenshot
- * an HTML page — no native image deps required.
- *
- * Usage:
- *   node generate-hero-image.js \
- *     --background path/to/background.png \
- *     --icon play          # Font Awesome icon name (solid style) \
- *     --text "Get Started" # Auto-uppercased \
- *     --output path/to/output.png
- *
- * Options:
- *   --background  (required) Path to background image (png/jpg)
- *   --icon        (required) Font Awesome 6 solid icon name (e.g. play, rocket, code, server)
- *   --text        (required) Label text — auto-uppercased
- *   --output      (required) Output file path (.png)
- *   --width       (optional) Output width in px, default: auto from background
- *   --height      (optional) Output height in px, default: auto from background
- *   --icon-size   (optional) Icon size in px, default: 64
- *   --text-size   (optional) Text size in px, default: 36
- *   --color       (optional) Text/icon colour, default: white
- *   --circle      (optional) Show icon inside a white circle, default: true
- *   --circle-size (optional) Circle diameter in px, default: 100
  * @script      generate-hero-image
  * @type        generator
+ * @concern     
+ * @niche       media
+ * @purpose     
  * @description generate hero image
  * @mode        generate
  * @pipeline    manual

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-page-links
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:link-integrity
+ * @type        remediator
+ * @concern     health
+ * @niche       repair
+ * @purpose     
  * @description Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual
  * @scope       v2 publishable docs pages, operations/reports/health/page-links
  * @usage       node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files v2/about --report-dir operations/reports/health/page-links
@@ -85,6 +85,7 @@ function parseArgs(argv) {
     files: [],
     reportDir: '',
     json: false,
+    verify: false,
     help: false
   };
 
@@ -150,7 +151,9 @@ function parseArgs(argv) {
       continue;
     }
 
-    throw new Error(`Unknown argument: ${token}`);
+    if (token === '--verify') { args.verify = true; continue; }
+
+        throw new Error(`Unknown argument: ${token}`);
   }
 
   if (explicitModeCount > 1) {
@@ -165,6 +168,71 @@ function loadDocsJson(repoRoot) {
   const filePath = path.join(repoRoot, DOCS_JSON_PATH);
   if (!fs.existsSync(filePath)) return {};
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+// ── Git rename map ──────────────────────
+// Builds a map of old route → current route from git rename history.
+// Only includes renames where the destination still exists as a published page.
+function buildGitRenameMap(repoRoot, knownRoutesSet) {
+  const map = new Map(); // oldRoute → newRoute
+  try {
+    const raw = execSync(
+      'git log --diff-filter=R --name-status --find-renames --pretty=format:"" -- "v2/"',
+      { cwd: repoRoot, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 }
+    );
+    for (const line of raw.split('\n')) {
+      const match = line.match(/^R\d+\t(.+)\t(.+)$/);
+      if (!match) continue;
+      const oldPath = normalizeRepoPath(match[1]).replace(/\.(md|mdx)$/i, '');
+      const newPath = normalizeRepoPath(match[2]).replace(/\.(md|mdx)$/i, '');
+      const oldRoute = normalizeRoute(oldPath);
+      const newRoute = normalizeRoute(newPath);
+      if (oldRoute && newRoute && knownRoutesSet.has(newRoute)) {
+        map.set(oldRoute, newRoute);
+      }
+    }
+  } catch (_) {
+    // git not available or failed — degrade gracefully
+  }
+  return map;
+}
+
+// ── Folder-link resolution ──────────────
+// When an href points to a folder (e.g. ./concepts/), find the first page
+// in that folder from docs.json navigation order.
+function resolvefolderToFirstNavPage(folderRoute, docsJson, knownRoutesSet) {
+  const normalized = normalizeRoute(folderRoute).replace(/\/+$/, '');
+  if (!normalized) return null;
+
+  // Recursively collect all page strings from docs.json nav
+  // Traverses: navigation.versions[].languages[].tabs[].groups[].pages[]
+  function collectPages(node) {
+    const pages = [];
+    if (typeof node === 'string') {
+      if (node.startsWith('v2/')) pages.push(node);
+    } else if (Array.isArray(node)) {
+      for (const item of node) pages.push(...collectPages(item));
+    } else if (node && typeof node === 'object') {
+      for (const val of Object.values(node)) {
+        if (val && (typeof val === 'object' || typeof val === 'string')) {
+          pages.push(...collectPages(val));
+        }
+      }
+    }
+    return pages;
+  }
+
+  // docs.json structure: navigation.versions[].languages[].tabs[].groups[].pages[]
+  const allNavPages = collectPages(docsJson.navigation || docsJson.tabs || docsJson);
+
+  // Find first page whose route starts with the folder path
+  for (const page of allNavPages) {
+    const pageRoute = normalizeRoute(page);
+    if (pageRoute.startsWith(normalized + '/') && knownRoutesSet.has(pageRoute)) {
+      return pageRoute;
+    }
+  }
+  return null;
 }
 
 function isPageFilePath(repoPath) {
@@ -329,7 +397,7 @@ function buildRedirectSuggestion(rawRoute, docsJson, knownRoutesSet) {
   return null;
 }
 
-function buildSuggestions(rawRoute, docsJson, knownRoutes) {
+function buildSuggestions(rawRoute, docsJson, knownRoutes, options = {}) {
   const knownRoutesSet = new Set(knownRoutes.map((route) => normalizeRoute(route)));
   const suggestions = [];
   const seen = new Set();
@@ -349,6 +417,15 @@ function buildSuggestions(rawRoute, docsJson, knownRoutes) {
 
   const redirectSuggestion = buildRedirectSuggestion(rawRoute, docsJson, knownRoutesSet);
   if (redirectSuggestion) addSuggestion(redirectSuggestion);
+
+  // Git rename lookup — highest confidence after redirects
+  if (options.gitRenameMap) {
+    const normalizedRaw = normalizeRoute(rawRoute);
+    const gitTarget = options.gitRenameMap.get(normalizedRaw);
+    if (gitTarget) {
+      addSuggestion({ route: gitTarget, reason: 'git rename history', score: 0.95 });
+    }
+  }
 
   suggestRemaps(rawRoute, knownRoutes).forEach((item) => addSuggestion(item));
   return suggestions;
@@ -372,7 +449,8 @@ function analyzeHrefMatch({
   docsJson,
   knownRoutes,
   generated,
-  match
+  match,
+  options
 }) {
   const currentRoute = canonicalRouteFromFile(repoPath);
   const fileRoute = fileRouteFromRepoPath(repoPath);
@@ -441,7 +519,24 @@ function analyzeHrefMatch({
     };
   }
 
-  const suggestions = buildSuggestions(suggestionRoute, docsJson, knownRoutes);
+  // Folder-link resolution: ./concepts/ or ./setup → first page in docs.json nav
+  const knownRoutesSet = new Set(knownRoutes.map((r) => normalizeRoute(r)));
+  const normalizedSuggestionRoute = normalizeRoute(suggestionRoute).replace(/\/+$/, '');
+  if (match.rawValue.endsWith('/') || !path.posix.extname(normalizedSuggestionRoute)) {
+    const folderPage = resolvefolderToFirstNavPage(normalizedSuggestionRoute, docsJson, knownRoutesSet);
+    if (folderPage) {
+      return {
+        ...base,
+        action: generated ? 'generator-owned' : 'rewrite',
+        status: 'folder-to-first-nav-page',
+        replacement: encodeRouteForHref(folderPage, target.suffix),
+        suggestions: [{ href: encodeRouteForHref(folderPage), reason: 'first page in docs.json nav group', score: 0.92 }]
+      };
+    }
+  }
+
+  const gitRenameMap = options?.gitRenameMap || null;
+  const suggestions = buildSuggestions(suggestionRoute, docsJson, knownRoutes, { gitRenameMap });
   const uniqueSuggestion = getUniqueHighConfidenceSuggestion(suggestions, {
     threshold: DEFAULT_REMAP_THRESHOLD,
     includePrefixes: ['v2/'],
@@ -485,7 +580,7 @@ function applyReplacements(content, repairs) {
   return next;
 }
 
-function analyzeFile({ repoRoot, filePath, docsJson, knownRoutes, mode }) {
+function analyzeFile({ repoRoot, filePath, docsJson, knownRoutes, mode, options }) {
   const repoPath = normalizeRepoPath(path.relative(repoRoot, filePath));
   const content = fs.readFileSync(filePath, 'utf8');
   const generated = isGeneratedDocsPageFile(filePath, content);
@@ -498,7 +593,8 @@ function analyzeFile({ repoRoot, filePath, docsJson, knownRoutes, mode }) {
       docsJson,
       knownRoutes,
       generated,
-      match
+      match,
+      options
     })
   );
 
@@ -711,13 +807,17 @@ function run(options = {}) {
   const docsJson = options.docsJson || loadDocsJson(repoRoot);
   const knownRoutes = options.knownRoutes || collectKnownPublishedRoutes(repoRoot);
   const targetFiles = options.targetFiles || collectTargetFiles(repoRoot, args.files);
+  const knownRoutesSet = new Set(knownRoutes.map((r) => normalizeRoute(r)));
+  const gitRenameMap = buildGitRenameMap(repoRoot, knownRoutesSet);
+  const analyzeOptions = { gitRenameMap };
   const filePlans = targetFiles.map((filePath) =>
     analyzeFile({
       repoRoot,
       filePath,
       docsJson,
       knownRoutes,
-      mode: args.mode
+      mode: args.mode,
+      options: analyzeOptions
     })
   );
 

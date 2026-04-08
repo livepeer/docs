@@ -1,11 +1,11 @@
 /**
  * @script      audit-component-usage
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        audit
+ * @concern     maintenance
+ * @niche       documentation
+ * @purpose     
  * @description Component usage auditor — scans pages for component usage patterns and reports statistics
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual
  * @scope       operations/scripts
  * @usage       node operations/scripts/audits/components/documentation/audit-component-usage.js

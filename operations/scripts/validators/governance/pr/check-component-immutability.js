@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-component-immutability
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        validator
+ * @concern     governance
+ * @niche       pr
+ * @purpose     
  * @description Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       changed
  * @usage       node operations/scripts/validators/governance/pr/check-component-immutability.js --base-ref main

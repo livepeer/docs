@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-anchor-usage
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, ci
  * @scope       v2-content
  * @usage       node operations/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope <glob>]

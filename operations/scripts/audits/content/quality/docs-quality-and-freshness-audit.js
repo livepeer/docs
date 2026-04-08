@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      docs-quality-and-freshness-audit
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        audit
+ * @concern     health
+ * @niche       quality
+ * @purpose     
  * @description Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual
  * @scope       operations/scripts, v2, workspace/reports/quality-accessibility
  * @usage       node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]

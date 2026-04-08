@@ -2,10 +2,11 @@
 title: Metrics and Alerting
 sidebarTitle: Metrics & Alerting
 description: >-
-  How to set up Prometheus, Grafana, and the Docker monitoring stack for your
-  Livepeer orchestrator. Covers the -monitor flag, key metrics, AI runner
-  container monitoring, and log capture.
-Keywords:
+  How to set up Prometheus, Grafana, and the Docker monitoring stack for your Livepeer orchestrator. Covers the -monitor
+  flag, key metrics, AI runner container monitoring, and log capture.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - prometheus
@@ -13,7 +14,7 @@ Keywords:
   - monitoring
   - metrics
   - docker
-  - -monitor
+  - '-monitor'
   - livepeer-monitoring
   - ai-runner
 'og:image': /snippets/assets/media/og-images/en/orchestrators.png
@@ -25,11 +26,11 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep this page focused on operator monitoring workflows, route unresolved fact checks to internal comments only, and leave alert policy details in the examples. */}
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Use this page to instrument the node, collect the metrics that matter, and wire up alerts before failures turn into missed jobs or missed rewards. Logs explain individual incidents; metrics show whether throughput, latency, capacity, and ticket flow are moving in the right direction.
@@ -102,7 +103,7 @@ go-livepeer exposes metrics across multiple categories. The full reference is at
 </Card>
 
 <Card title="Latency metrics" icon="gauge-high">
-  Processing time per segment. High latency means your GPU is saturated or a pipeline is slow — both affect gateway scoring.
+  Processing time per segment. High latency means your GPU is saturated or a pipeline is slow – both affect gateway scoring.
 </Card>
 
 </CardGroup>
@@ -276,7 +277,7 @@ docker stats livepeer-ai-runner
   </TableRow>
   <TableRow>
     <TableCell>`Error loading model`</TableCell>
-    <TableCell>Model failed to load — check VRAM, model ID spelling</TableCell>
+    <TableCell>Model failed to load – check VRAM, model ID spelling</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>`Container health check failed`</TableCell>
@@ -284,7 +285,7 @@ docker stats livepeer-ai-runner
   </TableRow>
   <TableRow>
     <TableCell>`CUDA out of memory`</TableCell>
-    <TableCell>VRAM exhausted — reduce `-maxSessions` or capacity in `aiModels.json`</TableCell>
+    <TableCell>VRAM exhausted – reduce `-maxSessions` or capacity in `aiModels.json`</TableCell>
   </TableRow>
 </StyledTable>
 
@@ -297,7 +298,7 @@ After starting your AI runner and go-livepeer, check that your pipelines appear 
 curl http://localhost:7935/getNetworkCapabilities | jq
 ```
 
-Also check the community tool at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) — this shows which AI-capable orchestrators are visible network-wide and which models are warm.
+Also check the community tool at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) – this shows which AI-capable orchestrators are visible network-wide and which models are warm.
 
 <CustomDivider />
 
@@ -398,7 +399,7 @@ groups:
     Full list of every metric exported by go-livepeer.
   </Card>
   <Card title="Troubleshooting" icon="triangle-exclamation" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting">
-    When metrics reveal a problem — how to diagnose and fix it.
+    When metrics reveal a problem – how to diagnose and fix it.
   </Card>
   <Card title="AI Configuration" icon="robot" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations">
     Setting up aiModels.json and the AI runner container.

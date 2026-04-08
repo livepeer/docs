@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      docs-path-sync
- * @type        
+ * @type        config
  * @concern     
  * @niche       
- * @purpose     qa:repo-health
+ * @purpose     
  * @description Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates.
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual -- library module
  * @scope       full-repo
  * @usage       const sync = require('./docs-path-sync');

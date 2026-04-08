@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-ownerless-language
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        remediator
+ * @concern     brand
+ * @niche       style
+ * @purpose     
  * @description Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual
  * @scope       AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, docs-guide/contributing/agent-instructions.mdx, docs-guide
  * @usage       node operations/scripts/remediators/content/style/repair-ownerless-language.js [--check|--write] [--files a,b]
@@ -99,7 +99,9 @@ function parseArgs(argv) {
       args.help = true;
       continue;
     }
-    throw new Error(`Unknown argument: ${token}`);
+    if (token === '--verify') { args.verify = true; continue; }
+
+        throw new Error(`Unknown argument: ${token}`);
   }
   return args;
 }

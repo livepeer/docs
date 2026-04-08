@@ -1,10 +1,13 @@
 ---
-title: 'Payment Receipts'
-sidebarTitle: 'Payment Receipts'
+title: Payment Receipts
+sidebarTitle: Payment Receipts
 description: >-
-  How probabilistic micropayment tickets arrive, when they win, how the Redeemer
-  submits them on-chain, and how to verify ticket redemption is working correctly.
-Keywords:
+  How probabilistic micropayment tickets arrive, when they win, how the Redeemer submits them on-chain, and how to
+  verify ticket redemption is working correctly.
+lifecycleStage: operate
+complexity: intermediate
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - probabilistic micropayments
@@ -28,7 +31,7 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <Tip>
   ETH earnings arrive in discrete redemption steps whenever a winning ticket is redeemed on-chain. A node that processed thousands of jobs often shows zero ETH balance changes for hours, then receives a larger deposit. This is expected behaviour and part of the PM design.
@@ -120,7 +123,7 @@ face value      = 1000 × per-job fee
 expected value  = 1/1000 × 1000 × fee = fee per job
 ```
 
-Over a large number of tickets, the ETH received converges to the equivalent per-job total. At low job volumes, the variance is high — a node processing 10 jobs per day might see zero redemptions some days and two on others. Variance decreases as volume increases.
+Over a large number of tickets, the ETH received converges to the equivalent per-job total. At low job volumes, the variance is high – a node processing 10 jobs per day might see zero redemptions some days and two on others. Variance decreases as volume increases.
 
 <CustomDivider middleText="The Redeemer" />
 
@@ -161,7 +164,7 @@ The Redeemer batches pending winners when possible. A busy orchestrator usually 
 
 ### ETH balance requirement
 
-Your orchestrator wallet on Arbitrum must hold ETH to pay redemption gas. **Maintain a minimum of 0.01 ETH on Arbitrum.** A depleted wallet means winning tickets expire unsubmitted — that ETH is permanently lost.
+Your orchestrator wallet on Arbitrum must hold ETH to pay redemption gas. **Maintain a minimum of 0.01 ETH on Arbitrum.** A depleted wallet means winning tickets expire unsubmitted – that ETH is permanently lost.
 
 <Warning>
   Winning tickets carry an expiry block number. A wallet that runs out of ETH before submission loses expired tickets permanently. The gateway's deposit is unaffected; the loss falls entirely on your side.
@@ -229,11 +232,11 @@ Key log messages:
 
 Possible causes:
 
-- **Low job volume** — at fewer than ~20 jobs per day, zero-win rounds are statistically common.
-- **ETH balance depleted** — winning tickets fail to redeem silently when gas cannot be paid.
-- **RPC connectivity issue** — check your `-ethUrl` endpoint is reachable and within provider limits.
-- **Node offline during job routing** — verify your node is connected and registered in the active set.
-- **Price above gateway caps** — confirm your `-pricePerUnit` is within range of active gateways. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" label="Pricing Strategy" newline={false} />.
+- **Low job volume** – at fewer than ~20 jobs per day, zero-win rounds are statistically common.
+- **ETH balance depleted** – winning tickets fail to redeem silently when gas cannot be paid.
+- **RPC connectivity issue** – check your `-ethUrl` endpoint is reachable and within provider limits.
+- **Node offline during job routing** – verify your node is connected and registered in the active set.
+- **Price above gateway caps** – confirm your `-pricePerUnit` is within range of active gateways. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" label="Pricing Strategy" newline={false} />.
 
 ### Overlapping scope with payments.mdx
 
@@ -254,6 +257,6 @@ Use this page for the receiver-side mechanics of PM tickets: how they arrive, ho
     Set prices within active gateway cap ranges to ensure tickets arrive.
   </Card>
   <Card title="Reward Mechanics" icon="rotate" href="/v2/orchestrators/guides/staking-and-rewards/reward-mechanics" arrow horizontal>
-    LPT inflation rewards — the second income stream alongside ETH fees.
+    LPT inflation rewards – the second income stream alongside ETH fees.
   </Card>
 </CardGroup>

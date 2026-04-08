@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      debug-mint-dev
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual — developer tool
  * @scope       tools/dev/preview
  * @usage       node tools/dev/preview/debug-mint-dev.js [flags]

@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            project-showcase-sync
- * @category          integrator
- * @purpose           infrastructure:data-feeds
- * @scope             .github/scripts
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches project showcase data from external source, writes to snippets/data/showcase-feed/
- * @pipeline          P5, P6
- * @usage             node .github/scripts/project-showcase-sync.js [flags]
+ * @script      project-showcase-sync
  * @type        integrator
- * @description project showcase sync
- * @mode        execute
+ * @concern     copy
+ * @niche       showcase
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches project showcase data from external source, writes to snippets/data/showcase-feed/
+ * @mode        integrate
+ * @pipeline    manual
+ * @scope       .github/scripts
+ * @usage       node .github/scripts/project-showcase-sync.js [flags]
+ * @policy      F-R1
  */
 /*
  * Project Showcase sync job for GitHub Actions.

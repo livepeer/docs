@@ -1,11 +1,11 @@
 /**
  * @script      verify-all-pages
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual — not yet in pipeline
  * @scope       single-domain
  * @usage       node operations/scripts/validators/content/structure/verify-all-pages.js

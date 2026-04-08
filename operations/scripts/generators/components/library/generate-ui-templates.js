@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-ui-templates
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     maintenance
+ * @niche       library
+ * @purpose     
  * @description Generates the UI template catalog and VS Code snippets from canonical template/component sources.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, .vscode
  * @usage       node operations/scripts/generators/components/library/generate-ui-templates.js [flags]

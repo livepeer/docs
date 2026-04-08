@@ -1,19 +1,15 @@
 /**
- * @script            fetch-github-releases
- * @category          integrator
- * @type              integrator
- * @concern           content
- * @niche             data/fetching
- * @purpose           infrastructure:data-feeds
- * @description       Fetches latest GitHub Releases via public REST API, writes per-product JSX data files.
- * @domain            docs
- * @needs             F-R1
- * @purpose-statement Fetches GitHub Releases for configured solutions and writes per-solution release data modules under snippets/data/social-feed-solutions/.
- * @mode              generate
- * @pipeline          config → GitHub REST API → snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx
- * @scope             .github/scripts, snippets/data/social-feed-solutions/
- * @usage             node .github/scripts/fetch-github-releases.js
- * @policy            Public repos only. No auth needed for public repos. GITHUB_TOKEN optional for rate limits.
+ * @script      fetch-github-releases
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches GitHub Releases for configured solutions and writes per-solution release data modules under snippets/data/social-feed-solutions/.
+ * @mode        integrate
+ * @pipeline    config → GitHub REST API → snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx
+ * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @usage       node .github/scripts/fetch-github-releases.js
+ * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");

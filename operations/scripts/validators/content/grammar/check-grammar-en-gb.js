@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-grammar-en-gb
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     brand
+ * @niche       grammar
+ * @purpose     
  * @description Deterministic UK English grammar checker for prose content with optional conservative autofix for safe rules.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files/CI validator for English v2 docs and explicit content files
  * @scope       operations/scripts/validators/content, tools/script-index.md, operations/tests/cript-index.md, docs-guide/catalog/scripts-catalog.mdx, v2
  * @usage       node operations/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full|changed] [--file <path[,path...]>] [--fix] [--strict]

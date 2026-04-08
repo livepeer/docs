@@ -43,6 +43,9 @@
  * @status stable
  * @description Full-width hero section wrapper with min-height and gradient background.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
  * @param {string} [minHeight="fit-content"] - min Height prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -52,7 +55,7 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
   return (
     <div
       className={["frame-mode-hero-full", className].filter(Boolean).join(" ")}
-      style={{ minHeight: minHeight, marginBottom: "0.5rem", ...style }}
+      style={{ minHeight: minHeight, marginBottom: "var(--lp-spacing-2)", ...style }}
       {...rest}
     >
       {children}
@@ -69,12 +72,12 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
  * A container component for the background of a portal page hero section.
  * The background sits behind the hero header.
  * The background is fixed and will not scroll with the page.
- * Currently a gif is generated looking like a starfield using HeroGif.jsx
+ * Currently a gif is generated looking like a starfield using StarfieldCanvas.jsx
  * This component should sit in a className="frame-mode-hero-full" element.
  *
  * @param {React.ReactNode} children:
  * The background image component. Defaults to <Starfield />
- * <Starfield /> is created in components/domain/SHARED/HeroGif.jsx
+ * <Starfield /> is created in components/domain/SHARED/StarfieldCanvas.jsx
  *
  * @author Alison Haire
  */
@@ -85,6 +88,9 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
  * @status stable
  * @description Hero background with image overlay and gradient.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -131,6 +137,9 @@ const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ..
  * @status stable
  * @description Centred content container inside hero sections.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -161,6 +170,8 @@ const HeroContentContainer = ({ children, className = "", style = {}, ...rest })
  * @status stable
  * @description Hero content layout with title, icon, subtitle, and CTA slots.
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -178,7 +189,7 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
         width: "80%",
         margin: "0 auto",
         fontSize: "1.1rem",
-        color: "var(--page-header-description-color)",
+        color: "var(--lp-color-text-secondary)",
         ...style,
       }}
       {...rest}
@@ -210,6 +221,9 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
  * @status stable
  * @description Outer container for portal page content below the hero.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -217,7 +231,7 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
 const PortalContentContainer = ({ children, className = "", style = {}, ...rest }) => {
     return (
         <div className={["frame-mode-container", className].filter(Boolean).join(" ")} style={style} {...rest}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>   
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--lp-spacing-4)" }}>   
                 {children}
             </div>
         </div>
@@ -250,6 +264,9 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  * @status stable
  * @description Hero content with logo, title, tagline, description, and card grid.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {boolean} [zIndex=true] - z Index prop.
  * @param {string} [title="Portal Page"] - title prop.
  * @param {string} [subtitle="Build - Explore - Create"] - subtitle prop.
@@ -288,8 +305,8 @@ const PortalHeroContent = ({
       <div
         style={{
           textAlign: "center",
-          marginTop: "2rem",
-          marginBottom: "1rem",
+          marginTop: "var(--lp-spacing-8)",
+          marginBottom: "var(--lp-spacing-4)",
         }}
       >
         <H1 align="center"
@@ -303,13 +320,13 @@ const PortalHeroContent = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "0.5rem",
+              gap: "var(--lp-spacing-2)",
             }}
           >
             {subtitleIcon && (
               <span
                 style={{
-                  marginRight: "0.5rem",
+                  marginRight: "var(--lp-spacing-2)",
                 }}
               >
                 <Icon icon={subtitleIcon} size={20} />
@@ -320,7 +337,7 @@ const PortalHeroContent = ({
                 fontSize: "1.5rem",
                 fontWeight: "500",
                 opacity: 1,
-                color: subtitleColor || "var(--accent)",
+                color: subtitleColor || "var(--lp-color-accent)",
               }}
             >
               {subtitle} {/* flipped icon */}
@@ -329,7 +346,7 @@ const PortalHeroContent = ({
                   style={{
                     display: "inline-block",
                     transform: "scaleX(-1)",
-                    marginLeft: "0.5rem",
+                    marginLeft: "var(--lp-spacing-2)",
                   }}
                 >
                   <Icon icon={subtitleIcon} size={20} />
@@ -349,7 +366,7 @@ const PortalHeroContent = ({
               width: "80%",
               margin: "0 auto",
               fontSize: "1.1rem",
-              color: "var(--text)",
+              color: "var(--lp-color-text-secondary)",
               paddingTop: "3rem",
             }}
           >
@@ -364,13 +381,13 @@ const PortalHeroContent = ({
               justifyContent: "center",
               width: "fit-content",
               margin: "0 auto",
-              marginTop: "1rem",
+              marginTop: "var(--lp-spacing-4)",
             }}
            >
             {refCardLink}
           </div>
               )}
-         <div style={{ width: "80%", margin: "0 auto", paddingBottom: "1rem" }}>
+         <div style={{ width: "80%", margin: "0 auto", paddingBottom: "var(--lp-spacing-4)" }}>
           {callout && callout}
           {divider ? <CustomDivider /> : null }
           {/* <CustomDivider /> */}
@@ -386,13 +403,13 @@ const PortalHeroContent = ({
               width: "80%",
               margin: "0 auto",
               fontSize: "1.1rem",
-              color: "var(--text)",
+              color: "var(--lp-color-text-secondary)",
             }}
           >
             {overview}
           </div>
               )}
-        <div style={{ width: "80%", margin: "0 auto", paddingTop: "1.5rem", paddingBottom: "0.1rem" }}>
+        <div style={{ width: "80%", margin: "0 auto", paddingTop: "var(--lp-spacing-6)", paddingBottom: "0.1rem" }}>
           {children ? <>{children}<CustomDivider /></> :  <CustomDivider />}
         </div>
         </div>
@@ -408,6 +425,9 @@ const PortalHeroContent = ({
  * @status stable
  * @description Section header with mission label and optional subtitle.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
  * @param {any} title - title prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -420,7 +440,7 @@ const PortalCardsHeader = ({ children, title, className = "", style = {}, ...res
             {title}
         </H2>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--lp-spacing-2)", marginBottom: "0.1rem" }}>
                 <span style={{ lineHeight: "1", color: "var(--text-primary)", opacity: 1, fontStyle: "italic", fontSize: "1.2rem" }}>
                     Choose Your Mission:
                 </span>
@@ -437,6 +457,9 @@ const PortalCardsHeader = ({ children, title, className = "", style = {}, ...res
  * @status stable
  * @description Section header with icon, title, and horizontal rule.
   * @aiDiscoverability none
+ * @usedIn v2/community/community-portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
  * @param {any} title - title prop.
  * @param {any} icon - icon prop.
@@ -481,6 +504,9 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  * @status stable
  * @description Hero banner with centred logo image, title, and subtitle.
   * @aiDiscoverability none
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} [src="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"] - src prop.
  * @param {string} [alt="Livepeer Logo"] - alt prop.
  * @param {string} [width="100%"] - width prop.
@@ -531,10 +557,10 @@ const LogoHeroContainer = ({
             top: "100%",
             right: "0",
             fontSize: "2rem",
-            color: "var(--accent)",
+            color: "var(--lp-color-accent)",
             fontWeight: "500",
             lineHeight: "1",
-            paddingTop:"0.5rem"
+            paddingTop:"var(--lp-spacing-2)"
           }}>
             {children}
           </div>
@@ -551,6 +577,8 @@ const LogoHeroContainer = ({
  * @status stable
  * @description Container for reference cards with configurable column count.
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -564,7 +592,7 @@ const RefCardContainer = ({ children, className = "", style = {}, ...rest }) => 
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
-        gap: "1rem",
+        gap: "var(--lp-spacing-4)",
         ...style,
       }}
       {...rest}

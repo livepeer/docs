@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      lint-patterns
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     brand
+ * @niche       copy
+ * @purpose     
  * @description Enforce Tier 2 copy pattern rules on MDX content files.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
  * @usage       node operations/scripts/validators/content/copy/lint-patterns.js [file or glob] [flags]

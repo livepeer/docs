@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-mdx-safe-markdown
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       full-repo
  * @usage       node operations/scripts/validators/content/structure/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]

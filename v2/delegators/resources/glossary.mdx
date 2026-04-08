@@ -2,6 +2,7 @@
 title: LPT Token Glossary
 sidebarTitle: Glossary
 description: 'Key terms for the Livepeer Token (LPT) — staking, delegation, inflation, governance, treasury, and tokenomics.'
+complexity: beginner
 keywords:
   - livepeer
   - glossary
@@ -35,17 +36,19 @@ lastVerified: '2026-04-06'
   Do not remove or rename the SearchTable itemsList prop — the parser depends on it.
 */}
 
-import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { SearchTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
-import { glossaryBadges } from '/v2/solutions/data/badges.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { glossaryBadges } from '/snippets/data/glossary-badges.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 
 {/* ==========================SECTION: SEARCH TIP========================= */}
 <Tip>
 **Finding terms quickly**
-- **Cmd+K** (Mac) / **Ctrl+K** (Windows) — search all Livepeer docs
-- **Cmd+F** (Mac) / **Ctrl+F** (Windows) — search within this page
+- **Cmd+K** (Mac) / **Ctrl+K** (Windows) – search all Livepeer docs
+- **Cmd+F** (Mac) / **Ctrl+F** (Windows) – search within this page
 - Use the category filter below to narrow by topic
 </Tip>
 
@@ -54,7 +57,7 @@ import { glossaryBadges } from '/v2/solutions/data/badges.jsx'
 </Note>
 
 {/* ==========================SECTION: INTRO========================= */}
-Definitions for LPT token holders and stakers — covering staking, delegation, inflation, governance, treasury, and the smart contracts that power the Livepeer protocol.
+Definitions for LPT token holders and stakers – covering staking, delegation, inflation, governance, treasury, and the smart contracts that power the Livepeer protocol.
 
 <CustomDivider />
 
@@ -95,7 +98,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     { Term: "Delegation Model", Category: "livepeer", Niche: "protocol, web3:tokenomics", Definition: "Livepeer's delegated proof-of-stake system in which token holders choose orchestrators to delegate stake to, earning rewards without running infrastructure." },
     { Term: "Delegator", Category: "livepeer", Niche: "role, web3:tokenomics", Definition: "A token holder who bonds LPT to an orchestrator in order to secure the network, earn a share of rewards and fees, and participate in on-chain governance." },
     { Term: "Dilution", Category: "economic", Niche: "reward, web3:tokenomics", Definition: "The reduction in proportional ownership experienced by non-staking token holders when new LPT is minted each round through inflation." },
-    { Term: "Dilution Protection", Category: "web3", Niche: "tokenomics, economic:reward", Definition: "The benefit that active stakers receive by bonding — because inflationary rewards accrue only to bonded participants, stakers maintain their proportional ownership while non-stakers are diluted." },
+    { Term: "Dilution Protection", Category: "web3", Niche: "tokenomics, economic:reward", Definition: "The benefit that active stakers receive by bonding – because inflationary rewards accrue only to bonded participants, stakers maintain their proportional ownership while non-stakers are diluted." },
     { Term: "Economic Weight", Category: "web3", Niche: "tokenomics", Definition: "An orchestrator's total active bonded stake, which determines their proportional share of inflationary rewards and their probability of being selected for job routing." },
     { Term: "ETH Fees", Category: "economic", Niche: "payment", Definition: "Ether paid by gateways to orchestrators as compensation for completed transcoding or AI inference work, with a configurable portion shared to delegators." },
     { Term: "Fee Cut", Category: "economic", Niche: "reward", Definition: "A complementary way to describe the ETH fee split: the percentage retained by the orchestrator rather than the portion shared to delegators. Current Explorer product surfaces use Fee Share for the delegator-facing value." },
@@ -163,7 +166,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
     { Term: "USD (United States Dollar)", Category: "economic", Niche: "currency", Definition: "The official currency of the United States; used as the reference denomination for Livepeer gateway fees, grant amounts, treasury allocations, and market data." },
     { Term: "USDT (Tether)", Category: "web3", Niche: "token", Definition: "A US-dollar-pegged ERC-20 stablecoin issued by Tether Limited; available on some centralised exchanges as a trading pair for LPT." },
     { Term: "veLPT (Vote-Escrowed LPT)", Category: "economic", Niche: "treasury, web3:governance", Definition: "A proposed mechanism that would allow LPT holders to lock tokens for an extended period in exchange for enhanced governance voting power, aligning long-term incentives." },
-    { Term: "Vesting", Category: "web3", Niche: "tokenomics, economic:reward", Definition: "A schedule controlling when token allocations — such as founder or team grants — become available over time, often with an initial cliff period followed by pro-rata release." },
+    { Term: "Vesting", Category: "web3", Niche: "tokenomics, economic:reward", Definition: "A schedule controlling when token allocations – such as founder or team grants – become available over time, often with an initial cliff period followed by pro-rata release." },
     { Term: "Vote Detachment", Category: "web3", Niche: "governance, operational:governance", Definition: "The ability for a delegator to override their orchestrator's governance vote with their own individual stake-weighted vote on a specific proposal." },
     { Term: "Voting Power", Category: "livepeer", Niche: "protocol, web3:governance", Definition: "The weight of a participant's vote in Livepeer on-chain governance, determined by their total bonded LPT stake at the block when the proposal was created." },
     { Term: "Wei", Category: "web3", Niche: "token", Definition: "The smallest denomination of Ether, where 1 ETH equals 10^18 Wei; used in Livepeer for precise on-chain price calculations such as price per pixel." },
@@ -244,7 +247,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="LIP (Livepeer Improvement Proposal)" icon="book-open">
     **Definition**: A formal design document proposing changes to the Livepeer protocol, governance, or ecosystem, analogous to Ethereum's EIP process.
 
-    **Context**: LIPs must follow a defined process — draft, discussion, formal proposal on-chain, community vote — before being implemented; key examples include LIP-89 (on-chain governance) and LIP-91/92 (treasury).
+    **Context**: LIPs must follow a defined process – draft, discussion, formal proposal on-chain, community vote – before being implemented; key examples include LIP-89 (on-chain governance) and LIP-91/92 (treasury).
 
     **Status**: current
 
@@ -252,11 +255,11 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   </Accordion>
 
   <Accordion title="LPT (Livepeer Token)" icon="book-open">
-    **Definition**: The ERC-20 governance and staking token used to coordinate, incentivize, and secure the Livepeer Network; staked LPT determines orchestrator selection, work allocation, and reward distribution.
+    **Definition**: The ERC-20 governance and staking token used to coordinate, incentivise, and secure the Livepeer Network; staked LPT determines orchestrator selection, work allocation, and reward distribution.
 
     **Also known as**: Livepeer Token
 
-    **Context**: LPT is the foundational cryptoeconomic primitive of the protocol — it serves simultaneously as a staking bond (security), a governance weight (voting power), and an inflation-distributed reward token.
+    **Context**: LPT is the foundational cryptoeconomic primitive of the protocol – it serves simultaneously as a staking bond (security), a governance weight (voting power), and an inflation-distributed reward token.
 
     **Status**: current
 
@@ -278,7 +281,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Operator Market" icon="book-open">
     **Definition**: The competitive ecosystem of orchestrators offering differentiated services to gateways and delegators, distinguished by price, performance, reliability, and commission rates.
 
-    **Context**: The operator market is Livepeer's two-sided marketplace dynamic — delegators allocate stake to orchestrators they trust, creating economic incentives for operators to compete on quality and price.
+    **Context**: The operator market is Livepeer's two-sided marketplace dynamic – delegators allocate stake to orchestrators they trust, creating economic incentives for operators to compete on quality and price.
 
     **Status**: current
 
@@ -350,7 +353,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Slashing" icon="book-open">
     **Definition**: A penalty mechanism that destroys a portion of an orchestrator's bonded LPT stake as punishment for protocol violations such as failing verification or underperforming.
 
-    **External**: [Proof of stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -462,7 +465,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="RoundsManager" icon="book-open">
     **Definition**: The Livepeer smart contract that tracks round progression, stores the current round number, and coordinates round-based protocol state transitions.
 
-    **Context**: RoundsManager is called at the start of each round initialization and interacts with BondingManager and Minter to trigger reward distribution and inflation calculation.
+    **Context**: RoundsManager is called at the start of each round initialisation and interacts with BondingManager and Minter to trigger reward distribution and inflation calculation.
 
     **Status**: current
 
@@ -544,7 +547,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Bonding" icon="book-open">
     **Definition**: The act of locking (staking) LPT tokens to an orchestrator in Livepeer's delegated proof-of-stake system.
 
-    **Context**: Bonding is the primary mechanism by which delegators participate in the protocol — bonded LPT secures the network, confers governance weight, and entitles the holder to a proportional share of inflationary rewards and ETH fees.
+    **Context**: Bonding is the primary mechanism by which delegators participate in the protocol – bonded LPT secures the network, confers governance weight, and entitles the holder to a proportional share of inflationary rewards and ETH fees.
 
     **Status**: current
 
@@ -586,7 +589,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Capital-backed Sybil Resistance" icon="book-open">
     **Definition**: A security mechanism where staking capital is required to participate, making Sybil attacks economically costly because each fake identity must fund real stake.
 
-    **External**: [Proof of stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -596,7 +599,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Capital Efficiency" icon="book-open">
     **Definition**: The degree to which staked capital generates productive returns through protocol inflation rewards, ETH fees, or work allocation.
 
-    **External**: [Cryptoeconomics — Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
+    **External**: [Cryptoeconomics – Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
 
     **Status**: current
 
@@ -606,7 +609,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Concentration Risk" icon="book-open">
     **Definition**: The risk arising when a disproportionate share of total bonded stake is held by a small number of orchestrators, reducing network decentralization and resilience.
 
-    **External**: [Proof of stake — Wikipedia](https://en.wikipedia.org/wiki/Proof_of_stake)
+    **External**: [Proof of stake – Wikipedia](https://en.wikipedia.org/wiki/Proof_of_stake)
 
     **Status**: current
 
@@ -634,7 +637,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   </Accordion>
 
   <Accordion title="Dilution Protection <Badge color='yellow'>draft</Badge>" icon="book-open">
-    **Definition**: The benefit that active stakers receive by bonding — because inflationary rewards accrue only to bonded participants, stakers maintain their proportional ownership while non-stakers are diluted.
+    **Definition**: The benefit that active stakers receive by bonding – because inflationary rewards accrue only to bonded participants, stakers maintain their proportional ownership while non-stakers are diluted.
 
     **Context**: Dilution protection is the primary economic argument for delegating LPT; an unbonded holder loses ownership percentage each round as new tokens are distributed to active participants.
 
@@ -646,7 +649,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Economic Weight" icon="book-open">
     **Definition**: An orchestrator's total active bonded stake, which determines their proportional share of inflationary rewards and their probability of being selected for job routing.
 
-    **Context**: Economic weight is central to Livepeer's security model — orchestrators with more delegated stake have higher economic weight and receive more work and rewards.
+    **Context**: Economic weight is central to Livepeer's security model – orchestrators with more delegated stake have higher economic weight and receive more work and rewards.
 
     **Status**: current
 
@@ -666,7 +669,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Liquidity Risk" icon="book-open">
     **Definition**: The risk that bonded LPT tokens cannot be quickly converted to liquid assets due to the mandatory unbonding period before withdrawal.
 
-    **External**: [Liquidity risk — Wikipedia](https://en.wikipedia.org/wiki/Liquidity_risk)
+    **External**: [Liquidity risk – Wikipedia](https://en.wikipedia.org/wiki/Liquidity_risk)
 
     **Status**: current
 
@@ -676,7 +679,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Non-custodial" icon="book-open">
     **Definition**: A staking model in which users retain control of their private keys and token ownership while their LPT is bonded, so they are never required to transfer custody to a third party.
 
-    **External**: [Proof of stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -698,7 +701,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
 
     **Also known as**: Bonded stake
 
-    **Context**: Stake is the core unit of participation in Livepeer — all economic weight, voting power, and reward distribution derive from how much LPT is staked to active orchestrators.
+    **Context**: Stake is the core unit of participation in Livepeer – all economic weight, voting power, and reward distribution derive from how much LPT is staked to active orchestrators.
 
     **Status**: current
 
@@ -708,7 +711,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Staking" icon="book-open">
     **Definition**: The act of locking tokens in a proof-of-stake protocol to participate in network security, governance, and earn inflationary rewards and fee income.
 
-    **External**: [Proof of stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -728,7 +731,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Target Bonding Rate" icon="book-open">
     **Definition**: The 50% participation threshold for the ratio of bonded LPT to total supply; the inflation mechanism adjusts the per-round issuance rate to push toward this target.
 
-    **Context**: The Target Bonding Rate is the equilibrium point of Livepeer's inflation model — if bonding rate is below 50%, inflation rises to incentivize more staking; if above, inflation falls.
+    **Context**: The Target Bonding Rate is the equilibrium point of Livepeer's inflation model – if bonding rate is below 50%, inflation rises to incentivise more staking; if above, inflation falls.
 
     **Status**: current
 
@@ -748,7 +751,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Tokenomics" icon="book-open">
     **Definition**: The economic design of the LPT token system encompassing total supply, genesis distribution, inflation schedule, staking incentives, governance rights, and deflationary mechanisms.
 
-    **External**: [Cryptoeconomics — Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
+    **External**: [Cryptoeconomics – Wikipedia](https://en.wikipedia.org/wiki/Cryptoeconomics)
 
     **Status**: current
 
@@ -768,9 +771,9 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   </Accordion>
 
   <Accordion title="Vesting" icon="book-open">
-    **Definition**: A schedule controlling when token allocations — such as founder or team grants — become available over time, often with an initial cliff period followed by pro-rata release.
+    **Definition**: A schedule controlling when token allocations – such as founder or team grants – become available over time, often with an initial cliff period followed by pro-rata release.
 
-    **External**: [Vesting — Wikipedia](https://en.wikipedia.org/wiki/Vesting)
+    **External**: [Vesting – Wikipedia](https://en.wikipedia.org/wiki/Vesting)
 
     **Status**: current
 
@@ -786,7 +789,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Commission Rate" icon="book-open">
     **Definition**: The combined percentage of inflationary rewards and ETH fees that an orchestrator retains before distributing the remainder to delegators.
 
-    **Context**: Commission rate is expressed as two separate parameters — reward cut and fee cut — which orchestrators can update between rounds.
+    **Context**: Commission rate is expressed as two separate parameters – reward cut and fee cut – which orchestrators can update between rounds.
 
     **Status**: current
 
@@ -862,7 +865,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Inflation Model <Badge color='yellow'>draft</Badge>" icon="book-open">
     **Definition**: Livepeer's algorithmic mechanism that adjusts the per-round LPT issuance rate dynamically based on the gap between the current Bonding Rate and the 50% Target Bonding Rate.
 
-    **Context**: The inflation model was designed so the protocol is self-regulating — no manual parameter changes are needed; the Inflation Adjustment (alpha) automatically nudges issuance each round.
+    **Context**: The inflation model was designed so the protocol is self-regulating – no manual parameter changes are needed; the Inflation Adjustment (alpha) automatically nudges issuance each round.
 
     **Status**: draft
 
@@ -902,7 +905,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Price Per Pixel" icon="book-open">
     **Definition**: The fundamental pricing unit for Livepeer transcoding work, expressed as the cost in wei for processing one pixel of video.
 
-    **Context**: Price per pixel allows standardized comparison between orchestrators regardless of resolution or bitrate; gateways filter orchestrators by MaxPrice, and orchestrators advertise their pricePerUnit.
+    **Context**: Price per pixel allows standardised comparison between orchestrators regardless of resolution or bitrate; gateways filter orchestrators by MaxPrice, and orchestrators advertise their pricePerUnit.
 
     **Status**: current
 
@@ -970,7 +973,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Proposer Bond" icon="book-open">
     **Definition**: The minimum bonded LPT balance (100 LPT) required to submit a formal on-chain governance proposal.
 
-    **Context**: The proposer bond deters spam proposals by requiring skin-in-the-game from proposal authors; it does not lock additional tokens — the proposer simply needs at least 100 LPT bonded.
+    **Context**: The proposer bond deters spam proposals by requiring skin-in-the-game from proposal authors; it does not lock additional tokens – the proposer simply needs at least 100 LPT bonded.
 
     **Status**: current
 
@@ -980,7 +983,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Quadratic Funding" icon="book-open">
     **Definition**: A public goods funding mechanism where matching funds amplify small individual contributions so that projects with broad community support receive disproportionately larger allocations.
 
-    **External**: [Quadratic voting — Wikipedia](https://en.wikipedia.org/wiki/Quadratic_voting)
+    **External**: [Quadratic voting – Wikipedia](https://en.wikipedia.org/wiki/Quadratic_voting)
 
     **Status**: current
 
@@ -1056,7 +1059,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Atomic Execution" icon="book-open">
     **Definition**: A guarantee that a set of on-chain operations either all succeed or none execute, preventing partial state changes.
 
-    **External**: [Atomic commit — Wikipedia](https://en.wikipedia.org/wiki/Atomic_commit)
+    **External**: [Atomic commit – Wikipedia](https://en.wikipedia.org/wiki/Atomic_commit)
 
     **Status**: current
 
@@ -1088,7 +1091,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
 
     **Tags**: `livepeer:governance`
 
-    **Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution — delegators with more staked LPT have proportionally greater influence.
+    **Context**: Used in Livepeer governance votes, orchestrator selection, and reward distribution – delegators with more staked LPT have proportionally greater influence.
 
     **Status**: current
 
@@ -1144,7 +1147,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Bridge" icon="book-open">
     **Definition**: Infrastructure connecting two blockchain ecosystems that enables token and information transfer between them.
 
-    **External**: [Bridges — ethereum.org](https://ethereum.org/developers/docs/bridges/)
+    **External**: [Bridges – ethereum.org](https://ethereum.org/developers/docs/bridges/)
 
     **Status**: current
 
@@ -1162,7 +1165,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   </Accordion>
 
   <Accordion title="Merkle Mine" icon="book-open">
-    **Definition**: Livepeer's decentralized token distribution algorithm used at genesis, where eligible Ethereum addresses could claim LPT by submitting Merkle proofs.
+    **Definition**: Livepeer's decentralised token distribution algorithm used at genesis, where eligible Ethereum addresses could claim LPT by submitting Merkle proofs.
 
     **Context**: The Merkle Mine was used to distribute genesis supply broadly across the Ethereum community without a traditional ICO, forming the initial base of LPT holders.
 
@@ -1174,7 +1177,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Proof-of-Stake" icon="book-open">
     **Definition**: A blockchain consensus mechanism where validators stake cryptocurrency as collateral to propose and validate blocks, replacing the energy-intensive Proof-of-Work model.
 
-    **External**: [Proof of stake — ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
+    **External**: [Proof of stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
     **Status**: current
 
@@ -1198,7 +1201,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Wei" icon="book-open">
     **Definition**: The smallest denomination of Ether, where 1 ETH equals 10^18 Wei; used in Livepeer for precise on-chain price calculations such as price per pixel.
 
-    **External**: [Wei — ethereum.org glossary](https://ethereum.org/glossary/)
+    **External**: [Wei – ethereum.org glossary](https://ethereum.org/glossary/)
 
     **Status**: current
 
@@ -1214,7 +1217,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="AI Inference" icon="book-open">
     **Definition**: Running a trained machine learning model on new input data to produce predictions or generated outputs, as opposed to the training phase.
 
-    **External**: [Inference — Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
+    **External**: [Inference – Wikipedia](https://en.wikipedia.org/wiki/Inference_engine)
 
     **Status**: current
 
@@ -1234,7 +1237,7 @@ Definitions for LPT token holders and stakers — covering staking, delegation, 
   <Accordion title="Transcoding" icon="book-open">
     **Definition**: The direct digital-to-digital conversion of video from one encoding format to another, producing multiple adaptive renditions for cross-device delivery.
 
-    **External**: [Transcoding — Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
+    **External**: [Transcoding – Wikipedia](https://en.wikipedia.org/wiki/Transcoding)
 
     **Status**: current
 

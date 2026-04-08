@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-agent-docs-freshness
- * @type        
- * @concern     
- * @niche       
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
  * @purpose     
- * @description 
- * @mode        read-only
+ * @description * @mode        read-only
+ * @mode        check
  * @pipeline    manual, ci
  * @scope       operations/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .windsurf, .augment, .mintlify, docs-guide/policies, ai-tools/ai-skills, docs-guide/contributing
  * @usage       node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold <days>] [--json]

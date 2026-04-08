@@ -1,7 +1,11 @@
 ---
 title: GPU Support Matrix
 sidebarTitle: GPU Support
-description: 'NVIDIA GPU compatibility, NVENC/NVDEC session limits, driver requirements, and CUDA versions for Livepeer orchestrators.'
+description: >-
+  NVIDIA GPU compatibility, NVENC/NVDEC session limits, driver requirements, and CUDA versions for Livepeer
+  orchestrators.
+lifecycleStage: discover
+complexity: intermediate
 keywords:
   - livepeer
   - orchestrator
@@ -23,7 +27,7 @@ pageType: reference
 audience: orchestrator
 purpose: reference
 status: review
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* TODO:
 Terminology Validation:
@@ -49,7 +53,7 @@ Human:
 - Review Page Layout
 */}
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Livepeer orchestrators use NVIDIA GPUs for video transcoding (NVENC/NVDEC hardware encoders) and AI inference (CUDA cores / Tensor cores). GPU compatibility, session limits, and driver requirements.
@@ -89,7 +93,7 @@ go-livepeer requires NVIDIA GPUs with NVENC and NVDEC support. AMD and Intel GPU
     <TableCell>**GeForce GTX 16xx** (Turing)</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>Limited</TableCell>
-    <TableCell>No Tensor cores — AI inference slower or unsupported for some pipelines.</TableCell>
+    <TableCell>No Tensor cores – AI inference slower or unsupported for some pipelines.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**GeForce GTX 10xx** (Pascal)</TableCell>
@@ -259,7 +263,7 @@ docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
     <TableCell>Batch AI (single warm model)</TableCell>
     <TableCell>8 GB</TableCell>
     <TableCell>16 GB</TableCell>
-    <TableCell>Depends on model size — SDXL needs ~7 GB</TableCell>
+    <TableCell>Depends on model size – SDXL needs ~7 GB</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>Batch AI (multiple warm models)</TableCell>
@@ -283,7 +287,7 @@ docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
     <TableCell>Real-time AI (ComfyStream)</TableCell>
     <TableCell>12 GB</TableCell>
     <TableCell>16 GB+</TableCell>
-    <TableCell>Latency-sensitive — VRAM headroom improves stability</TableCell>
+    <TableCell>Latency-sensitive – VRAM headroom improves stability</TableCell>
   </TableRow>
 </StyledTable>
 
@@ -296,13 +300,13 @@ For detailed per-pipeline VRAM planning, see the [Model and Demand Reference](/v
   <Tab  title="Transcoding Only" icon="video">
     Any supported NVIDIA GPU works. For cost efficiency, an RTX 3060 12GB or RTX 4060 Ti 16GB provides good transcoding throughput at low power draw. Patch the NVENC limit to handle more concurrent sessions.
 
-    **Budget pick:** GTX 1660 Super (6 GB) — cheapest entry for transcoding-only.
+    **Budget pick:** GTX 1660 Super (6 GB) – cheapest entry for transcoding-only.
   </Tab>
 
   <Tab  title="Transcoding + AI" icon="microchip">
     16 GB VRAM minimum. RTX 4070 Ti Super (16 GB) or RTX 3090 (24 GB) are common choices. 24 GB allows running 2–3 warm AI models alongside transcoding.
 
-    **Best value:** RTX 3090 24 GB — widely available used, high VRAM, strong community track record.
+    **Best value:** RTX 3090 24 GB – widely available used, high VRAM, strong community track record.
   </Tab>
 
   <Tab  title="AI-Heavy / LLM" icon="microchip">

@@ -1,18 +1,15 @@
 /**
- * @script            fetch-contract-addresses
- * @type              integrator
- * @concern           content
- * @niche             data/blockchain
- * @purpose           infrastructure:data-feeds
- * @description       Thin CLI entrypoint for the chain-first contracts pipeline.
- *                    Delegates discovery, truth recovery, provenance resolution,
- *                    enrichment, output generation, and incident reporting to the
- *                    contracts pipeline modules under operations/scripts/integrators/content/data/contracts/.
- * @mode              generate
- * @scope             .github/scripts, operations/scripts/integrators/content/data/contracts/, snippets/data/contract-addresses/, snippets/composables/pages/canonical/
- * @usage             node .github/scripts/fetch-contract-addresses.js [--dry-run] [--check] [--skip-verify]
- * @policy            Docs-local files do not define publishable contract truth.
+ * @script      fetch-contract-addresses
+ * @type        integrator
+ * @concern     maintenance
+ * @niche       contracts
+ * @purpose     infrastructure:data-feeds
+ * @description Thin CLI entrypoint for the chain-first contracts pipeline.
+ * @mode        integrate
  * @pipeline    manual
+ * @scope       .github/scripts, operations/scripts/integrators/content/data/contracts/, snippets/data/contract-addresses/, snippets/composables/pages/canonical/
+ * @usage       node .github/scripts/fetch-contract-addresses.js [--dry-run] [--check] [--skip-verify]
+ * @policy      Docs-local files do not define publishable contract truth.
  */
 
 const {

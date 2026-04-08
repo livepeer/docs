@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      page-imports-audit
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:import-integrity
+ * @type        audit
+ * @concern     health
+ * @niche       health
+ * @purpose     
  * @description Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual
  * @scope       operations/scripts, operations/reports/health/page-imports, v2 page import graph
  * @usage       node operations/scripts/audits/content/health/page-imports-audit.js [--staged|--scope routable-v2|repo|--files <paths>|--tab <tab>] [--strict] [--output-dir <dir>]

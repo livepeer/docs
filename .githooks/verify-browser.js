@@ -6,7 +6,7 @@
  * @niche       hooks
  * @purpose     tooling:dev-tools
  * @description Verifies browser availability for Puppeteer-based integration tests
- * @mode        execute
+ * @mode        dispatch
  * @pipeline    manual — developer tool
  * @scope       .githooks
  * @usage       node .githooks/verify-browser.js [flags]

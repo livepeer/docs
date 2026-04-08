@@ -5,7 +5,7 @@
 # @niche       hooks
 # @purpose     tooling:dev-tools
 # @description Pre-commit sub-hook — verifies file-walker is available and runs structural checks on staged files
-# @mode        execute
+# @mode        dispatch
 # @pipeline    manual — developer tool
 # @scope       .githooks
 # @usage       bash .githooks/verify.sh [flags]

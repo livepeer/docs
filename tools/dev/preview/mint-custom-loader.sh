@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # @script      mint-custom-loader
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source.
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual — developer tool
 # @scope       generated-output
 # @usage       bash tools/dev/preview/mint-custom-loader.sh [flags]

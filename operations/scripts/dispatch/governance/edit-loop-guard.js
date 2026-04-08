@@ -1,11 +1,11 @@
 /**
  * @script      edit-loop-guard
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Detects repeated edits to the same file and requires hypothesis before continuing
+ * @purpose     
  * @description PostToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track per-file edits → warn at 3 → flag block at 5
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

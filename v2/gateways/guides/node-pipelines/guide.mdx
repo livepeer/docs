@@ -2,9 +2,11 @@
 title: AI and Job Pipelines Overview
 sidebarTitle: Pipelines Guide
 description: >-
-  What a gateway pipeline is, the three job types your gateway can route (video
-  transcoding, AI inference, BYOC), and how pipeline selection maps to gateway type.
-PageType: guide
+  What a gateway pipeline is, the three job types your gateway can route (video transcoding, AI inference, BYOC), and
+  how pipeline selection maps to gateway type.
+lifecycleStage: operate
+complexity: intermediate
+pageType: guide
 audience: gateway
 purpose: orient
 status: current
@@ -19,7 +21,7 @@ keywords:
   - byoc
   - routing
   - overview
-og:image: /snippets/assets/media/og-images/fallback.png
+'og:image': /snippets/assets/media/og-images/fallback.png
 ---
 {/* TODO:
 Terminology Validation:
@@ -39,7 +41,7 @@ Human
 */}
 
 import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
@@ -83,7 +85,7 @@ Each pipeline is the control-plane path between an application request and orche
 Livepeer gateways route four categories of work. Each has different ingest patterns, payment models, and orchestrator requirements. A <Badge color="green">Dual</Badge> node runs both video and AI pipelines on a single node.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart LR
     A["Client App"] --> GW["Gateway"]
     GW --> VT["Video Transcoding <br/> RTMP/HTTP segments"]

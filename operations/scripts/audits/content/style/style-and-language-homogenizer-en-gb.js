@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      style-and-language-homogenizer-en-gb
- * @type        
- * @concern     
- * @niche       
- * @purpose     tooling:dev-tools
+ * @type        audit
+ * @concern     brand
+ * @niche       style
+ * @purpose     
  * @description EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
- * @mode        read-only
+ * @mode        scan
  * @pipeline    on-demand, repair)
  * @scope       operations/scripts, v2, tools/config/quality/style-language-profile-en-gb.json
  * @usage       node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]

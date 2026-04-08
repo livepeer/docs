@@ -3,14 +3,14 @@
 /**
  * @script      generate-hero-background
  * @type        generator
- * @concern     content
+ * @concern     
  * @niche       media
  * @purpose     content:media-generation
- * @description Generates radial gradient hero background images using Puppeteer
+ * @description generate hero background
  * @mode        generate
- * @pipeline    manual -> brand colours -> hero background PNG
- * @scope       operations/scripts/generators/media/
- * @usage       node operations/scripts/generators/media/generate-hero-background.js --preset daydream --output bg.png
+ * @pipeline    manual
+ * @scope       operations/scripts/generators/media
+ * @usage       node operations/scripts/generators/media/generate-hero-background.js
  */
 
 /**

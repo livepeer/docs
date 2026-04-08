@@ -604,25 +604,6 @@
       "status": "active"
     },
     {
-      "file": "project-showcase-sync.yml",
-      "name": "Project Showcase Sync",
-      "type": "project",
-      "concern": "showcase",
-      "pipeline_tag": "unknown",
-      "triggers": [
-        "workflow_dispatch",
-        "repository_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/integrators/copy/showcase/project-showcase-sync.js"
-      ],
-      "has_inline_script": false,
-      "has_permissions": true,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "disabled"
-    },
-    {
       "file": "remediator-brand-repair-en-gb-style.yml",
       "name": "EN-GB Style Homogenisation",
       "type": "remediator",
@@ -933,6 +914,119 @@
       "has_permissions": false,
       "has_concurrency": false,
       "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "generator-discoverability-generate-og-images.yml",
+      "name": "Generate OG Images",
+      "type": "generator",
+      "concern": "discoverability",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/content/seo/generate-og-images.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "project-showcase-sync.yml",
+      "name": "Project Showcase Sync",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/copy/showcase/project-showcase-sync.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "disabled"
+    },
+    {
+      "file": "styles-governance.yml",
+      "name": "Styles Governance",
+      "type": "remediator",
+      "concern": "brand",
+      "pipeline_tag": "P6",
+      "triggers": ["schedule", "workflow_dispatch"],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "update-config-flags.yml",
+      "name": "Update Configuration Flags",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": ["schedule", "workflow_dispatch"],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "update-exchanges-data.yml",
+      "name": "Update Exchanges Data",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": ["schedule", "workflow_dispatch"],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "validator-governance-check-workflow-governance.yml",
+      "name": "Check Workflow Governance",
+      "type": "validator",
+      "concern": "governance",
+      "pipeline_tag": "P3",
+      "triggers": ["pull_request", "workflow_dispatch"],
+      "scripts": ["operations/scripts/validators/governance/pr/check-workflow-governance.js"],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "generator-governance-generate-action-docs.yml",
+      "name": "Generate Action Documentation",
+      "type": "generator",
+      "concern": "governance",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        ".github/workspace/actions-library/generate-action-pages.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": true,
       "status": "active"
     }
   ]

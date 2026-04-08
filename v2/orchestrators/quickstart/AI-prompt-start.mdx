@@ -1,11 +1,26 @@
 ---
-title: 'Add AI to Your Node'
-description: 'An Experimental AI Prompt for setting up your GPU as a Livepeer Orchestrator. Add AI inference pipelines to an existing go-livepeer transcoding node — hardware check, aiModels.json configuration, and startup command update.'
+title: Add AI to Your Node
+description: >-
+  An Experimental AI Prompt for setting up your GPU as a Livepeer Orchestrator. Add AI inference pipelines to an
+  existing go-livepeer transcoding node — hardware check, aiModels.json configuration, and startup command update.
+lifecycleStage: setup
+complexity: beginner
+purpose: explain
 sidebarTitle: 'AI Prompt: Orchestrator Setup'
-keywords: ["livepeer", "orchestrator", "AI inference", "AI runner", "aiModels.json", "pipeline", "VRAM", "Cascade", "batch AI", "GPU"]
-pageType: 'guide'
-audience: 'orchestrator'
-status: 'review'
+keywords:
+  - livepeer
+  - orchestrator
+  - AI inference
+  - AI runner
+  - aiModels.json
+  - pipeline
+  - VRAM
+  - Cascade
+  - batch AI
+  - GPU
+pageType: guide
+audience: orchestrator
+status: review
 'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 lastVerified: '2026-03-10'
 ---
@@ -69,7 +84,7 @@ If your GPU does not have enough free VRAM to run both transcoding and your chos
 
 ---
 
-## Step 1 — Pull the AI runner image
+## Step 1 – Pull the AI runner image
 
 The AI subnet uses a separate Docker image (`livepeer/ai-runner`) to run inference. Pull it before starting your node:
 
@@ -87,7 +102,7 @@ Check the [AI Pipelines](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-
 
 ---
 
-## Step 2 — Configure aiModels.json
+## Step 2 – Configure aiModels.json
 
 The `aiModels.json` file tells your orchestrator which AI pipelines and models to serve, what to charge, and whether to keep models warm in VRAM.
 
@@ -97,7 +112,7 @@ Create the file at `~/.lpData/aiModels.json`:
 touch ~/.lpData/aiModels.json
 ```
 
-Add at least one pipeline entry. The example below configures a single `text-to-image` pipeline with a warm model — the minimal working configuration:
+Add at least one pipeline entry. The example below configures a single `text-to-image` pipeline with a warm model – the minimal working configuration:
 
 ```json
 [
@@ -120,7 +135,7 @@ Add at least one pipeline entry. The example below configures a single `text-to-
 | `warm` | No | If `true`, model is preloaded into VRAM on startup |
 | `capacity` | No | Max concurrent inference requests (default: 1) |
 | `optimization_flags` | No | Performance flags: `SFAST` (up to +25% speed) and/or `DEEPCACHE` (up to +50% speed) |
-| `url` | No | For external containers only — URL of a separately managed runner |
+| `url` | No | For external containers only – URL of a separately managed runner |
 | `token` | No | Bearer token for external container authentication |
 
 <Note>
@@ -131,13 +146,13 @@ For recommended pricing per pipeline, see [Job Types](/v2/orchestrators/guides/w
 
 ---
 
-## Step 3 — Update your startup command
+## Step 3 – Update your startup command
 
 Stop your current go-livepeer process, then restart it with the following additions. Three flags enable AI:
 
-- `-aiWorker` — enables the AI worker functionality
-- `-aiModels` — path to your `aiModels.json` file
-- `-aiModelsDir` — directory where model weights are stored on the host machine
+- `-aiWorker` – enables the AI worker functionality
+- `-aiModels` – path to your `aiModels.json` file
+- `-aiModelsDir` – directory where model weights are stored on the host machine
 
 **Before (transcoding only):**
 
@@ -196,7 +211,7 @@ The `-aiModelsDir` path must be the **host machine path**, not the path inside t
 
 ---
 
-## Step 4 — Verify AI is active
+## Step 4 – Verify AI is active
 
 ### Check the logs
 
@@ -258,5 +273,5 @@ Your AI runner is active. The next step depends on which pipeline type you want 
 
 ## Related
 
-- [Job Types](/v2/orchestrators/guides/workloads-and-ai/job-types) — understand the difference between transcoding, batch AI, real-time AI, and LLM inference before choosing a path
-- [AI Pipeline Configuration](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide) — advanced aiModels.json options, multi-GPU setup, external containers, and optimization flags {/* REVIEW: confirm path */}
+- [Job Types](/v2/orchestrators/guides/workloads-and-ai/job-types) – understand the difference between transcoding, batch AI, real-time AI, and LLM inference before choosing a path
+- [AI Pipeline Configuration](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide) – advanced aiModels.json options, multi-GPU setup, external containers, and optimisation flags {/* REVIEW: confirm path */}

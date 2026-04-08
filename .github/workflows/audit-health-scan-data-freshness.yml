@@ -93,30 +93,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { owner, repo } = context.repo;
-            const LABEL = 'health:data-freshness';
-            const TITLE = 'Data Freshness: stale pipelines detected';
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
             const staleCount = '${{ steps.freshness.outputs.stale_count }}';
-
             let body = `## Data Freshness Alert\n\n${staleCount} pipeline(s) are stale (>72h since last update).\n\n`;
-            body += `Stale feeds:\n\`\`\`\n${{ steps.freshness.outputs.stale_feeds }}\`\`\`\n\n`;
-            body += `Workflow run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-
-            const existing = await github.rest.issues.listForRepo({
-              owner, repo, state: 'open', labels: LABEL, per_page: 1
-            });
-
-            if (existing.data.length > 0) {
-              await github.rest.issues.update({
-                owner, repo, issue_number: existing.data[0].number, body
-              });
-              core.info(`Updated issue #${existing.data[0].number}`);
-            } else {
-              const created = await github.rest.issues.create({
-                owner, repo, title: TITLE, body, labels: [LABEL, 'automated']
-              });
-              core.info(`Created issue #${created.data.number}`);
-            }
+            body += `Stale feeds:\n\`\`\`\n${{ steps.freshness.outputs.stale_feeds }}\`\`\`\n`;
+            await ri.upsert({ github, context, core, label: 'health:data-freshness', title: 'Data Freshness: stale pipelines detected', body });
 
       - name: Retrigger stale integrator workflows
         if: steps.freshness.outputs.stale == 'true'
@@ -156,15 +137,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { owner, repo } = context.repo;
-            const existing = await github.rest.issues.listForRepo({
-              owner, repo, state: 'open', labels: 'health:data-freshness', per_page: 1
-            });
-            if (existing.data.length > 0) {
-              await github.rest.issues.update({
-                owner, repo, issue_number: existing.data[0].number,
-                state: 'closed', state_reason: 'completed',
-                body: existing.data[0].body + '\n\n---\n**Resolved:** All pipelines fresh as of ' + new Date().toISOString()
-              });
-              core.info(`Closed issue #${existing.data[0].number}`);
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            await ri.close({ github, context, core, label: 'health:data-freshness', reason: 'All pipelines fresh' });
             }

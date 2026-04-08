@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-workflow-headers
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:workflow-compliance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validates that GitHub Actions workflow YAML files have governance comment headers
- * @mode        read-only
+ * @mode        check
  * @pipeline    pr-changed -> .github/workflows/*.yml -> exit-code, stdout:violations
  * @scope       .github/workflows/
  * @usage       node operations/scripts/validators/governance/compliance/check-workflow-headers.js [--json]
@@ -23,11 +23,14 @@ const GOVERNANCE_KEYWORDS = ['# type:', '# concern:', '# pipeline:', '# pattern:
 
 // ── Args ────────────────────────────────
 function parseArgs(argv) {
-  const args = { json: false, help: false };
-  argv.forEach((token) => {
-    if (token === '--json') { args.json = true; return; }
-    if (token === '--help' || token === '-h') { args.help = true; return; }
-  });
+  const args = { json: false, help: false, files: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (token === '--json') { args.json = true; continue; }
+    if (token === '--help' || token === '-h') { args.help = true; continue; }
+    if (token === '--files' && argv[i + 1]) { argv[++i].split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+    if (token.startsWith('--files=')) { token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+  }
   return args;
 }
 
@@ -60,13 +63,17 @@ function main() {
   }
 
   let files;
-  try {
-    files = fs.readdirSync(WORKFLOWS_DIR)
-      .filter(f => f.endsWith('.yml') || f.endsWith('.yaml'))
-      .map(f => path.join(WORKFLOWS_DIR, f));
-  } catch (e) {
-    console.error('Could not read .github/workflows/');
-    return 2;
+  if (args.files.length > 0) {
+    files = args.files.filter((f) => fs.existsSync(f));
+  } else {
+    try {
+      files = fs.readdirSync(WORKFLOWS_DIR)
+        .filter(f => f.endsWith('.yml') || f.endsWith('.yaml'))
+        .map(f => path.join(WORKFLOWS_DIR, f));
+    } catch (e) {
+      console.error('Could not read .github/workflows/');
+      return 2;
+    }
   }
 
   const violations = [];
