@@ -1,19 +1,15 @@
 /**
- * @script            fetch-rss-blog-data
- * @category          integrator
- * @type              integrator
- * @concern           content
- * @niche             data/fetching
- * @purpose           infrastructure:data-feeds
- * @description       Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files.
- * @domain            docs
- * @needs             F-R1
- * @purpose-statement Fetches product RSS feeds from config and writes per-solution blog data modules under snippets/data/social-feed-solutions/.
- * @mode              generate
- * @pipeline          config → RSS feed → snippets/data/social-feed-solutions/{product}/blogData.jsx
- * @scope             .github/scripts, snippets/data/social-feed-solutions/
- * @usage             node .github/scripts/fetch-rss-blog-data.js
- * @policy            PUBLIC APIs / RSS only. No API keys for platforms we don't own.
+ * @script      fetch-rss-blog-data
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches product RSS feeds from config and writes per-solution blog data modules under snippets/data/social-feed-solutions/.
+ * @mode        integrate
+ * @pipeline    config → RSS feed → snippets/data/social-feed-solutions/{product}/blogData.jsx
+ * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @usage       node .github/scripts/fetch-rss-blog-data.js
+ * @policy      F-R1
  */
 const https = require("https");
 const http = require("http");

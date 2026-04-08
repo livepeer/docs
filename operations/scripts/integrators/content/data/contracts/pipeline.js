@@ -1,11 +1,11 @@
 /**
  * @script      pipeline
- * @type              integrator
- * @concern     content
+ * @type        integrator
+ * @concern     integrations
  * @niche       data
  * @purpose     content:contract-data
  * @description Contract data pipeline module: pipeline
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual -> contract data sources -> contract data files
  * @scope       operations/scripts/integrators/content/data/contracts/
  * @usage       Internal module — imported by fetch-contract-addresses.js

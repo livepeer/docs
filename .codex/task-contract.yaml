@@ -1,7 +1,8 @@
-task_id: 20260403
-branch: codex/20260403-contracts-surface-redesign
-base_branch: docs-v2-dev
+task_id: 20260409
+branch: codex/20260409-docs-v2-dev-into-docs-v2
+base_branch: docs-v2
 scope_in:
+  - .allowlist
   - .codex/
   - .claude/
   - .cursor/
@@ -13,11 +14,14 @@ scope_in:
   - AGENTS.md
   - ai-tools/
   - docs-guide/
+  - docs-index.json
   - docs.json
+  - jsconfig.json
   - llms.txt
   - operations/tests/
   - operations/
   - snippets/
+  - style.css
   - tools/
   - v2/
   - workspace/
@@ -27,16 +31,10 @@ allowed_generated:
   - .codex/pr-body.generated.md
   - sitemap-ai.xml
 acceptance_checks:
-  - node operations/tests/unit/contracts-addresses-pipeline.test.js
-  - node operations/tests/unit/contracts-view-model.test.js
-  - node operations/tests/playwright-contract-addresses.js
-  - node operations/tests/playwright-blockchain-contracts.js
-  - node operations/tests/contracts-browser-harness.js
-  - lpd test --staged
-  - node operations/scripts/validators/content/structure/lint-structure.js --check
-  - node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/20260403-contracts-surface-redesign
+  - mint validate
+  - node operations/tests/run-pr-checks.js --base-ref docs-v2
 risk_flags:
   - docs-navigation
-  - contracts-reference-surface
+  - merge-surface
   - mintlify-browser-render
 follow_up_issues: []

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      codex/task-preflight
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        integrator
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex task preflight — generates task setup files and validates preconditions
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — codex setup tool referenced by .githooks/pre-commit guidance, not auto-executed
  * @scope       operations/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
  * @usage       node operations/scripts/integrators/ai/codex/task-preflight.js [flags]

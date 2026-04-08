@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
- * One-time fix: updates @usage paths to current locations and cleans @pipeline duplicates.
  * @script      fix-usage-paths
  * @type        remediator
+ * @concern     governance
+ * @niche       scaffold
+ * @purpose     
  * @description fix usage paths
- * @mode        edit
+ * @mode        repair
+ * @pipeline    manual
  * @scope       operations/scripts/remediators/governance/scaffold
+ * @usage       
  */
+// Post-remediation verification support (D-GOV-03)
+const VERIFY_MODE = process.argv.includes('--verify');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');

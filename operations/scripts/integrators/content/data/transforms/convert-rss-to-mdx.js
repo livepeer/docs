@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      convert-rss-to-mdx
- * @type        
- * @concern     
- * @niche       
- * @purpose     infrastructure:data-feeds
+ * @type        integrator
+ * @concern     integrations
+ * @niche       data
+ * @purpose     
  * @description RSS-to-MDX converter — imports RSS feed items and converts to MDX page format
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, v2/internal/assets/transcripts
  * @usage       node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [flags]

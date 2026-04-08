@@ -5,6 +5,8 @@
  * @status stable
  * @description Icon button that opens an external link in a new tab. Bordered with rounded corners, hover colour transition.
  * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {string} href - URL to open on click.
  * @param {string} [icon='arrow-up-right'] - Icon name to display.
  * @param {number} [size=14] - Icon size in pixels.
@@ -39,9 +41,9 @@ export const ExternalLinkButton = ({
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "6px",
-        background: hovered ? "var(--border)" : "transparent",
-        border: `1.5px solid ${hovered ? "var(--accent)" : "var(--hero-text)"}`,
+        padding: "var(--lp-spacing-px-6)",
+        background: hovered ? "var(--lp-color-border-default)" : "transparent",
+        border: `1.5px solid ${hovered ? "var(--lp-color-accent)" : "var(--lp-color-text-primary)"}`,
         borderRadius: "6px",
         cursor: "pointer",
         transition: "all 0.15s ease",
@@ -53,7 +55,7 @@ export const ExternalLinkButton = ({
       <Icon
         icon={icon}
         size={size}
-        color={hovered ? "var(--accent)" : "var(--hero-text)"}
+        color={hovered ? "var(--lp-color-accent)" : "var(--lp-color-text-primary)"}
       />
     </button>
   );
@@ -66,6 +68,9 @@ export const ExternalLinkButton = ({
  * @status stable
  * @description Lazy-loaded download button with icon that renders on viewport intersection.
  * @aiDiscoverability none
+ * @usedIn v2/resources/compendium/media-kit.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {string} [label='Download'] - label prop.
  * @param {string} [icon='download'] - icon prop.
  * @param {any} downloadLink - download Link prop.
@@ -132,7 +137,7 @@ export const DownloadButton = ({
         ...(border
           ? {
               border: '1px solid grey',
-              borderRadius: '6px',
+              borderRadius: "6px",
               padding: '6px 10px',
               display: 'inline-block',
               cursor: 'pointer',
@@ -142,7 +147,7 @@ export const DownloadButton = ({
       }}
       {...rest}
     >
-      <Icon icon={icon} size={18} color="var(--accent)" />
+      <Icon icon={icon} size={18} color="var(--lp-color-accent)" />
       <button
         onClick={handleDownload}
         style={{
@@ -164,7 +169,7 @@ export const DownloadButton = ({
           icon={rightIcon}
           style={{ marginLeft: 8 }}
           size={18}
-          color="var(--accent)"
+          color="var(--lp-color-accent)"
         />
       )}
     </span>

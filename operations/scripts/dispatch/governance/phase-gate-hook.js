@@ -1,11 +1,11 @@
 /**
  * @script      phase-gate-hook
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Enforces phase checkpoint verification before allowing work to proceed
+ * @purpose     
  * @description PostToolUse hook for Edit/Write. Reads phase-gate.jsonl and emits unverified
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → reads phase-gate.jsonl → emits unverified checkpoints
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

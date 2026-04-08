@@ -1,11 +1,12 @@
 ---
 title: Blockchain Contracts
 sidebarTitle: Blockchain Contracts
-description:
-  Architecture overview of all Livepeer protocol smart contracts on Arbitrum
-  One and Ethereum Mainnet. What each contract does, how contracts interact,
-  and how upgrades work through governance.
-Keywords:
+description: >-
+  Architecture overview of all Livepeer protocol smart contracts on Arbitrum One and Ethereum Mainnet. What each
+  contract does, how contracts interact, and how upgrades work through governance.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
   - livepeer
   - livepeer protocol
   - livepeer smart contracts
@@ -25,10 +26,10 @@ Keywords:
   - ethereum contracts
   - smart contract upgrade
   - governance upgrade
-'og:title': "Livepeer Blockchain Contracts Architecture Overview"
+'og:title': Livepeer Blockchain Contracts Architecture Overview
 'og:description': >-
-  How Livepeer protocol smart contracts work on Arbitrum One and Ethereum
-  Mainnet. Staking, payments, governance, and service discovery.
+  How Livepeer protocol smart contracts work on Arbitrum One and Ethereum Mainnet. Staking, payments, governance, and
+  service discovery.
 'twitter:card': summary_large_image
 'og:image': /snippets/assets/media/og-images/en/page-blockchain-contracts.png
 'og:image:alt': Livepeer Docs social preview image for Blockchain Contracts
@@ -38,7 +39,7 @@ Keywords:
 audience: general
 pageType: concept
 purpose: concept
-lastVerified: 2026-04-03
+lastVerified: 2026-04-03T00:00:00.000Z
 ---
 
 {/*
@@ -70,15 +71,16 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { LinkArrow, DoubleIconLink, LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 import { Subtitle, CopyText } from '/snippets/components/elements/text/Text.jsx'
 import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
-import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
 import { AddressLinks } from '/snippets/components/elements/links/Links.jsx'
-import { LazyLoad } from '/snippets/components/wrappers/containers/LazyLoad.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
 import { ArbitrumIcon, ArbitrumSVG, LivepeerIcon, LivepeerSVG } from '/snippets/components/elements/icons/Icons.jsx'
 import { SolidityEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
 import { FunctionField as FField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
-import { DataWrap } from '/snippets/components/wrappers/data/workflows.jsx'
+import { DataWrap } from '/snippets/components/elements/text/DataWrap.jsx'
 import { blockchainContractsPageData } from '/snippets/data/contract-addresses/blockchainContractsPageData.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import {
   contractsRoutes,
   getBlockchainContract,
@@ -98,8 +100,8 @@ import {
 
 <Tip>
   Addresses on this page are automatically updated via a GitHub Action workflow. <br/>
-  <span style={{display: "flex", alignItems: "center", marginTop: "0.2rem"}}> Data is recovered from live chain state, upstream source provenance, and explorer verification before it is published on the canonical contracts page. </span> <br/>
-  <span style={{color: "var(--text)", marginTop: "0.5rem"}}> Last Verified: <DataWrap value={getBlockchainLastVerifiedDate(blockchainContractsPageData)} /> </span>
+  <FlexContainer align="center" marginTop="0.2rem"> Data is recovered from live chain state, upstream source provenance, and explorer verification before it is published on the canonical contracts page. </FlexContainer> <br/>
+  <Subtitle style={{marginTop: "0.5rem"}}> Last Verified: <DataWrap value={getBlockchainLastVerifiedDate(blockchainContractsPageData)} /> </Subtitle>
 </Tip>
 
 <Columns cols={2}>
@@ -709,7 +711,7 @@ Holds MINTER_ROLE on the L1 LivepeerToken. Called by the bridge when LPT is tran
 
 <Info>
   `BridgeMinter.sol` is an Ethereum Mainnet contract predating the Delta upgrade.
-  <span style={{display: "flex", alignItems: "center", marginTop: "0.5rem"}}> See <DoubleIconLink label="BridgeMinter.sol" href={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')}/> on the `streamflow` branch of `livepeer/protocol`</span>
+  <FlexContainer align="center" marginTop="0.5rem"> See <DoubleIconLink label="BridgeMinter.sol" href={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')}/> on the `streamflow` branch of `livepeer/protocol`</FlexContainer>
 </Info>
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<Icon icon="ethereum" color="var(--hero-text)"/>} title="BridgeMinter" />}>
@@ -1096,7 +1098,7 @@ Stores Merkle roots used to verify stake snapshots taken at the time of the Conf
 
 For the complete list of all current, paused, migration-residual, legacy-operational, and historical contract addresses across Arbitrum One and Ethereum Mainnet, see the [Contract Addresses](/v2/about/resources/reference/livepeer-contract-addresses) reference page.
 
-<Icon icon="check" color="var(--text)"/> <span style={{fontStyle: "italic", color: "var(--text)"}}>Last Verified {<DataWrap value={blockchainContractsPageData.meta.lastVerified} />}</span>
+<Icon icon="check" color="var(--lp-color-text-secondary)"/> <span className="lp-text-italic-muted">Last Verified {<DataWrap value={blockchainContractsPageData.meta.lastVerified} />}</span>
 
 <Card
     href="/v2/about/resources/reference/livepeer-contract-addresses"

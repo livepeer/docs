@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-v2-folder-governance-cleanup-matrix
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        audit
+ * @concern     governance
+ * @niche       reports
+ * @purpose     
  * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual
  * @scope       operations/scripts, tools/lib, workspace/reports/repo-ops, v2, docs.json operations/tests/unit/v2-folder-governance-cleanup-matrix.test.js
  * @usage       node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]

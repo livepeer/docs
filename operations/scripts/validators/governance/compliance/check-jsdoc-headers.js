@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-jsdoc-headers
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:script-compliance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validates that all JS files in governed locations have core JSDoc tags
- * @mode        read-only
+ * @mode        check
  * @pipeline    pr-changed -> governed JS files -> exit-code, stdout:violations
  * @scope       operations/scripts/, .github/scripts/, .githooks/
  * @usage       node operations/scripts/validators/governance/compliance/check-jsdoc-headers.js [--json]
@@ -33,11 +33,14 @@ const REQUIRED_TAGS = ['@script', '@type', '@description', '@mode', '@pipeline',
 
 // ── Args ────────────────────────────────
 function parseArgs(argv) {
-  const args = { json: false, help: false };
-  argv.forEach((token) => {
-    if (token === '--json') { args.json = true; return; }
-    if (token === '--help' || token === '-h') { args.help = true; return; }
-  });
+  const args = { json: false, help: false, files: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (token === '--json') { args.json = true; continue; }
+    if (token === '--help' || token === '-h') { args.help = true; continue; }
+    if (token === '--files' && argv[i + 1]) { argv[++i].split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+    if (token.startsWith('--files=')) { token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+  }
   return args;
 }
 
@@ -106,12 +109,17 @@ function main() {
     return 0;
   }
 
-  const files = [];
-  for (const dir of GOVERNED_DIRS) {
-    files.push(...walkDir(path.join(REPO_ROOT, dir)));
-  }
-  for (const pattern of GOVERNED_FILES_GLOB) {
-    files.push(...getGlobbedFiles(pattern));
+  let files;
+  if (args.files.length > 0) {
+    files = args.files.filter((f) => fs.existsSync(f));
+  } else {
+    files = [];
+    for (const dir of GOVERNED_DIRS) {
+      files.push(...walkDir(path.join(REPO_ROOT, dir)));
+    }
+    for (const pattern of GOVERNED_FILES_GLOB) {
+      files.push(...getGlobbedFiles(pattern));
+    }
   }
 
   const violations = [];

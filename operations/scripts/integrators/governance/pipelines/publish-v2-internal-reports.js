@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      publish-v2-internal-reports
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        integrator
+ * @concern     governance
+ * @niche       pipelines
+ * @purpose     
  * @description Report publisher — publishes v2 internal audit reports to configured output locations
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, tools/config, v2/internal, docs.json, workspace/reports, operations/tests/reports
  * @usage       node operations/scripts/integrators/governance/pipelines/publish-v2-internal-reports.js [flags]

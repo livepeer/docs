@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-root-governance-sync
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:root-management
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, ci
  * @scope       operations/scripts/validators/governance, operations/scripts/generators/governance/root, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, .allowlist
  * @usage       node operations/scripts/validators/governance/compliance/check-root-governance-sync.js [--json]

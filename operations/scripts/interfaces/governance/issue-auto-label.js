@@ -1,16 +1,15 @@
 /**
- * @script            issue-auto-label
- * @type              interface
- * @concern           governance
- * @niche             issue-lifecycle
- * @purpose           Parses issue form sections and applies structured labels based on template type
- * @description       Detects issue template type (docs_page_issue, bug_report, feature_request, etc.),
- *                    applies base + managed labels, validates required sections, adds needs-info comment
- *                    if sections are missing, and auto-assigns Copilot when conditions are met.
- * @mode              interface
- * @scope             .github/workflows/interface-governance-label-issues.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      issue-auto-label
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Parses issue form sections and applies structured labels based on template type
+ * @description Detects issue template type (docs_page_issue, bug_report, feature_request, etc.),
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-label-issues.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

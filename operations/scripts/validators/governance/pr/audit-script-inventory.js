@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-script-inventory
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        validator
+ * @concern     governance
+ * @niche       pr
+ * @purpose     
  * @description Audit the governed script corpus and regenerate the canonical script inventory outputs from current headers and filesystem state.
- * @mode        read-only
+ * @mode        check
  * @pipeline    commit), manual
  * @scope       full-repo
  * @usage       node operations/scripts/validators/governance/pr/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]

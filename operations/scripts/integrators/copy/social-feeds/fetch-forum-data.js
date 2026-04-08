@@ -1,16 +1,15 @@
 /**
- * @script            fetch-forum-data
- * @category          integrator
- * @purpose           infrastructure:data-feeds
- * @scope             .github/scripts
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
- * @pipeline          P5, P6
- * @usage             node .github/scripts/fetch-forum-data.js [flags]
+ * @script      fetch-forum-data
  * @type        integrator
- * @description fetch forum data
- * @mode        execute
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
+ * @mode        integrate
+ * @pipeline    manual
+ * @scope       .github/scripts
+ * @usage       node .github/scripts/fetch-forum-data.js [flags]
+ * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");

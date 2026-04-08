@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sweep-console-errors
- * @type        
- * @concern     
- * @niche       
- * @purpose     Generates console error baseline for all v2 routes via Puppeteer
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Visits every v2 route registered in docs.json, captures HTTP status,
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual — run once to generate baseline, re-run to update after verified fixes
  * @scope       operations/tests/baselines/console-baseline.json
  * @usage       node operations/scripts/validators/content/structure/sweep-console-errors.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]

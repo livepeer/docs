@@ -5,6 +5,9 @@
  * @status stable
  * @description Framed image with optional caption and full-width toggle.
   * @aiDiscoverability none
+ * @usedIn v2/about/protocol/technical-architecture.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-03-29
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.
@@ -36,6 +39,8 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, cl
  * @status stable
  * @description Clickable framed image that opens a URL in a new tab.
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-03-29
  * @param {any} src - src prop.
  * @param {any} alt - alt prop.
  * @param {any} caption - caption prop.

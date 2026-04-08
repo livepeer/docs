@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      create-codex-pr
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        dispatch
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex PR creator — generates codex PR with correct branch naming, labels, and body template
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, .codex/task-contract.yaml
  * @usage       node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]

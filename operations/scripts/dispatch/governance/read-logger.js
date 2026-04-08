@@ -1,11 +1,11 @@
 /**
  * @script      read-logger
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Tracks which files Claude reads per session for context-gate enforcement
+ * @purpose     
  * @description PostToolUse hook on Read. Logs file paths to a session-scoped temp file.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook (Read) → reads stdin → appends file path to /tmp/claude-reads-{session}
  * @scope       .claude/settings.json PostToolUse hook (Read matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

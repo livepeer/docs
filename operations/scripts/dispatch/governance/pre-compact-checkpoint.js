@@ -1,11 +1,11 @@
 /**
  * @script      pre-compact-checkpoint
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Preserves critical session state before context compaction
+ * @purpose     
  * @description Fires before Claude Code compacts context in long sessions. Reads the
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PreCompact hook → reads critical files → builds state summary → injects via systemMessage
  * @scope       .claude/settings.json PreCompact hook
  * @usage       Called automatically by Claude Code PreCompact hook. Not invoked directly.

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # @script      ensure-mint-watcher-patch
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Mint watcher patcher — applies patch to fix Mintlify file watcher issues in dev mode
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual — interactive developer tool, not suited for automated pipelines
 # @scope       tools/dev
 # @usage       bash tools/dev/preview/ensure-mint-watcher-patch.sh [flags]

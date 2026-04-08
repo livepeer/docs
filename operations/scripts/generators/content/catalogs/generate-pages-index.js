@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-pages-index
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     maintenance
+ * @niche       catalogs
+ * @purpose     
  * @description Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual
  * @scope       operations/scripts, v2
  * @usage       node operations/scripts/generators/content/catalogs/generate-pages-index.js [flags]

@@ -1,11 +1,11 @@
 /**
  * @script      friction-logger
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Detects and logs friction signals from user messages in real-time
+ * @purpose     
  * @description UserPromptSubmit hook. Scans user messages for frustration indicators
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin → pattern match → append to friction log
  * @scope       .claude/settings.json UserPromptSubmit hook
  * @usage       Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.

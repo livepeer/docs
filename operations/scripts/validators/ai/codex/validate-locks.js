@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      codex/validate-locks
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        validator
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex lock validator — checks for stale or conflicting lock files before push
- * @mode        read-only
+ * @mode        check
  * @pipeline    commit), P2 (push)
  * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
  * @usage       node operations/scripts/validators/ai/codex/validate-locks.js [flags]

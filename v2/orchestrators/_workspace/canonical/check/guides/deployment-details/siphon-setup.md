@@ -190,7 +190,7 @@
 |---|---|---|
 | 8.1 Internal links resolve | PASS | (1) `/v2/orchestrators/guides/deployment-details/setup-options` — PRESENT docs.json line 2885. PASS. (2) `/v2/orchestrators/setup/rs-install` — PRESENT docs.json (confirmed). PASS. (3) `/v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup` — PRESENT docs.json line 2888. PASS. (4) `/v2/orchestrators/guides/staking-and-rewards/earning-model` — PRESENT docs.json line 2910. PASS. (5) `/v2/orchestrators/guides/staking-and-rewards/reward-mechanics` — PRESENT docs.json line 2911. PASS. All internal links verified. |
 | 8.2 External links live | NOT-TESTED | `https://github.com/Stronk-Tech/OrchestratorSiphon` — NOT-TESTED. `https://explorer.livepeer.org/accounts/<address>/orchestrating` — template URL, NOT-TESTED. `https://arb1.arbitrum.io/rpc` — NOT-TESTED. |
-| 8.3 Snippet imports resolve | PASS | `Links.jsx`, `Steps.jsx`, `Tables.jsx`, `Divider.jsx`, `ZoomableDiagram.jsx` — standard paths. |
+| 8.3 Snippet imports resolve | PASS | `Links.jsx`, `Steps.jsx`, `Tables.jsx`, `Divider.jsx`, `ScrollableDiagram.jsx` — standard paths. |
 | 8.4 Images load | N/A |
 | 8.5 Renders clean | PASS | JSX well-formed. All components properly closed. StyledSteps within Part 1 and Part 2 correctly structured. |
 | 8.6 No TODO/TBD | PASS | TODO block at lines 32–38 — MDX comment, not rendered. Status/veracity incoherence logged in F-12. |

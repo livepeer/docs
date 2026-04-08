@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-root-governance-artifacts
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:root-management
+ * @type        generator
+ * @concern     governance
+ * @niche       root
+ * @purpose     
  * @description Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, P3
  * @scope       operations/scripts, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops, .allowlist
  * @usage       node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js [--write|--check]

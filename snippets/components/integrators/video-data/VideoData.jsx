@@ -8,6 +8,9 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
  * @description Renders YouTube video data with video embed and metadata columns.
  * @dataSource automation/youtube
   * @aiDiscoverability none
+ * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/streamplace/community.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} limit - Limit used by the component.
  * @param {number} [cols=2] - Cols used by the component.
@@ -39,8 +42,8 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", 
         const needsSpacer = idx > 0 && idx % cols === 0;
         return (
           <>
-            {needsSpacer && <div key={`spacer-${idx}`} style={{ height: "1.5rem", width: "100%" }} />}
-            {needsSpacer && <div key={`spacer2-${idx}`} style={{ height: "1.5rem", width: "100%" }} />}
+            {needsSpacer && <div key={`spacer-${idx}`} style={{ height: "var(--lp-spacing-6)", width: "100%" }} />}
+            {needsSpacer && <div key={`spacer2-${idx}`} style={{ height: "var(--lp-spacing-6)", width: "100%" }} />}
             <YouTubeVideo
               key={item.href || idx}
               embedUrl={getEmbedUrl(item.href)}

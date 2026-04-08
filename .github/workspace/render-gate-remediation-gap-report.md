@@ -171,8 +171,19 @@ The 6 pipeline docs in `docs-guide/docs-library/pipelines/` document how validat
 
 ## Recommendations
 
-1. **Expand `ERROR_TO_REMEDIATOR` to cover remaining 15 remediator scripts** — each has a distinct error class it addresses
-2. **Add a parallel `ERROR_TO_VALIDATOR` registry** — when blocking, suggest the relevant validator to diagnose scope before fixing
-3. **Add workflow references** — when a fix requires batch remediation across many files, suggest the GitHub Actions workflow instead of the local script
+1. ~~**Expand `ERROR_TO_REMEDIATOR` to cover remaining 15 remediator scripts**~~ — DONE 2026-04-08, all 21 scripts registered
+2. ~~**Add a parallel `ERROR_TO_VALIDATOR` registry**~~ — DONE 2026-04-08, 14 validators in ERROR_TO_VALIDATOR
+3. ~~**Add workflow references**~~ — DONE 2026-04-08, 16 workflow references in WORKFLOW_REFERENCES
 4. **Add pipeline doc references** — when the error class maps to a documented pipeline, link to the pipeline doc for full context
 5. **Consider auto-discovery** — instead of a hardcoded registry, scan `operations/scripts/remediators/` at runtime and match by JSDoc `@concern` and `@niche` tags
+
+## Post-Remediation Verification (added 2026-04-09)
+
+All 27 remediator scripts now support `--verify` flag. When passed:
+1. Pre-repair snapshots are taken
+2. Repairs are applied
+3. Paired validators run on affected files (from `operations/scripts/config/remediation-verify-registry.json`)
+4. If regressions found: only regressed files are reverted, successful fixes remain
+5. Exit code reflects verification result
+
+The 3 P6 remediator workflows also have regression steps that flag PRs with `needs-review` when verification fails.

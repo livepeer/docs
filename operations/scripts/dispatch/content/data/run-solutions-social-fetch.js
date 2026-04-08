@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      run-solutions-social-fetch
- * @type        
- * @concern     
- * @niche       
- * @purpose     infrastructure:data-feeds
+ * @type        dispatch
+ * @concern     integrations
+ * @niche       data
+ * @purpose     
  * @description Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual → .env + product-social-config.json → .github/scripts/fetch-*.js → snippets/data/social-feed-solutions/{product}/*.jsx
  * @scope       .github/scripts/fetch-*.js, snippets/data/social-feed-solutions/
  * @usage       node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--env path/to/.env] [--skip youtube,discord]

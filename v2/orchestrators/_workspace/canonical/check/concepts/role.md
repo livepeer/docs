@@ -220,7 +220,7 @@
 | `/snippets/components/elements/links/Links.jsx` | PASS |
 | `/snippets/components/wrappers/tables/Tables.jsx` | PASS |
 | `/snippets/components/elements/spacing/Divider.jsx` | PASS |
-| `/snippets/components/displays/diagrams/ZoomableDiagram.jsx` | PASS |
+| `/snippets/components/displays/diagrams/ScrollableDiagram.jsx` | PASS |
 | `/snippets/components/wrappers/containers/Containers.jsx` | PASS |
 
 | # | Check | Result | Notes |

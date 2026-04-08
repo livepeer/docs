@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-pr-template
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        validator
+ * @concern     governance
+ * @niche       pr
+ * @purpose     
  * @description Enforces that PR descriptions include required change and rationale sections before merge
- * @mode        read-only
+ * @mode        check
  * @pipeline    ci
  * @scope       operations/scripts/enforcers/pr, .github/pull_request_template.md, .github/pull-request-template-v2.md
  * @usage       PR_BODY="..." node operations/scripts/enforcers/pr/check-pr-template.js

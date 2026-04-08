@@ -2,10 +2,12 @@
 title: Diffusion Pipeline Setup
 sidebarTitle: Diffusion Setup
 description: >-
-  Complete operator guide for running batch AI inference pipelines on a Livepeer
-  orchestrator — aiModels.json configuration, all supported pipeline types,
-  Ollama LLM runner deployment, BYOC external containers, and troubleshooting.
-Keywords:
+  Complete operator guide for running batch AI inference pipelines on a Livepeer orchestrator — aiModels.json
+  configuration, all supported pipeline types, Ollama LLM runner deployment, BYOC external containers, and
+  troubleshooting.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - batch ai
@@ -27,14 +29,14 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Batch AI inference is the most accessible entry point to the Livepeer AI network. An application sends a request — a text prompt, an image, an audio file — your node processes it and returns the result. You earn per-unit fees for every successful job.
+Batch AI inference is the most accessible entry point to the Livepeer AI network. An application sends a request – a text prompt, an image, an audio file – your node processes it and returns the result. You earn per-unit fees for every successful job.
 
 Run batch AI by configuring `aiModels.json`, choosing and loading models, connecting external runners where needed, setting prices, and checking health and routing once the worker is live.
 
@@ -70,11 +72,11 @@ AI worker advertises capabilities to network
 Gateways start routing matching jobs
 ```
 
-The standard container image is `livepeer/ai-runner`. Except for the `llm` pipeline — which uses a separate Ollama-based runner — all batch pipelines use this image. The AI worker manages container lifecycle: starting, health-checking, and restarting containers automatically.
+The standard container image is `livepeer/ai-runner`. Except for the `llm` pipeline – which uses a separate Ollama-based runner – all batch pipelines use this image. The AI worker manages container lifecycle: starting, health-checking, and restarting containers automatically.
 
 <CustomDivider />
 
-## aiModels.json — full reference
+## aiModels.json – full reference
 
 `aiModels.json` is the single file that controls everything about your AI worker: which pipelines you run, which models you load, whether they stay warm in VRAM, and how you price each job.
 
@@ -168,7 +170,7 @@ This single entry is enough to start earning from the `text-to-image` pipeline w
 </StyledTable>
 
 <Warning>
-  `model_id` must match the HuggingFace model ID exactly, including capitalisation and the organisation prefix. A typo here will cause the container to fail at model load time. During Beta, only **one warm model per GPU** is supported — setting `warm: true` on more entries than you have GPUs will cause a conflict at startup.
+  `model_id` must match the HuggingFace model ID exactly, including capitalisation and the organisation prefix. A typo here will cause the container to fail at model load time. During Beta, only **one warm model per GPU** is supported – setting `warm: true` on more entries than you have GPUs will cause a conflict at startup.
 </Warning>
 
 <CustomDivider />
@@ -193,8 +195,8 @@ Generate images from text prompts. The highest-demand pipeline on the network.
 **Why Lightning?** SDXL-Lightning reduces inference to 4 steps (vs 20–50 for standard SDXL), delivering results in under 2 seconds on an RTX 4090. Gateways and users strongly prefer fast models for this pipeline.
 
 Alternative models:
-- `ByteDance/SDXL-Lightning` — similar performance, different base
-- `stabilityai/stable-diffusion-xl-base-1.0` — higher quality, slower
+- `ByteDance/SDXL-Lightning` – similar performance, different base
+- `stabilityai/stable-diffusion-xl-base-1.0` – higher quality, slower
 
 **Source:** [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning) · [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning)
 
@@ -220,7 +222,7 @@ Apply diffusion-based transformations, style transfer, or enhancement to an inpu
 
 ### image-to-video
 
-Animate a still image into a short video clip. Compute-intensive — expect longer per-job times.
+Animate a still image into a short video clip. Compute-intensive – expect longer per-job times.
 
 ```json icon="terminal" title="image-to-video aiModels.json entry"
 {
@@ -280,7 +282,7 @@ Speech recognition and transcription with timestamps. Backed by Whisper-large-v3
 
 ### segment-anything-2
 
-Promptable segmentation — returns pixel masks for objects or regions in an image or video frame.
+Promptable segmentation – returns pixel masks for objects or regions in an image or video frame.
 
 ```json icon="terminal" title="segment-anything-2 aiModels.json entry"
 {
@@ -334,7 +336,7 @@ Text-to-natural-speech synthesis. Growing use case for AI video narration.
 
 <CustomDivider />
 
-## LLM inference — the Ollama runner
+## LLM inference – the Ollama runner
 
 The `llm` pipeline uses a different architecture from all other batch pipelines. Instead of the standard `livepeer/ai-runner` container, it uses an Ollama-based runner maintained by Cloud SPE. This enables quantised LLMs to run on GPUs with as little as 8 GB VRAM.
 
@@ -348,7 +350,7 @@ go-livepeer -> livepeer-ollama-runner -> ollama container -> quantised model
 
 ### Why Ollama?
 
-Standard diffusion pipelines require 24 GB VRAM and server-class GPUs. The Ollama runner opens participation to older consumer GPUs (GTX 1080, RTX 2060) that would otherwise contribute nothing to the AI network. Quantised LLMs — especially 7B and 8B parameter models — run efficiently within 8–12 GB VRAM.
+Standard diffusion pipelines require 24 GB VRAM and server-class GPUs. The Ollama runner opens participation to older consumer GPUs (GTX 1080, RTX 2060) that would otherwise contribute nothing to the AI network. Quantised LLMs – especially 7B and 8B parameter models – run efficiently within 8–12 GB VRAM.
 
 **Source:** [tztcloud/livepeer-ollama-runner on Docker Hub](https://hub.docker.com/r/tztcloud/livepeer-ollama-runner) · [Cloud SPE LLM pipeline guide](https://www.livepeer.cloud/self-hosting-livepeers-llm-pipeline-deploying-an-ollama-based-gpu-runner-for-ai-orchestrators/)
 
@@ -413,7 +415,7 @@ docker compose up -d
 docker exec -it ollama ollama pull llama3.1:8b
 ```
 
-The Ollama model tag (`llama3.1:8b`) and the Livepeer `model_id` (`meta-llama/Meta-Llama-3.1-8B-Instruct`) are different naming conventions for the same model family. This is expected — the AI worker uses HuggingFace IDs for capability advertisement, while Ollama uses its own tag format internally.
+The Ollama model tag (`llama3.1:8b`) and the Livepeer `model_id` (`meta-llama/Meta-Llama-3.1-8B-Instruct`) are different naming conventions for the same model family. This is expected – the AI worker uses HuggingFace IDs for capability advertisement, while Ollama uses its own tag format internally.
 </StyledStep>
 
 <StyledStep title="Add the LLM entry to aiModels.json">
@@ -477,13 +479,13 @@ After restarting your AI worker, check [tools.livepeer.cloud/ai/network-capabili
 
 ## Warm vs cold models
 
-**Warm:** The model is preloaded into GPU VRAM at container startup. Any job request is served immediately — no model loading latency.
+**Warm:** The model is preloaded into GPU VRAM at container startup. Any job request is served immediately – no model loading latency.
 
 **Cold:** The model is loaded on first request. The container exists while the weights stay on disk until the first request triggers a model load, typically 10–60 seconds depending on model size and NVMe speed.
 
 ### Impact on job assignment
 
-Gateways track orchestrator latency. Nodes with fast first-response times win more jobs. For latency-sensitive pipelines — especially `text-to-image` and `image-to-image` — running cold puts you at a clear competitive disadvantage.
+Gateways track orchestrator latency. Nodes with fast first-response times win more jobs. For latency-sensitive pipelines – especially `text-to-image` and `image-to-image` – running cold puts you at a clear competitive disadvantage.
 
 **Rule of thumb:** Warm your primary revenue pipeline. Cold the rest.
 
@@ -656,7 +658,7 @@ For building and registering custom containers, see [Hosting Models (BYOC)](/v2/
 
 ## Pricing
 
-AI inference pricing on Livepeer is set by operators and advertised on-chain. Gateways filter by `maxPricePerUnit` — jobs only reach orchestrators whose price falls below the gateway's maximum.
+AI inference pricing on Livepeer is set by operators and advertised on-chain. Gateways filter by `maxPricePerUnit` – jobs only reach orchestrators whose price falls below the gateway's maximum.
 
 ### Pricing units by pipeline
 
@@ -725,7 +727,7 @@ AI inference pricing on Livepeer is set by operators and advertised on-chain. Ga
 "currency": "USD"
 ```
 
-Check current competitive pricing on the [Livepeer Explorer AI Leaderboard](https://explorer.livepeer.org) — per-orchestrator earnings data shows which price tiers are earning the most jobs. Prices above the active gateway ceiling receive no jobs.
+Check current competitive pricing on the [Livepeer Explorer AI Leaderboard](https://explorer.livepeer.org) – per-orchestrator earnings data shows which price tiers are earning the most jobs. Prices above the active gateway ceiling receive no jobs.
 
 <CustomDivider />
 
@@ -767,7 +769,7 @@ Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.clou
   </TableRow>
   <TableRow>
     <TableCell>`Error loading model`</TableCell>
-    <TableCell>Warm load failure — check VRAM and model_id</TableCell>
+    <TableCell>Warm load failure – check VRAM and model_id</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>`Container health check failed`</TableCell>
@@ -786,9 +788,9 @@ Primary NVIDIA toolkit reference for this section: [NVIDIA Container Toolkit ins
 <Accordion  title="Start the AI runner container" icon="microchip">
 **Most common causes:**
 
-1. **Wrong image tag** — verify the `livepeer/ai-runner` image tag exists on Docker Hub. The `-aiRunnerImage` flag is deprecated; use `-aiRunnerImageOverrides` instead.
-2. **VRAM OOM** — the container starts, then crashes immediately after loading because `warm: true` exceeds available VRAM. Check `docker logs <container_name>` for OOM messages.
-3. **NVIDIA Container Toolkit missing or misconfigured** — run `docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`. A passing result confirms the toolkit path. The installation guide is here as a primary reference: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
+1. **Wrong image tag** – verify the `livepeer/ai-runner` image tag exists on Docker Hub. The `-aiRunnerImage` flag is deprecated; use `-aiRunnerImageOverrides` instead.
+2. **VRAM OOM** – the container starts, then crashes immediately after loading because `warm: true` exceeds available VRAM. Check `docker logs <container_name>` for OOM messages.
+3. **NVIDIA Container Toolkit missing or misconfigured** – run `docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`. A passing result confirms the toolkit path. The installation guide is here as a primary reference: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
 </Accordion>
 
 <Accordion  title="Fix model ID loading errors" icon="microchip">
@@ -802,10 +804,10 @@ For external containers, download the model inside the container before the AI w
 </Accordion>
 
 <Accordion  title="Pipeline receiving no jobs" icon="circle-question">
-1. **Registration missing** — confirm your capabilities appear on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Missing entries usually mean the orchestrator needs to re-register capabilities after updating `aiModels.json`.
-2. **Price too high** — gateways don't route to orchestrators above their `maxPricePerUnit`. Compare your price against active competitors on Livepeer Explorer.
-3. **Model is cold** — for competitive pipelines like `text-to-image`, set `warm: true`.
-4. **Active-set gap** — check your stake status on [explorer.livepeer.org](https://explorer.livepeer.org). AI pipeline jobs require the orchestrator to be in the active set.
+1. **Registration missing** – confirm your capabilities appear on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Missing entries usually mean the orchestrator needs to re-register capabilities after updating `aiModels.json`.
+2. **Price too high** – gateways don't route to orchestrators above their `maxPricePerUnit`. Compare your price against active competitors on Livepeer Explorer.
+3. **Model is cold** – for competitive pipelines like `text-to-image`, set `warm: true`.
+4. **Active-set gap** – check your stake status on [explorer.livepeer.org](https://explorer.livepeer.org). AI pipeline jobs require the orchestrator to be in the active set.
 </Accordion>
 
 <Accordion  title="OOM during inference" icon="microchip">
@@ -818,7 +820,7 @@ Mitigations:
 </Accordion>
 
 <Accordion  title="Restore Ollama LLM job flow" icon="microchip">
-1. Verify container reachability: from the host running your orchestrator, run `curl http://llm_runner:8000/health` — should return HTTP 200
+1. Verify container reachability: from the host running your orchestrator, run `curl http://llm_runner:8000/health` – should return HTTP 200
 2. Check Docker network: the orchestrator and `llm_runner` container must share a Docker network for the hostname to resolve
 3. Re-register capabilities with the network after updating `aiModels.json`
 4. Confirm on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) that your orchestrator appears under the `llm` pipeline
@@ -854,7 +856,7 @@ When configuring `aiModels.json`, two external references are authoritative:
 
 **For supported models and pipeline compatibility:** The [AI Model Support](/v2/developers/concepts/ai-on-livepeer) page in the Developers section lists every pipeline type, supported model architectures, minimum VRAM, and current network status. This is the single source of truth for "will this model work on the network?" Use it before experimenting with untested model IDs.
 
-**For understanding how gateways select your node:** The [Orchestrator Offerings reference](/v2/gateways/resources/reference/technical/orchestrator-offerings) documents the capability discovery protocol — specifically the `capabilities_prices` field structure and how gateways evaluate your node against their `-maxPricePerCapability` configuration. Before setting prices, confirm your prices fall within ranges that major gateways will accept.
+**For understanding how gateways select your node:** The [Orchestrator Offerings reference](/v2/gateways/resources/reference/technical/orchestrator-offerings) documents the capability discovery protocol – specifically the `capabilities_prices` field structure and how gateways evaluate your node against their `-maxPricePerCapability` configuration. Before setting prices, confirm your prices fall within ranges that major gateways will accept.
 
 **For custom models outside the standard pipeline list:** [Bring Your Own Container (BYOC)](/v2/developers/build/byoc) covers building a custom Docker container with PyTrickle integration to run any model on the network. BYOC is the path for proprietary models, fine-tuned checkpoints, or models with non-standard inference architectures.
 
@@ -867,10 +869,10 @@ When configuring `aiModels.json`, two external references are authoritative:
     Canonical list of supported pipelines, model architectures, VRAM requirements, and network status. The authoritative reference before adding a new model.
   </Card>
   <Card title="Bring Your Own Container (BYOC)" icon="box-open" href="/v2/developers/build/byoc">
-    Run any custom model on the network using PyTrickle — for models not covered by the standard AI runner containers.
+    Run any custom model on the network using PyTrickle – for models not covered by the standard AI runner containers.
   </Card>
   <Card title="Orchestrator Offerings Reference" icon="tower-broadcast" href="/v2/gateways/resources/reference/technical/orchestrator-offerings">
-    How gateways discover orchestrators and evaluate capability/pricing — the selection algorithm that determines whether your node receives jobs.
+    How gateways discover orchestrators and evaluate capability/pricing – the selection algorithm that determines whether your node receives jobs.
   </Card>
   <Card title="Model Hosting and VRAM Planning" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference">
     VRAM table by pipeline, warm model strategy, and multi-GPU configuration.

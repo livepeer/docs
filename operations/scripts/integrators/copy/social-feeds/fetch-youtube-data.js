@@ -1,16 +1,15 @@
 /**
- * @script            fetch-youtube-data
- * @category          integrator
- * @purpose           infrastructure:data-feeds
- * @scope             .github/scripts
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
- * @pipeline          P5, P6
- * @usage             node .github/scripts/fetch-youtube-data.js [flags]
+ * @script      fetch-youtube-data
  * @type        integrator
- * @description fetch youtube data
- * @mode        execute
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
+ * @mode        integrate
+ * @pipeline    manual
+ * @scope       .github/scripts
+ * @usage       node .github/scripts/fetch-youtube-data.js [flags]
+ * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");

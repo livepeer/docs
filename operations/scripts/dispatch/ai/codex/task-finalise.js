@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      codex/task-finalize
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        dispatch
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex task finaliser — enforces task completion requirements before closing
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts/codex, operations/scripts/validate-codex-task-contract.js, operations/scripts/verify-pay-orc-gate-finalize.sh
  * @usage       node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]

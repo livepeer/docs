@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-seo
- * @type        
- * @concern     
- * @niche       
- * @purpose     feature:seo
+ * @type        remediator
+ * @concern     discoverability
+ * @niche       seo
+ * @purpose     
  * @description SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis
- * @mode        read-only
+ * @mode        repair
  * @pipeline    on-demand, SEO refresh)
  * @scope       operations/scripts
  * @usage       node operations/scripts/generators/content/seo/generate-seo.js [flags]
@@ -75,6 +75,7 @@ const DOMAIN_IMAGES = {
 
 // Parse command line arguments
 const args = process.argv.slice(2);
+  const verifyMode = args.includes('--verify');
 const isDryRun = args.includes("--dry-run");
 const specificFile = args
   .find((arg) => arg.startsWith("--file="))

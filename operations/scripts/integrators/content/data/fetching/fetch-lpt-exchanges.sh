@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      fetch-lpt-exchanges
-# @type        
-# @concern     
-# @niche       
-# @purpose     infrastructure:data-feeds
+# @type        integrator
+# @concern     integrations
+# @niche       data
+# @purpose     
 # @description LPT exchange data fetcher — pulls exchange listing data for LPT token pages
-# @mode        read-only
+# @mode        integrate
 # @pipeline    manual — not yet in pipeline
 # @scope       operations/scripts/integrators/content/data/fetching
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh [flags]

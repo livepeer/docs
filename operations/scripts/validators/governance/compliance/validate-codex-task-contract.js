@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      validate-codex-task-contract
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
- * @mode        read-only
+ * @mode        check
  * @pipeline    commit), P2 (push), P3 (PR, Track B)
  * @scope       operations/scripts, .codex/task-contract.yaml, operations/tests/onfig/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
  * @usage       node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js [flags]

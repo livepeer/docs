@@ -1,11 +1,13 @@
 ---
-title: 'Audio and Vision Pipelines'
-sidebarTitle: 'Audio & Vision'
+title: Audio and Vision Pipelines
+sidebarTitle: Audio & Vision
 description: >-
-  Set up audio-to-text (Whisper), text-to-speech, image-to-text, and segment-anything-2
-  pipelines on a Livepeer orchestrator. Covers VRAM requirements, aiModels.json entries,
-  pricing units, and testing commands for each pipeline.
-Keywords:
+  Set up audio-to-text (Whisper), text-to-speech, image-to-text, and segment-anything-2 pipelines on a Livepeer
+  orchestrator. Covers VRAM requirements, aiModels.json entries, pricing units, and testing commands for each pipeline.
+lifecycleStage: operate
+complexity: intermediate
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - audio-to-text
@@ -30,7 +32,7 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
@@ -39,7 +41,7 @@ import { BorderedBox } from '/snippets/components/wrappers/containers/Containers
 
 ---
 
-Four non-diffusion, non-LLM pipelines are available on the Livepeer AI network: `audio-to-text`, `text-to-speech`, `image-to-text`, and `segment-anything-2`. All use the standard `livepeer/ai-runner` container — the same one diffusion pipelines use. Go-livepeer manages the container lifecycle automatically.
+Four non-diffusion, non-LLM pipelines are available on the Livepeer AI network: `audio-to-text`, `text-to-speech`, `image-to-text`, and `segment-anything-2`. All use the standard `livepeer/ai-runner` container – the same one diffusion pipelines use. Go-livepeer manages the container lifecycle automatically.
 
 Each pipeline has a different VRAM footprint and a different pricing unit. The entry below each section is the complete `aiModels.json` configuration required to enable it.
 
@@ -186,7 +188,7 @@ Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.clou
 
 ## segment-anything-2
 
-`segment-anything-2` (SAM2) performs promptable segmentation — given an image or video frame and a point or bounding box prompt, it returns pixel masks for the identified object or region. The pipeline is compute-intensive and has lower competition than diffusion pipelines.
+`segment-anything-2` (SAM2) performs promptable segmentation – given an image or video frame and a point or bounding box prompt, it returns pixel masks for the identified object or region. The pipeline is compute-intensive and has lower competition than diffusion pipelines.
 
 **VRAM:** 12–24 GB depending on model variant  
 **Pricing unit:** Per input pixel  

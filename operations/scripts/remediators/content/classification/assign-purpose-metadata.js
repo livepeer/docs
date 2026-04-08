@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      assign-purpose-metadata
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        remediator
+ * @concern     governance
+ * @niche       classification
+ * @purpose     
  * @description Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts, tools/lib/docs-usefulness, tools/config, v2
  * @usage       node operations/scripts/remediators/content/classification/assign-purpose-metadata.js [flags]
@@ -33,7 +33,7 @@ const {
 // Previously this script used PURPOSE_ENUM from rubric-loader, which contains rubric-internal
 // labels (landing, overview, how_to, faq, etc.) — not valid frontmatter values. Fixed to use
 // CANONICAL_PURPOSES so written frontmatter always contains canonical values only.
-const { CANONICAL_PURPOSES } = require('../../../../../tools/lib/docs/frontmatter-taxonomy');
+const { CANONICAL_PURPOSES, CANONICAL_COMPLEXITIES, CANONICAL_LIFECYCLE_STAGES } = require('../../../../../tools/lib/docs/frontmatter-taxonomy');
 const { analyzeMdxPage } = require('../../../../../tools/lib/docs-usefulness/scoring');
 const prompts = require('../../../../../tools/lib/docs-usefulness/prompts');
 const { loadAndValidateUsefulnessConfig } = require('../../../../../tools/lib/docs-usefulness/config-validator');
@@ -168,6 +168,68 @@ function inferPurposeByRules(relPath, content) {
   return { purpose: 'unclassified', source: 'none' };
 }
 
+// COMPLEXITY_RULES: infer complexity from path patterns.
+// All values must be members of CANONICAL_COMPLEXITIES.
+const COMPLEXITY_RULES = [
+  { test: (p) => /\/quickstart\//i.test(p) || /quickstart\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /\/get-started\//i.test(p) || /get-started\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /\/concepts?\//i.test(p), complexity: 'beginner' },
+  { test: (p) => /overview\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /portal\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /navigator\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /primer\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /glossary\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /faq\.mdx$/i.test(p), complexity: 'beginner' },
+  { test: (p) => /\/advanced-operations\//i.test(p), complexity: 'advanced' },
+  { test: (p) => /\/economics?\//i.test(p), complexity: 'advanced' },
+  { test: (p) => /\/optimi[sz]e?\//i.test(p) || /optimi[sz]e/i.test(path.basename(p)), complexity: 'advanced' },
+  { test: (p) => /scaling/i.test(path.basename(p)), complexity: 'advanced' },
+  { test: (p) => /\/setup\//i.test(p) || /\/install\//i.test(p) || /\/configure\//i.test(p), complexity: 'intermediate' },
+  { test: (p) => /\/guides?\//i.test(p), complexity: 'intermediate' },
+  { test: (p) => /\/build\//i.test(p), complexity: 'intermediate' },
+  { test: (p) => /\/resources?\//i.test(p), complexity: 'intermediate' },
+  { test: (p) => /\/references?\//i.test(p), complexity: 'intermediate' },
+];
+
+function inferComplexity(relPath) {
+  for (const rule of COMPLEXITY_RULES) {
+    if (rule.test(relPath)) return rule.complexity;
+  }
+  return 'intermediate'; // safe default
+}
+
+// LIFECYCLE_RULES: infer lifecycle stage from path patterns.
+// All values must be members of CANONICAL_LIFECYCLE_STAGES.
+const LIFECYCLE_RULES = [
+  { test: (p) => /portal\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /navigator\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /index\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /overview\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /\/concepts?\//i.test(p), stage: 'discover' },
+  { test: (p) => /primer\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /glossary\.mdx$/i.test(p), stage: 'discover' },
+  { test: (p) => /evaluating/i.test(path.basename(p)), stage: 'evaluate' },
+  { test: (p) => /\/quickstart\//i.test(p) || /quickstart\.mdx$/i.test(p), stage: 'setup' },
+  { test: (p) => /\/get-started\//i.test(p) || /get-started\.mdx$/i.test(p), stage: 'setup' },
+  { test: (p) => /\/setup\//i.test(p) || /\/install\//i.test(p), stage: 'setup' },
+  { test: (p) => /\/configure\//i.test(p) || /configure\.mdx$/i.test(p), stage: 'setup' },
+  { test: (p) => /\/build\//i.test(p), stage: 'build' },
+  { test: (p) => /\/guides?\//i.test(p), stage: 'operate' },
+  { test: (p) => /\/advanced-operations\//i.test(p), stage: 'operate' },
+  { test: (p) => /\/economics?\//i.test(p), stage: 'operate' },
+  { test: (p) => /troubleshoot/i.test(path.basename(p)), stage: 'troubleshoot' },
+  { test: (p) => /faq\.mdx$/i.test(p), stage: 'troubleshoot' },
+  { test: (p) => /optimi[sz]e/i.test(path.basename(p)), stage: 'optimise' },
+  { test: (p) => /changelog|release-notes/i.test(path.basename(p)), stage: 'operate' },
+];
+
+function inferLifecycleStage(relPath) {
+  for (const rule of LIFECYCLE_RULES) {
+    if (rule.test(relPath)) return rule.stage;
+  }
+  return 'discover'; // safe default
+}
+
 function sectionFromPath(relPath) {
   const parts = String(relPath || '').split('/');
   if (parts[0] === 'v2') return parts[1] || 'unknown';
@@ -265,7 +327,7 @@ function upsertFrontmatterOrder(originalData, key, value) {
 }
 
 function printRow(row) {
-  console.log(`${row.path}\t${row.purpose}\t${row.audience}\t${row.source}\t${row.changed ? 'yes' : 'no'}`);
+  console.log(`${row.path}\t${row.purpose}\t${row.audience}\t${row.complexity}\t${row.lifecycleStage}\t${row.source}\t${row.changed ? 'yes' : 'no'}`);
 }
 
 async function main() {
@@ -345,6 +407,24 @@ async function main() {
       changed = true;
     }
 
+    const existingComplexity = parsed.data?.complexity;
+    if (!existingComplexity) {
+      const complexity = inferComplexity(relPath);
+      if (CANONICAL_COMPLEXITIES.includes(complexity)) {
+        nextData = upsertFrontmatterOrder(nextData, 'complexity', complexity);
+        changed = true;
+      }
+    }
+
+    const existingLifecycleStage = parsed.data?.lifecycleStage;
+    if (!existingLifecycleStage) {
+      const stage = inferLifecycleStage(relPath);
+      if (CANONICAL_LIFECYCLE_STAGES.includes(stage)) {
+        nextData = upsertFrontmatterOrder(nextData, 'lifecycleStage', stage);
+        changed = true;
+      }
+    }
+
     if (changed && !args.dryRun) {
       const updated = matter.stringify(parsed.content, nextData, {
         lineWidth: 120,
@@ -366,12 +446,14 @@ async function main() {
       path: relPath,
       purpose: existingPurpose || purposeInfo.purpose || 'unclassified',
       audience: existingAudience || audienceInfo.audience,
+      complexity: existingComplexity || inferComplexity(relPath),
+      lifecycleStage: existingLifecycleStage || inferLifecycleStage(relPath),
       source: existingPurpose ? 'frontmatter' : purposeInfo.source,
       changed
     });
   }
 
-  console.log('PATH\tPURPOSE\tAUDIENCE\tSOURCE\tCHANGED');
+  console.log('PATH\tPURPOSE\tAUDIENCE\tCOMPLEXITY\tLIFECYCLE\tSOURCE\tCHANGED');
   rows.forEach(printRow);
   console.log('---');
   console.log(`Assigned: ${args.dryRun ? wouldAssign : assigned} pages | Skipped (already set): ${skipped} | Unclassified: ${unclassified}`);

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-page-endings
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Validates that English v2 MDX pages end with an approved navigational or closing element
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → TODO comment appended, ci
  * @scope       operations/scripts/validators/content, v2
  * @usage       node operations/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]
@@ -207,6 +207,41 @@ function hasApprovedNavigationalEnding(body) {
   return /\[[^\]]+\]\([^)]+\)|<(Card|CardGroup|AccordionGroup)\b/i.test(lastHeading.sectionBody);
 }
 
+// Check 5.17: Validate Related Pages section uses correct format
+// Returns { valid: true } or { valid: false, issues: [...] }
+function checkRelatedPagesFormat(body) {
+  const lastHeading = getLastHeadingSection(body);
+  if (!lastHeading) return { valid: true, issues: [] };
+  if (!/^(related|related\s+pages)\b/i.test(lastHeading.title)) return { valid: true, issues: [] };
+
+  const section = lastHeading.sectionBody;
+  const issues = [];
+
+  // Should use Card components (not bare markdown links)
+  const hasCards = /<Card\b/i.test(section);
+  const hasBareLinks = /^\s*[-*]\s*\[/.test(section);
+  if (!hasCards && hasBareLinks) {
+    issues.push('Related Pages uses bare markdown links instead of Card components');
+  }
+
+  // Cards should use CustomCardTitle with icon prop
+  const cardMatches = section.match(/<Card\b[^>]*>/gi) || [];
+  cardMatches.forEach((card) => {
+    if (!/<CustomCardTitle\b/i.test(card) && /title\s*=\s*["']/i.test(card)) {
+      issues.push('Card in Related Pages uses plain title string instead of CustomCardTitle with icon');
+    }
+  });
+
+  // Cards should use horizontal layout
+  cardMatches.forEach((card) => {
+    if (!/\bhorizontal\b/i.test(card) && /<Card\b/i.test(card)) {
+      issues.push('Card in Related Pages missing horizontal layout prop');
+    }
+  });
+
+  return { valid: issues.length === 0, issues };
+}
+
 function analyzeFile(file, options) {
   const raw = fs.readFileSync(file.absPath, 'utf8');
   const body = getTrimmedBody(raw);
@@ -237,11 +272,17 @@ function analyzeFile(file, options) {
     fixed = true;
   }
 
+  // Check 5.17: validate Related Pages format when present
+  const relatedPagesCheck = checkRelatedPagesFormat(body);
+  const formatIssues = relatedPagesCheck.issues;
+
   return {
     file: file.relPath,
     verdict,
     reason,
-    fixed
+    fixed,
+    relatedPagesFormat: relatedPagesCheck.valid ? 'ok' : 'needs-work',
+    relatedPagesIssues: formatIssues
   };
 }
 

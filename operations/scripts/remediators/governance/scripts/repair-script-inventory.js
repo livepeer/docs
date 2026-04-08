@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 /**
  * @script      repair-script-inventory
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:script-header-repair
+ * @type        remediator
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     
  * @description Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual
  * @scope       operations/scripts
  * @usage       node operations/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files <path,...>] [--json] [--md] [--output <dir>]
  */
 
+// Post-remediation verification support (D-GOV-03)
+const VERIFY_MODE = process.argv.includes('--verify');
 const { spawnSync } = require('child_process');
 const REPO_ROOT = process.cwd();
 const AUDIT_SCRIPT = 'operations/scripts/validators/governance/pr/audit-script-inventory.js';

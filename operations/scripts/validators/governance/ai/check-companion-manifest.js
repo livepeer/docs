@@ -1,22 +1,11 @@
 /**
- * CDA-6: AI Companion Manifest Checker
- *
- * Validates that docs-guide/config/ai-companion-manifest.json is consistent
- * with the component registry's aiDiscoverability fields.
- *
- * Checks:
- *   1. Every component with aiDiscoverability 'snapshot' or 'props-extracted'
- *      has at least one entry in the manifest.
- *   2. Every companionPath listed in the manifest exists on disk.
- *
- * Usage:
- *   node operations/scripts/validators/governance/ai/check-companion-manifest.js
- *   node operations/scripts/validators/governance/ai/check-companion-manifest.js --check
- *   node operations/scripts/validators/governance/ai/check-companion-manifest.js --report
  * @script      check-companion-manifest
  * @type        validator
+ * @concern     governance
+ * @niche       ai
+ * @purpose     
  * @description check companion manifest
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       operations/scripts/validators/governance/ai
  * @usage       node operations/scripts/validators/governance/ai/check-companion-manifest.js

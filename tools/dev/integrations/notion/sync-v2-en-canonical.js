@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sync-v2-en-canonical
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Builds canonical v2 English page metadata and syncs Notion schema, row metadata, and optional page-body blocks to match docs.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/sync-v2-en-canonical.js [flags]

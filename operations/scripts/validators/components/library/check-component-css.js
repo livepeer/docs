@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-component-css
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        validator
+ * @concern     maintenance
+ * @niche       library
+ * @purpose     
  * @description Validates component files against component governance styling rules.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual → component .jsx files → exit-code, stdout:violations; --fix → component .jsx files → CSS token replacements, P3
  * @scope       single-domain
  * @usage       node operations/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]

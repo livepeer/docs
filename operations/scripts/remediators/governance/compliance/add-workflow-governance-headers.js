@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      add-workflow-governance-headers
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:workflow-headers
+ * @type        remediator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Adds governance comment headers to GitHub Actions workflow YAML files based on their governed filename pattern
- * @mode        read-only
+ * @mode        repair
  * @pipeline    manual -> .github/workflows/*.yml -> edited workflow files
  * @scope       .github/workflows/
  * @usage       node operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js [--dry-run|--write]
@@ -53,7 +53,8 @@ const PIPELINE_OVERRIDES = {
 const GOVERNANCE_KEYWORDS = ['# type:', '# concern:', '# pipeline:'];
 
 function parseArgs(argv) {
-  const args = { mode: 'dry-run', help: false };
+  const args = { mode: 'dry-run', help: false,
+    verify: false };
   argv.forEach((token) => {
     if (token === '--write') { args.mode = 'write'; return; }
     if (token === '--dry-run') { args.mode = 'dry-run'; return; }

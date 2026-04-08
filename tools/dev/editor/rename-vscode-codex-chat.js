@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      rename-vscode-codex-chat
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/dev/editor/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json
  * @usage       node tools/dev/editor/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]

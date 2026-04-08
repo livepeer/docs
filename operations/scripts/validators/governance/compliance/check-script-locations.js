@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-script-locations
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:script-placement
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validates all JS files are in governed locations per the script framework
- * @mode        read-only
+ * @mode        check
  * @pipeline    pr-changed -> all .js files -> exit-code, stdout:violations
  * @scope       full-repo
  * @usage       node operations/scripts/validators/governance/compliance/check-script-locations.js [--json]

@@ -18,6 +18,9 @@ on:
 
 permissions:
   contents: write
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 jobs:
   generate-ai-companions:
     runs-on: ubuntu-latest

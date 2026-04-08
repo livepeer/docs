@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-docs-guide-indexes
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     
  * @description Generates docs-guide workflow/template catalogs and optionally verifies freshness
- * @mode        read-only
+ * @mode        generate
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
  * @scope       operations/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
  * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]

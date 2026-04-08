@@ -7,6 +7,9 @@
  * @description Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
  * @dataSource CoinGecko API
  * @aiDiscoverability snapshot
+ * @usedIn v2/gateways/resources/compendium/arbitrum-exchanges.mdx, v2/gateways/resources/compendium/livepeer-exchanges.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {string} [coinId="arbitrum"] - coin Id prop.
   * @param {string} [className=''] - Optional CSS class override.
   * @param {object} [style={}] - Optional inline style override.
@@ -133,7 +136,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
           <thead>
             <tr
               style={{
-                backgroundColor: "var(--accent)",
+                backgroundColor: "var(--lp-color-accent)",
                 color: "var(--lp-color-on-accent)",
               }}
             >
@@ -142,7 +145,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                   padding: "12px 16px",
                   textAlign: "left",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--accent)",
+                  borderBottom: "2px solid var(--lp-color-accent)",
                   cursor: "pointer",
                   width: "220px",
                   maxWidth: "220px",
@@ -163,7 +166,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--accent)",
+                  borderBottom: "2px solid var(--lp-color-accent)",
                   width: "80px",
                   cursor: "pointer",
                   color: "var(--lp-color-on-accent)",
@@ -182,7 +185,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--accent)",
+                  borderBottom: "2px solid var(--lp-color-accent)",
                   width: "110px",
                   color: "var(--lp-color-on-accent)",
                 }}
@@ -194,7 +197,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--accent)",
+                  borderBottom: "2px solid var(--lp-color-accent)",
                   width: "100px",
                   color: "var(--lp-color-on-accent)",
                 }}
@@ -206,7 +209,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--accent)",
+                  borderBottom: "2px solid var(--lp-color-accent)",
                   width: "100px",
                   color: "var(--lp-color-on-accent)",
                 }}
@@ -220,7 +223,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
               <tr
                 key={index}
                 style={{
-                  borderBottom: "1px solid var(--border)",
+                  borderBottom: "1px solid var(--lp-color-border-default)",
                 }}
               >
                 <td
@@ -267,7 +270,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style 
                     target="_blank" rel="noopener noreferrer"
                     rel="noopener noreferrer"
                     style={{
-                      color: "var(--accent)",
+                      color: "var(--lp-color-accent)",
                       textDecoration: "none",
                     }}
                   >

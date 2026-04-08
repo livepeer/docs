@@ -2,11 +2,12 @@
 title: Livepeer Job Lifecycle
 sidebarTitle: Job Lifecycle
 description: >-
-  This page describes the end-to-end “compute job” as a state machine. Since
-  Livepeer’s compute is segment-oriented, the lifecycle is modelled at the level
-  of a stream session and per-segment processing, with payment settlement
-  occurring continuously via tickets and periodically via reward calls.
-PageType: concept
+  This page describes the end-to-end “compute job” as a state machine. Since Livepeer’s compute is segment-oriented, the
+  lifecycle is modelled at the level of a stream session and per-segment processing, with payment settlement occurring
+  continuously via tickets and periodically via reward calls.
+lifecycleStage: discover
+complexity: intermediate
+pageType: concept
 keywords:
   - livepeer
   - about
@@ -21,10 +22,10 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: concept
 ---
-import { DynamicTable } from "/snippets/components/wrappers/tables/Table.jsx"
+import { DynamicTable } from "/snippets/components/displays/tables/Tables.jsx"
 
 {/*
 This page describes:
@@ -137,12 +138,12 @@ flowchart LR
  Orchestrator -->|“assign chunk”| Transcoder([Transcoder GPU])
  Transcoder -->|“renditions”| Orchestrator
  Orchestrator -->|“encoded output”| Gateway
- Gateway -->|“next segment / finalize”| Orchestrator
+ Gateway -->|“next segment / finalise”| Orchestrator
 Example: A Gateway has a 30-second live video. It deposits ETH in TicketBroker, then streams segments to Orchestrator A with tickets. Orchestrator A’s Transcoder outputs multiple bitrates. Orchestrator A later sends any winning tickets to the TicketBroker contract on Arbitrum to claim payment. Fees (in ETH) are automatically split according to the Orchestrator’s fee-share settings, crediting Delegators’ balances
 .
 Probabilistic Payments: Instead of paying per-segment, Gateways use a lottery-ticket scheme. Each ticket has a chance to “win” a fixed ETH prize. Over many segments, the expected payout equals the true cost of work
 . This shields Orchestrators from tiny on-chain transactions and gas-variability. (Broadcasters pre-fund enough ETH so that expected payouts cover all tickets.) AI Inference Workflow: AI jobs (e.g. Real-time style transfer, video generation) use the same stake/fee model but may involve pipelines of multiple models (e.g. Stage-1 text encoder → Stage-2 image decoder). Livepeer’s Cascade framework coordinates multi-step AI workflows: a Gateway sends initial data and a prompt, and orchestrators sequentially apply models until a final video is produced
 . For example, Daydream (an AI app) captures webcam video, sends it through a StableDiffusion pipeline on the network, and returns the stylized video output.
-Example (AI): A user feeds a webcam stream into Daydream (powered by Livepeer AI). The Gateway sends frames plus a “style” prompt to Orchestrator B. B runs a sequence of GPUs (e.g. Enhance → stylize) and returns an AI-edited video with low latency. Livepeer’s GPUs and networking are optimized for this low-latency pipeline
+Example (AI): A user feeds a webcam stream into Daydream (powered by Livepeer AI). The Gateway sends frames plus a “style” prompt to Orchestrator B. B runs a sequence of GPUs (e.g. Enhance → stylize) and returns an AI-edited video with low latency. Livepeer’s GPUs and networking are optimised for this low-latency pipeline
 .
 The common pattern: Gateway 🡒 Orchestrator(s) 🡒 Transcoder/AI Model 🡒 Gateway. Smart contracts (TicketBroker for fees, JobsManager, etc.) mediate off-chain jobs and on-chain accounting.

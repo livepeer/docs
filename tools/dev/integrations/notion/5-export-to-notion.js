@@ -1,11 +1,11 @@
 /**
  * @script      5-export-to-notion
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Updates existing Notion page grouping fields from the exported docs navigation snapshot.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/5-export-to-notion.js [flags]

@@ -85,7 +85,7 @@ components/
 | File | Sub-niche | Key Exports | Description |
 |---|---|---|---|
 | `Code.jsx` | code | `CustomCodeBlock`, `CodeComponent`, `ComplexCodeBlock`, `CodeSection` | Code display components |
-| `ZoomableDiagram.jsx` | diagrams | `ScrollableDiagram` | Zoomable/scrollable diagram |
+| `ScrollableDiagram.jsx` | diagrams | `ScrollableDiagram` | Zoomable/scrollable diagram |
 | `Quote.jsx` | quotes | `Quote`, `FrameQuote` | Quote components |
 | `ResponseField.jsx` | response-fields | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
 | `Video.jsx` | video | `Video`, `TitledVideo`, `ShowcaseVideo`, `CardVideo`, `YouTubeVideo`, `YouTubeVideoDownload` | Video and media components |
@@ -95,7 +95,7 @@ components/
 | File | Sub-niche | Key Exports | Description |
 |---|---|---|---|
 | `FrameMode.jsx` | frame-mode | `PageHeader`, `H1`–`H6`, `P`, `Divider` | Frame mode heading overrides |
-| `HeroGif.jsx` | heroes | `Starfield` | Hero animation |
+| `StarfieldCanvas.jsx` | heroes | `Starfield` | Hero animation |
 | `Portals.jsx` | portals | `HeroSectionContainer`, `HeroContentContainer`, `PortalHeroContent`, `PortalCardsHeader`, `PortalSectionHeader`, `LogoHeroContainer` | Portal page layout components |
 
 ### integrators/

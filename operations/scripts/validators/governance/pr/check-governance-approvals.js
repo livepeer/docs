@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-governance-approvals
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        validator
+ * @concern     governance
+ * @niche       pr
+ * @purpose     
  * @description Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence.
- * @mode        read-only
+ * @mode        check
  * @pipeline    ci, pr-changed -> governance approval policy -> exit-code, stdout:violations
  * @scope       operations/governance/config, operations/scripts/validators/governance/pr, operations/tests/run-pr-checks.js, .github/pull_request_template.md, .github/workflows, .github/workspace
  * @usage       node operations/scripts/validators/governance/pr/check-governance-approvals.js [--base-ref <branch>] [--files <path[,path...]>] [--json]

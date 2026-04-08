@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-og-images
- * @type        
- * @concern     
- * @niche       
- * @purpose     seo:og-image-assets
+ * @type        generator
+ * @concern     discoverability
+ * @niche       seo
+ * @purpose     
  * @description Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual — run when OG assets, section labels, or branding change
  * @scope       operations/scripts, snippets/assets/media/og-images
  * @usage       node operations/scripts/generators/content/seo/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]

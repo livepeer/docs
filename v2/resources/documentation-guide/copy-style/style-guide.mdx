@@ -1,12 +1,12 @@
 ---
 title: Documentation Style Guide
 sidebarTitle: Style Guide
-description: >-
-  Style guide, Mintlify gotchas, and best practices for writing Livepeer
-  documentation
+description: 'Style guide, Mintlify gotchas, and best practices for writing Livepeer documentation'
+lifecycleStage: discover
+complexity: intermediate
 purpose: operations
 audience: everyone
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 pageType: guide
 keywords:
   - livepeer
@@ -23,7 +23,7 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 ---
-import { FocusableScrollRegions } from '/snippets/components/elements/a11y/A11y.jsx'
+import { FocusableScrollRegions } from '/snippets/components/elements/a11y/FocusableScrollRegion.jsx'
 
 <FocusableScrollRegions />
 
@@ -42,7 +42,7 @@ The documentation uses **CSS Custom Properties** defined in `style.css` at the r
 
 **DO NOT USE:**
 - ❌ JavaScript theme objects (ThemeData, themeStyles.jsx) - **DEPRECATED**
-- ❌ Inline style objects with hardcoded colors
+- ❌ Inline style objects with hardcoded colours
 - ❌ JavaScript-based theme switching
 
 **USE INSTEAD:**
@@ -50,9 +50,9 @@ The documentation uses **CSS Custom Properties** defined in `style.css` at the r
 - ✅ Global CSS variables in `style.css`
 - ✅ Mintlify theme configuration in `docs.json`
 
-### Color System
+### Colour System
 
-All theme colors are defined as CSS Custom Properties in `style.css`:
+All theme colours are defined as CSS Custom Properties in `style.css`:
 
 | Variable | Light Mode | Dark Mode | Usage |
 |----------|-----------|-----------|-------|
@@ -126,17 +126,17 @@ Mintlify automatically adds a `.dark` class to the `<html>` element when dark mo
 
 **No JavaScript required** - theme switching is handled entirely by CSS.
 
-### Color Rules
+### Colour Rules
 
 | Use Case | Approach |
 |----------|----------|
-| Brand colors (green) | Use `--accent` or `--accent-dark` |
+| Brand colours (green) | Use `--accent` or `--accent-dark` |
 | Headings | Use `--hero-text` |
 | Body text | Use `--text` |
 | Secondary text | Use `--muted-text` |
 | Backgrounds | Use `--background` or `--card-background` |
 | Borders | Use `--border` |
-| Semantic colors (error, warning, success) | Keep fixed (don't theme) |
+| Semantic colours (error, warning, success) | Keep fixed (don't theme) |
 | White text on green headers | Keep fixed as `#fff` |
 
 ### Deprecated Approaches
@@ -150,7 +150,7 @@ Mintlify automatically adds a `.dark` class to the `<html>` element when dark mo
    <div style={{ color: ThemeData.light.accent }}>Content</div>
    ```
 
-2. **Hardcoded Colors** - Never hardcode hex values that should adapt to theme
+2. **Hardcoded Colours** - Never hardcode hex values that should adapt to theme
    ```jsx icon="terminal"
    // ❌ WRONG - DO NOT USE
    <div style={{ color: "#3CB540" }}>Content</div>
@@ -161,10 +161,10 @@ Mintlify automatically adds a `.dark` class to the `<html>` element when dark mo
 ### What NOT to Do
 
 - ❌ Don't import or use `ThemeData` from `themeStyles.jsx`
-- ❌ Don't hardcode hex colors that should adapt to theme
+- ❌ Don't hardcode hex colours that should adapt to theme
 - ❌ Don't use generic grays without checking theme compatibility
-- ❌ Don't make semantic colors (trust scores, error states) theme-dependent
-- ❌ Don't override white text on intentionally colored backgrounds
+- ❌ Don't make semantic colours (trust scores, error states) theme-dependent
+- ❌ Don't override white text on intentionally coloured backgrounds
 - ❌ Don't create custom JavaScript theme objects
 
 ## Styling Framework Architecture
@@ -217,7 +217,7 @@ The Livepeer documentation uses a **three-layer styling framework** designed to 
 - ✅ Use `<style>` tags for complex styling (pseudo-classes, media queries)
 - ✅ Use inline style objects for simple styling
 - ❌ Import external CSS files
-- ❌ Hardcode theme colors (use CSS variables)
+- ❌ Hardcode theme colours (use CSS variables)
 - ❌ Use `className` without corresponding `<style>` tag
 
 **Pattern A: Inline Style Objects (Simple components)**
@@ -288,7 +288,7 @@ export const MyComponent = ({ variant = "default" }) => {
 - ✅ Use Mintlify global components (`Card`, `Tabs`, `Steps`, etc.)
 - ✅ Import custom components from `/snippets/components/`
 - ❌ **NO inline `style={{}}` attributes**
-- ❌ **NO hardcoded colors**
+- ❌ **NO hardcoded colours**
 - ❌ **NO custom `className` attributes**
 
 **Before (❌ WRONG):**
@@ -311,7 +311,7 @@ import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.j
 
 ### Decision Tree: Where Does This Style Go?
 
-1. **Is it a theme color?** → Add to `style.css` as CSS Custom Property
+1. **Is it a theme colour?** → Add to `style.css` as CSS Custom Property
 2. **Is it used in a component?** → Put in JSX component file (inline or `<style>` tag)
 3. **Is it needed in MDX?** → Create/use a component primitive
 4. **Is it used 5+ times globally?** → Add utility class to `style.css`
@@ -319,13 +319,284 @@ import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.j
 
 ### Component Primitives Library
 
-For common styling needs in MDX files, use component primitives from `/snippets/components/primitives/`:
+For common styling needs in MDX files, use component wrappers:
 
-- **Layout**: `FlexContainer`, `GridContainer`, `Spacer`
-- **Tables**: `StyledTable`, `TableRow`, `TableCell`
-- **Containers**: `BorderedBox`, `CenteredContainer`, `FullWidthContainer`
+- **Layout**: `FlexContainer`, `GridContainer` (`/snippets/components/wrappers/containers/Layout.jsx`), `Spacer` (`/snippets/components/elements/spacing/Divider.jsx`)
+- **Tables**: `StyledTable`, `TableRow`, `TableCell` (`/snippets/components/displays/tables/Tables.jsx`)
+- **Containers**: `BorderedBox`, `CenteredContainer`, `FullWidthContainer` (`/snippets/components/wrappers/containers/Containers.jsx`)
 
-See the [Component Library](./component-library/primitives) for complete reference.
+## Platform Constraints
+
+These are hard constraints imposed by the Mintlify platform. They cannot be worked around.
+
+### CSS file loading
+
+Mintlify auto-loads **all `.css` files** in the repository root. Any classes defined in any `.css` file are available globally in all MDX files. The repo uses `style.css` as the single source of truth for all design tokens and framework overrides.
+
+Mintlify also auto-loads **all `.js` files** from the content directory on every page. Be aware of this for security – do not place scripts in the content directory unless they are intended to run on every page.
+
+### Tailwind CSS v3
+
+Mintlify ships **Tailwind CSS v3** and it is available in both MDX files and JSX components. However:
+
+- **Arbitrary values are NOT supported** – `w-[200px]`, `bg-[#3CB540]` will not work
+- **Predefined classes only** – `flex`, `gap-4`, `grid-cols-2`, `p-4`, `rounded` etc.
+- **Responsive prefixes work** – `md:grid-cols-2`, `lg:grid-cols-3`
+- **Dark mode prefixes work** – `dark:hidden`, `dark:block`, `dark:bg-gray-800`
+
+**When to use Tailwind:** Layout structure (flex, grid, spacing, visibility toggling). Tailwind responsive classes (`md:`, `lg:`) are the recommended approach for responsive layouts.
+
+**When NOT to use Tailwind:** Colours (use CSS Custom Properties instead – Tailwind arbitrary values are not supported, and our colour system uses `--lp-*` tokens).
+
+<Warning>
+**Layout shift warning:** Mintlify explicitly warns that using the `style` prop (inline styles) can cause a **layout shift on page load**, especially on custom mode pages. Use Tailwind CSS classes or CSS Custom Properties in `style.css` instead of `style={{}}` to avoid shifts or flickering.
+</Warning>
+
+### Other platform constraints
+
+| Constraint | Detail |
+|---|---|
+| No CSS imports in JSX | JSX component files cannot import `.css` files. Styles must be inline, in `<style>` blocks, or in global `style.css` |
+| No JS theme detection | Mintlify adds `.dark` class to `<html>` automatically. Do not use JavaScript to detect or switch themes |
+| JSX cannot import JSX | Components cannot import other component files. Import both in the MDX file that uses them |
+| Mermaid cannot use CSS variables | Mermaid's theming engine only accepts hex colour values, not `var(--)` references. Use `MermaidColours.jsx` for centralised hex definitions |
+| Constants inside function bodies | All constants in JSX files must be defined inside the function body, not at top level |
+| React hooks are global | `useState`, `useEffect`, `useRef` etc. are available without import. Do not `import React` |
+| Mintlify components are global | `Card`, `Tabs`, `Steps`, `Icon`, `Badge`, `Accordion`, `Columns` etc. are available without import. Do not import them |
+
+## Token Reference
+
+### Colour tokens
+
+All theme colours are defined as CSS Custom Properties in `style.css`. Use `--lp-*` tokens for new work.
+
+| Token | Light | Dark | Usage |
+|---|---|---|---|
+| `--lp-color-accent` | `#3CB540` | `#2b9a66` | Primary accent (buttons, links, highlights) |
+| `--lp-color-accent-strong` | `#18794E` | `#18794E` | Emphasis, step icons |
+| `--lp-color-accent-soft` | `#6BBF59` | `#3CB540` | Soft accent |
+| `--lp-color-text-primary` | `#181C18` | `#E0E4E0` | Headings, titles |
+| `--lp-color-text-secondary` | `#717571` | `#A0A4A0` | Body text |
+| `--lp-color-text-muted` | `#9CA3AF` | `#6b7280` | Muted/secondary (note: borderline WCAG AA on white – 4.2:1) |
+| `--lp-color-bg-page` | `#FFFFFF` | `#0d0d0d` | Page background |
+| `--lp-color-bg-card` | `#F9FAFB` | `#1a1a1a` | Card background |
+| `--lp-color-border-default` | `#E5E7EB` | `#333333` | Default border |
+| `--lp-color-on-accent` | `#FFFFFF` | `#FFFFFF` | Text on accent backgrounds |
+| `--lp-color-arbitrum` | `#3EA6F8` | `#3EA6F8` | Arbitrum branding |
+| `--lp-color-status-good` | `#22C55E` | `#22C55E` | Success/positive |
+| `--lp-color-status-warn` | `#FBBF24` | `#FBBF24` | Warning |
+| `--lp-color-status-bad` | `#EF4444` | `#EF4444` | Error/negative |
+
+### Legacy aliases (deprecated)
+
+These older aliases still work but should be replaced with `--lp-*` tokens in new work:
+
+| Legacy alias | Replacement |
+|---|---|
+| `--accent` | `--lp-color-accent` |
+| `--accent-dark` | `--lp-color-accent-strong` |
+| `--hero-text` | `--lp-color-text-primary` |
+| `--text` | `--lp-color-text-secondary` |
+| `--muted-text` | `--lp-color-text-muted` |
+| `--background` | `--lp-color-bg-page` |
+| `--card-background` | `--lp-color-bg-card` |
+| `--border` | `--lp-color-border-default` |
+| `--button-text` | `--lp-color-on-accent` |
+| `--arbitrum` | `--lp-color-arbitrum` |
+
+### Spacing tokens
+
+| Token | Value | When to use |
+|---|---|---|
+| `--lp-spacing-1` | `0.25rem` | Tight gaps (icon-to-text) |
+| `--lp-spacing-2` | `0.5rem` | Small gaps (badge rows, inline elements) |
+| `--lp-spacing-3` | `0.75rem` | Standard component padding |
+| `--lp-spacing-4` | `1rem` | Default section spacing |
+| `--lp-spacing-6` | `1.5rem` | Comfortable section spacing |
+| `--lp-spacing-8` | `2rem` | Large section gaps |
+| `--lp-spacing-px-3` | `3px` | Fine borders, thin lines |
+| `--lp-spacing-px-4` | `4px` | Small borders, button padding |
+| `--lp-spacing-px-6` | `6px` | Medium borders |
+| `--lp-spacing-px-8` | `8px` | Standard border radius |
+| `--lp-spacing-px-12` | `12px` | Large border radius |
+
+### Brand colour tokens
+
+| Token | Value | Platform |
+|---|---|---|
+| `--lp-color-brand-linux` | `#ff9a0e` | Linux (orange) |
+| `--lp-color-brand-windows` | `#14bbf7` | Windows (blue) |
+| `--lp-color-brand-macos` | `#60ba47` | macOS (green) |
+
+## Component Styling Conventions
+
+These patterns exist across all component files and should be followed when authoring new components.
+
+### Style prop merging
+
+Every component accepts `style` and `className` props and merges them with defaults:
+
+```jsx icon="terminal"
+export const MyComponent = ({ children, style = {}, className = "", ...rest }) => {
+  const defaultStyle = { color: "var(--lp-color-text-secondary)", padding: "1rem" }
+  return (
+    <div className={className} style={{ ...defaultStyle, ...style }} {...rest}>
+      {children}
+    </div>
+  )
+}
+```
+
+### Variant pattern
+
+Use preset style objects keyed by variant name:
+
+```jsx icon="terminal"
+export const MyComponent = ({ variant = "default", style = {}, ...rest }) => {
+  const variants = {
+    default: { border: "1px solid var(--lp-color-border-default)" },
+    accent: { border: "1px solid var(--lp-color-accent)" },
+  }
+  return <div style={{ ...variants[variant], ...style }} {...rest} />
+}
+```
+
+### Scoped `<style>` injection
+
+When a component needs pseudo-classes, media queries, or must override Mintlify built-in component styles, use a scoped `<style>` block with a generated ID:
+
+```jsx icon="terminal"
+export const MyComponent = ({ children }) => {
+  const id = `my-component-${Math.random().toString(36).slice(2, 8)}`
+  return (
+    <>
+      <div id={id}>{children}</div>
+      <style>{`
+        #${id}:hover { border-color: var(--lp-color-accent); }
+        @media (max-width: 768px) { #${id} { padding: 0.5rem; } }
+      `}</style>
+    </>
+  )
+}
+```
+
+## Content/Style Separation Quick-Reference
+
+When writing MDX pages, use this table to find the correct approach for common layout needs:
+
+| Need | Correct approach | NOT this |
+|---|---|---|
+| Flex row | `<div className="flex gap-4">` or `<FlexContainer>` | `style={{ display: "flex", gap: "1rem" }}` |
+| Responsive grid | `<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">` | `style={{ display: "grid" }}` |
+| Spacing between sections | `<Spacer size="2rem" />` or `className="mt-8"` | `style={{ marginTop: "2rem" }}` |
+| Bordered container | `<BorderedBox variant="accent">` | `style={{ border: "1px solid var(--accent)" }}` |
+| Brand colour text | `<span style={{ color: "var(--lp-color-accent)" }}>` | `style={{ color: "var(--lp-color-accent)" }}` |
+| Show/hide for dark mode | `<div className="block dark:hidden">` / `<div className="hidden dark:block">` | JavaScript theme detection |
+
+**Rule:** Single-property CSS variable usage inline is acceptable (e.g. `style={{ color: "var(--lp-color-accent)" }}`). Multi-property layout styles must use a component or Tailwind classes.
+
+## Icon Usage
+
+### How icons render
+
+| Source | Renders as | Colour styleable? | Example |
+|---|---|---|---|
+| Lucide/FontAwesome name | Inline SVG | Yes – `color` prop works | `<Icon icon="check" color="var(--lp-color-accent)" />` |
+| Custom SVG path | `<img>` element | No – CSS `color` has no effect | `<Icon icon="/path/to/icon.svg" />` |
+
+**Icon library:** FontAwesome is configured in `docs.json` (`"icons.library": "fontawesome"`).
+
+### Brand icons
+
+Two custom brand icons use a **mask-image technique** that makes them colour-styleable:
+
+```jsx icon="terminal"
+import { ArbitrumIcon, LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
+
+<ArbitrumIcon size={16} color="var(--lp-color-arbitrum)" />
+<LivepeerIcon size={16} color="var(--lp-color-accent)" />
+```
+
+`<Icon icon="ethereum" />` is a standard FontAwesome icon – no custom component needed.
+
+The full semantic icon reference lives at `docs-guide/tooling/reference-maps/icon-map.mdx` with usage guidance and scan counts.
+
+## Badge Usage
+
+### Badge colour vocabulary
+
+`<Badge>` is a Mintlify global component – no import needed.
+
+| Colour | Meaning |
+|---|---|
+| `green` | Workload: Dual/Realtime AI. Ownership: Livepeer Product. State: confirmed |
+| `blue` | Workload: Video. Ownership: public |
+| `purple` | Workload: AI. Ownership: commercial product |
+| `yellow` | Status: draft/conditional. Funding: SPE-funded |
+| `gray` | Configuration values, neutral reference metadata |
+| `surface` | Neutral states, compound icon badges, metadata |
+| `orange` | Warnings, caution states |
+| `red` | Critical/destructive actions |
+
+<Note>
+Green is context-dependent: in solutions it means "Livepeer Product", in gateways it means "Dual workload", in pricing it means "ETH(wei)". Context determines meaning.
+</Note>
+
+### On-chain / off-chain markers
+
+```mdx icon="terminal"
+<Icon icon="link" size={16} />         {/* on-chain */}
+<Icon icon="floppy-disk" size={16} />  {/* off-chain */}
+```
+
+### Workload type triad
+
+```mdx icon="terminal"
+<Badge color="blue">Video</Badge>
+<Badge color="purple">AI</Badge>
+<Badge color="green">Dual</Badge>
+```
+
+The full badge reference lives at `docs-guide/tooling/reference-maps/badge-map.mdx`.
+
+## Responsive Design
+
+Use **Tailwind responsive prefixes** for breakpoint-based layouts. These work in both MDX and JSX.
+
+| Prefix | Breakpoint | Viewport |
+|---|---|---|
+| (none) | `< 640px` | Mobile-first default |
+| `sm:` | `>= 640px` | Small tablets |
+| `md:` | `>= 768px` | Tablets |
+| `lg:` | `>= 1024px` | Desktop |
+| `xl:` | `>= 1280px` | Large desktop |
+
+Test at three viewports minimum: **375px** (iPhone SE), **768px** (iPad), **1024px+** (Desktop).
+
+## Accessibility Checklist
+
+### Required for every page
+
+- **Single H1** – set via frontmatter `title:` property, not in content
+- **Sequential heading hierarchy** – H2 under H1, H3 under H2, no gaps
+- **Descriptive alt text** on all images
+- **Meaningful link text** – no "click here" or bare URLs
+- **Language declared** on code blocks
+
+### Required for components
+
+- **Never remove focus indicators** – do not use `outline: "none"` or `outline: 0`
+- **Keyboard accessible** – all interactive elements reachable via Tab
+- **ARIA labels** on icon-only buttons and inputs
+- **Colour contrast** – body text minimum 4.5:1, large text minimum 3:1
+
+### Tooling
+
+```bash icon="terminal"
+mint a11y                    # Full check
+mint a11y --skip-contrast    # Alt text only
+mint a11y --skip-alt-text    # Contrast only
+```
 
 ## Typography
 
@@ -432,7 +703,7 @@ You can configure LaTeX rendering in `docs.json` under `styles.latex` to overrid
 
 - **Portals** - Use CardGroups for key entry points
 - **Guides** - Use Steps for sequential instructions
-- **References** - Use Tables or Accordions for organized data
+- **References** - Use Tables or Accordions for organised data
 - **Quickstarts** - Use Tabs for different paths (OS, on-chain/off-chain)
 
 ## Component Usage
@@ -694,7 +965,7 @@ export function MyComponent() {
 import React, { useState, useEffect } from 'react';
 ```
 
-#### 7. Icon Component Behavior
+#### 7. Icon Component Behaviour
 
 **CRITICAL:** Mintlify's `<Icon>` component renders custom icons as `<img alt="Image">` elements, NOT inline SVG.
 
@@ -820,9 +1091,9 @@ git checkout -b docs-plan/XX-task-name
 
 ## Best Practices
 
-### Code Organization
+### Code Organisation
 
-1. **Keep components in `/snippets/components/`** organized by purpose:
+1. **Keep components in `/snippets/components/`** organised by purpose:
    - `primitives/` - Basic UI elements
    - `layout/` - Layout components
    - `display/` - Media and embeds
@@ -844,8 +1115,8 @@ git checkout -b docs-plan/XX-task-name
 
 ### Component Guidelines
 
-1. **Use CSS Custom Properties ONLY** - Never use ThemeData or hardcode colors
-2. **Reference Variables from style.css** - All theme colors are in `style.css` as CSS variables
+1. **Use CSS Custom Properties ONLY** - Never use ThemeData or hardcode colours
+2. **Reference Variables from style.css** - All theme colours are in `style.css` as CSS variables
 3. **Test Components** - Ensure components render correctly
 4. **Handle Children Properly** - Always handle children as arrays when mapping
 5. **Document Props** - Include JSDoc comments for component props
@@ -899,8 +1170,8 @@ Before submitting documentation:
 - All links work and point to correct pages
 - Code examples are accurate and tested
 - Images load and have appropriate alt text
-- Components use theme-aware colors
-- No hardcoded colors that should adapt to theme
+- Components use theme-aware colours
+- No hardcoded colours that should adapt to theme
 - Components render correctly
 - No console errors in browser dev tools
 - MDX syntax errors checked and fixed
@@ -979,7 +1250,7 @@ This repository uses Git pre-commit hooks to automatically enforce the style gui
 The pre-commit hooks automatically check for:
 
 - **Deprecated `ThemeData` Usage** - Blocks imports of `ThemeData` from `snippets/styles/themeStyles.jsx`
-- **Hardcoded Theme Colors** - Warns about direct hex color codes that should use CSS Custom Properties
+- **Hardcoded Theme Colours** - Warns about direct hex colour codes that should use CSS Custom Properties
 - **Relative Snippets Imports** - Flags imports from `snippets/` that use relative paths instead of absolute paths
 - **Unnecessary Imports** - Warns about explicit imports for Mintlify's globally available components and React hooks
 - **Syntax Validation** - Checks MDX, JSON, Shell, and JavaScript syntax
@@ -1069,7 +1340,7 @@ npm run test:browser    # Browser rendering tests
 #### What Gets Tested
 
 **Style Guide Tests** (`test:style`):
-- CSS Custom Properties usage (no ThemeData, no hardcoded colors)
+- CSS Custom Properties usage (no ThemeData, no hardcoded colours)
 - No inline styles in MDX files
 - No em dashes in English `v2` docs prose (use ` – ` or rewrite the sentence)
 - No Tailwind classes

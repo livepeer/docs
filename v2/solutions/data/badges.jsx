@@ -20,9 +20,4 @@ export const embodyBadges = [
   { color: 'red', label: 'Agents' },
 ]
 
-export const glossaryBadges = [
-  { color: 'blue', label: 'Video' },
-  { color: 'purple', label: 'AI' },
-  { color: 'green', label: 'Livepeer' },
-  { color: 'yellow', label: 'Technical' },
-]
+// glossaryBadges moved to /snippets/data/glossary-badges.jsx (cross-tab shared data)

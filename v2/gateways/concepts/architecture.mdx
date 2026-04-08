@@ -2,9 +2,11 @@
 title: Gateway Architecture
 sidebarTitle: Architecture
 description: >-
-  How gateways fit into the Livepeer stack - layer position, internal components,
-  request flow, system interactions, and the dual video/AI pipeline.
-PageType: concept
+  How gateways fit into the Livepeer stack - layer position, internal components, request flow, system interactions, and
+  the dual video/AI pipeline.
+lifecycleStage: discover
+complexity: beginner
+pageType: concept
 audience: gateway
 purpose: explain
 status: current
@@ -23,16 +25,16 @@ keywords:
   - orchestrator
   - remote signer
   - Arbitrum
-og:image: /snippets/assets/media/og-images/fallback.png
-og:image:alt: Livepeer Docs social preview image
-og:image:type: image/png
-og:image:width: 1200
-og:image:height: 630
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 
 Gateways sit at the application layer of Livepeer. They accept requests from apps, route them to orchestrators, and coordinate payment and failover across the compute and protocol layers.
 
@@ -47,7 +49,7 @@ The Livepeer network has three functional layers. Gateways operate at the **appl
 <ScrollableDiagram title="Layered Architecture" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 graph LR
     classDef default stroke-width:2px
     subgraph APP[Application Layer]
@@ -165,7 +167,7 @@ The gateway node (`LivepeerNode` in go-livepeer) runs two independent session ma
 <ScrollableDiagram title="Dual Gateway Architecture: Video & AI Pipelines" maxHeight="800px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     subgraph INPUT["Input Sources"]
         direction LR
@@ -276,7 +278,7 @@ This is what happens when an application sends a request to a gateway, from inta
 <ScrollableDiagram title="Gateway Request Flow" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 graph TD
     classDef default stroke-width:2px
     A["Application<br/>Daydream, ComfyUI, BYOC"] -->|Job Request| B["Gateway<br/>Job Intake, Pricing, Capability Match"]

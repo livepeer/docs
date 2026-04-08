@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-localized-docs-json
- * @type        
- * @concern     
- * @niche       
- * @purpose     feature:translation
+ * @type        integrator
+ * @concern     integrations
+ * @niche       language-translation
+ * @purpose     
  * @description Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    on-demand, translation pipeline)
  * @scope       docs.json, operations/scripts/i18n
  * @usage       node operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js [flags]

@@ -2,10 +2,11 @@
 title: On-Chain Metrics and Monitoring
 sidebarTitle: On-Chain Metrics
 description: >-
-  Monitor on-chain Gateway activity - TicketBroker contract events, Arbiscan watchlists,
-  deposit and reserve verification, gas price impact, and deposit depletion tracking on
-  Arbitrum.
-PageType: guide
+  Monitor on-chain Gateway activity - TicketBroker contract events, Arbiscan watchlists, deposit and reserve
+  verification, gas price impact, and deposit depletion tracking on Arbitrum.
+lifecycleStage: operate
+complexity: intermediate
+pageType: guide
 audience: gateway
 purpose: operate
 status: current
@@ -22,11 +23,11 @@ keywords:
   - reserve
   - gas
   - probabilistic micropayments
-og:image: /snippets/assets/media/og-images/fallback.png
-og:image:alt: Livepeer Docs social preview image
-og:image:type: image/png
-og:image:width: 1200
-og:image:height: 630
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 {/* TODO:
 Terminology Validation:
@@ -53,8 +54,8 @@ Human:
 
 import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Note>
   This page applies to **Gateways running in on-chain operational mode** (<Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>). Off-chain Gateways do not interact with Arbitrum contracts and can skip this page.
@@ -276,7 +277,7 @@ Sort `RedeemWinningTicket` events by timestamp to see redemption frequency and v
 
 If the Gateway stops routing jobs without clear error messages, work through this checklist in order:
 
-<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+<StyledSteps iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
   <StyledStep title="Check Prometheus deposit" icon="gauge-high">
     `livepeer_gateway_deposit` - if zero, top up immediately via <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />. If non-zero, continue.
   </StyledStep>

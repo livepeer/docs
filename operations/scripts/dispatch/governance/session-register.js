@@ -1,11 +1,11 @@
 /**
  * @script      session-register
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Registers active sessions and tracks which files each session touches
+ * @purpose     
  * @description SessionStart hook that registers this session in a shared registry file.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    SessionStart hook / PostToolUse hook → writes to /tmp/claude-session-registry
  * @scope       .claude/settings.json SessionStart + PostToolUse hooks
  * @usage       Called automatically by Claude Code hooks. Not invoked directly.

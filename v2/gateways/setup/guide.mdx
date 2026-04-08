@@ -2,9 +2,11 @@
 title: Gateway Operators Guide
 sidebarTitle: Guide
 description: >-
-  Connect Applications with Video & AI services by running your own Gateway! This page
-  gives an overview of the steps to run a Gateway node.
-PageType: guide
+  Connect Applications with Video & AI services by running your own Gateway! This page gives an overview of the steps to
+  run a Gateway node.
+lifecycleStage: setup
+complexity: intermediate
+pageType: guide
 audience: gateway
 purpose: operate
 status: current
@@ -17,11 +19,11 @@ keywords:
   - connect
   - applications
   - video
-og:image: /snippets/assets/media/og-images/fallback.png
-og:image:alt: Livepeer Docs social preview image
-og:image:type: image/png
-og:image:width: 1200
-og:image:height: 630
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 reviewed: true
 ---
 {/* TODO:
@@ -32,14 +34,14 @@ Verify:
 */}
 
 import { GotoLink, LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
-import { StyledTable } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer maxWidth="fit-content" margin="0 auto 2rem auto">
     <Card title={<CustomCardTitle icon="github" title="Go-Livepeer" style={{margin: "0 0.5rem -0.2rem 0"}} />} href="https://github.com/livepeer/go-livepeer" />
@@ -48,7 +50,7 @@ import { StyledTable } from '/snippets/components/wrappers/tables/Tables.jsx'
 <Quote>
 Gateways are essential infrastructure in the Livepeer network. They
 provide the service coordination layer (routing & verification) that connects applications
-to the decentralized GPU compute layer (DePIN). The requirements,
+to the decentralised GPU compute layer (DePIN). The requirements,
 setup steps, and best practices for running a Gateway node.
 </Quote>
 
@@ -158,7 +160,7 @@ This guide will walk through deployment of a gateway using `go-livepeer` and cov
 <Columns cols={2}>
 <FlexContainer justify="center">
   <Mermaid
-    chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': '#0d0d0d', 'clusterBorder': '#2d9a67' }}}%%
+    chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
       flowchart TB
       subgraph check["Check"]
           A["Check network & hardware requirements"]
@@ -253,7 +255,7 @@ This guide will walk through deployment of a gateway using `go-livepeer` and cov
 
 <ScrollableDiagram title="Dual Gateway Architecture: Video & AI Pipelines" maxHeight="600px">
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart LR
     subgraph INPUT["Input Sources"]
         CAM["Camera / RTMP / WebRTC"]
@@ -318,7 +320,7 @@ flowchart LR
 <Columns cols={2}>
     <Card
         title={<CustomCardTitle icon="cogs" title="Setup Options" style={{}} />}
-        href="../guides/deployment-details/setup-options"
+        href="/v2/gateways/guides/deployment-details/setup-options"
         horizontal
         arrow
         >
@@ -330,7 +332,7 @@ flowchart LR
     </Card>
     <Card
         title={<CustomCardTitle icon="file-code" title="Gateway Tutorials" style={{}} />}
-        href="../guides/tutorials/tutorials-resources"
+        href="/v2/gateways/guides/tutorials/tutorials-resources"
         horizontal
         arrow
         >
@@ -354,7 +356,7 @@ flowchart LR
     </Card>
     <Card
         title={<CustomCardTitle icon="chart-line" title="AI Pipelines" style={{}} />}
-        href="../guides/node-pipelines/ai-pipelines"
+        href="/v2/gateways/guides/node-pipelines/ai-pipelines"
         horizontal
         arrow
         >

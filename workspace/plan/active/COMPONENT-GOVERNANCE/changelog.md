@@ -161,3 +161,108 @@
 | Governance scripts updated | 4 |
 | Scripts archived | 3 |
 | Lines of dead code archived | 3,021+ |
+
+## 2026-04-08 — elements/ consolidation (component-naming-audit)
+
+### File consolidations
+- `Spacer.jsx` → merged into `Divider.jsx` (single spacing file)
+- `CustomCardTitle.jsx` → merged into `Text.jsx` (single text file)  
+- `BlinkingIcon` → moved from `Links.jsx` to `Icons.jsx` (all icons in one file)
+- `SocialLinks.jsx` → merged into `Links.jsx` (all links in one file)
+- `CustomCallout` + `TipWithArrow` → moved from `Links.jsx` to new `Callouts.jsx`
+- `CalloutWrapper` → moved to `wrappers/callouts/CalloutWrapper.jsx`
+- `A11y.jsx` → renamed to `FocusableScrollRegion.jsx`
+- `PreviewCallouts.jsx` → renamed to `Callouts.jsx`
+
+### Component merges
+- `StatusCallout` (variant="coming-soon" | "preview") replaces `ComingSoonCallout` + `PreviewCallout`
+- `IconCallout` (showArrow prop) replaces `CustomCallout` + `TipWithArrow`
+
+### Deletions
+- `BlinkingTerminal` — pure alias for BlinkingIcon, zero imports
+
+### Backwards compatibility
+- All old export names maintained as deprecated re-exports
+- 146 files updated with new import paths
+- VS Code snippets updated (.vscode/lp-components, components, templates)
+- tools/dev/authoring/add-callouts.js updated from legacy paths
+
+### Archived
+- `snippets/components/x-archive/elements-spacing/Spacer.jsx`
+- `snippets/components/x-archive/elements-text/CustomCardTitle.jsx`
+- `snippets/components/x-archive/elements-callouts/PreviewCallouts.jsx`
+- `snippets/components/x-archive/elements-social/SocialLinks.jsx`
+
+## 2026-04-08 — wrappers/ restructuring (component-naming-audit)
+
+### Moved to displays/
+- `tables/` (Tables.jsx, Table.jsx, SearchTable.jsx, ApiBaseUrlsTable.mdx)
+- `cards/` (CustomCards.jsx, ShowcaseCards.jsx, SolutionCard.jsx, SolutionItem.jsx)
+- `grids/` (CardCarousel.jsx, QuadGrid.jsx)
+- `accordions/` (AccordionGroupList.jsx, AccordionLayout.jsx)
+- `steps/` (Steps.jsx, ListSteps.jsx, Lists.jsx)
+
+### Containers consolidation
+- `Containers.jsx`: absorbed FlexContainer, GridContainer (from Layout.jsx), CalloutWrapper
+- `Layout.jsx`: now houses LazyLoad + ScrollBox (behaviour utilities)
+
+### New components
+- `BadgeRow` in Badges.jsx (variant="text"|"icon", replaces BadgeWrapper+IconBadgeWrapper)
+
+### Moved to elements/
+- `DataWrap` → `elements/text/DataWrap.jsx`
+
+### Archived
+- `x-archive/wrappers-containers/LazyLoad.jsx`
+- `x-archive/wrappers-containers/ScrollBox.jsx`
+- `x-archive/wrappers-containers/CalloutWrapper.jsx`
+
+### Propagation
+- 611 files updated with new import paths
+- VS Code snippets (4 files), tools/dev, editor-extensions updated
+
+## 2026-04-08 — displays/ consolidation (component-naming-audit)
+
+### File consolidations (single file per category)
+- `Tables.jsx`: absorbed Table.jsx (DynamicTable/V2) + SearchTable.jsx (SearchTable/V2) — 1291 lines
+- `Cards.jsx`: absorbed CustomCards + ShowcaseCards + SolutionCard + SolutionItem
+- `Grids.jsx`: absorbed CardCarousel + QuadGrid
+- `Accordions.jsx`: absorbed AccordionGroupList + AccordionLayout
+- `Steps.jsx`: absorbed ListSteps.jsx + Lists.jsx (StepList, StepLinkList, UpdateLinkList)
+
+### Renames
+- `ZoomableDiagram.jsx` → `ScrollableDiagram.jsx` (131 imports propagated)
+
+### Moves
+- `HistoricalContractTable.jsx` → `integrators/feeds/` (data-driven feed)
+
+### Deletions
+- `BlockchainContractsRenderers.jsx` (dead — 0 imports)
+
+### Deprecations
+- ShowcaseVideo, YouTubeVideoDownload (broken), YouTubeVideoData (duplicate)
+- ResponseFieldExpandable, ResponseFieldAccordion (superseded by ResponseFieldGroup)
+
+### Propagation
+- 344 files updated
+
+## 2026-04-08 — scaffolding/ + integrators/ + cross-cutting (component-naming-audit)
+
+### scaffolding/
+- `HeroGif.jsx` -> `StarfieldCanvas.jsx` (45 imports propagated)
+- FrameMode `Divider` renamed to `FrameModeDivider` (deprecated alias kept)
+
+### integrators/
+- `Data.jsx` -> `BlogCards.jsx` (87 imports propagated)
+- `ExternalContent.jsx` merged into `DataEmbed.jsx`
+- `contractVerifierData.js` archived (dead — 0 imports)
+- `ShowcaseCards.jsx` archived (duplicate — redirected to displays/cards/Cards.jsx)
+
+### cross-cutting fixes
+- `component-governance-utils.js`: bridge @category/@subcategory <-> @type/@subniche tag migration gap
+- `@accepts` moved from required to optional governance fields
+- Category folder mismatch downgraded from error to warning (pending batch tag update)
+- Deprecated components given full JSDoc + @see tags
+
+### Known issue
+- `generate-component-registry.js` cannot regenerate — 19 pre-existing missing JSDoc blocks across re-exports and legacy components block generation. Registry frozen at 2026-03-22 data. Requires a batch JSDoc repair pass (separate thread).

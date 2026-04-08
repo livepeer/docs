@@ -2,12 +2,13 @@
 title: Livepeer Token
 sidebarTitle: Token (LPT) Utility
 description: >-
-  Livepeer Token (LPT) is the native proof-of-stake token of the Livepeer
-  network. It is the key to participating in the protocol: to operate or
-  delegate in the transcoding network, to earn rewards, and to vote on
-  governance proposals. This page details the technical attributes, token supply
-  dynamics, inflation model, and contract integrations that define LPT’s role.
-PageType: concept
+  Livepeer Token (LPT) is the native proof-of-stake token of the Livepeer network. It is the key to participating in the
+  protocol: to operate or delegate in the transcoding network, to earn rewards, and to vote on governance proposals.
+  This page details the technical attributes, token supply dynamics, inflation model, and contract integrations that
+  define LPT’s role.
+lifecycleStage: discover
+complexity: intermediate
+pageType: concept
 keywords:
   - livepeer
   - about
@@ -21,7 +22,7 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: concept
 ---
 {/* This page describes:
@@ -40,24 +41,24 @@ import { AccordionTitleWithArrow } from '/snippets/components/elements/text/Text
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 
-<div style={{ display: "flex", justifyContent: "center"}}>
+<FlexContainer justify="center">
  <CardTitleTextWithArrow icon="hand-holding-dollar" horizontal href="https://www.livepeer.org/lpt"> Livepeer Token </CardTitleTextWithArrow>
-</div>
+</FlexContainer>
 
-<div style={{ display: "flex", margin: "0 1rem" }}>
+<FlexContainer style={{margin: "0 1rem"}}>
    <Tip>
-      <span style={{fontSize: '1.0rem'}}>
+      <Subtitle style={{fontSize: '1.0rem'}}>
  _**Did you know?**_
-      </span>
+      </Subtitle>
  Livepeer’s token distribution had no [ICO](https://messari.io/report/merkle-mine). <br/> <br/>
  Instead, the initial 10 million LPT supply was distributed via a community [Merkle Mine](https://github.com/livepeer/merkle-mine),
  allowing a wide set of participants to claim tokens at network launch.
  <Icon icon="github" size={18}/> {" "} <LinkArrow label={<span style={{color: "var(--hero-text)"}}>View the github code</span>} href="https://github.com/livepeer/merkle-mine" newline={false} borderColor="var(--accent)" />
    </Tip>
-</div>
+</FlexContainer>
 {/* <Quote>
 The **Livepeer Token (LPT)** is the staking and coordination token of the Livepeer protocol. LPT underpins protocol security, work selection, reward distribution, and decentralised governance incentivising optimal network service outcomes.
 </Quote> */}
@@ -67,14 +68,14 @@ The **Livepeer Token (LPT)** is the staking and coordination token of the Livepe
 ## LP Token
 Livepeer is a utility token and core component of the Livepeer Protocol. Used to secure and incentivise the decentralised network to deliver its key value proposition of reliable, cost-efficient, powerful AI and video streaming workflows.
 
-<div style={{ display: "flex", justifyContent: "center", width: "fit-content", margin: "0 auto" }}>
+<CenteredContainer preset="fitContent">
    <Accordion title={<div style={{color: "var(--accent)"}}>ELI5: Livepeer Token</div>} icon="user-crown">
  LPT is akin to a membership key for Liveper or LPT is like the loyalty token for useful network participants.
          - You need it to join and earn in the Livepeer system.
          - If you hold LPT, you can rent out your GPU (participate) or vote on network rules.
          - Over time, the network prints new LPT (adds to the money supply) to reward people who help run it. Those who have put their LPT into the system (staked) get extra tokens.
    </Accordion>
-</div>
+</CenteredContainer>
 
 One of the biggest competitive advantages of Livepeer is its decentralisation - creating free markets and competitive pricing. This network of decentralised nodes, orchestrators, gateways and broadcasters, and the flow of payments in the network for doing useful work, is underpinned by the Livepeer Token (LPT).
 
@@ -97,13 +98,13 @@ The Livepeer Token (LPT) has multiple key functions within the protocol:
  <Info>LPT is **not used** for service payments for video and AI compute (e.g. Transcoding, AI inference) -> those are paid in ETH or other currencies via separate payment channels. </Info>
 
 <DynamicTable
-  tableTitle={<span style={{fontSize: '0.9rem'}}>LPT Usage</span>}
+  tableTitle={<Subtitle style={{fontSize: '0.9rem'}}>LPT Usage</Subtitle>}
   headerList={["Use Case", "LPT Functionality"]}
   itemsList={[
     { "Use Case": "Protocol Security", "LPT Functionality": "Bonded stake determines active Orchestrators" },
     { "Use Case": "Inflation Rewards", "LPT Functionality": "Only bonded LPT receives newly minted token share" },
     { "Use Case": "Governance", "LPT Functionality": "Voting rights restricted to bonded LPT holders" },
-    { "Use Case": "Slashing Guarantee", "LPT Functionality": "Orchestrators risk LPT loss for malicious behavior" },
+    { "Use Case": "Slashing Guarantee", "LPT Functionality": "Orchestrators risk LPT loss for malicious behaviour" },
     { "Use Case": "Delegation Incentives", "LPT Functionality": "Delegators earn yield by bonding LPT to performant Orchestrators" },
   ]}
   margin="0 0.5rem -2rem 0.5rem"
@@ -115,7 +116,7 @@ The Livepeer Token (LPT) has multiple key functions within the protocol:
 
 <Accordion title="See Initial LPT Distribution" icon="chart-pie">
    ```mermaid
-   %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'pieStrokeColor': '#0d0d0d', 'pieOuterStrokeColor': '#0d0d0d', 'pieSectionTextColor': '#fff', 'pieLegendTextColor': '#fff', 'pieTitleTextColor': '#fff', 'pie1': '#2d9a67', 'pie2': '#1a794e', 'pie3': '#08a045', 'pie4': '#004225' }}}%%
+   %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
    pie title Initial LPT Distribution 2018
    "Community - MerkleMine" : 63.44
    "Team & Founders" : 19.00
@@ -180,7 +181,7 @@ This mechanism introduces a clear opportunity cost for passivity, encouraging ac
 <ScrollableDiagram title="LPT Staking and Reward Flow" maxHeight="350px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
 D([Delegator - LPT Holder]) -->|Stake LPT to| O([Orchestrator])
 O -->|Runs Transcoding| Process((Off-chain Video Service))

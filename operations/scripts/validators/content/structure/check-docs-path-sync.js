@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-docs-path-sync
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Docs path sync validator — detects staged page moves that require docs.json or governed path reference rewrites.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       staged
  * @usage       node operations/scripts/validators/content/structure/check-docs-path-sync.js --staged
@@ -15,7 +15,7 @@
 const sync = require('../../../config/docs-path-sync');
 
 function parseArgs(argv) {
-  const args = { staged: true, json: false, help: false, from: '', to: '' };
+  const args = { staged: true, json: false, help: false, from: '', to: '', files: [] };
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
     if (token === '--help' || token === '-h') args.help = true;
@@ -23,6 +23,8 @@ function parseArgs(argv) {
     else if (token === '--json') args.json = true;
     else if (token === '--from') args.from = String(argv[index + 1] || '').trim(), index += 1;
     else if (token === '--to') args.to = String(argv[index + 1] || '').trim(), index += 1;
+    else if (token === '--files') { (String(argv[index + 1] || '')).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); index += 1; }
+    else if (token.startsWith('--files=')) { token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); }
     else throw new Error(`Unknown argument: ${token}`);
   }
   if ((args.from && !args.to) || (!args.from && args.to)) throw new Error('--from and --to must be provided together');

@@ -6,7 +6,7 @@
  * @niche       compliance
  * @purpose     governance:new-file-gate
  * @description Validates newly staged files have required governance metadata (JSDoc, frontmatter, workflow headers)
- * @mode        read-only
+ * @mode        check
  * @pipeline    pre-commit -> staged new files -> exit-code, stdout:violations
  * @scope       full-repo
  * @usage       node operations/scripts/validators/governance/compliance/check-new-file-governance.js [--all|--staged]

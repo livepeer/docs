@@ -1,0 +1,150 @@
+/**
+ * @component StyledTable
+ * @category wrappers
+ * @subcategory tables
+ * @status stable
+ * @description Full-width table with header row styling and rounded container.
+  * @aiDiscoverability none
+ * @param {any} children - children prop.
+ * @param {string} [variant="default"] - variant prop.
+ * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
+ */
+export const StyledTable = ({ children, variant = "default", style = {}, className = "", ...rest }) => {
+  const wrapperVariants = {
+    default: {
+      border: "1px solid var(--lp-color-border-default)",
+      backgroundColor: "var(--lp-color-bg-card)",
+      overflow: "hidden",
+    },
+    bordered: {
+      border: "2px solid var(--lp-color-accent)",
+      backgroundColor: "var(--lp-color-bg-page)",
+      overflow: "hidden",
+    },
+    minimal: {
+      border: "none",
+      backgroundColor: "transparent",
+      overflow: "visible",
+    },
+  };
+
+  return (
+    <div
+      data-docs-styled-table-shell
+      className={className}
+      style={{
+        width: "100%",
+        padding: 0,
+        margin: 0,
+        ...wrapperVariants[variant],
+        ...style,
+      }}
+      {...rest}
+    >
+      <table
+        data-docs-styled-table
+        style={{
+          width: "100%",
+          // Neutralize browser/Mintlify table spacing so bordered tables sit flush.
+          borderCollapse: "collapse",
+          borderSpacing: 0,
+          margin: 0,
+          backgroundColor: "transparent",
+        }}
+      >
+        {children}
+      </table>
+    </div>
+  );
+};
+
+/**
+ * @component TableRow
+ * @category wrappers
+ * @subcategory tables
+ * @status stable
+ * @description Table row with optional header styling and hover effect.
+  * @aiDiscoverability none
+ * @param {any} children - children prop.
+ * @param {boolean} [header=false] - header prop.
+ * @param {boolean} [hover=false] - hover prop.
+ * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
+ */
+export const TableRow = ({
+  children,
+  header = false,
+  hover = false,
+  style = {},
+  className = "",
+  ...rest
+}) => {
+  const rowId = `table-row-${Math.random().toString(36).substr(2, 9)}`;
+
+  return (
+    <>
+      {hover && (
+        <style>{`
+          #${rowId}:hover {
+            background-color: var(--lp-color-bg-card);
+          }
+        `}</style>
+      )}
+      <tr
+        id={rowId}
+        className={className}
+        style={{
+          ...(header && {
+            backgroundColor: "var(--lp-color-accent-strong)",
+            color: "var(--lp-color-on-accent)",
+            fontWeight: "bold",
+          }),
+          ...style,
+        }}
+        {...rest}
+      >
+        {children}
+      </tr>
+    </>
+  );
+};
+
+/**
+ * @component TableCell
+ * @category wrappers
+ * @subcategory tables
+ * @status stable
+ * @description Table cell that switches between th and td based on header prop.
+  * @aiDiscoverability none
+ * @param {any} children - children prop.
+ * @param {string} [align="left"] - align prop.
+ * @param {boolean} [header=false] - header prop.
+ * @param {object} [style={}] - style prop.
+  * @param {string} [className=''] - Optional CSS class override.
+ */
+export const TableCell = ({
+  children,
+  align = "left",
+  header = false,
+  style = {},
+  className = "",
+  ...rest
+}) => {
+  const Component = header ? "th" : "td";
+
+  return (
+    <Component
+      className={className}
+      style={{
+        padding: "0.75rem 1rem",
+        textAlign: align,
+        border: header ? "none" : "1px solid var(--lp-color-border-default)",
+        ...style,
+      }}
+      {...rest}
+    >
+      {children}
+    </Component>
+  );
+};

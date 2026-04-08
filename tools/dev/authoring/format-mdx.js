@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      format-mdx
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       tools/dev/authoring, tools/editor-extensions/authoring-tools, tests/unit
  * @usage       node tools/dev/authoring/format-mdx.js [--check|--write] [--files a,b]

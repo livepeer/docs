@@ -2,11 +2,12 @@
 title: RFP Aims Implementation
 sidebarTitle: Aims
 description: >-
-  This page articulates the philosophical framework that underpinned the v2
-  engagement and demonstrates how the RFP's three overarching themes for
-  **stakeholder-focused**, **AI-first**, and **future-proofed** documentation,
-  were delivered across every layer of the system.
-Purpose: operations
+  This page articulates the philosophical framework that underpinned the v2 engagement and demonstrates how the RFP's
+  three overarching themes for **stakeholder-focused**, **AI-first**, and **future-proofed** documentation, were
+  delivered across every layer of the system.
+lifecycleStage: discover
+complexity: intermediate
+purpose: operations
 pageType: guide
 keywords:
   - livepeer
@@ -21,7 +22,7 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: internal
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 ---
 import { Quote } from "/snippets/components/displays/quotes/Quote.jsx";
 
@@ -134,7 +135,7 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
 
 
         ## Constraints
-        Full AEO (Answer Engine Optimization) beyond semantic structure has not been explicitly audited. Structured data markup (JSON-LD) has not been verified across all pages.
+        Full AEO (Answer Engine Optimisation) beyond semantic structure has not been explicitly audited. Structured data markup (JSON-LD) has not been verified across all pages.
         Analytics tracking at anchor level was not implemented, meaning there is no feedback signal yet for which sections LLMs are retrieving most frequently.
  These represent the next-generation AEO layer instead of a failure of the current implementation.
 
@@ -174,13 +175,13 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
  The contribution model was designed from the outset to support open-source contribution via GitHub PRs, beyond internal authorship. Issue templates, PR templates, CODEOWNERS, and a Discord issue intake workflow make external contribution low-friction. The governance.mdx and source-of-truth-policy.md documents define canonical ownership boundaries so contributors know exactly where content authority lives.
 
         ### Implementation: How v2 Delivers Future-Proofing
-        - **[Technical]** 58-script test and maintenance suite: MDX validity tests, import correctness, style compliance, browser validation, script self-documentation enforcement, pages catalog synchronisation, and automated quality gates. New scripts cannot enter the codebase without self-documenting headers. New pages must pass structural validation before merge.
+        - **[Technical]** 58-script test and maintenance suite: MDX validity tests, import correctness, style compliance, browser validation, script self-documentation enforcement, pages catalogue synchronisation, and automated quality gates. New scripts cannot enter the codebase without self-documenting headers. New pages must pass structural validation before merge.
 
         - **[Technical]** 17 GitHub Actions workflows covering PR validation, browser tests, link checker, forum/blog/YouTube/showcase data refresh, SDK generation, Discord issue intake, and auto-labelling. CI enforcement means quality gates cannot be bypassed.
 
         - **[DX]** lpd CLI: a unified maintainer command centre (lpd setup, dev, test, ci, hooks, scripts) with .lpdignore pattern system. Any future maintainer can run lpd dev to get a full local environment; lpd test to validate all quality gates. The barrier to entry for new contributors is dramatically lower.
 
-        - **[Internal docs]** docs-guide/ internal operating system: overview.mdx (source-of-truth model, update rules), features/feature-map.mdx (repo feature areas), features/architecture-map.mdx (data/control flow with Mermaid diagram), tooling/lpd-cli.mdx (CLI operator runbooks), policies/quality-gates.mdx (local/CI enforcement matrix), features/automations.mdx (automation surfaces), frameworks/content-system.mdx (IA model, copy principles), features/data-integrations.mdx (API specs, external feeds). Three generated catalogs: scripts-catalog.mdx, workflows-catalog.mdx, templates-catalog.mdx - all auto-updated when contents change.
+        - **[Internal docs]** docs-guide/ internal operating system: overview.mdx (source-of-truth model, update rules), features/feature-map.mdx (repo feature areas), features/architecture-map.mdx (data/control flow with Mermaid diagram), tooling/lpd-cli.mdx (CLI operator runbooks), policies/quality-gates.mdx (local/CI enforcement matrix), features/automations.mdx (automation surfaces), frameworks/content-system.mdx (IA model, copy principles), features/data-integrations.mdx (API specs, external feeds). Three generated catalogues: scripts-catalogue.mdx, workflows-catalogue.mdx, templates-catalogue.mdx - all auto-updated when contents change.
 
         - **[Governance]** 8 GitHub issue templates + 2 PR templates. .github/CODEOWNERS defining content ownership. CONTRIBUTING/ directory with Git hooks, PR workflow, and style requirements. Discord issue intake workflow (discord-issue-intake.yml). Quarterly docs review process defined in Maintenance Playbook (Notion).
 
@@ -208,9 +209,9 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
 
         ### Auto-Documenting Infrastructure
         A documentation system that requires humans to manually document its own components will inevitably fall out of sync. V2 eliminates this category of drift by making the infrastructure self-documenting.
-        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. New-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer - human or AI - can read scripts-catalog.mdx (auto-generated from the headers) to understand every automation in the system.
+        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. New-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer - human or AI - can read scripts-catalogue.mdx (auto-generated from the headers) to understand every automation in the system.
 
-        - **[Scripts]** generate-docs-guide-indexes.js auto-generates the scripts catalog, workflow catalog, and template catalog in docs-guide/ whenever underlying files change. The internal maintainer knowledge system cannot drift from the actual repository contents because it is generated from them.
+        - **[Scripts]** generate-docs-guide-indexes.js auto-generates the scripts catalogue, workflow catalogue, and template catalogue in docs-guide/ whenever underlying files change. The internal maintainer knowledge system cannot drift from the actual repository contents because it is generated from them.
 
         - **[Scripts]** update-component-library.sh automatically creates and updates component library documentation in the Resource HUB whenever components change. Component documentation is generated from the component source - not maintained separately.
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-llms-files
- * @type        
- * @concern     
- * @niche       
+ * @type        generator
+ * @concern     discoverability
+ * @niche       llm
  * @purpose     
- * @description 
- * @mode        read-only
+ * @description * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, P6
  * @scope       operations/scripts, docs.json, v2
  * @usage       node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      add-callouts
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     qa:content-quality
  * @description Callout inserter — adds Note/Tip/Warning callout components to MDX files based on content patterns
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/dev/authoring
  * @usage       node tools/dev/authoring/add-callouts.js [flags]
@@ -28,9 +28,9 @@ const path = require('path');
 const REPO_ROOT = path.join(__dirname, '../../../');
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 
-const COMING_SOON_IMPORT = "import {ComingSoonCallout} from '/snippets/components/primitives/previewCallouts.jsx'";
+const COMING_SOON_IMPORT = "import { ComingSoonCallout } from '/snippets/components/elements/callouts/Callouts.jsx'";
 const COMING_SOON_COMPONENT = '<ComingSoonCallout />';
-const PREVIEW_IMPORT = "import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'";
+const PREVIEW_IMPORT = "import { PreviewCallout } from '/snippets/components/elements/callouts/Callouts.jsx'";
 const PREVIEW_COMPONENT = '<PreviewCallout />';
 
 /**
@@ -134,7 +134,7 @@ function hasCallout(content) {
  * @returns {string} - Updated content
  */
 function cleanupPreviewCalloutImports(content, usage) {
-  const importRegex = /^\s*import\s+\{([^}]*)\}\s+from\s+(['"])\/snippets\/components\/primitives\/previewCallouts\.jsx\2;?\s*$/;
+  const importRegex = /^\s*import\s+\{([^}]*)\}\s+from\s+(['"])\/snippets\/components\/(?:primitives\/previewCallouts|elements\/callouts\/Callouts)\.jsx\2;?\s*$/;
 
   return content
     .split('\n')
@@ -157,7 +157,7 @@ function cleanupPreviewCalloutImports(content, usage) {
 
       if (filtered.length === 0) return null;
 
-      return `import { ${filtered.join(', ')} } from ${quote}/snippets/components/primitives/previewCallouts.jsx${quote}${hasSemicolon ? ';' : ''}`;
+      return `import { ${filtered.join(', ')} } from ${quote}/snippets/components/elements/callouts/Callouts.jsx${quote}${hasSemicolon ? ';' : ''}`;
     })
     .filter((line) => line !== null)
     .join('\n');
@@ -177,7 +177,7 @@ function removeTopLevelCallout(content) {
   const afterMetadata = parts.slice(2).join('---');
 
   const lines = afterMetadata.split('\n');
-  const importRegex = /^\s*import\s+\{[^}]*\}\s+from\s+['"]\/snippets\/components\/primitives\/previewCallouts\.jsx['"];?\s*$/;
+  const importRegex = /^\s*import\s+\{[^}]*\}\s+from\s+['"]\/snippets\/components\/(?:primitives\/previewCallouts|elements\/callouts\/Callouts)\.jsx['"];?\s*$/;
   const calloutRegex = /^\s*<\s*(PreviewCallout|ComingSoonCallout)\b[^>]*\/>\s*$/;
 
   let firstNonImportIndex = -1;

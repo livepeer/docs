@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      codex-commit
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        dispatch
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description Codex commit helper — audits codex branch state and generates compliant commit messages
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, .githooks, ai-tools/ai-rules
  * @usage       node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]

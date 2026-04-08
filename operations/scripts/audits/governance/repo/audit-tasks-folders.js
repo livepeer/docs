@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-tasks-folders
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        audit
+ * @concern     governance
+ * @niche       repo
+ * @purpose     
  * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, tasks
  * @usage       node operations/scripts/audits/governance/repo/audit-tasks-folders.js [flags]

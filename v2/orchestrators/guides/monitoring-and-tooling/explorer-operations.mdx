@@ -2,10 +2,11 @@
 title: Explorer Operations
 sidebarTitle: Explorer Guide
 description: >-
-  A walkthrough of every metric on your Livepeer Explorer orchestrator page —
-  what each number means, what healthy looks like, and what to do when something
-  is wrong.
-Keywords:
+  A walkthrough of every metric on your Livepeer Explorer orchestrator page — what each number means, what healthy looks
+  like, and what to do when something is wrong.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - explorer
   - orchestrator
@@ -24,11 +25,11 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep Explorer guidance practical, route unresolved fact checks to internal comments only, and keep cross-links in the supporting pages. */}
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
 Use the Livepeer Explorer to read the public state of your orchestrator: stake, cuts, reward calls, fee earnings, and service URI. Every number here comes from on-chain data indexed from Arbitrum, so the page is best used to confirm protocol state, compare your settings with peers, and spot drift between what you intended and what the network sees.
@@ -45,7 +46,7 @@ https://explorer.livepeer.org/accounts/<your-address>/orchestrating
 Before diving into metrics, understanding the Explorer's scope avoids confusion.
 
 **What it shows:**
-- On-chain state as written to Arbitrum — stake, cuts, reward calls, fee earnings
+- On-chain state as written to Arbitrum – stake, cuts, reward calls, fee earnings
 - Protocol-level data: your registered service URI, your active/inactive status
 - Your delegators and their individual stake amounts
 
@@ -85,7 +86,7 @@ This is the sum of your self-stake and all delegated stake. It is the single mos
 <Accordion  title="Self-stake vs delegated stake" icon="coins">
 Your self-stake is the LPT you bonded to yourself. Delegated stake comes from LPT holders who chose to delegate to you.
 
-Increase your self-stake directly by bonding more LPT. Attracting delegators requires competitive reward cut and fee share settings plus a strong performance track record — see [Getting Delegates](/v2/orchestrators/guides/staking-and-rewards/delegate-operations).
+Increase your self-stake directly by bonding more LPT. Attracting delegators requires competitive reward cut and fee share settings plus a strong performance track record – see [Getting Delegates](/v2/orchestrators/guides/staking-and-rewards/delegate-operations).
 </Accordion>
 
 <Accordion  title="How stake affects job routing" icon="coins">
@@ -149,7 +150,7 @@ Round 4024 ✓ reward called
 
 **What a missed round costs:**
 
-When you miss a round, that round's LPT inflation that would have been minted to your address is permanently lost. You and your delegators both miss their share. This compounds over time — delegators whose yield is consistently reduced by missed rounds will unbond and move their stake elsewhere.
+When you miss a round, that round's LPT inflation that would have been minted to your address is permanently lost. You and your delegators both miss their share. This compounds over time – delegators whose yield is consistently reduced by missed rounds will unbond and move their stake elsewhere.
 
 **Target: 100% call rate.**
 
@@ -185,11 +186,11 @@ Cumulative ETH earned from video transcoding and AI inference fees. This is sepa
 
 A low or zero fee balance despite being in the active set usually means one of three things:
 
-1. **Price is too high** — your `-pricePerUnit` exceeds what gateways are willing to pay. Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) to compare your price to other active orchestrators. Most gateways have a maximum price they will pay, and any orchestrator above that ceiling receives no work.
+1. **Price is too high** – your `-pricePerUnit` exceeds what gateways are willing to pay. Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) to compare your price to other active orchestrators. Most gateways have a maximum price they will pay, and any orchestrator above that ceiling receives no work.
 
-2. **Node is unreachable** — gateways cannot connect to your service URI. Test reachability from outside your network: `curl -v https://<your-service-uri>:8935/status`. Port 8935 must be accessible from the public internet.
+2. **Node is unreachable** – gateways cannot connect to your service URI. Test reachability from outside your network: `curl -v https://<your-service-uri>:8935/status`. Port 8935 must be accessible from the public internet.
 
-3. **Capabilities not registered** — for AI workloads, your `aiModels.json` configuration must match what gateways are requesting. Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) to confirm your pipelines appear.
+3. **Capabilities not registered** – for AI workloads, your `aiModels.json` configuration must match what gateways are requesting. Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) to confirm your pipelines appear.
 
 <CustomDivider />
 
@@ -198,8 +199,8 @@ A low or zero fee balance despite being in the active set usually means one of t
 Your delegators are LPT holders who have staked to your orchestrator. Their stake contributes to your total and increases your routing probability.
 
 **What to watch:**
-- Delegators with unbonding status — they are in the process of leaving. This reduces your stake at the next round.
-- New delegations — incoming stake increasing your rank.
+- Delegators with unbonding status – they are in the process of leaving. This reduces your stake at the next round.
+- New delegations – incoming stake increasing your rank.
 - Large single-delegator dependence can destabilise your active set position. One delegator holding most of your stake can move you sharply when they leave.
 
 **Why delegators leave:**
@@ -228,7 +229,7 @@ Fix by setting `-serviceAddr <public-ip>:8935` to match what is on-chain, or upd
 
 ## Rounds active
 
-A simple counter of how long your orchestrator has been registered. This is a soft trust signal for delegators — longer operation with consistent reward calling suggests stability.
+A simple counter of how long your orchestrator has been registered. This is a soft trust signal for delegators – longer operation with consistent reward calling suggests stability.
 
 <CustomDivider />
 

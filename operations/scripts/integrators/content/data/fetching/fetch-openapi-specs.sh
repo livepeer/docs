@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      fetch-openapi-specs
-# @type        
-# @concern     
-# @niche       
-# @purpose     tooling:api-spec
+# @type        integrator
+# @concern     integrations
+# @niche       data
+# @purpose     
 # @description OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages
-# @mode        read-only
+# @mode        integrate
 # @pipeline    manual — not yet in pipeline
 # @scope       operations/scripts/integrators/content/data/fetching
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh [flags]

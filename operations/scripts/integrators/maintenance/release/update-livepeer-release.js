@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            update-livepeer-release
- * @category          integrator
- * @purpose           qa:data-refresh
- * @scope             .github/workflows, snippets/data/globals
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
- * @pipeline          P2
- * @usage             node .github/scripts/update-livepeer-release.js [--version <tag>]
+ * @script      update-livepeer-release
  * @type        integrator
- * @description update livepeer release
- * @mode        execute
+ * @concern     maintenance
+ * @niche       release
+ * @purpose     qa:data-refresh
+ * @description Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
+ * @mode        integrate
+ * @pipeline    manual
+ * @scope       .github/workflows, snippets/data/globals
+ * @usage       node .github/scripts/update-livepeer-release.js [--version <tag>]
+ * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

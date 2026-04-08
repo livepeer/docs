@@ -1,19 +1,15 @@
 /**
- * @script            fetch-github-discussions
- * @category          integrator
- * @type              integrator
- * @concern           content
- * @niche             data/fetching
- * @purpose           infrastructure:data-feeds
- * @description       Fetches latest GitHub Discussions via public GraphQL API, writes per-product JSX data files.
- * @domain            docs
- * @needs             F-R1
- * @purpose-statement Fetches GitHub Discussions for configured solutions and writes per-solution discussion data modules under snippets/data/social-feed-solutions/.
- * @mode              generate
- * @pipeline          config → GitHub GraphQL API → snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx
- * @scope             .github/scripts, snippets/data/social-feed-solutions/
- * @usage             node .github/scripts/fetch-github-discussions.js
- * @policy            Public repos only. Uses GITHUB_TOKEN for rate limits (optional for public repos).
+ * @script      fetch-github-discussions
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     infrastructure:data-feeds
+ * @description Fetches GitHub Discussions for configured solutions and writes per-solution discussion data modules under snippets/data/social-feed-solutions/.
+ * @mode        integrate
+ * @pipeline    config → GitHub GraphQL API → snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx
+ * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @usage       node .github/scripts/fetch-github-discussions.js
+ * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");

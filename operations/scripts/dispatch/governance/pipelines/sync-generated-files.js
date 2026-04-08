@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sync-generated-files
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:index-management
+ * @type        dispatch
+ * @concern     governance
+ * @niche       pipelines
+ * @purpose     
  * @description Dispatches generator scripts to sync generated catalog/index files, then validates banners.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    manual | pre-commit --staged
  * @scope       operations/scripts/generators, docs-guide/catalog, v2
  * @usage       node operations/scripts/dispatch/governance/pipelines/sync-generated-files.js --write | --check [--staged]

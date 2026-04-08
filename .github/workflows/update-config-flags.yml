@@ -1,0 +1,58 @@
+# type: integrator
+# concern: maintenance
+# pipeline: P5-auto
+name: Update Configuration Flags
+on:
+  schedule:
+    # Weekly Monday 04:00 UTC (after exchanges at 03:00)
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview changes without writing'
+        required: false
+        default: 'false'
+        type: boolean
+      branch:
+        description: 'go-livepeer branch to parse'
+        required: false
+        default: 'master'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-config-flags:
+    runs-on: ubuntu-latest
+    env:
+      GO_LIVEPEER_BRANCH: ${{ inputs.branch || 'master' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch configuration flags
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            FLAGS="--dry-run"
+          fi
+          node .github/scripts/fetch-config-flags.js $FLAGS
+
+      - name: Check for changes
+        if: inputs.dry_run != 'true'
+        id: git-check
+        run: |
+          git diff --exit-code snippets/data/gateways/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add snippets/data/gateways/
+          git commit -m "chore: update config flags from go-livepeer@${{ env.GO_LIVEPEER_BRANCH }} - $(date -u +'%Y-%m-%dT%H:%M:%SZ') [skip ci]"
+          git push

@@ -33,11 +33,47 @@ jobs:
       - name: Run style homogeniser
         run: node operations/scripts/style-and-language-homogenizer-en-gb.js --scope ${{ inputs.scope }}
 
+      - name: Collect changed files
+        id: changes
+        run: |
+          FILES=$(git diff --name-only | tr '\n' ',' | sed 's/,$//')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "has_changes=$( [ -n "$FILES" ] && echo true || echo false )" >> "$GITHUB_OUTPUT"
+
+      - name: Post-remediation verification
+        id: verify
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          node operations/scripts/dispatch/governance/post-remediation-verify.js \
+            --remediator operations/scripts/remediators/content/style/remediate-us-spelling.js \
+            --files "${{ steps.changes.outputs.files }}" \
+            --json | tee /tmp/verify-result.json || true
+          echo "passed=$(node -e "try{console.log(JSON.parse(require('fs').readFileSync('/tmp/verify-result.json','utf8')).passed)}catch(e){console.log('true')}")" >> "$GITHUB_OUTPUT"
+
+      - name: Flag regression in rolling issue
+        if: steps.verify.outputs.passed == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            const fs = require('fs');
+            let report = '(report unavailable)';
+            try { report = fs.readFileSync('/tmp/verify-result.json', 'utf8'); } catch (_) {}
+            await ri.upsert({ github, context, core,
+              label: 'health:remediation-regression',
+              title: 'Remediation regression: EN-GB style homogenisation',
+              body: `## Regression Report\n\n\`\`\`json\n${report}\n\`\`\`\n`,
+            });
+
       - name: Create PR with changes
+        if: steps.changes.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           base: docs-v2
           title: 'chore: EN-GB style homogenisation'
-          body: 'Automated style fixes from style-homogenise workflow'
+          body: |
+            Automated style fixes from style-homogenise workflow.
+            ${{ steps.verify.outputs.passed == 'false' && '⚠️ **Regression detected** — manual review required.' || '✅ Verification: PASS' }}
           branch: chore/style-homogenise
           commit-message: 'chore: EN-GB style homogenisation'
+          labels: ${{ steps.verify.outputs.passed == 'false' && 'needs-review' || '' }}

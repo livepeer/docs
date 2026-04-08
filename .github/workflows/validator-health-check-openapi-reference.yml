@@ -223,18 +223,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { owner, repo } = context.repo;
-            const allLabels = require('./.github/config/labels.json').labels;
-            const needed = ['docs-v2', 'help wanted', 'status: needs-routing', 'type: bug', 'area: ci-cd'];
-            for (const name of needed) {
-              const meta = allLabels[name] || { color: 'ededed', description: name };
-              try { await github.rest.issues.getLabel({ owner, repo, name }); core.info(`Label exists: ${name}`); }
-              catch (e) {
-                if (e.status !== 404) throw e;
-                try { await github.rest.issues.createLabel({ owner, repo, name, color: meta.color, description: meta.description }); core.info(`Created label: ${name}`); }
-                catch (ce) { if (ce.status === 422) core.info(`Label already exists (race-safe): ${name}`); else throw ce; }
-              }
-            }
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            await ri.ensureLabels({ github, context, core, labels: ['docs-v2', 'help wanted', 'status: needs-routing', 'type: bug', 'area: ci-cd'] });
 
       - name: Sync rolling OpenAPI failure issue
         if: github.event_name != 'pull_request'

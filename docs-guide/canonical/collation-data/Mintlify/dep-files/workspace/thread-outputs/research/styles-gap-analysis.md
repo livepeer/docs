@@ -73,7 +73,7 @@ We verified these findings against [Mintlify's documentation](https://www.mintli
 - Each hardcoded init has ~12 colour values (primaryColor, primaryTextColor, primaryBorderColor, lineColor, mainBkg, nodeBorder, clusterBkg, clusterBorder, titleColor, edgeLabelBackground, textColor, nodeTextColor)
 - **No wrapper component** — authors must copy-paste init directives
 - Mintlify's built-in mermaid has zoom/pan + undocumented `theme` prop
-- **ZoomableDiagram.jsx** exists in repo — may overlap with built-in zoom
+- **ScrollableDiagram.jsx** exists in repo — may overlap with built-in zoom
 
 ### Worst offender
 
@@ -84,7 +84,7 @@ We verified these findings against [Mintlify's documentation](https://www.mintli
 1. Does the undocumented `theme` prop accept mermaid themeVariables?
 2. Can a wrapper component inject init directives into child mermaid blocks?
 3. Does Mintlify process mermaid before or after JSX rendering?
-4. Is ZoomableDiagram.jsx redundant with Mintlify's built-in zoom?
+4. Is ScrollableDiagram.jsx redundant with Mintlify's built-in zoom?
 
 ---
 
@@ -138,7 +138,7 @@ Inline styles cannot be responsive (no media queries in `style={{}}`). The style
 
 | Pattern | Status |
 |---|---|
-| `prefers-reduced-motion` | Respected in QuadGrid, BlinkingIcon, HeroGif, video components |
+| `prefers-reduced-motion` | Respected in QuadGrid, BlinkingIcon, StarfieldCanvas, video components |
 | ARIA roles on scroll regions | DynamicTable, ShowcaseCards correctly annotated |
 | Social links | Proper `aria-label` + `aria-hidden` on decorative icons |
 | Semantic tables | `<table>`, `<thead>`, `<th>` used correctly |

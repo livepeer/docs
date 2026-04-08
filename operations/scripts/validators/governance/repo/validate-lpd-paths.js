@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      validate-lpd-paths
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        validator
+ * @concern     governance
+ * @niche       repo
+ * @purpose     
  * @description Validates that every script path referenced in `lpd` exists on disk. Parses the lpd bash CLI for node and script_path invocations and checks each file against the filesystem. Exits non-zero if any path is missing.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, ci
  * @scope       lpd (repo root bash CLI)
  * @usage       node operations/scripts/validators/governance/repo/validate-lpd-paths.js [--json]

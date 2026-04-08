@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      mdx-sanitise
- * @type        
+ * @type        config
  * @concern     
  * @niche       
- * @purpose     infrastructure:shared-lib
+ * @purpose     
  * @description Shared sanitisation utilities for all scripts that write content consumed by MDX pages.
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    external content -> sanitise -> safe MDX/JSX output
  * @scope       operations/scripts/config/, .github/scripts/
  * @usage       const { sanitiseForMdx, escapeForJsx } = require('../../operations/scripts/config/mdx-sanitise')

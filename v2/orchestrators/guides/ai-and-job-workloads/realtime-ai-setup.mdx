@@ -2,10 +2,11 @@
 title: Cascade Setup
 sidebarTitle: Cascade Setup
 description: >-
-  Deploy the live-video-to-video pipeline on a Livepeer orchestrator — Cascade
-  architecture, ComfyStream setup, live-video frame processing, WebRTC streaming,
-  hardware requirements, and custom pipeline development.
-Keywords:
+  Deploy the live-video-to-video pipeline on a Livepeer orchestrator — Cascade architecture, ComfyStream setup,
+  live-video frame processing, WebRTC streaming, hardware requirements, and custom pipeline development.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - live-video ai
@@ -26,15 +27,15 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-03-13
+lastVerified: 2026-03-13T00:00:00.000Z
 ---
 {/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
 
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Cascade inference is fundamentally different from batch inference. Instead of processing a discrete request and returning a result, your node continuously transforms live video — receiving frames from a WebRTC stream, running inference on each frame, and streaming processed frames back with sub-100ms latency.
+Cascade inference is fundamentally different from batch inference. Instead of processing a discrete request and returning a result, your node continuously transforms live video – receiving frames from a WebRTC stream, running inference on each frame, and streaming processed frames back with sub-100ms latency.
 
 This is the **Cascade** architecture: the `live-video-to-video` pipeline that powers live AI video effects, live style transfer, and streaming AI agents on the Livepeer network.
 
@@ -42,16 +43,16 @@ This is the **Cascade** architecture: the `live-video-to-video` pipeline that po
 
 ## What Cascade is
 
-Cascade is Livepeer's live-video AI processing pipeline. The name refers to the architecture — video streams cascade through AI transformation nodes in the network, enabling live applications that previously required centralised infrastructure.
+Cascade is Livepeer's live-video AI processing pipeline. The name refers to the architecture – video streams cascade through AI transformation nodes in the network, enabling live applications that previously required centralised infrastructure.
 
 Example applications on Cascade:
 
-- **Daydream** — generative AI video platform with live style application
-- **StreamDiffusionTD** — live diffusion via TouchDesigner
-- **ComfyStream** — browser-based ComfyUI pipelines with live video input
-- **OBS plugins** — live AI effects applied to streaming content
+- **Daydream** – generative AI video platform with live style application
+- **StreamDiffusionTD** – live diffusion via TouchDesigner
+- **ComfyStream** – browser-based ComfyUI pipelines with live video input
+- **OBS plugins** – live AI effects applied to streaming content
 
-**Source:** [Livepeer AI Subnet Announcement — Mirror.xyz](https://mirror.xyz/livepeer.eth) · [ComfyStream on GitHub](https://github.com/livepeer/comfystream) · [Daydream](https://daydream.live)
+**Source:** [Livepeer AI Subnet Announcement – Mirror.xyz](https://mirror.xyz/livepeer.eth) · [ComfyStream on GitHub](https://github.com/livepeer/comfystream) · [Daydream](https://daydream.live)
 
 <CustomDivider />
 
@@ -151,7 +152,7 @@ The orchestrator receives the WebRTC stream, passes it to the AI runner containe
 
 <CustomDivider />
 
-## ComfyStream — the live-video pipeline runtime
+## ComfyStream – the live-video pipeline runtime
 
 [ComfyStream](https://github.com/livepeer/comfystream) is the primary runtime for live-video AI inference on Livepeer. It wraps ComfyUI's node-based workflow system and adapts it for continuous frame processing.
 
@@ -211,7 +212,7 @@ The `live-base` tag is separate from the standard `livepeer/ai-runner` image use
 
 `model_id` for live-video pipelines refers to the ComfyUI workflow or pipeline name, not a HuggingFace model ID in the traditional sense. The models themselves are loaded inside the ComfyStream container.
 
-**Pricing and gateway compatibility:** Your `price_per_unit` must stay at or below the gateway's configured `-maxPricePerCapability` for `live-video-to-video`. This is a hard filter — gateways skip nodes priced above that cap, regardless of hardware quality or latency.
+**Pricing and gateway compatibility:** Your `price_per_unit` must stay at or below the gateway's configured `-maxPricePerCapability` for `live-video-to-video`. This is a hard filter – gateways skip nodes priced above that cap, regardless of hardware quality or latency.
 
 For transcoding, the equivalent flag is `-maxPricePerUnit` on the gateway side. Before going live, verify that your transcoding price (set via `-pricePerUnit` or `livepeer_cli`) is below what major gateways have configured as their maximum. See [Gateway Pricing Configuration](/v2/gateways/guides/payments-and-pricing/pricing-configuration) for the full gateway pricing flag reference and the JSON structure used for AI capability pricing.
 </StyledStep>
@@ -257,16 +258,16 @@ Test the pipeline locally by sending a test WebRTC stream to your node. For setu
 
 <CustomDivider />
 
-## StreamDiffusion — live-video diffusion models
+## StreamDiffusion – live-video diffusion models
 
 [StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion) is the primary model architecture for live-video AI on Livepeer. It was designed specifically for continuous frame processing and achieves 30+ fps on an RTX 4090.
 
 **How StreamDiffusion achieves live performance:**
 
-1. **Stream Batch** — processes multiple frames simultaneously as a batch, amortising model overhead across frames
-2. **Residual CFG** — approximates classifier-free guidance with fewer forward passes
-3. **Stochastic Similarity Filter** — skips inference on frames that are sufficiently similar to the previous frame
-4. **TinyVAE acceleration** — uses a compressed VAE encoder/decoder for faster latency
+1. **Stream Batch** – processes multiple frames simultaneously as a batch, amortising model overhead across frames
+2. **Residual CFG** – approximates classifier-free guidance with fewer forward passes
+3. **Stochastic Similarity Filter** – skips inference on frames that are sufficiently similar to the previous frame
+4. **TinyVAE acceleration** – uses a compressed VAE encoder/decoder for faster latency
 
 **Source:** [cumulo-autumn/StreamDiffusion on GitHub](https://github.com/cumulo-autumn/StreamDiffusion) · [StreamDiffusion paper on arXiv](https://arxiv.org/abs/2312.12491)
 
@@ -335,8 +336,8 @@ class MyLiveVideoPipeline(Pipeline):
 
 Custom live-video pipelines require two code changes in the upstream repositories:
 
-1. **`ai-worker/runner/dl_checkpoints.sh`** — add your pipeline to the model download script
-2. **`go-livepeer/ai/worker/docker.go`** — add your pipeline to the container image map (`livePipelineToImage`)
+1. **`ai-worker/runner/dl_checkpoints.sh`** – add your pipeline to the model download script
+2. **`go-livepeer/ai/worker/docker.go`** – add your pipeline to the container image map (`livePipelineToImage`)
 
 These changes are required because the current pipeline registry still uses a static mapping. See the full custom pipeline development guide in the [ai-runner.md](https://github.com/livepeer/ai-runner) documentation.
 
@@ -483,22 +484,22 @@ Enterprise operators running 4090/A100 fleets monetise live-video AI at scale by
 <AccordionGroup>
 
 <Accordion  title="Frames dropping or high latency" icon="circle-question">
-1. **Model is too slow for target fps** — try a lower-step model (LCM, Lightning) or reduce output resolution
-2. **VRAM OOM on frame buffer** — reduce `stream_batch_size` in StreamDiffusion config
-3. **CPU bottleneck on encode/decode** — WebRTC frame codec operations are CPU-bound; monitor CPU usage during streaming
-4. **Network jitter** — WebRTC is sensitive to packet loss; check your upstream network quality
+1. **Model is too slow for target fps** – try a lower-step model (LCM, Lightning) or reduce output resolution
+2. **VRAM OOM on frame buffer** – reduce `stream_batch_size` in StreamDiffusion config
+3. **CPU bottleneck on encode/decode** – WebRTC frame codec operations are CPU-bound; monitor CPU usage during streaming
+4. **Network jitter** – WebRTC is sensitive to packet loss; check your upstream network quality
 </Accordion>
 
 <Accordion  title="Restore live-video job flow" icon="microchip">
 1. Confirm `live-video-to-video` appears on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under your orchestrator
 2. Verify the `live-base` container is running and healthy: `docker ps --filter name=livepeer-ai-runner-live`
-3. Check that your orchestrator's `serviceAddr` is reachable from gateways — WebRTC ICE negotiation requires bidirectional reachability
+3. Check that your orchestrator's `serviceAddr` is reachable from gateways – WebRTC ICE negotiation requires bidirectional reachability
 4. Confirm your node has WebRTC port access (typically UDP 8935 or your configured port)
 </Accordion>
 
 <Accordion  title="ComfyStream container failing to start" icon="microchip">
 1. Check model weights are present at the expected path (`-aiModelsDir` location)
-2. Check CUDA/driver compatibility — ComfyStream requires CUDA 12.0+
+2. Check CUDA/driver compatibility – ComfyStream requires CUDA 12.0+
 3. Run the container manually to see startup output:
 ```bash icon="terminal" title="Check CUDA access inside the live-base container"
 docker run --gpus all --rm livepeer/ai-runner:live-base python -c "import torch; print(torch.cuda.is_available())"

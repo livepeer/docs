@@ -1,11 +1,11 @@
 /**
  * @script      mdx-constraints-injector
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Auto-injects Mintlify MDX constraints when user messages involve page/component editing
+ * @purpose     
  * @description UserPromptSubmit hook. Keyword-matches the user message for MDX/component/page
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin user message → keyword match → inject constraints
  * @scope       .claude/settings.json UserPromptSubmit hook
  * @usage       Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.

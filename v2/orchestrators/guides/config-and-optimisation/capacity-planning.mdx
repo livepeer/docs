@@ -1,11 +1,13 @@
 ---
-title: 'Capacity Planning'
-sidebarTitle: 'Capacity Planning'
+title: Capacity Planning
+sidebarTitle: Capacity Planning
 description: >-
-  Determine the correct -maxSessions value for your orchestrator using livepeer_bench,
-  bandwidth calculations, and NVENC hardware session limits. Covers GPU and CPU
-  transcoding capacity, AI VRAM budgeting, and session limit configuration.
-Keywords:
+  Determine the correct -maxSessions value for your orchestrator using livepeer_bench, bandwidth calculations, and NVENC
+  hardware session limits. Covers GPU and CPU transcoding capacity, AI VRAM budgeting, and session limit configuration.
+lifecycleStage: operate
+complexity: intermediate
+purpose: explain
+keywords:
   - livepeer
   - orchestrator
   - maxSessions
@@ -30,11 +32,11 @@ lastVerified: '2026-03-16'
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Tip>
-  Set `-maxSessions` to the minimum of your hardware limit and your bandwidth limit. Too low wastes capacity and limits earnings. Too high pushes transcoding behind live segment cadence — segments pile up, gateways log errors, and your reputation score suffers.
+  Set `-maxSessions` to the minimum of your hardware limit and your bandwidth limit. Too low wastes capacity and limits earnings. Too high pushes transcoding behind live segment cadence – segments pile up, gateways log errors, and your reputation score suffers.
 </Tip>
 
 ---
@@ -43,8 +45,8 @@ import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Ste
 
 Two constraints determine the session limit independently:
 
-- **Hardware limit** — the number of concurrent sessions the GPU transcodes within live segment timing, measured with `livepeer_bench`
-- **Bandwidth limit** — the number of concurrent sessions your connection carries within available upload bandwidth
+- **Hardware limit** – the number of concurrent sessions the GPU transcodes within live segment timing, measured with `livepeer_bench`
+- **Bandwidth limit** – the number of concurrent sessions your connection carries within available upload bandwidth
 
 The session limit is `min(hardware_limit, bandwidth_limit)`.
 
@@ -153,11 +155,11 @@ The summary table appears after each run:
     </TableRow>
     <TableRow>
       <TableCell>**= 1.0**</TableCell>
-      <TableCell>Exactly on live pace — no headroom; any spike causes lag</TableCell>
+      <TableCell>Exactly on live pace – no headroom; any spike causes lag</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**&gt; 1.0**</TableCell>
-      <TableCell>GPU overloaded at this session count — reduce</TableCell>
+      <TableCell>GPU overloaded at this session count – reduce</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -273,7 +275,7 @@ livepeer \
     ...
 ```
 
-For a split orchestrator/transcoder setup, set `-maxSessions` on both nodes — the orchestrator uses it to track total capacity; the transcoder uses it to control how many concurrent jobs it accepts.
+For a split orchestrator/transcoder setup, set `-maxSessions` on both nodes – the orchestrator uses it to track total capacity; the transcoder uses it to control how many concurrent jobs it accepts.
 
 {/* FACT CHECK: Confirm -maxSessions is still valid on both O and T in the split-node setup. Rick to verify no flag rename in recent go-livepeer releases. */}
 

@@ -2,11 +2,11 @@
 /**
  * @script      check-voice-register
  * @type        validator
- * @concern     content
+ * @concern     brand
  * @niche       copy
  * @purpose     content:voice-compliance
  * @description Checks MDX pages with audience frontmatter for prohibited phrases from the wrong voice register
- * @mode        read-only
+ * @mode        check
  * @pipeline    pr-changed -> v2/*.mdx with audience frontmatter -> exit-code, stdout:violations
  * @scope       v2/
  * @usage       node operations/scripts/validators/content/copy/check-voice-register.js [--json]
@@ -59,11 +59,14 @@ const UNIVERSAL_PROHIBITED = [
 ];
 
 function parseArgs(argv) {
-  const args = { json: false, help: false };
-  argv.forEach((token) => {
-    if (token === '--json') { args.json = true; return; }
-    if (token === '--help' || token === '-h') { args.help = true; return; }
-  });
+  const args = { json: false, help: false, files: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (token === '--json') { args.json = true; continue; }
+    if (token === '--help' || token === '-h') { args.help = true; continue; }
+    if (token === '--files' && argv[i + 1]) { argv[++i].split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+    if (token.startsWith('--files=')) { token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).forEach((f) => args.files.push(f)); continue; }
+  }
   return args;
 }
 
@@ -105,7 +108,7 @@ function main() {
     return 0;
   }
 
-  const pages = walkMdx(V2_DIR);
+  const pages = args.files.length > 0 ? args.files.filter((f) => fs.existsSync(f)) : walkMdx(V2_DIR);
   const violations = [];
   let checked = 0, skipped = 0;
 

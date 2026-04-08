@@ -77,6 +77,9 @@ See https://coolors.co/073b3a-1a794e-f61067-08a045-6bbf59
   --lp-color-brand-linkedin: #0189df;
   --lp-color-brand-preview: #b636dd;
   --lp-color-brand-coming-soon: #ef1a73;
+  --lp-color-brand-linux: #ff9a0e;
+  --lp-color-brand-windows: #14bbf7;
+  --lp-color-brand-macos: #60ba47;
   --lp-color-status-good: #22c55e;
   --lp-color-status-warn: #fbbf24;
   --lp-color-status-bad: #ef4444;
@@ -86,6 +89,11 @@ See https://coolors.co/073b3a-1a794e-f61067-08a045-6bbf59
   --lp-spacing-4: 1rem;
   --lp-spacing-6: 1.5rem;
   --lp-spacing-8: 2rem;
+  --lp-spacing-px-3: 3px;
+  --lp-spacing-px-4: 4px;
+  --lp-spacing-px-6: 6px;
+  --lp-spacing-px-8: 8px;
+  --lp-spacing-px-12: 12px;
   --lp-font-sans: 'Inter', 'Segoe UI', sans-serif;
   --lp-font-mono: 'SFMono-Regular', 'SF Mono', 'Menlo', monospace;
   --lp-radius-sm: 0.25rem;
@@ -589,3 +597,68 @@ img[alt="US"][src*="flags/US.svg"]::before {
   top: 0.75rem;
   right: 0.75rem;
 } */
+
+/* ============================================
+   ACCESSIBILITY — Focus indicators
+   ============================================ */
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ACCESSIBILITY — Responsive breakpoints
+   ============================================ */
+
+@media (max-width: 767px) {
+  .frame-mode-hero-full {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  #content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES — inline element styling
+   Used where components can't replace inline spans
+   (e.g., inside Mintlify <Tip>, <Info> components)
+   ============================================ */
+
+.lp-inline-flex {
+  display: flex;
+  align-items: center;
+}
+
+.lp-text-muted {
+  color: var(--lp-color-text-secondary);
+}
+
+.lp-text-italic-muted {
+  font-style: italic;
+  color: var(--lp-color-text-secondary);
+}
+
+.lp-inline-flex-gap {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.lp-link-underline {
+  border-bottom: 1.5px solid var(--lp-color-text-primary);
+  color: var(--lp-color-text-primary);
+  padding-bottom: 0.25rem;
+}

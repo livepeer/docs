@@ -2,7 +2,7 @@
 /**
  * @script      generate-component-examples
  * @type        generator
- * @concern     components
+ * @concern     maintenance
  * @niche       library
  * @purpose     governance:index-management
  * @description Keeps per-file example MDX files in sync with the component registry
@@ -63,15 +63,14 @@ for (const comp of registry.components) {
 
 function expectedExamplesPath(sourceFile) {
   // e.g. "snippets/components/elements/buttons/Buttons.jsx"
-  //   → "snippets/components/elements/examples/buttons-examples.mdx"
+  //   → "snippets/components/examples/buttons.mdx"
   const rel = path.relative(SNIPPETS_ROOT, path.join(ROOT, sourceFile));
   // rel = "elements/buttons/Buttons.jsx"
   const parts = rel.split(path.sep); // ['elements', 'buttons', 'Buttons.jsx']
   if (parts.length < 3) return null;
-  const category = parts[0];
   const subniche = parts[1];
-  const examplesDir = path.join(SNIPPETS_ROOT, category, 'examples');
-  return path.join(examplesDir, `${subniche}-examples.mdx`);
+  const examplesDir = path.join(SNIPPETS_ROOT, 'examples');
+  return path.join(examplesDir, `${subniche}.mdx`);
 }
 
 // ─── Parse imports from an MDX file ─────────────────────────────────────────

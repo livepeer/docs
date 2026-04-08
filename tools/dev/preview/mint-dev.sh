@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # @script      mint-dev
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Mintlify dev server launcher — starts mint dev with correct configuration
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual — developer tool
 # @scope       full-repo
 # @usage       bash tools/dev/preview/mint-dev.sh [flags]

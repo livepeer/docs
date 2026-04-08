@@ -2,14 +2,14 @@
 title: Core Mechanisms and Functions
 sidebarTitle: Core Mechanisms
 description: >-
-  The Livepeer protocol secures a decentralised marketplace for verifiable media
-  and AI compute through a tightly coupled set of economic and cryptographic
-  systems. These mechanisms include LPT bonding, dynamic inflation, staking and
-  delegation, slashing conditions, and rewards distribution - all executed
-  through Ethereum-based smart contracts on Arbitrum. This page details each
-  core mechanism, how it interacts with others, and why these design decisions
-  underpin Livepeer’s scalable, permissionless infrastructure.
-PageType: concept
+  The Livepeer protocol secures a decentralised marketplace for verifiable media and AI compute through a tightly
+  coupled set of economic and cryptographic systems. These mechanisms include LPT bonding, dynamic inflation, staking
+  and delegation, slashing conditions, and rewards distribution - all executed through Ethereum-based smart contracts on
+  Arbitrum. This page details each core mechanism, how it interacts with others, and why these design decisions underpin
+  Livepeer’s scalable, permissionless infrastructure.
+lifecycleStage: discover
+complexity: intermediate
+pageType: concept
 keywords:
   - livepeer
   - about
@@ -21,7 +21,7 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: concept
 ---
 
@@ -32,7 +32,11 @@ import { AccordionTitleWithArrow } from '/snippets/components/elements/text/Text
 import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { ValueResponseField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 {/* This page describes:
 2. **Core Components & Mechanisms of the Livepeer Protocol**
@@ -44,16 +48,16 @@ import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
    * Slashing
    * Rounds */}
 
-<div style={{ display: "flex", justifyContent: "center"}}>
+<FlexContainer justify="center">
  <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/go-livepeer"> go-livepeer </CardTitleTextWithArrow>
-</div>
+</FlexContainer>
 <CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
 {/* <Quote> The Protocol is the **on-chain coordination and economic security layer** deployed on a blockchain to leverage unique cyrptoeconomic primitives. It is responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants. </Quote> */}
 
 ## Mechanism Objectives
 Livepeer’s core mechanisms are designed to:
 
-- **Incentivise honest behavior** among participants (Orchestrators, Delegators, Gateways/Broadcasters)
+- **Incentivise honest behaviour** among participants (Orchestrators, Delegators, Gateways/Broadcasters)
 
 - **Scale supply capacity** by rewarding infrastructure providers proportionally
 
@@ -76,7 +80,7 @@ Core features of the Livepeer Protocol include:
    <Accordion title="Consensus & Finality" icon="handshake">
       #### Consensus & Finality
  Livepeer does not use its own consensus; it relies on Arbitrum’s optimistic rollup.
- Blocks (called rounds) occur roughly every 24 hrs, and after a ~7-day challenge window the state is finalized on Ethereum.
+ Blocks (called rounds) occur roughly every 24 hrs, and after a ~7-day challenge window the state is finalised on Ethereum.
 
  This means trust assumptions are similar to other Ethereum Layer-2s: Arbitrum’s rollup validators and Ethereum miners secure the chain; fraud proofs protect against invalid blocks.
    </Accordion>
@@ -85,7 +89,7 @@ Core features of the Livepeer Protocol include:
  Livepeer’s core contracts are on an Ethereum Layer-2 (Arbitrum One), which inherits Ethereum-level security via optimistic rollup.
 
  LPT stakers (orchestrators and delegators) provide economic collateral against misbehavior.
- Protocol rules penalize malfeasance by slashing stake (e.g. Losing part or all delegated tokens).
+ Protocol rules penalise malfeasance by slashing stake (e.g. Losing part or all delegated tokens).
 
  Off-chain video verification and optional arbitration ensure correct transcoding.
    </Accordion>
@@ -126,7 +130,7 @@ Livepeer relies on Gateways (prev. Broadcasters), Orchestrators and Delegators t
 
 The Livepeer Protocol defines multiple key operational rules for the network and network actors.
 
-<span style={{display: "flex", lineHeight: "2rem", alignItems: "center", gap: "0.5rem"}}> <Icon icon="warning" /> **AI vs Video Mechanisms** <Icon icon="warning" /></span>
+<CustomCardTitle variant="tab" icon="warning" title="**AI vs Video Mechanisms**" />
 
 AI services do not participate in the same reward distribution or round-based active set election as video Orchestrators
 <FrameQuote>
@@ -135,14 +139,14 @@ The video transcoding system and AI system are architecturally separate and oper
 
 This separation allows AI services to operate without requiring LPT staking, making them more accessible while preserving the security model of video transcoding through economic bonding.
 
-<span style={{marginBottom: "-1rem"}}>**Incentive Structure Comparison**</span>
+<Subtitle style={{marginBottom: "-1rem"}}>**Incentive Structure Comparison**</Subtitle>
 <DynamicTable
    headerList={["Component", "Video Orchestrators", "AI Services"]}
    itemsList={[
-      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Protocol Rewards</span>, "Video Orchestrators": "Inflationary LPT rewards", "AI Services": "None" },
-      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Staking Required</span>, "Video Orchestrators": "Yes - LPT bonding to transcoderPool", "AI Services": "No" },
-      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Active Set Benefits</span>, "Video Orchestrators": "Stake-weighted election to active set", "AI Services": "No active set concept" },
-      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Fee Earnings</span>, "Video Orchestrators": "Yes via TicketBroker integration", "AI Services": "None in protocol" },
+      { "Component": <Subtitle variant="changelog">Protocol Rewards</Subtitle>, "Video Orchestrators": "Inflationary LPT rewards", "AI Services": "None" },
+      { "Component": <Subtitle variant="changelog">Staking Required</Subtitle>, "Video Orchestrators": "Yes - LPT bonding to transcoderPool", "AI Services": "No" },
+      { "Component": <Subtitle variant="changelog">Active Set Benefits</Subtitle>, "Video Orchestrators": "Stake-weighted election to active set", "AI Services": "No active set concept" },
+      { "Component": <Subtitle variant="changelog">Fee Earnings</Subtitle>, "Video Orchestrators": "Yes via TicketBroker integration", "AI Services": "None in protocol" },
    ]}
 />
 {/*
@@ -158,7 +162,7 @@ Security and good behaviour is enforced via stake: Delegation keeps the network 
 ### Mechanism Details
 Note that Staking, Rewards and Payments operate differently for AI pipelines
 
-<div style={{border: "1px solid var(--accent)", borderRadius: "8px", padding: "1rem"}}>
+<BorderedBox variant="accent">
 <Tabs>
    <Tab title="Rounds">
       ### Rounds and Timing
@@ -167,7 +171,7 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
 
  **Mechanism**
       1. Rounds have a fixed length in blocks (configured in `RoundsManager`)
-      2. New rounds must be initialized by calling `initializeRound()`
+      2. New rounds must be initialised by calling `initializeRound()`
  3. Multiple protocol operations are only valid during specific times in a round
       4. Parameter updates are restricted during "locked" periods of a round
       5. Rewards can only be claimed once per round by a transcoder
@@ -346,7 +350,7 @@ Broadcasters fund an ETH deposit on‑chain. With each transcoded segment, they 
 
    </Tab>
 </Tabs>
-</div>
+</BorderedBox>
 
  {/* ### Protocol Timing & Rounds
  The protocol uses a round-based system for timing and progress where:

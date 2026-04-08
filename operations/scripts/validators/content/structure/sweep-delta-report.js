@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sweep-delta-report
- * @type        
- * @concern     
- * @niche       
- * @purpose     Compares current console error state against baseline and produces a delta report
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual — run on demand or on schedule to detect drift
  * @scope       operations/tests/baselines/console-baseline.json
  * @usage       node operations/scripts/validators/content/structure/sweep-delta-report.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]

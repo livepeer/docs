@@ -3,7 +3,7 @@ import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
 ## <Icon icon="docker" iconType="solid" size={32} /> Docker Verification
 {dockerGroup()}
 
-<StyledSteps iconColor="var(--accent-dark, #18794E)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
+<StyledSteps iconColor="var(--lp-color-accent-strong)" titleColor="var(--accent)" lineColor="var(--accent)" titleSize="h3">
     <StyledStep title="Process Health">
         Confirm the gateway container is running and responding.
 
@@ -52,7 +52,7 @@ import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
 
         - **Version** and network connection
         - **ETH Account** address
-        - **BROADCASTER STATS** — active sessions, deposit, and reserve balances
+        - **BROADCASTER STATS** – active sessions, deposit, and reserve balances
 
         <Warning>
             Use the container hostname (not `localhost`) inside Docker networking. Using `localhost` causes connection failures.
@@ -117,13 +117,13 @@ import { dockerGroup } from '/v2/gateways/custom/components/iconItems.jsx'
                 1. The Orchestrator supports the requested pipeline (`text-to-image`)
                 2. The `model_id` exactly matches the Orchestrator's available models (case-sensitive)
 
-                **Off-chain mode** — confirm Orchestrators in `-orchAddr` are reachable:
+                **Off-chain mode** – confirm Orchestrators in `-orchAddr` are reachable:
 
                 ```bash
                 curl https://<orchestrator-address>:<port>/getOrchestratorInfo
                 ```
 
-                **On-chain mode** — the node uses `-aiServiceRegistry` for automatic discovery. Confirm via `livepeer_cli` Option 1 that sessions are available.
+                **On-chain mode** – the node uses `-aiServiceRegistry` for automatic discovery. Confirm via `livepeer_cli` Option 1 that sessions are available.
             </Tab>
             <Tab title="Dual">
                 Dual gateways must pass **both** the video RTMP test and the AI inference test. Both endpoints respond on port **8935** (single port architecture).

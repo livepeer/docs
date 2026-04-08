@@ -1,11 +1,11 @@
 /**
  * @script      generate-governance-map
- * @type        
- * @concern     
+ * @type        generator
+ * @concern     governance
  * @niche       
- * @purpose     governance:repo-health
+ * @purpose     
  * @description Reads GOVERNANCE.md markers from every root folder and produces a governance map report
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual -> GOVERNANCE.md markers, docs-guide/frameworks/*.mdx -> GOVERNANCE_MAP_LATEST.json, repo-governance-map.mdx
  * @scope       root folders, docs-guide/frameworks/, docs-guide/standards/
  * @usage       node operations/scripts/generators/governance/generate-governance-map.js [--write] [--check]

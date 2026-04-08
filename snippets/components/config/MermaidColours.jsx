@@ -1,10 +1,12 @@
 /**
  * @component MermaidColours
  * @category config
- * @subcategory none
+ * @subcategory  config
  * @status stable
  * @description Theme colour definitions for Mermaid diagrams (light/dark/CSS variable mappings).
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-03-29
  */
 export const MermaidColours = {
   font: {

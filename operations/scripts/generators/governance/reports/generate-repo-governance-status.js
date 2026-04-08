@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      generate-repo-governance-status
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:ownerless-governance
+ * @type        generator
+ * @concern     governance
+ * @niche       reports
+ * @purpose     
  * @description Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
- * @mode        read-only
+ * @mode        generate
  * @pipeline    manual, pr-changed -> repo-governance registry -> governance map and status reports
  * @scope       operations/governance/config, operations/scripts/generators/governance/reports, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
  * @usage       node operations/scripts/generators/governance/reports/generate-repo-governance-status.js [--write|--check]

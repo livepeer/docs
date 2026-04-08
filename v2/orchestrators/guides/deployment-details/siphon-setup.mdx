@@ -1,11 +1,12 @@
 ---
-title: 'Siphon Split Setup'
-sidebarTitle: 'Siphon Setup'
+title: Siphon Split Setup
+sidebarTitle: Siphon Setup
 description: >-
-  Separate reward claiming and keystore management from GPU workload processing
-  using OrchestratorSiphon - two-machine architecture, installation, config.ini
-  setup, systemd service, and day-to-day operations.
-Keywords:
+  Separate reward claiming and keystore management from GPU workload processing using OrchestratorSiphon - two-machine
+  architecture, installation, config.ini setup, systemd service, and day-to-day operations.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
   - livepeer
   - orchestrator
   - siphon
@@ -38,10 +39,10 @@ Verify:
 */}
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 
 <CustomDivider />
 
@@ -69,7 +70,7 @@ For a comparison with the O-T split and pool worker alternatives, see
 <ScrollableDiagram title="Siphon Split Architecture" maxHeight="380px">
 
 ```mermaid title="Siphon split architecture"
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart LR
     subgraph SM["Secure machine (no GPU required)"]
         Siphon["OrchestratorSiphon\nHolds keystore\nCalls reward each round\nWithdraws fees\nVotes on LIPs\nUpdates service URI"]

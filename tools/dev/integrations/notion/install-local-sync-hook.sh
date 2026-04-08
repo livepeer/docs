@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      install-local-sync-hook
-# @type        automation
+# @type        utility
 # @concern     governance
 # @niche       dev-tools
 # @purpose     tooling:dev-tools
 # @description Installs the managed local post-commit hook that invokes the Notion sync runner and preserves any prior hook as a backup.
-# @mode        execute
+# @mode        integrate
 # @pipeline    manual
 # @scope       single-file
 # @usage       bash tools/dev/integrations/notion/install-local-sync-hook.sh [flags]

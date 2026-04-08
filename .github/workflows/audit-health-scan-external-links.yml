@@ -71,34 +71,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const { owner, repo } = context.repo;
-            const LABEL = 'health:external-links';
-            const TITLE = 'External Link Audit: broken links detected';
-
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
             let body = '## External Link Audit\n\nBroken external links detected by scheduled audit.\n\n';
             const reportPath = '/tmp/page-links-audit-external.md';
-            if (fs.existsSync(reportPath)) {
-              body += fs.readFileSync(reportPath, 'utf8').slice(0, 60000);
-            } else {
-              body += 'Report file not available. Check workflow run artifacts.\n';
-            }
-            body += `\n\n---\nWorkflow run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-
-            const existing = await github.rest.issues.listForRepo({
-              owner, repo, state: 'open', labels: LABEL, per_page: 1
-            });
-
-            if (existing.data.length > 0) {
-              await github.rest.issues.update({
-                owner, repo, issue_number: existing.data[0].number, body
-              });
-              core.info(`Updated issue #${existing.data[0].number}`);
-            } else {
-              const created = await github.rest.issues.create({
-                owner, repo, title: TITLE, body, labels: [LABEL, 'automated']
-              });
-              core.info(`Created issue #${created.data.number}`);
-            }
+            if (fs.existsSync(reportPath)) { body += fs.readFileSync(reportPath, 'utf8').slice(0, 60000); }
+            else { body += 'Report file not available. Check workflow run artifacts.\n'; }
+            await ri.upsert({ github, context, core, label: 'health:external-links', title: 'External Link Audit: broken links detected', body });
 
       - name: Close rolling issue if clean
         if: steps.link-audit.outcome == 'success'
@@ -106,15 +84,5 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { owner, repo } = context.repo;
-            const existing = await github.rest.issues.listForRepo({
-              owner, repo, state: 'open', labels: 'health:external-links', per_page: 1
-            });
-            if (existing.data.length > 0) {
-              await github.rest.issues.update({
-                owner, repo, issue_number: existing.data[0].number,
-                state: 'closed', state_reason: 'completed',
-                body: existing.data[0].body + '\n\n---\n**Resolved:** All external links clean as of ' + new Date().toISOString()
-              });
-              core.info(`Closed issue #${existing.data[0].number} (all clean)`);
-            }
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            await ri.close({ github, context, core, label: 'health:external-links', reason: 'All external links clean' });

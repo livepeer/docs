@@ -182,7 +182,7 @@ Note: "Find Your Path" scores lower on precision/depth as it does not name the c
 | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Import | EXISTS |
 | `/snippets/components/elements/spacing/Divider.jsx` | Import | EXISTS |
 | `/snippets/components/elements/links/Links.jsx` | Import | EXISTS |
-| `/snippets/components/scaffolding/heroes/HeroGif.jsx` | Import | EXISTS |
+| `/snippets/components/scaffolding/heroes/StarfieldCanvas.jsx` | Import | EXISTS |
 | `/snippets/components/displays/code/Code.jsx` | Import | EXISTS |
 
 ## Category 9: Process & Governance

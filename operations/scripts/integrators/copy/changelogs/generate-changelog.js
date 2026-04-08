@@ -1,24 +1,15 @@
 /**
- * @script            generate-changelog
- * @type              integrator
- * @concern           content
- * @niche             data/changelog
- * @purpose           infrastructure:data-feeds
- * @description       Unified changelog generator for all changelog targets (solutions, contracts, resources).
- *                    Fetches GitHub/GitLab releases (mode: releases) or commit history (mode: commits).
- *                    Config-driven via product-social-config.json changelogs{} section. With --enhance,
- *                    uses an LLM to summarise release notes. With --contract, fetches governor-scripts
- *                    commits and verifies deployed addresses on-chain via Arbiscan/Etherscan.
- *                    Falls back to raw extraction on LLM failure. Supports dual-source (GitHub + GitLab)
- *                    with deduplication by tag_name. Backwards-compatible: falls back to legacy
- *                    products{} scanning if changelogs{} section is absent from config.
- * @mode              generate
- * @pipeline          config → GitHub/GitLab REST API → [LLM optional] → [on-chain verify optional] → changelog.mdx
- * @scope             .github/scripts, v2/solutions/, v2/resources/changelog/
- * @usage             CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]
- *                    CHANGELOG_CATEGORY=solutions node .github/scripts/generate-changelog.js [--dry-run] [--enhance]
- *                    PRODUCT_KEY=daydream node .github/scripts/generate-changelog.js [--dry-run] [--enhance]
- * @policy            Public repos only. GITHUB_TOKEN optional (rate limits). No secrets in output.
+ * @script      generate-changelog
+ * @type        integrator
+ * @concern     copy
+ * @niche       changelogs
+ * @purpose     infrastructure:data-feeds
+ * @description Unified changelog generator for all changelog targets (solutions, contracts, resources).
+ * @mode        integrate
+ * @pipeline    config → GitHub/GitLab REST API → [LLM optional] → [on-chain verify optional] → changelog.mdx
+ * @scope       .github/scripts, v2/solutions/, v2/resources/changelog/
+ * @usage       CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]
+ * @policy      Public repos only. GITHUB_TOKEN optional (rate limits). No secrets in output.
  */
 
 const https = require("https");
@@ -668,7 +659,7 @@ function buildUpdateBlock(tag, date, tags, content, rawNotes, releaseUrl, rssSum
   const heading = repoLabel ? `${repoLabel}: ${tag}` : tag;
 
   let block = "";
-  block += `<Update label="${heading}" tags={[${tagsStr}]} rss={{ title: "${esc(rssTitle)}", description: "${esc(rssDesc)}" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>${date}</div>}>\n`;
+  block += `<Update label="${heading}" tags={[${tagsStr}]} rss={{ title: "${esc(rssTitle)}", description: "${esc(rssDesc)}" }} description={<Subtitle variant="changelog">${date}</Subtitle>}>\n`;
   block += `  ## ${heading}\n\n`;
 
   // LLM summary with icon label + divider line underneath
@@ -677,9 +668,9 @@ function buildUpdateBlock(tag, date, tags, content, rawNotes, releaseUrl, rssSum
       .split("\n")
       .map((line) => (line ? `  ${line}` : ""))
       .join("\n");
-    block += `  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem"}}><Icon icon="user-robot" size={14} /> _AI Summary_</span>\n\n`;
+    block += `  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />\n\n`;
     block += `${indented}\n\n`;
-    block += `  <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />\n\n`;
+    block += `  <InlineDivider margin="1rem 0" />\n\n`;
   }
 
   // Full release notes from the maintainer in ScrollBox (when they exist and aren't placeholder)
@@ -688,7 +679,7 @@ function buildUpdateBlock(tag, date, tags, content, rawNotes, releaseUrl, rssSum
       .split("\n")
       .map((line) => (line ? `    ${line}` : ""))
       .join("\n");
-    block += `  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "1.5rem"}}><Icon icon="pen-to-square" size={14} /> _Release Notes_</span>\n\n`;
+    block += `  <CustomCardTitle variant="tab" icon="pen-to-square" title="_Release Notes_" style={{marginBottom: "var(--lp-spacing-6)"}} />\n\n`;
     block += `  <ScrollBox maxHeight="250px" showHint={true}>\n`;
     block += `${rawIndented}\n`;
     block += `  </ScrollBox>\n\n`;
@@ -947,7 +938,7 @@ function buildCommitUpdateBlock(commit, verifications, target) {
   const rssTitle = `${displayName}: ${cleanLabel}`;
 
   let block = "";
-  block += `<Update label="${esc(cleanLabel)}" tags={[${tagsStr}]} rss={{ title: "${esc(rssTitle)}", description: "${esc(commit.name || shortSha)}" }} description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>${date}</div>}>\n`;
+  block += `<Update label="${esc(cleanLabel)}" tags={[${tagsStr}]} rss={{ title: "${esc(rssTitle)}", description: "${esc(commit.name || shortSha)}" }} description={<Subtitle variant="changelog">${date}</Subtitle>}>\n`;
   block += `  ## ${cleanLabel}\n\n`;
 
   // Commit message in a ScrollBox if multi-line
@@ -961,7 +952,7 @@ function buildCommitUpdateBlock(commit, verifications, target) {
 
   // Contract verification table
   if (verifications && verifications.length > 0) {
-    block += `  <span style={{display: "inline-flex", alignItems: "center", gap: "0.35rem", marginBottom: "0.5rem"}}><Icon icon="shield-check" size={14} /> _On-chain verification_</span>\n\n`;
+    block += `  <CustomCardTitle variant="tab" icon="shield-check" title="_On-chain verification_" style={{marginBottom: "var(--lp-spacing-2)"}} />\n\n`;
     const deployed = verifications.filter((v) => v && v.deployed);
     const notFound = verifications.filter((v) => v && !v.deployed);
     if (deployed.length > 0) {

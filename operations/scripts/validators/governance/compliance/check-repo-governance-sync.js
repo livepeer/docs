@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-repo-governance-sync
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:ownerless-governance
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     
  * @description Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual, pr-changed -> repo-governance registry -> exit-code, stdout:violations
  * @scope       operations/governance/config, operations/scripts/generators/governance/reports, operations/scripts/validators/governance/compliance, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
  * @usage       node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js [--json]

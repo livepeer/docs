@@ -1,5 +1,5 @@
 export const iconMapMethodology = {
-  generatedOn: '2026-03-21',
+  generatedOn: '2026-04-09',
   scope: 'Current English MDX under v2/ and docs-guide/ (locale copies and internal excluded)',
   exclusions: [
     '_archive',
@@ -267,6 +267,34 @@ export const iconMapSections = [
           'v2/gateways/portal.mdx',
         ],
       },
+      {
+        icon: 'play',
+        label: 'Playback / tutorial action / demo start',
+        scanCount: 15,
+        useFor:
+          'Tutorial action buttons, demo start CTAs, and playback-related navigation across delegator and developer surfaces.',
+        avoid:
+          'Avoid where `circle-play` already covers watch/demo semantics. Use `play` for generic action triggers, `circle-play` for featured video.',
+        components: ['Card', 'Accordion', 'Tab'],
+        examples: [
+          'v2/delegators/delegation/bridge-lpt-to-arbitrum.mdx',
+          'v2/delegators/delegation/choose-an-orchestrator.mdx',
+        ],
+      },
+      {
+        icon: 'camera-movie',
+        label: 'Video recording / streaming context',
+        scanCount: 12,
+        useFor:
+          'Streaming and recording contexts, gateway quickstart content that involves live video capture.',
+        avoid:
+          'Avoid for post-processing or transcoding (use `film`). Avoid for viewer-side playback (use `play` or `circle-play`).',
+        components: ['Card', 'Tab', 'Accordion'],
+        examples: [
+          'v2/gateways/custom/views/quickstart/docker/dockerOffChainTab.mdx',
+          'v2/gateways/custom/views/quickstart/docker/dockerOnChainTab.mdx',
+        ],
+      },
     ],
   },
   {
@@ -356,6 +384,48 @@ export const iconMapSections = [
         examples: [
           'docs-guide/tooling/dev-tools.mdx',
           'v2/developers/resources/compendium/resources.mdx',
+        ],
+      },
+      {
+        icon: 'books',
+        label: 'Knowledge library / documentation collection',
+        scanCount: 12,
+        useFor:
+          'Navigator and portal surfaces linking to documentation libraries, knowledge hubs, and curated reading paths.',
+        avoid:
+          'Avoid for single-document links (use `book`). Avoid for guide collections (use `book-open`).',
+        components: ['Card', 'Accordion', 'navigator CTA'],
+        examples: [
+          'v2/about/navigator.mdx',
+          'v2/delegators/delegation/overview.mdx',
+        ],
+      },
+      {
+        icon: 'magnifying-glass',
+        label: 'Search / discover / explore',
+        scanCount: 11,
+        useFor:
+          'Search surfaces, discovery CTAs, explorer links, and opportunity-finding navigation.',
+        avoid:
+          'Avoid for detailed reference pages (use `table-list` or `file-lines`).',
+        components: ['Card', 'Tab', 'Accordion'],
+        examples: [
+          'v2/developers/navigator.mdx',
+          'v2/developers/guides/opportunities/overview.mdx',
+        ],
+      },
+      {
+        icon: 'file',
+        label: 'Configuration file / document reference',
+        scanCount: 10,
+        useFor:
+          'Configuration files, governance proposals, treasury documents, and file-level references.',
+        avoid:
+          'Avoid for broader documentation pages (use `book`). Avoid for templates (use `file-lines`).',
+        components: ['Card', 'Accordion', 'Tab'],
+        examples: [
+          'v2/about/protocol/treasury.mdx',
+          'v2/gateways/custom/views/setup/configure/video-configuration-content.mdx',
         ],
       },
     ],
@@ -477,6 +547,34 @@ export const iconMapSections = [
           'docs-guide/tooling/lpd-cli.mdx',
         ],
       },
+      {
+        icon: 'check',
+        label: 'Verification step / completed action',
+        scanCount: 24,
+        useFor:
+          'Verification steps in setup flows, completed-action indicators, contract verification, and funding confirmation.',
+        avoid:
+          'Avoid for generic success messaging (use `check-circle`). Use `check` for inline step verification, `check-circle` for summary/result status.',
+        components: ['Accordion', 'Tab', 'Card'],
+        examples: [
+          'v2/about/protocol/blockchain-contracts.mdx',
+          'v2/gateways/guides/payments-and-pricing/funding-guide.mdx',
+        ],
+      },
+      {
+        icon: 'download',
+        label: 'Install / download / fetch resource',
+        scanCount: 18,
+        useFor:
+          'Download actions, binary installation steps, SDK fetching, and resource acquisition CTAs.',
+        avoid:
+          'Avoid for generic setup (use `bolt` or `rocket`). Use `download` only when the action is specifically downloading or installing.',
+        components: ['Card', 'Tab', 'Step'],
+        examples: [
+          'v2/developers/get-started/contributor-quickstart.mdx',
+          'v2/gateways/guides/deployment-details/setup-options.mdx',
+        ],
+      },
     ],
   },
   {
@@ -580,6 +678,34 @@ export const iconMapSections = [
         examples: [
           'v2/developers/resources/compendium/resources.mdx',
           'v2/gateways/concepts/role.mdx',
+        ],
+      },
+      {
+        icon: 'lock',
+        label: 'Security / authentication / access control',
+        scanCount: 18,
+        useFor:
+          'Authentication pages, security considerations, API key management, access control, and encryption references.',
+        avoid:
+          'Avoid for general protocol governance (use `diagram-project`). Use `lock` only when the topic is specifically about securing access.',
+        components: ['Card', 'Accordion', 'Tab'],
+        examples: [
+          'v2/developers/build/sdk-gateway.mdx',
+          'v2/developers/guides/ai/authentication.mdx',
+        ],
+      },
+      {
+        icon: 'plug',
+        label: 'Integration / connection / API endpoint',
+        scanCount: 16,
+        useFor:
+          'Integration guides, API connection references, SDK endpoints, and plugin/extension surfaces.',
+        avoid:
+          'Avoid for general link/path semantics (use `link`). Use `plug` when the content is about connecting systems together.',
+        components: ['Card', 'Accordion', 'Tab'],
+        examples: [
+          'v2/developers/resources/reference/sdks.mdx',
+          'v2/developers/resources/reference/pricing-rate-limits.mdx',
         ],
       },
     ],
@@ -1077,6 +1203,19 @@ export const iconMapSections = [
         examples: [
           'v2/orchestrators/guides/advanced-operations/production-hardening.mdx',
           'v2/gateways/guides/advanced-operations/production-hardening.mdx',
+        ],
+      },
+      {
+        icon: 'pen-to-square',
+        label: 'Edit / changelog entry / content update',
+        scanCount: 34,
+        useFor:
+          'Changelog entry accordions, edit actions, and content-update indicators.',
+        avoid:
+          'Avoid for general writing or authoring surfaces (use `file-lines`). Use `pen-to-square` specifically for edit/update semantics.',
+        components: ['Accordion', 'Card', 'changelog entry'],
+        examples: [
+          'v2/solutions/daydream/changelog.mdx',
         ],
       },
     ],

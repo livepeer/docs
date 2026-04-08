@@ -1,143 +1,8 @@
 import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 
-/**
- * @component CustomCallout
- * @category elements
- * @subcategory links
- * @status stable
- * @description Styled callout box with icon, custom colour, and child content.
- * @aiDiscoverability none
- * @param {React.ReactNode} children - Content to display in the callout
- * @param {string} [icon="lightbulb"] - Icon name to display
- * @param {string} color - Primary color for icon, border, and background (defaults to theme accent)
- * @param {number} [iconSize=16] - Size of the icon in pixels
- * @param {string} [textSize="0.875rem"] - Font size for the text content
- * @param {string} textColor - Text color (defaults to match icon color)
- * @example
- * <CustomCallout color="example" textColor="example">Example content</CustomCallout>
- * @param {string} [className=''] - Optional CSS class override.
- * @param {object} [style={}] - Optional inline style override.
- */
-const CustomCallout = ({
-  children,
-  icon = 'lightbulb',
-  color,
-  iconSize = 16,
-  textSize = '0.875rem',
-  textColor,
-  className = '',
-  style = {},
-  ...rest
-}) => {
-  // Use theme accent if no color specified
-  const resolvedColor = color || 'var(--accent)'
-  const resolvedTextColor = textColor || resolvedColor
-
-  // Convert hex to rgba for proper opacity
-  const hexToRgba = (hex, alpha) => {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`
-  }
-
-  return (
-    <div
-      className={className}
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '12px',
-        padding: '16px 20px',
-        borderRadius: '16px',
-        border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
-        backgroundColor: hexToRgba(resolvedColor, 0.1),
-        marginTop: '16px',
-        marginBottom: '16px',
-        overflow: 'hidden',
-        ...style,
-      }}
-      {...rest}
-    >
-      <div style={{ marginTop: '2px', width: iconSize, flexShrink: 0 }}>
-        <Icon icon={icon} size={iconSize} color={resolvedColor} />
-      </div>
-      <div
-        style={{
-          fontSize: textSize,
-          color: resolvedTextColor,
-          minWidth: 0,
-          width: '100%',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
-/**
- * @component BlinkingIcon
- * @category elements
- * @subcategory links
- * @status stable
- * @description Animated icon with pulsing opacity. Respects prefers-reduced-motion.
- * @aiDiscoverability none
- * @param {string} [icon="terminal"] - Icon name to display
- * @param {number} [size=16] - Size of the icon in pixels
- * @param {string} color - Color of the icon (defaults to theme accent)
- * @example
- * <BlinkingIcon color="example" />
- * @param {string} [className=''] - Optional CSS class override.
- * @param {object} [style={}] - Optional inline style override.
- */
-const BlinkingIcon = ({
-  icon = 'terminal',
-  size = 16,
-  color,
-  className = '',
-  style = {},
-  ...rest
-}) => {
-  const resolvedColor = color || 'var(--accent)'
-  return (
-    <span
-      className={className}
-      style={{ display: 'inline-flex', ...style }}
-      {...rest}
-    >
-      <style>{`
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; }
-        }
-      `}</style>
-      <span
-        style={{
-          display: 'inline-flex',
-          animation: 'blink 3s ease-in-out infinite',
-        }}
-      >
-        <Icon icon={icon} size={size} color={resolvedColor} />
-      </span>
-    </span>
-  )
-}
-
-/**
- * @component BlinkingTerminal
- * @category elements
- * @subcategory links
- * @status stable
- * @description Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).
- * @aiDiscoverability none
- * @example
- * <BlinkingTerminal />
- */
-const BlinkingTerminal = BlinkingIcon
+// Re-exports for consumers that import these from Links.jsx
+export { BlinkingIcon } from '/snippets/components/elements/icons/Icons.jsx';
+export { CustomCallout, TipWithArrow } from '/snippets/components/elements/callouts/Callouts.jsx';
 
 /**
  * @component DoubleIconLink
@@ -146,6 +11,9 @@ const BlinkingTerminal = BlinkingIcon
  * @status stable
  * @description Inline link with icons on both sides.
  * @aiDiscoverability none
+ * @usedIn v2/about/protocol/blockchain-contracts.mdx, v2/gateways/guides/deployment-details/setup-options.mdx, v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/setup/configure.mdx, v2/gateways/setup/install.mdx, v2/gateways/setup/monitor/monitor-and-optimise.mdx, v2/gateways/setup/prepare.mdx, v2/gateways/setup/requirements/on-chain-setup/on-chain.mdx, v2/gateways/setup/requirements/setup.mdx, v2/resources/changelog/ai-compute/ai-runner.mdx, v2/resources/changelog/ai-compute/comfystream.mdx, v2/resources/changelog/ai-compute/pytrickle.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-go.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-js.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-python.mdx, v2/resources/changelog/apis-sdks/livepeer-js.mdx, v2/resources/changelog/apis-sdks/livepeer-python.mdx, v2/resources/changelog/ecosystem/awesome-livepeer.mdx, v2/resources/changelog/ecosystem/website.mdx, v2/resources/changelog/protocol/go-livepeer.mdx, v2/resources/changelog/protocol/lips.mdx, v2/resources/changelog/protocol/naap.mdx, v2/resources/changelog/protocol/subgraph.mdx, v2/resources/changelog/tooling/explorer.mdx, v2/resources/changelog/tooling/livepeer-data.mdx, v2/resources/changelog/tooling/livepeer-python-gateway.mdx, v2/solutions/daydream/changelog.mdx, v2/solutions/embody/changelog.mdx, v2/solutions/frameworks/changelog.mdx, v2/solutions/livepeer-studio/changelog.mdx, v2/solutions/solution-providers.mdx, v2/solutions/streamplace/changelog.mdx
+ * @breakingChangeRisk high
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} [label=""] - Link text/label
  * @param {string} [href="#"] - Link URL
  * @param {string} [text=""] - Optional text to display before the link
@@ -164,7 +32,7 @@ const DoubleIconLink = ({
   iconLeft = 'github',
   iconLeftColor,
   iconRight = 'arrow-up-right',
-  iconRightColor = 'var(--accent)',
+  iconRightColor = 'var(--lp-color-accent)',
   className = '',
   style = {},
   ...rest
@@ -176,7 +44,7 @@ const DoubleIconLink = ({
         whiteSpace: 'nowrap',
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '0.25rem',
+        gap: "var(--lp-spacing-1)",
         marginLeft: '0.3rem',
         ...style,
       }}
@@ -201,6 +69,9 @@ const DoubleIconLink = ({
  * @status stable
  * @description Inline navigation link with icon prefix and label.
  * @aiDiscoverability none
+ * @usedIn v2/about/network/interfaces.mdx, v2/about/network/marketplace.mdx, v2/about/network/technical-architecture.mdx, v2/about/protocol/technical-architecture.mdx, v2/developers/build/workload-fit.mdx, v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx, v2/gateways/setup/guide.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} label - Link text/label
  * @param {string} relativePath - Relative URL path
  * @param {string} [text=""] - Optional text to display before the link
@@ -241,6 +112,9 @@ const GotoLink = ({
  * @status stable
  * @description Card-style navigation link wrapping Mintlify Card component.
  * @aiDiscoverability none
+ * @usedIn v2/about/network/marketplace.mdx, v2/about/network/technical-architecture.mdx, v2/about/protocol/technical-architecture.mdx, v2/developers/build/workload-fit.mdx, v2/developers/guides/opportunities/overview.mdx, v2/developers/resources/compendium/developer-help.mdx, v2/developers/resources/compendium/resources.mdx, v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx
+ * @breakingChangeRisk medium
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} label - Card title
  * @param {string} relativePath - Relative URL path
  * @param {string} icon - Icon to display (defaults to "arrow-turn-down-right")
@@ -279,99 +153,15 @@ const GotoCard = ({
 }
 
 /**
- * @component TipWithArrow
- * @category elements
- * @subcategory links
- * @status stable
- * @description Callout box with tip icon and corner arrow indicator.
- * @aiDiscoverability none
- * @param {React.ReactNode} children - Content to display in the tip
- * @param {string} [icon="lightbulb"] - Main icon to display on the left
- * @param {string} [arrowIcon="arrow-up-right"] - Arrow icon to display in top-right
- * @param {string} color - Primary color for icons, border, and background (defaults to theme accent)
- * @param {number} [iconSize=16] - Size of the main icon in pixels
- * @param {number} [arrowSize=16] - Size of the arrow icon in pixels
- * @example
- * <TipWithArrow color="example">Example content</TipWithArrow>
- * @param {string} [className=''] - Optional CSS class override.
- * @param {object} [style={}] - Optional inline style override.
- */
-const TipWithArrow = ({
-  children,
-  icon = 'lightbulb',
-  arrowIcon = 'arrow-up-right',
-  color,
-  iconSize = 16,
-  arrowSize = 16,
-  className = '',
-  style = {},
-  ...rest
-}) => {
-  // Use theme accent if no color specified
-  const resolvedColor = color || 'var(--accent)'
-
-  // Convert hex to rgba for proper opacity
-  const hexToRgba = (hex, alpha) => {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`
-  }
-
-  return (
-    <div
-      className={className}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '12px',
-        padding: '16px 20px',
-        paddingRight: '48px', // Extra space for the arrow
-        borderRadius: '16px',
-        border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
-        backgroundColor: hexToRgba(resolvedColor, 0.1),
-        marginTop: '16px',
-        marginBottom: '16px',
-        overflow: 'hidden',
-        ...style,
-      }}
-      {...rest}
-    >
-      <div style={{ marginTop: '2px', width: iconSize, flexShrink: 0 }}>
-        <Icon icon={icon} size={iconSize} color={resolvedColor} />
-      </div>
-      <div
-        style={{
-          fontSize: '0.875rem',
-          color: resolvedColor,
-          minWidth: 0,
-          width: '100%',
-        }}
-      >
-        {children}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: '16px',
-          right: '16px',
-          opacity: 0.6,
-        }}
-      >
-        <Icon icon={arrowIcon} size={arrowSize} color={resolvedColor} />
-      </div>
-    </div>
-  )
-}
-
-/**
  * @component LinkArrow
  * @category elements
  * @subcategory links
  * @status stable
  * @description External link with arrow icon, optional description, and line break control.
  * @aiDiscoverability none
+ * @usedIn v2/about/concepts/livepeer-overview.mdx, v2/about/navigator.mdx, v2/about/protocol/blockchain-contracts.mdx, v2/about/protocol/governance-model.mdx, v2/about/protocol/livepeer-token.mdx, v2/about/protocol/overview.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/community/livepeer-connect/events-and-community-streams.mdx, v2/developers/build/sdk-gateway.mdx, v2/developers/guides/contribution-guide.mdx, v2/developers/guides/local-testnet-deployment.mdx, v2/developers/navigator.mdx, v2/developers/resources/reference/pytrickle.mdx, v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/advanced-operations/gateway-discoverability.mdx, v2/gateways/guides/advanced-operations/gateway-middleware.mdx, v2/gateways/guides/advanced-operations/orchestrator-selection.mdx, v2/gateways/guides/advanced-operations/scaling.mdx, v2/gateways/guides/deployment-details/setup-requirements.mdx, v2/gateways/guides/monitoring-and-tooling/health-checks.mdx, v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx, v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx, v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx, v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx, v2/gateways/guides/node-pipelines/ai-pipelines.mdx, v2/gateways/guides/node-pipelines/byoc-pipelines.mdx, v2/gateways/guides/node-pipelines/guide.mdx, v2/gateways/guides/node-pipelines/pipeline-configuration.mdx, v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx, v2/gateways/guides/payments-and-pricing/funding-guide.mdx, v2/gateways/guides/payments-and-pricing/payment-guide.mdx, v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx, v2/gateways/guides/payments-and-pricing/remote-signers.mdx, v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx, v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx, v2/gateways/guides/roadmap-and-funding/operator-support.mdx, v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx, v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx, v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx, v2/gateways/guides/tutorials/tutorial-3-go-production.mdx, v2/gateways/navigator.mdx, v2/gateways/portal.mdx, v2/gateways/resources/deployment-terms.mdx, v2/gateways/setup/guide.mdx, v2/gateways/setup/monitor.mdx, v2/gateways/setup/monitor/monitoring-setup.mdx, v2/gateways/setup/prepare.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/solutions/landscape.mdx, v2/home/solutions/showcase.mdx, v2/home/solutions/trending.mdx, v2/orchestrators/concepts/architecture.mdx, v2/orchestrators/concepts/capabilities.mdx, v2/orchestrators/concepts/incentive-model.mdx, v2/orchestrators/concepts/role.mdx, v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface.mdx, v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines.mdx, v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup.mdx, v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx, v2/orchestrators/guides/config-and-optimisation/ai-model-management.mdx, v2/orchestrators/guides/config-and-optimisation/capacity-planning.mdx, v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx, v2/orchestrators/guides/config-and-optimisation/reward-call-tuning.mdx, v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx, v2/orchestrators/guides/deployment-details/join-a-pool.mdx, v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx, v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx, v2/orchestrators/guides/deployment-details/setup-options.mdx, v2/orchestrators/guides/deployment-details/siphon-setup.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx, v2/orchestrators/guides/operator-considerations/operator-impact.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx, v2/orchestrators/guides/operator-considerations/requirements.mdx, v2/orchestrators/guides/payments-and-pricing/payment-receipts.mdx, v2/orchestrators/guides/tutorials/add-ai-to-video-node.mdx, v2/orchestrators/guides/tutorials/ai-earning-quickstart.mdx, v2/orchestrators/guides/tutorials/byoc-cpu-smoke-test.mdx, v2/orchestrators/guides/tutorials/full-ai-pipeline-tutorial.mdx, v2/orchestrators/guides/tutorials/realtime-ai-tutorial.mdx, v2/orchestrators/guides/tutorials/zero-to-first-reward.mdx, v2/orchestrators/navigator.mdx, v2/orchestrators/setup/configure.mdx, v2/orchestrators/setup/connect.mdx, v2/orchestrators/setup/verify.mdx, v2/resources/changelog/ai-compute/ai-runner.mdx, v2/resources/changelog/ai-compute/comfystream.mdx, v2/resources/changelog/ai-compute/pytrickle.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-go.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-js.mdx, v2/resources/changelog/apis-sdks/livepeer-ai-python.mdx, v2/resources/changelog/apis-sdks/livepeer-js.mdx, v2/resources/changelog/apis-sdks/livepeer-python.mdx, v2/resources/changelog/ecosystem/awesome-livepeer.mdx, v2/resources/changelog/ecosystem/website.mdx, v2/resources/changelog/protocol/go-livepeer.mdx, v2/resources/changelog/protocol/lips.mdx, v2/resources/changelog/protocol/naap.mdx, v2/resources/changelog/protocol/subgraph.mdx, v2/resources/changelog/tooling/explorer.mdx, v2/resources/changelog/tooling/livepeer-data.mdx, v2/resources/changelog/tooling/livepeer-python-gateway.mdx, v2/resources/portal.mdx, v2/solutions/daydream/changelog.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/changelog.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/changelog.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/changelog.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/solution-providers.mdx, v2/solutions/streamplace/changelog.mdx, v2/solutions/streamplace/community.mdx
+ * @breakingChangeRisk high
+ * @lastMeaningfulChange 2026-04-09
  * @param {any} href - href prop.
  * @param {any} label - label prop.
  * @param {any} description - description prop.
@@ -396,7 +186,7 @@ const LinkArrow = ({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '0.25rem',
+    gap: "var(--lp-spacing-1)",
     width: 'fit-content',
     ...(borderColor && { borderColor }),
   }
@@ -407,10 +197,10 @@ const LinkArrow = ({
         <a href={href} target="_blank" rel="noopener noreferrer">
           {label}
         </a>
-        <Icon icon="arrow-up-right" size={14} color="var(--accent)" />
+        <Icon icon="arrow-up-right" size={14} color="var(--lp-color-accent)" />
       </span>
       {description && description}
-      {description && <div style={{ height: '0.75rem' }} />}
+      {description && <div style={{ height: "var(--lp-spacing-3)" }} />}
     </span>
   )
 }
@@ -422,6 +212,9 @@ const LinkArrow = ({
  * @status stable
  * @description Wraps a Mintlify Icon in an anchor tag. Strips default Mintlify link styling (border-bottom).
  * @aiDiscoverability none
+ * @usedIn v2/about/protocol/blockchain-contracts.mdx, v2/about/resources/glossary.mdx, v2/community/resources/glossary.mdx, v2/delegators/resources/glossary.mdx, v2/developers/resources/glossary.mdx, v2/gateways/resources/glossary.mdx, v2/home/resources/glossary.mdx, v2/orchestrators/resources/glossary.mdx, v2/resources/resource-hub-terms.mdx, v2/solutions/resources/glossary.mdx, v2/solutions/solution-providers.mdx
+ * @breakingChangeRisk medium
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} href - Link destination URL.
  * @param {string} [icon="arrow-up-right-from-square"] - Font Awesome icon name.
  * @param {number} [size=14] - Icon size in pixels.
@@ -461,6 +254,9 @@ const LinkIcon = ({
  * @status stable
  * @description Copyable contract address with blockchain explorer and GitHub links.
  * @aiDiscoverability none
+ * @usedIn v2/about/protocol/blockchain-contracts.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-09
  * @param {string} address - Contract address to display and copy.
  * @param {string} [blockchainHref] - Blockchain explorer URL (e.g. Arbiscan).
  * @param {string} [githubHref] - GitHub source URL.
@@ -480,23 +276,129 @@ const AddressLinks = ({
   return (
     <span className={className} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', ...style }} {...rest}>
       <CopyText text={address} />
-      <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-        {blockchainHref && <LinkIcon color="var(--text)" href={blockchainHref} />}
-        {githubHref && <LinkIcon icon="github" size={14} color="var(--text)" href={githubHref} />}
+      <span style={{ display: 'flex', alignItems: 'center', gap: "var(--lp-spacing-2)", marginBottom: '0.2rem' }}>
+        {blockchainHref && <LinkIcon color="var(--lp-color-text-secondary)" href={blockchainHref} />}
+        {githubHref && <LinkIcon icon="github" size={14} color="var(--lp-color-text-secondary)" href={githubHref} />}
       </span>
     </span>
   )
 }
 
+/**
+ * @component SocialLinks
+ * @category elements
+ * @subcategory links
+ * @status stable
+ * @description Row of icon-only social media links with tooltips and aria-labels. Pass a links array to customise per product; omit for Livepeer defaults.
+ * @aiDiscoverability none
+ * @usedIn v2/home/primer.mdx, v2/solutions/daydream/community.mdx, v2/solutions/daydream/overview.mdx, v2/solutions/embody/community.mdx, v2/solutions/embody/overview.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/frameworks/overview.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/livepeer-studio/overview.mdx, v2/solutions/portal.mdx, v2/solutions/streamplace/community.mdx, v2/solutions/streamplace/overview.mdx
+ * @breakingChangeRisk medium
+ * @lastMeaningfulChange 2026-04-09
+ * @param {Array} [links] - Array of {icon, href, label} objects. Falls back to Livepeer defaults if omitted.
+ * @param {number} [size=20] - Icon size in pixels.
+ * @param {string} [gap="var(--lp-spacing-3)"] - Gap between icons.
+ * @param {string} [justify="center"] - Flex justify-content value.
+ * @param {string} [iconColor] - Override all icons to a single colour.
+ * @param {string} [color] - Alias for iconColor (backwards compat).
+ * @param {string} [className=""] - CSS class name.
+ * @param {object} [style={}] - Inline style overrides.
+ * @example
+ * <SocialLinks />
+ */
+const SocialLinks = ({
+  links,
+  size = 20,
+  gap = "var(--lp-spacing-3)",
+  justify = "center",
+  iconColor,
+  color,
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  const resolvedIconColor = iconColor || color;
+  const linkStyle = {
+    border: "none",
+    borderBottom: "none",
+    textDecoration: "none",
+    display: "inline-flex",
+  };
+
+  const colors = {
+    discord: resolvedIconColor || "var(--lp-color-brand-discord)",
+    twitter: resolvedIconColor || "var(--lp-color-text-primary)",
+    github: resolvedIconColor || "var(--lp-color-brand-github)",
+    forum: resolvedIconColor || "var(--lp-color-brand-forum)",
+    website: resolvedIconColor || "var(--lp-color-accent)",
+    blog: resolvedIconColor || "var(--lp-color-accent)",
+    globe: resolvedIconColor || "var(--lp-color-brand-globe)",
+    twitch: resolvedIconColor || "var(--lp-color-brand-twitch)",
+    youtube: resolvedIconColor || "var(--lp-color-brand-youtube)",
+    instagram: resolvedIconColor || "var(--lp-color-brand-instagram)",
+    linkedin: resolvedIconColor || "var(--lp-color-brand-linkedin)",
+  };
+
+  const iconColorMap = {
+    discord: "discord",
+    "x-twitter": "twitter",
+    github: "github",
+    "comment-pen": "forum",
+    "pen-line": "blog",
+    "pencil-line": "blog",
+    globe: "globe",
+    "book-open": "website",
+    twitch: "twitch",
+    youtube: "youtube",
+    instagram: "instagram",
+    linkedin: "linkedin",
+  };
+
+  const defaultLinks = [
+    { icon: "discord", href: "https://discord.com/invite/livepeer", label: "Livepeer Discord" },
+    { icon: "globe", href: "https://livepeer.org", label: "Livepeer Website" },
+    { icon: "github", href: "https://github.com/livepeer", label: "Livepeer GitHub" },
+    { icon: "comment-pen", href: "https://forum.livepeer.org", label: "Livepeer Forum" },
+    { icon: "pen-line", href: "https://livepeer.org/blog", label: "Livepeer Blog" },
+    { icon: "x-twitter", href: "https://x.com/livepeer", label: "Livepeer X" },
+  ];
+
+  const items = links || defaultLinks;
+
+  return (
+    <div className={className} style={style} {...rest}>
+      <style>{`
+        .social-links a {
+          border: none;
+          border-bottom: none;
+        }
+      `}</style>
+      <span
+        className="social-links"
+        style={{
+          display: "flex",
+          justifyContent: justify,
+          gap: gap,
+          marginTop: "var(--lp-spacing-2)",
+        }}
+      >
+        {items.map((item, i) => (
+          <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" aria-label={item.label} style={linkStyle}>
+            <Tooltip headline={item.label}>
+              <Icon icon={item.icon} size={size} color={colors[iconColorMap[item.icon] || "website"] || "var(--lp-color-accent)"} aria-hidden="true" />
+            </Tooltip>
+          </a>
+        ))}
+      </span>
+    </div>
+  );
+};
+
 export {
-  CustomCallout,
-  BlinkingIcon,
-  BlinkingTerminal,
   DoubleIconLink,
   GotoLink,
   GotoCard,
-  TipWithArrow,
   LinkArrow,
   LinkIcon,
   AddressLinks,
+  SocialLinks,
 }

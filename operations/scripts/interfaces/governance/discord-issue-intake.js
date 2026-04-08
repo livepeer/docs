@@ -1,16 +1,15 @@
 /**
- * @script            discord-issue-intake
- * @type              interface
- * @concern           governance
- * @niche             issue-lifecycle
- * @purpose           Creates GitHub issues from Discord community reports via repository_dispatch
- * @description       Validates repository_dispatch payload from Discord bot (n8n workflow),
- *                    checks for duplicates via correlation_id, ensures labels exist, screens
- *                    for security content, and creates a structured docs issue.
- * @mode              interface
- * @scope             .github/workflows/interface-governance-intake-discord-issues.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      discord-issue-intake
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Creates GitHub issues from Discord community reports via repository_dispatch
+ * @description Validates repository_dispatch payload from Discord bot (n8n workflow),
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-intake-discord-issues.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

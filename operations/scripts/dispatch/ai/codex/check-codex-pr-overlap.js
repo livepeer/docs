@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-codex-pr-overlap
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        dispatch
+ * @concern     discoverability
+ * @niche       codex
+ * @purpose     
  * @description PR enforcer — checks for conflicting codex PRs targeting the same files/branches
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PR, Track B)
  * @scope       operations/scripts, .github/workflows, codex PR governance
  * @usage       node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]

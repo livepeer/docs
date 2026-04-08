@@ -1,11 +1,11 @@
 /**
  * @script      3-check-duplicates
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Analyzes the exported Notion snapshot for duplicate page keys and writes JSON and Markdown reports.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/3-check-duplicates.js [flags]

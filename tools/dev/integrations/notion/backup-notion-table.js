@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      backup-notion-table
- * @type        automation
+ * @type        utility
  * @concern     governance
  * @niche       dev-tools
  * @purpose     tooling:dev-tools
  * @description Backs up the current Notion data source rows and metadata into timestamped JSON and CSV artifacts with a manifest.
- * @mode        execute
+ * @mode        integrate
  * @pipeline    manual
  * @scope       external
  * @usage       node tools/dev/integrations/notion/backup-notion-table.js [flags]

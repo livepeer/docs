@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      page-links-audit
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:link-integrity
+ * @type        audit
+ * @concern     health
+ * @niche       health
+ * @purpose     
  * @description Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual, P6
  * @scope       operations/scripts, operations/reports/health/page-links, v2 docs page surfaces
  * @usage       node operations/scripts/audits/content/health/page-links-audit.js [--full|--staged|--files <paths>|--tab <tab>] [--strict] [--external-policy classify|validate] [--output-dir <dir>]

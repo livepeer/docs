@@ -5,6 +5,9 @@
  * @status stable
  * @description API response field with name, type, and value display.
   * @aiDiscoverability none
+ * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/gateways/custom/views/setup/configure/video-configuration-content.mdx, v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {string} [post=null] - Post used by the component.
  * @param {string} [label="value"] - Label text rendered by the component.
@@ -75,6 +78,9 @@ const expandableCode = () => {
  * @status stable
  * @description Custom-styled API response field with configurable margin.
   * @aiDiscoverability none
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {React.ReactNode} description - Primary content rendered by the component.
  * @param {object} [props] - Additional props forwarded to ResponseField.
  * @param {string} [className=""] - CSS class name.
@@ -100,7 +106,12 @@ const CustomResponseField = ({ description, className = "", style = {}, ...props
  * @component ResponseFieldExpandable
  * @category displays
  * @subcategory response-fields
- * @status stable
+ * @status deprecated
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @deprecated Use ResponseFieldGroup with component="expandable" instead.
+ * @see ResponseFieldGroup
  * @description Expandable response field that reveals nested content on click.
   * @aiDiscoverability none
  * @param {object} [fields={}] - Fields used by the component.
@@ -127,7 +138,12 @@ const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...p
  * @component ResponseFieldAccordion
  * @category displays
  * @subcategory response-fields
- * @status stable
+ * @status deprecated
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @deprecated Use ResponseFieldGroup with component="accordion" instead.
+ * @see ResponseFieldGroup
  * @description Accordion-style response field with collapsible detail section.
   * @aiDiscoverability none
  * @param {object} [fields={}] - Fields used by the component.
@@ -159,6 +175,8 @@ const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...pr
  * @status stable
  * @description Container for grouping multiple response fields with consistent spacing.
   * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {string} [component="accordion"] - Component used by the component.
  * @param {object} [fields={}] - Fields used by the component.
  * @param {object} [props] - Additional props forwarded to the selected wrapper component.
@@ -199,6 +217,9 @@ const ResponseFieldGroup = ({
  * @status stable
  * @description Solidity function signature field with typed parameter pairs and optional return type.
  * @aiDiscoverability none
+ * @usedIn v2/about/protocol/blockchain-contracts.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
  * @param {string} name - Function name.
  * @param {string[]} [params=[]] - Parameter strings in "type name" format (e.g. "bytes32 _id").
  * @param {string} [returns] - Return type (e.g. "address", "uint256").

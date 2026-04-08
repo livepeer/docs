@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-scripts
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:repo-health
+ * @type        audit
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     
  * @description Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       operations/scripts, workspace/README.md, workspace/reports, operations/tests/unit/script-docs.test.js, operations/tests/README.md
  * @usage       node operations/scripts/audits/governance/scripts/audit-script-categories.js [flags]

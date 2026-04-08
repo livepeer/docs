@@ -1,11 +1,11 @@
 /**
  * @script      scope-checkpoint
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Injects periodic scope checks to prevent session drift from thread outcome
+ * @purpose     
  * @description PostToolUse hook for Edit/Write. Tracks total edit count per session.
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track edit count → inject scope check every 8 edits
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

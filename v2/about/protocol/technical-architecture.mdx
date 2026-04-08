@@ -2,7 +2,9 @@
 title: Technical Overview
 sidebarTitle: Technical Architecture
 description: A technical overview of the Livepeer protocol.
-PageType: concept
+lifecycleStage: discover
+complexity: intermediate
+pageType: concept
 keywords:
   - livepeer
   - about
@@ -16,7 +18,7 @@ keywords:
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17
+lastVerified: 2026-03-17T00:00:00.000Z
 purpose: concept
 ---
 
@@ -34,15 +36,15 @@ How in depth though?
 
 import { GotoCard, GotoLink } from '/snippets/components/elements/links/Links.jsx'
 import { Image } from '/snippets/components/elements/images/Image.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 
-<div style={{ display: "flex", justifyContent: "center", padding: 0, margin: 0}}>
+<FlexContainer justify="center" style={{padding: 0, margin: 0}}>
  <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
-</div>
+</FlexContainer>
 <CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
 
 <Quote>
@@ -83,7 +85,7 @@ These components implement the Livepeer protocol, allowing video to be efficient
 <ScrollableDiagram title="Livepeer Protocol Contract Architecture" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TD
     classDef default stroke-width:2px
     subgraph Core["Core Protocol Contracts"]
@@ -116,7 +118,7 @@ Livepeer can be modeled as a layered architecture:
 {/* <ScrollableDiagram title="Livepeer System Overview" maxHeight="500px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 graph TD
     classDef default stroke-width:2px
     A[Clients / Apps] --> B[Gateways]
@@ -146,7 +148,7 @@ graph TD
 <ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TD
     classDef default stroke-width:2px
     subgraph OffChain["Off-chain Network"]

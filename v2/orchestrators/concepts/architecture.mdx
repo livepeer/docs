@@ -1,10 +1,12 @@
 ---
-title: 'Orchestrator Architecture'
-sidebarTitle: 'Architecture'
+title: Orchestrator Architecture
+sidebarTitle: Architecture
 description: >-
-  How Orchestrators fit into the Livepeer stack - layer position, internal components,
-  request flow, GPU worker management, and protocol interactions.
-Keywords:
+  How Orchestrators fit into the Livepeer stack - layer position, internal components, request flow, GPU worker
+  management, and protocol interactions.
+lifecycleStage: discover
+complexity: beginner
+keywords:
   - livepeer
   - orchestrator
   - orchestrator architecture
@@ -25,10 +27,10 @@ Keywords:
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-pageType: 'concept'
-audience: 'orchestrator'
-purpose: 'explain'
-status: 'current'
+pageType: concept
+audience: orchestrator
+purpose: explain
+status: current
 lastVerified: '2026-03-15'
 ---
 
@@ -48,9 +50,9 @@ Human
 */}
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ZoomableDiagram.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
@@ -70,7 +72,7 @@ jobs from Gateways and executing them on GPU hardware.
 <ScrollableDiagram title="Livepeer Stack: Orchestrator Position" maxHeight="500px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 graph TB
     subgraph APP["Application Layer"]
         A["Applications\nDaydream, Streamplace, ComfyUI, custom apps"]
@@ -219,7 +221,7 @@ dual-workload configuration.
 <ScrollableDiagram title="Orchestrator Dual Pipeline Architecture" maxHeight="800px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     subgraph INPUT["From Gateways"]
         direction LR
@@ -331,7 +333,7 @@ delivery and payment accumulation.
 <ScrollableDiagram title="Orchestrator Job Flow" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 sequenceDiagram
     participant GW as Gateway
     participant ORC as Orchestrator

@@ -1,11 +1,11 @@
 /**
  * @script      mdx-render-verify
- * @type        
- * @concern     
+ * @type        dispatch
+ * @concern     governance
  * @niche       
- * @purpose     Verifies MDX page renders without new console errors after every edit
+ * @purpose     
  * @description PostToolUse hook for Edit/Write on v2 .mdx files. Launches Puppeteer,
- * @mode        read-only
+ * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → check if v2 MDX → ensure server → Puppeteer → compare baseline → write state
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.

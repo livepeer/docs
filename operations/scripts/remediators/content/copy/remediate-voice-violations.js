@@ -2,11 +2,11 @@
 /**
  * @script      remediate-voice-violations
  * @type        remediator
- * @concern     content
+ * @concern     brand
  * @niche       copy
  * @purpose     content:voice-compliance
  * @description Self-remediates voice register violations by deleting self-referential phrases and audience-specific prohibited constructions
- * @mode        edit
+ * @mode        repair
  * @pipeline    manual -> v2/*.mdx -> edited pages with violations removed
  * @scope       v2/
  * @usage       node operations/scripts/remediators/content/copy/remediate-voice-violations.js [--dry-run|--write]
@@ -21,7 +21,8 @@ const V2_DIR = path.join(REPO_ROOT, 'v2');
 
 // ── Args ────────────────────────────────
 function parseArgs(argv) {
-  const args = { mode: 'dry-run', help: false };
+  const args = { mode: 'dry-run', help: false,
+    verify: false };
   argv.forEach((token) => {
     if (token === '--write') { args.mode = 'write'; return; }
     if (token === '--dry-run') { args.mode = 'dry-run'; return; }

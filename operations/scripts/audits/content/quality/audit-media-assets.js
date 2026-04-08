@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-media-assets
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:repo-health
+ * @type        audit
+ * @concern     health
+ * @niche       quality
+ * @purpose     
  * @description Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       operations/scripts, workspace/reports/media-audit
  * @usage       node operations/scripts/audits/content/quality/audit-media-assets.js [flags]

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      audit-icon-usage
- * @type        
- * @concern     
- * @niche       
- * @purpose     tooling:dev-tools
+ * @type        audit
+ * @concern     maintenance
+ * @niche       reference
+ * @purpose     
  * @description Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual | post-PR | cron
  * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]

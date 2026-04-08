@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      cross-agent-packager
- * @type        
- * @concern     
- * @niche       
- * @purpose     governance:agent-governance
+ * @type        integrator
+ * @concern     discoverability
+ * @niche       agents
+ * @purpose     
  * @description Cross-agent packager — bundles audit reports and repo state into agent-consumable packages
- * @mode        read-only
+ * @mode        integrate
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
  * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]

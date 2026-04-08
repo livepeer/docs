@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      terminology-search
- * @type        
- * @concern     
- * @niche       
- * @purpose     tooling:dev-tools
+ * @type        audit
+ * @concern     maintenance
+ * @niche       reference
+ * @purpose     
  * @description Terminology search — searches glossary/terminology data for definitions
- * @mode        read-only
+ * @mode        scan
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts
  * @usage       node operations/scripts/audits/content/reference/terminology-search.js [flags]

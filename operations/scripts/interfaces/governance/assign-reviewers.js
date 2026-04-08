@@ -1,16 +1,15 @@
 /**
- * @script            assign-reviewers
- * @type              interface
- * @concern           governance
- * @niche             pr-lifecycle
- * @purpose           Auto-assigns Copilot reviewer to Codex PRs targeting docs-v2
- * @description       Three-phase reviewer assignment: (1) gate checks if PR is eligible
- *                    (same-repo, Codex branch/marker, not draft), (2) requests reviewer from
- *                    candidate list, (3) adds fallback marker comment if request failed.
- * @mode              interface
- * @scope             .github/workflows/interface-governance-assign-reviewers.yml
- * @usage             Called by github-script in workflow — not invoked directly
- * @policy            D-ACT-08 (workflows are dispatchers, scripts carry the type)
+ * @script      assign-reviewers
+ * @type        interface
+ * @concern     governance
+ * @niche       
+ * @purpose     Auto-assigns Copilot reviewer to Codex PRs targeting docs-v2
+ * @description Three-phase reviewer assignment: (1) gate checks if PR is eligible
+ * @mode        interface
+ * @pipeline    manual
+ * @scope       .github/workflows/interface-governance-assign-reviewers.yml
+ * @usage       Called by github-script in workflow — not invoked directly
+ * @policy      D-ACT-08 (workflows are dispatchers, scripts carry the type)
  */
 
 'use strict';

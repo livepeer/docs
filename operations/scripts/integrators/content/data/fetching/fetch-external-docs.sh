@@ -1,11 +1,11 @@
 #!/bin/bash
 # @script      fetch-external-docs
-# @type        
-# @concern     
-# @niche       
-# @purpose     infrastructure:data-feeds
+# @type        integrator
+# @concern     integrations
+# @niche       data
+# @purpose     
 # @description Fetches upstream markdown from external Livepeer repositories, sanitizes it for MDX, and writes shared page composables under snippets/composables/pages/shared/.
-# @mode        read-only
+# @mode        integrate
 # @pipeline    manual
 # @scope       operations/scripts/integrators/content/data/fetching
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh [flags]

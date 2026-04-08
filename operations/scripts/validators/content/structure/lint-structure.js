@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      lint-structure
- * @type        
- * @concern     
- * @niche       
- * @purpose     qa:content-quality
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
  * @description Enforce structural rules on MDX content files.
- * @mode        read-only
+ * @mode        check
  * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
  * @usage       node operations/scripts/validators/content/structure/lint-structure.js [file] [flags]
@@ -76,6 +76,17 @@ function getFiles() {
   }
 
   const args = process.argv.slice(2);
+
+  // --files a.mdx,b.mdx (explicit file list — used by post-remediation-verify)
+  const filesIdx = args.indexOf('--files');
+  if (filesIdx >= 0 && args[filesIdx + 1]) {
+    return args[filesIdx + 1].split(',').map((f) => f.trim()).filter(Boolean).filter((f) => fs.existsSync(f));
+  }
+  const filesEq = args.find((a) => a.startsWith('--files='));
+  if (filesEq) {
+    return filesEq.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean).filter((f) => fs.existsSync(f));
+  }
+
   if (args.includes('--changed-files')) {
     const diff = execSync('git diff --cached --name-only --diff-filter=ACM', {
       encoding: 'utf8'

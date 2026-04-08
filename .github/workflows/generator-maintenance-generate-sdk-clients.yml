@@ -16,6 +16,9 @@ permissions:
         default: false
   schedule:
     - cron: 0 0 * * *
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 jobs:
   generate:
     uses: speakeasy-api/sdk-generation-action/.github/workflows/workflow-executor.yaml@v15
