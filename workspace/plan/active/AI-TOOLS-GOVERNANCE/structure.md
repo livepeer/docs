@@ -1,5 +1,7 @@
 # AI-Skills Folder Structure — Canonical Reference
 
+> **DEPRECATED as canonical location.** The published version lives at `docs-guide/frameworks/ai-tools-governance.mdx`. This file remains as the working draft. Edits here must be synced to the published version.
+
 > Source of truth for the current AI-tools layout, the target canonical/adapters/generated architecture, and the migration rules that keep existing agent entrypoints working while logic is consolidated.
 
 ---

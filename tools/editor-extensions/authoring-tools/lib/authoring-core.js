@@ -1,3 +1,16 @@
+/**
+ * @script            authoring-core
+ * @type              utility
+ * @concern           governance
+ * @niche             editor-tooling
+ * @purpose           Shared authoring utilities for MDX formatting, component suggestions, import resolution, and path validation
+ * @description       Provides the core logic consumed by the authoring-tools VS Code extension: MDX content formatting, component and import autocompletion data, route discovery, import-path existence checks, and named-import upsert operations.
+ * @mode              integrate
+ * @scope             tools/editor-extensions/authoring-tools/lib/
+ * @usage             Required by tools/editor-extensions/authoring-tools/extension.js — not invoked directly
+ * @policy            mintlify-repo-best-practices, component-framework-canonical
+ */
+
 'use strict';
 
 const fs = require('fs');

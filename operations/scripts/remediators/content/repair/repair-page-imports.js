@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-page-imports
- * @category    remediator
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:import-integrity
- * @description Deterministic page-import remediator — removes safe unused page-reachable React runtime imports and reports the remaining unresolved import findings.
- * @mode        edit
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.
+ * @description Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.
+ * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts, operations/reports/health/page-imports
  * @usage       node operations/scripts/remediators/content/repair/repair-page-imports.js [--dry-run|--write] [--files <paths>] [--output-dir <dir>]

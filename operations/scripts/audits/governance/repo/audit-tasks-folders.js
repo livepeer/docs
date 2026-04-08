@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      audit-tasks-folders
- * @type        audit
- * @concern     governance
- * @niche       repo
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:repo-health
  * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, tasks
  * @usage       node operations/scripts/audits/governance/repo/audit-tasks-folders.js [flags]
- * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

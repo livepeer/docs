@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            local-post-commit-sync
-# @category          orchestrator
-# @purpose           tooling:dev-tools
-# @scope             external
-# @owner             docs
-# @needs             bash, git, node, NOTION_LOCAL_SYNC_MODE(optional), NOTION_LOCAL_SYNC_STALE_TAB_NAME(optional), NOTION_LOCAL_SYNC_DISABLE(optional)
-# @purpose-statement Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled.
-# @pipeline          manual
-# @usage             bash tools/dev/integrations/notion/local-post-commit-sync.sh [flags]
+# @script      local-post-commit-sync
+# @type        automation
+# @concern     governance
+# @niche       dev-tools
+# @purpose     tooling:dev-tools
+# @description Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled.
+# @mode        execute
+# @pipeline    manual
+# @scope       external
+# @usage       bash tools/dev/integrations/notion/local-post-commit-sync.sh [flags]
+# @policy      bash, git, node, NOTION_LOCAL_SYNC_MODE(optional), NOTION_LOCAL_SYNC_STALE_TAB_NAME(optional), NOTION_LOCAL_SYNC_DISABLE(optional)
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -195,7 +195,7 @@ These items are blocked by external decisions, missing infrastructure, or pendin
 
 **What:** `.github/AGENTS.md` still contains references to the fictional checkpoint branch system (`checkpoint/YYYY-MM-DD_HHMMSS` auto-commits) and uses `tools/scripts/` paths for structure rules. The Codex task lifecycle commands from `AGENT-INSTRUCTIONS.md` (now reduced to a pointer) were not migrated there because the paths were stale.
 
-**Blocker:** This file is read by OpenAI Codex. Updating it is a low-risk edit but should be a separate focused commit. The Codex commands need to be verified at their current `operations/scripts/automations/ai/codex/` paths before being documented.
+**Blocker:** This file is read by OpenAI Codex. Updating it is a low-risk edit but should be a separate focused commit. The Codex commands need to be verified at their current `operations/scripts/integrators/ai/codex/` paths before being documented.
 
 ---
 

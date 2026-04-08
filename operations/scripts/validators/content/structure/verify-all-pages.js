@@ -1,15 +1,14 @@
 /**
  * @script      verify-all-pages
- * @type        validator
- * @concern     content
- * @niche       structure
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:repo-health
  * @description Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       single-domain
  * @usage       node operations/scripts/validators/content/structure/verify-all-pages.js
- * @policy      E-C1, R-R14
  */
 const puppeteer = require('puppeteer');
 const { getEnglishComponentLibraryRoutes } = require('../../../../../tools/lib/governance/component-governance-utils');

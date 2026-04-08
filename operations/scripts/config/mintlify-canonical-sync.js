@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      mintlify-canonical-sync
- * @category    library
- * @type        generator
- * @concern     governance
- * @niche       compliance
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
- * @description Shared Mintlify canonical sync library — loads the Mintlify consumer registry, validates cleanup state, and plans deterministic reference rewrites.
- * @domain      docs
+ * @description Shared Mintlify canonical sync library — validates archived-source cleanup, consumer references, and deterministic rewrite plans for the canonical Mintlify governance surface.
  * @mode        read-only
- * @needs       R-R14, R-R18
- * @purpose-statement Shared Mintlify canonical sync library — validates archived-source cleanup, consumer references, and deterministic rewrite plans for the canonical Mintlify governance surface.
  * @pipeline    manual -- library module
  * @scope       docs-guide/canonical/collation-data/Mintlify, operations/scripts/validators/governance, operations/scripts/remediators/content/repair
  * @usage       const sync = require('./mintlify-canonical-sync');

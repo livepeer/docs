@@ -222,13 +222,13 @@ sync_codex_planner_skill() {
         return 1
     fi
 
-    if [ ! -f "$REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" ]; then
-        echo "sync-codex-skills.js not found at $REPO_ROOT/operations/scripts/automations/ai/agents/sync-codex-skills.js" >&2
+    if [ ! -f "$REPO_ROOT/operations/scripts/integrators/ai/agents/sync-codex-skills.js" ]; then
+        echo "sync-codex-skills.js not found at $REPO_ROOT/operations/scripts/integrators/ai/agents/sync-codex-skills.js" >&2
         return 1
     fi
 
     echo "Syncing Codex planner skill to $target_dir..."
-    node operations/scripts/automations/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
+    node operations/scripts/integrators/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
 }
 
 emit_json() {
@@ -1682,7 +1682,7 @@ EOF
     case "$surface" in
       portable-skills)
         if [ "$mode" = "write" ]; then
-          run_cli_step node operations/scripts/automations/ai/agents/export-portable-skills.js --write || {
+          run_cli_step node operations/scripts/integrators/ai/agents/export-portable-skills.js --write || {
             finish 1 "repair" "Portable skills export failed."
             return 1
           }

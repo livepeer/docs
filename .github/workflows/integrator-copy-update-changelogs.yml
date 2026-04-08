@@ -1,0 +1,127 @@
+# type: integrator
+# concern: copy
+# pipeline: P5-auto
+name: Update Changelogs
+
+# Weekly on Mondays at 00:00 UTC (11:00 AM AEDT).
+# Processes all managed changelog targets in product-social-config.json changelogs{}.
+# Manual trigger available with key, category, dry-run, and branch options.
+# Replaces update-solutions-changelog.yml — handles solutions, contracts, and resources.
+
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Weekly Monday 00:00 UTC
+
+  repository_dispatch:
+    types: [solution-release, governor-scripts-update]
+
+  workflow_dispatch:
+    inputs:
+      changelog_key:
+        description: "Changelog key (e.g. daydream, contracts). Leave blank to run all."
+        required: false
+      category:
+        description: "Filter by category (solutions | resources). Leave blank for all."
+        required: false
+        type: string
+        default: ""
+      dry_run:
+        description: "Dry run — show what would change without writing"
+        type: boolean
+        default: false
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+      enhance:
+        description: "Use LLM to summarise release notes (falls back to raw on failure)"
+        type: boolean
+        default: true
+      llm_provider:
+        description: "LLM provider: openrouter or copilot"
+        type: choice
+        options:
+          - openrouter
+          - copilot
+        default: openrouter
+
+jobs:
+  update-changelogs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout docs repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate changelog entries (enhanced)
+        id: enhanced
+        if: inputs.enhance != 'false'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          CHANGELOG_KEY: ${{ inputs.changelog_key || '' }}
+          CHANGELOG_CATEGORY: ${{ inputs.category || '' }}
+          ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          LLM_PROVIDER: ${{ inputs.llm_provider || 'openrouter' }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          COPILOT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIMIT: "10"
+        run: |
+          FLAGS=(--enhance)
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            FLAGS+=(--dry-run)
+          fi
+          # Add --contract flag when targeting the contracts changelog
+          if [[ "${{ inputs.changelog_key }}" == "contracts" ]] || [[ "${{ github.event.action }}" == "governor-scripts-update" ]]; then
+            FLAGS+=(--contract)
+          fi
+          node operations/scripts/integrators/copy/changelogs/generate-changelog.js "${FLAGS[@]}"
+
+      - name: Generate changelog entries (fallback — no LLM)
+        if: inputs.enhance == 'false' || steps.enhanced.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          CHANGELOG_KEY: ${{ inputs.changelog_key || '' }}
+          CHANGELOG_CATEGORY: ${{ inputs.category || '' }}
+          ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          LIMIT: "10"
+        run: |
+          FLAGS=()
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            FLAGS+=(--dry-run)
+          fi
+          if [[ "${{ inputs.changelog_key }}" == "contracts" ]] || [[ "${{ github.event.action }}" == "governor-scripts-update" ]]; then
+            FLAGS+=(--contract)
+          fi
+          echo "Running without LLM enhancement (fallback)"
+          node operations/scripts/integrators/copy/changelogs/generate-changelog.js "${FLAGS[@]}"
+
+      - name: Check for changes
+        if: inputs.dry_run != 'true'
+        id: git-check
+        run: |
+          git diff --exit-code v2/solutions/ v2/resources/changelog/ || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true' && inputs.dry_run != 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add v2/solutions/*/changelog.mdx v2/resources/changelog/*.mdx
+          git commit -m "chore: update changelogs with new entries [skip ci]"
+          git push

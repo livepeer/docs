@@ -5,13 +5,10 @@
  * @concern     components
  * @niche       library
  * @purpose     governance:quality-gate
- * @description Checks component library health:
- *   1. No non-archive MDX page imports a planned/deprecated/broken component
- *   2. Registry-source sync: every registry entry's source file exists on disk
- *   3. Every stable source file has a corresponding examples file (coverage check)
+ * @description Checks component library health: imports, exports, registry sync, and usage patterns
  * @mode        read-only
- * @pipeline    pr-workflow → component-registry.json, v2/**/*.mdx, snippets/components/**/*.jsx → exit-code, stdout:violations
- * @scope       v2-content, snippets/components
+ * @pipeline    pr-workflow -> component-registry.json, snippets/components/ -> exit-code, stdout:violations
+ * @scope       snippets/components/
  * @usage       node operations/scripts/validators/components/library/check-component-health.js [--check] [--report]
  * @policy      R-R10
  */

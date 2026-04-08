@@ -1,21 +1,17 @@
 #!/usr/bin/env node
 /**
  * @script      validate-ai-tools-registry
- * @category    validator
- * @type        validator
- * @concern     governance
- * @niche       compliance
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
- * @description AI-tools registry validator and report writer for source-of-truth coverage, lifecycle, lane alignment, and generated inventory output.
+ * @description Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned.
  * @mode        read-only
- * @domain      docs
- * @needs       R-R14, R-R29
- * @purpose-statement Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned.
  * @pipeline    manual -- bounded validator CLI
  * @scope       operations/scripts, tools/lib/ai/ai-tools-registry.js, ai-tools/registry, operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js, operations/tests/unit/ai-tools-registry.test.js, operations/governance/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
  * @usage       node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]
  * @policy      R-R14, R-R29
-*/
+ */
 
 const {
   DEFAULT_REGISTRY_PATH,

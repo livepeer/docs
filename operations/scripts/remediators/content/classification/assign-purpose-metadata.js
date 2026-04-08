@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      assign-purpose-metadata
- * @type        remediator
- * @concern     content
- * @niche       classification
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts, tools/lib/docs-usefulness, tools/config, v2
  * @usage       node operations/scripts/remediators/content/classification/assign-purpose-metadata.js [flags]
- * @policy      E-R1, R-R11
  */
 
 'use strict';

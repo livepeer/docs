@@ -1,0 +1,190 @@
+# type: dispatch
+# concern: copy
+# pipeline: P4
+name: Data Refresh Governance
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "Governed data-refresh mode"
+        required: true
+        type: string
+      use_test_branch:
+        description: "Write to TEST_BRANCH instead of DEPLOY_BRANCH"
+        required: false
+        default: false
+        type: boolean
+      version:
+        description: "Optional version override for livepeer-release mode"
+        required: false
+        default: ""
+        type: string
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Governed data-refresh mode"
+        required: true
+        type: choice
+        options:
+          - forum
+          - ghost-blog
+          - youtube
+          - github
+          - discord
+          - rss-blog
+          - livepeer-release
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+      version:
+        description: "Optional version override for livepeer-release mode"
+        required: false
+        type: string
+
+jobs:
+  data-refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.use_test_branch && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve target branch
+        id: branch
+        run: |
+          if [ "${{ inputs.use_test_branch }}" = "true" ]; then
+            echo "name=${{ vars.TEST_BRANCH }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ vars.DEPLOY_BRANCH }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run selected refresh mode
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL_ID: UCzfHtZnmUzMbJDxGCwIgY2g
+        run: |
+          case "${{ inputs.mode }}" in
+            forum)
+              node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js
+              ;;
+            ghost-blog)
+              node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js
+              ;;
+            youtube)
+              node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js
+              ;;
+            github)
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js
+              ;;
+            discord)
+              node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js
+              ;;
+            rss-blog)
+              node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js
+              ;;
+            livepeer-release)
+              if [[ -n "${{ inputs.version }}" ]]; then
+                node operations/scripts/integrators/maintenance/release/update-livepeer-release.js --version "${{ inputs.version }}"
+              else
+                node operations/scripts/integrators/maintenance/release/update-livepeer-release.js
+              fi
+              ;;
+            *)
+              echo "Unsupported data-refresh mode: ${{ inputs.mode }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Read updated release version
+        if: ${{ inputs.mode == 'livepeer-release' }}
+        id: version
+        run: |
+          VERSION=$(grep -oP 'latestVersion = "\K[^"]+' snippets/data/globals/latestRelease.jsx || echo "")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Updated version: ${VERSION}"
+
+      - name: Check for generated changes
+        id: git-check
+        run: |
+          case "${{ inputs.mode }}" in
+            forum)
+              git diff --exit-code snippets/data/social-feeds/forumData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            ghost-blog)
+              git diff --exit-code snippets/data/social-feeds/ghostBlogData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            youtube)
+              git diff --exit-code snippets/data/social-feeds/youtubeData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            github|rss-blog)
+              git diff --exit-code snippets/data/social-feed-solutions/ || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            discord)
+              git diff --exit-code snippets/data/social-feed-solutions/ snippets/data/social-feeds/discordAnnouncementsData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            livepeer-release)
+              git diff --exit-code snippets/data/globals/latestRelease.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unsupported diff mode: ${{ inputs.mode }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Commit and push if changed
+        if: ${{ steps.git-check.outputs.changed == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          case "${{ inputs.mode }}" in
+            forum)
+              git add snippets/data/social-feeds/forumData.jsx
+              git commit -m "chore: update forum data [skip ci]"
+              ;;
+            ghost-blog)
+              git add snippets/data/social-feeds/ghostBlogData.jsx
+              git commit -m "chore: update Ghost blog data [skip ci]"
+              ;;
+            youtube)
+              git add snippets/data/social-feeds/youtubeData.jsx
+              git commit -m "Update YouTube videos - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+              ;;
+            github)
+              git add snippets/data/social-feed-solutions
+              git commit -m "chore: update GitHub discussions & releases data [skip ci]"
+              ;;
+            discord)
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/discordAnnouncementsData.jsx
+              git commit -m "chore: update Discord announcements data [skip ci]"
+              ;;
+            rss-blog)
+              git add snippets/data/social-feed-solutions
+              git commit -m "chore: update RSS blog data [skip ci]"
+              ;;
+            livepeer-release)
+              git add snippets/data/globals/latestRelease.jsx
+              git commit -m "chore: update go-livepeer release to ${{ steps.version.outputs.version }} [skip ci]"
+              ;;
+            *)
+              echo "Unsupported commit mode: ${{ inputs.mode }}"
+              exit 1
+              ;;
+          esac
+
+          git push origin HEAD:${{ steps.branch.outputs.name }}

@@ -30,8 +30,8 @@ All `tools/scripts/...` references updated to `operations/scripts/<type>/<concer
 
 | Old path | New path |
 |---|---|
-| `tools/scripts/sync-codex-skills.js` | `operations/scripts/automations/ai/agents/sync-codex-skills.js` |
-| `tools/scripts/export-portable-skills.js` | `operations/scripts/automations/ai/agents/export-portable-skills.js` |
+| `tools/scripts/sync-codex-skills.js` | `operations/scripts/integrators/ai/agents/sync-codex-skills.js` |
+| `tools/scripts/export-portable-skills.js` | `operations/scripts/integrators/ai/agents/export-portable-skills.js` |
 | `tools/scripts/generate-docs-guide-indexes.js` | `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js` |
 | `tools/scripts/generate-docs-guide-pages-index.js` | `operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js` |
 | `tools/scripts/generate-docs-guide-components-index.js` | `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js` |
@@ -68,8 +68,8 @@ All `tests/...` references updated to `operations/tests/...`:
 ### 4. `operations/tests/run-all.js` — i18n test path
 
 Added i18n test block earlier in this session used stale `tools/scripts/...` path:
-- `tools/scripts/automations/content/language-translation/test/*.test.js`
-- → `operations/scripts/automations/content/language-translation/test/*.test.js`
+- `tools/scripts/integrators/content/language-translation/test/*.test.js`
+- → `operations/scripts/integrators/content/language-translation/test/*.test.js`
 
 ---
 
@@ -111,7 +111,7 @@ Create `tools/config/lpd-scope.json` listing every script `lpd` depends on:
   "sourceFile": "lpd",
   "docsFile": "docs-guide/tooling/lpd-cli.mdx",
   "scriptDeps": [
-    "operations/scripts/automations/ai/agents/sync-codex-skills.js",
+    "operations/scripts/integrators/ai/agents/sync-codex-skills.js",
     "operations/scripts/generators/content/seo/generate-ai-sitemap.js",
     "..."
   ]

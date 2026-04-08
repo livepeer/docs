@@ -160,7 +160,7 @@ _Empty — cleared 2026-03-29. BL-001 (SHOWCASE_DISCORD_REVIEWER_USER_ID warning
 
 ## BL-030 — Add governance headers to migrated contracts pipeline modules
 **Source:** Contracts Surface Migration to docs-v2 — 2026-04-03
-**Description:** The new `operations/scripts/automations/content/data/contracts/*.js` modules shipped in PR #857 without the canonical script-governance metadata header block. Normalize them in a dedicated governance pass instead of leaving the migration with silent policy drift.
+**Description:** The new `operations/scripts/integrators/content/data/contracts/*.js` modules shipped in PR #857 without the canonical script-governance metadata header block. Normalize them in a dedicated governance pass instead of leaving the migration with silent policy drift.
 **Priority:** P1
 
 ## BL-031 — Register migrated contracts UI components in component governance outputs

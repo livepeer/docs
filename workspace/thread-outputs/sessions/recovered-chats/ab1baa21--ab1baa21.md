@@ -421,7 +421,7 @@ Let me read the script governance and structure files first.
 {
   "description": "Read existing automation scripts",
   "subagent_type": "Explore",
-  "prompt": "I need to understand the existing automation script patterns. Find and read:\n\n1. .github/scripts/fetch-discord-announcements.js - full content\n2. Any other fetch-*.js or update-*.js scripts in .github/scripts/\n3. operations/scripts/automations/ - list all files and read any that fetch external data (blog, youtube, discord, github)\n4. snippets/automations/solutions/daydream/ - list all files to
+  "prompt": "I need to understand the existing automation script patterns. Find and read:\n\n1. .github/scripts/fetch-discord-announcements.js - full content\n2. Any other fetch-*.js or update-*.js scripts in .github/scripts/\n3. operations/scripts/integrators/ - list all files and read any that fetch external data (blog, youtube, discord, github)\n4. snippets/automations/solutions/daydream/ - list all files to
 
 
 --------------------------------------------------------------------------------

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-proper-nouns
- * @type        validator
- * @concern     content
- * @niche       grammar
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
  * @mode        read-only
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
  * @scope       v2, operations/scripts/validators/content, operations/tests/onfig/spell-dict.json
  * @usage       node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
- * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

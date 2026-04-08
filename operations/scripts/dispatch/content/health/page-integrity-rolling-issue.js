@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 /**
  * @script      page-integrity-rolling-issue
- * @category    utility
- * @type        utility
- * @concern     content
- * @niche       health
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:repo-health
- * @description Rolling issue helper — decides create/update/close behavior for unresolved page-integrity findings and formats issue bodies for workflow automation.
- * @mode        execute
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.
- * @pipeline    indirect -- library module
+ * @description Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.
+ * @mode        read-only
+ * @pipeline    manual -- library module
  * @scope       operations/scripts, .github/workflows, operations/tests/unit
  * @usage       node operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js [flags]
  * @policy      E-R12, E-R14

@@ -5,8 +5,8 @@ description: 'Generated audit report from operations/scripts/archive/legacy/audi
 keywords: ["livepeer","internal","reports","page-audits","audit-all-pages"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-31T04:31:17.145Z`
-Last Generated (UTC Human): `March 31, 2026 04:31 UTC`
+Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
+Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
 Generator Script: `operations/scripts/archive/legacy/audit-all-pages.js`
 What It Does: Generated audit report from operations/scripts/archive/legacy/audit-all-pages.js.
 Audited Scope: `workspace/scripts`

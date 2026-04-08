@@ -1,17 +1,14 @@
 /**
- * @script grep-loop-guard
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Detects repeated empty Grep results and fires a circuit-breaker warning
+ * @script      grep-loop-guard
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Detects repeated empty Grep results and fires a circuit-breaker warning
  * @description Tracks consecutive Grep calls that return no results. At 3 in a row,
- *   fires a warning to stop retrying the same search pattern and pivot to a different approach.
- *   Resets the counter when a Grep returns actual results.
- * @mode read-only
- * @pipeline PostToolUse hook → reads stdin tool result → tracks empty Greps → warns at 3
- * @scope .claude/settings.json PostToolUse hook (Grep matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → reads stdin tool result → tracks empty Greps → warns at 3
+ * @scope       .claude/settings.json PostToolUse hook (Grep matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

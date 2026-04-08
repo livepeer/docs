@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # @script      audit-python
-# @type        audit
-# @concern     content
-# @niche       quality
+# @type        
+# @concern     
+# @niche       
 # @purpose     qa:content-quality
 # @description Python page audit utility — validates routed docs files, snippet imports, and internal links, then writes page-audit reports
 # @mode        read-only
 # @pipeline    manual — not yet in pipeline
 # @scope       docs.json, v2, snippets, workspace/reports/page-audits
 # @usage       python3 operations/scripts/audits/content/quality/audit-python.py [flags]
-# @policy      E-C1, R-R14
 """
 Comprehensive audit script for all v2 pages
 Runs file checks, MDX validation, and link checking

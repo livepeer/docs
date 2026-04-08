@@ -9,7 +9,6 @@
 # @pipeline    manual — developer tool
 # @scope       full-repo
 # @usage       bash tools/dev/preview/mint-dev.sh [flags]
-# @policy      E-C6, F-C1
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
@@ -428,7 +427,7 @@ else
 fi
 
 echo "Fetching external snippets..."
-bash "$REPO_ROOT/operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
+bash "$REPO_ROOT/operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh"
 
 parse_port_args "$@"
 if [ "$has_explicit_port" != "1" ]; then

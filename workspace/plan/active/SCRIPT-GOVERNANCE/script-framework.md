@@ -1,5 +1,7 @@
 # Script Framework Specification
 
+> **DEPRECATED as canonical location.** The published summary lives at `docs-guide/frameworks/script-framework.mdx`. This file remains as the full working specification. Edits here must be synced to the published version.
+
 > **Canonical reference** for the Livepeer Docs script library.
 > Extracted from governance plans, audit reports, enforced pre-commit hooks, scaffold templates, and production scripts.
 >
@@ -9,11 +11,11 @@
 
 ## 1. Overview — GUIDE
 
-The script library lives at `operations/scripts/` and contains ~120 operational scripts that audit, generate, validate, remediate, dispatch, and automate work across the Livepeer documentation repository.
+The script library lives at `operations/scripts/` and contains ~205 operational scripts that audit, generate, validate, remediate, dispatch, and automate work across the Livepeer documentation repository.
 
 Scripts are organised using a **three-tier taxonomy**: `<type>/<concern>/<niche>`. Every script has a standardised JSDoc header (11 tags), follows a consistent file layout, and is designed to be composable into pipelines.
 
-Two non-type folders sit alongside the six type folders:
+Two non-type folders sit alongside the seven type folders (plus legacy automations alias):
 
 | Folder | Purpose |
 |---|---|
@@ -26,7 +28,7 @@ Two non-type folders sit alongside the six type folders:
 | Library | Purpose | Exports | Used by |
 |---|---|---|---|
 | `docs-path-sync.js` | Detects staged page moves, plans deterministic route rewrites, applies governed docs.json/path reference updates | `runDocsPathSync()` | `/propagate` skill, move-detect hook |
-| `mdx-sanitise.js` | Sanitisation utilities for all scripts that write content consumed by MDX pages | `sanitiseForMdx`, `escapeForJsx`, `validateUrl`, `stripHtmlTags` | All `.github/scripts/fetch-*.js` and `generate-changelog.js` |
+| `mdx-sanitise.js` | Sanitisation utilities for all scripts that write content consumed by MDX pages | `sanitiseForMdx`, `escapeForJsx`, `validateUrl`, `stripHtmlTags` | All integrator fetch scripts (operations/scripts/integrators/copy/social-feeds/) and generate-changelog.js |
 
 **Rule:** All scripts that write content consumed by MDX pages MUST import sanitisation functions from `operations/scripts/config/mdx-sanitise.js`. Do not create inline escape/sanitise functions in individual scripts.
 
@@ -63,20 +65,28 @@ operations/scripts/<type>/<concern>/<niche>/script-name.js
 | `validators/` | Enforce rules with a pass/fail gate. Reads files, checks conditions, exits 0 (pass) or non-zero (fail). | `validator` | `read-only` |
 | `remediators/` | Bulk fix or repair existing files in place. Modifies source content to bring it into compliance. | `remediator` | `edit` |
 | `dispatch/` | Dispatch work to other scripts or agents. Genuine orchestrators that spawn child processes and aggregate results. | `dispatch` | `execute` |
-| `automations/` | Automated pipelines — translation, data fetching, transforms. End-to-end workflows that read external inputs and write outputs directly. | `automation` | `write`, `generate`, `execute` |
+| `automations/` | Legacy name for integrator type. Pulls external data into the repo via API calls, transforms, and commits. Being renamed to `integrators/` per D-ACT-07. | `integrator` | `write`, `generate`, `execute` |
+| `integrators/` | Pulls external data into the repo (renamed from automations per D-ACT-07). External API calls, data fetching, transforms. | `integrator` | `write`, `generate`, `execute` |
+| `interfaces/` | Reacts to issue/PR/external events for triage, labelling, assignment (D-ACT-01). | `interface` | `execute` |
 
 **Classification test**: If a script does not spawn other scripts, it is NOT a `dispatch`. If a script only scans and reports without modifying source, it is NOT a `remediator`. If a script edits existing files in place, it is NOT a `generator` (it is a `remediator`).
 
 ### Concerns (Layer 2 — homogeneous across all types)
 
-Every type folder contains the same four concern sub-folders.
+Every type folder contains concern sub-folders. The canonical concern set expanded from 4 to 7 per D-ACT-05.
 
 | Concern | What it covers |
 |---|---|
-| `content/` | Docs pages, copy, SEO, veracity, quality, reference, reconciliation |
-| `components/` | Component library, registry, CSS, naming, documentation |
-| `governance/` | Scripts about scripts, repo structure, agent docs, manifests, catalogs |
-| `ai/` | AI-adjacent operations — LLM files, agent packaging, skills sync |
+| `copy/` | Written text, data standards, spelling, grammar |
+| `health/` | Site integrity, links, rendering, freshness, assets |
+| `maintenance/` | Indexes, catalogs, documentation, registries, changelogs |
+| `discoverability/` | SEO, AEO, AI indexing, translation |
+| `governance/` | System rules, compliance, issue/PR management |
+| `brand/` | Style, formatting, page structure, voice |
+| `integrations/` | External data feeds, APIs, structured data pipelines |
+| `content/` | Legacy concern (being split into copy, health, maintenance, discoverability, integrations per D-ACT-05) |
+| `components/` | Legacy concern (absorbed into maintenance per D-ACT-05) |
+| `ai/` | Legacy concern (absorbed into discoverability + governance per D-ACT-05) |
 
 ### Niches per type x concern (Layer 3)
 
@@ -1203,7 +1213,7 @@ main();
  * @mode        write
  * @pipeline    {trigger} → {inputs} → {outputs}
  * @scope       {file-scope}
- * @usage       node operations/scripts/automations/{concern}/{niche}/{script-name}.js [flags]
+ * @usage       node operations/scripts/integrators/{concern}/{niche}/{script-name}.js [flags]
  * @policy      {requirement-ids}
  */
 

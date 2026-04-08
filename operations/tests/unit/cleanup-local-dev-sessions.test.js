@@ -3,7 +3,7 @@
  * @script            cleanup-local-dev-sessions.test
  * @category          utility
  * @purpose           tooling:dev-tools
- * @scope             tests/unit, operations/scripts/automations/governance/cleanup-local-dev-sessions.js
+ * @scope             tests/unit, operations/scripts/integrators/governance/cleanup-local-dev-sessions.js
  * @domain            docs
  * @needs             E-C6, F-C1
  * @purpose-statement Tests cleanup-local-dev-sessions.js — preserves Mint on 3333 while targeting non-3333 Mint and Playwright process trees
@@ -17,7 +17,7 @@ const assert = require('assert');
 const {
   planCleanup,
   removeManagedCronLines
-} = require('../../scripts/automations/governance/cleanup-local-dev-sessions.js');
+} = require('../../scripts/integrators/governance/cleanup-local-dev-sessions.js');
 
 function createListeners(entries) {
   const map = new Map();
@@ -62,7 +62,7 @@ function runTests() {
 
   const cleaned = removeManagedCronLines([
     'MAILTO=""',
-    "*/10 * * * * cd '/repo' && '/opt/homebrew/bin/node' '/repo/operations/scripts/automations/governance/cleanup-local-dev-sessions.js' --apply >> '/tmp/livepeer-docs-cleanup-local-dev-sessions.log' 2>&1 # livepeer-docs-cleanup-local-dev-sessions",
+    "*/10 * * * * cd '/repo' && '/opt/homebrew/bin/node' '/repo/operations/scripts/integrators/governance/cleanup-local-dev-sessions.js' --apply >> '/tmp/livepeer-docs-cleanup-local-dev-sessions.log' 2>&1 # livepeer-docs-cleanup-local-dev-sessions",
     '* * * * * /usr/bin/true'
   ].join('\n'));
 

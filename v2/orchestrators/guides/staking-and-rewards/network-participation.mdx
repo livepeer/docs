@@ -3,22 +3,18 @@ title: Network Participation
 sidebarTitle: Network Participation
 description: >-
   How Livepeer protocol governance works and how orchestrators vote on Livepeer
-  Improvement Proposals (LIPs) — finding polls, voting via livepeer_cli without
-  importing your wallet into a browser, verifying your vote on Explorer, and
-  where to follow active proposals.
-keywords:
+  Improvement Proposals (LIPs) — finding polls, voting via livepeer_cli, verifying
+  your vote on Explorer, and where to follow active proposals.
+Keywords:
   - livepeer
   - governance
   - lip
   - livepeer improvement proposal
   - voting
   - livepeer_cli
-  - go-livepeer
   - orchestrator vote
   - lpt governance
   - protocol parameters
-  - treasury proposal
-  - secure voting
 'og:image': /snippets/assets/media/og-images/en/orchestrators.png
 'og:image:alt': Livepeer Docs social preview image for Orchestrators
 'og:image:type': image/png
@@ -28,7 +24,7 @@ pageType: guide
 audience: orchestrator
 purpose: guide
 status: published
-lastVerified: 2026-04-07
+lastVerified: 2026-03-13
 ---
 {/* Draft note: keep governance mechanics practical, route unresolved factual checks to internal comments only, and keep the page operator-facing. */}
 
@@ -36,7 +32,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Ste
 import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Livepeer is a protocol governed by its token holders. As an orchestrator, your vote carries weight proportional to your total stake — including the delegated LPT entrusted to you by your delegators. When you vote on a proposal, you are voting on their behalf as well as your own.
+Livepeer is a protocol governed by its token holders. Your vote carries weight proportional to your total stake — including the delegated LPT entrusted to you by your delegators. When you vote on a proposal, you are voting on their behalf as well as your own.
 
 Use this page to follow active proposals, cast a vote with `livepeer_cli`, and verify the result on Explorer.
 
@@ -113,24 +109,7 @@ The **#governance** channel on the [Livepeer Discord](https://discord.gg/livepee
 
 ## How to vote
 
-<Note>
-  Both voting methods below sign transactions through your locally running node via `livepeer_cli`. **Your private keys never leave the machine** — you do not need to import your wallet into a browser or connect to the Livepeer Explorer with a wallet to vote. This is the recommended, more secure governance workflow for orchestrators.
-</Note>
-
-Livepeer has two on-chain voting mechanisms, each with its own `livepeer_cli` option:
-
-| Mechanism | `livepeer_cli` option | Identifier | Choices |
-|---|---|---|---|
-| **Governance polls** (LIP signalling) | `Vote in a governance poll` | Poll contract address | Yes / No |
-| **Treasury proposals** (on-chain execution) | `Vote on a treasury proposal` | Proposal ID | Against / For / Abstain |
-
-Governance polls are used for LIP signalling. Treasury proposals execute automatically when quorum and majority thresholds are met and a timelock has elapsed — they directly change protocol parameters or disburse treasury funds.
-
----
-
-### Governance polls
-
-Use this method to vote on a **governance poll** (LIP signalling — identified by a poll contract address).
+Voting requires your orchestrator node to be running. `livepeer_cli` signs through your local node, so private keys stay on the node.
 
 <StyledSteps>
 
@@ -177,8 +156,8 @@ Use this method to vote on a **governance poll** (LIP signalling — identified 
   ```
 </StyledStep>
 
-<StyledStep title="Select Vote in a governance poll">
-  From the CLI menu, enter the number corresponding to **"Vote in a governance poll"**.
+<StyledStep title="Select Vote on a poll">
+  From the CLI menu, enter the number corresponding to **"Vote on a poll"**.
 </StyledStep>
 
 <StyledStep title="Enter the poll contract address">
@@ -225,103 +204,6 @@ Use this method to vote on a **governance poll** (LIP signalling — identified 
 
 <StyledStep title="Verify your vote on Explorer">
   Return to [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting) and open the same poll. Your orchestrator's address should now appear in the voter list with your choice and your stake weight reflected in the tally.
-</StyledStep>
-
-</StyledSteps>
-
----
-
-### Treasury proposals
-
-Use this method to vote on a **treasury proposal** (on-chain execution via the `LivepeerGovernor` contract — identified by a numeric proposal ID). This capability was added to `go-livepeer` in [PR #3275](https://github.com/livepeer/go-livepeer/pull/3275).
-
-<StyledSteps>
-
-<StyledStep title="Find the proposal ID on Explorer">
-  Go to [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting). Open the active treasury proposal. Note the **proposal ID** (a large integer) shown on the proposal page — you will need it in the next step.
-</StyledStep>
-
-<StyledStep title="Make sure livepeer is running">
-  `livepeer_cli` connects to your running node to sign the transaction. Your orchestrator must be active before running the CLI.
-
-  ```bash icon="terminal" title="Confirm the node is running"
-  # Confirm your node is running (example — adjust for your setup)
-  docker ps | grep livepeer
-  # or
-  systemctl status livepeer
-  ```
-</StyledStep>
-
-<StyledStep title="Run livepeer_cli">
-  ```bash icon="terminal" title="Open livepeer_cli"
-  livepeer_cli
-  ```
-
-  Nodes running on a non-standard port use:
-
-  ```bash icon="terminal" title="Open livepeer_cli on a custom port"
-  livepeer_cli -http 127.0.0.1:7935
-  ```
-</StyledStep>
-
-<StyledStep title="Select Vote on a treasury proposal">
-  From the CLI menu, enter the number corresponding to **"Vote on a treasury proposal"**.
-</StyledStep>
-
-<StyledStep title="Enter the proposal ID">
-  ```text icon="terminal" title="Proposal ID prompt"
-  Enter the proposal ID you want to vote on ->
-  ```
-
-  Paste the numeric proposal ID you copied from Explorer in Step 1.
-</StyledStep>
-
-<StyledStep title="Choose your vote">
-  The CLI shows:
-
-  ```text icon="terminal" title="Voting options"
-  Identifier  Voting Choices
-  0           Against
-  1           For
-  2           Abstain
-  ```
-
-  Enter `0` for Against, `1` for For, or `2` for Abstain, then confirm:
-
-  ```text icon="terminal" title="Vote confirmation prompt"
-  Enter the ID of the choice you want to vote for -> 1
-  Are you sure you want to vote "For"? (y/n) -> y
-  ```
-</StyledStep>
-
-<StyledStep title="Optionally provide a reason">
-  The CLI will ask whether you want to supply a reason for your vote. This reason is recorded on-chain alongside your vote and is visible publicly.
-
-  ```text icon="terminal" title="Optional reason prompt"
-  Do you want to provide a reason for your vote? (y/n) -> y
-  Enter your reason -> Supporting this treasury allocation as it funds verifiable transcoding research.
-  ```
-
-  If you do not wish to provide a reason, enter `n`.
-</StyledStep>
-
-<StyledStep title="Wait for transaction confirmation">
-  Your node submits the vote transaction on-chain. You will see the transaction hash in the logs:
-
-  ```text icon="terminal" title="Successful vote transaction log"
-  ******************************Eth Transaction******************************
-
-  Invoking transaction: "castVoteWithReason". Inputs: "proposalId: 75807788855349024769187985734965498450736534067061808083987979578988267536448  support: 1  reason: ..."
-  Hash: "0x..."
-
-  **************************************************************************
-  ```
-
-  Arbitrum transactions confirm in seconds. Once confirmed, your vote is recorded on-chain.
-</StyledStep>
-
-<StyledStep title="Verify your vote on Explorer">
-  Return to [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting) and open the same proposal. Your orchestrator's address should now appear in the voter list with your choice and your stake weight reflected in the tally.
 </StyledStep>
 
 </StyledSteps>
@@ -381,28 +263,15 @@ Ensure your orchestrator wallet has ETH on Arbitrum before voting. The same ETH 
 
 <AccordionGroup>
 
-<Accordion  title="Quick reference — governance poll checklist" icon="circle-question">
+<Accordion  title="Quick reference — voting checklist" icon="circle-question">
 
 1. Find the poll at [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting)
-2. Copy the **poll contract address**
+2. Copy the poll contract address
 3. Read the full LIP on [github.com/livepeer/LIPs](https://github.com/livepeer/LIPs) and follow the Forum discussion
 4. Ensure your node is running and has ETH on Arbitrum
-5. Run `livepeer_cli` → **"Vote in a governance poll"** → paste contract address → choose 0 (Yes) or 1 (No)
+5. Run `livepeer_cli` → "Vote on a poll" → paste address → choose 0 (Yes) or 1 (No)
 6. Confirm the transaction, wait for confirmation
 7. Verify your vote on Explorer
-
-</Accordion>
-
-<Accordion  title="Quick reference — treasury proposal checklist" icon="circle-question">
-
-1. Find the proposal at [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting)
-2. Copy the numeric **proposal ID**
-3. Read the proposal discussion on [forum.livepeer.org](https://forum.livepeer.org)
-4. Ensure your node is running and has ETH on Arbitrum
-5. Run `livepeer_cli` → **"Vote on a treasury proposal"** → paste proposal ID → choose 0 (Against), 1 (For), or 2 (Abstain)
-6. Optionally provide an on-chain reason for your vote
-7. Confirm the transaction, wait for confirmation
-8. Verify your vote on Explorer
 
 </Accordion>
 

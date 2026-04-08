@@ -1,0 +1,135 @@
+---
+title: Workflow and Pipeline Governance Framework
+sidebarTitle: GitHub Actions
+description: >-
+  Canonical reference for workflow and pipeline architecture. Defines how automated
+  pipelines are built, what they must do, and how they are governed in this
+  ownerless, self-governed repo.
+keywords:
+  - github actions
+  - workflow governance
+  - pipeline architecture
+  - CI/CD
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+sourceDoc: .github/workspace/framework-canonical.md
+---
+
+# Workflow and Pipeline Governance Framework
+
+Canonical reference for the Livepeer Docs workflow and pipeline architecture. 8 decisions locked (D-ACT-01 through D-ACT-08).
+
+Full specification: `.github/workspace/framework-canonical.md`
+Decisions log: `.github/workspace/decisions-log.mdx`
+
+---
+
+## Purpose
+
+This repo is ownerless and self-governed. It must self-repair and self-document through automated pipelines. This framework defines how those pipelines are built, what they must do, and how they are governed.
+
+What the product needs to do:
+
+1. **Protect itself** - detect breaks, auto-fix what it can, raise issues for what it cannot, block bad changes
+2. **Keep itself current** - pull fresh external data, regenerate derived files, detect drift
+3. **Maintain its own standards** - enforce voice, grammar, spelling, terminology, visual identity
+4. **Make itself findable** - keep AI/search surfaces regenerated on every change
+5. **Document itself** - catalogues, indexes, registries auto-regenerate
+6. **Govern itself** - rules enforced, issues managed, drift self-healed
+
+---
+
+## Pipeline Architecture (D-ACT-08)
+
+### The dispatcher model
+
+All workflow YAML files are dispatchers. They handle when, where, permissions, and orchestration. The typed work lives in scripts. The type classification comes from what the script does, not the workflow.
+
+| Layer | Role | Has type? |
+|---|---|---|
+| Workflow YAML | Dispatcher: trigger, permissions, environment, orchestration | No (all dispatchers) |
+| Script | Does the work: integrates, generates, validates, audits, remediates | Yes (7-type taxonomy) |
+
+### Pipeline patterns
+
+| Pattern | Shape | Example |
+|---|---|---|
+| **A: Integrate** | Fetch external data, diff check, commit | Contract address updates |
+| **B: Generate** | Build from internal data, commit | docs-index.json, llms.txt |
+| **C: Check** | Validate on PR, report pass/fail | Broken links, content quality |
+| **D: Scan, Report, Act** | Scheduled monitoring with response routing | Content freshness, asset health |
+| **E: Repair** | Fix broken state, commit or PR | Component metadata repair |
+| **F: React** | Issue/PR lifecycle events, no file changes | Label, assign, index, close |
+| **G: Orchestrate** | Dispatch children, aggregate results | Multi-script pipelines |
+
+### Generate/verify pairs
+
+Every generator (Pattern B) must have a matching verifier (Pattern C) that runs on PR with `--check` flag.
+
+---
+
+## Taxonomy
+
+### Types (7 values, D-ACT-01, D-ACT-07)
+
+| Type | Purpose |
+|---|---|
+| `integrator` | Pulls external data into the repo |
+| `generator` | Produces files from internal repo data |
+| `validator` | Enforces rules with pass/fail gate on PR |
+| `audit` | Read-only scheduled monitoring and reporting |
+| `remediator` | Auto-fixes broken state with optional commit |
+| `dispatch` | Orchestrates multiple scripts/workflows |
+| `interface` | Reacts to issue/PR/external events |
+
+### Concerns (7 values, D-ACT-05)
+
+| Concern | What it covers |
+|---|---|
+| `copy` | Written text, data standards, spelling, grammar |
+| `health` | Site integrity, links, rendering, freshness, assets |
+| `maintenance` | Indexes, catalogues, documentation, registries, changelogs |
+| `discoverability` | SEO, AEO, AI indexing, translation |
+| `governance` | System rules, compliance, issue/PR management |
+| `brand` | Style, formatting, page structure, voice |
+| `integrations` | External data feeds, APIs, structured data pipelines |
+
+### Pipeline tags (8 values, D-ACT-02)
+
+| Tag | Trigger | Authority |
+|---|---|---|
+| **P2** | PR (required check) | Blocks merge |
+| **P3** | PR (non-required) | Advisory |
+| **P4** | Push to deploy branch | Post-merge auto-commit |
+| **P5** | Schedule (read-only) | Advisory, report only |
+| **P5-auto** | Schedule + auto-commit | Writes to repo |
+| **P6** | Schedule + auto-fix | Self-heal, may create PR |
+| **manual** | workflow_dispatch only | Human-triggered |
+| **event-driven** | repository_dispatch / issues | External event |
+
+---
+
+## Workflow file naming (D-ACT-04)
+
+**Pattern:** `type-concern-verb-name.yml`
+
+**Example:** `integrator-maintenance-update-contract-addresses.yml`
+
+**Segments:**
+
+- **type**: one of the 7 type values
+- **concern**: one of the 7 concern values
+- **function** (11 verbs, closed enum): `update`, `generate`, `check`, `scan`, `repair`, `dispatch`, `label`, `index`, `intake`, `close`, `assign`
+- **name**: descriptive kebab-case slug
+
+**Naming quality rule:** The name must describe what the workflow does, not how it is implemented. If someone unfamiliar with the repo cannot guess the purpose from the filename alone, the name is bad.
+
+---
+
+## Canonical sources
+
+- Full specification: `.github/workspace/framework-canonical.md`
+- Decisions: `.github/workspace/decisions-log.mdx`
+- Per-action docs: `.github/workspace/actions-library/`

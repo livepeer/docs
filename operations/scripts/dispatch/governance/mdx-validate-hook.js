@@ -1,17 +1,14 @@
 /**
- * @script mdx-validate-hook
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Validates MDX files after edit using the server-manager (port 3145)
+ * @script      mdx-validate-hook
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Validates MDX files after edit using the server-manager (port 3145)
  * @description PostToolUse hook for Edit/Write on .mdx files. Uses the shared
- *   server-manager to check if the page renders — never spawns its own mintlify dev.
- *   If no server is running, skips silently (doesn't block work).
- * @mode read-only
- * @pipeline PostToolUse hook → reads stdin → checks if .mdx → hits server-manager → reports
- * @scope .claude/settings.json PostToolUse hook (Edit|Write matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → reads stdin → checks if .mdx → hits server-manager → reports
+ * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const path = require('path');

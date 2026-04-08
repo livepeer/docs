@@ -10,7 +10,6 @@
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/dev/authoring
  * @usage       node tools/dev/authoring/add-callouts.js [flags]
- * @policy      E-R1, R-R11
  */
 
 /**

@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      generate-ai-tools-registry-artifacts
- * @category    generator
- * @type        generator
- * @concern     governance
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
- * @description Syncs missing AI-tools registry artifact entries for canonical skill templates, exported portable skills, and repo-local skill roots from the live filesystem.
- * @mode        write
- * @domain      docs
- * @needs       R-R14, R-R29
- * @purpose-statement Keep ai-tools/registry/ai-tools-registry.json aligned with live skill/template/export files so ownerless governance coverage stays complete.
+ * @description Keep ai-tools/registry/ai-tools-registry.json aligned with live skill/template/export files so ownerless governance coverage stays complete.
+ * @mode        read-only
  * @pipeline    manual -- bounded registry sync
  * @scope       operations/scripts, ai-tools/registry, ai-tools/ai-skills/templates, ai-tools/ai-skills, ai-tools/agent-packs/skills, tools/lib/ai/ai-tools-registry.js, operations/tests/unit/ai-tools-registry.test.js
  * @usage       node operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js [--write|--check]
- * @policy      Do not hand-maintain missing template/export/local-skill registry entries. Regenerate from the live filesystem and re-run AI-tools registry validation.
+ * @policy      R-R14, R-R29
  */
 
 'use strict';
@@ -86,8 +82,8 @@ function buildTemplateArtifact(repoPath) {
       'operations/tests/unit/codex-skill-sync.test.js'
     ],
     repair_commands: [
-      'node operations/scripts/automations/ai/agents/export-portable-skills.js --write',
-      'node operations/scripts/automations/ai/agents/sync-codex-skills.js'
+      'node operations/scripts/integrators/ai/agents/export-portable-skills.js --write',
+      'node operations/scripts/integrators/ai/agents/sync-codex-skills.js'
     ],
     catalog_group: 'ai-skills/templates',
     status: 'canonical-active',
@@ -109,7 +105,7 @@ function buildExportArtifact(repoPath) {
     derived_outputs: ['ai-tools/agent-packs/skills/**'],
     runtime_targets: ['Codex', 'Cursor', 'Claude', 'Windsurf'],
     validators: ['operations/tests/unit/export-portable-skills.test.js'],
-    repair_commands: ['node operations/scripts/automations/ai/agents/export-portable-skills.js --write'],
+    repair_commands: ['node operations/scripts/integrators/ai/agents/export-portable-skills.js --write'],
     catalog_group: 'agent-packs/skills',
     status: 'generated-active',
     migration_wave: 'wave-2',
@@ -130,7 +126,7 @@ function buildLocalSkillArtifact(repoPath) {
     derived_outputs: [],
     runtime_targets: ['repo-local skill use'],
     validators: ['operations/tests/unit/skill-docs.test.js'],
-    repair_commands: ['node operations/scripts/automations/ai/agents/sync-codex-skills.js --check'],
+    repair_commands: ['node operations/scripts/integrators/ai/agents/sync-codex-skills.js --check'],
     catalog_group: 'ai-skills/local-skills',
     status: 'canonical-active',
     migration_wave: 'wave-3',

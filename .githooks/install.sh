@@ -9,7 +9,6 @@
 # @pipeline    manual — developer tool
 # @scope       .githooks
 # @usage       bash .githooks/install.sh [flags]
-# @policy      E-C6, F-C1
 # Install git hooks
 
 set -euo pipefail

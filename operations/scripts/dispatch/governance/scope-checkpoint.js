@@ -1,18 +1,14 @@
 /**
- * @script scope-checkpoint
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Injects periodic scope checks to prevent session drift from thread outcome
+ * @script      scope-checkpoint
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Injects periodic scope checks to prevent session drift from thread outcome
  * @description PostToolUse hook for Edit/Write. Tracks total edit count per session.
- *   Every 8th edit, injects a systemMessage restating the thread outcome (from /tmp)
- *   and listing files edited since the last checkpoint. Forces Claude to reconnect
- *   current work to the stated outcome before continuing.
- * @mode read-only
- * @pipeline PostToolUse hook → parse stdin → track edit count → inject scope check every 8 edits
- * @scope .claude/settings.json PostToolUse hook (Edit|Write matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → parse stdin → track edit count → inject scope check every 8 edits
+ * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

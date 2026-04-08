@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 /**
  * @script      page-links-audit
- * @category    validator
- * @type        validator
- * @concern     content
- * @niche       health
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:link-integrity
- * @description Canonical page-link audit — validates internal page refs, anchors, JSX link props, and optional external URL health for v2 page surfaces.
- * @mode        execute
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
- * @pipeline    P1, P5, P6
+ * @description Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
+ * @mode        read-only
+ * @pipeline    manual, P6
  * @scope       operations/scripts, operations/reports/health/page-links, v2 docs page surfaces
  * @usage       node operations/scripts/audits/content/health/page-links-audit.js [--full|--staged|--files <paths>|--tab <tab>] [--strict] [--external-policy classify|validate] [--output-dir <dir>]
  * @policy      E-R12, E-R14

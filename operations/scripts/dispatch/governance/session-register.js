@@ -1,17 +1,14 @@
 /**
- * @script session-register
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Registers active sessions and tracks which files each session touches
+ * @script      session-register
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Registers active sessions and tracks which files each session touches
  * @description SessionStart hook that registers this session in a shared registry file.
- *   PostToolUse on Edit/Write also calls this to log file claims. Pre-tool-guard reads
- *   the registry to warn about cross-session collisions.
- * @mode write (temp file only)
- * @pipeline SessionStart hook / PostToolUse hook → writes to /tmp/claude-session-registry
- * @scope .claude/settings.json SessionStart + PostToolUse hooks
- * @usage Called automatically by Claude Code hooks. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    SessionStart hook / PostToolUse hook → writes to /tmp/claude-session-registry
+ * @scope       .claude/settings.json SessionStart + PostToolUse hooks
+ * @usage       Called automatically by Claude Code hooks. Not invoked directly.
  */
 
 const fs = require('fs');

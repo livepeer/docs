@@ -9,6 +9,9 @@
  * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
  * @pipeline          P2, P3
  * @usage             node operations/scripts/validators/content/structure/test-v2-pages.js [flags]
+ * @type        validator
+ * @description test v2 pages
+ * @mode        read-only
  */
 
 /**
@@ -22,6 +25,7 @@ const puppeteer = require('puppeteer');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
+const BASELINE_PATH = path.join(REPO_ROOT, 'operations/tests/baselines/console-baseline.json');
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000; // 30 seconds per page
 const BASE_ORIGIN = new URL(BASE_URL).origin;
@@ -29,6 +33,37 @@ const BROWSER_LAUNCH_OPTIONS = {
   headless: true,
   args: ['--no-sandbox', '--disable-setuid-sandbox']
 };
+const USE_BASELINE = process.argv.includes('--baseline');
+
+// Load baseline for diffing (only fail on NEW errors not in baseline)
+let BASELINE = {};
+if (USE_BASELINE) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(BASELINE_PATH, 'utf8'));
+    if (raw.routes) {
+      raw.routes.forEach(r => {
+        BASELINE[r.route] = new Set((r.consoleErrors || []).map(e => normaliseError(e)));
+      });
+    }
+  } catch (e) {
+    console.warn('Warning: --baseline specified but could not load baseline:', e.message);
+  }
+}
+
+function normaliseError(msg) {
+  // Strip dynamic parts (line numbers, timestamps, hashes) for comparison
+  return msg
+    .replace(/:\d+:\d+/g, ':LINE:COL')
+    .replace(/\b[0-9a-f]{8,}\b/gi, 'HASH')
+    .replace(/localhost:\d+/g, 'localhost:PORT')
+    .trim();
+}
+
+function isBaselined(pagePath, error) {
+  const baselineErrors = BASELINE[pagePath];
+  if (!baselineErrors) return false;
+  return baselineErrors.has(normaliseError(error));
+}
 
 /**
  * Recursively extract all page paths from navigation structure
@@ -148,11 +183,18 @@ async function testPage(browser, pagePath) {
     // Wait a bit for any async rendering
     await new Promise(resolve => setTimeout(resolve, 2000));
     
+    // In baseline mode, only count errors NOT in the baseline as failures
+    const newErrors = USE_BASELINE
+      ? errors.filter(e => !isBaselined(pagePath, e))
+      : errors;
+
     return {
       pagePath,
       url,
-      success: errors.length === 0,
+      success: newErrors.length === 0,
       errors,
+      newErrors,
+      baselinedErrors: errors.length - newErrors.length,
       warnings,
       logs
     };
@@ -226,11 +268,17 @@ async function main() {
   
   // Print summary
   console.log('\n' + '='.repeat(60));
-  console.log('📊 SUMMARY');
+  console.log('SUMMARY' + (USE_BASELINE ? ' (baseline diff mode)' : ''));
   console.log('='.repeat(60));
   console.log(`Total pages tested: ${pages.length}`);
-  console.log(`✅ Passed: ${passed}`);
-  console.log(`❌ Failed: ${failed}`);
+  console.log(`Passed: ${passed}`);
+  console.log(`Failed: ${failed}`);
+  if (USE_BASELINE) {
+    const totalBaselined = results.reduce((s, r) => s + (r.baselinedErrors || 0), 0);
+    console.log(`Baselined errors (ignored): ${totalBaselined}`);
+    const totalNew = results.reduce((s, r) => s + (r.newErrors ? r.newErrors.length : 0), 0);
+    console.log(`NEW errors (cause failure): ${totalNew}`);
+  }
   console.log('');
   
   // Print failed pages

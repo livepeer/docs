@@ -1,0 +1,62 @@
+# type: validator
+# concern: health
+# pipeline: P3
+# validator-health-check-page-structure.yml
+# P3 advisory: reports page structure violations but does not block merge.
+# Promotes to P2 after baseline violations cleared (D-GOV-05).
+# check-mdx-safe-markdown and enforce-generated-file-banners already in run-pr-checks.js
+name: Check Page Structure
+
+on:
+  pull_request:
+    paths:
+      - 'v2/**/*.mdx'
+      - 'docs-guide/**/*.mdx'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  structure-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Structure Lint
+            script: operations/scripts/validators/content/structure/lint-structure.js
+          - name: Double Headers
+            script: operations/scripts/validators/content/structure/check-double-headers.js
+          - name: Anchor Usage
+            script: operations/scripts/validators/content/structure/check-anchor-usage.js
+          - name: Page Endings
+            script: operations/scripts/validators/content/structure/check-page-endings.js
+          - name: Description Quality
+            script: operations/scripts/validators/content/structure/check-description-quality.js
+          - name: Docs Path Sync
+            script: operations/scripts/validators/content/structure/check-docs-path-sync.js
+
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: cd tools && npm ci
+
+      - name: Run ${{ matrix.name }}
+        id: check
+        continue-on-error: true
+        run: node ${{ matrix.script }}
+
+      - name: Step summary
+        if: always()
+        run: |
+          if [ "${{ steps.check.outcome }}" = "failure" ]; then
+            echo "## ${{ matrix.name }}: issues found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This check is advisory (P3). Fix violations to promote to P2 hard gate." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ${{ matrix.name }}: clean" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -41,6 +41,9 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Gateways Verify | Consolidated verify page (`v2/gateways/setup/verify/test.mdx`) — health checks, end-to-end tests, on-chain verification for video/AI/dual across Docker/Linux/Windows. Research collated, 3 OS child views built. Scoped distinct from monitor (Prometheus/Grafana) | Done | 2026-04-07 |
 | Gateways Monitoring | Holistic `monitor.mdx` for `v2/gateways/setup/monitor/` with Docker/Linux/Windows tabs, Prometheus, Grafana, Explorer, alerts. Research + OS view files + parent page created | Active - page built, awaiting review | 2026-04-07 |
 | Gateways Connect | Holistic `connect.mdx` at `v2/gateways/setup/` with Docker/Linux/Windows tabs. Off-chain/on-chain connection, discovery verification, service publication, selection tuning. Research collated, 3 OS view files + parent page + nav registration | Active - page built, testing | 2026-04-07 |
+| Canonical Consolidation | 3-layer governance spine (published/enforcement/plans). 13 frameworks in docs-guide/frameworks/ with lastVerified. 5 standards in docs-guide/standards/. 18 GOVERNANCE.md markers. Generator + 3 validators + repair script + CI workflow. Decision index unified | Done | 2026-04-07 |
+| Zombie Prevention | 158 zombie processes killed (MCP servers, Puppeteer, stale sweeps). 3 redundancy layers: SessionStart cleanup expanded, SessionEnd hook added, UserPromptSubmit Chrome reaper. sweep-console-errors.js + mdx-render-verify.js hardened with signal handlers and timeouts. pre-tool-guard.js regex false positive fixed + Plan agent unblocked | Done | 2026-04-08 |
+| Docs Library | `docs-guide/docs-library/` — 8 pages: index, 6 pipeline concern pages (content quality, governance compliance, component health, discoverability, data integration, copy/brand) with real Mermaid diagrams, full script/workflow inventories, and gap analysis. Gap report: 17 gaps (2 P0, 5 P1, 6 P2, 4 P3) | Done | 2026-04-08 |
 
 **Rule:** When you finish a task or change status, update your row in this table before closing. If the master-tasks.md file has a matching item, update that too.
 
@@ -238,14 +241,16 @@ If the sidebar is broken: run `full-repair.sh --dry-run` first, then without `--
 | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate status |
 | `workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md` | Items blocking phases |
 | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Full execution plan, phases, dependency graph |
-| `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | Voice rules for all 7 audiences |
-| `workspace/plan/active/CONTENTI-PIPLEINE/00-TRACKER.md` | Orchestrators pipeline tracker |
-| `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Full taxonomy/voice/content frameworks |
+| `docs-guide/standards/voice-and-copy.mdx` | Voice and copy standards (UK English, banned words, per-audience rules) |
+| `docs-guide/docs-library/index.mdx` | Docs library: pipeline diagrams, script inventories, gap analysis |
+| `workspace/reports/governance/gap-report.mdx` | Governance gap report (17 original, 11 resolved, 6 remaining) |
 | `docs.json` | Mintlify navigation and routing config |
 | `docs-guide/policies/governance-index.mdx` | Canonical governance index — all governed surfaces, what to read before writing |
-| `workspace/thread-outputs/research/component-script-placement-reference.md` | Component/script folder placement rules |
+| `docs-guide/frameworks/` | Published governance frameworks (13 files) — promoted from workspace/plan/ |
+| `docs-guide/standards/` | Published standards (voice, authoring, naming, frontmatter) |
+| `docs-guide/decisions/registry.md` | Unified decision registry — cross-references all 7+ decision logs |
 | `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` | Canonical Mintlify and repo best-practices reference |
-| `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/thread-outputs/research/mintlify-constraints-reference.md` | Supporting Mintlify constraints research snapshot |
+| `workspace/reports/repo-ops/GOVERNANCE_MAP_LATEST.json` | Generated governance map — run `generate-governance-map.js --write` |
 | `.claude/references/` | Exemplary work to emulate — read before designing, writing, or building |
 
 ---

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-pr-template
- * @type        validator
- * @concern     governance
- * @niche       pr
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:repo-health
  * @description Enforces that PR descriptions include required change and rationale sections before merge
  * @mode        read-only
  * @pipeline    ci
  * @scope       operations/scripts/enforcers/pr, .github/pull_request_template.md, .github/pull-request-template-v2.md
  * @usage       PR_BODY="..." node operations/scripts/enforcers/pr/check-pr-template.js
- * @policy      R-R14, R-C6
  */
 
 const fs = require('fs');

@@ -22,7 +22,7 @@ Keep this as a standalone workflow because its trigger contract and ownership bo
 
 - action:actions/checkout@v4
 - action:actions/setup-node@v4
-- operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
+- operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
 - operations/scripts/generators/components/library/generate-component-registry.js
 - operations/scripts/validators/components/documentation/check-component-docs.js
 - operations/scripts/validators/components/library/check-component-css.js

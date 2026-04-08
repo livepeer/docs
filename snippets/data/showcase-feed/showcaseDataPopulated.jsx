@@ -3,9 +3,9 @@ export const showcaseDataPopulated = [
     "title": "Picarto.tv",
     "subtitle": "The world's best creative live streaming service",
     "href": "https://picarto.tv",
-    "mediaSrc": "",
+    "mediaSrc": "https://media1.giphy.com/media/2A8saXanZmdXPmHVtB/giphy.gif",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba08014eca1980bbfe4e40_Frame%202147261150%20(26).png",
+    "logo": "",
     "categoryTags": [
       "Video Streaming",
       "Community"
@@ -25,7 +25,7 @@ export const showcaseDataPopulated = [
     "title": "Fishtank Live",
     "subtitle": "24/7 interactive reality livestream — 1M+ viewers",
     "href": "https://www.fishtank.live",
-    "mediaSrc": "https://cdn.fishtank.live/images/logo/logo-stripe.png",
+    "mediaSrc": "https://img.youtube.com/vi/aP1CK26t3Ws/maxresdefault.jpg",
     "mediaType": "image",
     "logo": "",
     "categoryTags": [
@@ -46,9 +46,9 @@ export const showcaseDataPopulated = [
     "title": "StreamETH",
     "subtitle": "Open-source livestreaming for Ethereum events",
     "href": "https://streameth.org",
-    "mediaSrc": "",
+    "mediaSrc": "https://img.youtube.com/vi/Up3pKJKvsAE/maxresdefault.jpg",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba03edbb3055e660d71d78_Frame%202147261150%20(2).png",
+    "logo": "",
     "categoryTags": [
       "Video Streaming",
       "Community"
@@ -68,9 +68,9 @@ export const showcaseDataPopulated = [
     "title": "Huddle01",
     "subtitle": "The first decentralised real-time communication network",
     "href": "https://huddle01.com",
-    "mediaSrc": "",
-    "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba0678f9939310fc9dd55a_Frame%202147261150%20(11).png",
+    "mediaSrc": "https://framerusercontent.com/assets/T132RTPxL9aeFbpdvkm9HyLS9pQ.mp4",
+    "mediaType": "video",
+    "logo": "",
     "categoryTags": [
       "Video Streaming",
       "Apps"
@@ -91,9 +91,9 @@ export const showcaseDataPopulated = [
     "title": "Tape",
     "subtitle": "Video-centric social media built on Lens Protocol",
     "href": "https://tape.xyz",
-    "mediaSrc": "",
+    "mediaSrc": "https://raw.githubusercontent.com/tapexyz/assets/main/hello.gif",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66d0f411d26f1bc866f4ae1f_Frame%202147261150.svg",
+    "logo": "",
     "categoryTags": [
       "Social Media",
       "Video Streaming"
@@ -113,9 +113,9 @@ export const showcaseDataPopulated = [
     "title": "Hey",
     "subtitle": "Community-built decentralised social media on Lens",
     "href": "https://hey.xyz",
-    "mediaSrc": "",
+    "mediaSrc": "https://img.youtube.com/vi/IhT2JSsmf1Y/maxresdefault.jpg",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba0678ca79ebb325884be5_Frame%202147261150%20(9).png",
+    "logo": "",
     "categoryTags": [
       "Social Media"
     ],
@@ -134,9 +134,9 @@ export const showcaseDataPopulated = [
     "title": "The Lot Radio",
     "subtitle": "24/7 livestream of 165+ resident DJs from Brooklyn",
     "href": "https://www.thelotradio.com",
-    "mediaSrc": "",
-    "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba08753d9068bf8c18976f_Frame%202147261150%20(33).png",
+    "mediaSrc": "/snippets/assets/media/videos/the-lott-hero-video.mp4",
+    "mediaType": "video",
+    "logo": "",
     "categoryTags": [
       "Video Streaming",
       "Community"
@@ -156,9 +156,9 @@ export const showcaseDataPopulated = [
     "title": "Bonfire",
     "subtitle": "No-code community platform for web3 creators",
     "href": "https://www.bonfire.xyz",
-    "mediaSrc": "",
+    "mediaSrc": "https://img.youtube.com/vi/k1Dtms2qVbs/maxresdefault.jpg",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba0571d478596fca06250b_Frame%202147261150%20(5).png",
+    "logo": "",
     "categoryTags": [
       "Apps",
       "Community"
@@ -177,9 +177,9 @@ export const showcaseDataPopulated = [
     "title": "Minds",
     "subtitle": "Open-source social network with 15M+ users",
     "href": "https://www.minds.com",
-    "mediaSrc": "",
-    "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba07842e99eb695b087ef7_Frame%202147261150%20(22).png",
+    "mediaSrc": "https://cms.minds.com/uploads/networks_app_overview_0f2510abe5.mp4",
+    "mediaType": "video",
+    "logo": "",
     "categoryTags": [
       "Social Media",
       "Apps"
@@ -199,9 +199,9 @@ export const showcaseDataPopulated = [
     "title": "Unlonely",
     "subtitle": "Crypto-native livestreaming with gamified interaction",
     "href": "https://www.unlonely.app",
-    "mediaSrc": "",
+    "mediaSrc": "https://img.youtube.com/vi/DoLz53_3-WE/maxresdefault.jpg",
     "mediaType": "image",
-    "logo": "https://cdn.prod.website-files.com/66b1e1cb750c24d738b2c64b/66ba089c1d3d9ff1c57f8794_Frame%202147261150%20(34).png",
+    "logo": "",
     "categoryTags": [
       "Video Streaming",
       "Community"

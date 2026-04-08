@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      add-framework-headers
- * @type        remediator
- * @concern     content
- * @niche       classification
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:repo-health
  * @description Inserts or extends framework headers on all repo scripts from classification data.
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       full-repo
  * @usage       node operations/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run
- * @policy      R-R14
  */
 
 const fs = require('fs');

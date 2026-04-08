@@ -1,0 +1,63 @@
+# type: generator
+# concern: discoverability
+# pipeline: P4
+name: Generate AI Sitemap
+
+on:
+  push:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+
+jobs:
+  generate-ai-sitemap:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve target branch
+        id: branch
+        run: |
+          if [ "${{ inputs.use_test_branch }}" = "true" ]; then
+            echo "name=${{ vars.TEST_BRANCH }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ vars.DEPLOY_BRANCH }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Generate AI sitemap
+        run: node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code sitemap-ai.xml || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add sitemap-ai.xml
+          git commit -m "chore(seo): refresh AI sitemap"
+          git push origin HEAD:${{ steps.branch.outputs.name }}

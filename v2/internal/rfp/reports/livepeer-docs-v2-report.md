@@ -459,7 +459,7 @@ The depth of technical content in the v2 documentation significantly exceeds wha
 
 **LPT exchange data integration.** `operations/scripts/snippets/fetch-lpt-exchanges.sh` fetches LPT exchange data. `snippets/data/` contains domain data modules including exchange and reference data surfaces.
 
-**External docs integration.** `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh` provides automated fetching of external documentation sources.
+**External docs integration.** `operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh` provides automated fetching of external documentation sources.
 
 **SDK documentation.** Automated SDK generation is handled by `sdk_generation.yaml` (GitHub Actions), which runs on schedule and produces PRs with updated SDK documentation.
 
@@ -770,7 +770,7 @@ This section covers all software engineering, automation, and tooling work — t
 | M12 | `operations/scripts/snippets/fetch-openapi-specs.sh`                                                                           | OpenAPI spec fetcher                                         | 2       | 4        | \_\_    |
 | M13 | `operations/scripts/snippets/generate-api-docs.sh`                                                                             | API documentation generator                                  | 3       | 5        | \_\_    |
 | M14 | `operations/scripts/snippets/fetch-lpt-exchanges.sh`                                                                           | LPT exchange data fetcher                                    | 2       | 4        | \_\_    |
-| M15 | `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
+| M15 | `operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
 | M16 | `operations/scripts/snippets/test-scripts.sh`                                                                                  | Script test runner                                           | 1       | 2        | \_\_    |
 | M17 | OG image tooling (`dev/update-og-image.js`, `batch-update-og-image.sh`, `replace-og-image.py`, `update-all-og-images.js`) | Open Graph image management tooling                          | 4       | 8        | \_\_    |
 | M18 | `operations/scripts/test-v2-pages.js`, `test-all-pages-browser.js`, `test-all-pages-comprehensive.js`                          | Page testing scripts                                         | 4       | 7        | \_\_    |

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-codex-pr-overlap
- * @type        dispatch
- * @concern     ai
- * @niche       codex
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description PR enforcer — checks for conflicting codex PRs targeting the same files/branches
- * @mode        execute
+ * @mode        read-only
  * @pipeline    PR, Track B)
  * @scope       operations/scripts, .github/workflows, codex PR governance
  * @usage       node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const { spawnSync } = require('child_process');

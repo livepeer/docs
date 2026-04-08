@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      migrate-assets-to-branch
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:repo-health
  * @description Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual
  * @scope       full-repo
  * @usage       node operations/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
- * @policy      R-R14
  */
 
 const fs = require('fs');

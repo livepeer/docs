@@ -16,22 +16,30 @@ Codex layer extension (task isolation rules — HitL, checkpoints, locks):
 
 Canonical governance docs:
 
+- `docs-guide/policies/governance-index.mdx` — single entry point for all 10 governed surfaces
 - `docs-guide/policies/agent-governance-framework.mdx`
 - `docs-guide/policies/root-allowlist-governance.mdx`
-- `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`
+
+Governance infrastructure:
+
+- `docs-guide/frameworks/` — 13 published frameworks (scripts, components, content, repo structure, etc.)
+- `docs-guide/standards/` — voice, authoring, naming, frontmatter standards
+- `docs-guide/decisions/registry.md` — unified decision registry
+- `docs-guide/docs-library/` — pipeline diagrams and script inventories
+- `workspace/reports/governance/gap-report.mdx` — gap analysis (6 remaining)
+- Every root folder has a `GOVERNANCE.md` marker linking to its framework and validator
 
 ## Required Context
 
 Use these sources in this order when they apply:
 
-1. `docs.json` for navigation, routing, groups, tabs, and page placement.
-2. `v2/**` for current user-facing docs.
-3. `README.md` and `contribute/**` for workflow, hooks, testing, and contributor process.
-4. `docs-guide/**` for internal capability maps, governance policy, and generator ownership.
-5. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` for Mintlify runtime, MDX/JSX constraints, local preview rules, and repo authoring defaults.
-6. `v2/orchestrators/_workspace/canonical/Frameworks.mdx` for locked content taxonomy: `pageType`, `pagePurpose`, `audience` enums, and voice rules. All content pages must use values from this file.
-7. `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` for per-audience voice and tone rules.
-8. `v1/**` only for legacy reference or when the user explicitly asks for legacy behavior.
+1. `docs-guide/policies/governance-index.mdx` for all governed surfaces, what to read before writing anything.
+2. `docs.json` for navigation, routing, groups, tabs, and page placement.
+3. `v2/**` for current user-facing docs.
+4. `docs-guide/frameworks/` for how to build things (script taxonomy, component categories, workflow patterns).
+5. `docs-guide/standards/` for how to write things (voice, copy, naming, frontmatter).
+6. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` for Mintlify runtime, MDX/JSX constraints, local preview rules.
+7. `v1/**` only for legacy reference or when the user explicitly asks for legacy behaviour.
 
 Call out conflicts explicitly instead of guessing.
 

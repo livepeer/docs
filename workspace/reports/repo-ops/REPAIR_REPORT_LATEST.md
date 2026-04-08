@@ -1,14 +1,14 @@
 # Governance Repair Report
 
-- Date: 2026-04-05T15:05:14.129Z
+- Date: 2026-04-07T13:36:18.411Z
 - Mode: report-only
 - Verification: SKIPPED (report-only)
 
 ## Pre Repair
 
-- Total scripts: 365
-- Grade A/B/C/F: 0/92/197/76
-- Pipeline mismatches: 87
+- Total scripts: 381
+- Grade A/B/C/F: 0/91/229/61
+- Pipeline mismatches: 93
 - Not in JSON: 0
 - Phantom JSON: 0
 
@@ -31,9 +31,9 @@
 
 ## Post Repair
 
-- Total scripts: 365
-- Grade A/B/C/F: 0/92/197/76
-- Pipeline mismatches: 87
+- Total scripts: 381
+- Grade A/B/C/F: 0/91/229/61
+- Pipeline mismatches: 93
 - Not in JSON: 0
 - Phantom JSON: 0
 

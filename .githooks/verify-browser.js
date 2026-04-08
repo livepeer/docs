@@ -10,7 +10,6 @@
  * @pipeline    manual — developer tool
  * @scope       .githooks
  * @usage       node .githooks/verify-browser.js [flags]
- * @policy      E-C6, F-C1
  */
 /**
  * Headless browser validation for staged MDX files

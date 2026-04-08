@@ -64,7 +64,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
 - Severity Model: info-only
 - Autofix Mode: safe
 - Commands:
-  - `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`
+  - `node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all`
 - Outputs:
   - `ai-tools/agent-packs/codex/skills-manifest.json`
   - `ai-tools/agent-packs/cursor/rules.md`
@@ -106,5 +106,5 @@ These skills are not part of the audit pipeline but provide standards and guidan
 - Outputs:
   - `new MDX page conforming to all repo standards`
 
-Run source: `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all`
+Run source: `node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all`
 

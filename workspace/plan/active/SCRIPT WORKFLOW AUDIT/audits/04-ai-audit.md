@@ -448,7 +448,7 @@ Add `export-portable-skills.js --check` to a PR or cron workflow. Options:
 **Option A — Add to `check-ai-companions.yml` (recommended)**
 ```yaml
 - name: Verify portable skills are current
-  run: node operations/scripts/automations/ai/agents/export-portable-skills.js --check
+  run: node operations/scripts/integrators/ai/agents/export-portable-skills.js --check
 ```
 
 **Option B — Dedicated cron workflow (P5/P6)**

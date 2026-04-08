@@ -1,15 +1,14 @@
 /**
- * @script pre-tool-guard
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Pre-tool enforcement for Claude Code sessions
+ * @script      pre-tool-guard
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Pre-tool enforcement for Claude Code sessions
  * @description Mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes.
- * @mode read-only
- * @pipeline PreToolUse hook → reads stdin tool input → decision (allow/block/warn)
- * @scope .claude/settings.json PreToolUse hook
- * @usage Called automatically by Claude Code PreToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PreToolUse hook → reads stdin tool input → decision (allow/block/warn)
+ * @scope       .claude/settings.json PreToolUse hook
+ * @usage       Called automatically by Claude Code PreToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');
@@ -29,7 +28,7 @@ stdin.on('end', () => {
     if (toolName === 'Agent') {
       const prompt = (toolInput.prompt || '').toLowerCase();
       const subtype = (toolInput.subagent_type || '').toLowerCase();
-      const isReadOnly = subtype === 'explore' ||
+      const isReadOnly = subtype === 'explore' || subtype === 'plan' ||
         /\b(research|audit|investigate|analyse|analyze|scan|find|search|check|review|read|plan)\b/.test(prompt) &&
         !/\b(edit|write|create|build|fix|implement|refactor|move|rename|delete)\b/.test(prompt);
 
@@ -47,7 +46,7 @@ stdin.on('end', () => {
       const cmd = toolInput.command || '';
 
       // Block ad-hoc mintlify dev — use server-lifecycle instead
-      if (/mintlify\s+dev|npx\s+mintlify|mint\s+dev/i.test(cmd) && !/server-lifecycle/i.test(cmd)) {
+      if (/(?:^|[;&|]\s*)(?:mintlify\s+dev|npx\s+mintlify|mint\s+dev)/i.test(cmd) && !/server-lifecycle/i.test(cmd)) {
         console.log(JSON.stringify({
           decision: 'block',
           reason: 'BLOCKED: Do not run mintlify dev directly. Use: node operations/scripts/dispatch/governance/server-lifecycle.js restart (to start/restart) or server-lifecycle.js health (to check status). Ad-hoc mintlify dev leaves zombie processes on port 3333+.'
@@ -83,6 +82,31 @@ stdin.on('end', () => {
         } catch (_) { /* port is free — allow */ }
       }
 
+      // Root allowlist check for mkdir/touch/cat-redirect in Bash
+      const repoRoot = path.resolve(__dirname, '../../../..');
+      const mkdirMatch = cmd.match(/mkdir\s+(?:-p\s+)?["']?([^\s"']+)/);
+      const touchMatch = cmd.match(/touch\s+["']?([^\s"']+)/);
+      const catRedirect = cmd.match(/cat\s*>+\s*["']?([^\s"']+)/);
+      const targetPath = mkdirMatch?.[1] || touchMatch?.[1] || catRedirect?.[1];
+      if (targetPath) {
+        const absTarget = path.isAbsolute(targetPath) ? targetPath : path.resolve(repoRoot, targetPath);
+        const rel = path.relative(repoRoot, absTarget);
+        if (rel && !rel.startsWith('..') && !rel.startsWith('/')) {
+          const topSegment = rel.split(path.sep)[0];
+          try {
+            const allowlist = fs.readFileSync(path.join(repoRoot, '.allowlist'), 'utf8')
+              .split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+            if (!allowlist.includes(topSegment)) {
+              console.log(JSON.stringify({
+                decision: 'block',
+                reason: `BLOCKED: Bash command would create "${topSegment}/" which is not in .allowlist. Allowed root dirs: ${allowlist.filter(a => !a.includes('.')).join(', ')}.`
+              }));
+              process.exit(2);
+            }
+          } catch (_) { /* allowlist missing — allow */ }
+        }
+      }
+
       // Browser test commands: warn about cleanup
       if (/puppeteer|playwright|headless|smoke.*test|verify.*page/i.test(cmd)) {
         console.log(JSON.stringify({
@@ -104,14 +128,91 @@ stdin.on('end', () => {
         process.exit(2);
       }
 
-      // Block public service posts
-      if (/gh\s+(issue|pr)\s+(create|comment|edit)/i.test(cmd) ||
-          /curl.*(api\.github|hooks\.slack)/i.test(cmd)) {
+      // Block deletion of tracked files/directories (D2: no deletions policy)
+      // ALLOWED to delete: anything in .gitignore (untracked/ignored), /tmp/ scratch
+      // BLOCKED: any tracked file or directory. Must use git mv to x-archive/ instead.
+      const isRm = /\brm\b/.test(cmd);
+      const isGitRm = /git\s+rm\b/.test(cmd);
+      // Safe targets: /tmp/, node_modules, .DS_Store, .env, .cache, package-lock, yarn.lock,
+      // pnpm-lock, debug logs, *.code-workspace — all are gitignored or scratch
+      const isGitignored = /\brm\s+(-[rfdi]+\s+)*.*(\b\/tmp\/|\/tmp$|node_modules|\.DS_Store|\.env|\.cache|package-lock|yarn\.lock|pnpm-lock|debug\.log|\.code-workspace|client_secret|\.playwright-cli)/.test(cmd);
+      if ((isRm && !isGitignored) || isGitRm) {
         console.log(JSON.stringify({
           decision: 'block',
-          reason: 'BLOCKED: This command posts to a public service. Review content for sensitive data before running manually.'
+          reason: 'BLOCKED: Do not delete tracked files or directories. Use git mv to x-archive/ instead. Per D2 (no deletions policy): all superseded files must be archived, never deleted. Gitignored files (.env, node_modules, .cache, /tmp/, etc.) can be deleted freely. Example: git mv old-file.yml x-archive/old-file.yml'
         }));
         process.exit(2);
+      }
+
+      // Block raw curl to external services (gh CLI is allowed)
+      if (/curl.*(api\.github|hooks\.slack)/i.test(cmd)) {
+        console.log(JSON.stringify({
+          decision: 'block',
+          reason: 'BLOCKED: Raw curl to external service. Use gh CLI instead.'
+        }));
+        process.exit(2);
+      }
+    }
+
+    // --- FROZEN DIRECTORIES: block all writes to v1/ ---
+    if ((toolName === 'Write' || toolName === 'Edit') && toolInput.file_path) {
+      const repoRoot = path.resolve(__dirname, '../../../..');
+      const rel = path.relative(repoRoot, toolInput.file_path);
+      if (rel && !rel.startsWith('..') && rel.startsWith('v1' + path.sep)) {
+        console.log(JSON.stringify({
+          decision: 'block',
+          reason: 'BLOCKED: v1/ is FROZEN. No changes allowed — no exceptions.'
+        }));
+        process.exit(2);
+      }
+    }
+
+    // --- ROOT ALLOWLIST: block writes to unauthorised root directories ---
+    if ((toolName === 'Write' || toolName === 'Edit') && toolInput.file_path) {
+      const fp = toolInput.file_path;
+      const repoRoot = path.resolve(__dirname, '../../../..');
+      const allowlistPath = path.join(repoRoot, '.allowlist');
+      try {
+        const rel = path.relative(repoRoot, fp);
+        if (rel && !rel.startsWith('..') && !rel.startsWith('/')) {
+          const topSegment = rel.split(path.sep)[0];
+          const allowlist = fs.readFileSync(allowlistPath, 'utf8')
+            .split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+          if (!allowlist.includes(topSegment)) {
+            console.log(JSON.stringify({
+              decision: 'block',
+              reason: `BLOCKED: "${topSegment}/" is not an allowed root directory. Place files in the correct location:\n  Scripts → operations/scripts/<type>/<concern>/<niche>/\n  Components → snippets/components/<category>/\n  Docs pages → v2/<tab>/\n  Governance → docs-guide/frameworks/ or docs-guide/policies/\n  Standards → docs-guide/standards/\n  Plans/reports → workspace/\n  AI skills → ai-tools/ai-skills/\nSee docs-guide/frameworks/file-placement.mdx and docs-guide/frameworks/repo-structure.mdx`
+            }));
+            process.exit(2);
+          }
+        }
+      } catch (_) { /* allowlist missing or unreadable — allow through */ }
+    }
+
+    // --- NEW FILE GOVERNANCE GUIDANCE ---
+    if (toolName === 'Write' && toolInput.file_path) {
+      const repoRoot = path.resolve(__dirname, '../../../..');
+      const fp = toolInput.file_path;
+      const isNew = !fs.existsSync(fp);
+      if (isNew) {
+        const rel = path.relative(repoRoot, fp);
+        if (rel.endsWith('.js') && !rel.includes('test')) {
+          console.log(JSON.stringify({
+            systemMessage: 'NEW SCRIPT: Ensure 11-tag JSDoc header (@script, @type, @concern, @niche, @purpose, @description, @mode, @pipeline, @scope, @usage). Place in operations/scripts/<type>/<concern>/<niche>/. See docs-guide/frameworks/script-framework.mdx'
+          }));
+        } else if (rel.endsWith('.jsx')) {
+          console.log(JSON.stringify({
+            systemMessage: 'NEW COMPONENT: Ensure 7-tag JSDoc header. Place in snippets/components/<category>/<sub-niche>/. See docs-guide/frameworks/component-framework-canonical.mdx'
+          }));
+        } else if (rel.endsWith('.mdx') && rel.startsWith('v2' + path.sep)) {
+          console.log(JSON.stringify({
+            systemMessage: 'NEW DOCS PAGE: Ensure required frontmatter (title, description, keywords, audience). See docs-guide/standards/frontmatter.mdx'
+          }));
+        } else if (rel.endsWith('.yml') && rel.startsWith('.github' + path.sep + 'workflows')) {
+          console.log(JSON.stringify({
+            systemMessage: 'NEW WORKFLOW: Add governance header (# type: / # concern: / # pipeline:). See docs-guide/frameworks/github-actions.mdx'
+          }));
+        }
       }
     }
 

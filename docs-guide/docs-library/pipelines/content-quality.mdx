@@ -1,0 +1,120 @@
+---
+title: Content Quality Pipeline
+sidebarTitle: Content Quality
+description: >-
+  Full pipeline reference for content quality enforcement. Covers validators,
+  repair scripts, browser tests, and the P2 hard gate on every PR.
+keywords:
+  - content quality
+  - validators
+  - copy standards
+  - grammar
+  - structure
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-08
+---
+
+# Content Quality Pipeline
+
+> **Gate:** P2 (hard gate — blocks merge on failure)
+> **Trigger:** Every pull request touching `v2/**/*.mdx` or `docs-guide/**/*.mdx`
+> **Workflow:** `validator-copy-check-content-quality-suite.yml`
+
+---
+
+## What happens when a PR is opened
+
+```mermaid
+graph TD
+    PR["PR opened / updated"] --> SUITE["Content Quality Suite (P2)"]
+    SUITE --> COPY["Copy Checks"]
+    SUITE --> GRAMMAR["Grammar Checks"]
+    SUITE --> STRUCTURE["Structure Checks"]
+    SUITE --> COMPONENTS["Component Governance"]
+    SUITE --> BROWSER["Browser Tests"]
+
+    COPY --> LC["lint-copy.js<br/>Banned words"]
+    COPY --> LP["lint-patterns.js<br/>Copy patterns"]
+    GRAMMAR --> GB["check-grammar-en-gb.js<br/>UK English"]
+    GRAMMAR --> PN["check-proper-nouns.js<br/>Brand names"]
+    STRUCTURE --> DH["check-double-headers.js"]
+    STRUCTURE --> PE["check-page-endings.js"]
+    STRUCTURE --> AU["check-anchor-usage.js"]
+    STRUCTURE --> MS["check-mdx-safe-markdown.js"]
+    STRUCTURE --> DQ["check-description-quality.js"]
+    COMPONENTS --> CN["check-naming-conventions.js"]
+    COMPONENTS --> CS["check-mdx-component-scope.js"]
+    COMPONENTS --> CC["check-component-css.js"]
+    COMPONENTS --> CI["check-component-immutability.js"]
+
+    LC --> RESULT{Pass?}
+    LP --> RESULT
+    GB --> RESULT
+    PN --> RESULT
+    DH --> RESULT
+    PE --> RESULT
+    AU --> RESULT
+    MS --> RESULT
+    DQ --> RESULT
+    CN --> RESULT
+    CS --> RESULT
+    CC --> RESULT
+    CI --> RESULT
+    BROWSER --> RESULT
+
+    RESULT -->|Yes| MERGE["Merge allowed"]
+    RESULT -->|No| BLOCK["Merge blocked"]
+    BLOCK --> REPAIR["Run repair scripts"]
+```
+
+---
+
+## Validators (read-only, exit 0/1)
+
+| Script | Concern | Niche | What it checks |
+|--------|---------|-------|----------------|
+| `lint-copy.js` | content | copy | Banned words, filler phrases, self-reference |
+| `lint-patterns.js` | content | copy | Copy pattern violations (tone, voice) |
+| `check-grammar-en-gb.js` | content | grammar | UK English spelling (-ise, -our, -re) |
+| `check-proper-nouns.js` | content | grammar | Brand capitalisation (Livepeer, Arbitrum) |
+| `check-double-headers.js` | content | structure | Duplicate heading detection |
+| `check-page-endings.js` | content | structure | Page ending quality |
+| `check-anchor-usage.js` | content | structure | Anchor link validity |
+| `check-mdx-safe-markdown.js` | content | structure | MDX-unsafe markdown patterns |
+| `check-description-quality.js` | content | structure | SEO description length, boilerplate, duplicates |
+| `check-docs-path-sync.js` | content | structure | docs.json path consistency |
+| `verify-all-pages.js` | content | structure | Full page rendering verification |
+| `test-v2-pages.js` | content | structure | Browser-based page render tests |
+
+---
+
+## Remediators (auto-fix)
+
+| Script | What it fixes | Mode |
+|--------|---------------|------|
+| `repair-mdx-safe-markdown.js` | Invalid MDX patterns | edit |
+| `repair-page-links.js` | Broken page references | edit |
+| `repair-relative-page-hrefs.js` | Relative URL errors | edit |
+| `repair-spelling.js` | Spelling corrections | edit |
+| `repair-page-imports.js` | Broken import statements | edit |
+| `sync-docs-paths.js` | docs.json after file moves | edit |
+
+---
+
+## Audits (reporting)
+
+| Script | What it reports |
+|--------|----------------|
+| `docs-quality-and-freshness-audit.js` | Page quality scores and staleness |
+| `audit-copy-patterns.js` | Copy pattern compliance across all pages |
+| `page-imports-audit.js` | Import health across all pages |
+| `page-links-audit.js` | Link integrity across all pages |
+
+---
+
+## Gaps
+
+- **No auto-repair on PR:** Remediators exist but require manual invocation. No workflow auto-creates a fix PR when validators fail
+- **Browser tests use continue-on-error:** `test-v2-pages.js` runs in the suite but does not block merge

@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script sweep-delta-report
- * @type validator
- * @concern content
- * @niche structure
- * @purpose Compares current console error state against baseline and produces a delta report
+ * @script      sweep-delta-report
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Compares current console error state against baseline and produces a delta report
  * @description Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,
- *   and classifies every route as: new regression, fixed, unchanged, or new page.
- *   Optionally updates the baseline after human review.
- * @mode read-only
- * @pipeline manual — run on demand or on schedule to detect drift
- * @scope operations/tests/baselines/console-baseline.json
- * @usage node operations/scripts/validators/content/structure/sweep-delta-report.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    manual — run on demand or on schedule to detect drift
+ * @scope       operations/tests/baselines/console-baseline.json
+ * @usage       node operations/scripts/validators/content/structure/sweep-delta-report.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]
  */
 
 const fs = require('fs');

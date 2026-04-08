@@ -13,6 +13,13 @@
  *   node operations/scripts/validators/governance/ai/check-companion-manifest.js
  *   node operations/scripts/validators/governance/ai/check-companion-manifest.js --check
  *   node operations/scripts/validators/governance/ai/check-companion-manifest.js --report
+ * @script      check-companion-manifest
+ * @type        validator
+ * @description check companion manifest
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       operations/scripts/validators/governance/ai
+ * @usage       node operations/scripts/validators/governance/ai/check-companion-manifest.js
  */
 
 'use strict';

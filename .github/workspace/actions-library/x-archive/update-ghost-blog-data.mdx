@@ -1,0 +1,83 @@
+---
+title: 'Update Ghost Blog Data'
+sidebarTitle: 'Ghost Blog Data'
+description: 'Update Ghost Blog Data'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - integrator
+  - copy
+  - update-ghost-blog-data
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/update-ghost-blog-data.yml` |
+| **New name** | `integrator-copy-update-social-feeds.yml` |
+| **Type** | `integrator` |
+| **Concern** | `copy` |
+| **Pipeline tag** | P5-auto (scheduled + auto-commit) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["schedule, workflow_dispatch"] --> WF["update-ghost-blog-data"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `schedule` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `.github/scripts/fetch-ghost-blog-data.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- CRITICAL: Missing permissions: contents: write — push will fail
+
+**Review flags:** Merge into single matrix dispatcher (D-ACT-03). P0: missing permissions
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Identical structure — merge into unified data-fetch dispatcher |
+| **Dry-run** | No |
+| **Concurrency** | No |
+| **Error reporting** | none |
+| **Auto-commit** | Yes |

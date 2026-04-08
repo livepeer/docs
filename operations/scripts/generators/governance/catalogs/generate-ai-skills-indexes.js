@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-ai-skills-indexes
- * @category          
- * @purpose           governance:agent-governance
- * @scope             operations/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, docs-guide/contributing, v2
- * @domain            docs
- * @needs             
- * @purpose-statement 
- * @pipeline          manual, ci
- * @usage             node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]
+ * @script      generate-ai-skills-indexes
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     
+ * @description 
+ * @mode        read-only
+ * @pipeline    manual, ci
+ * @scope       operations/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, docs-guide/contributing, v2
+ * @usage       node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]
+ * @policy      * @purpose-statement
  */
 
 const fs = require('fs');

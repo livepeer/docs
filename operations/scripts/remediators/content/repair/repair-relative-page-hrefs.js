@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-relative-page-hrefs
- * @category    remediator
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:link-integrity
- * @description Compatibility shim for repair-page-links.js — preserves the legacy relative-href repair entrypoint while delegating to the canonical page-links remediator.
- * @mode        edit
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.
+ * @description Preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.
+ * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts/remediators/content/repair, operations/reports/health/page-links
  * @usage       node operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js [flags]

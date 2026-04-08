@@ -1,18 +1,14 @@
 /**
- * @script blast-radius-scanner
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Scans for consumers after editing shared files (components, templates, config)
+ * @script      blast-radius-scanner
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Scans for consumers after editing shared files (components, templates, config)
  * @description PostToolUse hook for Edit/Write. When a file in snippets/components/,
- *   snippets/templates/, or key config files is edited, greps the repo for all files
- *   that import or reference it. Emits a systemMessage listing every consumer.
- *   Not a reminder — actual grep results showing the blast radius.
- * @mode read-only
- * @pipeline PostToolUse hook → reads stdin → path check → grep consumers → emit list
- * @scope .claude/settings.json PostToolUse hook (Edit|Write matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → reads stdin → path check → grep consumers → emit list
+ * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const { execSync } = require('child_process');

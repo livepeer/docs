@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      pattern-observer
- * @type        audit
- * @concern     content
- * @niche       quality
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.
  * @mode        read-only
  * @pipeline    manual
  * @scope       single-domain, v2-content, generated-output
  * @usage       node operations/scripts/audits/content/quality/audit-copy-patterns.js --tab <name> | --all [--output <file>]
- * @policy      R-R14, R-R18
  */
 
 'use strict';

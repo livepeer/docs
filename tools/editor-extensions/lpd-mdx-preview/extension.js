@@ -1,3 +1,16 @@
+/**
+ * @script            extension
+ * @type              interface
+ * @concern           integrations
+ * @niche             editor-tooling
+ * @purpose           VS Code extension for live MDX preview with Mintlify component rendering
+ * @description       Opens a side-by-side webview panel that parses the active MDX document into typed segments, renders Mintlify and Livepeer components as styled HTML, and live-updates on edit with debounced refresh.
+ * @mode              interface
+ * @scope             tools/editor-extensions/lpd-mdx-preview/
+ * @usage             Activate via VS Code command palette: Livepeer: Preview MDX
+ * @policy            mintlify-repo-best-practices, component-framework-canonical
+ */
+
 'use strict';
 
 const path = require('path');

@@ -1,19 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script regression-bisect
- * @type validator
- * @concern content
- * @niche structure
- * @purpose Finds the exact commit that introduced a console error on a given route
+ * @script      regression-bisect
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Finds the exact commit that introduced a console error on a given route
  * @description Uses git bisect with an automated Puppeteer test to binary-search
- *   through commit history and identify the first commit where a specific console
- *   error pattern appears on a given v2 route. Requires a running Mintlify server
- *   or auto-starts one.
- * @mode read-only
- * @pipeline manual diagnostic tool
- * @scope single route
- * @usage node operations/scripts/validators/content/structure/regression-bisect.js --route /v2/path --error "ReferenceError" [--good abc123] [--bad HEAD]
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    manual diagnostic tool
+ * @scope       single route
+ * @usage       node operations/scripts/validators/content/structure/regression-bisect.js --route /v2/path --error "ReferenceError" [--good abc123] [--bad HEAD]
  */
 
 const fs = require('fs');

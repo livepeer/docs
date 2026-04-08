@@ -9,7 +9,7 @@ Scope:
 - `.github/workflows/update-contract-addresses.yml`
 - `.github/workflows/update-contract-addresses-shadow.yml`
 - `.github/scripts/fetch-contract-addresses.js`
-- `operations/scripts/automations/content/data/contracts/*.js`
+- `operations/scripts/integrators/content/data/contracts/*.js`
 - `snippets/data/contract-addresses/*`
 
 Out of scope for this file:

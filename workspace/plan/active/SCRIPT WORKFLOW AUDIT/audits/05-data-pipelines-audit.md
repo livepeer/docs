@@ -35,7 +35,7 @@ The pipeline operates across two parallel systems:
 | `fetch-youtube-data.js` | YouTube Data API v3 | `YOUTUBE_API_KEY` (required) | Hybrid (config + env vars) | `snippets/automations/solutions/{product}/youtubeData.jsx` or `snippets/automations/youtube/youtubeData.jsx` |
 | `fetch-rss-blog-data.js` | Generic RSS/Atom feeds | None (public RSS) | Yes (`product-social-config.json`) | `snippets/automations/solutions/{product}/blogData.jsx` |
 
-### Supplementary Data Scripts (`operations/scripts/automations/content/data/`)
+### Supplementary Data Scripts (`operations/scripts/integrators/content/data/`)
 
 | Script | Type | Pipeline | Purpose |
 |--------|------|----------|---------|

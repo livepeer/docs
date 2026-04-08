@@ -1,6 +1,19 @@
 #!/usr/bin/env node
 
 /**
+ * @script      generate-hero-background
+ * @type        generator
+ * @concern     content
+ * @niche       media
+ * @purpose     content:media-generation
+ * @description Generates radial gradient hero background images using Puppeteer
+ * @mode        generate
+ * @pipeline    manual -> brand colours -> hero background PNG
+ * @scope       operations/scripts/generators/media/
+ * @usage       node operations/scripts/generators/media/generate-hero-background.js --preset daydream --output bg.png
+ */
+
+/**
  * generate-hero-background.js
  *
  * Generates a radial gradient background image from brand colours.
@@ -45,6 +58,12 @@
  *
  *   # Preset:
  *   node generate-hero-background.js --preset daydream --output bg.png
+ * @type        generator
+ * @description generate hero background
+ * @mode        generate
+ * @pipeline    manual
+ * @scope       operations/scripts/generators/media
+ * @usage       node operations/scripts/generators/media/generate-hero-background.js
  */
 
 const path = require('path')

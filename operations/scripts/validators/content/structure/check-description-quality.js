@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-description-quality
- * @type        validator
- * @concern     content
- * @niche       structure
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       operations/scripts/validators/content, v2
  * @usage       node operations/scripts/validators/content/structure/check-description-quality.js [--path <repo-path>] [--strict]
- * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

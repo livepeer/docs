@@ -7,6 +7,8 @@ locked-by: Human
 
 # Documentation Item Model
 
+> **DEPRECATED as canonical location.** The published version lives at `docs-guide/frameworks/doc-item-model.mdx`. This file remains as the working draft. Edits here must be synced to the published version.
+
 > Frozen contract for all documentation governance execution. Do not modify without a new HUMAN REVIEW decision logged in `plan.md`.
 >
 > Source of truth for: classification taxonomy · naming convention · metadata spec · enforcement model.

@@ -36,7 +36,7 @@ Browser validation in this repo is governed runtime work, not an ad-hoc `open pa
 
 2. Start from a clean process state.
    Before new agent-owned browser validation, inspect or clean leaked sessions with:
-   `node operations/scripts/automations/governance/cleanup-local-dev-sessions.js --json`
+   `node operations/scripts/integrators/governance/cleanup-local-dev-sessions.js --json`
    If non-3333 agent sessions are present, apply cleanup before continuing.
 
 3. Use explicit non-human ports and explicit scope.
@@ -73,7 +73,7 @@ Browser validation in this repo is governed runtime work, not an ad-hoc `open pa
 ## Workflow
 
 1. Inspect current state.
-   - Run `node operations/scripts/automations/governance/cleanup-local-dev-sessions.js --json`
+   - Run `node operations/scripts/integrators/governance/cleanup-local-dev-sessions.js --json`
    - If needed, apply cleanup before launching new validation.
 
 2. Choose the smallest valid validation surface.

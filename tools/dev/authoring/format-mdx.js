@@ -10,7 +10,6 @@
  * @pipeline    manual
  * @scope       tools/dev/authoring, tools/editor-extensions/authoring-tools, tests/unit
  * @usage       node tools/dev/authoring/format-mdx.js [--check|--write] [--files a,b]
- * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

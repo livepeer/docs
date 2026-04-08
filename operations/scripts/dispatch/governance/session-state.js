@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
  * @script      session-state
- * @type        dispatch
- * @concern     governance
- * @niche       session
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:session-start
  * @description Reads ALL active plans and live project state. Run at session start.
  * @mode        read-only
+ * @pipeline    manual
  * @scope       workspace/plan/active/
  * @usage       node operations/scripts/dispatch/governance/session-state.js
  */

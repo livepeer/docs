@@ -1,3 +1,16 @@
+/**
+ * @script            component-map
+ * @type              utility
+ * @concern           governance
+ * @niche             editor-tooling
+ * @purpose           MDX component renderer that maps parsed JSX segments to styled HTML for live preview
+ * @description       Implements a 3-tier rendering pipeline (Mintlify built-ins, Livepeer custom components, generic placeholder) that converts parsed MDX segments into preview-ready HTML with icon badges, prop rendering, and data-file resolution.
+ * @mode              integrate
+ * @scope             tools/editor-extensions/lpd-mdx-preview/lib/
+ * @usage             Required by tools/editor-extensions/lpd-mdx-preview/extension.js — not invoked directly
+ * @policy            mintlify-repo-best-practices, component-framework-canonical
+ */
+
 'use strict';
 
 const fs = require('fs');

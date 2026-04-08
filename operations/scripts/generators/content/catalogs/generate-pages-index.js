@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-pages-index
- * @type        generator
- * @concern     content
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts, v2
  * @usage       node operations/scripts/generators/content/catalogs/generate-pages-index.js [flags]
- * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

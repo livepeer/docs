@@ -140,7 +140,7 @@ async function runTests() {
 
   await runCase('Cross-agent packager emits all pack targets from one catalogue', async () => {
     const result = runNode([
-      'operations/scripts/automations/ai/agents/cross-agent-packager.js',
+      'operations/scripts/integrators/ai/agents/cross-agent-packager.js',
       '--agent-pack',
       'all',
       '--output-dir',

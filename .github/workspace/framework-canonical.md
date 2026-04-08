@@ -1,5 +1,7 @@
 # Workflow and Pipeline Governance Framework
 
+> **DEPRECATED as canonical location.** The published summary lives at `docs-guide/frameworks/github-actions.mdx`. This file remains as the full working specification. Edits here must be synced to the published version.
+
 > Canonical reference for the Livepeer Docs workflow and pipeline architecture.
 > Status: CONFIRMED. 8 decisions locked (D-ACT-01 through D-ACT-08).
 > Decisions log: `.github/workspace/decisions-log.mdx`

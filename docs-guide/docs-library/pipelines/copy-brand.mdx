@@ -1,0 +1,101 @@
+---
+title: Copy and Brand Pipeline
+sidebarTitle: Copy and Brand
+description: >-
+  Full pipeline reference for copy and brand enforcement. Covers UK English
+  validation, banned words, proper nouns, voice rules, and auto-repair.
+keywords:
+  - copy standards
+  - brand enforcement
+  - uk english
+  - voice rules
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-08
+---
+
+# Copy and Brand Pipeline
+
+> **Gate:** P3 (advisory — does not block merge)
+> **Trigger:** PR touching `v2/**/*.mdx` or `docs-guide/**/*.mdx`
+> **Workflow:** `validator-brand-check-copy-standards.yml`
+
+---
+
+## What happens when copy changes
+
+```mermaid
+graph TD
+    PR["PR with MDX changes"] --> BRAND["Copy Standards Check (P3)"]
+    BRAND --> COPY["lint-copy.js<br/>Banned words, filler"]
+    BRAND --> PATTERNS["lint-patterns.js<br/>Copy patterns, voice"]
+    BRAND --> GRAMMAR["check-grammar-en-gb.js<br/>UK English spelling"]
+    BRAND --> NOUNS["check-proper-nouns.js<br/>Brand capitalisation"]
+
+    COPY --> RESULT{All pass?}
+    PATTERNS --> RESULT
+    GRAMMAR --> RESULT
+    NOUNS --> RESULT
+
+    RESULT -->|Yes| OK["Advisory: copy clean"]
+    RESULT -->|No| WARN["Advisory warning<br/>in PR (does not block)"]
+    WARN --> MANUAL["Manual fix by author"]
+    WARN --> AUTO["Or: run EN-GB<br/>style homogeniser"]
+```
+
+## Auto-repair (manual dispatch)
+
+```mermaid
+graph TD
+    DISPATCH["Manual dispatch<br/>remediator-brand-repair-en-gb-style.yml"] --> SCOPE{"Scope?"}
+    SCOPE -->|changed| CHANGED["Scan changed files only"]
+    SCOPE -->|full| FULL["Scan all v2/ MDX"]
+    CHANGED --> HOMOGENISE["style-and-language-<br/>homogenizer-en-gb.js"]
+    FULL --> HOMOGENISE
+    HOMOGENISE --> FIX["Auto-fix:<br/>colour/color, realise/realize,<br/>organisation/organization"]
+    FIX --> PRESERVE["Preserves: code blocks,<br/>URLs, proper nouns"]
+    PRESERVE --> CREATEPR["Create PR<br/>chore/style-homogenise branch"]
+```
+
+---
+
+## Validators (P3 — advisory)
+
+| Script | What it checks | Config |
+|--------|----------------|--------|
+| `lint-copy.js` | Banned words (effectively, essentially, basically, etc.), banned phrases, banned constructions | `operations/scripts/config/copy-standards.json` |
+| `lint-patterns.js` | Copy pattern violations (tone, structure) | Pattern definitions in script |
+| `check-grammar-en-gb.js` | UK English spelling (-ise not -ize, -our not -or, -re not -er) | Custom EN-GB dictionary |
+| `check-proper-nouns.js` | Brand names capitalised correctly (Livepeer, Arbitrum, Ethereum) | `operations/scripts/config/proper-nouns.json` |
+
+---
+
+## Remediators
+
+| Script | What it fixes | Mode |
+|--------|---------------|------|
+| `style-and-language-homogenizer-en-gb.js` | American → British English. Smart preservation of code blocks, URLs, proper nouns. ~80-90% auto-fixable | Manual dispatch |
+| `repair-spelling.js` | Individual spelling corrections | Manual |
+| `wcag-repair-common.js` | Accessibility text improvements | Manual |
+| `repair-ownerless-language.js` | Language style in ownerless governance docs | Manual |
+
+---
+
+## Standards
+
+| Standard | Location |
+|----------|----------|
+| Voice rules (7 audiences) | `docs-guide/standards/voice-and-copy.mdx` |
+| Banned words and phrases | `docs-guide/standards/voice-and-copy.mdx` |
+| UK English correction table | `docs-guide/standards/voice-and-copy.mdx` |
+| Domain terminology | `docs-guide/standards/voice-and-copy.mdx` |
+| Naming conventions | `docs-guide/standards/naming-conventions.mdx` |
+
+---
+
+## Gaps
+
+- **Advisory only (P3):** Brand checks do not block merge. Violations can ship to production. Transition to P2 (hard gate) not yet scheduled
+- **No auto-repair on PR failure:** Remediator exists but requires manual dispatch. No workflow auto-creates a fix PR when brand checks fail
+- **No voice validation:** Validators check spelling and banned words but not voice register (gateway vs delegator tone). Voice compliance is manual review only

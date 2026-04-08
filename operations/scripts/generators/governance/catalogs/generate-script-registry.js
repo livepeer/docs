@@ -1,22 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      generate-script-registry
- * @category    generator
- * @type        generator
- * @concern     governance
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
- * @description Derives tools/config/registry/script-registry.json from JSDoc headers across all governed
- *   script roots. JSDoc headers are authoritative; this file is a derived index. Run whenever
- *   script headers change. Output schema uses the 11-tag standard (@type, @concern, @niche, etc.).
- * @mode        write
- * @domain      docs
- * @needs       R-R14, R-R18
- * @purpose-statement Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
- * @pipeline    P3
+ * @description Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
+ * @mode        read-only
+ * @pipeline    manual
  * @scope       operations/scripts, operations/tests, workspace/scripts, .githooks, .github/scripts
  * @usage       node operations/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]
- * @policy      JSDoc headers are source of truth (doc-recommendation.md Q2). Never hand-edit output.
+ * @policy      R-R14, R-R18
  */
 
 'use strict';

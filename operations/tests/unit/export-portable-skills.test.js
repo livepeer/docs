@@ -3,7 +3,7 @@
  * @script            export-portable-skills.test
  * @category          validator
  * @purpose           governance:agent-governance
- * @scope             tests/unit, operations/scripts/automations/ai/agents/export-portable-skills.js, tools/lib/ai/codex-skill-templates.js, ai-tools/agent-packs/skills
+ * @scope             tests/unit, operations/scripts/integrators/ai/agents/export-portable-skills.js, tools/lib/ai/codex-skill-templates.js, ai-tools/agent-packs/skills
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests export-portable-skills.js — validates portable skill export packs from canonical templates.
@@ -19,7 +19,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const EXPORT_SCRIPT = path.join(REPO_ROOT, 'operations/scripts/automations/ai/agents/export-portable-skills.js');
+const EXPORT_SCRIPT = path.join(REPO_ROOT, 'operations/scripts/integrators/ai/agents/export-portable-skills.js');
 
 let errors = [];
 

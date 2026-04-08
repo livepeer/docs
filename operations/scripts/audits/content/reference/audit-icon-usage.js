@@ -1,24 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      audit-icon-usage
- * @type        audit
- * @concern     content
- * @niche       reference
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop
- *              values, compares them against the canonical icon map
- *              (snippets/data/reference-maps/icon-map.jsx), and emits a gap + overload
- *              report. Does NOT modify any files. Flags gaps only.
- * @mode        audit
+ * @mode        read-only
  * @pipeline    manual | post-PR | cron
  * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]
- * @flags
- *   --output <path>   Write JSON report to file (default: workspace/reports/_local/icon-usage-report.json)
- *   --md              Also write a markdown summary (icon-usage-report.md in same dir)
- *   --min-count <n>   Minimum occurrences before including an icon in output (default: 1)
- *   --unmapped-only   Only show icons not present in the canonical map
- *   --verbose         Print top unmapped icons to stdout
  */
 
 const fs = require('fs');

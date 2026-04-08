@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      wcag-repair-common
- * @type        remediator
- * @concern     content
- * @niche       style
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description WCAG repair shared logic — common repair functions used by WCAG audit fix mode
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, operations/tests/integration, workspace/reports, v2
  * @usage       node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]
- * @policy      E-R1, R-R11
  */
 
 const path = require('path');

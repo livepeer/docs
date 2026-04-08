@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      sync-mintlify-canonical-consumers
- * @category    remediator
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
- * @description Applies deterministic Mintlify canonical-path rewrites for registered consumers and generated path maps.
- * @domain      docs
- * @mode        edit
- * @needs       R-R14, R-R18
- * @purpose-statement Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.
+ * @description Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.
+ * @mode        read-only
  * @pipeline    manual
  * @scope       docs-guide/canonical/collation-data/Mintlify, docs-guide/contributing, AGENTS.md, .github, .claude, ai-tools, snippets, workspace/plan/active
  * @usage       node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js [--staged] [--check|--write] [--stage] [--json]

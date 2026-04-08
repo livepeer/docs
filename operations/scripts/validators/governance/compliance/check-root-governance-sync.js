@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-root-governance-sync
- * @category          validator
- * @type              validator
- * @purpose           governance:root-management
- * @scope             operations/scripts/validators/governance, operations/scripts/generators/governance/root, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, .allowlist
- * @owner             docs
- * @needs             R-R14, R-R16, R-R17
- * @purpose-statement Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest.
- * @pipeline          manual, ci
- * @usage             node operations/scripts/validators/governance/compliance/check-root-governance-sync.js [--json]
+ * @script      check-root-governance-sync
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:root-management
+ * @description Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest.
+ * @mode        read-only
+ * @pipeline    manual, ci
+ * @scope       operations/scripts/validators/governance, operations/scripts/generators/governance/root, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, .allowlist
+ * @usage       node operations/scripts/validators/governance/compliance/check-root-governance-sync.js [--json]
+ * @policy      R-R14, R-R16, R-R17
  */
 
 const fs = require('fs');

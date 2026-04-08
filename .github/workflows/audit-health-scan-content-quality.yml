@@ -1,0 +1,40 @@
+# type: audit
+# concern: health
+# pipeline: P5
+name: Content Health Check
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  content-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_BRANCH }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: cd tools && npm ci
+
+      - name: Content quality audit
+        run: node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full
+
+      - name: Component usage audit
+        run: node operations/scripts/audits/components/documentation/audit-component-usage.js
+
+      - name: Component registry validation
+        run: node operations/scripts/generators/components/library/generate-component-registry.js --validate-only
+
+      - name: Component usage drift check
+        run: node operations/scripts/audits/components/library/scan-component-imports.js --verify
+
+      - name: Component metadata drift check
+        run: node operations/scripts/remediators/components/library/repair-component-metadata.js --dry-run
+
+      - name: Component layout governance
+        run: node operations/scripts/validators/components/library/component-layout-governance.js

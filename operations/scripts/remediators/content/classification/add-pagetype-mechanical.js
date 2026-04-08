@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      add-pagetype-mechanical
- * @type        remediator
- * @concern     content
- * @niche       classification
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Mechanically assigns pageType frontmatter to eligible v2 MDX pages.
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual — deterministic metadata rollout utility for v2 docs
  * @scope       operations/scripts, v2, workspace/reports
  * @usage       node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]
- * @policy      E-R1, R-R11
  */
 
 'use strict';

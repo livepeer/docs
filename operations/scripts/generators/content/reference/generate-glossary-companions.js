@@ -1,21 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-glossary-companions
- * @type        generator
- * @concern     content
- * @niche       reference
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages
- *              and writes adjacent [page-slug]-data.json files for crawler/AI agent indexing.
- *              Satisfies the @aiDiscoverability tier-2 mechanism on all glossary pages.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual
  * @scope       operations/scripts/generators/content/reference
  * @usage       node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]
- * @flags
- *   --dry-run   Print what would be written without writing any files
- *   --check     Verify all expected companion JSONs exist and are up-to-date; exit 1 if any are missing or stale
- * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

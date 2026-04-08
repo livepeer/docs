@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-docs-guide-components-index
- * @type        generator
- * @concern     governance
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Generates components-catalog.mdx in docs-guide/catalog/ from component-registry.json and component-usage-map.json.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    commit — auto-regenerated when components staged)
  * @scope       generated-output
  * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix|--write|--check]
- * @policy      R-R10, R-R16, R-R17
  */
 
 const fs = require('fs');

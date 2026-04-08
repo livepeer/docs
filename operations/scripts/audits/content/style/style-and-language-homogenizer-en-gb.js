@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      style-and-language-homogenizer-en-gb
- * @type        audit
- * @concern     content
- * @niche       style
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
- * @mode        edit
+ * @mode        read-only
  * @pipeline    on-demand, repair)
  * @scope       operations/scripts, v2, tools/config/quality/style-language-profile-en-gb.json
  * @usage       node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]
- * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

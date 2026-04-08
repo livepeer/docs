@@ -5,7 +5,7 @@ description: >-
   How video jobs flow through your gateway - RTMP and HTTP ingest, source segmentation,
   orchestrator selection via BroadcastSessionsManager, transcoding profiles, on-chain
   payment per segment, and output delivery as HLS.
-pageType: guide
+PageType: guide
 audience: gateway
 purpose: explain
 status: current
@@ -49,11 +49,11 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 The video transcoding pipeline moves a stream from ingest to playback-ready [HLS](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) in three stages:
-1. the gateway segments incoming video,
-2. dispatches each segment to a selected orchestrator with a payment ticket, and
-3. assembles the transcoded renditions for delivery.
+1. The gateway segments incoming video,
+2. Dispatches each segment to a selected orchestrator with a payment ticket, and
+3. Assembles the transcoded renditions for delivery.
 
-This page explains what happens at each stage and how to tune it.
+What happens at each stage and how to tune it.
 
 <Warning>
   Video transcoding requires **on-chain operational mode** in production. Remote signers (off-chain mode) do not support video because ticket signing must happen in the hot path per segment. Off-chain video with `-network offchain` is available for local development and testing with a local orchestrator only.

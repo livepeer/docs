@@ -1,15 +1,14 @@
 #!/bin/bash
 # @script      generate-api-docs
-# @type        generator
-# @concern     content
-# @niche       reference
+# @type        
+# @concern     
+# @niche       
 # @purpose     tooling:dev-tools
 # @description API docs generator — generates API reference pages from OpenAPI specs
-# @mode        generate
+# @mode        read-only
 # @pipeline    manual — not yet in pipeline
 # @scope       operations/scripts/generators/content/reference
 # @usage       bash operations/scripts/generators/content/reference/generate-api-docs.sh [flags]
-# @policy      E-C6, F-C1
 # Generate API documentation from OpenAPI spec
 # Creates: landing page + individual endpoint pages + navigation JSON
 #

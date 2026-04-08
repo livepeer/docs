@@ -1,16 +1,15 @@
 #!/bin/bash
 #
-# @script headless-batch
-# @type dispatch
-# @concern governance
-# @niche pipelines
-# @purpose Run Claude Code headless for safe batch operations
+# @script      headless-batch
+# @type        
+# @concern     
+# @niche       
+# @purpose     Run Claude Code headless for safe batch operations
 # @description Executes a prompt against files non-interactively with restricted tools. Use for bulk quality checks, changelog regeneration, stale reference scans, and other well-defined batch tasks.
-# @mode execute
-# @pipeline CLI → claude headless → restricted tools → output file
-# @scope Any batch operation that is well-defined and repeatable
-# @usage ./operations/scripts/dispatch/governance/headless-batch.sh --prompt "..." --tools "Read,Grep,Glob" --output report.md
-# @policy No Write/Edit unless explicitly included in --tools
+# @mode        read-only
+# @pipeline    CLI → claude headless → restricted tools → output file
+# @scope       Any batch operation that is well-defined and repeatable
+# @usage       ./operations/scripts/dispatch/governance/headless-batch.sh --prompt "..." --tools "Read,Grep,Glob" --output report.md
 
 set -euo pipefail
 

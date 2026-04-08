@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      docs-research-packet
- * @type        dispatch
- * @concern     content
- * @niche       veracity
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.
  * @mode        read-only
  * @pipeline    manual — packet generator for research review tranches
  * @scope       operations/scripts, workspace/reports, tools/config/scoped-navigation, workspace/research operations/tests/unit/docs-research-packet.test.js operations/tests/unit/orchestrator-guides-research-review.test.js
  * @usage       node operations/scripts/dispatch/content/veracity/docs-research-packet.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

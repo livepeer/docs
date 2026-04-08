@@ -1,13 +1,15 @@
 /**
- * @script            1-read-notion-to-csv
- * @category          automation
- * @purpose           tooling:dev-tools
- * @scope             external
- * @owner             docs
- * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID
- * @purpose-statement Reads the Notion pages database, filters v2 rows, and writes CSV/JSON exports for downstream sync steps.
- * @pipeline          manual
- * @usage             node tools/dev/integrations/notion/1-read-notion-to-csv.js [flags]
+ * @script      1-read-notion-to-csv
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Reads the Notion pages database, filters v2 rows, and writes CSV/JSON exports for downstream sync steps.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       external
+ * @usage       node tools/dev/integrations/notion/1-read-notion-to-csv.js [flags]
+ * @policy      node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID
  */
 
 require("dotenv").config({ path: require("path").join(__dirname, ".env") });

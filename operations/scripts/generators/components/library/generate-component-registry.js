@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-component-registry
- * @type        generator
- * @concern     components
- * @niche       library
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Parses JSDoc from all component exports and produces component-registry.json.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual, P3, P5, P6, manual, manual
  * @scope       single-domain
  * @usage       node operations/scripts/generators/components/library/generate-component-registry.js [--validate-only]
- * @policy      R-R10
  */
 
 const fs = require('fs');

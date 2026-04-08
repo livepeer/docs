@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      codex-commit
- * @type        dispatch
- * @concern     ai
- * @niche       codex
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description Codex commit helper — audits codex branch state and generates compliant commit messages
- * @mode        execute
+ * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, .githooks, ai-tools/ai-rules
  * @usage       node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const { spawnSync } = require('child_process')

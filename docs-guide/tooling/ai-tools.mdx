@@ -233,7 +233,7 @@ The `sync-codex-skills.js` script handles safe upsert of templates into Codex-co
 
 | Property | Value |
 |---|---|
-| Script | `operations/scripts/automations/ai/agents/sync-codex-skills.js` |
+| Script | `operations/scripts/integrators/ai/agents/sync-codex-skills.js` |
 | Install target | `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) |
 | Sync behaviour | Safe upsert only (creates/updates managed skills; no deletion) |
 | Bootstrap path | `bash lpd setup --yes` syncs the planning skill automatically |
@@ -245,16 +245,16 @@ Runbook:
 bash lpd setup --yes
 
 # Sync a specific skill
-node operations/scripts/automations/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
+node operations/scripts/integrators/ai/agents/sync-codex-skills.js --skills agentic-project-management-orchestrator
 
 # Check sync status
-node operations/scripts/automations/ai/agents/sync-codex-skills.js --check
+node operations/scripts/integrators/ai/agents/sync-codex-skills.js --check
 
 # Sync all managed skills
-node operations/scripts/automations/ai/agents/sync-codex-skills.js
+node operations/scripts/integrators/ai/agents/sync-codex-skills.js
 
 # Dry-run for specific skills
-node operations/scripts/automations/ai/agents/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
+node operations/scripts/integrators/ai/agents/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
 ```
 
 Generated metadata per synced skill:
@@ -317,7 +317,7 @@ The `ai-tools/agent-packs/` directory contains generated outputs from the cross-
 ### Generation
 
 ```bash icon="terminal"
-node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all
+node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all
 ```
 
 ### Pack structure
@@ -343,7 +343,7 @@ node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mo
 
 1. Read `docs-guide/policies/agent-governance-framework.mdx` and `docs-guide/policies/root-allowlist-governance.mdx`.
 2. Use the approved runtime target for the chosen agent family (see Adapter Inventory above).
-3. Optionally run `node operations/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all` to generate supplemental reference packs under `ai-tools/agent-packs/`.
+3. Optionally run `node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all` to generate supplemental reference packs under `ai-tools/agent-packs/`.
 4. Run `node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full` as the first verification run.
 
 ## Codex planning entry point

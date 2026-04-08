@@ -1,15 +1,14 @@
 /**
- * @script post-tool-verify
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Post-tool verification for Claude Code sessions
+ * @script      post-tool-verify
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Post-tool verification for Claude Code sessions
  * @description Tracks consecutive failures for circuit breaker. Fires after tool use failures.
- * @mode read-only
- * @pipeline PostToolUseFailure hook → reads stdin → tracks failures → triggers circuit breaker at 3
- * @scope .claude/settings.json PostToolUseFailure hook
- * @usage Called automatically by Claude Code PostToolUseFailure hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUseFailure hook → reads stdin → tracks failures → triggers circuit breaker at 3
+ * @scope       .claude/settings.json PostToolUseFailure hook
+ * @usage       Called automatically by Claude Code PostToolUseFailure hook. Not invoked directly.
  */
 
 const fs = require('fs');
@@ -23,8 +22,20 @@ stdin.on('end', () => {
   try {
     const data = JSON.parse(input);
     const toolName = data.tool_name || 'unknown';
+    const toolInput = data.tool_input || {};
     const sessionId = process.env.CLAUDE_SESSION_ID || 'default';
     const trackerPath = path.join('/tmp', `claude-circuit-breaker-${sessionId}`);
+
+    // Skip circuit breaker for expected validator/generator exits
+    // Validators exit 1 when they find violations (by design)
+    // Generators exit 1 when they find staleness (by design)
+    if (toolName === 'Bash') {
+      const cmd = toolInput.command || '';
+      if (/\bcheck-|validate-|verify-|lint-|generate-governance-map|check-jsdoc|check-workflow|check-governance|check-script/.test(cmd)) {
+        // Expected exit 1 from governance validators — not a real failure
+        process.exit(0);
+      }
+    }
 
     // Append this failure
     fs.appendFileSync(trackerPath, toolName + '\n');

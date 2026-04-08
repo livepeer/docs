@@ -38,7 +38,7 @@ Primary Files to Touch
 - `operations/scripts/generators/content/catalogs/generate-pages-index.js`
 - `tests/unit/script-docs.test.js`
 - `operations/scripts/validators/content/structure/enforce-generated-file-banners.js`
-- `operations/scripts/automations/content/language-translation/translate-docs.js`
+- `operations/scripts/integrators/content/language-translation/translate-docs.js`
 - `tests/unit/docs-guide-sot.test.js`
 - `tests/run-all.js`
 - `tests/run-pr-checks.js`

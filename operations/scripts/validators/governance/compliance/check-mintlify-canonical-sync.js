@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      check-mintlify-canonical-sync
- * @category    validator
- * @type        validator
- * @concern     governance
- * @niche       compliance
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
- * @description Validates that the Mintlify canonical source, public wrapper, archived legacy sources, and registered consumers stay synchronized.
- * @domain      docs
+ * @description Enforce the Mintlify canonical-sync contract so archived legacy sources stay moved, registered consumers stay updated, and retained-source logs match the registry.
  * @mode        read-only
- * @needs       R-R14, R-R18
- * @purpose-statement Enforce the Mintlify canonical-sync contract so archived legacy sources stay moved, registered consumers stay updated, and retained-source logs match the registry.
  * @pipeline    manual, ci
  * @scope       docs-guide/canonical/collation-data/Mintlify, docs-guide/contributing, AGENTS.md, .github, .claude, ai-tools, snippets, v2/resources/documentation-guide, workspace/plan/active
  * @usage       node operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js [--staged] [--json]

@@ -8,6 +8,8 @@ supersedes: draft.md
 
 # Canonical Repo Folder Structure
 
+> **DEPRECATED as canonical location.** The published version lives at `docs-guide/frameworks/repo-structure.mdx`. This file remains as the working draft. Edits here must be synced to the published version.
+
 > Source of truth for locked decisions on repo root folder layout and per-folder structure.
 > Process for making these decisions: see [process.md](process.md)
 

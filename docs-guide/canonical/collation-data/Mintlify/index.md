@@ -72,7 +72,7 @@ Scope:
 - `docs-orch-work.json` — `tools/config/scoped-navigation/docs-orch-work.json`
 - `docs-gate-orch.json` — `tools/config/scoped-navigation/docs-gate-orch.json`
 - `docs-gate-work.json` — `tools/config/scoped-navigation/docs-gate-work.json`
-- `config.json` — `operations/scripts/automations/content/language-translation/config.json`
+- `config.json` — `operations/scripts/integrators/content/language-translation/config.json`
 - `README.md` — `tools/editor-extensions/README.md`
 - `recommended_extensions.md` — `tools/editor-extensions/recommended_extensions.md`
 - `README.md` — `tools/editor-extensions/authoring-tools/README.md`
@@ -112,9 +112,9 @@ Scope:
 - `validate-lpd-paths.js` — `operations/scripts/validators/governance/repo/validate-lpd-paths.js`
 - `generate-docs-index.js` — `operations/scripts/generators/content/catalogs/generate-docs-index.js`
 - `generate-pages-index.js` — `operations/scripts/generators/content/catalogs/generate-pages-index.js`
-- `cleanup-local-dev-sessions.js` — `operations/scripts/automations/governance/cleanup-local-dev-sessions.js`
-- `generate-localized-docs-json.js` — `operations/scripts/automations/content/language-translation/generate-localized-docs-json.js`
-- `docs-json-localizer.js` — `operations/scripts/automations/content/language-translation/lib/docs-json-localizer.js`
+- `cleanup-local-dev-sessions.js` — `operations/scripts/integrators/governance/cleanup-local-dev-sessions.js`
+- `generate-localized-docs-json.js` — `operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js`
+- `docs-json-localizer.js` — `operations/scripts/integrators/content/language-translation/lib/docs-json-localizer.js`
 - `sync-docs-paths.js` — `operations/scripts/remediators/content/repair/sync-docs-paths.js`
 - `mintlify-canonical-consumers.json` — `docs-guide/canonical/collation-data/Mintlify/mintlify-canonical-consumers.json`
 - `mintlify-canonical-sync.js` — `operations/scripts/config/mintlify-canonical-sync.js`

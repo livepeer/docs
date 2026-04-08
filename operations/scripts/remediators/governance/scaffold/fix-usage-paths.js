@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 /**
  * One-time fix: updates @usage paths to current locations and cleans @pipeline duplicates.
+ * @script      fix-usage-paths
+ * @type        remediator
+ * @description fix usage paths
+ * @mode        edit
+ * @scope       operations/scripts/remediators/governance/scaffold
  */
 const fs = require('fs');
 const path = require('path');

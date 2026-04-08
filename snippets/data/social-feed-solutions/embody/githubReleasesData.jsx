@@ -23,7 +23,7 @@ export const embodyReleasesData = [
     href: "https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.6",
     author: "By @its-DeFine",
     publishedDate: "Feb 9, 2026",
-    body: "## v1.3.6 (2026-02-09)  ### Highlights - PixelStreaming2 stability: force H.264 + LowLatency + periodic keyframes across UE5 builds (including `config=Game` PluginSettings). - Layout B hardening: optional bearer-token auth for script runner, managed by edge-rotator control-plane config (in addition to IP allowlists). - Orchestrator health: add cached GPU stats endpoint.  ### Included PRs - #193 fix(compose): enable cluster control by default - #202 Fix: mount Engine.ini for PixelStreaming2 codec (H.264) - #204 fix(orchestrator-health): unblock PR CI (allowlist testclient + cluster default) - #205 orchestrator-health: add /meta/gpu/stats (cached) - #206 PixelStreaming2: set keyframe interval + LowLatency defaults - #208 feat(orchestrator): runner bearer-token auth + rotator-managed tokens -...",
+    body: "## v1.3.6 (2026-02-09)  ### Highlights - PixelStreaming2 stability: force H.264 + LowLatency + periodic keyframes across UE5 builds (including \`config=Game\` PluginSettings). - Layout B hardening: optional bearer-token auth for script runner, managed by edge-rotator control-plane config (in addition to IP allowlists). - Orchestrator health: add cached GPU stats endpoint.  ### Included PRs - #193 fix(compose): enable cluster control by default - #202 Fix: mount Engine.ini for PixelStreaming2 codec (H.264) - #204 fix(orchestrator-health): unblock PR CI (allowlist testclient + cluster default) - #205 orchestrator-health: add /meta/gpu/stats (cached) - #206 PixelStreaming2: set keyframe interval + LowLatency defaults - #208 feat(orchestrator): runner bearer-token auth + rotator-managed tokens -...",
     prerelease: false
   },
   {
@@ -41,7 +41,7 @@ export const embodyReleasesData = [
     href: "https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.4",
     author: "By @its-DeFine",
     publishedDate: "Jan 28, 2026",
-    body: "- CLI: `start_vtuber_unreal.sh test` now checks that Payments is allowlisted (fix: `./scripts/embody_cli.sh allowlists fix`) ...",
+    body: "- CLI: \`start_vtuber_unreal.sh test\` now checks that Payments is allowlisted (fix: \`./scripts/embody_cli.sh allowlists fix\`) ...",
     prerelease: false
   }
 ];

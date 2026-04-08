@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-ai-tools-inventory
- * @type        generator
- * @concern     governance
- * @niche       reports
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:ai-tools-inventory
  * @description Generates the AI tools inventory report from the registry. Split from validate-ai-tools-registry.js.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual
  * @scope       ai-tools/registry
  * @usage       node operations/scripts/generators/governance/reports/generate-ai-tools-inventory.js [--output <path>]
- * @policy      R-R16
  */
 
 const path = require('path');

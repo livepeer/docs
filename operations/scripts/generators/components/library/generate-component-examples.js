@@ -5,13 +5,10 @@
  * @concern     components
  * @niche       library
  * @purpose     governance:index-management
- * @description Keeps per-file example MDX files in sync with the component registry.
- *              -- scaffold: creates missing examples files for stable components
- *              -- fix-imports: updates stale import lines in existing example files
- *              -- check: reports drift without writing (CI-safe)
+ * @description Keeps per-file example MDX files in sync with the component registry
  * @mode        generate
- * @pipeline    manual, pr-workflow → component-registry.json, snippets/components/**/*.jsx → snippets/components/**/examples/*.mdx
- * @scope       snippets/components/**/examples/*.mdx
+ * @pipeline    manual, pr-workflow -> component-registry.json -> snippets/components/examples/*.mdx
+ * @scope       snippets/components/
  * @usage       node operations/scripts/generators/components/library/generate-component-examples.js [--scaffold] [--fix-imports] [--check]
  * @policy      R-R10
  */

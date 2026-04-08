@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-governance-approvals
- * @category          validator
- * @type              validator
- * @concern           governance
- * @niche             pr
- * @purpose           governance:repo-health
- * @description       Enforces human approval labels and PR-body evidence for governance-sensitive pull requests.
- * @mode              read-only
- * @domain            docs
- * @needs             R-R14, R-R29
- * @purpose-statement Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence.
- * @pipeline          ci, pr-changed -> governance approval policy -> exit-code, stdout:violations
- * @scope             operations/governance/config, operations/scripts/validators/governance/pr, operations/tests/run-pr-checks.js, .github/pull_request_template.md, .github/workflows, .github/workspace
- * @usage             node operations/scripts/validators/governance/pr/check-governance-approvals.js [--base-ref <branch>] [--files <path[,path...]>] [--json]
- * @policy            R-R14, R-R29
+ * @script      check-governance-approvals
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:repo-health
+ * @description Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence.
+ * @mode        read-only
+ * @pipeline    ci, pr-changed -> governance approval policy -> exit-code, stdout:violations
+ * @scope       operations/governance/config, operations/scripts/validators/governance/pr, operations/tests/run-pr-checks.js, .github/pull_request_template.md, .github/workflows, .github/workspace
+ * @usage       node operations/scripts/validators/governance/pr/check-governance-approvals.js [--base-ref <branch>] [--files <path[,path...]>] [--json]
+ * @policy      R-R14, R-R29
  */
 
 const fs = require('fs');

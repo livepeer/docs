@@ -1,0 +1,23 @@
+# type: generator
+# concern: maintenance
+# pipeline: P4
+name: Generate Docs Index
+
+on:
+  push:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+
+jobs:
+  generate-docs-index:
+    uses: ./.github/workflows/dispatch-maintenance-check-catalogs.yml
+    with:
+      mode: generate-docs-index
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

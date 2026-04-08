@@ -1,23 +1,22 @@
 #!/usr/bin/env node
 /**
  * @script      enforce-generated-file-banners
- * @type        validator
- * @concern     content
- * @niche       structure
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Validates "do not edit" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js.
  * @mode        read-only
  * @pipeline    manual | pre-commit --staged
  * @scope       docs-guide/catalog, v2
  * @usage       node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]
- * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process'); // retained for getStagedFiles
-const { loadI18nConfig } = require('../../../automations/content/language-translation/lib/config');
-const { parseProvenanceComment } = require('../../../automations/content/language-translation/lib/provenance');
+const { loadI18nConfig } = require('../../../integrators/content/language-translation/lib/config');
+const { parseProvenanceComment } = require('../../../integrators/content/language-translation/lib/provenance');
 const {
   GENERATED_HIDDEN_MARKER,
   parseGeneratedHiddenBanner,

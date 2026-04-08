@@ -1,19 +1,14 @@
 /**
- * @script edit-loop-guard
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Detects repeated edits to the same file and requires hypothesis before continuing
+ * @script      edit-loop-guard
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Detects repeated edits to the same file and requires hypothesis before continuing
  * @description PostToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
- *   At 3 edits to the same file without verification passing, injects a hypothesis requirement.
- *   At 5 edits, writes a block flag that pre-tool-guard.js reads to hard-block further edits.
- *   Resets when mdx-render-verify writes a "passed" state for the file. Exempt paths
- *   (workspace/, .claude/, /tmp/, session-log) are not tracked.
- * @mode read-only
- * @pipeline PostToolUse hook → parse stdin → track per-file edits → warn at 3 → flag block at 5
- * @scope .claude/settings.json PostToolUse hook (Edit|Write matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → parse stdin → track per-file edits → warn at 3 → flag block at 5
+ * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

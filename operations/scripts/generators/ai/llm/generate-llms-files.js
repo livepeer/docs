@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-llms-files
- * @category          
- * @purpose           governance:index-management
- * @scope             operations/scripts, docs.json, v2
- * @domain            docs
- * @needs             
- * @purpose-statement 
- * @pipeline          manual, P6
- * @usage             node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]
+ * @script      generate-llms-files
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     
+ * @description 
+ * @mode        read-only
+ * @pipeline    manual, P6
+ * @scope       operations/scripts, docs.json, v2
+ * @usage       node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]
+ * @policy      * @purpose-statement
  */
 
 const fs = require('fs');

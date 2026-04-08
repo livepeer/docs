@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      scan-component-imports
- * @type        audit
- * @concern     components
- * @niche       library
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual, P6, manual
  * @scope       generated-output
  * @usage       node operations/scripts/audits/components/library/scan-component-imports.js [--verify] [--since <commit>]
- * @policy      R-R10
  */
 
 const fs = require('fs');
