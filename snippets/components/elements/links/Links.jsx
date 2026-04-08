@@ -1,14 +1,8 @@
 import { CopyText } from '/snippets/components/elements/text/Text.jsx'
-import { BlinkingIcon as BaseBlinkingIcon } from '/snippets/components/elements/icons/Icons.jsx'
-import {
-  CustomCallout as BaseCustomCallout,
-  TipWithArrow as BaseTipWithArrow,
-} from '/snippets/components/elements/callouts/Callouts.jsx'
 
-// Mint's snippet resolver handles local exports more reliably than re-export-only modules.
-export const BlinkingIcon = BaseBlinkingIcon
-export const CustomCallout = BaseCustomCallout
-export const TipWithArrow = BaseTipWithArrow
+// Re-exports for consumers that import these from Links.jsx
+export { BlinkingIcon } from '/snippets/components/elements/icons/Icons.jsx';
+export { CustomCallout, TipWithArrow } from '/snippets/components/elements/callouts/Callouts.jsx';
 
 /**
  * @component DoubleIconLink
