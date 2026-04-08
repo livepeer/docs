@@ -1,42 +1,40 @@
-task_id: 20260403
-branch: codex/20260403-contracts-surface-redesign
-base_branch: docs-v2-dev
+task_id: 20260409
+branch: codex/20260409-docs-v2-dev-into-docs-v2
+base_branch: docs-v2
 scope_in:
   - .codex/
   - .claude/
-  - .cursor/
   - .githooks/
   - .github/
-  - .playwright-cli/
   - .vscode/
-  - .windsurf/
-  - AGENTS.md
+  - .allowlist
   - ai-tools/
   - docs-guide/
+  - docs-index.json
   - docs.json
-  - llms.txt
-  - operations/tests/
+  - jsconfig.json
   - operations/
   - snippets/
+  - style.css
   - tools/
   - v2/
   - workspace/
+  - .codex/task-contract.yaml
 scope_out:
   - v1/
 allowed_generated:
   - .codex/pr-body.generated.md
   - sitemap-ai.xml
 acceptance_checks:
-  - node operations/tests/unit/contracts-addresses-pipeline.test.js
-  - node operations/tests/unit/contracts-view-model.test.js
-  - node operations/tests/playwright-contract-addresses.js
-  - node operations/tests/playwright-blockchain-contracts.js
-  - node operations/tests/contracts-browser-harness.js
-  - lpd test --staged
-  - node operations/scripts/validators/content/structure/lint-structure.js --check
-  - node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/20260403-contracts-surface-redesign
+  - bash tools/lpd hooks status
+  - bash tools/lpd doctor --strict
+  - bash tools/lpd dev --scoped --scope-prefix v2 -- --port 3334
+  - browser validation against scoped lpd dev on port 3334
+  - node operations/tests/run-pr-checks.js --base-ref docs-v2
+  - node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js --branch codex/20260409-docs-v2-dev-into-docs-v2 --require-pr-body
 risk_flags:
   - docs-navigation
-  - contracts-reference-surface
+  - merge-integration
+  - github-actions
   - mintlify-browser-render
 follow_up_issues: []
