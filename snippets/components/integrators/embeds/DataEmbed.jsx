@@ -93,6 +93,22 @@ export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
   const [html, setHtml] = useState('')
 
   useEffect(() => {
+    // Derive base URL so relative image paths in the remote file can be resolved
+    const lastSlash = url.lastIndexOf('/')
+    const baseUrl = lastSlash >= 0 ? url.substring(0, lastSlash + 1) : ''
+    const origin = baseUrl.match(/^(https?:\/\/[^/]+)/)?.[1] ?? ''
+
+    const resolveUrl = (src) => {
+      // Pass through absolute URLs, protocol-relative, data URIs, and fragment links
+      if (/^https?:\/\//i.test(src) || src.startsWith('//') || src.startsWith('data:') || src.startsWith('#')) return src
+      // Root-relative paths anchor to the origin, not the directory base
+      if (src.startsWith('/')) return origin + src
+      return baseUrl + src
+    }
+
+    const escapeAttr = (str) =>
+      String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
     fetch(url)
       .then((res) => res.text())
       .then((md) => {
@@ -102,10 +118,20 @@ export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
           .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
           // Inline code
           .replace(/`([^`]+)`/g, '<code>$1</code>')
-          // Images
+          // Markdown images — resolve relative src to absolute
           .replace(
             /!\[([^\]]*)\]\(([^)]+)\)/g,
-            '<img alt="$1" src="$2" style="max-width:100%" />'
+            (_, alt, src) => `<img alt="${escapeAttr(alt)}" src="${escapeAttr(resolveUrl(src))}" style="max-width:100%" />`
+          )
+          // Raw HTML img tags with double-quoted src — resolve relative src to absolute
+          .replace(
+            /<img\b([^>]*)src="([^"]*)"([^>]*)>/gi,
+            (_, before, src, after) => `<img${before}src="${resolveUrl(src)}"${after}>`
+          )
+          // Raw HTML img tags with single-quoted src — resolve relative src to absolute
+          .replace(
+            /<img\b([^>]*)src='([^']*)'([^>]*)>/gi,
+            (_, before, src, after) => `<img${before}src="${resolveUrl(src)}"${after}>`
           )
           // Links
           .replace(
