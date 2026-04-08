@@ -24,7 +24,7 @@ Keep this as a standalone workflow because its trigger contract and ownership bo
 - action:actions/github-script@v7
 - action:actions/setup-node@v4
 - action:actions/upload-artifact@v4
-- operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
+- operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
 - tools/v2-page-test-report.json
 
 ## Dependants

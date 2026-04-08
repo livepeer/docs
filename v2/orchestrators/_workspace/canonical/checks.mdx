@@ -66,6 +66,17 @@ Every page classifiable by a cold-start agent that produces the same taxonomy a 
 | 2.9 | **No passive value statements** | Every value claim is quantified or concrete. "Cost-effective" → "70% lower than AWS MediaConvert for 1080p". "Fast" → "sub-3-second latency" |
 | 2.10 | **No hedging openers** | Page does not open with a caveat, disclaimer, or conditional. Goes straight to the point |
 | 2.11 | **Terminology locked and consistent** | Uses terms from the locked terminology set (BYOC, NaaP, LIP-92 etc.). No deprecated or conflicted terms. Check `decisions/terminology-tracking.md` |
+| 2.12 | **No em-dashes** | Zero em-dashes in MDX content. Use comma, semicolon, colon, or rewrite the sentence. Hook enforcement active in repo. |
+| 2.13 | **Entity-led voice throughout** | Every paragraph starts with a system fact or reader outcome. Never "we", "our", "you will learn", "in this section we explore". Subject-first, always. |
+| 2.14 | **No hedging verbs in value claims** | No "can help you", "allows you to", "enables you to", "helps you", "may provide". Assert directly: "reduces cost" not "can help reduce cost". |
+| 2.15 | **Description field not self-referential** | Frontmatter `description` does not start with "This page/section/document describes/explains/outlines/covers/walks". Lead with the subject. |
+| 2.16 | **Deprecated terms absent** | Zero instances of: "Broadcaster" (use Gateway), "Pool worker" (use Pool node), "Combined mode" (use Dual mode), "Hybrid" (use Dual mode), "Transcoder" as synonym for Orchestrator. Full list in `deprecated-terms.md`. |
+| 2.17 | **Universal terms consistent** | Orchestrator, Gateway, Delegator, LPT, Transcoding, Staking match `universal-terms.md` canonical definitions. No drift between tabs. |
+| 2.18 | **Spell check passes** | cspell against `tools/config/cspell.json` dictionary. Zero unknown words (add to dictionary if legitimate Livepeer term). |
+| 2.19 | **Terms match TERMINOLOGY-COLLATE canonical** | Every Livepeer-specific term matches definition in `TERMINOLOGY-COLLATE/consolidated/glossary-*.md`. No conflicting definitions. |
+| 2.20 | **Per-tab terminology correct** | Uses terms appropriate to its tab per `TERMINOLOGY-COLLATE/per-tab/glossary-{tab}.md`. No borrowing from other tab's register without explanation. |
+| 2.21 | **First use of specialised term defined or linked** | Every Livepeer-specific term defined on first use (inline definition or link to glossary). Reader never encounters undefined term. |
+| 2.22 | **Terminology lock respected** | If tab has a terminology lock (`CONTENT-PIPLEINE/03.5-terminology-lock.md` or `_workspace/canonical/review/06-terminology.md`), all locked terms used exactly as defined. |
 
 ### What success looks like
 
@@ -76,10 +87,23 @@ Read any paragraph aloud and it sounds like a specific expert wrote it for a spe
 | Resource | Location | Use |
 |----------|----------|-----|
 | Voice rules (full) | Frameworks.mdx §2 + §3 | Universal + per-audience rules, banned words/phrases/constructions |
+| Voice rules (standalone) | `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | Per-audience voice extensions (7 audiences, locked) |
 | Banned words file | `tools/lib/copy-governance/banned-words.txt` | Automated check source |
 | Banned phrases file | `tools/lib/copy-governance/banned-phrases.txt` | Automated check source |
+| Copy governance (rationale) | `CONTENT-WRITING/Prompts/.../prompt-guides-guards-resources/copy-governance.md` | Human-readable rationale for each ban |
 | UK English table | Frameworks.mdx §2.3 | US→UK corrections |
+| Style language profile | `tools/config/style-language-profile-en-gb.json` | Machine-readable GB English enforcement |
+| Spell check dictionary | `tools/config/cspell.json` | Custom dictionary for protocol-specific terms |
 | Terminology tracking | `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md` | Locked + disputed terms |
+| Terminology master glossary | `TERMINOLOGY-COLLATE/consolidated/glossary-a-m.md` + `glossary-n-z.md` | 224KB canonical definitions |
+| Terminology per-tab | `TERMINOLOGY-COLLATE/per-tab/glossary-{tab}.md` (9 files) | Per-audience terminology |
+| Universal terms | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/universal-terms.md` | Cross-tab canonical definitions |
+| Deprecated terms | `CONTENT-WRITING/Prompts/.../prompt-guides-guards-resources/deprecated-terms.md` | Deprecated role terms and conflicting enums |
+| Docs philosophy | `CONTENT-WRITING/Prompts/.../prompt-guides-guards-resources/docs-philosophy-authoring.md` | Philosophy + authoring standards |
+| Terminology search | `operations/scripts/audits/content/reference/terminology-search.js` | Automated terminology audit |
+| Glossary gap audit | `operations/scripts/audits/content/reference/audit-glossary-gaps.js` | Glossary coverage check |
+| UK English homogeniser | `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` | Skill for automated UK English |
+| docs-copy skill (8 sub-skills) | `ai-tools/ai-skills/docs-copy/` | L0-L8 copy quality framework |
 | Prompt testing protocol | `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md` | Voice testing methodology |
 
 ---
@@ -99,6 +123,9 @@ Read any paragraph aloud and it sounds like a specific expert wrote it for a spe
 | 3.5 | Heading names the concept, not examples | "Hardware Architecture Tiers" not "NVIDIA vs AMD vs Intel" |
 | 3.6 | Title well-formed | 1–3 words, concept-derived, no banned forms. Uses the real governing concept, not a safe generic label |
 | 3.7 | Sounds like an expert editorial choice | Not a bureaucratic/safe label. Would a senior technical editor choose this heading? |
+| 3.8 | **Per-pageType naming style applied** | `reference` pages use literal/findability naming. `concept` pages use governing-concept naming. `instruction` pages use task-oriented naming. `navigation` pages use map language. See `section-naming.md` Step 16. |
+| 3.9 | **Per-audience register in headings** | `developer` headings use specialised technical terms. `delegator` headings use finance/governance register. `community` headings use accessible/narrative language. Per `section-naming.md` per-audience guidance. |
+| 3.10 | **Domain-anchor rule applied** | Heading includes the domain noun when needed to be interpretable in isolation (out of page context). Per `section-naming.md` and 687-line source research in `content-naming.md`. |
 
 ### Scoring rubric (per heading)
 
@@ -119,7 +146,10 @@ A reader scanning only headings builds an accurate mental model of the page. Eve
 | Resource | Location | Use |
 |----------|----------|-----|
 | Section naming rubric | Frameworks.mdx §4.1 | Full scoring methodology, 12-candidate generation, winner filter |
-| Section naming source | `workspace/plan/active/CONTENT-WRITING/Frameworks/section-naming.md` (if available) | Canonical rubric definition |
+| Section naming rubric (standalone) | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | **LOCKED** naming rubric: label classes, per-pageType style, per-audience register |
+| Naming research (687 lines) | `v2/_workspace/research/content-naming.md` | Full source research: domain-anchor rule, anti-patterns, per-pageType guidance |
+| Published naming conventions | `docs-guide/standards/naming-conventions.mdx` | Published standard |
+| Component naming check | `operations/scripts/validators/components/library/check-naming-conventions.js` | Automated naming validator |
 | Prompt input spec | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | Title rules for layout pass |
 
 ---
@@ -142,6 +172,12 @@ A reader scanning only headings builds an accurate mental model of the page. Eve
 | 4.8 | **No content duplication from adjacent sections** | Content is not repeated from neighbouring pages or sections. If the same information appears twice, one instance is wrong |
 | 4.9 | **Section orientation page present** (section-level check) | Every section has an entry page that orients the reader |
 | 4.10 | **Cross-tab links at journey intersections** | At least 3 cross-tab links where audience journeys intersect (tab-level check) |
+| 4.11 | **Page answers its question COMPLETELY (Discord test)** | Can you link this ONE page on Discord and know the person gets a complete answer without needing another page? If no, the page is incomplete. This is the defining quality bar. |
+| 4.12 | **Page size appropriate for scope** | Concept/guide pages: minimum 5KB substantive content. Pages under 2KB are stubs that should not be in published nav. Gold standard pages are 10-60KB. |
+| 4.13 | **No TODO/REVIEW comments without tracking** | Zero `{/* TODO` comments in published content. Zero `{/* REVIEW` comments without a linked tracking issue. |
+| 4.14 | **Flat layout where appropriate** | Actor/role pages use tabs/accordions for depth, not sub-folders. Rich flat pages (like `gateways/setup/prepare.mdx`) preserve reading flow. Sub-pages only for genuinely separate journeys. |
+| 4.15 | **Trade-offs present** | Every concept/economics/architecture page names at least one trade-off, limitation, or failure condition. No page presents only the positive case. |
+| 4.16 | **Content pass context block completable** | All 15 fields in `content-pass.md` context block (TAB, SECTION, PAGE_PATH, MODE, PAGE_TYPE, AUDIENCE, PERSONA, PURPOSE, LIFECYCLE_STAGE, COMPLEXITY, PREV_PAGE, NEXT_PAGE, PHASE_1_OUTPUT, TAB_MAP, PRIMARY_SOURCES) can be filled for this page. If any cannot be filled, the page's position in the pipeline is undefined. |
 
 ### What success looks like
 
@@ -155,7 +191,16 @@ A reader following the journey from entry to depth to exit never hits a wall, ne
 | Content pass modes | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | WRITE / REVIEW / REWRITE / AUDIT mode definitions |
 | Page brief format | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` line 692 | reader definition + one-sentence outcome + prev/next + single job + out-of-scope + human sign-off |
 | Purpose→InfoType mapping | Frameworks.mdx §1.6 | Which information types are permitted per purpose |
+| Information type framework | `workspace/plan/active/CONTENT-WRITING/Frameworks/information-type.md` | 9 info types determining structure, layout, style per section |
+| Content pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | Full content writing/review prompt with context block + 7-phase review |
+| Content placement prompt | `CONTENT-WRITING/Prompts/Good prompt references/docs-content-placement-prompt.md` | Content placement within fixed IA |
+| Page content prompt | `CONTENT-WRITING/Prompts/Good prompt references/PHASE: PAGE CONTENT.md` | IA research + page definition prompt |
+| Structure audit | `CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP methodology |
+| Exemplars | `_MY_PROCESS/EXEMPLARS/` | 4 annotated gold-standard pages showing WHY they work |
+| Page quality gate | `_MY_PROCESS/tools/page-quality-gate.sh` | 10-check quick enforcement (banned words, TODO, self-ref, frontmatter, hedging, UK English) |
 | Audience design outputs | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/` | Per-tab audience analysis and journey maps |
+| Per-tab canonical review | `v2/{tab}/_workspace/canonical/review/01-07` | Per-tab audience, persona, journey, section structure, terminology, path validation |
+| Docs philosophy | `v2/internal/docs-philosophy.mdx` + `v2/resources/documentation-guide/authoring-standard.mdx` | Why docs exist and how to write them |
 
 ---
 
@@ -177,6 +222,12 @@ A reader following the journey from entry to depth to exit never hits a wall, ne
 | 5.8 | **CSS uses custom properties only** | No hardcoded hex colours, no ThemeData, no inline JS theme switching. Uses `var(--accent)`, `var(--text)`, etc. |
 | 5.9 | **Generated file banners intact** | Any generated file has the `generated-file-banner:v1` block and visible `<Note>` banner. Not hand-edited |
 | 5.10 | **Component naming/import conventions** | PascalCase component names, correct imports, components in semantic subdirectories per component-framework-canonical.mdx |
+| 5.11 | **Page follows gold-standard template** | Page structure matches the template in `snippets/templates/pages/gold-standard-templates/{pageType}-template.mdx`. 7 templates exist: concept, guide, instruction, navigation, reference, resource, tutorial. |
+| 5.12 | **Section blocks from gold-standard library** | Sections composed from blocks in `snippets/templates/pages/gold-standard/`: introduction, prerequisites, step-sequence, decision-matrix, concept-explanation, config-reference, comparison-table, verification-checklist, accordion-group, multi-view-layout, related-pages-footer, next-step-cta, header-cta. |
+| 5.13 | **Section ordering matches pageType** | Section order follows `snippets/templates/section-patterns.md` ordering rules: navigation=Hero+Cards. concept=Header CTA+Intro+Explanation+Comparison+Accordion+Related. tutorial=Intro+Prerequisites+Steps+Verification+Related. guide=Header CTA+Intro+Decision Matrix+Comparison+Next Step. instruction=Header CTA+Intro+Prerequisites+Steps+Verification+Related. reference=Intro+Structured Data+Related. resource=Intro+Content+Related. |
+| 5.14 | **Multi-view layout rules respected** | 1 dimension = Tabs. 2 dimensions = Views then Tabs. 3 dimensions = Views then Tabs then Tabs-in-steps. 4+ dimensions = split into separate pages. Steps NEVER inside Accordions. Tabs NEVER inside Steps. Per `snippets/templates/page-classification.md` instruction section. |
+| 5.15 | **Data imports used, not hardcoded** | Contract addresses, CLI flags, port numbers, protocol parameters imported from `snippets/data/`. Never hardcoded in MDX prose. If a data file exists for the content, the page MUST import and render from it. |
+| 5.16 | **Related Pages footer or Next Step CTA present** | Every non-navigation page ends with either CardGroup (Related Pages, 2-3 cards, one-sentence descriptions) or single Card (Next Step CTA, clear action verb). Never both on the same page. |
 
 ### Component matrix (quick reference)
 
@@ -198,12 +249,20 @@ Every page of the same `pageType` has the same structural skeleton. A reader who
 
 | Resource | Location | Use |
 |----------|----------|-----|
-| Component layout matrix | `docs-guide/policies/component-layout-decisions.mdx` | Full pageType → sections → components → avoid matrix |
+| Component layout matrix | `docs-guide/policies/component-layout-decisions.mdx` | Full pageType sections components avoid matrix |
 | Component layout profile | `tools/config/component-layout-profile.json` | Machine-readable layout rules |
 | Component framework | `docs-guide/frameworks/component-framework-canonical.mdx` | Component taxonomy, naming, JSDoc standards |
+| Component governance | `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` | Extended component taxonomy + catalog + audits |
 | Layout validator | `node operations/scripts/validators/components/library/component-layout-governance.js` | Automated layout check |
 | Style guide | `v2/resources/documentation-guide/style-guide.mdx` | CSS custom properties, colour system, three-layer framework |
-| Design canonical | `workspace/plan/active/CONTENT-WRITING/design-canonical.mdx` | Production Engine ideal state: "MDX renders clean. No unapproved components. No old-schema frontmatter. All headings specific." |
+| Page classification | `snippets/templates/page-classification.md` | Decision tree for 7 pageTypes with component palettes, word ranges, time targets |
+| Section patterns | `snippets/templates/section-patterns.md` | 13 section archetypes with composition rules and ordering per pageType |
+| Gold-standard templates | `snippets/templates/pages/gold-standard-templates/` | 7 templates (one per pageType) |
+| Gold-standard blocks | `snippets/templates/pages/gold-standard/` | 13 composable section blocks |
+| Page composition framework | `snippets/templates/pages/page-composition-framework.mdx` | Page composition rules |
+| Page structure rules | `CONTENT-WRITING/Prompts/.../page-structure-rules.md` | Structural contracts per page type |
+| Layout pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | Component mapping, MDX template application |
+| Design canonical | `workspace/plan/active/CONTENT-WRITING/design-canonical.mdx` | Production Engine ideal state |
 
 ---
 
@@ -224,6 +283,9 @@ Every page of the same `pageType` has the same structural skeleton. A reader who
 | 6.7 | **Authoritative vs AI-generated glossary** | Content uses `resources/glossary.mdx` (human-reviewed, authoritative). Never trusts `resources/compendium/glossary.mdx` (AI-generated, unverified) without cross-check |
 | 6.8 | **Source staleness check** | Information sourced from fast-changing sources (API responses, smart contracts, SDK versions) is flagged for staleness risk |
 | 6.9 | **No open-ended research tasks** | Every residual veracity item has a named source and a concrete next step. No "needs more research" |
+| 6.10 | **Source authority tiers respected** | Factual claims cite T1 (primary: protocol contracts, API specs, changelogs). Technical claims cite tagged releases. Procedural claims verified against live system. No claims sourced exclusively from T3 (search/community) without T1/T2 cross-check. Per `accuracy-sources.md`. |
+| 6.11 | **Glossary definitions match universal terms** | Tab-level glossary definitions match `universal-terms.md` canonical definitions. No conflicting definitions across tabs. Per `in-repo-glossaries.md` audit. |
+| 6.12 | **Glossary definitions verified against primary sources** | Tab glossary definitions cross-checked against `TERMINOLOGY-COLLATE/consolidated/veracity-sources.md` primary source registry. No unverified definitions published. |
 
 ### Veracity standards by information type
 
@@ -252,6 +314,11 @@ Every page of the same `pageType` has the same structural skeleton. A reader who
 | Frameworks.mdx §1.7 | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Veracity quick reference |
 | Glossary (authoritative) | `v2/resources/glossary.mdx` | Human-reviewed terms |
 | Glossary (AI, untrusted) | `v2/resources/compendium/glossary.mdx` | Must cross-check before trusting |
+| Accuracy sources | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/accuracy-sources.md` | Source validation framework: T1/T2/T3 tiers |
+| Universal terms | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/universal-terms.md` | Cross-tab canonical definitions |
+| In-repo glossary audit | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/in-repo-glossaries.md` | Glossary quality audit |
+| Veracity pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | Claim flagging and resolution methodology |
+| TERMINOLOGY-COLLATE veracity | `TERMINOLOGY-COLLATE/consolidated/veracity-sources.md` | 58KB source authority for all terminology |
 
 ---
 
@@ -272,6 +339,8 @@ Every page of the same `pageType` has the same structural skeleton. A reader who
 | 7.7 | **File in correct lane** | Publishable content in `v2/<section>/`, not in `_workspace/`. Non-publishable in `_workspace/`. Deprecated in `x-deprecated/` or `x-archived/` |
 | 7.8 | **File naming conventions** | Prefixes used correctly: `s-` (setup), `r-` (reference), `rs-` (ref+setup), `rcs-` (ref+config+setup), `x-` (deprecated), `dep-` (deprecated). No `-index.mdx` suffix |
 | 7.9 | **_workspace/ TTL compliance** | Files in notes/, drafts/: ≤30 days. Files in archive/: ≤90 days. Active plans: no TTL |
+| 7.10 | **No stubs in published nav** | Every page listed in docs.json nav has >2KB of substantive content. Pages under 2KB are either expanded to meet the bar or removed from nav. Stubs actively harm readers by creating dead-end journeys. |
+| 7.11 | **Guides section serves secondary personas** | For tabs with a guides/ section: content covers edge cases, secondary journeys, evaluation frameworks, and depth that doesn't fit the main content sections (concepts, protocol, network, setup, quickstart). guides/ = everything else. |
 
 ### What success looks like
 
@@ -329,10 +398,10 @@ Every link clicked works. Every page loads fully. No console errors. No missing 
 |---|-------|---------------|
 | 9.1 | **Human sign-off recorded** | Page has been explicitly approved by a human. Agent self-reporting does not count |
 | 9.2 | **All consuming decisions in registry** | Any structural decision the page depends on exists in `decisions/decision-registry.md` with date and sign-off |
-| 9.3 | **Gate prerequisites met** | Page did not skip gates: IA Approved → Terminology Locked → Content Scan Done → Structure Approved → Content Pass Open → Veracity Done → Layout Done |
-| 9.4 | **Phase ordering respected** | Phase 8 (naming) ran BEFORE Phase 7 (veracity). No orphaned veracity markers from post-naming heading changes |
+| 9.3 | **Gate prerequisites met** | Page did not skip gates. Per-tab canonical review files (01-07) approved before content work. Content pass context block filled. Veracity pass run. Layout pass run. Per `_MY_PROCESS/` RUNBOOKs (00-08). |
+| 9.4 | **Phase ordering respected** | Phase ordering per `_MY_PROCESS/` RUNBOOKs: 00 (audience) -> 01 (research) -> 02 (content gathering) -> 03 (IA) -> 04 (briefs) -> 05 (journey validation) -> 06 (copy/voice) -> 07 (veracity) -> 08 (layout). No phase skipped. |
 | 9.5 | **Findings gathered before fixes** | Page went through structured review (findings report → scope approval → execution). Not fixed ad hoc |
-| 9.6 | **Feedback routed** | Any corrections found during review are routed through `decisions/feedback-routing-map.md` — not just fixed locally |
+| 9.6 | **Feedback routed** | Any corrections found during review are routed through `decisions/feedback-routing-map.md` AND `_MY_PROCESS/FEEDBACK/RUNBOOK.md`. Not just fixed locally. Corrections that affect voice rules, terminology, or templates update the canonical source. |
 
 ### What success looks like
 
@@ -347,7 +416,46 @@ Every shipped page has a traceable provenance: who approved it, what gates it pa
 | Feedback routing | `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | Correction → standards routing |
 | Session start protocol | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` | Mandatory pre-work steps |
 | Plan canonical | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Phase ordering, gate definitions |
+| Pipeline RUNBOOKs (00-08) | `workspace/plan/active/_MY_PROCESS/00_*` through `08_*/RUNBOOK.md` | Per-phase instructions, inputs, outputs, gate conditions |
+| Feedback loop | `workspace/plan/active/_MY_PROCESS/FEEDBACK/RUNBOOK.md` | Post-tab correction capture and framework update |
+| docs-guide governance index | `docs-guide/policies/governance-index.mdx` | Master governance policy index |
+| docs-guide standards | `docs-guide/standards/` | authoring-standard, frontmatter, naming-conventions, voice-and-copy, voice-rules |
+| Agent governance | `docs-guide/policies/agent-governance-framework.mdx` | Agent behaviour rules |
+| Source of truth policy | `docs-guide/policies/source-of-truth-policy.mdx` | Canonical source designation |
+| Skill pipeline map | `docs-guide/policies/skill-pipeline-map.mdx` | Skill to pipeline mapping |
 | What agents must never do | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` §6 | 12 hard prohibitions |
+
+---
+
+## 10. CONTENT COMPLETENESS
+
+**What this catches**: Missing pages, incomplete journeys, unanswered questions, gaps that no amount of page-level quality fixes can resolve. The existing 9 categories check QUALITY of what exists. This category checks whether what SHOULD exist actually does.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 10.1 | **Every question in the tab's question list has a page** | Cross-reference against `_workspace/canonical/review/03-jobs.md` for the tab. Every job maps to at least one published page. No unanswered questions. If a question has no page, the tab is incomplete regardless of how good the existing pages are. |
+| 10.2 | **Zero-to-hero journey complete** | A reader with zero prior knowledge can complete the full journey from "what is this?" to operational/participating without leaving the tab (except deliberate cross-tab handoffs). Test by tracing the primary persona's path from portal to final action. Per FIRST-PRINCIPLES-SITEMAP success criteria. |
+| 10.3 | **All primary persona paths unblocked** | Cross-reference against `_workspace/canonical/review/07-path-validation.md`. No persona hits a dead end, a missing page, or a knowledge gap (page assumes knowledge the previous page didn't provide). Every page's exit state matches the next page's entry state. |
+| 10.4 | **Scope boundaries explicit** | What this tab does NOT cover is stated and replaced with links to the tab that does cover it. Out-of-scope content is not just absent, it is explicitly directed elsewhere. Reader never wonders "where is the governance info?" without seeing a link to the correct tab. |
+| 10.5 | **Self-containment holds** | Tab can be read without visiting another tab (except deliberate cross-tab handoffs). If a gateway operator needs to understand orchestrator selection, that content exists IN the Gateways tab, not just linked to Orchestrators. Intentional duplication is correct per site-map ownership principle. |
+
+### What success looks like
+
+Every tab passes the FIRST-PRINCIPLES-SITEMAP completion test: "A person with no prior Livepeer knowledge can [complete their goal] without asking anyone." The Discord test passes for every common question. No reader hits a wall.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Per-tab canonical review (01-07) | `v2/{tab}/_workspace/canonical/review/` | Audience, personas, jobs, journey, section structure, terminology, path validation per tab (78 files across 9 tabs) |
+| First-principles sitemap | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/FIRST-PRINCIPLES-SITEMAP.md` | Zero-to-hero journeys and success criteria per audience |
+| Tab completion framework | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/RESEARCH/CLAUDE-OUTPUTS/TAB-COMPLETION-FRAMEWORK.md` | Universal + tab-specific ship-readiness gates |
+| Master site map | `_MY_PROCESS/SITE-MAP.md` | Tab ownership, overlap analysis, questions per tab |
+| Codex content briefs | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/RESEARCH/CLAUDE-OUTPUTS/CODEX-CONTENT-BRIEFS-P1.md` | Ready-to-execute briefs for missing P1 pages |
+| Product thinking skill | `ai-tools/ai-skills/product-thinking/SKILL.md` | Strategic review: tab fit, audience alignment, cross-tab positioning |
+| Content completeness skill | `ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md` | Cross-tab link validation, orphan detection, route integrity |
 
 ---
 
@@ -366,15 +474,17 @@ Based on `docs-review-prompt-tiers.md` Tier 3 (Single Page):
 6. Note the page's position in the journey (what comes before/after) — read `docs.json` to confirm the navigation sequence, do not infer from memory
 
 ### Review pass order
-1. **Frontmatter** (Category 1) — all fields present, all values canonical
-2. **Structure** (Category 4) — one purpose, one job, prerequisites, handoffs
-3. **Headings** (Category 3) — score each ≥20/25
-4. **Voice & copy** (Category 2) — banned words, register, UK English, opening order
-5. **Layout & components** (Category 5) — correct template, approved components
-6. **Veracity** (Category 6) — claims sourced, code tested, REVIEW flags placed
-7. **Links & rendering** (Category 8) — everything resolves, page renders clean
-8. **Navigation** (Category 7) — in docs.json, reachable, no dead ends
-9. **Spelling/typo pass** — scan all visible text: headings, link text, prose, card descriptions, table cells
+1. **Frontmatter** (Category 1) -- all 10+ fields present, all values canonical
+2. **Structure** (Category 4) -- one purpose, one job, Discord test, min size, prerequisites, handoffs, trade-offs
+3. **Headings** (Category 3) -- score each 20/25+, per-pageType naming, per-audience register, domain-anchor
+4. **Voice and copy** (Category 2) -- banned words/phrases/constructions, entity-led, no hedging, no em-dashes, no self-ref description, UK English, register, deprecated terms, terminology
+5. **Layout and components** (Category 5) -- gold-standard template, section blocks, ordering, multi-view, data imports, Related Pages or Next Step CTA
+6. **Veracity** (Category 6) -- claims sourced per authority tiers, code tested, REVIEW flags, glossary definitions match universal terms
+7. **Links and rendering** (Category 8) -- everything resolves, page renders, no TODO/TBD
+8. **Navigation** (Category 7) -- in docs.json, reachable, no dead ends, no stubs in nav, guides scope
+9. **Completeness** (Category 10) -- question coverage, zero-to-hero, persona paths, scope boundaries, self-containment
+10. **Process** (Category 9) -- human sign-off, decisions in registry, gates met, phases ordered, feedback routed
+11. **Spelling and typo pass** -- scan all visible text: headings, link text, prose, card descriptions, table cells
 
 ### Verdict scale
 
@@ -386,10 +496,18 @@ Based on `docs-review-prompt-tiers.md` Tier 3 (Single Page):
 
 ### Self-check (after review)
 - [ ] Introduction opens with subject, not caveat
-- [ ] No "this page" self-reference anywhere
+- [ ] No "this page" self-reference anywhere (body or description)
+- [ ] No em-dashes
+- [ ] No hedging verbs in value claims
+- [ ] No deprecated terms (Broadcaster, Pool worker, Combined mode, Hybrid)
 - [ ] Every section has a clear handoff to the next
+- [ ] Related Pages or Next Step CTA at page end
+- [ ] Page follows gold-standard template for its pageType
+- [ ] Page passes the Discord test (complete answer to its question)
+- [ ] Page is above 2KB minimum (5KB+ for concept/guide)
 - [ ] Volatile content has REVIEW flag
 - [ ] All corrections routed through feedback map
+- [ ] All terminology matches TERMINOLOGY-COLLATE canonical
 
 ---
 

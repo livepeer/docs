@@ -1,25 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      audit-glossary-gaps
- * @type        audit
- * @concern     content
- * @niche       reference
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     tooling:dev-tools
  * @description Glossary gap auditor — scans v2 MDX pages for terminology candidates not
- *              yet present in any glossary companion JSON, and emits a gap report for
- *              human review. Does NOT write definitions. Flags gaps only.
- *              Builds on generate-glossary-companions.js — reads existing companion JSONs
- *              as the known-term baseline.
- * @mode        audit
+ * @mode        read-only
  * @pipeline    manual | post-PR | cron
  * @scope       operations/scripts/audits/content/reference
  * @usage       node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]
- * @flags
- *   --output <path>   Write JSON report to file (default: workspace/reports/_local/glossary-gap-report.json)
- *   --md              Also write a markdown summary (glossary-gap-report.md in same dir)
- *   --min-count <n>   Minimum occurrences before flagging a candidate (default: 2)
- *   --verbose         Print candidates to stdout as they are found
- * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

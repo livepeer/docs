@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-double-headers
- * @type        validator
- * @concern     content
- * @niche       structure
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
  * @mode        read-only
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
  * @scope       v2-content
  * @usage       node operations/scripts/validators/content/structure/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
- * @policy      1.12, 1.13
  */
 
 const fs = require('fs');

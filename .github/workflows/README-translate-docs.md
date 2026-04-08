@@ -2,7 +2,7 @@
 
 Manual GitHub Actions workflow for translation generation and PR-based review.
 
-Default provider behavior is OpenRouter with an explicit `:free` model fallback chain configured in `/operations/scripts/automations/content/language-translation/config.json`.
+Default provider behavior is OpenRouter with an explicit `:free` model fallback chain configured in `/operations/scripts/integrators/content/language-translation/config.json`.
 The workflow also fails non-dry runs if the checked-in provider is accidentally set to `mock`.
 
 ## What It Does

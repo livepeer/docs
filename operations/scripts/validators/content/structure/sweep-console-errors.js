@@ -1,19 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script sweep-console-errors
- * @type validator
- * @concern content
- * @niche structure
- * @purpose Generates console error baseline for all v2 routes via Puppeteer
+ * @script      sweep-console-errors
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Generates console error baseline for all v2 routes via Puppeteer
  * @description Visits every v2 route registered in docs.json, captures HTTP status,
- *   console errors, body metrics, and error boundary state. Writes a baseline JSON
- *   file that downstream hooks use to distinguish pre-existing errors from new
- *   regressions introduced by agents.
- * @mode read-only
- * @pipeline manual — run once to generate baseline, re-run to update after verified fixes
- * @scope operations/tests/baselines/console-baseline.json
- * @usage node operations/scripts/validators/content/structure/sweep-console-errors.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    manual — run once to generate baseline, re-run to update after verified fixes
+ * @scope       operations/tests/baselines/console-baseline.json
+ * @usage       node operations/scripts/validators/content/structure/sweep-console-errors.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]
  */
 
 const fs = require('fs');
@@ -263,6 +259,27 @@ async function main(argv = process.argv.slice(2)) {
 
   let browser = await launchBrowser();
 
+  // --- Signal handlers: clean up browser on interruption ---
+  let activeBrowser = browser;
+  const cleanup = async () => {
+    try { await activeBrowser.close(); } catch (_) {}
+    process.exit(1);
+  };
+  process.on('SIGTERM', cleanup);
+  process.on('SIGINT', cleanup);
+  process.on('exit', () => {
+    try { activeBrowser.close(); } catch (_) {}
+  });
+
+  // Global execution timeout: 5 minutes max
+  const GLOBAL_TIMEOUT_MS = 5 * 60 * 1000;
+  const globalTimer = setTimeout(async () => {
+    console.error('\nGlobal timeout reached. Cleaning up...');
+    try { await activeBrowser.close(); } catch (_) {}
+    process.exit(2);
+  }, GLOBAL_TIMEOUT_MS);
+  globalTimer.unref();
+
   const results = {};
   let clean = 0;
   let dirty = 0;
@@ -284,6 +301,7 @@ async function main(argv = process.argv.slice(2)) {
       console.error(`\nBrowser crash at ${route}: ${err.message}. Relaunching browser...`);
       try { await browser.close(); } catch (_) {}
       browser = await launchBrowser();
+      activeBrowser = browser;
       // Retry the route once after browser relaunch
       try {
         result = await checkRoute(browser, route, baseUrl);
@@ -307,6 +325,7 @@ async function main(argv = process.argv.slice(2)) {
         baseUrl = await ensureServer(null);
         console.log(`Server restarted at ${baseUrl}`);
         browser = await launchBrowser();
+        activeBrowser = browser;
 
         // Retry this route
         try {
@@ -339,6 +358,7 @@ async function main(argv = process.argv.slice(2)) {
     }
   }
 
+  clearTimeout(globalTimer);
   try { await browser.close(); } catch (_) {}
 
   console.log('\n');
@@ -397,18 +417,37 @@ async function main(argv = process.argv.slice(2)) {
 
   // Write baseline
   if (args.updateBaseline || !existingBaseline) {
+    // Merge mode: when --update-baseline is used with --routes, merge new results
+    // into the existing baseline instead of overwriting it.
+    let mergedResults = results;
+    if (existingBaseline && args.routes.length > 0) {
+      // Start from existing baseline (excluding _meta), overlay new results
+      const { _meta: _oldMeta, ...existingRoutes } = existingBaseline;
+      mergedResults = { ...existingRoutes, ...results };
+    }
+
+    // Recount clean/dirty across the full merged set
+    let mergedClean = 0;
+    let mergedDirty = 0;
+    for (const entry of Object.values(mergedResults)) {
+      if (entry && typeof entry === 'object' && 'clean' in entry) {
+        if (entry.clean) mergedClean++;
+        else mergedDirty++;
+      }
+    }
+
     const baseline = {
       _meta: {
         generated: new Date().toISOString(),
         commit: getCommitSha(),
-        totalRoutes: routes.length,
-        clean,
-        dirty
+        totalRoutes: mergedClean + mergedDirty,
+        clean: mergedClean,
+        dirty: mergedDirty
       },
-      ...results
+      ...mergedResults
     };
     fs.writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n');
-    console.log(`\nBaseline written to ${BASELINE_PATH}`);
+    console.log(`\nBaseline written to ${BASELINE_PATH} (${mergedClean + mergedDirty} routes: ${mergedClean} clean, ${mergedDirty} dirty)`);
   }
 
   return dirty > 0 ? 1 : 0;

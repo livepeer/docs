@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            remove-local-sync-hook
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             single-file
-# @owner             docs
-# @needs             bash, git
-# @purpose-statement Removes the managed local Notion post-commit hook when it is present.
-# @pipeline          manual
-# @usage             bash tools/dev/integrations/notion/remove-local-sync-hook.sh [flags]
+# @script      remove-local-sync-hook
+# @type        automation
+# @concern     governance
+# @niche       dev-tools
+# @purpose     tooling:dev-tools
+# @description Removes the managed local Notion post-commit hook when it is present.
+# @mode        execute
+# @pipeline    manual
+# @scope       single-file
+# @usage       bash tools/dev/integrations/notion/remove-local-sync-hook.sh [flags]
+# @policy      bash, git
 set -euo pipefail
 
 MARKER="LIVEPEER_NOTION_LOCAL_SYNC_HOOK"

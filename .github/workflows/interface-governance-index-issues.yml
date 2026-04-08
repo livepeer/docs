@@ -1,0 +1,34 @@
+# type: interface
+# concern: governance
+# pipeline: P7
+name: Docs v2 Issue Indexer
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, reopened, closed]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+permissions:
+  issues: write
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: docs-v2-issue-indexer
+  cancel-in-progress: true
+
+jobs:
+  build-index:
+    if: ${{ github.event_name != 'issues' || !github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create or update docs-v2 top-level issue index
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = require('./operations/scripts/interfaces/governance/issue-indexer.js');
+            return await run({ github, context });

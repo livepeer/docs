@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-component-docs
- * @type        generator
- * @concern     components
- * @niche       documentation
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual
  * @scope       generated-output
  * @usage       node operations/scripts/generators/components/documentation/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
- * @policy      R-R10
  */
 
 const crypto = require('crypto');
@@ -30,7 +29,7 @@ const {
   buildProvenanceComment,
   injectOrReplaceProvenanceComment,
   parseProvenanceComment
-} = require('../../../automations/content/language-translation/lib/provenance');
+} = require('../../../integrators/content/language-translation/lib/provenance');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');

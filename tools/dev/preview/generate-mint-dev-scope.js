@@ -10,7 +10,6 @@
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       operations/scripts/dev, docs.json, .mintignore
  * @usage       node tools/dev/preview/generate-mint-dev-scope.js [flags]
- * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

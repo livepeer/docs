@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-repo-governance-status
- * @category          generator
- * @type              generator
- * @concern           governance
- * @niche             reports
- * @purpose           governance:ownerless-governance
- * @description       Generates the repo-governance map and deterministic status reports from the canonical top-level governance registry.
- * @mode              generate
- * @domain            docs
- * @needs             R-R14, R-R16, R-R17, R-R29
- * @purpose-statement Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
- * @pipeline          manual, pr-changed -> repo-governance registry -> governance map and status reports
- * @scope             operations/governance/config, operations/scripts/generators/governance/reports, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
- * @usage             node operations/scripts/generators/governance/reports/generate-repo-governance-status.js [--write|--check]
- * @policy            R-R14, R-R16, R-R17, R-R29
+ * @script      generate-repo-governance-status
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:ownerless-governance
+ * @description Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
+ * @mode        read-only
+ * @pipeline    manual, pr-changed -> repo-governance registry -> governance map and status reports
+ * @scope       operations/governance/config, operations/scripts/generators/governance/reports, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
+ * @usage       node operations/scripts/generators/governance/reports/generate-repo-governance-status.js [--write|--check]
+ * @policy      R-R14, R-R16, R-R17, R-R29
  */
 
 const fs = require('fs');

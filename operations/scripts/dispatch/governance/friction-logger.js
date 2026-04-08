@@ -1,18 +1,14 @@
 /**
- * @script friction-logger
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Detects and logs friction signals from user messages in real-time
+ * @script      friction-logger
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Detects and logs friction signals from user messages in real-time
  * @description UserPromptSubmit hook. Scans user messages for frustration indicators
- *   (swearing, ALL CAPS, corrections, explicit rule-violation callouts) and logs each
- *   incident to workspace/thread-outputs/sessions/friction-log.jsonl with timestamp,
- *   session ID, signal type, and triggering context. Never blocks input.
- * @mode read-only
- * @pipeline UserPromptSubmit hook → reads stdin → pattern match → append to friction log
- * @scope .claude/settings.json UserPromptSubmit hook
- * @usage Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    UserPromptSubmit hook → reads stdin → pattern match → append to friction log
+ * @scope       .claude/settings.json UserPromptSubmit hook
+ * @usage       Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.
  */
 
 const fs = require('fs');

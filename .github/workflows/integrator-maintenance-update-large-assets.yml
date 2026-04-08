@@ -1,0 +1,180 @@
+# type: integrator
+# concern: maintenance
+# pipeline: P5-auto
+name: "Sync Large Assets"
+
+on:
+  push:
+    branches:
+      - docs-v2
+      - docs-v2-dev
+    paths:
+      - "snippets/assets/**"
+      - "v2/assets/**"
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: "Branch that stores large published assets"
+        required: false
+        default: "docs-v2-assets"
+      threshold_mb:
+        description: "File size threshold in MB (default 1)"
+        required: false
+        default: "1"
+      dry_run:
+        description: "Dry run — report what would be synced without pushing"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-large-assets:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: "docs-v2-assets"
+      THRESHOLD_MB: "1"
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve inputs
+        id: config
+        run: |
+          if [ -n "${{ inputs.target_branch }}" ]; then
+            echo "target=${{ inputs.target_branch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "target=${{ env.TARGET_BRANCH }}" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -n "${{ inputs.threshold_mb }}" ]; then
+            echo "threshold=${{ inputs.threshold_mb }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "threshold=${{ env.THRESHOLD_MB }}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync large assets to target branch
+        shell: bash
+        env:
+          RESOLVED_TARGET: ${{ steps.config.outputs.target }}
+          RESOLVED_THRESHOLD: ${{ steps.config.outputs.threshold }}
+          DRY_RUN: ${{ steps.config.outputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          SOURCE_SHA="${GITHUB_SHA}"
+          SOURCE_REF="${GITHUB_REF_NAME}"
+          TARGET_BRANCH="${RESOLVED_TARGET}"
+          THRESHOLD_MB="${RESOLVED_THRESHOLD}"
+
+          if ! [[ "$THRESHOLD_MB" =~ ^[0-9]+$ ]]; then
+            echo "::error::threshold_mb must be an integer, got: $THRESHOLD_MB"
+            exit 1
+          fi
+
+          THRESHOLD_BYTES=$((THRESHOLD_MB * 1024 * 1024))
+
+          echo "::group::Configuration"
+          echo "Source branch: $SOURCE_REF"
+          echo "Source SHA:    $SOURCE_SHA"
+          echo "Target branch: $TARGET_BRANCH"
+          echo "Threshold:     ${THRESHOLD_MB} MB (${THRESHOLD_BYTES} bytes)"
+          echo "::endgroup::"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "$TARGET_BRANCH" 2>/dev/null || true
+
+          WORKTREE_DIR="../_assets-branch"
+          rm -rf "$WORKTREE_DIR"
+
+          if git show-ref --verify --quiet "refs/remotes/origin/$TARGET_BRANCH"; then
+            git worktree add -B "$TARGET_BRANCH" "$WORKTREE_DIR" "origin/$TARGET_BRANCH"
+          else
+            echo "Target branch $TARGET_BRANCH does not exist — creating it."
+            git worktree add -b "$TARGET_BRANCH" "$WORKTREE_DIR"
+            pushd "$WORKTREE_DIR" > /dev/null
+            printf '' > .nojekyll
+            mkdir -p .github
+            echo "Auto-managed by sync-large-assets.yml. Stores large asset files for static hosting." > .github/README.md
+            git add .nojekyll .github/README.md
+            git commit -m "chore: initialise large-assets branch"
+            git push -u origin "$TARGET_BRANCH"
+            popd > /dev/null
+          fi
+
+          # Build list of files exceeding threshold
+          LARGE_LIST="$(mktemp)"
+          file_count=0
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            size=$(wc -c < "$file")
+            if [ "$size" -gt "$THRESHOLD_BYTES" ]; then
+              echo "$file" >> "$LARGE_LIST"
+              file_count=$((file_count + 1))
+            fi
+          done < <(git ls-files 'snippets/assets/**' 'v2/assets/**')
+
+          sort -u "$LARGE_LIST" -o "$LARGE_LIST"
+
+          echo "::group::Large assets selected ($file_count files)"
+          if [ -s "$LARGE_LIST" ]; then
+            cat "$LARGE_LIST"
+          else
+            echo "(none — no files exceed ${THRESHOLD_MB} MB)"
+          fi
+          echo "::endgroup::"
+
+          # Sync to target branch
+          pushd "$WORKTREE_DIR" > /dev/null
+
+          # Remove previously tracked assets no longer in the selection
+          while IFS= read -r tracked; do
+            [ -z "$tracked" ] && continue
+            if ! grep -Fxq "$tracked" "$LARGE_LIST"; then
+              rm -f "$tracked"
+            fi
+          done < <(git ls-files 'snippets/assets/**' 'v2/assets/**')
+
+          # Copy selected large assets from source checkout
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            mkdir -p "$(dirname "$file")"
+            cp -f "${GITHUB_WORKSPACE}/$file" "$file"
+          done < "$LARGE_LIST"
+
+          # Write manifest
+          mkdir -p .github
+          printf 'source_branch=%s\nsource_sha=%s\nthreshold_mb=%s\nfile_count=%s\ngenerated_at=%s\n' \
+            "$SOURCE_REF" "$SOURCE_SHA" "$THRESHOLD_MB" "$file_count" \
+            "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            > .github/assets-manifest.txt
+
+          git add -A snippets/assets v2/assets .nojekyll .github/assets-manifest.txt .github/README.md
+
+          if git diff --cached --quiet; then
+            echo "No large-asset changes to commit."
+            exit 0
+          fi
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "::notice::DRY RUN — would sync $file_count assets to $TARGET_BRANCH"
+            echo "::group::Files that would be committed"
+            git diff --cached --stat
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          git commit -m "chore(assets): sync from ${SOURCE_REF}@${SOURCE_SHA:0:7}"
+          git push origin "$TARGET_BRANCH"
+          echo "::notice::Synced $file_count assets to $TARGET_BRANCH"
+
+          popd > /dev/null

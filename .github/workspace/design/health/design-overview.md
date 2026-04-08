@@ -105,7 +105,7 @@ _Fixes applied, in progress. Updated as work happens._
 
 | Date | What was done | Files changed |
 |---|---|---|
-| 2026-04-06 | Repaired repo-root frontmatter/governance runtime ownership, aligned checker documentation with existing repo-root entrypoints, and completed gateway frontmatter/link/style remediation using existing scripts only. | `operations/package.json`, `operations/scripts/validators/governance/pr/audit-script-inventory.js`, `tools/lib/docs/frontmatter-taxonomy.js`, `operations/tests/unit/frontmatter-taxonomy.test.js`, `operations/scripts/automations/content/language-translation/lib/frontmatter.js`, `operations/scripts/validators/content/structure/lint-structure.js`, `operations/tests/unit/style-guide.test.js`, `operations/scripts/dispatch/governance/pre-tool-guard.js`, `v2/gateways/**`, `.github/workspace/**` |
+| 2026-04-06 | Repaired repo-root frontmatter/governance runtime ownership, aligned checker documentation with existing repo-root entrypoints, and completed gateway frontmatter/link/style remediation using existing scripts only. | `operations/package.json`, `operations/scripts/validators/governance/pr/audit-script-inventory.js`, `tools/lib/docs/frontmatter-taxonomy.js`, `operations/tests/unit/frontmatter-taxonomy.test.js`, `operations/scripts/integrators/content/language-translation/lib/frontmatter.js`, `operations/scripts/validators/content/structure/lint-structure.js`, `operations/tests/unit/style-guide.test.js`, `operations/scripts/dispatch/governance/pre-tool-guard.js`, `v2/gateways/**`, `.github/workspace/**` |
 
 ---
 

@@ -3,7 +3,7 @@
  * @script            contracts-addresses-pipeline.test
  * @category          validator
  * @purpose           qa:contracts-registry
- * @scope             tests/unit, .github/scripts/fetch-contract-addresses.js, operations/scripts/automations/content/data/contracts/, .github/workflows/update-contract-addresses*.yml, operations/scripts/generators/content/seo/generate-ai-sitemap.js, snippets/components/integrators/feeds/ContractVerifier.jsx, snippets/data/contract-addresses/, v2/about
+ * @scope             tests/unit, .github/scripts/fetch-contract-addresses.js, operations/scripts/integrators/content/data/contracts/, .github/workflows/update-contract-addresses*.yml, operations/scripts/generators/content/seo/generate-ai-sitemap.js, snippets/components/integrators/feeds/ContractVerifier.jsx, snippets/data/contract-addresses/, v2/about
  * @owner             docs
  * @needs             E-R12, E-R14
  * @purpose-statement Regression tests for the contracts proof catalog, generated registry output, shared contracts surface wiring, blocking anomaly behavior, workflow cadence alignment, and route freshness dependencies.
@@ -22,14 +22,14 @@ const {
 } = require('../../../.github/scripts/fetch-contract-addresses.js');
 const {
   buildValidationReport,
-} = require('../../../operations/scripts/automations/content/data/contracts/pipeline.js');
+} = require('../../../operations/scripts/integrators/content/data/contracts/pipeline.js');
 const {
   BLOCKING_BRANCH_DIFF_TYPES,
   CONTRACTS_PIPELINE_CADENCE,
-} = require('../../../operations/scripts/automations/content/data/contracts/constants.js');
+} = require('../../../operations/scripts/integrators/content/data/contracts/constants.js');
 const {
   buildBlockchainContractPageSpec,
-} = require('../../../operations/scripts/automations/content/data/contracts/spec.js');
+} = require('../../../operations/scripts/integrators/content/data/contracts/spec.js');
 const {
   buildContractVerifierChainData,
   isContractVerifierControllerLookupEligible,

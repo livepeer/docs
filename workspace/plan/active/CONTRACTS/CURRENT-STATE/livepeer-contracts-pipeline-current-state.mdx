@@ -24,9 +24,9 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 This file documents the exact current repository implementation of the contracts pipeline. It does not restate the canonical target design. It describes what the repo actually does today across:
 
 - `.github/scripts/fetch-contract-addresses.js`
-- `operations/scripts/automations/content/data/contracts/pipeline.js`
-- `operations/scripts/automations/content/data/contracts/spec.js`
-- `operations/scripts/automations/content/data/contracts/constants.js`
+- `operations/scripts/integrators/content/data/contracts/pipeline.js`
+- `operations/scripts/integrators/content/data/contracts/spec.js`
+- `operations/scripts/integrators/content/data/contracts/constants.js`
 - `snippets/data/contract-addresses/*`
 
 Current-state evidence in this document is taken from the live repo files and generated outputs present in the working tree on 2026-04-03.
@@ -38,11 +38,11 @@ Current-state evidence in this document is taken from the live repo files and ge
 | Surface | Current file(s) | Current role |
 |---|---|---|
 | CLI entrypoint | `.github/scripts/fetch-contract-addresses.js` | Parses `--dry-run`, `--check`, and `--skip-verify`, then calls `runContractsPipeline()` |
-| Core pipeline | `operations/scripts/automations/content/data/contracts/pipeline.js` | Orchestrates repo fetch, address resolution, verification, enrichment, output shaping, validation, and file writes |
-| Proof catalog | `operations/scripts/automations/content/data/contracts/spec.js` | Defines deployment catalog, proof-chain metadata, authority strategies, and code-authority defaults |
-| Paths and chain config | `operations/scripts/automations/content/data/contracts/constants.js` | Defines watched repos, controllers, explorer URLs, RPC defaults, output paths, and failure classes |
-| Branch-watch helper | `operations/scripts/automations/content/data/contracts/branch-watch.js` | Loads previous branch inventory, diffs branch state, writes the branch-watch snapshot |
-| Incident helper | `operations/scripts/automations/content/data/contracts/incidents.js` | Builds incident fingerprints, anomaly reports, and issue payloads on blocking failure |
+| Core pipeline | `operations/scripts/integrators/content/data/contracts/pipeline.js` | Orchestrates repo fetch, address resolution, verification, enrichment, output shaping, validation, and file writes |
+| Proof catalog | `operations/scripts/integrators/content/data/contracts/spec.js` | Defines deployment catalog, proof-chain metadata, authority strategies, and code-authority defaults |
+| Paths and chain config | `operations/scripts/integrators/content/data/contracts/constants.js` | Defines watched repos, controllers, explorer URLs, RPC defaults, output paths, and failure classes |
+| Branch-watch helper | `operations/scripts/integrators/content/data/contracts/branch-watch.js` | Loads previous branch inventory, diffs branch state, writes the branch-watch snapshot |
+| Incident helper | `operations/scripts/integrators/content/data/contracts/incidents.js` | Builds incident fingerprints, anomaly reports, and issue payloads on blocking failure |
 | Generated registry outputs | `snippets/data/contract-addresses/contractAddressesData.jsx`, `contractAddressesData.json` | Canonical contracts registry payload |
 | Generated blockchain output | `snippets/data/contract-addresses/blockchainContractsPageData.jsx`, `blockchainContractsPageData.json` | Blockchain page companion payload |
 | Generated health artifacts | `snippets/data/contract-addresses/_health-checks.json`, `_branch-watch-state.json` | Health-check and watched-branch output artifacts |

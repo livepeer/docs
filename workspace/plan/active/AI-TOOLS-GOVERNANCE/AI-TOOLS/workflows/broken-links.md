@@ -22,7 +22,7 @@ Consolidate this workflow under `dispatcher:review-fix` and keep the script or v
 
 - action:actions/checkout@v4
 - action:actions/setup-node@v4
-- operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
+- operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
 
 ## Dependants
 

@@ -29,7 +29,7 @@ Each lock is a JSON file with this shape:
 ## Lifecycle
 
 1. Create branch + contract + lock:
-   - `node operations/scripts/automations/ai/codex/task-preflight.js --task <id> --slug <slug> --scope <a,b,c>`
+   - `node operations/scripts/integrators/ai/codex/task-preflight.js --task <id> --slug <slug> --scope <a,b,c>`
    - Default behavior provisions a managed worktree at `../codex-worktrees/<task-id>-<slug>`.
    - Use `--in-place` only when the task must reuse the current worktree.
 2. Validate lock before commit/push:
@@ -39,6 +39,6 @@ Each lock is a JSON file with this shape:
 4. Commit or merge the task commit onto `docs-v2-dev`.
    - A codex branch commit is not task completion by itself.
 5. Release lock only after `docs-v2-dev` contains the task commit:
-   - `node operations/scripts/automations/ai/codex/lock-release.js --branch codex/<id>-<slug>`
+   - `node operations/scripts/integrators/ai/codex/lock-release.js --branch codex/<id>-<slug>`
 6. Cleanup merged local worktrees and stale local codex branches only after `docs-v2-dev` contains the task commit:
-   - `node operations/scripts/automations/ai/codex/task-cleanup.js --branch codex/<id>-<slug> --apply`
+   - `node operations/scripts/integrators/ai/codex/task-cleanup.js --branch codex/<id>-<slug> --apply`

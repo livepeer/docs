@@ -108,7 +108,7 @@ Compiled `.vsix` files committed to repo — this is intentional for local insta
 **Status:** Partially current. 144 lines, 138+ scripts listed. Last git update: Mar 20. **But paths are wrong.**
 
 **Specific breakage:** The index consistently references `tools/scripts/codex/` paths (old structure). After SCRIPT-GOVERNANCE restructure, those scripts now live at:
-- `tools/scripts/automations/ai/codex/`
+- `tools/scripts/integrators/ai/codex/`
 - `tools/scripts/validators/ai/codex/`
 - `tools/scripts/dispatch/ai/codex/`
 

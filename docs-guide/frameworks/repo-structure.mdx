@@ -1,0 +1,148 @@
+---
+title: Canonical Repo Folder Structure
+sidebarTitle: Repo Structure
+description: >-
+  Source of truth for locked decisions on repo root folder layout and per-folder
+  structure. Maps ownership of specific folders to active governance plans.
+keywords:
+  - repo structure
+  - folder structure
+  - root folders
+  - folder governance
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+sourceDoc: workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md
+---
+
+# Canonical Repo Folder Structure
+
+Source of truth for locked decisions on repo root folder layout and per-folder structure. This framework is LOCKED. No structural changes to root-level folders without a policy update.
+
+---
+
+## Related Governance Plans
+
+Other active plans that own or affect specific folders. Coordinate with these before making structural changes.
+
+| Plan | Folder(s) owned |
+|---|---|
+| SCRIPT-GOVERNANCE | `operations/scripts/` |
+| AI-TOOLS-GOVERNANCE | `ai-tools/` |
+| COMPONENT-GOVERNANCE | `snippets/components/` |
+| CONTENT-WRITING | `v2/` page content |
+| DOCUMENTATION | `docs-guide/` |
+| SNIPPETS | `snippets/` template structure |
+| TOOLING | `tools/` CLI and dev tooling |
+| OSS-OWNERLESS-REPO-GOVERNANCE | Ownerless folder governance |
+
+---
+
+## Target Root Structure
+
+```
+/
+  .claude/                  AI adapter: Claude
+  .codex/                   AI adapter: Codex
+  .cursor/                  AI adapter: Cursor
+  .windsurf/                AI adapter: Windsurf
+  .augment/                 AI adapter: Augment
+  .github/                  CI/CD workflows
+  .githooks/                Local git hooks
+  .vscode/                  Editor settings
+  .mintlify/                Mintlify platform config
+
+  ai-tools/                 AI rules, skills, agent packs
+  api/                      OpenAPI specs only
+  docs-guide/               Contributor and authoring guide
+  operations/               Scripts and tests
+  snippets/                 Shared MDX components, assets, data
+  tools/                    Dev tooling (CLI, lib, vscode, config)
+  v1/                       v1 content pages (frozen)
+  v2/                       v2 content pages
+  workspace/                Planning workspace
+
+  docs.json                 Mintlify nav config
+  style.css                 Mintlify global styles
+  AGENTS.md                 Agent baseline
+  README.md                 Repo readme
+```
+
+---
+
+## Key Subfolder Structures
+
+### docs-guide/
+
+```
+docs-guide/
+  catalog/                  Auto-generated catalogues only; never edit manually
+  contributing/             Contributor guides and onboarding
+  decisions/                Unified decision registry index
+  features/                 Feature and system overviews
+  frameworks/               Decision models and taxonomies
+  policies/                 Enforceable governance rules
+  repo-ops/                 Config files, enforcement maps
+  standards/                Authoring, voice, naming, frontmatter standards
+  tooling/                  Tool references and AI tooling guides
+  canonical/                Platform constraints (Mintlify)
+```
+
+### v2/
+
+```
+v2/
+  about/
+  community/
+  developers/
+  gateways/
+  home/
+  internal/                 Internal-only pages
+  lpt/
+  orchestrators/
+  resources/
+  solutions/
+  templates/                Shared MDX templates
+```
+
+Per-section `_workspace/` approved subdirs: `notes/`, `plans/`, `research/`, `reviews/`, `drafts/`, `handoff/`, `archive/`, `deprecated/`, `context-data/`, `staging/`.
+
+### snippets/
+
+```
+snippets/
+  assets/                   Images, SVGs, brand assets, OG images
+  components/               JSX component library
+  composables/              Layer 3 MDX content architecture
+  data/                     Structured JSON/JS data
+  templates/                Page templates
+  guide.mdx                 Canonical snippets manual
+```
+
+### operations/
+
+```
+operations/
+  scripts/                  Operational script library (~120 scripts)
+    audits/
+    generators/
+    validators/
+    remediators/
+    dispatch/
+    automations/
+    config/                 Shared configuration and utility libraries
+  tests/                    Test suites
+  governance/               Governance config and enforcement
+```
+
+---
+
+## Pending Decisions
+
+| Item | Decision needed |
+|---|---|
+| `v2/templates/` | Stay or move to `snippets/templates/`? |
+| `snippets/composables/` | Integrate into pages or archive? |
+| `docs-guide/frameworks/` vs `policies/` | Keep as separate sections (current) |
+| Pre-commit gate for loose v2/ section-root files | Build now or defer? |

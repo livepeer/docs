@@ -491,7 +491,7 @@ async function runAllTests() {
     // i18n Unit Tests
     console.log('\n🌐 Running i18n Unit Tests...');
     const i18nCheck = spawnSync(
-      'node --test operations/scripts/automations/content/language-translation/test/*.test.js',
+      'node --test operations/scripts/integrators/content/language-translation/test/*.test.js',
       [],
       { cwd: REPO_ROOT, encoding: 'utf8', shell: true, env: createNodeProcessEnv({}, __dirname) }
     );

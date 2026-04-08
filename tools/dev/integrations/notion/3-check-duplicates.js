@@ -1,13 +1,15 @@
 /**
- * @script            3-check-duplicates
- * @category          validator
- * @purpose           tooling:dev-tools
- * @scope             external
- * @owner             docs
- * @needs             node
- * @purpose-statement Analyzes the exported Notion snapshot for duplicate page keys and writes JSON and Markdown reports.
- * @pipeline          manual
- * @usage             node tools/dev/integrations/notion/3-check-duplicates.js [flags]
+ * @script      3-check-duplicates
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Analyzes the exported Notion snapshot for duplicate page keys and writes JSON and Markdown reports.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       external
+ * @usage       node tools/dev/integrations/notion/3-check-duplicates.js [flags]
+ * @policy      node
  */
 
 const fs = require("fs");

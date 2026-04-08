@@ -10,7 +10,6 @@
  * @pipeline    manual — developer tool
  * @scope       tools/dev/preview
  * @usage       node tools/dev/preview/debug-mint-dev.js [flags]
- * @policy      E-C6, F-C1
  */
 /**
  * Debug script: gather evidence for why "mint dev" hangs at "preparing local preview".

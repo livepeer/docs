@@ -49,12 +49,12 @@ function slugFromFile(file) {
 
 function generatePage(workflow) {
   const slug = slugFromFile(workflow.file);
-  const newName = workflow.new_name || "TBD";
+  const newName = workflow.new_name || workflow.file;
   const pipelineLabel = PIPELINE_LABELS[workflow.pipeline_tag] || workflow.pipeline_tag;
-  const scripts = workflow.scripts.length
+  const scripts = (workflow.scripts || []).length
     ? workflow.scripts.map((s) => `- \`${s}\``).join("\n")
     : "None (inline only)";
-  const bugs = workflow.bugs.length
+  const bugs = (workflow.bugs || []).length
     ? workflow.bugs.map((b) => `- ${b}`).join("\n")
     : "None identified.";
   const flags = workflow.review_flags || "";
@@ -135,11 +135,10 @@ ${flags ? `\n**Review flags:** ${flags}` : ""}
 
 | Field | Value |
 |---|---|
-| **Consolidation** | ${workflow.consolidation_flag === "none" ? "Stays separate" : workflow.consolidation_note || workflow.consolidation_flag} |
-| **Dry-run** | ${workflow.dry_run ? "Yes" : "No"} |
-| **Concurrency** | ${workflow.concurrency ? "Yes" : "No"} |
-| **Error reporting** | ${workflow.error_handling || "none"} |
-| **Auto-commit** | ${workflow.auto_commit ? "Yes" : "No"} |
+| **Permissions** | ${workflow.has_permissions ? "Declared" : "Missing"} |
+| **Concurrency** | ${workflow.has_concurrency ? "Yes" : "No"} |
+| **Auto-commit** | ${workflow.has_auto_commit ? "Yes" : "No"} |
+| **Inline script** | ${workflow.has_inline_script ? "Yes (extraction candidate)" : "No"} |
 `;
 }
 

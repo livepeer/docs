@@ -9,6 +9,9 @@
  * @purpose-statement Mintlify language toggle checker — validates Mintlify version supports language toggle feature
  * @pipeline          manual — not yet in pipeline
  * @usage             node operations/scripts/i18n/test-mintlify-version-language-toggle.js [flags]
+ * @type        validator
+ * @description test mintlify version language toggle
+ * @mode        read-only
  */
 
 const puppeteer = require('puppeteer');

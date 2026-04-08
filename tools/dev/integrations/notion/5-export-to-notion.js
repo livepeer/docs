@@ -1,13 +1,15 @@
 /**
- * @script            5-export-to-notion
- * @category          automation
- * @purpose           tooling:dev-tools
- * @scope             external
- * @owner             docs
- * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID, NOTION_WRITABLE_DATABASE_ID(optional)
- * @purpose-statement Updates existing Notion page grouping fields from the exported docs navigation snapshot.
- * @pipeline          manual
- * @usage             node tools/dev/integrations/notion/5-export-to-notion.js [flags]
+ * @script      5-export-to-notion
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Updates existing Notion page grouping fields from the exported docs navigation snapshot.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       external
+ * @usage       node tools/dev/integrations/notion/5-export-to-notion.js [flags]
+ * @policy      node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID, NOTION_WRITABLE_DATABASE_ID(optional)
  */
 
 require("dotenv").config({ path: require("path").join(__dirname, ".env") });

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      audit-media-assets
- * @type        audit
- * @concern     content
- * @niche       quality
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:repo-health
  * @description Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       operations/scripts, workspace/reports/media-audit
  * @usage       node operations/scripts/audits/content/quality/audit-media-assets.js [flags]
- * @policy      R-R14
  */
 
 const fs = require('fs')

@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pkill -f 'Chromium.*--headless' 2>/dev/null; pkill -f 'chrome.*--headless' 2>/dev/null; pkill -f 'playwright.*BrowserServer' 2>/dev/null; pkill -f 'mintlify.*dev.*--port' 2>/dev/null; pkill -f '@mintlify/cli.*start.*dev' 2>/dev/null; echo '{\"systemMessage\":\"Cleaned up stale headless browsers and Mintlify dev servers.\"}'",
+            "command": "pkill -f 'Chromium.*--headless' 2>/dev/null; pkill -f 'chrome.*--headless' 2>/dev/null; pkill -f 'chrome.*Testing.*puppeteer' 2>/dev/null; pkill -f 'playwright.*BrowserServer' 2>/dev/null; pkill -f 'mintlify.*dev.*--port 3145' 2>/dev/null; pkill -f '@mintlify/cli.*start.*dev.*3145' 2>/dev/null; pkill -f 'claude-session-continuity-mcp' 2>/dev/null; pkill -f 'thedotmack.*mcp-server' 2>/dev/null; echo '{\"systemMessage\":\"Cleaned up stale browsers, agent dev servers (port 3145 only), and MCP zombies.\"}'",
             "statusMessage": "Cleaning up stale processes..."
           }
         ]
@@ -68,6 +68,15 @@
       }
     ],
     "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ORPHAN_CHROME=$(pgrep -f 'chrome.*Testing.*puppeteer_dev_chrome' 2>/dev/null | wc -l | tr -d ' '); if [ \"$ORPHAN_CHROME\" -gt 15 ]; then pkill -f 'chrome.*Testing.*puppeteer_dev_chrome' 2>/dev/null && echo '{\"systemMessage\":\"WARNING: Killed '\"$ORPHAN_CHROME\"' orphan Puppeteer Chrome processes.\"}'; else echo '{\"systemMessage\":\"\"}'; fi",
+            "statusMessage": "Checking for orphan processes..."
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -174,6 +183,16 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node operations/scripts/dispatch/governance/mdx-frontmatter-sanitise.js",
+            "statusMessage": "Checking frontmatter integrity..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
             "command": "node operations/scripts/dispatch/governance/mdx-render-verify.js",
             "statusMessage": "Verifying MDX render..."
           }
@@ -258,6 +277,17 @@
             "type": "command",
             "command": "node operations/scripts/dispatch/governance/post-tool-verify.js",
             "statusMessage": "Tracking consecutive failures..."
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pkill -f 'chrome.*Testing.*puppeteer' 2>/dev/null; pkill -f 'chrome.*--headless' 2>/dev/null; SWEEP_PIDS=$(pgrep -f 'sweep-console-errors' 2>/dev/null); [ -n \"$SWEEP_PIDS\" ] && kill $SWEEP_PIDS 2>/dev/null; echo '{\"systemMessage\":\"Session cleanup complete.\"}'",
+            "statusMessage": "Cleaning up session processes..."
           }
         ]
       }

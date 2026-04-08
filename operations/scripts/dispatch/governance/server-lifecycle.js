@@ -1,18 +1,14 @@
 /**
- * @script server-lifecycle
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Ensures Mintlify dev server is running for render verification
+ * @script      server-lifecycle
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Ensures Mintlify dev server is running for render verification
  * @description SessionStart hook + CLI tool. Auto-starts the Mintlify dev server via
- *   server-manager so that all subsequent render verification hooks have a live server.
- *   CLI usage: health (check status), restart [scope] (restart with optional scope).
- *   Scoped restarts use lpd dev --scoped for fast cold starts (<2 min).
- * @mode execute
- * @pipeline SessionStart hook → ensure server → write state | CLI → health|restart
- * @scope .claude/settings.json SessionStart hook + direct CLI invocation
- * @usage node server-lifecycle.js [health|restart [scope-prefix]]
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    SessionStart hook → ensure server → write state | CLI → health|restart
+ * @scope       .claude/settings.json SessionStart hook + direct CLI invocation
+ * @usage       node server-lifecycle.js [health|restart [scope-prefix]]
  */
 
 const fs = require('fs');
@@ -32,7 +28,44 @@ function getRepoRoot() {
 
 const REPO_ROOT = getRepoRoot();
 const SERVER_MANAGER_PATH = path.join(REPO_ROOT, '.githooks', 'server-manager.js');
-const PROBE_PATH = '/v2/home/mission-control';
+const DEFAULT_PROBE_PATH = '/v2/home/mission-control';
+
+/**
+ * Derive a probe path that exists within the given scope prefix.
+ * When the server is scoped (e.g. v2/delegators), the default probe path
+ * (/v2/home/mission-control) won't be served, so the health check fails.
+ * This reads docs.json and picks the first route matching the scope.
+ */
+function getProbePathForScope(scopePrefix) {
+  if (!scopePrefix) return DEFAULT_PROBE_PATH;
+  try {
+    const docsJson = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'docs.json'), 'utf8'));
+    const v2 = docsJson.navigation?.versions?.find((v) => v.version === 'v2');
+    if (!v2) return DEFAULT_PROBE_PATH;
+
+    function extractPages(nav, pages = []) {
+      if (Array.isArray(nav)) nav.forEach((i) => extractPages(i, pages));
+      else if (typeof nav === 'object' && nav !== null) {
+        if (Array.isArray(nav.pages)) nav.pages.forEach((pg) => {
+          if (typeof pg === 'string' && pg.trim()) pages.push(pg);
+          else if (typeof pg === 'object' && pg.pages) extractPages(pg.pages, pages);
+        });
+        Object.values(nav).forEach((val) => {
+          if (typeof val === 'object' && val !== null) extractPages(val, pages);
+        });
+      }
+      return pages;
+    }
+
+    const allPages = [...new Set(extractPages(v2))];
+    const match = allPages.find((p) => p.startsWith(scopePrefix));
+    if (match) {
+      const clean = match.replace(/\.mdx?$/, '');
+      return clean.startsWith('/') ? clean : `/${clean}`;
+    }
+  } catch (_) { /* fall through to default */ }
+  return DEFAULT_PROBE_PATH;
+}
 
 function getSessionId() {
   return process.env.CLAUDE_SESSION_ID || 'default';
@@ -88,7 +121,7 @@ async function main() {
   }
 
   try {
-    const alreadyRunning = await serverManager.isServerRunning({ probePath: PROBE_PATH });
+    const alreadyRunning = await serverManager.isServerRunning({ probePath: DEFAULT_PROBE_PATH });
 
     if (alreadyRunning) {
       const url = serverManager.getServerUrl();
@@ -146,7 +179,7 @@ async function healthCheck() {
   let running = false;
   let url = null;
   if (serverManager) {
-    running = await serverManager.isServerRunning({ probePath: PROBE_PATH });
+    running = await serverManager.isServerRunning({ probePath: DEFAULT_PROBE_PATH });
     if (running) url = serverManager.getServerUrl();
   }
 
@@ -212,10 +245,12 @@ async function restartServer() {
   try { fs.unlinkSync(PID_FILE); } catch (_) { /* already gone */ }
 
   // Start fresh — only use port 3145
+    const probePath = getProbePathForScope(scopeArg);
+    console.log(`Probe path: ${probePath}`);
   const label = scopeArg ? `scoped (${scopeArg})` : 'full (slow)';
   console.log(`Starting ${label} server on port 3145...`);
   try {
-    await serverManager.ensureServerRunning({ probePath: PROBE_PATH, allowCommonPorts: false });
+    await serverManager.ensureServerRunning({ probePath, allowCommonPorts: false });
     const url = serverManager.getServerUrl();
     writeServerState({
       running: true,

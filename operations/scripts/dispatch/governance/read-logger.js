@@ -1,17 +1,14 @@
 /**
- * @script read-logger
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Tracks which files Claude reads per session for context-gate enforcement
+ * @script      read-logger
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Tracks which files Claude reads per session for context-gate enforcement
  * @description PostToolUse hook on Read. Logs file paths to a session-scoped temp file.
- *   The pre-tool-guard checks this log before allowing Edit/Write to warn when Claude
- *   has not read the target file or broader context.
- * @mode write (temp file only)
- * @pipeline PostToolUse hook (Read) → reads stdin → appends file path to /tmp/claude-reads-{session}
- * @scope .claude/settings.json PostToolUse hook (Read matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook (Read) → reads stdin → appends file path to /tmp/claude-reads-{session}
+ * @scope       .claude/settings.json PostToolUse hook (Read matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

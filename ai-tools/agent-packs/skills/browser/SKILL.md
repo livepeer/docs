@@ -31,11 +31,11 @@ invoke_when:
 primary_paths:
   - "ai-tools/ai-skills/browser/SKILL.md"
   - ".githooks/server-manager.js"
-  - "operations/scripts/automations/governance/cleanup-local-dev-sessions.js"
+  - "operations/scripts/integrators/governance/cleanup-local-dev-sessions.js"
   - "operations/tests/contracts-validator-contract.js"
 primary_commands:
   - "read ai-tools/ai-skills/browser/SKILL.md"
-  - "node operations/scripts/automations/governance/cleanup-local-dev-sessions.js --json"
+  - "node operations/scripts/integrators/governance/cleanup-local-dev-sessions.js --json"
 ---
 
 SKILL: Browser

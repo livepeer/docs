@@ -47,7 +47,7 @@ flowchart TD
 
 1. Trigger: the main workflow runs daily at `02:00 UTC`, supports manual dispatch with `dry_run`, `skip_verify`, and `use_test_branch`, and can also be triggered by repository dispatch events from `livepeer/protocol`, `livepeer/arbitrum-lpt-bridge`, `livepeer/go-livepeer`, and `livepeer/governor-scripts`.
 2. Entrypoint: `.github/scripts/fetch-contract-addresses.js` is a thin CLI wrapper that runs `runContractsPipeline()` and enforces the `--dry-run` versus `--check` contract.
-3. Source loading: the pipeline loads the proof catalog from `operations/scripts/automations/content/data/contracts/spec.js`, fetches the governor addresses manifest, loads the previous successful contracts payload, and loads the previous branch-watch snapshot.
+3. Source loading: the pipeline loads the proof catalog from `operations/scripts/integrators/content/data/contracts/spec.js`, fetches the governor addresses manifest, loads the previous successful contracts payload, and loads the previous branch-watch snapshot.
 4. Repo and provenance checks: it fetches branch inventory for the four watched repos, diffs that state against the previous successful run, and carries any blocking branch anomalies into validation.
 5. Resolution and verification: it resolves every catalog deployment, verifies bytecode on Arbitrum One and Ethereum Mainnet, enriches metadata and proxy/controller state, builds implementation rows, and rebuilds Arbitrum historical seed entries from controller `SetContractInfo` logs.
 6. Output build: it assembles per-chain payloads, root historical data, blockchain-page companion data, and one canonical repo dataset at `snippets/data/contract-addresses/contractAddressesData.jsx`.

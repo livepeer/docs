@@ -1,0 +1,109 @@
+---
+title: Frontmatter Specification
+sidebarTitle: Frontmatter
+description: >-
+  Required and optional frontmatter fields for MDX pages, governance documents,
+  and framework files in the Livepeer docs repo.
+keywords:
+  - frontmatter
+  - metadata
+  - YAML
+  - page metadata
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+---
+
+# Frontmatter Specification
+
+Required and optional frontmatter fields for all document types.
+
+---
+
+## v2/ Content Pages (MDX)
+
+### Required
+
+```yaml
+title: Page Title
+sidebarTitle: Short Title
+description: >-
+  One to two sentences describing the page content.
+keywords:
+  - keyword1
+  - keyword2
+```
+
+### Optional (content pipeline)
+
+```yaml
+pageType: concept | tutorial | guide | instruction | navigation | reference | resource
+pageVariant: overview | specification | compendium | changelog | knowledge-hub
+audience: [gateway, orchestrator, developer, builder, delegator, community, founder]
+purpose: orient | explain | learn | choose | evaluate | start | build | configure | operate | troubleshoot | verify | integrate | optimise | reference | update
+veracityStatus: verified | unverified | stale
+complexity: beginner | intermediate | advanced
+lifecycleStage: discover | evaluate | setup | build | operate | troubleshoot | optimise
+```
+
+### OG images
+
+```yaml
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+```
+
+---
+
+## Governance Documents (docs-guide/)
+
+### Required
+
+```yaml
+title: Document Title
+sidebarTitle: Short Title
+description: >-
+  Description of what this document governs.
+keywords:
+  - keyword list
+consumer: [human, agent, automation]
+maintenance: generated | hand-maintained | mixed
+status: active | draft | deprecated | locked
+lastVerified: YYYY-MM-DD
+```
+
+### Conditional
+
+```yaml
+generator: path/to/script.js       # if maintenance = generated or mixed
+validator: path/to/script.js       # if maintenance = hand-maintained or mixed
+sourceDoc: path/to/source.md       # if this is a promoted/published version of a working doc
+```
+
+---
+
+## Component JSDoc (JSX)
+
+7 required tags: `@component`, `@type`, `@subniche`, `@status`, `@description`, `@accepts`, `@dataSource` (if integrator).
+
+See: [Component Framework](/docs-guide/frameworks/component-framework-canonical)
+
+---
+
+## Script JSDoc (JS)
+
+11 required tags in strict order: `@script`, `@type`, `@concern`, `@niche`, `@purpose`, `@description`, `@mode`, `@pipeline`, `@scope`, `@usage`, `@policy`.
+
+See: [Script Framework](/docs-guide/frameworks/script-framework)
+
+---
+
+## YAML Safety
+
+- Always quote hex values (`'0x...'`) to prevent YAML number coercion
+- Always quote values that could be parsed as booleans (`'true'`, `'false'`, `'yes'`, `'no'`)
+- Use `>-` for multi-line description strings (folded scalar, strip trailing newline)

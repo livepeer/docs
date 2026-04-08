@@ -1,41 +1,134 @@
 ---
-title: Resource Portal
+mode: frame
+title: Resource HUB
 sidebarTitle: Resource Portal
-description: Livepeer Resource Compendium
+description: 'Welcome To The Resource HUB: Documentation, References, Changelogs'
+pageType: navigation
+audience: everyone
+purpose: orient
+status: current
+lastVerified: '2026-04-07'
 keywords:
-  - home
-  - index
-  - landing
-  - help
-  - support
-  - contact
-  - faq
   - resource
   - resources
+  - resource hub
+  - resource portal
+  - documentation
+  - documentation guide
+  - glossary
+  - changelog
+  - changelogs
+  - help center
   - reference
   - references
   - compendium
-  - livepeer resource
   - livepeer resources
-  - livepeer reference
-  - livepeer references
-  - livepeer compendium
-  - livepeer resource portal
-  - livepeer resources portal
-  - livepeer reference portal
-  - livepeer references portal
-  - livepeer compendium portal
+  - livepeer documentation
+  - livepeer glossary
+  - livepeer changelog
+  - livepeer help
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-pageType: landing
-audience: everyone
-lastVerified: 2026-03-17
-purpose: landing
+tag: Start Here
 ---
+import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/scaffolding/portals/Portals.jsx'
+import { H1, H2, H5, P } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BlinkingIcon } from '/snippets/components/elements/links/Links.jsx'
+import { Starfield } from "/snippets/components/scaffolding/heroes/HeroGif.jsx";
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
 
+<HeroSectionContainer>
 
-## Resources Portal
-All resources and references in one place!
+  <HeroImageBackgroundComponent>
+    <Starfield />
+  </HeroImageBackgroundComponent>
+
+  <HeroContentContainer>
+    <LogoHeroContainer imgHeight="20px" />
+
+    <PortalHeroContent
+      title="Resource HUB"
+      subtitle="Reference - Learn - Contribute"
+      refCardLink={
+        <Card
+          title="livepeer/docs"
+          href="https://github.com/livepeer/docs"
+          icon="github"
+          arrow
+          horizontal
+        />
+      }
+      overview={
+        <>
+          The Resource HUB is the central reference layer for the Livepeer documentation site.
+          It houses the documentation guide, glossary, technical references, changelogs for every Livepeer repository, and the help centre.
+          <br />
+          <br />
+          Start with the documentation guide if you want to contribute. Use the glossary and technical references for terminology and contract addresses. Track releases across the ecosystem in the changelogs.
+        </>
+      }
+    />
+
+  </HeroContentContainer>
+</HeroSectionContainer>
+
+<PortalContentContainer>
+  <PortalCardsHeader title="Resource HUB Portal">
+    <BlinkingIcon icon="circle-play" size={20} />
+  </PortalCardsHeader>
+
+  <Columns cols={2}>
+    <Card
+      title={<CustomCardTitle icon="book-open" title="Documentation Guide" />}
+      href="/v2/resources/documentation-guide/documentation-overview"
+      arrow
+    >
+      How this documentation site works: architecture, conventions, authoring standards, and contribution workflows.
+      <LinkArrow href="/v2/resources/documentation-guide/documentation-overview" label="Overview" />
+    </Card>
+    <Card
+      title={<CustomCardTitle icon="pen-nib" title="Contribute to the Docs" />}
+      href="/v2/resources/documentation-guide/contributing/contribute-to-the-docs"
+      arrow
+    >
+      Everything you need to submit, review, and publish documentation changes to the Livepeer docs.
+      <LinkArrow href="docs-guide/contributing/contributing" label="Contributing Guide" />
+    </Card>
+    <Card
+      title={<CustomCardTitle icon="book" title="Glossary" />}
+      href="/v2/resources/glossary"
+      arrow
+    >
+      Canonical definitions for every term used across the Livepeer protocol, network, and documentation.
+      <LinkArrow href="/v2/resources/resource-hub-terms" label="Resource HUB Terms" />
+    </Card>
+    <Card
+      title={<CustomCardTitle icon="code" title="Technical References" />}
+      href="/v2/about/resources/reference/livepeer-contract-addresses"
+      arrow
+    >
+      Contract addresses, protocol parameters, and on-chain reference data for Livepeer on Arbitrum.
+    </Card>
+    <Card
+      title={<CustomCardTitle icon="swap" title="Changelogs" />}
+      href="/v2/resources/changelog/changelog"
+      arrow
+    >
+      Release history and change tracking across go-livepeer, AI Runner, SDKs, Explorer, and the broader ecosystem.
+    </Card>
+    <Card
+      title={<CustomCardTitle icon="comments-question-check" title="Help Centre" />}
+      href="/v2/resources/help-center"
+      arrow
+    >
+      Common questions, troubleshooting, and support channels for Livepeer documentation and the network.
+    </Card>
+  </Columns>
+
+  <br />
+</PortalContentContainer>

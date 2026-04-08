@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      docs-fact-registry
- * @type        validator
- * @concern     content
- * @niche       veracity
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @mode        read-only
  * @pipeline    manual — experimental research system
  * @scope       operations/scripts, workspace/research/claims operations/tests/unit/docs-fact-registry.test.js
  * @usage       node operations/scripts/audits/content/veracity/docs-fact-registry.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

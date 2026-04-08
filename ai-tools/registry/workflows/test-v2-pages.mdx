@@ -60,7 +60,7 @@ Govern the `.github/workflows/test-v2-pages.yml` workflow as a human-readable, v
 - `Install Mintlify globally` | runs `npm install -g mintlify`
 - `Install dependencies` | runs `cd tools && npm install`
 - `Install jq (for JSON parsing)` | runs `sudo apt-get update && sudo apt-get install -y jq`
-- `Fetch external snippets` | runs `bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`
+- `Fetch external snippets` | runs `bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh`
 - `Start Mintlify dev server` | runs `npx mintlify dev > /tmp/mint-dev.log 2>&1 &`
 - `Wait for server to be ready` | runs `echo "Waiting for mint dev server to start..."`
 - `Run V2 pages test` | runs `cd tools && npm run test:v2-pages`
@@ -94,7 +94,7 @@ Govern the `.github/workflows/test-v2-pages.yml` workflow as a human-readable, v
 - action:actions/github-script@v7
 - action:actions/setup-node@v4
 - action:actions/upload-artifact@v4
-- operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
+- operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
 - tools/v2-page-test-report.json
 
 ## Dependants

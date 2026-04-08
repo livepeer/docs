@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-docs-guide-pages-index
- * @type        generator
- * @concern     governance
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Generates the docs-guide pages catalog
- * @mode        generate
+ * @mode        read-only
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
  * @scope       operations/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
  * @usage       node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]
- * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

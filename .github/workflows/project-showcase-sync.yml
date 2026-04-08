@@ -1,8 +1,12 @@
+# type: integrator
+# concern: copy
+# pipeline: P5-auto
+
 name: Project Showcase Sync
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
+  # schedule: # DISABLED - not working
+  #   - cron: "0 */4 * * *" # DISABLED
   workflow_dispatch:
     inputs:
       mode:
@@ -60,4 +64,4 @@ jobs:
           DISCORD_API_BASE_URL: ${{ vars.SHOWCASE_DISCORD_API_BASE_URL }}
 
           MAX_ROWS_PER_RUN: ${{ vars.SHOWCASE_MAX_ROWS_PER_RUN }}
-        run: node .github/scripts/project-showcase-sync.js
+        run: node operations/scripts/integrators/copy/showcase/project-showcase-sync.js

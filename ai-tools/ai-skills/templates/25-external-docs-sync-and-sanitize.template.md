@@ -9,12 +9,12 @@ metadata:
   category: "governance"
   tier: "2"
 primary_paths:
-  - "operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
+  - "operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh"
   - "snippets/composables/pages/shared"
   - "operations/scripts/snippets/paths.config.json"
   - "v2/resources/documentation-guide/docs-features-and-ai-integrations.mdx"
 primary_commands:
-  - "bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
+  - "bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh"
   - "rg --files snippets/composables/pages/shared"
 ---
 
@@ -36,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh
+bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
 rg --files snippets/composables/pages/shared
 ```
 

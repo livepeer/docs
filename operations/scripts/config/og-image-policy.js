@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      og-image-policy
- * @type        generator
- * @concern     governance
- * @niche       config
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     seo:og-image-governance
  * @description OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual — library module imported by generators and validators
  * @scope       operations/scripts, snippets/assets/media/og-images, docs.json
  * @usage       node operations/scripts/config/og-image-policy.js [flags]
- * @policy      E-R1, R-R14
  */
 
 const fs = require("fs");

@@ -80,7 +80,7 @@ const GENERATED_AFFECTING_PREFIXES = [
   'operations/scripts/generate-docs-guide-',
   'operations/scripts/generators/content/catalogs/generate-pages-index.js',
   'operations/scripts/validators/content/structure/enforce-generated-file-banners.js',
-  'operations/scripts/automations/content/language-translation/lib/',
+  'operations/scripts/integrators/content/language-translation/lib/',
   'tools/lib/governance/generated-file-banners.js'
 ];
 const GENERATED_AFFECTING_EXACT = new Set([
@@ -286,7 +286,7 @@ function partitionFiles(changedFiles) {
   const portableSkillFiles = existingChangedFiles.filter((file) =>
     file.startsWith('ai-tools/ai-skills/templates/') ||
     file.startsWith('ai-tools/agent-packs/skills/') ||
-    file === 'operations/scripts/automations/ai/agents/export-portable-skills.js' ||
+    file === 'operations/scripts/integrators/ai/agents/export-portable-skills.js' ||
     file === 'tools/lib/ai/codex-skill-templates.js' ||
     file === 'operations/tests/unit/export-portable-skills.test.js' ||
     file === 'operations/tests/unit/codex-skill-sync.test.js'
@@ -1126,8 +1126,8 @@ function runGeneratedBannerCheck(changedFiles) {
 
 function runCodexSkillSyncCheck() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-skill-sync-check-'));
-  const syncArgs = ['operations/scripts/automations/ai/agents/sync-codex-skills.js', '--dest', tmpDir];
-  const checkArgs = ['operations/scripts/automations/ai/agents/sync-codex-skills.js', '--dest', tmpDir, '--check'];
+  const syncArgs = ['operations/scripts/integrators/ai/agents/sync-codex-skills.js', '--dest', tmpDir];
+  const checkArgs = ['operations/scripts/integrators/ai/agents/sync-codex-skills.js', '--dest', tmpDir, '--check'];
 
   const syncCmd = spawnSync('node', syncArgs, {
     cwd: REPO_ROOT,

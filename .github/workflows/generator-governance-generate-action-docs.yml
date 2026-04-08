@@ -1,0 +1,142 @@
+# type: generator
+# concern: governance
+# pipeline: P4
+# generator-governance-generate-action-docs.yml
+# P4: Regenerates the actions-library documentation when workflows change.
+# Self-documenting pipeline: scan workflows → update audit JSON → regenerate pages + catalog
+# Decision: D-ACT-08 (workflows are dispatchers, this documents them)
+name: Generate Action Documentation
+
+on:
+  push:
+    branches:
+      - docs-v2
+    paths:
+      - '.github/workflows/**'
+      - '.github/workspace/actions-library/generate-action-pages.js'
+      - '.github/workspace/actions-library/action-template.mdx'
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Show changes without writing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  generate-action-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Scan workflows and regenerate audit JSON
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const yaml = require('js-yaml');
+          const WORKFLOWS_DIR = '.github/workflows';
+          const OUTPUT = '.github/workspace/actions-library/actions-audit.json';
+          const files = fs.readdirSync(WORKFLOWS_DIR).filter(f => f.endsWith('.yml')).filter(f => !fs.statSync(path.join(WORKFLOWS_DIR, f)).isDirectory()).sort();
+          const workflows = [];
+          for (const file of files) {
+            const content = fs.readFileSync(path.join(WORKFLOWS_DIR, file), 'utf8');
+            let parsed;
+            try { parsed = yaml.load(content); } catch (e) { continue; }
+            const parts = file.replace('.yml', '').split('-');
+            const type = parts[0] || 'unknown';
+            const concern = parts[1] || 'unknown';
+            const triggers = [];
+            const on = parsed.on || {};
+            if (on.pull_request) triggers.push('pull_request');
+            if (on.push) triggers.push('push');
+            if (on.schedule) triggers.push('schedule');
+            if (on.workflow_dispatch !== undefined) triggers.push('workflow_dispatch');
+            if (on.repository_dispatch) triggers.push('repository_dispatch');
+            if (on.workflow_call !== undefined) triggers.push('workflow_call');
+            if (on.issues) triggers.push('issues');
+            const scripts = [];
+            const scriptMatches = content.match(/node\s+[\w./\-]+\.js/g) || [];
+            for (const m of scriptMatches) { const sp = m.replace('node ', '').trim(); if (!scripts.includes(sp)) scripts.push(sp); }
+            const hasInlineScript = (content.match(/script: \|/g) || []).length > 0;
+            const hasPermissions = content.includes('permissions:');
+            const hasConcurrency = content.includes('concurrency:');
+            const hasAutoCommit = content.includes('git commit') || content.includes('create-pull-request');
+            let pipelineTag = 'unknown';
+            if (type === 'validator' && triggers.includes('pull_request')) pipelineTag = 'P3';
+            if (type === 'generator' && triggers.includes('push')) pipelineTag = 'P4';
+            if (type === 'audit' && triggers.includes('schedule')) pipelineTag = 'P5';
+            if (type === 'integrator' && triggers.includes('schedule')) pipelineTag = 'P5-auto';
+            if (type === 'remediator') pipelineTag = triggers.includes('schedule') ? 'P6' : 'manual';
+            if (type === 'interface') pipelineTag = 'event-driven';
+            if (type === 'dispatch') pipelineTag = triggers.includes('workflow_call') ? 'reusable' : 'P4';
+            workflows.push({ file, name: parsed.name || file, type, concern, pipeline_tag: pipelineTag, triggers, scripts, has_inline_script: hasInlineScript, has_permissions: hasPermissions, has_concurrency: hasConcurrency, has_auto_commit: hasAutoCommit, status: file.startsWith('project-') ? 'disabled' : 'active' });
+          }
+          const audit = { meta: { generated: new Date().toISOString().split('T')[0], generator: 'generator-governance-generate-action-docs', workflow_count: workflows.length, decisions: 'D-ACT-01 through D-ACT-10' }, workflows };
+          fs.writeFileSync(OUTPUT, JSON.stringify(audit, null, 2));
+          console.log('Audit: ' + workflows.length + ' workflows');
+          "
+
+      - name: Generate action pages
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then FLAGS="--dry-run"; fi
+          node .github/workspace/actions-library/generate-action-pages.js $FLAGS
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard .github/workspace/actions-library/)" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changed files:"
+            git diff --name-only
+            git ls-files --others --exclude-standard .github/workspace/actions-library/
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/workspace/actions-library/
+          git commit -m "chore(governance): regenerate action documentation [skip ci]"
+          git push
+
+      - name: Step summary
+        if: always()
+        run: |
+          echo "## Action Documentation Generation" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ steps.changes.outputs.changed }}" == "true" ]]; then
+            echo "Pages regenerated and committed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No changes detected. Pages are up to date." >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            echo "*(dry-run mode, no files written)*" >> $GITHUB_STEP_SUMMARY
+          fi

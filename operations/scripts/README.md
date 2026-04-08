@@ -12,17 +12,25 @@ scripts/
   validators/      Enforce rules, pass/fail gate
   remediators/     Bulk fix/repair
   dispatch/        Dispatch work to agents, pipeline chaining
-  automations/     Automated pipelines (translation, data fetching, transforms)
+  automations/     Legacy name (being renamed to integrators per D-ACT-07)
+  integrators/     Pulls external data into the repo (D-ACT-07)
+  interfaces/      Reacts to issue/PR/external events (D-ACT-01)
   config/          Shared configuration and policy files
   x-archive/       Superseded scripts (git mv, never deleted)
 ```
 
-Each type folder contains four homogeneous concern folders:
+Each type folder contains concern folders. The concern set expanded from 4 to 7 per D-ACT-05:
 
-- `content/` — docs pages, copy, SEO, quality, veracity
-- `components/` — component library, registry, CSS, naming
-- `governance/` — scripts about scripts, repo structure, catalogs
-- `ai/` — LLM files, agent packaging, codex lifecycle
+- `copy/` — written text, data standards, spelling, grammar
+- `health/` — site integrity, links, rendering, freshness
+- `maintenance/` — indexes, catalogs, registries, changelogs
+- `discoverability/` — SEO, AEO, AI indexing, translation
+- `governance/` — system rules, compliance, issue/PR management
+- `brand/` — style, formatting, page structure, voice
+- `integrations/` — external data feeds, APIs
+- `content/` — legacy (splitting into above per D-ACT-05)
+- `components/` — legacy (absorbed into maintenance)
+- `ai/` — legacy (absorbed into discoverability + governance)
 
 Concern folders have niche sub-folders where volume warrants it.
 

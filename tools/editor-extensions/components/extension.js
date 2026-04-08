@@ -1,3 +1,16 @@
+/**
+ * @script            extension
+ * @type              interface
+ * @concern           integrations
+ * @niche             editor-tooling
+ * @purpose           VS Code extension for component quick-pick insertion from the governed component registry
+ * @description       Provides a categorised quick-pick palette to browse, preview, and insert Livepeer MDX components with correct import lines and snippet scaffolding.
+ * @mode              interface
+ * @scope             tools/editor-extensions/components/
+ * @usage             Activate via VS Code command palette: Livepeer: Insert Component
+ * @policy            component-framework-canonical
+ */
+
 'use strict';
 
 const vscode = require('vscode');

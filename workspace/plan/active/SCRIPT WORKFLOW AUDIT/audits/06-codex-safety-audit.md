@@ -34,10 +34,10 @@ This is a **safety-critical concern** — failures here allow unsupervised AI wr
 
 | Script | Path | @pipeline | Mode | Purpose |
 |--------|------|-----------|------|---------|
-| `task-preflight.js` | `operations/scripts/automations/ai/codex/` | manual | execute | Generates `.codex/task-contract.yaml` and lock files; creates codex branch |
-| `lock-release.js` | `operations/scripts/automations/ai/codex/` | manual | execute | Releases stale codex lock files |
-| `task-cleanup.js` | `operations/scripts/automations/ai/codex/` | manual | execute | Reports and prunes merged worktrees + stale local codex branches |
-| `sync-codex-skills.js` | `operations/scripts/automations/ai/agents/` | manual | execute | Synchronises Codex skill templates and companion resources |
+| `task-preflight.js` | `operations/scripts/integrators/ai/codex/` | manual | execute | Generates `.codex/task-contract.yaml` and lock files; creates codex branch |
+| `lock-release.js` | `operations/scripts/integrators/ai/codex/` | manual | execute | Releases stale codex lock files |
+| `task-cleanup.js` | `operations/scripts/integrators/ai/codex/` | manual | execute | Reports and prunes merged worktrees + stale local codex branches |
+| `sync-codex-skills.js` | `operations/scripts/integrators/ai/agents/` | manual | execute | Synchronises Codex skill templates and companion resources |
 
 ### Dispatch Scripts (4)
 
@@ -370,7 +370,7 @@ flowchart TB
 
 ### GAP-CX3: `sync-codex-skills.js` has no CI check mode
 
-- **Script**: `operations/scripts/automations/ai/agents/sync-codex-skills.js`
+- **Script**: `operations/scripts/integrators/ai/agents/sync-codex-skills.js`
 - **@pipeline tag says**: `manual — not yet in pipeline`
 - **Reality**: Supports `--check` mode but no workflow runs it
 - **Impact**: Codex skill definitions can drift from canonical templates without detection
@@ -484,7 +484,7 @@ Add to `check-docs-guide-catalogs.yml` or `test-suite.yml` as a soft gate:
 
 ```yaml
 - name: Verify codex skill sync
-  run: node operations/scripts/automations/ai/agents/sync-codex-skills.js --check
+  run: node operations/scripts/integrators/ai/agents/sync-codex-skills.js --check
   continue-on-error: true
 ```
 

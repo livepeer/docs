@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-root-governance-artifacts
- * @category          generator
- * @type              generator
- * @purpose           governance:root-management
- * @scope             operations/scripts, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops, .allowlist
- * @owner             docs
- * @needs             R-R14, R-R16, R-R17
- * @purpose-statement Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
- * @pipeline          manual, P3
- * @usage             node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js [--write|--check]
+ * @script      generate-root-governance-artifacts
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:root-management
+ * @description Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
+ * @mode        read-only
+ * @pipeline    manual, P3
+ * @scope       operations/scripts, operations/governance/config, tools/config/runtime, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops, .allowlist
+ * @usage       node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js [--write|--check]
+ * @policy      R-R14, R-R16, R-R17
  */
 
 const fs = require('fs');

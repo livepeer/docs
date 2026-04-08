@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      generate-docs-index
- * @type        generator
- * @concern     content
- * @niche       catalogs
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:index-management
  * @description Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
- * @mode        generate
+ * @mode        read-only
  * @pipeline    manual, P3, P6
  * @scope       operations/scripts, tools/lib, v2, docs.json, root
  * @usage       node operations/scripts/generators/content/catalogs/generate-docs-index.js [flags]
- * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

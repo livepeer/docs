@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      docs-research-adjudication
- * @type        audit
- * @concern     content
- * @niche       veracity
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @mode        read-only
  * @pipeline    manual — experimental research system
  * @scope       operations/scripts, workspace/research operations/tests/unit/docs-research-adjudication.test.js, workspace/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
  * @usage       node operations/scripts/audits/content/veracity/docs-research-adjudication.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

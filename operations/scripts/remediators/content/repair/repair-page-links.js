@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 /**
  * @script      repair-page-links
- * @category    remediator
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:link-integrity
- * @description Deterministic page-link remediator — rewrites safe relative internal page href literals to canonical root-level routes and reports unresolved targets.
- * @mode        edit
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.
+ * @description Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.
+ * @mode        read-only
  * @pipeline    manual
  * @scope       v2 publishable docs pages, operations/reports/health/page-links
  * @usage       node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files v2/about --report-dir operations/reports/health/page-links

@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      repo-audit-orchestrator
- * @type        dispatch
- * @concern     governance
- * @niche       repo
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     infrastructure:pipeline-orchestration
  * @description Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.
  * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts, ai-tools/ai-skills/catalog, workspace/reports/repo-ops
  * @usage       node operations/scripts/audits/governance/repo/repo-audit-orchestrator.js [flags]
- * @policy      R-R29
  */
 
 const fs = require('fs');

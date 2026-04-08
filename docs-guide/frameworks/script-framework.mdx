@@ -1,0 +1,173 @@
+---
+title: Script Framework Specification
+sidebarTitle: Script Framework
+description: >-
+  Canonical reference for the Livepeer Docs script library. Three-tier taxonomy,
+  standardised JSDoc headers, enforcement tiers, and classification rules for
+  ~120 operational scripts in operations/scripts/.
+keywords:
+  - script governance
+  - script taxonomy
+  - JSDoc standard
+  - operations scripts
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+sourceDoc: workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md
+---
+
+# Script Framework Specification
+
+Canonical reference for the Livepeer Docs script library. Each section is marked **ENFORCED** (violations block commits or fail CI) or **GUIDE** (recommended best practice; not gated).
+
+Full specification (1,368 lines): `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md`
+
+---
+
+## Overview (GUIDE)
+
+The script library lives at `operations/scripts/` and contains ~120 operational scripts. Scripts are organised using a three-tier taxonomy: `<type>/<concern>/<niche>`.
+
+Two non-type folders sit alongside the six type folders:
+
+| Folder | Purpose |
+|---|---|
+| `config/` | Shared configuration, policy files, shared utility libraries |
+| `x-archive/` | All superseded files via `git mv` (no deletions ever) |
+
+### Shared libraries in config/
+
+| Library | Purpose |
+|---|---|
+| `docs-path-sync.js` | Detects staged page moves, plans deterministic route rewrites |
+| `mdx-sanitise.js` | Sanitisation utilities for all scripts that write MDX content |
+
+**Rule:** All scripts that write content consumed by MDX pages MUST import sanitisation functions from `operations/scripts/config/mdx-sanitise.js`.
+
+### Enforcement tiers
+
+| Tier | Gate type | Runs where |
+|---|---|---|
+| **Hard gate** | Blocks commit or merge | Pre-commit hook + required GitHub Actions status check |
+| **Soft gate** | Warns in PR, does not block merge | GitHub Actions check (non-required) |
+| **Self-heal** | No gate, auto-fixes on schedule | Cron workflow with auto-PR |
+
+---
+
+## Taxonomy: Classification Rules (ENFORCED)
+
+Every script path follows: `operations/scripts/<type>/<concern>/<niche>/script-name.js`
+
+### Types (Layer 1)
+
+| Type folder | Purpose | `@type` value |
+|---|---|---|
+| `audits/` | Read-only scan, measure, report. Never modifies source files | `audit` |
+| `generators/` | Produce new files from source-of-truth data | `generator` |
+| `validators/` | Enforce rules with a pass/fail gate (exit 0 or non-zero) | `validator` |
+| `remediators/` | Bulk fix or repair existing files in place | `remediator` |
+| `dispatch/` | Dispatch work to other scripts or agents | `dispatch` |
+| `automations/` | Automated pipelines: translation, data fetching, transforms | `automation` |
+
+**Classification test:** If a script does not spawn other scripts, it is NOT a `dispatch`. If it only scans and reports, it is NOT a `remediator`. If it edits existing files, it is NOT a `generator` (it is a `remediator`).
+
+### Concerns (Layer 2)
+
+Every type folder contains the same four concern sub-folders.
+
+| Concern | What it covers |
+|---|---|
+| `content/` | Docs pages, copy, SEO, veracity, quality, reference, reconciliation |
+| `components/` | Component library, registry, CSS, naming, documentation |
+| `governance/` | Scripts about scripts, repo structure, agent docs, manifests, catalogues |
+| `ai/` | AI-adjacent operations: LLM files, agent packaging, skills sync |
+
+### Decision tree
+
+```
+1. Does the script SPAWN other scripts or coordinate a pipeline?
+   YES -> dispatch/     NO -> continue
+
+2. Does it only READ files and produce reports?
+   YES -> Does it enforce pass/fail (exit 0/1)?
+          YES -> validators/    NO -> audits/
+   NO -> continue
+
+3. Does it CREATE new files from source data?
+   YES -> generators/   NO -> continue
+
+4. Does it MODIFY existing files in place?
+   YES -> remediators/  NO -> continue
+
+5. End-to-end automated workflow?
+   YES -> automations/  NO -> Re-evaluate
+```
+
+For concern: operates on docs/MDX/SEO? `content/`. On components/registry? `components/`. On scripts/repo structure? `governance/`. On LLM/agent packs? `ai/`.
+
+---
+
+## JSDoc Header Standard (ENFORCED)
+
+Every script MUST include a JSDoc header with 11 tags in this order:
+
+| # | Tag | What it does |
+|---|---|---|
+| 1 | `@script` | Filename without extension |
+| 2 | `@type` | `audit`, `generator`, `validator`, `remediator`, `dispatch`, `automation` |
+| 3 | `@concern` | `content`, `components`, `governance`, `ai` |
+| 4 | `@niche` | Specific sub-concern |
+| 5 | `@purpose` | Functional category (freeform namespaced string) |
+| 6 | `@description` | One-line human-readable description |
+| 7 | `@mode` | `read-only`, `write`, `edit`, `generate`, `execute` |
+| 8 | `@pipeline` | Flow declaration: `trigger -> inputs -> outputs [-> dependants]` |
+| 9 | `@scope` | Files/directories it operates on |
+| 10 | `@usage` | CLI invocation example |
+| 11 | `@policy` | Governance/requirement traceability (if applicable) |
+
+### @pipeline examples
+
+```
+@pipeline   pre-commit -> staged .mdx files -> stdout:report
+@pipeline   manual -> docs.json, v2 frontmatter -> docs-index.json -> scripts-catalog
+@pipeline   cron:weekly -> full v2 tree -> governance-repair PR
+```
+
+---
+
+## File Layout Standard (ENFORCED)
+
+Every script follows this structure:
+
+```javascript
+/**
+ * @script   script-name
+ * @type     audit
+ * @concern  content
+ * ... (11 tags)
+ */
+
+// 1. Dependencies
+const fs = require('fs');
+
+// 2. Configuration
+const CONFIG = { ... };
+
+// 3. Core logic (pure functions)
+function analyse(input) { ... }
+
+// 4. I/O wrapper
+function main() { ... }
+
+// 5. Execution
+main();
+```
+
+---
+
+## Canonical sources
+
+- Full specification: `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md`
+- Niche tables by type x concern: see full specification, Section 2
+- Placement rules: [File Placement](/docs-guide/frameworks/file-placement)

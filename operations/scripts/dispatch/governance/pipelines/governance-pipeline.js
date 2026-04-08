@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            repair-governance
- * @category          dispatch
- * @type              dispatch
- * @concern           governance
- * @niche             pipelines
- * @purpose           governance:repo-health
- * @description       Chains audit, safe repair, verification, and reporting into a single self-healing governance pipeline.
- * @mode              execute
- * @domain            docs
- * @needs             R-R14, R-R18, R-C6
- * @purpose-statement Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
- * @pipeline          manual, P6, manual, manual
- * @scope             full-repo
- * @usage             node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]
- * @policy            R-R14, R-R18, R-C6
+ * @script      repair-governance
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:repo-health
+ * @description Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
+ * @mode        read-only
+ * @pipeline    manual, P6, manual, manual
+ * @scope       full-repo
+ * @usage       node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]
+ * @policy      R-R14, R-R18, R-C6
  */
 
 const fs = require('fs');

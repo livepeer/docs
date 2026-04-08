@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      repair-spelling
- * @type        remediator
- * @concern     content
- * @niche       repair
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual
  * @scope       v2-content
  * @usage       node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run
- * @policy      R-R2
  */
 
 const fs = require('fs');
@@ -20,7 +19,7 @@ const { spawnSync } = require('child_process');
 
 const { getMdxFiles, getStagedDocsPageFiles } = require('../../../../../operations/tests/utils/file-walker');
 const { resolveCspellConfig } = require('../../../../../operations/tests/utils/spell-checker');
-const { parseMdx } = require('../../../automations/content/language-translation/lib/mdx-parser');
+const { parseMdx } = require('../../../integrators/content/language-translation/lib/mdx-parser');
 
 const REPO_ROOT = process.cwd();
 const URL_REGEX = /\b(?:https?:\/\/|mailto:)[^\s<`)"']+/gi;

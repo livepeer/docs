@@ -9,7 +9,6 @@
 # @pipeline    manual — developer tool
 # @scope       generated-output
 # @usage       bash tools/dev/preview/mint-custom-loader.sh [flags]
-# @policy      E-C6, F-C1
 # Custom Mintlify loader for alternate docs config
 # Usage: bash tools/dev/preview/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
 

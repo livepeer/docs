@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      repair-script-inventory
- * @type        remediator
- * @concern     governance
- * @niche       scripts
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:script-header-repair
  * @description Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
- * @mode        edit
+ * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts
  * @usage       node operations/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files <path,...>] [--json] [--md] [--output <dir>]
- * @policy      R-R16
  */
 
 const { spawnSync } = require('child_process');

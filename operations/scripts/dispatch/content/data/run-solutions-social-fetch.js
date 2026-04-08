@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      run-solutions-social-fetch
- * @category    dispatch
- * @type        dispatch
- * @concern     content
- * @niche       data
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     infrastructure:data-feeds
- * @description Dispatches all solutions social data fetch scripts in sequence with env from a local .env file.
- * @domain      docs
- * @needs       F-R1
- * @purpose-statement Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
- * @mode        execute
+ * @description Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
+ * @mode        read-only
  * @pipeline    manual → .env + product-social-config.json → .github/scripts/fetch-*.js → snippets/data/social-feed-solutions/{product}/*.jsx
  * @scope       .github/scripts/fetch-*.js, snippets/data/social-feed-solutions/
  * @usage       node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--env path/to/.env] [--skip youtube,discord]
- * @policy      Requires API keys — see docs-guide/repo-ops/secrets/solutions-secrets.mdx
+ * @policy      F-R1
  */
 
 const { execSync } = require("child_process");

@@ -1,20 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      mdx-sanitise
- * @type        config
- * @concern     content
- * @niche       sanitisation
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     infrastructure:shared-lib
  * @description Shared sanitisation utilities for all scripts that write content consumed by MDX pages.
- *              Two main functions: sanitiseForMdx (content written directly to .mdx files) and
- *              escapeForJsx (content written to .jsx string literals). Plus URL validation and
- *              safe HTML tag stripping. Replaces 6 divergent inline escapeForJSX copies and the
- *              inline cleanForMdx in generate-changelog.js.
  * @mode        read-only
  * @pipeline    external content -> sanitise -> safe MDX/JSX output
  * @scope       operations/scripts/config/, .github/scripts/
  * @usage       const { sanitiseForMdx, escapeForJsx } = require('../../operations/scripts/config/mdx-sanitise')
- * @policy      No external dependencies. Node.js built-ins only. UK English.
  */
 
 "use strict";

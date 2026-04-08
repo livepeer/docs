@@ -59,7 +59,7 @@ function createFixtureRepo() {
     { executable: true }
   );
   writeFile(
-    path.join(repoRoot, 'operations/scripts/automations/content/data/fetching/fetch-external-docs.sh'),
+    path.join(repoRoot, 'operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh'),
     '#!/usr/bin/env bash\necho "Skipping external documentation fetch (fixture)."\nexit 0\n',
     { executable: true }
   );

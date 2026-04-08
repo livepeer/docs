@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      docs-quality-and-freshness-audit
- * @type        audit
- * @concern     content
- * @niche       quality
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
  * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts, v2, workspace/reports/quality-accessibility
  * @usage       node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]
- * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

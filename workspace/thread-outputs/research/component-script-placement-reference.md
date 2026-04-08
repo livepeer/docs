@@ -1,5 +1,7 @@
 # File Placement Reference
 
+> **DEPRECATED as canonical location.** The published version lives at `docs-guide/frameworks/file-placement.mdx`. This file remains for reference only.
+
 > Claude MUST read this before writing any component or script file.
 > Source: derived from plan/active/COMPONENT-GOVERNANCE, SCRIPT-GOVERNANCE, REPO-STRUCTURE-GOV (2026-03-25)
 

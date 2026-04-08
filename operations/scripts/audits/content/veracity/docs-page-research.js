@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      docs-page-research
- * @type        audit
- * @concern     content
- * @niche       veracity
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @mode        read-only
  * @pipeline    manual — experimental research system
  * @scope       operations/scripts, workspace/research/claims operations/tests/unit/docs-page-research.test.js, workspace/reports/repo-ops
  * @usage       node operations/scripts/audits/content/veracity/docs-page-research.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

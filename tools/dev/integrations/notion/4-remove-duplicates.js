@@ -1,13 +1,15 @@
 /**
- * @script            4-remove-duplicates
- * @category          remediator
- * @purpose           tooling:dev-tools
- * @scope             external
- * @owner             docs
- * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY
- * @purpose-statement Archives duplicate Notion pages from the duplicate report while keeping the first record in each group.
- * @pipeline          manual
- * @usage             node tools/dev/integrations/notion/4-remove-duplicates.js [flags]
+ * @script      4-remove-duplicates
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Archives duplicate Notion pages from the duplicate report while keeping the first record in each group.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       external
+ * @usage       node tools/dev/integrations/notion/4-remove-duplicates.js [flags]
+ * @policy      node, @notionhq/client, dotenv, NOTION_API_KEY
  */
 
 require("dotenv").config({ path: require("path").join(__dirname, ".env") });

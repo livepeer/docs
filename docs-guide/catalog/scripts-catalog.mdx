@@ -139,35 +139,35 @@ flowchart LR
 | `blockchain-page-spec.js` |  | manual | content |  |
 | `branch-watch.js` |  | manual | content |  |
 | `catalog-config.js` |  | manual | content |  |
-| `cleanup-local-dev-sessions.js` | Local dev session cleanup — preserves Mint on port 3333 and terminates stale Playwright plus non-3333 Mint session trees | manual | governance | `node operations/scripts/automations/governance/cleanup-local-dev-sessions.js [--apply] [--install-cron] [--remove-cron] [--keep-port 3333]` |
+| `cleanup-local-dev-sessions.js` | Local dev session cleanup — preserves Mint on port 3333 and terminates stale Playwright plus non-3333 Mint session trees | manual | governance | `node operations/scripts/integrators/governance/cleanup-local-dev-sessions.js [--apply] [--install-cron] [--remove-cron] [--keep-port 3333]` |
 | `cli-guardrails.test.js` |  | manual | content | `node operations/scripts/i18n/test/cli-guardrails.test.js [flags]` |
 | `constants.js` |  | manual | content |  |
 | `contract-address-routes.test.js` |  | manual | content |  |
 | `contract-verifier.test.js` |  | manual | content |  |
 | `contracts-browser-harness.js` | Unified scoped-browser harness for the contracts recovery browser gates. | manual | testing | `node operations/tests/contracts-browser-harness.js` |
-| `convert-rss-to-mdx.js` | RSS-to-MDX converter — imports RSS feed items and converts to MDX page format | manual | content | `node operations/scripts/automations/content/data/transforms/convert-rss-to-mdx.js [flags]` |
-| `cross-agent-packager.js` | Cross-agent packager — bundles audit reports and repo state into agent-consumable packages | manual | ai | `node operations/scripts/automations/ai/agents/cross-agent-packager.js [flags]` |
+| `convert-rss-to-mdx.js` | RSS-to-MDX converter — imports RSS feed items and converts to MDX page format | manual | content | `node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [flags]` |
+| `cross-agent-packager.js` | Cross-agent packager — bundles audit reports and repo state into agent-consumable packages | manual | ai | `node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]` |
 | `debug-mint-dev.js` | Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues | manual | governance | `node tools/dev/preview/debug-mint-dev.js [flags]` |
 | `docs-json-localizer.test.js` |  | manual | content | `node operations/scripts/i18n/test/docs-json-localizer.test.js [flags]` |
 | `ensure-mint-watcher-patch.sh` | Mint watcher patcher — applies patch to fix Mintlify file watcher issues in dev mode | manual | governance | `bash tools/dev/preview/ensure-mint-watcher-patch.sh [flags]` |
-| `export-portable-skills.js` | Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift. | manual | ai | `node operations/scripts/automations/ai/agents/export-portable-skills.js --write&#124;--check [--skills name[,name...]]` |
+| `export-portable-skills.js` | Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift. | manual | ai | `node operations/scripts/integrators/ai/agents/export-portable-skills.js --write&#124;--check [--skills name[,name...]]` |
 | `fetch-contract-addresses.js` | Thin CLI entrypoint for the chain-first contracts pipeline. | manual | content | `node .github/scripts/fetch-contract-addresses.js [--dry-run] [--check] [--skip-verify]` |
 | `fetch-contract-addresses.test.js` |  | manual | content |  |
 | `fetch-discord-announcements.js` | Fetches announcements from Discord channels via bot token. Writes per-product | manual | content | `node .github/scripts/fetch-discord-announcements.js` |
-| `fetch-external-docs.sh` | External docs fetcher — pulls doc fragments from external GitHub repos into snippets/composables/pages/shared/ for inclusion in builds | manual | content | `bash operations/scripts/automations/content/data/fetching/fetch-external-docs.sh [flags]` |
+| `fetch-external-docs.sh` | External docs fetcher — pulls doc fragments from external GitHub repos into snippets/composables/pages/shared/ for inclusion in builds | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh [flags]` |
 | `fetch-ghost-blog-data.js` | Fetches Livepeer blog posts via public RSS feed (blog.livepeer.org/rss/). No API key required. Writes to snippets/data/social-feeds/ghostBlogData.jsx. | manual | content | `node .github/scripts/fetch-ghost-blog-data.js` |
 | `fetch-github-discussions.js` | Fetches latest GitHub Discussions via public GraphQL API, writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-github-discussions.js` |
 | `fetch-github-releases.js` | Fetches latest GitHub Releases via public REST API, writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-github-releases.js` |
-| `fetch-lpt-exchanges.sh` | LPT exchange data fetcher — pulls exchange listing data for LPT token pages | manual | content | `bash operations/scripts/automations/content/data/fetching/fetch-lpt-exchanges.sh [flags]` |
-| `fetch-openapi-specs.sh` | OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages | manual | content | `bash operations/scripts/automations/content/data/fetching/fetch-openapi-specs.sh [flags]` |
+| `fetch-lpt-exchanges.sh` | LPT exchange data fetcher — pulls exchange listing data for LPT token pages | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh [flags]` |
+| `fetch-openapi-specs.sh` | OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh [flags]` |
 | `fetch-rss-blog-data.js` | Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-rss-blog-data.js` |
 | `format-mdx.js` | MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension. | manual | governance | `node tools/dev/authoring/format-mdx.js [--check&#124;--write] [--files a,b]` |
 | `frontmatter.test.js` |  | manual | content | `node operations/scripts/i18n/test/frontmatter.test.js [flags]` |
 | `generate-changelog.js` | Unified changelog generator for all changelog targets (solutions, contracts, resources). | manual | content | `CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]` |
-| `generate-localized-docs-json.js` | Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json | manual | content | `node operations/scripts/automations/content/language-translation/generate-localized-docs-json.js [flags]` |
+| `generate-localized-docs-json.js` | Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json | manual | content | `node operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js [flags]` |
 | `generate-mint-dev-scope.js` | Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages | manual | governance | `node tools/dev/preview/generate-mint-dev-scope.js [flags]` |
 | `incidents.js` |  | manual | content |  |
-| `lock-release.js` | Codex lock release utility — releases stale codex lock files | manual | ai | `node operations/scripts/automations/ai/codex/lock-release.js [flags]` |
+| `lock-release.js` | Codex lock release utility — releases stale codex lock files | manual | ai | `node operations/scripts/integrators/ai/codex/lock-release.js [flags]` |
 | `mdx-translate.test.js` |  | manual | content | `node operations/scripts/i18n/test/mdx-translate.test.js [flags]` |
 | `mint-custom-loader.sh` | Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source. | manual | governance | `bash tools/dev/preview/mint-custom-loader.sh [flags]` |
 | `mint-dev.sh` | Mintlify dev server launcher — starts mint dev with correct configuration | manual | governance | `bash tools/dev/preview/mint-dev.sh [flags]` |
@@ -176,16 +176,16 @@ flowchart LR
 | `playwright-contract-addresses.js` | CP-6: Verifies the canonical contract-addresses reference page, the dedicated verifier page, | manual | testing | `node operations/tests/playwright-contract-addresses.js` |
 | `provenance.test.js` |  | manual | content | `node operations/scripts/i18n/test/provenance.test.js [flags]` |
 | `provider-openrouter.test.js` |  | manual | content | `node operations/scripts/i18n/test/provider-openrouter.test.js [flags]` |
-| `publish-v2-internal-reports.js` | Report publisher — publishes v2 internal audit reports to configured output locations | manual | governance | `node operations/scripts/automations/governance/pipelines/publish-v2-internal-reports.js [flags]` |
+| `publish-v2-internal-reports.js` | Report publisher — publishes v2 internal audit reports to configured output locations | manual | governance | `node operations/scripts/integrators/governance/pipelines/publish-v2-internal-reports.js [flags]` |
 | `rename-vscode-codex-chat.js` | VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing. | manual | governance | `node tools/dev/editor/rename-vscode-codex-chat.js --title "New title" [--workspace &lt;path&gt;]` |
 | `solidity-parser.js` |  | manual | content |  |
 | `spec.js` |  | manual | content |  |
-| `studio-docs-migration.js` | Migrates livepeer-studio subfolder path references after moving | manual | content | `node operations/scripts/automations/content/studio-docs-migration.js [--write]` |
-| `sync-codex-skills.js` | Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode. | manual | ai | `node operations/scripts/automations/ai/agents/sync-codex-skills.js [flags]` |
-| `task-cleanup.js` | Codex task cleanup utility — reports and prunes merged clean worktrees plus stale local codex branches after merge | manual | ai | `node operations/scripts/automations/ai/codex/task-cleanup.js [flags]` |
-| `task-preflight.js` | Codex task preflight — generates task setup files and validates preconditions | P1 | ai | `node operations/scripts/automations/ai/codex/task-preflight.js [flags]` |
-| `translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | manual | content | `node operations/scripts/automations/content/language-translation/translate-docs.js [flags]` |
-| `validate-generated.js` | Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity | manual | content | `node operations/scripts/automations/content/language-translation/validate-generated.js [flags]` |
+| `studio-docs-migration.js` | Migrates livepeer-studio subfolder path references after moving | manual | content | `node operations/scripts/integrators/content/studio-docs-migration.js [--write]` |
+| `sync-codex-skills.js` | Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode. | manual | ai | `node operations/scripts/integrators/ai/agents/sync-codex-skills.js [flags]` |
+| `task-cleanup.js` | Codex task cleanup utility — reports and prunes merged clean worktrees plus stale local codex branches after merge | manual | ai | `node operations/scripts/integrators/ai/codex/task-cleanup.js [flags]` |
+| `task-preflight.js` | Codex task preflight — generates task setup files and validates preconditions | P1 | ai | `node operations/scripts/integrators/ai/codex/task-preflight.js [flags]` |
+| `translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | manual | content | `node operations/scripts/integrators/content/language-translation/translate-docs.js [flags]` |
+| `validate-generated.js` | Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity | manual | content | `node operations/scripts/integrators/content/language-translation/validate-generated.js [flags]` |
 
 ## 🏭 Generators
 

@@ -1,19 +1,14 @@
 /**
- * @script pre-compact-checkpoint
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Preserves critical session state before context compaction
+ * @script      pre-compact-checkpoint
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Preserves critical session state before context compaction
  * @description Fires before Claude Code compacts context in long sessions. Reads the
- *   thread outcome, active corrections, and recent friction signals, then injects them
- *   directly into the systemMessage so they survive compaction. Also writes a checkpoint
- *   to session-log.txt. The systemMessage IS the re-orientation — Claude doesn't need
- *   to go read anything after compaction because the essential state is right here.
- * @mode write (session-log.txt only)
- * @pipeline PreCompact hook → reads critical files → builds state summary → injects via systemMessage
- * @scope .claude/settings.json PreCompact hook
- * @usage Called automatically by Claude Code PreCompact hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PreCompact hook → reads critical files → builds state summary → injects via systemMessage
+ * @scope       .claude/settings.json PreCompact hook
+ * @usage       Called automatically by Claude Code PreCompact hook. Not invoked directly.
  */
 
 const fs = require('fs');

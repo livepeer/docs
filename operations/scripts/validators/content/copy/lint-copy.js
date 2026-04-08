@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      lint-copy
- * @type        validator
- * @concern     content
- * @niche       copy
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:content-quality
  * @description Enforce banned word and phrase rules on MDX content files.
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
  * @usage       node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
- * @policy      E-R1, R-R11
  */
 
 'use strict';

@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 /**
  * @script      page-imports-audit
- * @category    validator
- * @type        validator
- * @concern     content
- * @niche       health
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:import-integrity
- * @description Canonical page import audit — validates page-reachable MDX, JS, JSX, TS, TSX, and JSON imports and forbids React runtime imports on Mintlify page surfaces.
- * @mode        execute
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
- * @pipeline    P1, P5
+ * @description Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
+ * @mode        read-only
+ * @pipeline    manual
  * @scope       operations/scripts, operations/reports/health/page-imports, v2 page import graph
  * @usage       node operations/scripts/audits/content/health/page-imports-audit.js [--staged|--scope routable-v2|repo|--files <paths>|--tab <tab>] [--strict] [--output-dir <dir>]
  * @policy      E-R12, E-R14

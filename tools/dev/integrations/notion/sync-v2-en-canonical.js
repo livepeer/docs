@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            sync-v2-en-canonical
- * @category          orchestrator
- * @purpose           tooling:dev-tools
- * @scope             external
- * @owner             docs
- * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID or NOTION_WRITABLE_DATABASE_ID
- * @purpose-statement Builds canonical v2 English page metadata and syncs Notion schema, row metadata, and optional page-body blocks to match docs.
- * @pipeline          manual
- * @usage             node tools/dev/integrations/notion/sync-v2-en-canonical.js [flags]
+ * @script      sync-v2-en-canonical
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Builds canonical v2 English page metadata and syncs Notion schema, row metadata, and optional page-body blocks to match docs.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       external
+ * @usage       node tools/dev/integrations/notion/sync-v2-en-canonical.js [flags]
+ * @policy      node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID or NOTION_WRITABLE_DATABASE_ID
  */
 
 const fs = require("fs");

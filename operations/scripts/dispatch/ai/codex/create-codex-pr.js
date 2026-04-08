@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      create-codex-pr
- * @type        dispatch
- * @concern     ai
- * @niche       codex
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:agent-governance
  * @description Codex PR creator — generates codex PR with correct branch naming, labels, and body template
- * @mode        execute
+ * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       operations/scripts, .codex/task-contract.yaml
  * @usage       node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]
- * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

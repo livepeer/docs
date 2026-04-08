@@ -3,7 +3,7 @@
  * @category          config
  * @type              config
  * @purpose           tooling:dev-tools
- * @scope             operations/config/content/reports, operations/scripts/automations/governance/pipelines, v2/internal, docs.json, workspace/reports, operations/tests/reports
+ * @scope             operations/config/content/reports, operations/scripts/integrators/governance/pipelines, v2/internal, docs.json, workspace/reports, operations/tests/reports
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement Configuration data — list of internal report page paths for publish-v2-internal-reports.js

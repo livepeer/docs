@@ -1,117 +1,755 @@
 {
   "meta": {
-    "generated": "2026-03-31",
-    "thread": "GitHub Actions Governance",
-    "workflow_count": 45,
-    "script_count": 10,
-    "deprecated_count": 1,
-    "placeholder_count": 3,
-    "lastReviewed": "2026-04-01",
-    "decisions": "D-ACT-01 through D-ACT-08"
+    "generated": "2026-04-07",
+    "generator": "consolidated-architecture-scan",
+    "workflow_count": 49,
+    "decisions": "D-ACT-01 through D-ACT-10"
   },
   "workflows": [
     {
-      "file": "auto-assign-docs-reviewers.yml",
+      "file": "audit-governance-scan-workspace-retention.yml",
+      "name": "workspace/ retention enforcement",
+      "type": "audit",
+      "concern": "governance",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "audit-health-scan-content-quality.yml",
+      "name": "Content Health Check",
+      "type": "audit",
+      "concern": "health",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js",
+        "operations/scripts/audits/components/documentation/audit-component-usage.js",
+        "operations/scripts/generators/components/library/generate-component-registry.js",
+        "operations/scripts/audits/components/library/scan-component-imports.js",
+        "operations/scripts/remediators/components/library/repair-component-metadata.js",
+        "operations/scripts/validators/components/library/component-layout-governance.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "audit-health-scan-data-freshness.yml",
+      "name": "Pipeline Freshness Monitor",
+      "type": "audit",
+      "concern": "health",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "audit-health-scan-external-links.yml",
+      "name": "V2 External Link Audit (Advisory)",
+      "type": "audit",
+      "concern": "health",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/audits/content/health/page-links-audit.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "audit-health-scan-page-integrity.yml",
+      "name": "Page Integrity Health",
+      "type": "audit",
+      "concern": "health",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/dispatch/content/health/page-integrity-dispatch.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "dispatch-copy-update-social-feeds.yml",
+      "name": "Data Refresh Governance",
+      "type": "dispatch",
+      "concern": "copy",
+      "pipeline_tag": "reusable",
+      "triggers": [
+        "workflow_dispatch",
+        "workflow_call"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js",
+        "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js",
+        "operations/scripts/integrators/maintenance/release/update-livepeer-release.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "dispatch-governance-post-merge-sync.yml",
+      "name": "Governance sync (post-merge)",
+      "type": "dispatch",
+      "concern": "governance",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push"
+      ],
+      "scripts": [
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "operations/scripts/validators/governance/compliance/check-root-governance-sync.js",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js",
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "dispatch-maintenance-check-catalogs.yml",
+      "name": "Docs Catalog Governance",
+      "type": "dispatch",
+      "concern": "maintenance",
+      "pipeline_tag": "reusable",
+      "triggers": [
+        "workflow_dispatch",
+        "workflow_call"
+      ],
+      "scripts": [
+        "operations/scripts/generators/components/library/generate-component-registry.js",
+        "operations/scripts/generators/components/documentation/generate-component-docs.js",
+        "operations/scripts/validators/components/library/check-component-health.js",
+        "operations/scripts/generators/components/library/generate-component-examples.js",
+        "operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js",
+        "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js",
+        "operations/scripts/generators/content/catalogs/generate-docs-index.js",
+        "operations/tests/unit/quality.test.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "generator-discoverability-generate-ai-sitemap.yml",
+      "name": "Generate AI Sitemap",
+      "type": "generator",
+      "concern": "discoverability",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "generator-discoverability-generate-companions.yml",
+      "name": "Generate AI Companion Files",
+      "type": "generator",
+      "concern": "discoverability",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/content/reference/generate-glossary-companions.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "generator-discoverability-generate-llms-files.yml",
+      "name": "Generate llms.txt",
+      "type": "generator",
+      "concern": "discoverability",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/ai/llm/generate-llms-files.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "generator-maintenance-generate-catalogs.yml",
+      "name": "Generate Docs Guide Catalogs",
+      "type": "generator",
+      "concern": "maintenance",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "generator-maintenance-generate-component-registry.yml",
+      "name": "Generate Component Registry",
+      "type": "generator",
+      "concern": "maintenance",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "generator-maintenance-generate-docs-index.yml",
+      "name": "Generate Docs Index",
+      "type": "generator",
+      "concern": "maintenance",
+      "pipeline_tag": "P4",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "generator-maintenance-generate-sdk-clients.yml",
+      "name": "Generate",
+      "type": "generator",
+      "concern": "maintenance",
+      "pipeline_tag": "unknown",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-changelogs.yml",
+      "name": "Update Changelogs",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/copy/changelogs/generate-changelog.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-discord-data.yml",
+      "name": "Update Discord Announcements Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-forum-data.yml",
+      "name": "Update Forum Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-ghost-blog-data.yml",
+      "name": "Update Ghost Blog Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-github-data.yml",
+      "name": "Update GitHub Discussions & Releases Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-rss-blog-data.yml",
+      "name": "Update RSS Blog Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-translations.yml",
+      "name": "Docs Translation Pipeline",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "unknown",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/content/language-translation/translate-docs.js",
+        "operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js",
+        "operations/scripts/generators/content/catalogs/generate-docs-index.js",
+        "operations/scripts/integrators/content/language-translation/validate-generated.js",
+        "operations/tests/unit/docs-navigation.test.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "integrator-copy-update-youtube-data.yml",
+      "name": "Update YouTube Data",
+      "type": "integrator",
+      "concern": "copy",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-maintenance-update-contract-addresses-shadow.yml",
+      "name": "Update Contract Addresses Shadow",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "integrator-maintenance-update-contract-addresses.yml",
+      "name": "Update Contract Addresses",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "integrator-maintenance-update-large-assets.yml",
+      "name": "Sync Large Assets",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "push",
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "integrator-maintenance-update-release-version.yml",
+      "name": "Update Livepeer Release Version",
+      "type": "integrator",
+      "concern": "maintenance",
+      "pipeline_tag": "P5-auto",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "interface-governance-assign-reviewers.yml",
       "name": "Auto Assign Docs Reviewers",
       "type": "interface",
       "concern": "governance",
-      "niche": "pr-lifecycle",
-      "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
+      "pipeline_tag": "event-driven",
       "triggers": [
         "pull_request"
       ],
       "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:read",
-        "pull-requests:write",
-        "issues:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "hardcoded:docs-v2",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Branch docs-v2 hardcoded instead of vars.DEPLOY_BRANCH"
-      ],
-      "inline_script_lines": 80,
-      "new_name": "interface-governance-assign-reviewers.yml",
-      "review_flags": "Hardcoded branch. 80 lines inline"
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "broken-links.yml",
-      "name": "Check Broken Links",
+      "file": "interface-governance-close-linked-issues.yml",
+      "name": "Close Linked Issues (docs-v2 Merge)",
+      "type": "interface",
+      "concern": "governance",
+      "pipeline_tag": "event-driven",
+      "triggers": [
+        "pull_request"
+      ],
+      "scripts": [],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "interface-governance-index-issues.yml",
+      "name": "Docs v2 Issue Indexer",
+      "type": "interface",
+      "concern": "governance",
+      "pipeline_tag": "event-driven",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch",
+        "issues"
+      ],
+      "scripts": [],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "interface-governance-intake-discord-issues.yml",
+      "name": "Discord Issue Intake",
+      "type": "interface",
+      "concern": "governance",
+      "pipeline_tag": "event-driven",
+      "triggers": [
+        "repository_dispatch"
+      ],
+      "scripts": [],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "interface-governance-label-issues.yml",
+      "name": "Issue Auto Label",
+      "type": "interface",
+      "concern": "governance",
+      "pipeline_tag": "event-driven",
+      "triggers": [
+        "issues"
+      ],
+      "scripts": [],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "project-showcase-sync.yml",
+      "name": "Project Showcase Sync",
+      "type": "project",
+      "concern": "showcase",
+      "pipeline_tag": "unknown",
+      "triggers": [
+        "workflow_dispatch",
+        "repository_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/copy/showcase/project-showcase-sync.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "disabled"
+    },
+    {
+      "file": "remediator-brand-repair-en-gb-style.yml",
+      "name": "EN-GB Style Homogenisation",
+      "type": "remediator",
+      "concern": "brand",
+      "pipeline_tag": "manual",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/style-and-language-homogenizer-en-gb.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "remediator-discoverability-repair-seo-metadata.yml",
+      "name": "SEO Metadata Refresh",
+      "type": "remediator",
+      "concern": "discoverability",
+      "pipeline_tag": "manual",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/remediators/content/seo/generate-seo.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "remediator-governance-repair-pipelines.yml",
+      "name": "Governance Repair",
+      "type": "remediator",
+      "concern": "governance",
+      "pipeline_tag": "P6",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "operations/scripts/validators/governance/compliance/check-root-governance-sync.js",
+        "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+        "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js",
+        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
+    },
+    {
+      "file": "validator-brand-check-copy-standards.yml",
+      "name": "Check Copy Standards",
       "type": "validator",
-      "concern": "health",
-      "niche": "links",
+      "concern": "brand",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
         "pull_request",
         "workflow_dispatch"
       ],
-      "scripts": [
-        "operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
-      ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "summary",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-health-check-broken-links.yml"
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "build-review-assets.yml",
-      "name": "Build Review Assets",
-      "type": "placeholder",
-      "concern": "governance",
-      "niche": "review",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
+      "file": "validator-copy-check-content-quality-suite.yml",
+      "name": "Docs CI - Content Quality Suite",
+      "type": "validator",
+      "concern": "copy",
+      "pipeline_tag": "P3",
       "triggers": [
+        "pull_request",
+        "push",
         "workflow_dispatch"
       ],
-      "scripts": [],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "placeholder",
-      "consolidation_flag": "deprecate-candidate",
-      "consolidation_note": "Not implemented. Remove or implement.",
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "DELETE",
-      "review_flags": "Never implemented"
+      "scripts": [
+        "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js",
+        "operations/scripts/validators/components/library/check-naming-conventions.js",
+        "operations/scripts/validators/components/library/check-mdx-component-scope.js",
+        "operations/scripts/validators/components/library/check-component-css.js",
+        "operations/scripts/validators/components/documentation/check-component-docs.js",
+        "operations/scripts/validators/governance/pr/check-component-immutability.js",
+        "operations/scripts/generators/components/library/generate-component-registry.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "check-ai-companions.yml",
+      "file": "validator-discoverability-check-ai-sitemap.yml",
+      "name": "Verify AI Sitemap",
+      "type": "validator",
+      "concern": "discoverability",
+      "pipeline_tag": "P3",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "validator-discoverability-check-companions.yml",
       "name": "Check AI Companion Files",
       "type": "validator",
       "concern": "discoverability",
-      "niche": "companions",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
         "pull_request",
         "push",
@@ -121,131 +759,38 @@
         "operations/scripts/generators/content/reference/generate-glossary-companions.js",
         "operations/scripts/validators/governance/ai/check-companion-manifest.js"
       ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-discoverability-check-glossary-companions.yml"
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "check-docs-guide-catalogs.yml",
-      "name": "Check Docs Guide Catalogs",
+      "file": "validator-discoverability-check-llms-files.yml",
+      "name": "Verify llms.txt Files",
       "type": "validator",
-      "concern": "maintenance",
-      "niche": "catalogs",
+      "concern": "discoverability",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
         "pull_request",
         "push",
         "workflow_dispatch"
       ],
       "scripts": [
-        "operations/scripts/generators/components/library/generate-component-registry.js",
-        "operations/scripts/generators/components/documentation/generate-component-docs.js",
-        "operations/scripts/validators/components/library/check-component-health.js",
-        "operations/scripts/generators/components/library/generate-component-examples.js",
-        "operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js",
-        "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js",
-        "operations/tests/unit/quality.test.js"
+        "operations/scripts/generators/ai/llm/generate-llms-files.js"
       ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-maintenance-check-docs-guide-catalogs.yml"
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "check-docs-index.yml",
-      "name": "Check Docs Index",
-      "type": "validator",
-      "concern": "maintenance",
-      "niche": "catalogs",
-      "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
-      "triggers": [
-        "pull_request",
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generators/content/catalogs/generate-docs-index.js"
-      ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-maintenance-check-docs-index.yml"
-    },
-    {
-      "file": "close-linked-issues-docs-v2.yml",
-      "name": "Close Linked Issues (docs-v2 Merge)",
-      "type": "interface",
-      "concern": "governance",
-      "niche": "issue-lifecycle",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "pull_request:closed"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:read",
-        "pull-requests:read",
-        "issues:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "hardcoded:docs-v2",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 141,
-      "new_name": "interface-governance-close-linked-issues.yml",
-      "review_flags": "141 lines inline"
-    },
-    {
-      "file": "codex-governance.yml",
+      "file": "validator-governance-check-codex-compliance.yml",
       "name": "Codex Governance",
       "type": "validator",
       "concern": "governance",
-      "niche": "codex",
-      "pipeline_tag": "P2",
-      "enforcement": "hard-gate",
+      "pipeline_tag": "P3",
       "triggers": [
         "pull_request"
       ],
@@ -253,494 +798,57 @@
         "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js",
         "operations/scripts/check-codex-pr-overlap.js"
       ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:read",
-        "pull-requests:read",
-        "issues:read"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "hardcoded:docs-v2",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "check-codex-pr-overlap.js path may be stale (moved to dispatch/ai/codex/)"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "validator-governance-check-codex-compliance.yml",
-      "review_flags": "Hard gate P2. Script path may be stale"
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "content-health.yml",
-      "name": "Content Health Check",
-      "type": "audit",
-      "concern": "health",
-      "niche": "quality",
-      "pipeline_tag": "P5",
-      "enforcement": "scheduled",
+      "file": "validator-governance-check-governance-map.yml",
+      "name": "Check Governance Map",
+      "type": "validator",
+      "concern": "governance",
+      "pipeline_tag": "P3",
       "triggers": [
+        "pull_request",
         "schedule",
         "workflow_dispatch"
       ],
       "scripts": [
-        "operations/scripts/docs-quality-and-freshness-audit.js",
-        "operations/scripts/audit-component-usage.js",
-        "operations/scripts/generators/components/library/generate-component-registry.js",
-        "operations/scripts/audits/components/library/scan-component-imports.js",
-        "operations/scripts/remediators/components/library/repair-component-metadata.js",
-        "operations/scripts/validators/components/library/component-layout-governance.js"
+        "operations/scripts/validators/governance/compliance/check-governance-markers.js",
+        "operations/scripts/generators/governance/map/generate-governance-map.js",
+        "operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js"
       ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "continue-on-error-all",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "All 6 steps have continue-on-error masking failures",
-        "Script paths may be stale from restructure"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "audit-health-scan-content-quality.yml",
-      "review_flags": "continue-on-error masking all failures"
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": true,
+      "status": "active"
     },
     {
-      "file": "discord-issue-intake.yml",
-      "name": "Discord Issue Intake",
-      "type": "interface",
-      "concern": "governance",
-      "niche": "issue-lifecycle",
-      "pipeline_tag": "event-driven",
-      "enforcement": "none",
-      "triggers": [
-        "repository_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "issues:write",
-        "contents:read"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 261,
-      "new_name": "interface-governance-intake-discord-issues.yml",
-      "review_flags": "261 lines inline"
-    },
-    {
-      "file": "docs-v2-issue-indexer.yml",
-      "name": "Docs v2 Issue Indexer",
-      "type": "interface",
-      "concern": "governance",
-      "niche": "issue-lifecycle",
-      "pipeline_tag": "P5",
-      "enforcement": "scheduled",
-      "triggers": [
-        "issues",
-        "workflow_dispatch",
-        "schedule"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "issues:write",
-        "contents:read"
-      ],
-      "error_handling": "summary",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": true,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 403,
-      "new_name": "interface-governance-index-issues.yml",
-      "review_flags": "403 lines inline"
-    },
-    {
-      "file": "freshness-monitor.yml",
-      "name": "Pipeline Freshness Monitor",
-      "type": "audit",
+      "file": "validator-health-check-broken-links.yml",
+      "name": "Check Broken Links",
+      "type": "validator",
       "concern": "health",
-      "niche": "freshness",
-      "pipeline_tag": "P5",
-      "enforcement": "scheduled",
+      "pipeline_tag": "P3",
       "triggers": [
-        "schedule",
+        "pull_request",
         "workflow_dispatch"
       ],
       "scripts": [],
-      "secrets": [],
-      "permissions": [
-        "contents:read"
-      ],
-      "error_handling": "continue-on-error",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Hardcoded file list (7 files)",
-        "Hardcoded staleness thresholds"
-      ],
-      "inline_script_lines": 80,
-      "new_name": "audit-health-scan-data-freshness.yml",
-      "review_flags": "Inline 80 lines, extraction candidate"
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "generate-ai-companions.yml",
-      "name": "Generate AI Companion Files",
-      "type": "generator",
-      "concern": "discoverability",
-      "niche": "companions",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generators/content/reference/generate-glossary-companions.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "No concurrency control on auto-commit"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-discoverability-generate-glossary-companions.yml"
-    },
-    {
-      "file": "generate-ai-sitemap.yml",
-      "name": "Generate AI Sitemap",
-      "type": "generator",
-      "concern": "discoverability",
-      "niche": "seo",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generate-ai-sitemap.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Broad push trigger (all docs-v2 pushes)",
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-discoverability-generate-ai-sitemap.yml"
-    },
-    {
-      "file": "generate-component-registry.yml",
-      "name": "Generate Component Registry",
-      "type": "generator",
-      "concern": "maintenance",
-      "niche": "registry",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generators/components/library/generate-component-registry.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "No verify counterpart workflow",
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-maintenance-generate-component-registry.yml",
-      "review_flags": "Missing verify pair"
-    },
-    {
-      "file": "generate-docs-guide-catalogs.yml",
-      "name": "Generate Docs Guide Catalogs",
-      "type": "generator",
-      "concern": "maintenance",
-      "niche": "catalogs",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js",
-        "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js",
-        "operations/scripts/generators/components/documentation/generate-component-docs.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "git add includes entire v2/ directory",
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-maintenance-generate-docs-guide-catalogs.yml",
-      "review_flags": "Overly broad git add"
-    },
-    {
-      "file": "generate-docs-index.yml",
-      "name": "Generate Docs Index",
-      "type": "generator",
-      "concern": "maintenance",
-      "niche": "catalogs",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generators/content/catalogs/generate-docs-index.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Broad push trigger",
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-maintenance-generate-docs-index.yml"
-    },
-    {
-      "file": "generate-llms-files.yml",
-      "name": "Generate llms.txt",
-      "type": "generator",
-      "concern": "discoverability",
-      "niche": "llm-indexing",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/generate-llms-files.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-discoverability-generate-llms-files.yml"
-    },
-    {
-      "file": "generate-review-table.yml",
-      "name": "Generate Review Table",
-      "type": "placeholder",
-      "concern": "governance",
-      "niche": "review",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "placeholder",
-      "consolidation_flag": "deprecate-candidate",
-      "consolidation_note": "Not implemented. Remove or implement.",
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "DELETE",
-      "review_flags": "Never implemented"
-    },
-    {
-      "file": "governance-sync.yml",
-      "name": "Governance sync (post-merge)",
-      "type": "dispatch",
-      "concern": "governance",
-      "niche": "pipelines",
-      "pipeline_tag": "P4",
-      "enforcement": "post-merge",
-      "triggers": [
-        "push"
-      ],
-      "scripts": [
-        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write",
-        "pull-requests:write"
-      ],
-      "error_handling": "basic",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "References undefined inputs.use_test_branch",
-        "Uses python3 for JSON parsing"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "dispatch-governance-post-merge-sync.yml",
-      "review_flags": "Dead code (undefined input). Python3 dependency"
-    },
-    {
-      "file": "issue-auto-label.yml",
-      "name": "Issue Auto Label",
-      "type": "interface",
-      "concern": "governance",
-      "niche": "issue-lifecycle",
-      "pipeline_tag": "event-driven",
-      "enforcement": "none",
-      "triggers": [
-        "issues"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "issues:write",
-        "contents:read"
-      ],
-      "error_handling": "basic",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Label metadata hardcoded inline"
-      ],
-      "inline_script_lines": 339,
-      "new_name": "interface-governance-label-issues.yml",
-      "review_flags": "Hardcoded labels. 339 lines inline"
-    },
-    {
-      "file": "openapi-reference-validation.yml",
+      "file": "validator-health-check-openapi-reference.yml",
       "name": "OpenAPI Reference Validation",
       "type": "validator",
       "concern": "health",
-      "niche": "api-reference",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
         "pull_request",
         "push",
@@ -750,944 +858,82 @@
       "scripts": [
         "operations/tests/integration/openapi-reference-audit.js"
       ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write",
-        "pull-requests:write",
-        "issues:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "dynamic",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": true,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Uses peter-evans/create-pull-request@v6 (others use @v7)"
-      ],
-      "inline_script_lines": 40,
-      "new_name": "validator-health-check-openapi-reference.yml",
-      "review_flags": "Uses create-pull-request@v6"
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": true,
+      "status": "active"
     },
     {
-      "file": "project-showcase-sync.yml",
-      "name": "Project Showcase Sync",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch",
-        "repository_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/project-showcase-sync.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "SHOWCASE_GOOGLE_SERVICE_ACCOUNT_JSON",
-        "SHOWCASE_DISCORD_BOT_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Runs every 15 minutes — aggressive schedule",
-        "No error handling",
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-showcase-submissions.yml",
-      "review_flags": "Disable for now, not working"
-    },
-    {
-      "file": "repair-governance.yml",
-      "name": "Governance Repair",
-      "type": "remediator",
-      "concern": "governance",
-      "niche": "pipelines",
-      "pipeline_tag": "P6",
-      "enforcement": "self-heal",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write",
-        "pull-requests:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": true,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "References undefined inputs.use_test_branch"
-      ],
-      "inline_script_lines": 30,
-      "new_name": "remediator-governance-repair-pipelines.yml",
-      "review_flags": "Dead code (undefined input)"
-    },
-    {
-      "file": "sdk_generation.yaml",
-      "name": "Generate",
-      "type": "generator",
-      "concern": "maintenance",
-      "niche": "sdk",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "SPEAKEASY_API_KEY"
-      ],
-      "permissions": [
-        "checks:write",
-        "contents:write",
-        "pull-requests:write",
-        "statuses:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        ".yaml extension (all others use .yml)",
-        "Generic name 'Generate'"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "generator-maintenance-generate-sdk-clients.yml",
-      "review_flags": "Fix .yaml extension"
-    },
-    {
-      "file": "seo-refresh.yml",
-      "name": "SEO Metadata Refresh",
-      "type": "remediator",
-      "concern": "discoverability",
-      "niche": "seo",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/remediators/content/seo/generate-seo.js"
-      ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": true,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "CRITICAL: No auto-commit — non-dry-run writes go nowhere"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "remediator-discoverability-repair-seo-metadata.yml",
-      "review_flags": "P0: no commit step"
-    },
-    {
-      "file": "style-homogenise.yml",
-      "name": "EN-GB Style Homogenisation",
-      "type": "remediator",
-      "concern": "brand",
-      "niche": "copy",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/style-and-language-homogenizer-en-gb.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write",
-        "pull-requests:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Script path may be stale from restructure"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "remediator-brand-repair-en-gb-style.yml",
-      "review_flags": "Script path may be stale"
-    },
-    {
-      "file": "sync-large-assets.yml",
-      "name": "Sync Large Assets",
-      "type": "integrator",
-      "concern": "maintenance",
-      "niche": "assets",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "push",
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "docs-v2-assets",
-      "dry_run": true,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 80,
-      "new_name": "integrator-maintenance-update-large-assets.yml"
-    },
-    {
-      "file": "test-suite.yml",
-      "name": "Docs CI - Content Quality Suite",
-      "type": "validator",
-      "concern": "copy",
-      "niche": "quality",
-      "pipeline_tag": "P2",
-      "enforcement": "hard-gate",
-      "triggers": [
-        "push",
-        "pull_request",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/validators/components/library/check-naming-conventions.js",
-        "operations/scripts/validators/components/library/check-mdx-component-scope.js",
-        "operations/scripts/validators/components/library/check-component-css.js",
-        "operations/scripts/validators/components/documentation/check-component-docs.js",
-        "operations/scripts/validators/governance/pr/check-component-immutability.js",
-        "operations/scripts/generators/components/library/generate-component-registry.js",
-        "operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:read",
-        "pull-requests:write"
-      ],
-      "error_handling": "summary",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": true,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Overlaps with test-v2-pages.yml — both start Mintlify server + browser tests",
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-copy-check-content-quality-suite.yml",
-      "review_flags": "Hard gate P2"
-    },
-    {
-      "file": "test-v2-pages.yml",
+      "file": "validator-health-check-page-rendering.yml",
       "name": "Docs CI - V2 Browser Sweep",
       "type": "validator",
       "concern": "health",
-      "niche": "rendering",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
-        "push",
         "pull_request",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:read",
-        "pull-requests:write",
-        "issues:write"
-      ],
-      "error_handling": "summary",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": true,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Overlaps with test-suite.yml — merge as a job within test-suite",
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "validator-health-check-page-rendering.yml"
-    },
-    {
-      "file": "translate-docs.yml",
-      "name": "Docs Translation Pipeline",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "i18n",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/scripts/automations/content/language-translation/translate-docs.js",
-        "operations/scripts/automations/content/language-translation/generate-localized-docs-json.js",
-        "operations/scripts/generators/content/catalogs/generate-docs-index.js",
-        "operations/scripts/automations/content/language-translation/validate-generated.js",
-        "operations/tests/unit/docs-navigation.test.js"
-      ],
-      "secrets": [
-        "OPENROUTER_API_KEY"
-      ],
-      "permissions": [
-        "contents:write",
-        "pull-requests:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "input:target_branch",
-      "dry_run": true,
-      "auto_commit": false,
-      "concurrency": true,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "PR add-paths hardcodes v2/es,fr,cn but input defaults es,fr,de — mismatch"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-translations.yml",
-      "review_flags": "Path mismatch bug"
-    },
-    {
-      "file": "update-blog-data.yml",
-      "name": "Update Blog and Forum Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
+        "push",
         "workflow_dispatch"
       ],
       "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "continue-on-error",
-      "branch_targeting": "default",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "broken",
-      "consolidation_flag": "deprecate-candidate",
-      "consolidation_note": "Hardcoded YOUR_CONTENT_API_KEY placeholder — never worked. Superseded.",
-      "bugs": [
-        "CRITICAL: YOUR_CONTENT_API_KEY placeholder — non-functional"
-      ],
-      "inline_script_lines": 40,
-      "new_name": "DELETE",
-      "review_flags": "Broken: hardcoded API key placeholder"
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "update-changelogs.yml",
-      "name": "Update Changelogs",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "changelogs",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "repository_dispatch",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/generate-changelog.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "GITLAB_TOKEN",
-        "ARBISCAN_API_KEY",
-        "ETHERSCAN_API_KEY",
-        "OPENROUTER_API_KEY"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "fallback",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": true,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "No concurrency control"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-changelogs.yml"
-    },
-    {
-      "file": "update-contract-addresses.yml",
-      "name": "Update Contract Addresses",
-      "type": "integrator",
-      "concern": "maintenance",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "repository_dispatch",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-contract-addresses.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "ARBISCAN_API_KEY",
-        "ETHERSCAN_API_KEY"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "robust",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": true,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "git add v2/ is overly broad"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "DEFERRED",
-      "review_flags": "Pipeline changes in progress"
-    },
-    {
-      "file": "update-discord-data.yml",
-      "name": "Update Discord Announcements Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-discord-announcements.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "DISCORD_BOT_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure to 6 other data-fetch workflows — merge into unified dispatcher",
-      "bugs": [
-        "No error handling"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03)"
-    },
-    {
-      "file": "update-forum-data.yml",
-      "name": "Update Forum Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-forum-data.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure — merge into unified data-fetch dispatcher",
-      "bugs": [
-        "CRITICAL: Missing permissions: contents: write — push will fail"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03). P0: missing permissions"
-    },
-    {
-      "file": "update-ghost-blog-data.yml",
-      "name": "Update Ghost Blog Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-ghost-blog-data.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure — merge into unified data-fetch dispatcher",
-      "bugs": [
-        "CRITICAL: Missing permissions: contents: write — push will fail"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03). P0: missing permissions"
-    },
-    {
-      "file": "update-github-data.yml",
-      "name": "Update GitHub Discussions & Releases Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-github-discussions.js",
-        ".github/scripts/fetch-github-releases.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure — merge into unified data-fetch dispatcher",
-      "bugs": [
-        "No error handling"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03). Zero consumers for output data"
-    },
-    {
-      "file": "update-livepeer-release.yml",
-      "name": "Update Livepeer Release Version",
-      "type": "integrator",
-      "concern": "maintenance",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "repository_dispatch",
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "basic",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": null,
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [
-        "Uses grep -oP (GNU grep, not macOS compatible)",
-        "sed replacement may malform file"
-      ],
-      "inline_script_lines": 60,
-      "new_name": "integrator-maintenance-update-release-version.yml",
-      "review_flags": "Inline script extraction candidate"
-    },
-    {
-      "file": "update-review-template.yml",
-      "name": "Update Review Template",
-      "type": "placeholder",
-      "concern": "governance",
-      "niche": "review",
-      "pipeline_tag": "manual",
-      "enforcement": "none",
-      "triggers": [
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "none",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": null,
-      "status": "placeholder",
-      "consolidation_flag": "deprecate-candidate",
-      "consolidation_note": "Not implemented. Remove or implement.",
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "DELETE",
-      "review_flags": "Never implemented"
-    },
-    {
-      "file": "update-rss-blog-data.yml",
-      "name": "Update RSS Blog Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-rss-blog-data.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN"
-      ],
-      "permissions": [
-        "contents:write"
-      ],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure — merge into unified data-fetch dispatcher",
-      "bugs": [
-        "No error handling"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03)"
-    },
-    {
-      "file": "update-youtube-data.yml",
-      "name": "Update YouTube Data",
-      "type": "integrator",
-      "concern": "copy",
-      "niche": "data-fetch",
-      "pipeline_tag": "P5-auto",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        ".github/scripts/fetch-youtube-data.js"
-      ],
-      "secrets": [
-        "GITHUB_TOKEN",
-        "YOUTUBE_API_KEY"
-      ],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "vars.DEPLOY_BRANCH|vars.TEST_BRANCH",
-      "dry_run": false,
-      "auto_commit": true,
-      "concurrency": false,
-      "node_version": "20",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure — merge into unified data-fetch dispatcher",
-      "bugs": [
-        "CRITICAL: Missing permissions: contents: write",
-        "Inconsistent commit message format",
-        "Different bot identity",
-        "Hardcoded CHANNEL_ID"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "integrator-copy-update-social-feeds.yml",
-      "review_flags": "Merge into single matrix dispatcher (D-ACT-03). P0: missing permissions"
-    },
-    {
-      "file": "v2-external-link-audit.yml",
-      "name": "V2 External Link Audit (Advisory)",
-      "type": "audit",
+      "file": "validator-health-check-page-structure.yml",
+      "name": "Check Page Structure",
+      "type": "validator",
       "concern": "health",
-      "niche": "links",
-      "pipeline_tag": "P5",
-      "enforcement": "scheduled",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [
-        "operations/tests/integration/v2-link-audit.js"
-      ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "summary",
-      "branch_targeting": "vars.DEPLOY_BRANCH",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "none",
-      "consolidation_note": null,
-      "bugs": [],
-      "inline_script_lines": 0,
-      "new_name": "audit-health-scan-external-links.yml"
-    },
-    {
-      "file": "verify-ai-sitemap.yml",
-      "name": "Verify AI Sitemap",
-      "type": "validator",
-      "concern": "discoverability",
-      "niche": "seo",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
-        "push",
         "pull_request",
         "workflow_dispatch"
       ],
-      "scripts": [
-        "operations/scripts/generate-ai-sitemap.js"
-      ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "hardcoded:docs-v2",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure to verify-llms-files — merge into unified verify workflow",
-      "bugs": [
-        "Branch docs-v2 hardcoded"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "validator-discoverability-check-ai-sitemap.yml",
-      "review_flags": "Hardcoded branch"
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     },
     {
-      "file": "verify-llms-files.yml",
-      "name": "Verify llms.txt Files",
+      "file": "validator-maintenance-check-catalogs.yml",
+      "name": "Check Docs Guide Catalogs",
       "type": "validator",
-      "concern": "discoverability",
-      "niche": "llm-indexing",
+      "concern": "maintenance",
       "pipeline_tag": "P3",
-      "enforcement": "soft-gate",
       "triggers": [
-        "push",
         "pull_request",
+        "push",
         "workflow_dispatch"
       ],
-      "scripts": [
-        "operations/scripts/generate-llms-files.js"
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "validator-maintenance-check-docs-index.yml",
+      "name": "Check Docs Index",
+      "type": "validator",
+      "concern": "maintenance",
+      "pipeline_tag": "P3",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
       ],
-      "secrets": [],
-      "permissions": [],
-      "error_handling": "none",
-      "branch_targeting": "hardcoded:docs-v2",
-      "dry_run": false,
-      "auto_commit": false,
-      "concurrency": false,
-      "node_version": "22",
-      "status": "active",
-      "consolidation_flag": "merge-candidate",
-      "consolidation_note": "Identical structure to verify-ai-sitemap — merge into unified verify workflow",
-      "bugs": [
-        "Branch docs-v2 hardcoded"
-      ],
-      "inline_script_lines": 0,
-      "new_name": "validator-discoverability-check-llms-files.yml",
-      "review_flags": "Hardcoded branch"
+      "scripts": [],
+      "has_inline_script": false,
+      "has_permissions": false,
+      "has_concurrency": false,
+      "has_auto_commit": false,
+      "status": "active"
     }
-  ],
-  "generate_verify_pairs": [
-    {
-      "generator": "generate-ai-companions.yml",
-      "verifier": "check-ai-companions.yml"
-    },
-    {
-      "generator": "generate-ai-sitemap.yml",
-      "verifier": "verify-ai-sitemap.yml"
-    },
-    {
-      "generator": "generate-llms-files.yml",
-      "verifier": "verify-llms-files.yml"
-    },
-    {
-      "generator": "generate-docs-index.yml",
-      "verifier": "check-docs-index.yml"
-    },
-    {
-      "generator": "generate-docs-guide-catalogs.yml",
-      "verifier": "check-docs-guide-catalogs.yml"
-    },
-    {
-      "generator": "generate-component-registry.yml",
-      "verifier": null
-    },
-    {
-      "generator": "update-contract-addresses.yml",
-      "verifier": null
-    },
-    {
-      "generator": "update-changelogs.yml",
-      "verifier": null
-    }
-  ],
-  "consolidation_groups": {
-    "unified-data-fetch": [
-      "update-discord-data.yml",
-      "update-forum-data.yml",
-      "update-ghost-blog-data.yml",
-      "update-github-data.yml",
-      "update-rss-blog-data.yml",
-      "update-youtube-data.yml"
-    ],
-    "unified-verify": [
-      "verify-ai-sitemap.yml",
-      "verify-llms-files.yml"
-    ],
-    "test-merge": [
-      "test-suite.yml",
-      "test-v2-pages.yml"
-    ],
-    "deprecate": [
-      "build-review-assets.yml",
-      "generate-review-table.yml",
-      "update-review-template.yml",
-      "update-blog-data.yml"
-    ]
-  },
-  "type_counts": {
-    "automation": 15,
-    "generator": 8,
-    "validator": 10,
-    "audit": 3,
-    "remediator": 3,
-    "dispatch": 1
-  },
-  "concern_counts": {
-    "content": 26,
-    "governance": 12,
-    "ai": 5,
-    "components": 1
-  }
+  ]
 }

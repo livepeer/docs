@@ -1,17 +1,14 @@
 /**
  * @script      move-detect-hook
- * @type        dispatch
- * @concern     governance
- * @niche       pipelines
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     governance:move-propagation
  * @description PostToolUse hook on Bash. Detects mv/git mv commands targeting v2/ paths,
- *   extracts source/dest pairs, stores them in a session-scoped temp file, runs a dry-run
- *   via docs-path-sync, and emits a systemMessage prompting the user to run /propagate.
- * @mode        read-only (temp file write only)
+ * @mode        read-only
  * @pipeline    PostToolUse hook (Bash) -> parse command -> store moves -> dry-run -> systemMessage
  * @scope       .claude/settings.json PostToolUse hook (Bash matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

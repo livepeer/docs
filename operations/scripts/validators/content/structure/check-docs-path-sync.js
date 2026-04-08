@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-docs-path-sync
- * @type        validator
- * @concern     content
- * @niche       structure
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:repo-health
  * @description Docs path sync validator — detects staged page moves that require docs.json or governed path reference rewrites.
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged
  * @usage       node operations/scripts/validators/content/structure/check-docs-path-sync.js --staged
- * @policy      E-C1, R-R14
  */
 
 const sync = require('../../../config/docs-path-sync');

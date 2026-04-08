@@ -1,0 +1,124 @@
+---
+title: Content Writing Pipeline
+sidebarTitle: Content Writing
+description: >-
+  Governance summary for the content writing pipeline. Page taxonomy, purpose
+  enum, information layer, audience model, and voice rules for writing and
+  reviewing v2/ documentation pages.
+keywords:
+  - content writing
+  - page taxonomy
+  - content pipeline
+  - voice rules
+  - documentation authoring
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+sourceDoc: workspace/plan/active/CONTENT-WRITING/plan-canonical.md
+---
+
+# Content Writing Pipeline
+
+Governance summary for writing and reviewing v2/ documentation pages. This is the published reference. The full execution plan (997 lines) lives at `workspace/plan/active/CONTENT-WRITING/plan-canonical.md`.
+
+---
+
+## Page Taxonomy
+
+### pageType (7 primary)
+
+`concept`, `tutorial`, `guide`, `instruction`, `navigation`, `reference`, `resource`
+
+### pageVariant (locked)
+
+`overview` (cross-type), `specification`, `compendium`, `changelog`, `knowledge-hub`
+
+`knowledge-hub` = `resource` variant for curated external/public content: tools, directories, showcases, community channels, ecosystem link collections.
+
+### audience (7)
+
+`founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`
+
+### purpose (15)
+
+`orient`, `explain`, `learn`, `choose`, `evaluate`, `start`, `build`, `configure`, `operate`, `troubleshoot`, `verify`, `integrate`, `optimise`, `reference`, `update`
+
+---
+
+## Information Layer
+
+### Information types (9)
+
+`factual`, `conceptual`, `procedural`, `analytical`, `evaluative`, `structural`, `change`, `narrative`, `technical`
+
+**Key rule:** Information type is section-level (agent identifies per section at runtime), not page-level. Derived from `purpose` via the mapping in the full framework. Not tagged in frontmatter.
+
+### veracityStatus (3, frontmatter field)
+
+`verified`, `unverified`, `stale`
+
+This is the only new frontmatter field from the information layer.
+
+---
+
+## Complexity and Lifecycle
+
+### complexity (3)
+
+`beginner`, `intermediate`, `advanced`
+
+### lifecycleStage (7)
+
+`discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise`
+
+---
+
+## Voice Rules
+
+UK English throughout. No US spelling.
+
+**Banned words:** effectively, essentially, basically, meaningful, significant, real, various, several, obviously, clearly
+
+**Banned phrases:** "This section covers", "In this guide you will learn", "Let's dive in"
+
+Full audience-specific voice rules: `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
+
+---
+
+## Key Architectural Decisions
+
+| Decision | Rule |
+|---|---|
+| Information type is section-level | Agent identifies type per section at runtime |
+| Information type is not frontmatter | Derived from `purpose` via mapping |
+| `veracityStatus` is the only new field | `verified` / `unverified` / `stale` |
+| `overview` is a pageVariant, not a pageType | Cross-type variant for entry/orientation pages |
+| `navigation` stays as primary pageType | Pure routing pages: portals, tab roots |
+| `tutorial` placement is section-dependent | Tab-specific: `/guides`; community/external: `/resources` |
+| `resource` vs `reference` are distinct | `reference` = structured lookup; `resource` = curated discovery |
+| Pipeline scope | Gateways + orchestrators first |
+
+---
+
+## Pipeline Structure
+
+The content pipeline has 10+ phases. Summary:
+
+1. **Page taxonomy** - classify every page
+2. **Content scan** - inventory existing content per tab
+3. **IA audit** - verify information architecture matches taxonomy
+4. **Content pass** - write/rewrite pages to standard
+5. **Voice check** - verify audience-specific voice rules
+6. **Veracity pass** - verify factual claims against authoritative sources
+7. **Layout pass** - verify page composition and component usage
+
+---
+
+## Canonical sources
+
+- Full execution plan: `workspace/plan/active/CONTENT-WRITING/plan-canonical.md`
+- Framework index: `workspace/plan/active/CONTENT-WRITING/framework-index-canonical.md`
+- Voice rules: `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
+- Page taxonomy: `docs-guide/frameworks/page-taxonomy-framework.mdx`
+- Page composition: `docs-guide/frameworks/page-composition-framework.mdx`

@@ -9,7 +9,6 @@
 # @pipeline    manual — interactive developer tool, not suited for automated pipelines
 # @scope       tools/dev
 # @usage       bash tools/dev/preview/ensure-mint-watcher-patch.sh [flags]
-# @policy      E-C6, F-C1
 set -euo pipefail
 
 MODE="apply"

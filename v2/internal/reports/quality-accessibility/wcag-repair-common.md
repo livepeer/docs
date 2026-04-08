@@ -1,15 +1,15 @@
 ---
 title: 'WCAG Repair Common Report'
 sidebarTitle: 'WCAG Repair'
-description: 'Generated WCAG repair report from tools/scripts/wcag-repair-common.js.'
+description: 'Generated WCAG repair report from operations/scripts/remediators/content/style/wcag-repair-common.js.'
 keywords: ["livepeer","internal","reports","quality-accessibility","wcag-repair-common"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-16T15:11:31.531Z`
-Last Generated (UTC Human): `March 16, 2026 15:11 UTC`
-Generator Script: `tools/scripts/wcag-repair-common.js`
-What It Does: Generated WCAG repair report from tools/scripts/wcag-repair-common.js.
-Audited Scope: `tools/scripts, tests/integration, tasks/reports, v2`
+Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
+Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Generator Script: `operations/scripts/remediators/content/style/wcag-repair-common.js`
+What It Does: Generated WCAG repair report from operations/scripts/remediators/content/style/wcag-repair-common.js.
+Audited Scope: `operations/scripts, operations/tests/integration, workspace/reports, v2`
 Outputs:
 - _Not documented in script header._
 # V2 WCAG Accessibility Audit Report

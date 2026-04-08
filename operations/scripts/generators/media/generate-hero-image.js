@@ -26,6 +26,13 @@
  *   --color       (optional) Text/icon colour, default: white
  *   --circle      (optional) Show icon inside a white circle, default: true
  *   --circle-size (optional) Circle diameter in px, default: 100
+ * @script      generate-hero-image
+ * @type        generator
+ * @description generate hero image
+ * @mode        generate
+ * @pipeline    manual
+ * @scope       operations/scripts/generators/media
+ * @usage       node operations/scripts/generators/media/generate-hero-image.js
  */
 
 const path = require('path')

@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 /**
  * @script      page-integrity-dispatch
- * @category    orchestrator
- * @type        orchestrator
- * @concern     content
- * @niche       health
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     infrastructure:pipeline-orchestration
- * @description Page integrity dispatcher — resolves page scope once, runs page link and import audits, applies deterministic repairs, reruns, and emits combined unresolved findings plus rolling-issue planning data.
- * @mode        execute
- * @domain      docs
- * @needs       E-R12, E-R14
- * @purpose-statement Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.
- * @pipeline    P1, P5, P6
+ * @description Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.
+ * @mode        read-only
+ * @pipeline    manual, P6
  * @scope       operations/scripts, operations/reports/health/page-integrity, .github/workflows
  * @usage       node operations/scripts/dispatch/content/health/page-integrity-dispatch.js [--staged|--files <paths>|--tab <tab>] [--strict] [--no-repair] [--issue-mode off|plan] [--output-dir <dir>]
  * @policy      E-R12, E-R14

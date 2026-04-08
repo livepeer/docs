@@ -1,0 +1,85 @@
+---
+title: 'Governance Repair'
+sidebarTitle: 'Governance Repair'
+description: 'Governance Repair'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - remediator
+  - governance
+  - remediator-governance-repair-pipelines
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/remediator-governance-repair-pipelines.yml` |
+| **New name** | `remediator-governance-repair-pipelines.yml` |
+| **Type** | `remediator` |
+| **Concern** | `governance` |
+| **Pipeline tag** | P6 (self-heal) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["schedule, workflow_dispatch"] --> WF["remediator-governance-repair-pipelines"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `schedule` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `operations/scripts/generators/governance/root/generate-root-governance-artifacts.js`
+- `operations/scripts/validators/governance/compliance/check-root-governance-sync.js`
+- `operations/scripts/generators/governance/reports/generate-repo-governance-status.js`
+- `operations/scripts/validators/governance/compliance/check-repo-governance-sync.js`
+- `operations/scripts/dispatch/governance/pipelines/governance-pipeline.js`
+
+<CustomDivider />
+
+## Known Issues
+
+None identified.
+
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Permissions** | Declared |
+| **Concurrency** | No |
+| **Auto-commit** | Yes |
+| **Inline script** | Yes (extraction candidate) |

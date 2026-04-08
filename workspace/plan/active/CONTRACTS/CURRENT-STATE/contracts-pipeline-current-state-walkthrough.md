@@ -7,7 +7,7 @@ Scope:
 - `.github/workflows/update-contract-addresses.yml`
 - `.github/workflows/update-contract-addresses-shadow.yml`
 - `.github/scripts/fetch-contract-addresses.js`
-- `operations/scripts/automations/content/data/contracts/pipeline.js`
+- `operations/scripts/integrators/content/data/contracts/pipeline.js`
 - generated outputs under `snippets/data/contract-addresses/`
 
 This is current-state documentation, not target-state design.

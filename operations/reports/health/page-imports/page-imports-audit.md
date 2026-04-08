@@ -1,8 +1,8 @@
 # Page Imports Audit
 
 ## Summary
-- Entry pages: 463
-- Files analyzed: 601
+- Entry pages: 465
+- Files analyzed: 604
 - Findings: 13
 - Warnings: 0
 - Repo scope: routable-v2

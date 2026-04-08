@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-repo-governance-sync
- * @category          validator
- * @type              validator
- * @concern           governance
- * @niche             compliance
- * @purpose           governance:ownerless-governance
- * @description       Validates that the top-level repo-governance registry, generated outputs, and referenced steady-state paths stay aligned.
- * @mode              read-only
- * @domain            docs
- * @needs             R-R14, R-R16, R-R17, R-R29
- * @purpose-statement Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths.
- * @pipeline          manual, pr-changed -> repo-governance registry -> exit-code, stdout:violations
- * @scope             operations/governance/config, operations/scripts/generators/governance/reports, operations/scripts/validators/governance/compliance, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
- * @usage             node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js [--json]
- * @policy            R-R14, R-R16, R-R17, R-R29
+ * @script      check-repo-governance-sync
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     governance:ownerless-governance
+ * @description Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths.
+ * @mode        read-only
+ * @pipeline    manual, pr-changed -> repo-governance registry -> exit-code, stdout:violations
+ * @scope       operations/governance/config, operations/scripts/generators/governance/reports, operations/scripts/validators/governance/compliance, tools/lib/governance, docs-guide/repo-ops/config, workspace/reports/repo-ops
+ * @usage       node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js [--json]
+ * @policy      R-R14, R-R16, R-R17, R-R29
  */
 
 const fs = require('fs');

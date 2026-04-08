@@ -6,7 +6,7 @@ owner: "@livepeer/docs-team"
 status: active
 version: "2.0"
 created: 2026-03-25
-lastUpdated: 2026-03-26
+lastUpdated: 2026-04-07
 ---
 
 # Governance Index
@@ -17,20 +17,20 @@ lastUpdated: 2026-03-26
 
 ## Governed Surfaces
 
-Ten areas of this repo are governed. Each has a canonical framework document, a root path, and a staleness status.
+Twelve areas of this repo are governed. Each has a canonical framework document, a root path, and a staleness status.
 
 | # | Area | Root path | Framework | Status |
 |---|------|-----------|-----------|--------|
-| 1 | Components | `snippets/components/` | `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` | Partially stale |
-| 2 | Scripts | `operations/scripts/` | `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` | Partially stale |
-| 3 | AI Tools and Skills | `ai-tools/ai-skills/` | `workspace/plan/active/AI-TOOLS-GOVERNANCE/structure.md` | Current |
-| 4 | Repo Structure | Root folders | `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` | Current (LOCKED) |
-| 5 | Content Writing | `v2/` | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Active |
-| 6 | Documentation | `docs-guide/` | `workspace/plan/active/DOCUMENTATION/Frameworks/doc-item-model.md` | Frozen |
+| 1 | Components | `snippets/components/` | `docs-guide/frameworks/component-framework-canonical.mdx` | Current |
+| 2 | Scripts | `operations/scripts/` | `docs-guide/frameworks/script-framework.mdx` | Current |
+| 3 | AI Tools and Skills | `ai-tools/ai-skills/` | `docs-guide/frameworks/ai-tools-governance.mdx` | Current |
+| 4 | Repo Structure | Root folders | `docs-guide/frameworks/repo-structure.mdx` | Current (LOCKED) |
+| 5 | Content Writing | `v2/` | `docs-guide/frameworks/content-writing.mdx` | Active |
+| 6 | Documentation | `docs-guide/` | `docs-guide/frameworks/doc-item-model.mdx` | Frozen |
 | 7 | Snippets Root Governance | `snippets/` | `snippets/guide.mdx` | Current |
-| 8 | Mintlify Platform Constraints | Platform-wide | Reference files (see below) | Current |
-| 9 | File Placement | Cross-cutting | Reference file (see below) | Current |
-| 10 | GitHub Actions | `.github/workflows/` | `.github/workspace/framework-canonical.md` | Current |
+| 8 | Mintlify Platform Constraints | Platform-wide | `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` | Current |
+| 9 | File Placement | Cross-cutting | `docs-guide/frameworks/file-placement.mdx` | Current |
+| 10 | GitHub Actions | `.github/workflows/` | `docs-guide/frameworks/github-actions.mdx` | Current |
 
 ---
 
@@ -38,9 +38,11 @@ Ten areas of this repo are governed. Each has a canonical framework document, a 
 
 **Root path:** `snippets/components/`
 
-**Framework:** `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md`
+**Framework:** [Component Framework](../frameworks/component-framework-canonical.mdx)
 
 Six categories organise all components: elements, wrappers, displays, scaffolding, integrators, config. Every component file requires a 7-tag JSDoc header.
+
+**Working spec:** `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md`
 
 **Status:** Partially stale. The badges sub-niche is undocumented. Component counts in the framework are aspirational, not actual. Validate against the filesystem before relying on counts.
 
@@ -50,11 +52,13 @@ Six categories organise all components: elements, wrappers, displays, scaffoldin
 
 **Root path:** `operations/scripts/`
 
-**Framework:** `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md`
+**Framework:** [Script Framework](../frameworks/script-framework.mdx)
 
 The taxonomy covers 6 types, 4 concerns, and approximately 25 niches. Every script file requires an 11-tag JSDoc header.
 
-**Status:** Partially stale. 15 references to the old `tools/scripts/` path remain in the framework. Some niches are undocumented. Cross-reference against `operations/scripts/` for the actual inventory.
+**Working spec:** `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` (1,368 lines, full niche tables)
+
+**Status:** Partially stale. 15 references to the old `tools/scripts/` path remain in the working spec. Some niches are undocumented. Cross-reference against `operations/scripts/` for the actual inventory.
 
 ---
 
@@ -62,9 +66,11 @@ The taxonomy covers 6 types, 4 concerns, and approximately 25 niches. Every scri
 
 **Root path:** `ai-tools/ai-skills/`
 
-**Framework:** `workspace/plan/active/AI-TOOLS-GOVERNANCE/structure.md`
+**Framework:** [AI Tools Governance](../frameworks/ai-tools-governance.mdx)
 
-Six skill categories across 2 tiers. Each skill folder contains a `SKILL.md` file conforming to the standard template.
+Five-type classification (atomic, dispatcher, adapter, governance, reference) with 8 concerns and SKILL.md template conformance.
+
+**Working spec:** `workspace/plan/active/AI-TOOLS-GOVERNANCE/structure.md`
 
 **Status:** Current. 95% complete, in maintenance mode.
 
@@ -74,11 +80,13 @@ Six skill categories across 2 tiers. Each skill folder contains a `SKILL.md` fil
 
 **Root path:** All root folders.
 
-**Framework:** `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` (LOCKED)
+**Framework:** [Repo Structure](../frameworks/repo-structure.mdx) (LOCKED)
 
-This framework is locked. No structural changes to root-level folders without a policy update.
+This framework is locked. No structural changes to root-level folders without a policy update. Every root folder has a `GOVERNANCE.md` marker.
 
-**Status:** Current. Phase 0 complete. Phases 1 and 2 heavily executed.
+**Working spec:** `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md`
+
+**Status:** Current. 100% GOVERNANCE.md coverage.
 
 ---
 
@@ -86,15 +94,16 @@ This framework is locked. No structural changes to root-level folders without a 
 
 **Root path:** `v2/`
 
-**Framework:** `workspace/plan/active/CONTENT-WRITING/plan-canonical.md`
+**Framework:** [Content Writing Pipeline](../frameworks/content-writing.mdx)
 
 Governs page taxonomy (7 pageTypes, 15 pagePurposes, 7 audience tokens), voice rules, and the content pipeline (10+ phases from audience design through layout pass).
 
-**Supporting files:**
-- Voice rules: `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
-- Page taxonomy: `v2/orchestrators/_workspace/canonical/Frameworks.mdx`
-- Content pass prompt: `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md`
-- Veracity pass prompt: `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md`
+**Working spec:** `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` (997 lines, full pipeline)
+
+**Supporting published docs:**
+- Voice rules: [Voice Rules](../standards/voice-rules.mdx)
+- Page taxonomy: [Page Taxonomy](../frameworks/page-taxonomy-framework.mdx)
+- Frontmatter: [Frontmatter Spec](../standards/frontmatter.mdx)
 
 **Status:** Active. Five tabs in the pipeline. Orchestrators is priority 1.
 
@@ -104,9 +113,11 @@ Governs page taxonomy (7 pageTypes, 15 pagePurposes, 7 audience tokens), voice r
 
 **Root path:** `docs-guide/`
 
-**Framework:** `workspace/plan/active/DOCUMENTATION/Frameworks/doc-item-model.md` (FROZEN)
+**Framework:** [Doc Item Model](../frameworks/doc-item-model.mdx) (FROZEN)
 
 The doc-item model is locked. Execution is blocked on human review.
+
+**Working spec:** `workspace/plan/active/DOCUMENTATION/Frameworks/doc-item-model.md`
 
 **Status:** Model locked. No new doc-item types without explicit approval.
 
@@ -137,7 +148,7 @@ Read `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.
 
 ## 9. File Placement
 
-**Reference:** `workspace/thread-outputs/research/component-script-placement-reference.md`
+**Framework:** [File Placement](../frameworks/file-placement.mdx)
 
 Cross-cutting placement rules for components and scripts. Defines which folders accept which file types and the naming conventions for each.
 
@@ -174,40 +185,71 @@ Governance-sensitive workflow PRs also require the production approval gate:
 
 ---
 
+## 11. Site Configuration (docs.json)
+
+**Root path:** `docs.json`
+
+**Maintained by:** Hand-edited (human only). No generator.
+
+The canonical Mintlify configuration file. Controls navigation, routing, branding, tabs, anchors, redirects, and all site-level config. Changes deploy to `docs.livepeer.org` on merge to `docs-v2`.
+
+**Validation:** Mintlify build (implicit). Pre-commit hard gate validates redirect integrity against `tools/config/scoped-navigation/docs-gate-orch.json`. Root allowlist protects against accidental deletion.
+
+**Policy:** Changes to navigation structure, redirects, or tab config should be reviewed for downstream impact on generated surfaces (llms.txt, sitemap, AI sitemap, docs-index).
+
+**Status:** Current. Hand-maintained, critical infrastructure.
+
+---
+
+## 12. Web Contracts (robots.txt)
+
+**Root path:** `robots.txt`
+
+**Maintained by:** Hand-edited. Custom override of Mintlify auto-generated robots.txt (see file header comment).
+
+Explicitly allows AI search and retrieval crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, Amazonbot, cohere-ai) for AEO (Answer Engine Optimisation). References the canonical sitemap at `https://docs.livepeer.org/sitemap.xml`.
+
+**Validation:** No automated validator. Changes should be reviewed for SEO/AEO impact.
+
+**Policy:** This file is a web contract. Changes affect which crawlers can index the live site. Do not restrict AI crawlers without explicit approval.
+
+**Status:** Current. Hand-maintained.
+
+---
+
 ## Decision Rules
 
 Before writing or moving any governed file, read the required documents listed below.
 
 ### Before Writing a Component
 
-1. `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` - category taxonomy, JSDoc header requirements
-2. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - platform constraints, preview rules, and repo-safe JSX/MDX patterns
-3. `workspace/thread-outputs/research/component-script-placement-reference.md` - folder placement rules
+1. [Component Framework](../frameworks/component-framework-canonical.mdx) - category taxonomy, JSDoc header requirements
+2. [File Placement](../frameworks/file-placement.mdx) - folder placement rules
+3. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - platform constraints
 
 ### Before Writing a Script
 
-1. `workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md` - type/concern/niche taxonomy, JSDoc header requirements
-2. `workspace/thread-outputs/research/component-script-placement-reference.md` - folder placement rules
+1. [Script Framework](../frameworks/script-framework.mdx) - type/concern/niche taxonomy, JSDoc header requirements
+2. [File Placement](../frameworks/file-placement.mdx) - folder placement rules
 
 ### Before Writing a Docs Page
 
-1. `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` - pipeline phases, page taxonomy, gate definitions
-2. `ai-tools/ai-skills/page-authoring/SKILL.md` - page authoring skill
-3. `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` - per-audience voice rules
-4. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - Mintlify platform and repo behaviour rules
+1. [Content Writing Pipeline](../frameworks/content-writing.mdx) - pipeline phases, page taxonomy
+2. [Voice Rules](../standards/voice-rules.mdx) - per-audience voice rules
+3. [Frontmatter Spec](../standards/frontmatter.mdx) - required frontmatter fields
+4. `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` - Mintlify platform constraints
 
 ### Before Writing a Workflow
 
-1. `.github/workspace/framework-canonical.md` - type/concern taxonomy, naming convention, pipeline tags, required standards
-2. `.github/workspace/actions-library/action-template.mdx` - page template with full enum reference
-3. `.github/workspace/decisions-log.mdx` - locked decisions (D-ACT-01 through D-ACT-08)
-4. `operations/governance/config/governance-approval-policy.json` - required approval labels and PR-body evidence for governance-sensitive workflow changes
+1. [GitHub Actions Framework](../frameworks/github-actions.mdx) - type/concern taxonomy, naming convention, pipeline tags
+2. `.github/workspace/decisions-log.mdx` - locked decisions (D-ACT-01 through D-ACT-08)
+3. `operations/governance/config/governance-approval-policy.json` - required approval labels
 
 ### Before Moving Files
 
-1. `workspace/plan/active/REPO-STRUCTURE-GOV/folder-structure.md` - root folder structure (LOCKED)
-2. `workspace/thread-outputs/research/component-script-placement-reference.md` - component and script placement
-3. `docs-guide/policies/docs-guide-structure-policy.mdx` - docs-guide folder rules
+1. [Repo Structure](../frameworks/repo-structure.mdx) - root folder structure (LOCKED)
+2. [File Placement](../frameworks/file-placement.mdx) - component and script placement
+3. [Docs Guide Structure Policy](docs-guide-structure-policy) - docs-guide folder rules
 
 ---
 
@@ -219,6 +261,34 @@ Frameworks marked "Partially stale" or "Frozen" are still binding for their non-
 2. Cross-reference against the filesystem for the actual state.
 3. Do not update the framework without explicit approval.
 4. Flag the discrepancy in session output.
+
+---
+
+## Standards
+
+Published authoring and style standards in `docs-guide/standards/`:
+
+| Standard | What it covers |
+|----------|---------------|
+| [Voice Rules](../standards/voice-rules.mdx) | Per-audience voice, banned words/phrases, UK English corrections |
+| [Naming Conventions](../standards/naming-conventions.mdx) | File, folder, component, script, and workflow naming |
+| [Frontmatter Spec](../standards/frontmatter.mdx) | Required/optional frontmatter fields for all document types |
+
+---
+
+## Decision Registry
+
+All decision registries are indexed at [docs-guide/decisions/registry.md](../decisions/registry.md).
+
+---
+
+## Governance Map
+
+Auto-generated governance map: [repo-governance-map.mdx](../repo-ops/config/repo-governance-map.mdx)
+
+Generated by: `operations/scripts/generators/governance/generate-governance-map.js`
+
+Run `--check` to verify all folders are governed and no frameworks are stale. Run `--write` to regenerate the map.
 
 ---
 

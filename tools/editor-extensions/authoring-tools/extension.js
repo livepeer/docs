@@ -1,3 +1,16 @@
+/**
+ * @script            extension
+ * @type              interface
+ * @concern           integrations
+ * @niche             editor-tooling
+ * @purpose           VS Code extension providing MDX authoring tools — autocomplete, formatting, import validation
+ * @description       Registers completion providers for Livepeer MDX components and import paths, a document formatter, an import-path validator, and an import insertion command, all scoped to .mdx files in the docs workspace.
+ * @mode              interface
+ * @scope             tools/editor-extensions/authoring-tools/
+ * @usage             Activate via VS Code on .mdx file open; commands available in palette under Livepeer: Authoring Tools
+ * @policy            mintlify-repo-best-practices, component-framework-canonical
+ */
+
 'use strict';
 
 const path = require('path');

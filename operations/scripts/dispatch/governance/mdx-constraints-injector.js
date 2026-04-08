@@ -1,17 +1,14 @@
 /**
- * @script mdx-constraints-injector
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Auto-injects Mintlify MDX constraints when user messages involve page/component editing
+ * @script      mdx-constraints-injector
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Auto-injects Mintlify MDX constraints when user messages involve page/component editing
  * @description UserPromptSubmit hook. Keyword-matches the user message for MDX/component/page
- *   editing signals. When detected, injects the top Mintlify constraints as a systemMessage
- *   so Claude has them in context before it starts thinking. Zero LLM cost.
- * @mode read-only
- * @pipeline UserPromptSubmit hook → reads stdin user message → keyword match → inject constraints
- * @scope .claude/settings.json UserPromptSubmit hook
- * @usage Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    UserPromptSubmit hook → reads stdin user message → keyword match → inject constraints
+ * @scope       .claude/settings.json UserPromptSubmit hook
+ * @usage       Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.
  */
 
 const { stdin } = process;

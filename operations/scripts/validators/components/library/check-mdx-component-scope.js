@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script      check-mdx-component-scope
- * @type        validator
- * @concern     components
- * @niche       library
+ * @type        
+ * @concern     
+ * @niche       
  * @purpose     qa:repo-health
  * @description Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.
  * @mode        read-only
  * @pipeline    manual
  * @scope       operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components, operations/tests/tils
  * @usage       node operations/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]
- * @policy      R-R10, R-R29
  */
 
 const fs = require('fs');

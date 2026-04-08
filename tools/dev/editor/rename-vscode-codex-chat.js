@@ -10,7 +10,6 @@
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/dev/editor/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json
  * @usage       node tools/dev/editor/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]
- * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

@@ -3,7 +3,7 @@ title: 'Legacy Alias: Audit Tasks Folders Reports Audit'
 sidebarTitle: 'Legacy Alias'
 description: 'Retired internal report route preserved for link stability.'
 keywords: ["livepeer","internal","reports","repo-ops","publish-v2-internal-reports"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
 # Legacy Internal Report Alias
 

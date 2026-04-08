@@ -1,3 +1,16 @@
+/**
+ * @script            mdx-parser
+ * @type              utility
+ * @concern           governance
+ * @niche             editor-tooling
+ * @purpose           Lightweight MDX parser that tokenises MDX source into typed segments for preview rendering
+ * @description       Parses MDX source text into an ordered array of typed segments (frontmatter, import, markdown, mermaid, codeblock, jsx, jsx-expression) consumed by the component-map renderer to produce the live preview HTML.
+ * @mode              integrate
+ * @scope             tools/editor-extensions/lpd-mdx-preview/lib/
+ * @usage             Required by tools/editor-extensions/lpd-mdx-preview/extension.js — not invoked directly
+ * @policy            mintlify-repo-best-practices
+ */
+
 'use strict';
 
 /**

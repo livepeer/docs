@@ -1,19 +1,14 @@
 /**
- * @script completion-gate
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Blocks writing to completion artifacts while render verification is failing
+ * @script      completion-gate
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Blocks writing to completion artifacts while render verification is failing
  * @description PreToolUse hook for Write/Edit. Detects writes to session-log.txt,
- *   completion-reports.md, and other completion artifacts. If mdx-render-verify state
- *   is "failed", BLOCKS the write. If edit-loop state has active hypothesis requirements,
- *   WARNS. If render verification is pending or server-failed, WARNS. Allows through
- *   when no blocking conditions exist.
- * @mode read-only
- * @pipeline PreToolUse hook → parse stdin → check completion artifact → read verify/loop state → allow or block
- * @scope .claude/settings.json PreToolUse hook (Write|Edit matcher)
- * @usage Called automatically by Claude Code PreToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PreToolUse hook → parse stdin → check completion artifact → read verify/loop state → allow or block
+ * @scope       .claude/settings.json PreToolUse hook (Write|Edit matcher)
+ * @usage       Called automatically by Claude Code PreToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

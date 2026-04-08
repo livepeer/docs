@@ -1,19 +1,14 @@
 /**
- * @script phase-gate-hook
- * @type dispatch
- * @concern governance
- * @niche pipelines
- * @purpose Enforces phase checkpoint verification before allowing work to proceed
+ * @script      phase-gate-hook
+ * @type        
+ * @concern     
+ * @niche       
+ * @purpose     Enforces phase checkpoint verification before allowing work to proceed
  * @description PostToolUse hook for Edit/Write. Reads phase-gate.jsonl and emits unverified
- *   checkpoints as a systemMessage on EVERY edit. Not a one-time reminder — a persistent
- *   nag that fires every time Claude writes to any file while unverified checkpoints exist.
- *   Claude must verify each checkpoint and mark it done in phase-gate.jsonl before the
- *   warnings stop. This prevents the "skip verification, ship anyway" pattern.
- * @mode read-only
- * @pipeline PostToolUse hook → reads phase-gate.jsonl → emits unverified checkpoints
- * @scope .claude/settings.json PostToolUse hook (Edit|Write matcher)
- * @usage Called automatically by Claude Code PostToolUse hook. Not invoked directly.
- * @policy Governance enforcement — do not bypass
+ * @mode        read-only
+ * @pipeline    PostToolUse hook → reads phase-gate.jsonl → emits unverified checkpoints
+ * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
+ * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
 
 const fs = require('fs');

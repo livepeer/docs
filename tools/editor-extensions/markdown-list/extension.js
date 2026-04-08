@@ -1,3 +1,16 @@
+/**
+ * @script            extension
+ * @type              interface
+ * @concern           maintenance
+ * @niche             editor-tooling
+ * @purpose           VS Code extension for markdown list manipulation and formatting
+ * @description       Provides commands to split, sort, deduplicate, and reformat markdown lists and selections, with configurable bullet style and ordering preferences.
+ * @mode              interface
+ * @scope             tools/editor-extensions/markdown-list/
+ * @usage             Activate via VS Code command palette: Livepeer: Sort List, Livepeer: Deduplicate List, etc.
+ * @policy            voice-rules, authoring-standards
+ */
+
 'use strict';
 
 const vscode = require('vscode');

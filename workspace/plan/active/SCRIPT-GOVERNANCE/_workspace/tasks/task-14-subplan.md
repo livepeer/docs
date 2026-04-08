@@ -150,7 +150,7 @@ Verify each changed file manually before committing.
 These are the highest-risk files — a broken pre-commit hook blocks ALL commits.
 
 Known references:
-- `tools/scripts/automations/ai/codex/task-preflight.js`
+- `tools/scripts/integrators/ai/codex/task-preflight.js`
 - `tools/scripts/validators/governance/compliance/validate-codex-task-contract.js`
 - `tools/scripts/validators/ai/codex/validate-locks.js`
 - `tools/scripts/validators/ai/codex/check-no-ai-stash.sh`

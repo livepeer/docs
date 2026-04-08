@@ -3,7 +3,7 @@
  * @script            codex-skill-sync.test
  * @category          validator
  * @purpose           governance:agent-governance
- * @scope             operations/tests/unit, operations/scripts/automations/ai/agents/sync-codex-skills.js, ai-tools/ai-skills/templates
+ * @scope             operations/tests/unit, operations/scripts/integrators/ai/agents/sync-codex-skills.js, ai-tools/ai-skills/templates
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests sync-codex-skills.js — validates skill file and companion bundle synchronisation between sources
@@ -19,7 +19,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const SYNC_SCRIPT = path.join(REPO_ROOT, 'operations/scripts/automations/ai/agents/sync-codex-skills.js');
+const SYNC_SCRIPT = path.join(REPO_ROOT, 'operations/scripts/integrators/ai/agents/sync-codex-skills.js');
 
 let errors = [];
 

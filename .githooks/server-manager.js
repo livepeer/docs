@@ -10,7 +10,6 @@
  * @pipeline    manual — legacy browser-validation module imported by .githooks/verify-browser.js
  * @scope       .githooks
  * @usage       node .githooks/server-manager.js [flags]
- * @policy      E-C6, F-C1
  */
 /**
  * Server management utility for browser tests

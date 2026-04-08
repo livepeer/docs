@@ -6,7 +6,7 @@ description: >-
   engagement and demonstrates how the RFP's three overarching themes for
   **stakeholder-focused**, **AI-first**, and **future-proofed** documentation,
   were delivered across every layer of the system.
-purpose: operations
+Purpose: operations
 pageType: guide
 keywords:
   - livepeer
@@ -99,7 +99,7 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
         - **n8n Automation Layer** - Platform-independent automation with parallel GitHub Actions + n8n architecture for AI pipeline integration.
 
         ## Discoverability - Machine-Readable Parallel Formats
-        Documentation discoverability for AI systems requires more than well-structured HTML. LLM crawlers, retrieval-augmented generation (RAG) systems, and AI search engines require clean, parseable content without the navigation chrome, JavaScript rendering, and layout noise of a production documentation site. v2 addresses this at two levels: platform-native and system-level.
+        Documentation discoverability for AI systems requires more than well-structured HTML. LLM crawlers, retrieval-augmented generation (RAG) systems, and AI search engines require clean, parseable content without the navigation chrome, JavaScript rendering, and layout noise of a production documentation site. V2 addresses this at two levels: platform-native and system-level.
         - **[Technical]** Mintlify natively serves all MDX pages as clean, parseable content accessible at predictable URLs. The MDX source files in v2/pages/ are structured to be fetched and read directly - clean semantic markup, no extraneous UI scaffolding - providing a de-facto parallel readable format for bot consumers alongside the rendered human UI.
 
         - **[Scripts]** Pages index generator (operations/scripts/generate-pages-index.js) produces and validates section-level index.mdx files for all v2/pages/ folders plus a root aggregate index. This index is machine-readable and provides AI systems with a flat, navigable inventory of all documentation surfaces without requiring a site crawl.
@@ -111,7 +111,7 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
         - **[Technical]** Repository AI guidance files (`AGENTS.md` plus the native adapter paths) make the documentation repository itself legible to AI coding assistants - enabling developers using AI tools to query and navigate the docs repo without human instruction.
 
         ## Readability - Clear Journeys & Implementation Items for AI Consumers
- Beyond discoverability, AI-first documentation provides structured, actionable journeys explicitly designed for AI agent execution. v2 introduces multiple novel documentation patterns in this category.
+ Beyond discoverability, AI-first documentation provides structured, actionable journeys explicitly designed for AI agent execution. V2 introduces multiple novel documentation patterns in this category.
         - **"Get AI to Set Up the Gateway"** - Dedicated quickstart (v2/pages/04_gateways/quickstart/AI-prompt.mdx) written as a structured prompt for AI agent consumption. Developers copy and paste the prompt into their AI assistant to set up a Livepeer gateway. Establishes a "copy to AI" quickstart pattern extendable across the library.
 
         - **Agent-oriented Structure** - All quickstart and how-to pages follow Diátaxis typing for reliable agent task decomposition. Tutorials provide explicit preconditions, step sequences, verification criteria, and failure modes-critical for AI agent execution reliability.
@@ -188,27 +188,27 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
 
         - **[Automations]** Five live automation pipelines: forum integration (live posts, reply counts, rich previews), Ghost blog integration (reading time, author attribution), YouTube integration (Shorts filtered), project showcase (searchable, sortable ecosystem projects), release tracking (global version auto-update). Parallel n8n workflow layer for platform independence.
 
-        - **[Technical]** Multilingual architecture in place: language switcher live in navigation, auto-translation architecture ready for activation. i18n readiness means localisation can be enabled without restructuring the IA.
+        - **[Technical]** Multilingual architecture in place: language switcher live in navigation, auto-translation architecture ready for activation. I18n readiness means localisation can be enabled without restructuring the IA.
 
         - **[AI]** MCP server pathway documented in future recommendations. Exposing Livepeer docs as an MCP (Model Context Protocol) server would make the documentation directly queryable by AI agents and developer tooling - positioning Livepeer as an early mover in agent-native documentation infrastructure.
 
         - **[Product Positioning]** Documentation is positioned as a product surface, not a support artifact. Templates, runbooks, and component library make the documentation itself a distribution mechanism - shortening time-to-success for each stakeholder type and reducing support overhead.
 
         ### Auto-Auditing & Auto-Fixing
-        Future-proof infrastructure must not only enforce quality at authoring time - it must continuously audit the existing documentation estate and surface issues for remediation. v2 builds this audit layer into the repository as first-class tooling.
+        Future-proof infrastructure must not only enforce quality at authoring time - it must continuously audit the existing documentation estate and surface issues for remediation. V2 builds this audit layer into the repository as first-class tooling.
         - **[Scripts]** audit-all-pages.js and audit-all-pages-simple.js audit the full v2 pages estate for structural completeness, flagging empty pages, placeholder content, TODO markers, and missing frontmatter. Output is written to SCRIPT_AUDIT reports, providing maintainers with a live inventory of content gaps without manual review.
 
         - **[Scripts]** audit-v2-usefulness.js audits v2 MDX pages for human and agent usefulness, including source-weighted 2026 accuracy verification fields in the emitted page matrix. As of the February 2026 audit run, 384 pages were scored across human usefulness and agent usefulness dimensions - producing a cohort breakdown by section (about: avg 62.8 human/64.0 agent; lpt: 61.5/56.8; platforms: 52.7/52.9). This purpose-aware usefulness audit system is a novel feature of the v2 infrastructure with no equivalent in v1.
 
         - **[Scripts]** generate-docs-status.js generates live documentation coverage and status reports - providing maintainers with a snapshot of section completeness, stale-risk pages, and verification queue priorities without manually reviewing each page.
 
-        - **[Scripts]** audit-scripts.js audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports. Auto-fixes where possible (e.g. regenerating stale indexes, patching missing headers). The system finds and reports its own gaps.
+        - **[Scripts]** audit-scripts.js audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports. Auto-fixes where possible (e.g. Regenerating stale indexes, patching missing headers). The system finds and reports its own gaps.
 
         - **[Technical]** Pre-commit auto-fix behaviour: the pre-commit hook system not only blocks invalid commits but, where possible, auto-corrects fixable issues (stale page indexes, missing script headers via autofill flag) before the author even sees a failure. Quality improvement is built into the commit workflow instead of deferred to code review.
 
         ### Auto-Documenting Infrastructure
-        A documentation system that requires humans to manually document its own components will inevitably fall out of sync. v2 eliminates this category of drift by making the infrastructure self-documenting.
-        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. new-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer - human or AI - can read scripts-catalog.mdx (auto-generated from the headers) to understand every automation in the system.
+        A documentation system that requires humans to manually document its own components will inevitably fall out of sync. V2 eliminates this category of drift by making the infrastructure self-documenting.
+        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. New-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer - human or AI - can read scripts-catalog.mdx (auto-generated from the headers) to understand every automation in the system.
 
         - **[Scripts]** generate-docs-guide-indexes.js auto-generates the scripts catalog, workflow catalog, and template catalog in docs-guide/ whenever underlying files change. The internal maintainer knowledge system cannot drift from the actual repository contents because it is generated from them.
 
@@ -289,7 +289,7 @@ import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx"
         - **Technical** - Resource HUB (v2/pages/07_resources/) consolidates style guide, component library, automations documentation, and documentation guide in a single discoverable section - making the documentation system itself navigable by external contributors without requiring repository access.
 
         ### Clear Definitions - Product Glossary & Terminology System
- A fundamental requirement for stakeholder-focused documentation is that every reader arrives at a shared understanding of terminology. Livepeer has a complex vocabulary with multiple terms that require disambiguation: "Gateway" (a protocol-level node) vs. "Studio" (a hosted gateway product); "Orchestrator" vs. the deprecated "Broadcaster"; "Developer" (application builder) vs. "Gateway Operator" (self-hosted network participant). v1 used these terms inconsistently, contributing directly to onboarding confusion.
+ A fundamental requirement for stakeholder-focused documentation is that every reader arrives at a shared understanding of terminology. Livepeer has a complex vocabulary with multiple terms that require disambiguation: "Gateway" (a protocol-level node) vs. "Studio" (a hosted gateway product); "Orchestrator" vs. The deprecated "Broadcaster"; "Developer" (application builder) vs. "Gateway Operator" (self-hosted network participant). V1 used these terms inconsistently, contributing directly to onboarding confusion.
         - **[Content]** Livepeer Glossary (v2/about/resources/livepeer-glossary.mdx) provides a comprehensive, categorised reference covering: Core Terms (Protocol, Network, Developer Platform), Actors & Network Roles (Gateway, Orchestrator, Transcoder, Delegator, Developer, Broadcaster → deprecated), Core Network Concepts (Job, Segment, Ticket, Rounds, Slashing, Inflation, Reputation), Web3 Terms (DePIN, LPT, ETH), Video Terms (Transcoding, Ingest, Delivery, Streaming), and AI Terms (Inference, Model, Pipeline, World Model, Agent).
         - **[Content]** Deprecated term handling is explicit and visible: "Broadcaster" is marked with a deprecation badge (→ See Gateways) directly in the glossary. This prevents new users from following outdated terminology into dead ends.
         - **[Scripts/AI]** Automated terminology pipeline: generate-glossary.js (extraction), terminology-search.js (discovery and cross-page search), glossary-terms.json (machine-readable term data). The pipeline supports optional LLM-assisted classification, enabling the terminology system to scale as new products and concepts enter the Livepeer ecosystem. Both humans and AI assistants querying the docs get consistent term definitions.

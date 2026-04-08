@@ -9,7 +9,6 @@
 # @pipeline    manual — developer tool
 # @scope       .githooks
 # @usage       bash .githooks/verify.sh [flags]
-# @policy      E-C6, F-C1
 # Verification script for pre-commit hook
 # Runs various validation checks on staged files
 
