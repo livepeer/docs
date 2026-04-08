@@ -22,16 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          ref: ${{ inputs.use_test_branch && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
 
       - name: Resolve target branch
         id: branch
         run: |
-          if [ "${{ inputs.use_test_branch }}" = "true" ]; then
-            echo "name=${{ vars.TEST_BRANCH }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "name=${{ vars.DEPLOY_BRANCH }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "name=${{ inputs.use_test_branch && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
         with:
