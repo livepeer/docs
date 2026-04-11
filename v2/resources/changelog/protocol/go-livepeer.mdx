@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-03-30T00:00:00.000Z
+lastVerified: 2026-04-11T00:00:00.000Z
 ---
 
 {/*
@@ -57,6 +57,29 @@ Release notes for the Livepeer node software. For protocol-level changes, see th
 {/* ──────────────────────────────────────────────
   AUTOMATION ZONE -- entries below are populated by workflow.
   ────────────────────────────────────────────── */}
+
+<Update label="Development" tags={["Bug Fixes"]} rss={{ title: "go-livepeer development updates — April 2026", description: "Fixed macOS pre-built binary downloads that failed in environments without X11" }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
+  ## Development updates
+
+### Bug fixes
+
+- **Fixed macOS pre-built binary downloads** — Resolved an issue where macOS binaries required X11 to be installed, causing downloads to fail in environments without it. Pre-built macOS binaries now work out of the box again.
+
+</Update>
+
+<Update label="Development" tags={["BYOC", "Livepeer Box", "Live AI"]} rss={{ title: "go-livepeer development updates — March 2026", description: "BYOC worker auth tokens, webcam input for Livepeer Box, and Live AI session usage tracking" }} description={<Subtitle variant="changelog">March 2026</Subtitle>}>
+  ## Development updates
+
+### New features
+
+- **Webcam input for Livepeer Box** — The Docker-based Livepeer Box now supports webcam input via the `INPUT_WEBCAM` environment variable (e.g. `INPUT_WEBCAM=/dev/video0`). You can also use a video file with `INPUT_VIDEO`. Previously, only a generated test pattern was available for streaming.
+
+### Updates
+
+- **BYOC worker authentication** — BYOC workers now register with an authentication token, matching the same auth pattern used by AI runner workers. This prevents unauthorized workers from joining an orchestrator's pool. Orchestrators running [BYOC pipelines](/v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline) benefit from this without any configuration changes.
+- **Live AI usage tracking** — Live AI sessions now emit usage events for each payment interval, enabling more accurate usage-based billing for gateway operators. This lays the groundwork for improved billing visibility in future releases.
+
+</Update>
 
 <Update label="v0.8.10" tags={["Live AI", "BYOC", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10", description: "Remote signer support for Live AI gateways, unified BYOC capability discovery, and broadcaster crash fix" }} description={<Subtitle variant="changelog">March 2026</Subtitle>}>
   ## v0.8.10
