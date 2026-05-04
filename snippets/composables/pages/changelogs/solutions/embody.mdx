@@ -1,0 +1,182 @@
+---
+sidebarTitle: Changelog
+title: Embody Changelog
+description: Release history for Embody – real-time AI avatars powered by Livepeer.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - embody
+  - livepeer
+  - changelog
+  - releases
+  - avatars
+  - real-time AI
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Embody Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: changelog
+purpose: changelog
+audience: builder
+lastVerified: 2026-03-25T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Tip>
+  This page is an automated workflow.
+  <Subtitle variant="changelog" style={{fontSize: "0.95rem", marginTop: "0.25rem"}}>Subscribe to this changelog's <LinkArrow label="RSS Feed" href="/v2/solutions/embody/changelog/rss.xml" newline={false} /></Subtitle>
+</Tip>
+
+<CustomDivider style={{margin: "-0.5rem 0 -1.5rem 0"}} />
+
+Track releases for <LinkArrow label="Embody" href="https://github.com/its-DeFine/Unreal_Vtuber/releases" newline={false} /> on GitHub.
+
+{/* ──────────────────────────────────────────────
+  AUTOMATION ZONE — entries below are populated by workflow.
+  ────────────────────────────────────────────── */}
+
+<Update label="v2026.3.1-alpha.1" tags={["Features"]} rss={{ title: "Embody v2026.3.1-alpha.1", description: "Alpha release in date-based format. Includes merged updates through PR #236 (security hardening: remove hardcoded pay..." }} description={<Subtitle variant="changelog">March 2026</Subtitle>}>
+  ## v2026.3.1-alpha.1
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    Alpha release in date-based format. Includes merged updates through PR #236 (security hardening: remove hardcoded payments defaults, add allowlist diagnostics) plus prior mainline changes.
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v2026.3.1-alpha.1" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.6" tags={["Features", "Fixes"]} rss={{ title: "Embody v1.3.6", description: "- PixelStreaming2 stability: force H.264 + LowLatency + periodic keyframes across UE5 builds (including `config=Game`..." }} description={<Subtitle variant="changelog">February 2026</Subtitle>}>
+  ## v1.3.6
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    - PixelStreaming2 stability: force H.264 + LowLatency + periodic keyframes across UE5 builds (including `config=Game` PluginSettings).
+    - Layout B hardening: optional bearer-token auth for script runner, managed by edge-rotator control-plane config (in addition to IP allowlists).
+    - Orchestrator health: add cached GPU stats endpoint.
+
+    ### Included PRs
+    - #193 fix(compose): enable cluster control by default
+    - #202 Fix: mount Engine.ini for PixelStreaming2 codec (H.264)
+    - #204 fix(orchestrator-health): unblock PR CI (allowlist testclient + cluster default)
+    - #205 orchestrator-health: add /meta/gpu/stats (cached)
+    - #206 PixelStreaming2: set keyframe interval + LowLatency defaults
+    - #208 feat(orchestrator): runner bearer-token auth + rotator-managed tokens
+    - #209 fix(pixel-streaming): PS2 PluginSettings (H264 + keyframes) via Game.ini
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.6" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.5" tags={["Release"]} rss={{ title: "Embody v1.3.5", description: "- EXPERIMENTAL_REMOTE_CLUSTER_CONTROL now defaults to true" }} description={<Subtitle variant="changelog">January 2026</Subtitle>}>
+  ## v1.3.5
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    - EXPERIMENTAL_REMOTE_CLUSTER_CONTROL now defaults to true
+    - Removes onboarding friction for multi-avatar cluster mode
+    - Cluster endpoints still protected by IP allowlist
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.5" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.4" tags={["Fixes"]} rss={{ title: "Embody v1.3.4", description: "- CLI: `start_vtuber_unreal.sh test` now checks that Payments is allowlisted (fix: `./scripts/embody_cli.sh allowlist..." }} description={<Subtitle variant="changelog">January 2026</Subtitle>}>
+  ## v1.3.4
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    - CLI: `start_vtuber_unreal.sh test` now checks that Payments is allowlisted (fix: `./scripts/embody_cli.sh allowlists fix`)
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.4" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.3" tags={["Features"]} rss={{ title: "Embody v1.3.3", description: "- Add allowlisted `GET /meta/gpu` endpoint in orchestrator-health" }} description={<Subtitle variant="changelog">January 2026</Subtitle>}>
+  ## v1.3.3
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    - Add allowlisted `GET /meta/gpu` endpoint in orchestrator-health
+    - Returns NVIDIA GPU inventory via `nvidia-smi` (works even when game is stopped)
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.3" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.2" tags={["Release"]} rss={{ title: "Embody v1.3.2", description: "* Docs: explain what v1.3.1 enables by @its-DeFine in https://github.com/its-DeFine/Unreal_Vtuber/pull/180" }} description={<Subtitle variant="changelog">January 2026</Subtitle>}>
+  ## v1.3.2
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * Docs: explain what v1.3.1 enables
+    * Enable remote cluster control by default
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.2" iconLeft="github" />
+</Update>
+
+<Update label="v1.3.1" tags={["Features", "Fixes"]} rss={{ title: "Embody v1.3.1", description: "Changelog:" }} description={<Subtitle variant="changelog">January 2026</Subtitle>}>
+  ## v1.3.1
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    - Remote ops parity: richer `/meta`, config push, and `upgrade/rollout` support.
+    - Encrypted game image: staged rollout (prefetch) + pending rollout state; persist last verify in `/meta`.
+    - CLI: repo auto-update on launch (ff-only, best-effort; opt-out via `EMBODY_CLI_NO_AUTO_UPDATE=1`); remove `cluster deploy --no-update`.
+    - Remote ops: pin orchestrator to `{ref, service_image_tag}` and apply safely during sleep (`--no-start`).
+    - consume.sh: more robust base64 decode detection.
+
+    ### Upgrade / install
+
+    ```bash
+    git clone https://github.com/its-DeFine/Unreal_Vtuber.git
+    cd Unreal_Vtuber
+
+    git fetch --tags
+    git checkout v1.3.1
+
+    # If you ever see GHCR "denied" pulling the game image:
+    sudo ./scripts/embody_cli.sh rollout
+    ```
+
+    ### Start cluster (auto)
+
+    ```bash
+    sudo ./scripts/embody_cli.sh cluster deploy --auto --yes --pull missing
+    ```
+
+    ### Capacity mental model (developer notes)
+
+    - The unit of allocatable capacity is a **signaling server registration**. Each cluster slot contributes one.
+    - Cluster mode is deterministic:
+      - Signaling port: `8080 + slot`
+      - Runner port: `9877 + slot`
+      - Recorder-control port: `8889 + slot`
+    - Per-slot sleep/wake is supported via `/power/projects/{project}` (and CLI wrappers).
+
+    ### Defaults & knobs
+
+    - CLI repo auto-update is on by default; disable with `EMBODY_CLI_NO_AUTO_UPDATE=1` (auto-update is skipped automatically when the repo is dirty or on detached HEAD).
+    - CLI auto-upgrade-when-sleeping is on by default; disable with `EMBODY_CLI_AUTO_UPGRADE_WHEN_SLEEPING=0`.
+    - Service containers (runner/health/rotator/etc) can be pinned to a release tag via `EMBODY_SERVICE_IMAGE_TAG=v1.3.1` in `.env` (remote ops can also set `service_image_tag` via `/ops/upgrade`).
+    - Remote ops endpoints are enabled by default (`EXPERIMENTAL_REMOTE_OPS=1`); opt out with `EXPERIMENTAL_REMOTE_OPS=0` and recreate `orchestrator-health`.
+    - Remote cluster control (`/cluster/*`) is opt-in: set `EXPERIMENTAL_REMOTE_CLUSTER_CONTROL=1` and recreate `orchestrator-health`.
+
+    ### Included PRs
+
+    - #161 Issue #160: remote ops parity (meta/version + remote config + upgrade/rollout) https://github.com/its-DeFine/Unreal_Vtuber/pull/161
+    - #162 consume.sh: fix base64 decode detection https://github.com/its-DeFine/Unreal_Vtuber/pull/162
+    - #164 Issue #163: auto-update repo on CLI launch https://github.com/its-DeFine/Unreal_Vtuber/pull/164
+    - #168 Issue #167: staged encrypted rollouts + persist verify/meta https://github.com/its-DeFine/Unreal_Vtuber/pull/168
+    - #170 Issue #169: enable remote ops by default https://github.com/its-DeFine/Unreal_Vtuber/pull/170
+    - #172 Issue #171: fix docs for orchestrator-health recreate https://github.com/its-DeFine/Unreal_Vtuber/pull/172
+    - #176 Remote ops: pin git ref + service image tag https://github.com/its-DeFine/Unreal_Vtuber/pull/176
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/its-DeFine/Unreal_Vtuber/releases/tag/v1.3.1" iconLeft="github" />
+</Update>
+

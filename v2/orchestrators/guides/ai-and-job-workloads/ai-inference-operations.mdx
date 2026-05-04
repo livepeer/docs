@@ -2,7 +2,7 @@
 title: AI Inference Operations
 sidebarTitle: AI Inference
 description: >-
-  How AI inference works on the Livepeer network — pipeline types, the batch vs live-video distinction, hardware
+  How AI inference works on the Livepeer network – pipeline types, the batch vs live-video distinction, hardware
   requirements, and how jobs flow from application to your GPU node.
 lifecycleStage: operate
 complexity: intermediate
@@ -34,21 +34,21 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-Livepeer's AI subnet launched in Q3 2024 and has grown into a major source of new fee revenue for orchestrators. It turns GPU nodes into open, composable inference infrastructure that serves image generation, live-video effects, and large language model completions.
+Livepeer's AI subnet launched in Q3 2024 and has grown into a major source of new fee revenue for Orchestrators. It turns GPU nodes into open, composable inference infrastructure that serves image generation, live-video effects, and large language model completions.
 
-AI workloads reach your node through gateway routing, capability advertisement, and container-based inference. The core operator distinction is between batch inference and live-video inference because the hardware profile and routing logic differ.
+AI workloads reach your node through Gateway routing, capability advertisement, and container-based inference. The core operator distinction is between batch inference and live-video inference because the hardware profile and routing logic differ.
 
 <BorderedBox variant="accent">
   <AccordionGroup>
     <Accordion title="Already running video?" icon="clapperboard">
-      AI pipelines sit beside an existing video orchestrator. The usual delta is:
+      AI pipelines sit beside an existing video Orchestrator. The usual delta is:
 
       - keep the existing go-livepeer service and video pricing flags
       - add the AI worker and `aiModels.json`
       - budget VRAM for the models you want warm
       - expose only the pipelines you keep healthy under load
 
-      See [Dual Mode Configuration](/v2/orchestrators/guides/deployment-details/dual-mode-configuration) for the exact operational delta and [Diffusion Pipeline Setup](/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the first AI worker path.
+      See [Dual Mode Configuration](/v2/Orchestrators/guides/deployment-details/dual-mode-configuration) for the exact operational delta and [Diffusion Pipeline Setup](/v2/Orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the first AI worker path.
     </Accordion>
   </AccordionGroup>
 </BorderedBox>
@@ -61,7 +61,7 @@ AI workloads reach your node through gateway routing, capability advertisement, 
 
 ## How the network routes AI jobs
 
-Applications never communicate with orchestrators directly. Every request flows through a gateway, which handles authentication, pricing negotiation, and routing to qualified nodes.
+Applications never communicate with Orchestrators directly. Every request flows through a Gateway, which handles authentication, pricing negotiation, and routing to qualified nodes.
 
 ``` icon="terminal"
 Application / User
@@ -75,13 +75,13 @@ AI Runner container (your GPU + model)
 Result returned through gateway
 ```
 
-Your orchestrator advertises **capabilities** – which pipelines it supports and at what price – and gateways route matching jobs to it. You never build a marketplace, billing system, or authentication layer. You run excellent inference infrastructure.
+Your Orchestrator advertises **capabilities** – which pipelines it supports and at what price – and Gateways route matching jobs to it. You never build a marketplace, billing system, or authentication layer. You run excellent inference infrastructure.
 
-When a gateway selects your orchestrator, it is because your combination of capability, pricing, latency, and uptime made you the best option for that specific request.
+When a Gateway selects your Orchestrator, it is because your combination of capability, pricing, latency, and uptime made you the best option for that specific request.
 
-### How gateway selection actually works
+### How Gateway selection actually works
 
-Gateways discover orchestrators through the `OrchestratorInfo` structure, which your node broadcasts and updates on-chain. The key fields that determine whether you receive AI jobs are:
+Gateways discover Orchestrators through the `OrchestratorInfo` structure, which your node broadcasts and updates on-chain. The key fields that determine whether you receive AI jobs are:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -97,11 +97,11 @@ Gateways discover orchestrators through the `OrchestratorInfo` structure, which 
   <TableRow>
     <TableCell>`capabilities_prices`</TableCell>
     <TableCell>Your price per pipeline and model</TableCell>
-    <TableCell>Must be below the gateway's `-maxPricePerCapability`</TableCell>
+    <TableCell>Must be below the Gateway's `-maxPricePerCapability`</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>`hardware`</TableCell>
-    <TableCell>GPU specs advertised to the gateway</TableCell>
+    <TableCell>GPU specs advertised to the Gateway</TableCell>
     <TableCell>Auto-populated by go-livepeer</TableCell>
   </TableRow>
   <TableRow>
@@ -111,11 +111,11 @@ Gateways discover orchestrators through the `OrchestratorInfo` structure, which 
   </TableRow>
 </StyledTable>
 
-**Gateway pricing is a hard gate.** Gateways configure a maximum price they will pay per capability using the `-maxPricePerCapability` JSON flag. A pipeline priced above that maximum receives no jobs from that gateway, regardless of hardware quality.
+**Gateway pricing is a hard gate.** Gateways configure a maximum price they will pay per capability using the `-maxPricePerCapability` JSON flag. A pipeline priced above that maximum receives no jobs from that Gateway, regardless of hardware quality.
 
-Before setting prices in `aiModels.json`, check what prices the major gateways are using. See [Models and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for a pricing reference table and [Gateway Orchestrator Offerings](/v2/gateways/resources/reference/technical/orchestrator-offerings) for the full capability discovery protocol documentation.
+Before setting prices in `aiModels.json`, check what prices the major Gateways are using. See [Models and VRAM Reference](/v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference) for a pricing reference table and [Gateway Orchestrator Offerings](/v2/Gateways/resources/reference/technical/Orchestrator-offerings) for the full capability discovery protocol documentation.
 
-For the complete list of supported pipelines and their model architectures, see [AI Model Support](/v2/developers/concepts/ai-on-livepeer) in the Developers section.
+For the complete list of supported pipelines and their model architectures, see [AI Model Support](/v2/developers/concepts/ai-on-Livepeer) in the Developers section.
 
 <CustomDivider />
 
@@ -268,7 +268,7 @@ OpenAI-compatible text completion endpoint backed by an Ollama-based runner. Run
 **Recommended model:** `meta-llama/Meta-Llama-3.1-8B-Instruct` (via Ollama)
 **Typical hardware:** GTX 1070 Ti, GTX 1080, RTX 2060
 
-The LLM pipeline uses a separate runner architecture from the standard `livepeer/ai-runner` image. See [Batch AI Setup](/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the Ollama deployment guide.
+The LLM pipeline uses a separate runner architecture from the standard `livepeer/ai-runner` image. See [Batch AI Setup](/v2/Orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the Ollama deployment guide.
 
 **Source:** [Cloud SPE Ollama runner blog post](https://www.livepeer.cloud/self-hosting-livepeers-llm-pipeline-deploying-an-ollama-based-gpu-runner-for-ai-orchestrators/)
 </Accordion>
@@ -359,13 +359,13 @@ This pipeline powers the **Cascade** architecture – Livepeer's live-video AI s
   </TableRow>
 </StyledTable>
 
-For detailed VRAM planning, warm model strategy, and multi-pipeline configuration, see [Model Hosting and VRAM Planning](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference).
+For detailed VRAM planning, warm model strategy, and multi-pipeline configuration, see [Model Hosting and VRAM Planning](/v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference).
 
 <CustomDivider />
 
 ## What you build and what the network supplies
 
-The Livepeer protocol handles the hard parts of running an inference marketplace. :
+The Livepeer Protocol handles the hard parts of running an inference marketplace. :
 
 **You do need to:**
 - Run and maintain GPU infrastructure
@@ -387,10 +387,10 @@ Gateways provide all of that. Your competitive advantage is performance: lower l
 
 To verify your pipelines are visible to the network and check live capability coverage:
 
-- **Network capabilities:** [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+- **Network capabilities:** [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
 - **Orchestrator performance:** [explorer.livepeer.org](https://explorer.livepeer.org)
 
-The network capabilities tool shows all registered orchestrators and their advertised pipelines currently visible on the network. Before your orchestrator receives AI jobs, it must appear there under at least one pipeline.
+The network capabilities tool shows all registered Orchestrators and their advertised pipelines currently visible on the network. Before your Orchestrator receives AI jobs, it must appear there under at least one pipeline.
 
 <CustomDivider />
 
@@ -414,14 +414,14 @@ The network capabilities tool shows all registered orchestrators and their adver
     icon="graduation-cap"
     href="https://www.youtube.com/watch?v=UKWdvJBqrNw"
   >
-    Full session from the Q1 2025 bootcamp covering ComfyStream, live AI video pipelines, and orchestrator setup for Cascade workloads.
+    Full session from the Q1 2025 bootcamp covering ComfyStream, live AI video pipelines, and Orchestrator setup for Cascade workloads.
   </Card>
   <Card
     title="ComfyStream Demo"
     icon="play"
     href="https://www.youtube.com/watch?v=7a6kBrL0RYg"
   >
-    Live demonstration of ComfyStream running live-video AI effects through a Livepeer orchestrator.
+    Live demonstration of ComfyStream running live-video AI effects through a Livepeer Orchestrator.
   </Card>
 </CardGroup>
 
@@ -440,7 +440,7 @@ The network capabilities tool shows all registered orchestrators and their adver
     VRAM planning, warm model strategy, pricing, and aiModels.json reference.
   </Card>
   <Card title="Batch AI Setup" icon="rocket" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
-    Upgrade path for existing transcoding orchestrators adding AI pipelines.
+    Upgrade path for existing transcoding Orchestrators adding AI pipelines.
   </Card>
 </CardGroup>
 

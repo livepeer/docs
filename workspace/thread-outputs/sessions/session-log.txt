@@ -1438,3 +1438,26 @@ Files touched: 55 v2/*.mdx (excluding _workspace, x-archived, x-deprecated, loca
 Follow-up flag (Styles Governance): program→programme rule is unconditional; add context exceptions for computing/software (smart contracts, install instructions) in tools/config/quality/language-rules.json.
 Session started: 2026-05-04 19:10:29
 Session started: 2026-05-04 19:11:15
+
+2026-05-04 — UK Spelling + Em-Dash Sweep (corrected scope)
+User pushback: "21 files? are you serious? there are 100s of files on docs.json"
+User correct — initial run undercounted. Investigation:
+  - docs.json registers 608 v2/ pages; v2 routable .mdx total = 889 (script walks superset).
+  - Bugs in EXISTING scripts:
+    1. remediate-em-dashes.js: multi-line frontmatter block scalars (description: >-, |) silently skipped. Only same-line value scanned.
+    2. remediate-us-spelling.js: zoned ENTIRE frontmatter as skip — missed user-facing keys (title/sidebarTitle/description/keywords).
+  - Both fixed in-place (no new scripts). Block-scalar indent tracking added; spelling script now per-key like em-dash script.
+Re-run results:
+  - Em-dashes: +42 in 38 files (frontmatter description block scalars). Verify passed.
+  - UK spelling: +20 in 13 files (title/sidebarTitle/description/keywords). Verify passed.
+Final independent audit (cross-checked against script logic):
+  - 0 em-dashes remaining in scope.
+  - 38 UK-spelling hits remain — ALL in technical-identifier contexts:
+      35 in component-library prop tables (color/Color refers to React prop name)
+      2 in markdown link path (`docs-guide/catalog/...`)
+      1 in filename reference ("scripts catalog" → scripts-catalog.mdx)
+  These are functionally props/code identifiers, not prose.
+Total session: 50 v2/*.mdx files modified across both passes.
+Flags raised: 3 — program/programme rule, em-dash script bug, spelling script bug + prop-doc-table case.
+Session started: 2026-05-04 21:53:35
+Session started: 2026-05-04 22:08:07

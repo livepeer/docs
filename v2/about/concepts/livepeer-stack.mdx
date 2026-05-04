@@ -8,6 +8,7 @@ pageType: "concept"
 audience: "community"
 lastVerified: "2026-05-02T00:00:00.000Z"
 purpose: "explain"
+veracityStatus: "unverified"
 keywords:
   - livepeer
   - stack
@@ -135,7 +136,7 @@ Livepeer's crypto-economic primitives and decentralised compute mesh provide add
 
 <Card title={<CustomCardTitle title="See Livepeer as an OSI Stack" icon="file-code"/>} href="/v2/developers/" arrow />
 
-# Livepeer Protocol and Network Architecture
+## Livepeer Protocol and Network Architecture
 
 Livepeer's crypto-economic primitives and decentralised compute mesh provide additional benefits to the system such as censorship resistance, economic security, and trustless coordination.
 
@@ -148,12 +149,12 @@ Livepeer's crypto-economic primitives and decentralised compute mesh provide add
 ### Protocol contracts
 {/* BondingManager, TicketBroker, RoundsManager, Minter, Controller. Live on Arbitrum One. Link → Protocol → Architecture. */}
 
-The Livepeer protocol is a set of Solidity contracts deployed to Arbitrum One. Five contracts carry the load: `BondingManager` tracks stake and delegation, `TicketBroker` issues and redeems probabilistic micropayment tickets, `RoundsManager` advances the protocol clock, `Minter` issues LPT inflation, and `Controller` is the upgrade authority that registers all the others.
+The Livepeer Protocol is a set of Solidity contracts deployed to Arbitrum One. Five contracts carry the load: `BondingManager` tracks stake and delegation, `TicketBroker` issues and redeems probabilistic micropayment tickets, `RoundsManager` advances the protocol clock, `Minter` issues LPT inflation, and `Controller` is the upgrade authority that registers all the others.
 
 <ScrollableDiagram title="Protocol Contracts on Arbitrum One" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
     classDef proto fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
@@ -186,7 +187,7 @@ flowchart TB
 
 </ScrollableDiagram>
 
-These contracts run unchanged across every node in the network. An orchestrator earns by redeeming winning tickets at `TicketBroker` and reward calls at `BondingManager`; a delegator earns by bonding LPT through `BondingManager`. See [Protocol Architecture](/v2/about/protocol/architecture) for contract addresses and ABIs.
+These contracts run unchanged across every node in the network. An Orchestrator earns by redeeming winning tickets at `TicketBroker` and reward calls at `BondingManager`; a Delegator earns by bonding LPT through `BondingManager`. See [Protocol Architecture](/v2/about/protocol/architecture) for contract addresses and ABIs.
 
 {/* <ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
 
@@ -221,12 +222,12 @@ flowchart TD
 ### Network nodes
 
 {/* go-livepeer binary running as orchestrator, transcoder, gateway. Link → Network → Architecture. */}
-The network layer is a single binary, `go-livepeer`, run in different modes. One mode is the gateway: it accepts video and AI jobs from clients, selects an orchestrator, and settles payment in tickets. Another is the orchestrator: it advertises capabilities, receives jobs, runs them, and redeems winning tickets on-chain. The transcoder mode is a worker that an orchestrator can split off onto a separate machine to scale horizontally. Newer modes – redeemer and remote signer – separate ticket redemption and key custody from the live job path so that gateway implementations in other languages can integrate.
+The network layer is a single binary, `go-livepeer`, run in different modes. One mode is the Gateway: it accepts video and AI jobs from clients, selects an Orchestrator, and settles payment in tickets. Another is the Orchestrator: it advertises capabilities, receives jobs, runs them, and redeems winning tickets on-chain. The transcoder mode is a worker that an Orchestrator can split off onto a separate machine to scale horizontally. Newer modes – redeemer and remote signer – separate ticket redemption and key custody from the live job path so that Gateway implementations in other languages can integrate.
 
 <ScrollableDiagram title="go-livepeer Node Modes" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart LR
     classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
     classDef gw fill:#1a1a1a,color:#E0E4E0,stroke:#3b82f6,stroke-width:2px
@@ -257,18 +258,18 @@ flowchart LR
 
 </ScrollableDiagram>
 
-A small operator runs a single binary that fills both gateway and orchestrator roles. A larger operator splits the modes onto separate machines: orchestrator on the network edge, transcoders or AI workers behind it on a private subnet. See [Network Architecture](/v2/network/architecture) for the deployment topology.
+A small operator runs a single binary that fills both Gateway and Orchestrator roles. A larger operator splits the modes onto separate machines: Orchestrator on the network edge, transcoders or AI workers behind it on a private subnet. See [Network Architecture](/v2/network/architecture) for the deployment topology.
 
 ### Off-chain coordination
 
 {/* Discovery, capabilities advertisement, off-chain payment ticketing. Link → Network → Marketplace. */}
 
-Most of what happens on the network never touches a contract. Gateways discover orchestrators through the on-chain subgraph, direct configuration, a webhook, or the Network Capabilities API. Orchestrators advertise capabilities and prices in `OrchestratorInfo` messages. Payment runs in probabilistic micropayment tickets that batch off-chain until a winning ticket triggers an on-chain redemption. This off-chain layer is what makes per-frame, per-pixel pricing economical.
+Most of what happens on the network never touches a contract. Gateways discover Orchestrators through the on-chain subgraph, direct configuration, a webhook, or the Network Capabilities API. Orchestrators advertise capabilities and prices in `OrchestratorInfo` messages. Payment runs in probabilistic micropayment tickets that batch off-chain until a winning ticket triggers an on-chain redemption. This off-chain layer is what makes per-frame, per-pixel pricing economical.
 
 <ScrollableDiagram title="Off-Chain Coordination Loop" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 sequenceDiagram
     autonumber
     participant G as Gateway
@@ -291,18 +292,18 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The off-chain loop is what scales the network: thousands of jobs and tickets per second between gateway and orchestrator, with on-chain settlement only when a ticket wins. See [Marketplace and Discovery](/v2/network/marketplace) for the full discovery and selection algorithm.
+The off-chain loop is what scales the network: thousands of jobs and tickets per second between Gateway and Orchestrator, with on-chain settlement only when a ticket wins. See [Marketplace and Discovery](/v2/network/marketplace) for the full discovery and selection algorithm.
 
 ### AI Runtime
 
 {/* ai-worker (Go) + ai-runner (Python) for model inference. Link → Network → Capabilities. */}
 
-The AI runtime sits inside the orchestrator. `ai-worker` is a Go subsystem in `go-livepeer` that owns the orchestrator-side job lifecycle: it receives an AI job from the gateway, picks a registered pipeline, starts or wakes the corresponding container, and streams frames in and out. Each pipeline runs as a separate `ai-runner` Python container, isolated by GPU and model. The transport between `ai-worker` and `ai-runner` for real-time work is the trickle protocol; for batch work it is a request/response HTTP API. ComfyStream is one such container, offering a ComfyUI-graph runtime for real-time video-to-video pipelines.
+The AI runtime sits inside the Orchestrator. `ai-worker` is a Go subsystem in `go-livepeer` that owns the Orchestrator-side job lifecycle: it receives an AI job from the Gateway, picks a registered pipeline, starts or wakes the corresponding container, and streams frames in and out. Each pipeline runs as a separate `ai-runner` Python container, isolated by GPU and model. The transport between `ai-worker` and `ai-runner` for real-time work is the trickle protocol; for batch work it is a request/response HTTP API. ComfyStream is one such container, offering a ComfyUI-graph runtime for real-time video-to-video pipelines.
 
 <ScrollableDiagram title="AI Runtime – ai-worker and ai-runner" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
     classDef goproc fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
@@ -332,18 +333,18 @@ flowchart TB
 
 </ScrollableDiagram>
 
-An orchestrator declares which pipelines it serves through `aiModels.json`, which sets per-pipeline pricing and warm-model strategy. See [AI Capabilities](/v2/network/capabilities) for the pipeline catalogue and pricing units.
+An Orchestrator declares which pipelines it serves through `aiModels.json`, which sets per-pipeline pricing and warm-model strategy. See [AI Capabilities](/v2/network/capabilities) for the pipeline catalogue and pricing units.
 
 ### Applications and integrations
 
 {/* Studio, Daydream, partner integrations, BYOC. Link → Solutions tab. */}
 
-Applications are the products built on the layers below. Livepeer Studio is the hosted video product run by Livepeer Inc – streaming, VOD, transcoding, and the embeddable player behind an API key. Daydream is the hosted real-time AI video product, built on ComfyStream and the AI Gateway API. Storyboard is an AI agent workspace that uses Daydream as its inference backend. Streamplace is the live-video product for the AT Protocol and Bluesky. BYOC ("bring your own container") is the path for a partner to plug a custom AI pipeline into the network as an orchestrator-side container.
+Applications are the products built on the layers below. Livepeer Studio is the hosted video product run by Livepeer Inc – streaming, VOD, transcoding, and the embeddable player behind an API key. Daydream is the hosted real-time AI video product, built on ComfyStream and the AI Gateway API. Storyboard is an AI agent workspace that uses Daydream as its inference backend. Streamplace is the live-video product for the AT Protocol and Bluesky. BYOC ("bring your own container") is the path for a partner to plug a custom AI pipeline into the network as an Orchestrator-side container.
 
 <ScrollableDiagram title="Applications and Their Layer Position" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TB
     classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
     classDef firstparty fill:#1a1a1a,color:#E0E4E0,stroke:#a855f7,stroke-width:2px
@@ -388,7 +389,7 @@ A job is the test: it touches every layer in one round trip. The job descends fr
 <ScrollableDiagram title="One Job Through the Stack" maxHeight="700px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 sequenceDiagram
     autonumber
     participant App as Layer 4<br/>Application

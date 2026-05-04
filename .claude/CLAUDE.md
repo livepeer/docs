@@ -2,7 +2,7 @@
 
 > Project coordinator. Rules only. State is injected by `session-state.js` at session start.
 
----
+<CustomDivider />
 
 ## Project identity
 
@@ -14,7 +14,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 **Working branch:** `docs-v2-dev`
 **Live site:** `docs.livepeer.org` deploys from `docs-v2` (configured in Mintlify dashboard, NOT in docs.json)
 
----
+<CustomDivider />
 
 ## Observer Agent Authentication
 
@@ -22,7 +22,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - If observer returns 'Not logged in · Please run /login', halt the primary session and re-authenticate before continuing
 - Never assume observer sessions are working — check for actual observation output, not just dispatch success
 
----
+<CustomDivider />
 
 ## Active threads
 
@@ -54,11 +54,11 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Docs Library | `docs-guide/docs-library/` — 8 pages: index, 6 pipeline concern pages (content quality, governance compliance, component health, discoverability, data integration, copy/brand) with real Mermaid diagrams, full script/workflow inventories, and gap analysis. Gap report: 17 gaps (2 P0, 5 P1, 6 P2, 4 P3) | Done | 2026-04-08 |
 | Agent Creation Skills | 3 skills (`/create-component`, `/create-script`, `/create-action`) + `generate-component-snippets.js`. Full governance compliance, self-documenting pipelines, VS Code tooling updates. Fills actions-audit.json and concurrency group gaps | Done | 2026-04-08 |
 | Styles Governance | Full pipeline: audit (6 categories), remediator (14 fix types + --verify regression check), self-documenting generator, GH Actions workflow with regression step. Style guide (10 new sections + pixel spacing + brand tokens). WCAG focus-visible + responsive CSS. CoinGecko exchanges + go-livepeer config flags pipelines. Badge reference + engineering guide. 0 non-mermaid violations (3,986 → 0). 68 mermaid dark-mode variants accepted | Done | 2026-04-09 |
-| UK Spelling + Em-Dash Sweep | remediate-em-dashes.js + remediate-us-spelling.js with --write --verify across v2/. 21 em-dashes (frontmatter + body) and 79 US-spellings (34 files) converted. Verify passed both runs. Final dry-run: 0/0. Flag raised: program→programme rule applies unconditionally in language-rules.json — review for tech-context exceptions (smart-contract glossary defs, install instructions) | Done | 2026-05-04 |
+| UK Spelling + Em-Dash Sweep | remediate-em-dashes.js + remediate-us-spelling.js with --write --verify across v2/. First pass: 21 em-dash + 79 spelling. User flagged scope concern; investigation found two zone-detection bugs in the existing scripts: (1) em-dash script missed multi-line frontmatter block scalars (`description: >-`); (2) spelling script zoned ENTIRE frontmatter as skip, missing user-facing keys. Both scripts patched (block-scalar handling + per-key zoning of title/sidebarTitle/description/keywords). Second pass: +42 em-dash (38 files) + 20 spelling (13 files). Independent audit: 0 em-dashes remaining; 38 UK-spelling hits remain — all in technical identifier references (35 React prop name docs in component-library tables, 2 markdown link paths, 1 filename reference). Flags raised: program→programme rule unconditional; component-library prop-doc tables need rule exclusion or skip-zone | Done | 2026-05-04 |
 
 **Rule:** When you finish a task or change status, update your row in this table before closing. If the master-tasks.md file has a matching item, update that too.
 
----
+<CustomDivider />
 
 ## Execution rules
 
@@ -67,9 +67,9 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **Reproduce before fixing.** For bugs: (1) reproduce the exact failure, (2) capture the error, (3) hypothesise from evidence, (4) test one fix at a time. Use `/diagnose` for anything beyond a trivial one-line fix.
 - **Verify first instance before bulk operations.** Apply to one file, confirm it works, then proceed to the rest.
 - **Read Mintlify constraints before editing MDX.** Reference: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. No React/hook imports, no Mintlify global imports, use root-absolute imports for shared resources, include file extensions, keep MDX-facing JSX data flow in parent MDX, define risky constants inside export bodies, use arrow function syntax only, and follow the repo's scoped preview and styling rules.
-- **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with a scoped restart: `node operations/scripts/dispatch/governance/server-lifecycle.js restart v2/TAB` (e.g. `restart v2/home`). Scoped restarts take <2 min. Never cold-start the full 795-page docs.json (10+ min). Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
+- **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with a scoped restart: `node operations/scripts/dispatch/governance/server-lifecycle.js restart v2/TAB` (e.g. `restart v2/home`). Scoped restarts take &lt;2 min. Never cold-start the full 795-page docs.json (10+ min). Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
 
----
+<CustomDivider />
 
 ## MDX & Frontmatter Conventions
 
@@ -78,7 +78,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - For badge/data extraction, follow role-keyed naming (not layerN-prefixed) per the solutions pattern
 - Run a dry-run validation (em-dash check, frontmatter parse) before committing generated stubs
 
----
+<CustomDivider />
 
 ## Stay On Task
 
@@ -86,7 +86,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - If you discover a systemic issue while working, surface it as a follow-up suggestion rather than pivoting mid-task
 - When governance hooks block progress, stop and report — do not silently keep retrying or expand scope
 
----
+<CustomDivider />
 
 ## Debugging discipline
 
@@ -95,7 +95,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **5 edits trigger a hard block.** If you edit the same file 5 times without verification passing, further edits to that file are blocked until you run /diagnose or verification passes — hook enforced
 - **Do not permute.** Trying 5 CSS values, 4 import paths, or 3 MDX patterns is not debugging. It is guessing. Identify the constraint (read the error, read the docs, read the Mintlify constraints reference), then apply the correct fix once
 
----
+<CustomDivider />
 
 ## Hard boundaries
 
@@ -121,7 +121,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - Every 8th edit triggers a scope checkpoint requiring reconnection to the thread outcome — hook enforced
 - Writing to completion artifacts (session-log.txt, completion-reports.md) is blocked while render verification is failing — hook enforced
 
----
+<CustomDivider />
 
 ## Platform constraints
 
@@ -129,7 +129,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **Mintlify MDX bundler.** Always read the constraints reference before attempting MDX fixes: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. Do NOT try the same broken pattern twice. The bundler constraints are non-negotiable — they cannot be worked around
 - **Never edit auto-generated files directly.** Trace back to the generator source — hook enforced
 
----
+<CustomDivider />
 
 ## Dry-run policy
 
@@ -137,7 +137,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - If no dry-run flag exists, propose the run and wait for approval before executing
 - Always verify script side effects before marking tasks complete
 
----
+<CustomDivider />
 
 ## Karpathy guidelines
 
@@ -170,7 +170,7 @@ Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rule
 - For multi-step tasks, state a brief plan with a verify step per item.
 - Strong success criteria let you loop independently. Weak criteria ("make it work") force constant clarification.
 
----
+<CustomDivider />
 
 ## Engineering standards
 
@@ -182,7 +182,7 @@ Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rule
 - **Think before writing.** Read the surrounding code. Understand the design intent. Check how similar problems are solved elsewhere in the repo. Only then propose a change.
 - **No isolated fixes.** A change to a template must account for all instances. A change to a component must account for all consumers. A change to a script must account for all callers and the pipeline it feeds.
 
----
+<CustomDivider />
 
 ## How we work together
 
@@ -196,7 +196,7 @@ Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rule
 
 **Claude does without asking:** reading files, presenting findings, flagging out-of-scope content, updating completion reports, running tests.
 
----
+<CustomDivider />
 
 ## Co-creation principles
 
@@ -211,7 +211,7 @@ Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rule
 - Ignore IDE-opened file context (messages like "The user opened the file X in the IDE") unless the file is explicitly referenced in the message.
 - Use TodoWrite to track session tasks. Create the task list immediately after defining the session outcome in `/thread`. Update status in real time. At `/close`, the task list is the source of truth for what was attempted.
 
----
+<CustomDivider />
 
 ## Quick commands
 
@@ -231,7 +231,7 @@ These are inline. No skill files. Just do what it says.
 
 **If the user says a message was lost/eaten:** Immediately read the last 5 entries from `workspace/thread-outputs/sessions/message-backup.jsonl` and present them. Don't ask questions — just show the content.
 
----
+<CustomDivider />
 
 ## Domain terms
 
@@ -247,7 +247,7 @@ These are inline. No skill files. Just do what it says.
 | dual                        | WORKLOAD config — not a payment type       |
 | pool worker                 | Must be defined at first use on every page |
 
----
+<CustomDivider />
 
 ## Voice and review standards
 
@@ -255,7 +255,7 @@ UK English (-ise, -our, -re). No em dashes. No questions in headings. Lead with 
 
 **Full standards:** `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` and `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md`
 
----
+<CustomDivider />
 
 ## Skills (`ai-tools/ai-skills/`)
 
@@ -275,7 +275,7 @@ Run `/skills` for the full catalogue with descriptions and status.
 
 **File outputs:** Write to `workspace/thread-outputs/{skill}/{topic}-{type}.md`. Never dump files in repo root.
 
----
+<CustomDivider />
 
 ## VS Code Claude Code Extension Issues
 
@@ -291,7 +291,7 @@ Run `/skills` for the full catalogue with descriptions and status.
 
 If the sidebar is broken: run `full-repair.sh --dry-run` first, then without `--dry-run` if the report looks right.
 
----
+<CustomDivider />
 
 ## Key files
 
@@ -314,7 +314,7 @@ If the sidebar is broken: run `full-repair.sh --dry-run` first, then without `--
 | `workspace/reports/repo-ops/GOVERNANCE_MAP_LATEST.json` | Generated governance map — run `generate-governance-map.js --write` |
 | `.claude/references/` | Exemplary work to emulate — read before designing, writing, or building |
 
----
+<CustomDivider />
 
 ## Session end — mandatory before closing
 
