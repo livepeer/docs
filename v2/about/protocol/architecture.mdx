@@ -57,54 +57,6 @@ The protocol is structured so that on-chain contracts coordinate economic securi
 
 The protocol stack has three layers, each with a different responsibility and a different rate of change. The blockchain layer is slow, expensive, and authoritative. The protocol layer is fast and trust-minimised. The node layer is where the actual work happens.
 
-<ScrollableDiagram title="Livepeer Protocol Stack" maxHeight="500px">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
-flowchart TB
-    classDef default stroke-width:2px
-
-    subgraph NODE["Node Layer (go-livepeer)"]
-        GW["Gateways<br/>Job intake, orchestrator selection, payment dispatch"]
-        ORC["Orchestrators<br/>Session management, worker coordination"]
-        WORK["Transcoders / AI Runners<br/>Video encoding and AI inference on GPUs"]
-    end
-
-    subgraph PROTOCOL["Protocol Layer (off-chain)"]
-        DISC["Service discovery and capability advertising"]
-        NEG["Job negotiation and price quotes"]
-        TIX["Probabilistic micropayment tickets"]
-        VER["Off-chain verification (segment re-encoding checks)"]
-    end
-
-    subgraph CHAIN["Blockchain Layer (Arbitrum One)"]
-        STAKE["BondingManager<br/>Staking and delegation"]
-        ROUNDS["RoundsManager<br/>Round progression"]
-        PAY["TicketBroker<br/>Winning ticket redemption"]
-        REG["ServiceRegistry<br/>Orchestrator on-chain identity"]
-        MINT["Minter<br/>LPT issuance and rewards"]
-        GOV["LivepeerGovernor + Treasury<br/>On-chain governance"]
-    end
-
-    GW --> ORC --> WORK
-    GW <--> NEG
-    ORC <--> NEG
-    GW --> TIX
-    ORC --> TIX
-    ORC <--> DISC
-    GW <--> DISC
-    GW <--> VER
-
-    TIX --> PAY
-    DISC --> REG
-    ORC -.->|"stake, claim rewards"| STAKE
-    ORC -.->|"reward call per round"| MINT
-    ORC -.->|"round init"| ROUNDS
-    STAKE --> GOV
-```
-
-</ScrollableDiagram>
-
 <DynamicTableV2
   headerList={["Layer", "Runs on", "Responsibility", "Rate of change"]}
   itemsList={[

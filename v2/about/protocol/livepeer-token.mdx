@@ -1,227 +1,253 @@
 ---
-title: Livepeer Token Economics and Role
+title: Livepeer Token
 sidebarTitle: Livepeer Token
-description: "Learn how LPT, staking, inflation, rewards, fees, and payment flows shape the Livepeer protocol economy."
+description: >-
+  What LPT is, how it differs from ETH, and the four roles it plays in the Livepeer protocol - staking, security, governance, and work coordination.
 lifecycleStage: discover
-complexity: intermediate
+complexity: beginner
 pageType: concept
 keywords:
   - livepeer
-  - about
-  - livepeer protocol
-  - livepeer protocol economics
-  - protocol
-  - economics
+  - livepeer token
+  - lpt
+  - lpt vs eth
+  - staking
+  - protocol economics
+  - tokenomics
+  - inflation
+  - delegated proof of stake
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17T00:00:00.000Z
+lastVerified: 2026-05-04T00:00:00.000Z
 purpose: concept
 ---
 
-Provides a detailed overview of the Livepeer token (LPT), its role in the protocol, and the economic flows that drive the network.
-This includes staking mechanics, inflation rewards, fee distribution, and the payment system that connects broadcasters and orchestrators.
+import { CustomCardTitle, Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-{/* This page describes:
-6. **TOKEN**
-
-   * Tokenomics
-   * Inflation model
-   * Staking & delegation
-   * Reward distribution
-   * Slashing
-   * Rounds
-
-*/}
-
-{/*
-<Accordion icon="rocket" title="More on Crypto-Primitive Advantages">
-    Decentralisation and cryptoeconomic design add specific properties that a centrally operated cloud cannot provide:
-
-    <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
-      <StyledStep title="Dynamic Scaling" icon="arrows-rotate">
-        No single point of failure; capacity is contributed by independent operators globally.
-      </StyledStep>
-
-      <StyledStep title="Global Payments" icon="money-bill-transfer">
-        Accessible by AI agents and automated systems without bank accounts or API contracts.
-      </StyledStep>
-
-      <StyledStep title="Open Participation" icon="door-open">
-        Anyone with compatible hardware can join the network; innovation is not gated by a vendor relationship.
-      </StyledStep>
-
-      <StyledStep title="Creator Economics" icon="chart-line">
-        Transparent, auditable revenue streams with no hidden intermediary margin.
-      </StyledStep>
-
-      <StyledStep title="Data Locality" icon="location-dot">
-        Data stays closer to the user when operators are geographically distributed.
-      </StyledStep>
-
-      <StyledStep title="Lower Costs" icon="sack-dollar">
-        No vendor margin on compute; switching is possible at the protocol level.
-      </StyledStep>
-
-      <StyledStep title="Sustaining Incentives" icon="coins">
-        Inflation-based rewards and fee capture provide a runway to self-sustaining infrastructure without requiring venture capital to subsidise operations.
-      </StyledStep>
-
-      <StyledStep title="Network Effects" icon="circle-nodes">
-        As more operators join, capacity, resilience, and geographic coverage increase for all participants.
-      </StyledStep>
-    </StyledSteps>
-</Accordion> */}
-
-{/* such as censorship resistance, economic security, and trustless coordination, but the core value proposition remains the same: a global, open, and permissionless compute infrastructure that anyone can build on, operate, and benefit from. */}
-
-Livepeer uses both its native token - LPT, and Ethereum (ETH) to power its network and compensate actors for their contributions.
-The Livepeer protocol uses a dynamic inflation rate and stake-for-access model to ensure the network's security and functionality.
-
-{/* https://github.com/livepeer/wiki/blob/ethpayments/WHITEPAPER.md#livepeer-token */}
 <Quote>
-Livepeer Token
-The Livepeer Token (LPT) is the protocol token of the Livepeer network. But it is not the medium of exchange token. Broadcasters use Ethereum's Ether (ETH) to broadcast video on the network. Nodes who contribute processing and bandwidth earn ETH in the form of fees from broadcasters. LPT is a staking token that participants who want to perform work on the network stake in order to coordinate how work gets distributed on the network, and to provide security that the work will get done honestly and correctly. LPT has the following purposes:
-
-It serves as a bonding mechanism in a delegated proof of stake system, in which stake is delegated towards transcoders (or validators) who participate in the protocol to transcode video and validate work. The token, and potential slashing that occurs due to protocol violation, is necessary in order to secure the network against a number of attacks. More below.
-It routes work through the network in proportion to the amount of staked and delegated token, essentially serving as a coordination mechanism.
-It is a unit of account that is specific to the Livepeer ecosystem, which forms the basis of a SectorCoin concept, applicable to additional functionality to be introduced in the future [4]. Services such as DVR, closed captioning, ad insertion/monetisation, and analytics can all plug into the Livepeer ecosystem and potentially make use of the security provided by staking LPT.
-An initial allocation of Livepeer Token will be distributed so that stakeholders can fulfill various roles in, and use the network, and then additional token will be issued according to algorithmically programmed issuance over time. See the Token Distribution section.
-
-Following the conventions of Ethereum and many popular ERC20 tokens [16], LPT will be divisible by 10 ^ 18, with larger denominations such as the LPT itself intended to be used for user level transactions such as staking, and smaller denominations intended to be used for protocol accounting.
+The **Livepeer Token (LPT)** is the protocol's _staking and coordination_ token. It secures the network, routes work to operators, and grants governance rights. ETH - not LPT - is the medium of exchange for transcoding and AI inference jobs.
 </Quote>
 
-## Money Flow: LPT Token Economics
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
 
-### 1. **Staking Flow (Delegators → Orchestrators)**
+## Two tokens, two jobs
 
-**Step 1: Token Approval**
-Before bonding, delegators must approve the BondingManager to transfer their LPT tokens.
+The Livepeer protocol uses two distinct assets, each with a job that the other cannot do. ETH pays for work performed off-chain. LPT secures the right to perform that work and to share in protocol rewards.
 
-**Step 2: Bonding**
-Delegators call `Bond(amount, orchestratorAddress)` which:
-- Transfers LPT from delegator to BondingManager
-- Updates orchestrator's delegated stake
-- Calculates pool position hints for gas optimisation
-- Updates the transcoder pool sorted by stake
+<DynamicTableV2
+  headerList={["Asset", "Role", "Used by", "Earned by"]}
+  itemsList={[
+    {
+      "Asset": <Subtitle variant="changelog">**ETH**</Subtitle>,
+      "Role": "Medium of exchange for video transcoding and AI inference jobs",
+      "Used by": "Gateways - to fund deposits and pay for work",
+      "Earned by": "Orchestrators - via probabilistic micropayment tickets",
+    },
+    {
+      "Asset": <Subtitle variant="changelog">**LPT**</Subtitle>,
+      "Role": "Staking, coordination, security, and governance",
+      "Used by": "Orchestrators and Delegators - bonded into the protocol",
+      "Earned by": "Bonded participants - via inflationary rewards each round",
+    },
+  ]}
+/>
 
-**Step 3: Orchestrator Registration**
-To become an orchestrator, a node must:
-- First bond LPT to itself
-- Call `Transcoder(rewardCut, feeShare)` with commission parameters
-- Register service URI via `SetServiceURI()`
+This separation is deliberate. Service buyers should not need to acquire a protocol-specific token to use the network. Operators should have economic skin in the game in a way that scales with how much of the network they want to influence and earn from. ETH satisfies the first requirement; LPT satisfies the second.
 
-The transcoder pool maintains orchestrators sorted by delegated stake as a linked list, with hints optimising insertions.
+<Tip>
+Gateways pay in ETH. Orchestrators are paid in ETH for the work they perform. LPT is never used to pay for jobs.
+</Tip>
 
-### 2. **Reward Flow (Minter → Orchestrators → Delegators)**
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
-Each round, active orchestrators can call `Reward()` to mint inflationary tokens:
+## What LPT is
 
-**Reward Calculation Process**:
-1. Orchestrator calls `Reward()` on BondingManager
-2. BondingManager queries `CurrentMintableTokens()` from Minter
-3. Minter calculates: `mintable = inflation * totalSupply / bonded`
-4. Reward distributed proportionally to orchestrator's stake
-5. Orchestrator keeps their commission (rewardCut)
-6. Remaining rewards distributed to delegators proportionally
+LPT is an [ERC-20 token](https://github.com/livepeer/protocol/blob/delta/contracts/token/LivepeerToken.sol) deployed on Ethereum Mainnet, with a bridged representation on [Arbitrum One](https://arbitrum.io/) where all active protocol operations occur. It is the staking asset of a delegated proof-of-stake system: holders bond LPT to participate in or support the network, and the amount they bond determines both their share of rewards and their voting weight on protocol decisions.
 
-**Claiming Earnings**:
-Delegators must call `ClaimEarnings(endRound)` to realise their accumulated rewards and fees from past rounds.
+The initial supply of 10,000,000 LPT was distributed through the [Merkle Mine](https://github.com/livepeer/merkle-mine) at network launch in 2018, a permissionless claim mechanism that allowed any Ethereum address to mine and claim tokens directly. There was no ICO and no pre-mine. Total supply has grown since then through the protocol's inflationary reward schedule, which mints new LPT each round to participants who stake.
 
-### 3. **Payment Flow (Broadcasters → Orchestrators)**
+<CenteredContainer preset="fitContent" style={{ width: '90%' }}>
+  <BorderedBox variant="accent">
+    <Subtitle style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>**Quick reference**</Subtitle>
+    - **Token standard**: ERC-20 (with EIP-2612 permit, burnable, role-based mint/burn)
+    - **Origin chain**: Ethereum Mainnet
+    - **Active chain**: Arbitrum One (bridged via paired LPTGateway contracts)
+    - **Initial supply**: 10,000,000 LPT (Merkle Mine, 2018)
+    - **Issuance**: Dynamic inflation, per round, only to bonded participants
+    - **Divisibility**: 18 decimals, in line with Ethereum and standard ERC-20 tokens
+  </BorderedBox>
+</CenteredContainer>
 
-The payment system uses probabilistic micropayments to minimise on-chain transactions:
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
-**Step 1: Broadcaster Deposits**
-Broadcasters fund their account via `FundDepositAndReserve()`:
-- **Deposit**: Locked collateral (can't be used immediately)
-- **Reserve**: Available pool for ticket redemptions [14](#0-13)
+## What LPT does in the protocol
 
-**Step 2: Off-Chain Ticket Creation**
-For each video segment processed:
-- Broadcaster creates a signed ticket with faceValue and winProb
-- Ticket sent off-chain to orchestrator via HTTP headers
-- Most tickets don't win (e.g., 1% win probability)
+LPT performs four functions in the Livepeer Protocol. Each function is enforced on-chain through smart contracts on Arbitrum One.
 
-**Step 3: Ticket Validation & Queuing**
-Orchestrator validates ticket:
-- Checks signature and expiration
-- Calculates if ticket wins using `recipientRand`
-- Winning tickets queued in local database
-- Tracks sender's MaxFloat (reserve - pending redemptions)
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Stakes operators into the network" icon="lock">
+    Orchestrators bond LPT to themselves to be eligible to perform transcoding and AI inference work. The active set of orchestrators that receive video work is determined by total bonded stake - own stake plus delegated stake - sorted from highest to lowest.
+  </StyledStep>
+  <StyledStep title="Secures the network through skin in the game" icon="shield-halved">
+    Bonded LPT is the protocol's economic security primitive. Slashing rules can burn an orchestrator's stake (and the stake of those who delegated to it) for protocol violations, giving every participant a financial reason to behave honestly.
+  </StyledStep>
+  <StyledStep title="Routes work in proportion to stake" icon="arrows-split-up-and-left">
+    Stake weight is the coordination signal that tells gateways which orchestrators to prefer. Higher-staked orchestrators sit higher in the active set and are more likely to receive video transcoding jobs from the network.
+  </StyledStep>
+  <StyledStep title="Grants governance rights" icon="building-columns">
+    Bonded LPT confers voting power, proportional to stake, over Livepeer Improvement Proposals (LIPs) and treasury allocations. Delegators vote through their orchestrator by default, and can override that vote on any specific proposal.
+  </StyledStep>
+</StyledSteps>
 
-**Step 4: On-Chain Redemption**
-When sufficient funds available:
-- Orchestrator calls `RedeemWinningTicket(ticket, sig, recipientRand)`
-- TicketBroker validates ticket against on-chain state
-- Transfers `faceValue` from broadcaster's reserve to orchestrator
-- Updates `claimedReserve` in BondingManager
+<Info>
+**Slashing today.** The slashing function (`slashTranscoder()`) exists in the BondingManager contract, but the Verifier role is currently set to the null address, leaving slashing inoperative. It can be re-enabled through governance. The economic security model still relies on stake at risk - bonded LPT remains illiquid for the unbonding period and is exposed to whatever slashing conditions governance reactivates.
+</Info>
 
-This achieves ~99% cost reduction vs. Per-segment on-chain payments while maintaining fair compensation through probabilistic expected value.
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
-### 4. **Fee Flow (Broadcasters → Orchestrators → Delegators)**
+## How value flows through the network
 
-Orchestrators earn fees from ticket redemptions:
-- Fees accumulate in orchestrator's earnings pool
-- Orchestrator keeps their commission (feeShare)
-- Remaining fees distributed to delegators
-- Delegators claim via `ClaimEarnings()`
+The protocol creates two parallel value flows: an ETH flow that pays for compute work, and an LPT flow that rewards the participants who secure the network. Both flows settle on Arbitrum One.
 
-### 5. **Withdrawal Flows**
+<ScrollableDiagram title="LPT and ETH Value Flows in the Livepeer Protocol" maxHeight="600px">
 
-**Unstaking (Delegators)**:
-1. Call `Unbond(amount)` - creates unbonding lock
-2. Wait `UnbondingPeriod` rounds (typically 7 rounds)
-3. Call `WithdrawStake(unbondingLockId)` - receive LPT back
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart LR
+    classDef default stroke-width:2px
 
-**Payment Withdrawal (Broadcasters)**:
-1. Call `Unlock()` on TicketBroker
-2. Wait unlock period
-3. Call `Withdraw()` - receive remaining deposit + reserve
+    subgraph ETHFlow["ETH Flow - Payment for Work"]
+        Gateway[Gateway]
+        TicketBroker[TicketBroker]
+        Orchestrator1[Orchestrator]
+    end
 
-## Client Integration
+    subgraph LPTFlow["LPT Flow - Rewards for Stake"]
+        Delegator[Delegator]
+        BondingManager[BondingManager]
+        Minter[Minter]
+        Treasury[Treasury]
+        Orchestrator2[Orchestrator]
+    end
 
-The go-livepeer client abstracts all contract interactions through the `LivepeerEthClient` interface: [15](#0-14)
+    Gateway -->|"1 - Fund deposit and reserve"| TicketBroker
+    Gateway -.->|"2 - Off-chain tickets per job"| Orchestrator1
+    Orchestrator1 -->|"3 - Redeem winning tickets"| TicketBroker
+    TicketBroker -->|"4 - ETH fees"| Orchestrator1
 
-**Contract Address Resolution**:
-All contract addresses are dynamically discovered through the Controller registry using Keccak256 hashes of contract names. This enables contract upgrades without changing client code. [16](#0-15)
+    Delegator -->|"a - Bond LPT to orchestrator"| BondingManager
+    Orchestrator2 -->|"b - Self-bond and call reward each round"| BondingManager
+    Minter -->|"c - Mint new LPT"| BondingManager
+    BondingManager -->|"d - Reward share"| Orchestrator2
+    BondingManager -->|"e - Reward share"| Delegator
+    BondingManager -->|"f - Treasury cut"| Treasury
+```
 
-## Gas Optimisation Strategies
+</ScrollableDiagram>
 
-### 1. **Pool Hints**
-When bonding or calling reward, the client calculates "hints" (previous/next positions in the sorted transcoder pool) to enable O(1) insertions instead of O(n) searches on-chain. [17](#0-16)
+The ETH flow pays for actual compute. Gateways pre-fund a deposit and a reserve in the [TicketBroker contract](/v2/about/protocol/blockchain-contracts#ticketbroker) and issue off-chain probabilistic micropayment tickets to orchestrators with each transcoding or inference job. Orchestrators redeem winning tickets on-chain to receive ETH. This amortises payment costs across many jobs without losing the strong settlement guarantees of on-chain payments.
 
-### 2. **Batch Operations**
-Multiple tickets can be created off-chain in batches, with only winning tickets requiring on-chain transactions.
+The LPT flow rewards stake. Each round, the [Minter contract](/v2/about/protocol/blockchain-contracts#minter) calculates the round's mintable LPT supply based on the current inflation rate, and the [BondingManager](/v2/about/protocol/blockchain-contracts#bondingmanager) distributes those new tokens. Orchestrators that called `reward()` during their active round receive a share proportional to their bonded stake. Delegators receive the remainder of the orchestrator's reward, after the orchestrator's commission (`rewardCut`) is taken. A configurable fraction of each round's rewards is also routed to the protocol treasury.
 
-### 3. **Dynamic Gas Pricing**
-The client implements sophisticated gas price management, using 2x base fee with user-specified ceilings to balance confirmation speed and cost. [18](#0-17)
+<Tip>
+The two flows meet at the orchestrator. A working orchestrator earns ETH from the work it performs and LPT inflation from the stake it bonds. Delegators earn a share of both. The orchestrator's `feeShare` parameter sets the percentage of ETH fees passed to delegators. The orchestrator's `rewardCut` parameter sets the percentage of LPT rewards the orchestrator keeps as commission, with the remainder distributed to delegators in proportion to their bonded stake.
+</Tip>
 
-## Summary: Complete Money Flow
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
-1. **Token holders** approve and bond LPT → **BondingManager** (staking)
-2. **Minter** mints new LPT → **BondingManager** → **Orchestrators** (inflation rewards)
-3. **Orchestrators** distribute rewards → **Delegators** (minus commission)
-4. **Broadcasters** deposit LPT → **TicketBroker** (payment reserves)
-5. **Orchestrators** redeem tickets → receive LPT from **TicketBroker** (fees)
-6. **Orchestrators** distribute fees → **Delegators** (minus commission)
-7. **Delegators** claim earnings from **BondingManager** (accumulated rewards + fees)
+## Inflation, bonding, and the target rate
 
-This creates a circular economy where:
-- Staking secures the network and earns inflation rewards
-- Active orchestrators earn fees from broadcasters
-- Delegators participate in rewards without running infrastructure
-- Probabilistic payments enable cost-efficient micropayments
-- All flows tracked on-chain with minimal gas overhead
+Livepeer ties LPT issuance to network participation. Each round, the protocol checks how much of the total LPT supply is bonded and adjusts the next round's inflation rate up or down to nudge the bonded share toward a target.
 
-## Notes
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Bonded share is below target" icon="arrow-trend-up">
+    Inflation increases on the next round. Higher rewards attract more bonded stake, which secures the network.
+  </StyledStep>
+  <StyledStep title="Bonded share is above target" icon="arrow-trend-down">
+    Inflation decreases on the next round. Lower issuance limits dilution of bonded holders once security is met.
+  </StyledStep>
+  <StyledStep title="Only bonded LPT earns rewards" icon="hand-holding-dollar">
+    Newly minted LPT is distributed exclusively to bonded stake. Unbonded LPT is diluted by every round's issuance.
+  </StyledStep>
+</StyledSteps>
 
-- The contracts are deployed on Ethereum mainnet (and Arbitrum for L2)
-- Contract addresses are stored in the Controller registry for upgradeability
-- All token operations use standard ERC20 approval patterns
-- The system supports both L1 and L2 deployments with backward compatibility
-- Round-based operations ensure coordinated protocol upgrades and state transitions
-- The probabilistic payment system reduces on-chain transactions by ~99% while maintaining fair expected value for all parties
+This creates a clear opportunity cost for holding LPT idle. The dilution is not theoretical: every round of inflation that an unbonded holder sits through reduces their share of the total supply. The mechanism design intends for stakeholders to either bond directly, delegate to an orchestrator they trust, or accept the dilution as the cost of liquidity.
+
+<Note>
+Inflation parameters - the target bonding rate, the per-round inflation step, the minimum and maximum bounds - are set in the Minter contract and adjustable through governance. The exact current values can be read directly from the contract on Arbitrum One. See <LinkArrow href="/v2/about/protocol/blockchain-contracts#minter" label="Minter contract reference" newline={false} /> for the precise function signatures.
+</Note>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Bonding, unbonding, and rebonding
+
+LPT participation in the protocol is gated by an unbonding period. This delay is the protocol's protection against rapid stake exit during a slashing event.
+
+<DynamicTableV2
+  headerList={["Action", "Function", "Effect"]}
+  itemsList={[
+    {
+      "Action": <Subtitle variant="changelog">**Bond**</Subtitle>,
+      "Function": "`bond(amount, orchestrator)`",
+      "Effect": "LPT moves from holder to BondingManager. Stake counts toward orchestrator's active set position from the next round.",
+    },
+    {
+      "Action": <Subtitle variant="changelog">**Unbond**</Subtitle>,
+      "Function": "`unbond(amount)`",
+      "Effect": "Creates an unbonding lock. Stake stops earning rewards. LPT is locked for the unbonding period.",
+    },
+    {
+      "Action": <Subtitle variant="changelog">**Rebond**</Subtitle>,
+      "Function": "`rebond(unbondingLockId)`",
+      "Effect": "Cancels an in-progress unbond. Stake returns to active duty without resetting the unbonding period.",
+    },
+    {
+      "Action": <Subtitle variant="changelog">**Withdraw stake**</Subtitle>,
+      "Function": "`withdrawStake(unbondingLockId)`",
+      "Effect": "After the unbonding period expires, returns LPT to the holder's wallet.",
+    },
+    {
+      "Action": <Subtitle variant="changelog">**Claim earnings**</Subtitle>,
+      "Function": "`claimEarnings(endRound)`",
+      "Effect": "Realises accumulated LPT rewards and ETH fees from past rounds into the holder's claimable balance.",
+    },
+  ]}
+/>
+
+Rounds are the protocol's time unit. On Arbitrum One, a round is configured to approximately 24 hours. State changes triggered by `bond`, `unbond`, or orchestrator parameter updates take effect at the start of the next round, ensuring all participants compete on a stable view of the active set within any given round.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="cogs" title="Core Mechanisms" />} href="/v2/about/protocol/mechanisms" horizontal arrow>
+    Staking, rewards, payments, rounds, and slashing - the protocol primitives in detail.
+  </Card>
+  <Card title={<CustomCardTitle icon="file-code" title="Blockchain Contracts" />} href="/v2/about/protocol/blockchain-contracts" horizontal arrow>
+    Every contract, every function. BondingManager, TicketBroker, Minter, and the rest.
+  </Card>
+  <Card title={<CustomCardTitle icon="vault" title="Governance and Treasury" />} href="/v2/about/protocol/governance-and-treasury" horizontal arrow>
+    On-chain voting, proposal lifecycle, and how LPT inflation funds ecosystem work.
+  </Card>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Protocol Design" />} href="/v2/about/protocol/design" horizontal arrow>
+    Design decisions behind delegated proof-of-stake, probabilistic micropayments, and the role of LPT.
+  </Card>
+  <Card title={<CustomCardTitle icon="hand-holding-dollar" title="Obtain LPT" />} href="https://www.livepeer.org/lpt" horizontal arrow>
+    Where to acquire LPT to delegate, bond, or run an orchestrator.
+  </Card>
+  <Card title={<CustomCardTitle icon="chart-line" title="Livepeer Explorer" />} href="https://explorer.livepeer.org/" horizontal arrow>
+    Live network data: inflation rate, bonded supply, orchestrators, and rewards.
+  </Card>
+</Columns>
