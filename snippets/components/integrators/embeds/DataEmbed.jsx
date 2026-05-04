@@ -116,12 +116,12 @@ export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
             '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
           )
           // Headings
-          .replace(/^######\s+(.+)$/gm, '<h6>$1</h6>')
-          .replace(/^#####\s+(.+)$/gm, '<h5>$1</h5>')
-          .replace(/^####\s+(.+)$/gm, '<h4>$1</h4>')
-          .replace(/^###\s+(.+)$/gm, '<h3>$1</h3>')
-          .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
-          .replace(/^#\s+(.+)$/gm, '<h1>$1</h1>')
+          .replace(/^######\s+(.+?)(?:\s+#+)?$/gm, '<h6>$1</h6>')
+          .replace(/^#####\s+(.+?)(?:\s+#+)?$/gm, '<h5>$1</h5>')
+          .replace(/^####\s+(.+?)(?:\s+#+)?$/gm, '<h4>$1</h4>')
+          .replace(/^###\s+(.+?)(?:\s+#+)?$/gm, '<h3>$1</h3>')
+          .replace(/^##\s+(.+?)(?:\s+#+)?$/gm, '<h2>$1</h2>')
+          .replace(/^#\s+(.+?)(?:\s+#+)?$/gm, '<h1>$1</h1>')
           // Bold + italic
           .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
           .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -148,8 +148,13 @@ export const MarkdownEmbed = ({ url, className = '', style = {}, ...rest }) => {
   return (
     <div
       className={className}
-      style={style}
       {...rest}
+      style={{
+        maxWidth: '100%',
+        overflowWrap: 'anywhere',
+        wordBreak: 'break-word',
+        ...style,
+      }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
