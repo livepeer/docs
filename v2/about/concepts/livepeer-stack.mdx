@@ -31,6 +31,8 @@ import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/co
 import { BadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
 import { layerBadges } from '../data/badges.jsx'
 import { LinkArrow } from "/snippets/components/elements/links/Links.jsx";
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { CustomCardTitle } from "/snippets/components/elements/text/Text.jsx";
 
 {/* SCOPE: the layered architecture of Livepeer as a single mental model. Diagram-led. Each layer gets a short description and a link to its deep-dive home. */}
 
@@ -110,14 +112,6 @@ _**Protocol vs Network vs Platform**_
 
 The **protocol** provides trust, coordination and payment mechanisms, the **network** supplies compute, routing, and verification, and **platforms** expose the network's capabilities in a usable way.
 
-# Livepeer Protocol and Network Architecture
-
-Livepeer's crypto-economic primitives and decentralised compute mesh provide additional benefits to the system such as censorship resistance, economic security, and trustless coordination.
-
-<Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_layperson.svg" alt="Livepeer Network Protocol Layperson" caption="Livepeer Protocol and Network Layers" />
-
-<Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_technical.svg" alt="Livepeer Network Protocol Technical" caption="Livepeer Protocol and Network Architecture" />
-
 ## Infrastructure Layers
 Livepeer is a decentralised serverless GPU fabric with a cryptoeconomic control plane, where services are exposed through a set of developer-friendly products and applications, enabling real-time compute infrastructure.
 {/* Livepeer is akin to how you would access and build on traditional cloud providers, for example, social media is powered by on an underlying infrastructure, which you access through a set of products and applications (e.g. Twitter, Instagram, Facebook). */}
@@ -126,29 +120,294 @@ Livepeer's crypto-economic primitives and decentralised compute mesh provide add
 
 {/* One sub-section per layer. Each: 2-3 sentences. What it is, who runs it, where it lives in the codebase, link to the section that covers it in depth. */}
 
-### Protocol contracts
+<DynamicTableV2
+  headerList={["Layer", "Role"]}
+  itemsList={[
+    { "Layer": "Client Layer", "Role": "Streams or submits jobs via Application Layer (eg. CLI, SDK, API)" },
+    { "Layer": "Gateway Layer", "Role": "Receives jobs, initiates session routing" },
+    { "Layer": "Orchestrator Layer", "Role": "Bids on sessions, runs compute nodes" },
+    { "Layer": "Worker Layer", "Role": "Performs transcoding / AI inference" },
+    { "Layer": "Off-chain Manager", "Role": "Handles bonding sync, ticket validation" },
+    { "Layer": "L2 Contracts (ARB)", "Role": "TicketBroker, BondingManager, Delegator claims, reward withdrawal" },
+    { "Layer": "L1 Contracts (ETH)", "Role": "LivepeerToken, BridgeMinter - token issuance & bridging only" },
+  ]}
+/>
 
+# Livepeer Protocol and Network Architecture
+
+Livepeer's crypto-economic primitives and decentralised compute mesh provide additional benefits to the system such as censorship resistance, economic security, and trustless coordination.
+
+<Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_layperson.svg" alt="Livepeer Network Protocol Layperson" caption="Livepeer Protocol and Network Layers" />
+
+<Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_technical.svg" alt="Livepeer Network Protocol Technical" caption="Livepeer Protocol and Network Architecture" />
+
+### Protocol contracts
 {/* BondingManager, TicketBroker, RoundsManager, Minter, Controller. Live on Arbitrum One. Link → Protocol → Architecture. */}
+
+The Livepeer protocol is a set of Solidity contracts deployed to Arbitrum One. Five contracts carry the load: `BondingManager` tracks stake and delegation, `TicketBroker` issues and redeems probabilistic micropayment tickets, `RoundsManager` advances the protocol clock, `Minter` issues LPT inflation, and `Controller` is the upgrade authority that registers all the others.
+
+<ScrollableDiagram title="Protocol Contracts on Arbitrum One" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart TB
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    classDef proto fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
+    classDef token fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+
+    Ctrl["Controller<br/><i>upgrade authority,<br/>contract registry</i>"]:::proto
+
+    subgraph Core["Core protocol"]
+        BondMgr["BondingManager<br/><i>stake, delegation,<br/>active set, reward cut</i>"]:::proto
+        TicketB["TicketBroker<br/><i>probabilistic micropayments,<br/>winning ticket redemption</i>"]:::proto
+        Rounds["RoundsManager<br/><i>round transitions,<br/>protocol clock</i>"]:::proto
+        Minter["Minter<br/><i>LPT inflation,<br/>treasury distribution</i>"]:::proto
+    end
+
+    subgraph Tokens["Tokens & treasury"]
+        LPT["LivepeerToken (LPT)<br/><i>governance, staking</i>"]:::token
+        Treasury["Treasury<br/><i>protocol-owned LPT</i>"]:::token
+    end
+
+    Ctrl -->|registers + upgrades| BondMgr
+    Ctrl -->|registers + upgrades| TicketB
+    Ctrl -->|registers + upgrades| Rounds
+    Ctrl -->|registers + upgrades| Minter
+    Minter -->|mints| LPT
+    Minter -->|funds| Treasury
+    BondMgr -->|reads stake| LPT
+    TicketB -->|reads active set| BondMgr
+    BondMgr -->|advances on| Rounds
+```
+
+</ScrollableDiagram>
+
+These contracts run unchanged across every node in the network. An orchestrator earns by redeeming winning tickets at `TicketBroker` and reward calls at `BondingManager`; a delegator earns by bonding LPT through `BondingManager`. See [Protocol Architecture](/v2/about/protocol/architecture) for contract addresses and ABIs.
+
+{/* <ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart TD
+    classDef default stroke-width:2px
+    subgraph OffChain["Off-chain Network"]
+        B[Broadcaster] -->|Video/AI jobs| O[Orchestrator]
+        O -->|Results| B
+        B -->|Prob. Tickets| O
+    end
+    subgraph OnChain["On-chain Protocol"]
+        BDeposit[[Broadcaster Deposit - ETH]]
+        OStake[[Orchestrator Stake - LPT]]
+        TicketBroker[TicketBroker Contract]
+        BondingManager[BondingManager Contract]
+        Treasury[Treasury]
+    end
+    B -.->|Deposit ETH| TicketBroker
+    OStake -.->|Stake/Delegate LPT| BondingManager
+    TicketBroker -.->|Redeem winning ticket| OStake
+    BondingManager -.->|Inflation rewards| OStake
+    BondingManager -.->|Treasury share| Treasury
+    O -.->|Redeem winning ticket| TicketBroker
+```
+
+</ScrollableDiagram> */}
+
+<Card title={<CustomCardTitle title="See full contract details" icon="file-code"/>} href="/v2/developers/protocol/architecture" arrow />
 
 ### Network nodes
 
 {/* go-livepeer binary running as orchestrator, transcoder, gateway. Link → Network → Architecture. */}
+The network layer is a single binary, `go-livepeer`, run in different modes. One mode is the gateway: it accepts video and AI jobs from clients, selects an orchestrator, and settles payment in tickets. Another is the orchestrator: it advertises capabilities, receives jobs, runs them, and redeems winning tickets on-chain. The transcoder mode is a worker that an orchestrator can split off onto a separate machine to scale horizontally. Newer modes — redeemer and remote signer — separate ticket redemption and key custody from the live job path so that gateway implementations in other languages can integrate.
+
+<ScrollableDiagram title="go-livepeer Node Modes" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart LR
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    classDef gw fill:#1a1a1a,color:#fff,stroke:#3b82f6,stroke-width:2px
+    classDef orch fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    classDef aux fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+
+    Client["Client app<br/>(Studio, Daydream, SDK)"]:::default
+
+    subgraph DemandSide["Demand side"]
+        Gateway["Gateway<br/>job routing, payment,<br/>session management"]:::gw
+        RemoteSigner["Remote Signer<br/>key custody,<br/>ticket signing"]:::aux
+        Redeemer["Redeemer<br/>ticket redemption"]:::aux
+    end
+
+    subgraph SupplySide["Supply side"]
+        Orchestrator["Orchestrator<br/>capability advertisement,<br/>job acceptance, payment receipt"]:::orch
+        Transcoder["Transcoder<br/>video transcoding worker"]:::orch
+        AIWorker["AI Worker<br/>AI inference worker"]:::orch
+    end
+
+    Client -->|"video/AI job"| Gateway
+    Gateway -->|"signs ticket"| RemoteSigner
+    Gateway -->|"forwards ticket"| Redeemer
+    Gateway -->|"job + ticket"| Orchestrator
+    Orchestrator -->|"transcode work"| Transcoder
+    Orchestrator -->|"AI work"| AIWorker
+```
+
+</ScrollableDiagram>
+
+A small operator runs a single binary that fills both gateway and orchestrator roles. A larger operator splits the modes onto separate machines: orchestrator on the network edge, transcoders or AI workers behind it on a private subnet. See [Network Architecture](/v2/network/architecture) for the deployment topology.
 
 ### Off-chain coordination
 
 {/* Discovery, capabilities advertisement, off-chain payment ticketing. Link → Network → Marketplace. */}
 
-### AI runtime
+Most of what happens on the network never touches a contract. Gateways discover orchestrators through the on-chain subgraph, direct configuration, a webhook, or the Network Capabilities API. Orchestrators advertise capabilities and prices in `OrchestratorInfo` messages. Payment runs in probabilistic micropayment tickets that batch off-chain until a winning ticket triggers an on-chain redemption. This off-chain layer is what makes per-frame, per-pixel pricing economical.
+
+<ScrollableDiagram title="Off-Chain Coordination Loop" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+sequenceDiagram
+    autonumber
+    participant G as Gateway
+    participant Sub as Arbitrum subgraph
+    participant O as Orchestrator
+    participant TB as TicketBroker (on-chain)
+
+    G->>Sub: query active orchestrators<br/>(stake, service URI)
+    Sub-->>G: candidate list
+    G->>O: GetOrchestrator request
+    O-->>G: OrchestratorInfo<br/>(capabilities, price,<br/>ticket params)
+    G->>G: filter by price + capability<br/>+ blacklist + score
+    G->>O: job + probabilistic ticket
+    O->>O: process job, accumulate tickets
+    O-->>G: result
+    Note over O,TB: only winning tickets<br/>(low probability per ticket)
+    O->>TB: redeem winning ticket
+    TB-->>O: settle ETH from gateway deposit
+```
+
+</ScrollableDiagram>
+
+The off-chain loop is what scales the network: thousands of jobs and tickets per second between gateway and orchestrator, with on-chain settlement only when a ticket wins. See [Marketplace and Discovery](/v2/network/marketplace) for the full discovery and selection algorithm.
+
+### AI Runtime
 
 {/* ai-worker (Go) + ai-runner (Python) for model inference. Link → Network → Capabilities. */}
+
+The AI runtime sits inside the orchestrator. `ai-worker` is a Go subsystem in `go-livepeer` that owns the orchestrator-side job lifecycle: it receives an AI job from the gateway, picks a registered pipeline, starts or wakes the corresponding container, and streams frames in and out. Each pipeline runs as a separate `ai-runner` Python container, isolated by GPU and model. The transport between `ai-worker` and `ai-runner` for real-time work is the trickle protocol; for batch work it is a request/response HTTP API. ComfyStream is one such container, offering a ComfyUI-graph runtime for real-time video-to-video pipelines.
+
+<ScrollableDiagram title="AI Runtime — ai-worker and ai-runner" maxHeight="600px">
+
+    ```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+    flowchart TB
+        classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+        classDef goproc fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+        classDef py fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+        classDef cfg fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
+
+        Gateway["Gateway<br/>(remote)"]:::default
+
+        subgraph Orchestrator["Orchestrator host"]
+            Orch["go-livepeer<br/>orchestrator process"]:::goproc
+            AIWorker["ai-worker subsystem<br/>job dispatch, container<br/>lifecycle, payment"]:::goproc
+
+            subgraph Containers["ai-runner containers"]
+                Batch["Batch pipelines<br/>text-to-image,<br/>image-to-video,<br/>audio-to-text…"]:::py
+                Realtime["Real-time pipelines<br/>live-video-to-video,<br/>ComfyStream"]:::py
+            end
+
+            AIModels["aiModels.json<br/><i>configured pipelines<br/>+ pricing</i>"]:::cfg
+        end
+
+        Gateway -->|AI job| Orch
+        Orch -->|dispatch| AIWorker
+        AIWorker -->|HTTP request/response| Batch
+        AIWorker -->|trickle protocol<br/>(WebRTC frames)| Realtime
+        AIModels -->|loaded at start| AIWorker
+    ```
+
+</ScrollableDiagram>
+
+An orchestrator declares which pipelines it serves through `aiModels.json`, which sets per-pipeline pricing and warm-model strategy. See [AI Capabilities](/v2/network/capabilities) for the pipeline catalogue and pricing units.
 
 ### Applications and integrations
 
 {/* Studio, Daydream, partner integrations, BYOC. Link → Solutions tab. */}
 
+Applications are the products built on the layers below. Livepeer Studio is the hosted video product run by Livepeer Inc — streaming, VOD, transcoding, and the embeddable player behind an API key. Daydream is the hosted real-time AI video product, built on ComfyStream and the AI Gateway API. Storyboard is an AI agent workspace that uses Daydream as its inference backend. Streamplace is the live-video product for the AT Protocol and Bluesky. BYOC ("bring your own container") is the path for a partner to plug a custom AI pipeline into the network as an orchestrator-side container.
+
+<ScrollableDiagram title="Applications and Their Layer Position" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart TB
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    classDef firstparty fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+    classDef partner fill:#1a1a1a,color:#fff,stroke:#3b82f6,stroke-width:2px
+    classDef platform fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
+
+    subgraph FirstParty["First-party apps (Livepeer Inc)"]
+        Studio["Livepeer Studio<br/>hosted video"]:::firstparty
+        Daydream["Daydream<br/>hosted real-time AI video"]:::firstparty
+    end
+
+    subgraph Partner["Partner & community apps"]
+        Storyboard["Storyboard<br/>AI agent workspace"]:::partner
+        Streamplace["Streamplace<br/>live video on AT Protocol"]:::partner
+        BYOC["BYOC pipelines<br/>custom containers"]:::partner
+    end
+
+    subgraph Platforms["Platform layer (Layer 3)"]
+        StudioAPI["Studio API"]:::platform
+        AIGwAPI["AI Gateway API"]:::platform
+        ComfyStream["ComfyStream"]:::platform
+    end
+
+    Studio --> StudioAPI
+    Daydream --> AIGwAPI
+    Daydream --> ComfyStream
+    Storyboard --> AIGwAPI
+    Streamplace --> StudioAPI
+    BYOC --> AIGwAPI
+```
+
+</ScrollableDiagram>
+
+A reader choosing where to build picks the highest layer that meets their needs. Studio for managed video, Daydream for managed AI video, the AI Gateway API for direct network calls, ComfyStream for custom real-time pipelines, BYOC for new pipeline types. See [Solutions](/v2/solutions) for the full product catalogue.
+
 ## How the layers interact
 
 {/* One paragraph: a job flows top-down, payment flows bottom-up, governance flows across. */}
+
+A job is the test: it touches every layer in one round trip. The job descends from an application call to platform routing to network compute, then settles back up in payment to the operator and a small redemption fee on-chain. Governance acts across, not through, the live job path.
+
+<ScrollableDiagram title="One Job Through the Stack" maxHeight="700px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+sequenceDiagram
+    autonumber
+    participant App as Layer 4<br/>Application
+    participant Plat as Layer 3<br/>Platform<br/>(Studio API / AI Gateway API)
+    participant Net as Layer 2<br/>Network<br/>(Gateway + Orchestrator)
+    participant Proto as Layer 1<br/>Protocol<br/>(Arbitrum)
+
+    App->>Plat: call SDK / API<br/>(video stream or AI prompt)
+    Plat->>Net: forward job to gateway
+    Net->>Net: gateway selects orchestrator<br/>off-chain (capabilities, price, score)
+    Net->>Net: orchestrator runs work<br/>(transcode / inference)
+    Net-->>Plat: result stream
+    Plat-->>App: result delivered
+    Note over Net: per-job: probabilistic ticket<br/>(off-chain, mostly losing)
+    Net->>Proto: redeem winning ticket
+    Proto-->>Net: settle ETH from gateway deposit
+    Note over Proto: per-round: inflation reward<br/>distributed by stake
+    Proto-->>Net: LPT inflation reward
+```
+
+</ScrollableDiagram>
+
+The protocol does not see most jobs — it only sees the ones whose tickets win and the per-round inflation distribution. That is the design that makes per-pixel and per-token pricing viable on Arbitrum.
 
 {/* ## The stack at a glance
 

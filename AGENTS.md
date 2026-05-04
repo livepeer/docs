@@ -100,6 +100,14 @@ Run the smallest relevant validation set before handing work back:
 
 If a validator fails: read the output, fix the root cause, rerun. Do not skip.
 
+## No Lazy Tooling Claims
+
+- Do not claim a required tool is unavailable just because the current non-interactive shell cannot find it on `PATH`.
+- Before reporting `node`, `npm`, `lpd`, package managers, validators, or repo CLIs as unavailable, inspect repo wrappers, README/setup docs, shell startup files, version managers, and common install locations.
+- If this repo provides a canonical wrapper such as `tools/lpd`, use that wrapper directly or load the required runtime path, then run the smallest relevant validation.
+- If validation still cannot run, report the exact commands attempted, the exact missing dependency/path, and the next concrete remediation command.
+- Treat stopping at `command not found` without this discovery as unacceptable.
+
 ## Response and Review Contract
 
 - Cite repo file paths when making factual claims about repository behavior.
