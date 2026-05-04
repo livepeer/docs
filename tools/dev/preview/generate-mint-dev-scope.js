@@ -1894,6 +1894,14 @@ class ScopedMintSessionSupervisor {
     if (filename) {
       const normalizedName = path.basename(String(filename || ''));
       if (!watcher.names.has(normalizedName)) {
+        // New file in a watched directory — trigger a profile rebuild so
+        // the watch list picks it up. Only for extensions the scope cares about.
+        const ext = path.extname(normalizedName).toLowerCase();
+        const scopedExtensions = new Set(['.mdx', '.md', '.js', '.jsx', '.ts', '.tsx', '.css', '.json', '.svg', '.yaml', '.yml']);
+        if (ext && scopedExtensions.has(ext)) {
+          this.rememberChangedFile(path.join(dirPath, normalizedName));
+          this.scheduleRefresh();
+        }
         return;
       }
       const changedPath = path.join(dirPath, normalizedName);

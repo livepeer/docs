@@ -2,7 +2,7 @@
 > This document was produced in a prior planning session. It contains proposals, decision flags, and recommendations that have not yet been formally reviewed or approved. Do not treat any section as a current repo policy. Superseded by: `gap-analysis.md` (current state) and `decisions/decision-log.md` (decisions).
 > Last reviewed: 2026-03-27
 
----
+<CustomDivider />
 
 **LIVEPEER DOCS**
 
@@ -148,7 +148,7 @@ The contribute/ directory contains:
 
 The contribute-to-the-docs.mdx page provides a public-facing contributor guide at v2/resources/documentation-guide/contribute-to-the-docs.mdx with small/medium/large change workflows, recognition policy, and links to CODEOWNERS and style guide.
 
-The community-guidelines.mdx page at v2/community/livepeer-community/community-guidelines.mdx covers values (openness, transparency, constructive disagreement, accountability), moderation escalation paths, and contribution principles (read before you build, keep PRs focused, conventional commits).
+The guidelines.mdx page at v2/community/guides/guidelines.mdx covers values (openness, transparency, constructive disagreement, accountability), moderation escalation paths, and contribution principles (read before you build, keep PRs focused, conventional commits).
 
 ## **3.2 Governance Model**
 

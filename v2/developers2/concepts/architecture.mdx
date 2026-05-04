@@ -1,0 +1,523 @@
+---
+title: Livepeer Open Infrastructure Stack
+sidebarTitle: Architecture
+description: >-
+  A high-level introduction to the Livepeer open, on-demand AI & Media infrastructure
+  substrate and the distributed crypto-primitive coordination system.
+lifecycleStage: discover
+complexity: beginner
+pageType: concept
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - mental model
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+lastVerified: 2026-03-17T00:00:00.000Z
+purpose: concept
+---
+
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
+import { StyledTable, TableCell, TableRow } from '/snippets/components/displays/tables/Tables.jsx'
+import { AccordionLayout } from '/snippets/components/displays/accordions/Accordions.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { BadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { layerBadges } from '../data/badges.jsx'
+
+{/* ---
+title: "Architecture"
+description: "Five layout diagrams covering Livepeer's runtime, payment, and compute architecture."
+---
+
+This page is a stub. Content coming soon. */}
+
+<CenteredContainer preset="readable90">
+  <Quote>
+  Livepeer is a crypto-economic coordination protocol that secures a global, on-demand GPU network optimised for low-latency video and AI, exposed through developer-friendly platforms and applications.
+  {/* <Note> image would be good </Note> */}
+  {/* It includes a protocol layer that implements the economic incentives and rules of the system, a network layer of independently operated nodes that perform the compute work, and a growing ecosystem of platforms and applications that expose the network's capabilities in usable ways. */}
+  </Quote>
+</CenteredContainer>
+
+<CustomDivider margin="medium" />
+
+## Livepeer Infrastructure Layers
+Livepeer is a decentralised serverless GPU fabric with a cryptoeconomic control plane, where services are exposed through a set of developer-friendly products and applications, enabling real-time compute infrastructure.
+{/* Livepeer is akin to how you would access and build on traditional cloud providers, for example, social media is powered by on an underlying infrastructure, which you access through a set of products and applications (e.g. Twitter, Instagram, Facebook). */}
+
+Livepeer's crypto-economic primitives and decentralised compute mesh provide additional benefits to the system such as censorship resistance, economic security, and trustless coordination.
+
+<Accordion icon="rocket" title="More on Crypto-Primitive Advantages">
+    Decentralisation and cryptoeconomic design add specific properties that a centrally operated cloud cannot provide:
+
+    <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+      <StyledStep title="Dynamic Scaling" icon="arrows-rotate">
+        No single point of failure; capacity is contributed by independent operators globally.
+      </StyledStep>
+
+      <StyledStep title="Global Payments" icon="money-bill-transfer">
+        Accessible by AI agents and automated systems without bank accounts or API contracts.
+      </StyledStep>
+
+      <StyledStep title="Open Participation" icon="door-open">
+        Anyone with compatible hardware can join the network; innovation is not gated by a vendor relationship.
+      </StyledStep>
+
+      <StyledStep title="Creator Economics" icon="chart-line">
+        Transparent, auditable revenue streams with no hidden intermediary margin.
+      </StyledStep>
+
+      <StyledStep title="Data Locality" icon="location-dot">
+        Data stays closer to the user when operators are geographically distributed.
+      </StyledStep>
+
+      <StyledStep title="Lower Costs" icon="sack-dollar">
+        No vendor margin on compute; switching is possible at the protocol level.
+      </StyledStep>
+
+      <StyledStep title="Sustaining Incentives" icon="coins">
+        Inflation-based rewards and fee capture provide a runway to self-sustaining infrastructure without requiring venture capital to subsidise operations.
+      </StyledStep>
+
+      <StyledStep title="Network Effects" icon="circle-nodes">
+        As more operators join, capacity, resilience, and geographic coverage increase for all participants.
+      </StyledStep>
+    </StyledSteps>
+</Accordion>
+
+{/* such as censorship resistance, economic security, and trustless coordination, but the core value proposition remains the same: a global, open, and permissionless compute infrastructure that anyone can build on, operate, and benefit from. */}
+
+### Infrastructure Layers
+
+<QuadGrid gap="var(--lp-spacing-6)">
+    <BorderedBox variant="accent">
+        **Protocol**
+        <BadgeWrapper badges={[layerBadges.protocol]} />
+        The **Protocol** provides trust, coordination and payment mechanisms.
+        Using crypto‑economic primitives, the protocol implements the incentives, staking, governance, and payments rails of the decentralised network.
+    </BorderedBox>
+
+    <BorderedBox variant="accent">
+        **Network**
+        <BadgeWrapper badges={[layerBadges.orchestrator, layerBadges.gateway]} />
+        The **Network** supplies compute, job routing, and verification.
+        Orchestrators provide a global GPU network that performs the actual compute work, while Gateways handle job routing and verification.
+    </BorderedBox>
+
+    <BorderedBox variant="accent">
+        **Platforms**
+        <BadgeWrapper badges={[layerBadges.gateway, layerBadges.platform]} />
+        **Platforms** provide a set of developer‑facing tools and platforms (APIs, SDKs, platforms) which expose the network's capabilities for developers to build on and integrate with, without requiring deep knowledge of the underlying infrastructure.
+    </BorderedBox>
+
+    <BorderedBox variant="accent">
+        **Applications**
+        <BadgeWrapper badges={[layerBadges.application, layerBadges.solution]} />
+        **Applications** are the products and solutions built on top of the network. They are the end-user experiences that leverage the underlying infrastructure to provide AI and video capabilities for user products.
+    </BorderedBox>
+</QuadGrid>
+
+{/* <br/>
+_**Mapping Protocol vs Network vs Platform**_
+| Concern | Lives Where | Examples |
+|---------|-------------|----------|
+| Security & incentives | Protocol | LPT, staking, inflation |
+| Performance & routing | Network | Orchestrators, fees |
+| UX & onboarding | Product | APIs, dashboards |
+| Creativity & apps | Application | Daydream, studios | */}
+{/* where the **protocol** provides trust, coordination and payment mechanisms, the **network** supplies compute, routing, and verification, and **products** expose the network's capabilities in a usable way. */}
+
+{/* Livepeer is a crypto-economic coordination protocol that secures a global, permissionless GPU network optimized for real-time video and AI, exposed through developer-friendly products and applications. */}
+
+## Livepeer as an OSI-Like Stack
+
+One of the traditional ways to map infrastructure architectures is with the [OSI model](https://en.wikipedia.org/wiki/OSI_model).
+While this model doesn't map perfectly to decentralised systems - and is also being rapidly transformed by AI, the framework is still useful for understanding the different layers and how they interact.
+
+Livepeer can be pictured as an OSI stack where the “cloud control plane” is replaced by a cryptoeconomic protocol, and persistent storage is optional, external, and secondary to real-time streamed compute.
+
+The stack has two logical groupings:
+- the **network and protocol stack** (Layers 1-6) and
+- the **platform and application stack** (Layers 7-10).
+
+Middleware and integrations sit between these two groupings.
+
+### Network & Protocol Stack
+
+*Think of this as the global decentralised open compute substrate.*
+
+{/* #### Layer 1: Physical Compute & Resource Layer
+(OSI: Physical) */}
+
+<Accordion
+          title="Layer 1: Physical Compute & Resource Layer"
+          description={
+              <AccordionLayout>
+                <Subtitle text="OSI: Physical | Orchestrators" />
+                <BadgeWrapper badges={[layerBadges.orchestrator]} margin="0.5rem 0 0" />
+              </AccordionLayout>
+          }
+      >
+    > *"Raw atoms"*
+
+ **What it is:**
+    - GPUs, CPUs, memory, bandwidth
+    - Heterogeneous hardware (consumer → data‑centre grade)
+    - Power, latency, geographic placement
+
+ **Livepeer Context:**
+    - Hardware is contributed and owned by independent operators
+    - Capacity is surfaced to the network via orchestrator infrastructure
+
+ **Not Livepeer‑specific:**
+    - NVIDIA, AMD, bare metal, cloud VMs
+
+ **Who provides it:**
+    - Orchestrators (GPU operators)
+    - Gateways (in some cases - depending on deployment)
+
+ <Tip>Livepeer does not own infrastructure. It indexes and incentivizes it.</Tip>
+
+</Accordion>
+
+<Accordion
+          title="Layer 2: Transport & Media Substrate"
+          description={
+              <AccordionLayout>
+                <Subtitle text="OSI: Data Link / Transport | Gateways, Orchestrators" />
+                <BadgeWrapper badges={[layerBadges.gateway, layerBadges.orchestrator]} margin="0.5rem 0 0" />
+              </AccordionLayout>
+          }
+          >
+    > *"Bits move"*
+
+ **What it is:**
+    - Video transport, chunking, codecs, streaming primitives
+    - Frame-level + segment-level delivery
+    - Peer discovery, routing, and delivery paths
+
+ **Livepeer context:**
+    - Segment-based processing and delivery patterns
+    - Low-latency media delivery is a core competence ("video DNA")
+    - Gateway-mediated delivery patterns (client/server hybrid)
+
+ **Who provides it:**
+    - Gateways (as the primary network-facing media/API surface)
+    - Orchestrators (as the execution endpoints)
+    - Underlying Internet transport (TCP/UDP/HTTP/WebRTC etc.)
+
+ <Tip> Key Idea: <br/> This is where Livepeer differs from generic GPU clouds: it is built around media-native transport patterns. </Tip>
+
+ {/* - **Transcoding profiles:** video quality settings
+    - **Transport:** WebRTC / TCP/UDP, HTTP(S), HLS / RTMP support (via gateways)
+    - **Segments:** 1‑second video chunks
+    - **Transcoding profiles:** video quality settings
+    - **Codecs:** H.264, H.265, VP9 */}
+
+</Accordion>
+
+<Accordion
+          title="Layer 3: Distributed Execution Network"
+          description={
+              <AccordionLayout>
+                <Subtitle text="OSI: Network | Orchestrators, Gateways" />
+                <BadgeWrapper badges={[layerBadges.orchestrator, layerBadges.gateway]} margin="0.5rem 0 0" />
+              </AccordionLayout>
+          }
+      >
+    > *"Who Actually does the work?"*
+
+ **What it is:**
+    - Distributed job routing + load balancing
+    - Service discovery and selection
+    - Capacity-aware and performance-aware execution selection
+
+ **Livepeer context:**
+    - Orchestrator selection and routing mechanisms
+    - Segment/task model: work can be broken into independently computable units
+    - Execution endpoints expose pricing/fees and performance characteristics
+
+ **Who provides it:**
+    - Orchestrators (provide execution + advertise capability)
+    - Gateways / clients (initiate and route work via protocol/network rules)
+
+ <Tip> Key Idea: <br/> The network decides who executes; the protocol incentivizes honest participation.</Tip>
+
+ {/* <Info>Think: Serverless GPU execution, but decentralised</Info> */}
+
+</Accordion>
+
+<Accordion
+          title="Layer 4: Crypto-Economic Coordination Layer"
+          description={
+             <AccordionLayout>
+               <Subtitle text="OSI: Session / Control Plane (conceptual) | Protocol" />
+               <BadgeWrapper badges={[layerBadges.protocol]} margin="0.5rem 0 0" />
+             </AccordionLayout>
+          }
+      >
+    > *"Coordination, Trust, Provenance"*
+
+ **What it is:**
+    - On‑chain logic that secures and coordinates the network
+    - Cryptoeconomic primitives that align incentives
+    - Work/role coordination, reputation signals, and network rules enforcement
+
+ **Livepeer Context:**
+    - On-chain protocol + off-chain coordination patterns that:
+       - allow permissionless participation
+       - coordinate stake-weighted influence and selection
+       - align behaviour with network goals
+
+ **Who provides it:**
+    - Ethereum smart contracts (on Arbitrum L2)
+    - Blockchain network (Arbitrum L2)
+    - Network participants (orchestrators, delegators, gateways) operating under protocol rules
+
+ <Tip> Key Idea: <br/> This is the “brain” that replaces a centralised cloud control plane. It incentivizes correct behaviour, but does not run jobs. </Tip>
+
+</Accordion>
+
+<Accordion title="Layer 5: Economic & Security Layer" description={<AccordionLayout><Subtitle text="OSI: No direct equivalent | Protocol, Orchestrators" /><BadgeWrapper badges={[layerBadges.protocol, layerBadges.orchestrator]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > *"Why anyone behaves" (incentives alignment, game theory)*
+
+ **What it is:**
+    - Cryptoeconomic primitives that align incentives
+    - Game‑theoretic mechanisms that ensure correct behaviour
+    - Incentives for participation and penalties for misbehavior
+
+ **Livepeer Context:**
+    - LPT staking + delegation
+    - Inflation-based rewards (protocol issuance)
+    - Fee capture and distribution (usage-based)
+    - Slashing (where enabled) to penalise malicious/incorrect behaviour
+    - Governance processes (LIPs, voting, treasury stewardship)
+
+ **Who provides it:**
+    - Protocol participants:
+        - Delegators (stake delegation / security backing)
+        - Orchestrators (service provision under stake)
+        - Governance participants (proposal + voting + stewardship)
+
+ <Tip> Key Idea: <br/> Security is achieved via economic incentives + cryptographic verification, not trust in a single operator. </Tip>
+
+</Accordion>
+
+<Accordion title="Layer 6: Data & State Layer" description={<AccordionLayout><Subtitle text="OSI: Presentation /Data (conceptual) | Gateways, Orchestrators" /><BadgeWrapper badges={[layerBadges.gateway, layerBadges.orchestrator]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > *"What persists"*
+
+ **What it is:**
+    - The data plane around jobs: segments, manifests, logs, receipts
+    - Temporary + derived artifacts needed for execution and verification
+
+ **Livepeer Context:**
+    - Livepeer is intentionally light on storage
+    - Video segments and state are often ephemeral and pipeline-driven
+    - Long-term storage is typically external (object stores, CDNs, decentralised storage)
+
+ **What persists:**
+    - Video segments (temporary)
+    - Manifests, logs, receipts
+    - Verification metadata
+
+ **Who provides it:**
+    - Broadcasters / application operators (sometimes own long-term storage)
+    - External storage providers (S3, GCS, IPFS, Arweave, etc.)
+    - Not the Livepeer chain
+
+ <Tip> Key Idea: <br/> Livepeer coordinates compute over data, not long-term data custody.</Tip>
+
+</Accordion>
+
+### Platform and Application Stack
+
+<Accordion title="Layer 7: Platform Services" description={<AccordionLayout><Subtitle text="OSI: Application Services (conceptual) | Platforms, Gateways" /><BadgeWrapper badges={[layerBadges.platform, layerBadges.gateway]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > *"Batteries included"*
+
+ **What it is:**
+    - Managed services that abstract protocol/network complexity and make it easy to build on Livepeer
+    - Operational tooling: dashboards, analytics, key management, billing abstraction
+    - Provides features such as stream management, analytics, key management, billing abstraction
+
+ **Livepeer Context:**
+    - Hosted/managed gateway experiences
+    - Templates, pipelines, and reference apps
+    - Ecosystem-led products that package the network into a usable platform
+
+ **Who provides it:**
+    - Livepeer ecosystem teams (Inc, Foundation-funded projects, community teams)
+    - Gateway operators offering service layers on top
+
+ <Tip> Key Idea: <br/> This is where the network meets user needs. Products are opinions about access-they are not the protocol and not the network. </Tip>
+
+ **Examples:**
+    - Livepeer Studio
+    - Streamplace
+    - Daydream
+    - and anyone who builds on top of the Livepeer protocol and network
+
+ [See More Products & Platforms](../solutions/portal)
+</Accordion>
+
+<Accordion title="Layer 8: Developer Interfaces" description={<AccordionLayout><Subtitle text="OSI: Presentation (developer-facing) | Platforms, Gateways" /><BadgeWrapper badges={[layerBadges.platform, layerBadges.gateway]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > *"How builders integrate"*
+
+ **What it is:**
+    - APIs, SDKs, client libraries, docs, example repos
+
+ **Livepeer Context:**
+    - Gateway APIs
+    - SDKs (JS, Python, etc.)
+    - BYOC-style integrations (containerized apps connecting to the stack)
+
+ {/* - The final layer is where the end-user applications and services are built.
+    - This is where the magic happens and is what most users will interact with. */}
+
+ **Who provides it:**
+    - Product teams and open-source contributors
+    - Gateway implementations exposing consistent interfaces
+
+ {/* **Examples:**
+ Decentralized Twitch alternatives, AI video apps, surveillance/vision pipelines, Metaverse/XR video. */}
+
+ <Tip> Key Idea: <br/> This layer collapses network/protocol complexity into stable developer primitives. </Tip>
+
+ [See the Showcase](/v2/home/solutions/showcase)
+</Accordion>
+
+<Accordion title="Layer 9: Developer Applications" description={<AccordionLayout><Subtitle text="OSI: Application | Applications" /><BadgeWrapper badges={[layerBadges.application]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > *"What builders ship"*
+
+ **What it is:**
+    - End-user applications and services built on top of Livepeer
+    - The final layer is where the end-user applications and services are built.
+    - This is where the magic happens and is what most users will interact with.
+
+ **Who provides it:**
+    - Independent developers, studios, ecosystem teams
+    - Anyone who builds end-user applications on top of Livepeer or Livepeer Platform services
+
+ **Examples:**
+ Decentralised Twitch alternatives, AI video apps, surveillance/vision pipelines, Metaverse/XR video.
+
+ <Tip> Key Idea: <br/> This is where the end-user applications and services are built. Applications are plural and replaceable; the network remains the substrate.</Tip>
+
+ [See the Showcase](/v2/home/solutions/showcase)
+</Accordion>
+
+<Accordion title="Layer 10: End User" description={<AccordionLayout><Subtitle text="OSI: Application | End Users" /><BadgeWrapper badges={[layerBadges.user]} margin="0.5rem 0 0" /></AccordionLayout>}>
+    > “Humans and (increasingly) AI Agents”
+
+ **What it is:**
+    - Viewers, creators, AI consumers.
+
+ **Livepeer Context:**
+    - Users typically never see
+        - orchestrators,
+        - staking/delegation,
+        - protocol mechanics.
+
+ **Who provides it:**
+    - The applications and experiences (Layer 9)
+
+ <Tip> Key Idea: <br/> End users are the ultimate beneficiaries of the network, but they don't need to know or care about the underlying technology. Success means protocol mechanics disappear behind great UX. </Tip>
+
+<Note>End users never see orchestrators, stakes, or protocol mechanics.</Note>
+
+</Accordion>
+
+## Middleware & Integrations
+
+{/* ## Where Compute & Storage Glue Fits */}
+Middleware is the "joining layer" between the network and protocol stack (Layers 1-6) and the platform and application stack (Layers 7-10). In traditional cloud architectures this role is played by message queues, orchestration engines, and container schedulers (Kafka, Airflow, Kubernetes). In the Livepeer stack, these functions are served differently.
+
+**What joins the layers in Livepeer:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Traditional middleware</TableCell>
+      <TableCell header>Livepeer equivalent</TableCell>
+      <TableCell header>Where it lives</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Job queue / message broker</TableCell>
+      <TableCell>Probabilistic micropayment ticket system + segment routing</TableCell>
+      <TableCell>go-livepeer, on-chain settlement</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Container orchestration</TableCell>
+      <TableCell>go-livepeer spawning ai-runner Docker containers per GPU per pipeline</TableCell>
+      <TableCell>go-livepeer + livepeer/ai-runner</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Service mesh / load balancer</TableCell>
+      <TableCell>Gateway-mediated Orchestrator selection (stake-weighted, performance-aware)</TableCell>
+      <TableCell>Gateway logic in go-livepeer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Streaming transport</TableCell>
+      <TableCell>Trickle protocol -- low-latency HTTP-based frame streaming</TableCell>
+      <TableCell>livepeer/pytrickle, go-livepeer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>API gateway</TableCell>
+      <TableCell>Gateway node exposing the AI Gateway REST API</TableCell>
+      <TableCell>go-livepeer (Gateway mode), Livepeer Studio Gateway, Community Gateway</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Auth / billing / identity</TableCell>
+      <TableCell>pymthouse (OIDC, usage billing, signer proxy) or Studio API keys</TableCell>
+      <TableCell>eliteprox/pymthouse, Livepeer Studio</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Workflow engine</TableCell>
+      <TableCell>ComfyUI node graph + ComfyStream pipeline runtime</TableCell>
+      <TableCell>Livepeer/ComfyStream, Livepeer/ComfyUI-Stream-Pack</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Plugin platform</TableCell>
+      <TableCell>NaaP micro-frontend shell + plugin SDK</TableCell>
+      <TableCell>livepeer/naap (operator.livepeer.org)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The key difference from a traditional cloud stack: Livepeer replaces persistent storage coupling and centralised scheduling with streamed, ephemeral compute coordination. The cryptoeconomic protocol provides the trust guarantees that a centralised Orchestrator would otherwise provide.
+
+<Tip>
+Livepeer replaces persistent storage coupling with streamed, ephemeral compute coordination.
+</Tip>
+
+<CustomDivider mergin="medium"/>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Developer stack" icon="layer-group" href="/v2/developers/concepts/developer-stack" arrow horizontal>
+    Choose the right layer to build at - [Studio](/v2/developers/concepts/studio), [Daydream](/v2/developers/concepts/daydream), [AI Gateway](/v2/developers/concepts/ai-gateway), [ComfyStream](/v2/developers/concepts/comfystream), or [protocol](/v2/developers/concepts/protocol).
+  </Card>
+  <Card title="OSS stack" icon="code-branch" href="/v2/developers/concepts/oss-stack" arrow horizontal>
+    Map of the main Livepeer open-source repositories and how they connect.
+  </Card>
+  <Card title="Ecosystem repo map" icon="map" href="/v2/developers/concepts/ecosystem-repo-map" arrow horizontal>
+    Full map of official and community repos across every layer of the stack.
+  </Card>
+  <Card title="Products and platforms" icon="grid-2" href="/v2/solutions/portal" arrow horizontal>
+    The hosted products and platform services built on the Livepeer Network.
+  </Card>
+</CardGroup>

@@ -5,8 +5,8 @@ description: 'Generated script inventory audit report from operations/scripts/au
 keywords: ["livepeer","internal","reports","repo-ops","audit-scripts"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
-Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
 Generator Script: `operations/scripts/audits/governance/scripts/audit-script-categories.js`
 What It Does: Generated script inventory audit report from operations/scripts/audits/governance/scripts/audit-script-categories.js.
 Audited Scope: `operations/scripts, workspace/README.md, workspace/reports, operations/tests/unit/script-docs.test.js, operations/tests/README.md`

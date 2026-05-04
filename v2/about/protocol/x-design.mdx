@@ -1,0 +1,189 @@
+---
+title: Livepeer Protocol Design
+sidebarTitle: Protocol Design
+description: >-
+  This section outlines the design, contract architecture, staking & reward mechanisms, incentive alignment and
+  governance model of the on-chain Livepeer Protocol that governs how work is coordinated, secured and rewarded and how
+  upgrades are proposed and implemented.
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol overview
+  - protocol
+  - overview
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+purpose: overview
+audience: general
+lastVerified: 2026-04-29T00:00:00.000Z
+aim: What the protocol is. What it secures. What it does not do
+---
+
+import { CardTitleTextWithArrow, CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+{/* This page defines the core design principles of the Livepeer protocol. */}
+
+<FlexContainer justify="center">
+ <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
+</FlexContainer>
+
+<Quote>
+The Protocol is the **on-chain coordination, security and economic layer** responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants. It leverages unique cyrptoeconomic primitives to create the conditions for a secure, open marketplace enabling performant, verifiable media and AI compute workloads.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## Protocol Design Goals
+In any decentralised system involving independent participants, its essential to provide:
+
+<AccordionGroup>
+  <Accordion title="Reward systems" icon="coins">
+    Reward systems incentivise participants to act honestly and cooperate, often using game-theoretic mechanisms.
+
+    They also define penalties for negative behaviour.
+  </Accordion>
+  <Accordion title="Coordination mechanisms" icon="handshake">
+    Coordination mechanisms help independent participants agree on the state of the system.
+  </Accordion>
+  <Accordion title="Payment systems" icon="money-bill-transfer">
+    Payment systems compensate participants for useful work and contributions.
+  </Accordion>
+  <Accordion title="Governance systems" icon="building-columns">
+    Governance systems evolve protocol rules over time and support the growth and health of the network.
+  </Accordion>
+</AccordionGroup>
+
+The protocol is the underlying logic that provides these mechanisms to ensure the desired network outcomes are achieved as efficiently, reliably and fairly as possible. In Livepeer's case, this is enabling the conditions for a robust, open infrastructure network providing a marketplace for cost-effective, performant and secure video streaming & AI pipelines.
+
+<Tip>
+ If you're interested in learning more about game theory, mechanism design and token economics for building digital ecosystems, [this module](https://tokenflows.xyz/tutorials/introduction-tutorials/module3/) is a good primer.
+</Tip>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Livepeer Whitepaper
+
+Livepeer’s [original whitepaper](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md) (published 2017) provides a deep dive into the foundational system design and economic incentives alignment behind the Livepeer protocol.
+
+<FrameQuote>
+The **Livepeer Protocol defines how the multiple actors** in a live streaming ecosystem **participate in a secure and economically rational way**...[incl] the economic incentives for encouraging participation in the network in a secure and game-theoretic manner.
+</FrameQuote>
+
+The whitepaper outlined an ambitious system design for the fully decentralised live video streaming network - aiming to provide **_“the world’s open video infrastructure”_**
+{/* - and described the core design goals, architectural layers, and economic mechanisms that underpin the Livepeer protocol. */}
+
+<Card title={<div style={{ color: "var(--accent)", marginBottom: "-1rem" }}><Icon icon="scroll" size={22} color="var(--accent)" /> {" "}Livepeer Whitepaper</div>} href="/v2/about/resources/knowledge-hub/livepeer-whitepaper" arrow cta="Read the full Livepeer Whitepaper" />
+
+The Livepeer Whitepaper described 3 core design goals:
+  1. _**Sustainable, Aligned Incentives**_: Create economic alignment for operators and token holders to maintain service quality, uptime, and security.
+  2. _**Trustless Verification**_: Guarantee off-chain video work was performed honestly and efficiently without a trusted middleman.
+  3. _**Composable Governance**_: Enable open participation and economic security of Livepeer via token governance for protocol upgrades and treasury spending via on-chain token governance-driven by LPT holders.
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## Design Principles
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Decentralisation" icon="network-wired">
+    Minimise trust in any single orchestrator; selection based on stake ensures broad participation.
+  </StyledStep>
+
+  <StyledStep title="Economic Alignment" icon="scale-balanced">
+    Orchestrators and delegators are rewarded for honest work and penalised for misconduct; broadcasters pay only for actual service.
+  </StyledStep>
+
+  <StyledStep title="Scalability & Cost Efficiency" icon="gauge-high">
+    Streamflow and probabilistic micropayments scale to millions of streams without per-segment on-chain calls; Arbitrum reduces fee overhead.
+  </StyledStep>
+
+  <StyledStep title="Modularity" icon="cubes-stacked">
+    The protocol separates core staking/governance from payment channels, enabling future upgrades without a complete rewrite.
+  </StyledStep>
+
+  <StyledStep title="Open Participation" icon="door-open">
+    Anyone can become an orchestrator or delegate and propose improvements via LIPs, fostering an open and evolving ecosystem.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Design Decisions
+
+The protocol design is the result of a series of design decisions that trade off different priorities and constraints to achieve the desired network outcomes.
+
+Some of the key design decisions include:
+<AccordionGroup>
+  <Accordion title="Stake as security, not permission" icon="shield-halved">
+    The protocol uses delegated proof-of-stake to control which orchestrators receive video work. The active set is the top 100 orchestrators by bonded stake, refreshed each round, with stake providing Sybil resistance and economic collateral that can be slashed for misbehaviour. There is no allowlist, no operator KYC, and no foundation veto over participation; any address that bonds enough LPT to displace the lowest-staked orchestrator can join the active set immediately. Delegators reinforce the same mechanism, since their stake amplifies an orchestrator's weight without requiring them to run hardware.
+
+    The choice trades raw throughput for credible neutrality. An evaluator can read the contract, count the bonded LPT, and verify that work allocation is determined by economics alone. The pre-proposal that locked in the current 100-slot ceiling is on the [Livepeer Forum](https://forum.livepeer.org/t/orchestrator-pool-modification-pre-proposal/1795); AI job routing sits outside this stake-weighted path and is selected by capability, price, and latency instead, as documented in the [staking guide](https://docs.livepeer.org/v2/orchestrators/advanced-setup/staking-LPT).
+  </Accordion>
+
+  <Accordion title="Probabilistic micropayments instead of per-job settlement" icon="ticket">
+    Settling each transcoded segment on-chain would put gas costs into every payment and price the network out of its target market. The protocol instead uses probabilistic micropayments: gateways send orchestrators lottery-style tickets off-chain, each ticket carries an expected value derived from face value and winning probability, and only winning tickets get redeemed through the on-chain `TicketBroker`. Over many tickets the law of large numbers ensures orchestrators are paid the correct amount, while per-job gas overhead stays at zero in expectation.
+
+    The mechanism shipped in the [Streamflow upgrade](https://medium.com/livepeer-blog/the-streamflow-proposal-scaling-livepeer-72179b20bfdd) and is described in detail in [Streamflow: Probabilistic Micropayments](https://medium.com/livepeer-blog/streamflow-probabilistic-micropayments-f3a647672462) and the [PM technical specification](https://github.com/livepeer/wiki/blob/master/spec/streamflow/pm.md). The same payment rail now carries video, AI inference, and BYOC traffic.
+  </Accordion>
+
+  <Accordion title="Inflation tied to participation" icon="chart-line">
+    LPT inflation is set dynamically each round against a target bonding rate. When fewer than half of all LPT is bonded, the per-round inflation rate ticks up to attract more stake; when more than half is bonded, it ticks down to reduce dilution. The mechanism gives the protocol an automatic stabiliser that keeps the security budget proportional to demand for security, without requiring governance to vote on emissions every cycle.
+
+    Inflation is what funded the network's security and operator participation through its early years. As fee revenue has grown and bonding has stabilised near the target, the community has run multiple rounds of governance proposals to reduce emissions further. See the [inflation-focused LIP discussion thread](https://forum.livepeer.org/t/inflation-focused-lip-discussion-thread/2753) and the more recent [Put the brakes on LPT emissions pre-proposal](https://forum.livepeer.org/t/pre-proposal-put-the-brakes-on-lpt-emissions/3211).
+  </Accordion>
+
+  <Accordion title="Strict separation of protocol and execution network" icon="layer-group">
+    The protocol does not transcode video, run AI inference, store source media or model weights, or route jobs. Those are network responsibilities, performed off-chain by [`go-livepeer`](https://github.com/livepeer/go-livepeer) nodes. The protocol contracts hold ETH deposits, mint and distribute LPT, validate payment tickets, enforce staking rules, and manage governance. Heavy compute and ephemeral data stay off-chain.
+
+    The boundary is what makes the protocol auditable and the network flexible. New workload classes (AI inference in 2024, real-time AI video and BYOC in 2025) shipped on the same contracts that have been live since the [Confluence migration to Arbitrum One](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-73.md). No new payment surface, no token redesign, no protocol fork.
+  </Accordion>
+
+  <Accordion title="Arbitrum One as the execution chain" icon="link">
+    The protocol originally ran on Ethereum mainnet. By 2021, mainnet gas had made reward calls expensive for orchestrators, delegation expensive for stakers, and ticket redemption expensive for the broadcasters funding tickets. [LIP-73 (Confluence)](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-73.md) migrated the entire protocol surface to Arbitrum One, an optimistic rollup anchored to Ethereum for data availability and security. All staking, ticket redemption, governance voting, and inflation issuance now happen on Arbitrum.
+
+    The migration delivered an order-of-magnitude reduction in costs for every protocol participant and made the high-frequency settlement workload that probabilistic micropayments require economically viable. LPT itself remains an ERC-20 on Ethereum mainnet, bridged to Arbitrum for protocol operations through the contracts in [`arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge). The launch is documented in the [Confluence upgrade announcement](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e).
+  </Accordion>
+
+  <Accordion title="Workload-neutral payment surface" icon="cubes">
+    The same `TicketBroker` contract that settles a 1080p video segment also settles a text-to-image inference, a live video-to-video frame, and a [Bring Your Own Container](https://github.com/livepeer/ai-worker) workload. The protocol does not encode workload-specific logic; pricing is per-unit (per pixel for video, per token or per second of compute for AI), the unit is set off-chain by the orchestrator, and the ticket carries the ETH value owed.
+
+    This is what let the [AI subnet launch in May 2024](https://medium.com/livepeer-blog/livepeers-pioneering-layer-2-migration-confluence-proceeds-to-community-vote-2f52e85ba813) without a protocol upgrade, and what let BYOC ship in mid-2025 (see the [AI Video SPE Stage 4 proposal](https://forum.livepeer.org/t/ai-video-spe-stage-4-pre-proposal/2933) and the [Phase 4 retrospective](https://forum.livepeer.org/t/ai-spe-phase-4-retrospective/3208)) on the same contracts. Future workload classes inherit the same payment surface.
+  </Accordion>
+
+  <Accordion title="On-chain treasury for public-good funding" icon="building-columns">
+    [LIP-89](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-89.md) and the bundled [LIP-91](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-91.md), shipped in the Delta upgrade in October 2023, established an on-chain treasury that receives a percentage of each round's LPT issuance. Funds are released only by passing a stake-weighted on-chain vote through `LivepeerGovernor`, an OpenZeppelin Governor instance integrated with the existing delegation and voting power system. The convention favours simplicity and reuse of audited governance tooling over bespoke mechanisms.
+
+    The treasury is what funds Special Purpose Entities, community-approved teams that build infrastructure, tooling, and ecosystem demand. Active SPEs include the [AI Video SPE](https://forum.livepeer.org/t/ai-spe-phase-4-retrospective/3208) (now MuxionLabs), [Streamplace](https://github.com/streamplace/streamplace), [Livepeer.Cloud](https://forum.livepeer.org/t/2025-january-monthly-update-livepeer-cloud-spe/2720), and [Gateway Wizard](https://forum.livepeer.org/t/rfp-documentation-restructure/3071). Treasury sustainability is an active governance topic; see [It's time to ACT! Accumulation & the Treasury Ceiling](https://forum.livepeer.org/t/its-time-to-act-accumulation-the-treasury-ceiling/3153/1).
+  </Accordion>
+
+  <Accordion title="Modular contract architecture" icon="cubes-stacked">
+    The protocol separates core concerns across distinct contracts: `BondingManager` for stake and delegation, `TicketBroker` for payment settlement, `RoundsManager` for round progression, `Minter` for inflation issuance, `LivepeerToken` for the ERC-20 itself, and `LivepeerGovernor` plus the treasury contracts for governance. Contracts route through a single `Controller` registry, and proxy-based upgradability lets governance update individual modules without redeploying the entire system.
+
+    The split is what allowed Streamflow to introduce probabilistic micropayments without touching the bonding logic, and Confluence to migrate execution chains without rewriting the staking model. Future upgrades target individual modules. The full deployment, including current Arbitrum One addresses, is on the [`livepeer/protocol`](https://github.com/livepeer/protocol) repo.
+  </Accordion>
+
+  <Accordion title="LPT for staking and governance, ETH for payment" icon="coins">
+    LPT and ETH each have one job. LPT is the staking, delegation, and governance asset; bonded LPT determines active-set membership, earns inflation rewards, and weights governance and treasury votes. ETH is the unit of account for jobs; gateways deposit ETH into the `TicketBroker`, orchestrators redeem winning tickets for ETH, and ETH is what flows through to delegators as fee share.
+
+    Splitting the assets keeps the security budget (LPT) decoupled from the payment volume (ETH), so volatility in one does not destabilise the other. Builders pricing services in USD layer that on top through gateway-side oracles or credit balances; the protocol itself only sees ETH-denominated tickets.
+  </Accordion>
+
+  <Accordion title="Round-based time, not block-based" icon="clock-rotate-left">
+    The protocol advances in fixed-length rounds (currently around one day on Arbitrum) instead of per-block. Each round locks in the active set, snapshots delegations, distributes inflation, and resets per-round counters. Orchestrators must call the on-chain reward function each round to mint and distribute LPT to themselves and their delegators.
+
+    Rounds give the network a predictable cadence for delegators reasoning about returns, for orchestrators scheduling reward calls, and for governance proposals timing their effects. Round progression is implemented in `RoundsManager` and is the temporal foundation for everything else in the protocol.
+  </Accordion>
+</AccordionGroup>
+
+The full proposal history can be found on the [Livepeer Forum](https://forum.livepeer.org) and [LIPs repository](https://github.com/livepeer/LIPs).

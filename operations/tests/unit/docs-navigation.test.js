@@ -461,7 +461,7 @@ function getCanonicalMap(normalizedRoute) {
     'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
       'v2/orchestrators/setup/data-centres-and-large-scale-hardware-providers'
     ],
-    'v2/pages/02_community/livepeer-community/media-kit': ['v2/resources/media-kit'],
+    'v2/pages/02_community/community/media-kit': ['v2/resources/media-kit'],
     'v2/pages/01_about/livepeer-network/actors': ['v2/about/network/actors'],
     'v2/pages/03_developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory': [
       'v2/developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory'
@@ -837,7 +837,7 @@ function runTests(options = {}) {
       errors.push({
         file: 'docs.json',
         rule: 'Legacy Resource HUB route',
-        message: `Legacy route "${LEGACY_RESOURCE_HUB_ROUTE}" is not allowed; route directly to an active v2/resources page instead`,
+        message: `Legacy route "${LEGACY_RESOURCE_HUB_ROUTE}" is not allowed; use "${RESOURCE_HUB_REDIRECT_ROUTE}"`,
         pointer
       });
     }
@@ -885,7 +885,52 @@ function runTests(options = {}) {
   });
 
   const objectNodes = collectObjectNodes(docsJson.navigation || docsJson, 'navigation');
+  objectNodes
+    .filter(({ node }) => node && node.anchor === 'Resource HUB')
+    .forEach(({ node, pointer }) => {
+      const pages = Array.isArray(node.pages) ? node.pages : [];
+      const isCanonical =
+        pages.length === 1 && normalizeRoute(pages[0]) === RESOURCE_HUB_REDIRECT_ROUTE;
+      if (!isCanonical) {
+        errors.push({
+          file: 'docs.json',
+          rule: 'Resource HUB anchor target',
+          message: `anchor "Resource HUB" must target exactly ["${RESOURCE_HUB_REDIRECT_ROUTE}"]`,
+          pointer
+        });
+      }
+    });
+
+  objectNodes
+    .filter(({ node }) => node && node.tab === 'Resource HUB')
+    .forEach(({ node, pointer }) => {
+      const firstRoute = node?.anchors?.[0]?.groups?.[0]?.pages?.[0];
+      if (normalizeRoute(firstRoute) !== RESOURCE_HUB_REDIRECT_ROUTE) {
+        errors.push({
+          file: 'docs.json',
+          rule: 'Resource HUB tab first route',
+          message: `Resource HUB tab first routable page must be "${RESOURCE_HUB_REDIRECT_ROUTE}"`,
+          pointer: `${pointer}.anchors[0].groups[0].pages[0]`
+        });
+      }
+    });
+
   const redirects = Array.isArray(docsJson.redirects) ? docsJson.redirects : [];
+  const hasCanonicalRedirect = redirects.some(
+    (redirect) =>
+      redirect &&
+      redirect.source === `/${RESOURCE_HUB_REDIRECT_ROUTE}` &&
+      redirect.destination === `/${RESOURCE_HUB_PORTAL_ROUTE}`
+  );
+  if (!hasCanonicalRedirect) {
+    errors.push({
+      file: 'docs.json',
+      rule: 'Resource HUB redirect',
+      message: `Missing redirect "/${RESOURCE_HUB_REDIRECT_ROUTE}" -> "/${RESOURCE_HUB_PORTAL_ROUTE}"`,
+      pointer: 'redirects'
+    });
+  }
+
   redirects.forEach((redirect, index) => {
     if (redirect && redirect.source === '/v2/pages/07_resources/redirect') {
       errors.push({

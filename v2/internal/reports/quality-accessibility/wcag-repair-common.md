@@ -5,8 +5,8 @@ description: 'Generated WCAG repair report from operations/scripts/remediators/c
 keywords: ["livepeer","internal","reports","quality-accessibility","wcag-repair-common"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
-Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
 Generator Script: `operations/scripts/remediators/content/style/wcag-repair-common.js`
 What It Does: Generated WCAG repair report from operations/scripts/remediators/content/style/wcag-repair-common.js.
 Audited Scope: `operations/scripts, operations/tests/integration, workspace/reports, v2`

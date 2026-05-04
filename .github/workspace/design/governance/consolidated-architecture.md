@@ -5,7 +5,7 @@
 > NOTHING gets implemented until approved.
 > Date: 2026-04-07 (updated with gap audit findings)
 
----
+<CustomDivider />
 
 ## 1. Governed Surfaces (complete inventory)
 
@@ -44,7 +44,7 @@ See Appendix A for the complete rename table.
 
 | File | Purpose | In architecture? |
 |---|---|---|
-| pre-commit | 5 hard gates (< 5 seconds) | YES |
+| pre-commit | 5 hard gates (&lt; 5 seconds) | YES |
 | pre-push | Codex isolation + task contract | YES |
 | pre-commit-no-deletions | Alternative pre-commit (deletion guard variant) | NOT IN ARCHITECTURE |
 | post-commit.disabled | Disabled post-commit hook | NOT IN ARCHITECTURE |
@@ -75,7 +75,7 @@ See Appendix A for the complete rename table.
 | completion-gate.js | PreToolUse (Write) | Block completion artifacts while render failing |
 | server-lifecycle.js | SessionStart | Ensure Mintlify dev server running |
 | pre-compact-checkpoint.js | PreCompact | Preserve state before compaction |
-| message-backup.js | UserPromptSubmit | Backup messages > 200 chars |
+| message-backup.js | UserPromptSubmit | Backup messages &gt; 200 chars |
 | session-register.js | SessionStart + PostToolUse | Track sessions, detect collisions |
 | session-state.js | SessionStart | Inject session state |
 | read-logger.js | PostToolUse (Read) | Track file reads |
@@ -162,17 +162,17 @@ See Appendix A for the complete rename table.
 | .github/workspace/decisions-log.mdx | D-ACT decisions | Active (transitional-runtime per registry) |
 | .github/workspace/outcomes.md | Visual maps + data feed table | Design-only (archive candidate) |
 
----
+<CustomDivider />
 
 ## 2. Enforcement Layer Architecture
 
-### Layer 1: Write time (Claude hooks, < 1 second)
+### Layer 1: Write time (Claude hooks, &lt; 1 second)
 
 **Implementation:** 20+ hooks in operations/scripts/dispatch/governance/ registered in .claude/settings.json
 **Self-repair:** Constraints auto-injected. Em-dashes blocked. Render validation.
 **GAP:** No auto-fix on write (hooks warn but don't correct). Render gate false-positives on Mintlify platform React 418 errors.
 
-### Layer 2: Commit time (git hooks, < 5 seconds)
+### Layer 2: Commit time (git hooks, &lt; 5 seconds)
 
 **Implementation:** .githooks/pre-commit (5 hard gates), .githooks/pre-push (codex isolation)
 **Self-repair:** BLOCK only. No auto-correct.
@@ -255,7 +255,7 @@ See Appendix A for the complete rename table.
 **Self-repair:** Inherently self-managing (fire on event).
 **GAP:** All 5 have inline JS (1,340 lines total). Labels hardcoded (not config-driven). No .github/ISSUE_TEMPLATE/ files.
 
----
+<CustomDivider />
 
 ## 3. Self-Remediation Map
 
@@ -279,7 +279,22 @@ Issue/PR event            --> Auto-label, assign, index, close, intake
 **Priority:** Auto-fix silently > Auto-fix PR > Create issue > Block with error
 **Rule:** No headless scans. Every finding gets a response.
 
----
+### 3.1 Local CLI equivalence (D-GOV-07)
+
+Every workflow dispatcher must have a matching local script. The workflow is the CI orchestrator; the script is the portable logic.
+
+| Layer | Owns | Example |
+|---|---|---|
+| Workflow (.yml) | When to run, environment setup, commit/push, issue creation, secrets | `integrator-copy-update-forum-data.yml` |
+| Script (.js) | All business logic, file I/O, `--dry-run`, `--verify`, exit codes | `fetch-forum-data.js` |
+
+**Standards:**
+- Every script accepts `--dry-run` (preview without writing)
+- Secrets-dependent scripts degrade gracefully when secrets are absent
+- Actions-library docs pages include the local invocation command
+- `check-workflow-governance.js` enforces this at PR time
+
+<CustomDivider />
 
 ## 4. File Moves and Renames
 
@@ -335,7 +350,7 @@ See Appendix A for the complete table.
 | workspace/reports/ (60+ historical reports) | Archive dated reports to workspace/reports/archive/ |
 | workspace/reports/_local/ | Keep (local scratch) |
 
----
+<CustomDivider />
 
 ## 5. Gaps Still Open
 
@@ -377,7 +392,7 @@ See Appendix A for the complete table.
 | Render gate false-positives on React 418 | Add platform-error exclusion to render-verify hook |
 | Advisory-to-gate promotion not documented | Write criteria in framework doc |
 
----
+<CustomDivider />
 
 ## 6. Implementation Order
 
@@ -400,7 +415,7 @@ See Appendix A for the complete table.
 
 Each step: explain intent, wait for go, test, document.
 
----
+<CustomDivider />
 
 ## Appendix A: Complete Workflow Rename Table
 

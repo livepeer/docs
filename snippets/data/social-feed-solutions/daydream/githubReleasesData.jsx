@@ -4,9 +4,18 @@ export const daydreamReleasesData = [
     name: "Preview Build",
     href: "https://github.com/daydreamlive/scope/releases/tag/preview",
     author: "By @leszko",
-    publishedDate: "Apr 7, 2026",
-    body: "Preview build from \`main\` branch (2026-04-07 10:54 UTC).  Commit: af49de0288af0c0f3d4614c42b7983dab42b9d87  This is an automated preview - not a versioned release. Do not use for production....",
+    publishedDate: "Apr 14, 2026",
+    body: "Preview build from \`main\` branch (2026-04-14 00:49 UTC).  Commit: c13319d9a2407721627910266d4addc3a50c7282  This is an automated preview - not a versioned release. Do not use for production....",
     prerelease: true
+  },
+  {
+    tagName: "v0.2.2",
+    name: "v0.2.2",
+    href: "https://github.com/daydreamlive/scope/releases/tag/v0.2.2",
+    author: "By @leszko",
+    publishedDate: "Apr 9, 2026",
+    body: "This release introduces **Multi Source / Multi Sink graphs**, an **Audio In node**, and a number of bug fixes across graph mode, cloud, and recording.  ## Highlights  * **Multi Source / Multi Sink** - Workflows can now contain multiple source and sink nodes in a single graph. Each source routes to its own input track, each sink shows its own per-sink stats (FPS / bitrate), and per-node recording lets you capture each sink independently. Works in local, cloud, and headless modes. * **Audio In Node** - A new graph node for audio inputs. WAV / MP3 / FLAC / OGG files can be uploaded to the asset library, picked from a new audio media picker, and forwarded into pipelines via an \`audio\` complex field. * **Bug Fixes** - Many fixes around graph mode, cloud relay routing, NDI / Syphon sources...",
+    prerelease: false
   },
   {
     tagName: "v0.2.1",
@@ -33,15 +42,6 @@ export const daydreamReleasesData = [
     author: "By @leszko",
     publishedDate: "Mar 21, 2026",
     body: "This release adds audio output support for pipelines and fixes a VACE regression introduced in 0.1.8.  ## Highlights  * **Audio Out Support** - Pipelines can now return audio alongside video, streamed over WebRTC with a mute/unmute toggle in the frontend by @BuffMcBigHuge, @ryanontheinside, and @leszko in [#534](https://github.com/daydreamlive/scope/pull/534), [#718](https://github.com/daydreamlive/scope/pull/718), and [#719](https://github.com/daydreamlive/scope/pull/719) * **Fix VACE Regression** - Fixed tempo sync modulation interfering with VACE noise scale, a regression introduced in 0.1.8 by @BuffMcBigHuge in [#716](https://github.com/daydreamlive/scope/pull/716)  ## What's Changed  * Audio Support for Scope Rework by @BuffMcBigHuge in https://github.com/daydreamlive/scope/p...",
-    prerelease: false
-  },
-  {
-    tagName: "v0.1.8",
-    name: "v0.1.8",
-    href: "https://github.com/daydreamlive/scope/releases/tag/v0.1.8",
-    author: "By @leszko",
-    publishedDate: "Mar 18, 2026",
-    body: "This release adds beat-synced parameter modulation with Ableton Link and MIDI clock support, an MCP server for AI-assisted pipeline control, and DMX Art-Net input.  ## Highlights  * **Tempo Sync & Beat Modulation** - Lock pipelines to Ableton Link or MIDI clock. Quantize parameter changes to beat/bar boundaries, modulate parameters (noise scale, denoising steps, etc.) with waveforms synced to the beat, and automatically cycle prompts on beat or bar boundaries by @BuffMcBigHuge, @ryanontheinside, and @leszko in [#703](https://github.com/daydreamlive/scope/pull/703) * **MCP Server** - AI assistants can now programmatically manage pipelines, control parameters, capture frames, and drive headless sessions via the Model Context Protocol by @ryanontheinside in [#660](https://github.com/dayd...",
     prerelease: false
   }
 ];

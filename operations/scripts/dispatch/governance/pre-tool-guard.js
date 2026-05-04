@@ -318,8 +318,8 @@ stdin.on('end', () => {
         }));
       }
 
-      // Em-dash check — block on authored MDX content, including prop text.
-      // Only code fences, inline code, and JSX comments are exempt.
+      // Em-dash advisory: PostToolUse mdx-frontmatter-sanitise self-remediates by
+      // converting em-dash to en-dash. We only surface a system message here.
       if (/\.mdx$/.test(fp)) {
         const content = toolInput.new_string || toolInput.content || '';
         const stripped = content
@@ -327,11 +327,11 @@ stdin.on('end', () => {
           .replace(/`[^`]*`/g, '')              // inline code
           .replace(/```[\s\S]*?```/g, '');      // code blocks
         if (stripped.includes('\u2014')) {
+          // Self-remediates via PostToolUse mdx-frontmatter-sanitise.
+          // Notice only; never block.
           console.log(JSON.stringify({
-            decision: 'block',
-            reason: 'BLOCKED: Em-dash (\u2014) detected in MDX content. Use a comma, semicolon, colon, or rewrite the sentence. No em-dashes.'
+            systemMessage: 'NOTE: Em-dash (\u2014) detected in MDX. PostToolUse auto-replaces with en-dash (\u2013). Prefer comma, semicolon, or colon when authoring new content.'
           }));
-          process.exit(2);
         }
       }
 

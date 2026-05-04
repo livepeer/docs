@@ -45,6 +45,10 @@ on:
           - copilot
         default: openrouter
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   update-changelogs:
     runs-on: ubuntu-latest

@@ -32,7 +32,7 @@ This is the one tab where no specific technical background can be assumed. The H
 - `get-started.mdx` (7.5KB) — get started routing
 - `trending.mdx` (6.4KB) — current network activity/trends
 
-### about-livepeer/
+### about/
 - `vision.mdx` (8.8KB) — Livepeer's mission and vision
 - `evolution.mdx` (7.9KB) — history and pivot narrative
 - `ecosystem.mdx` (25.7KB) — ✅ substantial — ecosystem map including Foundation
@@ -89,7 +89,7 @@ v2/home/
 ├── get-started.mdx                     ✅ (role-based routing)
 ├── trending.mdx                        ⚠️  stale risk — audit content type
 │
-└── about-livepeer/
+└── about/
     ├── vision.mdx                      ✅ good
     ├── evolution.mdx                   ⚠️  confirm AI pivot is the lead story
     ├── ecosystem.mdx                   ✅ strong — Foundation covered here

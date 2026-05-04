@@ -4579,7 +4579,7 @@ Template is correct. Ready to regenerate when you say go.
 ## USER
 ================================================================================
 
-<ide_opened_file>The user opened the file /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/community/livepeer-community/livepeer-latest-topics.mdx in the IDE. This may or may not be related to the current task.</ide_opened_file>
+<ide_opened_file>The user opened the file /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/community/community/livepeer-latest-topics.mdx in the IDE. This may or may not be related to the current task.</ide_opened_file>
 ok so the changelog... some of these "logs" are way too long.
 
 Let's use ScrollBox Component for the CONTENT in the change ie the part between "whats changed" and the doubleiconlink

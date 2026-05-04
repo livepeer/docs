@@ -8,13 +8,15 @@
  * @mode        integrate
  * @pipeline    config → Discord API → snippets/data/social-feed-solutions/{product}/discordData.jsx
  * @scope       .github/scripts, snippets/data/social-feed-solutions/, snippets/data/social-feeds/
- * @usage       node .github/scripts/fetch-discord-announcements.js
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+
+const dryRun = process.argv.includes("--dry-run");
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const CONFIG_PATH =
@@ -196,9 +198,14 @@ function writeJSX(exportName, announcements, outPath) {
     jsx += `  }${idx < announcements.length - 1 ? "," : ""}\n`;
   });
   jsx += `];\n`;
-  fs.mkdirSync(path.dirname(outPath), { recursive: true });
-  fs.writeFileSync(outPath, jsx);
-  console.log(`  Written to ${outPath}`);
+  if (dryRun) {
+    console.log(`[dry-run] Would write to ${outPath} (${jsx.length} bytes)`);
+    console.log(jsx);
+  } else {
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, jsx);
+    console.log(`  Written to ${outPath}`);
+  }
 }
 
 async function main() {

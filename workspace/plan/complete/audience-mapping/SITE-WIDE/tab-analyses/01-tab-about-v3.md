@@ -207,7 +207,7 @@ Reading the actual pages revealed significant content that serves the OSS Contri
 | S6 — LPT: the protocol token | "What is LPT for?" | `concept` | `livepeer-protocol/livepeer-token.mdx` ⚠️ (has #TODO markers) |
 | S7 — Staking and delegation | "What does bonding LPT involve?" | `concept` | Within `economics.mdx` + `core-mechanisms.mdx` — not a dedicated page |
 | S8 — Governance | "Who controls this protocol?" | `concept` | `governance-model.mdx` ✅ strong |
-| S9 — The organisation | "Is there a company behind this?" | `concept` | `home/about-livepeer/ecosystem.mdx` (Foundation) — not in About tab |
+| S9 — The organisation | "Is there a company behind this?" | `concept` | `home/about/ecosystem.mdx` (Foundation) — not in About tab |
 | S10 — Ecosystem and current state | "What's been built? Is it actively developed?" | `concept` | `resources/network-metrics.mdx` 🔴 MISSING |
 
 ### Absent IA element: navigator.mdx

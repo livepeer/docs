@@ -5,13 +5,13 @@
 **Branch:** docs-v2-dev
 **Status:** Phase 4 COMPLETE — all phases done
 
----
+<CustomDivider />
 
 ## Objective
 
 Bring social/data-feed sections (YouTube, GitHub README, GitHub Changelog, Discord Announcements, X/Twitter, Blog, Forum/GitHub Discussions) into every product section under `v2/solutions/`, using the existing `trending-topics.mdx` page as the reference template. Create a reusable layout template in `snippets/templates/pages/data-imports/` that standardises how social data flows into product pages.
 
----
+<CustomDivider />
 
 ## 1. Reverse-Engineering: How trending-topics.mdx Gets Its Data
 
@@ -46,7 +46,7 @@ The page uses **5 data pipelines**, each following the same pattern:
 - **GitHub Changelog** — Template exists but no automated fetch. Products may publish releases/changelogs on GitHub that can be pulled in.
 - **GitHub Discussions** — No existing pipeline. Alternative to Discourse forums for products that use GitHub Discussions instead.
 
----
+<CustomDivider />
 
 ## 2. Pipeline Reuse Assessment: Can These Pipelines Serve Product Pages?
 
@@ -74,7 +74,7 @@ The page uses **5 data pipelines**, each following the same pattern:
 | **Data config registry** | A single config file mapping product → `{youtubeChannelId, xHandle, xProfileUrl, discordServerId, discordChannelId, blogUrl, blogType, forumUrl, forumType, githubOrg, githubRepo, githubDiscussions}` to drive all fetches. | Low |
 | **Hero video sourcing** | Find/curate a hero YouTube video per product (or fallback to downloadable mp4) | Research |
 
----
+<CustomDivider />
 
 ## 3. Social & Documentation Research (→ socials-research.md)
 
@@ -88,7 +88,7 @@ The page uses **5 data pipelines**, each following the same pattern:
 | **Livepeer Studio** | livepeer.studio | docs.livepeer.org (Mintlify) | youtube.com/@livepeer | @Livepeer + @LivepeerStudio | discord.gg/livepeer | github.com/livepeer (170 repos) | blog.livepeer.org (Ghost, RSS) | forum.livepeer.org |
 | **Streamplace** | stream.place | stream.place/docs (Starlight) | None | @streamplace (dormant) | discord.com/invite/EdtZv4UTMU | github.com/streamplace (67 repos) | blog.stream.place (Leaflet, RSS) | forum.livepeer.org |
 
----
+<CustomDivider />
 
 ## 4. Layout Template Design (→ `snippets/templates/pages/data-imports/`)
 
@@ -191,7 +191,7 @@ From scanning `snippets/templates/pages/`:
 
 **YouTube MCP:** No YouTube MCP is available in the current tool set. Video discovery will need manual web search or YouTube Data API queries via the existing fetch script infrastructure.
 
----
+<CustomDivider />
 
 ## 5. Execution Phases
 
@@ -229,7 +229,7 @@ From scanning `snippets/templates/pages/`:
 - [x] Template updated to match fixes
 - [x] **CHECKPOINT:** Final report inline. Committed. Done.
 
----
+<CustomDivider />
 
 ## 6. Dependencies & Risks
 
@@ -247,7 +247,7 @@ From scanning `snippets/templates/pages/`:
 | Products with no GitHub Discussions enabled | Omit section. Fall back to GitHub Issues or static link to repo. |
 | ~35 existing external links to livepeer.studio/docs | Separate cleanup task — convert to relative links pointing to our own solutions pages. |
 
----
+<CustomDivider />
 
 ## 7. Artefact Inventory (as-built)
 
@@ -296,7 +296,7 @@ From scanning `snippets/templates/pages/`:
 | File | Change |
 |------|--------|
 | `docs.json` | Added community page to each product nav group |
-| `v2/community/livepeer-community/trending-topics.mdx` | Added Product Communities CardGroup (cols={2}, 5 cards) |
+| `v2/community/connect/trending-topics.mdx` | Added Product Communities CardGroup (cols={2}, 5 cards) |
 | `v2/solutions/streamplace/overview.mdx` | Fixed GitHub URL (streamplace/overview → streamplace/streamplace) |
 
 ### Secrets & Handover Documentation (`docs-guide/repo-ops/`)

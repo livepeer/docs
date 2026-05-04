@@ -4,7 +4,7 @@
 > Each registry stays in its own location. This file cross-references them all.
 > Last verified: 2026-04-07
 
----
+<CustomDivider />
 
 ## Active Decision Registries
 
@@ -15,10 +15,11 @@
 | Content Writing — Tab Status | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate status | — |
 | Script Governance | `workspace/plan/active/SCRIPT-GOVERNANCE/decision-log.md` | Script architecture decisions | Multiple |
 | OSS Ownerless Governance | `workspace/plan/active/OSS-OWNERLESS-REPO-GOVERNANCE/decisions/decision-log.md` | Ownerless contribution decisions | — |
-| GitHub Actions | `.github/workspace/decisions-log.mdx` | Workflow architecture (D-ACT-01 through D-ACT-08) | 8 locked |
+| GitHub Actions | `.github/workspace/decisions-log.mdx` | Workflow architecture (D-ACT-01 through D-ACT-10) | 10 locked |
+| Governance Design | `.github/workspace/design/governance/design-overview.md` | Governance infrastructure (D-GOV-01 through D-GOV-07) | 7 locked |
 | Ship-Content | `workspace/plan/active/SHIP-CONTENT/decisions.md` | Runtime execution decisions (D-01 through D-12) | — |
 
----
+<CustomDivider />
 
 ## Tab-Specific Decision Logs
 
@@ -27,7 +28,7 @@
 | Orchestrators | `v2/orchestrators/_workspace/canonical/check/decision-log.md` | Tab IA and content decisions |
 | Gateways | `v2/gateways/_workspace/canonical/decision-log.md` | Tab IA and content decisions |
 
----
+<CustomDivider />
 
 ## Decision Format
 
@@ -41,7 +42,7 @@ All registries use this format:
 
 Decisions are locked when a human signs off. Locked decisions cannot be changed without a new decision that explicitly supersedes the old one.
 
----
+<CustomDivider />
 
 ## How to Add a Decision
 

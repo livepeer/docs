@@ -1012,6 +1012,8 @@ cmd_dev() {
     local scope_prefixes=""
     local skip_external_fetch=0
     local disable_openapi=0
+    local skip_remediation=0
+    local remediation_language="en-gb"
     local -a mint_args
     mint_args=()
 
@@ -1195,7 +1197,20 @@ cmd_dev() {
             --skip-external-fetch)
                 skip_external_fetch=1
                 ;;
-            --disable-openapi)
+            --no-fix)
+                skip_remediation=1
+                ;;
+            --language)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--language requires a value."
+                    return 1
+                fi
+                remediation_language="$2"
+                shift
+                ;;
+            --language=*)
+                remediation_language="${1#--language=}"
+                ;;            --disable-openapi)
                 disable_openapi=1
                 ;;
             --scope-*)
@@ -1269,6 +1284,12 @@ EOF
         fi
     fi
 
+    if [ "$skip_remediation" = "0" ]; then
+        echo "Running auto-remediation on staged files..."
+        node "$REPO_ROOT/tools/dev/remediation/auto-remediate.js" \
+            --mode startup --staged --language "$remediation_language" || true
+    fi
+
         if [ "$dry_run" = "1" ]; then
         if [ "$scoped_mode" = "1" ]; then
             echo "Scoped mint profile: enabled"
@@ -1314,6 +1335,9 @@ EOF
 
     local -a env_vars
     env_vars=("LPD_DEV_ENTRYPOINT=lpd")
+    if [ "$skip_remediation" = "1" ]; then
+        env_vars+=("LPD_SKIP_REMEDIATION=1")
+    fi
     if [ "$scoped_mode" = "1" ]; then
         env_vars+=("LPD_SCOPED_MINT_DEV=1")
     fi
@@ -1645,7 +1669,8 @@ Surfaces:
   script-governance
   component-governance
   frontmatter-contract
-
+  content-style
+  content-safety  content-links
 Notes:
   - Default mode is --check.
   - --stage implies --write.
@@ -1829,7 +1854,65 @@ EOF
           return 1
         }
         ;;
-      *)
+      content-style)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/remediators/content/style/remediate-em-dashes.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "Em-dash remediation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/remediators/content/style/remediate-us-spelling.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "US spelling remediation failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/remediators/content/style/repair-term-capitalisation.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "Term capitalisation repair failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add v2/ || true
+          fi
+        else
+          run_cli_step node operations/scripts/remediators/content/style/remediate-em-dashes.js --dry-run "${quality_scope[@]}" || true
+          run_cli_step node operations/scripts/remediators/content/style/remediate-us-spelling.js --dry-run "${quality_scope[@]}" || true
+          run_cli_step node operations/scripts/remediators/content/style/repair-term-capitalisation.js --dry-run "${quality_scope[@]}" || true
+        fi
+        ;;
+      content-safety)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "MDX safe markdown repair failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/remediators/content/repair/repair-spelling.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "Spelling repair failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add v2/ || true
+          fi
+        else
+          run_cli_step node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run "${quality_scope[@]}" || true
+          run_cli_step node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run "${quality_scope[@]}" || true
+        fi
+        ;;
+      content-links)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node operations/scripts/remediators/content/repair/repair-page-links.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "Page links repair failed."
+            return 1
+          }
+          run_cli_step node operations/scripts/remediators/content/repair/repair-page-imports.js --write "${quality_scope[@]}" || {
+            finish 1 "repair" "Page imports repair failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add v2/ || true
+          fi
+        else
+          run_cli_step node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run "${quality_scope[@]}" || true
+          run_cli_step node operations/scripts/remediators/content/repair/repair-page-imports.js --dry-run "${quality_scope[@]}" || true
+        fi
+        ;;      *)
         finish 1 "repair" "Unknown surface: $surface"
         return 1
         ;;

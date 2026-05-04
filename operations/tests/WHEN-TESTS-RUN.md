@@ -195,9 +195,9 @@ node operations/tests/unit/quality.test.js
 node operations/tests/unit/links.test.js
 node operations/tests/unit/imports.test.js
 node operations/tests/integration/browser.test.js
-node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
-node operations/scripts/audits/content/health/page-imports-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
-node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/livepeer-community/trending-topics.mdx --strict --no-repair
+node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/connect/trending-topics.mdx --strict
+node operations/scripts/audits/content/health/page-imports-audit.js --files v2/community/connect/trending-topics.mdx --strict
+node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/connect/trending-topics.mdx --strict --no-repair
 node operations/tests/integration/v2-wcag-audit.js --full
 node operations/tests/integration/v2-wcag-audit.js --full --no-fix
 node operations/tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json
@@ -211,10 +211,10 @@ node operations/tests/run-pr-checks.js --base-ref main
 node operations/tests/run-pr-checks.js --base-ref main --lane branch-health
 
 # Canonical page health audits on explicit files
-node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
+node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/connect/trending-topics.mdx --strict
 node operations/scripts/audits/content/health/page-links-audit.js --full --external-policy validate --external-link-types navigational --no-write-links --report /tmp/page-links-audit-external.md --report-json /tmp/page-links-audit-external.json
-node operations/scripts/audits/content/health/page-imports-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
-node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/livepeer-community/trending-topics.mdx --strict --no-repair
+node operations/scripts/audits/content/health/page-imports-audit.js --files v2/community/connect/trending-topics.mdx --strict
+node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/connect/trending-topics.mdx --strict --no-repair
 node operations/tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json
 node operations/tests/integration/openapi-reference-audit.js --full --fix --write --report /tmp/openapi-audit-fix.md --report-json /tmp/openapi-audit-fix.json
 node operations/tests/integration/openapi-reference-audit.js --files v2/solutions/livepeer-studio/api-reference/streams/create.mdx --strict

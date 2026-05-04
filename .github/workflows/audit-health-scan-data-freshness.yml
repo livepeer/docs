@@ -107,22 +107,43 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const staleFeeds = '${{ steps.freshness.outputs.stale_feeds }}';
-            const feedToWorkflow = {
-              'ghostBlogData': 'integrator-copy-update-ghost-blog-data.yml',
-              'discordAnnouncementsData': 'integrator-copy-update-discord-data.yml',
-              'forumData': 'integrator-copy-update-forum-data.yml',
-              'youtubeData': 'integrator-copy-update-youtube-data.yml',
-              'rssData': 'integrator-copy-update-rss-blog-data.yml',
-              'githubData': 'integrator-copy-update-github-data.yml',
-              'latestRelease': 'integrator-maintenance-update-release-version.yml',
-              'showcaseData': 'dispatch-copy-update-social-feeds.yml',
+            // Social feeds + livepeer-release dispatch the consolidated workflow with a mode input.
+            // Other feeds dispatch their own workflow.
+            const feedToMode = {
+              'ghostBlogData': 'ghost-blog',
+              'discordAnnouncementsData': 'discord',
+              'forumData': 'forum',
+              'youtubeData': 'youtube',
+              'rssData': 'rss-blog',
+              'githubData': 'github',
+              'latestRelease': 'livepeer-release',
             };
+            const feedToWorkflow = {
+              'showcaseData': 'project-showcase-sync.yml',
+            };
+            const ref = '${{ vars.DEPLOY_BRANCH || 'docs-v2' }}';
+            // Dispatch consolidated social-feeds workflow with mode input
+            for (const [feed, mode] of Object.entries(feedToMode)) {
+              if (staleFeeds.includes(feed)) {
+                try {
+                  await github.rest.actions.createWorkflowDispatch({
+                    owner, repo,
+                    workflow_id: 'dispatch-copy-update-social-feeds.yml',
+                    ref,
+                    inputs: { mode }
+                  });
+                  core.info(`Retriggered dispatch-copy-update-social-feeds.yml mode=${mode} for stale ${feed}`);
+                } catch (e) {
+                  core.warning(`Failed to retrigger mode=${mode}: ${e.message}`);
+                }
+              }
+            }
+            // Dispatch standalone workflows
             for (const [feed, workflow] of Object.entries(feedToWorkflow)) {
               if (staleFeeds.includes(feed)) {
                 try {
                   await github.rest.actions.createWorkflowDispatch({
-                    owner, repo, workflow_id: workflow,
-                    ref: '${{ vars.DEPLOY_BRANCH || 'docs-v2' }}'
+                    owner, repo, workflow_id: workflow, ref
                   });
                   core.info(`Retriggered ${workflow} for stale ${feed}`);
                 } catch (e) {

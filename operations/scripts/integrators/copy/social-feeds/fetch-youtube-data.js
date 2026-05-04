@@ -8,13 +8,15 @@
  * @mode        integrate
  * @pipeline    manual
  * @scope       .github/scripts
- * @usage       node .github/scripts/fetch-youtube-data.js [flags]
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+
+const dryRun = process.argv.includes("--dry-run");
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID || "UCzfHtZnmUzMbJDxGCwIgY2g";
@@ -45,7 +47,7 @@ function parseDuration(duration) {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-const escapeForJSX = (str) => escapeForJsx(str, { stripEntities: true }).replace(/\n/g, " ");
+const escapeForJSX = (str) => escapeForJsx(str, { stripEntities: true }).replace(/\n/g, " ").replace(/'/g, "\\'" );
 
 /**
  * Resolve which channels to fetch. If PRODUCT_KEY is set, fetch only that product.
@@ -82,67 +84,79 @@ function resolveChannels() {
   return [{ key: "", channelId: CHANNEL_ID }];
 }
 
+const SERIES_PATTERNS = [/watercooler/i, /fireside/i];
+const isSeries = (v) => SERIES_PATTERNS.some((p) => p.test(v.title));
+const MIN_NON_SERIES = 4;
+const MAX_PAGES = 5;
+
 async function fetchChannel(channelId, outputPath) {
-  // Step 1: Get recent videos
-  console.log(`Fetching recent videos for channel ${channelId}...`);
-  const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${YOUTUBE_API_KEY}`;
-  const searchResults = await httpsGet(searchUrl);
-
-  if (!searchResults.items || searchResults.items.length === 0) {
-    console.log("No videos found");
-    return;
-  }
-
-  // Step 2: Get video details for each video
-  console.log(
-    `Found ${searchResults.items.length} videos, fetching details...`
-  );
-  const videoIds = searchResults.items.map((item) => item.id.videoId).join(",");
-  const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds}&key=${YOUTUBE_API_KEY}`;
-  const detailsResults = await httpsGet(detailsUrl);
-
-  // Step 3: Process and filter videos
+  // Step 1: Paginate until we have enough non-series videos
   const videos = [];
-  for (const video of detailsResults.items) {
-    const duration = video.contentDetails.duration;
-    const durationSeconds = parseDuration(duration);
-    const snippet = video.snippet;
+  let pageToken = "";
+  let page = 0;
 
-    // Skip upcoming/currently live streams — only show completed content
-    const isUpcomingOrLive =
-      snippet.liveBroadcastContent === "live" ||
-      snippet.liveBroadcastContent === "upcoming";
+  while (page < MAX_PAGES) {
+    page++;
+    const tokenParam = pageToken ? `&pageToken=${pageToken}` : "";
+    console.log(`Fetching videos (page ${page})...`);
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${YOUTUBE_API_KEY}${tokenParam}`;
+    const searchResults = await httpsGet(searchUrl);
 
-    if (isUpcomingOrLive) continue;
+    if (!searchResults.items || searchResults.items.length === 0) break;
 
-    // Past livestreams are fine — check if it was one (for Shorts filter exemption)
-    const isPastLivestream =
-      duration === "P0D" ||
-      duration === "PT0S" ||
-      snippet.title.toLowerCase().includes("watercooler") ||
-      snippet.title.toLowerCase().includes("fireside");
+    // Step 2: Get video details for this page
+    const videoIds = searchResults.items.map((item) => item.id.videoId).join(",");
+    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds}&key=${YOUTUBE_API_KEY}`;
+    const detailsResults = await httpsGet(detailsUrl);
 
-    // Filter out Shorts and short clips (under 3 minutes, not past livestreams)
-    const isShort =
-      durationSeconds < 180 && durationSeconds > 0 && !isPastLivestream;
+    // Step 3: Process and filter videos
+    for (const video of detailsResults.items) {
+      const duration = video.contentDetails.duration;
+      const durationSeconds = parseDuration(duration);
+      const snippet = video.snippet;
 
-    if (!isShort) {
-      videos.push({
-        title: snippet.title,
-        href: `https://www.youtube.com/watch?v=${video.id}`,
-        author: `By ${snippet.channelTitle || "Livepeer"}`,
-        content: (snippet.description || "").substring(0, 500),
-        publishedDate: new Date(snippet.publishedAt).toLocaleDateString(
-          "en-US",
-          { month: "short", day: "numeric", year: "numeric" }
-        ),
-        duration: duration,
-        thumbnailUrl: snippet.thumbnails.high.url,
-      });
+      // Skip upcoming/currently live streams — only show completed content
+      const isUpcomingOrLive =
+        snippet.liveBroadcastContent === "live" ||
+        snippet.liveBroadcastContent === "upcoming";
+
+      if (isUpcomingOrLive) continue;
+
+      // Past livestreams are fine — check if it was one (for Shorts filter exemption)
+      const isPastLivestream =
+        duration === "P0D" ||
+        duration === "PT0S" ||
+        isSeries({ title: snippet.title });
+
+      // Filter out Shorts and short clips (under 3 minutes, not past livestreams)
+      const isShort =
+        durationSeconds < 180 && durationSeconds > 0 && !isPastLivestream;
+
+      if (!isShort) {
+        videos.push({
+          title: snippet.title,
+          href: `https://www.youtube.com/watch?v=${video.id}`,
+          author: `By ${snippet.channelTitle || "Livepeer"}`,
+          content: (snippet.description || "").substring(0, 500),
+          publishedDate: new Date(snippet.publishedAt).toLocaleDateString(
+            "en-US",
+            { month: "short", day: "numeric", year: "numeric" }
+          ),
+          duration: duration,
+          thumbnailUrl: snippet.thumbnails.high.url,
+        });
+      }
     }
+
+    const nonSeriesCount = videos.filter((v) => !isSeries(v)).length;
+    console.log(`  Page ${page}: ${videos.length} total videos (${nonSeriesCount} non-series)`);
+
+    // Stop if we have enough non-series videos or no more pages
+    if (nonSeriesCount >= MIN_NON_SERIES || !searchResults.nextPageToken) break;
+    pageToken = searchResults.nextPageToken;
   }
 
-  console.log(`Filtered to ${videos.length} non-Short videos`);
+  console.log(`Fetched ${videos.length} videos across ${page} page(s)`);
 
   // Step 3b: Deduplicate by title (keep most recent — list is already date-sorted)
   const seenTitles = new Set();
@@ -158,14 +172,13 @@ async function fetchChannel(channelId, outputPath) {
     console.log(`Deduplicated: ${videos.length} → ${deduped.length} (removed ${videos.length - deduped.length} title duplicates)`);
   }
 
+  // Step 3c: Partition into series and non-series
+  const seriesVideos = deduped.filter(isSeries);
+  const nonSeriesVideos = deduped.filter((v) => !isSeries(v));
+  console.log(`Split: ${nonSeriesVideos.length} videos + ${seriesVideos.length} series`);
+
   // Step 4: Generate JSX content
-  const exportName = outputPath.includes("/")
-    ? path.basename(outputPath, ".jsx")
-    : "youtubeData";
-  const jsxContent = `export const ${exportName} = [
-${deduped
-  .map(
-    (v) => `  {
+  const formatVideo = (v) => `  {
     title: '${escapeForJSX(v.title)}',
     href: '${v.href}',
     author: '${v.author}',
@@ -173,17 +186,34 @@ ${deduped
     publishedDate: '${v.publishedDate}',
     duration: '${v.duration}',
     thumbnailUrl: '${v.thumbnailUrl}'
-  }`
-  )
-  .join(",\n")}
+  }`;
+
+  const exportName = outputPath.includes("/")
+    ? path.basename(outputPath, ".jsx")
+    : "youtubeData";
+  const seriesExportName = outputPath.includes("/")
+    ? path.basename(outputPath, ".jsx") + "Series"
+    : "youtubeSeriesData";
+
+  const jsxContent = `export const ${exportName} = [
+${nonSeriesVideos.map(formatVideo).join(",\n")}
+];
+
+export const ${seriesExportName} = [
+${seriesVideos.map(formatVideo).join(",\n")}
 ];
 `;
 
   // Step 5: Write to file
-  const dir = path.dirname(outputPath);
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(outputPath, jsxContent);
-  console.log(`Successfully wrote ${outputPath}`);
+  if (dryRun) {
+    console.log(`[dry-run] Would write to ${outputPath} (${jsxContent.length} bytes)`);
+    console.log(jsxContent);
+  } else {
+    const dir = path.dirname(outputPath);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(outputPath, jsxContent);
+    console.log(`Successfully wrote ${outputPath}`);
+  }
 }
 
 async function main() {

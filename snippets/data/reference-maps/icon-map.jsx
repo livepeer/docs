@@ -250,7 +250,7 @@ export const iconMapSections = [
         components: ['Card', 'portal CTA', 'hero callout'],
         examples: [
           'v2/developers/portal.mdx',
-          'v2/home/about-livepeer/benefits.mdx',
+          'v2/home/about/benefits.mdx',
         ],
       },
       {
@@ -636,7 +636,7 @@ export const iconMapSections = [
         components: ['Card', 'community CTA'],
         examples: [
           'v2/developers/resources/compendium/developer-help.mdx',
-          'v2/community/community-portal.mdx',
+          'v2/community/portal.mdx',
         ],
       },
       {
@@ -963,7 +963,7 @@ export const iconMapSections = [
         components: ['Card', 'Accordion', 'governance CTA'],
         examples: [
           'v2/about/protocol/overview.mdx',
-          'v2/community/livepeer-community/livepeer-latest-topics.mdx',
+          'v2/community/community/livepeer-latest-topics.mdx',
         ],
       },
       {
@@ -1018,7 +1018,7 @@ export const iconMapSections = [
         components: ['Card', 'Accordion'],
         examples: [
           'v2/about/concepts/livepeer-overview.mdx',
-          'v2/community/livepeer-community/ecosystem.mdx',
+          'v2/community/community/ecosystem.mdx',
         ],
       },
       {
@@ -1236,7 +1236,7 @@ export const iconMapSections = [
           'Avoid for individual persona routing (use `user-robot` or role-specific icons).',
         components: ['Card', 'Tab', 'community CTA'],
         examples: [
-          'v2/community/community-portal.mdx',
+          'v2/community/portal.mdx',
           'v2/about/concepts/livepeer-overview.mdx',
         ],
       },
@@ -1304,8 +1304,8 @@ export const iconMapSections = [
           'Avoid for technical reference pages or governance documents.',
         components: ['Card', 'Accordion'],
         examples: [
-          'v2/community/livepeer-community/livepeer-latest-topics.mdx',
-          'v2/home/about-livepeer/benefits.mdx',
+          'v2/community/community/livepeer-latest-topics.mdx',
+          'v2/home/about/benefits.mdx',
         ],
       },
       {

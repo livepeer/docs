@@ -79,6 +79,7 @@ Call out conflicts explicitly instead of guessing.
 - Preserve information architecture unless the task is an intentional IA migration.
 - When the approved task is data-only, helper-only, or pipeline-only, preserve the existing page structure, headings, section order, copy, layout, styling, and route boundaries exactly unless the user explicitly approves presentation changes.
 - Requests such as “move data out of MDX”, “extract helpers”, or “make the widget standalone in terms of data” do not grant permission to rewrite the page experience.
+- For a single broken MDX page, fix the smallest page-local render blockers first: validate import paths, undefined identifiers, and stray JSX/comment syntax before changing layout, styling, shared components, navigation, or adjacent pages.
 - Keep edits minimal, local, and consistent with nearby files.
 - Use absolute snippet imports from root, for example `/snippets/components/...`.
 - Use CSS custom properties instead of `ThemeData` or hardcoded theme colours.
@@ -98,6 +99,14 @@ Run the smallest relevant validation set before handing work back:
 | Catalog or index regeneration | `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check` |
 
 If a validator fails: read the output, fix the root cause, rerun. Do not skip.
+
+## No Lazy Tooling Claims
+
+- Do not claim a required tool is unavailable just because the current non-interactive shell cannot find it on `PATH`.
+- Before reporting `node`, `npm`, `lpd`, package managers, validators, or repo CLIs as unavailable, inspect repo wrappers, README/setup docs, shell startup files, version managers, and common install locations.
+- If this repo provides a canonical wrapper such as `tools/lpd`, use that wrapper directly or load the required runtime path, then run the smallest relevant validation.
+- If validation still cannot run, report the exact commands attempted, the exact missing dependency/path, and the next concrete remediation command.
+- Treat stopping at `command not found` without this discovery as unacceptable.
 
 ## Response and Review Contract
 

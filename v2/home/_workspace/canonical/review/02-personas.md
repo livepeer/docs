@@ -150,8 +150,8 @@
 | Newcomer | primer + role cards | `primer.mdx` + `get-started.mdx` | Definition accuracy; complexity of role cards |
 | Builder | "Build on Livepeer" + API | `mission-control.mdx`? | Link placement; API readiness clarity |
 | GPU Op | ROI + setup path | `get-started.mdx` → Orchestrators | ROI calculator missing; complexity ranking missing |
-| Investor | LPT story + roadmap | `about-livepeer/roadmap.mdx` (STUB) | Roadmap is 1.8KB; needs full content |
-| Researcher | Whitepaper + architecture | `about-livepeer/ecosystem.mdx` | Whitepaper link visibility; spec accessibility |
+| Investor | LPT story + roadmap | `about/roadmap.mdx` (STUB) | Roadmap is 1.8KB; needs full content |
+| Researcher | Whitepaper + architecture | `about/ecosystem.mdx` | Whitepaper link visibility; spec accessibility |
 | Contributor | Paths + initiatives | NOT IN HOME | Missing entirely; should link to Community tab |
 | Returning | Search + sticky nav | Search unclear | Nav stickiness; breadcrumbs unclear |
 

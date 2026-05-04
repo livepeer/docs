@@ -16,6 +16,14 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 
 ---
 
+## Observer Agent Authentication
+
+- Before launching observer/memory agent sessions, verify authentication with `claude --version` or a quick test prompt
+- If observer returns 'Not logged in · Please run /login', halt the primary session and re-authenticate before continuing
+- Never assume observer sessions are working — check for actual observation output, not just dispatch success
+
+---
+
 ## Active threads
 
 > Every thread updates its own row on completion or status change. Master tracker: `workspace/plan/future/BACKLOG/master-tasks.md`
@@ -46,6 +54,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Docs Library | `docs-guide/docs-library/` — 8 pages: index, 6 pipeline concern pages (content quality, governance compliance, component health, discoverability, data integration, copy/brand) with real Mermaid diagrams, full script/workflow inventories, and gap analysis. Gap report: 17 gaps (2 P0, 5 P1, 6 P2, 4 P3) | Done | 2026-04-08 |
 | Agent Creation Skills | 3 skills (`/create-component`, `/create-script`, `/create-action`) + `generate-component-snippets.js`. Full governance compliance, self-documenting pipelines, VS Code tooling updates. Fills actions-audit.json and concurrency group gaps | Done | 2026-04-08 |
 | Styles Governance | Full pipeline: audit (6 categories), remediator (14 fix types + --verify regression check), self-documenting generator, GH Actions workflow with regression step. Style guide (10 new sections + pixel spacing + brand tokens). WCAG focus-visible + responsive CSS. CoinGecko exchanges + go-livepeer config flags pipelines. Badge reference + engineering guide. 0 non-mermaid violations (3,986 → 0). 68 mermaid dark-mode variants accepted | Done | 2026-04-09 |
+| UK Spelling + Em-Dash Sweep | remediate-em-dashes.js + remediate-us-spelling.js with --write --verify across v2/. 21 em-dashes (frontmatter + body) and 79 US-spellings (34 files) converted. Verify passed both runs. Final dry-run: 0/0. Flag raised: program→programme rule applies unconditionally in language-rules.json — review for tech-context exceptions (smart-contract glossary defs, install instructions) | Done | 2026-05-04 |
 
 **Rule:** When you finish a task or change status, update your row in this table before closing. If the master-tasks.md file has a matching item, update that too.
 
@@ -59,6 +68,23 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - **Verify first instance before bulk operations.** Apply to one file, confirm it works, then proceed to the rest.
 - **Read Mintlify constraints before editing MDX.** Reference: `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`. No React/hook imports, no Mintlify global imports, use root-absolute imports for shared resources, include file extensions, keep MDX-facing JSX data flow in parent MDX, define risky constants inside export bodies, use arrow function syntax only, and follow the repo's scoped preview and styling rules.
 - **Verify renders before declaring done.** After editing any `v2/*.mdx` file, confirm the PostToolUse render-verify hook reported PASSED. If it reported `server-failed`, restart the server with a scoped restart: `node operations/scripts/dispatch/governance/server-lifecycle.js restart v2/TAB` (e.g. `restart v2/home`). Scoped restarts take <2 min. Never cold-start the full 795-page docs.json (10+ min). Before declaring a page complete, run the smoke test: `node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path/to/page`. Never use `node .githooks/server-manager.js` directly (library, not CLI). Never declare a page "done" without a PASSED verification or successful smoke test.
+
+---
+
+## MDX & Frontmatter Conventions
+
+- Always use double-quoted YAML frontmatter to safely handle apostrophes and em-dashes
+- When editing MDX files, check for an existing custom Image/Frame component before introducing new syntax
+- For badge/data extraction, follow role-keyed naming (not layerN-prefixed) per the solutions pattern
+- Run a dry-run validation (em-dash check, frontmatter parse) before committing generated stubs
+
+---
+
+## Stay On Task
+
+- Do not build infrastructure (hooks, CI workflows, auto-repair scripts) when the user asked for content changes (stubs, edits, fixes)
+- If you discover a systemic issue while working, surface it as a follow-up suggestion rather than pivoting mid-task
+- When governance hooks block progress, stop and report — do not silently keep retrying or expand scope
 
 ---
 
@@ -110,6 +136,39 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 - Before running any script that writes or modifies data files, check for `--dry-run` support first
 - If no dry-run flag exists, propose the run and wait for approval before executing
 - Always verify script side effects before marking tasks complete
+
+---
+
+## Karpathy guidelines
+
+Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rules to reduce common LLM coding mistakes. Bias toward caution over speed. For trivial tasks, use judgement.
+
+**1. Think before coding — don't assume, don't hide confusion, surface tradeoffs.**
+- State assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — do not pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what is confusing. Ask.
+
+**2. Simplicity first — minimum code that solves the problem, nothing speculative.**
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that was not requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+- Test: would a senior engineer call this overcomplicated? If yes, simplify.
+
+**3. Surgical changes — touch only what you must, clean up only your own mess.**
+- Do not "improve" adjacent code, comments, or formatting.
+- Do not refactor things that are not broken.
+- Match existing style, even if you would do it differently.
+- If you notice unrelated dead code, mention it — do not delete it.
+- Remove imports/variables/functions that YOUR changes made unused. Leave pre-existing dead code alone unless asked.
+- Test: every changed line should trace directly to the user's request.
+
+**4. Goal-driven execution — define success criteria, loop until verified.**
+- Convert tasks into verifiable goals: "add validation" becomes "write tests for invalid inputs, then make them pass". "Fix the bug" becomes "write a test that reproduces it, then make it pass".
+- For multi-step tasks, state a brief plan with a verify step per item.
+- Strong success criteria let you loop independently. Weak criteria ("make it work") force constant clarification.
 
 ---
 

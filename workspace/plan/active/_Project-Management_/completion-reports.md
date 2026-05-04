@@ -2,7 +2,7 @@
 
 Reports are appended here at the end of any session that completes a plan or significant phase of work.
 
----
+<CustomDivider />
 
 ## Template
 
@@ -581,7 +581,7 @@ Session was initiated to get the docs-v2-dev docs.json structure onto origin/doc
 **Outcome: NOT MET — frozen.** Work to resume when parallel threads on docs-v2/docs-v2-dev close.
 ```
 
----
+<CustomDivider />
 
 ## References Knowledge System — Phase 1 — 2026-03-30
 
@@ -592,7 +592,7 @@ Session was initiated to get the docs-v2-dev docs.json structure onto origin/doc
 
 Scanned the repo for exemplary work across 13 categories, presented candidates to Alison for selection, then wrote 14 analysis docs with pointers + analysis. All 38 referenced files verified to exist. CLAUDE.md updated with threads table entry. The folder serves as a learning resource for future Claude sessions — read before designing, writing, laying out, or building.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -617,7 +617,7 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 - `skills.md` — 6 exemplary skills with "what makes a good skill" patterns
 - `README.md` — master index
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -630,7 +630,7 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 | All AI-written copy excluded from copy exemplars | Alison: "none of these are good. ai-written." |
 | Section-naming prompt surfaced prominently | Naming across all surfaces is a recurring problem |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -640,7 +640,7 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 | Per-category subfolder structure | P1 | Phase 2 design | Phase 1 complete |
 | Best-practice + patterns docs | P1 | Phase 2 collation | Source mapping |
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -650,13 +650,13 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 | README index matches docs | ✅ Pass | 14 files, 13 categories |
 | CLAUDE.md updated | ✅ Pass | Threads table + key files |
 
----
+<CustomDivider />
 
 ### Recommendations
 
 1. **Phase 2** — Restructure flat files into category subfolders, collate research per category, extract patterns linked to repo context.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -678,7 +678,7 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 | `.claude/references/skills.md` | new | 6 skill exemplars |
 | `.claude/CLAUDE.md` | modified | Threads table + key files |
 
----
+<CustomDivider />
 
 **Outcome: MET.** Phase 2 continuing in same thread.
 
@@ -691,7 +691,7 @@ Scanned the repo for exemplary work across 13 categories, presented candidates t
 
 Replaced the entire v2/solutions section on the `docs-v2` branch with the finished version from `docs-v2-dev`. This required surgically migrating 19 component files (at new restructured paths that don't conflict with existing old-path components), 21 automation data files, 33 asset files, 136 content files, and a scoped docs.json update. Work was done in an isolated git worktree, tested with Puppeteer (23/23 pages pass), and squash-merged via PR #845.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -712,7 +712,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 - docs.json Solutions tab surgically replaced (all other 9 tabs untouched)
 - 12 redirects added for old Livepeer Studio paths and removed pages
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -724,7 +724,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 | `/docs/` subfolder within `livepeer-studio/` is Studio Docs anchor only | Product-level pages (overview, community, changelog) sit at `livepeer-studio/` root. Technical documentation (quickstart, API ref, livestream, etc.) lives under `livepeer-studio/docs/`. |
 | Exclude `_workspace/` from migration | Internal working files not needed in production. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -735,7 +735,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 | JSDoc annotations on migrated components | Low | Pre-commit hook flagged missing JSDoc on 19 components — bypassed for migration | Part B or component governance pass |
 | `docs-v2` force-push investigation | Medium | `docs-v2` was force-pushed between our branch creation and merge, creating a `docs/` mirror of `v2/` | None |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -743,7 +743,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 - **Old Studio URLs**: Redirects in place for all path changes (`/livepeer-studio/<section>/` → `/livepeer-studio/docs/<section>/`). Monitor 404s post-deploy.
 - **Part B (component migration)**: The 19 component files at new paths coexist with old components at old paths. This duplication is intentional and temporary — Part B will consolidate.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -758,7 +758,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 | Non-solutions pages | ✅ Spot-checked | About + Orchestrators portals render fine |
 | Console errors | ⚠️ Pre-existing only | `fs`/`require` errors from Mintlify bundling Node.js scripts — not caused by migration |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -767,7 +767,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 3. **Add `.mintignore` entries for `tools/` and `operations/`** — the console errors from Mintlify trying to bundle Node.js scripts are pre-existing and noisy. Already fixed on `docs-v2-dev` but not yet on `docs-v2`.
 4. **Visual QA on production deploy** — Puppeteer confirmed rendering in dev, but verify hero images, videos, and community data feeds render in production build.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -782,7 +782,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 | PR #845 | merged | `a06c18513e397fa9f6ee574fb3930b83f38e150f` on docs-v2 |
 | Worktree | `/Users/alisonhaire/Documents/Livepeer/solutions-migration` | Can be removed |
 
----
+<CustomDivider />
 
 ## Full-Site Style Diagnostic and Fix — 2026-03-26/27
 
@@ -793,7 +793,7 @@ Replaced the entire v2/solutions section on the `docs-v2` branch with the finish
 
 Site-wide style issues were diagnosed using Playwright automated testing across multiple viewports (600-1920px), branch diffs, and DOM element chain analysis. All CSS fixes applied to `style.css` with `!important` overrides, using `:has()` selectors to scope regular pages vs portal/frame-mode pages differently. The `.mintignore` was updated to prevent Mintlify from parsing plain `.md` files as MDX. Portal pages received separate balanced padding (2rem) and wider inner cap (80rem). The Daydream hero GIF was restored from git history (original 92MB, re-compressed to 30MB at 540px/128 colours). The Starfield canvas component size distribution was adjusted for more visible larger stars. Mintlify CLI updated from 4.2.416 to 4.2.446.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -822,7 +822,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 - Root cause: Size bucket distribution heavily weighted toward tiny stars (65% at 0.3 scale, only 5% large+extra large)
 - Fix: Adjusted weights — tiny 65%→50%, medium 10%→15%, large 4%→10%, extra large 1%→5%. About portal bumped to `density={1.8}` (from default 1.1).
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -835,7 +835,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 | Re-compress Daydream GIF at 540px/128 colours (30MB) | Best balance of quality and file size. 92MB original too large; 12MB replacement was a different, lower-quality recording. |
 | Starfield size weights user-directed | User tested multiple distributions and chose final values. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -845,7 +845,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 | `mint update` did not fix dev padding injection | Info | CLI updated 4.2.416→4.2.446, body padding still injected — CSS override still needed | None |
 | Starfield colour palette could use brighter existing vars | Low | User noted stars could be greener. Existing vars `--lp-color-accent-bright` (#5DD662) and `--lp-color-accent-brightest` (#A0F0A5) available but not yet used in palette. | None |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -854,7 +854,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 - **Production builds**: `body { padding: 0 }` is a no-op (production already has `padding: 0`). All other overrides WILL take effect in production after merge.
 - **Starfield component**: Size distribution change affects ALL portal pages site-wide (About, Solutions, Orchestrators, Gateways, Developers, etc.).
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -869,7 +869,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 | Starfield size distribution | ✅ | User visually confirmed density and size balance |
 | mint dev clean build | ✅ | No build errors after all changes |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -877,7 +877,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 2. **Monitor Mintlify CLI updates** — The body padding injection may be fixed in a future CLI version, making the `body { padding: 0 }` rule unnecessary.
 3. **Consider bumping Starfield density on other portals** — About portal is now at 1.8; others still at default 1.1.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -890,7 +890,7 @@ Site-wide style issues were diagnosed using Playwright automated testing across 
 | `snippets/components/scaffolding/heroes/HeroGif.jsx` | modified | Starfield size bucket weights adjusted for more larger stars |
 | `v2/about/portal.mdx` | modified | Starfield density bumped to 1.8 |
 
----
+<CustomDivider />
 
 ## Contract Addresses Page Fix — 2026-03-30
 
@@ -964,7 +964,7 @@ The contract addresses canonical page was broken by 3 Mintlify constraint violat
 | `snippets/data/contract-addresses/contractAddressesData.jsx` | modified | export function → arrow function |
 | `workspace/thread-outputs/research/mintlify-constraints-reference.md` | modified | 2 new constraints documented |
 
----
+<CustomDivider />
 
 ## Solutions Tab — Full Page Build and Standardisation — 2026-03-26
 
@@ -975,7 +975,7 @@ The contract addresses canonical page was broken by 3 Mintlify constraint violat
 
 Multi-session initiative that took the Solutions tab from scattered drafts to a fully complete page set. Central data architecture established (`v2/solutions/data/`) for socials, badges, infra tags, and brand colours. All 5 overview pages standardised to canonical layout (badges, socials, Info box, Key Features, Get Started with StyledSteps, Try cards, Resources with social links). Hero images generated for all products (20 images + 5 backgrounds) via two new Puppeteer-based scripts. YouTube video data fixed across all community pages. Solution Providers overview page created. Glossary expanded with 3 new terms. All pages in docs.json nav marked complete in pageStatus.md.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1033,7 +1033,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 **Page status**
 - All pages in docs.json nav marked complete in `v2/solutions/_workspace/canonical/pageStatus.md`
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1046,7 +1046,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 | youtu.be URLs replaced everywhere | YouTubeVideoData getEmbedUrl() only parses `?v=` format; short URLs break rendering |
 | Removed broken YouTubeVideo from Frameworks overview | Malformed JSX tag; correct version with proper embedUrl/title props added |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1057,7 +1057,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 | Streamplace changelog page | Low | Placeholder exists | Streamplace team updates |
 | Studio docs sub-pages content review | Medium | Marked complete for layout but inherited from v1 — content not rewritten | Content pipeline Phase 6 |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1066,7 +1066,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 - **Template updated** — new solution provider pages should follow `snippets/templates/pages/domain-pages/solutions-overview-template.mdx`.
 - **Community pages depend on static data files** in `snippets/automations/solutions/*/` — export names must match imports exactly.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1078,7 +1078,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 | Hero images generated | All 20 complete | Verified file existence in assets folders |
 | Glossary accordion rendering | Verified | 4 new terms render correctly |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1087,7 +1087,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 3. **Automate YouTube data refresh** — static data files will go stale. Consider a scheduled script to pull latest from YouTube API.
 4. **Add Streamplace changelog content** — page exists but is minimal.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1120,7 +1120,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 | `snippets/assets/media/heros/solutions/*/` | new | 20 hero images + 5 backgrounds across all products |
 | `v2/solutions/_workspace/canonical/pageStatus.md` | modified | All pages marked complete |
 
----
+<CustomDivider />
 
 ## Orchestrators Full Quality Check Sweep — 2026-03-24
 
@@ -1131,7 +1131,7 @@ Multi-session initiative that took the Solutions tab from scattered drafts to a 
 
 Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection Summary, Section Rollup, Full Rollup) across all 66 pages in `v2/orchestrators/guides/` and `v2/orchestrators/resources/`. Zero pages are publishable; median ~21-22 fails per page. Universal patterns: taxonomy gap (66/66 pages), `## See Also` Banned-tier (most pages), `{/* FACT CHECK: */}` non-canonical format (~50+ instances across 8 subfolders), P39 atomic split-fix violation (template-level defect in tutorial stubs). Eight tab-level blocking decisions require human resolution before remediation packages can execute. A 10-package remediation roadmap was produced; Package 0 can run immediately without any blocking decision resolution.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1159,7 +1159,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 - learnings.md grew from P89 to P110 (21 new systematic checker error patterns)
 - Key new patterns: P90 (status:published is wrong-enum only, not coherence failure), P97 (BORDERLINE invalid for absolute prohibitions), P104 (navigation orphan vs dead nav entry distinction), P107 (type-confusion handling for check 1.2/1.3), P108 (cross-subsection scope boundary detection)
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1169,7 +1169,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | P39 fix must be atomic (status + veracityStatus in one edit) | Split fixes create transient incoherent state where status: draft exists without veracityStatus — violates the same rule being fixed |
 | BORDERLINE is invalid for absolute prohibitions (P97) | Em-dash ban (P30) is binary PASS/FAIL; BORDERLINE inflated false negatives across 5+ batches |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1180,7 +1180,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | Livepeer Forum URL section-wide search | Medium | BD-TAB-02 scope unknown until `forum.livepeer.org` search runs across all 66 pages | BD-TAB-02 decision |
 | FACT CHECK comment total count | Medium | Estimated 50+ in guides; resources count unknown | Section-wide search needed before Package 6 |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1189,7 +1189,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 - **Veracity pass (Phase 7)** on S01-S12 runs independently of this remediation — different page set, different pipeline
 - **Unchecked sections** (concepts, setup, quickstart, root pages) will produce additional findings and potentially new blocking decisions
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1200,7 +1200,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | Learnings deduplication | P89-P110, 0 duplicates | Each new pattern verified against full P1-Pn list |
 | ORCHESTRATORS-ROLLUP.md cross-references | Section rollup findings consolidated | 8 tab-level BDs, 6 cross-section patterns |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1211,7 +1211,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 5. **Register join-a-pool deprecation (BD-TAB-08)** — decision already made in session log; write to decision-registry.md. Zero editorial effort.
 6. **Run section-wide searches before Packages 5-6** — `forum.livepeer.org` scope and cross-tab link inventory are both unknown. Two grep commands close these gaps.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1227,7 +1227,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | `v2/orchestrators/_workspace/canonical/check/learnings.md` | modified | P89 to P110 — 21 new systematic checker error patterns |
 | `.claude/CLAUDE.md` | modified | Session log entry appended |
 
----
+<CustomDivider />
 
 ## Template Cleanup + Icon Map Framework — 2026-03-21
 
@@ -1238,7 +1238,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 
 `v2/templates/` was a folder of generated preview pages written by `generate-ui-templates.js` into the user-facing `v2/` directory — wrong location, no real consumption path beyond rendered stubs. The preview pipeline was stripped from the generator, the 21-file folder deleted, and 5 source-side issues in `snippets/templates/` resolved (naming, duplicates, wrong extension, README clarity). In the same session the icon map was extended from 30 to 78 icons and a compliance audit script was created.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1270,7 +1270,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 **Phase 5 — Config and test cleanup**
 - Removed all `v2/templates` references from: `script-registry.json`, `ownerless-governance-surfaces.json`, `run-all.js`, `v2-link-audit.test.js`, `run-pr-checks.js` (bonus — not in original plan)
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1281,7 +1281,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | Add minimal scaffold to empty `tutorial.mdx` | Generator requires valid frontmatter to run. Content quality is deferred to CONTENT-STRUCTURE-TEMPLATES plan. |
 | Block-examples overview page — static authored page, not generated | The concept has value but the generated version was raw stubs. A static page with annotated examples is more useful and shouldn't be auto-generated. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1291,7 +1291,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | `tutorial.mdx` content | Low | File was empty; placeholder only | CONTENT-STRUCTURE-TEMPLATES plan |
 | Navigation validation error (1 error in `docs-navigation.test.js`) | Pre-existing | About `docs.json` redirect rule for Resource Hub tab — unrelated to template cleanup | Whoever owns docs.json work |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1300,7 +1300,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 - **Glossary companion JSONs**: Must be re-run (`generate-glossary-companions.js`) whenever new glossary terms are added, to keep JSON files current for AI/crawler discoverability.
 - **Generator is now the single source of truth**: `docs-guide/catalog/ui-templates.mdx` is fully generated. Do not edit it by hand — run `node operations/scripts/generators/components/library/generate-ui-templates.js --write` after any `snippets/templates/` change.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1311,7 +1311,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | `docs-guide-sot.test.js` | ✅ Clean | Must be run from repo root (uses `process.cwd()`) |
 | `run-all.js` | Pre-existing failures only | Navigation (1 — docs.json redirect rule), AI-tools registry (13), Skill docs (3), Root Allowlist (4), Style guide (559 errors) — none introduced by this work |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1321,7 +1321,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 4. **Extend `audit-icon-usage.js` to validate page-type defaults** — flag cards/accordions linking to a known page type that use a non-canonical icon. `iconMapPageTypeDefaults` is already available for this.
 5. **Resolve the pre-existing navigation validation error** — `docs.json` Resource Hub tab requires `v2/resources/redirect` as first page. Unrelated to this work but should be addressed before the next deploy.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1352,7 +1352,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 | `snippets/templates/pages/reference-and-api/source-of-truth-template.mdx` | deleted | Renamed → `source-of-truth.mdx` |
 | `snippets/templates/pages/tutorial-and-guides/tutorial-template.md` | deleted | Renamed → `tutorial.mdx` |
 
----
+<CustomDivider />
 
 ## AI Governance — Open Items (Phases 1–4) — 2026-03-22
 
@@ -1363,7 +1363,7 @@ Ran the full 5-step check pipeline (Check, Critical Review, Subfolder/Subsection
 
 All executable open items from the AI-Tools Governance backlog are done. Stale `tools/scripts/` path references in `AGENTS.md` and `ai-tools/README.md` were corrected to `operations/scripts/`; a duplicate copilot instructions file was archived; 7 duplicate URLs were removed from `llms.txt`; `AGENT-INSTRUCTIONS.md` was reduced from 113 lines of stale Codex commands to a 7-line pointer; and the skill test suite was updated to recognise `content-pipeline` as a valid category (used by 3 existing skills but not in the enum). All 62 skill-doc targets pass. Five items remain deferred pending content decisions or infrastructure dependencies.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1387,7 +1387,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 - Added `content-pipeline` as 6th valid category to `skill-spec-contract.md` and `skill-docs.test.js` VALID_CATEGORIES enum (3 skills were using it; enum was missing it)
 - Regenerated all 5 agent-pack exports via `cross-agent-packager.js --agent-pack all`
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1398,7 +1398,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 | Defer Resource HUB `docs.json` stub fix | AGENTS.md governance rule requires user confirmation before committing `docs.json` changes |
 | Manually deduplicate `llms.txt` rather than regenerate | `generate-llms-files.js` requires ESM `unified` package which doesn't resolve locally (it's in `tools/node_modules/`, not reachable by ESM `import()` from `operations/scripts/`) |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1412,7 +1412,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 | Skill consolidation (4 skills → 2) | Low | Human decision gate | `plan2.md` Task 3.2 |
 | `.github/AGENTS.md` stale content (checkpoint branch fiction, `tools/scripts/` refs) | Low | Separate focused commit; Codex commands need path verification first | Verify `operations/scripts/integrators/ai/codex/` paths |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1421,7 +1421,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 - **Agent-pack exports**: Regenerated from current skill catalog. Any new skill or template change requires re-running `cross-agent-packager.js --agent-pack all` to keep packs current.
 - **`AGENT-INSTRUCTIONS.md`**: Now a 7-line pointer only. Codex operators reading it are directed to root `AGENTS.md` and `.github/AGENTS.md` — ensure those files stay authoritative.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1434,7 +1434,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 | Template / agent-pack parity | ✅ 42 templates, 42 packs | |
 | `check-agent-docs-freshness.js --json` | ✅ No stale docs | |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1445,7 +1445,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 5. **Wire `skill-docs.test.js` into PR gates** — Test already exists and passes; just needs adding to `.github/workflows/` so template/pack parity is enforced on every PR.
 6. **Consider auto-deriving `skill-catalog.json` from frontmatter** — Catalog is manually maintained; a generator step in `cross-agent-packager.js` would prevent drift as new skills are added.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1467,7 +1467,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 | `ai-tools/ai-rules/_retired/imported-copilot-instructions.md` | new (git mv) | Archived duplicate of `.github/copilot-instructions.md` |
 | `ai-tools/ai-rules/rules/imported/copilot-instructions.md` | deleted (git mv) | Moved to `_retired/` — canonical copy is `.github/` |
 
----
+<CustomDivider />
 
 ## agentskills.io Standard Alignment — 2026-03-22
 
@@ -1478,7 +1478,7 @@ All executable open items from the AI-Tools Governance backlog are done. Stale `
 
 VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is not supported in skill files." Root cause: VS Code validates any file named `SKILL.md` against the agentskills.io open standard (adopted by all major AI tools in December 2025), which places `version` inside a `metadata:` map rather than at the top level and replaces `invoke_when` arrays with `description` prose. The full standard was documented, the schema contract and test suite were rewritten, and all 19 local skill files and 42 templates were migrated. All five test suites now pass against 227 registry artifacts and 62 skill targets with 0 errors.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1511,7 +1511,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 **Agent-pack regeneration**
 - 5 agent-pack files regenerated via `cross-agent-packager.js --agent-pack all`
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1522,7 +1522,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 | Keep `primary_paths` and `primary_commands` at top-level on templates | These are arrays; they cannot go in `metadata` (string-to-string only). Template-only constraint maintained. |
 | Fix "no git history" from ERROR to WARNING in freshness validator | A file with no git history is a new uncommitted file, not a missing or stale file. ERROR status blocking `passed` was incorrect semantics. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1532,7 +1532,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 | `structure.md` root-level file allowlist shows 3 files but `agentskills-io-standard.md` is now a 4th | Low | Doc drift only — validator is already updated | Update in next governance pass |
 | `plan.md` verification sequence uses `^category:` grep and wrong test path | Low | Plan is near-complete; verification sequence will be run once then archived | Update or archive `plan.md` |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1541,7 +1541,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 - **`agentskills-io-standard.md`**: New governed reference document at `ai-tools/ai-skills/` root. Picked up by `check-agent-docs-freshness.js` as an AI-SKILL entry. Will show as a WARNING (no git history) until committed.
 - **`ai-tools-registry.json`**: 227 artifacts (was 222). Registry now covers all current files including new `agentskills-io-standard.md`, `_workspace/.gitkeep`, `best-practices.md`, and the 3 content-pipeline SKILL.md files.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1553,7 +1553,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 | `node operations/tests/unit/export-portable-skills.test.js` | ✅ 4 cases | |
 | `node operations/tests/unit/check-agent-docs-freshness.test.js` | ✅ 2 cases | Fixed ERROR→WARNING for untracked files |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1562,7 +1562,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 3. **Fix inventory generator bug (plan2.md Task 1.1)** — `generate-ai-tools-inventory.js` imports `validateFullRegistry` from `tools/lib/ai-tools-registry.js` but that function is not exported. The inventory report is stale at 215 rows. Fix by aliasing the export, then regenerate to reflect 227 current artifacts.
 4. **Retire `completion-report.md` recommendation R4** — R4 says "Add `content-pipeline` to `skill-docs/SKILL.md` invoke_when." `invoke_when` no longer exists. The `content-pipeline` category is already in `skill-docs/SKILL.md` v1.4 Constraints section. R4 is fully resolved and should be struck or noted complete.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1582,7 +1582,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 | `ai-tools/agent-packs/codex/skills-manifest.json` | modified | Regenerated by cross-agent-packager |
 | `ai-tools/agent-packs/README.md` | modified | Regenerated by cross-agent-packager |
 
----
+<CustomDivider />
 
 ## Solutions Tab Fixes + Glossary Component Remediation — 2026-03-26
 
@@ -1593,7 +1593,7 @@ VS Code flagged every `SKILL.md` file in the repo with "Attribute 'version' is n
 
 Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 community pages, fixed a broken GitHub README embed (wrong branch), removed a broken Frameworks overview `<YouTubeVideo>` duplicate, stripped the deprecated `streamplace/introduction` section from `docs.json`, and built the `solution-providers.mdx` page as a reference directory with badge/infra differentiation. Separately, discovered and fixed a site-wide glossary rendering failure — all 9 glossary pages were missing the `TableComponent` prop required by `SearchTable`, causing a warning instead of a table. Added `DynamicTable` as the renderer, added `showSeparators={false}` for flat tables, added `categoryGroupByPrefix` for split category:niche filtering, and wrapped all glossaries in `LazyLoad` for performance.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1628,7 +1628,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 **DynamicTable component enhancement**
 - Added `showSeparators` prop (defaults `true`, backwards-compatible) to optionally hide category separator rows
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1639,7 +1639,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 | Two-level category filtering via `categoryGroupByPrefix` rather than changelog-style tag panel | User chose simpler option; changelog `<Update>` tags are Mintlify-specific, not available on general pages |
 | Solution-providers page uses tables + badges, not SolutionCard components | Portal already provides the rich card layout; this page is a flat reference directory |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1648,7 +1648,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 | Verify `BadgeWrapper`/`IconBadgeWrapper` render inside markdown table cells on Mintlify | Medium | May need fallback to plain text if Mintlify strips JSX in table cells | Dev server check |
 | Update glossary templates in `snippets/templates/` to match new pattern | Low | Templates are reference only; live pages already fixed | None |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1657,7 +1657,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 - **DynamicTable component**: New `showSeparators` prop defaults to `true`. Existing usages unaffected.
 - **docs.json**: 5 Streamplace introduction pages removed from nav. Files still exist on disk.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1668,7 +1668,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 | Studio README embed branch | ✅ Changed to `master` | Matches GitHub default branch |
 | docs.json valid JSON | Not tested | Verify with `npx mintlify dev` |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1676,7 +1676,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 2. **Update glossary templates** — the 4 template files in `snippets/templates/pages/resources/compendium/` still use the old pattern without `TableComponent`.
 3. **Audit remaining community pages** (Daydream, Streamplace) for similar stale tweet/embed issues.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1692,7 +1692,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 | `snippets/components/wrappers/tables/Table.jsx` | modified | Added `showSeparators` prop |
 | `v2/*/resources/compendium/glossary.mdx` (9 files) | modified | DynamicTable + showSeparators + categoryGroupByPrefix + LazyLoad |
 
----
+<CustomDivider />
 
 ## Solutions Tab — Glossary Addition + Notion Table Sync — 2026-03-26
 
@@ -1703,7 +1703,7 @@ Multiple quick fixes across the Solutions tab: corrected tweet embed IDs on 3 co
 
 Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all Solutions pages complete in `pageStatus.md`. Synced the Notion "PAGES By Category and Group" database: backed up all data, moved all 67 old SOLUTIONS rows (including stale entries and all Studio Docs sub-pages) to Tab Group "Stale", and created 17 fresh rows matching the current docs.json Solutions anchor with "Complete" status. User performed final manual cleanup in Notion UI to resolve view caching issues.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1723,7 +1723,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 - 17 fresh rows created from docs.json Solutions anchor with correct paths, sidebar titles, section groups, nav order 34-50, all "Complete" status, Version "v2"
 - User performed final manual Notion UI cleanup to resolve remaining view/caching issues
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1735,7 +1735,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 | Dropped Sub Section "Compendium" for glossary row | Not in Notion's existing Sub Section options; would require schema update |
 | Nav order starts at 34 | Preserved position after HOME/ABOUT rows to maintain table ordering |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1746,7 +1746,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 | "Compendium" Sub Section option in Notion | Low | Not in schema; glossary row has no Sub Section | Notion schema update needed |
 | Bulk delete Stale rows | Low | 67 rows now in Stale tab group; can be cleaned up from Notion UI | Manual or script with API key |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1755,7 +1755,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 - **`tools/notion/` npm dependencies**: `npm install` was run during this session; `node_modules` now exists in `tools/notion/`.
 - **pageStatus.md**: All boxes checked — this file is now a complete record, not an active checklist.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1766,7 +1766,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 | Glossary term renders | Not verified | Added following established Accordion pattern; low risk |
 | Backup file exists | ✅ | `tools/notion/data/backup-2026-03-26T10-13-33.json` — 100 rows, 67 SOLUTIONS |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1775,7 +1775,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 3. **Add "Compendium" to Notion Sub Section options** — if sub-section tracking matters for the glossary row, update the database schema.
 4. **Run `sync-v2-en-canonical.js --dry-run` after Stale cleanup** — verify the sync script recognises the 17 new rows and doesn't conflict.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1788,7 +1788,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 | `tools/notion/node_modules/` | new | npm dependencies installed for Notion scripts |
 | `/Users/alisonhaire/.claude/plans/fancy-floating-metcalfe.md` | new | Plan file for Notion sync |
 
----
+<CustomDivider />
 
 ## Solutions Changelog Pipeline + GitLab Support + Component Fixes - 2026-03-27
 
@@ -1799,7 +1799,7 @@ Added "Real-time Interactive 3D Avatar" to the Solutions glossary. Marked all So
 
 Extended the changelog generation script to support dual-source (GitHub + GitLab) fetching with deduplication, built a new Streamplace changelog from 131 GitLab releases, redesigned the enhanced changelog entry format (AI Summary with icon label + divider + Release Notes with icon label in ScrollBox), switched to `openrouter/free` for zero-maintenance model selection, added retry logic, `--regenerate` flag, and MDX-safety fixes. Separately fixed broken StyledSteps/LazyLoad/YouTubeVideoData components across solution pages. All work on `docs-v2-dev`, uncommitted.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -1849,7 +1849,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 **Daydream Changelog**
 - Full regeneration with all latest format changes (37 entries, 37/37 LLM-enhanced)
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -1863,7 +1863,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 | LazyLoad wraps entire automation zone, not individual entries | One wrapper for all entries is simpler than per-entry wrappers. Script emits the wrapper. |
 | `--regenerate` flag | Manual wipe-and-rerun was error-prone. Flag automates truncation to template header before repopulating. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
@@ -1874,7 +1874,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 | CORS test for GitLab raw file access | Low | Community page still uses GitHub README embed | Test from browser console on docs.livepeer.org |
 | Process log to skill conversion | Low | Process log has 12 patterns after 5 runs | After 2-3 more runs |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -1883,7 +1883,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 - **`openrouter/free` model**: If OpenRouter changes the free router behaviour, fallback to raw extraction handles it gracefully. Override with `OPENROUTER_MODEL` env var.
 - **Template**: `changelog-solutions-template.mdx` is now the canonical reference for the entry format. Script output matches the template's documented modes.
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -1896,7 +1896,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 | MDX parse error (angle brackets) | ✅ Fixed | `<https://...>` stripped by `cleanForMdx()` |
 | Embody, Studio, Frameworks changelogs | ⚠️ Not regenerated | Still have old format entries; need `--regenerate --enhance` |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -1905,7 +1905,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 3. **Update the dead model default in CI** - The GitHub Actions secret `OPENROUTER_MODEL` should be unset (let it fall through to `openrouter/free`) or set to a known-good model.
 4. **Convert process log to skill** - `workspace/thread-outputs/build/changelog-process-log.md` has 12 patterns from 5 runs. After the remaining regenerations, it's ready to become a `/changelog-ops` skill.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -1937,7 +1937,7 @@ Extended the changelog generation script to support dual-source (GitHub + GitLab
 | `workspace/thread-outputs/build/changelog-process-log.md` | new | Process log with 12 patterns from 5 runs |
 | `/Users/alisonhaire/.claude/plans/parallel-sniffing-bunny.md` | new | GitLab changelog plan |
 
----
+<CustomDivider />
 
 ## Claude Code VSCode Session Recovery — 2026-03-27
 
@@ -1963,7 +1963,7 @@ Claude Code crashed at ~02:13, wiping all chat sessions from the VSCode sidebar 
 
 Sessions visible in sidebar but not loadable. Extension bugs require Anthropic code changes. ~120 minutes consumed, zero project work done. Full report: `workspace/plan/active/FUCK_CLAUDE/completion-report-2026-03-27.md`
 
----
+<CustomDivider />
 
 ## Solutions Social Data Pipeline — 2026-03-27
 
@@ -1974,7 +1974,7 @@ Sessions visible in sidebar but not loadable. Extension bugs require Anthropic c
 
 Built a full social data pipeline infrastructure bringing YouTube videos, blog posts, Discord announcements, GitHub READMEs/releases, and X/Twitter embeds into per-product community pages under `v2/solutions/`. Six fetch scripts (YouTube multi-channel, Discord announcements with message_snapshots support, RSS blog, GitHub discussions, GitHub releases, Ghost RSS), three GH Actions workflows, a central product config, and five community pages with verified rendering. Multiple component fixes were required to handle RSS data (new RssBlogCard), Discord forwarded messages (message_snapshots extraction), and Mintlify-specific scoping issues (inline sanitiseHTML, ScrollBox integration).
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -2017,7 +2017,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 - Added Embody YouTube channel (UCtehiOEHAVEoxNkuwEmynZw) to config and pipeline
 - Discord channel IDs configured for all products from user's Livepeer server
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -2027,23 +2027,23 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 | Discord reads from user's own server, not product servers | Cannot add bot to every product server; user subscribes to product announcements via Discord Follow feature |
 | RSS for Ghost blog instead of Content API | Eliminates API key dependency; RSS is public and sufficient |
 | message_snapshots for forwarded Discord content | Discord API returns empty content for forwarded messages; actual text is in message_snapshots[].message.content |
-| New RssBlogCard component instead of adapting BlogCard | BlogCard uses dangerouslySetInnerHTML with Ghost HTML; RSS data format fundamentally different; separate component avoids breaking existing Ghost blog rendering |
+| New RssBlogCard component instead of adapting BlogCard | `BlogCard uses dangerouslySetInnerHTML with Ghost HTML; RSS data format fundamentally different; separate component avoids breaking existing Ghost blog rendering` |
 | Tip text: "This page is an automated workflow." | User-specified. Do not change without approval. |
 | sidebarTitle pattern: "Recent Activity" | User-specified. Do not change without approval. |
 | Title pattern: "{Product} Recent Announcements" | User-specified. Do not change without approval. |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
 | Item | Priority | Reason | Dependency |
 |---|---|---|---|
 | ~35 external livepeer.studio/docs links to convert to relative paths | Medium | Separate cleanup task | None |
-| Blog component parity with Ghost BlogCard (images, full HTML scroll) | High | RSS script now outputs full HTML but component needs update to use dangerouslySetInnerHTML like BlogCard | Script fix done; component update pending |
+| Blog component parity with Ghost BlogCard (images, full HTML scroll) | High | `RSS script now outputs full HTML but component needs update to use dangerouslySetInnerHTML like BlogCard` | Script fix done; component update pending |
 | Composable reference data pages (blockchain contracts, multi-repo changelogs) | Medium | Next plan — user specified as follow-on work | SOLUTIONS-SOCIAL-DATA completion |
 | Livepeer Studio + Streamplace hero videos | Low | No suitable candidates found | Manual search |
 
----
+<CustomDivider />
 
 ### Dependencies & Downstream Effects
 
@@ -2052,7 +2052,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 - **GH Actions secrets**: DISCORD_BOT_TOKEN, YOUTUBE_API_KEY need configuring in GitHub repo secrets before workflows run on main
 - **docs.json**: 5 new nav entries added to Solutions groups
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -2062,13 +2062,13 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 | YouTubeVideoData with pipeline data | ✅ | After escapeForJSX fix for smart quotes |
 | RssBlogCardLayout with RSS data | ✅ | New component; BlogCard crashes with RSS data |
 | DiscordAnnouncements with forwarded messages | ✅ | After message_snapshots extraction + inline sanitiseHTML fix |
-| MarkdownEmbed GitHub README | ✅ | After dangerouslySetInnerHTML rewrite |
+| MarkdownEmbed GitHub README | ✅ | `After dangerouslySetInnerHTML rewrite` |
 | docs.json valid JSON | ✅ | All 5 pages wired |
 | All fetch scripts execute locally | ✅ | Via run-solutions-social-fetch.js |
 | Other 4 community pages | ⚠️ Not individually render-tested | Structure matches Daydream; components verified |
 | trending-topics Discord section | ✅ | ScrollBox + new pipeline data |
 
----
+<CustomDivider />
 
 ### Recommendations
 
@@ -2078,7 +2078,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 4. **Find and embed X tweets for remaining products** — Only Daydream has a tweet embed. Other products need a pinned/featured tweet ID.
 5. **Plan next initiative: Composable Reference Data Pages** — User specified blockchain contracts and multi-repo changelogs as follow-on work using same fetch→data→template→composable pattern.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -2099,7 +2099,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 | `operations/scripts/dispatch/content/data/run-solutions-social-fetch.js` | new | Manual pipeline runner |
 | `snippets/templates/pages/data-imports/social-data-page.mdx` | new | Community page template |
 | `snippets/components/integrators/blog/Data.jsx` | modified | RssBlogCard, RssBlogCardLayout, DiscordAnnouncements ScrollBox |
-| `snippets/components/integrators/embeds/DataEmbed.jsx` | modified | MarkdownEmbed dangerouslySetInnerHTML rewrite |
+| `snippets/components/integrators/embeds/DataEmbed.jsx` | modified | `MarkdownEmbed dangerouslySetInnerHTML rewrite` |
 | `snippets/components/integrators/video-data/VideoData.jsx` | modified | Row gap spacing |
 | `v2/solutions/daydream/community.mdx` | new | Daydream community page |
 | `v2/solutions/daydream/data/socials.jsx` | new | Daydream social links data |
@@ -2111,7 +2111,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 | `v2/solutions/livepeer-studio/data/socials.jsx` | new | Livepeer Studio social links data |
 | `v2/solutions/streamplace/community.mdx` | new | Streamplace community page |
 | `v2/solutions/streamplace/data/socials.jsx` | new | Streamplace social links data |
-| `v2/community/livepeer-community/trending-topics.mdx` | modified | ScrollBox Discord, Product Communities CardGroup |
+| `v2/community/connect/trending-topics.mdx` | modified | ScrollBox Discord, Product Communities CardGroup |
 | `docs.json` | modified | 5 community pages added to Solutions nav |
 | `docs-guide/repo-ops/secrets/solutions-secrets.mdx` | new | Pipeline secrets documentation |
 | `docs-guide/repo-ops/config/.env.example` | new | Full repo env var reference |
@@ -2121,7 +2121,7 @@ Built a full social data pipeline infrastructure bringing YouTube videos, blog p
 
 All planned deliverables exist on disk. Five community pages with social data feeds, six fetch scripts, three GH Actions workflows, central config, template, secrets documentation. Daydream page render-verified. Remaining 4 pages need individual render testing (recommendation 1).
 
----
+<CustomDivider />
 
 ## Contracts Canonical Documentation Cleanup — 2026-04-03
 
@@ -2132,7 +2132,7 @@ All planned deliverables exist on disk. Five community pages with social data fe
 
 The contracts planning surface was normalized so root `CONTRACTS/` now points to canonical framework material only, with recovery state under `CURRENT-STATE/` and archived material under `DEPRECATED/`. The canonical contracts workflow references were then rewritten against the actual implemented workflow and script boundaries on disk instead of the aspirational replacement design. No explicit `/thread` outcome was defined this session, so closeout is recorded against verified repo state only.
 
----
+<CustomDivider />
 
 ### Completed
 
@@ -2150,7 +2150,7 @@ The contracts planning surface was normalized so root `CONTRACTS/` now points to
 - Per-change backup batches were written under `workspace/reports/contracts/` before the documentation cleanup and sync passes.
 - Closeout verification confirmed the contracts artifacts exist on disk while the currently dirty git worktree is unrelated governance work outside this contracts session scope.
 
----
+<CustomDivider />
 
 ### Decisions Made
 
@@ -2160,7 +2160,7 @@ The contracts planning surface was normalized so root `CONTRACTS/` now points to
 | Treat the canonical contracts docs as current-state references, not target-state designs | The repo needs documentation of what the scripts actually do today |
 | Close this session against repo state, not active diff state | The contracts deliverables exist on disk, but the remaining open git changes are unrelated to this thread |
 
----
+<CustomDivider />
 
 ### Test / Validation State
 
@@ -2171,13 +2171,13 @@ The contracts planning surface was normalized so root `CONTRACTS/` now points to
 | Contracts planning tree exists on disk | ✅ | Verified under `Canonical/`, `CURRENT-STATE/`, and `DEPRECATED/` |
 | Current git worktree isolated to this contracts session | ❌ | Current uncommitted changes are unrelated governance/docs files outside the contracts scope |
 
----
+<CustomDivider />
 
 ### Deferred Items
 
 1. Propagate any wording or anchor changes from the updated canonical contracts docs into dependent packets only if a later thread explicitly needs those downstream references refreshed.
 
----
+<CustomDivider />
 
 ### Artifacts
 
@@ -2197,7 +2197,7 @@ The contracts planning surface was normalized so root `CONTRACTS/` now points to
 
 The contracts documentation cleanup and canonical workflow sync are present on disk and internally linked. The remaining dirty worktree at close time belongs to unrelated governance work and is not part of this completed contracts session.
 
----
+<CustomDivider />
 
 ## Claude Code VS Code Session Loss Recovery — 2026-03-27
 
@@ -2275,7 +2275,7 @@ All 83 Claude Code chat sessions were intact on disk but invisible in the VS Cod
 | `workspace/plan/active/FUCK_CLAUDE/session-loss-diagnosis-2026-03-27.md` | new | Session 2 technical report |
 | `workspace/plan/active/FUCK_CLAUDE/verification-report.md` | new | Critical claim verification against local evidence |
 
----
+<CustomDivider />
 
 ## Co-work Process Infrastructure — 2026-03-27
 
@@ -2387,7 +2387,7 @@ Session was triggered by /insights analysis showing 130+ frustrated signals and 
 | `docs-guide/policies/governance-index.mdx` | new | Canonical governance index — 9 governed surfaces |
 | `workspace/thread-outputs/research/mintlify-constraints-reference.md` | new | Top 10 Mintlify mistakes + decision tree |
 
----
+<CustomDivider />
 
 ## Chat Session Audit — 2026-03-27
 
@@ -2418,7 +2418,7 @@ User could not access past conversations from the VS Code sidebar. Audited all `
 | Report VS Code history browser as missing feature | Low | Platform limitation, not repo issue | Anthropic product feedback |
 | `workspace/thread-outputs/build/staleness-remediation-report.md` | new | Agent completion report — 4 frameworks fixed |
 
----
+<CustomDivider />
 
 ## lpd dev --scoped: DX improvements — 2026-03-27
 
@@ -2474,7 +2474,7 @@ Four UX problems with `lpd dev --scoped` were identified and fixed: no way to di
 | `docs-guide/tooling/lpd-cli.mdx` | Modified | New flags, fuzzy matching docs, updated examples, lastVerified 2026-03-27 |
 | `workspace/plan/active/TOOLING/lpd-command-reference.md` | Modified | All new flags and scope validation note |
 
----
+<CustomDivider />
 
 ## OSS Contributor Governance — Phase 1: State Assessment — 2026-03-28
 
@@ -2540,7 +2540,7 @@ The repo is being handed over to the OSS community and a human review team with 
 | `workspace/plan/active/OSS-OWNERLESS-REPO-GOVERNANCE/master-status.mdx` | Updated | Corrected counts, decisions, handover context |
 | `workspace/plan/active/OSS-OWNERLESS-REPO-GOVERNANCE/05_OSS-Governance-Framework/**` | Updated | Status headers added to all 8 planning input files |
 
----
+<CustomDivider />
 
 ## Propagate System — 2026-03-29
 
@@ -2616,7 +2616,7 @@ Built a 3-layer file rename/move propagation system to solve the problem of ~11,
 | `.claude/settings.json` | Modified | +PostToolUse Bash hook for move-detect |
 | `.claude/plans/merry-greeting-moth.md` | New | Implementation plan |
 
----
+<CustomDivider />
 
 ## Contract Address Verifier Widget — 2026-03-29
 
@@ -2682,7 +2682,7 @@ The original brief for a browser-based contract address verifier widget containe
 | `v2/about/resources/contract-addresses-canonical.mdx` | Modified | Added ContractVerifier import and widget placement |
 | `.claude/plans/spicy-dancing-hickey.md` | New | Full corrected build plan with 10 error fixes, 7 risks, 6 co-design gates |
 
----
+<CustomDivider />
 
 ## Mintlify Constraints Reference Audit — 2026-03-29
 
@@ -2767,7 +2767,7 @@ The single reference doc Claude reads before touching MDX/JSX had 2 wrong claims
 | `workspace/thread-outputs/research/mintlify-constraints-reference.md` | Rewritten (530+ lines) | Canonical constraints reference — 12 mistakes, 35 globals, 16 CSS vars, AEO section, headless-verified |
 | `.claude/plans/kind-leaping-stardust.md` | Plan | Full audit plan with findings tables and execution order |
 
----
+<CustomDivider />
 
 ## Contracts & Changelogs — Layout Session — 2026-03-30
 
@@ -2822,7 +2822,7 @@ Built the page structure for `contract-addresses-canonical.mdx` including Search
 | `snippets/components/wrappers/steps/Steps.jsx` | Component (extended) | Diamond terminator on last step |
 | `snippets/components/elements/text/Text.jsx` | Component (reworked) | CopyText — no code tag, copy inside bordered box |
 
----
+<CustomDivider />
 
 ## Styles Governance — Gap Analysis — 2026-03-30
 
@@ -2877,7 +2877,7 @@ None locked — 10 decisions (D1-D10) presented for human review.
 | `workspace/thread-outputs/research/styles-gap-analysis.md` | Research deliverable | 10-section gap analysis with quantified evidence, 10 decisions |
 | `.claude/plans/warm-giggling-whisper.md` | Plan | 5-phase plan: research → audit → design → mermaid → remediation |
 
----
+<CustomDivider />
 
 ## Historical Contract Tables — 2026-03-30
 
@@ -2985,7 +2985,7 @@ Researched every lever available for SEO and AEO dominance of contract address q
 | llms.txt | Config (modified) | Safety section with contract addresses at top |
 | sitemap-ai.xml | Config (modified) | Canonical page entry (URL now stale) |
 
----
+<CustomDivider />
 
 ## Contract Address Verifier Widget (continued) — 2026-03-30
 
@@ -3062,7 +3062,7 @@ Continued iteration on ContractVerifier widget after initial build (reported 202
 | `snippets/composables/pages/reference/livepeer-contract-addresses.mdx` | Modified | Updated "How this widget works" for dual-path verification |
 | `.claude/plans/spicy-dancing-hickey.md` | Existing | Original build plan (10 error corrections) |
 
----
+<CustomDivider />
 
 ## Historical Contract Tables — Session 2 Close — 2026-03-30
 
@@ -3179,7 +3179,7 @@ Separately investigated why docs.livepeer.org is serving stale content despite P
 | `origin/merge/solutions-to-docs-v2` | branch | 2 commits ahead of docs-v2, ready for PR |
 | `.claude/worktrees/solutions-merge` | worktree | Working tree for merge branch |
 
----
+<CustomDivider />
 
 ## Asset Pipeline Migration (#849) — 2026-03-30
 
@@ -3250,7 +3250,7 @@ The `sync-large-assets.yml` workflow had never run since creation due to bash he
 | `.claude/plans/vivid-whistling-aho.md` | plan | Full migration plan |
 | `operations/scripts/remediators/content/repair/migrate-assets-to-branch.js` | script | Enhanced with verification gate |
 
----
+<CustomDivider />
 
 ## lpd dev --scoped: v1-only tab detection — 2026-03-30
 
@@ -3289,7 +3289,7 @@ When `--scope-tab Delegators` was passed without `--scope-version`, the version 
 |---|---|---|
 | `tools/dev/generate-mint-dev-scope.js` | Modified | v1-only tab detection in `createScopedManifest` |
 
----
+<CustomDivider />
 
 ## Contract Address Verifier Widget (final) — 2026-03-30
 
@@ -3322,7 +3322,7 @@ Pipeline now populates `meta.keccakHash`, `meta.registeredInController`, `meta.e
 |---|---|---|
 | `snippets/components/integrators/feeds/ContractVerifier.jsx` | Modified | Fully data-driven — zero hardcoded addresses, hashes, or URLs |
 
----
+<CustomDivider />
 
 ## Changelog Pipeline — 2026-03-30
 
@@ -3431,7 +3431,7 @@ System was buried in swap (26.4 GB / 27.6 GB used) due to 24 orphaned `claude --
 ### Completed
 - Diagnosed: 24 claude sessions running, only 3 active (by JSONL mod time and CPU analysis)
 - Killed 20 stale claude processes + 7 orphaned MCP node children — swap dropped from 26.4 GB to 19.1 GB, free pages from 3,495 to 167,790
-- Built `reap-zombie-claude.sh`: kills idle orphans (>5 min old, <1% CPU), keeps 3 newest + any actively working
+- Built `reap-zombie-claude.sh`: kills idle orphans (&gt;5 min old, &lt;1% CPU), keeps 3 newest + any actively working
 - Built `com.alison.claude-reaper.plist`: launchd agent, 10-minute interval, RunAtLoad
 - Installed launchd agent — verified running (PID 57590)
 - Pushed both files to `DeveloperAlly/claude-code-survival-toolkit` on GitHub
@@ -3439,7 +3439,7 @@ System was buried in swap (26.4 GB / 27.6 GB used) due to 24 orphaned `claude --
 ### Decisions Made
 | Decision | Rationale |
 |---|---|
-| Keep 3 newest + >1% CPU as safety margin | Matches typical active session count; CPU threshold catches actively-working sessions |
+| Keep 3 newest + &gt;1% CPU as safety margin | Matches typical active session count; CPU threshold catches actively-working sessions |
 | 10-minute interval | Balances cleanup frequency vs overhead; matches observation that zombies accumulate over hours |
 | launchd over cron | macOS-native, handles sleep/wake, consistent with existing `claude-backup` plist |
 
@@ -3458,7 +3458,7 @@ System was buried in swap (26.4 GB / 27.6 GB used) due to 24 orphaned `claude --
 | `workspace/plan/active/FUCK_CLAUDE/scripts/com.alison.claude-reaper.plist` | Config | launchd agent — 10-minute interval |
 | `~/.claude/logs/reaper.log` | Log | Runtime log for the reaper |
 
----
+<CustomDivider />
 
 ## Thread Lifecycle Pipeline — 2026-03-31
 
@@ -3522,7 +3522,7 @@ Updated `/thread` SKILL.md from v1.2 to v1.3 with a properly structured 10-phase
 | `.claude/references/skills/exemplars.md` | reference | Thread exemplar updated with lifecycle patterns |
 | `workspace/plan/future/BACKLOG/registry.md` | backlog | BL-016 to BL-019 — audit, verify, document, cleanup skills |
 
----
+<CustomDivider />
 
 ## i18n Translation Archive & Cleanup — 2026-03-31
 
@@ -3542,7 +3542,7 @@ User noticed `v2/es/`, `v2/fr/`, `v2/cn/` language folders and asked what was sp
 |---|---|---|
 | `v2/_workspace/locale-page-archive/` | archive | Archived es/fr/cn translation stubs (24 files) |
 
----
+<CustomDivider />
 
 ## Contracts Pipeline — 2026-03-31
 
@@ -3600,7 +3600,7 @@ Built a complete contract address data pipeline. Script fetches from governor-sc
 | `v2/about/resources/livepeer-contract-addresses-data.json` | data | Companion JSON |
 | `snippets/composables/pages/reference/livepeer-contract-addresses.mdx` | composable | 4 consumers |
 
----
+<CustomDivider />
 
 ## Blockchain Contracts Pipeline — Production Readiness Audit — 2026-03-31
 
@@ -3646,7 +3646,7 @@ Production readiness audit of the entire blockchain contracts pipeline. Three Ex
 |---|---|
 | D2 resolved: Option A (scan-fix for hardcoded addresses) | Verified `scanAndFix()` regex covers all v2/ MDX. No component complexity needed |
 | D3 resolved: Keep resources/references page | Audit confirmed it IS in docs.json nav (line 3202), not 404. Serves general audience context |
-| OG images stay on working branch | All under 1MB threshold. sync-large-assets workflow handles >1MB automatically. No branch rewrite needed |
+| OG images stay on working branch | All under 1MB threshold. sync-large-assets workflow handles &gt;1MB automatically. No branch rewrite needed |
 
 ### Deferred Items
 
@@ -3812,7 +3812,7 @@ The v2 `Delegators` rename is now merged on `docs-v2-dev` and validated as a pat
 | `operations/tests/run-pr-checks.js` | Test runner (modified) | Bootstraps dependency roots, passes env to child checks, and fixes stale validator paths |
 | `operations/scripts/integrators/content/language-translation/lib/mdx-parser.js` | Utility (modified) | Resolves ESM parser dependencies through repo-owned installs |
 
----
+<CustomDivider />
 
 ## GitHub Actions Governance Phases 0-5 — 2026-04-01
 
@@ -3876,7 +3876,7 @@ Designed and implemented a governance framework for all 45 GitHub Actions workfl
 | `.github/workspace/actions-library/generators/maintenance/generate-action-docs.yml` | Workflow (staged) | P4 auto-regeneration |
 | `.github/workspace/actions-library/validators/governance/check-action-naming.yml` | Workflow (staged) | P3 naming convention validator |
 
----
+<CustomDivider />
 
 ## Contracts Surface Redesign and Local Merge — 2026-04-03
 
@@ -3950,7 +3950,7 @@ The contracts redesign is now merged into the local `docs-v2-dev` branch and the
 | `operations/tests/unit/contracts-view-model.test.js` | Test | Focused unit coverage for shared contracts shaping logic |
 | `workspace/plan/active/CONTRACTS/Canonical/workflow-data.mdx` | Internal reference | End-to-end documentation of the redesign data path and rationale |
 
----
+<CustomDivider />
 
 ## Contracts Surface Migration to docs-v2 — 2026-04-03
 
@@ -4022,7 +4022,7 @@ The contracts surface migration was completed in an isolated `docs-v2` worktree 
 | `workspace/plan/active/_Project-Management_/project-state.md` | modified | Completed output state updated with the new PR surface |
 | `workspace/plan/future/BACKLOG/registry.md` | modified | Governance follow-up items captured for next sessions |
 
----
+<CustomDivider />
 
 ## Snippets Assets `/site` Migration Verification — 2026-04-05
 
@@ -4102,7 +4102,7 @@ The `/site` migration was verified end to end against the repo rather than the c
 | `workspace/plan/active/_Project-Management_/project-state.md` | modified | Watcher flag updated with the current verification blockers |
 | `workspace/plan/future/BACKLOG/registry.md` | modified | Follow-up backlog items for the concrete verification blockers |
 
----
+<CustomDivider />
 
 ## Contracts Local Render Recovery and Data Surface Audit — 2026-04-03
 
@@ -4165,7 +4165,7 @@ The local contracts routes were restored and render-verified in `docs-v2-dev`, a
 | `workspace/thread-outputs/sessions/session-log.txt` | modified | Session outcome log entry |
 | `workspace/plan/active/_Project-Management_/project-state.md` | modified | Watcher flag updated for the current local contracts drift |
 
----
+<CustomDivider />
 
 ## Contracts Workflow Verification Copy — 2026-04-03
 
@@ -4336,7 +4336,7 @@ Began systematic snippets/ folder cleanup. Completed root-level design (target s
 | `tools/dev/script-index.md` | created | Regenerated script index for the governed `tools/dev` root |
 | `tools/lib/script-index.md` | modified | Regenerated script index for the namespaced `tools/lib` layout |
 
----
+<CustomDivider />
 
 ## Governance Pipeline Design + Implementation Plan — 2026-04-05
 
@@ -4395,7 +4395,7 @@ Designed the governance enforcement system for an ownerless documentation repo f
 | `.github/workspace/phase2/locked-pipelines.md` | Product | Product capabilities, 6 critical gaps, full concern mapping |
 | `.claude/plans/soft-gliding-falcon.md` | Plan | 7-phase implementation plan with co-design checkpoints |
 
----
+<CustomDivider />
 
 ## About, Gateways, and Delegators IA Route Alignment — 2026-04-05
 
@@ -4470,7 +4470,7 @@ The About, Gateways, and Delegators v2 surfaces now match their intended on-disk
 | `llms.txt` | modified | Refreshed AI-first route inventory |
 | `sitemap-ai.xml` | modified | Refreshed AI sitemap entries for the moved routes |
 
----
+<CustomDivider />
 
 ## Production Governance Cutover — 2026-04-06
 
@@ -4542,7 +4542,7 @@ The repo’s production governance model now runs on one active control plane, w
 | `docs-guide/repo-ops/config/repo-governance-map.mdx` | generated doc | Live repo governance map updated to the production architecture |
 | `workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md` | new report | Final ownerless-handover summary of canonical governance/runtime surfaces and repair paths |
 
----
+<CustomDivider />
 
 ## Delegators Canonical IA Rebuild — 2026-04-06
 
@@ -4619,7 +4619,7 @@ The outcome is only partially met because the live Delegators experience is rebu
 | `operations/scripts/generators/governance/catalogs/generate-snippets-registry.js` | modified | MDX-safe snippets metadata sentinel contract |
 | `snippets/data/references/glossaryBadges.jsx` | new | Shared glossary badge mapping decoupled from `v2/solutions` |
 
----
+<CustomDivider />
 
 ## Gateway Single-Click Deployment Path Migration — 2026-04-06
 
@@ -4685,7 +4685,7 @@ The gateway single-click deployment page now lives at the canonical deployment-d
 | `v2/gateways/index.mdx` | modified | Generated gateways index refreshed to surface the new route |
 | `v2/index.mdx` | modified | Generated root index refreshed to surface the new route |
 
----
+<CustomDivider />
 
 ## Insights Enforcement Hooks — 2026-04-07
 
@@ -4740,7 +4740,7 @@ Built three new governance hooks to mechanically enforce behaviour that CLAUDE.m
 | `ai-tools/ai-skills/thread/SKILL.md` | modified | Outcome file write instruction |
 | `.claude/plans/humming-swimming-cake.md` | plan | Full design document |
 
----
+<CustomDivider />
 
 ## PR/Issue Triage & Pipeline Governance — 2026-04-07
 
@@ -4834,7 +4834,7 @@ The mint dev site was returning 404 errors because 158 zombie node processes fro
 | `operations/scripts/dispatch/governance/pre-tool-guard.js` | modified | Regex fix + Plan agent pre-approved |
 | `.claude/plans/wobbly-launching-sutherland.md` | plan | Full diagnostic and implementation plan |
 
----
+<CustomDivider />
 
 ## Canonical Consolidation + Gap Remediation + Final Gap Closure -- 2026-04-07 to 2026-04-08
 
@@ -4923,7 +4923,7 @@ Built a 3-layer governance spine (published in docs-guide/, enforcement in opera
 | */GOVERNANCE.md (18 files) | markers | Folder governance markers |
 | .claude/plans/spicy-percolating-conway.md | plan | Full 3-phase plan with architecture diagrams |
 
----
+<CustomDivider />
 
 ## Agent Creation Skills — 2026-04-08
 
@@ -4969,3 +4969,58 @@ The repo had mature governance frameworks for components (7-tag JSDoc), scripts 
 | operations/scripts/generators/components/library/generate-component-snippets.js | script | VS Code snippet generator — reads component-registry.json, writes .vscode/components.code-snippets |
 | operations/governance/config/generated-artifacts.json | config | Updated — .vscode/components.code-snippets registered as generated artifact |
 | .claude/plans/zany-petting-wind.md | plan | Full implementation plan with research findings and critical file references |
+
+## Docs-v2-dev Into Docs-v2 Merge PR — 2026-04-09
+
+**Plans**: `/Users/alisonhaire/.claude/plans/soft-gliding-falcon.md`
+**Scope**: Create a dedicated merge-worktree PR from `docs-v2-dev` into `docs-v2`, repair the broken `Links.jsx`/import surface, and document the remaining validation state.
+**Outcome**: Partially met
+
+### Summary
+A dedicated merge worktree was used to build and push a conflict-resolved merge branch from `docs-v2-dev` into `docs-v2`. The session repaired the merge-branch `Links.jsx` surface, canonicalized `BlinkingIcon`, `TipWithArrow`, and `CustomCallout` imports on `docs-v2-dev`, carried those import fixes into the merge worktree, and opened draft PR `#876`. The merge PR exists and is rebased onto current `docs-v2`, but final merge readiness is still blocked on a clean rerun of browser validation and source-branch PR checks after the last branch update.
+
+### Completed
+- **Merge branch orchestration**: Created and maintained the dedicated merge worktree at `/Users/alisonhaire/Documents/Livepeer/Docs-v2-merge-20260409`, resolved merge conflicts with `docs-v2-dev` treated as source of truth, and pushed the refreshed merge branch behind PR `#876`.
+- **Runtime/import repair**: Restored the consolidation export form in `snippets/components/elements/links/Links.jsx` on both the source branch and merge branch, then replaced wrong-path imports so `BlinkingIcon` comes from `Icons.jsx` and `TipWithArrow` / `CustomCallout` come from `Callouts.jsx`.
+- **PR preparation**: Opened draft PR `#876` from `codex/20260409-docs-v2-dev-into-docs-v2-import-fixes` into `docs-v2` and updated the merge branch to include latest `docs-v2` content.
+
+### Decisions Made
+| Decision | Rationale |
+|---|---|
+| `docs-v2-dev` remains the source of truth for conflict resolution | User explicitly set the branch contract for this merge |
+| `Links.jsx` was restored to the consolidation re-export form on the merge surface | The alias-export version produced real browser/runtime failures (`BaseBlinkingIcon is not defined`) |
+| Symbol imports were canonicalized on the pages/templates instead of continuing to rely on `Links.jsx` as a symbol aggregator | Mint repeatedly reported unresolved exports for `BlinkingIcon`, `TipWithArrow`, and `CustomCallout` when pages imported those symbols from `Links.jsx` |
+
+### Deferred Items
+| Item | Priority | Reason | Dependency |
+|---|---|---|---|
+| Rerun final scoped browser validation on PR `#876` after the last merge-branch update | P0 | The branch changed again after the last scoped browser pass | Merge worktree branch `codex/20260409-docs-v2-dev-into-docs-v2-import-fixes` |
+| Rerun `node operations/tests/run-pr-checks.js --base-ref docs-v2` on `docs-v2-dev` and capture the terminal failure set cleanly | P0 | Earlier runs showed broad style/copy debt, but the last closeout state was not captured as a finished final report | Source branch `docs-v2-dev` |
+| Close superseded PRs `#874` and `#875` | P2 | `#876` is the current draft review surface | Human review/cleanup |
+
+### Dependencies & Downstream Effects
+- **PR `#876`**: The current review surface is `https://github.com/livepeer/docs/pull/876`; older PRs `#874` and `#875` are now superseded.
+- **Source branch**: `docs-v2-dev` now contains commit `2ad9bb5d0 fix import issues`, which is the source commit for the canonical import-path repair.
+- **Merge branch**: `codex/20260409-docs-v2-dev-into-docs-v2-import-fixes` now includes merge commit `37d39ce80 merge: update import-fix branch with docs-v2`.
+
+### Test / Validation State
+| Check | Result | Notes |
+|---|---|---|
+| `git status` in `/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev` | Pass | Clean at session close |
+| `git status` in `/Users/alisonhaire/Documents/Livepeer/Docs-v2-merge-20260409` | Pass | Clean at session close |
+| Scoped `lpd dev` browser pass on merge worktree | Partial | Portal-family routes returned `200`, and `BaseBlinkingIcon` runtime error was cleared before the final PR branch refresh; a fresh post-refresh rerun is still required |
+| `mint validate` after import rewrites on `docs-v2-dev` | Incomplete | Started but no terminal success/failure record was captured in this session |
+| `node operations/tests/run-pr-checks.js --base-ref docs-v2` on `docs-v2-dev` | Failing evidence observed | Earlier runs showed broad style/copy/MDX-safe debt and generated report artifacts; a clean final rerun/report is still required |
+
+### Recommendations
+1. **Rerun scoped browser validation on PR `#876` immediately** — Confirms the post-rebase merge branch still renders the fixed portal/import surface before review proceeds.
+2. **Rerun `docs-v2-dev` PR checks to completion and record the failing lanes** — Separates remaining repo debt from merge-specific issues and gives the PR an accurate review note.
+3. **Close PRs `#874` and `#875` after confirming `#876` is the active review surface** — Prevents reviewers from landing on superseded merge attempts.
+
+### Artifacts
+| File | Type | Description |
+|---|---|---|
+| `snippets/components/elements/links/Links.jsx` | component | Restored to the consolidation export form on both source and merge surfaces |
+| `v2/**` + `snippets/templates/**` import-touch set | docs | Canonicalized `BlinkingIcon`, `TipWithArrow`, and `CustomCallout` import paths |
+| `/Users/alisonhaire/Documents/Livepeer/Docs-v2-merge-20260409` | worktree | Dedicated merge worktree used for the branch-promotion PR |
+| `https://github.com/livepeer/docs/pull/876` | pull request | Current draft merge PR from the dedicated merge branch |

@@ -1,0 +1,723 @@
+---
+title: "Per-Page Quality Checks – Developers Tab Canonical"
+sidebarTitle: "Developers Tab Checks"
+description: "Per-page quality gate for the Developers tab. Every page must pass these checks before it ships."
+pageType: "reference"
+audience: "developer"
+purpose: "reference"
+complexity: "intermediate"
+lifecycleStage: "operate"
+veracityStatus: "verified"
+keywords: ["developers tab checks", "per-page quality gate", "developer register", "builder register", "page review canonical", "code-first checks"]
+---
+
+# Per-Page Quality Checks – Developers Tab Canonical Reference
+
+Everything a Developers tab page must pass before it ships. Organised by category, each with:
+- **What to check** (concrete items)
+- **What success looks like** (the bar)
+- **Frameworks, rules and tools that help** (where to look, what to run)
+
+**Developers tab default audiences**: `developer` (code-first, deep-protocol, BYOC, OSS contributor) and `builder` (integration-focused, API/SDK consumer, hosted-gateway path). Per-page brief assigns one of these as primary.
+
+**Developers tab PAGE_TYPE mix expected**: `instruction`, `tutorial`, `reference` are dominant. `concept` and `guide` are moderate. `navigation` (portal, navigator). `resource` (compendium, knowledge-hub).
+
+Sources: `plan-canonical.md`, `content-pipeline-canonical.md`, `design-canonical.mdx`, `Frameworks.mdx`, `component-layout-decisions.mdx`, `voice-rules.md`, `section-naming.md`, `veracity.md`, `page-taxonomy-framework.mdx`, `v2-folder-governance.mdx`, `quality-gates.mdx`, `prompt-input-spec.md`, `docs-review-prompt-tiers.md`, `v2/developers/_design/developers-IA.md`.
+
+---
+
+## 1. FRONTMATTER & TAXONOMY
+
+**What this catches**: Wrong classification, missing fields, deprecated enum values, pages that confuse the pipeline and break downstream systems.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 1.1 | All **10 required frontmatter fields** present | `title`, `sidebarTitle`, `description`, `pageType`, `audience`, `purpose`, `complexity`, `lifecycleStage`, `keywords`, OG image block – none missing, none empty |
+| 1.2 | `pageType` uses **7-type canonical schema** | One of: `concept`, `tutorial`, `guide`, `instruction`, `navigation`, `reference`, `resource`. No deprecated 12-type values (`landing`, `overview`, `how_to`, `quickstart`, `faq`, `troubleshooting`, `changelog`, `glossary`). When migrating a deprecated value, also set `pageVariant` per the §1.1 migration table in Frameworks.mdx (e.g. `quickstart` → `pageType: instruction` + `pageVariant: quickstart`; `faq` → `pageType: reference` + `pageVariant: compendium`; `glossary` → `pageType: reference` + `pageVariant: compendium`; `troubleshooting` → `pageType: instruction` + `pageVariant: troubleshooting`; `changelog` → `pageType: reference` + `pageVariant: changelog`) |
+| 1.3 | `pageVariant` valid if present | One of: `overview`, `specification`, `compendium`, `changelog`, `knowledge-hub`, `quickstart`, `troubleshooting`. `overview` is a variant, never a pageType |
+| 1.4 | `purpose` uses **15-value canonical set** | One of: `orient`, `explain`, `learn`, `choose`, `evaluate`, `start`, `build`, `configure`, `operate`, `troubleshoot`, `verify`, `integrate`, `optimise`, `reference`, `update`. No deprecated aliases. Developers tab purpose mix skews `start`, `build`, `integrate`, `configure`, `reference`, `troubleshoot` |
+| 1.5 | `audience` uses **7-token set** | One of: `founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`. **Developers tab default: `developer` or `builder`** per page brief. Use `developer` for code-first, deep-protocol, BYOC, OSS pages. Use `builder` for integration-focused, API/SDK, hosted-gateway pages. Not old values like `general`, `everyone`, `internal`, `platform-builder`, `gateway-operator` |
+| 1.6 | `complexity` single canonical value | One of: `beginner`, `intermediate`, `advanced`. Developers tab quickstarts skew `beginner`; build pages skew `intermediate`; BYOC and protocol pages skew `advanced` |
+| 1.7 | `lifecycleStage` single canonical value | One of: `discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise`. Developers tab skews `setup`, `build`, `operate`, `troubleshoot` |
+| 1.8 | `veracityStatus` present and honest | One of: `verified`, `unverified`, `stale`. Default for AI-generated or unreviewed content is `unverified`. `verified` only if ALL sections pass their information-type veracity standard. `status: current` requires `veracityStatus: verified` AND zero `{/* REVIEW: */}` flags |
+| 1.9 | `industry` array valid if present | Max 2 entries from: `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer`. First entry dominates. Developers tab skews `technical`, `AI`, `livepeer` |
+| 1.10 | `niche` array valid if present | From: `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure` |
+| 1.11 | `description` well-formed | Subject-first, ≤160 chars, no self-reference ("this page"), UK English |
+| 1.12 | OG image block complete | All 5 OG fields present with correct fallback path |
+| 1.13 | `keywords` field quality | Keywords are specific, relevant, and searcher-intent-aligned. Not generic. Each keyword must be a term a target reader would actually search for. Bad: `"livepeer", "developer"`. Good: `"livepeer ai api integration", "byoc container deployment", "comfystream realtime ai pipeline", "livepeer studio sdk typescript"`. Cross-reference `v2/developers/resources/compendium/glossary.mdx` |
+| 1.14 | **Developer/builder split honoured** | If page uses `developer` register but solves a `builder` problem (or vice versa), reclassify. Developer = code-first, deep-protocol, BYOC, OSS. Builder = integration-focused, API/SDK consumer, hosted-gateway. Mismatch is a frontmatter failure, not a voice failure |
+
+### What success looks like
+
+Every Developers page classifiable by a cold-start agent that produces the same taxonomy a human would. Zero `missing-fields` pages site-wide. No deprecated enum values surviving in any frontmatter. Every developer/builder split is correct.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Canonical enum index | `workspace/plan/active/CONTENT-WRITING/framework-index-canonical.md` | Master list of all locked enums |
+| Frameworks.mdx | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | §1 Taxonomy Frameworks – full tables |
+| Developers IA design | `v2/developers/_design/developers-IA.md` | Developers tab IA, personas, page inventory |
+| Page taxonomy framework | `docs-guide/frameworks/page-taxonomy-framework.mdx` | Frontmatter field schema |
+| Frontmatter taxonomy update | `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md` | Deprecated alias migration map |
+| Frontmatter validator | `tools/config/frontmatter-taxonomy.js` | Automated check |
+
+---
+
+## 2. VOICE & COPY
+
+**What this catches**: Generic AI slop, wrong register for the audience, US English, hedging, filler, self-referential openers, marketing language adjacent to technical content, prose explanations of code, missing error-state coverage.
+
+### Universal checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 2.1 | **UK English throughout** | No US spellings: optimize→optimise, behavior→behaviour, color→colour, center→centre, labeled→labelled, canceled→cancelled, traveling→travelling, -ize→-ise (where both standard). Full table at the bottom of `voice-rules.md` |
+| 2.2 | **Zero banned words** | None of: `effectively`, `essentially`, `basically`, `meaningful`, `significant`, `real` (as intensifier), `various`, `several`, `obviously`, `clearly` |
+| 2.3 | **Zero banned phrases** | None of: "This section covers", "This page covers/explains/walks you through", "Understanding X is essential", "It is important to note", "As mentioned above", "and so on"/"etc.", "rather than", "what it takes", "it should be noted", "not just X", "can generate"/"may produce" in value claims, "The reason is straightforward", "among other factors", "low but not zero", "once X is stable", "depends on various" |
+| 2.4 | **Zero banned constructions** | No `not [X]` in value statements. No unresolved `if [condition]` in body prose (exception: code blocks, exact config conditions). No `This page [verb]` self-reference. No `can/may [verb]` in value claims |
+| 2.5 | **Opening order correct** | Value or outcome before mechanism. Fact before caveat. Reader benefit before system description. Introduction opens with subject, not caveat or self-reference |
+| 2.6 | **Paragraph discipline** | One paragraph = one job. Lead sentence states the fact. Final sentence ends on fact, number, or next step – never a hedge |
+| 2.7 | **Audience register correct** | Voice matches the page's `audience` token. **Developers tab uses both `developer` and `builder` registers** per page brief. See per-audience rules below |
+| 2.8 | **Per-audience prohibited phrases absent** | Each audience has specific prohibited phrases. Developer: no "with just a few lines", "the SDK makes it simple", "easily integrated with", "don't worry about the details", "as you may know". Builder: no "as you know, Livepeer is", "built on blockchain technology", any opening that explains the network before the integration value |
+| 2.9 | **No passive value statements** | Every value claim is quantified or concrete. "Cost-effective" → "$0.019/megapixel for text-to-image". "Fast" → "sub-3-second latency at p50" |
+| 2.10 | **No hedging openers** | Page does not open with a caveat, disclaimer, or conditional. Goes straight to the point |
+| 2.11 | **Terminology locked and consistent** | Uses terms from the locked terminology set (BYOC, NaaP, LIP-92, ComfyStream, PyTrickle etc.). No deprecated or conflicted terms |
+| 2.12 | **No em-dashes** | Zero em-dashes in MDX content. Use comma, semicolon, colon, or rewrite the sentence. Hook enforcement active |
+| 2.13 | **Entity-led voice throughout** | Every paragraph starts with a system fact, API behaviour, or reader outcome. Never "we", "our", "you will learn", "in this section we explore". Subject-first, always |
+| 2.14 | **No hedging verbs in value claims** | No "can help you", "allows you to", "enables you to", "helps you", "may provide". Assert directly: "the SDK returns a base64 image" not "the SDK can return a base64 image" |
+| 2.15 | **Description field not self-referential** | Frontmatter `description` does not start with "This page/section/document describes/explains/outlines/covers/walks". Lead with the subject |
+| 2.16 | **Deprecated terms absent** | Zero instances of: "Broadcaster" (use Gateway), "Pool worker" (use Pool node), "Combined mode" (use Dual mode), "Hybrid" (use Dual mode), "Transcoder" as synonym for Orchestrator |
+| 2.17 | **Universal terms consistent** | Orchestrator, Gateway, Delegator, LPT, Transcoding, Staking match `universal-terms.md` canonical definitions |
+| 2.18 | **Spell check passes** | cspell against `tools/config/cspell.json` dictionary. Zero unknown words (add to dictionary if legitimate Livepeer term) |
+| 2.19 | **Terms match TERMINOLOGY-COLLATE canonical** | Every Livepeer-specific term matches definition in `TERMINOLOGY-COLLATE/consolidated/glossary-*.md` |
+| 2.20 | **Per-tab terminology correct** | Uses terms appropriate to its tab per `TERMINOLOGY-COLLATE/per-tab/glossary-developers.md` |
+| 2.21 | **First use of specialised term defined or linked** | Every Livepeer-specific term defined on first use. Reader never encounters undefined term. For developer-register pages: protocol terms (round, active set, ticket) may be referenced terser since the audience has read-the-source competence |
+| 2.22 | **Terminology lock respected** | All locked terms used exactly as defined |
+
+### Developer-register checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 2.D1 | **Code-first opening** (developer-register, instruction/tutorial pages) | For `instruction` and `tutorial` pages, the first content beneath orientation is a working code sample, not prose. Prose explains the code, not the other way round |
+| 2.D2 | **Function/API/method named in prose has code example or GitHub link** | Every function, API endpoint, SDK method, or CLI flag named in prose either has an inline code example or a link to its GitHub source/release. Naming a function without showing it is a fail |
+| 2.D3 | **Versions stated are current** | Every version number (go-livepeer, ai-runner, ComfyStream, SDK npm/PyPI/Go module) is the current release at time of write. State the version explicitly. No "latest" without a number |
+| 2.D4 | **Error states and edge cases in main content** | Error states, edge cases, and failure modes belong in the main content, not buried in `<Note>` at the end. A developer page that hides error handling fails this check |
+| 2.D5 | **No prose explanations of self-evident code** | Code that speaks for itself does not get a prose paragraph restating it. Comment in the code, or move on |
+| 2.D6 | **No marketing language adjacent to technical content** | "Powerful AI pipeline" adjacent to `import livepeer` is a fail. Strip marketing tone. Technical content earns trust through precision, not adjectives |
+| 2.D7 | **`<Note>` and `<Info>` not used for primary content** | If content belongs in the main explanation, do not hide it in a Note or Info block. These components are for adjacent context, not core information |
+
+### Builder-register checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 2.B1 | **Integration value before network architecture** | Page leads with what the integration gives the builder's product or users – not what Livepeer is or how the network works |
+| 2.B2 | **Exact API endpoint or SDK method named first** | State the exact API endpoint or SDK method first, then the context. Not "you can use the Livepeer SDK to..." but "`livepeer.generate.textToImage()` returns..." |
+| 2.B3 | **Working code in most-likely language** | Show working code in the most-likely language for the builder audience: JS/TS first, then Python, then Go. SDK examples preferred over raw curl unless the page is REST-specific |
+| 2.B4 | **Full request/response cycle shown** | Show the full request/response cycle, not just "call this endpoint". Include authentication, expected response shape, error response shape |
+| 2.B5 | **Prerequisites stated explicitly** | Which API keys, which SDK version, which plan or tier applies – state explicitly at the top |
+| 2.B6 | **No node-operator or gateway terminology without translation** | Builder pages do not use orchestrator/gateway/round terminology without translating to integration implications. The builder is shipping a product, not running infrastructure |
+| 2.B7 | **No web3 mechanics without framing** | Gas, transactions, on-chain interactions are not assumed knowledge. If the builder must understand them, the page frames why and links to a primer |
+| 2.B8 | **No mixing protocol mechanics with integration steps** | "How the protocol works" and "how to integrate" are separate pages. A builder integration page that lapses into protocol explanation is a SPLIT candidate |
+
+### What success looks like
+
+Read any Developers paragraph aloud: developer-register pages sound like a senior engineer wrote notes for another senior engineer. Builder-register pages sound like a staff engineer wrote a working integration guide for another staff engineer. No sentence reads like marketing. Code is primary; prose is supporting.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Voice rules (full) | `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | Per-audience voice extensions (7 audiences, locked) |
+| Frameworks.mdx | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | §2 + §3 universal + per-audience rules |
+| Banned words file | `tools/lib/copy-governance/banned-words.txt` | Automated check source |
+| Banned phrases file | `tools/lib/copy-governance/banned-phrases.txt` | Automated check source |
+| UK English table | `voice-rules.md` (bottom) and Frameworks.mdx §2.3 | US→UK corrections |
+| Style language profile | `tools/config/style-language-profile-en-gb.json` | Machine-readable GB English enforcement |
+| Spell check dictionary | `tools/config/cspell.json` | Custom dictionary for protocol-specific terms |
+| Terminology tracking | `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md` | Locked + disputed terms |
+| Terminology master glossary | `TERMINOLOGY-COLLATE/consolidated/glossary-a-m.md` + `glossary-n-z.md` | 224KB canonical definitions |
+| Terminology per-tab | `TERMINOLOGY-COLLATE/per-tab/glossary-developers.md` | Developer/builder terminology |
+| Universal terms | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/universal-terms.md` | Cross-tab canonical definitions |
+| Deprecated terms | `CONTENT-WRITING/Prompts/.../prompt-guides-guards-resources/deprecated-terms.md` | Deprecated role terms |
+| UK English homogeniser | `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` | Skill for automated UK English |
+| docs-copy skill (8 sub-skills) | `ai-tools/ai-skills/docs-copy/` | L0-L8 copy quality framework |
+| Prompt testing protocol | `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md` | Voice testing methodology |
+
+---
+
+## 3. SECTION NAMING & HEADINGS
+
+**What this catches**: Generic, vague, or unstable headings that fail to communicate what a section actually contains. Marketing headings on developer pages. Tutorial headings that hide the step.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 3.1 | Every heading scores **≥20/25** on the naming rubric | 5 dimensions × 5 points: Precision, Depth, Stability, Clarity, Conciseness. **EXEMPT: `Related Pages` heading – do not score, do not include in the Heading Score Table, do not reference in check 3.2 or 3.7. Approved structural element. Treat as invisible to all heading checks.** |
+| 3.2 | No banned or weak standalone heading terms | Three tiers per Frameworks.mdx §4.1: **Banned**: `Basics`, `Notes`, `How It Works`, `See Also`, `Conclusion`, `What's Next`. **Avoid**: `Overview`, `Details`, `Information`, `Introduction`, `Summary`, `Options`, `Background`, `Next Steps`, `Further Reading`. **OK**: `Types`, `Modes`, `Profiles`, `Prerequisites`, `Configuration`, `Setup`, `Resources`, `Related`. Banned terms also apply to heading rename suggestions. **EXEMPT: `Related Pages`** |
+| 3.3 | No literal contrast labels | No `X vs Y` headings – name the governing concept instead. "Studio API vs Gateway API" → "API Access Tiers" |
+| 3.4 | Domain-anchor rule applied | Heading includes the domain noun when needed to be interpretable in isolation |
+| 3.5 | Heading names the concept, not examples | "AI Pipeline Endpoints" not "text-to-image, image-to-video, audio-to-text" |
+| 3.6 | Title well-formed | 1–3 words, concept-derived, no banned forms |
+| 3.7 | Sounds like an expert editorial choice | Would a senior technical editor choose this heading? |
+| 3.8 | **Per-pageType naming style applied** | `reference` pages use literal/findability naming (e.g. "Authentication", "Rate Limits"). `instruction`/`tutorial` pages use task-oriented naming (e.g. "Make Your First Inference Call"). `concept` pages use governing-concept naming. `navigation` pages use map language |
+| 3.9 | **Per-audience register in headings** | `developer` headings use specialised technical terms (e.g. "FrameProcessor Pattern", "PyTrickle StreamServer"). `builder` headings use integration-outcome terms (e.g. "Authenticate Your Requests", "Handle Rate Limits"). Per `section-naming.md` per-audience guidance |
+| 3.10 | **Domain-anchor rule applied** | Heading includes the domain noun when needed to be interpretable in isolation |
+
+### Scoring rubric (per heading)
+
+| Dimension | 5 (best) | 1 (worst) |
+|-----------|----------|-----------|
+| **Precision** | Names the exact concept | Could mean anything |
+| **Depth** | Signals the intellectual level | Surface-level label |
+| **Stability** | Survives content changes | Breaks if examples change |
+| **Clarity** | Instantly understood by target audience | Requires reading the section to understand |
+| **Conciseness** | Minimal words, maximum signal | Wordy or padded |
+
+### What success looks like
+
+A reader scanning only headings on a Developers page builds an accurate plan of what they will do or look up. Site-wide: all headings ≥20/25.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Section naming rubric | Frameworks.mdx §4.1 | Full scoring methodology |
+| Section naming rubric (standalone) | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | **LOCKED** naming rubric |
+| Naming research (687 lines) | `v2/_workspace/research/content-naming.md` | Domain-anchor rule, anti-patterns, per-pageType guidance |
+| Published naming conventions | `docs-guide/standards/naming-conventions.mdx` | Published standard |
+| Component naming check | `operations/scripts/validators/components/library/check-naming-conventions.js` | Automated naming validator |
+| Prompt input spec | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | Title rules for layout pass |
+
+---
+
+## 4. PAGE STRUCTURE & CONTENT ARCHITECTURE
+
+**What this catches**: Pages trying to do too many things, broken journeys, missing handoffs, content that doesn't serve the reader's actual job. Developers-specific: code samples not testable, error states absent, version drift, mixed developer/builder scope.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 4.1 | **One purpose, one audience, one job** | Page serves exactly one reader doing exactly one thing. Developer/builder mismatch is a frontmatter/scope failure, not a copy fix |
+| 4.2 | **Purpose statement test passes** | Can state: "This page lets the [developer or builder] [concrete action]." Concrete action = make a call, deploy a container, set up auth, integrate webhooks, etc. |
+| 4.3 | **PREV_PAGE / NEXT_PAGE adjacency correct** | Reader arriving from previous page has the knowledge needed. Reader leaving to next page knows why. No knowledge gaps. Quickstart → build → guide adjacency must hold |
+| 4.4 | **No dead ends** | Every page has a clear next step – next quickstart, next build chapter, related guide, or graduation to Gateways/Solutions |
+| 4.5 | **Prerequisites stated or linked** | All prerequisite knowledge explicitly stated at the top: API keys required, SDK version, language runtime, hardware (e.g. CUDA for ComfyStream), credentials |
+| 4.6 | **Out-of-scope is clear** | What this page does NOT cover is understood. Per Notion IA Proposal: video streaming aggregator pages link to Solutions platforms (Studio, Streamplace) rather than recreate content |
+| 4.7 | **Information type per section is correct** | Each section's information type matches the permitted types for the page's `purpose` (see Purpose→Information Type mapping in Frameworks.mdx §1.6). Developers tab skews `procedural`, `technical`, `factual`, `analytical` |
+| 4.8 | **No content duplication from adjacent sections** | Content is not repeated from neighbouring pages. SDK reference belongs in resources/reference; build pages link, do not copy |
+| 4.9 | **Section orientation page present** (section-level check) | Every section (Concepts, Get Started, Build, Guides, Opportunities, Resources) has an entry page that orients the reader |
+| 4.10 | **Cross-tab links at journey intersections** | At least 3 cross-tab links per page where reader graduations are expected (to Gateways for self-hosted, Solutions for managed video, About for protocol context) |
+| 4.11 | **Page answers its question COMPLETELY (Discord test)** | Can you link this ONE page on Discord and know the person gets a complete answer without needing another page? |
+| 4.12 | **Page size appropriate for scope** | Concept/guide pages: minimum 5KB substantive content. Pages under 2KB are stubs that should not be in published nav. Gold standard pages are 10-60KB |
+| 4.13 | **No TODO/REVIEW comments without tracking** | Zero `{/* TODO` comments in published content. Zero `{/* REVIEW` comments without a linked tracking issue |
+| 4.14 | **Flat layout where appropriate** | Build pages use tabs for language variants (TS/Python/Go), not sub-folders. Sub-pages only for genuinely separate journeys |
+| 4.15 | **Trade-offs present** | Every concept/architecture/decision page on Developers names at least one trade-off, limitation, or failure condition. BYOC: container size, cold start, debugging cost. ComfyStream: GPU requirement, frame rate ceiling. Studio API: pricing tier, rate limit |
+| 4.16 | **Content pass context block completable** | All 15 fields in `content-pass.md` context block can be filled. If any cannot be filled, the page's position in the pipeline is undefined |
+| 4.17 | **Code samples – every code block has language tag** (Developers-specific) | Every fenced code block carries a language identifier (`bash`, `typescript`, `python`, `go`, `json`, `yaml`, `dockerfile`). Bare ``` fences are a fail. Cross-reference with check 5.20 (icon and title metadata also required) |
+| 4.18 | **Code-first opening** (Developers-specific, instruction/tutorial only) | For pages with `pageType: instruction` or `pageType: tutorial`, the first content beneath orientation is a working code sample, not prose. Cross-reference 2.D1 |
+| 4.19 | **Error states and edge cases in main content** (Developers-specific) | Error states, common failure modes, and edge cases live in the main content flow, not buried in a `<Note>` at the end. Cross-reference 2.D4 |
+| 4.20 | **Function/API/method named in prose has code example or link** (Developers-specific) | Every function, API endpoint, SDK method, or CLI flag named in prose either has an inline code example or a link to its GitHub source/release. Cross-reference 2.D2 |
+
+### What success looks like
+
+A developer or builder following the journey from quickstart to build to operations never hits a wall. Every page either ships them with a working integration or graduates them to the right next surface (Gateways, Solutions, About).
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Definition of Good (all levels) | `workspace/plan/active/CONTENT-WRITING/content-pipeline-canonical.md` lines 81–174 | Site/tab/section/page quality bars |
+| Developers IA design | `v2/developers/_design/developers-IA.md` | Developers IA, journeys, page inventory |
+| Developer audience design | `v2/developers/_design/compass_artifact_developers.md` | Personas (AI builder, video developer, OSS contributor, hackathon, evaluator) |
+| Content pass modes | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | WRITE / REVIEW / REWRITE / AUDIT mode definitions |
+| Page brief format | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` line 692 | reader definition + outcome + prev/next + single job |
+| Purpose→InfoType mapping | Frameworks.mdx §1.6 | Which information types are permitted per purpose |
+| Information type framework | `workspace/plan/active/CONTENT-WRITING/Frameworks/information-type.md` | 9 info types determining structure, layout, style |
+| Content pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | Full content writing/review prompt |
+| Content placement prompt | `CONTENT-WRITING/Prompts/Good prompt references/docs-content-placement-prompt.md` | Content placement within fixed IA |
+| Structure audit | `CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | KEEP/MOVE/MERGE/SPLIT/REWRITE/DROP methodology |
+| Exemplars | `_MY_PROCESS/EXEMPLARS/` | 4 annotated gold-standard pages |
+| Page quality gate | `_MY_PROCESS/tools/page-quality-gate.sh` | 10-check quick enforcement |
+| Per-tab canonical review | `v2/developers/_workspace/canonical/review/01-07` | Developers tab audience, persona, journey, section structure, terminology, path validation |
+| Docs philosophy | `v2/internal/docs-philosophy.mdx` | Why docs exist and how to write them |
+
+---
+
+## 5. LAYOUT, COMPONENTS & TEMPLATE
+
+**What this catches**: Wrong components for the page type, missing required sections, unapproved components, MDX that won't render, inconsistent page structure across the same pageType. Developers-specific: code blocks without language/icon/title metadata, raw Steps instead of StyledSteps, untagged language tabs.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 5.1 | **Correct template for pageType + pageVariant** | Page uses the structural template defined for its type. See component-layout-decisions.mdx matrix |
+| 5.2 | **Required sections present** | Each pageType has mandatory sections. Developers-tab focus: `instruction`/quickstart requires Prerequisites, Steps, Next Steps. `tutorial` requires Prerequisites, Steps, Verification, Related. `reference` requires Reference. `guide` requires Overview + Steps/H2 |
+| 5.3 | **Only approved components used** | Components match the "Preferred" column for the pageType. No unapproved components |
+| 5.4 | **Avoided components absent** | No TODO/TBD placeholders, no `Coming Soon`, no `PreviewCallout` where forbidden |
+| 5.5 | **Information type → component mapping correct** | `procedural` → StyledSteps; `technical` → CodeComponent/CodeGroup; `reference` → ParamField/ResponseField/StyledTable; `multi-language` → Tabs (TS/Python/Go) |
+| 5.6 | **MDX renders clean** | Page renders without errors. No broken JSX, no unclosed tags, no import errors |
+| 5.7 | **No old-schema frontmatter** | No 12-type pageType values, no deprecated purpose aliases, no old audience tokens |
+| 5.8 | **CSS uses custom properties only** | No hardcoded hex colours, no ThemeData. Uses `var(--accent)`, `var(--text)`, etc. |
+| 5.9 | **Generated file banners intact** | Any generated file has the `generated-file-banner:v1` block and visible `<Note>` banner. Not hand-edited |
+| 5.10 | **Component naming/import conventions** | PascalCase component names, correct imports |
+| 5.11 | **Page follows gold-standard template** | Page structure matches the template in `snippets/templates/pages/gold-standard-templates/{pageType}-template.mdx` |
+| 5.12 | **Section blocks from gold-standard library** | Sections composed from blocks in `snippets/templates/pages/gold-standard/` |
+| 5.13 | **Section ordering matches pageType** | Section order follows `snippets/templates/section-patterns.md` ordering rules. Developers-tab focus: tutorial = Intro+Prerequisites+Steps+Verification+Related. instruction = Header CTA+Intro+Prerequisites+Steps+Verification+Related. reference = Intro+Structured Data+Related |
+| 5.14 | **Multi-view layout rules respected** | 1 dimension = Tabs. 2 dimensions = Views then Tabs. 3 dimensions = Views then Tabs then Tabs-in-steps. 4+ dimensions = split into separate pages. Steps NEVER inside Accordions. Tabs NEVER inside Steps. Language variants (TS/Python/Go) belong in Tabs at section level |
+| 5.15 | **Data imports used, not hardcoded** | Contract addresses, CLI flags, API endpoints, default model IDs imported from `snippets/data/`. Never hardcoded in MDX prose |
+| 5.16 | **Related Pages footer or Next Step CTA present** | Every non-navigation Developers page ends with either CardGroup (Related Pages, 2-3 cards) or single Card (Next Step CTA, clear action verb). Never both |
+| 5.17 | **Related Pages format correct** | Related Pages uses `<Columns cols={2}>` with `<Card>` children. Card `title` is 1-3 words. Card description is one sentence, max 10 words. Cards use `<CustomCardTitle>` with `icon` prop and `horizontal` layout |
+| 5.18 | **Tab icon prop present** | Every `<Tab>` includes an `icon` prop using a FontAwesome icon name that matches the tab content. Language tabs: `js` for JS/TS, `python` for Python, `golang` for Go |
+| 5.19 | **Accordion icon prop present** | Every `<Accordion>` includes an `icon` prop |
+| 5.20 | **Code block metadata present** | Every fenced code block includes `icon` and `title` attributes. `icon` conveys the tool (`terminal`, `docker`, `code`). `title` conveys the file or command context (`auth.ts`, `Dockerfile`, `curl-request`). Bare code fences without metadata fail quality checks |
+| 5.21 | **StyledSteps used, not raw Steps** | Procedural step sequences use `<StyledSteps>` with accent styling props (`iconColor`, `titleColor`), not raw `<Steps>` |
+| 5.22 | **Navigation cards use CustomCardTitle** | Every `<Card>` used for navigation includes a title via `<CustomCardTitle>` with `icon` and `title` props |
+| 5.23 | **Tables use StyledTable component** | Data tables use `<StyledTable>` (not raw markdown tables or `<Table>`). Raw markdown tables only acceptable in non-published workspace files |
+| 5.24 | **Maximum 1-2 tables per page** | Tables support prose; they do not replace it. A page with more tables than paragraphs is a spreadsheet, not documentation |
+| 5.25 | **Maximum 1 major layout element per page** | No more than one major layout element (`StyledTable`, `StyledSteps`) per page unless nested |
+| 5.26 | **CustomDivider placement rules** | 5 rules: (1) ONE opening divider after imports. (2) NO divider between intro prose and first H2. (3) Between major H2 sections (optional). (4) Before Related Pages section, always. (5) Media and callouts placed AFTER opening divider and BEFORE intro prose |
+| 5.27 | **Mermaid diagrams use governed theme colours** | Mermaid diagrams use colour values from `snippets/components/config/MermaidColours.jsx`. Colours hardcoded in Mermaid syntax. Prose appears before every diagram. Use `ScrollableDiagram` wrapper when overflow |
+| 5.28 | **Import section ordering** | Imports follow canonical order: (1) Component imports, (2) Data imports, (3) Page imports, (4) Composable imports |
+| 5.29 | **Media and video placeholders in TODO comments** | Placeholders for media assets are marked as JSX comments with a TODO for human action |
+| 5.30 | **Fact-check flags in JSX comments** | Unverified claims flagged as `{/* REVIEW: [claim] - [what needs checking] */}` inline. A page with REVIEW flags cannot have `veracityStatus: verified` |
+| 5.31 | **Decision-critical info visible without interaction** | Information needed to make a decision (workload-fit table, SDK comparison) must be visible on page load. Not hidden behind Tabs or Accordions |
+| 5.32 | **Reference tables at end, not beginning** | Pages that combine decision support with reference data place the reference table at the end |
+| 5.33 | **Drafts in workspace, not live pages** | New content and rewrites are drafted in `_workspace/drafts/`, never written directly to the live `.mdx` file until human approval |
+| 5.34 | **No inline styles or hardcoded hex in MDX** | MDX page content uses CSS custom properties only. No inline `style=` attributes in MDX prose. No hardcoded hex colour values |
+
+### Component matrix (quick reference – Developers tab focus)
+
+| pageType | Required sections | Preferred components | Avoid |
+|----------|-------------------|----------------------|-------|
+| `navigation` (portal, navigator, setup-paths) | Portal/routing | Card, CardGroup, CustomCardTitle | Content components |
+| `concept` (developer-stack, ai-on-livepeer, video-on-livepeer, oss-stack) | Overview | Accordion, AccordionGroup, CodeGroup, Tabs, Note, Info, Tip, Mermaid | TODO/TBD |
+| `tutorial` (build-an-ai-agent) | Prerequisites, Steps, Verification, Next Steps | StyledSteps, Step, CodeGroup, Tip, Warning, Check | Coming Soon |
+| `instruction` (quickstarts) | Prerequisites, Steps, Next Steps | StyledSteps, Step, CodeGroup, Warning, Check, Tip | Coming Soon, PreviewCallout |
+| `guide` (build/*, guides/*) | Overview, Steps or H2 | StyledSteps, Step, CodeGroup, Note, Info, Tip, Card, CardGroup, Tabs (language variants) | Coming Soon, PreviewCallout |
+| `reference` (model-support, sdks, apis) | Reference | ParamField, ResponseField, CodeGroup, Tabs, StyledTable | TODO/TBD/Coming Soon |
+| `resource` (compendium, knowledge-hub) | Overview or H2 | Card, CardGroup, StyledTable, Accordion, Note | TODO/TBD |
+
+### What success looks like
+
+Every Developers page of the same `pageType` has the same structural skeleton. A reader who has seen one quickstart knows where to find prerequisites, steps, and next steps on every other quickstart. Zero render errors. Every code block has language, icon, and title. Every Tab and Accordion has an icon. StyledSteps is used wherever steps are shown.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Component layout matrix | `docs-guide/policies/component-layout-decisions.mdx` | Full pageType sections components avoid matrix |
+| Component layout profile | `tools/config/component-layout-profile.json` | Machine-readable layout rules |
+| Component framework | `docs-guide/frameworks/component-framework-canonical.mdx` | Component taxonomy, naming, JSDoc standards |
+| Component governance | `workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md` | Extended component taxonomy + catalog + audits |
+| Layout validator | `node operations/scripts/validators/components/library/component-layout-governance.js` | Automated layout check |
+| Style guide | `v2/resources/documentation-guide/style-guide.mdx` | CSS custom properties, colour system |
+| Page classification | `snippets/templates/page-classification.md` | Decision tree for 7 pageTypes |
+| Section patterns | `snippets/templates/section-patterns.md` | 13 section archetypes with composition rules |
+| Gold-standard templates | `snippets/templates/pages/gold-standard-templates/` | 7 templates (one per pageType) |
+| Gold-standard blocks | `snippets/templates/pages/gold-standard/` | 13 composable section blocks |
+| Page composition framework | `snippets/templates/pages/page-composition-framework.mdx` | Component structure rules |
+| Page authoring skill | `ai-tools/ai-skills/page-authoring/SKILL.md` | CustomDivider placement, table limits, Mermaid rules |
+| Mermaid colour palette | `snippets/components/config/MermaidColours.jsx` | Governed Mermaid theme colours |
+| Layout pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | Component mapping, MDX template application |
+| Design canonical | `workspace/plan/active/CONTENT-WRITING/design-canonical.mdx` | Production Engine ideal state |
+
+---
+
+## 6. VERACITY & FACTUAL ACCURACY
+
+**What this catches**: Plausible-sounding AI hallucinations, outdated facts, untested procedures, unverifiable claims, stale information presented as current. Developers-tab risk: SDK version drift, removed/renamed API methods, ai-runner pipeline lists out of date, ComfyStream/PyTrickle interface changes, hard-coded gateway URLs going stale.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 6.1 | **Every factual claim citable** | Can point to a specific authoritative source for every fact. Protocol contracts, API specs, official changelogs for `factual` type. Live system testing for `procedural` type. GitHub repos for `technical` type |
+| 6.2 | **Code/commands tested** | Every code block, CLI command, SDK call, and API request has been executed in the correct environment and produces the stated output. **TESTED:** label required for every code block. NOT-TESTED requires a justification and a risk note |
+| 6.3 | **No deprecated API usage** | All endpoints, SDK methods, CLI flags are current. No references to removed or renamed APIs. Version-pin the example: state the SDK version, not "latest" |
+| 6.4 | **Numbers are real** | Every number (pricing, latency, frame rate, VRAM, model dimensions) is sourced and current. No "approximately" without a range |
+| 6.5 | **REVIEW flags for unverified claims** | Any claim that cannot yet be verified has `{/* REVIEW: [claim] – [what needs checking] */}` inline |
+| 6.6 | **veracityStatus honest** | Page-level veracityStatus reflects the weakest section. If any section at "very high" or "high" standard is unverified → page is `unverified` |
+| 6.7 | **Authoritative vs AI-generated glossary** | Content uses `resources/glossary.mdx` (human-reviewed, authoritative). Never trusts `resources/compendium/glossary.mdx` (AI-generated, unverified) without cross-check |
+| 6.8 | **Source staleness check** | Information sourced from fast-changing sources (SDK versions, ai-runner pipelines, ComfyStream supported models) is flagged for staleness risk. Versions stated explicitly |
+| 6.9 | **No open-ended research tasks** | Every residual veracity item has a named source and a concrete next step. No "needs more research" |
+| 6.10 | **Source authority tiers respected** | Factual claims cite T1 (primary: protocol contracts, API specs, changelogs, GitHub releases). Technical claims cite tagged releases. Procedural claims verified against live system. No claims sourced exclusively from T3 (search/community) without T1/T2 cross-check |
+| 6.11 | **Glossary definitions match universal terms** | Tab-level glossary definitions match `universal-terms.md` canonical definitions. No conflicting definitions across tabs |
+| 6.12 | **Glossary definitions verified against primary sources** | Tab glossary definitions cross-checked against `TERMINOLOGY-COLLATE/consolidated/veracity-sources.md` primary source registry |
+
+### Veracity standards by information type
+
+| Information type | Standard | "Verified" means | Authoritative sources |
+|------------------|----------|-------------------|-----------------------|
+| `factual` | Very high | Every claim citable against primary source | Protocol contracts, API specs, changelogs |
+| `technical` | Very high | Code tested against live system, current codebase | go-livepeer, ai-runner, ComfyStream, PyTrickle, SDK repos |
+| `procedural` | Very high | Every step executed, produces stated output | Live system testing, official CLI docs |
+| `change` | Very high | Every entry confirmed against release/migration | GitHub releases, changelogs |
+| `evaluative` | High | Evidence is real, sourced, labelled if approximate | Benchmarks, analytics, actual cost data |
+| `structural` | High | Accurately reflects current site structure | docs.json, live site |
+| `analytical` | Medium | Reasoning consistent with documented behaviour | Derived from factual/technical sources |
+| `conceptual` | Medium | Mental model consistent with documented behaviour | Official docs, whitepapers |
+| `narrative` | Lower | Value framing consistent with foundation comms | Foundation communications, official positioning |
+
+### What success looks like
+
+≥90% auto-clearance rate against the 45-source veracity library. Every code sample TESTED-labelled. Every SDK version stated explicitly. Zero pages with `veracityStatus: verified` that contain unchecked claims.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Veracity framework | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | Standards per information type, blocking rules |
+| Veracity source library | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | All 45 authoritative sources |
+| Frameworks.mdx §1.7 | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Veracity quick reference |
+| Glossary (authoritative) | `v2/resources/glossary.mdx` | Human-reviewed terms |
+| Glossary (AI, untrusted) | `v2/resources/compendium/glossary.mdx` | Must cross-check before trusting |
+| Accuracy sources | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/accuracy-sources.md` | Source validation framework |
+| Universal terms | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/universal-terms.md` | Cross-tab canonical definitions |
+| In-repo glossary audit | `CONTENT-WRITING/Prompts/.../reference-sources-quality-scored/in-repo-glossaries.md` | Glossary quality audit |
+| Veracity pass methodology | `CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | Claim flagging methodology |
+| TERMINOLOGY-COLLATE veracity | `TERMINOLOGY-COLLATE/consolidated/veracity-sources.md` | 58KB source authority |
+
+---
+
+## 7. NAVIGATION & INFORMATION ARCHITECTURE
+
+**What this catches**: Orphaned pages, broken paths, missing from docs.json, dead-end journeys, wrong position in the tab/section hierarchy. Developers-specific: stub pages still in published nav (setup-paths, video-on-livepeer, sdk-gateway thin), missing graduation to Gateways for self-host path.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 7.1 | **Page exists in docs.json** | File path matches a docs.json navigation entry. No orphaned files. No phantom nav entries pointing to missing files |
+| 7.2 | **Navigation matches file system** | docs.json structure mirrors actual directory structure. Zero broken paths |
+| 7.3 | **Tab entry portal routes to all sections** | Developers portal links to every section: Concepts, Get Started, Build (Custom AI Workflows), Guides (with Tutorials and Opportunities subgroups), Resources |
+| 7.4 | **No structural orphans** | Every page reachable from at least one navigation path |
+| 7.5 | **Audience journey complete** | Entry → depth → exit with no missing steps for the tab's primary personas: AI Application Builder, Video Transcoding Developer, Hackathon Participant, OSS Protocol Contributor, Infrastructure Evaluator |
+| 7.6 | **Cross-tab graduation paths exist** | Developers → Gateways (self-host path); Developers → Solutions (managed video, Studio/Streamplace); Developers → About (protocol context); Developers → Orchestrators (OSS contributor entering operator path) |
+| 7.7 | **File in correct lane** | Publishable content in `v2/developers/`, not in `_workspace/`. Non-publishable in `_workspace/`. Deprecated in `x-deprecated/` or `x-archived/` |
+| 7.8 | **File naming conventions** | Prefixes used correctly. No `-index.mdx` suffix |
+| 7.9 | **_workspace/ TTL compliance** | Files in notes/, drafts/: ≤30 days. Files in archive/: ≤90 days. Active plans: no TTL |
+| 7.10 | **No stubs in published nav** | Every page listed in docs.json nav has >2KB of substantive content. Per Developers IA: `setup-paths.mdx`, `video-on-livepeer.mdx`, `video-quickstart.mdx`, `sdk-gateway.mdx` are flagged stubs – must expand or remove from nav |
+| 7.11 | **Resources sub-structure correct** | Developers `resources/` follows the canonical 4-bucket layout: root (developer-help), `reference/` (SDKs, APIs), `compendium/` (glossary, examples), `knowledge-hub/` (awesome-livepeer, deepwiki, wiki). Per `v2/developers/_design/developers-IA.md` |
+| 7.12 | **Guides section serves secondary personas** | Guides covers AI integration deep dives, video integration (migrated from v1), OSS/contributor guides, and Tutorials subgroup. Quickstarts and build-page coverage live in Get Started and Build (Custom AI Workflows), not in Guides |
+
+### What success looks like
+
+A new developer or builder can enter the Developers tab and navigate to any quickstart, deep-build chapter, or reference without hitting a dead end. docs.json mirrors the file system. Zero orphans. Every primary persona path from `developers-IA.md` is complete.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| docs.json | Root `docs.json` | Navigation source of truth |
+| Developers IA design | `v2/developers/_design/developers-IA.md` | Canonical Developers IA, journeys, graduation paths |
+| V2 folder governance | `docs-guide/policies/v2-folder-governance.mdx` | Publishable vs workspace lanes, TTL rules |
+| Workspace lifecycle | `docs-guide/policies/workspace-lifecycle-policy.mdx` | Retention and cleanup rules |
+| Tab status board | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate tracking |
+| Cross-tab journeys | `workspace/plan/active/CONTENT-WRITING/decisions/cross-tab-journeys.md` | Graduation path definitions |
+
+---
+
+## 8. LINKS & RENDERING
+
+**What this catches**: Broken internal/external links, pages that fail to render, import errors, missing assets.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 8.1 | **All internal links resolve** | Every `[text](/path)` and `<a href>` points to an existing page |
+| 8.2 | **All external links live** | No 404s, no redirect chains, no dead domains. Developers tab links to GitHub, npm, PyPI, Hugging Face frequently – verify each |
+| 8.3 | **All snippet imports resolve** | Every `<Snippet file="..." />` or MDX import points to an existing snippet |
+| 8.4 | **All images load** | Every image path resolves. Image files ≤2MB. PNGs >500KB reviewed for WebP conversion |
+| 8.5 | **Page renders without error** | No JSX errors, no unclosed tags, no missing component imports, no Mintlify build errors |
+| 8.6 | **No TODO/TBD/Coming Soon in published content** | Any placeholder text belongs in `_workspace/`, not in publishable pages |
+
+### What success looks like
+
+Every link clicked works. Every page loads fully. No console errors. No missing images. No broken imports. This is table stakes.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Quality gates | `docs-guide/policies/quality-gates.mdx` | CI validation layers |
+| Link health checks | PR CI pipeline | Automated link validation |
+| Snippets/assets policy | `docs-guide/policies/snippets-assets-policy.mdx` | Image size limits, directory structure |
+| Mintlify preview | Local dev server (NOT port 3000) | Render validation |
+
+---
+
+## 9. PROCESS & GOVERNANCE
+
+**What this catches**: Pages that shipped without proper review, skipped gates, missing human sign-off, decisions not in the registry.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 9.1 | **Human sign-off recorded** | Page has been explicitly approved by a human. Agent self-reporting does not count |
+| 9.2 | **All consuming decisions in registry** | Any structural decision the page depends on exists in `decisions/decision-registry.md` with date and sign-off |
+| 9.3 | **Gate prerequisites met** | Page did not skip gates. Per-tab canonical review files (01-07) approved before content work. Content pass context block filled. Veracity pass run. Layout pass run. Per `_MY_PROCESS/` RUNBOOKs (00-08) |
+| 9.4 | **Phase ordering respected** | Phase ordering per `_MY_PROCESS/` RUNBOOKs: 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08. No phase skipped |
+| 9.5 | **Findings gathered before fixes** | Page went through structured review (findings report → scope approval → execution). Not fixed ad hoc |
+| 9.6 | **Feedback routed** | Any corrections found during review are routed through `decisions/feedback-routing-map.md` AND `_MY_PROCESS/FEEDBACK/RUNBOOK.md`. Corrections that affect voice rules, terminology, or templates update the canonical source |
+
+### What success looks like
+
+Every shipped Developers page has a traceable provenance. No page ships on agent self-assessment alone. Every correction teaches the system something.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Decision registry | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | Authoritative decision record |
+| Tab status / gates | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Gate tracking per tab |
+| Feedback routing | `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | Correction → standards routing |
+| Session start protocol | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` | Mandatory pre-work steps |
+| Plan canonical | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Phase ordering, gate definitions |
+| Pipeline RUNBOOKs (00-08) | `workspace/plan/active/_MY_PROCESS/00_*` through `08_*/RUNBOOK.md` | Per-phase instructions |
+| Feedback loop | `workspace/plan/active/_MY_PROCESS/FEEDBACK/RUNBOOK.md` | Post-tab correction capture |
+| docs-guide governance index | `docs-guide/policies/governance-index.mdx` | Master governance policy index |
+| docs-guide standards | `docs-guide/standards/` | authoring-standard, frontmatter, naming-conventions, voice-and-copy, voice-rules |
+| Agent governance | `docs-guide/policies/agent-governance-framework.mdx` | Agent behaviour rules |
+| Source of truth policy | `docs-guide/policies/source-of-truth-policy.mdx` | Canonical source designation |
+| What agents must never do | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` §6 | 12 hard prohibitions |
+
+---
+
+## 10. CONTENT COMPLETENESS
+
+**What this catches**: Missing pages, incomplete journeys, unanswered questions, gaps that no amount of page-level quality fixes can resolve. Developers-specific: missing concept entry for video developers, missing AI guides (authentication, troubleshooting, production-checklist), thin SDK and API references, missing Eliza tutorial.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 10.1 | **Every question in the tab's question list has a page** | Cross-reference against `v2/developers/_workspace/canonical/review/03-jobs.md`. Every job maps to at least one published page. No unanswered questions |
+| 10.2 | **Zero-to-hero journey complete** | A developer or builder with zero prior Livepeer knowledge can complete the full journey from "what can I build?" to "I have a working integration in production" without leaving the tab (except deliberate handoffs to Gateways or Solutions) |
+| 10.3 | **All primary persona paths unblocked** | Cross-reference against `v2/developers/_workspace/canonical/review/07-path-validation.md`. AI Application Builder, Video Transcoding Developer, Hackathon Participant, OSS Protocol Contributor, Infrastructure Evaluator – none hit a dead end |
+| 10.4 | **Scope boundaries explicit** | What this tab does NOT cover is stated and replaced with links. Self-hosted gateway operations → Gateways tab. Managed video (Studio, Streamplace) → Solutions tab. Protocol participation → Orchestrators tab |
+| 10.5 | **Self-containment holds** | Developers tab can be read without visiting another tab to complete its job (build an integration). Cross-tab handoffs are deliberate graduations |
+| 10.6 | **Code samples have a working language path** (Developers-specific) | For each persona's primary path: AI Application Builder must have a complete TypeScript path (and Python where relevant). Video Transcoding Developer must have a complete TypeScript/JS path. OSS Protocol Contributor must have a complete Go path. Missing primary-language paths block ship |
+| 10.7 | **Persona-specific guides present** (Developers-specific) | AI integration guides (authentication, webhooks, troubleshooting, production-checklist) – all present. Video integration guides (access-control, webhooks, monitor-stream-health, playback) – migrated from v1. OSS/contributor guides (contribution, local testnet, testnet contract deployment) – present. Tutorial (build-an-ai-agent-on-livepeer) – present |
+
+### What success looks like
+
+Every Developers-tab persona passes the FIRST-PRINCIPLES-SITEMAP completion test: "A developer or builder with no prior Livepeer knowledge can ship a working integration without asking anyone." The Discord test passes for every common arriving question. No reader hits a wall.
+
+### Frameworks and tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Per-tab canonical review (01-07) | `v2/developers/_workspace/canonical/review/` | Developers audience, personas, jobs, journey, section structure, terminology, path validation |
+| Developers IA design | `v2/developers/_design/developers-IA.md` | Journey maps for all five primary personas |
+| Developer audience design | `v2/developers/_design/compass_artifact_developers.md` | Persona definitions and entry states |
+| First-principles sitemap | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/FIRST-PRINCIPLES-SITEMAP.md` | Zero-to-hero journeys and success criteria per audience |
+| Tab completion framework | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/RESEARCH/CLAUDE-OUTPUTS/TAB-COMPLETION-FRAMEWORK.md` | Universal + tab-specific ship-readiness gates |
+| Master site map | `_MY_PROCESS/SITE-MAP.md` | Tab ownership, overlap analysis |
+| Codex content briefs | `_MY_PROCESS/00_AUDIENCE-JOURNEY/ALL-CURRENT-INFORMATION/RESEARCH/CLAUDE-OUTPUTS/CODEX-CONTENT-BRIEFS-P1.md` | Ready-to-execute briefs for missing P1 pages |
+| Product thinking skill | `ai-tools/ai-skills/product-thinking/SKILL.md` | Strategic review |
+| Content completeness skill | `ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md` | Cross-tab link validation, orphan detection |
+
+---
+
+# REVIEW EXECUTION GUIDE
+
+## How to run a per-page review (Developers tab)
+
+Based on `docs-review-prompt-tiers.md` Tier 3 (Single Page):
+
+### Pre-flight (before touching the page)
+1. **Check for `generated-file-banner`** – if present, read the generation script before logging any findings
+2. Read the page's frontmatter – classify against canonical enums. **Read each field value directly from the file. Do not infer `purpose` from `pageType`. Do not infer `audience` from the file path.** Developers-tab risk: assuming `developer` when the page actually serves `builder` (or vice versa) – these have different registers and structure
+3. Identify the page's audience, purpose, and pageType – from the actual field values
+4. Load the relevant voice rules for that audience (developer or builder)
+5. Load the component matrix for that pageType
+6. Note the page's position in the journey – read `docs.json` to confirm the navigation sequence
+
+### Review pass order
+1. **Frontmatter** (Category 1) – all 10+ fields present, all values canonical, developer/builder split honoured
+2. **Structure** (Category 4) – one purpose, one job, code-first opening, error states in main content, Discord test, prerequisites, handoffs, trade-offs
+3. **Headings** (Category 3) – score each 20/25+, per-pageType naming, per-audience register, domain-anchor
+4. **Voice and copy** (Category 2) – banned words/phrases/constructions, entity-led, no hedging, no em-dashes, UK English, register (developer or builder), deprecated terms, terminology, code-first opening (developer-register), integration value first (builder-register)
+5. **Layout and components** (Category 5) – gold-standard template, code blocks have language/icon/title, Tabs have icons, StyledSteps used, data imports, Related Pages or Next Step CTA
+6. **Veracity** (Category 6) – claims sourced per authority tiers, code TESTED-labelled, REVIEW flags, SDK versions stated, glossary definitions match universal terms
+7. **Links and rendering** (Category 8) – everything resolves, page renders, no TODO/TBD
+8. **Navigation** (Category 7) – in docs.json, reachable, no dead ends, no stubs in nav, resources sub-structure correct, guides scope correct
+9. **Completeness** (Category 10) – question coverage, zero-to-hero, persona paths, scope boundaries, language-path completeness, persona-specific guides
+10. **Process** (Category 9) – human sign-off, decisions in registry, gates met, phases ordered, feedback routed
+11. **Spelling and typo pass** – scan all visible text
+
+### Verdict scale
+
+| Verdict | Meaning |
+|---------|---------|
+| **PASS** | Ships as-is. All checks pass |
+| **NEEDS WORK** | Specific fixes identified. Fix, re-check affected categories, then re-verdict |
+| **REWRITE REQUIRED** | Fundamental scope, audience, or structure problem. Page brief needed before rewrite |
+
+### Self-check (after review)
+- [ ] Introduction opens with subject, not caveat
+- [ ] No "this page" self-reference anywhere
+- [ ] No em-dashes
+- [ ] No hedging verbs in value claims
+- [ ] No deprecated terms (Broadcaster, Pool worker, Combined mode, Hybrid)
+- [ ] Every section has a clear handoff to the next
+- [ ] Related Pages or Next Step CTA at page end
+- [ ] Page follows gold-standard template for its pageType
+- [ ] Page passes the Discord test
+- [ ] Page is above 2KB minimum (5KB+ for concept/guide)
+- [ ] Volatile content has REVIEW flag
+- [ ] All corrections routed through feedback map
+- [ ] All terminology matches TERMINOLOGY-COLLATE canonical
+- [ ] **Every code block has a language tag** (Developers-specific)
+- [ ] **Every code block has icon and title metadata** (Developers-specific)
+- [ ] **Every function/API/method named in prose has a code example or GitHub link** (Developers-specific)
+- [ ] **Error states live in main content, not buried in Note** (Developers-specific)
+- [ ] **For instruction/tutorial: first content beneath orientation is a working code sample** (Developers-specific)
+- [ ] **Versions stated explicitly (no "latest")** (Developers-specific)
+
+---
+
+## MANDATORY REPORT FORMAT
+
+Every check report must include these sections. Nothing silently skipped – every check appears as PASS, FAIL, or N/A with reason.
+
+### Frontmatter Table
+
+| Field | Present? | Value | Pass/Fail | Notes |
+|-------|----------|-------|-----------|-------|
+
+All 10 required fields (check 1.1) plus any extras. State the actual value.
+
+### Categories 1–10
+
+Every numbered check must appear. If not applicable, state why: `N/A – [reason]`.
+
+### Banned Construction Scan
+
+**Scope:** all visible text including body prose, headings, frontmatter `description`, Tips, Notes, Warnings, table cells, card descriptions, **CustomDivider `middleText` props**, **AccordionGroup `title` props**, **Tabs `title` props**, and any other visible component prop.
+
+**No exemptions beyond those in checks.mdx or CLAUDE.md.** If a construction matches the pattern but its intent is unclear, flag as BORDERLINE.
+
+| Line | Sentence | Word/Pattern | Classification | Flag? |
+|------|----------|--------------|----------------|-------|
+
+Classification: `value-claim` (flag) / `procedural` (ok) / `conditional caveat` (ok) / `rhetorical` (ok) / `BORDERLINE` (flag for human review).
+
+**Show the work:** list every candidate match considered, even when the result is PASS.
+
+### Heading Score Table
+
+| Heading | Precision | Depth | Stability | Clarity | Conciseness | Total |
+|---------|-----------|-------|-----------|---------|-------------|-------|
+
+### Spelling/Typo Check
+
+Scan all visible text. State findings or "No typos found."
+
+### Component Matrix
+
+| Component | Used? | Appropriate for `[pageType]`? | Notes |
+|-----------|-------|-------------------------------|-------|
+
+### Code Block Audit (Developers-specific)
+
+| Line | Language tag? | Icon? | Title? | Tested? | Notes |
+|------|---------------|-------|--------|---------|-------|
+
+### Cross-Category Connections
+
+```
+Root Cause [N]: [description]
+Affects: Cat X.Y + Cat X.Y
+Fix: [single concrete fix]
+```
+
+### Blocking Decision (when applicable)
+
+```
+Blocking Decision: [question]
+Options: [A] / [B]
+If A: [fixes that apply]
+If B: [fixes that apply]
+```
+
+---
+
+## REPORTING RULES
+
+**Fixes must be executable.** No "add appropriate X". Specify the exact value, line, or action.
+
+**Definition strings in fixes must be REVIEW placeholders.** Use `{/* REVIEW: [term] – verify definition against [source] before inserting */}`.
+
+**Schema rules must be cited.** Any finding that asserts a schema constraint must cite the specific checks.mdx section.
+
+**Read fields directly.** State the actual frontmatter field value – read it, do not infer it.
+
+**Characterise the error correctly.** When a frontmatter value fails: (a) deprecated alias, (b) wrong field, (c) invalid value.
+
+**Evaluate the current state only.** All findings evaluate the page as it currently exists.
+
+**Result column must match the detail conclusion.**
+
+**Veracity findings: TESTED or NOT-TESTED.** Every code block, command, or factual claim must be labelled.
+
+**Component approval: NOT-TESTED unless the catalog was read.**
+
+**Verify every cited occurrence.** Quote the content at the cited line.
+
+**Link verification.** Use `operations/scripts/validators/content/structure/check-docs-path-sync.js`.
+
+**Navigation sequence.** Check 4.3 requires reading `docs.json`.
+
+**Self-consistency corrections are only complete when ALL instances are updated.**
+
+**Findings must appear in all applicable sections.** No orphaned findings.
+
+**Severity levels.** Use only: CRITICAL / HIGH / MEDIUM / INFO.
+
+**Em-dash prohibition applies to all visible text.**
+
+**Heading rename suggestions** must not introduce BANNED heading terms.
+
+**veracityStatus fix must be internally consistent.**
+
+**First use in Mermaid/diagram labels counts as first use.**
+
+**Dead imports.** Do not flag.
+
+**Deduplication.** Log each finding once in the most specific category.
+
+**Developers-tab specific:** Code blocks without language/icon/title metadata are HIGH findings under check 5.20. Untested code is HIGH under 6.2. Mixed developer/builder scope is CRITICAL under 1.14 / 4.1. Missing error-state coverage on instruction/tutorial pages is HIGH under 4.19 / 2.D4.
+
+---
+
+# SEVERITY DEFINITIONS
+
+| Severity | Meaning | Action |
+|----------|---------|--------|
+| **CRITICAL** | Breaks downstream phase, produces structurally wrong output, or fails on common page type | Fix before any further work |
+| **HIGH** | Incorrect/incomplete on specific cases but does not break downstream | Fix recommended before shipping |
+| **MEDIUM** | Inconsistent but does not break downstream consumption | Monitor; fix in next pass |
+| **INFO** | Expected variation or minor style preference | Document; no action required |
+
+---
+
+# FINDINGS
+
+_Use this section to log per-page findings during reviews. Format:_
+
+```
+## [Page path]
+- **[SEVERITY]** Category [#]: [Finding description]
+  - Expected: [what should be]
+  - Found: [what is]
+  - Fix: [what to do]
+```

@@ -171,7 +171,7 @@ Multiple heading failures = one check 3.1 FAIL (P85).
 | 4.7 | Information type per section correct | PASS | `purpose: reference` — structural/reference content throughout is appropriate |
 | 4.8 | No content duplication from adjacent sections | PASS | No duplication with Glossary or Community Pools adjacent pages |
 | 4.9 | Section orientation page present | N/A | Page-level check only |
-| 4.10 | Cross-tab links at journey intersections | PASS | 4 cross-tab links confirmed: `v2/developers/build/model-support`, `v2/developers/build/byoc`, `v2/developers/resources/awesome-livepeer`, `v2/community/livepeer-connect/events-and-community-streams` |
+| 4.10 | Cross-tab links at journey intersections | PASS | 4 cross-tab links confirmed: `v2/developers/build/model-support`, `v2/developers/build/byoc`, `v2/developers/resources/awesome-livepeer`, `v2/community/connect/events-and-streams` |
 
 **Category 4 verdict: 0 FAILs**
 
@@ -256,7 +256,7 @@ Internal link verification (filesystem check — P7):
 - `/v2/orchestrators/guides/advanced-operations/pool-operators` — EXISTS
 - `/v2/orchestrators/guides/deployment-details/join-a-pool` — EXISTS
 - `/v2/developers/resources/awesome-livepeer` — EXISTS
-- `/v2/community/livepeer-connect/events-and-community-streams` — EXISTS
+- `/v2/community/connect/events-and-streams` — EXISTS
 - `/v2/orchestrators/resources/faq` — EXISTS
 - `/v2/orchestrators/resources/community-pools` — EXISTS
 - `/v2/orchestrators/resources/technical/cli-flags` — CONFIRMED in docs.json line 2976

@@ -32,15 +32,15 @@
   - L93: ../about/portal -> /v2/about/portal [direct]
   - L101: ../developers/get-started/video-quickstart -> /v2/developers/get-started/video-quickstart [direct]
   - L109: ../developers/get-started/ai-quickstart -> /v2/developers/get-started/ai-quickstart [direct]
-  - L125: ../community/community-portal -> /v2/community/community-portal [direct]
+  - L125: ../community/portal -> /v2/community/portal [direct]
   - L141: ../gateways/portal -> /v2/gateways/portal [direct]
   - L149: ../lpt/token-portal -> /v2/lpt/token-portal [direct]
   - L157: ../developers/opportunities/overview -> /v2/developers/opportunities/overview [direct]
 - v2/home/primer.mdx
-  - L32: ../community/community-portal -> /v2/community/community-portal [direct]
+  - L32: ../community/portal -> /v2/community/portal [direct]
   - L180: ../developers/portal -> /v2/developers/portal [direct]
   - L183: ../gateways/portal -> /v2/gateways/portal [direct]
-  - L189: ../community/community-portal -> /v2/community/community-portal [direct]
+  - L189: ../community/portal -> /v2/community/portal [direct]
 
 ## Unresolved
 - v2/home/get-started.mdx

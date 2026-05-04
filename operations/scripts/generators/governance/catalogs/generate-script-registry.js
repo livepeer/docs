@@ -33,8 +33,8 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const OUTPUT_PATH = 'tools/config/registry/script-registry.json';
 const DRY_RUN = process.argv.includes('--dry-run');
 
-// Aligned to actions framework: D-ACT-07 (integrator), D-ACT-01 (interface). Accepts legacy 'automation' during transition
-const VALID_TYPES = new Set(['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface', 'automation']);
+// Aligned to actions framework: D-ACT-07 (integrator), D-ACT-01 (interface)
+const VALID_TYPES = new Set(['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface']);
 const SCRIPT_EXTENSIONS_SET = new Set(SCRIPT_EXTENSIONS);
 
 // ---------------------------------------------------------------------------
@@ -90,19 +90,40 @@ const TYPE_FROM_SEGMENT = new Map([
   ['validators', 'validator'],
   ['remediators', 'remediator'],
   ['dispatch', 'dispatch'],
-  ['automations', 'automation']
+  ['integrators', 'integrator'],
+  ['interfaces', 'interface'],
 ]);
+
+// Legacy concern mapping — matches LEGACY_CONCERN_MAP in script-governance-config.js
+const LEGACY_CONCERN_MAP = { components: 'maintenance', ai: 'discoverability', governance: 'governance' };
+const CONTENT_NICHE_TO_CONCERN = {
+  health: 'health', quality: 'health', structure: 'health', repair: 'health', veracity: 'health',
+  style: 'brand', grammar: 'brand', copy: 'brand',
+  data: 'integrations', 'language-translation': 'integrations',
+  seo: 'discoverability', reference: 'maintenance', catalogs: 'maintenance',
+  reconciliation: 'maintenance', classification: 'governance',
+};
+// Legacy type mapping
+const LEGACY_TYPE_MAP = { automation: 'integrator', orchestrator: 'dispatch', enforcer: 'validator' };
 
 function deriveFromPath(repoPath) {
   const parts = repoPath.split('/');
-  // operations/scripts/<type>/<concern>/<niche>/...
-  // Find the type segment after 'scripts'
   const scriptsIdx = parts.indexOf('scripts');
   if (scriptsIdx >= 0 && parts.length > scriptsIdx + 1) {
     const typeSegment = parts[scriptsIdx + 1];
-    const type = TYPE_FROM_SEGMENT.get(typeSegment) || '';
-    const concern = parts[scriptsIdx + 2] || '';
+    let type = TYPE_FROM_SEGMENT.get(typeSegment) || '';
+    if (LEGACY_TYPE_MAP[type]) type = LEGACY_TYPE_MAP[type];
+
+    let concern = parts[scriptsIdx + 2] || '';
     const niche = parts[scriptsIdx + 3] || '';
+
+    // Map legacy concerns
+    if (concern === 'content' && niche && CONTENT_NICHE_TO_CONCERN[niche]) {
+      concern = CONTENT_NICHE_TO_CONCERN[niche];
+    } else if (LEGACY_CONCERN_MAP[concern] !== undefined) {
+      concern = LEGACY_CONCERN_MAP[concern] || concern;
+    }
+
     return { type, concern, niche };
   }
   return { type: '', concern: '', niche: '' };
@@ -124,14 +145,21 @@ function extractEntry(repoPath) {
   const header = extractLeadingScriptHeader(content);
   const derived = deriveFromPath(repoPath);
 
-  const rawType = getTagValue(header, '@type') || derived.type;
+  let rawType = getTagValue(header, '@type') || derived.type;
+  if (LEGACY_TYPE_MAP[rawType]) rawType = LEGACY_TYPE_MAP[rawType];
   const type = VALID_TYPES.has(rawType) ? rawType : (derived.type || rawType);
 
   return {
     path: repoPath,
     name: path.basename(repoPath),
     type: type || '',
-    concern: getTagValue(header, '@concern') || derived.concern || '',
+    concern: (() => {
+      let c = getTagValue(header, '@concern') || derived.concern || '';
+      if (LEGACY_CONCERN_MAP[c] !== undefined) c = LEGACY_CONCERN_MAP[c] || c;
+      const niche = getTagValue(header, '@niche') || derived.niche || '';
+      if (c === 'content' && niche && CONTENT_NICHE_TO_CONCERN[niche]) c = CONTENT_NICHE_TO_CONCERN[niche];
+      return c;
+    })(),
     niche: getTagValue(header, '@niche') || derived.niche || '',
     purpose: getTagValue(header, '@purpose') || '',
     description: getTagValue(header, '@description') || '',

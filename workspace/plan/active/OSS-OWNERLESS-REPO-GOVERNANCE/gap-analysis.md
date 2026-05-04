@@ -3,13 +3,13 @@
 **Status:** Phase 1 output — NOT source of truth
 **Next use:** Input to Phase 2 design
 
----
+<CustomDivider />
 
 ## Summary
 
 The ownerless governance foundation (Phases 0–1) is implemented and passing: canonical policy doc, machine-readable manifest, `lpd repair` wrapper, and 4 autofix surfaces are all operational. The label system is partially built — 24 labels live in the repo via inline `labelMeta` in `issue-auto-label.yml`, against a target of 55 — with 31 missing labels, no central `labels.yml`, and no lifecycle or agent-routing labels wired. Three governance surfaces remain migrating (`script-governance`, `component-governance`, `ai-tools-registry`) and one is advisory-only (`frontmatter-contract`), blocked on upstream schema migrations. Contributor ladder, stale automation, and AI agent auto-classification are planned but not implemented.
 
----
+<CustomDivider />
 
 ## 1. Label System
 
@@ -78,7 +78,7 @@ The ownerless governance foundation (Phases 0–1) is implemented and passing: c
 
 **Summary:** 4 `status:` labels (including the `needs-triage` vs `needs-routing` discrepancy), 2 `lifecycle:` labels, 4 `size:` labels, 3 agent-routing labels, and community-standard labels account for the highest-priority gap. Automation prefix labels (`ai-opened:*`) are P2–P3 and can follow after core status/lifecycle gaps close.
 
----
+<CustomDivider />
 
 ## 2. Governance Surfaces
 
@@ -115,7 +115,7 @@ Each migrating and advisory surface needs the following to graduate:
 | `ai-tools-registry` | No canonical source defined; no validator; repair path is partial only; not fully captured in the `Ownerless Repo Plan.md` surface inventory |
 | `frontmatter-contract` | Advisory surface: relative-link advisories remain noisy; path to blocking is not yet defined; no promotion timeline set |
 
----
+<CustomDivider />
 
 ## 3. Contributor-Facing Docs
 
@@ -132,7 +132,7 @@ Each migrating and advisory surface needs the following to graduate:
 | `agent-governance-framework.mdx` (AI governance) | Referenced in planning docs; location not confirmed from audit |
 | `governance.mdx` (ownership model, SLAs, triage) | `v2/internal/overview/governance.mdx` |
 | `contribute-to-the-docs.mdx` (public-facing contributor guide) | `v2/resources/documentation-guide/contribute-to-the-docs.mdx` |
-| `community-guidelines.mdx` | `v2/community/livepeer-community/community-guidelines.mdx` |
+| `guidelines.mdx` | `v2/community/guides/guidelines.mdx` |
 | `.cursorrules` | `.cursorrules` |
 
 ### Missing
@@ -146,7 +146,7 @@ Each migrating and advisory surface needs the following to graduate:
 | `labels.yml` central config | No single file for label definitions; all definitions inline in workflow; no standalone audit or bulk-create capability |
 | Custom Copilot instruction files | `.github/instructions/` directory and instruction files do not exist; Copilot has no repo-specific review context |
 
----
+<CustomDivider />
 
 ## 4. Automation
 
@@ -173,7 +173,7 @@ Each migrating and advisory surface needs the following to graduate:
 | Quarterly label audit script | Referenced in proposal; not built |
 | Issue indexer milestone/size distribution extension | Planned in Repo Management Proposal; not implemented |
 
----
+<CustomDivider />
 
 ## 5. Key Contradictions in Planning Docs
 
@@ -186,7 +186,7 @@ Each migrating and advisory surface needs the following to graduate:
 | C5 | **Phase timing mismatch between the two proposals** — The Repo Management Proposal defines a 4-phase sequence: Phase 1 (immediate) = fix 27 missing labels, Phase 2 (Week 1) = consolidate duplicates, Phase 3 (Week 2) = lifecycle/size labels + stale bot, Phase 4 (Week 3) = workflow sync + AI governance. The OSS Governance Plan defines: Phase 1 (Week 1) = foundation, Phase 2 (Week 2) = Copilot integration (decisions required), Phase 3 (Week 3) = policy + docs, Phase 4 (Week 4) = handover. Phase 1 of one plan ≠ Phase 1 of the other. No cross-reference or reconciliation exists between them. | Repo Management Proposal `01_Management-Proposal/index.md` vs OSS Governance Plan `01_OSS-Governance-Plan/index.md` |
 | C6 | **`ai-tools-registry` surface** — The Ownerless Repo Plan surface inventory lists 7 surfaces; it does not include `ai-tools-registry`. The live state context lists 8 governance surfaces including `ai-tools-registry` as "migrating." The surface inventory table is out of sync with the live manifest. | `Ownerless Repo Plan.md` surface inventory table vs live state context |
 
----
+<CustomDivider />
 
 ## 6. Decisions Outstanding (D1–D7)
 
@@ -200,7 +200,7 @@ Each migrating and advisory surface needs the following to graduate:
 | D6 | Custom Copilot instruction scope: create instruction files for code review only, coding agent only, or both? Owner: Rick | `.github/instructions/` directory creation; which `excludeAgent` properties to set; whether one shared instruction set suffices | OPEN |
 | D7 | Timeline and resourcing: 4-week plan (Alison executes Phases 1, 3, 4; Rick/Foundation admin enables Copilot for Phase 2)? Options: 4 weeks / compress to 2 weeks / extend to 6 weeks. Owner: Rich / Rick | Phase sequencing; who owns Copilot enablement step (requires GitHub org admin access) | OPEN |
 
----
+<CustomDivider />
 
 ## Severity Summary
 

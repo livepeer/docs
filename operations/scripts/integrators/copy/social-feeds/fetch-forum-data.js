@@ -4,11 +4,11 @@
  * @concern     copy
  * @niche       social-feeds
  * @purpose     infrastructure:data-feeds
- * @description Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
+ * @description Fetches latest topics from Livepeer Forum API with category metadata, writes multiple sorted exports to snippets/data/social-feeds/forumData.jsx
  * @mode        integrate
  * @pipeline    manual
- * @scope       .github/scripts
- * @usage       node .github/scripts/fetch-forum-data.js [flags]
+ * @scope       operations/scripts/integrators/copy/social-feeds
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
@@ -16,21 +16,24 @@ const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
 
+const dryRun = process.argv.includes("--dry-run");
+const TOPIC_LIMIT = 20;
+
+const escapeStr = (str) => (str || "")
+  .replace(/\\/g, "\\\\")
+  .replace(/"/g, '\\"')
+  .replace(/\n/g, " ");
+
 // Fetch JSON from URL
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
     https
       .get(url, (res) => {
         let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
+        res.on("data", (chunk) => { data += chunk; });
         res.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (e) {
-            reject(e);
-          }
+          try { resolve(JSON.parse(data)); }
+          catch (e) { reject(e); }
         });
       })
       .on("error", reject);
@@ -52,10 +55,7 @@ function cleanAndFormatHTML(html) {
   let cleanHTML = html;
 
   // Remove anchor navigation links
-  cleanHTML = cleanHTML.replace(
-    /<a[^>]*name="[^"]*"[^>]*class="anchor"[^>]*>.*?<\/a>/g,
-    ""
-  );
+  cleanHTML = cleanHTML.replace(/<a[^>]*name="[^"]*"[^>]*class="anchor"[^>]*>.*?<\/a>/g, "");
 
   // Clean up headings
   cleanHTML = cleanHTML.replace(/<h1[^>]*>(.*?)<\/h1>/g, "<h3>$1</h3>");
@@ -65,35 +65,13 @@ function cleanAndFormatHTML(html) {
 
   // Clean up images and their references
   cleanHTML = cleanHTML.replace(/<a[^>]*class="lightbox"[^>]*>.*?<\/a>/g, "");
-  cleanHTML = cleanHTML.replace(
-    /<div[^>]*class="lightbox-wrapper"[^>]*>.*?<\/div>/g,
-    ""
-  );
+  cleanHTML = cleanHTML.replace(/<div[^>]*class="lightbox-wrapper"[^>]*>.*?<\/div>/g, "");
   cleanHTML = cleanHTML.replace(/<img[^>]*>/g, "");
   cleanHTML = cleanHTML.replace(/\[!\[.*?\]\(.*?\)\]\(.*?\)/g, "");
   cleanHTML = cleanHTML.replace(/image\d+×\d+\s+[\d.]+\s*[KM]B/gi, "");
 
-  // Keep paragraphs, lists, emphasis, code
-  cleanHTML = cleanHTML.replace(/<p>/g, "<p>");
-  cleanHTML = cleanHTML.replace(/<\/p>/g, "</p>");
-  cleanHTML = cleanHTML.replace(/<ul>/g, "<ul>");
-  cleanHTML = cleanHTML.replace(/<\/ul>/g, "</ul>");
-  cleanHTML = cleanHTML.replace(/<ol>/g, "<ol>");
-  cleanHTML = cleanHTML.replace(/<\/ol>/g, "</ol>");
-  cleanHTML = cleanHTML.replace(/<li>/g, "<li>");
-  cleanHTML = cleanHTML.replace(/<\/li>/g, "</li>");
-  cleanHTML = cleanHTML.replace(
-    /<strong>(.*?)<\/strong>/g,
-    "<strong>$1</strong>"
-  );
-  cleanHTML = cleanHTML.replace(/<em>(.*?)<\/em>/g, "<em>$1</em>");
-  cleanHTML = cleanHTML.replace(/<code>(.*?)<\/code>/g, "<code>$1</code>");
-
   // Simplify links
-  cleanHTML = cleanHTML.replace(
-    /<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g,
-    '<a href="$1" target="_blank">$2</a>'
-  );
+  cleanHTML = cleanHTML.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g, '<a href="$1" target="_blank">$2</a>');
 
   // Decode HTML entities
   cleanHTML = cleanHTML.replace(/&amp;/g, "&");
@@ -110,7 +88,47 @@ function cleanAndFormatHTML(html) {
   return cleanHTML.trim();
 }
 
+function formatDate(isoStr) {
+  if (!isoStr) return "";
+  return new Date(isoStr).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function serializeItem(item) {
+  return `  {
+    title: "${escapeStr(item.title)}",
+    href: "${item.href}",
+    author: "${escapeStr(item.author)}",
+    content: "${escapeStr(item.content)}",
+    replyCount: ${item.replyCount},
+    views: ${item.views},
+    likeCount: ${item.likeCount},
+    datePosted: "${item.datePosted}",
+    lastActivity: "${item.lastActivity}",
+    categoryId: ${item.categoryId},
+    categoryName: "${escapeStr(item.categoryName)}",
+    categoryColor: "${item.categoryColor}"
+  }`;
+}
+
+function serializeArray(exportName, items) {
+  return `export const ${exportName} = [\n${items.map(serializeItem).join(",\n")}\n];\n`;
+}
+
 async function main() {
+  // Step 1: Fetch categories
+  console.log("Fetching categories...");
+  const catData = await fetchJSON("https://forum.livepeer.org/categories.json");
+  const categoryMap = {};
+  for (const cat of (catData.category_list?.categories || [])) {
+    categoryMap[cat.id] = { name: cat.name, color: `#${cat.color}` };
+  }
+  console.log(`Found ${Object.keys(categoryMap).length} categories`);
+
+  // Step 2: Fetch latest topics (sorted by last activity — Discourse default)
   console.log("Fetching latest topics...");
   const latestData = await fetchJSON("https://forum.livepeer.org/latest.json");
 
@@ -121,90 +139,78 @@ async function main() {
   const filteredTopics = topics.filter((t) => !isOldPinned(t));
   console.log(`After filtering: ${filteredTopics.length} topics`);
 
-  // Get top 4
-  const top4 = filteredTopics.slice(0, 4);
-  console.log(`Processing top 4 topics...`);
+  // Take top N
+  const topN = filteredTopics.slice(0, TOPIC_LIMIT);
+  console.log(`Processing ${topN.length} topics...`);
 
   const processedTopics = [];
 
-  for (const topic of top4) {
-    console.log(`Processing topic ${topic.id}: ${topic.title}`);
+  for (const topic of topN) {
+    console.log(`  ${topic.id}: ${topic.title}`);
 
-    // Fetch full topic data
-    const topicData = await fetchJSON(
-      `https://forum.livepeer.org/t/${topic.id}.json`
-    );
-
-    // Extract first post
-    const firstPost = topicData.post_stream?.posts?.find(
-      (p) => p.post_number === 1
-    );
+    // Fetch full topic data for first post content
+    const topicData = await fetchJSON(`https://forum.livepeer.org/t/${topic.id}.json`);
+    const firstPost = topicData.post_stream?.posts?.find((p) => p.post_number === 1);
 
     if (!firstPost) {
-      console.log(`  No first post found, skipping`);
+      console.log(`    No first post found, skipping`);
       continue;
     }
 
     const htmlContent = cleanAndFormatHTML(firstPost.cooked || "");
-    const datePosted = topic.created_at
-      ? new Date(topic.created_at).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
-      : "";
+    const cat = categoryMap[topic.category_id] || { name: "Uncategorized", color: "#808281" };
 
     processedTopics.push({
       title: topic.title,
       href: `https://forum.livepeer.org/t/${topic.id}`,
-      author: `By ${firstPost.name || firstPost.username || "Unknown"} (@${
-        firstPost.username || "unknown"
-      })`,
+      author: `By ${firstPost.name || firstPost.username || "Unknown"} (@${firstPost.username || "unknown"})`,
       content: htmlContent,
       replyCount: (topic.posts_count || 1) - 1,
-      datePosted: datePosted,
+      views: topic.views || 0,
+      likeCount: topic.like_count || 0,
+      datePosted: formatDate(topic.created_at),
+      lastActivity: formatDate(topic.bumped_at || topic.last_posted_at),
+      categoryId: topic.category_id || 0,
+      categoryName: cat.name,
+      categoryColor: cat.color,
     });
   }
 
   console.log(`Processed ${processedTopics.length} topics`);
 
-  // Generate JavaScript export with exact formatting
-  let jsExport = "export const forumData = [\n";
+  // Step 3: Build sorted views
+  const byActivity = [...processedTopics]; // already sorted by activity from API
+  const byNewest = [...processedTopics].sort((a, b) =>
+    new Date(b.datePosted) - new Date(a.datePosted)
+  );
+  const byViews = [...processedTopics].sort((a, b) => b.views - a.views);
+  const byReplies = [...processedTopics].sort((a, b) => b.replyCount - a.replyCount);
 
-  processedTopics.forEach((item, index) => {
-    jsExport += "  {\n";
-    jsExport += `    title: "${item.title
-      .replace(/\\/g, "\\\\")
-      .replace(/"/g, '\\"')}",\n`;
-    jsExport += `    href: "${item.href}",\n`;
-    jsExport += `    author: "${item.author
-      .replace(/\\/g, "\\\\")
-      .replace(/"/g, '\\"')}",\n`;
+  // Step 4: Serialize category map
+  const catEntries = Object.entries(categoryMap)
+    .map(([id, c]) => `  ${id}: { name: "${escapeStr(c.name)}", color: "${c.color}" }`)
+    .join(",\n");
+  const catExport = `export const forumCategories = {\n${catEntries}\n};\n`;
 
-    // Content with proper escaping and indentation
-    const escapedContent = item.content
-      .replace(/\\/g, "\\\\")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, " ");
+  // Step 5: Generate output
+  let jsExport = "";
+  jsExport += catExport + "\n";
+  jsExport += serializeArray("forumData", byActivity) + "\n";
+  jsExport += serializeArray("forumByActivity", byActivity) + "\n";
+  jsExport += serializeArray("forumByNewest", byNewest) + "\n";
+  jsExport += serializeArray("forumByViews", byViews) + "\n";
+  jsExport += serializeArray("forumByReplies", byReplies) + "\n";
 
-    jsExport += `    content:\n      "${escapedContent}",\n`;
-    jsExport += `    replyCount: ${item.replyCount},\n`;
-    jsExport += `    datePosted: "${item.datePosted}",\n`;
-    jsExport += "  }";
-
-    if (index < processedTopics.length - 1) {
-      jsExport += ",";
-    }
-    jsExport += "\n";
-  });
-
-  jsExport += "];\n";
-
-  // Write to file
+  // Step 6: Write
   const outputPath = "snippets/data/social-feeds/forumData.jsx";
-  fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
-  fs.writeFileSync(outputPath, jsExport);
-  console.log(`Written to ${outputPath}`);
+  if (dryRun) {
+    console.log(`[dry-run] Would write to ${outputPath} (${jsExport.length} bytes)`);
+    console.log(jsExport);
+  } else {
+    fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
+    fs.writeFileSync(outputPath, jsExport);
+    console.log(`Written to ${outputPath}`);
+  }
 }
 
 main().catch((err) => {

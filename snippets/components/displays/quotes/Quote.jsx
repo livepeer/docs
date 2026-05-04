@@ -5,7 +5,7 @@
  * @status stable
  * @description Styled blockquote with accent border and centred italic text.
   * @aiDiscoverability none
- * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/governance-model.mdx, v2/about/protocol/livepeer-token.mdx, v2/about/protocol/overview.mdx, v2/about/protocol/technical-architecture.mdx, v2/about/protocol/treasury.mdx, v2/gateways/setup/guide.mdx, v2/home/about-livepeer/roadmap.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/report.mdx, v2/orchestrators/guides/deployment-details/join-a-pool.mdx, v2/orchestrators/guides/deployment-details/setup-options.mdx
+ * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/governance-model.mdx, v2/about/protocol/livepeer-token.mdx, v2/about/protocol/overview.mdx, v2/about/protocol/technical-architecture.mdx, v2/about/protocol/treasury.mdx, v2/gateways/setup/guide.mdx, v2/home/about/roadmap.mdx, v2/home/about/vision.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/report.mdx, v2/orchestrators/guides/deployment-details/join-a-pool.mdx, v2/orchestrators/guides/deployment-details/setup-options.mdx
  * @breakingChangeRisk medium
  * @lastMeaningfulChange 2026-04-08
  * @param {any} children - children prop.
@@ -35,7 +35,7 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @status stable
  * @description Framed blockquote with optional author, source link, and image.
   * @aiDiscoverability none
- * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx
+ * @usedIn v2/about/protocol/core-mechanisms.mdx, v2/about/protocol/overview.mdx, v2/home/about/benefits.mdx, v2/home/about/ecosystem.mdx, v2/home/about/vision.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-08
  * @param {any} children - children prop.

@@ -1,0 +1,243 @@
+---
+title: Video on Livepeer
+sidebarTitle: Video on Livepeer
+description: >-
+  What Livepeer provides for video developers: livestreaming, VOD transcoding, playback, and access control via the
+  Studio API and SDKs.
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - video transcoding
+  - livestreaming
+  - VOD
+  - Studio API
+  - HLS
+  - WebRTC
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+purpose: explain
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The Studio API and SDKs give you full lifecycle management for livestreams and video assets with four lines of code -- no infrastructure to operate.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer's video infrastructure handles transcoding, packaging, and delivery for both live and recorded video. The Studio API exposes this as a REST interface with official SDKs in TypeScript, Python, Go, and React. You call the API; the network provides the compute.
+
+Video workloads on Livepeer use LPT stake-weighted routing and round-based rewards -- this is the original Livepeer use case and the most mature part of the network.
+
+<CustomDivider middleText="What You Can Build" />
+
+## Capabilities
+
+The Studio API covers four workload types:
+
+**Livestreams** -- Create a stream, get an RTMP ingest URL, and Livepeer handles transcoding to adaptive bitrate HLS for delivery. Sub-second WebRTC playback is available for latency-sensitive applications.
+
+**VOD assets** -- Upload a video file, Livepeer transcodes it to multiple renditions. The asset is playable immediately via HLS or MP4.
+
+**Webhooks** -- Subscribe to events (stream started, stream ended, asset ready, asset failed) via HTTP callbacks. Event-driven architectures do not need to poll the API.
+
+**Access control** -- Gate content behind JWTs or webhook-based authorisation. JWT playback policy signs a token server-side; the player verifies it at playback.
+
+<CustomDivider middleText="API Surface" />
+
+## API surface
+
+All video operations go through the Studio REST API at `https://livepeer.studio/api`. Authentication uses a Bearer token from the Studio dashboard.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Resource</TableCell>
+      <TableCell header>Key operations</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Streams**</TableCell>
+      <TableCell>create, get, update, delete, list</TableCell>
+      <TableCell>Returns RTMP ingest URL and playback ID</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Assets**</TableCell>
+      <TableCell>create (upload), get, update, delete, list</TableCell>
+      <TableCell>Supports direct upload and URL-based import</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Webhooks**</TableCell>
+      <TableCell>create, list, delete, test</TableCell>
+      <TableCell>`stream.started`, `stream.idle`, `asset.ready`, `asset.failed`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Signing keys**</TableCell>
+      <TableCell>create, list, delete</TableCell>
+      <TableCell>Used to sign JWTs for access-controlled content</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Multistream targets**</TableCell>
+      <TableCell>create, list, delete</TableCell>
+      <TableCell>Simultaneously push to YouTube, Twitch, custom RTMP</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="SDKs" />
+
+## SDKs
+
+Four officially supported SDKs cover the full Studio API surface including video resources and AI inference:
+
+```bash
+# TypeScript / JavaScript (npm v3.5.0)
+npm install livepeer
+
+# Python
+pip install livepeer
+
+# Go
+go get github.com/livepeer/livepeer-go
+
+# React UI components (Player, Broadcast)
+npm install @livepeer/react
+```
+
+All SDKs share the same resource structure. Initialise with your API key:
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```typescript
+    import { Livepeer } from 'livepeer';
+
+    const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const stream = await client.stream.create({
+      name: 'my-stream',
+    });
+
+    console.log(stream.rtmpIngestUrl); // push here from OBS / ffmpeg
+    console.log(stream.playbackId);    // use in Player component
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+    import os
+
+    client = Livepeer(api_key=os.environ['LIVEPEER_API_KEY'])
+
+    stream = client.stream.create(request={'name': 'my-stream'})
+    print(stream.stream.rtmp_ingest_url)
+    print(stream.stream.playback_id)
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    import (
+      "context"
+      "github.com/livepeer/livepeer-go"
+      "github.com/livepeer/livepeer-go/models/components"
+    )
+
+    client := livepeer.New(livepeer.WithSecurity(os.Getenv("LIVEPEER_API_KEY")))
+
+    stream, err := client.Stream.Create(context.Background(), components.NewStreamPayload{
+      Name: "my-stream",
+    })
+    ```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Playback" />
+
+## Playback protocols
+
+Livepeer delivers content over two protocols:
+
+**HLS** -- Standard adaptive bitrate streaming. Works with any HLS player: `@livepeer/react` Player, HLS.js, Video.js, or native iOS/Android players. Latency is typically 3-8 seconds.
+
+**WebRTC** -- Sub-second latency for live interactive applications. Supported via the `@livepeer/react` Player and Broadcast components. Requires no additional configuration -- the player selects WebRTC automatically when available.
+
+The `@livepeer/react` Player handles both protocols, fallback logic, and access-controlled playback via the `jwt` prop:
+
+```tsx
+import * as Player from '@livepeer/react/player';
+
+export const VideoPlayer = ({ playbackId }: { playbackId: string }) => (
+  <Player.Root src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8`}>
+    <Player.Container>
+      <Player.Video />
+      <Player.Controls />
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+<CustomDivider middleText="Pricing" />
+
+## Pricing
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Tier</TableCell>
+      <TableCell header>Monthly</TableCell>
+      <TableCell header>Transcoding</TableCell>
+      <TableCell header>Concurrent viewers</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Free**</TableCell>
+      <TableCell>$0</TableCell>
+      <TableCell>1,000 min/month</TableCell>
+      <TableCell>30</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Growth**</TableCell>
+      <TableCell>$100 minimum</TableCell>
+      <TableCell>$0.33 per 60 min</TableCell>
+      <TableCell>50,000</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Enterprise**</TableCell>
+      <TableCell>$2,500 annual commit</TableCell>
+      <TableCell>Custom</TableCell>
+      <TableCell>Custom</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Transcoding Quickstart" icon="fast-forward" href="/v2/developers/get-started/transcoding-quickstart">
+    Create your first stream and test end-to-end in 15 minutes.
+  </Card>
+  <Card title="Developer Stack" icon="layer-group" href="/v2/developers/concepts/developer-stack">
+    Understand all three access layers and when to use Studio vs a self-hosted gateway.
+  </Card>
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/video/access-control">
+    Gate content with JWTs or webhook-based authorisation.
+  </Card>
+  <Card title="Webhooks" icon="bell" href="/v2/developers/guides/video/webhooks">
+    Subscribe to stream and asset events for event-driven applications.
+  </Card>
+</CardGroup>

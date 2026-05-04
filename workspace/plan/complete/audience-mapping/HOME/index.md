@@ -96,7 +96,7 @@ v2/home/
 ├── primer.mdx (10.6KB)                ✅ 10-minute "what is Livepeer" — strong content
 ├── get-started.mdx (7.5KB)            ✅ 6-persona routing with discovery cards + mermaid diagram
 ├── trending.mdx (6.4KB)               ⚠️ stale risk if contains static "current" content
-├── about-livepeer/
+├── about/
 │   ├── vision.mdx (8.8KB)             ✅ good
 │   ├── evolution.mdx (7.9KB)          ⚠️ confirm AI pivot is lead story
 │   ├── ecosystem.mdx (25.7KB)         ✅ strong — Foundation covered here

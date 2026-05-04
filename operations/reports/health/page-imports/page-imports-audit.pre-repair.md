@@ -1,0 +1,127 @@
+# Page Imports Audit
+
+## Summary
+- Entry pages: 460
+- Files analyzed: 590
+- Findings: 39
+- Warnings: 0
+- Repo scope: routable-v2
+
+## Findings
+- v2/resources/documentation-guide/component-library/wrappers.mdx:88 [missing-import] Import from "/snippets/components/wrappers/accordions/AccordionGroupList.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/accordions/AccordionGroupList.jsx
+  - resolved: ../../../../../snippets/components/wrappers/accordions/AccordionGroupList.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:109 [missing-import] Import from "/snippets/components/wrappers/accordions/AccordionLayout.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/accordions/AccordionLayout.jsx
+  - resolved: ../../../../../snippets/components/wrappers/accordions/AccordionLayout.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:130 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:174 [missing-import] Import from "/snippets/components/wrappers/grids/CardCarousel.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/grids/CardCarousel.jsx
+  - resolved: ../../../../../snippets/components/wrappers/grids/CardCarousel.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:227 [missing-import] Import from "/snippets/components/wrappers/cards/CustomCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/CustomCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/CustomCards.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:251 [missing-import] Import from "/snippets/components/wrappers/tables/Table.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/tables/Table.jsx
+  - resolved: ../../../../../snippets/components/wrappers/tables/Table.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:349 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:368 [missing-import] Import from "/snippets/components/wrappers/cards/CustomCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/CustomCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/CustomCards.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:392 [missing-import] Import from "/snippets/components/wrappers/cards/ShowcaseCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/ShowcaseCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/ShowcaseCards.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:422 [missing-import] Import from "/snippets/components/wrappers/cards/ShowcaseCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/ShowcaseCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/ShowcaseCards.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:443 [missing-import] Import from "/snippets/components/wrappers/lists/ListSteps.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/ListSteps.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/ListSteps.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:465 [missing-import] Import from "/snippets/components/wrappers/grids/QuadGrid.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/grids/QuadGrid.jsx
+  - resolved: ../../../../../snippets/components/wrappers/grids/QuadGrid.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:490 [missing-import] Import from "/snippets/components/wrappers/containers/ScrollBox.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/containers/ScrollBox.jsx
+  - resolved: ../../../../../snippets/components/wrappers/containers/ScrollBox.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:514 [missing-import] Import from "/snippets/components/wrappers/tables/SearchTable.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/tables/SearchTable.jsx
+  - resolved: ../../../../../snippets/components/wrappers/tables/SearchTable.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:543 [missing-import] Import from "/snippets/components/wrappers/cards/ShowcaseCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/ShowcaseCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/ShowcaseCards.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:588 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:609 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:630 [missing-import] Import from "/snippets/components/wrappers/steps/Steps.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/steps/Steps.jsx
+  - resolved: ../../../../../snippets/components/wrappers/steps/Steps.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:654 [missing-import] Import from "/snippets/components/wrappers/steps/Steps.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/steps/Steps.jsx
+  - resolved: ../../../../../snippets/components/wrappers/steps/Steps.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:679 [missing-import] Import from "/snippets/components/wrappers/tables/Tables.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/tables/Tables.jsx
+  - resolved: ../../../../../snippets/components/wrappers/tables/Tables.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:701 [missing-import] Import from "/snippets/components/wrappers/tables/Tables.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/tables/Tables.jsx
+  - resolved: ../../../../../snippets/components/wrappers/tables/Tables.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:724 [missing-import] Import from "/snippets/components/wrappers/tables/Tables.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/tables/Tables.jsx
+  - resolved: ../../../../../snippets/components/wrappers/tables/Tables.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:747 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:766 [missing-import] Import from "/snippets/components/wrappers/lists/Lists.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/lists/Lists.jsx
+  - resolved: ../../../../../snippets/components/wrappers/lists/Lists.jsx
+- v2/resources/documentation-guide/component-library/wrappers.mdx:785 [missing-import] Import from "/snippets/components/wrappers/cards/CustomCards.jsx" points to a non-existent file.
+  - raw: /snippets/components/wrappers/cards/CustomCards.jsx
+  - resolved: ../../../../../snippets/components/wrappers/cards/CustomCards.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:149 [missing-import] Import from "/snippets/styles/themeStyles.jsx" points to a non-existent file.
+  - raw: /snippets/styles/themeStyles.jsx
+  - resolved: ../../../../../snippets/styles/themeStyles.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:879 [missing-import] Import from "/snippets/components/MyComponent.jsx" points to a non-existent file.
+  - raw: /snippets/components/MyComponent.jsx
+  - resolved: ../../../../../snippets/components/MyComponent.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:882 [missing-import] Import from "../components/MyComponent.jsx" points to a non-existent file.
+  - raw: ../components/MyComponent.jsx
+  - resolved: v2/resources/documentation-guide/components/MyComponent.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:889 [missing-import] Import from "/snippets/Component.jsx" points to a non-existent file.
+  - raw: /snippets/Component.jsx
+  - resolved: ../../../../../snippets/Component.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:892 [missing-import] Import from "/snippets/Component" points to a non-existent file.
+  - raw: /snippets/Component
+  - resolved: ../../../../../snippets/Component
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:902 [missing-import] Import from "/snippets/styles/themeStyles.jsx" points to a non-existent file.
+  - raw: /snippets/styles/themeStyles.jsx
+  - resolved: ../../../../../snippets/styles/themeStyles.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:914 [missing-import] Import from "/snippets/components/MyComponent.jsx" points to a non-existent file.
+  - raw: /snippets/components/MyComponent.jsx
+  - resolved: ../../../../../snippets/components/MyComponent.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:915 [missing-import] Import from "/snippets/styles/themeStyles.jsx" points to a non-existent file.
+  - raw: /snippets/styles/themeStyles.jsx
+  - resolved: ../../../../../snippets/styles/themeStyles.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:937 [missing-import] Import from "/snippets/data/gateways/code.jsx" points to a non-existent file.
+  - raw: /snippets/data/gateways/code.jsx
+  - resolved: ../../../../../snippets/data/gateways/code.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:938 [missing-import] Import from "/snippets/pages/ChildView.mdx" points to a non-existent file.
+  - raw: /snippets/pages/ChildView.mdx
+  - resolved: ../../../../../snippets/pages/ChildView.mdx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:965 [forbidden-import] Import from "react" is forbidden on page-reachable Mintlify surfaces.
+  - raw: react
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:1056 [missing-import] Import from "/snippets/components/MyComponent.jsx" points to a non-existent file.
+  - raw: /snippets/components/MyComponent.jsx
+  - resolved: ../../../../../snippets/components/MyComponent.jsx
+- v2/resources/documentation-guide/copy-style/style-guide.mdx:1057 [missing-import] Import from "/snippets/data/gateways/code.jsx" points to a non-existent file.
+  - raw: /snippets/data/gateways/code.jsx
+  - resolved: ../../../../../snippets/data/gateways/code.jsx
+- snippets/composables/pages/trending-topics.mdx:29 [missing-import] Import from "/snippets/components/elements/links/SocialLinks.jsx" points to a non-existent file.
+  - raw: /snippets/components/elements/links/SocialLinks.jsx
+  - resolved: ../../../../../snippets/components/elements/links/SocialLinks.jsx
+

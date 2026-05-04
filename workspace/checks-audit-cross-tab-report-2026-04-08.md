@@ -201,12 +201,12 @@ Reviews written for all 20 pages. TAB summary pending.
 | Section | Pages | Pass | Needs Work | Fail |
 |---|---|---|---|---|
 | root | 3 | 2 | 0 | 1 |
-| livepeer-community | 5 | 3 | 2 | 0 |
-| livepeer-connect | 3 | 3 | 0 | 0 |
-| livepeer-contribute | 3 | 0 | 0 | 3 |
+| community | 5 | 3 | 2 | 0 |
+| connect | 3 | 3 | 0 | 0 |
+| contribute | 3 | 0 | 0 | 3 |
 | resources | 4 | 2 | 0 | 1 |
 
-**Critical:** livepeer-contribute/ is entirely empty stubs in published nav (3 Fail). `dashboards.mdx` is also a stub.
+**Critical:** contribute/ is entirely empty stubs in published nav (3 Fail). `dashboards.mdx` is also a stub.
 
 ---
 

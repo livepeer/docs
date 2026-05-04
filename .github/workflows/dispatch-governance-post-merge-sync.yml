@@ -38,6 +38,10 @@ on:
       - 'workspace/scripts/**'
       - 'workspace/reports/script-classifications.json'
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
   issues: write

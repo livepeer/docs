@@ -5,8 +5,8 @@ description: 'Generated file-check audit report from operations/scripts/archive/
 keywords: ["livepeer","internal","reports","page-audits","audit-all-pages-simple"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
-Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
 Generator Script: `operations/scripts/archive/legacy/audit-all-pages-simple.js`
 What It Does: Generated file-check audit report from operations/scripts/archive/legacy/audit-all-pages-simple.js.
 Audited Scope: `workspace/scripts`
@@ -30,11 +30,11 @@ Outputs:
 - `v2/home/mission-control`
 - `v2/home/get-started`
 - `v2/home/primer`
-- `v2/home/about-livepeer/vision`
-- `v2/home/about-livepeer/evolution`
-- `v2/home/about-livepeer/benefits`
-- `v2/home/about-livepeer/ecosystem`
-- `v2/home/about-livepeer/roadmap`
+- `v2/home/about/vision`
+- `v2/home/about/evolution`
+- `v2/home/about/benefits`
+- `v2/home/about/ecosystem`
+- `v2/home/about/roadmap`
 - `v2/home/solutions/showcase`
 - `v2/home/solutions/verticals`
 - `v2/home/solutions/applications`
@@ -244,5 +244,6 @@ Outputs:
 - `v2/gateways/references/api-reference/AI-API/audio-to-text`
 - `v2/gateways/references/api-reference/AI-API/segment-anything-2`
 - `v2/gateways/references/api-reference/AI-API/llm`
+- `v2/gateways/references/api-reference/AI-API/image-to-text`
 
 _Published page truncated for site reliability. Use the repository report artifact for the full output._

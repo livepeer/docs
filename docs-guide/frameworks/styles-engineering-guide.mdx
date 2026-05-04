@@ -38,11 +38,11 @@ The styles governance system follows the repo's standard pipeline pattern: **Con
 │  → gates PR merge                                    │
 ├─────────────────────────────────────────────────────┤
 │  P5 (weekly cron)                                    │
-│  styles-governance.yml → full audit report            │
+│  remediator-brand-repair-style-tokens.yml → full audit report            │
 │  → artifact upload for review                        │
 ├─────────────────────────────────────────────────────┤
 │  P6 (on-demand)                                      │
-│  styles-governance.yml → manual dispatch              │
+│  remediator-brand-repair-style-tokens.yml → manual dispatch              │
 │  → audit OR remediate-dry-run OR remediate-write     │
 │  → remediate-write creates PR via peter-evans         │
 └─────────────────────────────────────────────────────┘
@@ -157,7 +157,7 @@ When `--verify` is passed with `--write`:
 
 ### CoinGecko Exchanges
 
-**Script:** `.github/scripts/fetch-exchanges-data.js`
+**Script:** `operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js`
 **Workflow:** `.github/workflows/update-exchanges-data.yml`
 **Output:** `snippets/data/exchanges/exchangesData.jsx`
 **Schedule:** Weekly Monday 03:00 UTC
@@ -165,7 +165,7 @@ When `--verify` is passed with `--write`:
 
 ### go-livepeer Configuration Flags
 
-**Script:** `.github/scripts/fetch-config-flags.js`
+**Script:** `operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js`
 **Workflow:** `.github/workflows/update-config-flags.yml`
 **Output:** `snippets/data/gateways/configFlagsData.jsx`
 **Schedule:** Weekly Monday 04:00 UTC

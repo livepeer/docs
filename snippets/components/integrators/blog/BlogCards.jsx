@@ -64,7 +64,7 @@ function sanitiseHTML(html) {
  * @description Blog post card with scrollable content, metadata, and CTA.
  * @dataSource automation/blog
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {any} title - title prop.
@@ -265,7 +265,7 @@ export const BlogCard = ({
  * @description Grid layout rendering BlogCards from an items array.
  * @dataSource automation/blog
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {Array} [items=[]] - items prop.
@@ -307,7 +307,7 @@ export const CardBlogDataLayout = ({
  * @description Multi-column BlogCard layout using Mintlify Columns.
  * @dataSource automation/blog
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {Array} [items=[]] - items prop.
@@ -557,7 +557,7 @@ export const BlogDataLayout = ({
  * @description Post card with gradient header, scrollable content, and metadata.
  * @dataSource automation/blog
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {any} title - title prop.
@@ -571,6 +571,8 @@ export const BlogDataLayout = ({
  * @param {string} [dateIcon="calendar"] - date Icon prop.
  * @param {string} [cta="Read More"] - cta prop.
  * @param {any} [img=null] - img prop.
+ * @param {string} [categoryName=null] - Forum category name for badge display.
+ * @param {string} [categoryColor=null] - Hex colour for category badge.
  * @param {string} [className=''] - Optional CSS class override.
  * @param {object} [style={}] - Optional inline style override.
  */
@@ -586,6 +588,8 @@ export const PostCard = ({
   dateIcon = 'calendar',
   cta = 'Read More',
   img = null,
+  categoryName = null,
+  categoryColor = null,
   className = '',
   style = {},
   ...rest
@@ -621,11 +625,29 @@ export const PostCard = ({
       arrow
       {...rest}
     >
+      {categoryName && (
+        <div style={{ marginTop: "var(--lp-spacing-px-12)" }}>
+          <span
+            style={{
+              display: 'inline-block',
+              fontSize: 11,
+              fontWeight: 600,
+              padding: '2px 8px',
+              borderRadius: 4,
+              backgroundColor: categoryColor || 'var(--lp-color-bg-subtle)',
+              color: '#fff',
+              letterSpacing: '0.02em',
+            }}
+          >
+            {categoryName}
+          </span>
+        </div>
+      )}
       {author && (
         <div
           style={{
             display: 'flex',
-            marginTop: "var(--lp-spacing-px-12)",
+            marginTop: categoryName ? 8 : "var(--lp-spacing-px-12)",
             fontSize: 13,
             color: 'var(--lp-color-text-secondary)',
             gap: 8,
@@ -720,7 +742,7 @@ export const PostCard = ({
  * @description Multi-column PostCard layout.
  * @dataSource automation/blog
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {number} [cols=2] - cols prop.
@@ -794,7 +816,7 @@ export const CardInCardLayout = ({
  * @description Latest forum topics with banner image and topic cards.
  * @dataSource automation/forum
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/livepeer-latest-topics.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx
+ * @usedIn v2/community/community/livepeer-latest-topics.mdx, v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {Array} [items=[]] - items prop.
@@ -842,7 +864,7 @@ export const ForumLatestLayout = ({
  * @description Discord announcement feed with parsed markdown content. Sanitised HTML.
  * @dataSource automation/discord
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/streamplace/community.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/streamplace/community.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {Array} [items=[]] - items prop.
@@ -1000,7 +1022,7 @@ export const DiscordAnnouncements = ({
  * @description Upcoming/past event cards from Luma calendar data.
  * @dataSource Luma API
  * @aiDiscoverability none
- * @usedIn v2/community/livepeer-connect/events-and-community-streams.mdx
+ * @usedIn v2/community/connect/events-and-streams.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {any} data - data prop.

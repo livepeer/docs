@@ -99,7 +99,7 @@
 
 ### Ecosystem (Home)
 
-**File:** `v2/home/about-livepeer/ecosystem.mdx`
+**File:** `v2/home/about/ecosystem.mdx`
 
 **Why it's good:** QuadGrid for entity overview — four cards with icons, descriptions, and anchor links. Clean organisational hierarchy: values list → entity cards → detailed sections per entity. FrameQuote for significant quotations.
 
@@ -116,7 +116,7 @@
 
 ### Evolution Timeline (Home)
 
-**File:** `v2/home/about-livepeer/evolution.mdx`
+**File:** `v2/home/about/evolution.mdx`
 
 **Why it's good:** Update component used as a timeline — each entry is a year/period with tags and bullet content. YouTubeVideo component at top for video-first opening. This is the pattern for any chronological content (changelogs, roadmaps, history).
 

@@ -13,6 +13,7 @@
  * @policy      E-R1, R-R11
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
 
@@ -93,7 +94,7 @@ async function fetchLatestRelease(fetcher = global.fetch) {
 function writeLatestReleaseModule({ version, outputPath = DEFAULT_OUTPUT_PATH }) {
   const content = buildLatestReleaseModule(version);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, content, 'utf8');
+  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { fs.writeFileSync(outputPath, content, 'utf8'); };
   return content;
 }
 

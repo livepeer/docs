@@ -16007,7 +16007,7 @@ keywords:
 
 ---
 
-### /Users/alisonhaire/Documents/Livepeer/livepeer-docs-v2_d-v2-branch/docs/developers/moved-to-about-livepeer-protocol/livepeer-actors/gateways.mdx
+### /Users/alisonhaire/Documents/Livepeer/livepeer-docs-v2_d-v2-branch/docs/developers/moved-to-about-protocol/livepeer-actors/gateways.mdx
 
 ---
 keywords:

@@ -1,7 +1,7 @@
 # Actions Library Summary
 
-> 55 workflows | 7 types | 6 concerns | P2–P7 pipeline tiers
-> Generated 2026-04-08
+> 49 workflows | 7 types | 6 concerns | P2–P7 pipeline tiers
+> Generated 2026-05-01 (consolidated 6 social feed wrappers into single matrix dispatcher)
 
 ---
 
@@ -37,16 +37,10 @@
 | **P4** | generate-docs-index | push to docs-v2 | Regenerates docs-index.json |
 | **P4** | generate-sdk-clients | — | SDK client generation (trigger TBD) |
 
-## Integrators (12) — scheduled data feeds + auto-commit
+## Integrators (6) — scheduled data feeds + auto-commit
 
 | Pipeline | Workflow | Trigger | What it does |
 |---|---|---|---|
-| **P5-auto** | update-discord-data | cron + manual | Fetches Discord announcements, commits JSON |
-| **P5-auto** | update-forum-data | cron + manual | Fetches Livepeer forum topics, commits JSON |
-| **P5-auto** | update-ghost-blog-data | cron + manual | Fetches Ghost blog posts, commits JSON |
-| **P5-auto** | update-github-data | cron + manual | Fetches GitHub discussions + releases, commits JSON |
-| **P5-auto** | update-rss-blog-data | cron + manual | Fetches RSS blog feed, commits JSON |
-| **P5-auto** | update-youtube-data | cron + manual | Fetches YouTube videos, commits JSON |
 | **P5-auto** | update-changelogs | cron + dispatch + manual | Fetches repo changelogs, commits MDX |
 | **P5-auto** | update-translations | manual only | Translates docs pages via OpenRouter |
 | **P5-auto** | update-contract-addresses | cron + dispatch + manual | Fetches on-chain contract data, commits JSON |
@@ -54,6 +48,8 @@
 | **P5-auto** | update-release-version | cron + dispatch + manual | Fetches latest go-livepeer release version |
 | **P5-auto** | update-large-assets | push + cron + manual | Syncs large assets to external storage |
 | **P5-auto** | project-showcase-sync | manual + dispatch | Syncs project showcase data |
+
+> **Consolidated 2026-05-01:** 6 social feed wrappers (discord, forum, ghost-blog, github, rss-blog, youtube) merged into `dispatch-copy-update-social-feeds.yml` which now owns all per-feed cron schedules. Trigger via workflow_dispatch with `mode:` input or scheduled cron.
 
 ## Auditors (5) — scheduled scans with rolling issues
 
@@ -80,7 +76,7 @@
 | Pipeline | Workflow | Trigger | What it does |
 |---|---|---|---|
 | **P4** | post-merge-sync | push to docs-v2 | Runs governance repair + root artifact generation post-merge |
-| **P4** | update-social-feeds | workflow_call + manual | Reusable dispatcher called by individual feed workflows |
+| **P4** | dispatch-copy-update-social-feeds | cron + workflow_call + manual | Matrix dispatcher: forum, ghost-blog, youtube, github, discord, rss-blog, livepeer-release. Per-feed cron schedules. |
 | **P4** | check-catalogs | workflow_call + manual | Reusable dispatcher called by catalog validators |
 
 ## Remediators (3) — self-heal + auto-fix PRs

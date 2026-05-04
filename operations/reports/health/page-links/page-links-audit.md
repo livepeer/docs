@@ -106,22 +106,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
   - (none)
 
 ### Community
-- Livepeer Community Portal (community/community-portal.mdx)
-- Community FAQ (community/faq.mdx)
+- Livepeer Community Portal (community/portal.mdx)
+- Community FAQ (community/resources/faq.mdx)
 - ### Livepeer Community
-  - Community Guidelines (community/livepeer-community/community-guidelines.mdx)
-  - Governance & the Livepeer Foundation (community/livepeer-community/governance-and-foundation.mdx)
-  - What's Happening in Livepeer (community/livepeer-community/livepeer-latest-topics.mdx)
-  - Livepeer Foundation Roadmap (community/livepeer-community/roadmap.mdx)
-  - Trending Topics (community/livepeer-community/trending-topics.mdx)
+  - Community Guidelines (community/guides/guidelines.mdx)
+  - Governance & the Livepeer Foundation (community/ecosystem/governance.mdx)
+  - What's Happening in Livepeer (community/community/livepeer-latest-topics.mdx)
+  - Livepeer Foundation Roadmap (community/ecosystem/roadmap.mdx)
+  - Trending Topics (community/connect/trending-topics.mdx)
 - ### Livepeer Connect
-  - Events & Live Streams (community/livepeer-connect/events-and-community-streams.mdx)
-  - Connect & Channels (community/livepeer-connect/forums-and-discussions.mdx)
-  - News & Socials (community/livepeer-connect/news-and-socials.mdx)
+  - Events & Live Streams (community/connect/events-and-streams.mdx)
+  - Connect & Channels (community/connect/connect-channels.mdx)
+  - News & Socials (community/connect/news-and-socials.mdx)
 - ### Livepeer Contribute
-  - Build Livepeer (community/livepeer-contribute/build-livepeer.mdx)
-  - Contribute to Livepeer (community/livepeer-contribute/contribute.mdx)
-  - Livepeer Opportunities (community/livepeer-contribute/opportunities.mdx)
+  - Build Livepeer (community/contribute/build-livepeer.mdx)
+  - Contribute to Livepeer (community/contribute/contribute.mdx)
+  - Livepeer Opportunities (community/contribute/opportunities.mdx)
 - ### Resources
   - Ecosystem Tools & Projects (community/resources/awesome-livepeer.mdx)
   - Dashboards (community/resources/dashboards.mdx)
@@ -471,11 +471,11 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 - Livepeer Primer (home/primer.mdx)
 - ⚠️ Trending Topics (home/trending.mdx)
 - ### About Livepeer
-  - The Livepeer Advantage (home/about-livepeer/benefits.mdx)
-  - Livepeer Organisational Structure (home/about-livepeer/ecosystem.mdx)
-  - Livepeer Evolution (home/about-livepeer/evolution.mdx)
-  - What's Next for Livepeer? (home/about-livepeer/roadmap.mdx)
-  - Livepeer Story (home/about-livepeer/vision.mdx)
+  - The Livepeer Advantage (home/about/benefits.mdx)
+  - Livepeer Organisational Structure (home/about/ecosystem.mdx)
+  - Livepeer Evolution (home/about/evolution.mdx)
+  - What's Next for Livepeer? (home/about/roadmap.mdx)
+  - Livepeer Story (home/about/vision.mdx)
 - ### Get Started
   - ⚠️ Livepeer AI (quickstart) (home/get-started/ai-pipelines.mdx)
   - ⚠️ Use Livepeer (home/get-started/build-on-livepeer.mdx)
@@ -1276,8 +1276,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://docs.openzeppelin.com/contracts/4.x/api/governance#governor |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/4.x/api/governance#governorsettings |  | null | 🟡 untested-external |  |  |  |
 | internal-relative | ./treasury | v2/about/protocol/treasury.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/home/about-livepeer/ecosystem#livepeer-foundation | v2/home/about-livepeer/ecosystem.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/home/about-livepeer/ecosystem#special-purpose-entities | v2/home/about-livepeer/ecosystem.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/home/about/ecosystem#livepeer-foundation | v2/home/about/ecosystem.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/home/about/ecosystem#special-purpose-entities | v2/home/about/ecosystem.mdx | true | ok |  |  |  |
 | external-https | https://discord.com/channels/423160867534929930/686685097935503397 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/lips |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer.livepeer.org/voting |  | null | 🟡 untested-external |  |  |  |
@@ -1474,14 +1474,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | (none) |  |  |  |  |  |  |  |
 
-### v2/community/community-portal.mdx
+### v2/community/portal.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.com/events/423160867534929930/1394387788568203274 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://x.com/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.youtube.com/@livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://blog.livepeer.org/ |  | null | 🟡 untested-external |  |  |  |
@@ -1493,12 +1493,12 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://www.reddit.com/r/livepeer/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.youtube.com/@livepeer |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/faq.mdx
+### v2/community/resources/faq.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://explorer.livepeer.org/treasury |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation#how-to-propose-an-spe | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance#how-to-propose-an-spe | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://explorer.livepeer.org/treasury |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/t/introducing-workstreams-a-new-era-of-execution-for-the-livepeer-project/3030 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.com/invite/livepeer |  | null | 🟡 untested-external |  |  |  |
@@ -1518,7 +1518,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.youtube.com/@livepeer |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-community/community-guidelines.mdx
+### v2/community/guides/guidelines.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://forum.livepeer.org/t/rules-moderation-of-livepeer-discord/2640 |  | null | 🟡 untested-external |  |  |  |
@@ -1536,7 +1536,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://www.reddit.com/r/livepeer/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.livepeer.org/community-hub |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-contribute/contribute | v2/community/livepeer-contribute/contribute.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/contribute/contribute | v2/community/contribute/contribute.mdx | true | ok |  |  |  |
 | external-https | https://explorer.livepeer.org/voting |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer |  | null | 🟡 untested-external |  |  |  |
@@ -1546,14 +1546,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-contribute/contribute | v2/community/livepeer-contribute/contribute.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/community/livepeer-connect/forums-and-discussions | v2/community/livepeer-connect/forums-and-discussions.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/contribute/contribute | v2/community/contribute/contribute.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/connect/connect-channels | v2/community/connect/connect-channels.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/wiki/blob/master/CONTRIBUTING.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.livepeer.org/community-hub |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/faq |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.contributor-covenant.org/ |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-community/governance-and-foundation.mdx
+### v2/community/ecosystem/governance.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://forum.livepeer.org/c/governance/17 |  | null | 🟡 untested-external |  |  |  |
@@ -1574,7 +1574,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/t/govworks-community-updates/2673 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-community/livepeer-latest-topics.mdx
+### v2/community/community/livepeer-latest-topics.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://forum.livepeer.org/c/governance/17 |  | null | 🟡 untested-external |  |  |  |
@@ -1591,7 +1591,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/c/treasury/18 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.com/invite/livepeer |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-community/roadmap.mdx
+### v2/community/ecosystem/roadmap.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://www.nvidia.com/en-us/glossary/world-models/ |  | null | 🟡 untested-external |  |  |  |
@@ -1599,7 +1599,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://roadmap.livepeer.org/roadmap |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://roadmap.livepeer.org/roadmap |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-community/trending-topics.mdx
+### v2/community/connect/trending-topics.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://download.com |  | null | 🟡 untested-external |  |  |  |
@@ -1619,13 +1619,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://www.youtube.com/watch?v=-iO7HsR3KE4&#x26;list=PLkw6hm1fcjtF1OYFCF20AwBUtGygQxTQV&#x26;index=3 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.google.com/presentation/d/1Qg6u1Ns1RU2Gw4m-dzGu_WeKx9z0v5HcbHTpWwA91Yw/embed |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-connect/events-and-community-streams.mdx
+### v2/community/connect/events-and-streams.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://luma.com/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://lu.ma/embed/calendar/cal-giBner4VGLXeKjy/events?period=all |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-connect/forums-and-discussions.mdx
+### v2/community/connect/connect-channels.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
@@ -1647,22 +1647,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 
-### v2/community/livepeer-connect/news-and-socials.mdx
+### v2/community/connect/news-and-socials.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | (none) |  |  |  |  |  |  |  |
 
-### v2/community/livepeer-contribute/build-livepeer.mdx
+### v2/community/contribute/build-livepeer.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | (none) |  |  |  |  |  |  |  |
 
-### v2/community/livepeer-contribute/contribute.mdx
+### v2/community/contribute/contribute.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | (none) |  |  |  |  |  |  |  |
 
-### v2/community/livepeer-contribute/opportunities.mdx
+### v2/community/contribute/opportunities.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | (none) |  |  |  |  |  |  |  |
@@ -1752,7 +1752,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://en.wikipedia.org/wiki/Transcoding |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/community | v2/community/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/community/faq | v2/community/faq.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/resources/faq | v2/community/resources/faq.mdx | true | ok |  |  |  |
 
 ### v2/community/resources/guides.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -1763,7 +1763,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways | v2/gateways/index.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/treasury/18 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation#how-to-propose-an-spe | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance#how-to-propose-an-spe | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators | v2/orchestrators/index.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
@@ -1772,7 +1772,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation#how-to-propose-an-spe | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance#how-to-propose-an-spe | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://forum.livepeer.org/t/livepeer-governance-process/2767 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://mirror.xyz/livepeer.eth/kIYLc2c-KLDDTUtEdMlGPdFLoR-6n7fy33oD3XyMMzk |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
@@ -1888,7 +1888,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/delegators/guides/governance/overview.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/community/livepeer-community/governance-and-foundation | v2/community/livepeer-community/governance-and-foundation.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/ecosystem/governance | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
@@ -1916,7 +1916,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
-| external-https | https://paragraph.com/@livepeer-2/using-the-livepeer-community-treasury |  | null | 🟡 untested-external |  |  |  |
+| external-https | https://paragraph.com/@livepeer-2/using-the-community-treasury |  | null | 🟡 untested-external |  |  |  |
 
 ### v2/delegators/guides/treasury/proposals.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2370,7 +2370,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/developers/guides/opportunities/bug-bounties | v2/developers/guides/opportunities/bug-bounties.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/guides/opportunities/grants-and-programmes | v2/developers/guides/opportunities/grants-and-programmes.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/community/livepeer-community/community-guidelines | v2/community/livepeer-community/community-guidelines.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/guides/guidelines | v2/community/guides/guidelines.mdx | true | ok |  |  |  |
 
 ### v2/developers/guides/opportunities/overview.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -4484,7 +4484,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways/setup/configure | v2/gateways/setup/configure.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/setup/monitor | v2/gateways/setup/monitor.mdx | true | ok |  |  |  |
 
-### v2/home/about-livepeer/benefits.mdx
+### v2/home/about/benefits.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://www.linkedin.com/in/shannon-wells/ |  | null | 🟡 untested-external |  |  |  |
@@ -4494,7 +4494,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 
-### v2/home/about-livepeer/ecosystem.mdx
+### v2/home/about/ecosystem.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://en.wikipedia.org/wiki/Decentralized_autonomous_organization |  | null | 🟡 untested-external |  |  |  |
@@ -4549,7 +4549,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://imgflip.com/embed/aidl1c |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer.livepeer.org/treasury |  | null | 🟡 untested-external |  |  |  |
 
-### v2/home/about-livepeer/evolution.mdx
+### v2/home/about/evolution.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0001.md |  | null | 🟡 untested-external |  |  |  |
@@ -4569,16 +4569,16 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://blog.livepeer.org/livepeer-foundation-is-live/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://roadmap.livepeer.org/roadmap |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/00_HOME/evolution.png |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/home/about-livepeer/roadmap | v2/home/about-livepeer/roadmap.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/home/about/roadmap | v2/home/about/roadmap.mdx | true | ok |  |  |  |
 
-### v2/home/about-livepeer/roadmap.mdx
+### v2/home/about/roadmap.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://roadmap.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.nvidia.com/en-us/glossary/world-models/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://roadmap.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 
-### v2/home/about-livepeer/vision.mdx
+### v2/home/about/vision.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://medium.com/livepeer-blog/the-livepeer-development-stack-technology-behind-live-streaming-built-on-ethereum-d6a06158d5e2 |  | null | 🟡 untested-external |  |  |  |
@@ -4587,7 +4587,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://medium.com/livepeer-blog/livepeer-for-beginners-3b49945c24a7?source=collection_home---------163---------------------------- |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://livepeer.org/primer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/media/videos/livepeer-founders-post.mp4 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/home/about-livepeer/roadmap | v2/home/about-livepeer/roadmap.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/home/about/roadmap | v2/home/about/roadmap.mdx | true | ok |  |  |  |
 
 ### v2/home/mission-control.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -4597,7 +4597,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/developers/get-started/transcoding-quickstart | v2/developers/get-started/transcoding-quickstart.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/get-started/ai-quickstart | v2/developers/get-started/ai-quickstart.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/community/community-portal | v2/community/community-portal.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/portal | v2/community/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/solutions/showcase | v2/home/solutions/showcase.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/setup/guide | v2/gateways/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/delegators/concepts/overview | v2/delegators/concepts/overview.mdx | true | ok |  |  |  |
@@ -4620,14 +4620,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.com/invite/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjgxanlyczB0NW05M2xlYWEwdDg1N20zanowNGxmdzNnbWZ2bHQwdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ae7SI3LoPYj8Q/giphy.gif |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/community-portal | v2/community/community-portal.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/portal | v2/community/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/ | v2/about/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/solutions/showcase | v2/home/solutions/showcase.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/solutions/portal | v2/solutions/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/portal | v2/developers/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/portal | v2/gateways/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/portal | v2/orchestrators/portal.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/community/community-portal | v2/community/community-portal.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/portal | v2/community/portal.mdx | true | ok |  |  |  |
 
 ### v2/home/resources/glossary.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5164,13 +5164,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer.livepeer.org/orchestrators |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://tools.livepeer.cloud |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/advanced-operations/gateway-relationships | v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/staking-and-rewards/earning-model | v2/orchestrators/guides/staking-and-rewards/earning-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/guides/deployment-details/join-a-pool.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5756,7 +5756,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://en.wikipedia.org/wiki/Throughput |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators | v2/orchestrators/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/resources/knowledge-hub/community-guides.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5782,7 +5782,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/guides/advanced-operations/pool-operators | v2/orchestrators/guides/advanced-operations/pool-operators.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
 | external-https | https://www.youtube.com/@LivepeerOrg |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/community/livepeer-connect/events-and-community-streams | v2/community/livepeer-connect/events-and-community-streams.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/community/connect/events-and-streams | v2/community/connect/events-and-streams.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/ai-worker |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
@@ -5790,8 +5790,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/developers/resources/knowledge-hub/awesome-livepeer | v2/developers/resources/knowledge-hub/awesome-livepeer.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/transcoders/7 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
 | internal-rooted | /v2/orchestrators/resources/technical/cli-flags | v2/orchestrators/resources/technical/cli-flags | false | missing | /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) |
 
@@ -5828,10 +5828,10 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://www.quicknode.com/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://chainstack.com/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://arb1.arbitrum.io/rpc |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq#arbitrum-rpc-connection-failing--node-will-not-start | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq#arbitrum-rpc-connection-failing--node-will-not-start | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | internal-rooted | /v2/orchestrators/resources/arbitrum-exchanges | v2/orchestrators/resources/arbitrum-exchanges | false | missing | /v2/gateways/resources/compendium/arbitrum-exchanges (same leaf segment match, 0.65) | /v2/orchestrators/resources/reference/arbitrum-exchanges (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) |
 | internal-rooted | /v2/orchestrators/resources/technical/x-contract-addresses | v2/orchestrators/resources/technical/x-contract-addresses | false | missing | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-pools (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/resources/reference/faq.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5883,7 +5883,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup | v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/resources/reference/technical/x-troubleshooting.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5898,7 +5898,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/transcoders/7 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/advanced-operations/pool-operators | v2/orchestrators/guides/advanced-operations/pool-operators.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
@@ -5908,10 +5908,10 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox | v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/resources/technical/cli-flags | v2/orchestrators/resources/technical/cli-flags | false | missing | /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | internal-rooted | /v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox | v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/resources/x-help.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5976,7 +5976,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/orch-config | v2/orchestrators/setup/orch-config | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 | internal-rooted | /v2/orchestrators/setup/orch-config | v2/orchestrators/setup/orch-config | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
 | internal-rooted | /v2/orchestrators/get-started/quickstart | v2/orchestrators/get-started/quickstart | false | missing | /v2/solutions/livepeer-studio/docs/quickstart (same leaf segment match, 0.65) | /v2/orchestrators/quickstart/AI-prompt-start (high path similarity, 0.575) | /v2/orchestrators/quickstart/dep-x-setup-paths (high path similarity, 0.575) |
 
@@ -5986,7 +5986,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | internal-relative | ./install-go-livepeer | v2/orchestrators/setup/install-go-livepeer | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
 | internal-relative | ../advanced/rewards-and-fees | v2/orchestrators/advanced/rewards-and-fees | false | missing | /v2/orchestrators/GOVERNANCE (high path similarity, 0.5) | /v2/orchestrators/concepts/architecture (high path similarity, 0.5) | /v2/orchestrators/concepts/capabilities (high path similarity, 0.5) |
-| internal-relative | ../resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-relative | ../resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
 
 ### v2/orchestrators/setup/prepare.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |

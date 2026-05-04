@@ -152,17 +152,17 @@ S1 Pick your path → S2 Map community structure → S3 Join venues → S4 Start
 
 ```
 v2/community/
-├── community-portal.mdx (6.9KB)       ✅ entry point
+├── portal.mdx (6.9KB)       ✅ entry point
 ├── index.mdx (2.1KB)                  ✅ minimal
 ├── faq.mdx (7.7KB)                    ✅ good — audit for cross-tab duplication
-├── livepeer-community/
-│   ├── community-guidelines.mdx (19.7KB) ✅ comprehensive
-│   ├── governance-and-foundation.mdx (14KB) ✅ good — scope boundary with About needed
+├── community/
+│   ├── guidelines.mdx (19.7KB) ✅ comprehensive
+│   ├── governance.mdx (14KB) ✅ good — scope boundary with About needed
 │   ├── livepeer-latest-topics.mdx (3.9KB) ⚠️ stale risk
 │   ├── trending-topics.mdx (6.8KB)    ⚠️ stale risk
 │   └── roadmap.mdx (2KB)              ⚠️ stub — duplicate risk with Home
-├── livepeer-connect/                   ⚠️ confirm published contents
-├── livepeer-contribute/                ⚠️ confirm published contents
+├── connect/                   ⚠️ confirm published contents
+├── contribute/                ⚠️ confirm published contents
 └── resources/                          ⚠️ confirm published contents
 ```
 
@@ -172,8 +172,8 @@ v2/community/
 
 1. **NO CANONICAL COLLATION EXISTS** — collated/ directory is empty. Needs 2nd+ model run then collation synthesis before Phase 2.
 2. **Primary persona decision unresolved** — Engaged Holder (v5) vs First-time Participant (v4).
-3. **livepeer-connect/ contents unconfirmed** — critical for Intent A (finding community).
-4. **livepeer-contribute/ contents unconfirmed** — critical for Intent C (contributing).
+3. **connect/ contents unconfirmed** — critical for Intent A (finding community).
+4. **contribute/ contents unconfirmed** — critical for Intent C (contributing).
 5. **Roadmap duplication** — Community roadmap.mdx (2KB) vs Home roadmap.mdx (1.8KB). One canonical location needed.
 6. **FAQ scope** — check for cross-tab duplication (delegation questions belong in LPT tab).
 7. **Governance scope boundary** — Community covers participation; About covers mechanics.

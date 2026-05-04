@@ -5,11 +5,11 @@
  * @concern     brand
  * @niche       style
  * @purpose     qa:content-quality
- * @description Converts US English spellings to UK English in routable v2 MDX content text only. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values.
+ * @description Converts between US and UK English spellings in routable v2 MDX content text only. Default direction: US to UK (en-GB). Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values.
  * @mode        repair
  * @pipeline    manual — batch remediation utility, run with --dry-run first
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
- * @usage       node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--verify]
+ * @usage       node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--language en-gb|en-us] [--staged] [--files path,path]
  */
 
 'use strict';
@@ -22,172 +22,92 @@ const V2_ROOT = path.join(REPO_ROOT, 'v2');
 
 const EXCLUDED_SEGMENTS = new Set(['_workspace', 'x-archived', 'x-deprecated', 'cn', 'es', 'fr']);
 
-// ── US → UK word map ────────────────────
-// Each entry: [usPattern (regex source), ukReplacement]
-// Word-boundary aware. Case-preserving via matchCase().
-const US_TO_UK = [
-  // -ize → -ise family
-  ['optimize', 'optimise'],
-  ['optimized', 'optimised'],
-  ['optimizing', 'optimising'],
-  ['optimization', 'optimisation'],
-  ['optimizations', 'optimisations'],
-  ['organize', 'organise'],
-  ['organized', 'organised'],
-  ['organizing', 'organising'],
-  ['organization', 'organisation'],
-  ['organizations', 'organisations'],
-  ['recognize', 'recognise'],
-  ['recognized', 'recognised'],
-  ['recognizing', 'recognising'],
-  ['customize', 'customise'],
-  ['customized', 'customised'],
-  ['customizing', 'customising'],
-  ['customization', 'customisation'],
-  ['customizations', 'customisations'],
-  ['minimize', 'minimise'],
-  ['minimized', 'minimised'],
-  ['minimizing', 'minimising'],
-  ['maximize', 'maximise'],
-  ['maximized', 'maximised'],
-  ['maximizing', 'maximising'],
-  ['utilize', 'utilise'],
-  ['utilized', 'utilised'],
-  ['utilizing', 'utilising'],
-  ['utilization', 'utilisation'],
-  ['analyze', 'analyse'],
-  ['analyzed', 'analysed'],
-  ['analyzing', 'analysing'],
-  ['stabilize', 'stabilise'],
-  ['stabilized', 'stabilised'],
-  ['synchronize', 'synchronise'],
-  ['synchronized', 'synchronised'],
-  ['synchronizing', 'synchronising'],
-  ['decentralize', 'decentralise'],
-  ['decentralized', 'decentralised'],
-  ['decentralizing', 'decentralising'],
-  ['incentivize', 'incentivise'],
-  ['incentivized', 'incentivised'],
-  ['incentivizing', 'incentivising'],
-  ['prioritize', 'prioritise'],
-  ['prioritized', 'prioritised'],
-  ['prioritizing', 'prioritising'],
-  ['initialize', 'initialise'],
-  ['initialized', 'initialised'],
-  ['initializing', 'initialising'],
-  ['initialization', 'initialisation'],
-  ['finalize', 'finalise'],
-  ['finalized', 'finalised'],
-  ['finalizing', 'finalising'],
-  ['normalize', 'normalise'],
-  ['normalized', 'normalised'],
-  ['normalizing', 'normalising'],
-  ['normalization', 'normalisation'],
-  ['standardize', 'standardise'],
-  ['standardized', 'standardised'],
-  ['standardizing', 'standardising'],
-  ['standardization', 'standardisation'],
-  ['authorize', 'authorise'],
-  ['authorized', 'authorised'],
-  ['authorizing', 'authorising'],
-  ['authorization', 'authorisation'],
-  ['categorize', 'categorise'],
-  ['categorized', 'categorised'],
-  ['categorizing', 'categorising'],
-  ['summarize', 'summarise'],
-  ['summarized', 'summarised'],
-  ['summarizing', 'summarising'],
-  ['monetize', 'monetise'],
-  ['monetized', 'monetised'],
-  ['monetizing', 'monetising'],
-  ['monetization', 'monetisation'],
-  ['tokenize', 'tokenise'],
-  ['tokenized', 'tokenised'],
-  ['tokenizing', 'tokenising'],
-  ['tokenization', 'tokenisation'],
-  ['visualize', 'visualise'],
-  ['visualized', 'visualised'],
-  ['visualizing', 'visualising'],
-  ['visualization', 'visualisation'],
-  ['penalize', 'penalise'],
-  ['penalized', 'penalised'],
-  ['penalizing', 'penalising'],
+// ── Load rules from shared data file ───
+function loadLanguageRules() {
+  const rulesPath = path.join(REPO_ROOT, 'tools', 'config', 'quality', 'language-rules.json');
+  try {
+    return JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
+  } catch (err) {
+    console.error(`Failed to load language rules from ${rulesPath}: ${err.message}`);
+    process.exit(1);
+  }
+}
 
-  // -or → -our family
-  ['behavior', 'behaviour'],
-  ['behaviors', 'behaviours'],
-  ['favor', 'favour'],
-  ['favored', 'favoured'],
-  ['favoring', 'favouring'],
-  ['favorite', 'favourite'],
-  ['favorites', 'favourites'],
-  ['honor', 'honour'],
-  ['honored', 'honoured'],
-  ['honoring', 'honouring'],
-  ['neighbor', 'neighbour'],
-  ['neighbors', 'neighbours'],
-  ['neighboring', 'neighbouring'],
-  ['labor', 'labour'],
-  ['humor', 'humour'],
-  ['vigor', 'vigour'],
+function buildCompiledRules(language) {
+  const data = loadLanguageRules();
+  const pairs = data.pairs.map((p) => {
+    if (language === 'en-gb') {
+      return [p.us, p.uk];
+    }
+    return [p.uk, p.us];
+  });
 
-  // -er → -re family (careful — only specific words)
-  ['center', 'centre'],
-  ['centered', 'centred'],
-  ['centering', 'centring'],
-  ['fiber', 'fibre'],
-  ['fibers', 'fibres'],
-  ['liter', 'litre'],
-  ['liters', 'litres'],
+  // Sort by length descending so longer matches get tried first
+  pairs.sort((a, b) => b[0].length - a[0].length);
 
-  // -ense → -ence family
-  ['defense', 'defence'],
-  ['offense', 'offence'],
-
-  // -og → -ogue family (skip UI "dialog")
-  ['catalog', 'catalogue'],
-  ['catalogs', 'catalogues'],
-
-  // Other
-  ['gray', 'grey'],
-
-  // -or → -our for color (content only — props excluded by zone detection)
-  ['color', 'colour'],
-  ['colors', 'colours'],
-  ['colored', 'coloured'],
-  ['colorful', 'colourful'],
-];
-
-// Sort by length descending so longer matches get tried first (e.g. "optimizations" before "optimization")
-US_TO_UK.sort((a, b) => b[0].length - a[0].length);
-
-// Compile regexes with word boundaries
-const COMPILED_RULES = US_TO_UK.map(([us, uk]) => ({
-  us,
-  uk,
-  regex: new RegExp(`\\b${us}\\b`, 'gi'),
-}));
+  return pairs.map(([from, to]) => ({
+    from,
+    to,
+    regex: new RegExp(`\\b${from}\\b`, 'gi'),
+  }));
+}
 
 // ── Args ────────────────────────────────
 function parseArgs(argv) {
-  const args = { mode: 'dry-run', verify: false, help: false };
-  argv.forEach((token) => {
-    if (token === '--write') { args.mode = 'write'; return; }
-    if (token === '--dry-run') { args.mode = 'dry-run'; return; }
-    if (token === '--verify') { args.verify = true; return; }
-    if (token === '--help' || token === '-h') { args.help = true; return; }
-  });
+  const args = { mode: 'dry-run', verify: false, help: false, language: 'en-gb', stagedOnly: false, files: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (token === '--write') { args.mode = 'write'; continue; }
+    if (token === '--dry-run') { args.mode = 'dry-run'; continue; }
+    if (token === '--verify') { args.verify = true; continue; }
+    if (token === '--help' || token === '-h') { args.help = true; continue; }
+    if (token === '--language' && i + 1 < argv.length) {
+      args.language = argv[++i];
+      if (args.language !== 'en-gb' && args.language !== 'en-us') {
+        console.error(`Invalid language: ${args.language}. Use en-gb or en-us.`);
+        process.exit(1);
+      }
+      continue;
+    }
+    if (token.startsWith('--language=')) {
+      args.language = token.slice('--language='.length);
+      if (args.language !== 'en-gb' && args.language !== 'en-us') {
+        console.error(`Invalid language: ${args.language}. Use en-gb or en-us.`);
+        process.exit(1);
+      }
+      continue;
+    }
+    if (token === '--staged') { args.stagedOnly = true; continue; }
+    if (token === '--files' && i + 1 < argv.length) {
+      args.files = argv[++i].split(',').map((f) => f.trim()).filter(Boolean);
+      continue;
+    }
+    if (token.startsWith('--files=')) {
+      args.files = token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean);
+      continue;
+    }
+  }
   return args;
 }
 
 function printHelp() {
+  const data = loadLanguageRules();
   console.log([
     'Usage:',
-    '  node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify]',
+    '  node operations/scripts/remediators/content/style/remediate-us-spelling.js [flags]',
     '',
     'Modes:',
-    '  --dry-run   Show US → UK spelling replacements without modifying files (default).',
-    '  --write     Apply US → UK spelling replacements to published v2 MDX files.',
+    '  --dry-run       Show spelling replacements without modifying files (default).',
+    '  --write         Apply spelling replacements to published v2 MDX files.',
+    '',
+    'Language:',
+    '  --language en-gb  Convert US to UK English (default).',
+    '  --language en-us  Convert UK to US English.',
+    '',
+    'Scope:',
+    '  --staged        Only process staged files.',
+    '  --files a,b,c   Only process specified files (comma-separated).',
+    '  (default)       Process all routable v2 MDX files.',
     '',
     'Safety:',
     '  - Replaces only in prose content text.',
@@ -196,10 +116,10 @@ function printHelp() {
     '  - JSX props like color=, backgroundColor=, etc. are never touched.',
     '',
     'Flags:',
-    '  --verify    After --write, re-run detection on affected files. If any US spellings',
-    '              remain, revert all changes and exit non-zero. No-op in --dry-run mode.',
+    '  --verify    After --write, re-run detection on affected files. If any',
+    '              source-language spellings remain, revert and exit non-zero.',
     '',
-    'Word map: ' + US_TO_UK.length + ' US → UK rules loaded.',
+    'Word map: ' + data.pairs.length + ' bidirectional rules loaded.',
   ].join('\n'));
 }
 
@@ -233,9 +153,36 @@ function walkMdxFiles(dirPath, out = []) {
   return out;
 }
 
+function getStagedMdxFiles() {
+  const { execSync } = require('child_process');
+  try {
+    const output = execSync('git diff --cached --name-only --diff-filter=ACM', {
+      cwd: REPO_ROOT, encoding: 'utf8',
+    });
+    return output.trim().split('\n')
+      .filter((f) => f && /\.mdx$/i.test(f) && f.startsWith('v2/') && !isExcluded(f))
+      .map((relPath) => ({ fullPath: path.join(REPO_ROOT, relPath), relPath }));
+  } catch (_) {
+    return [];
+  }
+}
+
+function resolveTargetFiles(args) {
+  if (args.files.length > 0) {
+    return args.files.map((f) => {
+      const abs = path.isAbsolute(f) ? f : path.join(REPO_ROOT, f);
+      return { fullPath: abs, relPath: toPosix(path.relative(REPO_ROOT, abs)) };
+    }).filter((f) => /\.mdx$/i.test(f.relPath));
+  }
+  if (args.stagedOnly) {
+    return getStagedMdxFiles();
+  }
+  return walkMdxFiles(V2_ROOT);
+}
+
 // ── Zone detection ──────────────────────
 function buildZoneMap(content) {
-  const zones = []; // { start, end, type }
+  const zones = [];
   let m;
 
   // Frontmatter
@@ -246,7 +193,7 @@ function buildZoneMap(content) {
     }
   }
 
-  // Fenced code blocks (including indented fences inside JSX)
+  // Fenced code blocks
   const codeRegex = /^[ \t]*```[^\n]*$/gm;
   const codeStarts = [];
   while ((m = codeRegex.exec(content)) !== null) {
@@ -263,13 +210,13 @@ function buildZoneMap(content) {
     zones.push({ start: m.index, end: m.index + m[0].length, type: 'jsx-comment' });
   }
 
-  // Inline code `...` (single line)
+  // Inline code `...`
   const inlineCodeRegex = /`[^`\n]+`/g;
   while ((m = inlineCodeRegex.exec(content)) !== null) {
     zones.push({ start: m.index, end: m.index + m[0].length, type: 'inline-code' });
   }
 
-  // JSX template literals: chart={`...`} or similar multi-line template props
+  // JSX template literals
   const templateLitRegex = /=\{`[\s\S]*?`\}/g;
   while ((m = templateLitRegex.exec(content)) !== null) {
     zones.push({ start: m.index, end: m.index + m[0].length, type: 'template-literal' });
@@ -281,8 +228,7 @@ function buildZoneMap(content) {
     zones.push({ start: m.index, end: m.index + m[0].length, type: 'url' });
   }
 
-  // JSX attribute values: attr="..." or attr='...' or attr={...}
-  // Match patterns like prop="value" within JSX tags
+  // JSX attribute values
   const attrDoubleRegex = /\b\w+="[^"]*"/g;
   while ((m = attrDoubleRegex.exec(content)) !== null) {
     const eqPos = m[0].indexOf('="');
@@ -294,8 +240,7 @@ function buildZoneMap(content) {
     zones.push({ start: m.index + eqPos + 1, end: m.index + m[0].length, type: 'jsx-attr' });
   }
 
-  // JSX tags: <Component ... /> or <Component ...>
-  // Captures the entire tag including tag name and attributes
+  // JSX tags
   const jsxTagRegex = /<\/?[A-Z][A-Za-z0-9.]*(?:\s[^>]*)?\/?>/g;
   while ((m = jsxTagRegex.exec(content)) !== null) {
     zones.push({ start: m.index, end: m.index + m[0].length, type: 'jsx-tag' });
@@ -315,16 +260,12 @@ function isOnImportExportLine(content, index) {
 }
 
 function isInJsxTag(content, index) {
-  // Check if position is inside a JSX opening/self-closing tag: <Component ... />
-  // Look backwards for < not preceded by a closing >
   const searchStart = Math.max(0, index - 500);
   const before = content.slice(searchStart, index + 1);
   const lastOpen = before.lastIndexOf('<');
   const lastClose = before.lastIndexOf('>');
   if (lastOpen < 0) return false;
-  // If the last < is after the last >, we're inside a tag
   if (lastOpen > lastClose) {
-    // Verify it's a component/element tag, not a comparison operator
     const afterOpen = before.slice(lastOpen + 1);
     return /^[A-Za-z\/]/.test(afterOpen);
   }
@@ -332,12 +273,10 @@ function isInJsxTag(content, index) {
 }
 
 function isCodeIdentifierReference(content, index, matchedWord) {
-  // Skip if the line contains the same word (case-insensitive) inside backticks — it's referencing a code identifier
   const lineStart = content.lastIndexOf('\n', index - 1) + 1;
   const lineEnd = content.indexOf('\n', index);
   const line = content.slice(lineStart, lineEnd > 0 ? lineEnd : content.length);
   const lower = matchedWord.toLowerCase();
-  // Check for backtick-wrapped instances of the word (e.g., `color`, `backgroundColor`)
   const backtickRegex = /`([^`]+)`/g;
   let bm;
   while ((bm = backtickRegex.exec(line)) !== null) {
@@ -356,11 +295,11 @@ function matchCase(original, replacement) {
 }
 
 // ── Core ────────────────────────────────
-function processFile(content) {
+function processFile(content, compiledRules) {
   const zones = buildZoneMap(content);
-  const replacements = []; // { index, length, from, to, lineNum, line }
+  const replacements = [];
 
-  for (const rule of COMPILED_RULES) {
+  for (const rule of compiledRules) {
     const regex = new RegExp(rule.regex.source, rule.regex.flags);
     let match;
     while ((match = regex.exec(content)) !== null) {
@@ -379,14 +318,14 @@ function processFile(content) {
         index: idx,
         length: match[0].length,
         from: match[0],
-        to: matchCase(match[0], rule.uk),
+        to: matchCase(match[0], rule.to),
         lineNum,
         line: line.trim(),
       });
     }
   }
 
-  // Deduplicate overlapping replacements (longer match wins, already sorted by rule length)
+  // Deduplicate overlapping replacements
   replacements.sort((a, b) => a.index - b.index);
   const deduped = [];
   let lastEnd = -1;
@@ -409,20 +348,32 @@ function applyReplacements(content, replacements) {
   return result;
 }
 
-// ── Main ────────────────────────────────
-function main() {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.help) { printHelp(); process.exit(0); }
+// ── Run (programmatic API) ──────────────
+function run(options = {}) {
+  const args = options.args || parseArgs([]);
+  const quiet = options.quiet === true;
+  const compiledRules = buildCompiledRules(args.language);
 
-  const files = walkMdxFiles(V2_ROOT);
+  const files = Array.isArray(options.files) && options.files.length > 0
+    ? options.files.map((f) => {
+        const abs = path.isAbsolute(f) ? f : path.join(REPO_ROOT, f);
+        return { fullPath: abs, relPath: toPosix(path.relative(REPO_ROOT, abs)) };
+      })
+    : resolveTargetFiles(args);
+
   let totalReplacements = 0;
   let filesChanged = 0;
   const report = [];
-  const affectedFiles = []; // { fullPath, relPath, originalContent }
+  const affectedFiles = [];
 
   for (const { fullPath, relPath } of files) {
-    const content = fs.readFileSync(fullPath, 'utf8');
-    const replacements = processFile(content);
+    let content;
+    try {
+      content = fs.readFileSync(fullPath, 'utf8');
+    } catch (_) {
+      continue;
+    }
+    const replacements = processFile(content, compiledRules);
     if (replacements.length === 0) continue;
 
     totalReplacements += replacements.length;
@@ -446,35 +397,40 @@ function main() {
     }
   }
 
-  // Print report
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`US → UK spelling remediation — ${args.mode === 'write' ? 'APPLIED' : 'DRY RUN'}`);
-  console.log(`${'='.repeat(60)}\n`);
+  const direction = args.language === 'en-gb' ? 'US \u2192 UK' : 'UK \u2192 US';
 
-  for (const entry of report) {
-    console.log(`  ${entry.file} (${entry.count} replacement${entry.count > 1 ? 's' : ''})`);
-    for (const s of entry.samples) {
-      console.log(`    L${s.lineNum}: "${s.from}" → "${s.to}"  |  ${s.line}`);
+  if (!quiet) {
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`${direction} spelling remediation \u2014 ${args.mode === 'write' ? 'APPLIED' : 'DRY RUN'}`);
+    console.log(`${'='.repeat(60)}\n`);
+
+    for (const entry of report) {
+      console.log(`  ${entry.file} (${entry.count} replacement${entry.count > 1 ? 's' : ''})`);
+      for (const s of entry.samples) {
+        console.log(`    L${s.lineNum}: "${s.from}" \u2192 "${s.to}"  |  ${s.line}`);
+      }
+      if (entry.count > 8) console.log(`    ... and ${entry.count - 8} more`);
     }
-    if (entry.count > 8) console.log(`    ... and ${entry.count - 8} more`);
+
+    console.log(`\nTotal: ${totalReplacements} replacements in ${filesChanged} files`);
+
+    if (args.mode === 'dry-run') {
+      console.log('Run with --write to apply changes.');
+    }
   }
 
-  console.log(`\nTotal: ${totalReplacements} replacements in ${filesChanged} files`);
-
-  if (args.mode === 'dry-run') {
-    console.log('Run with --write to apply changes.');
-    process.exit(0);
-  }
-
-  // ── Verify step (Layer 1) ──────────────
-  if (args.verify && affectedFiles.length > 0) {
-    console.log(`\n${'\u2500'.repeat(40)}`);
-    console.log('Verify: re-running detection on affected files...');
+  // Verify step
+  let reverted = 0;
+  if (args.verify && args.mode === 'write' && affectedFiles.length > 0) {
+    if (!quiet) {
+      console.log(`\n${'\u2500'.repeat(40)}`);
+      console.log('Verify: re-running detection on affected files...');
+    }
 
     const failures = [];
     for (const { fullPath, relPath } of affectedFiles) {
       const updatedContent = fs.readFileSync(fullPath, 'utf8');
-      const remaining = processFile(updatedContent);
+      const remaining = processFile(updatedContent, compiledRules);
       if (remaining.length > 0) {
         failures.push({ file: relPath, count: remaining.length, samples: remaining.slice(0, 3) });
       }
@@ -482,33 +438,58 @@ function main() {
 
     if (failures.length > 0) {
       const regressedFiles = new Set(failures.map(f => f.file));
-      console.error('\n\u274c VERIFY FAILED \u2014 US spellings still present after remediation:');
-      for (const f of failures) {
-        console.error(`  ${f.file} (${f.count} remaining)`);
-        for (const s of f.samples) {
-          console.error(`    L${s.lineNum}: "${s.from}" still present`);
+      if (!quiet) {
+        console.error('\n\u274c VERIFY FAILED \u2014 source-language spellings still present:');
+        for (const f of failures) {
+          console.error(`  ${f.file} (${f.count} remaining)`);
+          for (const s of f.samples) {
+            console.error(`    L${s.lineNum}: "${s.from}" still present`);
+          }
         }
       }
 
-      // Per-file revert: only revert regressed files, keep successful fixes
-      const reverted = [];
-      const kept = [];
       for (const af of affectedFiles) {
         if (regressedFiles.has(af.relPath)) {
           fs.writeFileSync(af.fullPath, af.originalContent, 'utf8');
-          reverted.push(af.relPath);
-        } else {
-          kept.push(af.relPath);
+          reverted++;
         }
       }
-      console.error(`\nReverted ${reverted.length} regressed file(s). Kept ${kept.length} successful fix(es).`);
-      process.exit(1);
+      if (!quiet) {
+        console.error(`\nReverted ${reverted} regressed file(s). Kept ${affectedFiles.length - reverted} successful fix(es).`);
+      }
+    } else if (!quiet) {
+      console.log(`\u2705 Verify passed \u2014 0 source-language spellings remaining in ${affectedFiles.length} affected files.`);
     }
-
-    console.log(`\u2705 Verify passed \u2014 0 US spellings remaining in ${affectedFiles.length} affected files.`);
   }
 
+  return {
+    remediator: 'remediate-us-spelling',
+    mode: args.mode,
+    language: args.language,
+    direction,
+    filesScanned: files.length,
+    filesFixed: filesChanged,
+    totalFixes: totalReplacements,
+    reverted,
+    report,
+  };
+}
+
+// ── Main (CLI entry) ────────────────────
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (args.help) { printHelp(); process.exit(0); }
+
+  const result = run({ args });
+
+  if (args.mode === 'write' && result.reverted > 0) {
+    process.exit(1);
+  }
   process.exit(0);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { parseArgs, run, buildZoneMap, isInZone, isOnImportExportLine, isInJsxTag, isCodeIdentifierReference, matchCase };

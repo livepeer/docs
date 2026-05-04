@@ -1,4 +1,16 @@
 /**
+<<<<<<<< HEAD:operations/scripts/validators/content/structure/verify-all-pages.js
+ * @script      verify-all-pages
+ * @type        validator
+ * @concern     health
+ * @niche       structure
+ * @purpose     
+ * @description Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
+ * @mode        check
+ * @pipeline    manual — not yet in pipeline
+ * @scope       single-domain
+ * @usage       node operations/scripts/validators/content/structure/verify-all-pages.js
+========
  * @script            verify-all-pages
  * @category          enforcer
  * @purpose           qa:repo-health
@@ -8,54 +20,28 @@
  * @purpose-statement Page verifier — checks all pages in docs.json resolve to valid files
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
  * @usage             node tools/scripts/archive/legacy/verify-all-pages.js [flags]
+>>>>>>>> docs-v2-dev:operations/scripts/archive/legacy/verify-all-pages.js
  */
 const puppeteer = require('puppeteer');
+const { getEnglishComponentLibraryRoutes } = require('../../../../../tools/lib/governance/component-governance-utils');
 
 const BASE_URL = 'http://localhost:3333';
-const PAGES = [
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/display',
-      '/v2/resources/documentation-guide/component-library/display'
-    ],
-    name: 'Display'
-  },
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/primitives',
-      '/v2/resources/documentation-guide/component-library/primitives'
-    ],
-    name: 'Primitives'
-  },
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/content',
-      '/v2/resources/documentation-guide/component-library/content'
-    ],
-    name: 'Content'
-  },
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/layout',
-      '/v2/resources/documentation-guide/component-library/layout'
-    ],
-    name: 'Layout'
-  },
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/domain',
-      '/v2/resources/documentation-guide/component-library/domain'
-    ],
-    name: 'Domain'
-  },
-  {
-    paths: [
-      '/v2/resources/documentation-guide/component-library/integrations',
-      '/v2/resources/documentation-guide/component-library/integrations'
-    ],
-    name: 'Integrations'
-  },
-];
+const ROUTE_LABELS = {
+  'component-library': 'Component Library',
+  overview: 'Component Library Overview',
+  primitives: 'Primitives',
+  content: 'Content',
+  layout: 'Layout',
+  data: 'Data',
+  'page-structure': 'Page Structure'
+};
+const PAGES = getEnglishComponentLibraryRoutes().map((routePath) => {
+  const slug = routePath.split('/').pop();
+  return {
+    paths: [routePath],
+    name: ROUTE_LABELS[slug] || slug
+  };
+});
 
 async function verifyPage(paths, name) {
   const browser = await puppeteer.launch({

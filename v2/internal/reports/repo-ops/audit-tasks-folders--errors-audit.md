@@ -5,8 +5,8 @@ description: 'Generated tasks folder audit reports from operations/scripts/audit
 keywords: ["livepeer","internal","reports","repo-ops","audit-tasks-folders"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
-Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
 Generator Script: `operations/scripts/audits/governance/repo/audit-tasks-folders.js`
 What It Does: Generated tasks folder audit reports from operations/scripts/audits/governance/repo/audit-tasks-folders.js.
 Audited Scope: `tasks/errors`

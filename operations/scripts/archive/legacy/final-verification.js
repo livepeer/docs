@@ -17,7 +17,7 @@ const puppeteer = require('puppeteer');
   
   const testPages = [
     { path: '/introduction/vision', name: 'Vision' },
-    { path: '/community-portal', name: 'Community Portal' },
+    { path: '/portal', name: 'Community Portal' },
     { path: '/introduction/evolution', name: 'Evolution' },
   ];
   

@@ -12,6 +12,7 @@
  * @usage       node operations/scripts/integrators/governance/pipelines/publish-v2-internal-reports.js [flags]
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
 
@@ -614,7 +615,7 @@ function writeIfChanged(targetAbsPath, nextContent, args) {
     ? fs.readFileSync(targetAbsPath, 'utf8')
     : null;
   if (prev === nextContent) return false;
-  fs.writeFileSync(targetAbsPath, nextContent, 'utf8');
+  if (DRY_RUN) { console.log('[dry-run] Would write:', targetAbsPath); } else { fs.writeFileSync(targetAbsPath, nextContent, 'utf8'); };
   return true;
 }
 
@@ -699,7 +700,7 @@ function cleanupDynamicPages(records, args) {
         if (!args.check) {
           const placeholder = buildRetiredLegacyAliasContent(entry.categorySlug, fileName);
           if (fs.readFileSync(fullPath, 'utf8') !== placeholder) {
-            fs.writeFileSync(fullPath, placeholder, 'utf8');
+            if (DRY_RUN) { console.log('[dry-run] Would write:', fullPath); } else { fs.writeFileSync(fullPath, placeholder, 'utf8'); };
           }
         }
         continue;
@@ -819,7 +820,7 @@ function updateDocsJson(records, args) {
   if (args.check || prev === next) {
     return { changed: false, groupsWritten: nextManagedGroups.length };
   }
-  fs.writeFileSync(DOCS_JSON_PATH, next, 'utf8');
+  if (DRY_RUN) { console.log('[dry-run] Would write:', DOCS_JSON_PATH); } else { fs.writeFileSync(DOCS_JSON_PATH, next, 'utf8'); };
   return { changed: true, groupsWritten: nextManagedGroups.length };
 }
 

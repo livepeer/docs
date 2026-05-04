@@ -298,7 +298,7 @@ function getCanonicalMap(normalizedRoute) {
     'v2/pages/04_gateways/run-a-gateway/quickstart-a-gateway': ['v2/pages/04_gateways/quickstart/gateway-setup'],
     'v2/pages/04_gateways/run-a-gateway/get-AI-to-setup-the-gateway': ['v2/pages/04_gateways/quickstart/AI-prompt'],
     'v2/pages/04_gateways/references/video-flags': ['v2/pages/04_gateways/references/configuration-flags'],
-    'v2/pages/02_community/livepeer-community/media-kit': ['v2/resources/media-kit'],
+    'v2/pages/02_community/community/media-kit': ['v2/resources/media-kit'],
     'v2/pages/01_about/livepeer-network/actors': ['v2/about/network/actors'],
     'v2/resources/concepts/livepeer-core-concepts': ['v2/about/concepts/core-concepts'],
     'v2/resources/concepts/livepeer-actors': ['v2/about/network/actors'],

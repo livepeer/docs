@@ -40,7 +40,7 @@ Each tab entry answers four questions:
 - How to run an orchestrator → Orchestrators tab
 - How to run a gateway → Gateways tab
 - How to build on Livepeer → Developers tab
-- Governance voting processes → LP Token tab (processes.mdx) + Community tab (governance-and-foundation.mdx)
+- Governance voting processes → LP Token tab (processes.mdx) + Community tab (governance.mdx)
 - Community channels, forums, events → Community tab
 
 **Handoff points:**
@@ -74,7 +74,7 @@ Each tab entry answers four questions:
 - How to delegate LPT → LP Token tab
 - How to build applications → Developers tab
 - Community participation → Community tab
-- The Livepeer Foundation as an org → Home tab owns the introduction; Community tab owns the operational governance-and-foundation page
+- The Livepeer Foundation as an org → Home tab owns the introduction; Community tab owns the operational governance page
 
 **Handoff points:**
 - After "I understand the protocol and want to participate as a node operator" → Orchestrators tab
@@ -110,7 +110,7 @@ About does not follow the standard full-stack IA (portal → quickstart → setu
 - How to become an orchestrator → Orchestrators tab
 - Running gateway infrastructure → Gateways tab
 - Building applications → Developers tab
-- The Livepeer Foundation as an entity → Home tab (introduction), Community tab (governance-and-foundation.mdx)
+- The Livepeer Foundation as an entity → Home tab (introduction), Community tab (governance.mdx)
 
 **Handoff points:**
 - "I want to run a node, not just delegate" → Orchestrators tab
@@ -240,7 +240,7 @@ Most closely aligned to canonical. Has: portal.mdx, navigator.mdx, concepts/, qu
 - The Livepeer Foundation's formal introduction → Home tab
 
 **Current IA alignment vs canonical:**
-Community does not follow canonical — correctly so. It has: community-portal.mdx, faq.mdx, livepeer-community/, livepeer-connect/, livepeer-contribute/, resources/. This is a custom structure appropriate for a social/participatory tab. Some sections (livepeer-connect, livepeer-contribute) need page population.
+Community does not follow canonical — correctly so. It has: portal.mdx, faq.mdx, community/, connect/, contribute/, resources/. This is a custom structure appropriate for a social/participatory tab. Some sections (connect, contribute) need page population.
 
 ---
 

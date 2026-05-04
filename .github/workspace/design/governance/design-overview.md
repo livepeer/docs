@@ -20,7 +20,7 @@
 - `audit.md` - what exists today, pipeline-by-pipeline findings
 - `related/` - raw agent outputs, supporting data
 
----
+<CustomDivider />
 
 **Concern:** Governance
 **Definition:** System rules, compliance, issue/PR management. If governance breaks, everything else drifts over time.
@@ -60,7 +60,7 @@ _What documents in the repo define governance requirements? Done before requirem
 
 **Findings:** 43 requirement documents + 28 enforcement mechanisms indexed in `process-docs/research.md`
 
----
+<CustomDivider />
 
 ## 2. Requirements
 
@@ -76,7 +76,7 @@ _What rules must governance enforce? Organised by category. Derived from researc
 - Scripts live at `operations/scripts/<type>/<concern>/<niche>/`
 - 7 valid types: audit, generator, validator, remediator, dispatch, integrator, interface
 - 7 valid concerns: copy, health, maintenance, discoverability, governance, brand, integrations
-- No inline scripts > 50 lines in workflows (D-ACT-08)
+- No inline scripts &gt; 50 lines in workflows (D-ACT-08)
 - Workflow naming: `type-concern-verb-name.yml` (D-ACT-04)
 - Workflows are dispatchers, scripts carry the type (D-ACT-08)
 - No deprecated tags (@owner, @dualmode)
@@ -187,12 +187,12 @@ _What rules must governance enforce? Organised by category. Derived from researc
 - Claude sessions: /thread at start, /log after deliverables, /close at end
 - No destructive git operations without approval
 - No public posts without review
-- No retry > 2x without root-cause analysis
+- No retry &gt; 2x without root-cause analysis
 - Check flags before new work
 - AI companion files regenerate on content change
 - AI sitemap and llms.txt regenerate on content change
 
----
+<CustomDivider />
 
 ## 3. Design
 
@@ -227,7 +227,7 @@ From those requirements, the system needs these layers (ordered by when they fir
 **1. At write time (instant, local)**
 Hooks catch obvious violations before they reach git. The author gets immediate feedback.
 
-- Must run in < 1 second
+- Must run in &lt; 1 second
 - Must have clear error messages that explain HOW to fix, not just WHAT failed
 - Must be bypassable for legitimate edge cases (with audit trail)
 - **Self-repair:** Where possible, auto-fix on the spot (e.g. inject missing constraints, format corrections)
@@ -236,7 +236,7 @@ Hooks catch obvious violations before they reach git. The author gets immediate 
 **2. At commit time (seconds, local)**
 Pre-commit gates catch structural violations that would break the repo.
 
-- Must run in < 5 seconds
+- Must run in &lt; 5 seconds
 - Hard gates only (things that MUST NOT reach the repo)
 - Everything else moves to PR time OR cron jobs
 - **Self-repair:** Where safe, auto-correct and re-stage (e.g. generated file banner missing -> add it)
@@ -321,7 +321,7 @@ New enforcement starts advisory (P3). Promotion to hard gate (P2) requires:
 3. Error messages are clear and actionable
 4. Override mechanism exists for legitimate edge cases
 
----
+<CustomDivider />
 
 ## 4. Audit
 
@@ -335,7 +335,7 @@ _Current state vs design. What meets requirements, what doesn't._
 
 | Requirement | Status | Gap |
 |---|---|---|
-| < 5 seconds | MET (800ms-1.5s) | |
+| &lt; 5 seconds | MET (800ms-1.5s) | |
 | Hard gates only | MET (5 gates) | |
 | Clear error messages (HOW to fix) | PARTIAL | Redirect integrity + contract validation need remediation guidance |
 | Bypassable with audit trail | PARTIAL | Pre-push uses env vars not git trailers (no audit trail) |
@@ -388,7 +388,7 @@ _Current state vs design. What meets requirements, what doesn't._
 
 | Requirement | Status | Gap |
 |---|---|---|
-| < 1 second | MET | All hooks < 500ms |
+| &lt; 1 second | MET | All hooks &lt; 500ms |
 | Clear error messages | MET | All 12 hooks explain HOW to fix |
 | Auto-fix on write | NOT MET | Constraints injected but not applied. Em-dashes blocked not converted |
 | Auto-installed | MET | Registered in .claude/settings.json |
@@ -425,7 +425,7 @@ _Current state vs design. What meets requirements, what doesn't._
 
 See `process-docs/audit.md` for full per-pipeline details.
 
----
+<CustomDivider />
 
 ## 5. Implementation Plan
 
@@ -435,7 +435,7 @@ _Bridges the gap between design (section 3) and audit (section 4). Prioritised t
 
 _Populated after audit reveals what exists vs what the design requires._
 
----
+<CustomDivider />
 
 ## 6. Implementation Log
 
@@ -445,7 +445,7 @@ _Fixes applied, in progress. Updated as work happens._
 | ---- | ------------- | ------------- |
 |      |               |               |
 
----
+<CustomDivider />
 
 ## 7. Test Results
 
@@ -453,7 +453,7 @@ _Dry-run outputs per pipeline._
 
 **Status:** Blocked on implementation.
 
----
+<CustomDivider />
 
 ## 8. Documentation Status
 
@@ -463,7 +463,7 @@ _Are ALL canonical docs current with this concern? Repo-wide._
 | ------- | --- | -------- | ----- |
 |         |     |          |       |
 
----
+<CustomDivider />
 
 ## 9. Branch Status
 
@@ -471,7 +471,7 @@ _Are ALL canonical docs current with this concern? Repo-wide._
 
 ### docs-v2
 
----
+<CustomDivider />
 
 ## 10. Decisions
 
@@ -485,8 +485,9 @@ _Governance-specific decisions locked during design. Thread-wide decisions in fr
 | D-GOV-04 | Tooling makes correct the default                           | 2026-04-04 | Templates, scaffolding, IDE snippets, documentation, gold-standard examples                    |
 | D-GOV-05 | Advisory before hard gate                                   | 2026-04-04 | New enforcement starts P3, promotes to P2 after baseline clean + false positives acceptable    |
 | D-GOV-06 | Align script framework to actions framework                 | 2026-04-04 | 7 types (integrator not automation), 7 concerns. Config enum updated, docs pending             |
+| D-GOV-07 | Every workflow dispatcher must have a local CLI equivalent   | 2026-04-14 | All GitHub Actions workflows must have a matching local script that can be run without CI trigger. Enables testing, manual upgrades, and offline operation |
 
----
+<CustomDivider />
 
 ## 11. Backlog and Recommendations
 

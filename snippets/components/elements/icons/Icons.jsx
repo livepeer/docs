@@ -148,7 +148,7 @@ export const ArbitrumIcon = ({
  * @status stable
  * @description Animated icon with pulsing opacity. Respects prefers-reduced-motion.
  * @aiDiscoverability none
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/custom/views/setup/configure/ai-configuration-content.mdx, v2/gateways/portal.mdx, v2/gateways/setup/requirements/on-chain-setup/on-chain.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @usedIn v2/about/portal.mdx, v2/community/portal.mdx, v2/developers/portal.mdx, v2/gateways/custom/views/setup/configure/ai-configuration-content.mdx, v2/gateways/portal.mdx, v2/gateways/setup/requirements/on-chain-setup/on-chain.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
  * @breakingChangeRisk medium
  * @lastMeaningfulChange 2026-04-09
  * @param {string} [icon="terminal"] - Icon name to display

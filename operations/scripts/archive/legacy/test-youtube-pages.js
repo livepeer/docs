@@ -23,13 +23,13 @@ const TIMEOUT = 20000; // 20 seconds per page
 // Pages that use YouTubeVideo component
 const testPages = [
   '/introduction/vision',
-  '/community-portal',
+  '/portal',
   '/introduction/evolution',
   '/home/trending',
   '/home/copy-trending-at-livepeer',
-  '/about-livepeer/moved/livepeer-overview',
+  '/about/moved/livepeer-overview',
   '/solutions/portal',
-  '/livepeer-community/trending-topics',
+  '/community/trending-topics',
 ];
 
 /**

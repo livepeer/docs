@@ -4,7 +4,7 @@
 > Concern: `content/data` (SCRIPT-GOVERNANCE taxonomy — cross-cutting)
 > Scope: All scripts, workflows, gates, and artifacts related to external data ingestion pipelines
 
----
+<CustomDivider />
 
 ## 1. Purpose
 
@@ -19,7 +19,7 @@ The pipeline operates across two parallel systems:
 1. **GitHub Actions (GHA)** — 7 scheduled/manual workflows calling 7 fetch scripts in `.github/scripts/`
 2. **n8n external automation** — 5 n8n workflows (legacy, targeting `docs-v2-preview` branch)
 
----
+<CustomDivider />
 
 ## 2. Scripts in Scope (7 fetch scripts + 4 supplementary)
 
@@ -50,7 +50,7 @@ The pipeline operates across two parallel systems:
 |------|---------|
 | `operations/scripts/config/product-social-config.json` | Maps each product (daydream, embody, frameworks, livepeer-studio, streamplace) to its social channels, API endpoints, and pipeline parameters |
 
----
+<CustomDivider />
 
 ## 3. Workflows in Scope (7 GHA + 5 n8n)
 
@@ -76,7 +76,7 @@ The pipeline operates across two parallel systems:
 | `Youtube to Mintlify.json` | `docs-v2-preview` | Scheduled | YouTube Data API | `snippets/automations/youtube/youtubeData.jsx` |
 | `Get LatestRelease And push to Docs.json` | N/A (in JSON) | Weekly | GitHub REST API (`go-livepeer`) | Release data |
 
----
+<CustomDivider />
 
 ## 4. Artifacts
 
@@ -111,12 +111,12 @@ The pipeline operates across two parallel systems:
 | Page | Data Imports |
 |------|-------------|
 | `v2/home/trending.mdx` | `forumData`, `ghostData`, `youtubeData`, `discordAnnouncementsData` |
-| `v2/community/livepeer-community/trending-topics.mdx` | `forumData`, `ghostData`, `youtubeData`, `discordAnnouncementsData` |
-| `v2/community/livepeer-community/livepeer-latest-topics.mdx` | `forumData` |
+| `v2/community/connect/trending-topics.mdx` | `forumData`, `ghostData`, `youtubeData`, `discordAnnouncementsData` |
+| `v2/community/community/livepeer-latest-topics.mdx` | `forumData` |
 | `v2/solutions/daydream/community.mdx` | `youtubeData` (Daydream), `daydreamBlogData`, `daydreamDiscordData`, `discordAnnouncementsData` |
 | `v2/solutions/livepeer-studio/community.mdx` | `youtubeData`, `ghostData`, `forumData`, `discordAnnouncementsData` |
 
----
+<CustomDivider />
 
 ## 5. Pipeline Diagram — Full Data Pipeline Lifecycle
 
@@ -194,7 +194,7 @@ flowchart TB
 
 **Legend:** Red = data produced but not yet consumed by any page.
 
----
+<CustomDivider />
 
 ## 6. Trigger Matrix
 
@@ -246,7 +246,7 @@ flowchart LR
 
 **Legend:** Orange = n8n workflows targeting `docs-v2-preview` branch (may be stale/redundant with GHA).
 
----
+<CustomDivider />
 
 ## 7. Gate Classification
 
@@ -277,7 +277,7 @@ flowchart TB
 
 **Note:** All data pipeline scripts operate at P5/P6 (scheduled cron, self-healing). None serve as PR gates. This is appropriate per governance D7 — external data freshness should not block developer PRs.
 
----
+<CustomDivider />
 
 ## 8. Schedule Collision Matrix
 
@@ -303,7 +303,7 @@ gantt
 
 **Issue:** `update-ghost-blog-data.yml` and `update-forum-data.yml` both fire at 00:00 UTC. While they touch different files, both auto-commit to the same branch — creating a potential race condition if both complete and push near-simultaneously.
 
----
+<CustomDivider />
 
 ## 9. Requirements & Real Needs
 
@@ -325,7 +325,7 @@ gantt
 | Bot identity is consistent across workflows | Mixed: 4 use `github-actions[bot]`, 1 uses `GitHub Actions Bot` with different email | **No** |
 | Per-product YouTube data is fetched | Workflow passes single `CHANNEL_ID` env var (legacy mode), does not use config `PRODUCT_KEY=all` | **No** |
 
----
+<CustomDivider />
 
 ## 10. Efficiency Assessment
 
@@ -345,7 +345,7 @@ gantt
 - **n8n workflows are fully redundant with GHA** — all 5 n8n workflows duplicate functionality that GHA workflows now handle, and target a different branch (`docs-v2-preview`) than GHA (`DEPLOY_BRANCH`).
 - **GitHub discussions/releases data is produced but never consumed** — scripts generate `githubDiscussionsData.jsx` and `githubReleasesData.jsx` per product, but no MDX page imports them.
 
----
+<CustomDivider />
 
 ## 11. Blocking Analysis
 
@@ -358,7 +358,7 @@ gantt
 
 **Note:** Data pipeline scripts appropriately have NO gate enforcement. They are pure P5/P6 (scheduled self-heal). The only risk is silent failure when APIs are down or secrets expire.
 
----
+<CustomDivider />
 
 ## 12. Gaps
 
@@ -422,7 +422,7 @@ gantt
 - **Impact**: Low — confuses maintainers reading the workflow
 - **Severity**: Low — documentation debt
 
----
+<CustomDivider />
 
 ## 13. Duplication / Overlap
 
@@ -458,7 +458,7 @@ Exact same logic (with minor variations) appears in:
 6. `fetch-youtube-data.js` (different single-quote handling)
 7. `fetch-rss-blog-data.js`
 
----
+<CustomDivider />
 
 ## 14. Recommendations
 
@@ -613,7 +613,7 @@ Wire this into `check-docs-guide-catalogs.yml` or a dedicated health workflow.
 
 Remove or update the `# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH` and `# N8N IS BEING USING AS AN ALTERNATIVE` comments in `update-forum-data.yml` and `update-youtube-data.yml` to reflect current state.
 
----
+<CustomDivider />
 
 ## 15. Recommended Gate Matrix (After Fixes)
 
@@ -631,7 +631,7 @@ Remove or update the `# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH` a
 | Shared `escapeForJSX` | N/A (library) | N/A | **NEW — extract utility** |
 | Retry logic | N/A (library) | N/A | **NEW — shared retry helper** |
 
----
+<CustomDivider />
 
 ## 16. Error Handling Deep Dive
 
@@ -647,7 +647,7 @@ Remove or update the `# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH` a
 
 **Assessment**: Config-driven scripts (`fetch-github-discussions.js`, `fetch-github-releases.js`, `fetch-rss-blog-data.js`) have per-product try/catch — they continue processing other products if one fails. Single-source scripts (`fetch-ghost-blog-data.js`, `fetch-forum-data.js`) fail completely on any error. Neither pattern includes retry logic.
 
----
+<CustomDivider />
 
 ## 17. n8n vs GHA Feature Comparison
 
@@ -665,7 +665,7 @@ Remove or update the `# NOTE: THIS GITHUB ACTION WILL ONLY RUN ON MAIN BRANCH` a
 
 **Recommendation**: GHA is the strategic platform. The one advantage n8n has (Ghost API key access for richer data) can be migrated to GHA by adding the Ghost Content API key as a GitHub secret and updating `fetch-ghost-blog-data.js` to use the API instead of RSS.
 
----
+<CustomDivider />
 
 ## 18. Summary
 

@@ -1,4 +1,15 @@
 /**
+<<<<<<<< HEAD:operations/scripts/archive/legacy/verify-all-pages.js
+ * @script            verify-all-pages
+ * @category          enforcer
+ * @purpose           qa:repo-health
+ * @scope             tools/scripts
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Page verifier — checks all pages in docs.json resolve to valid files
+ * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @usage             node tools/scripts/archive/legacy/verify-all-pages.js [flags]
+========
  * @script      verify-all-pages
  * @type        validator
  * @concern     health
@@ -9,6 +20,7 @@
  * @pipeline    manual — not yet in pipeline
  * @scope       single-domain
  * @usage       node operations/scripts/validators/content/structure/verify-all-pages.js
+>>>>>>>> docs-v2-dev:operations/scripts/validators/content/structure/verify-all-pages.js
  */
 const puppeteer = require('puppeteer');
 const { getEnglishComponentLibraryRoutes } = require('../../../../../tools/lib/governance/component-governance-utils');

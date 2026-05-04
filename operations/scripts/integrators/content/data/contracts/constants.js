@@ -30,6 +30,18 @@ const BLOCKCHAIN_PAGE_DATA_JSX_PATH = path.join(
   REPO_ROOT,
   "snippets/data/contract-addresses/blockchainContractsPageData.jsx"
 );
+const CANONICAL_PAGE_DATA_JSON_PATH = path.join(
+  REPO_ROOT,
+  "snippets/data/contract-addresses/canonicalContractsPageData.json"
+);
+const CANONICAL_PAGE_DATA_JSX_PATH = path.join(
+  REPO_ROOT,
+  "snippets/data/contract-addresses/canonicalContractsPageData.jsx"
+);
+const VIEW_MODEL_SOURCE_PATH = path.join(
+  REPO_ROOT,
+  "snippets/data/contract-addresses/view-model.jsx"
+);
 const HEALTH_CHECK_PATH = path.join(
   REPO_ROOT,
   "snippets/data/contract-addresses/_health-checks.json"
@@ -147,6 +159,9 @@ module.exports = {
   ANOMALY_MD_PATH,
   BLOCKCHAIN_PAGE_DATA_JSX_PATH,
   BLOCKCHAIN_PAGE_DATA_JSON_PATH,
+  CANONICAL_PAGE_DATA_JSX_PATH,
+  CANONICAL_PAGE_DATA_JSON_PATH,
+  VIEW_MODEL_SOURCE_PATH,
   BRANCH_WATCH_STATE_PATH,
   CONTROLLERS,
   DEFAULT_RPC_URLS,

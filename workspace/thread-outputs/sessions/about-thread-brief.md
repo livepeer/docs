@@ -15,7 +15,7 @@ Gather ALL About-related content from everywhere in the repo, present it visuall
 Search the entire repo for About-related content. Check:
 - `v2/about/` — all pages
 - `v2/about/_workspace/` — deprecated, archived, working docs
-- `v2/home/about-livepeer/` — About content in Home tab
+- `v2/home/about/` — About content in Home tab
 - `v2/lpt/about/` — token About content in LPT section
 - `v2/internal/overview/about.mdx` — internal docs
 - `workspace/plan/active/CONTENT-WRITING/context-packs/about-*` — research packs

@@ -88,7 +88,7 @@ No traditional headings -- this is a frame-mode landing page using component-ren
 | /v2/orchestrators/portal | OK |
 | /v2/home/solutions/showcase | OK |
 | /v2/gateways/portal | OK |
-| /v2/community/community-portal | OK |
+| /v2/community/portal | OK |
 | /v2/delegators/portal | OK |
 | /v2/developers/guides/opportunities/overview | WARN -- verify path |
 

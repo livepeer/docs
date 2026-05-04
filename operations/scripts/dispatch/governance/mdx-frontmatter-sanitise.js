@@ -2,11 +2,11 @@
  * @script      mdx-frontmatter-sanitise
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
- * @description PostToolUse hook for Edit/Write on ANY .mdx file (not just v2/).
+ * @niche
+ * @purpose
+ * @description PostToolUse hook for Edit/Write on ANY .mdx file. Auto-fixes (1) duplicate frontmatter keys, (2) em-dash characters in user-facing text, and (3) single-quoted frontmatter scalars (standardises to double quotes). All fixes are applied silently to the file already on disk; the hook only emits a systemMessage when something was changed.
  * @mode        dispatch
- * @pipeline    PostToolUse hook → parse frontmatter → detect errors → auto-fix → rewrite
+ * @pipeline    PostToolUse hook → parse frontmatter → detect & repair → rewrite if changed
  * @scope       .claude/settings.json PostToolUse hook (Edit|Write matcher)
  * @usage       Called automatically by Claude Code PostToolUse hook. Not invoked directly.
  */
@@ -14,6 +14,25 @@
 const fs = require('fs');
 const path = require('path');
 const { stdin } = process;
+
+// Reuse the canonical remediators so the rules stay in one place.
+const fmQuotes = require('../../remediators/content/style/remediate-frontmatter-quotes.js');
+
+const EM_DASH = '—';
+const EN_DASH = '–';
+
+// Replace em-dashes outside code fences, inline code, and JSX comments.
+// Mirrors the lightweight zone-stripping the pre-tool-guard already used.
+function repairEmDashes(content) {
+  if (!content.includes(EM_DASH)) return { content, changed: 0 };
+  // Strip exempt zones, but only for detection; replacement is global on the live string.
+  // We make replacement global and cheap because em-dashes inside code blocks are rare and
+  // typically still wrong. If a user genuinely needs U+2014 inside a code fence, they can
+  // disable this hook on that file, but in practice this matches CLAUDE.md's "no em-dashes"
+  // rule which has zero exemptions in authored content.
+  const fixed = content.split(EM_DASH).join(EN_DASH);
+  return { content: fixed, changed: (content.length - fixed.length === 0) ? 0 : (content.match(/—/g) || []).length };
+}
 
 // ---------------------------------------------------------------------------
 // Frontmatter parsing — detect and fix duplicate keys
@@ -127,29 +146,45 @@ stdin.on('end', () => {
     try {
       fileContent = fs.readFileSync(fp, 'utf8');
     } catch (_) {
-      process.exit(0); // File doesn't exist (new file not yet written?)
+      process.exit(0); // File does not exist
     }
 
-    const fm = extractFrontmatter(fileContent);
-    if (!fm) {
-      process.exit(0); // No frontmatter
+    const fixes = [];
+    let workingContent = fileContent;
+
+    // 1. Duplicate frontmatter keys
+    const fm = extractFrontmatter(workingContent);
+    if (fm) {
+      const dedupe = deduplicateFrontmatter(fm.content);
+      if (dedupe.hasDuplicates) {
+        workingContent = fm.before + dedupe.fixed + fm.after + fm.rest;
+        const dupList = dedupe.duplicates.map((d) => `"${d.key}" (line ${d.line})`).join(', ');
+        fixes.push(`removed duplicate keys: ${dupList}`);
+      }
     }
 
-    // Check for duplicate keys
-    const result = deduplicateFrontmatter(fm.content);
+    // 2. Frontmatter quote standardisation (single-quoted scalars => double-quoted).
+    try {
+      const fmRes = fmQuotes.processFile(workingContent);
+      if (fmRes.changed > 0) {
+        workingContent = fmRes.content;
+        fixes.push(`normalised ${fmRes.changed} frontmatter scalar(s) to double quotes`);
+      }
+    } catch (_) { /* never block on remediator failure */ }
 
-    if (!result.hasDuplicates) {
-      process.exit(0); // Clean
+    // 3. Em-dash to en-dash across the file body.
+    const emRes = repairEmDashes(workingContent);
+    if (emRes.content !== workingContent) {
+      workingContent = emRes.content;
+      fixes.push('replaced em-dash with en-dash');
     }
 
-    // Auto-fix: rewrite the file with deduplicated frontmatter
-    const fixedContent = fm.before + result.fixed + fm.after + fm.rest;
-    fs.writeFileSync(fp, fixedContent);
-
-    const dupList = result.duplicates.map((d) => `"${d.key}" (line ${d.line})`).join(', ');
-    console.log(JSON.stringify({
-      systemMessage: `FRONTMATTER AUTO-FIX: Removed duplicate keys in ${path.basename(fp)}: ${dupList}. File rewritten. Duplicate keys kill the Mintlify dev server — this has been fixed automatically.`
-    }));
+    if (fixes.length > 0) {
+      fs.writeFileSync(fp, workingContent);
+      console.log(JSON.stringify({
+        systemMessage: `FRONTMATTER AUTO-FIX in ${path.basename(fp)}: ${fixes.join('; ')}. File rewritten.`
+      }));
+    }
 
     process.exit(0);
   } catch (_) {

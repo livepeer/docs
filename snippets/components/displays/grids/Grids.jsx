@@ -146,13 +146,15 @@ export const CardCarousel = ({
  * @status stable
  * @description 2x2 grid with centred rotating icon overlay. Respects prefers-reduced-motion.
   * @aiDiscoverability none
- * @usedIn v2/about/concepts/livepeer-overview.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx
+ * @usedIn v2/about/concepts/livepeer-overview.mdx, v2/home/about/ecosystem.mdx, v2/home/about/vision.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {string} [icon="arrows-spin"] - Icon configuration used by the component.
  * @param {number} [iconSize=50] - Icon configuration used by the component.
  * @param {string} [iconColor="var(--lp-color-accent)"] - Icon configuration used by the component.
+ * @param {string} [iconBackgroundColor="transparent"] - Background colour for the centred icon wrapper.
+ * @param {string} [gap] - Optional gap between grid cells.
  * @param {string} [spinDuration="10s"] - Spin duration used by the component.
  * @param {string} [className=""] - CSS class name.
  * @param {object} [style={}] - Inline style overrides.
@@ -162,6 +164,8 @@ export const QuadGrid = ({
   icon = "arrows-spin",
   iconSize = 50,
   iconColor = "var(--lp-color-accent)",
+  iconBackgroundColor = "transparent",
+  gap,
   spinDuration = "10s",
   className = "",
   style = {},
@@ -179,13 +183,29 @@ export const QuadGrid = ({
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
+        .lp-quad-grid-layout {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
+          gap: var(--lp-quad-grid-gap, 0);
+        }
+        @media (max-width: 768px) {
+          .lp-quad-grid-layout {
+            grid-template-columns: 1fr;
+          }
+        }
         @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; }
+          .lp-quad-grid-icon {
+            animation: none !important;
+          }
         }
       `}</style>
-      <Columns cols={2}>
+      <div
+        className="lp-quad-grid-layout"
+        style={{ "--lp-quad-grid-gap": gap }}
+      >
         {children}
-      </Columns>
+      </div>
       <div style={{
         position: "absolute",
         top: "50%",
@@ -193,8 +213,8 @@ export const QuadGrid = ({
         transform: "translate(-50%, -50%)",
         zIndex: 10,
       }}>
-        <div style={{
-          backgroundColor: "var(--lp-color-bg-page)",
+        <div className="lp-quad-grid-icon" style={{
+          backgroundColor: iconBackgroundColor,
           borderRadius: "50%",
           padding: "var(--lp-spacing-2)",
           animation: `quadGridSpin ${spinDuration} linear infinite`,
