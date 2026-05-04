@@ -185,11 +185,42 @@ function buildZoneMap(content) {
   const zones = [];
   let m;
 
-  // Frontmatter
+  // Frontmatter — zone everything except user-facing keys
+  // (title, sidebarTitle, description, keywords). Block scalars (>-, |) and
+  // array continuations are exposed for remediation.
+  const CHECKED_FM_KEYS_LOCAL = /^(title|sidebarTitle|description|keywords)\s*:/;
   if (content.startsWith('---')) {
     const close = content.indexOf('---', 3);
     if (close > 0) {
-      zones.push({ start: 0, end: close + 3, type: 'frontmatter' });
+      const fmEnd = close + 3;
+      const fmLines = content.slice(0, fmEnd).split('\n');
+      let offset = 0;
+      let exposeIndent = -1; // when >=0, expose continuation lines indented past this
+      for (const line of fmLines) {
+        const lineEnd = offset + line.length;
+        const indent = line.length - line.trimStart().length;
+        const trimmed = line.trimStart();
+        if (exposeIndent >= 0) {
+          if (trimmed === '' || indent > exposeIndent) {
+            offset = lineEnd + 1;
+            continue;
+          }
+          exposeIndent = -1;
+        }
+        if (CHECKED_FM_KEYS_LOCAL.test(trimmed)) {
+          const colonPos = line.indexOf(':');
+          let valueStart = offset + colonPos + 1;
+          while (valueStart < lineEnd && content[valueStart] === ' ') valueStart++;
+          zones.push({ start: offset, end: valueStart, type: 'frontmatter' });
+          const afterColon = line.slice(colonPos + 1).trim();
+          if (/^[>|][-+]?\s*$/.test(afterColon) || afterColon === '') {
+            exposeIndent = indent;
+          }
+        } else {
+          zones.push({ start: offset, end: lineEnd, type: 'frontmatter' });
+        }
+        offset = lineEnd + 1;
+      }
     }
   }
 

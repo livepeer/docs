@@ -2,7 +2,7 @@
 title: Scale Operations
 sidebarTitle: Scale Operations
 description: >-
-  Architectural patterns for running multiple Livepeer orchestrator nodes at data-centre scale — multi-orchestrator
+  Architectural patterns for running multiple Livepeer orchestrator nodes at data-centre scale – multi-orchestrator
   setup, capacity management, rolling updates, fleet-wide monitoring, and enterprise onboarding.
 lifecycleStage: operate
 complexity: advanced
@@ -33,28 +33,28 @@ lastVerified: 2026-03-13T00:00:00.000Z
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Run a fleet when one orchestrator is no longer enough for the GPU footprint, failure isolation, or regional coverage you need. The sections below cover the multi-node patterns, worker scaling model, rollout mechanics, and enterprise handoff points that apply once you are beyond a single machine.
+Run a fleet when one Orchestrator is no longer enough for the GPU footprint, failure isolation, or regional coverage you need. The sections below cover the multi-node patterns, worker scaling model, rollout mechanics, and enterprise handoff points that apply once you are beyond a single machine.
 
 <CustomDivider />
 
 ## When you need fleet operations
 
-Single-node operation is appropriate for most orchestrators. You are in fleet territory when these conditions start to apply:
+Single-node operation is appropriate for most Orchestrators. You are in fleet territory when these conditions start to apply:
 
 - Your workload requires more GPU capacity than fits in one machine
 - You need geographic distribution for latency-sensitive AI workloads
 - You want to separate concerns – one node for reward calling, one for ticket redemption, separate GPU workers
-- You are operating at data-centre scale with SLA commitments to gateway operators
+- You are operating at data-centre scale with SLA commitments to Gateway operators
 
 Start with a single node unless one of these conditions already applies. Fleet architecture adds operational complexity, and the gains only justify that overhead once scale pressure is already present.
 
 <CustomDivider />
 
-## Multi-orchestrator architecture
+## Multi-Orchestrator architecture
 
-go-livepeer supports running multiple orchestrator nodes behind a single on-chain identity. This is documented in `doc/multi-o.md` in the go-livepeer repository.
+go-livepeer supports running multiple Orchestrator nodes behind a single on-chain identity. This is documented in `doc/multi-o.md` in the go-livepeer repository.
 
-The key insight: **each orchestrator node has its own keypair and accepts payments on behalf of the same on-chain registered Ethereum address.** Node separation allows you to assign specific functions to specific nodes:
+The key insight: **each Orchestrator node has its own keypair and accepts payments on behalf of the same on-chain registered Ethereum address.** Node separation allows you to assign specific functions to specific nodes:
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
@@ -96,17 +96,17 @@ graph TD
   </TableRow>
 </StyledTable>
 
-This pattern is architecturally similar to the [Siphon split setup](/v2/orchestrators/guides/deployment-details/siphon-setup). The same principle separates reward calling from workload processing, but the split is implemented entirely within go-livepeer instead of through OrchestratorSiphon.
+This pattern is architecturally similar to the [Siphon split setup](/v2/Orchestrators/guides/deployment-details/siphon-setup). The same principle separates reward calling from workload processing, but the split is implemented entirely within go-livepeer instead of through OrchestratorSiphon.
 
 <Card title="doc/multi-o.md — go-livepeer" icon="github" href="https://github.com/livepeer/go-livepeer/blob/master/doc/multi-o.md">
-  The canonical multi-orchestrator architecture documentation in the go-livepeer repository.
+  The canonical multi-Orchestrator architecture documentation in the go-livepeer repository.
 </Card>
 
 <CustomDivider />
 
 ## Scaling GPU workers
 
-Whether you are running a single orchestrator or a fleet, GPU workers scale horizontally. Each worker connects to an orchestrator with `-orchSecret` and the orchestrator distributes segments across all connected workers.
+Whether you are running a single Orchestrator or a fleet, GPU workers scale horizontally. Each worker connects to an orchestrator with `-orchSecret` and the orchestrator distributes segments across all connected workers.
 
 **Adding capacity:**
 
@@ -121,7 +121,7 @@ Whether you are running a single orchestrator or a fleet, GPU workers scale hori
      -nvidia 0,1,2 \
      -maxSessions 10
    ```
-4. The orchestrator immediately begins routing to the new worker – no configuration change on the orchestrator required
+4. The Orchestrator immediately begins routing to the new worker – no configuration change on the Orchestrator required
 
 Orchestrator logs confirm each new connection:
 ``` icon="terminal"
@@ -132,7 +132,7 @@ Got a RegisterTranscoder request from transcoder=10.3.27.5 capacity=10
 
 ## Capacity management at fleet scale
 
-Each worker advertises its capacity (the `-maxSessions` value). The orchestrator tracks capacity across all connected workers and routes jobs accordingly. There is no manual load balancing step – go-livepeer handles distribution internally.
+Each worker advertises its capacity (the `-maxSessions` value). The Orchestrator tracks capacity across all connected workers and routes jobs accordingly. There is no manual load balancing step – go-livepeer handles distribution internally.
 
 **What to monitor fleet-wide:**
 
@@ -172,7 +172,7 @@ docker run --net=host \
 
 ## Rolling updates
 
-Updating a single-node orchestrator drops all in-flight sessions. At fleet scale, you can do rolling updates to minimise disruption:
+Updating a single-node Orchestrator drops all in-flight sessions. At fleet scale, you can do rolling updates to minimise disruption:
 
 **Basic rolling update procedure:**
 
@@ -181,10 +181,10 @@ Updating a single-node orchestrator drops all in-flight sessions. At fleet scale
 3. **Verify the updated node.** Confirm it connects and is receiving sessions before proceeding.
 4. **Repeat for remaining nodes.**
 
-This requires at least two workload nodes to maintain service continuity during updates. With a single orchestrator, updates are always disruptive.
+This requires at least two workload nodes to maintain service continuity during updates. With a single Orchestrator, updates are always disruptive.
 
 <Note>
-  Workers reconnect automatically when an orchestrator restarts. From a worker's perspective, the orchestrator briefly disappears and then reappears. No manual action is needed on the worker side.
+  Workers reconnect automatically when an Orchestrator restarts. From a worker's perspective, the Orchestrator briefly disappears and then reappears. No manual action is needed on the worker side.
 </Note>
 
 <CustomDivider />
@@ -195,7 +195,7 @@ Fleet operations introduce key management complexity that does not exist on sing
 
 **Key considerations:**
 
-- Each orchestrator node needs access to the same Ethereum keystore to accept payments on behalf of your on-chain address. Distribute the keystore file carefully – only over encrypted channels, with restricted file permissions on each machine.
+- Each Orchestrator node needs access to the same Ethereum keystore to accept payments on behalf of your on-chain address. Distribute the keystore file carefully – only over encrypted channels, with restricted file permissions on each machine.
 - For reward calling, you want exactly **one** node calling `reward()` per round. Running reward calling on multiple nodes risks duplicate submissions and wasted gas. Designate a single node for reward calling and set `-reward=false` on all others.
 - For ticket redemption, the Redeemer can be run as a separate process. See `doc/redeemer.md` in the go-livepeer repository.
 - Static IPs or stable DNS names are essential at fleet scale – your service URI is stored on-chain and must resolve consistently.
@@ -207,7 +207,7 @@ Fleet operations introduce key management complexity that does not exist on sing
 If you are operating at data-centre scale, multiple co-location sites, or with commercial-grade SLA requirements, the Livepeer Foundation offers direct engagement support.
 
 <Card title="Contact Livepeer Foundation" icon="building" href="https://livepeer.org/contact">
-  For enterprise and data-centre operators. Direct support for fleet integration, custom gateway relationships, and commercial partnership discussions.
+  For enterprise and data-centre operators. Direct support for fleet integration, custom Gateway relationships, and commercial partnership discussions.
 </Card>
 
 The SPE (Special Purpose Entity) programme is the primary pathway for professional GPU operators who want a structured relationship with the network. Current SPEs include Titan Node (video mining) and MuxionLabs (formerly known as the AI SPE). See the Livepeer Forum and Discord for active SPE discussions.
@@ -219,7 +219,7 @@ The SPE (Special Purpose Entity) programme is the primary pathway for profession
     Pool operations – accepting worker connections and managing off-chain payouts.
   </Card>
   <Card title="Split O-T Setup" icon="plug" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
-    The foundational split between orchestrator and transcoder processes.
+    The foundational split between Orchestrator and transcoder processes.
   </Card>
   <Card title="Siphon Setup" icon="shield-check" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
     The reward-safe split setup using OrchestratorSiphon.

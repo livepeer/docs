@@ -2,7 +2,7 @@
 title: Model and Demand Reference
 sidebarTitle: Model Reference
 description: >-
-  Operator reference for GPU memory planning on Livepeer — VRAM requirements by pipeline, warm model strategy, multi-GPU
+  Operator reference for GPU memory planning on Livepeer – VRAM requirements by pipeline, warm model strategy, multi-GPU
   configuration, aiModels.json complete schema, pricing reference, and earnings optimisation.
 lifecycleStage: operate
 complexity: intermediate
@@ -43,7 +43,7 @@ Use this reference for pipeline-level VRAM figures, warm model strategy, multi-G
 
 ## Demand signals
 
-VRAM is only one part of the earning equation. Start with a better question: **which pipeline-model combinations are currently being routed by gateways, and does your hardware keep one of them warm at a competitive price?**
+VRAM is only one part of the earning equation. Start with a better question: **which pipeline-model combinations are currently being routed by Gateways, and does your hardware keep one of them warm at a competitive price?**
 
 Use these two signals together before loading a model:
 
@@ -54,9 +54,9 @@ Use these two signals together before loading a model:
     <TableCell header>Operator action</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)</TableCell>
+    <TableCell>[tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)</TableCell>
     <TableCell>Which models and pipelines are currently visible on the network, and whether competitors are advertising them warm or cold</TableCell>
-    <TableCell>Choose a model that gateways are actually requesting and that fits in VRAM</TableCell>
+    <TableCell>Choose a model that Gateways are actually requesting and that fits in VRAM</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>[Livepeer Explorer](https://explorer.livepeer.org/orchestrators)</TableCell>
@@ -66,7 +66,7 @@ Use these two signals together before loading a model:
 </StyledTable>
 
 <Tip>
-  A lightweight pipeline with visible demand usually beats an impressive model sitting outside current gateway routing. Start from demand, then validate that the warm VRAM footprint fits your GPU with headroom.
+  A lightweight pipeline with visible demand usually beats an impressive model sitting outside current Gateway routing. Start from demand, then validate that the warm VRAM footprint fits your GPU with headroom.
 </Tip>
 
 <CustomDivider />
@@ -512,15 +512,15 @@ For Ollama with multiple loaded models or hardware built for parallel inference,
 
 Model earnings diverge for four clear reasons:
 
-1. **Pipeline demand** – some pipelines receive more jobs from gateways
-2. **Model match** – gateways often request specific model IDs; running the requested model gets you the job
+1. **Pipeline demand** – some pipelines receive more jobs from Gateways
+2. **Model match** – Gateways often request specific model IDs; running the requested model gets you the job
 3. **Warm status** – warm models win latency-competitive pipelines
-4. **Pricing competitiveness** – prices above the gateway's `maxPricePerUnit` receive zero jobs
+4. **Pricing competitiveness** – prices above the Gateway's `maxPricePerUnit` receive zero jobs
 
 ### Tracking performance
 
-- **[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** – current capability visibility across all orchestrators
-- **[explorer.livepeer.org](https://explorer.livepeer.org)** – per-orchestrator fee earnings and job count
+- **[tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** – current capability visibility across all Orchestrators
+- **[explorer.livepeer.org](https://explorer.livepeer.org)** – per-Orchestrator fee earnings and job count
 
 Use the Explorer AI leaderboard to compare your earnings against similar nodes. Nodes with identical hardware but different warm model selections often show significantly different earnings – the warm pipeline choice matters more than raw GPU performance.
 
@@ -559,7 +559,7 @@ Use the Explorer AI leaderboard to compare your earnings against similar nodes. 
 
 ### Understanding the market
 
-Prices are set by operators and enforced at the gateway layer. A `price_per_unit` above a gateway's `maxPricePerUnit` removes your node from that gateway's job set, regardless of performance.
+Prices are set by operators and enforced at the Gateway layer. A `price_per_unit` above a Gateway's `maxPricePerUnit` removes your node from that Gateway's job set, regardless of performance.
 
 The network is price-competitive. Setting prices too high means no jobs. Setting prices too low reduces earnings unnecessarily.
 
@@ -602,9 +602,9 @@ These figures are approximate and shift with ETH/USD rates and network competiti
 
 ### GPU economics at scale
 
-A fully utilised RTX 4090 running `text-to-image` at competitive pricing and warm load earns strong fee revenue when demand, active-set position, and gateway routing align.
+A fully utilised RTX 4090 running `text-to-image` at competitive pricing and warm load earns strong fee revenue when demand, active-set position, and Gateway routing align.
 
-For an economics illustration with current network utilisation figures, see [Orchestrator Economics](/v2/orchestrators/concepts/incentive-model).
+For an economics illustration with current network utilisation figures, see [Orchestrator Economics](/v2/Orchestrators/concepts/incentive-model).
 
 <CustomDivider />
 
@@ -618,7 +618,7 @@ BYOC use cases:
 - Custom inference architectures (TensorRT, ONNX, OpenVINO)
 - Models hosted in K8s or a GPU farm behind a load balancer
 
-The only requirement is the `/health` endpoint contract and matching the AI worker's request format. See [Hosting Models (BYOC)](/v2/orchestrators/guides/advanced-operations/scale-operations) for the full BYOC guide.
+The only requirement is the `/health` endpoint contract and matching the AI worker's request format. See [Hosting Models (BYOC)](/v2/Orchestrators/guides/advanced-operations/scale-operations) for the full BYOC guide.
 
 <CustomDivider />
 

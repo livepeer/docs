@@ -2,7 +2,7 @@
 
 > Single lookup point for all decision registries across the repo.
 > Each registry stays in its own location. This file cross-references them all.
-> Last verified: 2026-04-07
+> Last verified: 2026-05-04
 
 <CustomDivider />
 
@@ -10,6 +10,8 @@
 
 | Registry | Location | Scope | Locked Decisions |
 |----------|----------|-------|-----------------|
+| Docs Guide Structure | `docs-guide/decisions/docs-guide-structure.md` | docs-guide/ folder layout, authority tiers, frontmatter contract, adapter parity, PR enforcement (D-DG-01 through D-DG-13) | 13 locked |
+| Glossary Boundary | `docs-guide/decisions/glossary-boundary.md` | Public vs internal glossary split; canonical corpus contract (D-GLOS-01) | 1 locked |
 | Content Writing | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | Structural content decisions (IA, page patterns, voice) | D-NAV-01 |
 | Content Writing — Blocking Items | `workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md` | P0 gaps blocking content production | — |
 | Content Writing — Tab Status | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate status | — |
@@ -35,12 +37,16 @@
 All registries use this format:
 
 ```markdown
-| ID | Decision | Scope | Decided by | Date | Unblocks |
-|---|---|---|---|---|---|
-| D-XXX-NN | [What was decided] | [Tab or area] | [Human/AI] | YYYY-MM-DD | [What this unblocks] |
+| ID | Decision | Scope | Decided by | Date | Status | Unblocks | Supersedes |
+|---|---|---|---|---|---|---|---|
+| D-XXX-NN | [What was decided] | [Tab or area] | [Human/AI] | YYYY-MM-DD | proposed \| locked \| superseded \| retired | [What this unblocks] | [D-YYY-NN if applicable] |
 ```
 
-Decisions are locked when a human signs off. Locked decisions cannot be changed without a new decision that explicitly supersedes the old one.
+ID grammar: `D-{SCOPE}-{NN}` where SCOPE is one of NAV, ACT, GOV, SCRIPT, OWN, CONTENT, ORCH, GW, DG, GLOS. NN is a zero-padded sequence within scope.
+
+Decisions are locked when a human signs off. Locked decisions cannot be changed without a new decision that explicitly supersedes the old one. The D-DG-NN scope is reserved for `docs-guide/` structural decisions; D-GLOS-NN for terminology and glossary decisions.
+
+Status, Supersedes, and ID-uniqueness are validated by `check-decisions-registry.js` (Phase 4 of the docs-guide redesign plan).
 
 <CustomDivider />
 

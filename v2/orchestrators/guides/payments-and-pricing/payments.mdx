@@ -2,7 +2,7 @@
 title: Payments
 sidebarTitle: Payments
 description: >-
-  How ETH moves from gateway to your orchestrator wallet — probabilistic micropayments, winning ticket mechanics, the
+  How ETH moves from gateway to your orchestrator wallet – probabilistic micropayments, winning ticket mechanics, the
   Redeemer, on-chain redemption on Arbitrum, and keeping your node funded for transactions.
 lifecycleStage: operate
 complexity: intermediate
@@ -34,7 +34,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Gateways pay orchestrators in ETH for every job completed through **probabilistic micropayments (PM)**. Gateways send lightweight signed tickets, a fraction of which are winners redeemable for a larger ETH payout. This keeps payment traffic efficient even when a node is processing thousands of segments or inference jobs.
+Gateways pay Orchestrators in ETH for every job completed through **Probabilistic Micropayments (PM)**. Gateways send lightweight signed tickets, a fraction of which are winners redeemable for a larger ETH payout. This keeps payment traffic efficient even when a node is processing thousands of segments or inference jobs.
 
 Use this page to understand how tickets flow, what makes one a winner, how the Redeemer submits them on-chain, and how to keep your node funded and earning.
 
@@ -65,9 +65,9 @@ Every step from ticket receipt to on-chain submission happens automatically insi
 
 <CustomDivider />
 
-## Probabilistic micropayments explained
+## Probabilistic Micropayments explained
 
-The core idea: the gateway sends tickets with a small **win probability** instead of settling every segment or inference request on-chain. Each winner is worth a larger amount, and the expected value across many jobs still matches the intended payment total.
+The core idea: the Gateway sends tickets with a small **win probability** instead of settling every segment or inference request on-chain. Each winner is worth a larger amount, and the expected value across many jobs still matches the intended payment total.
 
 ``` icon="terminal"
 Win probability:       e.g. 1 in 1000
@@ -80,7 +80,7 @@ This means:
 - **Winning tickets are infrequent but larger** – each represents many segments' worth of payment
 - **Gas costs are batched implicitly** – one redemption transaction covers hundreds or thousands of segments
 
-The result is that a busy orchestrator usually redeems ETH in a few batched submissions per day. Gas overhead stays negligible relative to earnings.
+The result is that a busy Orchestrator usually redeems ETH in a few batched submissions per day. Gas overhead stays negligible relative to earnings.
 
 <Note>
   From a practical perspective, the probabilistic system delivers ETH in larger redemption steps. Balance changes appear when winning tickets are redeemed on-chain, and that stepped pattern is expected behaviour.
@@ -88,7 +88,7 @@ The result is that a busy orchestrator usually redeems ETH in a few batched subm
 
 ### Ticket structure
 
-Each payment ticket the gateway sends contains:
+Each payment ticket the Gateway sends contains:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -105,15 +105,15 @@ Each payment ticket the gateway sends contains:
   </TableRow>
   <TableRow>
     <TableCell>**Sender address**</TableCell>
-    <TableCell>The gateway's Ethereum address</TableCell>
+    <TableCell>The Gateway's Ethereum address</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Recipient address**</TableCell>
-    <TableCell>Your orchestrator's Ethereum address</TableCell>
+    <TableCell>Your Orchestrator's Ethereum address</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Sender deposit**</TableCell>
-    <TableCell>The gateway's on-chain deposit that backs all their tickets</TableCell>
+    <TableCell>The Gateway's on-chain deposit that backs all their tickets</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Expiry**</TableCell>
@@ -133,7 +133,7 @@ Your node verifies the signature, checks the sender has sufficient deposit on-ch
 
 The Redeemer is a component of go-livepeer responsible for submitting winning tickets to the Arbitrum smart contract.
 
-In a standard single-node setup, the Redeemer runs as part of your orchestrator process. Multi-node or high-volume setups often run the Redeemer as a separate service to centralise on-chain redemption across multiple worker nodes.
+In a standard single-node setup, the Redeemer runs as part of your Orchestrator process. Multi-node or high-volume setups often run the Redeemer as a separate service to centralise on-chain redemption across multiple worker nodes.
 
 ### What the Redeemer does
 
@@ -172,10 +172,10 @@ Redemption transactions run on Arbitrum One (L2). Gas costs are low, but your wa
   </TableRow>
 </StyledTable>
 
-Keep a minimum of **0.01 ETH on Arbitrum** in your orchestrator wallet to prevent redemption failures. A depleted wallet means winning tickets expire unsubmitted – that ETH is permanently lost.
+Keep a minimum of **0.01 ETH on Arbitrum** in your Orchestrator wallet to prevent redemption failures. A depleted wallet means winning tickets expire unsubmitted – that ETH is permanently lost.
 
 <Warning>
-  A wallet without ETH on Arbitrum lets winning tickets expire before redemption. The gateway's deposit stays intact, and the loss sits entirely with your node. Monitor your ETH balance and top it up regularly. See [Funding Your Node](#funding-your-node) below.
+  A wallet without ETH on Arbitrum lets winning tickets expire before redemption. The Gateway's deposit stays intact, and the loss sits entirely with your node. Monitor your ETH balance and top it up regularly. See [Funding Your Node](#funding-your-node) below.
 </Warning>
 
 <CustomDivider />
@@ -196,7 +196,7 @@ Transcoding is paid per segment – approximately every 2 seconds of video proce
 - **Selection factor:** stake-weighted routing; higher total stake = more segments routed to you
 - **Typical fee level:** low per-segment (highly competitive, commoditised pipeline)
 
-The transcoding fee rate is set by your `-pricePerUnit` flag in Wei per pixel. Gateways filter orchestrators by maximum acceptable price before routing.
+The transcoding fee rate is set by your `-pricePerUnit` flag in Wei per pixel. Gateways filter Orchestrators by maximum acceptable price before routing.
 
 </Accordion>
 
@@ -210,7 +210,7 @@ AI inference is paid per inference job – one ticket per job request.
 - **Selection factor:** capability first, price second; stake weight is a secondary factor
 - **Typical fee level:** higher per-job than transcoding (GPU-intensive work)
 
-AI fees are configured in `aiModels.json` via the `price_per_unit` field. The pricing unit varies by pipeline – see [Model and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for per-pipeline pricing units.
+AI fees are configured in `aiModels.json` via the `price_per_unit` field. The pricing unit varies by pipeline – see [Model and VRAM Reference](/v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference) for per-pipeline pricing units.
 
 </Accordion>
 
@@ -220,8 +220,8 @@ Live-video AI (live-video-to-video) uses a time-based payment model measured acr
 
 - **Pricing unit:** per second of active stream
 - **Payment trigger:** periodic PM tickets at regular intervals during the stream session
-- **Payment state:** the gateway maintains running session state to calculate fees based on elapsed time
-- **Relevance to remote signers:** Live AI payment state is managed by the remote signer component (PRs #3791 and #3822). See [Remote Signers](/v2/gateways/guides/payments-and-pricing/remote-signers) for gateway-side context.
+- **Payment state:** the Gateway maintains running session state to calculate fees based on elapsed time
+- **Relevance to remote signers:** Live AI payment state is managed by the remote signer component (PRs #3791 and #3822). See [Remote Signers](/v2/Gateways/guides/payments-and-pricing/remote-signers) for Gateway-side context.
 
 </Accordion>
 
@@ -231,24 +231,24 @@ Live-video AI (live-video-to-video) uses a time-based payment model measured acr
 
 ## Clearinghouses
 
-In the standard PM model, the gateway itself holds an Ethereum deposit on-chain and signs payment tickets directly. A **clearinghouse** is an alternative arrangement where a third-party operator manages the PM deposit and ticket signing on behalf of gateways that don't want to handle crypto infrastructure directly.
+In the standard PM model, the Gateway itself holds an Ethereum deposit on-chain and signs payment tickets directly. A **clearinghouse** is an alternative arrangement where a third-party operator manages the PM deposit and ticket signing on behalf of Gateways that don't want to handle crypto infrastructure directly.
 
-From the orchestrator's perspective, payments from a gateway using a clearinghouse are identical to direct PM payments. The same ticket structure, the same Redeemer process, the same Arbitrum redemption.
+From the Orchestrator's perspective, payments from a Gateway using a clearinghouse are identical to direct PM payments. The same ticket structure, the same Redeemer process, the same Arbitrum redemption.
 
 Clearinghouses exist to enable:
 - Gateway implementations on platforms that can't easily handle Ethereum keys (browser, mobile)
-- Enterprise gateways that want to settle in fiat while still using Livepeer orchestrators
+- Enterprise Gateways that want to settle in fiat while still using Livepeer Orchestrators
 - Separation of media processing concerns from payment logistics
 
-This is a gateway-side concern. You receive valid signed tickets and redeem them – the clearinghouse arrangement is transparent to you.
+This is a Gateway-side concern. You receive valid signed tickets and redeem them – the clearinghouse arrangement is transparent to you.
 
-For the gateway-side detail, see [Payment Clearinghouses](/v2/gateways/guides/payments-and-pricing/clearinghouse-guide).
+For the Gateway-side detail, see [Payment Clearinghouses](/v2/Gateways/guides/payments-and-pricing/clearinghouse-guide).
 
 <CustomDivider />
 
 ## Funding your node
 
-Your orchestrator wallet on Arbitrum needs ETH for three types of transaction:
+Your Orchestrator wallet on Arbitrum needs ETH for three types of transaction:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -282,7 +282,7 @@ Bridge ETH from Ethereum mainnet to Arbitrum One when your operating wallet star
 <StyledSteps>
 
 <StyledStep title="Use the Arbitrum official bridge">
-  Go to [bridge.arbitrum.io](https://bridge.arbitrum.io) and connect the wallet corresponding to your orchestrator address.
+  Go to [bridge.Arbitrum.io](https://bridge.arbitrum.io) and connect the wallet corresponding to your Orchestrator address.
 </StyledStep>
 
 <StyledStep title="Bridge ETH from L1 to Arbitrum One">
@@ -290,11 +290,11 @@ Bridge ETH from Ethereum mainnet to Arbitrum One when your operating wallet star
 </StyledStep>
 
 <StyledStep title="Verify receipt on Arbitrum">
-  Check [arbiscan.io](https://arbiscan.io) for your orchestrator address to confirm the ETH arrived.
+  Check [Arbiscan.io](https://arbiscan.io) for your Orchestrator address to confirm the ETH arrived.
 </StyledStep>
 
 <StyledStep title="Set up balance monitoring">
-  Add your orchestrator wallet address to a balance monitoring tool. Alert when balance drops below your threshold. Most operators use Prometheus + Grafana for this – see [Metrics and Monitoring](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+  Add your Orchestrator wallet address to a balance monitoring tool. Alert when balance drops below your threshold. Most operators use Prometheus + Grafana for this – see [Metrics and Monitoring](/v2/Orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
 </StyledStep>
 
 </StyledSteps>
@@ -326,13 +326,13 @@ The go-livepeer node exposes Prometheus metrics for payment activity. Key ones t
   </TableRow>
   <TableRow>
     <TableCell>`livepeer_eth_balance`</TableCell>
-    <TableCell>Your current orchestrator ETH balance on Arbitrum</TableCell>
+    <TableCell>Your current Orchestrator ETH balance on Arbitrum</TableCell>
   </TableRow>
 </StyledTable>
 
 A healthy node has `tickets_redeemed` tracking closely behind `tickets_received`, and zero sustained `redemption_errors`. Persistent errors with `redemption_errors > 0` usually indicate a depleted ETH balance or a connectivity issue with your Arbitrum RPC endpoint.
 
-For the complete Prometheus metric reference, see [Metrics and Monitoring](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+For the complete Prometheus metric reference, see [Metrics and Monitoring](/v2/Orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
 
 <CustomDivider />
 
@@ -349,7 +349,7 @@ For the complete Prometheus metric reference, see [Metrics and Monitoring](/v2/o
     Gateway-side clearinghouse model and off-chain settlement options.
   </Card>
   <Card title="Remote Signers" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
-    How Live AI payment state is managed for off-chain gateway implementations.
+    How Live AI payment state is managed for off-chain Gateway implementations.
   </Card>
 </CardGroup>
 

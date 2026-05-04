@@ -138,10 +138,23 @@ function buildZoneMap(content) {
       const fmBlock = content.slice(0, fmEnd);
       const fmLines = fmBlock.split('\n');
       let offset = 0;
+      let blockScalarIndent = -1; // -1 = not in block scalar; otherwise indent of the parent key
 
       for (const line of fmLines) {
         const lineEnd = offset + line.length;
+        const indent = line.length - line.trimStart().length;
         const trimmed = line.trimStart();
+
+        // If we're inside a block scalar from a checked key, expose continuation lines
+        if (blockScalarIndent >= 0) {
+          if (trimmed === '' || indent > blockScalarIndent) {
+            // continuation — leave exposed (no zone)
+            offset = lineEnd + 1;
+            continue;
+          }
+          // indent dropped — block scalar ended
+          blockScalarIndent = -1;
+        }
 
         if (CHECKED_FM_KEYS.test(trimmed)) {
           // Zone only the key portion; leave the value exposed for remediation
@@ -149,6 +162,11 @@ function buildZoneMap(content) {
           let valueStart = offset + colonPos + 1;
           while (valueStart < lineEnd && content[valueStart] === ' ') valueStart++;
           zones.push({ start: offset, end: valueStart, type: 'frontmatter' });
+          // Detect YAML block scalar indicator (>-, >+, >, |-, |+, |) on this line
+          const afterColon = line.slice(colonPos + 1).trim();
+          if (/^[>|][-+]?\s*$/.test(afterColon)) {
+            blockScalarIndent = indent;
+          }
         } else {
           zones.push({ start: offset, end: lineEnd, type: 'frontmatter' });
         }
