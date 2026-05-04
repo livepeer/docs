@@ -12,6 +12,8 @@
  * @policy      Docs-local files do not define publishable contract truth.
  */
 
+const path = require("path");
+
 const {
   buildBlockchainContractsPageData,
   buildChainPayload,

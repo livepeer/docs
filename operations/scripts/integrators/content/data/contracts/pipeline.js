@@ -2651,4 +2651,5 @@ module.exports = {
   resolveAuthority,
   resolveGovernorSeries,
   runContractsPipeline,
+  fetchRepoInventory,
 };

@@ -133,11 +133,15 @@ Livepeer's crypto-economic primitives and decentralised compute mesh provide add
   ]}
 />
 
+<Card title={<CustomCardTitle title="See Livepeer as an OSI Stack" icon="file-code"/>} href="/v2/developers/" arrow />
+
 # Livepeer Protocol and Network Architecture
 
 Livepeer's crypto-economic primitives and decentralised compute mesh provide additional benefits to the system such as censorship resistance, economic security, and trustless coordination.
 
 <Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_layperson.svg" alt="Livepeer Network Protocol Layperson" caption="Livepeer Protocol and Network Layers" />
+
+<br />
 
 <Image src="/snippets/assets/media/diagrams/livepeer_network_protocol_technical.svg" alt="Livepeer Network Protocol Technical" caption="Livepeer Protocol and Network Architecture" />
 
@@ -149,11 +153,11 @@ The Livepeer protocol is a set of Solidity contracts deployed to Arbitrum One. F
 <ScrollableDiagram title="Protocol Contracts on Arbitrum One" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
 flowchart TB
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-    classDef proto fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
-    classDef token fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef proto fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
+    classDef token fill:#1a1a1a,color:#E0E4E0,stroke:#a855f7,stroke-width:2px
 
     Ctrl["Controller<br/><i>upgrade authority,<br/>contract registry</i>"]:::proto
 
@@ -187,7 +191,7 @@ These contracts run unchanged across every node in the network. An orchestrator 
 {/* <ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
 flowchart TD
     classDef default stroke-width:2px
     subgraph OffChain["Off-chain Network"]
@@ -217,17 +221,17 @@ flowchart TD
 ### Network nodes
 
 {/* go-livepeer binary running as orchestrator, transcoder, gateway. Link → Network → Architecture. */}
-The network layer is a single binary, `go-livepeer`, run in different modes. One mode is the gateway: it accepts video and AI jobs from clients, selects an orchestrator, and settles payment in tickets. Another is the orchestrator: it advertises capabilities, receives jobs, runs them, and redeems winning tickets on-chain. The transcoder mode is a worker that an orchestrator can split off onto a separate machine to scale horizontally. Newer modes — redeemer and remote signer — separate ticket redemption and key custody from the live job path so that gateway implementations in other languages can integrate.
+The network layer is a single binary, `go-livepeer`, run in different modes. One mode is the gateway: it accepts video and AI jobs from clients, selects an orchestrator, and settles payment in tickets. Another is the orchestrator: it advertises capabilities, receives jobs, runs them, and redeems winning tickets on-chain. The transcoder mode is a worker that an orchestrator can split off onto a separate machine to scale horizontally. Newer modes – redeemer and remote signer – separate ticket redemption and key custody from the live job path so that gateway implementations in other languages can integrate.
 
 <ScrollableDiagram title="go-livepeer Node Modes" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
 flowchart LR
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-    classDef gw fill:#1a1a1a,color:#fff,stroke:#3b82f6,stroke-width:2px
-    classDef orch fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-    classDef aux fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
+    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef gw fill:#1a1a1a,color:#E0E4E0,stroke:#3b82f6,stroke-width:2px
+    classDef orch fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef aux fill:#1a1a1a,color:#E0E4E0,stroke:#a855f7,stroke-width:2px
 
     Client["Client app<br/>(Studio, Daydream, SDK)"]:::default
 
@@ -264,7 +268,7 @@ Most of what happens on the network never touches a contract. Gateways discover 
 <ScrollableDiagram title="Off-Chain Coordination Loop" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
 sequenceDiagram
     autonumber
     participant G as Gateway
@@ -295,36 +299,36 @@ The off-chain loop is what scales the network: thousands of jobs and tickets per
 
 The AI runtime sits inside the orchestrator. `ai-worker` is a Go subsystem in `go-livepeer` that owns the orchestrator-side job lifecycle: it receives an AI job from the gateway, picks a registered pipeline, starts or wakes the corresponding container, and streams frames in and out. Each pipeline runs as a separate `ai-runner` Python container, isolated by GPU and model. The transport between `ai-worker` and `ai-runner` for real-time work is the trickle protocol; for batch work it is a request/response HTTP API. ComfyStream is one such container, offering a ComfyUI-graph runtime for real-time video-to-video pipelines.
 
-<ScrollableDiagram title="AI Runtime — ai-worker and ai-runner" maxHeight="600px">
+<ScrollableDiagram title="AI Runtime – ai-worker and ai-runner" maxHeight="600px">
 
-    ```mermaid
-    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
-    flowchart TB
-        classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-        classDef goproc fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-        classDef py fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
-        classDef cfg fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+flowchart TB
+    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef goproc fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef py fill:#1a1a1a,color:#E0E4E0,stroke:#a855f7,stroke-width:2px
+    classDef cfg fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
 
-        Gateway["Gateway<br/>(remote)"]:::default
+    Gateway["Gateway<br/>(remote)"]:::default
 
-        subgraph Orchestrator["Orchestrator host"]
-            Orch["go-livepeer<br/>orchestrator process"]:::goproc
-            AIWorker["ai-worker subsystem<br/>job dispatch, container<br/>lifecycle, payment"]:::goproc
+    subgraph Orchestrator["Orchestrator host"]
+        Orch["go-livepeer<br/>orchestrator process"]:::goproc
+        AIWorker["ai-worker subsystem<br/>job dispatch, container<br/>lifecycle, payment"]:::goproc
 
-            subgraph Containers["ai-runner containers"]
-                Batch["Batch pipelines<br/>text-to-image,<br/>image-to-video,<br/>audio-to-text…"]:::py
-                Realtime["Real-time pipelines<br/>live-video-to-video,<br/>ComfyStream"]:::py
-            end
-
-            AIModels["aiModels.json<br/><i>configured pipelines<br/>+ pricing</i>"]:::cfg
+        subgraph Containers["ai-runner containers"]
+            Batch["Batch pipelines<br/>text-to-image,<br/>image-to-video,<br/>audio-to-text…"]:::py
+            Realtime["Real-time pipelines<br/>live-video-to-video,<br/>ComfyStream"]:::py
         end
 
-        Gateway -->|AI job| Orch
-        Orch -->|dispatch| AIWorker
-        AIWorker -->|HTTP request/response| Batch
-        AIWorker -->|trickle protocol<br/>(WebRTC frames)| Realtime
-        AIModels -->|loaded at start| AIWorker
-    ```
+        AIModels["aiModels.json<br/><i>configured pipelines<br/>+ pricing</i>"]:::cfg
+    end
+
+    Gateway -->|AI job| Orch
+    Orch -->|dispatch| AIWorker
+    AIWorker -->|HTTP request/response| Batch
+    AIWorker -->|trickle protocol<br/>WebRTC frames| Realtime
+    AIModels -->|loaded at start| AIWorker
+```
 
 </ScrollableDiagram>
 
@@ -334,17 +338,17 @@ An orchestrator declares which pipelines it serves through `aiModels.json`, whic
 
 {/* Studio, Daydream, partner integrations, BYOC. Link → Solutions tab. */}
 
-Applications are the products built on the layers below. Livepeer Studio is the hosted video product run by Livepeer Inc — streaming, VOD, transcoding, and the embeddable player behind an API key. Daydream is the hosted real-time AI video product, built on ComfyStream and the AI Gateway API. Storyboard is an AI agent workspace that uses Daydream as its inference backend. Streamplace is the live-video product for the AT Protocol and Bluesky. BYOC ("bring your own container") is the path for a partner to plug a custom AI pipeline into the network as an orchestrator-side container.
+Applications are the products built on the layers below. Livepeer Studio is the hosted video product run by Livepeer Inc – streaming, VOD, transcoding, and the embeddable player behind an API key. Daydream is the hosted real-time AI video product, built on ComfyStream and the AI Gateway API. Storyboard is an AI agent workspace that uses Daydream as its inference backend. Streamplace is the live-video product for the AT Protocol and Bluesky. BYOC ("bring your own container") is the path for a partner to plug a custom AI pipeline into the network as an orchestrator-side container.
 
 <ScrollableDiagram title="Applications and Their Layer Position" maxHeight="600px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
 flowchart TB
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
-    classDef firstparty fill:#1a1a1a,color:#fff,stroke:#a855f7,stroke-width:2px
-    classDef partner fill:#1a1a1a,color:#fff,stroke:#3b82f6,stroke-width:2px
-    classDef platform fill:#1a1a1a,color:#fff,stroke:#f59e0b,stroke-width:2px
+    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef firstparty fill:#1a1a1a,color:#E0E4E0,stroke:#a855f7,stroke-width:2px
+    classDef partner fill:#1a1a1a,color:#E0E4E0,stroke:#3b82f6,stroke-width:2px
+    classDef platform fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
 
     subgraph FirstParty["First-party apps (Livepeer Inc)"]
         Studio["Livepeer Studio<br/>hosted video"]:::firstparty
@@ -384,7 +388,7 @@ A job is the test: it touches every layer in one round trip. The job descends fr
 <ScrollableDiagram title="One Job Through the Stack" maxHeight="700px">
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
 sequenceDiagram
     autonumber
     participant App as Layer 4<br/>Application
@@ -407,7 +411,7 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The protocol does not see most jobs — it only sees the ones whose tickets win and the per-round inflation distribution. That is the design that makes per-pixel and per-token pricing viable on Arbitrum.
+The protocol does not see most jobs – it only sees the ones whose tickets win and the per-round inflation distribution. That is the design that makes per-pixel and per-token pricing viable on Arbitrum.
 
 {/* ## The stack at a glance
 

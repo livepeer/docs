@@ -1,7 +1,10 @@
 ---
-title: Technical Overview
+title: Livepeer Protocol Technical Architecture
 sidebarTitle: Technical Architecture
-description: A technical overview of the Livepeer protocol.
+description: >-
+  How the Livepeer protocol is structured as a layered system of on-chain contracts on Arbitrum One,
+  off-chain coordination protocols, and node software, and how these layers interact to secure media
+  and AI compute work.
 lifecycleStage: discover
 complexity: intermediate
 pageType: concept
@@ -9,142 +12,130 @@ keywords:
   - livepeer
   - about
   - livepeer protocol
-  - technical overview
-  - technical
-  - overview
+  - technical architecture
+  - architecture
+  - on-chain
+  - off-chain
+  - arbitrum
+  - smart contracts
+  - go-livepeer
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 audience: general
-lastVerified: 2026-03-17T00:00:00.000Z
+status: current
 purpose: concept
+lastVerified: "2026-05-04"
 ---
 
-{/* This page describes:
-7. **Technical Architecture**
-
-   * Smart contracts
-   * On-chain components
-   * How protocol interacts with network
-
-How in depth though?
-*/}
-
-import { GotoCard, GotoLink } from '/snippets/components/elements/links/Links.jsx'
-import { Image } from '/snippets/components/elements/images/Image.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
-import { DynamicTable, DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
 import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <FlexContainer justify="center" style={{padding: 0, margin: 0}}>
- <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
+  <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
 </FlexContainer>
 <CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
 
 <Quote>
-
+The Livepeer protocol is a layered system. Smart contracts on Arbitrum One handle staking, payments, and coordination. Off-chain protocols handle job negotiation and per-segment payment. Node software runs the actual media and AI compute work. Each layer has a defined role, and the boundaries between them are what make the network scalable and verifiable.
 </Quote>
 
-Notes
-- The blockchain handles economic incentives and coordination, while `go-livepeer` network nodes handle the computationally intensive work of media processing and AI inference.
-- The on-chain contracts verify work and handle payments, but don't perform the actual transcoding/AI inference
-- `go-livepeer` nodes communicate with the blockchain to submit work proofs and claim rewards
-- This architecture allows the protocol to scale while maintaining economic security through on-chain verification
+<CustomDivider style={{margin: 0, marginBottom: "-2rem"}} />
 
-<CustomDivider />
+The protocol is structured so that on-chain contracts coordinate economic security and off-chain components handle high-throughput compute. The blockchain settles state that must be globally agreed upon - stake, payments, governance. Everything else runs off-chain and references the chain only when it has to.
 
-{/* <Warning> this is the NETWORK not the protocol </Warning>
-The [go-livepeer](https://github.com/livepeer/go-livepeer) architecture is organized around three node types that work together to form a decentralised media processing network:
+<CustomDivider middleText="Layered Architecture" />
 
-- Gateway: Accepts video streams and AI jobs, routes work to orchestrators
-- Orchestrator: Manages transcoding tasks, pays out rewards
-- Worker Nodes: (Transcoder & AI Worker) Performs video transcoding or AI inference work
+## Three Architectural Layers
 
-<Image src="/snippets/assets/domain/01_ABOUT/ProtocolNodeDiagram.png" alt="System Overview" caption="Livepeer System Overview" height="500px"/> */}
+The protocol stack has three layers, each with a different responsibility and a different rate of change. The blockchain layer is slow, expensive, and authoritative. The protocol layer is fast and trust-minimised. The node layer is where the actual work happens.
 
-{/* Livepeer is a decentralized infrastructure protocol that allows users to upload, transcode, and serve video content & run AI pipelines. It operates on a network with different node types including Gateways (formerly Broadcasters), Orchestrators, and Transcoders. The protocol uses smart contracts deployed on Ethereum Mainnet and Arbitrum Mainnet, with the native token LPT (Livepeer Token). Since the Confluence upgrade, the protocol primarily runs on Arbitrum Mainnet.
+<ScrollableDiagram title="Livepeer Protocol Stack" maxHeight="500px">
 
-The core components of the Livepeer node implementation work together to provide a distributed, scalable video transcoding platform. Each component has specific responsibilities:
-- LivepeerNode: The central structure representing a node in the network
-- LivepeerServer: Handles media operations and HTTP interfaces
-- Orchestrator: Manages transcoding tasks and payment processing
-- BroadcastSessionsManager: Coordinates with multiple orchestrators
-- RemoteTranscoderManager: Distributes work to transcoders
-- RPC System: Enables communication between different node types
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart TB
+    classDef default stroke-width:2px
 
-These components implement the Livepeer protocol, allowing video to be efficiently transcoded in a decentralized network. */}
+    subgraph NODE["Node Layer (go-livepeer)"]
+        GW["Gateways<br/>Job intake, orchestrator selection, payment dispatch"]
+        ORC["Orchestrators<br/>Session management, worker coordination"]
+        WORK["Transcoders / AI Runners<br/>Video encoding and AI inference on GPUs"]
+    end
 
-## Architecture Overview
+    subgraph PROTOCOL["Protocol Layer (off-chain)"]
+        DISC["Service discovery and capability advertising"]
+        NEG["Job negotiation and price quotes"]
+        TIX["Probabilistic micropayment tickets"]
+        VER["Off-chain verification (segment re-encoding checks)"]
+    end
 
-Blockchain layer (Arbitrum One) for staking, payments, and coordination
-Protocol layer (off-chain) for job negotiation and micropayments
-Node layer (go-livepeer) for video processing and protocol interaction
+    subgraph CHAIN["Blockchain Layer (Arbitrum One)"]
+        STAKE["BondingManager<br/>Staking and delegation"]
+        ROUNDS["RoundsManager<br/>Round progression"]
+        PAY["TicketBroker<br/>Winning ticket redemption"]
+        REG["ServiceRegistry<br/>Orchestrator on-chain identity"]
+        MINT["Minter<br/>LPT issuance and rewards"]
+        GOV["LivepeerGovernor + Treasury<br/>On-chain governance"]
+    end
 
-**Blockchain Layer** - Smart contracts deployed on Arbitrum One that manage staking, payments, time progression, and service discovery. All contracts are registered through the Controller contract for discoverability.
+    GW --> ORC --> WORK
+    GW <--> NEG
+    ORC <--> NEG
+    GW --> TIX
+    ORC --> TIX
+    ORC <--> DISC
+    GW <--> DISC
+    GW <--> VER
 
-The blockchain layer provides:
+    TIX --> PAY
+    DISC --> REG
+    ORC -.->|"stake, claim rewards"| STAKE
+    ORC -.->|"reward call per round"| MINT
+    ORC -.->|"round init"| ROUNDS
+    STAKE --> GOV
+```
 
-- Immutable transaction history
-- State consensus via Arbitrum One rollup
-- Economic security through fraud proofs
-- Cross-chain token bridging between L1 and L2
-
-<Tip> The Confluence upgrade (LIP-73) moved contracts from Ethereum mainnet to Arbitrum One, reducing gas costs by approximately 100x while maintaining Ethereum's security guarantees. </Tip>
-
-**Protocol Layer** - Off-chain protocols that enable scalable payments, job assignment, and work verification without requiring on-chain transactions for every segment.
-
-Protocol Mechanisms
-The protocol layer implements economic and coordination mechanisms on top of the blockchain:
+</ScrollableDiagram>
 
 <DynamicTableV2
-  headerList={['Protocol', 'Purpose', 'On-chain Component', 'Off-chain Component']}
+  headerList={["Layer", "Runs on", "Responsibility", "Rate of change"]}
   itemsList={[
     {
-      Protocol: 'Bonding/Delegation',
-      Purpose: 'Stake coordination',
-      'On-chain Component': 'BondingManager.bond()',
-      'Off-chain Component': 'Client delegation decisions',
+      "Layer": "Blockchain",
+      "Runs on": "Arbitrum One smart contracts",
+      "Responsibility": "Staking, payments, round progression, service registry, governance, treasury",
+      "Rate of change": "Per round (~24h), per LIP, per redemption",
     },
     {
-      Protocol: 'Service Discovery',
-      Purpose: 'Orchestrator advertising',
-      'On-chain Component': 'ServiceRegistry.setServiceURI()',
-      'Off-chain Component': 'Client queries and filtering',
+      "Layer": "Protocol",
+      "Runs on": "Peer-to-peer between Gateways and Orchestrators",
+      "Responsibility": "Service discovery, price negotiation, per-segment payment tickets, verification",
+      "Rate of change": "Per session, per segment",
     },
     {
-      Protocol: 'Job Negotiation',
-      Purpose: 'Price discovery',
-      'On-chain Component': 'None',
-      'Off-chain Component': 'P2P price quotes',
-    },
-    {
-      Protocol: 'Probabilistic Micropayments',
-      Purpose: 'Scalable payments',
-      'On-chain Component': 'TicketBroker.redeemWinningTicket()',
-      'Off-chain Component': 'Ticket generation/validation',
-    },
-    {
-      Protocol: 'Verification',
-      Purpose: 'Work correctness',
-      'On-chain Component': 'BondingManager.slashTranscoder()',
-      'Off-chain Component': 'Segment re-encoding checks',
-    },
-    {
-      Protocol: 'Rewards',
-      Purpose: 'Inflation distribution',
-      'On-chain Component': 'Minter.reward()',
-      'Off-chain Component': 'Orchestrator reward() calls',
+      "Layer": "Node",
+      "Runs on": "go-livepeer software on participant machines",
+      "Responsibility": "Video transcoding, AI inference, session management, ticket validation",
+      "Rate of change": "Per request, per frame",
     },
   ]}
 />
 
-**Node Layer** - Software implementations running on participant machines that interact with both blockchain and protocol layers to perform video transcoding work.
+<CustomDivider middleText="Blockchain Layer" />
 
-## Protocol Architecture
+## Blockchain Layer
+
+The blockchain layer is the protocol's source of truth for any state that must be globally agreed and economically secured. Smart contracts deployed on Arbitrum One coordinate stake, settle payments, govern parameters, and define the active set of Orchestrators eligible for work.
+
+The contracts are organised around a central `Controller` that records the deployed address of every other protocol contract. Contracts query the Controller to find each other, which makes upgrades possible without redeploying the entire system.
 
 <ScrollableDiagram title="Livepeer Protocol Contract Architecture" maxHeight="600px">
 
@@ -175,143 +166,139 @@ flowchart TD
 
 </ScrollableDiagram>
 
-## System Overview
+The LPT token contract is deployed on Ethereum mainnet and bridged to Arbitrum One. Protocol contracts read and write the bridged LPT on Arbitrum. The Confluence upgrade ([LIP-73](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0073.md)) migrated the protocol contracts from Ethereum mainnet to Arbitrum One to reduce transaction costs and increase throughput, while keeping Ethereum's security guarantees through the rollup.
 
-Livepeer can be modeled as a layered architecture:
+For full contract addresses and source links see <LinkArrow href="/v2/about/protocol/blockchain-contracts" label="Blockchain Contracts" newline={false} />.
 
-{/* <ScrollableDiagram title="Livepeer System Overview" maxHeight="500px">
+<CustomDivider middleText="Protocol Layer" />
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
-graph TD
-    classDef default stroke-width:2px
-    A[Clients / Apps] --> B[Gateways]
-    B --> C[Orchestrator Nodes]
-    C --> D[Transcode / AI Workers]
-    D --> E[Off-chain Managers]
-    E --> F[Smart Contracts - L2 Arbitrum]
-```
+## Protocol Layer
 
-</ScrollableDiagram> */}
+The protocol layer is the set of off-chain coordination protocols that sit between Gateways and Orchestrators. It is what makes the network usable at production volume: every video segment, every AI inference request, every price quote runs through the protocol layer without touching the chain.
 
-<DynamicTable
-  headerList={["Layer", "Role"]}
+The protocol layer pairs each off-chain mechanism with a thin on-chain anchor. Discovery happens off-chain, but the addresses Gateways query were registered on-chain. Payment happens off-chain through tickets, but winning tickets settle on-chain. Verification happens off-chain through re-encoding, but slashing happens on-chain.
+
+<DynamicTableV2
+  headerList={['Mechanism', 'Off-chain component', 'On-chain anchor']}
   itemsList={[
-    { "Layer": "Client Layer", "Role": "Streams or submits jobs via Application Layer (eg. CLI, SDK, API)" },
-    { "Layer": "Gateway Layer", "Role": "Receives jobs, initiates session routing" },
-    { "Layer": "Orchestrator Layer", "Role": "Bids on sessions, runs compute nodes" },
-    { "Layer": "Worker Layer", "Role": "Performs transcoding / AI inference" },
-    { "Layer": "Off-chain Manager", "Role": "Handles bonding sync, ticket validation" },
-    { "Layer": "L2 Contracts (ARB)", "Role": "TicketBroker, BondingManager, Delegator claims, reward withdrawal" },
-    { "Layer": "L1 Contracts (ETH)", "Role": "LivepeerToken, BridgeMinter - token issuance & bridging only" },
+    {
+      'Mechanism': 'Bonding and delegation',
+      'Off-chain component': 'Client-side delegation decisions',
+      'On-chain anchor': 'BondingManager.bond()',
+    },
+    {
+      'Mechanism': 'Service discovery',
+      'Off-chain component': 'Client queries to advertised endpoints',
+      'On-chain anchor': 'ServiceRegistry.setServiceURI()',
+    },
+    {
+      'Mechanism': 'Job negotiation',
+      'Off-chain component': 'Peer-to-peer price quotes between Gateway and Orchestrator',
+      'On-chain anchor': 'None - prices are not posted on-chain',
+    },
+    {
+      'Mechanism': 'Probabilistic micropayments',
+      'Off-chain component': 'Ticket generation and validation per segment',
+      'On-chain anchor': 'TicketBroker.redeemWinningTicket()',
+    },
+    {
+      'Mechanism': 'Verification',
+      'Off-chain component': 'Segment re-encoding checks',
+      'On-chain anchor': 'BondingManager.slashTranscoder()',
+    },
+    {
+      'Mechanism': 'Rewards',
+      'Off-chain component': 'Orchestrator-initiated reward() call each round',
+      'On-chain anchor': 'Minter.reward()',
+    },
   ]}
 />
 
-## System Diagram
+The probabilistic micropayment design is the load-bearing piece. Without it, every transcoded segment would need an on-chain transaction. With it, payments accumulate as off-chain tickets and only winning tickets settle on Arbitrum, keeping per-segment cost bounded while preserving the economic guarantees of on-chain settlement.
 
-<ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
+For the mechanisms in detail see <LinkArrow href="/v2/about/protocol/mechanisms" label="Core Mechanisms" newline={false} />.
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
-flowchart TD
-    classDef default stroke-width:2px
-    subgraph OffChain["Off-chain Network"]
-        B[Broadcaster] -->|Video/AI jobs| O[Orchestrator]
-        O -->|Results| B
-        B -->|Prob. Tickets| O
-    end
-    subgraph OnChain["On-chain Protocol"]
-        BDeposit[[Broadcaster Deposit - ETH]]
-        OStake[[Orchestrator Stake - LPT]]
-        TicketBroker[TicketBroker Contract]
-        BondingManager[BondingManager Contract]
-        Treasury[Treasury]
-    end
-    B -.->|Deposit ETH| TicketBroker
-    OStake -.->|Stake/Delegate LPT| BondingManager
-    TicketBroker -.->|Redeem winning ticket| OStake
-    BondingManager -.->|Inflation rewards| OStake
-    BondingManager -.->|Treasury share| Treasury
-    O -.->|Redeem winning ticket| TicketBroker
-```
+<CustomDivider middleText="Node Layer" />
 
-</ScrollableDiagram>
+## Node Layer
 
-## Actor & Incentive Model
+The node layer is the software that participants run. The reference implementation is [go-livepeer](https://github.com/livepeer/go-livepeer). It is the same binary in every role - the role is selected by command-line flag.
 
-## Trust & Verification Model
+A node started with `-broadcaster` (or `-gateway`) accepts video streams and AI requests from applications, selects Orchestrators from the on-chain registry, and dispatches jobs with attached payment tickets. A node started with `-orchestrator` registers on-chain, advertises capabilities, accepts jobs from Gateways, and coordinates GPU workers. A node started with `-transcoder` connects to an Orchestrator and performs only the video encoding work, allowing GPU capacity to scale independently of the Orchestrator controller.
 
-## Job Lifecycle
-
-## Governance & Treasury
-
-## Protocol References
-
-<Note>Aggregate from internal Livepeer Notions, Prev site & deepwiki</Note>
-
-{/*
-### A/B/C TEST LAYOUTS
-
-**Expandable**
-
-  <Expandable title="All References" defaultOpen={true}>
-    <ResponseField name="Contract Addresses">
-        <GotoLink
-          label="Contract Addresses"
-          text="See all current contract addresses for the deployed protocol"
-          relativePath="/v2/about/resources/reference/livepeer-contract-addresses"
-        />
-    </ResponseField>
-
-    <ResponseField name="is_over_21" type="boolean">
- Whether the user is over 21 years old
-    </ResponseField>
-
-  </Expandable>
-
-**Steps**
-
-<Steps>
-  <Step title="Contract Addresses" icon="code">
-    <GotoLink
-      label="Contract Addresses"
-      text="See all current contract addresses for the deployed protocol"
-      relativePath="/v2/about/resources/reference/livepeer-contract-addresses"
-    />
-  </Step>
-  <Step title="Contract Addresses" icon="home">
- See all current contract addresses for the deployed protocol
-  </Step>
-  <Step title="Contract Addresses" icon="book">
- See all current contract addresses for the deployed protocol
-  </Step>
-</Steps>
-
-**Basic Link**
-
-<GotoLink
-  label="Contract Addresses"
-  text="See all current contract addresses for the deployed protocol"
-  relativePath="/v2/about/resources/reference/livepeer-contract-addresses"
+<DynamicTableV2
+  headerList={["Node role", "Started with", "Responsibility"]}
+  itemsList={[
+    {
+      "Node role": "Gateway",
+      "Started with": "go-livepeer -gateway (or -broadcaster)",
+      "Responsibility": "Receive jobs from applications, select Orchestrators, dispatch work with payment tickets, return results",
+    },
+    {
+      "Node role": "Orchestrator",
+      "Started with": "go-livepeer -orchestrator",
+      "Responsibility": "Register on-chain, advertise capabilities, accept jobs, coordinate workers, redeem winning tickets",
+    },
+    {
+      "Node role": "Transcoder",
+      "Started with": "go-livepeer -transcoder -orchAddr <addr>",
+      "Responsibility": "Perform video encoding work for a connected Orchestrator (O-T split configuration)",
+    },
+    {
+      "Node role": "AI Runner",
+      "Started with": "Docker container managed by Orchestrator process",
+      "Responsibility": "Run AI inference for a specific pipeline and model on GPU",
+    },
+  ]}
 />
 
-**Link Cards**
+The node layer is what interacts with both other layers. Gateways read the on-chain ServiceRegistry to discover Orchestrators, then talk to those Orchestrators directly through the protocol layer. Orchestrators read on-chain stake and bonding state, accept off-chain jobs, redeem winning tickets back on-chain, and call `reward()` once per round to claim inflation.
 
-<GotoCard
-  label="Contract Addresses"
-  text="See all current contract addresses for the deployed protocol"
-  relativePath="/v2/about/resources/reference/livepeer-contract-addresses"
-/>
+<CustomDivider middleText="System Interactions" />
 
-### Links
+## How the Layers Interact
 
-<Warning>To remove... Notes only</Warning>
-Internal
+The interaction model is best read as the lifecycle of a single piece of work. A Gateway has a video stream or an AI request. It needs an Orchestrator that can do the work, a way to pay for it, and a way to verify the result. The three layers each play one part.
 
-- [Reward Calc](https://www.notion.so/livepeer/Livepeer-Protocol-Reward-Calculation-2320a34856878026adb0e7bcb7521661)
-- [Reward Accumulation](https://www.notion.so/livepeer/Livepeer-Rewards-Accumulation-Mechanism-23e0a348568780199f26f8cbc3c2d231)
-- [Migration Report](https://www.notion.so/livepeer/Livepeer-L1-L2-Migration-Report-Complete-Technical-Overview-2b10a348568780a28b59df9d8710bff9)
+The Gateway begins by reading the on-chain ServiceRegistry to find Orchestrators that have advertised the capability it needs. It then negotiates price directly with one or more candidates over the protocol layer - that negotiation never touches the chain. Once a session is open, jobs flow segment-by-segment, each carrying a probabilistic payment ticket.
 
-Docs Current
+Most tickets are losing tickets and never settle. A small fraction win and are redeemed by the Orchestrator on-chain through the TicketBroker, releasing accumulated ETH. Once per round, the Orchestrator also calls `reward()` to claim its share of newly minted LPT, distributed proportionally to bonded stake.
 
-- */}
+For the per-job state machine and per-workload pipeline differences see <LinkArrow href="/v2/about/network/job-pipelines" label="Job Pipelines" newline={false} />.
+
+<CustomDivider middleText="Design Principles" />
+
+## What This Architecture Buys
+
+The layered design reflects three deliberate tradeoffs.
+
+The blockchain handles only what must be globally agreed: stake, payments at the redemption boundary, governance, and the active set. Everything else is pushed off-chain, which is what makes the per-segment cost low enough to compete with centralised infrastructure.
+
+The protocol layer is the verification surface. Gateways check that returned segments match the input - if they do not, the Gateway stops sending work. Slashing on-chain only intervenes for repeated or provable misbehaviour. Most quality enforcement happens through Gateway selection, which costs the misbehaving Orchestrator future revenue without requiring an on-chain transaction.
+
+The node layer is interchangeable. Anyone can implement a compatible Gateway or Orchestrator against the protocol specification. go-livepeer is the reference implementation, but the protocol does not require it - what defines a compliant participant is correct interaction with the on-chain contracts and the off-chain protocol mechanisms.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Protocol Design" icon="compass-drafting" href="/v2/about/protocol/design" arrow horizontal>
+    Why the protocol is structured this way and the design decisions behind it.
+  </Card>
+  <Card title="Core Mechanisms" icon="gears" href="/v2/about/protocol/mechanisms" arrow horizontal>
+    Rounds, staking, rewards, payments, slashing, and upgrades in detail.
+  </Card>
+  <Card title="Protocol Actors" icon="users-gear" href="/v2/about/protocol/actors" arrow horizontal>
+    Orchestrators, Gateways, Delegators, and how their incentives align.
+  </Card>
+  <Card title="Blockchain Contracts" icon="file-contract" href="/v2/about/protocol/blockchain-contracts" arrow horizontal>
+    Full contract reference with deployed addresses and source links.
+  </Card>
+  <Card title="Governance and Treasury" icon="building-columns" href="/v2/about/protocol/governance-and-treasury" arrow horizontal>
+    LIPs, on-chain voting, and the protocol treasury.
+  </Card>
+  <Card title="Livepeer Token" icon="coins" href="/v2/about/protocol/livepeer-token" arrow horizontal>
+    LPT token economics, inflation, and bridging.
+  </Card>
+</CardGroup>
