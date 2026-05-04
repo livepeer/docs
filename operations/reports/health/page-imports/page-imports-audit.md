@@ -1,13 +1,25 @@
 # Page Imports Audit
 
 ## Summary
-- Entry pages: 474
-- Files analyzed: 598
-- Findings: 38
+- Entry pages: 541
+- Files analyzed: 674
+- Findings: 42
 - Warnings: 0
 - Repo scope: routable-v2
 
 ## Findings
+- v2/developers2/concepts/ecosystem-map.mdx:29 [missing-import] Import from "/snippets/components/primitives/links.jsx" points to a non-existent file.
+  - raw: /snippets/components/primitives/links.jsx
+  - resolved: ../../../../../snippets/components/primitives/links.jsx
+- v2/developers2/concepts/ecosystem-map.mdx:31 [missing-import] Import from "/snippets/components/layout/tables.jsx" points to a non-existent file.
+  - raw: /snippets/components/layout/tables.jsx
+  - resolved: ../../../../../snippets/components/layout/tables.jsx
+- v2/developers2/concepts/ecosystem-map.mdx:32 [missing-import] Import from "/snippets/components/primitives/divider.jsx" points to a non-existent file.
+  - raw: /snippets/components/primitives/divider.jsx
+  - resolved: ../../../../../snippets/components/primitives/divider.jsx
+- v2/developers2/concepts/ecosystem-map.mdx:33 [missing-import] Import from "/snippets/components/layout/containers.jsx" points to a non-existent file.
+  - raw: /snippets/components/layout/containers.jsx
+  - resolved: ../../../../../snippets/components/layout/containers.jsx
 - v2/resources/documentation-guide/component-library/wrappers.mdx:88 [missing-import] Import from "/snippets/components/wrappers/accordions/AccordionGroupList.jsx" points to a non-existent file.
   - raw: /snippets/components/wrappers/accordions/AccordionGroupList.jsx
   - resolved: ../../../../../snippets/components/wrappers/accordions/AccordionGroupList.jsx

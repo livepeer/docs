@@ -67,18 +67,73 @@ import { DataWrap } from '/snippets/components/elements/text/DataWrap.jsx'
 import VerifyContractAddresses from '/snippets/composables/pages/canonical/verify-contract-addresses.mdx'
 import {
   getActiveTableItems,
+  getActiveEntries,
+  getImplementationEntries,
+  getLifecycleTableItems,
   getHistoricalCategories,
   getHistoricalCategoryMeta,
   getNonActiveGroups,
   getProxyTableItems,
+  collectLifecycleEntries,
+  sortContractsForDisplay,
+  normalizeContractsForTable,
+  normalizeString,
+  normalizeCategoryKey,
+  normalizeLifecycleKey,
+  normalizeTypeKey,
+  compareByLocale,
+  versionToNumber,
+  getExplorerBase,
+  chainLabel,
+  lifecycleLabel,
+  categoryOrder,
+  nonActiveLifecycleOrder,
+  nonActiveLifecycleConfig,
+  historicalCategoryConfig,
 } from '/snippets/data/contract-addresses/view-model.jsx'
 import {
   buildCategoryAccordionRows,
   historicalCategoryIcon,
+  NonActiveAccordionGroup,
+  HistoricalCategoriesAccordionGroup,
 } from '/snippets/composables/pages/canonical/data/livepeer-contract-addresses-page-data.jsx'
 
 {/* data */}
 import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+
+export const NonActiveAccordionGroup = ({ sourceData }) => (
+  <AccordionGroup>
+    {getNonActiveGroups(sourceData).map((group) => (
+      <Accordion key={group.key} title={group.title} icon={group.icon}>
+        <p style={{ color: "var(--text)", fontStyle: "italic", marginBottom: "0.75rem" }}>
+          {group.description}
+        </p>
+        <DynamicTable
+          headerList={["Name", "Address", "Chain", "Type"]}
+          itemsList={buildCategoryAccordionRows(group.items)}
+          columnWidths={{ Chain: '36%' }}
+          showSeparators={true}
+        />
+      </Accordion>
+    ))}
+  </AccordionGroup>
+)
+
+export const HistoricalCategoriesAccordionGroup = ({ sourceData }) => (
+  <AccordionGroup>
+    {getHistoricalCategories(sourceData).map((group) => {
+      const meta = getHistoricalCategoryMeta(group.key)
+      return (
+        <Accordion
+          key={group.key}
+          title={<AccordionTitle icon={historicalCategoryIcon(meta.key)} title={meta.title} description={meta.description} />}
+        >
+          <HistoricalContractTable category={group.key} sourceData={sourceData} />
+        </Accordion>
+      )
+    })}
+  </AccordionGroup>
+)
 
 <Danger>
  Ensure you are on the official `docs.livepeer.org/` site before using any address.
@@ -308,21 +363,7 @@ Proxy addresses are stable upgrade entrypoints for active controller-managed con
 
 Paused Ethereum contracts, migration-residual contracts, and legacy-operational helper contracts remain published for verification and audit purposes, but they are not part of the active contract table above.
 
-<AccordionGroup>
-  {getNonActiveGroups(contractAddresses).map((group) => (
-    <Accordion key={group.key} title={group.title} icon={group.icon}>
-      <p style={{ color: "var(--text)", fontStyle: "italic", marginBottom: "0.75rem" }}>
-        {group.description}
-      </p>
-      <DynamicTable
-        headerList={["Name", "Address", "Chain", "Type"]}
-        itemsList={buildCategoryAccordionRows(group.items)}
-        columnWidths={{ Chain: '36%' }}
-        showSeparators={true}
-      />
-    </Accordion>
-  ))}
-</AccordionGroup>
+<NonActiveAccordionGroup sourceData={contractAddresses} />
 
 <CustomDivider />
 
@@ -330,20 +371,7 @@ Paused Ethereum contracts, migration-residual contracts, and legacy-operational 
 
 Historical implementations replaced through governance upgrades. These target contracts are superseded and listed for audit trail and version history only. Do not interact with deprecated targets directly.
 
-<AccordionGroup>
-  {getHistoricalCategories(contractAddresses).map((group) => {
-    const meta = getHistoricalCategoryMeta(group.key)
-
-    return (
-      <Accordion
-        key={group.key}
-        title={<AccordionTitle icon={historicalCategoryIcon(meta.key)} title={meta.title} description={meta.description} />}
-      >
-        <HistoricalContractTable category={group.key} sourceData={contractAddresses} />
-      </Accordion>
-    )
-  })}
-</AccordionGroup>
+<HistoricalCategoriesAccordionGroup sourceData={contractAddresses} />
 
 <CustomDivider />
 

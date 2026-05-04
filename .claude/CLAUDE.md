@@ -138,6 +138,39 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 
 ---
 
+## Karpathy guidelines
+
+Source: https://github.com/forrestchang/andrej-karpathy-skills. Behavioural rules to reduce common LLM coding mistakes. Bias toward caution over speed. For trivial tasks, use judgement.
+
+**1. Think before coding — don't assume, don't hide confusion, surface tradeoffs.**
+- State assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — do not pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what is confusing. Ask.
+
+**2. Simplicity first — minimum code that solves the problem, nothing speculative.**
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that was not requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+- Test: would a senior engineer call this overcomplicated? If yes, simplify.
+
+**3. Surgical changes — touch only what you must, clean up only your own mess.**
+- Do not "improve" adjacent code, comments, or formatting.
+- Do not refactor things that are not broken.
+- Match existing style, even if you would do it differently.
+- If you notice unrelated dead code, mention it — do not delete it.
+- Remove imports/variables/functions that YOUR changes made unused. Leave pre-existing dead code alone unless asked.
+- Test: every changed line should trace directly to the user's request.
+
+**4. Goal-driven execution — define success criteria, loop until verified.**
+- Convert tasks into verifiable goals: "add validation" becomes "write tests for invalid inputs, then make them pass". "Fix the bug" becomes "write a test that reproduces it, then make it pass".
+- For multi-step tasks, state a brief plan with a verify step per item.
+- Strong success criteria let you loop independently. Weak criteria ("make it work") force constant clarification.
+
+---
+
 ## Engineering standards
 
 **This is production infrastructure for a multi-million dollar protocol.** Every change must meet the highest engineering standards for the full context of the change.
