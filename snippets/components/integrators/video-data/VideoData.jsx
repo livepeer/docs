@@ -8,7 +8,7 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
  * @description Renders YouTube video data with video embed and metadata columns.
  * @dataSource automation/youtube
   * @aiDiscoverability none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/solutions/trending.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/streamplace/community.mdx
+ * @usedIn v2/community/connect/trending-topics.mdx, v2/home/solutions/trending.mdx, v2/solutions/daydream/community.mdx, v2/solutions/embody/community.mdx, v2/solutions/frameworks/community.mdx, v2/solutions/livepeer-studio/community.mdx, v2/solutions/streamplace/community.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-08
  * @param {Array} [items=[]] - Collection data rendered by the component.

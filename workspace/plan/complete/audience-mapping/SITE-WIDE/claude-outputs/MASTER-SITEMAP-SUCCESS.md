@@ -34,11 +34,11 @@ A tab ships when it passes ALL of these:
 
 | Page | Size | Status | Issue |
 |---|---|---|---|
-| `about-livepeer/vision.mdx` | 8.8KB | ✅ Publishable | — |
-| `about-livepeer/evolution.mdx` | 7.9KB | ✅ Publishable | — |
-| `about-livepeer/ecosystem.mdx` | 25.7KB | ✅ Publishable | Stale risk on org structure post-Foundation launch |
-| `about-livepeer/benefits.mdx` | 9.9KB | ✅ Publishable | — |
-| `about-livepeer/roadmap.mdx` | 1.8KB | 🔴 STUB | Needs actual content or redirect to About/technical-roadmap |
+| `about/vision.mdx` | 8.8KB | ✅ Publishable | — |
+| `about/evolution.mdx` | 7.9KB | ✅ Publishable | — |
+| `about/ecosystem.mdx` | 25.7KB | ✅ Publishable | Stale risk on org structure post-Foundation launch |
+| `about/benefits.mdx` | 9.9KB | ✅ Publishable | — |
+| `about/roadmap.mdx` | 1.8KB | 🔴 STUB | Needs actual content or redirect to About/technical-roadmap |
 | `get-started.mdx` | 7.5KB | ✅ Publishable | — |
 | `get-started/ai-pipelines.mdx` | 484B | 🔴 STUB | "Coming Soon" — needs content or removal from nav |
 | `get-started/build-on-livepeer.mdx` | 448B | 🔴 STUB | "Coming Soon" — needs content or removal from nav |
@@ -314,9 +314,9 @@ A tab ships when it passes ALL of these:
 
 | Section | Status | Notes |
 |---|---|---|
-| livepeer-community/ (5 pages) | 🟡 Partial | Community portal and guidelines need current Foundation info |
-| livepeer-connect/ (3 pages) | 🟡 Partial | Channels page needs platform map |
-| livepeer-contribute/ (3 pages) | 🟡 Partial | Workstreams page needs current roster |
+| community/ (5 pages) | 🟡 Partial | Community portal and guidelines need current Foundation info |
+| connect/ (3 pages) | 🟡 Partial | Channels page needs platform map |
+| contribute/ (3 pages) | 🟡 Partial | Workstreams page needs current roster |
 | resources/ (4 pages) | ✅ Good | Links to awesome-livepeer |
 
 ### Final IA (from community-tab-05-final-ia-and-pages.md — CANONICAL)

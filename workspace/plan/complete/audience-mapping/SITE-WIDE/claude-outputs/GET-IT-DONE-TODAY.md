@@ -78,7 +78,7 @@ These gaps mean a reader's journey breaks completely. Fix these first.
 | P3-05 | `resources/reference/network-metrics.mdx` | About | Real data or live component |
 | P3-06 | `knowledge-hub/evaluating-livepeer.mdx` | About | Write — evaluator path |
 | P3-07 | `knowledge-hub/contributor-orientation.mdx` | About | Write — contributor path |
-| P3-08 | `about-livepeer/roadmap.mdx` | Home | Redirect or short summary |
+| P3-08 | `about/roadmap.mdx` | Home | Redirect or short summary |
 | P3-09 | Community workstreams page | Community | Route volatile content to Forum |
 | P3-10 | Solutions bridge page | About | Link/page to "what's been built" |
 
@@ -150,7 +150,7 @@ These questions appear repeatedly in Discord and currently have NO linkable doc 
 | "What is the difference between realtime AI and batch AI?" | `orchestrators/concepts/job-types.mdx` | 🔴 P1 — outdated |
 | "Do I need a remote signer?" | `gateways/setup/remote-signers.mdx` | 🔴 P1 — doesn't exist |
 | "How do I configure aiModels.json?" | `orchestrators/advanced/ai-pipelines.mdx` | 🟡 P2 — thin |
-| "What are the active workstreams and who leads them?" | `community/livepeer-community/workstreams.mdx` | 🟡 volatile — route to Forum |
+| "What are the active workstreams and who leads them?" | `community/community/workstreams.mdx` | 🟡 volatile — route to Forum |
 
 ---
 

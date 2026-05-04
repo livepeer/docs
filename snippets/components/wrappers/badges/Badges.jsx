@@ -11,6 +11,7 @@
  * @param {Array} [badges] - Array of {color, label} objects. Rendered automatically as Badge elements.
  * @param {ReactNode} [children] - Manual Badge JSX. Used if badges prop is omitted.
  * @param {string} [gap="0.4rem"] - Gap between badges.
+ * @param {string} [margin="0.5rem 0 1.5rem 0"] - Margin around the badge row.
  * @param {object} [style={}] - Inline style overrides (merged with defaults).
  * @param {string} [className=""] - CSS class name.
  *
@@ -26,6 +27,7 @@ export const BadgeWrapper = ({
   badges,
   children,
   gap = '0.4rem',
+  margin = '0.5rem 0 1.5rem 0',
   style = {},
   className = '',
   ...rest
@@ -35,7 +37,7 @@ export const BadgeWrapper = ({
     flexWrap: 'wrap',
     alignItems: 'center',
     gap,
-    margin: '0.5rem 0 1.5rem 0',
+    margin,
   }
 
   return (

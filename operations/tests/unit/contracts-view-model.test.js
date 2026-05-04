@@ -111,6 +111,42 @@ function run() {
   assert.ok(bindings.controller, 'blockchain bindings should expose the controller address');
   assert.ok(bindings.l2Migrator, 'blockchain bindings should expose the L2Migrator proxy address');
 
+  const canonicalPagePath = path.join(
+    REPO_ROOT,
+    'snippets',
+    'data',
+    'contract-addresses',
+    'canonicalContractsPageData.json'
+  );
+  const canonicalPageOnDisk = loadJson(canonicalPagePath);
+  const expectedActive = viewModel.getActiveTableItems(contractAddresses);
+  const expectedProxy = viewModel.getProxyTableItems(contractAddresses);
+  const expectedNonActive = viewModel.getNonActiveGroups(contractAddresses);
+  const expectedHistorical = viewModel
+    .getHistoricalCategories(contractAddresses)
+    .map((group) => ({ ...group, meta: viewModel.getHistoricalCategoryMeta(group.key) }));
+
+  assert.strictEqual(
+    JSON.stringify(canonicalPageOnDisk.activeTableItems),
+    JSON.stringify(expectedActive),
+    'canonicalContractsPageData.activeTableItems must match view-model output for the current dataset'
+  );
+  assert.strictEqual(
+    JSON.stringify(canonicalPageOnDisk.proxyTableItems),
+    JSON.stringify(expectedProxy),
+    'canonicalContractsPageData.proxyTableItems must match view-model output for the current dataset'
+  );
+  assert.strictEqual(
+    JSON.stringify(canonicalPageOnDisk.nonActiveGroups),
+    JSON.stringify(expectedNonActive),
+    'canonicalContractsPageData.nonActiveGroups must match view-model output for the current dataset'
+  );
+  assert.strictEqual(
+    JSON.stringify(canonicalPageOnDisk.historicalCategories),
+    JSON.stringify(expectedHistorical),
+    'canonicalContractsPageData.historicalCategories must match view-model output for the current dataset'
+  );
+
   console.log('✅ contracts-view-model.test passed');
 }
 

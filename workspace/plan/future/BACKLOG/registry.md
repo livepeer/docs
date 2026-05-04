@@ -239,3 +239,8 @@ _Empty — cleared 2026-03-29. BL-001 (SHOWCASE_DISCORD_REVIEWER_USER_ID warning
 **Source:** Gateway Single-Click Deployment Path Migration — 2026-04-06
 **Description:** `operations/scripts/generators/content/catalogs/generate-pages-index.js` currently relies on tracked-path discovery, so it misses unstaged renames/new files and reports `v2/gateways/index.mdx` / `v2/index.mdx` as outdated until the moved page paths are staged. The generator should account for working-tree renames/new files or document/enforce the staging requirement explicitly.
 **Priority:** P2
+
+## BL-046 — Rerun final validation for docs-v2-dev into docs-v2 merge PR #876
+**Source:** docs-v2-dev into docs-v2 merge PR — 2026-04-09
+**Description:** After restoring the consolidation `Links.jsx`, canonicalizing page/template imports, and rebasing the dedicated merge branch onto current `docs-v2`, rerun scoped merge-worktree browser validation and `node operations/tests/run-pr-checks.js --base-ref docs-v2` on `docs-v2-dev`, then record the final failing/clean lanes before merge.
+**Priority:** P0

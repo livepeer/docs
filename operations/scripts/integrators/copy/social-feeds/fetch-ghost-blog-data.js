@@ -8,7 +8,7 @@
  * @mode        integrate
  * @pipeline    RSS feed → snippets/data/social-feeds/ghostBlogData.jsx
  * @scope       .github/scripts, snippets/data/social-feeds/
- * @usage       node .github/scripts/fetch-ghost-blog-data.js
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
@@ -16,6 +16,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+
+const dryRun = process.argv.includes("--dry-run");
 
 const RSS_URL = process.env.GHOST_RSS_URL || "https://blog.livepeer.org/rss/";
 const LIMIT = parseInt(process.env.LIMIT || "4", 10);
@@ -120,9 +122,14 @@ async function main() {
   });
   jsx += "];\n";
 
-  fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
-  fs.writeFileSync(OUTPUT_PATH, jsx);
-  console.log(`Written to ${OUTPUT_PATH}`);
+  if (dryRun) {
+    console.log(`[dry-run] Would write to ${OUTPUT_PATH} (${jsx.length} bytes)`);
+    console.log(jsx);
+  } else {
+    fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
+    fs.writeFileSync(OUTPUT_PATH, jsx);
+    console.log(`Written to ${OUTPUT_PATH}`);
+  }
 }
 
 main().catch((err) => {

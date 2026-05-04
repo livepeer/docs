@@ -12,6 +12,7 @@
  * @usage       
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
 
@@ -49,7 +50,7 @@ const TIER_2 = [
   'v2/developers/resources/reference/apis.mdx',
   'v2/developers/resources/reference/sdks.mdx',
   'v2/home/get-started.mdx',
-  'v2/community/livepeer-community/trending-topics.mdx',
+  'v2/community/connect/trending-topics.mdx',
   'docs-guide/tooling/reference-maps/icon-map.mdx',
   // JSX data files
   'snippets/data/solutions/hrefs.jsx',
@@ -113,7 +114,7 @@ function processFile(relPath) {
   const updated = original.replace(MIGRATION_REGEX, REPLACEMENT);
 
   if (WRITE_MODE) {
-    fs.writeFileSync(absPath, updated, 'utf8');
+    if (DRY_RUN) { console.log('[dry-run] Would write:', absPath); } else { fs.writeFileSync(absPath, updated, 'utf8'); };
   }
 
   return { file: relPath, status: WRITE_MODE ? 'UPDATED' : 'DRY RUN', count: changes.length, changes };

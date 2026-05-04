@@ -2,7 +2,7 @@
 title: Orchestrator Glossary
 sidebarTitle: Glossary
 description: >-
-  Key terms for Livepeer orchestrator operators — GPU setup, AI pipelines, staking, payment mechanics, monitoring, and
+  Key terms for Livepeer orchestrator operators – GPU setup, AI pipelines, staking, payment mechanics, monitoring, and
   protocol roles.
 lifecycleStage: discover
 complexity: beginner
@@ -56,7 +56,7 @@ import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
 </Note>
 
 {/* ==========================SECTION: INTRO========================= */}
-Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment flows, monitoring, and protocol roles for operators running Livepeer orchestrator nodes.
+Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment flows, monitoring, and protocol roles for operators running Livepeer Orchestrator nodes.
 
 <CustomDivider />
 
@@ -207,9 +207,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
 
 <AccordionGroup>
   <Accordion title="Active Set" icon="book-open">
-    **Definition**: The top 100 orchestrators by total bonded stake eligible to receive video transcoding work in the current round.
+    **Definition**: The top 100 Orchestrators by total bonded stake eligible to receive video transcoding work in the current round.
 
-    **Context**: Active set membership is determined at round start by ranking orchestrators by total bonded LPT (self-stake plus delegated stake). AI inference routing does not require active set membership – it prioritises capability and price over stake position.
+    **Context**: Active Set membership is determined at round start by ranking Orchestrators by total bonded LPT (self-stake plus delegated stake). AI inference routing does not require Active Set membership – it prioritises capability and price over stake position.
 
     **Status**: current
 
@@ -217,9 +217,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="AIServiceRegistry" icon="book-open">
-    **Definition**: Smart contract registering AI service capabilities for orchestrators on the Livepeer AI network.
+    **Definition**: Smart contract registering AI service capabilities for Orchestrators on the Livepeer AI network.
 
-    **Context**: Orchestrators optionally advertise their AI pipelines and models on-chain via this contract, enabling capability-based routing by gateways.
+    **Context**: Orchestrators optionally advertise their AI pipelines and models on-chain via this contract, enabling capability-based routing by Gateways.
 
     **Status**: current
 
@@ -227,9 +227,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="aiModels.json" icon="book-open">
-    **Definition**: JSON configuration file specifying available AI models including pipeline type, model ID, pricing, and warm status for an orchestrator node.
+    **Definition**: JSON configuration file specifying available AI models including pipeline type, model ID, pricing, and warm status for an Orchestrator node.
 
-    **Context**: The primary config file for AI orchestrators. Each entry defines which model to load, at what price, and whether it should be pre-warmed on startup.
+    **Context**: The primary config file for AI Orchestrators. Each entry defines which model to load, at what price, and whether it should be pre-warmed on startup.
 
     **Status**: current
 
@@ -239,7 +239,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="AI Runner" icon="book-open">
     **Definition**: The container process that executes AI model inference jobs; go-livepeer communicates with it via HTTP and it loads models into GPU memory to process requests.
 
-    **Context**: Configured via `aiModels.json` and the `-aiWorker` / `-aiModels` CLI flags. Each AI runner handles one or more pipelines on a dedicated GPU.
+    **Context**: Configured via `aiModels.json` and the `-aiWorker` / `-aiModels` CLI flags. Each AI Runner handles one or more pipelines on a dedicated GPU.
 
     **Status**: current
 
@@ -247,9 +247,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="aiWorker" icon="book-open">
-    **Definition**: CLI flag starting a go-livepeer node as a dedicated AI worker process that connects to an orchestrator and handles AI inference jobs.
+    **Definition**: CLI flag starting a go-livepeer node as a dedicated AI worker process that connects to an Orchestrator and handles AI inference jobs.
 
-    **Context**: Enables the orchestrator to offload GPU inference work to a separate subprocess. Multiple aiWorker processes can be connected to a single orchestrator for multi-GPU setups.
+    **Context**: Enables the Orchestrator to offload GPU inference work to a separate subprocess. Multiple aiWorker processes can be connected to a single Orchestrator for multi-GPU setups.
 
     **Status**: current
 
@@ -257,7 +257,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="BondingManager" icon="book-open">
-    **Definition**: Core smart contract managing bonding, delegation, staking logic, and fund ownership on the Livepeer protocol.
+    **Definition**: Core smart contract managing bonding, delegation, staking logic, and fund ownership on the Livepeer Protocol.
 
     **Context**: The central contract for all LPT stake operations – bonding, unbonding, delegation, reward distribution, and slash execution.
 
@@ -267,7 +267,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="BYOC (Bring Your Own Container)" icon="book-open">
-    **Definition**: Deployment pattern enabling orchestrators to run custom Docker containers for AI workloads alongside standard Livepeer pipelines.
+    **Definition**: Deployment pattern enabling Orchestrators to run custom Docker containers for AI workloads alongside standard Livepeer pipelines.
 
     **Context**: BYOC containers must conform to the Livepeer AI worker API specification. Used by teams deploying proprietary or experimental models not available in the standard pipeline set.
 
@@ -277,7 +277,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Capability Advertisement" icon="book-open">
-    **Definition**: Mechanism by which orchestrators inform gateways of the AI services, pipelines, and models they can process.
+    **Definition**: Mechanism by which Orchestrators inform Gateways of the AI services, pipelines, and models they can process.
 
     **Context**: Orchestrators broadcast their capabilities either on-chain via the AIServiceRegistry or off-chain via webhook discovery. Gateways use this data to route inference jobs to capable nodes.
 
@@ -287,9 +287,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Capability Matching" icon="book-open">
-    **Definition**: Process by which a gateway routes an AI task to an appropriate orchestrator based on advertised capabilities.
+    **Definition**: Process by which a Gateway routes an AI task to an appropriate Orchestrator based on advertised capabilities.
 
-    **Context**: The gateway compares the requested pipeline and model against each orchestrator's advertised capabilities and selects the best match based on price, performance score, and availability.
+    **Context**: The Gateway compares the requested pipeline and model against each Orchestrator's advertised capabilities and selects the best match based on price, performance score, and availability.
 
     **Status**: current
 
@@ -299,7 +299,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Cascade" icon="book-open">
     **Definition**: Strategic vision for Livepeer to become the leading platform for real-time AI video pipelines, representing the current phase of protocol development.
 
-    **Context**: The Cascade phase introduced AI inference as a first-class network capability, enabling orchestrators to advertise and earn from AI workloads alongside video transcoding.
+    **Context**: The Cascade phase introduced AI inference as a first-class network capability, enabling Orchestrators to advertise and earn from AI workloads alongside video transcoding.
 
     **Status**: current
 
@@ -307,9 +307,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Clearinghouse" icon="book-open">
-    **Definition**: Contract or system handling settlement of payments between gateways and orchestrators.
+    **Definition**: Contract or system handling settlement of payments between Gateways and Orchestrators.
 
-    **Context**: The clearinghouse resolves probabilistic micropayment tickets on-chain via the TicketBroker contract, converting winning tickets into ETH for orchestrators.
+    **Context**: The clearinghouse resolves probabilistic micropayment tickets on-chain via the TicketBroker contract, converting winning tickets into ETH for Orchestrators.
 
     **Status**: current
 
@@ -319,7 +319,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="ComfyStream" icon="book-open">
     **Definition**: Livepeer project running ComfyUI workflows as a real-time media processing backend for live streams.
 
-    **Context**: ComfyStream enables orchestrators to expose ComfyUI-based diffusion pipelines as live-video-to-video capabilities on the Livepeer network.
+    **Context**: ComfyStream enables Orchestrators to expose ComfyUI-based diffusion pipelines as live-video-to-video capabilities on the Livepeer Network.
 
     **Status**: current
 
@@ -337,9 +337,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Delegator" icon="book-open">
-    **Definition**: LPT token holder who stakes tokens to an orchestrator to secure the network, participate in governance, and earn a share of rewards.
+    **Definition**: LPT token holder who stakes tokens to an Orchestrator to secure the network, participate in governance, and earn a share of rewards.
 
-    **Context**: Delegators do not run infrastructure. They bond LPT to an orchestrator of their choice and receive a proportional share of that orchestrator's inflation rewards and service fees.
+    **Context**: Delegators do not run infrastructure. They bond LPT to an Orchestrator of their choice and receive a proportional share of that Orchestrator's inflation rewards and service fees.
 
     **Status**: current
 
@@ -347,7 +347,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Dual Mode" icon="book-open">
-    **Definition**: Deployment configuration where a single orchestrator process handles both video transcoding and AI inference simultaneously.
+    **Definition**: Deployment configuration where a single Orchestrator process handles both video transcoding and AI inference simultaneously.
 
     **Context**: The most common production configuration for operators with capable hardware (24 GB+ VRAM). Dual mode is a workload configuration, not a separate protocol mode – the same go-livepeer binary supports all modes via flag combinations.
 
@@ -357,9 +357,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Gateway" icon="book-open">
-    **Definition**: Node that submits jobs to the network, routes work to orchestrators, manages payment flows, and provides a protocol interface for applications.
+    **Definition**: Node that submits jobs to the network, routes work to Orchestrators, manages payment flows, and provides a protocol interface for applications.
 
-    **Context**: Gateways are the demand side of the Livepeer network. They receive streams or AI requests from users or applications and select orchestrators to fulfil the work.
+    **Context**: Gateways are the demand side of the Livepeer Network. They receive streams or AI requests from users or applications and select Orchestrators to fulfil the work.
 
     **Status**: current
 
@@ -367,9 +367,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="go-livepeer" icon="book-open">
-    **Definition**: Official Go implementation of the Livepeer protocol containing the Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary.
+    **Definition**: Official Go implementation of the Livepeer Protocol containing the Broadcaster, Orchestrator, Transcoder, Gateway, and Worker roles in a single binary.
 
-    **Context**: The canonical node software for running any Livepeer network role. Orchestrators, gateways, and transcoders all run go-livepeer with different flag combinations.
+    **Context**: The canonical node software for running any Livepeer Network role. Orchestrators, Gateways, and transcoders all run go-livepeer with different flag combinations.
 
     **Status**: current
 
@@ -377,9 +377,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="GPU Worker" icon="book-open">
-    **Definition**: Subprocess running AI inference on a dedicated GPU, managed by the go-livepeer orchestrator process.
+    **Definition**: Subprocess running AI inference on a dedicated GPU, managed by the go-livepeer Orchestrator process.
 
-    **Context**: In AI or dual-mode deployments, each GPU in the system runs a dedicated AI runner subprocess (GPU worker). The orchestrator routes inference jobs to available GPU workers.
+    **Context**: In AI or dual-mode deployments, each GPU in the system runs a dedicated AI Runner subprocess (GPU worker). The Orchestrator routes inference jobs to available GPU workers.
 
     **Status**: current
 
@@ -387,9 +387,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Hard Gate" icon="book-open">
-    **Definition**: Strict filter that immediately disqualifies orchestrators failing a required criterion such as exceeding the gateway's maximum price threshold.
+    **Definition**: Strict filter that immediately disqualifies Orchestrators failing a required criterion such as exceeding the Gateway's maximum price threshold.
 
-    **Context**: Unlike soft scoring factors, a hard gate is binary – the orchestrator is excluded from consideration entirely if the condition is not met. MaxPrice is the most common hard gate in practice.
+    **Context**: Unlike soft scoring factors, a hard gate is binary – the Orchestrator is excluded from consideration entirely if the condition is not met. MaxPrice is the most common hard gate in practice.
 
     **Status**: current
 
@@ -397,9 +397,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="LPT (Livepeer Token)" icon="book-open">
-    **Definition**: ERC-20 governance and staking token used to coordinate, incentivise, and secure the Livepeer network; staked LPT determines work allocation and reward share.
+    **Definition**: ERC-20 governance and staking token used to coordinate, incentivise, and secure the Livepeer Network; staked LPT determines work allocation and reward share.
 
-    **Context**: LPT is the native utility token of the Livepeer protocol. Orchestrators must bond LPT to enter the active set for video transcoding work. Delegators bond LPT to orchestrators to earn a share of rewards.
+    **Context**: LPT is the native utility token of the Livepeer Protocol. Orchestrators must bond LPT to enter the Active Set for video transcoding work. Delegators bond LPT to Orchestrators to earn a share of rewards.
 
     **Status**: current
 
@@ -407,9 +407,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="MaxPrice" icon="book-open">
-    **Definition**: CLI flag setting the maximum transcoding price per pixelsPerUnit that a gateway will accept from an orchestrator; orchestrators above this threshold are excluded.
+    **Definition**: CLI flag setting the maximum transcoding price per pixelsPerUnit that a Gateway will accept from an Orchestrator; Orchestrators above this threshold are excluded.
 
-    **Context**: MaxPrice acts as a hard gate in orchestrator selection. Orchestrators set their own pricePerUnit; gateways set their MaxPrice to filter out orchestrators whose prices exceed the budget.
+    **Context**: MaxPrice acts as a hard gate in Orchestrator selection. Orchestrators set their own pricePerUnit; Gateways set their MaxPrice to filter out Orchestrators whose prices exceed the budget.
 
     **Status**: current
 
@@ -417,9 +417,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="O-T Split" icon="book-open">
-    **Definition**: Architectural separation of the Orchestrator and Transcoder (Worker) processes, typically running on different machines, where the orchestrator handles protocol interaction and the transcoder handles GPU compute.
+    **Definition**: Architectural separation of the Orchestrator and Transcoder (Worker) processes, typically running on different machines, where the Orchestrator handles protocol interaction and the transcoder handles GPU compute.
 
-    **Context**: Enables security isolation and multi-GPU scaling. The orchestrator process uses the `-orchestrator` flag; the transcoder uses `-transcoder`. Authentication between them uses the `orchSecret` shared secret.
+    **Context**: Enables security isolation and multi-GPU scaling. The Orchestrator process uses the `-orchestrator` flag; the transcoder uses `-transcoder`. Authentication between them uses the `orchSecret` shared secret.
 
     **Status**: current
 
@@ -427,9 +427,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Orchestrator" icon="book-open">
-    **Definition**: Supply-side network node contributing GPU resources, receiving jobs from gateways, performing transcoding or AI inference, and earning rewards.
+    **Definition**: Supply-side network node contributing GPU resources, receiving jobs from Gateways, performing transcoding or AI inference, and earning rewards.
 
-    **Context**: The canonical Livepeer compute node. An orchestrator handles protocol interaction, job routing, payment negotiation, and capability advertisement. It may run its own transcoder subprocess or delegate to remote transcoder workers.
+    **Context**: The canonical Livepeer compute node. An Orchestrator handles protocol interaction, job routing, payment negotiation, and capability advertisement. It may run its own transcoder subprocess or delegate to remote transcoder workers.
 
     **Status**: current
 
@@ -437,9 +437,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="OrchestratorInfo" icon="book-open">
-    **Definition**: Data structure advertised by orchestrators containing capabilities, pricing, service URI, and metadata used by gateways for selection decisions.
+    **Definition**: Data structure advertised by Orchestrators containing capabilities, pricing, service URI, and metadata used by Gateways for selection decisions.
 
-    **Context**: OrchestratorInfo is exchanged during gateway-orchestrator negotiation. It includes the orchestrator's pricePerUnit, supported AI capabilities, ticket parameters, and service URI.
+    **Context**: OrchestratorInfo is exchanged during Gateway-Orchestrator negotiation. It includes the Orchestrator's pricePerUnit, supported AI capabilities, ticket parameters, and service URI.
 
     **Status**: current
 
@@ -447,9 +447,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="orchSecret" icon="book-open">
-    **Definition**: Shared secret used to authenticate communication between an orchestrator process and its standalone transcoder or worker nodes in an O-T split deployment.
+    **Definition**: Shared secret used to authenticate communication between an Orchestrator process and its standalone transcoder or worker nodes in an O-T split deployment.
 
-    **Context**: Set via the `-orchSecret` CLI flag on both the orchestrator and transcoder. Must match exactly. Prevents unauthorised nodes from connecting to an orchestrator as transcoders.
+    **Context**: Set via the `-orchSecret` CLI flag on both the Orchestrator and transcoder. Must match exactly. Prevents unauthorised nodes from connecting to an Orchestrator as transcoders.
 
     **Status**: current
 
@@ -457,9 +457,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Performance Score" icon="book-open">
-    **Definition**: Composite metric rating an orchestrator's reliability and speed, calculated as latency score multiplied by success rate, used by gateways in orchestrator selection.
+    **Definition**: Composite metric rating an Orchestrator's reliability and speed, calculated as latency score multiplied by success rate, used by Gateways in Orchestrator selection.
 
-    **Context**: Performance score is tracked per-gateway and influences routing decisions. A low score from failed transcodes or high latency reduces the probability of being selected for future jobs.
+    **Context**: Performance score is tracked per-Gateway and influences routing decisions. A low score from failed transcodes or high latency reduces the probability of being selected for future jobs.
 
     **Status**: current
 
@@ -477,9 +477,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Pool" icon="book-open">
-    **Definition**: Group of transcoder or worker nodes coordinated under a single orchestrator for increased capacity and redundancy.
+    **Definition**: Group of transcoder or worker nodes coordinated under a single Orchestrator for increased capacity and redundancy.
 
-    **Context**: A pool allows orchestrators to scale beyond a single machine. The pool operator runs the on-chain orchestrator node and handles staking, reward calling, and ticket redemption. Pool workers contribute GPU compute and receive off-chain payouts from the operator.
+    **Context**: A pool allows Orchestrators to scale beyond a single machine. The pool operator runs the on-chain Orchestrator node and handles staking, reward calling, and ticket redemption. Pool workers contribute GPU compute and receive off-chain payouts from the operator.
 
     **Status**: current
 
@@ -487,9 +487,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Pool Operator" icon="book-open">
-    **Definition**: Entity running an orchestrator that coordinates a pool of transcoder or worker nodes, managing on-chain operations and distributing earnings to workers.
+    **Definition**: Entity running an Orchestrator that coordinates a pool of transcoder or worker nodes, managing on-chain operations and distributing earnings to workers.
 
-    **Context**: Pool operators require infrastructure reliability and community trust. They stake LPT to the active set threshold and distribute earnings to pool workers via off-chain agreements.
+    **Context**: Pool operators require infrastructure reliability and community trust. They stake LPT to the Active Set threshold and distribute earnings to pool workers via off-chain agreements.
 
     **Status**: current
 
@@ -497,11 +497,11 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Pool Worker" icon="book-open">
-    **Definition**: Individual machine within an orchestrator pool, running go-livepeer in transcoder mode and executing GPU compute jobs delegated by the pool operator's orchestrator.
+    **Definition**: Individual machine within an Orchestrator pool, running go-livepeer in transcoder mode and executing GPU compute jobs delegated by the pool operator's Orchestrator.
 
     **Also known as**: Pool node
 
-    **Context**: Pool workers do not hold LPT or interact with the protocol directly – the pool operator stakes on their behalf. Workers connect to the orchestrator using the `-orchAddr` and `-orchSecret` flags.
+    **Context**: Pool workers do not hold LPT or interact with the protocol directly – the pool operator stakes on their behalf. Workers connect to the Orchestrator using the `-orchAddr` and `-orchSecret` flags.
 
     **Status**: current
 
@@ -509,7 +509,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Price Feed" icon="book-open">
-    **Definition**: External data source providing real-time ETH/USD exchange rates used by orchestrators to denominate prices in USD terms.
+    **Definition**: External data source providing real-time ETH/USD exchange rates used by Orchestrators to denominate prices in USD terms.
 
     **Context**: Orchestrators using USD pricing fetch the current ETH/USD rate from a price feed service to dynamically adjust their wei-denominated pricePerUnit as ETH price fluctuates.
 
@@ -521,7 +521,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="pricePerCapability" icon="book-open">
     **Definition**: CLI flag setting the price per unit for a specific AI pipeline and model pair, overriding the default pricePerUnit for that capability.
 
-    **Context**: Allows orchestrators to charge different rates for different AI pipelines based on compute intensity. For example, a text-to-image pipeline with a large model can be priced higher than a lightweight audio-to-text pipeline.
+    **Context**: Allows Orchestrators to charge different rates for different AI pipelines based on compute intensity. For example, a text-to-image pipeline with a large model can be priced higher than a lightweight audio-to-text pipeline.
 
     **Status**: current
 
@@ -529,9 +529,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="pricePerGateway" icon="book-open">
-    **Definition**: JSON configuration allowing orchestrators to set customised per-gateway-address pricing, enabling different rates for specific gateway partners.
+    **Definition**: JSON configuration allowing Orchestrators to set customised per-Gateway-address pricing, enabling different rates for specific Gateway partners.
 
-    **Context**: Useful for commercial relationships where specific gateways receive preferential pricing. Configured as a JSON map from gateway Ethereum addresses to price overrides.
+    **Context**: Useful for commercial relationships where specific Gateways receive preferential pricing. Configured as a JSON map from Gateway Ethereum addresses to price overrides.
 
     **Status**: current
 
@@ -539,9 +539,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="pricePerUnit" icon="book-open">
-    **Definition**: CLI flag setting the transcoding price in wei per pixelsPerUnit that an orchestrator advertises to gateways.
+    **Definition**: CLI flag setting the transcoding price in wei per pixelsPerUnit that an Orchestrator advertises to Gateways.
 
-    **Context**: The primary pricing parameter for video transcoding. Gateways with `-maxPricePerUnit` below this value will not route work to the orchestrator. Can be set in wei directly or with a USD target using a price feed.
+    **Context**: The primary pricing parameter for video transcoding. Gateways with `-maxPricePerUnit` below this value will not route work to the Orchestrator. Can be set in wei directly or with a USD target using a price feed.
 
     **Status**: current
 
@@ -551,7 +551,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Redeemer" icon="book-open">
     **Definition**: Service or entity submitting a winning probabilistic micropayment ticket to the TicketBroker contract to claim its face value in ETH.
 
-    **Context**: In production deployments, orchestrators typically run an automated redeemer process that monitors for winning tickets and submits them on-chain. Redemption costs gas, so batching is common.
+    **Context**: In production deployments, Orchestrators typically run an automated redeemer process that monitors for winning tickets and submits them on-chain. Redemption costs gas, so batching is common.
 
     **Status**: current
 
@@ -559,7 +559,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Reward Call" icon="book-open">
-    **Definition**: On-chain transaction (`Reward()`) that an active orchestrator submits once per round to mint and distribute new LPT inflation rewards.
+    **Definition**: On-chain transaction (`Reward()`) that an active Orchestrator submits once per round to mint and distribute new LPT inflation rewards.
 
     **Context**: Missing a reward call permanently forfeits that round's rewards. Gas cost on Arbitrum is approximately $0.01–$0.12 per call. Orchestrators typically automate reward calling via a cron job or dedicated service.
 
@@ -579,9 +579,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Segment" icon="book-open">
-    **Definition**: Short time-sliced chunk of a video stream (typically around 2 seconds) representing the unit of work for video transcoding in the Livepeer protocol.
+    **Definition**: Short time-sliced chunk of a video stream (typically around 2 seconds) representing the unit of work for video transcoding in the Livepeer Protocol.
 
-    **Context**: Gateways split incoming live streams into segments and distribute them to orchestrators. Orchestrators transcode each segment independently and return the results. Segment-level parallelism enables distributed transcoding at scale.
+    **Context**: Gateways split incoming live streams into segments and distribute them to Orchestrators. Orchestrators transcode each segment independently and return the results. Segment-level parallelism enables distributed transcoding at scale.
 
     **Status**: current
 
@@ -589,9 +589,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Service URI" icon="book-open">
-    **Definition**: Public URL registered on-chain that gateways use to discover and connect to an orchestrator node for job submission.
+    **Definition**: Public URL registered on-chain that Gateways use to discover and connect to an Orchestrator node for job submission.
 
-    **Context**: Must be publicly reachable from the internet. Format is typically `https://your-domain:8935`. Registered via the ServiceRegistry contract. An unreachable or incorrect service URI prevents gateways from routing work to the orchestrator.
+    **Context**: Must be publicly reachable from the internet. Format is typically `https://your-domain:8935`. Registered via the ServiceRegistry contract. An unreachable or incorrect service URI prevents Gateways from routing work to the Orchestrator.
 
     **Status**: current
 
@@ -599,9 +599,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="ServiceRegistry" icon="book-open">
-    **Definition**: Smart contract where orchestrators register their service URI for gateway discovery.
+    **Definition**: Smart contract where Orchestrators register their service URI for Gateway discovery.
 
-    **Context**: Orchestrators call the ServiceRegistry when activating or updating their service endpoint. Gateways query this contract to build their list of reachable orchestrators.
+    **Context**: Orchestrators call the ServiceRegistry when activating or updating their service endpoint. Gateways query this contract to build their list of reachable Orchestrators.
 
     **Status**: current
 
@@ -609,9 +609,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Session" icon="book-open">
-    **Definition**: Active logical connection between a gateway and an orchestrator during which one or more jobs are processed.
+    **Definition**: Active logical connection between a Gateway and an Orchestrator during which one or more jobs are processed.
 
-    **Context**: Video sessions are stream-based (one per active stream); AI sessions are job-based (one per inference request or batch). The `-maxSessions` flag limits concurrent sessions and effectively controls the orchestrator's maximum throughput.
+    **Context**: Video sessions are stream-based (one per active stream); AI sessions are job-based (one per inference request or batch). The `-maxSessions` flag limits concurrent sessions and effectively controls the Orchestrator's maximum throughput.
 
     **Status**: current
 
@@ -619,9 +619,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Siphon" icon="book-open">
-    **Definition**: Lightweight component directing incoming work to the correct processing path within an orchestrator, or routing a subset of network traffic to specific orchestrators for staged rollout.
+    **Definition**: Lightweight component directing incoming work to the correct processing path within an Orchestrator, or routing a subset of network traffic to specific Orchestrators for staged rollout.
 
-    **Context**: In orchestrator architecture, the siphon routes incoming jobs between video transcoding and AI inference paths. It can also describe a minimal transcoder deployment that connects to a remote orchestrator to expose local GPU resources.
+    **Context**: In Orchestrator architecture, the siphon routes incoming jobs between video transcoding and AI inference paths. It can also describe a minimal transcoder deployment that connects to a remote Orchestrator to expose local GPU resources.
 
     **Status**: current
 
@@ -629,9 +629,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Slashing" icon="book-open">
-    **Definition**: Penalty mechanism that destroys a portion of an orchestrator's bonded LPT stake for protocol violations such as failing verification or missing verifications.
+    **Definition**: Penalty mechanism that destroys a portion of an Orchestrator's bonded LPT stake for protocol violations such as failing verification or missing verifications.
 
-    **Context**: Slashing conditions include failing transcoding verification, skipping required verifications, or sustained underperformance. Both the orchestrator's self-stake and delegated stake are at risk, which incentivises delegators to select reliable orchestrators.
+    **Context**: Slashing conditions include failing transcoding verification, skipping required verifications, or sustained underperformance. Both the Orchestrator's self-stake and delegated stake are at risk, which incentivises Delegators to select reliable Orchestrators.
 
     **Status**: current
 
@@ -639,9 +639,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Solo Operator" icon="book-open">
-    **Definition**: Orchestrator deployment where a single operator runs a complete orchestrator node with all components on one machine, without pool workers.
+    **Definition**: Orchestrator deployment where a single operator runs a complete Orchestrator node with all components on one machine, without pool workers.
 
-    **Context**: The standard deployment for most individual orchestrators. Full control and full responsibility for staking, reward calling, ticket redemption, and compute. Can run in video, AI, or dual mode.
+    **Context**: The standard deployment for most individual Orchestrators. Full control and full responsibility for staking, reward calling, ticket redemption, and compute. Can run in video, AI, or dual mode.
 
     **Status**: current
 
@@ -659,9 +659,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="TicketBroker" icon="book-open">
-    **Definition**: Smart contract managing the probabilistic micropayment system, holding gateway funds and processing winning ticket redemptions.
+    **Definition**: Smart contract managing the probabilistic micropayment system, holding Gateway funds and processing winning ticket redemptions.
 
-    **Context**: The TicketBroker holds gateway deposits and reserves, validates winning ticket signatures, and transfers ETH to orchestrators when tickets are redeemed. It is the on-chain settlement layer for all Livepeer service payments.
+    **Context**: The TicketBroker holds Gateway deposits and reserves, validates winning ticket signatures, and transfers ETH to Orchestrators when tickets are redeemed. It is the on-chain settlement layer for all Livepeer service payments.
 
     **Status**: current
 
@@ -669,9 +669,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Titan Node" icon="book-open">
-    **Definition**: Community orchestrator group in Western North America providing education, Start Up Grants, and pre-configured hardware for running Livepeer orchestrators.
+    **Definition**: Community Orchestrator group in Western North America providing education, Start Up Grants, and pre-configured hardware for running Livepeer Orchestrators.
 
-    **Context**: Titan Node operates as both a community resource and a hardware supply partner. Their pre-configured nodes are designed to lower the barrier to entry for new orchestrator operators.
+    **Context**: Titan Node operates as both a community resource and a hardware supply partner. Their pre-configured nodes are designed to lower the barrier to entry for new Orchestrator operators.
 
     **Status**: current
 
@@ -681,7 +681,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Treasury" icon="book-open">
     **Definition**: On-chain pool of LPT and ETH governed by token holder votes, used for funding public goods and ecosystem development initiatives.
 
-    **Context**: The Livepeer on-chain treasury is funded by a governable percentage of per-round inflation (the treasury reward cut rate). Orchestrators appear in treasury governance pages as stake-weighted voters.
+    **Context**: The Livepeer on-chain treasury is funded by a governable percentage of per-round inflation (the treasury Reward Cut rate). Orchestrators appear in treasury governance pages as stake-weighted voters.
 
     **Status**: current
 
@@ -689,9 +689,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Webhook Discovery" icon="book-open">
-    **Definition**: Mechanism for orchestrators to dynamically advertise their AI capabilities to gateways via HTTP webhook callbacks rather than only relying on on-chain registration.
+    **Definition**: Mechanism for Orchestrators to dynamically advertise their AI capabilities to Gateways via HTTP webhook callbacks rather than only relying on on-chain registration.
 
-    **Context**: Provides a flexible, off-chain channel for capability advertisement. Gateways can call a registered webhook endpoint to retrieve the orchestrator's current capability set, enabling real-time updates without on-chain transactions.
+    **Context**: Provides a flexible, off-chain channel for capability advertisement. Gateways can call a registered webhook endpoint to retrieve the Orchestrator's current capability set, enabling real-time updates without on-chain transactions.
 
     **Status**: current
 
@@ -747,7 +747,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Cold Model / Cold Start" icon="book-open">
     **Definition**: Latency incurred when an AI model must be loaded from storage into GPU memory before the first request can be processed, typically adding 5 to 90 seconds of delay.
 
-    **Context**: During the current beta, orchestrators typically support one warm model per GPU. Requests to a cold model trigger a model load before inference can begin. Warm model status is configured in `aiModels.json`.
+    **Context**: During the current beta, Orchestrators typically support one warm model per GPU. Requests to a cold model trigger a model load before inference can begin. Warm model status is configured in `aiModels.json`.
 
     **Status**: current
 
@@ -795,7 +795,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="HuggingFace" icon="book-open">
-    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer orchestrator nodes.
+    **Definition**: An AI platform and open-source community providing model repositories, datasets, and inference APIs; a primary source for AI models deployed on Livepeer Orchestrator nodes.
 
     **Also known as**: Hugging Face, HF
 
@@ -877,7 +877,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="PyTorch (Torch)" icon="book-open">
-    **Definition**: Open-source deep learning framework providing GPU-accelerated tensor computation and automatic differentiation, used to build and run AI models on orchestrator nodes.
+    **Definition**: Open-source deep learning framework providing GPU-accelerated tensor computation and automatic differentiation, used to build and run AI models on Orchestrator nodes.
 
     **External**: [PyTorch – Wikipedia](https://en.wikipedia.org/wiki/PyTorch)
 
@@ -949,7 +949,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Warm Model" icon="book-open">
     **Definition**: AI model already loaded into GPU memory and ready to serve inference requests immediately, without cold-start latency.
 
-    **Context**: During the current beta, orchestrators typically support one warm model per GPU. The warm status for each model is declared in `aiModels.json`. Requests to a warm model are served immediately; requests to a cold model trigger a model load that adds seconds to minutes of latency.
+    **Context**: During the current beta, Orchestrators typically support one warm model per GPU. The warm status for each model is declared in `aiModels.json`. Requests to a warm model are served immediately; requests to a cold model trigger a model load that adds seconds to minutes of latency.
 
     **Status**: current
 
@@ -983,9 +983,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Fee Cut" icon="book-open">
-    **Definition**: The percentage of ETH service fees that an orchestrator retains before distributing the remainder to delegators.
+    **Definition**: The percentage of ETH service fees that an Orchestrator retains before distributing the remainder to Delegators.
 
-    **Context**: Set independently from reward cut. A lower fee cut sends more ETH earnings to delegators, which can attract more delegation. Both cuts are configured on-chain and visible in the Livepeer Explorer.
+    **Context**: Set independently from Reward Cut. A lower Fee Cut sends more ETH earnings to Delegators, which can attract more delegation. Both cuts are configured on-chain and visible in the Livepeer Explorer.
 
     **Status**: current
 
@@ -993,9 +993,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Fee Pool" icon="book-open">
-    **Definition**: Accumulated ETH fees awaiting distribution between an orchestrator and its delegators.
+    **Definition**: Accumulated ETH fees awaiting distribution between an Orchestrator and its Delegators.
 
-    **Context**: ETH earned from winning tickets flows into the fee pool each round. Orchestrators and delegators claim their respective shares according to the orchestrator's fee cut setting.
+    **Context**: ETH earned from winning tickets flows into the fee pool each round. Orchestrators and Delegators claim their respective shares according to the Orchestrator's Fee Cut setting.
 
     **Status**: current
 
@@ -1003,7 +1003,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Inflation" icon="book-open">
-    **Definition**: Dynamic issuance of new LPT tokens each protocol round, distributed to orchestrators and delegators based on participation and stake.
+    **Definition**: Dynamic issuance of new LPT tokens each protocol round, distributed to Orchestrators and Delegators based on participation and stake.
 
     **Context**: The inflation rate adjusts by 0.00005% per round based on whether total bonded LPT is above or below the 50% target bonding rate. Orchestrators claim their share of inflationary rewards each round via the reward call transaction.
 
@@ -1043,9 +1043,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Per Round" icon="book-open">
-    **Definition**: The Livepeer protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and delegator earnings accrue on a per-round basis.
+    **Definition**: The Livepeer Protocol's fundamental time unit, approximately equal to one day of Ethereum blocks; reward minting, activations, and Delegator earnings accrue on a per-round basis.
 
-    **Context**: Key unit for orchestrator reward calculations, delegator stake checkpoints, and LPT inflation scheduling.
+    **Context**: Key unit for Orchestrator reward calculations, Delegator stake checkpoints, and LPT inflation scheduling.
 
     **Status**: current
 
@@ -1053,7 +1053,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="PM (Probabilistic Micropayment)" icon="book-open">
-    **Definition**: Lottery-based payment scheme where gateways send signed tickets to orchestrators and only winning tickets are redeemed on-chain, amortising transaction costs across many payments.
+    **Definition**: Lottery-based payment scheme where Gateways send signed tickets to Orchestrators and only winning tickets are redeemed on-chain, amortising transaction costs across many payments.
 
     **Context**: The PM system is the core payment mechanism in Livepeer. Most tickets are non-winning; over time, the expected value of winning tickets equals the fair payment for work performed. Orchestrators batch redemptions to optimise gas costs.
 
@@ -1063,9 +1063,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Reward Cut" icon="book-open">
-    **Definition**: The percentage of inflationary LPT rewards that an orchestrator keeps before distributing the remainder to delegators.
+    **Definition**: The percentage of inflationary LPT rewards that an Orchestrator keeps before distributing the remainder to Delegators.
 
-    **Context**: Set by the orchestrator and visible in the Livepeer Explorer. A lower reward cut sends more LPT to delegators, which can attract more delegation and increase active set rank. Separate from fee cut.
+    **Context**: Set by the Orchestrator and visible in the Livepeer Explorer. A lower Reward Cut sends more LPT to Delegators, which can attract more delegation and increase Active Set rank. Separate from Fee Cut.
 
     **Status**: current
 
@@ -1073,9 +1073,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Stake Weight" icon="book-open">
-    **Definition**: An orchestrator's proportional influence in the network, determined by total bonded LPT (self-stake plus delegated stake), affecting active set rank, reward share, and governance vote weight.
+    **Definition**: An Orchestrator's proportional influence in the network, determined by total bonded LPT (self-stake plus delegated stake), affecting Active Set rank, reward share, and governance vote weight.
 
-    **Context**: Stake weight is the primary factor in active set membership for video transcoding. Higher total bonded LPT means a higher rank and greater share of inflationary rewards.
+    **Context**: Stake weight is the primary factor in Active Set membership for video transcoding. Higher total bonded LPT means a higher rank and greater share of inflationary rewards.
 
     **Status**: current
 
@@ -1083,7 +1083,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="USD Pricing" icon="book-open">
-    **Definition**: Pricing approach where orchestrators denominate work costs in US dollars, using a price feed to dynamically convert to wei as the ETH/USD rate fluctuates.
+    **Definition**: Pricing approach where Orchestrators denominate work costs in US dollars, using a price feed to dynamically convert to wei as the ETH/USD rate fluctuates.
 
     **Context**: Enables price stability relative to real-world costs. Implemented via the `-pricePerUnit` flag with a USD value (e.g. `0.50USD`) combined with an ETH/USD price feed service.
 
@@ -1095,7 +1095,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Win Probability" icon="book-open">
     **Definition**: The configured likelihood that any given micropayment ticket is a winning ticket; a lower probability means larger face values per winning ticket.
 
-    **Context**: Win probability is a parameter negotiated between gateway and orchestrator. Lower win probability reduces on-chain redemption frequency (and gas costs) at the expense of larger, less frequent payouts.
+    **Context**: Win probability is a parameter negotiated between Gateway and Orchestrator. Lower win probability reduces on-chain redemption frequency (and gas costs) at the expense of larger, less frequent payouts.
 
     **Status**: current
 
@@ -1105,7 +1105,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Winning Ticket" icon="book-open">
     **Definition**: Probabilistic payment ticket whose random outcome meets the configured threshold, entitling the holder to redeem its face value in ETH on-chain.
 
-    **Context**: Most tickets sent by gateways are non-winning. The winning ticket mechanism amortises on-chain transaction costs across many off-chain payments while preserving the expected payout value.
+    **Context**: Most tickets sent by Gateways are non-winning. The winning ticket mechanism amortises on-chain transaction costs across many off-chain payments while preserving the expected payout value.
 
     **Status**: current
 
@@ -1115,7 +1115,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Yield" icon="book-open">
     **Definition**: Return earned from staking LPT and performing work, expressed as an annual percentage combining inflationary LPT rewards and ETH service fees.
 
-    **Context**: Orchestrator yield depends on active set position, reward cut, fee cut, total stake, and network workload volume. Delegator yield is derived from the orchestrator's yield minus the cuts retained by the orchestrator.
+    **Context**: Orchestrator yield depends on Active Set position, Reward Cut, Fee Cut, total stake, and network workload volume. Delegator yield is derived from the Orchestrator's yield minus the cuts retained by the Orchestrator.
 
     **Status**: current
 
@@ -1149,7 +1149,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Pixel" icon="book-open">
-    **Definition**: Single point in a video frame used as the fundamental pricing unit for transcoding work on the Livepeer network.
+    **Definition**: Single point in a video frame used as the fundamental pricing unit for transcoding work on the Livepeer Network.
 
     **External**: [Pixel – Wikipedia](https://en.wikipedia.org/wiki/Pixel)
 
@@ -1169,7 +1169,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="RTMP (Real-Time Messaging Protocol)" icon="book-open">
-    **Definition**: Protocol for streaming audio, video, and data over TCP on port 1935, used as the primary ingest protocol for live video submitted to Livepeer orchestrators.
+    **Definition**: Protocol for streaming audio, video, and data over TCP on port 1935, used as the primary ingest protocol for live video submitted to Livepeer Orchestrators.
 
     **External**: [RTMP – Wikipedia](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
@@ -1197,7 +1197,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="Arbitrum" icon="book-open">
     **Definition**: A Layer 2 Optimistic Rollup settling to Ethereum, processing transactions off-chain while inheriting Ethereum-grade security.
 
-    **External**: [Arbitrum – docs.arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
+    **External**: [Arbitrum – docs.Arbitrum.io](https://docs.arbitrum.io/welcome/arbitrum-gentle-introduction)
 
     **Status**: current
 
@@ -1205,7 +1205,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Bonding" icon="book-open">
-    **Definition**: Staking (locking) LPT tokens to an orchestrator in Livepeer's delegated proof-of-stake system.
+    **Definition**: Staking (locking) LPT tokens to an Orchestrator in Livepeer's delegated proof-of-stake system.
 
     **External**: [Proof-of-stake – ethereum.org](https://ethereum.org/developers/docs/consensus-mechanisms/pos/)
 
@@ -1215,7 +1215,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="ETH" icon="book-open">
-    **Definition**: The native cryptocurrency of Ethereum, used to pay transaction fees (gas) and as the settlement currency for orchestrator service fee payments.
+    **Definition**: The native cryptocurrency of Ethereum, used to pay transaction fees (gas) and as the settlement currency for Orchestrator service fee payments.
 
     **External**: [Ether – ethereum.org](https://ethereum.org/what-is-ether/)
 
@@ -1285,7 +1285,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="GeForce" icon="book-open">
-    **Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer orchestrator operators.
+    **Definition**: NVIDIA's consumer-grade discrete GPU brand, encompassing the GTX and RTX product lines; the most common GPU family used by Livepeer Orchestrator operators.
 
     **Tags**: `technical:hardware`
 
@@ -1427,7 +1427,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="LIP-91" icon="book-open">
-    **Definition**: Livepeer Improvement Proposal bundling the treasury establishment mechanism and defining the inflation-funded treasury reward cut rate.
+    **Definition**: Livepeer Improvement Proposal bundling the treasury establishment mechanism and defining the inflation-funded treasury Reward Cut rate.
 
     **Context**: LIP-91 activated the community treasury by directing a governable percentage of per-round LPT inflation into the on-chain treasury contract.
 
@@ -1439,7 +1439,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   <Accordion title="LIP-92" icon="book-open">
     **Definition**: Livepeer Improvement Proposal defining the AI model registry and capability discovery mechanism for the network.
 
-    **Context**: LIP-92 specified how orchestrators register AI capabilities on-chain via the AIServiceRegistry, enabling structured capability advertisement and gateway discovery of AI services.
+    **Context**: LIP-92 specified how Orchestrators register AI capabilities on-chain via the AIServiceRegistry, enabling structured capability advertisement and Gateway discovery of AI services.
 
     **Status**: current
 
@@ -1447,7 +1447,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Loki" icon="book-open">
-    **Definition**: Horizontally scalable log aggregation system by Grafana Labs, used in Livepeer orchestrator monitoring stacks.
+    **Definition**: Horizontally scalable log aggregation system by Grafana Labs, used in Livepeer Orchestrator monitoring stacks.
 
     **External**: [Loki – Grafana Labs](https://grafana.com/oss/loki/)
 
@@ -1467,7 +1467,7 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Throughput" icon="book-open">
-    **Definition**: Rate of successful data processing per unit time, measuring the volume of work an orchestrator can complete (segments transcoded per second, or AI requests per minute).
+    **Definition**: Rate of successful data processing per unit time, measuring the volume of work an Orchestrator can complete (segments transcoded per second, or AI requests per minute).
 
     **External**: [Throughput – Wikipedia](https://en.wikipedia.org/wiki/Throughput)
 
@@ -1477,9 +1477,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Transcode Fail Rate" icon="book-open">
-    **Definition**: Percentage of source segments that an orchestrator fails to transcode successfully, used as a performance and reliability metric by gateways.
+    **Definition**: Percentage of source segments that an Orchestrator fails to transcode successfully, used as a performance and reliability metric by Gateways.
 
-    **Context**: A high transcode fail rate lowers an orchestrator's performance score and reduces the probability of being selected for future jobs. Causes include GPU errors, timeout, software bugs, and capacity overload.
+    **Context**: A high transcode fail rate lowers an Orchestrator's performance score and reduces the probability of being selected for future jobs. Causes include GPU errors, timeout, software bugs, and capacity overload.
 
     **Status**: current
 
@@ -1487,9 +1487,9 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
   </Accordion>
 
   <Accordion title="Workload" icon="book-open">
-    **Definition**: Total amount of work assigned to an orchestrator – the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time.
+    **Definition**: Total amount of work assigned to an Orchestrator – the aggregate of active sessions, concurrent segments, and AI inference requests being processed at a given time.
 
-    **Context**: Workload determines whether an orchestrator is at capacity. The `-maxSessions` flag caps the maximum concurrent workload. Monitoring workload against capacity helps operators tune pricing and hardware scaling decisions.
+    **Context**: Workload determines whether an Orchestrator is at capacity. The `-maxSessions` flag caps the maximum concurrent workload. Monitoring workload against capacity helps operators tune pricing and hardware scaling decisions.
 
     **Status**: current
 
@@ -1502,12 +1502,12 @@ Terms covering GPU setup, AI pipeline configuration, staking mechanics, payment 
 {/* ==========================SECTION: FOOTER========================= */}
 <CardGroup cols={3}>
   <Card title="Orchestrator Docs" icon="house" href="/v2/orchestrators">
-    Setup guides, configuration references, and architecture for running an orchestrator node.
+    Setup guides, configuration references, and architecture for running an Orchestrator node.
   </Card>
   <Card title="Full Glossary" icon="book" href="/v2/resources/glossary">
     All terms across every Livepeer tab
   </Card>
   <Card title="Orchestrator FAQ" icon="circle-question" href="/v2/orchestrators/resources/faq">
-    Answers to common questions about running an orchestrator.
+    Answers to common questions about running an Orchestrator.
   </Card>
 </CardGroup>

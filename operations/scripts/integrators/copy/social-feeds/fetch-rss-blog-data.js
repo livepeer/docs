@@ -8,7 +8,7 @@
  * @mode        integrate
  * @pipeline    config → RSS feed → snippets/data/social-feed-solutions/{product}/blogData.jsx
  * @scope       .github/scripts, snippets/data/social-feed-solutions/
- * @usage       node .github/scripts/fetch-rss-blog-data.js
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
@@ -16,6 +16,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+
+const dryRun = process.argv.includes("--dry-run");
 
 const CONFIG_PATH =
   process.env.CONFIG_PATH || "operations/scripts/config/product-social-config.json";
@@ -224,10 +226,15 @@ async function main() {
       jsx += `];\n`;
 
       const outDir = `snippets/data/social-feed-solutions/${productKey}`;
-      fs.mkdirSync(outDir, { recursive: true });
       const outPath = path.join(outDir, "blogData.jsx");
-      fs.writeFileSync(outPath, jsx);
-      console.log(`  Written to ${outPath}`);
+      if (dryRun) {
+        console.log(`[dry-run] Would write to ${outPath} (${jsx.length} bytes)`);
+        console.log(jsx);
+      } else {
+        fs.mkdirSync(outDir, { recursive: true });
+        fs.writeFileSync(outPath, jsx);
+        console.log(`  Written to ${outPath}`);
+      }
     } catch (err) {
       console.error(`  Error fetching ${productKey}: ${err.message}`);
     }

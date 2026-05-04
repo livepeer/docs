@@ -97,7 +97,7 @@ async function run() {
   console.log('\n===== PHASE 2: Other pages using DiscordAnnouncements + MarkdownEmbed =====\n');
 
   const otherPages = [
-    { path: '/v2/community/livepeer-community/trending-topics', name: 'trending-topics (Discord+Blog)' },
+    { path: '/v2/community/connect/trending-topics', name: 'trending-topics (Discord+Blog)' },
     { path: '/v2/home/trending', name: 'home/trending (Discord+Blog)' },
     { path: '/v2/solutions/livepeer-studio/community', name: 'livepeer-studio community (Discord+MarkdownEmbed)' },
     { path: '/v2/solutions/frameworks/community', name: 'frameworks community (MarkdownEmbed)' },

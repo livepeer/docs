@@ -104,7 +104,7 @@ Page endings findings: 1
 - Write: `446` files scanned, `33` files with repairs, `79` applied repairs, `2322` skipped issues
 - Repair-spelling parse skips:
 - `v2/about/livepeer-protocol/treasury.mdx`
-- `v2/home/about-livepeer/ecosystem.mdx`
+- `v2/home/about/ecosystem.mdx`
 
 ## Page Endings - Content Required
 - Summary: `357` warnings across `450` files checked

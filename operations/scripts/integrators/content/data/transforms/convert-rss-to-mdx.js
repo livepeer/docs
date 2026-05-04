@@ -12,6 +12,7 @@
  * @usage       node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [flags]
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs')
 const path = require('path')
 
@@ -209,7 +210,7 @@ function main() {
   const mdx = buildMdx(feed)
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-  fs.writeFileSync(outputPath, mdx, 'utf8')
+  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { fs.writeFileSync(outputPath, mdx, 'utf8'); }
 
   console.log(`✓ Converted RSS to MDX`)
   console.log(`  Input:  ${inputPath}`)

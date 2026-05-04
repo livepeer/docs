@@ -8,13 +8,15 @@
  * @mode        integrate
  * @pipeline    config → GitHub GraphQL API → snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx
  * @scope       .github/scripts, snippets/data/social-feed-solutions/
- * @usage       node .github/scripts/fetch-github-discussions.js
+ * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js [--dry-run]
  * @policy      F-R1
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+
+const dryRun = process.argv.includes("--dry-run");
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 const CONFIG_PATH =
@@ -157,10 +159,15 @@ async function main() {
       jsx += `];\n`;
 
       const outDir = `snippets/data/social-feed-solutions/${productKey}`;
-      fs.mkdirSync(outDir, { recursive: true });
       const outPath = path.join(outDir, "githubDiscussionsData.jsx");
-      fs.writeFileSync(outPath, jsx);
-      console.log(`  Written to ${outPath}`);
+      if (dryRun) {
+        console.log(`[dry-run] Would write to ${outPath} (${jsx.length} bytes)`);
+        console.log(jsx);
+      } else {
+        fs.mkdirSync(outDir, { recursive: true });
+        fs.writeFileSync(outPath, jsx);
+        console.log(`  Written to ${outPath}`);
+      }
     } catch (err) {
       console.error(`  Error fetching ${productKey}: ${err.message}`);
     }

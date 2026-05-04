@@ -5,8 +5,8 @@ description: 'Generated docs.json route validation report from operations/tests/
 keywords: ["livepeer","internal","reports","navigation-links","docs-navigation.test"]
 og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-04-07T17:35:12.011Z`
-Last Generated (UTC Human): `April 07, 2026 17:35 UTC`
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
 Generator Script: `operations/tests/unit/docs-navigation.test.js`
 What It Does: Generated docs.json route validation report from operations/tests/unit/docs-navigation.test.js.
 Audited Scope: `tests, docs.json`

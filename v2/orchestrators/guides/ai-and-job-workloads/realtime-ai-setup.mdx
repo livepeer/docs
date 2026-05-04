@@ -2,7 +2,7 @@
 title: Cascade Setup
 sidebarTitle: Cascade Setup
 description: >-
-  Deploy the live-video-to-video pipeline on a Livepeer orchestrator — Cascade architecture, ComfyStream setup,
+  Deploy the live-video-to-video pipeline on a Livepeer orchestrator – Cascade architecture, ComfyStream setup,
   live-video frame processing, WebRTC streaming, hardware requirements, and custom pipeline development.
 lifecycleStage: operate
 complexity: intermediate
@@ -37,13 +37,13 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 
 Cascade inference is fundamentally different from batch inference. Instead of processing a discrete request and returning a result, your node continuously transforms live video – receiving frames from a WebRTC stream, running inference on each frame, and streaming processed frames back with sub-100ms latency.
 
-This is the **Cascade** architecture: the `live-video-to-video` pipeline that powers live AI video effects, live style transfer, and streaming AI agents on the Livepeer network.
+This is the **Cascade** architecture: the `live-video-to-video` pipeline that powers live AI video effects, live style transfer, and streaming AI agents on the Livepeer Network.
 
 <CustomDivider />
 
 ## What Cascade is
 
-Cascade is Livepeer's live-video AI processing pipeline. The name refers to the architecture – video streams cascade through AI transformation nodes in the network, enabling live applications that previously required centralised infrastructure.
+Cascade is Livepeer's live-video AI processing pipeline. The name refers to the architecture – video streams Cascade through AI transformation nodes in the network, enabling live applications that previously required centralised infrastructure.
 
 Example applications on Cascade:
 
@@ -148,7 +148,7 @@ Live video source (OBS, browser, camera)
    Application / viewer
 ```
 
-The orchestrator receives the WebRTC stream, passes it to the AI runner container, and streams the processed output back through the gateway to the application. From the application's perspective, it's an input stream in and a transformed stream out.
+The Orchestrator receives the WebRTC stream, passes it to the AI Runner container, and streams the processed output back through the Gateway to the application. From the application's perspective, it's an input stream in and a transformed stream out.
 
 <CustomDivider />
 
@@ -171,7 +171,7 @@ The orchestrator receives the WebRTC stream, passes it to the AI runner containe
 - SAM2 (live segmentation)
 - Any ComfyUI-compatible model loaded as a DAG node
 
-**Source:** [livepeer/comfystream on GitHub](https://github.com/livepeer/comfystream) · [ComfyUI-Stream-Pack](https://github.com/livepeer/ComfyUI-Stream-Pack)
+**Source:** [Livepeer/ComfyStream on GitHub](https://github.com/livepeer/comfystream) · [ComfyUI-Stream-Pack](https://github.com/livepeer/ComfyUI-Stream-Pack)
 
 <CustomDivider />
 
@@ -212,9 +212,9 @@ The `live-base` tag is separate from the standard `livepeer/ai-runner` image use
 
 `model_id` for live-video pipelines refers to the ComfyUI workflow or pipeline name, not a HuggingFace model ID in the traditional sense. The models themselves are loaded inside the ComfyStream container.
 
-**Pricing and gateway compatibility:** Your `price_per_unit` must stay at or below the gateway's configured `-maxPricePerCapability` for `live-video-to-video`. This is a hard filter – gateways skip nodes priced above that cap, regardless of hardware quality or latency.
+**Pricing and Gateway compatibility:** Your `price_per_unit` must stay at or below the Gateway's configured `-maxPricePerCapability` for `live-video-to-video`. This is a hard filter – Gateways skip nodes priced above that cap, regardless of hardware quality or latency.
 
-For transcoding, the equivalent flag is `-maxPricePerUnit` on the gateway side. Before going live, verify that your transcoding price (set via `-pricePerUnit` or `livepeer_cli`) is below what major gateways have configured as their maximum. See [Gateway Pricing Configuration](/v2/gateways/guides/payments-and-pricing/pricing-configuration) for the full gateway pricing flag reference and the JSON structure used for AI capability pricing.
+For transcoding, the equivalent flag is `-maxPricePerUnit` on the Gateway side. Before going live, verify that your transcoding price (set via `-pricePerUnit` or `livepeer_cli`) is below what major Gateways have configured as their maximum. See [Gateway Pricing Configuration](/v2/Gateways/guides/payments-and-pricing/pricing-configuration) for the full Gateway pricing flag reference and the JSON structure used for AI capability pricing.
 </StyledStep>
 
 <StyledStep title="Download the pipeline model weights">
@@ -229,7 +229,7 @@ pip install -r requirements.txt
 python scripts/download_models.py
 ```
 
-Models are downloaded to the volume mounted by the AI runner container. Ensure the path matches what go-livepeer expects via the `-aiModelsDir` flag.
+Models are downloaded to the volume mounted by the AI Runner container. Ensure the path matches what go-livepeer expects via the `-aiModelsDir` flag.
 </StyledStep>
 
 <StyledStep title="Start go-livepeer with live AI flags">
@@ -249,7 +249,7 @@ docker run -d \
 </StyledStep>
 
 <StyledStep title="Verify the pipeline is registered">
-Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Your orchestrator should appear under `live-video-to-video` with **Warm** status.
+Check [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Your Orchestrator should appear under `live-video-to-video` with **Warm** status.
 
 Test the pipeline locally by sending a test WebRTC stream to your node. For setup scripts and test utilities, see the [ComfyStream repository](https://github.com/livepeer/comfystream).
 </StyledStep>
@@ -296,7 +296,7 @@ Steps as low as `2` support live performance. Quality vs latency is tunable thro
 
 ## The Pipeline interface (custom pipelines)
 
-For operators who want to build custom live-video AI processing beyond ComfyUI, the AI runner exposes a Python `Pipeline` interface. Custom pipelines extend this interface and are packaged as Docker images extending `livepeer/ai-runner:live-base`.
+For operators who want to build custom live-video AI processing beyond ComfyUI, the AI Runner exposes a Python `Pipeline` interface. Custom pipelines extend this interface and are packaged as Docker images extending `livepeer/ai-runner:live-base`.
 
 ```python icon="terminal" title="Custom live-video Pipeline interface example"
 from runner.live.pipelines import Pipeline
@@ -440,7 +440,7 @@ A single RTX 4090 usually handles **1–2 concurrent live-video streams** depend
 
 - **Multiple GPUs:** The AI worker dispatches streams across multiple physical GPUs
 - **Model parallelism:** ComfyStream uses one GPU per stream
-- **Scale-out:** Run multiple orchestrator instances, each handling 1–2 streams, behind a gateway load balancer
+- **Scale-out:** Run multiple Orchestrator instances, each handling 1–2 streams, behind a Gateway load balancer
 
 Enterprise operators running 4090/A100 fleets monetise live-video AI at scale by advertising higher `capacity` values and maintaining multiple warm pipeline instances.
 
@@ -466,7 +466,7 @@ Enterprise operators running 4090/A100 fleets monetise live-video AI at scale by
     icon="graduation-cap"
     href="https://www.youtube.com/watch?v=UKWdvJBqrNw"
   >
-    Full Q1 2025 bootcamp session. Covers ComfyStream, Cascade architecture, and orchestrator setup for live-video inference.
+    Full Q1 2025 bootcamp session. Covers ComfyStream, Cascade architecture, and Orchestrator setup for live-video inference.
   </Card>
   <Card
     title="StreamDiffusion Demo"
@@ -491,9 +491,9 @@ Enterprise operators running 4090/A100 fleets monetise live-video AI at scale by
 </Accordion>
 
 <Accordion  title="Restore live-video job flow" icon="microchip">
-1. Confirm `live-video-to-video` appears on [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under your orchestrator
+1. Confirm `live-video-to-video` appears on [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under your Orchestrator
 2. Verify the `live-base` container is running and healthy: `docker ps --filter name=livepeer-ai-runner-live`
-3. Check that your orchestrator's `serviceAddr` is reachable from gateways – WebRTC ICE negotiation requires bidirectional reachability
+3. Check that your Orchestrator's `serviceAddr` is reachable from Gateways – WebRTC ICE negotiation requires bidirectional reachability
 4. Confirm your node has WebRTC port access (typically UDP 8935 or your configured port)
 </Accordion>
 

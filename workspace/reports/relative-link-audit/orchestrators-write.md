@@ -46,7 +46,7 @@
     - suggestion: /v2/orchestrators/concepts/incentive-model (high path similarity, score 0.5)
     - suggestion: /v2/orchestrators/concepts/role (high path similarity, score 0.5)
   - L69: ../resources/faq
-    - suggestion: /v2/community/faq (same leaf segment match, score 0.65)
+    - suggestion: /v2/community/resources/faq (same leaf segment match, score 0.65)
     - suggestion: /v2/gateways/resources/reference/faq (same leaf segment match, score 0.65)
     - suggestion: /v2/orchestrators/resources/reference/faq (same leaf segment match, score 0.65)
     - suggestion: /v2/orchestrators/resources/x-guides (high path similarity, score 0.75)

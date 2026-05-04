@@ -14,8 +14,8 @@
 | LAYOUT | 5.1-5.16 | PASS | Uses SearchTable, DynamicTable, LazyLoad, CustomDivider, Accordion, CardGroup -- all approved components. Data imports from badges.jsx. Footer has Related Pages cards |
 | VERACITY | 6.1-6.12 | PASS | Definitions are accurate. External links provided for third-party terms. No REVIEW flags |
 | NAV | 7.1-7.11 | PASS | Registered in docs.json. Redirect from compendium/glossary exists |
-| LINKS | 8.1-8.6 | WARN | Footer card links to "/v2/resources/glossary" -- should be "/v2/community/resources/glossary" or cross-tab equivalent. Card to "/v2/community/faq" -- verify exists |
-| PROCESS | 9.1-9.6 | WARN | status=draft, lastVerified=2026-03 (incomplete date format). Content is mature enough for "provisional" |
+| LINKS | 8.1-8.6 | WARN | Footer card links to "/v2/resources/glossary" -- should be "/v2/community/resources/glossary" or cross-tab equivalent. Card to "/v2/community/resources/faq" -- verify exists |
+| PROCESS | 9.1-9.6 | WARN | `status=draft, lastVerified=2026-03 (incomplete date format). Content is mature enough for "provisional"` |
 | COMPLETENESS | 10.1-10.5 | PASS | 80+ terms across 12 categories. Comprehensive for community audience. Dual-layer (search + accordion) pattern |
 
 ## Frontmatter Table
@@ -49,7 +49,7 @@
 | # | Category | Severity | Issue |
 |---|---|---|---|
 | 1 | FRONTMATTER | P2 | lastVerified uses "2026-03" not a full ISO date |
-| 2 | FRONTMATTER | P2 | status=draft is inaccurate -- content is mature |
+| 2 | FRONTMATTER | P2 | `status=draft is inaccurate -- content is mature` |
 | 3 | FRONTMATTER | P3 | Missing sourceOfTruth |
 | 4 | FRONTMATTER | P3 | Only 3 keywords -- thin for a glossary |
 | 5 | LINKS | P2 | Footer card href "/v2/resources/glossary" may not resolve (missing community segment) |

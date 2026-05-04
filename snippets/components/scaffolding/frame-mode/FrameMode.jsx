@@ -110,7 +110,7 @@ const PageHeader = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
   * @aiDiscoverability none
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @usedIn v2/about/portal.mdx, v2/community/portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {any} children - children prop.
@@ -172,7 +172,7 @@ const H1 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
   * @aiDiscoverability none
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @usedIn v2/about/portal.mdx, v2/community/portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {string} children - The heading text
@@ -234,7 +234,7 @@ const H2 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
   * @aiDiscoverability none
- * @usedIn v2/community/community-portal.mdx
+ * @usedIn v2/community/portal.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {string} children - The heading text
@@ -357,7 +357,7 @@ const H4 = ({
  * @status stable
  * @description Heading override with optional icon prefix for frame-mode pages.
   * @aiDiscoverability none
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @usedIn v2/about/portal.mdx, v2/community/portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {string} children - The heading text
@@ -480,7 +480,7 @@ const H6 = ({
  * @status stable
  * @description Paragraph override with optional icon prefix for frame-mode pages.
   * @aiDiscoverability none
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
+ * @usedIn v2/about/portal.mdx, v2/community/portal.mdx, v2/developers/portal.mdx, v2/gateways/portal.mdx, v2/home/mission-control.mdx, v2/orchestrators/portal.mdx, v2/resources/portal.mdx, v2/solutions/portal.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
  * @param {string} children - The paragraph text

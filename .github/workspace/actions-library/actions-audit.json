@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-04-07",
+    "generated": "2026-05-01",
     "generator": "consolidated-architecture-scan",
     "workflow_count": 49,
     "decisions": "D-ACT-01 through D-ACT-10"
@@ -322,91 +322,6 @@
       "status": "active"
     },
     {
-      "file": "integrator-copy-update-discord-data.yml",
-      "name": "Update Discord Announcements Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "active"
-    },
-    {
-      "file": "integrator-copy-update-forum-data.yml",
-      "name": "Update Forum Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "active"
-    },
-    {
-      "file": "integrator-copy-update-ghost-blog-data.yml",
-      "name": "Update Ghost Blog Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "active"
-    },
-    {
-      "file": "integrator-copy-update-github-data.yml",
-      "name": "Update GitHub Discussions & Releases Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "active"
-    },
-    {
-      "file": "integrator-copy-update-rss-blog-data.yml",
-      "name": "Update RSS Blog Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
-      "status": "active"
-    },
-    {
       "file": "integrator-copy-update-translations.yml",
       "name": "Docs Translation Pipeline",
       "type": "integrator",
@@ -426,23 +341,6 @@
       "has_permissions": true,
       "has_concurrency": true,
       "has_auto_commit": true,
-      "status": "active"
-    },
-    {
-      "file": "integrator-copy-update-youtube-data.yml",
-      "name": "Update YouTube Data",
-      "type": "integrator",
-      "concern": "copy",
-      "pipeline_tag": "P5-auto",
-      "triggers": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "scripts": [],
-      "has_inline_script": false,
-      "has_permissions": false,
-      "has_concurrency": false,
-      "has_auto_commit": false,
       "status": "active"
     },
     {
@@ -936,7 +834,7 @@
       "status": "active"
     },
     {
-      "file": "project-showcase-sync.yml",
+      "file": "integrator-copy-update-showcase-submissions.yml",
       "name": "Project Showcase Sync",
       "type": "integrator",
       "concern": "copy",
@@ -955,12 +853,15 @@
       "status": "disabled"
     },
     {
-      "file": "styles-governance.yml",
+      "file": "remediator-brand-repair-style-tokens.yml",
       "name": "Styles Governance",
       "type": "remediator",
       "concern": "brand",
       "pipeline_tag": "P6",
-      "triggers": ["schedule", "workflow_dispatch"],
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
       "scripts": [],
       "has_inline_script": false,
       "has_permissions": true,
@@ -969,13 +870,18 @@
       "status": "active"
     },
     {
-      "file": "update-config-flags.yml",
+      "file": "integrator-maintenance-update-config-flags.yml",
       "name": "Update Configuration Flags",
       "type": "integrator",
       "concern": "maintenance",
       "pipeline_tag": "P5-auto",
-      "triggers": ["schedule", "workflow_dispatch"],
-      "scripts": [],
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js"
+      ],
       "has_inline_script": false,
       "has_permissions": true,
       "has_concurrency": false,
@@ -983,13 +889,18 @@
       "status": "active"
     },
     {
-      "file": "update-exchanges-data.yml",
+      "file": "integrator-maintenance-update-exchanges-data.yml",
       "name": "Update Exchanges Data",
       "type": "integrator",
       "concern": "maintenance",
       "pipeline_tag": "P5-auto",
-      "triggers": ["schedule", "workflow_dispatch"],
-      "scripts": [],
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js"
+      ],
       "has_inline_script": false,
       "has_permissions": true,
       "has_concurrency": false,
@@ -1002,8 +913,13 @@
       "type": "validator",
       "concern": "governance",
       "pipeline_tag": "P3",
-      "triggers": ["pull_request", "workflow_dispatch"],
-      "scripts": ["operations/scripts/validators/governance/pr/check-workflow-governance.js"],
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/validators/governance/pr/check-workflow-governance.js"
+      ],
       "has_inline_script": false,
       "has_permissions": true,
       "has_concurrency": true,

@@ -549,7 +549,7 @@ Two different estimates exist. The Blueprint (96 pages) is journey-derived. The 
 | **Delegators** | ⚠️ Missing pieces | No proper portal (token-portal.mdx doesn't match spec), no quickstart section |
 | **About** | ⚠️ Custom IA correct | Non-task tab — no quickstart/setup/guides needed |
 | **Home** | ⚠️ Custom IA correct | Routing/orientation tab |
-| **Community** | ⚠️ Lighter stack | Custom IA correct — livepeer-community/, livepeer-connect/, livepeer-contribute/ |
+| **Community** | ⚠️ Lighter stack | Custom IA correct — community/, connect/, contribute/ |
 | **Solutions** | ⚠️ Product-focused | Custom IA correct — per-product sections |
 | **Resource Hub** | ⚠️ Reference-only | Unique structure: changelog/, documentation-guide/, compendium/ |
 

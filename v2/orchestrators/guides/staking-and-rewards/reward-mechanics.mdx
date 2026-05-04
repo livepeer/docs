@@ -2,7 +2,7 @@
 title: Reward Mechanics
 sidebarTitle: Reward Mechanics
 description: >-
-  Protocol reward mechanics for Livepeer orchestrators — how LPT inflation flows, calling Reward() automatically and
+  Protocol reward mechanics for Livepeer orchestrators – how LPT inflation flows, calling Reward() automatically and
   manually, gas thresholds on Arbitrum, fee redemption, setting commission, and monitoring for missed rounds.
 lifecycleStage: operate
 complexity: intermediate
@@ -33,13 +33,13 @@ lastVerified: 2026-03-13T00:00:00.000Z
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Reward calling determines whether your node actually receives the LPT inflation it has earned. Read this page to tune automatic and manual calls, Arbitrum gas costs, commission updates, and the fee path from job to wallet. It assumes you have read [Earnings Explained](/v2/orchestrators/guides/staking-and-rewards/earning-model) and have an active orchestrator node.
+Reward calling determines whether your node actually receives the LPT inflation it has earned. Read this page to tune automatic and manual calls, Arbitrum gas costs, commission updates, and the fee path from job to wallet. It assumes you have read [Earnings Explained](/v2/Orchestrators/guides/staking-and-rewards/earning-model) and have an active Orchestrator node.
 
 <CustomDivider />
 
 ## How LPT rewards flow
 
-Every round (approximately every 22 hours on Arbitrum), the protocol mints new LPT and makes it available to the active orchestrator set. The sequence is:
+Every round (approximately every 22 hours on Arbitrum), the protocol mints new LPT and makes it available to the active Orchestrator set. The sequence is:
 
 ``` icon="terminal"
 Round initialises
@@ -91,10 +91,10 @@ livepeer \
 **Requirements for automatic reward to succeed:**
 - Your node must be running at round initialisation (approximately every 22 hours)
 - Your node's ETH wallet must have sufficient ETH on Arbitrum to pay the transaction gas
-- Your orchestrator must be in the active set that round
+- Your Orchestrator must be in the Active Set that round
 
 <Warning>
-  Nodes offline at round initialisation miss that round's reward. There is no retry. For production orchestrators, use systemd or Docker restart policies to keep the node running continuously.
+  Nodes offline at round initialisation miss that round's reward. There is no retry. For production Orchestrators, use systemd or Docker restart policies to keep the node running continuously.
 </Warning>
 
 ### Option 2: Disable automatic, call manually
@@ -114,9 +114,9 @@ livepeer \
 
 Gather three inputs:
 
-1. **Current gas price on Arbitrum** – check [arbiscan.io](https://arbiscan.io/gastracker) for current L2 gas prices
+1. **Current gas price on Arbitrum** – check [Arbiscan.io](https://arbiscan.io/gastracker) for current L2 gas prices
 2. **Gas used per reward call** – typically **350,000 to 450,000 gas** on Arbitrum
-3. **LPT value you'd receive** – visible in Explorer on your orchestrator page under "Estimated Reward This Round"
+3. **LPT value you'd receive** – visible in Explorer on your Orchestrator page under "Estimated Reward This Round"
 
 ``` icon="terminal" title="Reward profitability formula"
 ETH cost = gas_used × gas_price_in_ETH
@@ -178,9 +178,9 @@ Reward calls run on Arbitrum (Arbitrum One), Livepeer's L2 network. Gas costs ar
   </TableRow>
 </StyledTable>
 
-At these levels, the stake threshold for profitable reward calling is much lower than it was on mainnet. Most actively staked orchestrators are well above the break-even point.
+At these levels, the stake threshold for profitable reward calling is much lower than it was on mainnet. Most actively staked Orchestrators are well above the break-even point.
 
-Keep **ETH on Arbitrum** in your orchestrator wallet for reward transactions. Running out of ETH causes reward calls to fail silently and rounds to be missed.
+Keep **ETH on Arbitrum** in your Orchestrator wallet for reward transactions. Running out of ETH causes reward calls to fail silently and rounds to be missed.
 
 ```bash icon="terminal" title="Check orchestrator ETH balance with livepeer_cli"
 # Check your orchestrator ETH balance on Arbitrum
@@ -200,13 +200,13 @@ Commission parameters are set via `livepeer_cli` or the [Livepeer Explorer](http
 livepeer_cli
 ```
 
-Select the option for **"Set orchestrator config"** to update:
+Select the option for **"Set Orchestrator config"** to update:
 - `rewardCut` – the percentage of LPT inflation you keep (0–100%)
-- `feeShare` – the percentage of ETH fees shared with delegators (0–100%)
+- `feeShare` – the percentage of ETH fees shared with Delegators (0–100%)
 
 ### Commission rate strategy
 
-There is no universally correct setting. The trade-off is between your immediate per-job earnings and your ability to attract delegators who increase your total stake.
+There is no universally correct setting. The trade-off is between your immediate per-job earnings and your ability to attract Delegators who increase your total stake.
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -219,26 +219,26 @@ There is no universally correct setting. The trade-off is between your immediate
     <TableCell>Delegator-attractive</TableCell>
     <TableCell>0–10%</TableCell>
     <TableCell>50–100%</TableCell>
-    <TableCell>Building stake from zero; maximising delegator ROI</TableCell>
+    <TableCell>Building stake from zero; maximising Delegator ROI</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>Balanced</TableCell>
     <TableCell>15–25%</TableCell>
     <TableCell>20–50%</TableCell>
-    <TableCell>Mid-stage orchestrators with some delegation</TableCell>
+    <TableCell>Mid-stage Orchestrators with some delegation</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>Operator-heavy</TableCell>
     <TableCell>50%+</TableCell>
     <TableCell>0–20%</TableCell>
-    <TableCell>High self-stake; few delegators needed</TableCell>
+    <TableCell>High self-stake; few Delegators needed</TableCell>
   </TableRow>
 </StyledTable>
 
-Check what leading orchestrators are currently set to on [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators). The "Active" tab shows all current parameters and fee history side by side.
+Check what leading Orchestrators are currently set to on [explorer.livepeer.org/Orchestrators](https://explorer.livepeer.org/orchestrators). The "Active" tab shows all current parameters and fee history side by side.
 
 <Note>
-  Changing commission rates after attracting delegators is the primary way orchestrators damage their reputation. Delegators monitor their orchestrators and migrate away from those who change rates unfavourably after building trust. See [Getting Delegates](/v2/orchestrators/guides/staking-and-rewards/delegate-operations) for more on the delegator relationship.
+  Changing commission rates after attracting Delegators is the primary way Orchestrators damage their reputation. Delegators monitor their Orchestrators and migrate away from those who change rates unfavourably after building trust. See [Getting Delegates](/v2/Orchestrators/guides/staking-and-rewards/delegate-operations) for more on the Delegator relationship.
 </Note>
 
 <CustomDivider />
@@ -265,17 +265,17 @@ Your feeShare % flows to delegators' claimable balances
 
 ETH fees from jobs are available for withdrawal once the Redeemer has processed the winning tickets. The Redeemer is a component of go-livepeer that handles on-chain submission automatically.
 
-For the full probabilistic micropayment lifecycle, ticket structure, and Redeemer operation, see [Payments](/v2/orchestrators/guides/payments-and-pricing/payment-receipts).
+For the full probabilistic micropayment lifecycle, ticket structure, and Redeemer operation, see [Payments](/v2/Orchestrators/guides/payments-and-pricing/payment-receipts).
 
 <CustomDivider />
 
 ## Monitoring for missed rounds
 
-The [Livepeer Explorer](https://explorer.livepeer.org) shows your reward call history on your orchestrator's profile page. A gap in the history means a missed round.
+The [Livepeer Explorer](https://explorer.livepeer.org) shows your reward call history on your Orchestrator's profile page. A gap in the history means a missed round.
 
 ### Automated alerting
 
-For production orchestrators, set up alerting on the go-livepeer Prometheus metrics. The relevant metric is `livepeer_orchestrator_reward_call_status`:
+For production Orchestrators, set up alerting on the go-livepeer Prometheus metrics. The relevant metric is `livepeer_orchestrator_reward_call_status`:
 
 ```yaml icon="terminal" title="Example Prometheus alert rule"
 # Example Prometheus alert rule
@@ -292,7 +292,7 @@ groups:
           description: "A reward() call failed. Check ETH balance and node uptime."
 ```
 
-The Explorer also tracks your **reward call ratio** (`rewardCalls / n` over up to 90 rounds). Delegators see this ratio on your profile and factor it directly into their yield calculation. A ratio below 1.0 reduces their effective yield and makes your orchestrator less attractive.
+The Explorer also tracks your **reward call ratio** (`rewardCalls / n` over up to 90 rounds). Delegators see this ratio on your profile and factor it directly into their yield calculation. A ratio below 1.0 reduces their effective yield and makes your Orchestrator less attractive.
 
 <CustomDivider />
 
@@ -300,7 +300,7 @@ The Explorer also tracks your **reward call ratio** (`rewardCalls / n` over up t
 
 Illustrative scenario for context only. Actual figures depend on LPT price, ETH price, inflation rate, and network demand.
 
-Example node profile for the table below: 10,000 LPT total stake (3,000 self-bonded + 7,000 delegated), active set, `rewardCut` = 15%, `feeShare` = 40%.
+Example node profile for the table below: 10,000 LPT total stake (3,000 self-bonded + 7,000 delegated), Active Set, `rewardCut` = 15%, `feeShare` = 40%.
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -349,7 +349,7 @@ Example node profile for the table below: 10,000 LPT total stake (3,000 self-bon
 
 <CustomDivider />
 
-## Watch: Reward calling and orchestrator setup
+## Watch: Reward calling and Orchestrator setup
 
 <Frame>
   <iframe
@@ -372,10 +372,10 @@ Example node profile for the table below: 10,000 LPT total stake (3,000 self-bon
     The two revenue streams, commission parameters, and what determines how much work you win.
   </Card>
   <Card title="Getting Delegates" icon="people-group" href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations">
-    How delegators evaluate orchestrators and what you can do to attract more stake.
+    How Delegators evaluate Orchestrators and what you can do to attract more stake.
   </Card>
   <Card title="Payments" icon="receipt" href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts">
-    Probabilistic micropayments, winning ticket mechanics, and on-chain ETH redemption.
+    Probabilistic Micropayments, winning ticket mechanics, and on-chain ETH redemption.
   </Card>
   <Card title="Metrics and Monitoring" icon="chart-mixed" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting">
     Prometheus setup, Grafana dashboards, and alerts for reward call failures.

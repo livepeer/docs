@@ -2,7 +2,7 @@
 title: FAQ and Troubleshooting
 sidebarTitle: FAQ
 description: >-
-  Answers to common orchestrator questions and step-by-step fixes for the most frequent errors — installation,
+  Answers to common orchestrator questions and step-by-step fixes for the most frequent errors – installation,
   networking, job routing, AI pipelines, and earnings.
 lifecycleStage: troubleshoot
 complexity: beginner
@@ -54,7 +54,7 @@ Human:
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-the most common errors orchestrators encounter and answers the questions that come up most often. Find your symptom or question in the relevant section. Each entry is self-contained – you should be able to read one entry and resolve your issue without reading the rest.
+the most common errors Orchestrators encounter and answers the questions that come up most often. Find your symptom or question in the relevant section. Each entry is self-contained – you should be able to read one entry and resolve your issue without reading the rest.
 
 If your issue is not covered here, see the [escalation paths](#still-stuck) at the bottom of this page.
 
@@ -106,10 +106,10 @@ The NVIDIA driver version installed on the host is below the minimum required by
 <Accordion  title='"OrchestratorCapped" error' icon="triangle-exclamation">
 
 **Symptom**  
-Your orchestrator logs show `OrchestratorCapped` and stops accepting new jobs from gateways.
+Your Orchestrator logs show `OrchestratorCapped` and stops accepting new jobs from Gateways.
 
 **Cause**  
-Your orchestrator has reached its session limit. This can be caused by the `-maxSessions` flag being set too low, or by hitting the hardware NVENC/NVDEC session limit on your GPU.
+Your Orchestrator has reached its session limit. This can be caused by the `-maxSessions` flag being set too low, or by hitting the hardware NVENC/NVDEC session limit on your GPU.
 
 **Fix**
 
@@ -189,7 +189,7 @@ The CUDA version installed on your host does not match the version that go-livep
 <Accordion  title='"Service address did not match discovered address"' icon="link">
 
 **Symptom**  
-On startup, your orchestrator logs:
+On startup, your Orchestrator logs:
 ``` icon="terminal"
 Service address https://127.0.0.1:4433 did not match discovered address https://127.1.5.10:8935; set the correct address in livepeer_cli or use -serviceAddr
 ```
@@ -198,11 +198,11 @@ Service address https://127.0.0.1:4433 did not match discovered address https://
 **Cause**  
 When starting up, go-livepeer checks whether the current public IP matches the address stored on the Livepeer blockchain from your registration. If your server IP has changed, or if you registered with the wrong address, the check fails.
 
-Your node may still start, but gateways cannot route jobs to you if the on-chain address is unreachable.
+Your node may still start, but Gateways cannot route jobs to you if the on-chain address is unreachable.
 
 **Fix**
 
-1. Identify the address currently stored on-chain. You can find this on the [Livepeer Explorer](https://explorer.livepeer.org) – search for your orchestrator's ETH address.
+1. Identify the address currently stored on-chain. You can find this on the [Livepeer Explorer](https://explorer.livepeer.org) – search for your Orchestrator's ETH address.
 
 2. If the stored address is wrong, update it via `livepeer_cli`:
    ```bash icon="terminal"
@@ -226,10 +226,10 @@ Use a domain name (e.g. `orch.yourdomain.com:8935`) instead of a bare IP address
 <Accordion  title='Port 8935 not reachable from outside your network' icon="link">
 
 **Symptom**  
-Your orchestrator starts without errors, but no gateways connect, and the `Service address did not match` error does not appear. Running an external port check against your IP:8935 shows the port as closed.
+Your Orchestrator starts without errors, but no Gateways connect, and the `Service address did not match` error does not appear. Running an external port check against your IP:8935 shows the port as closed.
 
 **Cause**  
-Port 8935 (the default orchestrator port) is blocked by a firewall, a router NAT, or a cloud provider security group. Gateways discover your orchestrator address from the blockchain but cannot reach you.
+Port 8935 (the default Orchestrator port) is blocked by a firewall, a router NAT, or a cloud provider security group. Gateways discover your Orchestrator address from the blockchain but cannot reach you.
 
 **Fix**
 
@@ -278,7 +278,7 @@ The `-ethUrl` value is incorrect, the RPC endpoint is rate-limited, or the provi
    ```
    Arbitrum One should return chain ID `0xa4b1` (42161 in decimal).
 
-3. If rate-limited, switch to a different RPC provider or upgrade your plan. Free-tier RPC endpoints from Alchemy and Infura have request limits that can be hit by active orchestrators.
+3. If rate-limited, switch to a different RPC provider or upgrade your plan. Free-tier RPC endpoints from Alchemy and Infura have request limits that can be hit by active Orchestrators.
 
 4. Check your API key has not expired or been rotated.
 
@@ -299,27 +299,27 @@ This is the most common question after initial activation. There are four distin
 <Accordion  title='Not in the active orchestrator set (top 100 by stake)' icon="coins">
 
 **Symptom**  
-Your orchestrator is running, the port is reachable, but you receive no transcoding or AI jobs. Your address does not appear on the [Livepeer Explorer](https://explorer.livepeer.org) active orchestrators list.
+Your Orchestrator is running, the port is reachable, but you receive no transcoding or AI jobs. Your address does not appear on the [Livepeer Explorer](https://explorer.livepeer.org) active Orchestrators list.
 
 **Cause**  
-The active orchestrator set is limited to the top 100 orchestrators by total LPT stake (self-delegated plus delegated). If your stake is below the 100th orchestrator's stake, you are not in the active set and gateways will not route jobs to you.
+The active Orchestrator set is limited to the top 100 Orchestrators by total LPT stake (self-delegated plus delegated). If your stake is below the 100th Orchestrator's stake, you are not in the Active Set and Gateways will not route jobs to you.
 
 **Fix**
 
-1. Go to [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator in the list. Note their total stake – that is the current minimum.
+1. Go to [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th Orchestrator in the list. Note their total stake – that is the current minimum.
 
-2. To enter the active set, your total stake must exceed that figure. You can:
+2. To enter the Active Set, your total stake must exceed that figure. You can:
    - Self-delegate additional LPT
-   - Attract more delegators by adjusting your reward cut to be competitive
+   - Attract more Delegators by adjusting your Reward Cut to be competitive
 
-3. Once your stake places you in the top 100, your orchestrator must be activated or re-activated via `livepeer_cli`:
+3. Once your stake places you in the top 100, your Orchestrator must be activated or re-activated via `livepeer_cli`:
    ```bash icon="terminal"
    livepeer_cli
    ```
-   Select the multi-step "become an orchestrator" option.
+   Select the multi-step "become an Orchestrator" option.
 
 <Note>
-If your orchestrator drops out of the active set (falls below top-100 rank) and your stake then changes (either up or down), it will be automatically re-entered. However, if you are inactive and your stake remains static while still technically in the top 100, the protocol does not automatically re-add you – you must re-register.
+If your Orchestrator drops out of the Active Set (falls below top-100 rank) and your stake then changes (either up or down), it will be automatically re-entered. However, if you are inactive and your stake remains static while still technically in the top 100, the protocol does not automatically re-add you – you must re-register.
 </Note>
 
 </Accordion>
@@ -327,18 +327,18 @@ If your orchestrator drops out of the active set (falls below top-100 rank) and 
 <Accordion  title='pricePerUnit set too high — gateways are not selecting your node' icon="server">
 
 **Symptom**  
-Your orchestrator is in the active set, is reachable, and is activated – but you receive very few or no jobs. No error messages appear in your logs.
+Your Orchestrator is in the Active Set, is reachable, and is activated – but you receive very few or no jobs. No error messages appear in your logs.
 
 **Cause**  
-`-pricePerUnit` is set too high relative to competing orchestrators. Gateways select orchestrators based on a combination of stake weight and price. If your price is significantly above the market rate, gateways will route jobs to lower-priced orchestrators first.
+`-pricePerUnit` is set too high relative to competing Orchestrators. Gateways select Orchestrators based on a combination of stake weight and price. If your price is significantly above the market rate, Gateways will route jobs to lower-priced Orchestrators first.
 
 **Fix**
 
-1. Check the current market rate at [livepeer.tools](https://livepeer.tools) – this shows per-pixel pricing for active orchestrators.
+1. Check the current market rate at [Livepeer.tools](https://livepeer.tools) – this shows per-pixel pricing for active Orchestrators.
 
 2. Note the unit: `-pricePerUnit` is set in **wei per pixel**, not ETH. A common misconfiguration is setting the value in ETH (e.g. `0.0001`) instead of the equivalent wei value, which produces a price orders of magnitude too high.
 
-   A typical starting value for transcoding is in the range of a few hundred to a few thousand wei per pixel. Check the Explorer for comparable orchestrators' pricing.
+   A typical starting value for transcoding is in the range of a few hundred to a few thousand wei per pixel. Check the Explorer for comparable Orchestrators' pricing.
 
 3. Update your price via `livepeer_cli`:
    ```bash icon="terminal"
@@ -356,37 +356,37 @@ Your orchestrator is in the active set, is reachable, and is activated – but y
 <Accordion  title='Node not activated via livepeer_cli' icon="server">
 
 **Symptom**  
-Your orchestrator is running, the port is reachable, and your stake is sufficient – but you still receive no jobs. Your address does not appear in the active orchestrators list on the Explorer.
+Your Orchestrator is running, the port is reachable, and your stake is sufficient – but you still receive no jobs. Your address does not appear in the active Orchestrators list on the Explorer.
 
 **Cause**  
-go-livepeer running in orchestrator mode does not automatically register or activate the node on the Livepeer protocol. Activation requires a one-time on-chain transaction via `livepeer_cli`.
+go-livepeer running in Orchestrator mode does not automatically register or activate the node on the Livepeer Protocol. Activation requires a one-time on-chain transaction via `livepeer_cli`.
 
 **Fix**
 
-1. With your orchestrator running, open a second terminal and run:
+1. With your Orchestrator running, open a second terminal and run:
    ```bash icon="terminal"
    livepeer_cli
    ```
 
-2. Select the option to invoke the multi-step "become an orchestrator" flow.
+2. Select the option to invoke the multi-step "become an Orchestrator" flow.
 
 3. You will be prompted to set:
-   - Reward cut (percentage of LPT inflation you keep; the remainder goes to delegators)
-   - Fee cut (percentage of ETH fees you keep)
+   - Reward Cut (percentage of LPT inflation you keep; the remainder goes to Delegators)
+   - Fee Cut (percentage of ETH fees you keep)
    - Price per unit (in wei per pixel)
    - Service address (your public IP:port)
    - Amount of LPT to stake (in LPTU – note: 1 LPT = 1,000,000,000,000,000,000 LPTU)
 
 4. Each step submits an on-chain transaction. You need ETH on Arbitrum to pay gas.
 
-5. After completion, verify your orchestrator appears on [explorer.livepeer.org](https://explorer.livepeer.org).
+5. After completion, verify your Orchestrator appears on [explorer.livepeer.org](https://explorer.livepeer.org).
 
 </Accordion>
 
 <Accordion  title='serviceAddr not externally reachable after activation' icon="triangle-exclamation">
 
 **Symptom**  
-Your orchestrator is activated and appears on the Explorer, but still receives no jobs. Port check against your registered IP:port shows the port as closed or unreachable.
+Your Orchestrator is activated and appears on the Explorer, but still receives no jobs. Port check against your registered IP:port shows the port as closed or unreachable.
 
 **Cause**  
 Your service address is registered on-chain, but the actual server at that address is not reachable – either a firewall rule was added after registration, the server moved to a different IP, or a network change broke external access.
@@ -446,10 +446,10 @@ Common causes: the NVIDIA Container Toolkit is not installed or configured; the 
 <Accordion  title='aiModels.json errors — AI jobs not being received' icon="microchip">
 
 **Symptom**  
-Your AI Runner container is running, but your orchestrator does not receive AI inference jobs. No AI-related errors appear in your orchestrator logs.
+Your AI Runner container is running, but your Orchestrator does not receive AI inference jobs. No AI-related errors appear in your Orchestrator logs.
 
 **Cause**  
-The most common cause is an incorrect or missing `aiModels.json` configuration. If go-livepeer cannot load a valid pipeline configuration, it will not advertise AI capabilities to gateways and will not receive AI jobs.
+The most common cause is an incorrect or missing `aiModels.json` configuration. If go-livepeer cannot load a valid pipeline configuration, it will not advertise AI capabilities to Gateways and will not receive AI jobs.
 
 **Fix**
 
@@ -537,7 +537,7 @@ The model you have configured requires more VRAM than your GPU has available, or
 You are receiving AI jobs, but they fail or return errors related to pipeline mismatch. Or: you have configured multiple pipelines but only one ever receives jobs.
 
 **Cause**  
-Gateways route jobs based on the pipeline and model ID advertised in your `aiModels.json`. If the requested model ID does not match an entry in your config, the job is rejected. If your model is not in the Livepeer-verified model registry, it will not be matched to gateway requests.
+Gateways route jobs based on the pipeline and model ID advertised in your `aiModels.json`. If the requested model ID does not match an entry in your config, the job is rejected. If your model is not in the Livepeer-verified model registry, it will not be matched to Gateway requests.
 
 **Fix**
 
@@ -545,7 +545,7 @@ Gateways route jobs based on the pipeline and model ID advertised in your `aiMod
 
 2. If you want to run a model not on the approved list, submit a feature request on the [go-livepeer GitHub repository](https://github.com/livepeer/go-livepeer/issues) to have it verified and added.
 
-3. Verify your orchestrator is advertising all configured pipelines. Check the Explorer or query your orchestrator's status endpoint:
+3. Verify your Orchestrator is advertising all configured pipelines. Check the Explorer or query your Orchestrator's status endpoint:
    ```bash icon="terminal"
    curl -k https://YOUR_IP:8935/status
    ```
@@ -563,14 +563,14 @@ Gateways route jobs based on the pipeline and model ID advertised in your `aiMod
 <Accordion  title='Earnings not appearing in the Explorer' icon="coins">
 
 **Symptom**  
-Your orchestrator is running and processing jobs, but earnings are not updating on [explorer.livepeer.org](https://explorer.livepeer.org).
+Your Orchestrator is running and processing jobs, but earnings are not updating on [explorer.livepeer.org](https://explorer.livepeer.org).
 
 **Cause**  
 There are two types of earnings on Livepeer: transcoding fees (ETH, paid per job) and staking rewards (LPT, minted per round). Explorer indexing can have a delay of a few minutes to hours. Additionally, staking rewards require a reward call to be made each round.
 
 **Fix**
 
-1. Allow up to 24 hours for Explorer indexing before raising an issue – especially for new orchestrators.
+1. Allow up to 24 hours for Explorer indexing before raising an issue – especially for new Orchestrators.
 
 2. For staking rewards specifically: these are only minted if a reward call is made during the current round. If no reward call is made, no LPT is minted for that round. Check your logs for reward call transactions.
 
@@ -581,14 +581,14 @@ There are two types of earnings on Livepeer: transcoding fees (ETH, paid per job
 <Accordion  title='Reward call not being made — missing LPT staking rewards' icon="coins">
 
 **Symptom**  
-Your orchestrator is active and receiving jobs, but LPT staking rewards are not accumulating. No reward call transactions appear in your wallet's Arbitrum transaction history.
+Your Orchestrator is active and receiving jobs, but LPT staking rewards are not accumulating. No reward call transactions appear in your wallet's Arbitrum transaction history.
 
 **Cause**  
-If you run your orchestrator process and transcoder process as separate instances (split O+T setup), and the wrong process has the `-reward` flag enabled, reward calls may not be made correctly. Also: if ETH balance on Arbitrum is insufficient, reward call transactions will fail.
+If you run your Orchestrator process and transcoder process as separate instances (split O+T setup), and the wrong process has the `-reward` flag enabled, reward calls may not be made correctly. Also: if ETH balance on Arbitrum is insufficient, reward call transactions will fail.
 
 **Fix**
 
-1. For split orchestrator/transcoder setups, add `-reward=false` to all transcoder launch commands. Only the orchestrator process should make reward calls:
+1. For split Orchestrator/transcoder setups, add `-reward=false` to all transcoder launch commands. Only the Orchestrator process should make reward calls:
 
    ```bash icon="terminal"
    # Transcoder process — reward disabled
@@ -600,19 +600,19 @@ If you run your orchestrator process and transcoder process as separate instance
 
    Also remove the `-ethUrl` option from transcoder processes if they are using the same wallet – this prevents the transcoder from inadvertently submitting on-chain transactions.
 
-2. Ensure your Arbitrum ETH balance is sufficient to pay for reward call gas. Check via `livepeer_cli` or on [arbiscan.io](https://arbiscan.io).
+2. Ensure your Arbitrum ETH balance is sufficient to pay for reward call gas. Check via `livepeer_cli` or on [Arbiscan.io](https://arbiscan.io).
 
-3. If running a single combined orchestrator+transcoder process (the default for most solo operators), reward calls are handled automatically. No additional configuration is needed.
+3. If running a single combined Orchestrator+transcoder process (the default for most solo operators), reward calls are handled automatically. No additional configuration is needed.
 
 </Accordion>
 
 <Accordion  title='Pool worker earnings not showing' icon="coins">
 
 **Symptom**  
-You are contributing compute to an orchestrator pool (e.g. Titan Node, Video Miner, LivePool) as a transcoder worker, but you cannot see your earnings.
+You are contributing compute to an Orchestrator pool (e.g. Titan Node, Video Miner, LivePool) as a transcoder worker, but you cannot see your earnings.
 
 **Cause**  
-Pool earnings are tracked and distributed by the pool operator, not by go-livepeer directly. The Livepeer Explorer shows the pool orchestrator's earnings, not individual worker earnings. Each pool has its own payout mechanism and reporting interface.
+Pool earnings are tracked and distributed by the pool operator, not by go-livepeer directly. The Livepeer Explorer shows the pool Orchestrator's earnings, not individual worker earnings. Each pool has its own payout mechanism and reporting interface.
 
 **Fix**
 
@@ -620,7 +620,7 @@ Pool earnings are tracked and distributed by the pool operator, not by go-livepe
 
 2. If earnings are not updating there, contact the pool operator via their Discord or forum. Pool-specific issues are outside Livepeer's core go-livepeer documentation.
 
-3. Verify your transcoder process is running correctly and connected to the pool's orchestrator address by checking your logs for successful job processing messages.
+3. Verify your transcoder process is running correctly and connected to the pool's Orchestrator address by checking your logs for successful job processing messages.
 </Accordion>
 
 </AccordionGroup>
@@ -633,17 +633,17 @@ Pool earnings are tracked and distributed by the pool operator, not by go-livepe
 
 <Accordion  title='What is the difference between an orchestrator and a transcoder?' icon="video">
 
-An **orchestrator** is an on-chain participant. It holds staked LPT, is registered in the Livepeer protocol, receives job routing from gateways, sets pricing, and makes reward calls each round to mint LPT. An orchestrator is your identity and your stake on the network.
+An **Orchestrator** is an on-chain participant. It holds staked LPT, is registered in the Livepeer Protocol, receives job routing from Gateways, sets pricing, and makes reward calls each round to mint LPT. An Orchestrator is your identity and your stake on the network.
 
 A **transcoder** is a compute process. It does the actual video encoding or AI inference work using the GPU. A transcoder has no on-chain identity.
 
-In the most common setup, a single machine runs both roles simultaneously using the `-orchestrator -transcoder` flags. In more advanced setups, operators run one orchestrator process that delegates work to multiple transcoder processes – potentially across different machines.
+In the most common setup, a single machine runs both roles simultaneously using the `-orchestrator -transcoder` flags. In more advanced setups, operators run one Orchestrator process that delegates work to multiple transcoder processes – potentially across different machines.
 
 </Accordion>
 
 <Accordion  title='Do I need to keep livepeer_cli running after activation?' icon="circle-question">
 
-No. `livepeer_cli` is an interactive management tool. You use it to perform one-time or occasional on-chain actions (activate as orchestrator, update pricing, update service address, manage stake). Once an action is submitted, `livepeer_cli` can be closed.
+No. `livepeer_cli` is an interactive management tool. You use it to perform one-time or occasional on-chain actions (activate as Orchestrator, update pricing, update service address, manage stake). Once an action is submitted, `livepeer_cli` can be closed.
 
 The `livepeer` daemon process is what needs to remain running continuously to receive and process jobs.
 
@@ -651,23 +651,23 @@ The `livepeer` daemon process is what needs to remain running continuously to re
 
 <Accordion  title='How long does it take to appear in the active orchestrator set after activation?' icon="circle-question">
 
-After your activation transaction is confirmed on Arbitrum, your orchestrator is eligible to enter the active set at the start of the next Livepeer round. Rounds are approximately 5,760 Ethereum blocks long (roughly 22–24 hours).
+After your activation transaction is confirmed on Arbitrum, your Orchestrator is eligible to enter the Active Set at the start of the next Livepeer round. Rounds are approximately 5,760 Ethereum blocks long (roughly 22–24 hours).
 
-If your stake is in the top 100, you will be included in the active set at the next round boundary. Check [explorer.livepeer.org](https://explorer.livepeer.org) to confirm your status.
+If your stake is in the top 100, you will be included in the Active Set at the next round boundary. Check [explorer.livepeer.org](https://explorer.livepeer.org) to confirm your status.
 
 </Accordion>
 
 <Accordion  title='What is the minimum LPT stake required to receive jobs?' icon="coins">
 
-There is no fixed minimum in the protocol. The active set is the top 100 orchestrators by total LPT stake (self-staked plus delegated). The effective minimum at any point in time is equal to the stake of the 100th orchestrator on the list.
+There is no fixed minimum in the protocol. The Active Set is the top 100 Orchestrators by total LPT stake (self-staked plus delegated). The effective minimum at any point in time is equal to the stake of the 100th Orchestrator on the list.
 
-Check [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th orchestrator by stake to see the current threshold. This value changes over time as operators enter and leave the network.
+Check [explorer.livepeer.org](https://explorer.livepeer.org) and find the 100th Orchestrator by stake to see the current threshold. This value changes over time as operators enter and leave the network.
 
 </Accordion>
 
 <Accordion  title='Can I run an orchestrator on Windows?' icon="circle-question">
 
-You can run go-livepeer on Windows for video transcoding. The standard orchestrator binary is available for Windows.
+You can run go-livepeer on Windows for video transcoding. The standard Orchestrator binary is available for Windows.
 
 However, the AI pipeline functionality (AI Runner containers, aiModels.json configuration, AI inference jobs) requires Linux. If you want to serve AI inference jobs, you must run on a Linux host.
 
@@ -675,9 +675,9 @@ However, the AI pipeline functionality (AI Runner containers, aiModels.json conf
 
 <Accordion  title='What does "Transcode loop timed out" or "Segment loop timed out" mean in my logs?' icon="video">
 
-These log messages indicate that a transcoding session was cleaned up because no new video segments arrived for a period of time. This is normal behaviour – it occurs when a stream ends or a gateway disconnects. It is not an error requiring any action on your part.
+These log messages indicate that a transcoding session was cleaned up because no new video segments arrived for a period of time. This is normal behaviour – it occurs when a stream ends or a Gateway disconnects. It is not an error requiring any action on your part.
 
-If you see these messages repeatedly when you expect to be processing an active stream, it may indicate the gateway is disconnecting from your node – in which case check your serviceAddr configuration and external reachability.
+If you see these messages repeatedly when you expect to be processing an active stream, it may indicate the Gateway is disconnecting from your node – in which case check your serviceAddr configuration and external reachability.
 
 </Accordion>
 
@@ -687,7 +687,7 @@ If you see these messages repeatedly when you expect to be processing an active 
 Error ticket params
 ```
 
-This error appears in your orchestrator logs when a gateway sends a payment ticket with parameters that are considered too old by your node. It is typically caused by a timing difference: the gateway collected your orchestrator info and then took longer than expected before sending the segment, or your node is slow to poll for new Arbitrum blocks.
+This error appears in your Orchestrator logs when a Gateway sends a payment ticket with parameters that are considered too old by your node. It is typically caused by a timing difference: the Gateway collected your Orchestrator info and then took longer than expected before sending the segment, or your node is slow to poll for new Arbitrum blocks.
 
 This error is usually transient. If it occurs occasionally, no action is needed. If it appears persistently, check that your Arbitrum RPC endpoint is responsive and not rate-limited.
 
@@ -697,13 +697,13 @@ This error is usually transient. If it occurs occasionally, no action is needed.
 
 You can, but there are important limitations:
 
-1. Your orchestrator must be publicly reachable on port 8935. Most home routers require you to configure port forwarding to expose a specific machine on your local network to the internet.
+1. Your Orchestrator must be publicly reachable on port 8935. Most home routers require you to configure port forwarding to expose a specific machine on your local network to the internet.
 
-2. Home broadband often uses dynamic IP addresses. If your IP changes, your on-chain service URI becomes stale and gateways cannot reach you. Use a dynamic DNS service to maintain a stable hostname, then register with that hostname instead of a bare IP.
+2. Home broadband often uses dynamic IP addresses. If your IP changes, your on-chain service URI becomes stale and Gateways cannot reach you. Use a dynamic DNS service to maintain a stable hostname, then register with that hostname instead of a bare IP.
 
-3. Home broadband upload speeds may limit your transcoding throughput. Each video segment must be received from a gateway, transcoded, and returned – upload capacity directly affects how many concurrent sessions you can handle.
+3. Home broadband upload speeds may limit your transcoding throughput. Each video segment must be received from a Gateway, transcoded, and returned – upload capacity directly affects how many concurrent sessions you can handle.
 
-For production orchestrators, a VPS or data centre is strongly recommended.
+For production Orchestrators, a VPS or data centre is strongly recommended.
 
 </Accordion>
 

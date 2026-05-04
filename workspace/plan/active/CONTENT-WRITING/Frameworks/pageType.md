@@ -4,7 +4,7 @@
 **Purpose**: Non-destructive audit of every v2 page. Assigns recommended pageType, pageVariant, and purpose based on reading actual content (not trusting frontmatter).
 **Excludes**: x-archive, x-deprecated, x-resources, _workspace, dep- prefixed files.
 
----
+<CustomDivider />
 
 ## 7 Primary Types
 
@@ -20,7 +20,7 @@
 
 `overview` = entry/orientation page for a section of this type. Available on all types except `navigation`.
 
----
+<CustomDivider />
 
 ## HOME
 
@@ -30,11 +30,11 @@
 | home/get-started.mdx | (none) | tutorial | Role-based navigation hub ("new/developer/GPU/creator/LPT") | navigation | landing | choose |
 | home/primer.mdx | tutorial | tutorial | Intro explainer: what Livepeer is, why it matters. No steps. | concept | (none) | explain |
 | home/trending.mdx | (none) | (none) | Aggregation page pulling live data feeds (YouTube, Forum, Discord, X) | resource | (none) | update |
-| home/about-livepeer/vision.mdx | concept | concept | Founder story with video, quotes, mission narrative | concept | (none) | explain |
-| home/about-livepeer/evolution.mdx | concept | concept | Timeline of key achievements 2016-present | reference | changelog | learn |
-| home/about-livepeer/roadmap.mdx | overview | overview | Links to external roadmap site. Thin pointer page. | resource | (none) | update |
-| home/about-livepeer/benefits.mdx | concept | concept | "Why Livepeer" value proposition: cost, performance, open, trust | concept | (none) | choose |
-| home/about-livepeer/ecosystem.mdx | concept | concept | Livepeer org structure: Foundation, Inc, SPEs, governance | concept | (none) | explain |
+| home/about/vision.mdx | concept | concept | Founder story with video, quotes, mission narrative | concept | (none) | explain |
+| home/about/evolution.mdx | concept | concept | Timeline of key achievements 2016-present | reference | changelog | learn |
+| home/about/roadmap.mdx | overview | overview | Links to external roadmap site. Thin pointer page. | resource | (none) | update |
+| home/about/benefits.mdx | concept | concept | "Why Livepeer" value proposition: cost, performance, open, trust | concept | (none) | choose |
+| home/about/ecosystem.mdx | concept | concept | Livepeer org structure: Foundation, Inc, SPEs, governance | concept | (none) | explain |
 | home/solutions/showcase.mdx | overview | overview | Gallery of creative projects built on Livepeer | resource | (none) | learn |
 | home/solutions/landscape.mdx | (none) | (none) | STUB — single quote about DeAI. Essentially empty. | concept | (none) | explain |
 | home/solutions/verticals.mdx | overview | overview | Industry verticals: Media, Gaming, Robotics, Analytics | concept | (none) | choose |
@@ -44,7 +44,7 @@
 | home/get-started/use-livepeer.mdx | (none) | (none) | STUB — "Coming Soon" | guide | (none) | start |
 | home/get-started/build-on-livepeer.mdx | (none) | (none) | STUB — "Coming Soon" | guide | (none) | build |
 
----
+<CustomDivider />
 
 ## ABOUT
 
@@ -83,7 +83,7 @@
 | about/resources/technical-roadmap.mdx | reference | reference | Two blog links. Extremely thin. | resource | (none) | update |
 | about/resources/blockchain-contracts.mdx | (none) | concept | Contract addresses with Arbiscan/GitHub links | reference | specification | reference |
 
----
+<CustomDivider />
 
 ## GATEWAYS
 
@@ -172,7 +172,7 @@
 | gateways/resources/technical/api-reference/CLI-HTTP/cli-http-api.mdx | reference | reference | CLI HTTP API Portal: index of all endpoints | reference | specification | reference |
 | gateways/resources/technical/api-reference/CLI-HTTP/*.mdx (11 files) | reference | (none)/(reference) | Individual CLI HTTP endpoint pages | reference | specification | reference |
 
----
+<CustomDivider />
 
 ## DEVELOPERS
 
@@ -217,7 +217,7 @@
 | developers/resources/sdks.mdx | landing | landing | Hub: Studio SDKs and Gateway Client SDK | reference | compendium | reference |
 | developers/resources/wiki.mdx | landing | landing | Links to Livepeer Wiki on GitHub/DeepWiki | resource | (none) | learn |
 
----
+<CustomDivider />
 
 ## ORCHESTRATORS
 
@@ -280,7 +280,7 @@
 | orchestrators/guides/roadmap-and-funding/orchestrator-profiles.mdx | guide | (none) | STUB — placeholder for case studies | resource | (none) | learn |
 | orchestrators/guides/roadmap-and-funding/funding-and-support.mdx | guide | (none) | STUB — placeholder for funding programmes | resource | (none) | orient |
 | orchestrators/guides/tutorials/add-ai-to-video-node.mdx | tutorial | (none) | Tutorial: add AI to existing video orchestrator | tutorial | (none) | build |
-| orchestrators/guides/tutorials/ai-earning-quickstart.mdx | tutorial | (none) | Tutorial: start earning from AI in < 2 hours | tutorial | (none) | start |
+| orchestrators/guides/tutorials/ai-earning-quickstart.mdx | tutorial | (none) | Tutorial: start earning from AI in &lt; 2 hours | tutorial | (none) | start |
 | orchestrators/guides/tutorials/full-ai-pipeline-tutorial.mdx | tutorial | (none) | End-to-end: gateway routes inference to orchestrator | tutorial | (none) | build |
 | orchestrators/guides/tutorials/realtime-ai-tutorial.mdx | tutorial | (none) | Live video-to-video AI with ComfyStream/Cascade | tutorial | (none) | build |
 | orchestrators/guides/tutorials/zero-to-first-reward.mdx | tutorial | (none) | End-to-end: install, configure, fund, activate, first reward | tutorial | (none) | start |
@@ -295,7 +295,7 @@
 | orchestrators/resources/gpu-support.mdx | reference | reference | NVIDIA GPU compatibility matrix | reference | specification | reference |
 | orchestrators/resources/technical/cli-flags.mdx | reference | reference | CLI flags and gRPC field mapping | reference | specification | reference |
 
----
+<CustomDivider />
 
 ## LPT
 
@@ -321,30 +321,30 @@
 | lpt/treasury/allocations.mdx | concept | concept | Allocation accounting, evaluation, verification | concept | (none) | explain |
 | lpt/treasury/proposals.mdx | concept | concept | Proposal structure + Steps for submitting. Mix of concept + instruction. | guide | (none) | operate |
 
----
+<CustomDivider />
 
 ## COMMUNITY
 
 | Path | Current pageType | Current purpose | Actual Function | Rec. pageType | Rec. variant | Rec. purpose |
 |---|---|---|---|---|---|---|
-| community/community-portal.mdx | landing | landing | Hero portal with cards to community sections | navigation | landing | orient |
-| community/faq.mdx | reference | faq | Accordion FAQ: Foundation, SPEs, voting, inflation | reference | compendium | reference |
-| community/livepeer-community/community-guidelines.mdx | guide | concept | Code of conduct, participation norms | guide | (none) | operate |
-| community/livepeer-community/governance-and-foundation.mdx | guide | how_to | Foundation structure, SPE process, treasury, how to participate | guide | (none) | operate |
-| community/livepeer-community/livepeer-latest-topics.mdx | reference | reference | Ecosystem highlights + live forum feed | resource | (none) | update |
-| community/livepeer-community/roadmap.mdx | overview | overview | Embeds roadmap.livepeer.org iframe | overview | (none) | orient |
-| community/livepeer-community/trending-topics.mdx | landing | landing | Aggregates YouTube, forum, Discord, X, blog feeds | resource | (none) | update |
-| community/livepeer-connect/events-and-community-streams.mdx | guide | operations | Luma events calendar embed | resource | (none) | learn |
-| community/livepeer-connect/forums-and-discussions.mdx | guide | concept | Directory of community channels | reference | compendium | reference |
-| community/livepeer-connect/news-and-socials.mdx | landing | landing | STUB — empty headers only | resource | (none) | update |
-| community/livepeer-contribute/build-livepeer.mdx | guide | operations | STUB — single Info callout only | guide | (none) | build |
-| community/livepeer-contribute/contribute.mdx | landing | landing | STUB — single Info callout only | guide | (none) | build |
-| community/livepeer-contribute/opportunities.mdx | guide | operations | STUB — single Info callout only | resource | (none) | learn |
+| community/portal.mdx | landing | landing | Hero portal with cards to community sections | navigation | landing | orient |
+| community/resources/faq.mdx | reference | faq | Accordion FAQ: Foundation, SPEs, voting, inflation | reference | compendium | reference |
+| community/guides/guidelines.mdx | guide | concept | Code of conduct, participation norms | guide | (none) | operate |
+| community/ecosystem/governance.mdx | guide | how_to | Foundation structure, SPE process, treasury, how to participate | guide | (none) | operate |
+| community/community/livepeer-latest-topics.mdx | reference | reference | Ecosystem highlights + live forum feed | resource | (none) | update |
+| community/ecosystem/roadmap.mdx | overview | overview | Embeds roadmap.livepeer.org iframe | overview | (none) | orient |
+| community/connect/trending-topics.mdx | landing | landing | Aggregates YouTube, forum, Discord, X, blog feeds | resource | (none) | update |
+| community/connect/events-and-streams.mdx | guide | operations | Luma events calendar embed | resource | (none) | learn |
+| community/connect/connect-channels.mdx | guide | concept | Directory of community channels | reference | compendium | reference |
+| community/connect/news-and-socials.mdx | landing | landing | STUB — empty headers only | resource | (none) | update |
+| community/contribute/build-livepeer.mdx | guide | operations | STUB — single Info callout only | guide | (none) | build |
+| community/contribute/contribute.mdx | landing | landing | STUB — single Info callout only | guide | (none) | build |
+| community/contribute/opportunities.mdx | guide | operations | STUB — single Info callout only | resource | (none) | learn |
 | community/resources/awesome-livepeer.mdx | reference | concept | Curated ecosystem tools by category | reference | compendium | reference |
 | community/resources/dashboards.mdx | reference | landing | STUB — single card to GitHub | reference | compendium | reference |
 | community/resources/guides.mdx | reference | concept | Cards organized by role: delegator, gateway, orchestrator | reference | compendium | reference |
 
----
+<CustomDivider />
 
 ## RESOURCES
 
@@ -369,7 +369,7 @@
 | resources/documentation-guide/snippets-inventory.mdx | (none) | (none) | Inventory of snippets folder | reference | compendium | reference |
 | resources/documentation-guide/component-library/*.mdx (7 files) | (none) | (none) | Component library docs (overview, primitives, layout, content, data, page-structure) | reference | compendium | reference |
 
----
+<CustomDivider />
 
 ## SOLUTIONS
 
@@ -422,7 +422,7 @@
 | solutions/livepeer-studio/reference/sdks.mdx | reference | reference | SDK overview: TypeScript, Go, Python, React | reference | compendium | reference |
 | solutions/livepeer-studio/reference/managing-projects.mdx | reference | reference | Project org: staging, production, API keys | reference | (none) | configure |
 
----
+<CustomDivider />
 
 ## Summary Statistics
 

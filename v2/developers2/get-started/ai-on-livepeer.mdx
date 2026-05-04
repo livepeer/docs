@@ -1,0 +1,310 @@
+---
+title: AI on Livepeer
+sidebarTitle: AI on Livepeer
+description: >-
+  Three AI pipeline categories on the Livepeer network -- batch inference,
+  real-time AI, and LLM -- with the infrastructure, GPU requirements, and
+  developer entry points for each.
+keywords:
+  - livepeer
+  - AI
+  - pipeline
+  - batch AI
+  - real-time AI
+  - LLM
+  - comfystream
+  - inference
+  - developer
+  - VTuber
+  - avatar
+  - agent
+  - eliza
+purpose: explain
+pageType: concept
+audience: developer
+lastVerified: 2026-04-08
+status: current
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+complexity: beginner
+lifecycleStage: discover
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+The Livepeer network supports three distinct categories of AI pipeline. Each category works differently at the protocol level: different connection models, different billing, different GPU requirements. Understanding which category fits your use case before building prevents rework.
+
+**Limitation:** Livepeer AI pipelines run on GPU capacity contributed by independent orchestrators. Availability and latency depend on the orchestrator set at any given time. The Studio gateway routes to the best available orchestrator; direct gateway access gives more control at the cost of more operational responsibility.
+
+<CustomDivider middleText="PIPELINE CATEGORIES" />
+
+## Pipeline categories at a glance
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Category</TableCell>
+      <TableCell header>What it does</TableCell>
+      <TableCell header>Best for</TableCell>
+      <TableCell header>Primary tool</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Batch AI**</TableCell>
+      <TableCell>Single request to inference result</TableCell>
+      <TableCell>Image generation, transcription, upscaling, captioning</TableCell>
+      <TableCell>AI Gateway API</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Real-time AI**</TableCell>
+      <TableCell>Persistent stream with continuous frame-by-frame output</TableCell>
+      <TableCell>Live video transformation, VTuber avatars, generative overlays</TableCell>
+      <TableCell>ComfyStream</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LLM**</TableCell>
+      <TableCell>Text in, text out (OpenAI-compatible)</TableCell>
+      <TableCell>Chatbots, agents, copilots, text inference</TableCell>
+      <TableCell>LLM API (Ollama-based)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="BATCH AI" />
+
+## Batch AI pipelines
+
+Batch AI pipelines follow a request-and-response model: your application sends a job to the network, an orchestrator processes it, and you receive the result. There is no persistent connection. The GPU is assigned to your job, completes the inference, and is released.
+
+The Livepeer network supports the following batch pipelines:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>What it does</TableCell>
+      <TableCell header>Min VRAM</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image`</TableCell>
+      <TableCell>Generate images from text prompts</TableCell>
+      <TableCell>24 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image`</TableCell>
+      <TableCell>Style transfer, enhancement, img2img</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-video`</TableCell>
+      <TableCell>Animate images into video clips</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text`</TableCell>
+      <TableCell>Generate captions or descriptions for images</TableCell>
+      <TableCell>4 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>Speech recognition (ASR) with timestamps</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`text-to-speech`</TableCell>
+      <TableCell>Generate natural speech from text</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`upscale`</TableCell>
+      <TableCell>Upscale low-resolution images without distortion</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`segment-anything-2`</TableCell>
+      <TableCell>Promptable visual segmentation for images and video</TableCell>
+      <TableCell>~16 GB</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Orchestrators keep one model per pipeline "warm" -- loaded and ready in GPU memory. Requesting a model that no orchestrator currently has warm still works, but the first response is slower while the model loads (30 seconds to several minutes). Warm model availability per pipeline is listed on each pipeline's reference page.
+
+Batch pipelines are accessed through the AI Gateway API. Gateway options include the Studio-managed gateway and the free community gateway. See [Developer Stack](/v2/developers/concepts/developer-stack) for a full comparison.
+
+**Where to start:** [AI Quickstart](/v2/developers/get-started/ai-quickstart)
+
+<CustomDivider middleText="REAL-TIME AI" />
+
+## Real-time AI
+
+Real-time AI on Livepeer is built around the `live-video-to-video` pipeline type. Unlike batch pipelines, real-time AI maintains a persistent stream connection: video frames flow in continuously, inference runs on each frame, and transformed frames flow back out at sub-second latency.
+
+The infrastructure model differs from batch processing in four ways:
+
+- **Connection:** Persistent WebRTC or RTMP stream, not request/response
+- **Billing:** Per second of compute, not per pixel or per output
+- **GPU assignment:** Dedicated to your stream for its full duration
+- **Output:** Continuous frame-by-frame results, not a single returned asset
+
+{/* REVIEW: Confirm exact billing unit with Rick/Mehrdad -- per-second confirmed in go-livepeer CHANGELOG but exact developer-facing pricing model needs verification. */}
+
+**ComfyStream** is the primary tool for building real-time AI pipelines on Livepeer. It is an open-source ComfyUI plugin (`github.com/livepeer/comfystream`) that turns ComfyUI's node-graph workflow editor into a real-time inference engine for live video. Daydream is built on ComfyStream -- if you are using the Daydream API, you are already running on this infrastructure.
+
+### Use cases
+
+Real-time AI on Livepeer supports:
+
+- Live video style transfer and artistic transformation
+- Interactive generative overlays for live streams
+- Real-time scene augmentation and frame-by-frame computer vision
+
+### VTuber and agent avatar infrastructure
+
+VTuber avatar generation is the most technically demanding real-time AI use case. It requires sub-100ms latency, face/body tracking input, and a real-time diffusion pipeline running at 20+ FPS. Livepeer's real-time AI infrastructure supports this via ComfyStream.
+
+The **Agent SPE** -- a treasury-funded Special Purpose Entity approved in April 2025 with 30,000 LPT -- built the first production VTuber and AI avatar pipeline on Livepeer. Its deliverables are:
+
+- A real-time agent avatar generation pipeline using ComfyStream and StreamDiffusion
+- A Livepeer model provider plugin for the [Eliza](https://github.com/elizaos/eliza) agent framework (ai16z), enabling Eliza agents to route LLM inference through the Livepeer network
+
+**Technical path for VTuber / avatar products:**
+
+1. ComfyStream as the real-time inference engine -- see [Build with ComfyStream](/v2/developers/build/comfystream)
+2. `live-video-to-video` pipeline type via the AI gateway
+3. StreamDiffusion custom nodes from [ComfyUI-Stream-Pack](https://github.com/livepeer/ComfyUI-Stream-Pack) for diffusion-based avatar transformation
+4. GPU requirements: NVIDIA RTX 3090 or better; RTX 4090 recommended for 25 FPS
+
+**Where to start for VTuber / avatar:** [ComfyStream Quickstart](/v2/developers/get-started/comfystream-quickstart)
+
+**Where to start for AI agents with avatar output:** [Build an AI Agent on Livepeer](/v2/developers/guides/tutorials/build-an-ai-agent-on-livepeer)
+
+**Limitation:** Real-time AI requires a dedicated GPU for the duration of the stream. At peak network load, orchestrator availability for `live-video-to-video` is lower than for batch pipelines. Test under expected concurrency before production launch.
+
+<CustomDivider middleText="LLM PIPELINE" />
+
+## LLM pipeline
+
+The LLM pipeline brings text inference to the Livepeer network using an Ollama-based runner with an OpenAI-compatible API. From a developer's perspective, it works like any OpenAI-compatible chat completions endpoint. Requests route to decentralised GPU orchestrators rather than a centralised cloud provider.
+
+The LLM pipeline runs on a wider range of GPU hardware than diffusion-based batch pipelines. An orchestrator needs as little as 8 GB of VRAM to serve LLM workloads, making it accessible to a larger pool of network participants.
+
+{/* REVIEW: Confirm LLM pipeline production status vs beta with Rick or Mehrdad before removing this note. Referenced in go-livepeer CHANGELOG as updated to OpenAI-compatible format. */}
+
+The **LLM SPE** built and maintains this pipeline. The **Cloud SPE** provides managed gateway access to it, making decentralised LLM inference available at `https://livepeer.studio/api/beta/generate/llm` with a Studio API key and no infrastructure setup.
+
+### Working with the LLM pipeline
+
+The LLM endpoint accepts the OpenAI `/v1/chat/completions` request format:
+
+```bash
+curl -X POST https://livepeer.studio/api/beta/generate/llm \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "messages": [
+      {"role": "user", "content": "Explain Livepeer in one sentence."}
+    ]
+  }'
+```
+
+Supported models include `meta-llama/Meta-Llama-3.1-8B-Instruct` (warm, 8 GB VRAM), `mistralai/Mistral-7B-Instruct-v0.3`, `google/gemma-2-9b-it`, and `Qwen/Qwen2.5-7B-Instruct`. Any Ollama-compatible model works -- cold-start applies to models not currently loaded on any orchestrator.
+
+The LLM pipeline supports applications that need:
+
+- Text or code generation
+- Conversational agents and chatbots
+- AI copilots embedded in applications
+- Decentralised, open-source model inference without proprietary API dependency
+
+**Where to start:** [AI Quickstart](/v2/developers/get-started/ai-quickstart) -- [Build an AI Agent on Livepeer](/v2/developers/guides/tutorials/build-an-ai-agent-on-livepeer) for the Eliza integration tutorial
+
+<CustomDivider middleText="CHOOSE YOUR PATH" />
+
+## Choose your path
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>If your workload is...</TableCell>
+      <TableCell header>Use</TableCell>
+      <TableCell header>Latency</TableCell>
+      <TableCell header>Setup complexity</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Generating images or video on demand</TableCell>
+      <TableCell>Batch AI (text-to-image, image-to-video)</TableCell>
+      <TableCell>Seconds</TableCell>
+      <TableCell>Low</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Processing audio to text</TableCell>
+      <TableCell>Batch AI (audio-to-text)</TableCell>
+      <TableCell>Seconds</TableCell>
+      <TableCell>Low</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Captioning or analysing images</TableCell>
+      <TableCell>Batch AI (image-to-text, segment-anything-2)</TableCell>
+      <TableCell>Seconds</TableCell>
+      <TableCell>Low</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Live video transformation, avatars, VTubers, overlays</TableCell>
+      <TableCell>Real-time AI (live-video-to-video via ComfyStream)</TableCell>
+      <TableCell>Sub-second</TableCell>
+      <TableCell>Medium-High</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Text/code inference, chatbots, agents</TableCell>
+      <TableCell>LLM pipeline</TableCell>
+      <TableCell>Seconds</TableCell>
+      <TableCell>Low-Medium</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Custom AI model or pipeline (BYOC)</TableCell>
+      <TableCell>Real-time AI + BYOC</TableCell>
+      <TableCell>Sub-second</TableCell>
+      <TableCell>High</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+The key question: does your application transform a live stream continuously, or process one piece of media at a time? Continuous live transformation requires real-time AI. One-at-a-time processing uses batch AI.
+</Note>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={3}>
+  <Card title="AI Quickstart" href="/v2/developers/get-started/ai-quickstart">
+    Make your first batch AI inference call via the AI Gateway API.
+  </Card>
+  <Card title="ComfyStream Quickstart" href="/v2/developers/get-started/comfystream-quickstart">
+    Build and run a real-time AI video pipeline with ComfyStream.
+  </Card>
+  <Card title="Build an AI Agent" href="/v2/developers/guides/tutorials/build-an-ai-agent-on-livepeer">
+    Connect an Eliza agent to the Livepeer LLM pipeline.
+  </Card>
+  <Card title="AI Model Support" href="/v2/developers/build/model-support">
+    All supported models, warm model availability, and VRAM requirements.
+  </Card>
+  <Card title="BYOC" href="/v2/developers/build/byoc">
+    Deploy a custom model container on the Livepeer network.
+  </Card>
+  <Card title="Grants & Programmes" href="/v2/developers/guides/opportunities/grants-and-programmes">
+    Agent SPE, LLM SPE, and Cloud SPE details, plus funded builder programmes.
+  </Card>
+</CardGroup>

@@ -1,5 +1,5 @@
 # Project State — Content Writing Pipeline
-> Last updated: 2026-04-06
+> Last updated: 2026-04-09
 > This file must be read at the start of every AI session and updated after every agent batch.
 
 ---
@@ -16,6 +16,7 @@
 
 | Output file | Notes | Unblocks |
 |---|---|---|
+| docs-v2-dev into docs-v2 import-fix merge PR | Dedicated merge branch `codex/20260409-docs-v2-dev-into-docs-v2-import-fixes` pushed and opened as draft PR #876; branch includes consolidation `Links.jsx`, canonical symbol-import fixes, and a conflict-resolved merge against current `docs-v2` | Unblocks human review of the docs-v2 promotion surface without working directly on the source worktree |
 | Delegators canonical IA rebuild | `v2/delegators/**` now follows the canonical portal/concepts/delegation/guides/resources model; the live Delegators routes were rebuilt, glossary/reference surfaces normalized, and the preview/generator dependencies repaired to support the new IA | Unblocks focused review of the live Delegators tab and a human-owned cleanup commit for any tracked shadow-source removals |
 | Gateway single-click deployment path migration | `v2/gateways/setup/install/community-projects.mdx` was moved to `v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx`; docs.json, scoped navigation mirrors, active gateway cross-links, redirects, and generated page indexes now point at the new canonical route | Unblocks staging/review of the gateway deployment-details move without leaving broken active links on the old route |
 | Production governance cutover | `operations/governance/**` and `operations/config/**` now operate as the production control plane; governance-sensitive PRs require explicit approval labels plus PR-body evidence; active/current governance reports and docs were cleaned to the steady-state architecture; and the ownerless handover report was generated | Unblocks production review of the governance model without relying on bridge-era behavior or undocumented approval process |
@@ -125,6 +126,7 @@
 | REVIEW | Production Governance Cutover | The production governance model is implemented and validated, but `.github/workspace/framework-canonical.md` and `.github/workspace/decisions-log.mdx` remain intentionally transitional workflow-governance inputs under bounded review cadence rather than final retired surfaces | 2026-04-06 |
 | REVIEW | Developers Tab Restructure and Content Promotion | The Developers IA/nav/content restructure is implemented and locally validated, but promoted product/external claims still need a primary-source verification pass and the tracked archive moves require a human-owned deletion commit with `--trailer "allow-deletions=true"` | 2026-04-06 |
 | REVIEW | Delegators Canonical IA Rebuild | The live Delegators routes are rebuilt and validated, but `_workspace/TO-ADD/files/**` remains as tracked shadow source content and scoped preview did not prove the legacy redirect routes even though `docs.json` contains the redirect entries | 2026-04-06 |
+| REVIEW | docs-v2-dev into docs-v2 merge PR | Draft PR #876 is the active merge surface and now contains the merge-worktree import/runtime fixes, but final scoped browser reruns plus a clean `docs-v2-dev` PR-check report are still required before merge readiness can be claimed | 2026-04-09 |
 
 ---
 

@@ -1,0 +1,1142 @@
+---
+title: Blockchain Contracts
+sidebarTitle: Blockchain Contracts
+description: >-
+  Architecture overview of all Livepeer protocol smart contracts on Arbitrum One and Ethereum Mainnet. What each
+  contract does, how contracts interact, and how upgrades work through governance.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer
+  - livepeer protocol
+  - livepeer smart contracts
+  - livepeer contract architecture
+  - blockchain contracts
+  - blockchain
+  - contracts
+  - livepeer BondingManager
+  - livepeer TicketBroker
+  - livepeer Controller
+  - livepeer Governor
+  - livepeer RoundsManager
+  - livepeer Minter
+  - livepeer ServiceRegistry
+  - livepeer protocol contracts
+  - arbitrum contracts
+  - ethereum contracts
+  - smart contract upgrade
+  - governance upgrade
+'og:title': Livepeer Blockchain Contracts Architecture Overview
+'og:description': >-
+  How Livepeer protocol smart contracts work on Arbitrum One and Ethereum Mainnet. Staking, payments, governance, and
+  service discovery.
+'twitter:card': summary_large_image
+'og:image': /snippets/assets/media/og-images/en/page-blockchain-contracts.png
+'og:image:alt': Livepeer Docs social preview image for Blockchain Contracts
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+pageType: concept
+purpose: concept
+lastVerified: 2026-04-03T00:00:00.000Z
+---
+
+{/*
+VERIFICATION LOG — 28 March 2026
+Sources: Blockscout MCP (Arbitrum One chain 42161), GitHub livepeer/protocol delta branch, livepeer/governor-scripts
+
+Errors corrected from previous version:
+1. Governor functions: Transaction[] → Update memory (correct Solidity type from Governor.sol source)
+2. Governor: added cancel(Update memory _update) — exists in source, was missing
+3. Governor: status line now sourced from generated pipeline facts
+4. BondingManager: added public checkpointBondingState(address _account) — external function in source
+5. BondingManager: added transferBond() — public function used in practice, was missing
+6. BondingManager: claimEarnings — added note that _endRound is unused; earnings always claimed to current round
+7. TicketBroker: WinningTicketRedeemed is correct but WinningTicketTransfer is also emitted (ETH movement) — both documented
+8. TicketBroker: getSender() → getSenderInfo() — correct function name from source
+9. TicketBroker: getReserve() → getReserveInfo() — correct function name from source
+10. TicketBroker: added fundDepositAndReserveFor() — separate public function exists in source
+11. L1 Gateway Badge: "gren" → "green" (typo fix)
+12. Controller: removed static "20 transactions" count — Controller is actively used in every round
+13. BondingManager V11 target note: added unverified source note
+
+Enhancements added:
+- Slashing note in BondingManager (disabled via governance)
+- Both TicketBroker events documented
+- BondingManager _endRound clarification
+*/}
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink, LinkIcon } from '/snippets/components/elements/links/Links.jsx'
+import { Subtitle, CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { AddressLinks } from '/snippets/components/elements/links/Links.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { ArbitrumIcon, ArbitrumSVG, LivepeerIcon, LivepeerSVG } from '/snippets/components/elements/icons/Icons.jsx'
+import { SolidityEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { FunctionField as FField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
+import { DataWrap } from '/snippets/components/elements/text/DataWrap.jsx'
+import { blockchainContractsPageData } from '/snippets/data/contract-addresses/blockchainContractsPageData.jsx'
+import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import {
+  contractsRoutes,
+  getBlockchainContract,
+  getBlockchainCodeHref,
+  getBlockchainContractAddress,
+  getBlockchainContracts,
+  getBlockchainExplorerHref,
+  getBlockchainLastVerifiedDate,
+  getNamedBlockchainContract,
+  getBlockchainRawCodeHref,
+} from '/snippets/data/contract-addresses/view-model.jsx'
+
+<Note>
+  Use [Contract Addresses]({contractsRoutes.reference}) for the current official registry and
+  [Verify Contract Addresses]({contractsRoutes.verifier}) for browser-based or manual self-verification workflows.
+</Note>
+
+<Tip>
+  Addresses on this page are automatically updated via a GitHub Action workflow. <br/>
+  <FlexContainer align="center" marginTop="0.2rem"> Data is recovered from live chain state, upstream source provenance, and explorer verification before it is published on the canonical contracts page. </FlexContainer> <br/>
+  <Subtitle style={{marginTop: "0.5rem"}}> Last Verified: <DataWrap value={getBlockchainLastVerifiedDate(blockchainContractsPageData)} /> </Subtitle>
+</Tip>
+
+<Columns cols={2}>
+  <Card
+    href="https://github.com/livepeer/protocol"
+    icon="github"
+    title={<>Livepeer Protocol Source <br/>  <Badge color="green"> Commit Pinned </Badge></>}
+    horizontal
+  />
+  <Card
+    href="https://arbiscan.io/accounts/label/livepeer"
+    icon="cubes"
+    title={<>Livepeer Contracts Arbiscan <br/>  <Badge color="green"> On-chain Canonical </Badge></>}
+    horizontal
+  />
+  <Card title="Solidity Protocol Contracts" icon="github" href="https://github.com/livepeer/protocol/tree/delta/contracts" horizontal />
+  <Card title="Solidity LPT Bridge Contracts" icon="github" href="https://github.com/livepeer/arbitrum-lpt-bridge/tree/main/contracts" horizontal />
+</Columns>
+
+<CustomDivider />
+Livepeer uses a system of Ethereum smart contracts to permissionlessly govern its decentralised network.
+
+The [Livepeer Protocol](https://github.com/livepeer/protocol/tree/delta) <LivepeerIcon size={12} color="var(--accent)"/> is deployed on [Arbitrum One](https://arbiscan.io/accounts/label/livepeer) <ArbitrumIcon size={14} color="var(--arbitrum)"/> and uses these contracts to govern:
+
+- Livepeer Token (LPT) ownership and delegation
+- Staking and selection of active orchestrators
+- Distribution of inflationary rewards and fees to participants
+- Time-based progression of the protocol through rounds
+- Payment processing through a probabilistic micropayment system
+
+## Livepeer Contracts
+
+There are three categories of contracts in the Livepeer Protocol as well as migration contacts:
+
+1. **[Core Protocol Contracts](#core-protocol-contracts)** – staking, payments, round progression, and service discovery
+2. **[Token and Utility Contracts](#token-and-utility-contracts)** – the LPT token and bridge infrastructure
+3. **[Governance Contracts](#governance-contracts)** – on-chain voting, proposal execution, and treasury management
+4. **[Migration Contracts](#migration-contracts)** – historical Confluence upgrade contracts, migration complete
+
+<LazyLoad>
+<ScrollableDiagram title="Contract Interaction Architecture" maxHeight="1000px" maxWidth="100%" showControls={true}>
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+graph TB
+    subgraph "Registry"
+        Controller["Controller\nContract Registry"]
+    end
+
+    subgraph "Discovery"
+        ServiceRegistry["ServiceRegistry\nOrchestrator URI Mapping"]
+        AIServiceRegistry["AIServiceRegistry\nAI Capability Registration"]
+    end
+
+    subgraph "Economic"
+        LPT["LivepeerToken\nERC-20"]
+        BondingManager["BondingManager\nStaking & Rewards"]
+        TicketBroker["TicketBroker\nMicropayments"]
+        Minter["Minter\nToken Inflation"]
+    end
+
+    subgraph "Time"
+        RoundsManager["RoundsManager\nProtocol Rounds"]
+    end
+
+    subgraph "Governance"
+        BondingVotes["BondingVotes\nStake Checkpointing"]
+        Governor["Governor\nUpgrade Executor"]
+        LivepeerGovernor["LivepeerGovernor\nOn-chain Voting"]
+        Treasury["Treasury\nProtocol Treasury"]
+    end
+
+    subgraph "Participants"
+        Gateway["Gateway Node"]
+        Orchestrator["Orchestrator Node"]
+        Delegator["LPT Holder"]
+    end
+
+    Controller -.->|"Address Lookup"| LPT
+    Controller -.->|"Address Lookup"| BondingManager
+    Controller -.->|"Address Lookup"| TicketBroker
+    Controller -.->|"Address Lookup"| RoundsManager
+    Controller -.->|"Address Lookup"| Minter
+    Controller -.->|"Address Lookup"| ServiceRegistry
+    Controller -.->|"Address Lookup"| BondingVotes
+    Controller -.->|"Address Lookup"| LivepeerGovernor
+    Controller -.->|"Address Lookup"| Treasury
+
+    Delegator -->|"approve() LPT"| LPT
+    Delegator -->|"bond(amount, orch)"| BondingManager
+    Delegator -->|"castVote()"| LivepeerGovernor
+    BondingManager -->|"transferFrom()"| LPT
+    BondingManager -->|"checkpointBondingState()"| BondingVotes
+
+    Orchestrator -->|"transcoder(rewardCut, feeShare)"| BondingManager
+    Orchestrator -->|"setServiceURI(url)"| ServiceRegistry
+    Orchestrator -->|"reward()"| BondingManager
+    BondingManager -->|"createReward()"| Minter
+    Minter -->|"mint() new LPT"| LPT
+    Minter -->|"trustedTransferTokens()"| Treasury
+
+    Gateway -->|"fundDepositAndReserve()"| TicketBroker
+    Orchestrator -->|"redeemWinningTicket()"| TicketBroker
+    TicketBroker -->|"winningTicketTransfer()"| LPT
+
+    RoundsManager -->|"currentRound()"| BondingManager
+    RoundsManager -->|"blockHashForRound()"| TicketBroker
+
+    BondingVotes -->|"getPastVotes()"| LivepeerGovernor
+    LivepeerGovernor -->|"execute()"| Governor
+    Governor -->|"setContractInfo()"| Controller
+```
+
+</ScrollableDiagram>
+</LazyLoad>
+
+<CustomDivider style={{marginBottom: "-2rem"}} />
+
+## Core Protocol Contracts
+
+The core protocol contracts manage staking, delegation, reward distribution, round progression, payment processing, and service discovery. The Controller serves as the central registry – upgrading a contract means registering a new target implementation address via the Controller, while the proxy address remains stable.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+graph LR
+    D[Delegator] -->|"bond / unbond"| BM[BondingManager]
+    O[Orchestrator] -->|"register / reward"| BM
+    O -->|"set URI"| SR[ServiceRegistry]
+    G[Gateway] -->|"fund deposit"| TB[TicketBroker]
+    O -->|"redeem ticket"| TB
+    BM -->|"create reward"| M[Minter]
+    M -->|"mint LPT"| LPT[LivepeerToken]
+    TB -->|"pay fees"| LPT
+    RM[RoundsManager] -.->|"round timing"| BM
+    RM -.->|"block hash"| TB
+```
+
+---
+
+#### **Controller** <Subtitle text="Contract Registry" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The Controller is the central registry for all protocol contracts. Every other contract resolves peer contract addresses by calling `getContract(keccak256("<n>"))` on the Controller. Upgrades are applied by registering a new implementation address under the same name hash – the proxy addresses never change.
+
+<Accordion  title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Controller"/>} >
+  <AddressLinks
+  address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'Controller')}
+  blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'Controller')}
+  githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'Controller')}
+/>
+{/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registry · Active_
+
+**Purpose**:
+
+- Central address registry for all protocol contracts
+- Enables contract upgrades while keeping proxy addresses stable
+- Provides `pause()`/`unpause()` for emergency system-wide halts
+- Owner is the Governor contract – all upgrades must go through governance
+
+**Key functions** (from `Controller.sol`):
+
+<FField name="getContract" returns="address" params={["bytes32 _id"]}>
+  Look up a registered contract by keccak256 name hash
+</FField>
+<FField name="getContractInfo" returns="(address, bytes20)" params={["bytes32 _id"]}>
+  Returns address and git commit hash
+</FField>
+<FField name="setContractInfo" params={["bytes32 _id", "address _contractAddress", "bytes20 _gitCommitHash"]}>
+  Register or update a contract; callable by owner (Governor) only
+</FField>
+<FField name="pause">
+  Halt all contracts that check `controller.paused()`
+</FField>
+<FField name="unpause">
+  Resume all contracts that check `controller.paused()`
+</FField>
+<FField name="updateController" params={["bytes32 _id", "address _controller"]}>
+  Update the Controller reference in a registered contract
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'controller')}
+  title={<DoubleIconLink label="Controller.sol"/>}
+  filename="Controller.sol"
+/>
+
+</Accordion>
+
+#### **BondingManager** <Subtitle text="Staking and Delegation" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The BondingManager is the most critical economic contract in the protocol. It manages the active orchestrator pool as a sorted doubly-linked list, handles all LPT bonding and unbonding, and distributes inflationary rewards and fees each round.
+
+The `feeShare` in the protocol is defined as: **the percentage of fees paid to delegators by the transcoder (orchestrator)**. It is not the gateway's cut – it is the orchestrator's share of fees that they pass on to their delegators.
+
+Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid to delegators by transcoder".
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="BondingManager" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'BondingManager', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'BondingManager', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'BondingManager', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved · Target V13_
+
+**Purpose**:
+
+- Manages the active orchestrator pool (sorted by stake using SortedDoublyLL)
+- Handles `bond()`, `unbond()`, and `withdrawStake()` for all delegators
+- Distributes inflationary LPT rewards to orchestrators and their delegators each round
+- Manages the unbonding period – delegators must wait `unbondingPeriod` rounds before withdrawing
+- Tracks per-round earnings pools for each orchestrator
+- Calls `checkpointBondingState()` on BondingVotes on every state change for governance weight
+- Since Delta upgrade: sends `treasuryRewardCutRate` fraction of each reward to Treasury; contributions halt automatically when treasury balance exceeds `treasuryBalanceCeiling`
+
+<Info>
+  **Slashing:** `slashTranscoder()` exists in the contract but is currently inoperative: the Verifier role is set to the null address (`0x000...`). Slashing could be re-enabled via governance by configuring the Verifier role and making necessary compatibility updates. It is out of scope for current audits.
+</Info>
+
+**Key functions** (from `BondingManager.sol`, `delta` branch):
+
+<FField name="bond" params={["uint256 _amount", "address _to"]}>
+  Delegate LPT stake to an orchestrator
+</FField>
+<FField name="unbond" params={["uint256 _amount"]}>
+  Begin withdrawal; creates an unbonding lock, starts the unbonding period
+</FField>
+<FField name="rebond" params={["uint256 _unbondingLockId"]}>
+  Cancel unbonding and re-bond stake to current delegate
+</FField>
+<FField name="rebondFromUnbonded" params={["address _to", "uint256 _unbondingLockId"]}>
+  Re-bond to a new orchestrator from unbonded state
+</FField>
+<FField name="withdrawStake" params={["uint256 _unbondingLockId"]}>
+  Complete withdrawal after unbonding period expires
+</FField>
+<FField name="withdrawFees" params={["address payable _recipient", "uint256 _amount"]}>
+  Withdraw accumulated ETH fees to a recipient address
+</FField>
+<FField name="transcoder" params={["uint256 _rewardCut", "uint256 _feeShare"]}>
+  Register as an orchestrator or update parameters; `_rewardCut` is % of reward kept by orchestrator; `_feeShare` is % of fees passed to delegators
+</FField>
+<FField name="reward">
+  Called by active orchestrators each round to mint inflationary LPT and distribute to earnings pool
+</FField>
+<FField name="claimEarnings" params={["uint256 _endRound"]}>
+  Claim accumulated rewards and fees. Note: `_endRound` is unused; earnings are always claimed through the current round regardless of the value passed.
+</FField>
+<FField name="checkpointBondingState" params={["address _account"]}>
+  Publicly callable function to fix a stale voting power checkpoint for any account. Useful for operators after an inconsistent state.
+</FField>
+<FField name="transferBond" params={["address _delegator", "uint256 _amount", "address _oldDelegateNewPosPrev", "address _oldDelegateNewPosNext", "address _newDelegateNewPosPrev", "address _newDelegateNewPosNext"]}>
+  Transfer ownership of a bond (or portion) to a new delegator. Used for stake migrations between wallets.
+</FField>
+<FField name="pendingStake" returns="uint256" params={["address _addr", "uint256 _endRound"]}>
+  Returns unclaimed pending stake for a delegator through the current round
+</FField>
+<FField name="pendingFees" returns="uint256" params={["address _addr", "uint256 _endRound"]}>
+  Returns unclaimed pending ETH fees for a delegator through the current round
+</FField>
+<FField name="getTranscoder" params={["address _transcoder"]}>
+  Returns orchestrator state: lastRewardRound, rewardCut, feeShare, activationRound, deactivationRound, cumulativeRewards, cumulativeFees, lastFeeRound
+</FField>
+<FField name="getDelegator" params={["address _delegator"]}>
+  Returns delegator state: bondedAmount, fees, delegateAddress, delegatedAmount, startRound, lastClaimRound, nextUnbondingLockId
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'bonding-manager')}
+  title={<DoubleIconLink label="BondingManager.sol"/>}
+  filename="BondingManager.sol"
+/>
+
+</Accordion>
+
+#### **TicketBroker** <Subtitle text="Probabilistic Micropayments" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM) system. Gateways pre-fund a deposit and reserve on-chain; they send lottery tickets to orchestrators off-chain with each transcoding job. Orchestrators redeem winning tickets on-chain to claim payment. This amortises per-segment payment costs across many tickets.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="TicketBroker" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'TicketBroker', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'TicketBroker', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'TicketBroker', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved_
+
+**Purpose**:
+
+- Holds gateway ETH deposits and reserves
+- Validates and settles winning probabilistic payment tickets
+- Manages the unlock period before gateways can withdraw funds
+- Tracks claimed reserves per orchestrator per round to prevent over-redemption
+- Emits `WinningTicketRedeemed` (ticket redemption attempt) and `WinningTicketTransfer` (ETH actually moved) events used for on-chain payment monitoring
+
+**Key functions** (from `MixinTicketBrokerCore.sol`):
+
+<FField name="fundDeposit">
+  Gateway adds ETH to deposit (payable)
+</FField>
+<FField name="fundReserve">
+  Gateway adds ETH to reserve (payable)
+</FField>
+<FField name="fundDepositAndReserve" params={["uint256 _depositAmount", "uint256 _reserveAmount"]}>
+  Fund both deposit and reserve in one call (payable); msg.value must equal the sum of both amounts
+</FField>
+<FField name="fundDepositAndReserveFor" params={["address _addr", "uint256 _depositAmount", "uint256 _reserveAmount"]}>
+  Fund deposit and reserve on behalf of another address (payable)
+</FField>
+<FField name="redeemWinningTicket" params={["Ticket memory _ticket", "bytes memory _sig", "uint256 _recipientRand"]}>
+  Orchestrator redeems a winning ticket; transfers ETH to fee pool via BondingManager. Emits both `WinningTicketTransfer` and `WinningTicketRedeemed`.
+</FField>
+<FField name="unlock">
+  Gateway initiates the withdrawal unlock period; emits `Unlock`
+</FField>
+<FField name="cancelUnlock">
+  Gateway cancels an in-progress unlock; emits `UnlockCancelled`
+</FField>
+<FField name="withdraw">
+  Gateway withdraws all deposit and reserve after unlock period; emits `Withdrawal`
+</FField>
+<FField name="getSenderInfo" returns="(Sender memory sender, ReserveInfo memory reserve)" params={["address _sender"]}>
+  Returns full sender state: deposit amount, withdrawRound, and reserve info
+</FField>
+<FField name="isUnlockInProgress" returns="bool" params={["address _sender"]}>
+  Returns whether a sender has an unlock in progress
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'ticket-broker')}
+  title={<DoubleIconLink label="TicketBroker.sol"/>}
+  filename="TicketBroker.sol"
+/>
+
+</Accordion>
+
+#### **RoundsManager** <Subtitle text="Protocol Time Management" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The RoundsManager defines the protocol's time unit. A round is a fixed number of Arbitrum blocks. The current round must be initialised before orchestrators can call `reward()`. It stores per-round block hashes used as randomness for ticket validation.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="RoundsManager" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'RoundsManager', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'RoundsManager', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'RoundsManager', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved_
+
+**Purpose**:
+
+- Tracks the current round number and round length in blocks
+- Stores block hashes per round for ticket randomness (used by TicketBroker)
+- Enforces the round lock period – orchestrators cannot change parameters during the lock window at end of each round
+- `initializeRound()` must be called at the start of each new round before reward calls proceed
+
+**Key functions** (from `RoundsManager.sol`):
+
+<FField name="initializeRound">
+  Initialise a new round; callable by any address; updates block hash store and lip upgrade rounds
+</FField>
+<FField name="currentRound" returns="uint256">
+  Returns current round number
+</FField>
+<FField name="currentRoundInitialized" returns="bool">
+  Returns whether the current round has been initialised
+</FField>
+<FField name="currentRoundLocked" returns="bool">
+  Returns whether the current round is in its lock period
+</FField>
+<FField name="blockHashForRound" returns="bytes32" params={["uint256 _round"]}>
+  Returns the stored block hash for a given round
+</FField>
+<FField name="roundLength" returns="uint256">
+  Returns round length in blocks
+</FField>
+<FField name="roundLockAmount" returns="uint256">
+  Returns lock period as a percentage of round length (MathUtils percPoint)
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'rounds-manager')}
+  title={<DoubleIconLink label="RoundsManager.sol"/>}
+  filename="RoundsManager.sol"
+/>
+
+</Accordion>
+
+#### **Minter** <Subtitle text="Token Inflation" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The Minter controls LPT token inflation. Each round it calculates the mintable token supply based on the configured inflation rate. Since the Delta upgrade (LIP-91), a configurable fraction of each round's reward is minted to the Treasury rather than solely to orchestrators and delegators.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Minter" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'Minter')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'Minter')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'Minter')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active_
+
+**Purpose**:
+
+- Manages LPT token inflation schedule
+- Calculates mintable tokens per round based on current `inflation` rate and total LPT supply
+- Adjusts inflation up or down each round based on actual bonding rate vs `targetBondingRate`
+- Called by BondingManager during orchestrator `reward()` calls – not called directly
+- Holds ETH received from TicketBroker redemptions and disburses to orchestrators
+
+**Key functions** (from `Minter.sol`):
+
+<FField name="createReward" returns="uint256" params={["uint256 _fracNum", "uint256 _fracDenom"]}>
+  Called only by BondingManager; mints a fraction of mintable tokens for the round as a reward
+</FField>
+<FField name="trustedTransferTokens" params={["address _to", "uint256 _amount"]}>
+  Transfer LPT to an address; callable by BondingManager only
+</FField>
+<FField name="trustedBurnTokens" params={["uint256 _amount"]}>
+  Burn LPT; callable by BondingManager only
+</FField>
+<FField name="trustedWithdrawETH" params={["address payable _to", "uint256 _amount"]}>
+  Withdraw ETH to an address; callable by BondingManager only
+</FField>
+<FField name="depositETH">
+  Receive ETH from TicketBroker on ticket redemption (payable)
+</FField>
+<FField name="currentMintableTokens" returns="uint256">
+  Returns LPT mintable in the current round
+</FField>
+<FField name="currentMintedTokens" returns="uint256">
+  Returns LPT already minted in the current round
+</FField>
+<FField name="inflation" returns="uint256">
+  Returns current inflation rate as a MathUtils percPoint value
+</FField>
+<FField name="inflationChange" returns="uint256">
+  Returns per-round inflation adjustment amount
+</FField>
+<FField name="targetBondingRate" returns="uint256">
+  Returns the target bonding rate that inflation adjusts towards
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'minter')}
+  title={<DoubleIconLink label="Minter.sol"/>}
+  filename="Minter.sol"
+/>
+
+</Accordion>
+
+#### **ServiceRegistry** <Subtitle text="Orchestrator Discovery" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service URI on-chain. Gateway nodes query this registry during network initialisation to discover orchestrators. Each update emits a `ServiceURIUpdate` event that off-chain indexers track.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="ServiceRegistry" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'ServiceRegistry', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'ServiceRegistry', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'ServiceRegistry', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved_
+
+**Purpose**:
+
+- Allows orchestrators to register and update their service endpoint URIs
+- Enables gateway nodes to discover orchestrators when using `-network arbitrum-one-mainnet`
+- Not used when a gateway specifies `-orchAddr` directly
+
+**Key functions** (from `ServiceRegistry.sol`):
+
+<FField name="setServiceURI" params={["string calldata _serviceURI"]}>
+  Orchestrator registers or updates their HTTPS endpoint; emits `ServiceURIUpdate(address indexed _addr, string _serviceURI)`
+</FField>
+<FField name="getServiceURI" returns="string" params={["address _addr"]}>
+  Returns the registered URI for a given orchestrator address
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'service-registry')}
+  title={<DoubleIconLink label="ServiceRegistry.sol"/>}
+  filename="ServiceRegistry.sol"
+/>
+
+</Accordion>
+
+#### **AIServiceRegistry** <Subtitle text="AI Capability Registration" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+A standalone ServiceRegistry for AI subnet orchestrators. Detached from the Controller – its address is hardcoded in go-livepeer (`starter.go`) rather than resolved dynamically. Deployed by a different deployer than the main protocol contracts.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="AIServiceRegistry" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'AIServiceRegistry')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'AIServiceRegistry')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'AIServiceRegistry')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Deployment artifact confirmed · Runtime consumer confirmed · Active_
+
+**Purpose**:
+
+- Stores service URI and capability metadata for AI-enabled orchestrators
+- Used when a node is started with `-aiServiceRegistry` flag
+- Same interface as ServiceRegistry (`setServiceURI`, `getServiceURI`)
+</Accordion>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Token and Utility Contracts
+
+The LivepeerToken contract originates on Ethereum Mainnet and is bridged to Arbitrum One via paired gateway contracts, with a BridgeMinter handling L1 mint operations.
+All active protocol operations use the Arbitrum One representation.
+LPT must be bridged before it can be staked, delegated, or used for payments.
+<Info>
+Livepeer moved from Ethereum Mainnet to Arbitrum One in 2022 (the Confluence upgrade) to increase throughput and reduce fees.
+
+On Ethereum Mainnet, only the `LivepeerToken` and `BridgeMinter` contracts remain operational. All other Ethereum Mainnet protocol contracts are paused.
+</Info>
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+graph TB
+    subgraph "Ethereum Mainnet"
+        L1LPT["LivepeerToken (origin)"]
+        BridgeMinter["BridgeMinter"]
+        L1GW["L1LPTGateway"]
+        ESC["L1Escrow"]
+    end
+    subgraph "Arbitrum One"
+        L2LPT["LivepeerToken (bridged)"]
+        L2GW["L2LPTGateway"]
+        Minter["Minter (inflation)"]
+    end
+    L1GW -->|"lock LPT"| ESC
+    L2GW -->|"mint on L2"| L2LPT
+    BridgeMinter -->|"mint on L1"| L1LPT
+    Minter -->|"mint rewards"| L2LPT
+    L1GW <-.->|"Arbitrum bridge"| L2GW
+```
+
+---
+
+#### **LivepeerToken (LPT)** <Subtitle text="ERC-20 Token" />
+<Badge color="green">
+  Ethereum Mainnet (origin)
+</Badge>
+
+The LivepeerToken is the native protocol token. It is an ERC-20 with AccessControl-based MINTER_ROLE and BURNER_ROLE. The canonical token contract lives on Ethereum Mainnet; a bridged representation exists on Arbitrum One.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<LivepeerIcon color="var(--accent)" size={13} />} title="LivepeerToken" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'LivepeerToken')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'LivepeerToken')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'LivepeerToken')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active_
+
+**Address (Ethereum Mainnet)**:
+
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'ethereumMainnet', 'LivepeerToken')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'ethereumMainnet', 'LivepeerToken')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'LivepeerToken')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active_
+
+**Purpose**:
+
+- ERC-20 token used for bonding, staking, gateway payment reserves, and governance voting weight
+- `approve()` must be called before bonding or funding deposits
+- On Arbitrum One: minted by Minter (inflationary rewards) and by the bridge (inflows from L1)
+
+**Key functions** (from `LivepeerToken.sol`, inherits [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/token/erc20) ERC20 + ERC20Permit + ERC20Burnable + AccessControl):
+
+<FField name="transfer / transferFrom / approve / balanceOf / totalSupply / allowance">
+  Standard ERC-20 interface
+</FField>
+<FField name="permit" params={["..."]}>
+  EIP-2612 gasless approval
+</FField>
+<FField name="mint" params={["address _to", "uint256 _amount"]}>
+  Callable only by MINTER_ROLE (Minter contract on Arbitrum, BridgeMinter on L1)
+</FField>
+<FField name="burn" params={["uint256 _amount"]}>
+  Callable only by BURNER_ROLE
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'livepeer-token-arbitrum')}
+  title={<DoubleIconLink label="LivepeerToken.sol (L2)"/>}
+  filename="LivepeerToken.sol"
+/>
+
+</Accordion>
+
+#### **BridgeMinter** <Subtitle text="L1 Bridge Minting" />
+
+<Badge color="green">Ethereum Mainnet</Badge>
+
+Holds MINTER_ROLE on the L1 LivepeerToken. Called by the bridge when LPT is transferred from Arbitrum back to Ethereum Mainnet, minting the corresponding L1 LPT.
+
+<Info>
+  `BridgeMinter.sol` is an Ethereum Mainnet contract predating the Delta upgrade.
+  <FlexContainer align="center" marginTop="0.5rem"> See <DoubleIconLink label="BridgeMinter.sol" href={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')}/> on the `streamflow` branch of `livepeer/protocol`</FlexContainer>
+</Info>
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<Icon icon="ethereum" color="var(--hero-text)"/>} title="BridgeMinter" />}>
+  **Address (Ethereum Mainnet)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'BridgeMinter')} />
+  <Icon icon="check" color="var(--text)"/> _Verified · Bridge-derived · Active_
+
+**Purpose**:
+
+- Holds MINTER_ROLE on the L1 LivepeerToken contract
+- Called exclusively by L1LPTGateway when LPT is bridged from Arbitrum back to Ethereum Mainnet
+- Also callable by L1Migrator for migration operations (`withdrawETHToL1Migrator`, `withdrawLPTToL1Migrator`)
+- Registered with the Ethereum Mainnet Controller (`0xF96D54E490317c557A967ABfA5d6e33006BE69b3`)
+
+**Key functions** (from `BridgeMinter.sol`, `streamflow` branch):
+
+<FField name="bridgeMint" params={["address _to", "uint256 _amount"]}>
+  Mint LPT to an address; callable by L1LPTGateway only
+</FField>
+<FField name="withdrawETHToL1Migrator" returns="uint256">
+  Send contract ETH balance to L1Migrator; callable by L1Migrator only
+</FField>
+<FField name="withdrawLPTToL1Migrator" returns="uint256">
+  Send contract LPT balance to L1Migrator; callable by L1Migrator only
+</FField>
+<FField name="migrateToNewMinter" params={["address _newMinterAddr"]}>
+  Transfer token ownership and balances to a new Minter; callable by Controller owner only
+</FField>
+<FField name="depositETH" returns="bool">
+  Accept ETH deposits; required for migration compatibility with older Minter implementations (payable)
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'bridge-minter')}
+  title={<DoubleIconLink label="BridgeMinter.sol"/>}
+  filename="BridgeMinter.sol"
+/>
+
+</Accordion>
+
+#### **L1 LPTGateway / L2 LPTGateway** <Subtitle text="Token Bridge" />
+<Badge color="green">
+  Ethereum Mainnet
+</Badge>
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+Paired bridge gateway contracts on Ethereum Mainnet (L1) and Arbitrum One (L2). LPT bridged L1→L2 is locked in L1Escrow; LPT bridged L2→L1 is released from escrow or minted via BridgeMinter. Based on the Dai bridge architecture.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Bridge Gateways" />}>
+  **L2LPTGateway (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'L2LPTGateway')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'L2LPTGateway')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'L2LPTGateway')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+  <Icon icon="check" color="var(--text)"/> _Verified · Bridge-derived · Bridge artifact confirmed · Active_
+
+**L1LPTGateway (Ethereum Mainnet)**:
+
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'ethereumMainnet', 'L1LPTGateway')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'ethereumMainnet', 'L1LPTGateway')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'L1LPTGateway')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+  <Icon icon="check" color="var(--text)"/> _Verified · Bridge-derived · Bridge artifact confirmed · Active_
+
+**L1Escrow (Ethereum Mainnet)**:
+
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'ethereumMainnet', 'L1Escrow')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'ethereumMainnet', 'L1Escrow')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'ethereumMainnet', 'L1Escrow')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+  <Icon icon="check" color="var(--text)"/> _Verified · Bridge-derived · Bridge artifact confirmed · Active_
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'l2-lpt-gateway')}
+  title={<DoubleIconLink label="L2LPTGateway.sol"/>}
+  filename="L2LPTGateway.sol"
+/>
+
+</Accordion>
+
+#### **LivepeerTokenFaucet** <Subtitle text="Local development utility" />
+<Badge color="surface">Local development</Badge>
+
+<Note>Local development utility contract.</Note>
+
+<CustomDivider />
+
+## Governance Contracts
+
+The Delta upgrade ([LIP-89](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-89.md), [LIP-91](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-91.md) - October 2023) introduced full on-chain governance alongside the [Livepeer Treasury](/v2/about/protocol/treasury). The governance system consists of four contracts working together: BondingVotes checkpoints voting power, LivepeerGovernor manages proposal voting, Treasury holds protocol funds, and Governor executes approved upgrades.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+graph LR
+    BM[BondingManager] -->|"checkpoint"| BV[BondingVotes]
+    D[Delegator] -->|"castVote()"| LG[LivepeerGovernor]
+    BV -->|"voting power"| LG
+    LG -->|"queue"| T[Treasury / Timelock]
+    T -->|"execute"| GOV[Governor]
+    GOV -->|"update contracts"| C[Controller]
+    MINT[Minter] -.->|"trustedTransferTokens()"| T
+```
+
+---
+
+#### **BondingVotes** <Subtitle text="Voting Power Checkpointing" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+BondingVotes implements the ERC-5805 votes interface, storing per-round stake checkpoints for every delegator and orchestrator. The LivepeerGovernor queries it to determine voting power at proposal creation time. Checkpoints are written automatically by BondingManager on every bond, unbond, reward, and earnings claim.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="BondingVotes" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'BondingVotes', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'BondingVotes', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'BondingVotes', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved · Target V2_
+
+**Purpose**:
+
+- Stores per-round stake checkpoints for every participant
+- Implements ERC-5805 (`getPastVotes`, `getPastTotalSupply`) used by LivepeerGovernor
+- Checkpoints are written by BondingManager – not called directly by users
+- Supports delegator vote overrides: a delegator can override their orchestrator's vote
+
+**Key functions** (from `BondingVotes.sol`, `delta` branch):
+
+<FField name="checkpointBondingState" params={["address _owner", "uint256 _startRound", "uint256 _bondedAmount", "address _delegateAddress", "uint256 _delegatedAmount", "uint256 _lastClaimRound", "uint256 _lastRewardRound"]}>
+  Called by BondingManager to checkpoint stake state; not callable directly by users
+</FField>
+<FField name="checkpointTotalActiveStake" params={["uint256 _totalStake", "uint256 _round"]}>
+  Checkpoint total active stake; called by BondingManager
+</FField>
+<FField name="getPastVotes" returns="uint256" params={["address _account", "uint256 _round"]}>
+  Returns voting power for an account at the start of a given round
+</FField>
+<FField name="getPastTotalSupply" returns="uint256" params={["uint256 _round"]}>
+  Returns total voting power (active stake) at a given round
+</FField>
+<FField name="hasCheckpoint" returns="bool" params={["address _account"]}>
+  Returns whether an account has any checkpointed stake
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'bonding-votes')}
+  title={<DoubleIconLink label="BondingVotes.sol"/>}
+  filename="BondingVotes.sol"
+/>
+
+</Accordion>
+
+#### **Governor** <Subtitle text="Protocol Upgrade Executor" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+The original upgrade execution contract. Holds the owner role on the Controller. Executes protocol upgrades (contract address updates, parameter changes) via a staged update queue with a configurable block delay.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Governor" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'Governor')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'Governor')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'Governor')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Deployment artifact confirmed · Active_
+
+**Purpose**:
+
+- Owns the Controller contract – only address that can call `setContractInfo()`
+- Executes protocol upgrade transactions after governance approval
+- Enforces a staged execution queue with a mandatory block-number delay
+
+**Key functions** (from `Governor.sol`):
+
+<FField name="stage" params={["Update memory _update", "uint256 _delay"]}>
+  Queue a batch of upgrade transactions with a delay in blocks; callable by owner only; emits `UpdateStaged`
+</FField>
+<FField name="execute" params={["Update memory _update"]}>
+  Execute a queued update after its block delay has elapsed; emits `UpdateExecuted`
+</FField>
+<FField name="cancel" params={["Update memory _update"]}>
+  Cancel a staged update; callable by owner only; emits `UpdateCancelled`
+</FField>
+
+The `Update` struct contains: `address[] target`, `uint256[] value`, `bytes[] data`, `uint256 nonce`.
+
+`owner` is a public state variable (not a function) returning the current owner address.
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'governor')}
+  title={<DoubleIconLink label="Governor.sol"/>}
+  filename="Governor.sol"
+/>
+
+</Accordion>
+
+#### **LivepeerGovernor** <Subtitle text="On-Chain Voting" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+Implements [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance)'s upgradeable Governor framework adapted for Livepeer's stake-weighted voting. Voting power equals bonded LPT as recorded by BondingVotes at proposal creation time. Supports GovernorCountingOverridable – delegators can override their orchestrator's vote on any proposal.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="LivepeerGovernor" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'LivepeerGovernor', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'LivepeerGovernor', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'LivepeerGovernor', 'proxy')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active · Proxy target resolved_
+
+**Purpose**:
+
+- On-chain voting for protocol proposals, weighted by bonded LPT stake
+- Delegators can override their orchestrator's vote (GovernorCountingOverridable)
+- Passed proposals execute through the Treasury timelock, then through the Governor to the Controller
+- `bumpGovernorVotesTokenAddress()` must be called if BondingVotes address ever changes
+
+**Key functions** (from `LivepeerGovernor.sol`, `delta` branch):
+
+<FField name="initialize" params={["uint256 _initialVotingDelay", "uint256 _initialVotingPeriod", "uint256 _initialProposalThreshold", "uint256 _initialQuorumNumerator", "TimelockControllerUpgradeable _timelock", "address _controller"]}>
+  One-time initialisation via proxy
+</FField>
+<FField name="propose" returns="uint256" params={["address[] memory targets", "uint256[] memory values", "bytes[] memory calldatas", "string memory description"]}>
+  Submit a new governance proposal; returns proposalId
+</FField>
+<FField name="castVote" returns="uint256" params={["uint256 proposalId", "uint8 support"]}>
+  Cast a vote (0=Against, 1=For, 2=Abstain)
+</FField>
+<FField name="castVoteWithReason" returns="uint256" params={["uint256 proposalId", "uint8 support", "string calldata reason"]}>
+  Vote with explanation
+</FField>
+<FField name="queue" returns="uint256" params={["address[] memory targets", "uint256[] memory values", "bytes[] memory calldatas", "bytes32 descriptionHash"]}>
+  Queue a passed proposal into the timelock
+</FField>
+<FField name="execute" returns="uint256" params={["address[] memory targets", "uint256[] memory values", "bytes[] memory calldatas", "bytes32 descriptionHash"]}>
+  Execute a queued proposal after timelock delay
+</FField>
+<FField name="quorumDenominator" returns="uint256">
+  Returns `MathUtils.PERC_DIVISOR` (the quorum denominator)
+</FField>
+<FField name="bumpGovernorVotesTokenAddress">
+  Update the internal BondingVotes reference if its address has changed
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'livepeer-governor')}
+  title={<DoubleIconLink label="LivepeerGovernor.sol"/>}
+  filename="LivepeerGovernor.sol"
+/>
+
+</Accordion>
+
+#### **Treasury** <Subtitle text="Protocol Treasury" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+An [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance#TimelockController) TimelockControllerUpgradeable that holds the protocol's on-chain treasury. A configurable percentage of each round's inflationary LPT rewards is directed here by the Minter. All disbursements require a passed LivepeerGovernor proposal. Automatic contributions halt when the treasury balance exceeds `treasuryBalanceCeiling` (configured in BondingManager).
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Treasury" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'Treasury')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'Treasury')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'Treasury')} />
+  {/* CHANGELOG PIPELINE UPDATE */}
+<Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Active_
+
+**Purpose**:
+
+- Receives a fraction of each round's inflationary LPT rewards (rate set by `treasuryRewardCutRate` in BondingManager)
+- Governed entirely by LivepeerGovernor – all disbursements require a passed proposal
+- Implements TimelockController – all operations have a mandatory delay between queue and execution
+- Contributions automatically halt when LPT balance exceeds `treasuryBalanceCeiling`
+- Funds Special Purpose Entities (SPEs) and ecosystem grants via governance proposals
+
+**Key functions** ([OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance#TimelockController)) TimelockControllerUpgradeable):
+
+<FField name="schedule" params={["address target", "uint256 value", "bytes calldata data", "bytes32 predecessor", "bytes32 salt", "uint256 delay"]}>
+  Schedule an operation; callable by proposer role (LivepeerGovernor)
+</FField>
+<FField name="execute" params={["address target", "uint256 value", "bytes calldata payload", "bytes32 predecessor", "bytes32 salt"]}>
+  Execute a ready operation; callable by executor role
+</FField>
+<FField name="cancel" params={["bytes32 id"]}>
+  Cancel a pending operation; callable by canceller role
+</FField>
+<FField name="isOperation" returns="bool" params={["bytes32 id"]}>
+  Check if an operation exists
+</FField>
+<FField name="isOperationReady" returns="bool" params={["bytes32 id"]}>
+  Check if an operation is past its delay and ready to execute
+</FField>
+<FField name="getMinDelay" returns="uint256">
+  Returns the minimum delay for all operations
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'treasury')}
+  title={<DoubleIconLink label="Treasury.sol"/>}
+  filename="Treasury.sol"
+/>
+
+</Accordion>
+
+<CustomDivider />
+
+## Migration Contracts
+
+The [Confluence upgrade (2022)](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e) migrated the Livepeer protocol from Ethereum Mainnet to Arbitrum One.
+These contracts facilitated that migration.
+<br />The migration is complete - no new migrations are possible - but both contracts remain registered in the Controller.
+<Info> L2Migrator continues to process pending `claimStake` calls from participants who have not yet claimed their migrated stake as of March 2026.</Info>
+
+#### **L2Migrator** <Subtitle text="Stake Migration" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+
+Facilitated the migration of bonded stake and delegations from Ethereum Mainnet to Arbitrum One during the Confluence upgrade. Participants who migrated on L1 claim their Arbitrum-side stake by calling `claimStake()` here. The contract still holds residual ETH and continues to receive `claimStake` calls from participants who have not yet claimed.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="L2Migrator" />}>
+  **Proxy Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'proxy')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'proxy')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'proxy')} />
+  **Current Target (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'target')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'target')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'L2Migrator', 'target')} />
+  <Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Migration · Proxy target resolved_
+
+**Purpose**:
+
+- Receives cross-chain migration messages from the L1Migrator via the Arbitrum bridge
+- Allows participants to claim their migrated bonded stake on Arbitrum One via `claimStake()`
+- Allows delegators to claim migrated delegations via `claimDelegatorStake()`
+- Holds residual ETH from migration fee payments; no new migrations are possible
+
+**Key functions**:
+
+<FField name="claimStake" params={["address _delegate", "uint256 _stake", "uint256 _fees", "address[] calldata _delegators", "uint256[] calldata _delegatorStakes"]}>
+  Claim migrated stake on Arbitrum One; callable by participants who completed an L1 migration
+</FField>
+<FField name="finalizeMigrateDelegator" params={["address _l1Addr", "address _l2Addr", "address _delegate", "uint256 _stake", "uint256 _fees"]}>
+  Finalise a delegator migration initiated on L1; called via the bridge
+</FField>
+
+</Accordion>
+
+#### **MerkleSnapshot** <Subtitle text="Migration Proof Verification" />
+<Badge color="blue">
+  Arbitrum One
+</Badge>
+
+Stores Merkle roots used to verify stake snapshots taken at the time of the Confluence migration. Used internally by L2Migrator to validate migration claims.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="MerkleSnapshot" />}>
+  **Address (Arbitrum One)**:
+  <AddressLinks address={getBlockchainContractAddress(blockchainContractsPageData, 'arbitrumOne', 'MerkleSnapshot')} blockchainHref={getBlockchainExplorerHref(blockchainContractsPageData, 'arbitrumOne', 'MerkleSnapshot')} githubHref={getBlockchainCodeHref(blockchainContractsPageData, 'arbitrumOne', 'MerkleSnapshot')} />
+  <Icon icon="check" color="var(--text)"/> _Verified · Controller registered · Migration_
+
+**Purpose**:
+
+- Stores Merkle root snapshots (keyed by snapshot ID) set at migration time
+- Provides `verify()` for L2Migrator to validate that a claimed stake amount was included in the original snapshot
+- Read-only in practice; `setSnapshot()` is callable only by the Controller owner and has not been called since the migration
+
+**Key functions** (from `MerkleSnapshot.sol`):
+
+<FField name="verify" returns="bool" params={["bytes32 _id", "bytes32[] calldata _proof", "bytes32 _leaf"]}>
+  Verify a Merkle proof against a stored snapshot root
+</FField>
+<FField name="setSnapshot" params={["bytes32 _id", "bytes32 _root"]}>
+  Store a Merkle root for a given snapshot ID; callable by Controller owner only
+</FField>
+
+**Contract**
+
+<SolidityEmbed
+  url={getBlockchainRawCodeHref(blockchainContractsPageData, 'merkle-snapshot')}
+  title={<DoubleIconLink label="MerkleSnapshot.sol"/>}
+  filename="MerkleSnapshot.sol"
+/>
+
+</Accordion>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2rem 0"}}/>
+
+## Full Address Reference
+
+For the complete list of all current, paused, migration-residual, legacy-operational, and historical contract addresses across Arbitrum One and Ethereum Mainnet, see the [Contract Addresses](/v2/about/resources/reference/livepeer-contract-addresses) reference page.
+
+<Icon icon="check" color="var(--lp-color-text-secondary)"/> <span className="lp-text-italic-muted">Last Verified {<DataWrap value={blockchainContractsPageData.meta.lastVerified} />}</span>
+
+<Card
+    href="/v2/about/resources/reference/livepeer-contract-addresses"
+    icon="file-code"
+    title={<> Contract Address Reference Page · Livepeer Docs <br/> <Badge color="surface"> <><Icon icon="user-robot" color="var(--text)"/> Automatically Updated </></Badge></>}
+    horizontal
+    arrow
+/>
+<Columns cols={2}>
+  <Card
+    href="https://github.com/livepeer/protocol"
+    icon="github"
+    title={<>Livepeer Protocol Source <br/>  <Badge color="green"> Commit Pinned </Badge></>}
+    horizontal
+  />
+  <Card
+    href="https://arbiscan.io/accounts/label/livepeer"
+    icon="cubes"
+    title={<>Livepeer Contracts Arbiscan <br/>  <Badge color="green"> On-chain Canonical </Badge></>}
+    horizontal
+  />
+</Columns>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="coins" title="Livepeer Token" />} href="/v2/about/protocol/livepeer-token" horizontal arrow>
+    LPT token mechanics, supply, minting, and the role of the token in the protocol.
+  </Card>
+  <Card title={<CustomCardTitle icon="vault" title="Treasury" />} href="/v2/about/protocol/treasury" horizontal arrow>
+    On-chain treasury, funding proposals, SPEs, and the treasury balance ceiling.
+  </Card>
+  <Card title={<CustomCardTitle icon="landmark" title="Governance" />} href="/v2/about/protocol/governance-model" horizontal arrow>
+    On-chain voting, proposal lifecycle, and delegator vote overrides.
+  </Card>
+  <Card title={<CustomCardTitle icon="chart-line" title="Economics" />} href="/v2/about/protocol/economics" horizontal arrow>
+    Inflation model, bonding rate targets, reward distribution, and fee economics.
+  </Card>
+</Columns>

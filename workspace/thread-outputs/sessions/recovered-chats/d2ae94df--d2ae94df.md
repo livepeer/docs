@@ -10189,14 +10189,14 @@ Good — I have enough now. Let me compile the findings and respond.
 
 | Tab | Sections (current) |
 |---|---|
-| `home` | `about-livepeer`, `get-started`, `solutions` |
+| `home` | `about`, `get-started`, `solutions` |
 | `about` | `core-concepts`, `livepeer-network`, `livepeer-protocol`, `resources` |
 | `solutions` | `daydream`, `embody`, `frameworks`, `livepeer-studio`, `streamplace` |
 | `developers` | `build`, `concepts`, `developer-tools`, `get-started`, `guides`, `opportunities`, `resources`, `technical-references` |
 | `gateways` | `concepts`, `quickstart`, `setup`, `guides`, `resources` |
 | `orchestrators` | `concepts`, `quickstart`, `setup`, `guides`, `resources` |
 | `lpt` | `about`, `delegation`, `governance`, `treasury`, `resources` |
-| `community` | `livepeer-community`, `livepeer-connect`, `livepeer-contribute`, `resources` |
+| `community` | `community`, `connect`, `contribute`, `resources` |
 | `resources` | `changelog`, `concepts`, `documentation-guide`, `lpt`, `references`, `resources` |
 
 **What you already designed for orchestrators** (dep-IA.mdx):
@@ -48956,7 +48956,7 @@ Waiting on your direction.
 The output file `/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/CONTENT-WRITING/context-packs/about-v1-content.md` is complete. It contains all 41 source files concatenated with clear separators:
 
 - 36 files from `_dep-docs/about/` (index, core-concepts, faq-about, portal, livepeer-overview, mental-model, all livepeer-network/* pages, all livepeer-network/livepeer-actors/* pages, all livepeer-protocol/* pages, all resources/* pages, core-concepts/concepts/actors, all x-deprecated/* files)
-- 5 files from `_dep-docs/home/about-livepeer/` (ecosystem, vision, evolution, roadmap, benefits)
+- 5 files from `_dep-docs/home/about/` (ecosystem, vision, evolution, roadmap, benefits)
 
 The file is approximately 3,750 lines long and uses the format:
 ```

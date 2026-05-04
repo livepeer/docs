@@ -15,6 +15,11 @@ on:
         required: false
         default: false
         type: boolean
+      dry_run:
+        description: "Fetch and preview data without writing files or committing"
+        required: false
+        default: false
+        type: boolean
       version:
         description: "Optional version override for livepeer-release mode"
         required: false
@@ -38,13 +43,51 @@ on:
         description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
         type: boolean
         default: false
+      dry_run:
+        description: "Fetch and preview data without writing files or committing"
+        type: boolean
+        default: false
       version:
         description: "Optional version override for livepeer-release mode"
         required: false
         type: string
+  schedule:
+    # Per-feed cron schedules. Mode resolved from cron expression in resolve-mode step.
+    - cron: "0 0 * * *"      # 00:00 UTC daily — forum + ghost-blog
+    - cron: "0 1 * * *"      # 01:00 UTC daily — discord
+    - cron: "0 2 * * *"      # 02:00 UTC daily — github
+    - cron: "0 3 * * *"      # 03:00 UTC daily — rss-blog
+    - cron: "0 0 * * 0"      # 00:00 UTC Sunday weekly — youtube
 
 jobs:
+  resolve-mode:
+    runs-on: ubuntu-latest
+    outputs:
+      modes: ${{ steps.resolve.outputs.modes }}
+    steps:
+      - name: Resolve modes from trigger
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            case "${{ github.event.schedule }}" in
+              "0 0 * * *")    echo 'modes=["forum","ghost-blog"]' >> "$GITHUB_OUTPUT" ;;
+              "0 1 * * *")    echo 'modes=["discord"]' >> "$GITHUB_OUTPUT" ;;
+              "0 2 * * *")    echo 'modes=["github"]' >> "$GITHUB_OUTPUT" ;;
+              "0 3 * * *")    echo 'modes=["rss-blog"]' >> "$GITHUB_OUTPUT" ;;
+              "0 0 * * 0")    echo 'modes=["youtube"]' >> "$GITHUB_OUTPUT" ;;
+              *)              echo 'modes=[]' >> "$GITHUB_OUTPUT" ;;
+            esac
+          else
+            echo 'modes=["${{ inputs.mode }}"]' >> "$GITHUB_OUTPUT"
+          fi
+
   data-refresh:
+    needs: resolve-mode
+    if: ${{ needs.resolve-mode.outputs.modes != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: ${{ fromJSON(needs.resolve-mode.outputs.modes) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -70,6 +113,16 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Resolve dry-run flag
+        id: flags
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "dry_run_flag=--dry-run" >> "$GITHUB_OUTPUT"
+            echo "Running in dry-run mode — no files will be written"
+          else
+            echo "dry_run_flag=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run selected refresh mode
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
@@ -77,25 +130,26 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           CHANNEL_ID: UCzfHtZnmUzMbJDxGCwIgY2g
         run: |
-          case "${{ inputs.mode }}" in
+          DRY_RUN_FLAG="${{ steps.flags.outputs.dry_run_flag }}"
+          case "${{ matrix.mode }}" in
             forum)
-              node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js $DRY_RUN_FLAG
               ;;
             ghost-blog)
-              node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js $DRY_RUN_FLAG
               ;;
             youtube)
-              node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js $DRY_RUN_FLAG
               ;;
             github)
-              node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js
-              node operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js $DRY_RUN_FLAG
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js $DRY_RUN_FLAG
               ;;
             discord)
-              node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js $DRY_RUN_FLAG
               ;;
             rss-blog)
-              node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js
+              node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js $DRY_RUN_FLAG
               ;;
             livepeer-release)
               if [[ -n "${{ inputs.version }}" ]]; then
@@ -105,13 +159,20 @@ jobs:
               fi
               ;;
             *)
-              echo "Unsupported data-refresh mode: ${{ inputs.mode }}"
+              echo "Unsupported data-refresh mode: ${{ matrix.mode }}"
               exit 1
               ;;
           esac
 
+      - name: Write lastUpdated timestamp
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          FORMATTED=$(date -u +"%-d %B %Y")
+          echo "export const socialFeedsLastUpdated = \"${FORMATTED}\";" > snippets/data/social-feeds/lastUpdated.jsx
+          echo "Timestamp written: ${FORMATTED}"
+
       - name: Read updated release version
-        if: ${{ inputs.mode == 'livepeer-release' }}
+        if: ${{ matrix.mode == 'livepeer-release' }}
         id: version
         run: |
           VERSION=$(grep -oP 'latestVersion = "\K[^"]+' snippets/data/globals/latestRelease.jsx || echo "")
@@ -119,9 +180,11 @@ jobs:
           echo "Updated version: ${VERSION}"
 
       - name: Check for generated changes
+        if: ${{ inputs.dry_run != true }}
         id: git-check
         run: |
-          case "${{ inputs.mode }}" in
+          git diff --exit-code snippets/data/social-feeds/lastUpdated.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+          case "${{ matrix.mode }}" in
             forum)
               git diff --exit-code snippets/data/social-feeds/forumData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
               ;;
@@ -141,40 +204,40 @@ jobs:
               git diff --exit-code snippets/data/globals/latestRelease.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              echo "Unsupported diff mode: ${{ inputs.mode }}"
+              echo "Unsupported diff mode: ${{ matrix.mode }}"
               exit 1
               ;;
           esac
 
       - name: Commit and push if changed
-        if: ${{ steps.git-check.outputs.changed == 'true' }}
+        if: ${{ inputs.dry_run != true && steps.git-check.outputs.changed == 'true' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          case "${{ inputs.mode }}" in
+          case "${{ matrix.mode }}" in
             forum)
-              git add snippets/data/social-feeds/forumData.jsx
+              git add snippets/data/social-feeds/forumData.jsx snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "chore: update forum data [skip ci]"
               ;;
             ghost-blog)
-              git add snippets/data/social-feeds/ghostBlogData.jsx
+              git add snippets/data/social-feeds/ghostBlogData.jsx snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "chore: update Ghost blog data [skip ci]"
               ;;
             youtube)
-              git add snippets/data/social-feeds/youtubeData.jsx
+              git add snippets/data/social-feeds/youtubeData.jsx snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "Update YouTube videos - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
               ;;
             github)
-              git add snippets/data/social-feed-solutions
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "chore: update GitHub discussions & releases data [skip ci]"
               ;;
             discord)
-              git add snippets/data/social-feed-solutions snippets/data/social-feeds/discordAnnouncementsData.jsx
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/discordAnnouncementsData.jsx snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "chore: update Discord announcements data [skip ci]"
               ;;
             rss-blog)
-              git add snippets/data/social-feed-solutions
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/lastUpdated.jsx
               git commit -m "chore: update RSS blog data [skip ci]"
               ;;
             livepeer-release)
@@ -182,7 +245,7 @@ jobs:
               git commit -m "chore: update go-livepeer release to ${{ steps.version.outputs.version }} [skip ci]"
               ;;
             *)
-              echo "Unsupported commit mode: ${{ inputs.mode }}"
+              echo "Unsupported commit mode: ${{ matrix.mode }}"
               exit 1
               ;;
           esac

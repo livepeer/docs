@@ -29,9 +29,9 @@ Browser harness notes:
 
 | Page | Components verified | Renders correctly? | Notes |
 |------|-------------------|-------------------|-------|
-| `/v2/home/about-livepeer/vision` | `CustomDivider` | Yes | Divider rendered in the expected accent styling above the prev/next navigation area. Screenshot: `/tmp/visual-verification-20260309/home-custom-divider.png` |
+| `/v2/home/about/vision` | `CustomDivider` | Yes | Divider rendered in the expected accent styling above the prev/next navigation area. Screenshot: `/tmp/visual-verification-20260309/home-custom-divider.png` |
 | `/v2/developers/ai-inference-on-livepeer/overview` | `PreviewCallout` | Yes | Preview callout rendered with the expected accent styling, centered copy, and links. Screenshot: `/tmp/visual-verification-20260309/ai-preview-callout.png` |
-| `/v2/community/livepeer-community/trending-topics` | `DiscordAnnouncements`, `YouTubeVideo` coverage | Yes | Discord announcements block rendered correctly and video content/cards appeared as expected. Screenshot: `/tmp/visual-verification-20260309/community-trending.png` |
+| `/v2/community/connect/trending-topics` | `DiscordAnnouncements`, `YouTubeVideo` coverage | Yes | Discord announcements block rendered correctly and video content/cards appeared as expected. Screenshot: `/tmp/visual-verification-20260309/community-trending.png` |
 | `/v2/gateways/references/livepeer-exchanges` | `CoinGeckoExchanges` | Yes | Exchange table rendered; white text remained readable against colored badges/cells. Screenshot: `/tmp/visual-verification-20260309/coingecko-exchanges.png` |
 | `/v2/developers/portal` | `Portals` components | Yes | Hero section and portal card grid rendered correctly. Screenshot: `/tmp/visual-verification-20260309/developers-portal.png` |
 | `/v2/resources/documentation-guide/component-library/display` | frame-mode headings (`H1-H6`) | Partial | Section and tab controls rendered, but after selecting the `Headings` tab the live example area appeared empty in the current preview. Screenshot: `/tmp/visual-verification-20260309/display-frame-headings-2.png` |

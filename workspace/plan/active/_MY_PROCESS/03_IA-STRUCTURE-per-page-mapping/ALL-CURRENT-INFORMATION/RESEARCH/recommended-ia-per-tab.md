@@ -285,12 +285,12 @@ Community uses a lighter custom IA that fits its purpose. No canonical rename ne
 
 ```
 v2/community/
-├── community-portal.mdx          ⚠️ consider rename to portal.mdx for consistency
+├── portal.mdx          ⚠️ consider rename to portal.mdx for consistency
 ├── index.mdx                     ✅
 ├── faq.mdx                       ✅
-├── livepeer-community/           ✅ (guidelines, governance, topics, roadmap)
-├── livepeer-connect/             ✅ (events, forums, news)
-├── livepeer-contribute/          ✅ (build, contribute, opportunities)
+├── community/           ✅ (guidelines, governance, topics, roadmap)
+├── connect/             ✅ (events, forums, news)
+├── contribute/          ✅ (build, contribute, opportunities)
 └── resources/                    🔧 RESTRUCTURE
     ├── glossary.mdx              ← NEW (promote from compendium/)
     ├── compendium/glossary.mdx   keep
@@ -300,7 +300,7 @@ v2/community/
     │   └── guides.mdx            ← MOVE from resources/ root
 ```
 
-**Roadmap duplication**: `livepeer-community/roadmap.mdx` duplicates `v2/home/about-livepeer/roadmap.mdx`. One canonical location needed — recommend Home owns it, Community redirects.
+**Roadmap duplication**: `community/roadmap.mdx` duplicates `v2/home/about/roadmap.mdx`. One canonical location needed — recommend Home owns it, Community redirects.
 
 ---
 
@@ -315,7 +315,7 @@ v2/home/
 ├── primer.mdx                    ✅ (10-min overview)
 ├── get-started.mdx               ✅ (persona routing with cards)
 ├── trending.mdx                  ⚠️ stale risk
-├── about-livepeer/               ✅ (vision, evolution, ecosystem, benefits, roadmap)
+├── about/               ✅ (vision, evolution, ecosystem, benefits, roadmap)
 ├── get-started/                  🔴 4 STUBS ("Coming Soon")
 ├── solutions/                    ✅ (applications, landscape, showcase, verticals)
 └── resources/compendium/         ✅ (glossary)

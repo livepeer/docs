@@ -166,10 +166,10 @@ node operations/tests/integration/domain-pages-audit.js --staged --version both
 node operations/tests/integration/domain-pages-audit.js --base-url https://docs.livepeer.org --version both
 node operations/scripts/audits/content/health/page-links-audit.js --full --write-links
 node operations/scripts/audits/content/health/page-links-audit.js --staged --strict --report /tmp/page-links-audit-staged.md
-node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
+node operations/scripts/audits/content/health/page-links-audit.js --files v2/community/connect/trending-topics.mdx --strict
 node operations/scripts/audits/content/health/page-links-audit.js --full --external-policy validate --external-link-types navigational --no-write-links --report /tmp/page-links-audit-external.md --report-json /tmp/page-links-audit-external.json
 node operations/scripts/audits/content/health/page-imports-audit.js --staged --strict
-node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/livepeer-community/trending-topics.mdx --strict --no-repair --report /tmp/page-integrity.md
+node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/connect/trending-topics.mdx --strict --no-repair --report /tmp/page-integrity.md
 node operations/tests/integration/v2-wcag-audit.js --full
 node operations/tests/integration/v2-wcag-audit.js --full --no-fix
 node operations/tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json

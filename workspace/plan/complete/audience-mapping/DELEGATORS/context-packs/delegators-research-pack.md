@@ -57,7 +57,7 @@ Drafted but NOT in nav (held in `v2/lpt/delegation/TO-ADD/`):
 - `_dep-docs/about/livepeer-network/livepeer-actors/delegators.mdx`
 - `_dep-docs/resources/lpt/delegator-dashboard.mdx`
 - `_dep-docs/orchestrators_v1/advanced-setup/delegation.mdx`
-- `_dep-docs/developers/moved-to-about-livepeer-protocol/livepeer-actors/delegators.mdx`
+- `_dep-docs/developers/moved-to-about-protocol/livepeer-actors/delegators.mdx`
 
 ---
 

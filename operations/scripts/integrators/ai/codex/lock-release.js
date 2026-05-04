@@ -12,6 +12,7 @@
  * @usage       node operations/scripts/integrators/ai/codex/lock-release.js [flags]
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
@@ -215,7 +216,7 @@ function main() {
 
     lock.status = 'released';
     lock.released_at = new Date().toISOString();
-    fs.writeFileSync(abs, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
+    if (DRY_RUN) { console.log('[dry-run] Would write:', abs); } else { fs.writeFileSync(abs, `${JSON.stringify(lock, null, 2); }}\n`, 'utf8');
     releasedCount += 1;
   });
 

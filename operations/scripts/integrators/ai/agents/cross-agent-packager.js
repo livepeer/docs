@@ -12,6 +12,7 @@
  * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]
  */
 
+const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
 
@@ -168,7 +169,7 @@ function writeCodexPack(baseDirAbs, pipelineSkills, referenceSkills, catalog, ma
   };
 
   const manifestPath = path.join(packDir, 'skills-manifest.json');
-  fs.writeFileSync(manifestPath, `${JSON.stringify(payload, null, 2)}\n`);
+  if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPath); } else { fs.writeFileSync(manifestPath, `${JSON.stringify(payload, null, 2); }}\n`);
 
   return [toPosix(path.relative(REPO_ROOT, manifestPath))];
 }
@@ -238,7 +239,7 @@ function writeCursorPack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills, referenceSkills));
+  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { fs.writeFileSync(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
@@ -248,7 +249,7 @@ function writeClaudePack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const claudePath = path.join(packDir, 'CLAUDE.md');
-  fs.writeFileSync(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills, referenceSkills));
+  if (DRY_RUN) { console.log('[dry-run] Would write:', claudePath); } else { fs.writeFileSync(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, claudePath))];
 }
@@ -258,7 +259,7 @@ function writeWindsurfPack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills, referenceSkills));
+  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { fs.writeFileSync(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
@@ -289,7 +290,7 @@ function main() {
   }
 
   const readmePath = path.join(outputDirAbs, 'README.md');
-  fs.writeFileSync(readmePath, buildTopReadme(pipelineSkills));
+  if (DRY_RUN) { console.log('[dry-run] Would write:', readmePath); } else { fs.writeFileSync(readmePath, buildTopReadme(pipelineSkills); });
   generated.push(toPosix(path.relative(REPO_ROOT, readmePath)));
 
   console.log(`✅ ${STAGE_ID} generated ${generated.length} file(s):`);

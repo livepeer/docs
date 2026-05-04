@@ -2,7 +2,7 @@
 title: Video Transcoding Operations
 sidebarTitle: Video Transcoding
 description: >-
-  Configure video transcoding on your Livepeer orchestrator — wei and USD pricing, automatic price adjustment, session
+  Configure video transcoding on your Livepeer orchestrator – wei and USD pricing, automatic price adjustment, session
   limits, bandwidth calculation, NVENC session caps, and output rendition profiles.
 lifecycleStage: operate
 complexity: intermediate
@@ -40,13 +40,13 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-Video transcoding configuration turns on three operator decisions: price, safe concurrency, and output profile coverage. For hardware benchmarking, see the dedicated [Benchmarking Guide](/v2/orchestrators/guides/config-and-optimisation/capacity-planning).
+Video transcoding configuration turns on three operator decisions: price, safe concurrency, and output profile coverage. For hardware benchmarking, see the dedicated [Benchmarking Guide](/v2/Orchestrators/guides/config-and-optimisation/capacity-planning).
 
 <CustomDivider />
 
 ## How transcoding works
 
-When a broadcaster sends a live stream to a Livepeer gateway, the gateway segments the stream into roughly 2-second chunks and routes each segment to an orchestrator. Your node receives the raw segment, decodes it with NVDEC, re-encodes it to multiple output renditions using NVENC, and returns the results. The session persists for the duration of the stream – potentially hours. Your node processes dozens or hundreds of segments per session continuously.
+When a broadcaster sends a live stream to a Livepeer Gateway, the Gateway segments the stream into roughly 2-second chunks and routes each segment to an Orchestrator. Your node receives the raw segment, decodes it with NVDEC, re-encodes it to multiple output renditions using NVENC, and returns the results. The session persists for the duration of the stream – potentially hours. Your node processes dozens or hundreds of segments per session continuously.
 
 ```mermaid title="Video transcoding flow"
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
@@ -92,7 +92,7 @@ This charges 500 wei per output pixel. To work with more human-friendly numbers,
 ```
 
 <Note>
-  `-pixelsPerUnit` is the denominator. Setting it higher makes your effective per-pixel price lower. The per-pixel rate the gateway sees is `pricePerUnit ÷ pixelsPerUnit`.
+  `-pixelsPerUnit` is the denominator. Setting it higher makes your effective per-pixel price lower. The per-pixel rate the Gateway sees is `pricePerUnit ÷ pixelsPerUnit`.
 </Note>
 
 ### Option B: USD pricing (go-livepeer 0.8.0+)
@@ -121,7 +121,7 @@ livepeer \
 - `-pixelsPerUnit` supports exponential notation (`1e12`); `-pricePerUnit` does not
 - Use `-pixelsPerUnit` to keep `-pricePerUnit` as a readable decimal
 - The Chainlink ETH/USD feed on Arbitrum is auto-configured for mainnet – no additional setup required
-- Livepeer Studio pegs its `-maxPricePerUnit` to USD, so USD pricing on your node stays in sync with the gateway side automatically
+- Livepeer Studio pegs its `-maxPricePerUnit` to USD, so USD pricing on your node stays in sync with the Gateway side automatically
 
 **Custom currency or non-Arbitrum networks:**
 
@@ -206,21 +206,21 @@ Check your node logs – the updated price appears in the startup or config log 
 
 </StyledSteps>
 
-### What gateways pay – and what you need to know
+### What Gateways pay – and what you need to know
 
-Gateways set a maximum price they will pay via `-maxPricePerUnit`. Any orchestrator with a price above that maximum receives zero work from that gateway. This threshold is a hard binary – above it you are invisible to that gateway, below it you are in the pool.
+Gateways set a maximum price they will pay via `-maxPricePerUnit`. Any Orchestrator with a price above that maximum receives zero work from that Gateway. This threshold is a hard binary – above it you are invisible to that Gateway, below it you are in the pool.
 
-Within the pool, gateways weigh price, stake, and performance score. Lower prices increase your selection probability. Being above the ceiling guarantees no work.
+Within the pool, Gateways weigh price, stake, and performance score. Lower prices increase your selection probability. Being above the ceiling guarantees no work.
 
 **Checking current market rates:**
 
-Compare your price to active orchestrators on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Filter by active set members and look at advertised price. The median active price is a reasonable starting anchor – price competitively while staying above your cost floor.
+Compare your price to active Orchestrators on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Filter by Active Set members and look at advertised price. The median active price is a reasonable starting anchor – price competitively while staying above your cost floor.
 
 <CustomDivider />
 
 ## Session limits
 
-Your session limit is the maximum number of concurrent transcoding sessions your node accepts. When you exceed it, the node returns `OrchestratorCapped` to gateways. The default is **10 sessions**.
+Your session limit is the maximum number of concurrent transcoding sessions your node accepts. When you exceed it, the node returns `OrchestratorCapped` to Gateways. The default is **10 sessions**.
 
 Set it via `-maxSessions`:
 
@@ -232,7 +232,7 @@ livepeer \
   # ...
 ```
 
-The right value is the **minimum of your hardware capacity and your bandwidth capacity**. Set it too high and you degrade transcoding quality and get penalised by gateway performance scoring; set it too low and you leave money on the table.
+The right value is the **minimum of your hardware capacity and your bandwidth capacity**. Set it too high and you degrade transcoding quality and get penalised by Gateway performance scoring; set it too low and you leave money on the table.
 
 ### Calculating hardware capacity
 
@@ -264,7 +264,7 @@ In this example, your hardware limit is 4 sessions for this GPU.
 
 **Multi-GPU:** Benchmark one GPU, then multiply by the number of identical GPUs. For different GPU models, benchmark each separately.
 
-For the full benchmarking walkthrough including test stream download and CSV output analysis, see [Benchmarking](/v2/orchestrators/guides/config-and-optimisation/capacity-planning).
+For the full benchmarking walkthrough including test stream download and CSV output analysis, see [Benchmarking](/v2/Orchestrators/guides/config-and-optimisation/capacity-planning).
 
 ### Calculating bandwidth capacity
 
@@ -357,7 +357,7 @@ The NVIDIA driver enforces the NVENC session cap. An open-source patch removes t
 
 ## Output rendition profiles
 
-The standard ABR (Adaptive Bitrate) ladder on the Livepeer network assumes a 1080p30fps source input. The default `transcodingOptions.json` used by `livepeer_bench` – and the profile most gateways request – is:
+The standard ABR (Adaptive Bitrate) ladder on the Livepeer Network assumes a 1080p30fps source input. The default `transcodingOptions.json` used by `livepeer_bench` – and the profile most Gateways request – is:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -394,11 +394,11 @@ P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
 
 **How profiles affect GPU load:**
 
-More output renditions = more NVENC encode passes per segment. The standard 4-rendition ladder is roughly 4× the GPU load of encoding a single output. Nodes operating near GPU capacity lower that load by reducing the output ladder in `transcodingOptions.json`, at the cost of covering fewer gateway requests.
+More output renditions = more NVENC encode passes per segment. The standard 4-rendition ladder is roughly 4× the GPU load of encoding a single output. Nodes operating near GPU capacity lower that load by reducing the output ladder in `transcodingOptions.json`, at the cost of covering fewer Gateway requests.
 
 **Custom profiles:**
 
-Define a custom `transcodingOptions.json` for unusual gateway requirements. The file is a JSON array of profile objects specifying resolution, bitrate, fps, and profile string. The default configuration file is at:
+Define a custom `transcodingOptions.json` for unusual Gateway requirements. The file is a JSON array of profile objects specifying resolution, bitrate, fps, and profile string. The default configuration file is at:
 
 ``` icon="terminal"
 https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json

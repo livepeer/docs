@@ -51,7 +51,7 @@ function makeContract(absPath, taskId = 3456) {
     '  - docs-index.json',
     'acceptance_checks:',
     '  - node operations/tests/run-pr-checks.js --base-ref docs-v2',
-    '  - node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/faq.mdx --strict --no-repair',
+    '  - node operations/scripts/dispatch/content/health/page-integrity-dispatch.js --files v2/community/resources/faq.mdx --strict --no-repair',
     'follow_up_issues:',
     `  - ${taskId + 1}`,
     ''
@@ -79,7 +79,7 @@ async function runTests() {
       '--base',
       'docs-v2',
       '--changed-files',
-      'v2/community/faq.mdx,docs.json'
+      'v2/community/resources/faq.mdx,docs.json'
     ]);
 
     assert.strictEqual(run.status, 0, `generator failed: ${run.stderr || run.stdout}`);

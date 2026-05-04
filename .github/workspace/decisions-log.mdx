@@ -4,7 +4,7 @@
 > Updated: 2026-03-31
 > Rule: Every decision recorded at the time it is made. No batch updates.
 
----
+<CustomDivider />
 
 ## Decisions
 
@@ -37,7 +37,7 @@
 **Reasoning:** All 7 social data workflows have identical structure (checkout, setup node, run script, diff check, commit, push). 3 have missing permissions bugs. Consolidation fixes all 7 at once and reduces maintenance surface 7x.
 **Impact:** Phase 6 execution. Not blocking current documentation work. Consolidation happens after governance framework and library are in place.
 
----
+<CustomDivider />
 
 ## Framework Snapshots
 
@@ -84,7 +84,7 @@
 
 **Status:** Confirmed.
 
----
+<CustomDivider />
 
 ### D-ACT-04: Workflow naming convention with function verb enum
 
@@ -185,9 +185,9 @@
 **Reasoning:** Every workflow does the same thing: checkout, setup, run script, handle output. The only difference is what the script does. Making this separation explicit means workflows become thin, standardised shells and the interesting logic lives in governed, independently runnable scripts.
 **Impact:** Strengthens D-ACT-06. No changes to naming convention or type enum.
 
----
+<CustomDivider />
 
----
+<CustomDivider />
 
 ## Type-by-Type Review: Confirmed Names
 
@@ -233,7 +233,7 @@
 | 9 | verify-ai-sitemap.yml | `validator-discoverability-check-ai-sitemap.yml` | discoverability | Hardcoded branch. Verify pair for generate-ai-sitemap |
 | 10 | verify-llms-files.yml | `validator-discoverability-check-llms-files.yml` | discoverability | Hardcoded branch. Verify pair for generate-llms-files |
 
----
+<CustomDivider />
 
 ### Auditors (3 workflows, reviewed 2026-04-01)
 
@@ -243,7 +243,7 @@
 | 2 | freshness-monitor.yml | `audit-health-scan-data-freshness.yml` | health | Inline script (80 lines), extraction candidate. Hardcoded file list + thresholds |
 | 3 | v2-external-link-audit.yml | `audit-health-scan-external-links.yml` | health | Clean |
 
----
+<CustomDivider />
 
 ### Remediators (3 workflows, reviewed 2026-04-01)
 
@@ -253,7 +253,7 @@
 | 2 | seo-refresh.yml | `remediator-discoverability-repair-seo-metadata.yml` | discoverability | **P0: no commit step, writes vanish** |
 | 3 | style-homogenise.yml | `remediator-brand-repair-en-gb-style.yml` | brand | First workflow using `brand` concern. Script path may be stale |
 
----
+<CustomDivider />
 
 ### Interfaces (5 workflows, reviewed 2026-04-01)
 
@@ -267,7 +267,7 @@
 
 **Systemic:** All 5 are inline-only (1,224 total lines). All extraction candidates for D-ACT-06.
 
----
+<CustomDivider />
 
 ### Dispatchers (1 workflow, reviewed 2026-04-01)
 
@@ -275,7 +275,7 @@
 |---|---|---|---|---|
 | 1 | governance-sync.yml | `dispatch-governance-post-merge-sync.yml` | governance | Dead code (undefined input). Python3 dependency for JSON parsing |
 
----
+<CustomDivider />
 
 ### D-ACT-09: Pipeline output locations
 
@@ -322,7 +322,55 @@
 **Reasoning:** Ownerless self-governance audit (2026-04-05) found multiple overlapping control planes that contradict each other. One registry, one truth. Specialised manifests stay for detail; the unified registry is the index.
 **Impact:** The former legacy ownerless-governance manifest path is superseded. All governance queries start from `operations/governance/config/`.
 
----
+### D-GOV-07: Every workflow dispatcher must have a local CLI equivalent
+
+**Date:** 2026-04-14
+**Status:** Confirmed
+**Decision:** Every GitHub Actions workflow dispatcher must have a matching local script that can run the same pipeline without a CI trigger. The workflow YAML is the CI orchestrator; the script is the portable logic. A contributor (human or agent) must be able to run any pipeline locally for testing, debugging, and manual upgrades without pushing to GitHub.
+
+**Requirements:**
+1. Every workflow that calls a script must document the local invocation in its actions-library docs page
+2. Every script called by a workflow must accept `--dry-run` (preview without writing)
+3. New workflows must not contain inline logic that cannot be run locally; extract to a governed script first (D-ACT-08)
+4. The local script must produce the same output as the CI version (same exit codes, same file changes, same reports)
+5. Secrets-dependent scripts (API keys, tokens) must degrade gracefully when secrets are absent: skip the authenticated step with a clear message, do not crash
+
+**Implementation pattern:**
+```
+# CI path (workflow dispatches):
+.github/workflows/integrator-copy-update-forum-data.yml
+  -> runs: node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js
+
+# Local path (same script, same flags):
+node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js --dry-run
+
+# CI-only additions (the workflow provides):
+- checkout, node setup, npm ci
+- git commit + push (if changes)
+- rolling issue creation (if failure)
+```
+
+**What the workflow adds beyond the script:**
+- Environment setup (checkout, node version, dependencies)
+- Commit and push logic
+- Issue/PR creation for findings
+- Secrets injection
+- Concurrency control
+- Schedule triggers
+
+**What the script owns:**
+- All business logic
+- File reading and writing
+- Validation and error reporting
+- `--dry-run` mode
+- `--verify` mode (post-remediation verification)
+- Exit codes (0 = clean, 1 = findings, 2 = error)
+
+**Reasoning:** During testing, a contributor discovered that social feed integrators could not be tested locally because the scripts had no `--dry-run` and the workflows had no local equivalent. This made it impossible to verify changes without pushing to CI. An ownerless repo must be testable by anyone, anywhere.
+
+**Impact:** All existing workflows already comply via D-ACT-08 (scripts carry the type). The new requirement is that every script must also support `--dry-run`. The `check-workflow-governance.js` validator should be extended to verify this. Actions-library docs pages should include the local invocation command.
+
+<CustomDivider />
 
 ## Pending Decisions
 

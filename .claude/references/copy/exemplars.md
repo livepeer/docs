@@ -62,7 +62,7 @@
 
 ### Home Tab Pages (Mostly Good)
 
-**Files:** `v2/home/about-livepeer/ecosystem.mdx`, `v2/home/about-livepeer/evolution.mdx`, `v2/home/primer.mdx`
+**Files:** `v2/home/about/ecosystem.mdx`, `v2/home/about/evolution.mdx`, `v2/home/primer.mdx`
 
 **Why it's good:** These pages target the broadest audience ("everyone") and use accessible language without dumbing down. UK spelling throughout. Fact-led paragraphs. No questions in headings. Values and entities are listed, not narrated.
 

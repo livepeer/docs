@@ -2,7 +2,7 @@
 title: Pool Operators
 sidebarTitle: Pool Operators
 description: >-
-  How to operate a Livepeer GPU pool — accept external worker connections, manage job routing across multiple GPUs,
+  How to operate a Livepeer GPU pool – accept external worker connections, manage job routing across multiple GPUs,
   handle off-chain fee distribution, and maintain operational transparency.
 lifecycleStage: operate
 complexity: advanced
@@ -34,17 +34,17 @@ import { BorderedBox } from '/snippets/components/wrappers/containers/Containers
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-A Livepeer pool is a single orchestrator node that routes jobs to multiple external GPU workers. You hold the on-chain identity and LPT stake; workers contribute GPU compute and earn payouts managed off-chain by you, the operator. This page is for experienced orchestrators who want to expand beyond their own hardware by accepting external worker connections.
+A Livepeer pool is a single Orchestrator node that routes jobs to multiple external GPU workers. You hold the on-chain identity and LPT stake; workers contribute GPU compute and earn payouts managed off-chain by you, the operator. This page is for experienced Orchestrators who want to expand beyond their own hardware by accepting external worker connections.
 
-Workers joining an existing pool should start with [Join a Pool](/v2/orchestrators/guides/deployment-details/join-a-pool).
+Workers joining an existing pool should start with [Join a Pool](/v2/Orchestrators/guides/deployment-details/join-a-pool).
 
 <CustomDivider />
 
 ## How a pool works
 
-The Livepeer protocol sees only one entity: your orchestrator. It has a single on-chain address, a single stake, and a single service URI. Everything behind that address is your architecture to design.
+The Livepeer Protocol sees only one entity: your Orchestrator. It has a single on-chain address, a single stake, and a single service URI. Everything behind that address is your architecture to design.
 
-In a pool, the orchestrator node accepts connections from remote transcoders (workers). When a gateway routes a job to your orchestrator, go-livepeer dispatches it to an available worker via gRPC streaming RPC. Workers process the segment and return results – the orchestrator handles all protocol-level interaction, the workers handle the compute.
+In a pool, the Orchestrator node accepts connections from remote transcoders (workers). When a Gateway routes a job to your Orchestrator, go-livepeer dispatches it to an available worker via gRPC streaming RPC. Workers process the segment and return results – the Orchestrator handles all protocol-level interaction, the workers handle the compute.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
@@ -55,7 +55,7 @@ graph LR
   O --> W3["Worker 3\nGPU"]
 ```
 
-Workers have no on-chain presence. Delegators and Explorer see only your orchestrator identity, and all stake, protocol reputation, and on-chain fees flow through that address.
+Workers have no on-chain presence. Delegators and Explorer see only your Orchestrator identity, and all stake, protocol reputation, and on-chain fees flow through that address.
 
 <CustomDivider />
 
@@ -68,7 +68,7 @@ Workers have no on-chain presence. Delegators and Explorer see only your orchest
 
     **Who it suits:** Technically capable workers who want full control over their environment. Best for Linux operators already comfortable with GPU workloads.
 
-    **Worker provides:** A machine with an NVIDIA GPU, NVIDIA drivers, and network connectivity to your orchestrator on port 8935.
+    **Worker provides:** A machine with an NVIDIA GPU, NVIDIA drivers, and network connectivity to your Orchestrator on port 8935.
 
     **Worker runs:**
     ```bash icon="terminal" title="Start a worker in transcoder mode"
@@ -117,7 +117,7 @@ Workers have no on-chain presence. Delegators and Explorer see only your orchest
 
 ## Accepting workers
 
-To configure your orchestrator to accept remote worker connections, run **without** `-transcoder` but **with** `-orchSecret`:
+To configure your Orchestrator to accept remote worker connections, run **without** `-transcoder` but **with** `-orchSecret`:
 
 ```bash icon="terminal" title="Accept remote workers on the orchestrator"
 livepeer \
@@ -132,8 +132,8 @@ livepeer \
 **Key points:**
 
 - **`-orchSecret`** is a shared secret that authenticates worker connections. Any node that knows this secret can connect as a worker. Treat it like a password.
-- **`-transcoder` is omitted.** This puts the orchestrator in standalone mode: it handles gateway connections and routing, but does no local transcoding. All jobs go to connected workers.
-- **Port 8935** must be open for both inbound gateway connections and inbound worker connections.
+- **`-transcoder` is omitted.** This puts the Orchestrator in standalone mode: it handles Gateway connections and routing, but does no local transcoding. All jobs go to connected workers.
+- **Port 8935** must be open for both inbound Gateway connections and inbound worker connections.
 
 <Warning>
   Keep `-orchSecret` private. If it is exposed, any node can connect as a worker and receive job assignments. Depending on your off-chain payout model, this could result in payout obligations to unknown parties or diluted job distribution.
@@ -145,7 +145,7 @@ The secret can be passed as plaintext or from a file (recommended):
 -orchSecret /path/to/secret.txt
 ```
 
-When a worker connects successfully, your orchestrator logs will show:
+When a worker connects successfully, your Orchestrator logs will show:
 
 ``` icon="terminal"
 Got a RegisterTranscoder request from transcoder=10.3.27.1 capacity=10
@@ -158,12 +158,12 @@ The `capacity` field is the worker's `-maxSessions` value – how many concurren
 ## Fee distribution
 
 <Note>
-  **Fee distribution in a Livepeer pool is entirely off-chain.** The protocol pays all fees and rewards to your orchestrator's Ethereum address. There is no protocol mechanism to split payments to workers automatically. Pool operators implement their own payout systems.
+  **Fee distribution in a Livepeer pool is entirely off-chain.** The protocol pays all fees and rewards to your Orchestrator's Ethereum address. There is no protocol mechanism to split payments to workers automatically. Pool operators implement their own payout systems.
 </Note>
 
-**What the protocol does:** All ETH transcoding fees and LPT inflation rewards are paid to your orchestrator's Ethereum address. The reward cut and fee share you configured applies at this level, splitting between you and your delegators.
+**What the protocol does:** All ETH transcoding fees and LPT inflation rewards are paid to your Orchestrator's Ethereum address. The Reward Cut and fee share you configured applies at this level, splitting between you and your Delegators.
 
-**What you manage:** Tracking worker contributions and distributing their share of earnings from your orchestrator wallet. Common approaches:
+**What you manage:** Tracking worker contributions and distributing their share of earnings from your Orchestrator wallet. Common approaches:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -194,13 +194,13 @@ Payout protocols remain operator-specific. Existing pools have each implemented 
 
 ## On-chain identity and transparency
 
-Your pool is represented entirely by your orchestrator's Ethereum address. On [Livepeer Explorer](https://explorer.livepeer.org):
+Your pool is represented entirely by your Orchestrator's Ethereum address. On [Livepeer Explorer](https://explorer.livepeer.org):
 
-- **Delegators** see your total stake, reward cut, fee cut, and historical performance
-- **Explorer shows only the orchestrator** – worker-level data stays in your off-chain systems.
+- **Delegators** see your total stake, Reward Cut, Fee Cut, and historical performance
+- **Explorer shows only the Orchestrator** – worker-level data stays in your off-chain systems.
 - **Pool performance** (sessions, fees) reflects aggregate work done by all connected workers combined
 
-If you are running a public pool, building delegator trust requires transparency work beyond go-livepeer configuration. Titan Node does this via a public website, regular Livepeer Forum campaign posts, and a public payout dashboard. Consider documenting your pool's architecture, hardware footprint, uptime history, and payout record.
+If you are running a public pool, building Delegator trust requires transparency work beyond go-livepeer configuration. Titan Node does this via a public website, regular Livepeer Forum campaign posts, and a public payout dashboard. Consider documenting your pool's architecture, hardware footprint, uptime history, and payout record.
 
 <CustomDivider />
 
@@ -209,7 +209,7 @@ If you are running a public pool, building delegator trust requires transparency
 <AccordionGroup>
 
 <Accordion  title="Worker connection management" icon="gear">
-Monitor connected workers. If a worker disconnects, your orchestrator continues accepting jobs and assigns them to remaining workers. A worker that was mid-session when it disconnected will cause that session to fail and the segment to be retried by the gateway.
+Monitor connected workers. If a worker disconnects, your Orchestrator continues accepting jobs and assigns them to remaining workers. A worker that was mid-session when it disconnected will cause that session to fail and the segment to be retried by the Gateway.
 
 Workers reconnect automatically on restart. You will see a new `Got a RegisterTranscoder request` log line each time. There is no manual reconnection step required on your side.
 </Accordion>
@@ -221,11 +221,11 @@ Titan Node patches the NVIDIA driver on worker machines to remove this cap. Oper
 </Accordion>
 
 <Accordion  title="Session routing and load balancing" icon="circle-question">
-go-livepeer distributes sessions across connected workers internally. No manual load balancing is required for basic deployments. For large pools, a load balancer in front of multiple orchestrator instances is possible – see `doc/multi-o.md` in the go-livepeer repository for the multi-orchestrator architecture.
+go-livepeer distributes sessions across connected workers internally. No manual load balancing is required for basic deployments. For large pools, a load balancer in front of multiple Orchestrator instances is possible – see `doc/multi-o.md` in the go-livepeer repository for the multi-Orchestrator architecture.
 </Accordion>
 
 <Accordion  title="Node updates and downtime" icon="server">
-Updating go-livepeer on the orchestrator drops all connected workers and in-flight sessions. Gateways will observe the interruption. Workers reconnect automatically after the orchestrator restarts.
+Updating go-livepeer on the Orchestrator drops all connected workers and in-flight sessions. Gateways will observe the interruption. Workers reconnect automatically after the Orchestrator restarts.
 
 For pools with SLA commitments, coordinate updates during low-traffic periods and communicate planned downtime to workers in advance.
 </Accordion>
@@ -237,9 +237,9 @@ Poor communication is the most common cause of worker churn in community pools.
 </Accordion>
 
 <Accordion  title="orchSecret rotation" icon="circle-question">
-If you need to rotate your `-orchSecret` (for example, because you believe it has been compromised), all existing worker connections will drop immediately when the orchestrator restarts with the new secret.
+If you need to rotate your `-orchSecret` (for example, because you believe it has been compromised), all existing worker connections will drop immediately when the Orchestrator restarts with the new secret.
 
-There is no zero-downtime rotation mechanism. Communicate the new secret to all workers before restarting the orchestrator. Workers reconnect automatically with the new secret once updated.
+There is no zero-downtime rotation mechanism. Communicate the new secret to all workers before restarting the Orchestrator. Workers reconnect automatically with the new secret once updated.
 </Accordion>
 
 </AccordionGroup>
@@ -251,7 +251,7 @@ There is no zero-downtime rotation mechanism. Communicate the new secret to all 
 <CardGroup cols={2}>
 
 <Card title="One entity on-chain" icon="fingerprint">
-  Your pool is one orchestrator address. Workers are invisible to the protocol. All reputation, stake, and on-chain fees flow to you.
+  Your pool is one Orchestrator address. Workers are invisible to the protocol. All reputation, stake, and on-chain fees flow to you.
 </Card>
 
 <Card title="Fee distribution is your problem" icon="coins">
@@ -275,10 +275,10 @@ There is no zero-downtime rotation mechanism. Communicate the new secret to all 
     The worker perspective – connecting your GPU to an existing pool.
   </Card>
   <Card title="Split O-T Setup" icon="plug" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
-    The orchestrator-transcoder split that underpins pool architecture.
+    The Orchestrator-transcoder split that underpins pool architecture.
   </Card>
   <Card title="Fleet Operations" icon="building" href="/v2/orchestrators/guides/advanced-operations/scale-operations">
-    Running multiple orchestrators at data-centre scale.
+    Running multiple Orchestrators at data-centre scale.
   </Card>
   <Card title="Earnings and Economics" icon="chart-line" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
     Pool economics, fee strategy, and what to expect from transcoding revenue.

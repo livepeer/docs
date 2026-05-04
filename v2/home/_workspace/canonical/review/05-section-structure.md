@@ -27,7 +27,7 @@ v2/home/
 │   └── trending.mdx (6.4KB)
 │       └── Current network activity (⚠️ stale-risk if static content)
 │
-├── about-livepeer/
+├── about/
 │   ├── vision.mdx (8.8KB) ✅ Good
 │   ├── evolution.mdx (7.9KB) ⚠️ Needs AI pivot audit
 │   ├── ecosystem.mdx (25.7KB) ✅ Strong — Foundation covered here
@@ -143,7 +143,7 @@ Home should be organized around **jobs and personas**, not technical categories.
 - Link to full roadmap (in About section)
 
 **Current mapping**:
-- `about-livepeer/roadmap.mdx` (1.8KB) — STUB, needs full content
+- `about/roadmap.mdx` (1.8KB) — STUB, needs full content
 
 **Status**: 🔴 STUB at 1.8KB — HIGH PRIORITY
 
@@ -355,4 +355,4 @@ Section structure is working when:
 
 7. **Sticky nav**: Should Home have its own sticky nav, or rely on global site nav?
 
-8. **About subsections**: Should about-livepeer/ pages be reorganized for clarity, or are they fine as-is?
+8. **About subsections**: Should about/ pages be reorganized for clarity, or are they fine as-is?

@@ -92,7 +92,7 @@ Score: 5/7 compliant. Two question headings violate heading standards.
 
 | Link | Resolves |
 |---|---|
-| /v2/community/community-portal | OK |
+| /v2/community/portal | OK |
 | /v2/home/solutions/showcase | OK |
 | ../about/livepeer-protocol | WARN -- relative, may not resolve |
 | /solutions/portal | WARN -- missing v2 prefix |

@@ -5,7 +5,7 @@
  * @status stable
  * @description Framed image with optional caption and full-width toggle.
   * @aiDiscoverability none
- * @usedIn v2/about/protocol/technical-architecture.mdx, v2/community/livepeer-community/community-guidelines.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx
+ * @usedIn v2/about/protocol/technical-architecture.mdx, v2/community/guides/guidelines.mdx, v2/home/about/benefits.mdx, v2/home/about/evolution.mdx, v2/home/about/vision.mdx, v2/home/primer.mdx
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-03-29
  * @param {any} src - src prop.

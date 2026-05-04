@@ -1,0 +1,496 @@
+---
+title: "Livepeer: Open AI-Infrastructure for Real-Time Interactive Media"
+sidebarTitle: About Livepeer
+description: "Livepeer is a full-stack permissionless infrastructure substrate and decentralised marketplace for real-time media & AI pipelines. The network is defined by the off-chain actors that perform the compute work for video & AI jobs and the protocol that coordinates and governs them."
+lifecycleStage: discover
+complexity: beginner
+pageType: concept
+audience: community
+lastVerified: 2026-03-17T00:00:00.000Z
+purpose: explain
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol overview
+  - protocol
+  - overview
+'og:image': /snippets/assets/media/og-images/en/about.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { Quote, FrameQuote } from "/snippets/components/displays/quotes/Quote.jsx";
+import { Image } from '/snippets/components/elements/images/Image.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+
+import Protocol from "./composables/protocol.mdx"
+import Network from "./composables/network.mdx"
+import Actors from "./composables/actors.mdx"
+import Overview from "./composables/overview.mdx"
+
+{/* <Tip>
+The <span style={{color: "white"}}>**Livepeer Protocol**</span> and <span style={{color: "white"}}>**Livepeer Network**</span> are distinct but complementary components of the Livepeer ecosystem.
+</Tip> */}
+
+<YouTubeVideo url="https://www.youtube.com/watch?v=U6YRg7hHorM" caption="Tom Trowbridge talks to Doug Petkanics, CEO and Founder at Livepeer" />
+
+<Accordion title="Summary: Decentralizing Video Streaming for the Future of AI" icon="video">
+  **Key themes**
+
+  - **DePIN overview:** Blockchain networks coordinate idle physical resources for open global access.
+  - **Livepeer focus:** Livepeer offers video infrastructure at 10x lower cost than centralised providers.
+  - **Market stats:** Video streaming is a $250 billion market; Livepeer handles 3 million+ video minutes weekly.
+  - **Token model:** Staking yields about 40% annual returns; inflationary rewards foster competition.
+  - **AI expansion:** Plans to add generative AI workloads could increase usage 10x to 100x.
+  - **Market efficiency:** Millions of idle GPUs enable efficient decentralised resource use.
+
+  **DePIN definition and market context** *(00:00)*
+
+  DePIN networks coordinate idle physical resources globally using blockchain incentives, enabling open infrastructure.
+
+  They combine advanced hardware, software, and token economics for crowdsourced capacity monetisation.
+
+  **Livepeer product strategy and market differentiation** *(04:22)*
+
+  Livepeer aims to be the leading open video infrastructure, backed by nearly eight years of development.
+
+  - Offers up to 10x cost savings and better scalability than centralised clouds.
+  - Targets the $250 billion video market through decentralised networks and developer-friendly SaaS APIs.
+  - Processes over 3 million unique video minutes weekly, gaining industry credibility.
+
+  **Token economics and network incentives** *(15:35)*
+
+  Livepeer's work token model incentivizes GPU operators to stake and earn fees plus inflationary rewards.
+
+  - Stakers earn about 40% annual returns; the protocol targets 50% token staking to maintain network health.
+  - Inflation adjusts dynamically to encourage optimal staking levels.
+  - Inflationary rewards enable lower prices than traditional clouds, fostering competition.
+
+  **AI and generative video expansion** *(22:33)*
+
+  Livepeer plans to support generative AI video workloads, which are highly compute-intensive.
+
+  - AI integration could increase network usage 10x to 100x.
+  - NVIDIA's rapid data centre growth highlights huge compute demand and chip shortages.
+
+  **Supply-side dynamics and market efficiency** *(28:18)*
+
+  Livepeer benefits from millions of idle video encoding GPUs, offering near-infinite supply.
+
+  - Large cloud providers' reserved capacity often sits idle and can be monetised through DePIN networks.
+  - Crypto-settled, open access payments enable efficient, global resource monetisation.
+
+  **Founding insights and industry vision** *(31:30 onward)*
+
+  Key lessons: work with great people and maintain a motivating mission to endure market cycles.
+
+  - Mission focus helps navigate pivots and maintain relevance amid trends like generative AI.
+  - DePIN can enable open, decentralised AI infrastructure to counter big tech and regulatory dominance.
+  - Decentralised AI models promote trust and transparency versus opaque corporate AI systems.
+</Accordion>
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## About Livepeer
+
+Projects like Livepeer are also known as <LinkArrow label="DePIN" href="https://review.stanfordblockchain.xyz/p/32-depin-decentralized-physical-infrastructure" newline={false} />  (Decentralised Physical Infrastructure Network) projects - blockchain networks that coordinate idle physical resources for open global access. They combine advanced hardware, software, and token economics to enable crowdsourced capacity monetisation.
+
+<Tip>
+    Livepeer was one of the earliest [DePIN](https://review.stanfordblockchain.xyz/p/32-depin-decentralized-physical-infrastructure) (Decentralised Physical Infrastructure Network) projects in the blockchain space - recognising the clear business and technical advantages of decentralised networks for resilience, scalability, and cost efficiency as well as for incentivising innovation, participation and network growth.
+    {/* A use case that is only more relevant today as AI reshapes industries and the way we work, collaborate and communicate and blockchain primitives providing agent payments, provenance and trust guarantees. */}
+</Tip>
+
+Open-participation, distributed infrastructure systems like Livepeer aren’t just software systems - they’re multi-layered digital ecosystems that require careful design of economic incentives, governance structures, and technical architecture and that provide unique value propositions that centrally operated systems cannot match, such as censorship resistance, economic security, and trustless coordination.
+
+<Accordion title="The Case for Decentralisation" icon="network-wired">
+    <p>Livepeer has both a decentralised network architecture and a decentralised governance model.</p>
+    <p>The network is designed to be open and permissionless, allowing anyone to participate as a node operator or token holder.</p>
+
+    The protocol is governed by token holders through on-chain voting, ensuring that the community has a say in the direction of the project.
+
+    Technical Decentralisation Benefits:
+    - **Resilience**: A distributed network of nodes is more resistant to failures, attacks, and censorship than a centralised system.
+    - **Global Access**: By enabling anyone to participate as a node operator, Livepeer can tap into underutilized resources worldwide, increasing capacity and reducing costs.
+    - **Open Innovation**: An open, decentralised ecosystem encourages innovation from a diverse set of contributors, leading to more robust and feature-rich infrastructure.
+    - **Economic Alignment**: Cryptoeconomic incentives can align the interests of various stakeholders (operators
+
+    A worldwide network of incentivised stakeholders provides critical benefits for achieving Livepeer's mission:
+
+    For Developers:
+
+    - Competitive improvements driven by self-interest rather than corporate roadmap
+    - No gatekeeping on contributions and innovations
+    - Freedom to fork and experiment
+
+    For Infrastructure Operators:
+
+    - Level playing field without platform risk from central authority
+    - Economic confidence that rules won't arbitrarily change
+    - Empowerment to participate in building the network
+
+    For Token Participants:
+
+    - Transparent incentive mechanisms
+    - Clear process for proposing and voting on protocol updates
+    - Predictable economics and future direction
+</Accordion>
+<Accordion icon="rocket" title="Crypto-Primitive Advantages">
+    Decentralisation and cryptoeconomic design add specific properties that a centrally operated cloud cannot provide:
+
+    - **Dynamic scaling and resilience** -- no single point of failure; capacity is contributed by independent operators globally
+    - **Global payment rails** -- accessible by AI agents and automated systems without bank accounts or API contracts
+    - **Permissionless participation** -- anyone with compatible hardware can join the network; innovation is not gated by a vendor relationship
+    - **Fairer creator economics** -- transparent, auditable revenue streams with no hidden intermediary margin
+    - **Lower latency via data locality** -- data stays closer to the user when operators are geographically distributed
+    - **Lower costs without lock-in** -- no vendor margin on compute; switching is possible at the protocol level
+    - **Self-sustaining incentives** -- inflation-based rewards and fee capture provide a runway to self-sustaining infrastructure without requiring venture capital to subsidise operations
+    - **Network effects** -- as more operators join, capacity, resilience, and geographic coverage increase for all participants
+</Accordion>
+
+## Protocol Evolution
+
+Livepeer’s [original whitepaper](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md) (2017) outlined an ambitious system design **protocol** for the fully decentralised live video streaming **network** - aiming to provide **_“the world’s open video infrastructure”_**
+
+It defined how the multiple actors in a live streaming ecosystem participate in a secure and economically rational way, including the economic incentives for encouraging participation in the network.
+
+<CenteredContainer>
+    <Card title={<div style={{ color: "var(--accent)", marginBottom: "-1rem" }}><Icon icon="scroll" size={22} color="var(--accent)" /> {" "}Livepeer Whitepaper</div>} href="/v2/about/resources/knowledge-hub/livepeer-whitepaper" arrow cta="Read the full Livepeer Whitepaper" />
+</CenteredContainer>
+
+While **_the Livepeer Protocol and Network have evolved significantly since the original whitepaper_**, the core design principles and economic incentives outlined in that document remain foundational to how the system operates today.
+
+<ScrollableDiagram title="Livepeer Protocol Evolution" maxHeight="700px" maxWidth="100%" showControls={true}>
+
+    ```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+    flowchart TB
+    subgraph v4["V4 Characteristics"]
+        v4a["AI Inference<br/>Workloads"]
+        v4b["Real-time Video<br/>Pipelines"]
+        v4c["AI-aware<br/>Gateways"]
+    end
+
+    subgraph v3["V3 Characteristics"]
+        v3a["Arbitrum One<br/>Deployment"]
+        v3b["L1-L2 Bridge<br/>Contracts"]
+        v3c["Reduced Gas<br/>Costs"]
+    end
+
+    subgraph v2["V2 Characteristics"]
+        v2a["Off-chain Job<br/>Negotiation"]
+        v2b["Probabilistic<br/>Micropayments"]
+        v2c["Fault-based<br/>Verification"]
+        v2d["Orchestrator/<br/>Transcoder Split"]
+    end
+
+    subgraph v1["V1 Characteristics"]
+        v1a["On-chain Job<br/>Assignment"]
+        v1b["On-chain Payments<br/>Per Job"]
+        v1c["Routine Truebit<br/>Verification"]
+        v1d["Unified Transcoder<br/>Role"]
+    end
+
+    v1Start["V1: Whitepaper<br/>April 2017"]
+    v2Start["V2: Streamflow<br/>December 2018"]
+    v3Start["V3: Confluence<br/>2022"]
+    v4Start["V4: Cascade<br/>2024"]
+
+    v1Start -->|"scalability upgrades"| v2Start
+    v2Start -->|"L2 migration"| v3Start
+    v3Start -->|"AI workload expansion"| v4Start
+
+    v1Start -.-> v1a
+    v1Start -.-> v1b
+    v1Start -.-> v1c
+    v1Start -.-> v1d
+
+    v2Start -.-> v2a
+    v2Start -.-> v2b
+    v2Start -.-> v2c
+    v2Start -.-> v2d
+
+    v3Start -.-> v3a
+    v3Start -.-> v3b
+    v3Start -.-> v3c
+
+    v4Start -.-> v4a
+    v4Start -.-> v4b
+    v4Start -.-> v4c
+
+    classDef version fill:#18794E,stroke:#3CB540,color:#ffffff,stroke-width:2px
+    classDef characteristic fill:#ffffff,stroke:#3CB540,color:#18794E,stroke-width:1px
+    classDef group fill:#0B1F17,stroke:#3CB540,color:#3CB540,stroke-width:1px
+
+    class v1Start,v2Start,v3Start,v4Start version
+    class v1a,v1b,v1c,v1d,v2a,v2b,v2c,v2d,v3a,v3b,v3c,v4a,v4b,v4c characteristic
+    class v1,v2,v3,v4 group
+    ```
+
+</ScrollableDiagram>
+
+<Accordion title="Protocol Principles" icon="cubes">
+    ## Protocol Principles
+
+    The protocol aims to deliver **open AI and video infrastructure** at efficient pricing and infinite scale by harnessing:
+    1. **Open source software** - Development contributed by global community
+    2. **Open market for resources** - Underutilized compute and bandwidth from worldwide operators
+    3. **Cryptoeconomic incentives** - Token-based participation rewards distributed to many parties
+
+    <ScrollableDiagram title="Livepeer Mission, Stakeholders, and Outcomes" maxHeight="650px" maxWidth="100%" showControls={true}>
+
+        ```mermaid
+        %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+        flowchart TB
+        mission["Mission:<br/>Build World's Open<br/>Video Infrastructure"]
+
+        subgraph enabling["Enabling Factors"]
+            oss["Open Source Software<br/>Global developer<br/>contributions"]
+            market["Open Resource Market<br/>Compute + Bandwidth"]
+            incentives["Cryptoeconomic Incentives<br/>LPT token economics"]
+        end
+
+        subgraph stakeholders["Stakeholder Groups"]
+            developers["Developers<br/>Protocol & Application"]
+            operators["Infrastructure Operators<br/>Orchestrators/Transcoders"]
+            participants["Network Participants<br/>Delegators/Token Holders"]
+        end
+
+        subgraph outcomes["Outcomes"]
+            pricing["Efficient Pricing"]
+            scale["Infinite Scale"]
+            publicGood["Public Good<br/>Base Layer Protocol"]
+        end
+
+        mission --> oss
+        mission --> market
+        mission --> incentives
+
+        oss --> developers
+        market --> operators
+        incentives --> participants
+
+        developers --> pricing
+        operators --> scale
+        participants --> publicGood
+
+        pricing --> mission
+        scale --> mission
+        publicGood --> mission
+        market --> scale
+        incentives --> publicGood
+
+        classDef mission fill:#18794E,stroke:#3CB540,color:#ffffff,stroke-width:2px
+        classDef node fill:#ffffff,stroke:#3CB540,color:#18794E,stroke-width:1px
+        classDef group fill:#0B1F17,stroke:#3CB540,color:#3CB540,stroke-width:1px
+
+        class mission mission
+        class oss,market,incentives,developers,operators,participants,pricing,scale,publicGood node
+        class enabling,stakeholders,outcomes group
+        ```
+
+    </ScrollableDiagram>
+</Accordion>
+<Accordion title="Protocol Evolution: From Whitepaper to Cascade" icon="arrows-spin">
+    The whitepaper provides a detailed technical blueprint for the protocol's architecture, token economics, and security model, which continue to guide development and inform the community's understanding of the network's mechanics.
+
+    <Image
+    src="https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/00_HOME/evolution.png"
+    alt="Evolution of Livepeer"
+    caption="Evolution of the Livepeer Network"
+    href="/v2/home/about/roadmap"
+    arrow
+    />
+
+    <Update label="Whitepaper" description="April 2017" tags={["V1", "Original Design"]}>
+    - Original design with on-chain job assignment, routine verification, and a unified transcoder role.
+    - Gas constraints capped the Active Set at roughly 10-15 transcoders.
+    </Update>
+
+    <Update label="Streamflow" description="December 2018" tags={["V2", "Scalability & Micropayments"]}>
+    - Off-chain job negotiation and Probabilistic Micropayments cut transaction overhead by orders of magnitude.
+    - The Orchestrator and transcoder roles split, allowing one Orchestrator to coordinate many transcoder workers.
+    </Update>
+
+    <Update label="Confluence" description="2022" tags={["V3", "Arbitrum L2"]}>
+    - Core protocol contracts migrated from Ethereum mainnet to Arbitrum One.
+    - The migration reduced gas costs roughly 100x while inheriting Ethereum security through the rollup.
+    </Update>
+
+    <Update label="Cascade" description="2024" tags={["V4", "AI Workloads"]}>
+    - The network expanded beyond video transcoding to real-time AI video pipelines.
+    - Gateways became AI-aware, routing inference jobs and coordinating multi-step pipelines alongside existing transcoding workloads.
+    - The protocol's stake, payment, and verification primitives stayed the same; the workload surface changed.
+    </Update>
+
+    <QuadGrid icon="arrows-spin" iconSize={50}>
+    <DisplayCard title="Real-time Performance" icon="bolt">
+    Industry-standard low latency optimised for real-time video AI and media, enabling sub-second inference and proven scalability.
+    </DisplayCard>
+    <DisplayCard title="Cost Efficiency" icon="piggy-bank">
+    Access to GPU compute at 5–10x lower cost through an open marketplace with transparent on-chain economics and a pay-per-use model.
+    </DisplayCard>
+    <DisplayCard title="Automagic Scalability" icon="arrows-maximize">
+    Scale capacity up or down dynamically in real-time via an elastic network supply, smart routing, and incentivised idle GPU utilisation.
+    </DisplayCard>
+    <DisplayCard title="Openness & Community" icon="people-group">
+    Permissionless, open-source, community-driven infrastructure that provides global access, on-chain verifiable compute, and rewards all participants.
+    </DisplayCard>
+    </QuadGrid>
+
+    ## Key Changes by Version
+
+    <DynamicTableV2
+    headerList={['Aspect', 'V1: Whitepaper', 'V2: Streamflow', 'V3: Confluence', 'V4: Cascade']}
+    itemsList={[
+        {
+        Aspect: 'Workloads',
+        'V1: Whitepaper': 'Video transcoding',
+        'V2: Streamflow': 'Video transcoding',
+        'V3: Confluence': 'Video transcoding',
+        'V4: Cascade': 'Transcoding + real-time AI',
+        },
+        {
+        Aspect: 'Job Assignment',
+        'V1: Whitepaper': 'On-chain stake-based',
+        'V2: Streamflow': 'Off-chain negotiation',
+        'V3: Confluence': 'Off-chain negotiation',
+        'V4: Cascade': 'Off-chain, AI-aware routing',
+        },
+        {
+        Aspect: 'Payments',
+        'V1: Whitepaper': 'On-chain per job',
+        'V2: Streamflow': 'Probabilistic micropayments',
+        'V3: Confluence': 'Probabilistic micropayments',
+        'V4: Cascade': 'Probabilistic micropayments',
+        },
+        {
+        Aspect: 'Verification',
+        'V1: Whitepaper': 'Routine (1/1000 segments)',
+        'V2: Streamflow': 'Fault-based challenges',
+        'V3: Confluence': 'Fault-based challenges',
+        'V4: Cascade': 'Fault-based challenges',
+        },
+        {
+        Aspect: 'Node Roles',
+        'V1: Whitepaper': 'Unified Transcoder',
+        'V2: Streamflow': 'Orchestrator + Transcoder',
+        'V3: Confluence': 'Orchestrator + Transcoder',
+        'V4: Cascade': 'Orchestrator + Transcoder + AI worker',
+        },
+        {
+        Aspect: 'Active Nodes',
+        'V1: Whitepaper': '10-15 transcoders',
+        'V2: Streamflow': 'Hundreds of orchestrators',
+        'V3: Confluence': 'Hundreds of orchestrators',
+        'V4: Cascade': 'Hundreds of orchestrators',
+        },
+        {
+        Aspect: 'Blockchain',
+        'V1: Whitepaper': 'Ethereum mainnet',
+        'V2: Streamflow': 'Ethereum mainnet',
+        'V3: Confluence': 'Arbitrum One',
+        'V4: Cascade': 'Arbitrum One',
+        },
+        {
+        Aspect: 'Transaction Cost',
+        'V1: Whitepaper': 'High',
+        'V2: Streamflow': 'Medium',
+        'V3: Confluence': 'Low',
+        'V4: Cascade': 'Low',
+        },
+    ]}
+    />
+</Accordion>
+
+## Livepeer Protocol and Network
+
+<Tip> The **Livepeer Protocol** and **Livepeer Network** are distinct but complementary components of the Livepeer ecosystem. </Tip>
+
+The on-chain **Livepeer Protocol** governs the off-chain **Livepeer Network** participants who perform the work.
+<CenteredContainer>
+  <DynamicTableV2
+    headerList={['Layer', 'Description', 'Technicals']}
+    itemsList={[
+        {
+        Layer: <strong>Livepeer Protocol</strong>,
+        Description: 'On-chain crypto-economic incentives & coordination; staking; payments.',
+        Technicals : 'Smart contracts on Arbitrum (originally Ethereum mainnet) handling staking, delegation, the Active Set, round transitions, reward minting, ticket redemption, and slashing.',
+        },
+        {
+        Layer: <strong>Livepeer Network</strong>,
+        Description: 'Off-chain nodes performing real-time work (transcoding, inference, routing).',
+        Technicals : 'Orchestrators running GPU nodes that perform transcoding and AI inference work, and Gateways that route jobs to Orchestrators and handle payments.',
+        }
+    ]}
+    />
+</CenteredContainer>
+
+### Livepeer Protocol
+
+<Quote>
+The Livepeer Protocol is the **on-chain coordination, security and economic layer** responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants.
+</Quote>
+The **Livepeer Protocol** consists of a set of smart contracts encoded in [Solidity](https://soliditylang.org/) and deployed on the [Arbitrum One](https://arbitrum.io/) blockchain (with the token deployed on Ethereum mainnet), which enforce the rules of the network, coordinate participant behaviour, and provide economic incentives to secure the system and align it with desired outcomes.
+
+<Accordion icon="cubes" title="Protocol Functions">
+    The Livepeer Protocol contracts govern:
+    - LivepeerToken (LPT) ownership and delegation
+    - Staking and selection of active transcoder operators (Orchestrators)
+    - Distribution of inflationary rewards and fees to participants
+    - Time-based progression of the protocol through rounds
+    - Payment processing through a probabilistic micropayment system
+
+    Protocol services include:
+    - staking
+    - delegation
+    - inflation & rewards
+    - Orchestrator selection
+    - slashing
+    - probabilistic payments
+    - verification rules
+
+    This makes up the economic and coordination layer that incentivises and enforces desired behaviour.
+</Accordion>
+
+**Protocol Pages**
+<Columns cols={2} gap="2rem" style={{ margin: "2rem 0" }}>
+    <Card href="/v2/about/protocol/design" title={<CustomCardTitle icon="cubes" title="Protocol Design" />} horizontal arrow> A deep dive on the design of the Livepeer Protocol and its mechanisms </Card>
+    <Card href="/v2/about/protocol/blockchain-contracts" title={<CustomCardTitle icon="code" title="Blockchain Contracts" />} horizontal arrow> A detailed breakdown of the protocol's smart contract architecture. </Card>
+</Columns>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+### Livepeer Network
+<Quote>
+The Livepeer Network is the **off-chain execution layer** of the Livepeer ecosystem - the mesh of hardware and software nodes performing work.
+</Quote>
+
+The **Livepeer Network** consists of Orchestrators running GPU nodes that perform transcoding and AI inference work, and Gateways that route jobs to Orchestrators and handle payments and which operates according to the rules defined by the protocol.
+
+The Livepeer Network is implemented by <LinkArrow label="go-livepeer" href="https://github.com/livepeer/go-livepeer" newline={false} />
+
+<Accordion icon="network-wired" title="Network Services">
+    Network services include:
+    - Job routing
+    - Verification
+    - Payment
+    - AI inference
+    - Video Transcoding
+    - Real-time AI Video Streaming
+</Accordion>
+
+**Network Pages**
+<Columns cols={2} gap="2rem" style={{ margin: "2rem 0" }}>
+    <Card href="/v2/about/network/actors" title={<CustomCardTitle icon="circle-nodes" title="Network Actors" />} horizontal arrow> A detailed overview of the core actors and participants enabling the Livepeer Network. </Card>
+    <Card href="/v2/about/network/marketplace" title={<CustomCardTitle icon="play" title="Livepeer Marketplace" />} horizontal arrow> How the Livepeer Network functions as a service marketplace to facilitates the exchange of compute resources. </Card>
+</Columns>

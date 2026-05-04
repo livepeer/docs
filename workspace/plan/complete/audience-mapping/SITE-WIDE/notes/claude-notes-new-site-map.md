@@ -20,4 +20,4 @@ Let me pull the full inventory first — all tabs in parallel.Now I have the ful
 
 **05 — Orchestrators + Gateways.** Both are structurally complete (the reference tabs). Gaps are content-quality: AI pipeline reliability troubleshooting is missing; dual-mode page publish status needs confirmation; hardware requirements need AI-specific GPU specs.
 
-**06 — Community.** Three directories (`livepeer-connect/`, `livepeer-contribute/`, `resources/`) need published-content confirmation. Roadmap duplication risk with Home tab.
+**06 — Community.** Three directories (`connect/`, `contribute/`, `resources/`) need published-content confirmation. Roadmap duplication risk with Home tab.

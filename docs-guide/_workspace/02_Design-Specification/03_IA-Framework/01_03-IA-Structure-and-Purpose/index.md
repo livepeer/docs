@@ -56,7 +56,7 @@ Every persona tab follows the same structural order. Not every tab needs all 6 p
 - [ ] Zero dead-end links (every link resolves to a page with real content)
 - [ ] No instructional content
 
-**Examples in repo:** `v2/home/portal.mdx`, `v2/about/portal.mdx`, `v2/developers/portal.mdx`, `v2/gateways/gateways-portal.mdx`, `v2/orchestrators/orchestrators-portal.mdx`, `v2/lpt/token-portal.mdx`, `v2/community/community-portal.mdx`
+**Examples in repo:** `v2/home/portal.mdx`, `v2/about/portal.mdx`, `v2/developers/portal.mdx`, `v2/gateways/gateways-portal.mdx`, `v2/orchestrators/orchestrators-portal.mdx`, `v2/lpt/token-portal.mdx`, `v2/community/portal.mdx`
 
 ### **2. **`overview`
 

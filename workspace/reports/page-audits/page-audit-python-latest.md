@@ -120,7 +120,7 @@
 - `/solutions/streamplace/introduction/streamplace-integration` - file_not_found
   - Expected: `v2/pages/solutions/streamplace/introduction/streamplace-integration`
 
-### v2/home/about-livepeer/ecosystem
+### v2/home/about/ecosystem
 
 - `/v2/lpt/treasury/overview` - file_not_found
   - Expected: `v2/pages/v2/lpt/treasury/overview`
@@ -207,8 +207,8 @@
   - Expected: `v2/pages/v2/orchestrators/guides/advanced-operations/pool-operators`
 - `/v2/orchestrators/guides/deployment-details/join-a-pool` - file_not_found
   - Expected: `v2/pages/v2/orchestrators/guides/deployment-details/join-a-pool`
-- `/v2/community/livepeer-connect/events-and-community-streams` - file_not_found
-  - Expected: `v2/pages/v2/community/livepeer-connect/events-and-community-streams`
+- `/v2/community/connect/events-and-streams` - file_not_found
+  - Expected: `v2/pages/v2/community/connect/events-and-streams`
 - `/v2/developers/resources/awesome-livepeer` - file_not_found
   - Expected: `v2/pages/v2/developers/resources/awesome-livepeer`
 - `/v2/orchestrators/resources/faq` - file_not_found
@@ -768,7 +768,7 @@
 - `/v2/orchestrators/resources/faq` - file_not_found
   - Expected: `v2/pages/v2/orchestrators/resources/faq`
 
-### v2/community/livepeer-connect/forums-and-discussions
+### v2/community/connect/connect-channels
 
 - `/v2/gateways` - file_not_found
   - Expected: `v2/pages/v2/gateways`
@@ -868,12 +868,12 @@
 - `/v2/orchestrators/portal` - file_not_found
   - Expected: `v2/pages/v2/orchestrators/portal`
 
-### v2/community/faq
+### v2/community/resources/faq
 
-- `/v2/community/livepeer-community/governance-and-foundation` - file_not_found
-  - Expected: `v2/pages/v2/community/livepeer-community/governance-and-foundation`
-- `/v2/community/livepeer-community/governance-and-foundation#how-to-propose-an-spe` - file_not_found
-  - Expected: `v2/pages/v2/community/livepeer-community/governance-and-foundation#how-to-propose-an-spe`
+- `/v2/community/ecosystem/governance` - file_not_found
+  - Expected: `v2/pages/v2/community/ecosystem/governance`
+- `/v2/community/ecosystem/governance#how-to-propose-an-spe` - file_not_found
+  - Expected: `v2/pages/v2/community/ecosystem/governance#how-to-propose-an-spe`
 - `/v2/gateways` - file_not_found
   - Expected: `v2/pages/v2/gateways`
 - `/v2/orchestrators` - file_not_found
@@ -1002,7 +1002,7 @@
 - `/v2/gateways/guides/payments-and-pricing/funding-guide` - file_not_found
   - Expected: `v2/pages/v2/gateways/guides/payments-and-pricing/funding-guide`
 
-### v2/community/livepeer-community/governance-and-foundation
+### v2/community/ecosystem/governance
 
 - `/v2/lpt` - file_not_found
   - Expected: `v2/pages/v2/lpt`
@@ -1042,8 +1042,8 @@
 
 ### v2/lpt/governance/overview
 
-- `/v2/community/livepeer-community/governance-and-foundation` - file_not_found
-  - Expected: `v2/pages/v2/community/livepeer-community/governance-and-foundation`
+- `/v2/community/ecosystem/governance` - file_not_found
+  - Expected: `v2/pages/v2/community/ecosystem/governance`
 
 ### v2/solutions/streamplace/overview
 
@@ -1122,10 +1122,10 @@
 
 ### v2/about/livepeer-protocol/governance-model
 
-- `/v2/home/about-livepeer/ecosystem#livepeer-foundation` - file_not_found
-  - Expected: `v2/pages/v2/home/about-livepeer/ecosystem#livepeer-foundation`
-- `/v2/home/about-livepeer/ecosystem#special-purpose-entities` - file_not_found
-  - Expected: `v2/pages/v2/home/about-livepeer/ecosystem#special-purpose-entities`
+- `/v2/home/about/ecosystem#livepeer-foundation` - file_not_found
+  - Expected: `v2/pages/v2/home/about/ecosystem#livepeer-foundation`
+- `/v2/home/about/ecosystem#special-purpose-entities` - file_not_found
+  - Expected: `v2/pages/v2/home/about/ecosystem#special-purpose-entities`
 
 ### v2/gateways/guides/advanced-operations/gateway-middleware
 

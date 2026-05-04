@@ -143,6 +143,11 @@ function getLineNumber(content, index) {
   return content.slice(0, index).split('\n').length;
 }
 
+function categoryMatches(category, ...names) {
+  if (!category) return true;
+  return names.some((name) => category.includes(name));
+}
+
 /* ============================================
    REMEDIATORS
    ============================================ */
@@ -405,6 +410,45 @@ function findClosingTag(content, openIndex, tagName) {
   return -1;
 }
 
+function parseNamedImport(importLine) {
+  const match = String(importLine || '').match(/^import\s+\{\s*([^}]+?)\s*\}\s+from\s+['"]([^'"]+)['"]/);
+  if (!match) return null;
+  return {
+    names: match[1].split(',').map((name) => name.trim()).filter(Boolean),
+    source: match[2],
+  };
+}
+
+function upsertImportLine(content, importLine) {
+  const parsed = parseNamedImport(importLine);
+  if (!parsed) return content;
+
+  const lines = content.split('\n');
+  const sameSourceIndex = lines.findIndex((line) => {
+    const existing = parseNamedImport(line);
+    return existing && existing.source === parsed.source;
+  });
+
+  if (sameSourceIndex >= 0) {
+    const existing = parseNamedImport(lines[sameSourceIndex]);
+    const names = [...new Set([...existing.names, ...parsed.names])].sort();
+    lines[sameSourceIndex] = `import { ${names.join(', ')} } from '${existing.source}'`;
+    return lines.join('\n');
+  }
+
+  let lastImportIdx = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('import ')) lastImportIdx = i;
+  }
+
+  if (lastImportIdx >= 0) {
+    lines.splice(lastImportIdx + 1, 0, importLine);
+    return lines.join('\n');
+  }
+
+  return `${importLine}\n${content}`;
+}
+
 const COMPONENT_PATTERNS = [
   // #1: Flex center div → FlexContainer
   {
@@ -436,6 +480,17 @@ const COMPONENT_PATTERNS = [
     importLine: "import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'",
     importName: 'CenteredContainer',
   },
+  // #4: CenteredContainer width style → named preset
+  {
+    type: 'centered-readable90-to-preset',
+    regex: /<CenteredContainer\s+style=\{\{\s*width:\s*["']90%["']\s*\}\}>/g,
+    replacement: '<CenteredContainer preset="readable90">',
+    closeOld: '</CenteredContainer>',
+    closeNew: '</CenteredContainer>',
+    tagName: 'CenteredContainer',
+    importLine: null,
+    importName: null,
+  },
   // #7: Inline span divider → InlineDivider
   {
     type: 'span-divider-to-component',
@@ -449,7 +504,7 @@ const COMPONENT_PATTERNS = [
   // #8: Bordered div → BorderedBox
   {
     type: 'bordered-div-to-component',
-    regex: /<div\s+style=\{\{\s*border:\s*["']1px solid var\(--[^)]*\)["'],\s*borderRadius:\s*["']8px["'],\s*padding:\s*["'][^"']*["']\s*\}\}>/g,
+    regex: /<div\s+style=\{\{\s*border:\s*["']1px solid var\(--[^)]*\)["'],\s*borderRadius:\s*["']8px["'],\s*padding:\s*["'][^"']*["'](?:,\s*margin:\s*["'][^"']*["'])?\s*\}\}>/g,
     replacement: '<BorderedBox variant="accent">',
     closeOld: '</div>',
     closeNew: '</BorderedBox>',
@@ -546,7 +601,9 @@ function remediateComponentPatterns(filePath, content) {
         newContent = modified.slice(0, m.index) + replacementText + modified.slice(m.index + m.length);
       } else if (pattern.closeOld && pattern.closeNew) {
         // Find and replace closing tag
-        const closeIndex = findClosingDiv(modified, m.index);
+        const closeIndex = pattern.tagName
+          ? findClosingTag(modified, m.index, pattern.tagName)
+          : findClosingDiv(modified, m.index);
         if (closeIndex === -1) continue; // can't find closing tag, skip
 
         replacementText = pattern.replacement;
@@ -571,32 +628,21 @@ function remediateComponentPatterns(filePath, content) {
         file: path.relative(REPO_ROOT, filePath),
         line: m.line,
         before: m.original.slice(0, 60),
-        after: pattern.replacement.slice(0, 60),
+        after: String(replacementText || '').slice(0, 60),
       });
     }
   }
 
   // Add missing imports
   if (importsNeeded.size > 0) {
-    const lines = modified.split('\n');
-    // Find last import line
-    let lastImportIdx = -1;
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i].startsWith('import ')) lastImportIdx = i;
-    }
-
-    if (lastImportIdx >= 0) {
-      const existingImports = modified;
-      const newImports = [];
-      for (const imp of importsNeeded) {
-        const name = imp.match(/\{ (\w+)/)?.[1];
-        if (name && !existingImports.includes(`import { ${name}`) && !existingImports.includes(`import {${name}`)) {
-          newImports.push(imp);
-        }
-      }
-      if (newImports.length > 0) {
-        lines.splice(lastImportIdx + 1, 0, ...newImports);
-        modified = lines.join('\n');
+    for (const imp of importsNeeded) {
+      const parsed = parseNamedImport(imp);
+      const missing = parsed && parsed.names.some((name) => {
+        const importNameRegex = new RegExp(`import\\s+\\{[^}]*\\b${name}\\b[^}]*\\}\\s+from\\s+['"]`);
+        return !importNameRegex.test(modified);
+      });
+      if (missing) {
+        modified = upsertImportLine(modified, imp);
       }
     }
   }
@@ -623,19 +669,19 @@ function runRemediation(options = {}) {
   const filesModified = [];
 
   // JSX: legacy tokens + outline removal
-  if (!category || category.includes('legacy-token') || category.includes('outline-removal')) {
+  if (categoryMatches(category, 'legacy-token', 'outline-removal')) {
     for (const file of jsxFiles) {
       const content = fs.readFileSync(file, 'utf8');
       let modified = content;
       let fileFixes = [];
 
-      if (!category || category.includes('legacy-token')) {
+      if (categoryMatches(category, 'legacy-token')) {
         const result = remediateLegacyTokens(file, modified);
         modified = result.modified;
         fileFixes.push(...result.fixes);
       }
 
-      if (!category || category.includes('outline-removal')) {
+      if (categoryMatches(category, 'outline-removal')) {
         const result = remediateOutlineRemoval(file, modified);
         modified = result.modified;
         fileFixes.push(...result.fixes);
@@ -652,7 +698,7 @@ function runRemediation(options = {}) {
   }
 
   // MDX: mermaid init standardisation
-  if (!category || category.includes('mermaid-hardcoded')) {
+  if (categoryMatches(category, 'mermaid-hardcoded')) {
     for (const file of mdxFiles) {
       const content = fs.readFileSync(file, 'utf8');
       const result = remediateMermaidInit(file, content);
@@ -670,7 +716,7 @@ function runRemediation(options = {}) {
   }
 
   // JSX + MDX: hardcoded hex colours → CSS variables
-  if (!category || category.includes('hardcoded-hex')) {
+  if (categoryMatches(category, 'hardcoded-hex')) {
     for (const file of [...jsxFiles, ...mdxFiles]) {
       const content = fs.readFileSync(file, 'utf8');
       const result = remediateHexColours(file, content);
@@ -688,7 +734,7 @@ function runRemediation(options = {}) {
   }
 
   // JSX: literal spacing → --lp-spacing-* tokens
-  if (!category || category.includes('literal-spacing')) {
+  if (categoryMatches(category, 'literal-spacing')) {
     for (const file of jsxFiles) {
       const content = fs.readFileSync(file, 'utf8');
       const result = remediateLiteralSpacing(file, content);
@@ -706,7 +752,7 @@ function runRemediation(options = {}) {
   }
 
   // MDX: component pattern migrations (inline styles → components)
-  if (!category || category.includes('component-migration')) {
+  if (categoryMatches(category, 'component-migration', 'inline-style-mdx')) {
     for (const file of mdxFiles) {
       const content = fs.readFileSync(file, 'utf8');
       const result = remediateComponentPatterns(file, content);
@@ -848,7 +894,9 @@ function printHelp() {
     '',
     'Options:',
     '  --category X   Only fix specific categories (comma-separated):',
-    '                 legacy-token, outline-removal, mermaid-hardcoded',
+      '                 legacy-token, outline-removal, mermaid-hardcoded,',
+      '                 hardcoded-hex, literal-spacing, component-migration,',
+      '                 inline-style-mdx',
     '  --files X      Only fix specific files (comma-separated)',
     '  --help, -h     Show this help',
     '',
@@ -913,4 +961,12 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  categoryMatches,
+  remediateComponentPatterns,
+  runRemediation,
+};
