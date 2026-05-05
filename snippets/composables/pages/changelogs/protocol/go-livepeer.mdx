@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-03-30T00:00:00.000Z
+lastVerified: 2026-05-05T00:00:00.000Z
 ---
 
 {/*
@@ -57,6 +57,24 @@ Release notes for the Livepeer node software. For protocol-level changes, see th
 {/* ──────────────────────────────────────────────
   AUTOMATION ZONE -- entries below are populated by workflow.
   ────────────────────────────────────────────── */}
+
+<Update label="Unreleased" tags={["Live AI", "BYOC", "Livepeer Box", "Bug Fixes"]} rss={{ title: "go-livepeer unreleased", description: "Webcam input for Livepeer Box, BYOC worker auth tokens, Live AI payment tracking, and macOS build fix" }} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
+  ## Unreleased
+
+### New features
+
+- **Webcam input for Livepeer Box** - The Livepeer Box stream script now accepts a webcam (for example `/dev/video0`) as a video input source via v4l2, in addition to video files. This makes it easier to test Live AI pipelines end-to-end with a local camera. See the [box example gateway](https://github.com/livepeer/go-livepeer/blob/master/box/box.md) for usage.
+
+### Updates
+
+- **Auth tokens for BYOC worker registration** - BYOC orchestrators can now require an auth token when workers register, giving operators tighter control over which workers can join an orchestrator's BYOC capacity. See the [BYOC tutorial](/v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline) for the BYOC architecture.
+- **Live AI payment tracking events** - Live AI gateways now emit Kafka events when payments are sent to orchestrators, and increment a Prometheus counter on Kafka delivery errors. This improves payment observability for gateway operators running Live AI workloads.
+
+### Bug fixes
+
+- **Fixed macOS prebuilt binaries** - Removed the X11 dependency from macOS builds so prebuilt binaries run again in environments without X11 installed. Mac users can now download and run releases without extra system libraries.
+
+</Update>
 
 <Update label="v0.8.10" tags={["Live AI", "BYOC", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10", description: "Remote signer support for Live AI gateways, unified BYOC capability discovery, and broadcaster crash fix" }} description={<Subtitle variant="changelog">March 2026</Subtitle>}>
   ## v0.8.10
