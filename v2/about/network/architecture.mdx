@@ -1,27 +1,30 @@
 ---
 title: Network Architecture
 sidebarTitle: Network Architecture
-description: The running fleet's structure, the off-chain coordination layer, the on-chain anchor surfaces, and where the Network is observable from outside.
+description: "The Network's structure: three architectural layers, the off-chain coordination loop, and the on-chain anchor surfaces that bind it to the protocol."
 lifecycleStage: discover
 complexity: intermediate
-pageType: concept
-audience: community
-purpose: explain
-status: current
-veracityStatus: verified
-lastVerified: 2026-05-04
 keywords:
-  - livepeer network architecture
-  - go-livepeer node fleet
-  - off-chain coordination layer
-  - on-chain anchor surfaces
-  - livepeer explorer subgraph
-  - network capabilities api
+  - livepeer
+  - about
+  - livepeer network
+  - network architecture
+  - go-livepeer nodes
+  - off-chain coordination
+  - on-chain anchor
 'og:image': /snippets/assets/media/og-images/en/about.png
 'og:image:alt': Livepeer Docs social preview image for About
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
+pageType: concept
+pageVariant: specification
+purpose: explain
+audience: community
+status: current
+veracityStatus: verified
+lastVerified: 2026-05-04
+aim: How the Network is laid out and how it anchors to the protocol
 ---
 
 import { CustomCardTitle, Subtitle } from '/snippets/components/elements/text/Text.jsx'
@@ -33,43 +36,44 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-The Network is a running fleet of `go-livepeer` nodes coordinating off-chain and anchored to four protocol contracts on Arbitrum One. The fleet is observable from outside through the Explorer, the subgraph, and the Network Capabilities API.
+The Network is a population of `go-livepeer` nodes coordinating off-chain, anchored to four protocol contracts on Arbitrum One. The Network is observable from outside through the Explorer, the subgraph, and the Network Capabilities API.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
 
-## Three Architectural Layers
-
-The Network's architecture is three layers stacked: the running fleet of nodes, the off-chain coordination layer they communicate over, and the on-chain anchor surfaces they read from and write to. Each layer answers a different question.
+## Architectural Layers
 
 <DynamicTableV2
-  headerList={['Layer', 'What it is', 'What it answers']}
+  headerList={['Layer', 'What it is', 'What it answers', 'Rate of change']}
   itemsList={[
     {
-      Layer: <Subtitle variant="changelog">**Node fleet**</Subtitle>,
+      Layer: <Subtitle variant="changelog">**Node population**</Subtitle>,
       'What it is': 'The running `go-livepeer` processes operated by gateways, orchestrators, and their attached workers',
-      'What it answers': 'What machines are running, what role each plays, how they connect to clients and to each other',
+      'What it answers': 'What nodes are running, what role each plays, how they connect to clients and to each other',
+      'Rate of change': 'Continuous (release-cadence weekly)',
     },
     {
       Layer: <Subtitle variant="changelog">**Off-chain coordination**</Subtitle>,
       'What it is': 'Direct gateway-to-orchestrator traffic: capability advertisement, job dispatch, ticket exchange, real-time frame transport',
       'What it answers': 'How nodes find each other, agree on price, exchange work, and pay for it without touching the chain',
+      'Rate of change': 'Per-session and per-job',
     },
     {
       Layer: <Subtitle variant="changelog">**On-chain anchor**</Subtitle>,
       'What it is': 'Four protocol contracts on Arbitrum One that the off-chain layer reads and writes against',
       'What it answers': 'What the Network commits to permanently, where stake and settlement live, what is publicly auditable',
+      'Rate of change': 'Per round (~21 hours), per winning ticket',
     },
   ]}
 />
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## The Running Fleet
+## Network Topology
 
-The fleet is operated by independent participants. Orchestrators run GPU nodes and any workers attached to them. Gateways run routing and payment infrastructure. Both run the same `go-livepeer` binary in different modes. A small operator runs one process; a large operator splits the modes across separate machines on a private subnet, with the orchestrator on the network edge.
+The Network is operated by independent participants. Orchestrators run GPU nodes and any workers attached to them. Gateways run routing and payment infrastructure. Both run the same `go-livepeer` binary in different modes. A small operator runs one process; a large operator splits the modes across separate hosts on a private subnet, with the orchestrator on the network edge.
 
-<ScrollableDiagram title="Network Fleet and the Boundary it Anchors To" maxHeight="700px">
+<ScrollableDiagram title="Network Topology and the Boundary it Anchors To" maxHeight="700px">
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
@@ -82,12 +86,12 @@ flowchart TB
 
     Client["Client app"]:::default
 
-    subgraph DemandSide["Demand-side fleet"]
-        Gateway["Gateway nodes<br/>job intake, routing,<br/>payment"]:::gw
+    subgraph DemandSide["Demand side"]
+        Gateway["Gateway nodes<br/>job intake, routing, payment"]:::gw
     end
 
-    subgraph SupplySide["Supply-side fleet"]
-        Orch["Orchestrator nodes<br/>capability advertisement,<br/>job dispatch"]:::orch
+    subgraph SupplySide["Supply side"]
+        Orch["Orchestrator nodes<br/>capability advertisement, job dispatch"]:::orch
         Workers["Worker processes<br/>transcoders, AI workers"]:::orch
     end
 
@@ -98,7 +102,7 @@ flowchart TB
         Minter["Minter"]:::chain
     end
 
-    subgraph Outside["Outside-the-fleet observability"]
+    subgraph Outside["Outside observability"]
         Explorer["Livepeer Explorer"]:::obs
         Subgraph["Arbitrum subgraph"]:::obs
         CapsAPI["Network Capabilities API"]:::obs
@@ -122,7 +126,70 @@ flowchart TB
 
 </ScrollableDiagram>
 
-Solid arrows are off-chain traffic at job rate. Dashed arrows from the fleet to the chain are settlement and registration, at lower frequency. Dashed arrows from the observability surfaces are read-only data flows that let outside readers see what the fleet is doing without operating any of it.
+Solid arrows are off-chain traffic at job rate. Dashed arrows from the nodes to the chain are settlement and registration, at lower frequency. Dashed arrows from the observability surfaces are read-only data flows that let outside readers see what the Network is doing without operating any of it.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Traffic Planes
+
+Inside the Network, four distinct kinds of traffic move on different transports at different rates. Separating them clarifies what scales, what bottlenecks, and what an outside observer can see.
+
+<DynamicTableV2
+  headerList={['Plane', 'What flows', 'Transport', 'Cadence']}
+  itemsList={[
+    {
+      Plane: <Subtitle variant="changelog">**Control**</Subtitle>,
+      'What flows': 'Capability advertisement, discovery queries, session establishment',
+      Transport: 'gRPC and HTTP between gateway and orchestrator',
+      Cadence: 'Per-session (seconds to minutes)',
+    },
+    {
+      Plane: <Subtitle variant="changelog">**Data**</Subtitle>,
+      'What flows': 'Video segments, AI inference inputs and outputs, real-time frames',
+      Transport: 'HTTP for batch jobs; trickle for real-time AI; RTMP/WHIP for live ingest',
+      Cadence: 'Per-segment or per-frame (sub-second to seconds)',
+    },
+    {
+      Plane: <Subtitle variant="changelog">**Payment**</Subtitle>,
+      'What flows': 'Probabilistic micropayment tickets, winning ticket redemptions',
+      Transport: 'Off-chain ticket exchange in HTTP headers; on-chain redemption to `TicketBroker`',
+      Cadence: 'Per-segment off-chain; per-winning-ticket on-chain',
+    },
+    {
+      Plane: <Subtitle variant="changelog">**Observability**</Subtitle>,
+      'What flows': 'Round state, stake changes, ticket events, service URI updates, governance votes',
+      Transport: 'Subgraph indexer, Explorer front-end, leaderboard API',
+      Cadence: 'Continuous read; updates per round and per on-chain event',
+    },
+  ]}
+/>
+
+The control and data planes are sized for production volume. The payment plane uses probabilistic settlement so the on-chain layer never sees per-segment traffic. The observability plane is read-only and decoupled from job execution.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Round Lifecycle
+
+The on-chain layer advances in **rounds** of approximately 21 hours each (~5,760 Arbitrum L2 blocks). The active set, which orchestrators are eligible for video work, locks at the start of each round. Per-round inflation rewards distribute through `BondingManager`. The round is the cadence at which the protocol meets the Network.
+
+<ScrollableDiagram title="Round Lifecycle" maxHeight="400px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+stateDiagram-v2
+  [*] --> NewRound
+  NewRound --> Initializing: anyone calls initializeRound
+  Initializing --> Active: active set locked, reward eligibility set
+  Active --> RewardCalls: orchestrators call reward() during round
+  RewardCalls --> Active
+  Active --> Closing: round end approaches
+  Closing --> NewRound: next round begins
+  Active --> [*]: orchestrator unbonds, exits active set
+```
+
+</ScrollableDiagram>
+
+Mid-round, capability advertisement and pricing can change. Eligibility cannot. An orchestrator that wants to enter the active set bonds during a round; eligibility takes effect at the next round boundary.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
@@ -158,11 +225,15 @@ Four communication patterns run continuously across the off-chain layer:
   ]}
 />
 
+<Tip>
+The active set, which orchestrators are eligible for video work, locks at the start of each round. Capability advertisement and pricing can change mid-round; eligibility cannot.
+</Tip>
+
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## On-Chain Anchor Surfaces
+## On-Chain Anchor Contracts
 
-The Network reads from and writes to four contracts on Arbitrum One. These are the surfaces the off-chain fleet relies on for ground truth.
+The Network reads from and writes to four contracts on Arbitrum One. These are the surfaces the off-chain layer relies on for ground truth.
 
 <DynamicTableV2
   headerList={['Contract', 'What the Network uses it for']}
@@ -190,9 +261,9 @@ The Network reads from and writes to four contracts on Arbitrum One. These are t
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## Observable from Outside
+## External Observability
 
-The Network is observable from outside the fleet through three surfaces. Researchers, evaluators, and integrators do not need to operate any node to see what the Network is doing.
+The Network is observable from outside through three surfaces. Researchers, evaluators, and integrators do not need to operate any node to see what the Network is doing.
 
 <DynamicTableV2
   headerList={['Surface', 'What it exposes', 'Who uses it']}
@@ -217,6 +288,8 @@ The Network is observable from outside the fleet through three surfaces. Researc
 
 The three surfaces share a property: they let an outside reader build a real picture of the Network's state without trusting any single operator. Each surface reads ground truth from the chain or from operator-published data, not from a central authority.
 
+<Card title={<CustomCardTitle icon="chart-line" title="Observability" />} href="/v2/about/network/observability" horizontal arrow > How to read the Network state from outside. </Card>
+
 <CustomDivider />
 
 ## Related Pages
@@ -235,168 +308,3 @@ The three surfaces share a property: they let an outside reader build a real pic
     The four-layer Livepeer stack.
   </Card>
 </Columns>
-
-{  /* ---
-title: Network Technical Architecture
-sidebarTitle: Architecture
-description: >-
-  Technical stack of the Livepeer Network: node types, gateway infrastructure, APIs, CLI, SDKs, and monitoring. How
-  orchestrators, gateways, and workers fit together.
-lifecycleStage: discover
-complexity: intermediate
-pageType: concept
-audience: general
-lastVerified: 2026-03-17T00:00:00.000Z
-purpose: concept
-keywords:
-  - livepeer
-  - about
-  - livepeer network
-  - technical architecture
-  - stack
-  - orchestrator
-  - gateway
-  - go-livepeer
-'og:image': /snippets/assets/media/og-images/en/about.png
----
-import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
-import { GotoCard, GotoLink } from '/snippets/components/elements/links/Links.jsx'
-
-the full stack of tools, infrastructure, and components that power the Livepeer Network at the node, Gateway, and client level. Livepeer's architecture is modular and developer-facing: you can run an Orchestrator, build a custom AI Gateway, or use APIs to build media apps on decentralised compute.
-
-## Architecture layers
-
-```mermaid
-graph TD
-    UI[Apps / SDKs / Interfaces]
-    API[Gateway APIs / REST / GraphQL]
-    GW[Gateway Nodes]
-    O[Orchestrator Node - go-livepeer]
-    W[Worker Layer - FFmpeg / AI]
-    P[Protocol - Ethereum / Arbitrum]
-
-    UI --> API --> GW --> O --> W
-    O --> P
-```
-
-The network sits above the protocol: Gateways and Orchestrators handle off-chain compute and routing; the protocol (Arbitrum) handles staking, tickets, and rewards.
-
-## Orchestrator node
-
-The Orchestrator node runs **go-livepeer** (the `livepeer` binary), available at:
-
-[https://github.com/livepeer/go-livepeer](https://github.com/livepeer/go-livepeer)
-
-### Key components
-
-- **Transcoder selection** - Internal or external workers; configured via `orchSecret` and `orchAddr` for remote transcoders
-- **Ticket validation** - L2 `TicketBroker` on Arbitrum for ETH payment redemption
-- **Reward claim** - Merkle submission to `BondingManager` each round
-- **LPT staking** - BondingManager for self-bond and delegator stake
-- **Region advertisement** - For Gateway routing (latency, capacity)
-
-### Deployment modes
-
-- Bare metal with GPU
-- Containerized
-- Cloud auto-scaling
-
-### Tools
-
-- **livepeer_cli** - Stake, set fee/reward cut, monitor sessions
-- **livepeer_exporter** - Prometheus metrics exporter for observability
-
-## Worker layer
-
-Workers can be local or remote services attached to an Orchestrator:
-
-<DynamicTable
-  headerList={["Type", "Language / runtime", "Example use"]}
-  itemsList={[
-    { "Type": "Transcoder", "Language / runtime": "FFmpeg", "Example use": ".ts segment processing, multi-bitrate output" },
-    { "Type": "Inference", "Language / runtime": "Python (Torch)", "Example use": "AI tasks, e.g. SDXL image-to-image" },
-    { "Type": "Plugin", "Language / runtime": "WebRTC / C++", "Example use": "Real-time browser capture or object detection" }
-  ]}
-/>
-
-Configured via Orchestrator `config.json` or environment variables.
-
-## Gateway infrastructure
-
-Gateways manage:
-
-- Session auth (API key, ETH deposit, or credit check)
-- Job routing to Orchestrators
-- Session logging and retries
-
-**Codebases:**
-
-- [Studio Gateway](https://github.com/livepeer/studio-gateway)
-- [Daydream Gateway](https://github.com/livepeer/daydream)
-- [Cascade](https://github.com/livepeer/cascade) - Load balancer and AI workflow coordination
-
-**Features:** Rate limiting, region scoring, health probes, fallback Orchestrators, credit tracking (e.g. Postgres/Redis).
-
-## APIs
-
-<DynamicTable
-  headerList={["API", "Protocol", "Description"]}
-  itemsList={[
-    { "API": "REST Gateway", "Protocol": "HTTPS", "Description": "Transcode, AI job control (e.g. Livepeer Studio API)" },
-    { "API": "gRPC Gateway", "Protocol": "gRPC", "Description": "Fast session handshakes, monitoring (e.g. ReserveSession, Heartbeat)" },
-    { "API": "Explorer API", "Protocol": "GraphQL", "Description": "Metrics, staking, round data (explorer.livepeer.org)" }
-  ]}
-/>
-
-**Endpoints:**
-
-- `https://livepeer.studio/api` - Studio REST
-- `https://explorer.livepeer.org/graphql` - Explorer GraphQL
-
-## CLI and SDKs
-
-**CLI:** `livepeer_cli` (shipped with go-livepeer)
-
-- Stake LPT, bond/unbond
-- Set Orchestrator fees and reward cut
-- Watch active sessions, query protocol state
-
-**SDKs:**
-
-- **[Livepeer JS SDK](https://github.com/livepeer/js-sdk)** - Playback, ingest, AI session tools; works in Node.js and browser
-- **Python AI pipelines** - Used in internal and community projects (e.g. DotSimulate, MetaDJ)
-
-## Monitoring and observability
-
-<DynamicTable
-  headerList={["Tool", "Metric type", "Description"]}
-  itemsList={[
-    { "Tool": "Prometheus", "Metric type": "Session, CPU, ticketing", "Description": "Exposed via livepeer_exporter" },
-    { "Tool": "Grafana dashboards", "Metric type": "Visual ops", "Description": "Studio and Orchestrator internal views" },
-    { "Tool": "Loki", "Metric type": "Logs", "Description": "Transcode errors, API retries" },
-    { "Tool": "Gateway logs", "Metric type": "Credits, API, routing", "Description": "Per-session logs (e.g. Redis / S3)" }
-  ]}
-/>
-
-Node software exposes explicit metrics (e.g. Segment success rate, ticket value sent/redeemed, orchestrator swaps); see [Job lifecycle](./job-lifecycle) for event/transition details.
-
-## Deployment examples
-
-- [Orchestrator on AWS](https://github.com/livepeer/orchestrator-on-aws)
-- [Studio gateway deploy](https://github.com/livepeer/studio-gateway-deploy)
-- [Daydream AI node pipeline](https://github.com/livepeer/daydream)
-
-## See also
-
-- [Interfaces](./interfaces) - REST, gRPC, GraphQL, JS SDK, CLI, and smart contract access
-- [Marketplace](./marketplace) - How Gateways route jobs and how pricing works
-- [Job lifecycle](./job-lifecycle) - End-to-end flow and state machine
-- [Protocol technical architecture](../protocol/technical-architecture) - On-chain contracts and node types from protocol perspective
-- [Blockchain contracts](../protocol/blockchain-contracts) - Contract addresses (Arbitrum)
-
-## References
-
-- [Livepeer GitHub](https://github.com/livepeer)
-- [Orchestrator docs](/v2/orchestrators/portal)
-- [Daydream Gateway](https://github.com/livepeer/daydream)
-- [Livepeer Explorer](https://explorer.livepeer.org) */}

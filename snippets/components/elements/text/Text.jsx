@@ -22,6 +22,45 @@ export const Subtitle = ({
   className = '',
   ...rest
 }) => {
+  const renderInlineCode = (value, keyPrefix) => {
+    return value.split(/(`[^`]+`)/g).map((segment, index) => {
+      if (segment.startsWith('`') && segment.endsWith('`')) {
+        return <code key={`${keyPrefix}-code-${index}`}>{segment.slice(1, -1)}</code>
+      }
+
+      return segment
+    })
+  }
+
+  const renderInlineMarkup = (value, keyPrefix = 'subtitle') => {
+    if (typeof value !== 'string') {
+      return value
+    }
+
+    return value.split(/(\*\*[\s\S]+?\*\*)/g).map((segment, index) => {
+      if (segment.startsWith('**') && segment.endsWith('**')) {
+        const inner = segment.slice(2, -2)
+        return (
+          <strong key={`${keyPrefix}-strong-${index}`}>
+            {renderInlineCode(inner, `${keyPrefix}-strong-${index}`)}
+          </strong>
+        )
+      }
+
+      return renderInlineCode(segment, `${keyPrefix}-${index}`)
+    })
+  }
+
+  const renderContent = (value, keyPrefix) => {
+    if (Array.isArray(value)) {
+      return value.map((item, index) =>
+        renderContent(item, `${keyPrefix}-${index}`)
+      )
+    }
+
+    return renderInlineMarkup(value, keyPrefix)
+  }
+
   const variants = {
     default: {
       fontSize: '1rem',
@@ -48,8 +87,8 @@ export const Subtitle = ({
       }}
       {...rest}
     >
-      {text}
-      {children}
+      {renderContent(text, 'text')}
+      {renderContent(children, 'children')}
     </span>
   )
 }
