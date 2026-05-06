@@ -34,6 +34,7 @@ import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
 
 <Quote>
     The Network is the **off-chain execution layer** responsible for _running the work_, _routing jobs to the right operators_, and _settling payment_ at production volume. The Protocol enforces the rules; the Network does the work.
@@ -43,72 +44,24 @@ import { BorderedBox } from '/snippets/components/wrappers/containers/Containers
 
 ## Network Role
 
-The Network was designed to deliver real-time video and AI compute at production volume on a permissionless, open marketplace. Where the Protocol provides the rules, the Network provides the execution: GPU operators accepting jobs, gateways routing demand, payments settling continuously off-chain.
+The Network was designed to deliver real-time video and AI compute at production volume on a permissionless, open marketplace.
 
-The **Livepeer Network** is the population of `go-livepeer` nodes that accept jobs, perform transcoding and AI inference, exchange off-chain payments, and settle on-chain only when a probabilistic ticket wins. Most of what a user experiences as "Livepeer" happens in the Network.
+The Network provides the **off-chain** execution layer for Livepeer with GPU operators accepting jobs, gateways routing demand, and payments settling continuously off-chain.
 
-<FrameQuote author="Livepeer Whitepaper (2017)" href="/v2/about/resources/knowledge-hub/livepeer-whitepaper">
-The Livepeer protocol describes an **open, decentralised network** for live video transmission, where **transcoding capacity is provided by node operators in exchange for fees**, and where the system can scale to meet demand without requiring permission from any central authority.
-</FrameQuote>
+The **Livepeer Network** is implemented by nodes running [`go-livepeer`](https://github.com/livepeer/go-livepeer) that accept jobs, perform compute, transcoding and AI inference, exchange off-chain payments, and then settle on-chain.
 
-See the [Livepeer Stack](/v2/about/concepts/livepeer-stack) for how the Network sits inside the broader four-layer architecture.
+<Card title={<CustomCardTitle icon="cubes" title="Network Implementation, Actors & Node Mechanisms" />} arrow href="/v2/about/network/actors" />
 
-<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+## Network Design Principles
 
-## Changes Since the 2017 Whitepaper
-
-The 2017 whitepaper specified a working system. The Network running today preserves the design intent and replaces six of the specific mechanisms with later, more practical equivalents. The differences matter to anyone reading the whitepaper as current spec.
-
-<ScrollableDiagram title="As Designed (2017) vs As Running (2026)" maxHeight="500px">
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
-flowchart LR
-    classDef old fill:#1a1a1a,color:#E0E4E0,stroke:#71717a,stroke-width:2px
-    classDef new fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
-
-    subgraph Designed["2017: As designed (whitepaper)"]
-        D1["Single Transcoder actor"]:::old
-        D2["Per-segment on-chain escrow"]:::old
-        D3["Truebit-style verification"]:::old
-        D4["Swarm/PPSPP relay distribution"]:::old
-        D5["Ethereum mainnet"]:::old
-        D6["Off-chain LIP polls<br/>(non-binding)"]:::old
-    end
-
-    subgraph Running["2026: As running"]
-        R1["Orchestrator + Transcoder + AI Worker<br/>(Streamflow split)"]:::new
-        R2["Probabilistic micropayment tickets<br/>(off-chain, on-chain redemption)"]:::new
-        R3["Fast verification<br/>(MPEG-7 perceptual hash)"]:::new
-        R4["Direct HTTP, trickle, external CDNs"]:::new
-        R5["Arbitrum One<br/>(LIP-73 Confluence)"]:::new
-        R6["On-chain Governor<br/>(LIP-89 Delta)"]:::new
-    end
-
-    D1 -.->|Streamflow 2019| R1
-    D2 -.->|PM ticket spec| R2
-    D3 -.->|never deployed| R3
-    D4 -.->|simplified| R4
-    D5 -.->|2022 migration| R5
-    D6 -.->|2023 upgrade| R6
-```
-
-</ScrollableDiagram>
-
-The design intent in every row is preserved. What changed is the mechanism that delivers it. Slashing is the one whitepaper mechanism that exists in the deployed contracts but is not currently active: the on-chain Verifier role is set to `0x0`, and honest work is enforced through stake exposure, fast verification, and selection feedback instead.
-
-<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
-
-## Design Properties
-
-The Network's design preserves seven properties. Together they explain why the deployed network can do what a centralised compute API cannot.
+The 2017 whitepaper specified core design principles for the Livepeer video broadcasting network:
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Protocol Boundary" icon="scale-balanced">
-    The chain enforces; the Network executes. The Protocol records stake, settles winning tickets, and distributes inflation. The Network handles every job that does not touch the chain. This split is what lets the system change quickly at the execution layer while the rules stay slow.
+    The chain enforces; the Network executes. The Protocol records stake, settles winning tickets, distributes inflation. The Network handles every job that does not touch the chain. The split is what lets execution change quickly while the rules stay slow.
   </StyledStep>
   <StyledStep title="Permissionless Participation" icon="door-open">
-    Anyone with compatible hardware can register an orchestrator and start receiving jobs. Anyone can run a gateway and route demand. There is no application process, no vendor relationship, no gatekeeper. Capacity grows whenever a new operator joins.
+    Anyone with compatible hardware can register an orchestrator and start receiving jobs. Anyone can run a gateway and route demand. No application process, no vendor relationship, no gatekeeper. Capacity grows whenever a new operator joins.
   </StyledStep>
   <StyledStep title="Off-Chain Settlement" icon="bolt">
     Jobs are paid through probabilistic micropayment tickets exchanged off-chain. Only winning tickets touch the chain. This is what makes per-pixel and per-token pricing economical at production volume; on-chain settlement per job would cost more than the work itself.
@@ -127,10 +80,6 @@ The Network's design preserves seven properties. Together they explain why the d
   </StyledStep>
 </StyledSteps>
 
-<Card title={<CustomCardTitle icon="cogs" title="Protocol Mechanisms" />} href="/v2/about/protocol/mechanisms" horizontal arrow > How the Protocol enforces the rules the Network executes against. </Card>
-
-<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
-
 ## Design Decisions
 
 The Network's design reflects deliberate choices made to preserve the seven properties at scale.
@@ -147,107 +96,61 @@ Slashing exists in the Protocol but is currently dormant: the on-chain Verifier 
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## Property Provenance
+## Network Evolution
 
-Every property the Network preserves traces back to a specific protocol decision: a Livepeer Improvement Proposal that ratified the change, and a contract or codebase that implements it. The provenance is what lets a researcher cite the running Network with confidence.
+<FrameQuote author="Livepeer Whitepaper (2017)" href="/v2/about/resources/knowledge-hub/livepeer-whitepaper">
+The Livepeer protocol described an **open, decentralised network** for live video transmission, where **transcoding capacity is provided by node operators in exchange for fees**, and where the system can scale to meet demand without requiring permission from any central authority.
+</FrameQuote>
 
-<DynamicTableV2
-  headerList={['Network property', 'Ratified by', 'Implemented in']}
-  itemsList={[
-    {
-      'Network property': <Subtitle variant="changelog">**Off-chain settlement (PM tickets)**</Subtitle>,
-      'Ratified by': 'Streamflow spec (2019), refined by LIP-36 cumulative earnings, LIP-52 snapshot claim',
-      'Implemented in': '`pm/` package in `go-livepeer`; `TicketBroker` contract on Arbitrum One',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**Active set election**</Subtitle>,
-      'Ratified by': 'Streamflow spec; LIP-83 round-length adjustment',
-      'Implemented in': '`BondingManager`, `RoundsManager` contracts',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**Service URI advertisement**</Subtitle>,
-      'Ratified by': 'LIP-9 (ServiceRegistry)',
-      'Implemented in': '`ServiceRegistry` contract; `discovery/` package in `go-livepeer`',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**On-chain governance**</Subtitle>,
-      'Ratified by': 'LIP-89, LIP-91, LIP-92 (Delta upgrade, 2023)',
-      'Implemented in': '`LivepeerGovernor`, `BondingVotes`, `Treasury` contracts',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**Arbitrum deployment**</Subtitle>,
-      'Ratified by': 'LIP-73 (Confluence, 2022)',
-      'Implemented in': 'Full contract redeployment to Arbitrum One',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**SPE funding convention**</Subtitle>,
-      'Ratified by': 'LIP-90 (Funding Entity Conventions, 2023)',
-      'Implemented in': 'Social convention; Treasury proposals route through SPEs',
-    },
-    {
-      'Network property': <Subtitle variant="changelog">**AI extension and BYOC**</Subtitle>,
-      'Ratified by': 'AI Video SPE Stage 1 through Stage 4 (no LIP)',
-      'Implemented in': '`ai/`, `byoc/`, `trickle/` packages in `go-livepeer`; `ai-runner` repository',
-    },
-  ]}
-/>
+The design principles and mechanisms outlined in the whitepaper have been preserved and expanded upon in the real-world implementation of the Livepeer Network, which has evolved to meet the demands of production workloads while adhering to the core tenets of decentralisation, permissionless participation, and economic security.
 
-The AI extension is the one Network property without a Livepeer Improvement Proposal anchoring it. The mandate for AI work was instead authorised through the SPE convention (LIP-90) by funding the AI Video Special Purpose Entity. This is a deliberate consequence of the SPE model: pipeline-level capability does not need a hard fork.
+The Network's design continues to reflect the original vision of an open, decentralised marketplace for video and AI compute, while incorporating new features and optimisations that have emerged through real-world usage and community feedback over time.
 
-<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
-
-## Implementation
-
-The Network is implemented as `go-livepeer` nodes communicating off-chain, anchored to four protocol contracts on Arbitrum One. Off-chain traffic carries jobs, capability advertisement, and tickets. On-chain settlement carries deposits, winning tickets, and per-round rewards.
-
-<ScrollableDiagram title="Off-Chain Execution Anchored On-Chain" maxHeight="600px">
+<ScrollableDiagram title="Livepeer Network Evolution" maxHeight="600px">
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
-flowchart TB
-    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
-    classDef net fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:3px
-    classDef chain fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
+flowchart LR
+    classDef old fill:#1a1a1a,color:#E0E4E0,stroke:#71717a,stroke-width:2px
+    classDef new fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
 
-    subgraph OffChain["Off-chain Network"]
-        Client["Client app"]:::default
-        Gateway["Gateway nodes<br/>job intake, routing, payment"]:::net
-        Orch["Orchestrator nodes<br/>capability advertisement, job execution"]:::net
-        Workers["Worker processes<br/>transcoders, AI workers"]:::net
+    subgraph Designed["Whitepaper (2017)"]
+        D1["Single Transcoder actor<br/>(25-node cap)"]:::old
+        D2["Per-segment on-chain escrow"]:::old
+        D3["Truebit-style verification"]:::old
+        D4["Swarm/PPSPP relay distribution"]:::old
+        D5["Ethereum mainnet"]:::old
+        D6["Off-chain LIP polls<br/>(non-binding)"]:::old
+        D7["Video transcoding only"]:::old
+        D8["Implicit pricing<br/>(no marketplace spec)"]:::old
     end
 
-    subgraph OnChain["On-chain Protocol (Arbitrum One)"]
-        Bond["BondingManager<br/>stake, active set"]:::chain
-        Broker["TicketBroker<br/>winning ticket settlement"]:::chain
-        Registry["ServiceRegistry<br/>orchestrator endpoints"]:::chain
-        Minter["Minter<br/>LPT inflation rewards"]:::chain
+    subgraph Running["2026 Network"]
+        R1["Orchestrator + Transcoder<br/>(100-node active set)"]:::new
+        R2["Probabilistic micropayment tickets<br/>(off-chain, on-chain redemption)"]:::new
+        R3["Fast verification<br/>(MPEG-7 perceptual hash)<br/>Verifier role 0x0 - dormant"]:::new
+        R4["Direct HTTP, trickle, external CDNs"]:::new
+        R5["Arbitrum One"]:::new
+        R6["On-chain Governor + Treasury<br/>(inflation-funded public goods)"]:::new
+        R7["Video + AI Worker<br/>(transcoding, inference, real-time AI)"]:::new
+        R8["Posted-price marketplace<br/>ServiceRegistry capability ads<br/>performance-based selection"]:::new
     end
 
-    Client -->|job| Gateway
-    Gateway -->|job + ticket per segment| Orch
-    Orch -->|dispatch| Workers
-    Orch -.->|reads stake, active set| Bond
-    Gateway -.->|deposits ETH| Broker
-    Orch -.->|redeems winning ticket| Broker
-    Orch -.->|reads endpoints| Registry
-    Bond -.->|distributes per round| Minter
+    D1 -.->|Streamflow LIP-30 - 2020| R1
+    D2 -.->|Streamflow PM tickets - 2020| R2
+    D3 -.->|fast-verify - slashing dormant| R3
+    D4 -.->|simplified| R4
+    D5 -.->|Confluence LIP-80 - 2022| R5
+    D6 -.->|Delta LIP-91 - 2023| R6
+    D7 -.->|Cascade LIP-100 - 2025| R7
+    D8 -.->|emergent| R8
 ```
 
 </ScrollableDiagram>
 
-The diagram is the boundary diagram. Solid arrows are continuous off-chain traffic; dashed arrows are the few on-chain interactions per session. Most jobs never produce a dashed arrow. The Network is sized for the solid lines.
-
-<Card title={<CustomCardTitle icon="diagram-project" title="Network Architecture" />} href="/v2/about/network/architecture" horizontal arrow > The Network's three-layer topology in detail. </Card>
-
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## Network Actors
-
-<Tip>
-The Network does not enforce the rules; the Protocol does. The actors below are the participants that run the off-chain layer and interact with the on-chain Protocol to coordinate, settle, and earn.
-</Tip>
-
-The Network is operated by four kinds of participant. Each runs different software, takes a different risk, and earns differently.
+## Network Participants
 
 <DynamicTableV2
   headerList={['Actor', 'What they run', 'What they take on', 'What they earn']}
@@ -278,8 +181,6 @@ The Network is operated by four kinds of participant. Each runs different softwa
     },
   ]}
 />
-
-<CustomDivider />
 
 ## Related Pages
 
