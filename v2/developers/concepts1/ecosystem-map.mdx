@@ -29,10 +29,10 @@ complexity: beginner
 lifecycleStage: discover
 ---
 
-import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
-import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
 
 <CenteredContainer style={{ width: '90%' }}>
   <Tip>The Livepeer GitHub organisation hosts 173 public repositories. This page maps the ones that matter for developers – organised by stack layer, with the role each repo plays and where to start.</Tip>
@@ -46,50 +46,7 @@ Repositories marked **[Official]** are maintained under the `livepeer/` GitHub o
 
 For a focused view of OSS contribution paths, see <LinkArrow href="/v2/developers/concepts/oss-stack" label="The OSS stack" newline={false} />.
 
-<CustomDivider />
-
-<Image src="/snippets/assets/media/images/livepeer-oss-stack.svg" alt="Diagram of the Livepeer open source stack, showing how the different repositories connect" />
-
-## Repo map
-
-| Repo | What it does | Language | Role in the stack |
-|------|-------------|----------|------------------|
-| [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) | The Livepeer node – implements Broadcaster, Orchestrator, Transcoder, and Gateway roles | Go | Core runtime; everything else depends on or connects to this |
-| [`livepeer/livepeer-protocol`](https://github.com/livepeer/livepeer-protocol) | Solidity smart contracts governing staking, bonding, and on-chain job settlement on Arbitrum | Solidity | Protocol layer; go-livepeer calls these contracts for on-chain operations |
-| [`livepeer/ai-worker`](https://github.com/livepeer/ai-worker) | The AI runner – containerised Python inference service for batch and real-time AI pipelines | Python | go-livepeer spawns `ai-runner` Docker containers per pipeline to handle inference |
-| [`livepeer/comfystream`](https://github.com/livepeer/comfystream) | Real-time AI video pipeline engine built on ComfyUI; the primary tool for building `live-video-to-video` workflows | Python | Connects to the Livepeer network via the trickle protocol (see pytrickle) |
-| [`livepeer/pytrickle`](https://github.com/livepeer/pytrickle) | Python SDK for the trickle streaming protocol – the transport layer used by comfystream and BYOC pipelines | Python | Transport layer; used by comfystream and by custom BYOC containers (via PyTrickle `FrameProcessor`) |
-| [`livepeer/livepeer.js`](https://github.com/livepeer/livepeer.js) / [`livepeer/ui-kit`](https://github.com/livepeer/ui-kit) | Frontend SDK and React components for integrating Livepeer video into web applications | TypeScript / React | Application layer; independent of the AI and protocol stack |
-| [`livepeer/docs`](https://github.com/livepeer/docs) | This documentation site | MDX (Mintlify) | Docs; you are reading the output of this repo right now |
-
-<CustomDivider />
-
-## How the repos connect
-
-`go-livepeer` is the foundation. It implements the node software that every participant in the network runs – in Gateway mode, Orchestrator mode, or both. When AI inference is enabled, `go-livepeer` spawns one or more `ai-runner` Docker containers (from `livepeer/ai-worker`) per GPU, and proxies inference requests to them via a local REST interface.
-
-`livepeer-protocol` defines the on-chain rules. The Solidity contracts on Arbitrum govern staking, bonding, reward distribution, and slashing. `go-livepeer` calls these contracts when a node registers on-chain or settles payments. Off-chain AI gateways bypass this layer entirely – they talk directly to orchestrators without on-chain settlement.
-
-`comfystream` sits above `go-livepeer` for the real-time AI path. It runs alongside ComfyUI and uses `pytrickle` to exchange frames with an orchestrator over the trickle streaming protocol. A BYOC developer using `pytrickle` directly implements their own `FrameProcessor` class – the same interface that `comfystream` uses internally.
-
-`livepeer.js` / `ui-kit` is independent of the above. It is the application SDK for developers building Studio-integrated video apps – stream playback, upload, asset management. It does not interact with `go-livepeer` directly.
-
-<CustomDivider />
-
-## Where to start contributing
-
-| If you want to… | Start with | Look for |
-|----------------|-----------|---------|
-| **Build or improve AI pipelines** (batch inference, new pipeline types) | [`livepeer/ai-worker`](https://github.com/livepeer/ai-worker) | Open issues and `runner/pipelines/` Python modules |
-| **Build real-time AI workflows** (ComfyStream, BYOC, trickle transport) | [`livepeer/comfystream`](https://github.com/livepeer/comfystream) or [`livepeer/pytrickle`](https://github.com/livepeer/pytrickle) | Open issues; ask in `#comfystream` Discord |
-| **Contribute to the core node** (gateway, orchestrator, transcoder logic) | [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) | "Contributing to go-livepeer" guide in the README; open issues |
-| **Work on protocol contracts** (staking, bonding, governance) | [`livepeer/livepeer-protocol`](https://github.com/livepeer/livepeer-protocol) | Open issues; Protocol R&D SPE (Sidestream) for mentorship |
-| **Build the frontend SDK** (player, React components, Studio API integration) | [`livepeer/ui-kit`](https://github.com/livepeer/ui-kit) | Open issues; `#developers` Discord |
-| **Improve documentation** | [`livepeer/docs`](https://github.com/livepeer/docs) – branch `docs-v2` | Open issues tagged `docs`; contribution guide |
-
-All repositories accept pull requests. The `go-livepeer` README links directly to a contributing guide. For `ai-worker` and `comfystream`, open issues are the best starting point – ask in the relevant Discord channel (`#comfystream`, `#developers`, `#protocol-development`) before starting work on anything substantial.
-
-<CustomDivider />
+<CustomDivider middleText="Hosted products" />
 
 ## Hosted products
 
