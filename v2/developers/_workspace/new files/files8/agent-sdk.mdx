@@ -1,0 +1,246 @@
+---
+title: 'Agent SDK'
+sidebarTitle: 'Agent SDK'
+description: >-
+  @livepeer/agent: CLI, library, and MCP server for building creative AI
+  applications on Livepeer. AgentRunner, provider abstraction, ToolRegistry,
+  and 40+ inference capabilities.
+keywords:
+  - livepeer
+  - '@livepeer/agent'
+  - AgentRunner
+  - ToolRegistry
+  - WorkingMemory
+  - MCP server
+  - Daydream
+  - creative AI
+  - CLI
+  - agent SDK
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>@livepeer/agent installs as a CLI, imports as a library, and runs as an MCP server. All three modes share the same underlying AgentRunner and ToolRegistry.</Tip>
+</CenteredContainer>
+
+---
+
+`@livepeer/agent` is the agent runtime package from the Storyboard project (`livepeer/storyboard`). It provides a provider-agnostic agent loop, 40+ Livepeer inference capabilities as callable tools, working and session memory, and an MCP server mode for integration with Claude Code, Cursor, and other MCP-compatible tools.
+
+API key from `daydream.live`.
+
+<CustomDivider middleText="Installation" />
+
+## Installation
+
+**One-line installer (CLI on PATH + MCP auto-config):**
+
+```bash
+curl -fsSL https://storyboard.daydream.monster/install.sh | bash
+livepeer setup --non-interactive --api-key sk_live_xxx
+```
+
+The installer drops `livepeer` on your PATH and configures Claude Code / Cursor MCP entries automatically.
+
+**npm (once 1.0.0 is published):**
+
+```bash
+npm install -g @livepeer/agent
+```
+
+**Homebrew (macOS):**
+
+```bash
+brew install livepeer/tap/livepeer-agent
+```
+
+<CustomDivider middleText="CLI Usage" />
+
+## CLI Verbs
+
+The CLI exposes verbs for inference, file handling, finishing, and memory:
+
+**Inference:**
+
+```bash
+# Single model call
+livepeer run flux-schnell --prompt "a cat astronaut on Mars"
+# → https://v3b.fal.media/files/.../image.jpg
+
+# Animate a still image
+livepeer cinemagraph ./portrait.jpg --motion "leaves drifting"
+
+# JSON output (for scripts)
+livepeer run flux-schnell --prompt "..." | jq '.url'
+```
+
+**Finishing (ffmpeg-backed):**
+
+```bash
+livepeer concat clip1.mp4 clip2.mp4 --transition crossfade-300
+livepeer mux video.mp4 audio.mp3 --mode replace
+livepeer caption video.mp4 --text "Hello" --start 0 --end 3
+livepeer export video.mp4 --preset tiktok-portrait
+```
+
+**Discovery:**
+
+```bash
+livepeer models              # list all 40+ capabilities
+livepeer models flux         # inspect a specific model
+livepeer pricing flux-schnell
+livepeer schema seedance-i2v
+```
+
+**Memory:**
+
+```bash
+livepeer memory pin "always use seedance-i2v-fast for animations"
+livepeer memory recall "animation"
+livepeer memory show
+```
+
+All verbs emit JSON when stdout is piped. Use `--json` to force JSON on a TTY or `--no-json` to force human output when piped.
+
+<CustomDivider middleText="Library Usage" />
+
+## Library API
+
+```typescript
+import {
+  AgentRunner,
+  ToolRegistry,
+  WorkingMemoryStore,
+  SessionMemoryStore,
+} from '@livepeer/agent';
+import { GeminiProvider } from '@livepeer/agent/providers/gemini';
+
+const provider = new GeminiProvider({ apiKey: process.env.GEMINI_API_KEY! });
+const tools = new ToolRegistry();
+const runner = new AgentRunner(
+  provider,
+  tools,
+  new WorkingMemoryStore(),    // 800-token budget per turn
+  new SessionMemoryStore(),    // queryable log across turns
+);
+
+const result = await runner.run({ user: 'generate an image of a mountain' });
+console.log(result.finalText);
+```
+
+**Importing individual verbs** (without the full agent loop):
+
+```typescript
+import { runRun } from '@livepeer/agent/cli/verbs/run';
+import { runConcat } from '@livepeer/agent/cli/verbs/finishing';
+
+const result = await runRun({
+  name: 'flux-schnell',
+  prompt: 'a mountain at dawn',
+  apiKey: process.env.DAYDREAM_API_KEY,
+});
+```
+
+**Provider swap:** change the LLM backend without changing application code:
+
+```typescript
+import { ClaudeProvider } from '@livepeer/agent/providers/claude';
+import { LivepeerProvider } from '@livepeer/agent/providers/livepeer';
+
+// Claude directly
+const provider = new ClaudeProvider({ apiKey: process.env.ANTHROPIC_API_KEY! });
+
+// All LLM calls through Livepeer infrastructure (one API key)
+const provider = new LivepeerProvider({ apiKey: process.env.DAYDREAM_API_KEY! });
+```
+
+<CustomDivider middleText="MCP Server" />
+
+## MCP Server Mode
+
+`@livepeer/agent` runs as an MCP server over stdio, exposing all 40+ inference capabilities as MCP tools to Claude Code, Cursor, and any other MCP host:
+
+```bash
+livepeer mcp
+```
+
+Add to Claude Code (`~/.claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "livepeer": { "command": "livepeer", "args": ["mcp"] }
+  }
+}
+```
+
+The one-line installer configures this automatically. Once connected, Claude Code can call `livepeer` tools directly: `run flux-schnell`, `cinemagraph`, `concat`, `detect`, and all other CLI verbs are available as MCP tool calls.
+
+<CustomDivider middleText="Configuration" />
+
+## Configuration
+
+Credentials live in `~/.livepeer/credentials`:
+
+```
+DAYDREAM_API_KEY=sk_live_xxx
+LIVEPEER_SDK_URL=https://sdk.daydream.monster
+```
+
+Environment variable overrides take highest precedence: `LIVEPEER_API_KEY` or `DAYDREAM_API_KEY`, and `LIVEPEER_SDK_URL`.
+
+```bash
+livepeer setup show    # print current config (key redacted)
+livepeer version
+livepeer update
+```
+
+<CustomDivider middleText="Skills" />
+
+## Skills
+
+Skills are markdown system prompt files that shape agent behaviour for specific tasks. The public registry is browsable and installable from the CLI:
+
+```bash
+livepeer skills list
+livepeer skills install cinemagraph
+livepeer skills install --all
+livepeer docs "animate portrait"    # search registry by keyword
+```
+
+Installed skills live in `~/.livepeer/skills/*.md` and are loaded automatically by the agent runner when relevant.
+
+<Note>
+  `@livepeer/agent` is under active development through multiple phases (C8 is the current stable milestone). The CLI verb argument shapes and output shapes are frozen at C8; later phases (D–L) add new verbs without breaking existing ones.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Storyboard" icon="palette" href="/v2/developers/build/ai-and-agents/agents/storyboard" arrow horizontal>
+    The reference application built on @livepeer/agent and @livepeer/creative-kit.
+  </Card>
+  <Card title="MCP and Livepeer" icon="plug" href="/v2/developers/build/ai-and-agents/mcp/overview" arrow horizontal>
+    Connecting Claude Code, Cursor, and other MCP tools to Livepeer.
+  </Card>
+  <Card title="Agents Overview" icon="robot" href="/v2/developers/build/ai-and-agents/agents/overview" arrow horizontal>
+    Eliza integration and BYOC agent patterns.
+  </Card>
+  <Card title="AI Pipelines" icon="cpu" href="/v2/developers/build/ai-and-agents/ai-pipelines" arrow horizontal>
+    The underlying inference endpoints the agent SDK routes through.
+  </Card>
+</CardGroup>

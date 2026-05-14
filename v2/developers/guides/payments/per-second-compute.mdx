@@ -1,0 +1,122 @@
+---
+title: 'Per-Second Compute'
+sidebarTitle: 'Per-Second Compute'
+description: >-
+  How per-second billing works for the live-video-to-video pipeline on Livepeer:
+  fee calculation, ticket generation intervals, and pricing configuration.
+keywords:
+  - livepeer
+  - per-second compute
+  - live-video-to-video
+  - Cascade
+  - billing
+  - pricing
+  - LivePaymentSender
+  - aiModels.json
+  - cost per hour
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The live-video-to-video pipeline bills per wall-clock second of active inference. The gateway pays based on elapsed time at regular intervals rather than per output pixel or per request.</Tip>
+</CenteredContainer>
+
+---
+
+The `live-video-to-video` (Cascade) pipeline operates as a persistent streaming session rather than a discrete request-response exchange. Standard per-pixel or per-request billing does not map naturally to this model. Instead, Livepeer uses per-second compute billing for live AI: the gateway pays for the time the orchestrator's GPU is actively running inference for the session.
+
+<CustomDivider middleText="Billing Model" />
+
+## Fee Calculation
+
+The `LivePaymentSender` interface in go-livepeer handles per-second fee calculation and ticket generation for live AI sessions. It calculates the fee based on:
+
+- **Elapsed seconds** since the last payment was sent
+- **Configured cost per hour** advertised by the orchestrator
+
+```
+fee = elapsed_seconds × (cost_per_hour / 3600)
+```
+
+This fee is expressed in ETH (wei). The PM mechanism translates it into a ticket with the appropriate face value and win probability so the expected payout equals the computed fee.
+
+Payments are sent at regular intervals during the session. The orchestrator returns updated ticket parameters after each payment; the gateway uses those parameters for the next payment in the series.
+
+<CustomDivider middleText="Orchestrator Pricing" />
+
+## Configuring Pricing
+
+Orchestrators set per-second pricing for AI pipelines in `aiModels.json`. The pricing field is `price_per_unit`, and for live AI the unit is one second of inference time:
+
+```json
+[
+  {
+    "pipeline": "live-video-to-video",
+    "model_id": "comfystream",
+    "url": "http://127.0.0.1:8188",
+    "price_per_unit": 1000000000000000,
+    "warm": true
+  }
+]
+```
+
+`price_per_unit` is in wei per second. 1000000000000000 wei = 0.001 ETH per second = 3.6 ETH per hour.
+
+Gateways set a maximum acceptable price via `-maxPricePerUnit`. Orchestrators whose `price_per_unit` exceeds this maximum are excluded from selection for that session.
+
+<CustomDivider middleText="Payment State" />
+
+## State Management
+
+Per-second billing requires stateful bookkeeping: the gateway must track how much time has elapsed since the last payment and how much ETH has been committed. In the remote signer model, this bookkeeping lives in the signer service rather than the gateway:
+
+- The gateway sends `signerState` (the accumulated bookkeeping state from the previous signing call) with each `signTicket` request
+- The signer updates the state (records elapsed time, adjusts balance) and returns the updated `signerState` alongside the signed ticket
+- The gateway stores the returned state and sends it with the next request
+
+This design makes the signer stateless across restarts: the gateway carries the state, and the signer reconstructs its view from the state it receives. If a gateway sends a null state, the signer creates a fresh session.
+
+Failure to send the correct updated state (or sending stale state) leads to invalid tickets due to repeated nonces or incorrect fee calculations.
+
+<CustomDivider middleText="Session Lifecycle" />
+
+## Payment Intervals
+
+The gateway sends payments at configurable intervals during the session, not per-frame. The interval is set to balance two concerns: payment frequency (more frequent = smaller per-ticket amounts, smaller ETH commitment per interval) and overhead (more frequent = more signing calls and on-chain submissions).
+
+For production live AI workloads, the go-livepeer default payment interval is adequate. Custom gateway implementations using `livepeer-python-gateway` inherit the interval logic from `LivePaymentSender` in the remote signer.
+
+<Note>
+  Per-second compute billing applies specifically to the `live-video-to-video` pipeline. Batch AI pipelines (text-to-image, audio-to-text, etc.) use per-output-unit billing. See the individual pipeline reference pages for recommended pricing.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Probabilistic Micropayments" icon="coin" href="/v2/developers/guides/payments/probabilistic-micropayments" arrow horizontal>
+    How PM tickets and face values translate per-second fees to on-chain settlement.
+  </Card>
+  <Card title="Remote Signer" icon="key" href="/v2/developers/guides/payments/remote-signer" arrow horizontal>
+    How the remote signer manages LivePaymentSender state for off-chain gateways.
+  </Card>
+  <Card title="Real-Time AI Overview" icon="video" href="/v2/developers/build/ai-and-agents/realtime-ai/overview" arrow horizontal>
+    The Cascade pipeline that uses per-second compute billing.
+  </Card>
+  <Card title="Alt-Gateway Overview" icon="server" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
+    Python gateway implementation that integrates with LivePaymentSender.
+  </Card>
+</CardGroup>

@@ -1,0 +1,189 @@
+---
+title: 'PaymentSession'
+sidebarTitle: 'Payment Session'
+description: >-
+  PaymentSession in livepeer-python-gateway: generating PM tickets via the
+  remote signer, sending payments to the orchestrator, and managing signer state.
+keywords:
+  - livepeer
+  - PaymentSession
+  - remote signer
+  - get_payment
+  - send_payment
+  - GetPaymentResponse
+  - livepeer-python-gateway
+  - signer state
+  - PM tickets
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>PaymentSession carries signer state across calls. Each get_payment call updates self._state and returns payment + seg_creds HTTP headers. The state must persist across calls for nonces to stay valid; never create a fresh PaymentSession per segment.</Tip>
+</CenteredContainer>
+
+---
+
+`PaymentSession` (`livepeer_gateway.remote_signer`) generates probabilistic micropayment tickets by calling a remote signer service on behalf of the gateway. It manages the stateful signing session and handles OrchestratorInfo refresh on ticket expiry.
+
+`start_lv2v` creates a `PaymentSession` automatically; access it via `job.payment_session`. Construct one directly only when implementing custom job types.
+
+<CustomDivider middleText="Constructor" />
+
+## Constructor
+
+```python
+from livepeer_gateway.remote_signer import PaymentSession
+
+session = PaymentSession(
+    signer_url="https://signer.example.com",
+    info=orchestrator_info,          # lp_rpc_pb2.OrchestratorInfo
+    signer_headers={"Authorization": "Bearer sk_xxx"},
+    type="lv2v",                     # job type identifier
+    capabilities=capabilities,       # lp_rpc_pb2.Capabilities or None
+    use_tofu=True,
+    max_refresh_retries=3,
+)
+```
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Parameter</TableCell>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`signer_url`</TableCell>
+      <TableCell>`str | None`</TableCell>
+      <TableCell>Base URL of the remote signer. If None or empty, runs in off-chain mode (uses auth_token from OrchestratorInfo, no ETH signing).</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`info`</TableCell>
+      <TableCell>`OrchestratorInfo`</TableCell>
+      <TableCell>Protobuf OrchestratorInfo from GetOrchestratorInfo. Contains the orchestrator's ticket parameters and transcoder URL.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`signer_headers`</TableCell>
+      <TableCell>`dict | None`</TableCell>
+      <TableCell>Extra HTTP headers sent to all signer endpoints.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`type`</TableCell>
+      <TableCell>`str`</TableCell>
+      <TableCell>Job type identifier sent to the signer (e.g. `"lv2v"`).</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`capabilities`</TableCell>
+      <TableCell>`Capabilities | None`</TableCell>
+      <TableCell>Capabilities protobuf included in the payment request payload.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`use_tofu`</TableCell>
+      <TableCell>`bool`</TableCell>
+      <TableCell>TLS mode for OrchestratorInfo refresh calls.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`max_refresh_retries`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Maximum number of OrchestratorInfo refresh attempts on HTTP 480 before raising PaymentError. Default: 3.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Methods" />
+
+## set_manifest_id(manifest_id)
+
+```python
+session.set_manifest_id(job.manifest_id)
+```
+
+Sets the manifest ID on the session. Must be called after the job response is received and before the first `get_payment` call. `start_lv2v` calls this automatically.
+
+---
+
+## get_payment()
+
+```python
+p = session.get_payment()
+# p.payment   : base64 PM ticket string
+# p.seg_creds : base64 segment credentials (or None)
+```
+
+Calls `POST {signer_url}/generate-live-payment` with the serialised OrchestratorInfo, job type, capabilities, manifest ID, and current signer state. Returns a `GetPaymentResponse`.
+
+The signer state (`self._state`) is updated on each call. The caller (gateway) must not create a new `PaymentSession` per segment; state continuity is required for nonces to remain valid.
+
+On HTTP 480 (`SignerRefreshRequired`), `get_payment` re-fetches OrchestratorInfo from the orchestrator and retries, up to `max_refresh_retries` times.
+
+**Off-chain mode:** If `signer_url` is None or empty, `get_payment` generates credentials from the orchestrator's `auth_token` field and returns an empty payment string. The orchestrator must have provided an auth_token in its OrchestratorInfo response.
+
+---
+
+## send_payment()
+
+```python
+session.send_payment()
+```
+
+Calls `get_payment()` then POSTs the resulting headers (`Livepeer-Payment`, `Livepeer-Segment`) to `POST {orch.transcoder}/payment`.
+
+This is a synchronous blocking call. The background payment task in `LiveVideoToVideo` wraps it via `asyncio.to_thread`. The task fires once every 5 seconds of active output, not once per frame.
+
+---
+
+## GetPaymentResponse
+
+```python
+@dataclass(frozen=True)
+class GetPaymentResponse:
+    payment: str              # base64-encoded PM ticket
+    seg_creds: Optional[str]  # base64-encoded segment credentials
+```
+
+Both fields are used as HTTP request headers: `Livepeer-Payment` and `Livepeer-Segment`.
+
+<CustomDivider middleText="Signer State" />
+
+## Signer State Round-Tripping
+
+The remote signer is stateless across HTTP requests. The client (gateway) carries the accumulated session state and sends it with every `generate-live-payment` call. The signer updates the state and returns it in the response. The gateway stores the returned state and sends it with the next call.
+
+Consequences:
+- Creating a new `PaymentSession` per call loses the accumulated nonce counter, leading to repeated nonces and invalid tickets
+- Concurrent `get_payment` calls on the same session produce invalid tickets due to state divergence; the payment sender serialises calls
+- If the session is dropped and re-created mid-stream, the signer creates a fresh state, which is valid but resets balance accrual
+
+<Note>
+  `PaymentSession` is not thread-safe for concurrent `get_payment` calls. The background payment sender in `LiveVideoToVideo` serialises all payment calls through the asyncio event loop. If calling `get_payment` directly from multiple threads, add external synchronisation.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Live Video Job" icon="video" href="/v2/developers/build/alt-gateways/live-video-job" arrow horizontal>
+    LiveVideoToVideo and start_lv2v: the primary entry point that creates PaymentSession.
+  </Card>
+  <Card title="Remote Signer" icon="key" href="/v2/developers/guides/payments/remote-signer" arrow horizontal>
+    Remote signer architecture: goals, stateless design, and security properties.
+  </Card>
+  <Card title="Alt-Gateway Overview" icon="grid" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
+    livepeer-python-gateway architecture and class overview.
+  </Card>
+</CardGroup>

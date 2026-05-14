@@ -1,0 +1,350 @@
+---
+title: "Ecosystem and Developer Projects & Repo's"
+sidebarTitle: "Dev Projects"
+description: >-
+  Active projects, tools, and applications built on Livepeer. Covers official repos, community tools, analytics, and monitoring resources for developers building on the network.
+keywords:
+  - livepeer
+  - ecosystem
+  - projects
+  - developer tools
+  - community tools
+  - storyboard
+  - NaaP
+  - pymthouse
+  - comfystream
+  - ai-runner
+  - monitoring
+  - analytics
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: resource
+audience: developer
+status: current
+lastVerified: 2026-04-21
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>These are the active projects across the Livepeer ecosystem that developers are most likely to build on, contribute to, or reference. Projects marked [Official] are maintained under the Livepeer Foundation GitHub org. Projects marked [Community] are maintained by ecosystem contributors.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The Livepeer ecosystem spans official protocol infrastructure, developer tooling, AI pipeline runtimes, creative applications, operator utilities, and analytics dashboards. This page collects everything in one place so you can find what you need without searching across GitHub, the Forum, and Discord separately.
+
+For the official SDK and API reference, see <LinkArrow href="/v2/developers/resources" label="Developer resources" newline={false} />. For contribution paths and funded work, see <LinkArrow href="/v2/developers/guides/opportunities/overview" label="Builder opportunities" newline={false} />.
+
+<CustomDivider middleText="AI compute and inference" />
+
+## AI compute and inference
+
+### Storyboard [Official]
+
+**Repo**: [github.com/livepeer/storyboard](https://github.com/livepeer/storyboard)
+**Live**: [storyboard-rust.vercel.app](https://storyboard-rust.vercel.app)
+
+An agent-powered creative platform built on Livepeer. Type a prompt; the agent orchestrates 40+ AI models to produce media on an infinite canvas. Supports image generation, video creation, audio, 3D models, real-time live-to-video streams, and multi-scene story generation.
+
+Storyboard ships two publishable packages that developers can use independently:
+
+- **`@livepeer/agent`** - Provider-agnostic agent runtime. Manages the LLM-tool loop with support for Gemini, Claude, OpenAI, and a unified Livepeer provider (one API key routes through Livepeer infrastructure). Includes working memory (800 token budget) and queryable session memory.
+- **`@livepeer/creative-kit`** - Reusable framework for creative AI apps. Provides `ArtifactStore` (canvas state), `ProjectPipeline` (batch generation), `CommandRouter` (slash commands), `CapabilityResolver` (model selection with automatic fallback chains), and UI components (`InfiniteBoard`, `ChatPanel`, `ArtifactCard`).
+
+A second application, **Creative Lab**, ships in the same monorepo as an educational creative platform for children aged 8-16 (`apps/creative-lab/`).
+
+The SDK service endpoint (`sdk.daydream.monster`) exposes capabilities, inference, LLM chat, and Scope live-stream control. Configure this via the gear icon in the UI or the `DAYDREAM_API_KEY` environment variable.
+
+```bash icon="terminal"
+git clone https://github.com/livepeer/storyboard.git
+cd storyboard && npm install && npm run dev
+```
+
+<Note>
+  Storyboard was created in April 2026 and is under active early development. The `@livepeer/agent` and `@livepeer/creative-kit` packages are not yet on npm - use the monorepo directly.
+</Note>
+
+<CustomDivider />
+
+### ai-runner [Official]
+
+**Repo**: [github.com/livepeer/ai-runner](https://github.com/livepeer/ai-runner)
+
+The inference runtime that runs inside Livepeer orchestrator nodes. Handles both batch and real-time AI pipelines. If you are building a BYOC (Bring Your Own Container) deployment or a custom AI pipeline, `ai-runner` is the execution environment your container integrates with. 24 stars, 32 forks, the most actively developed AI-specific repository in the org.
+
+See <LinkArrow href="/v2/developers/build" label="Custom AI pipelines" newline={false} /> for BYOC integration guides.
+
+<CustomDivider />
+
+### ComfyStream [Official]
+
+**Repo**: [github.com/livepeer/comfystream](https://github.com/livepeer/comfystream)
+**Docs**: [docs.comfystream.org](https://docs.comfystream.org) {/* REVIEW: confirm docs URL */}
+
+A ComfyUI custom node that runs real-time media workflows as a live streaming backend. ComfyUI pipelines become real-time video-to-video processors served through the Livepeer AI subnet. Used as the reference implementation for real-time AI pipeline development on the network.
+
+<CustomDivider />
+
+### livepeer-ai-python [Official]
+
+**Repo**: [github.com/livepeer/livepeer-ai-python](https://github.com/livepeer/livepeer-ai-python)
+
+Official Python SDK for the Livepeer AI Gateway API. Dispatches inference jobs (text-to-image, live-video-to-video, and other pipelines) from Python applications and ML workflows. High staleness risk - verify against the latest tagged release.
+
+<CustomDivider />
+
+### livepeer-ai-js [Official]
+
+**Repo**: [github.com/livepeer/livepeer-ai-js](https://github.com/livepeer/livepeer-ai-js)
+
+Official JavaScript/TypeScript SDK for the Livepeer AI API. Use for integrating AI pipelines into JS/TS applications and browser environments.
+
+<CustomDivider />
+
+### livepeer-python-gateway [Official]
+
+**Repo**: [github.com/livepeer/livepeer-python-gateway](https://github.com/livepeer/livepeer-python-gateway)
+
+A Python implementation of a Livepeer gateway node. Enables Python-stack teams to operate gateway infrastructure without Go. Under active development as of April 2026. No stable documented interface yet - follow the repo for release announcements before building against it.
+
+<CustomDivider middleText="Network tooling and portals" />
+
+## Network tooling and portals
+
+### NaaP - Network as a Platform [Official]
+
+**Repo**: [github.com/livepeer/naap](https://github.com/livepeer/naap)
+**Live**: [operator.livepeer.org](https://operator.livepeer.org)
+**Dev docs**: [operator.livepeer.org/docs](https://operator.livepeer.org/docs)
+
+The official Livepeer network portal. A micro-frontend shell that loads independent plugins at runtime - each plugin owns its own UI, Next.js API routes, and PostgreSQL schema. Ships with 12 core plugins: Developer API Manager, Plugin Marketplace, Capacity Planner, My Wallet, Daydream Video, Community Hub, and others.
+
+Build and publish your own plugin using the `@naap/plugin-sdk` CLI. Full quickstart, architecture docs, API reference, and 8 AI prompt templates for plugin development are available in the NaaP docs.
+
+See <LinkArrow href="/v2/developers/guides/naap" label="NaaP guide" newline={false} /> for the full overview.
+
+<CustomDivider />
+
+### pymthouse [Community]
+
+**Repo**: [github.com/eliteprox/pymthouse](https://github.com/eliteprox/pymthouse)
+**Live**: [pymthouse.com](https://pymthouse.com)
+**Docs**: [docs.pymthouse.com](https://docs.pymthouse.com)
+
+Hosted identity, billing, and payment signing infrastructure for Livepeer-powered applications. Provides a full OIDC provider (RFC 8693 token exchange), multi-tenant billing plans, and a managed `go-livepeer` remote signer proxy. Free during beta; self-hostable and open source.
+
+Built by [@eliteprox](https://github.com/eliteprox) (John), a Livepeer orchestrator operator and go-livepeer contributor. Integrates with NaaP's Developer API Manager as a billing provider via OAuth.
+
+See <LinkArrow href="/v2/developers/guides/pymthouse" label="pymthouse guide" newline={false} /> for the full overview.
+
+<CustomDivider />
+
+### livepeer-data-mcp [Official]
+
+**Repo**: [github.com/livepeer/livepeer-data-mcp](https://github.com/livepeer/livepeer-data-mcp)
+
+An MCP (Model Context Protocol) server for Livepeer platform data. Enables AI agents and LLM tooling to query network data through the MCP standard - useful for building agentic Livepeer integrations. Created February 2026, still stabilising its API surface (29 open issues). Watch this repo if you are building AI-native tooling.
+
+<CustomDivider />
+
+### Livepeer Explorer [Official]
+
+**Live**: [explorer.livepeer.org](https://explorer.livepeer.org)
+**Repo**: [github.com/livepeer/explorer](https://github.com/livepeer/explorer)
+
+The primary on-chain protocol explorer. Browse the active orchestrator set, track stake distributions, view reward histories, monitor treasury balances, and interact with governance proposals. The canonical read interface for all on-chain Livepeer state.
+
+<CustomDivider middleText="Infrastructure and monitoring" />
+
+## Infrastructure and monitoring
+
+### livepeer-monitoring [Official]
+
+**Repo**: [github.com/livepeer/livepeer-monitoring](https://github.com/livepeer/livepeer-monitoring)
+
+Prometheus metrics exporters and Grafana dashboard configurations for `go-livepeer` nodes. The starting point for operator observability stacks.
+
+<CustomDivider />
+
+### Livepeer Exporter [Community]
+
+**Repo**: [github.com/transcodeninja/livepeer-exporter](https://github.com/transcodeninja/livepeer-exporter)
+
+Enhanced Prometheus exporter for Livepeer network and orchestrator metrics. Extends the official monitoring stack with additional signal coverage.
+
+<CustomDivider />
+
+### Orchestrator Pricing Visibility [Community]
+
+**Live**: [grafana.stronk.tech/d/g423g24y/orchestrator-ppp](https://grafana.stronk.tech/d/g423g24y/orchestrator-ppp?orgId=1&refresh=5s&var-regions=Leiden)
+
+Grafana dashboard showing price-per-pixel changes over time on a per-orchestrator basis. Useful for developers and gateways evaluating routing economics.
+
+<CustomDivider />
+
+### Livepeer Reward Watcher [Community]
+
+**Repo**: [github.com/rickstaa/livepeer-reward-watcher](https://github.com/rickstaa/livepeer-reward-watcher)
+
+Monitors an orchestrator node and alerts when it is at risk of missing a reward call. Relevant to any delegator or orchestrator operator running automated reward management.
+
+<CustomDivider />
+
+### Telegram Watcher Bot [Community]
+
+**Forum**: [forum.livepeer.org/t/telegram-bot-orchestrator-watcher/1077](https://forum.livepeer.org/t/telegram-bot-orchestrator-watcher/1077)
+
+Telegram bot providing notifications about chosen orchestrators. Covers reward call status and node health signals.
+
+<CustomDivider middleText="Analytics and on-chain data" />
+
+## Analytics and on-chain data
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Resource</TableCell>
+      <TableCell header>What it covers</TableCell>
+      <TableCell header>Maintainer</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>[Livepeer Arbitrum Dune Dashboard](https://dune.com/stronk/livepeer-arbitrum)</TableCell>
+      <TableCell>Protocol state - stake, fees, rounds, treasury</TableCell>
+      <TableCell>@stronk (community)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Livepeer AI Dune Dashboard](https://dune.com/rickstaa/livepeer-ai)</TableCell>
+      <TableCell>AI subnet - inference volume, pipeline usage, earnings</TableCell>
+      <TableCell>@rickstaa (community)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Livepeer Macro Financial Statements](https://dune.com/messari/Messari:-Livepeer-Macro-Financial-Statements)</TableCell>
+      <TableCell>Protocol-level financial metrics</TableCell>
+      <TableCell>Messari</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Livepeer Subgraph](https://thegraph.com/hosted-service/subgraph/0xcadams/livepeer-arbitrum-one)</TableCell>
+      <TableCell>Protocol event data queryable via GraphQL</TableCell>
+      <TableCell>Community</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Orchestrator Payout Report](https://www.livepeer.tools/payout/report)</TableCell>
+      <TableCell>Per-orchestrator payout history and earnings breakdown</TableCell>
+      <TableCell>livepeer.tools (community)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Web3 Index](https://web3index.org)</TableCell>
+      <TableCell>Usage-based fee metrics across decentralised infrastructure protocols</TableCell>
+      <TableCell>Web3 Index</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[Messari Livepeer Profile](https://messari.io/asset/livepeer)</TableCell>
+      <TableCell>Market data, research reports, network metrics</TableCell>
+      <TableCell>Messari</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[StakingRewards](https://www.stakingrewards.com/earn/livepeer/)</TableCell>
+      <TableCell>Staking statistics and yield estimates</TableCell>
+      <TableCell>StakingRewards</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Network testing" />
+
+## Network testing
+
+### Stream Tester [Community]
+
+**Live**: [livepeer-test-broadcaster.ad-astra.video](https://livepeer-test-broadcaster.ad-astra.video/)
+
+Assess an orchestrator's transcoding performance and streaming capabilities. Returns latency, quality scores, and regional test results.
+
+<CustomDivider />
+
+### AI Inference Tester [Community]
+
+**Live**: [livepeer-test-broadcaster.ad-astra.video/inference](https://livepeer-test-broadcaster.ad-astra.video/inference)
+
+Obtains AI inference statistics for a given orchestrator. Tests pipeline availability and response times across the AI subnet.
+
+<CustomDivider />
+
+### Test Streams Dashboard [Community]
+
+**Live**: [interptr-latest-test-streams.vercel.app](https://interptr-latest-test-streams.vercel.app/?address=0x5bdeedca9c6346b0ce6b17ffa8227a4dace37039)
+
+Per-orchestrator transcoding test stream scores across regions. Replace the address parameter with any orchestrator address.
+
+<CustomDivider middleText="Applications built on Livepeer" />
+
+## Applications built on Livepeer
+
+These are live production applications using Livepeer infrastructure. They serve as reference points for what is possible and as sources of integration patterns.
+
+**Video and streaming**
+
+StreamETH, EthGlobal.tv, Picarto.tv, Minds, Switchboard, The Lot Radio, stream.place, Beem, Huddle01, Glass, Xeenon.
+
+**AI-powered**
+
+[Daydream](https://daydream.live) (Livepeer Foundation - real-time AI video transform), [Storyboard](https://storyboard-rust.vercel.app) (agent-driven creative canvas), [Inference by Stronk](https://inference.stronk.rocks) (community AI inference interface), [Let's Generate](https://letsgenerate.ai), [Tsunameme](https://www.tsunameme.ai).
+
+The full curated list is maintained in [awesome-livepeer](https://github.com/livepeer/awesome-livepeer) (`livepeer.cool` redirects there).
+
+<CustomDivider middleText="Community infrastructure" />
+
+## Community infrastructure
+
+### Community Arbitrum RPC [Community SPE]
+
+**Live**: [liveinfraspe.com](https://liveinfraspe.com)
+
+Free, load-balanced, geo-distributed RPC endpoint for Arbitrum L2 and Ethereum L1, operated by the LiveInfra SPE. Use this as a free fallback RPC when testing or building on the network.
+
+<CustomDivider />
+
+### Orchestrator Pools
+
+Teams building applications that need reliable compute supply interact with orchestrator pools rather than selecting individual nodes. Active pools include Titan Node, Video Miner, Livepool, Grant Node Pool, and Open-Pool.
+
+<CustomDivider />
+
+### Staking infrastructure
+
+[Tenderize](https://www.tenderize.me/) provides liquid staking for LPT - stake without the 7-round unbonding lockup by receiving derivative tokens representing staked positions. Relevant to application developers building LPT staking flows.
+
+<CustomDivider middleText="Livepeer income reports" />
+
+## Tax and accounting tools
+
+### Livepeer Income Reports [Community]
+
+**Repo**: [github.com/rickstaa/livepeer-income-reports](https://github.com/rickstaa/livepeer-income-reports)
+
+Python scripts for delegators and orchestrators to calculate earnings, rewards, and generate tax reports. Useful for operators managing accounting across multiple reward periods.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={3}>
+  <Card title="NaaP" icon="grid-2" href="/v2/developers/guides/naap" arrow horizontal>
+    Build and publish plugins for the official Livepeer network portal.
+  </Card>
+  <Card title="pymthouse" icon="shield-check" href="/v2/developers/guides/pymthouse" arrow horizontal>
+    Identity, billing, and payment signing for Livepeer app developers.
+  </Card>
+  <Card title="Builder opportunities" icon="hammer" href="/v2/developers/guides/opportunities/overview" arrow horizontal>
+    Grants, RFPs, bounties, and open-source contribution paths.
+  </Card>
+</CardGroup>

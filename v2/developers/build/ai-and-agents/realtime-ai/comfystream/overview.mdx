@@ -1,0 +1,202 @@
+---
+title: 'ComfyStream Overview'
+sidebarTitle: 'Overview'
+description: >-
+  ComfyStream turns any ComfyUI workflow into a real-time video pipeline. Phase 4 hardened it for production: multimodal output, dynamic warm-up, BYOC packaging.
+keywords:
+  - comfystream
+  - real-time ai
+  - comfyui
+  - streamdiffusion
+  - live video
+  - byoc
+  - pytrickle
+  - phase 4
+pageType: concept
+audience: developer
+purpose: explain
+complexity: intermediate
+lifecycleStage: discover
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>ComfyStream turns ComfyUI workflows into real-time video pipelines. One Docker image, one workflow JSON, sub-second latency.</Tip>
+</CenteredContainer>
+
+---
+
+ComfyStream is a Livepeer-maintained extension of ComfyUI that swaps batch image generation for a real-time video loop. A ComfyUI workflow that takes an image and returns an image becomes a live-video-to-video pipeline when run through ComfyStream: video frames flow in over WebRTC, the workflow processes each frame, transformed frames flow back out at sub-second latency.
+
+Phase 4 (January 2026) hardened ComfyStream for production. The runtime added audio processing, data-channel output, dynamic workflow warm-up, and PyTrickle-based BYOC packaging. Daydream and Embody both run on ComfyStream infrastructure.
+
+The canonical install reference is `docs.comfystream.org`. The repository is `livepeer/comfystream`. The current Docker image is `livepeer/comfystream`, with `livepeer/comfyui-base:stable` as the BYOC base.
+
+<CustomDivider middleText="Pipeline Modes" />
+
+## Pipeline Modes
+
+ComfyStream workflows produce one of four output types. Every workflow declares its output mode through the nodes it composes.
+
+| Mode | Input | Output | Representative node |
+|---|---|---|---|
+| Image-to-image (live) | Live video frames | Transformed video frames | `StreamDiffusionSampler` |
+| Video-to-video | Video segment | Processed video | StreamDiffusion V2 |
+| Audio processing | Audio track from stream | Audio (pass-through or transformed) | `LoadAudioTensor` |
+| Data-channel output | Audio or video frames | Structured text alongside video | `AudioTranscription` + data output node |
+
+A single ComfyStream container can host multiple pipelines (Phase 4 addition). Dynamic warm-up loads new workflows mid-stream without restarting the server, which lets one orchestrator advertise multiple capabilities from one image.
+
+<CustomDivider middleText="Node Ecosystem" />
+
+## Node Ecosystem
+
+ComfyStream uses standard ComfyUI custom nodes. Any node that executes per-frame without maintaining incompatible state runs in a real-time workflow.
+
+### Core I/O Nodes
+
+Required for every ComfyStream workflow. They handle the real-time tensor handoff between the stream and the ComfyUI graph.
+
+| Node | Source | Purpose |
+|---|---|---|
+| `LoadTensor` | `livepeer/comfystream` | Load a video frame tensor from the live stream |
+| `LoadAudioTensor` | `livepeer/comfystream` | Load an audio frame tensor for audio-aware processing |
+
+### Real-Time Control Nodes
+
+These nodes update their output on every workflow execution, which makes them suitable for animating parameters across a continuous stream.
+
+| Node | Source | Purpose |
+|---|---|---|
+| `FloatControl` | `ComfyUI_RealtimeNodes` | Outputs a float that changes over time (sine, bounce, random) |
+| `IntControl` | `ComfyUI_RealtimeNodes` | Same as `FloatControl` for integer values |
+| `StringControl` | `ComfyUI_RealtimeNodes` | Cycles through a list of strings per frame |
+| `FloatSequence` | `ComfyUI_RealtimeNodes` | Cycles through comma-separated float values |
+| `IntSequence` | `ComfyUI_RealtimeNodes` | Cycles through comma-separated integer values |
+| Motion detection nodes | `ComfyUI_RealtimeNodes` | Detect motion between frames; can trigger parameter changes |
+
+### StreamDiffusion Nodes (Phase 4)
+
+The primary generative video nodes. Ported from Daydream's StreamDiffusion pipeline.
+
+| Node | Purpose |
+|---|---|
+| `StreamDiffusionCheckpoint` | Loads a StreamDiffusion checkpoint model. Use with SD1.5 or SDXL |
+| `StreamDiffusionConfig` | Configures CFG, t-index, acceleration mode |
+| `StreamDiffusionSampler` | Runs StreamDiffusion inference per frame |
+| `StreamDiffusionLPCheckpointLoader` | Alternative checkpoint loader for Livepeer-hosted models |
+| `StreamDiffusionTensorRTEngineLoader` | Loads a pre-compiled TensorRT engine. Not compatible with all ControlNets |
+
+StreamDiffusion V2 adds video-to-video mode and stable diffusion V2 base models.
+
+### Phase 4 Additions
+
+- **SuperResolution.** Real-time video upscaling. Input: standard-resolution frame. Output: upscaled frame.
+- **AudioTranscription.** Whisper-based real-time speech transcription. Two output modes: SRT subtitles burned into video, or text delivered to the application via WebRTC data channel.
+
+<CustomDivider middleText="Workflow Format" />
+
+## Workflow Format
+
+ComfyStream requires workflows in ComfyUI **API format**, not the default save format. The default ComfyUI export includes layout metadata that ComfyStream does not parse.
+
+To export a workflow in API format:
+
+1. Enable **Developer Mode** in ComfyUI settings.
+2. Use **Save (API Format)** to produce the JSON file.
+
+Workflows saved in the default format will not load correctly. API format is the only supported input.
+
+Place the workflow file in your ComfyStream workspace's `workflows/` directory. For Docker deployments, mount this directory as a volume. The canonical workspace layout is in `docs.comfystream.org`.
+
+When the workflow loads in the ComfyStream UI, the server compiles TensorRT engines for the relevant nodes. First run takes between two and ten minutes depending on the model and the GPU. Subsequent loads skip compilation.
+
+<CustomDivider middleText="Data Channel" />
+
+## Data-Channel Output
+
+Phase 4 added a structured-text output path that runs alongside video. The ComfyStream WebRTC connection extends with a data channel; workflows containing a data output node emit text to the browser or application that connects to the server.
+
+Use cases:
+
+- Real-time audio transcription delivered as text to a downstream application
+- Frame-level metadata (object labels, confidence scores) delivered to an overlay UI
+- Any workflow where the output is data, not video
+
+To receive data-channel output from a browser client, use <LinkArrow href="" label="" newline={false} />, which handles WebRTC video streaming and the data channel from the same connection.
+
+<CustomDivider middleText="Performance" />
+
+## Performance Characteristics
+
+ComfyStream compiles TensorRT engines and runs `torch.compile` on model components at first run. This is a one-time cost per workflow on each machine.
+
+| Operation | Duration | Frequency |
+|---|---|---|
+| TensorRT compilation | 2-10 minutes | First run per machine, per workflow |
+| `torch.compile` (ControlNet, VAE) | On first frame | First frame per session |
+| Subsequent workflow loads | Immediate | All later runs |
+
+Achievable frame rate depends on model complexity, GPU, and image resolution. Reference figures from community testing on an RTX 4090:
+
+- SD1.5 + DMD one-step + DepthControlNet workflow: 14-15 fps at 640x360 input
+- StreamDiffusion with TensorRT: higher throughput at the same resolution
+
+Frame rates vary substantially with LoRA stack and ControlNet load. Test under expected concurrency before production launch.
+
+<CustomDivider middleText="Hardware" />
+
+## Hardware Requirements
+
+ComfyStream requires an NVIDIA GPU. The server component runs on Linux only; Windows and macOS are not supported for the server, though the browser client runs anywhere.
+
+| Workload | Minimum VRAM | Recommended |
+|---|---|---|
+| Real-time AI (ComfyStream) | 12 GB | 16 GB+ |
+
+VRAM headroom matters for stability. A workflow that runs at 12 GB may stutter under load that 16 GB absorbs cleanly. Source: the <LinkArrow href="" label="" newline={false} />.
+
+CUDA 12.0+ is required. Current ComfyStream releases target CUDA 12.8 with NVIDIA driver 570.124.06 or later.
+
+<CustomDivider middleText="Relationship to BYOC" />
+
+## Relationship to BYOC
+
+ComfyStream is itself BYOC-compatible. Phase 4 integrated ComfyStream with PyTrickle, which means the `livepeer/comfystream` Docker image can register directly as a BYOC capability on an orchestrator without rewriting the workflow as a custom container.
+
+| If you want to | Use |
+|---|---|
+| Run a ComfyUI workflow as a real-time pipeline | ComfyStream directly |
+| Run a custom Python model that isn't a ComfyUI workflow | <LinkArrow href="" label="" newline={false} /> |
+| Run multiple ComfyStream workflows from one orchestrator | ComfyStream's multi-pipeline mode (Phase 4) |
+| Earn fees from your ComfyStream instance | Register as a BYOC capability on go-livepeer |
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ComfyStream Quickstart" icon="rocket" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart">
+    Docker, RunPod, or local install. First real-time AI effect on a webcam in fifteen minutes.
+  </Card>
+  <Card title="Workflow Authoring" icon="diagram-project" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring">
+    Build a custom workflow, configure StreamDiffusion, tune for latency.
+  </Card>
+  <Card title="ComfyStream as BYOC" icon="cube" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc">
+    Register a ComfyStream instance as a BYOC capability and earn fees.
+  </Card>
+  <Card title="docs.comfystream.org" icon="book" href="https://docs.comfystream.org">
+    Canonical install reference, hardware deep-dive, troubleshooting.
+  </Card>
+</CardGroup>

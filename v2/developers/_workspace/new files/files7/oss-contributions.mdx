@@ -1,0 +1,157 @@
+---
+title: 'Open Source Contributions'
+sidebarTitle: 'OSS Contributions'
+description: >-
+  Contributing to Livepeer open-source repositories: go-livepeer, ai-runner,
+  comfystream, ui-kit, the docs, and the protocol contracts.
+keywords:
+  - livepeer
+  - open source
+  - contributing
+  - go-livepeer
+  - ai-runner
+  - pull request
+  - good first issue
+  - help wanted
+  - changelog
+  - GitHub
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Start with issues labelled help wanted or good first issue in the repo you want to contribute to. Maintainers respond within 7 days. The docs repo (livepeer/docs, branch docs-v2-dev) is the lowest-friction entry point for first contributions.</Tip>
+</CenteredContainer>
+
+---
+
+All core Livepeer software is open source under the MIT licence. Contributions are accepted across the full stack: protocol contracts, the go-livepeer node, the AI runner, real-time AI tooling, SDKs, and documentation.
+
+<CustomDivider middleText="Where to Contribute" />
+
+## Contribution Targets
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Repository</TableCell>
+      <TableCell header>Language</TableCell>
+      <TableCell header>Best first issues</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`livepeer/docs`</TableCell>
+      <TableCell>MDX</TableCell>
+      <TableCell>Documentation improvements, new pages, accuracy fixes. Active development branch: `docs-v2-dev`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/go-livepeer`</TableCell>
+      <TableCell>Go</TableCell>
+      <TableCell>Issues labelled `help wanted` and `good first issue`. Node software: broadcaster, orchestrator, transcoder.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/ai-runner`</TableCell>
+      <TableCell>Python</TableCell>
+      <TableCell>New pipeline types, model integration, performance improvements.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/comfystream`</TableCell>
+      <TableCell>Python</TableCell>
+      <TableCell>ComfyUI node improvements, deployment tooling, documentation.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/pytrickle`</TableCell>
+      <TableCell>Python</TableCell>
+      <TableCell>FrameProcessor improvements, audio handling, examples.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/ui-kit`</TableCell>
+      <TableCell>TypeScript</TableCell>
+      <TableCell>Player component features, accessibility, browser compatibility.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`livepeer/protocol`</TableCell>
+      <TableCell>Solidity</TableCell>
+      <TableCell>Requires deep protocol knowledge. Start with the whitepaper and existing audit reports before attempting contributions.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="go-livepeer Contribution Process" />
+
+## go-livepeer Contribution Process
+
+go-livepeer is the most active node software repository. Contributions follow a standard GitHub PR workflow with a few project-specific conventions.
+
+**Commit structure:** Commits are logically grouped. The project uses fixup commits and autosquashing during rebase. Avoid merge commits; rebase against the upstream branch before opening a PR.
+
+**Changelog entries:** Every PR that affects behaviour requires a changelog entry in `CHANGELOG.md`. Classify the entry by node type: General, Broadcaster, Orchestrator, or Transcoder. Breaking changes go in the "Breaking changes" section. Pending deprecations go in "Upcoming changes". Include the PR number (e.g. `\#3682`) rather than a full URL.
+
+**Maintainer response:** Expect a response within 7 days. If you have not heard anything, ping the PR thread.
+
+**Issue labels in use:**
+
+| Label | Meaning |
+|---|---|
+| `help wanted` | Maintainers want external contributors on this |
+| `good first issue` | Accessible scope for new contributors |
+| `status: triage` | Not yet evaluated by maintainers |
+| `status: needs-owner` | Valid issue without an assigned contributor |
+| `priority: medium` | Scheduled after higher-priority work |
+
+<CustomDivider middleText="Documentation Contributions" />
+
+## Documentation Contributions
+
+The documentation repository (`livepeer/docs`, branch `docs-v2-dev`) is the lowest-friction entry point for first contributions. Changes do not require Go or Python knowledge and the review cycle is fast.
+
+**Standards that apply to all doc contributions:**
+
+- UK English throughout (colour, behaviour, analyse, etc.)
+- No em-dashes in narrative prose
+- JSX comments only (`{/* */}`); no HTML comments
+- No Studio-framing in pages under `v2/developers/`; these pages document network-direct access, not managed APIs
+- All technical claims verified against a canonical source (go-livepeer, ai-runner, protocol repo) before inclusion
+
+The documentation standards are defined in the skills directory of the repo (`/ai-tools/ai-skills/`).
+
+<CustomDivider middleText="Getting Paid for Contributions" />
+
+## Funded Contribution Paths
+
+Two mechanisms fund OSS contributions beyond goodwill:
+
+**Network Engineering SPE: Retroactive grants:** Submit completed work to the Livepeer Forum for retroactive payment in the $2k–$20k range. Includes GitHub contributions, tooling, documentation. See <LinkArrow href="/v2/developers/opportunities/grants-and-programmes" label="Grants and Programmes" newline={false} />.
+
+**Network Engineering SPE: RFPs:** Apply to published RFPs for scoped engineering work. Some RFPs target go-livepeer improvements, orchestrator tooling, or developer onboarding infrastructure.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Grants and Programmes" icon="coins" href="/v2/developers/opportunities/grants-and-programmes" arrow horizontal>
+    RFPs and retroactive grants for funded OSS contributions.
+  </Card>
+  <Card title="Bug Bounties" icon="shield" href="/v2/developers/opportunities/bug-bounties" arrow horizontal>
+    Security vulnerability reporting via Immunefi.
+  </Card>
+  <Card title="Repository Map" icon="git-branch" href="/v2/developers/concepts/repo-map" arrow horizontal>
+    All Livepeer repos, languages, and purposes.
+  </Card>
+  <Card title="Builder Opportunities" icon="grid" href="/v2/developers/opportunities/overview" arrow horizontal>
+    Overview of all funding and participation pathways.
+  </Card>
+</CardGroup>

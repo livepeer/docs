@@ -1,0 +1,148 @@
+---
+title: 'AI API authentication'
+sidebarTitle: 'Authentication'
+description: >-
+  How to authenticate with the Livepeer AI Gateway API: API key types, CORS configuration, rotation strategy, and security patterns.
+keywords:
+  - livepeer authentication
+  - API key
+  - CORS
+  - Bearer token
+  - security
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Backend API keys have full API access and must never appear in client-side code. CORS-enabled keys are scoped and safe for browser use.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Every request to the Livepeer AI Gateway API requires a Bearer token. Obtain one from [Livepeer Studio](https://livepeer.studio) under **Settings > API Keys**. Two key types exist -- choose based on where your code runs.
+
+<CustomDivider middleText="Key Types" />
+
+## API key types
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Where to use</TableCell>
+      <TableCell header>Scope</TableCell>
+      <TableCell header>Risk if leaked</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Backend API key**</TableCell>
+      <TableCell>Server-side code, scripts, CI/CD pipelines</TableCell>
+      <TableCell>Full access to all Studio API resources</TableCell>
+      <TableCell>Full account access -- rotate immediately</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**CORS-enabled key**</TableCell>
+      <TableCell>Browser JavaScript, frontend applications</TableCell>
+      <TableCell>Scoped to specific asset and stream IDs</TableCell>
+      <TableCell>Limited to scoped resources only</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+A backend key in client-side code is a critical security vulnerability. Use the correct type for the deployment context.
+
+<CustomDivider middleText="Usage" />
+
+## Using a backend API key
+
+Pass the key as a Bearer token in the `Authorization` header:
+
+```bash
+curl -X POST https://livepeer.studio/api/beta/generate/text-to-image \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "a mountain at dawn", "model_id": "SG161222/RealVisXL_V4.0_Lightning"}'
+```
+
+In environment variables:
+
+```bash
+# .env (never commit this file)
+LIVEPEER_API_KEY=your-api-key-here
+```
+
+```typescript
+// Never hardcode -- always read from environment
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+```
+
+<CustomDivider middleText="CORS Keys" />
+
+## CORS-enabled keys for browser applications
+
+When your frontend makes direct API calls, create a CORS-enabled key in Studio. The Studio dashboard scopes the key to specific asset or stream IDs -- a leaked CORS key cannot access other resources in your account.
+
+Create in Studio: **Settings > API Keys > Create Key > Enable CORS**.
+
+```typescript
+// Safe to bundle in a React or Next.js frontend
+const client = new Livepeer({
+  apiKey: process.env.NEXT_PUBLIC_LIVEPEER_CORS_KEY, // CORS-enabled key
+});
+```
+
+The NEXT_PUBLIC_ prefix makes the variable available client-side in Next.js. Do not use this prefix for backend API keys.
+
+<CustomDivider middleText="Key Management" />
+
+## Key rotation
+
+Rotate API keys on a schedule and immediately if a key is exposed. Studio lets you create multiple active keys and delete compromised ones without downtime.
+
+Recommended rotation schedule:
+- Production backend keys: every 90 days
+- After any team member offboarding
+- Immediately after any suspected exposure
+
+Keep API keys out of version control. If a key appears in a commit, treat it as compromised and rotate immediately -- git history is permanent and public repositories are indexed.
+
+<CustomDivider middleText="Common Errors" />
+
+## Authentication errors
+
+A `401 Unauthorized` response means the key is missing, malformed, or invalid:
+
+```json
+{"error": "Unauthorized", "message": "Invalid API key"}
+```
+
+Check:
+1. The `Authorization` header is present and formatted as `Bearer <key>` (not `Bearer: <key>`)
+2. The key value has no leading or trailing whitespace
+3. The key has not been deleted or expired in Studio
+4. You are using a backend key for a server-side request, not a CORS key
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="SDK Integration Guide" icon="code" href="/v2/developers/build/sdk-gateway">
+    Full SDK setup with authentication patterns for TypeScript, Python, and Go.
+  </Card>
+  <Card title="Video Access Control" icon="lock" href="/v2/developers/guides/video/access-control">
+    JWT and webhook-based access control for gating streams and assets.
+  </Card>
+</CardGroup>

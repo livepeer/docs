@@ -1,0 +1,265 @@
+---
+title: "Build a NaaP plugin"
+sidebarTitle: "Build a NaaP plugin"
+description: >-
+  Scaffold, develop, and run a NaaP plugin that adds a panel to the shell sidebar, calls the shell API, and renders results in a React frontend.
+keywords:
+  - NaaP
+  - livepeer
+  - plugin
+  - tutorial
+  - micro-frontend
+  - dashboard
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-05-11
+complexity: intermediate
+lifecycleStage: discover
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>A frontend-only NaaP plugin running locally inside the NaaP shell at `localhost:3000`, with a sidebar entry, a route, and a React panel that fetches and renders data through the shell API. Reader time: 45 to 60 minutes.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+NaaP (Node as a Platform) is the Livepeer-maintained plugin platform for operating against the Livepeer AI Compute Network. Plugins are micro-frontends: each is built as a UMD bundle, loaded at runtime by a Next.js shell, and given access to shell services (auth, notifications, theming, the API proxy) via the `@naap/plugin-sdk` hooks.
+
+This tutorial builds a **frontend-only** plugin called `network-snapshot` that lists recent Orchestrators returned by the shell's existing Livepeer data endpoints. Backend and database plugins follow the same skeleton with extra steps; see <LinkArrow href="https://naap-platform.vercel.app/docs/guides/your-first-plugin" label="Your First Plugin" newline={false} /> for the full-stack walkthrough.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- Node.js 20 or later, npm
+- Docker (NaaP uses Docker Compose to run Postgres locally)
+- Git
+- A clone of the NaaP monorepo. Plugins live inside the repo at `plugins/<plugin-name>/`. Standalone repos are possible but out of scope for this tutorial.
+
+Clone and bootstrap NaaP:
+
+```bash icon="terminal"
+git clone https://github.com/livepeer/NaaP.git
+cd NaaP
+./bin/start.sh
+```
+
+The script installs dependencies, starts Postgres via Docker, runs migrations, builds plugin bundles, and starts the shell. Open `http://localhost:3000` once the script reports ready.
+
+<CustomDivider middleText="Scaffold" />
+
+## Scaffold the Plugin
+
+NaaP provides a CLI (`naap-plugin`) that generates the plugin skeleton, including `plugin.json`, the frontend Vite config, and a mount entry point.
+
+```bash icon="terminal"
+naap-plugin create network-snapshot --template frontend-only --category monitoring
+cd plugins/network-snapshot
+npm install
+```
+
+The generator produces this layout:
+
+``` icon="terminal"
+plugins/network-snapshot/
+├── plugin.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx
+│   │   └── mount.tsx
+│   ├── vite.config.ts
+│   └── package.json
+└── README.md
+```
+
+<CustomDivider middleText="Manifest" />
+
+## Plugin Manifest
+
+Edit `plugin.json`:
+
+```json icon="terminal"
+{
+  "name": "network-snapshot",
+  "displayName": "Network snapshot",
+  "version": "0.1.0",
+  "description": "Lists recent orchestrators from the Livepeer network",
+  "category": "monitoring",
+  "frontend": {
+    "entry": "./frontend/dist/production/network-snapshot.js",
+    "devPort": 3050,
+    "routes": ["/network-snapshot", "/network-snapshot/*"],
+    "navigation": {
+      "label": "Network snapshot",
+      "icon": "Activity",
+      "section": "main",
+      "order": 50
+    }
+  }
+}
+```
+
+The `routes` array binds shell URLs to this plugin. The `navigation` block adds a sidebar entry. The `devPort` is the port Vite serves the plugin from during local development.
+
+<CustomDivider middleText="Build" />
+
+## Frontend Panel
+
+Replace `frontend/src/App.tsx` with:
+
+```tsx icon="terminal"
+import { useEffect, useState } from 'react';
+import { useAuth, useNotify, usePluginApi } from '@naap/plugin-sdk';
+
+type Orchestrator = {
+  id: string;
+  serviceUri: string;
+  active: boolean;
+};
+
+export default function App() {
+  const auth = useAuth();
+  const notify = useNotify();
+  const api = usePluginApi();
+
+  const [orchestrators, setOrchestrators] = useState<Orchestrator[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const data = await api.get('/livepeer/orchestrators?limit=5');
+        if (!cancelled) setOrchestrators(data.orchestrators ?? []);
+      } catch (e) {
+        if (!cancelled) setError(String(e));
+        notify.error('Failed to load orchestrators');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [api, notify]);
+
+  return (
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-2">Network snapshot</h1>
+      <p className="text-sm opacity-70 mb-6">
+        Signed in as {auth.user?.email ?? 'unknown user'}.
+      </p>
+
+      {loading && <p>Loading...</p>}
+      {error && <pre className="text-red-600 text-sm">{error}</pre>}
+
+      <ul className="space-y-2">
+        {orchestrators.map((o) => (
+          <li
+            key={o.id}
+            className="p-3 rounded-lg border flex items-center justify-between"
+          >
+            <span className="font-mono text-sm">{o.id}</span>
+            <span className="text-xs opacity-70">{o.serviceUri}</span>
+            <span
+              className={
+                o.active ? 'text-green-600 text-xs' : 'text-red-500 text-xs'
+              }
+            >
+              {o.active ? 'active' : 'inactive'}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+The three hooks expose the shell context to the plugin:
+
+- `useAuth()` returns the signed-in user.
+- `useNotify()` raises shell-level toast notifications.
+- `usePluginApi()` returns an HTTP client preconfigured with auth headers and the shell base URL. It auto-unwraps the `{ success, data }` API envelope.
+
+The hook signatures and the API envelope are part of the published SDK contract. See the SDK Hooks reference at `naap-platform.vercel.app/docs/api-reference/sdk-hooks`.
+
+<CustomDivider middleText="Mount" />
+
+## Mount Entry Point
+
+`frontend/src/mount.tsx` is generated by the scaffold and is the file the shell calls when the plugin loads. The default version is:
+
+```tsx icon="terminal"
+import { createRoot } from 'react-dom/client';
+import { ShellProvider, ShellContext } from '@naap/plugin-sdk';
+import App from './App';
+
+export function mount(container: HTMLElement, context: ShellContext) {
+  const root = createRoot(container);
+  root.render(
+    <ShellProvider value={context}>
+      <App />
+    </ShellProvider>
+  );
+  return () => root.unmount();
+}
+```
+
+The function returns a cleanup callback. The shell calls it when the user navigates away.
+
+<CustomDivider middleText="Run" />
+
+## Run the Plugin
+
+From the NaaP repo root:
+
+```bash icon="terminal"
+./bin/start.sh network-snapshot
+```
+
+The script rebuilds the plugin bundle and reloads the shell. Open `http://localhost:3000` and sign in. The sidebar now contains a **Network snapshot** entry. Click it. The panel mounts, fetches Orchestrators through `api.get('/livepeer/orchestrators?limit=5')`, and renders the list.
+
+<CustomDivider middleText="Common Errors" />
+
+## Common Errors
+
+**Plugin is missing from the sidebar.** The manifest navigation block is incorrect or the plugin is not enabled for the current user or team. Check `plugin.json` against the manifest reference. Check the Plugin Manager view in the shell.
+
+**Mount fires but the panel is blank.** The UMD bundle was not rebuilt after a source change. Run `./bin/start.sh network-snapshot` again, or run `npm run build` inside the plugin directory.
+
+**`api.get` returns 401.** The user's session token did not propagate. Sign out and back in. Confirm the shell is running against the same Postgres instance that holds your user record.
+
+**TypeScript can't find `@naap/plugin-sdk`.** The SDK is a workspace package, not a published npm package. Run `npm install` from the repo root, not from the plugin directory.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Full-stack plugin walkthrough" icon="layer-group" href="https://naap-platform.vercel.app/docs/guides/your-first-plugin">
+    Add an Express backend and a Prisma schema to the same plugin.
+  </Card>
+  <Card title="SDK hooks reference" icon="puzzle-piece" href="https://naap-platform.vercel.app/docs/api-reference/sdk-hooks">
+    Every hook exposed by `@naap/plugin-sdk`.
+  </Card>
+  <Card title="Plugin manifest reference" icon="file-code" href="https://naap-platform.vercel.app/docs/api-reference/plugin-manifest">
+    Every field accepted by `plugin.json`.
+  </Card>
+  <Card title="Publishing plugins" icon="paper-plane" href="https://naap-platform.vercel.app/docs/guides/publishing-plugins">
+    Submit a plugin to the registry once it is ready.
+  </Card>
+</CardGroup>

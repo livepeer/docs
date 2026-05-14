@@ -1,0 +1,265 @@
+---
+title: 'AI Jobs Direct Quickstart'
+sidebarTitle: 'AI Jobs Quickstart'
+description: >-
+  Make your first AI inference call against the Livepeer network in under ten minutes. Free community gateway, no API key required for experimentation.
+keywords:
+  - livepeer
+  - ai gateway api
+  - quickstart
+  - text-to-image
+  - community gateway
+  - dream gateway
+  - inference
+  - sdk
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: beginner
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Free, off-chain AI inference against the Livepeer network via the Cloud Community Gateway. Curl in ten minutes.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+By the end of this quickstart you'll have run a text-to-image inference call against the Livepeer network, downloaded the generated image, and seen the same call work through both `@livepeer/ai` (TypeScript) and `livepeer-ai-python`. The path needs only a terminal or a runtime.
+
+The path runs against `dream-gateway.livepeer.cloud`, the free Cloud SPE Community Gateway. It is off-chain, public, and shaped for experimentation. Production workloads should run against a paid gateway or a self-hosted one; see <LinkArrow href="" label="" newline={false} /> for the trade-offs.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Required Tools
+
+Pick one of the three paths below. You need exactly one:
+
+- `curl` (any modern shell)
+- Node.js 20 or later, with `npm` or `pnpm`
+- Python 3.11 or later, with `pip`
+
+The network does the GPU work. Your machine only sends the request and receives a URL.
+
+<CustomDivider middleText="First Call" />
+
+## First Call
+
+<Steps>
+  <Step title="Send a POST request">
+    The community gateway accepts unauthenticated POSTs at `/text-to-image`. Pick your client below.
+
+    <Tabs>
+      <Tab title="curl">
+        ```bash
+        curl -X POST https://dream-gateway.livepeer.cloud/text-to-image \
+          -H "Content-Type: application/json" \
+          -d '{
+            "model_id": "ByteDance/SDXL-Lightning",
+            "prompt": "A coffee shop at sunset, photorealistic",
+            "width": 1024,
+            "height": 1024
+          }'
+        ```
+      </Tab>
+      <Tab title="Node (fetch)">
+        ```js
+        const res = await fetch('https://dream-gateway.livepeer.cloud/text-to-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model_id: 'ByteDance/SDXL-Lightning',
+            prompt: 'A coffee shop at sunset, photorealistic',
+            width: 1024,
+            height: 1024,
+          }),
+        });
+        const data = await res.json();
+        console.log(data.images[0].url);
+        ```
+      </Tab>
+      <Tab title="Python (requests)">
+        ```python
+        import requests
+
+        res = requests.post(
+            "https://dream-gateway.livepeer.cloud/text-to-image",
+            json={
+                "model_id": "ByteDance/SDXL-Lightning",
+                "prompt": "A coffee shop at sunset, photorealistic",
+                "width": 1024,
+                "height": 1024,
+            },
+        )
+        print(res.json()["images"][0]["url"])
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Inspect the response">
+    The gateway returns a JSON object with an `images` array. Each image has a hosted URL, a deterministic `seed`, and an NSFW classifier flag.
+
+    ```json
+    {
+      "images": [
+        {
+          "url": "https://dream-gateway.livepeer.cloud/stream/d0fc1fc6/8fdf5a94.png",
+          "seed": 2562822894,
+          "nsfw": false
+        }
+      ]
+    }
+    ```
+
+    The `url` is publicly fetchable.
+  </Step>
+
+  <Step title="Download the image">
+    ```bash
+    curl -O https://dream-gateway.livepeer.cloud/stream/d0fc1fc6/8fdf5a94.png
+    ```
+
+    Open the downloaded `.png`. That image was generated on a GPU run by an independent orchestrator on the Livepeer network.
+  </Step>
+</Steps>
+
+<CustomDivider middleText="SDK Path" />
+
+## SDK Path
+
+The same call works through the official SDKs. Pick the language that matches your project.
+
+<Tabs>
+  <Tab title="@livepeer/ai (TypeScript)">
+    Install the package:
+
+    ```bash
+    npm install @livepeer/ai
+    ```
+
+    Call the gateway:
+
+    ```ts
+    import { Livepeer } from '@livepeer/ai';
+
+    const livepeer = new Livepeer({
+      serverURL: 'https://dream-gateway.livepeer.cloud',
+    });
+
+    const result = await livepeer.generate.textToImage({
+      modelId: 'ByteDance/SDXL-Lightning',
+      prompt: 'A coffee shop at sunset, photorealistic',
+      width: 1024,
+      height: 1024,
+    });
+
+    console.log(result.imageResponse?.images[0]?.url);
+    ```
+
+    The SDK wraps the same REST surface and handles request shaping, error types, and retries.
+  </Tab>
+  <Tab title="livepeer-ai-python">
+    Install the package:
+
+    ```bash
+    pip install livepeer-ai
+    ```
+
+    Call the gateway:
+
+    ```python
+    from livepeer_ai import Livepeer
+
+    client = Livepeer(server_url="https://dream-gateway.livepeer.cloud")
+
+    result = client.generate.text_to_image(request={
+        "model_id": "ByteDance/SDXL-Lightning",
+        "prompt": "A coffee shop at sunset, photorealistic",
+        "width": 1024,
+        "height": 1024,
+    })
+
+    print(result.image_response.images[0].url)
+    ```
+
+    Speakeasy-generated from the same OpenAPI spec as the TypeScript SDK.
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Models" />
+
+## Pipeline Models
+
+The text-to-image pipeline accepts any diffusion model supported by `ai-runner`. Two models are kept warm on the network and respond immediately:
+
+| Model | Notes |
+|---|---|
+| `ByteDance/SDXL-Lightning` | Fast, four-step inference. Recommended default |
+| `SG161222/RealVisXL_V4.0_Lightning` | Photorealistic, four-step variant |
+
+Other supported models (cold-start on first request, then warm):
+
+- `stabilityai/stable-diffusion-xl-base-1.0`
+- `SG161222/Realistic_Vision_V6.0_B1_noVAE`
+- `runwayml/stable-diffusion-v1-5`
+- `prompthero/openjourney-v4`
+- `stabilityai/sd-turbo`, `stabilityai/sdxl-turbo` (limited-commercial licence)
+
+A cold model takes between 30 seconds and a few minutes for the first response while an orchestrator loads it into GPU memory.
+
+For all available pipelines (image-to-image, image-to-video, audio-to-text, LLM, and more), see <LinkArrow href="" label="" newline={false} />.
+
+<CustomDivider middleText="Common Errors" />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="No orchestrator available for model">
+    No orchestrator on the network currently has capacity for the requested model. Retry after a short wait, or pick one of the warm models above. The pipeline reference page lists which models are kept warm.
+  </Accordion>
+  <Accordion title="Cold model load (slow first request)">
+    The first request to a non-warm model triggers an orchestrator to load weights into GPU memory. Subsequent requests against the same model are fast. The community gateway does not stream progress; the request blocks until the model is ready.
+  </Accordion>
+  <Accordion title="Validation error on `width` or `height`">
+    Most SDXL-family models accept multiples of 64 between 512 and 1024. Drop down to 768 or 1024 squared if a request fails on dimensions.
+  </Accordion>
+  <Accordion title="Rate limit on the community gateway">
+    The community gateway is shared infrastructure. High-volume callers should move to a paid gateway or self-host. A paid gateway accepts the same request shape; pass a Bearer token in the `Authorization` header.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  The community gateway is shaped for experimentation. Production workloads should run against a paid gateway or a self-hosted gateway. See <LinkArrow href="" label="" newline={false} />.
+</Warning>
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="AI Pipelines" icon="layer-group" href="/v2/developers/build/ai-and-agents/ai-pipelines">
+    The eleven native pipelines, request shapes, and what each one solves.
+  </Card>
+  <Card title="AI SDKs Overview" icon="code" href="/v2/developers/build/ai-and-agents/ai-sdks-overview">
+    Full SDK surface: error types, retries, streaming, batching.
+  </Card>
+  <Card title="Model Support" icon="cube" href="/v2/developers/build/ai-and-agents/model-support">
+    Warm models per pipeline, VRAM requirements, custom-model paths.
+  </Card>
+  <Card title="AI Image Generation App" icon="palette" href="/v2/developers/build/tutorials/ai-image-generation-app">
+    Wrap this quickstart in a working Next.js app.
+  </Card>
+</CardGroup>

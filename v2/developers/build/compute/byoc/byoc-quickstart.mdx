@@ -1,0 +1,398 @@
+---
+title: 'BYOC Quickstart'
+sidebarTitle: 'BYOC Quickstart'
+description: >-
+  Wrap a Python function in a container, register it as a network capability, and route your first BYOC job in twenty-five minutes. CPU only, off-chain, no GPU.
+keywords:
+  - livepeer
+  - byoc
+  - bring your own container
+  - quickstart
+  - pytrickle
+  - capability
+  - docker
+  - off-chain
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Wrap a Python function in a container, register it as a network capability, route your first BYOC job. Twenty-five minutes, CPU only, off-chain.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+By the end of this quickstart you'll have a custom Docker container running as a Bring Your Own Container (BYOC) pipeline on a local Livepeer network, a job routed to it through a gateway and orchestrator, and verified output coming back. The path uses a green-tint frame processor (the simplest possible BYOC contract) and `-network offchain` mode. Once this works, you understand the full BYOC lifecycle; production deployment is the same architecture against a registered orchestrator with on-chain payment attached.
+
+This is the Persona 3 activation moment. The transcoding quickstart proved the gateway-orchestrator-pipeline lifecycle; this quickstart proves you can plug arbitrary compute into it. The reference applications live at <LinkArrow href="" label="" newline={false} /> and the SDK at <LinkArrow href="" label="" newline={false} />.
+
+<CustomDivider middleText="Required Tools" />
+
+## Required Tools
+
+Four things on one Linux amd64 machine:
+
+- `go-livepeer` binary or Docker (from the <LinkArrow href="" label="" newline={false} />)
+- Docker Engine 24 or later
+- Python 3.10 or later with `pip`
+- Four free terminals
+
+No GPU, no Arbitrum wallet, no API keys.
+
+<Note>
+  This quickstart assumes you completed the <LinkArrow href="" label="" newline={false} /> or have `go-livepeer` installed and verified. Run `./livepeer -version` to confirm.
+</Note>
+
+<CustomDivider middleText="Processor Build" />
+
+## Container Build
+
+The simplest BYOC contract is one Python class with one method: receive raw bytes, return raw bytes. PyTrickle wraps that class in an HTTP server speaking the trickle protocol.
+
+<Steps>
+  <Step title="Create a project directory">
+    ```bash
+    mkdir byoc-quickstart && cd byoc-quickstart
+    ```
+  </Step>
+
+  <Step title="Write the processor">
+    Save as `processor.py`. This boosts the green channel on every frame.
+
+    ```python
+    """
+    processor.py - BYOC green-tint pipeline for Livepeer.
+
+    Applies a green-channel boost to every incoming video frame.
+    CPU only, no model loading.
+    """
+
+    import asyncio
+    import logging
+
+    from pytrickle import FrameProcessor, run_processor
+
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
+
+    class GreenTintProcessor(FrameProcessor):
+        """Applies a green channel boost to every frame.
+
+        Input and output: raw RGB bytes (width * height * 3 bytes per frame).
+        """
+
+        async def initialize(self):
+            """Called once when the container starts. Load models here."""
+            logger.info("GreenTintProcessor: initialised")
+
+        async def process(self, frame: bytes) -> bytes:
+            """Receive one frame of raw bytes, return transformed bytes."""
+            data = bytearray(frame)
+            # Boost the green channel (offset 1 in each RGB triplet)
+            for i in range(1, len(data), 3):
+                data[i] = min(255, data[i] + 80)
+            return bytes(data)
+
+        async def shutdown(self):
+            """Called when the job ends."""
+            logger.info("GreenTintProcessor: shutdown")
+
+
+    if __name__ == "__main__":
+        asyncio.run(run_processor(GreenTintProcessor(), port=8000))
+    ```
+
+    Three methods, one required. `process()` is the only method the contract demands; `initialize()` and `shutdown()` are useful for model loading and cleanup.
+  </Step>
+
+  <Step title="Write the Dockerfile">
+    Save as `Dockerfile`.
+
+    ```dockerfile
+    FROM python:3.11-slim
+
+    WORKDIR /app
+
+    RUN apt-get update && apt-get install -y --no-install-recommends git \
+        && rm -rf /var/lib/apt/lists/*
+
+    RUN pip install --no-cache-dir \
+        git+https://github.com/livepeer/pytrickle.git
+
+    COPY processor.py ./processor.py
+
+    EXPOSE 8000
+
+    ENTRYPOINT ["python", "processor.py"]
+    ```
+
+    `python:3.11-slim` keeps the image small. For GPU inference, swap the base to `nvidia/cuda:12.x-runtime-ubuntu22.04` and add `--gpus all` to your `docker run` commands.
+  </Step>
+
+  <Step title="Build and verify">
+    ```bash
+    docker build -t byoc-green-tint:latest .
+    docker images | grep byoc-green-tint
+    ```
+
+    The image should show in the list with a `latest` tag and a recent timestamp.
+  </Step>
+</Steps>
+
+<CustomDivider middleText="Container Isolation Test" />
+
+## Container Isolation Test
+
+Before wiring into the network, confirm the container starts cleanly and accepts a frame.
+
+<Steps>
+  <Step title="Run the container">
+    First terminal:
+
+    ```bash
+    docker run --name byoc-test -p 8000:8000 byoc-green-tint:latest
+    ```
+
+    Expected output:
+
+    ```
+    INFO: GreenTintProcessor: initialised
+    INFO: Trickle server listening on port 8000
+    ```
+
+    Leave it running.
+  </Step>
+
+  <Step title="Hit the status endpoint">
+    Second terminal:
+
+    ```bash
+    curl http://localhost:8000/api/stream/status
+    ```
+
+    A `200 OK` confirms the trickle server is accepting requests. The body shape varies; what matters is the status code.
+  </Step>
+
+  <Step title="Stop the test container">
+    ```bash
+    docker stop byoc-test && docker rm byoc-test
+    ```
+
+    Container logic verified. Any failure from here is a wiring problem.
+  </Step>
+</Steps>
+
+<CustomDivider middleText="Network Wiring" />
+
+## Network Wiring
+
+The container is a capability. The orchestrator advertises that capability to the gateway. The gateway routes matching jobs to the orchestrator, which routes them to the container.
+
+<Steps>
+  <Step title="Start the BYOC container in host mode">
+    First terminal:
+
+    ```bash
+    docker run --name byoc-green-tint --network host byoc-green-tint:latest
+    ```
+
+    `--network host` lets the orchestrator reach the container at `localhost:8000`. Acceptable for local development; production deployments use a Docker network or Kubernetes service.
+  </Step>
+
+  <Step title="Start the orchestrator with the BYOC capability">
+    Second terminal:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -network offchain \
+      -serviceAddr 127.0.0.1:8936 \
+      -cliAddr 127.0.0.1:7936 \
+      -datadir ~/.lpData-orch \
+      -byoc \
+      -byocContainerURL http://127.0.0.1:8000 \
+      -byocModelID green-tint-cpu
+    ```
+
+    | Flag | Effect |
+    |---|---|
+    | `-byoc` | Enable BYOC mode on this orchestrator |
+    | `-byocContainerURL` | URL of the running BYOC container |
+    | `-byocModelID` | Capability name advertised to gateways; arbitrary string |
+  </Step>
+
+  <Step title="Start the gateway">
+    Third terminal:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -network offchain \
+      -orchAddr 127.0.0.1:8936 \
+      -httpAddr 0.0.0.0:8935 \
+      -httpIngest \
+      -cliAddr 127.0.0.1:5935 \
+      -datadir ~/.lpData-gw
+    ```
+
+    `-httpIngest` enables the HTTP job-submission endpoint used by BYOC jobs.
+  </Step>
+</Steps>
+
+<CustomDivider middleText="First Job" />
+
+## First Job
+
+<Steps>
+  <Step title="Send a BYOC job">
+    Fourth terminal. Save as `send_job.py`:
+
+    ```python
+    import requests
+
+    GATEWAY_URL = "http://localhost:8935"
+    MODEL_ID = "green-tint-cpu"
+
+    # Black 640x480 RGB frame
+    frame = bytes(640 * 480 * 3)
+
+    response = requests.post(
+        f"{GATEWAY_URL}/live/video-to-video",
+        headers={
+            "Content-Type": "application/octet-stream",
+            "X-Model-Id": MODEL_ID,
+        },
+        data=frame,
+    )
+
+    print(f"Status: {response.status_code}")
+    print(f"Response size: {len(response.content)} bytes")
+
+    # Confirm the green-channel boost happened
+    g_channel_sum = sum(response.content[1::3])
+    print(f"Green channel sum: {g_channel_sum} (input was 0)")
+    ```
+
+    Run it:
+
+    ```bash
+    python send_job.py
+    ```
+  </Step>
+
+  <Step title="Inspect the result">
+    Expected output:
+
+    ```
+    Status: 200
+    Response size: 921600 bytes
+    Green channel sum: 7372800 (input was 0)
+    ```
+
+    The green-channel sum is non-zero. The job routed through gateway → orchestrator → container → orchestrator → gateway and back to the client. The container applied its transformation.
+  </Step>
+
+  <Step title="Watch the orchestrator logs">
+    The orchestrator terminal shows the BYOC routing path:
+
+    ```
+    I0000 BYOC capability registered: green-tint-cpu -> http://127.0.0.1:8000
+    I0000 Job received from gateway: green-tint-cpu
+    I0000 Forwarded to BYOC container
+    I0000 Container response received, returning to gateway
+    ```
+  </Step>
+</Steps>
+
+<CustomDivider middleText="Lifecycle Exercised" />
+
+## Job Lifecycle
+
+```
+Python client
+  +-> POST /live/video-to-video to Gateway (8935)
+        +-> Gateway looks up capability "green-tint-cpu"
+              +-> Routes job to Orchestrator (8936)
+                    +-> Orchestrator forwards to BYOC container (8000)
+                          +-> Container processes frame (green tint)
+                                +-> Returns transformed bytes to Orchestrator
+                                      +-> Orchestrator returns to Gateway
+                                            +-> Gateway returns to client
+```
+
+The full job lifecycle ran with custom compute in the middle. The only piece off-chain mode skips is the payment envelope; routing and execution are identical to a production gateway.
+
+Four ideas underpin what just happened.
+
+**Capability.** A named identifier (`green-tint-cpu`) that the orchestrator advertises and the gateway routes against. Any unique string works. Production orchestrators publish their capability set to the on-chain registry.
+
+**Trickle protocol.** The HTTP convention the orchestrator uses to push frames to the container and pull results back. PyTrickle implements both sides so the processor only writes the `process()` method.
+
+**FrameProcessor contract.** One required method: `process(bytes) -> bytes`. Optional `initialize()` runs once on container start; optional `shutdown()` runs on job end. Any Python library that runs in the container can be loaded in `initialize()`.
+
+**Per-second compute.** In on-chain mode, BYOC jobs are paid per second of GPU compute under <LinkArrow href="" label="" newline={false} />. Off-chain mode skips payment but exercises the same routing.
+
+<CustomDivider middleText="Common Errors" />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="No orchestrator advertising capability green-tint-cpu">
+    The orchestrator started without the BYOC flags, or the gateway started before the orchestrator registered. Confirm the orchestrator log shows `BYOC capability registered: green-tint-cpu`. If not, check the `-byoc`, `-byocContainerURL`, and `-byocModelID` flags match what the gateway expects.
+  </Accordion>
+  <Accordion title="Container connection refused from orchestrator">
+    The orchestrator can't reach the container. With `--network host`, the container must bind to `0.0.0.0:8000` and the orchestrator must use `127.0.0.1:8000`. Confirm the container log shows `Trickle server listening on port 8000`. If using a custom Docker network, the container hostname goes in `-byocContainerURL`.
+  </Accordion>
+  <Accordion title="Gateway returns 400 on job submission">
+    The `X-Model-Id` header doesn't match any advertised capability. Confirm the header value matches `-byocModelID` exactly. Capability names are case-sensitive.
+  </Accordion>
+  <Accordion title="Container starts but process() raises an error">
+    The frame size sent to the container doesn't match what `process()` expects. Black frames at `640x480x3 = 921600` bytes work with the green-tint processor. For real video, the gateway negotiates frame format; for direct testing, the bytes-in must match bytes-out.
+  </Accordion>
+  <Accordion title="Port conflict on 8000, 8935, or 8936">
+    ```bash
+    lsof -i :8000    # BYOC container
+    lsof -i :8935    # Gateway
+    lsof -i :8936    # Orchestrator
+    ```
+
+    Kill the conflicting process, or change `-byocContainerURL`, `-httpAddr`, and `-serviceAddr` to free ports.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="BYOC Architecture" icon="diagram-project" href="/v2/developers/build/compute/byoc/byoc-architecture">
+    Trickle protocol, container contract, capability discovery, payment flow.
+  </Card>
+  <Card title="BYOC Production" icon="server" href="/v2/developers/build/compute/byoc/byoc-production">
+    Public registry, container hosting, scaling, monitoring.
+  </Card>
+  <Card title="BYOC SDK" icon="code" href="/v2/developers/resources/reference/byoc-sdk">
+    `@muxionlabs/byoc-sdk` for browser clients with WebRTC streaming.
+  </Card>
+  <Card title="Per-Second Compute" icon="dollar-sign" href="/v2/developers/guides/payments/per-second-compute">
+    Pricing, settlement, the production billing model.
+  </Card>
+</CardGroup>
+
+For ComfyUI-based real-time pipelines, ComfyStream is already BYOC-compatible. See <LinkArrow href="" label="" newline={false} />.

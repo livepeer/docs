@@ -1,0 +1,50 @@
+---
+title: 'AI Pipelines'
+sidebarTitle: 'AI Pipelines'
+description: >-
+  Full reference for the eleven AI pipelines on the Livepeer network. Request shapes, response examples, per-pipeline parameters, and operational notes.
+keywords:
+  - livepeer
+  - ai pipelines
+  - text-to-image
+  - llm
+  - audio-to-text
+  - image-to-video
+  - reference
+  - api
+pageType: reference
+audience: developer
+purpose: reference
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Every AI pipeline, every request shape, every response shape. Tab through, copy the cURL, swap the gateway.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer AI Jobs API exposes eleven native pipelines through one consistent surface: HTTP POST against a gateway endpoint, JSON request body keyed by `model_id` and pipeline-specific fields, JSON response with the result and metadata. Real-time video AI runs separately through trickle streaming; this page covers the batch surface.
+
+For VRAM, warm-model status, and architecture support per pipeline, see <LinkArrow href="" label="" newline={false} />. For the SDK wrappers around these endpoints, see <LinkArrow href="" label="" newline={false} />.
+
+<CustomDivider middleText="Shared Conventions" />
+
+## Shared Request Conventions
+
+Every batch endpoint takes the same shape:
+
+```bash

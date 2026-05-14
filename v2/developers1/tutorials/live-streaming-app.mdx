@@ -1,0 +1,246 @@
+---
+title: "Build a low-latency live streaming app"
+sidebarTitle: "Low-latency live streaming"
+description: >-
+  Run a self-hosted gateway and a single-page React app that broadcasts WebRTC and plays back LL-HLS for sub-3-second glass-to-glass latency.
+keywords:
+  - livepeer
+  - WebRTC
+  - LL-HLS
+  - low-latency
+  - live streaming
+  - tutorial
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-05-11
+complexity: intermediate
+lifecycleStage: discover
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Single-page Next.js app with a WebRTC Broadcast component and an LL-HLS Player component, running through a self-hosted Gateway. End state: sub-3-second glass-to-glass latency between two browser tabs.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Browser-to-browser sub-3-second latency through Livepeer requires control over both ends of the chain: the WebRTC ingest at the Gateway and the LL-HLS chunk pacing on playback. Hosted Gateways add hops that push real-world latency above this floor. This tutorial runs the Gateway locally and the app against that Gateway.
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+- A Linux host or Docker Desktop. CPU transcoding is enough for the tutorial; for production add an NVIDIA GPU.
+- Node.js 20 or later, npm
+- A reachable HTTPS endpoint. WebRTC ingest needs TLS. For local development, use `ngrok http 8935` or `cloudflared tunnel --url http://localhost:8935` to expose the Gateway over HTTPS.
+
+<CustomDivider middleText="Run the Gateway" />
+
+## Run the Gateway
+
+Run go-livepeer in Gateway (broadcaster) mode against your CPU:
+
+```bash icon="terminal"
+docker run --rm \
+  -p 8935:8935 \
+  -p 1935:1935 \
+  livepeer/go-livepeer:master \
+  -broadcaster \
+  -dataDir /data \
+  -httpAddr 0.0.0.0:8935 \
+  -rtmpAddr 0.0.0.0:1935 \
+  -orchAddr https://orchestrator.example.com:8935 \
+  -transcodingOptions P240p30fps16x9 \
+  -httpIngest=true
+```
+
+Replace `-orchAddr` with a reachable Orchestrator URL. For development against the network's free off-chain transcoding, use the Livepeer Cloud community Orchestrator list (see <LinkArrow href="/v2/gateways/quickstart/overview" label="Run a gateway" newline={false} />). Production deployments use `-network arbitrum-one-mainnet` with an ETH wallet.
+
+Verify the Gateway is reachable:
+
+```bash icon="terminal"
+curl http://localhost:8935/status
+```
+
+A healthy Gateway responds with JSON describing the node version and current capabilities. If the request hangs, check Docker port mappings.
+
+Expose the HTTP port over HTTPS for WebRTC ingest:
+
+```bash icon="terminal"
+ngrok http 8935
+```
+
+Note the HTTPS URL ngrok returns. You will use it as the base URL in the app.
+
+<CustomDivider middleText="Bootstrap the App" />
+
+## Bootstrap the App
+
+```bash icon="terminal"
+npx create-next-app@latest livepeer-live-app \
+  --typescript --tailwind --app --src-dir --import-alias "@/*"
+cd livepeer-live-app
+npm install @livepeer/react
+```
+
+<CustomDivider middleText="Provider" />
+
+## LivepeerProvider Configuration
+
+Wrap the app in a provider that points at the self-hosted Gateway. Edit `src/app/layout.tsx`:
+
+```tsx icon="terminal"
+'use client';
+
+import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react';
+import './globals.css';
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    baseUrl: process.env.NEXT_PUBLIC_GATEWAY_URL!,
+    apiKey: '', // self-hosted gateway, no key
+  }),
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <LivepeerConfig client={livepeerClient}>{children}</LivepeerConfig>
+      </body>
+    </html>
+  );
+}
+```
+
+Create `.env.local`:
+
+``` icon="terminal"
+NEXT_PUBLIC_GATEWAY_URL=https://your-ngrok-id.ngrok.app
+```
+
+The `studioProvider` name is historical; it accepts any compatible Gateway URL.
+
+<CustomDivider middleText="Broadcast" />
+
+## Broadcast Component
+
+Create `src/app/broadcast/page.tsx`:
+
+```tsx icon="terminal"
+'use client';
+
+import { Broadcast } from '@livepeer/react';
+
+const STREAM_KEY = process.env.NEXT_PUBLIC_STREAM_KEY!;
+
+export default function BroadcastPage() {
+  return (
+    <main className="min-h-screen p-8 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-4">Broadcast</h1>
+      <Broadcast.Root ingestUrl={`whip://${STREAM_KEY}`}>
+        <Broadcast.Container className="aspect-video rounded overflow-hidden bg-black">
+          <Broadcast.Video className="w-full h-full" />
+          <Broadcast.Controls className="flex gap-2 mt-2">
+            <Broadcast.EnabledTrigger className="px-3 py-1 rounded bg-black text-white" />
+          </Broadcast.Controls>
+        </Broadcast.Container>
+      </Broadcast.Root>
+    </main>
+  );
+}
+```
+
+Add `NEXT_PUBLIC_STREAM_KEY=test-stream-key` to `.env.local`. Self-hosted Gateways accept any stream key by default; you can scope keys via webhook auth (see <LinkArrow href="/v2/gateways/run-a-gateway/configure" label="Configure a gateway" newline={false} />).
+
+<CustomDivider middleText="Player" />
+
+## Player Component
+
+Create `src/app/watch/page.tsx`:
+
+```tsx icon="terminal"
+'use client';
+
+import { Player } from '@livepeer/react';
+
+const STREAM_KEY = process.env.NEXT_PUBLIC_STREAM_KEY!;
+const GATEWAY = process.env.NEXT_PUBLIC_GATEWAY_URL!;
+
+const playbackUrl = `${GATEWAY}/hls/${STREAM_KEY}/index.m3u8`;
+
+export default function WatchPage() {
+  return (
+    <main className="min-h-screen p-8 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-4">Watch</h1>
+      <Player.Root src={playbackUrl} lowLatency>
+        <Player.Container className="aspect-video rounded overflow-hidden bg-black">
+          <Player.Video className="w-full h-full" />
+        </Player.Container>
+      </Player.Root>
+    </main>
+  );
+}
+```
+
+The `lowLatency` prop activates LL-HLS playback paths in the player.
+
+<CustomDivider middleText="Test" />
+
+## End-to-End Test
+
+Run the app:
+
+```bash icon="terminal"
+npm run dev
+```
+
+Open two browser tabs:
+
+1. `http://localhost:3000/broadcast`. Allow camera. Click Enable.
+2. `http://localhost:3000/watch`. Playback starts within 3 to 8 seconds.
+
+Measure latency by pointing the broadcaster's camera at a stopwatch on a second device or by clapping. Latency floor in this configuration is 2 to 3 seconds. Earlier results indicate transcoding latency from the Orchestrator side.
+
+<CustomDivider middleText="Tuning" />
+
+## Latency Tuning
+
+Three settings most affect the latency floor:
+
+**HLS segment duration on the Gateway.** Pass `-hlsSegmentDuration 1` to `livepeer` to publish 1-second segments instead of the default 2-second segments. Halves segment latency; doubles segment count overhead.
+
+**Player buffer policy.** `@livepeer/react` exposes `lowLatency` and `lowLatencyBufferTarget`. Lower the buffer target only after the link is stable; aggressive lowering causes stalls under packet loss.
+
+**Network path between broadcaster, Gateway, and Orchestrator.** A Gateway co-located with the Orchestrator removes one round trip. A broadcaster on the same continent as the Gateway removes another.
+
+<CustomDivider middleText="Production" />
+
+## Production Checklist
+
+Self-hosted Gateway for production traffic carries operational load: wallet management for on-chain settlement, monitoring, scaling, Orchestrator selection policy. The production hardening reference covers all of these:
+
+<CardGroup cols={2}>
+  <Card title="Gateway production hardening" icon="shield" href="/v2/gateways/advanced/production-hardening">
+    Wallet management, monitoring, redeemer nodes, and failover.
+  </Card>
+  <Card title="Configure a gateway" icon="gear" href="/v2/gateways/run-a-gateway/configure">
+    Flag reference for go-livepeer in Gateway mode.
+  </Card>
+  <Card title="Live events guide" icon="video" href="/v2/developers/guides/video/live-events">
+    Multi-stream events, recording, and chat overlay.
+  </Card>
+  <Card title="Run a gateway" icon="server" href="/v2/gateways/quickstart/overview">
+    Quickstart for a working Gateway from scratch.
+  </Card>
+</CardGroup>

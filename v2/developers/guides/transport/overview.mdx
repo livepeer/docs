@@ -1,0 +1,149 @@
+---
+title: 'Transport Protocols'
+sidebarTitle: 'Overview'
+description: >-
+  The transport protocols used in Livepeer: RTMP for ingest, HLS for delivery,
+  WebRTC for low-latency playback and broadcast, and trickle for real-time AI.
+keywords:
+  - livepeer
+  - transport
+  - RTMP
+  - HLS
+  - WebRTC
+  - trickle protocol
+  - WHIP
+  - ingest
+  - playback
+  - streaming protocols
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Livepeer uses different protocols at different points in the pipeline. RTMP arrives from the encoder; HLS leaves for the viewer; WebRTC connects the browser player; trickle connects real-time AI components internally.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer's video pipeline spans four distinct transport layers. The choice of protocol at each layer is determined by the requirements of that layer: encoder compatibility at ingest, CDN delivery at playback, sub-second latency in the browser, and persistent low-latency framing for real-time AI.
+
+<CustomDivider middleText="Protocol Map" />
+
+## Protocol by Layer
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Layer</TableCell>
+      <TableCell header>Protocol</TableCell>
+      <TableCell header>Direction</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Live ingest from encoder</TableCell>
+      <TableCell>RTMP</TableCell>
+      <TableCell>Encoder → Gateway</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>VOD and standard live playback</TableCell>
+      <TableCell>HLS (ABR)</TableCell>
+      <TableCell>Gateway/CDN → Player</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Low-latency live playback</TableCell>
+      <TableCell>WebRTC (WHEP)</TableCell>
+      <TableCell>Gateway → Browser player</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Browser publish (Broadcast component)</TableCell>
+      <TableCell>WebRTC (WHIP)</TableCell>
+      <TableCell>Browser → Gateway</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Real-time AI frame pipeline</TableCell>
+      <TableCell>Trickle (HTTP/1.1)</TableCell>
+      <TableCell>Gateway ↔ Orchestrator ↔ ai-runner</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Segment submission (transcoding)</TableCell>
+      <TableCell>HTTP/HTTPS</TableCell>
+      <TableCell>Gateway → Orchestrator</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="RTMP" />
+
+## RTMP (Ingest)
+
+RTMP (Real-Time Messaging Protocol) is the standard input format for live streams. OBS, FFmpeg, and all professional encoders support it. go-livepeer accepts RTMP on port 1935 by default (`-rtmpAddr` flag).
+
+The stream name is taken from the first path segment of the RTMP URL: `rtmp://localhost/stream/<name>`. The HLS output manifest appears at `http://localhost:8935/stream/<name>.m3u8`. A stream key can be appended to the RTMP URL to prevent unauthorised playback.
+
+RTMP is an ingest-only protocol in modern Livepeer deployments. Playback goes through HLS or WebRTC.
+
+See <LinkArrow href="/v2/developers/guides/transport/rtmp" label="RTMP" newline={false} /> for flag reference and stream key configuration.
+
+<CustomDivider middleText="HLS" />
+
+## HLS (Playback)
+
+HLS (HTTP Live Streaming) is the standard delivery format for VOD assets and standard live streams. Livepeer outputs ABR HLS: a top-level manifest listing multiple rendition playlists, one per transcoding profile. Players (including the `@livepeer/react` Player) select the appropriate rendition based on available bandwidth.
+
+HLS carries 5-15 seconds of glass-to-glass latency for live streams due to segment buffering. This is acceptable for event streams and VOD but not for interactive scenarios.
+
+See <LinkArrow href="/v2/developers/guides/transport/hls" label="HLS" newline={false} /> for manifest structure and ABR configuration.
+
+<CustomDivider middleText="WebRTC" />
+
+## WebRTC (Low-Latency Live)
+
+WebRTC provides sub-second glass-to-glass latency for live streams. The `@livepeer/react` Player uses WHEP (WebRTC-HTTP Egress Protocol) for low-latency playback and the Broadcast component uses WHIP (WebRTC-HTTP Ingestion Protocol) for browser-based publishing.
+
+WHIP was standardised by the IETF as RFC 9725 in March 2025. It provides a single HTTP POST for WebRTC session establishment, replacing the proprietary signalling protocols previously required for WebRTC ingest.
+
+WebRTC requires ICE server infrastructure (STUN/TURN) for NAT traversal. Livepeer's managed gateway infrastructure handles this; self-hosted gateways require ICE server configuration.
+
+See <LinkArrow href="/v2/developers/guides/transport/webrtc" label="WebRTC" newline={false} /> for WHIP/WHEP endpoint details and ICE configuration.
+
+<CustomDivider middleText="Trickle" />
+
+## Trickle (Real-Time AI)
+
+The trickle protocol (`j0sh/http-trickle`) is an HTTP/1.1-based streaming transport for real-time AI frame pipelines. It splits a media stream into sequential short segments delivered as soon as they are produced. The gateway opens a persistent HTTP connection to the orchestrator; the orchestrator forwards frames to the ai-runner over a second trickle connection.
+
+Trickle is an internal protocol between Livepeer components. Developers interact with it indirectly via the `live-video-to-video` pipeline endpoint and the PyTrickle `StreamServer` interface.
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/overview" label="Real-Time AI Overview" newline={false} /> for the Cascade architecture that uses trickle.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="RTMP" icon="broadcast" href="/v2/developers/guides/transport/rtmp" arrow horizontal>
+    go-livepeer RTMP ingest: flags, stream keys, and webhook authentication.
+  </Card>
+  <Card title="HLS" icon="film" href="/v2/developers/guides/transport/hls" arrow horizontal>
+    HLS output format, ABR manifest structure, and segment delivery.
+  </Card>
+  <Card title="WebRTC" icon="zap" href="/v2/developers/guides/transport/webrtc" arrow horizontal>
+    WHIP/WHEP endpoints, ICE configuration, and low-latency playback.
+  </Card>
+  <Card title="Real-Time AI Overview" icon="video" href="/v2/developers/build/ai-and-agents/realtime-ai/overview" arrow horizontal>
+    Cascade architecture and the trickle-based frame pipeline.
+  </Card>
+</CardGroup>

@@ -1,0 +1,165 @@
+---
+title: 'Player'
+sidebarTitle: 'Player'
+description: >-
+  Embedding the @livepeer/react Player component for HLS and low-latency WebRTC
+  playback of Livepeer live streams and VOD assets.
+keywords:
+  - livepeer
+  - player
+  - '@livepeer/react'
+  - HLS
+  - WebRTC
+  - playback
+  - React
+  - ui-kit
+  - playbackId
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Pass a playbackId from a Livepeer stream or asset to the Player component. It handles ABR selection, HLS parsing, WebRTC low-latency fallback, and WAI-ARIA keyboard controls automatically.</Tip>
+</CenteredContainer>
+
+---
+
+The `@livepeer/react` package (`livepeer/ui-kit`) provides React primitives for video playback and broadcasting. The `Player` component handles adaptive bitrate playback over HLS and low-latency WebRTC, surface-testing across browsers, and WAI-ARIA accessibility with keyboard shortcuts.
+
+<CustomDivider middleText="Installation" />
+
+## Installation
+
+```bash
+npm install @livepeer/react
+```
+
+Current version: 4.3.6. The package requires React 17 or React 18.
+
+<CustomDivider middleText="Basic Usage" />
+
+## Basic Player
+
+Pass a `playbackId` from a Livepeer stream or VOD asset:
+
+```jsx
+import { Player } from '@livepeer/react';
+
+export function VideoPlayer({ playbackId }) {
+  return (
+    <Player
+      playbackId={playbackId}
+      autoPlay
+      muted
+    />
+  );
+}
+```
+
+The `playbackId` comes from:
+- `stream.playbackId` when a stream is created via the Livepeer API
+- `asset.playbackId` when a VOD asset finishes transcoding
+
+The Player resolves the playback URL, negotiates the best transport (WebRTC for low-latency live streams, HLS for VOD and standard live), and handles adaptive bitrate switching automatically.
+
+<CustomDivider middleText="Props" />
+
+## Key Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `playbackId` | string | required | Livepeer playback ID |
+| `src` | string | none | Direct HLS or WebRTC URL (alternative to `playbackId`) |
+| `autoPlay` | boolean | `false` | Start playback immediately |
+| `muted` | boolean | `false` | Mute audio (required for autoPlay in most browsers) |
+| `loop` | boolean | `false` | Loop the video (VOD only) |
+| `showTitle` | boolean | `true` | Show stream/asset name overlay |
+| `showPipButton` | boolean | `false` | Show picture-in-picture button |
+| `controls` | object | none | Override default control visibility |
+| `theme` | object | none | Style overrides for player chrome |
+| `lowLatency` | boolean \| `"force"` | `true` | Prefer WebRTC for live streams; `"force"` disables HLS fallback |
+
+<CustomDivider middleText="Low-Latency Playback" />
+
+## Low-Latency WebRTC
+
+For live streams, the Player prefers WebRTC when available, falling back to HLS. WebRTC delivery provides sub-second glass-to-glass latency compared to the 5-15 second latency of standard HLS.
+
+```jsx
+<Player
+  playbackId={playbackId}
+  lowLatency="force"
+  autoPlay
+  muted
+/>
+```
+
+`lowLatency="force"` disables the HLS fallback path. Use this only when you are certain the WebRTC path is available and acceptable to all viewers.
+
+<CustomDivider middleText="Custom ICE Servers" />
+
+## Custom ICE Servers
+
+From `@livepeer/react` 4.3.0, custom ICE servers can be passed for WebRTC negotiation:
+
+```jsx
+<Player
+  playbackId={playbackId}
+  iceServers={[
+    { urls: 'stun:stun.example.com:3478' },
+    {
+      urls: 'turn:turn.example.com:3478',
+      username: 'user',
+      credential: 'pass',
+    },
+  ]}
+/>
+```
+
+<CustomDivider middleText="Broadcast" />
+
+## Broadcast Component
+
+The `Broadcast` component provides WebRTC publishing from the browser:
+
+```jsx
+import { Broadcast } from '@livepeer/react';
+
+export function StreamBroadcaster({ streamKey }) {
+  return (
+    <Broadcast
+      streamKey={streamKey}
+      controls={{ camera: true, microphone: true }}
+    />
+  );
+}
+```
+
+Pass the stream key from a Livepeer stream object. The Broadcast component negotiates a WebRTC connection to the Livepeer ingest endpoint and publishes the camera/microphone feed.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod" arrow horizontal>
+    Generating playbackId from uploaded assets for use with the Player.
+  </Card>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+    Generating playbackId from live streams.
+  </Card>
+  <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>
+    Video access paths and SDK reference.
+  </Card>
+</CardGroup>

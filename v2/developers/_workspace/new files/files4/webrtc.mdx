@@ -1,0 +1,141 @@
+---
+title: 'WebRTC'
+sidebarTitle: 'WebRTC'
+description: >-
+  WebRTC in Livepeer: WHIP for browser ingest, WHEP for low-latency playback,
+  ICE server configuration, and the @livepeer/react Broadcast component.
+keywords:
+  - livepeer
+  - WebRTC
+  - WHIP
+  - WHEP
+  - low-latency
+  - ICE servers
+  - STUN
+  - TURN
+  - Broadcast
+  - sub-second latency
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>WebRTC delivers live video at sub-second latency. The @livepeer/react Player uses WHEP for playback; the Broadcast component uses WHIP for publishing. Both are standardised HTTP-based protocols requiring no custom signalling.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer supports WebRTC for both ingest (WHIP) and playback (WHEP). WebRTC paths provide sub-second glass-to-glass latency, making them suitable for interactive scenarios where HLS latency is too high.
+
+WHIP (WebRTC-HTTP Ingestion Protocol) was standardised by the IETF as RFC 9725 in March 2025. WHEP (WebRTC-HTTP Egress Protocol) is the corresponding playback standard. Both use a single HTTP POST for session establishment, removing the need for custom signalling infrastructure.
+
+<CustomDivider middleText="WHEP Playback" />
+
+## WHEP (Playback)
+
+The `@livepeer/react` Player uses WHEP automatically for live streams when the gateway supports it. WHEP sessions are established by a POST to the playback endpoint; the response body contains the SDP answer. The player negotiates ICE and begins receiving frames.
+
+WHEP endpoints return STUN/TURN server information in the SDP response. Livepeer-managed gateways include ICE server configuration; self-hosted gateways require ICE server setup.
+
+To force WebRTC playback and disable the HLS fallback:
+
+```jsx
+import { Player } from '@livepeer/react';
+
+<Player
+  playbackId={playbackId}
+  lowLatency="force"
+  autoPlay
+  muted
+/>
+```
+
+Custom ICE servers (added in `@livepeer/react` 4.3.0):
+
+```jsx
+<Player
+  playbackId={playbackId}
+  iceServers={[
+    { urls: 'stun:stun.example.com:3478' },
+    {
+      urls: 'turn:turn.example.com:3478',
+      username: 'user',
+      credential: 'pass',
+    },
+  ]}
+/>
+```
+
+<CustomDivider middleText="WHIP Ingest" />
+
+## WHIP (Browser Ingest)
+
+The `@livepeer/react` Broadcast component publishes from browser camera/microphone using WHIP:
+
+```jsx
+import { Broadcast } from '@livepeer/react';
+
+<Broadcast
+  streamKey={streamKey}
+  controls={{ camera: true, microphone: true }}
+/>
+```
+
+The component establishes a WHIP session with the Livepeer ingest endpoint, negotiates a WebRTC connection, and transmits the browser's media stream. The `streamKey` comes from a Livepeer stream object.
+
+For custom WHIP implementations without the React component, make a POST to the WHIP endpoint with an SDP offer:
+
+```bash
+curl -X POST "https://rtmp.livepeer.com/webrtc/<streamKey>" \
+  -H "Content-Type: application/sdp" \
+  --data-binary @offer.sdp
+```
+
+The response body contains the SDP answer. Proceed with standard WebRTC ICE negotiation.
+
+<CustomDivider middleText="ICE Configuration" />
+
+## ICE Servers
+
+WebRTC requires ICE (Interactive Connectivity Establishment) to traverse NATs and firewalls. ICE uses STUN to discover public IP addresses and TURN to relay traffic when direct connections are blocked.
+
+For production deployments:
+
+- STUN servers are free to use at scale (Google's `stun.l.google.com:19302` is widely used)
+- TURN servers relay traffic and must be run or paid for; they become the bottleneck for users behind symmetric NATs
+- Livepeer-managed gateways include TURN capacity; self-hosted gateways need their own TURN infrastructure
+
+The WHEP SDP response from Livepeer-managed endpoints includes ICE server credentials in the `ICE-Servers` header and embedded in the SDP. The `@livepeer/react` Player processes these automatically; custom players must parse and apply them.
+
+<Note>
+  WebRTC playback for a given stream is only available while the stream is actively receiving RTMP or WHIP input. The Player falls back to HLS automatically when the WebRTC path is unavailable unless `lowLatency="force"` is set.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Transport Overview" icon="grid" href="/v2/developers/guides/transport/overview" arrow horizontal>
+    Protocol map covering when WebRTC applies vs HLS.
+  </Card>
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/player" arrow horizontal>
+    @livepeer/react Player: WHEP playback and custom ICE server props.
+  </Card>
+  <Card title="HLS" icon="film" href="/v2/developers/guides/transport/hls" arrow horizontal>
+    HLS fallback path and ABR manifest structure.
+  </Card>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+    Stream creation and RTMP ingest alongside WHIP.
+  </Card>
+</CardGroup>
