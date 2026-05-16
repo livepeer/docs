@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-05-15T00:00:00.000Z
+lastVerified: 2026-05-16T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -35,17 +35,11 @@ import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 
 <CustomDivider />
 
-<Update label="This week" tags={["Live AI", "Trickle"]} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
-
-No user-facing changes shipped this week beyond the trickle `/next` endpoint released on May 12. See below for the most recent updates.
-
-</Update>
-
-<Update label="May 12, 2026" tags={["Live AI", "Trickle"]} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
+<Update label="This week" tags={["Live AI", "Trickle"]} description={<Subtitle variant="changelog">May 11 – 16, 2026</Subtitle>}>
 
 ### New features
 
-- **New trickle `/next` endpoint** - Trickle servers now expose `GET /{channel}/next`, which returns the channel's next write sequence number along with an `Lp-Trickle-Latest` header. SDKs and publishers can probe this endpoint before their first POST to stay in sync with the server's sequence numbering, avoiding a race that could drop the first segment on a fresh channel. The endpoint returns `404` for unknown channels and signals `Lp-Trickle-Closed: terminated` when the channel is closed. This unblocks the new [Python gateway SDK](https://github.com/livepeer/livepeer-python-gateway) for [Live AI pipelines](/v2/developers/concepts/ai-on-livepeer).
+- **Trickle `/next` endpoint for sequence probing** — Trickle channels now expose `GET /{channel}/next`, returning the next write sequence number alongside an `Lp-Trickle-Latest` header. Publishers and SDKs can call this before their first POST to align with the server's sequence numbering, eliminating a race that could drop the first segment on a fresh channel. The endpoint returns `404` for unknown channels and signals `Lp-Trickle-Closed: terminated` when a channel has been closed. This unblocks the new Python gateway SDK for [Live AI pipelines](/v2/developers/concepts/ai-on-livepeer).
 
 </Update>
 
