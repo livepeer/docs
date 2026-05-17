@@ -38,7 +38,7 @@ NaaP (Node as a Platform) is the Livepeer-maintained plugin platform for operati
 
 This tutorial builds a **frontend-only** plugin called `network-snapshot` that lists recent Orchestrators returned by the shell's existing Livepeer data endpoints. Backend and database plugins follow the same skeleton with extra steps; see <LinkArrow href="https://naap-platform.vercel.app/docs/guides/your-first-plugin" label="Your First Plugin" newline={false} /> for the full-stack walkthrough.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -57,7 +57,7 @@ cd NaaP
 
 The script installs dependencies, starts Postgres via Docker, runs migrations, builds plugin bundles, and starts the shell. Open `http://localhost:3000` once the script reports ready.
 
-<CustomDivider middleText="Scaffold" />
+<CustomDivider />
 
 ## Scaffold the Plugin
 
@@ -83,7 +83,7 @@ plugins/network-snapshot/
 └── README.md
 ```
 
-<CustomDivider middleText="Manifest" />
+<CustomDivider />
 
 ## Plugin Manifest
 
@@ -112,7 +112,7 @@ Edit `plugin.json`:
 
 The `routes` array binds shell URLs to this plugin. The `navigation` block adds a sidebar entry. The `devPort` is the port Vite serves the plugin from during local development.
 
-<CustomDivider middleText="Build" />
+<CustomDivider />
 
 ## Frontend Panel
 
@@ -197,7 +197,7 @@ The three hooks expose the shell context to the plugin:
 
 The hook signatures and the API envelope are part of the published SDK contract. See the SDK Hooks reference at `naap-platform.vercel.app/docs/api-reference/sdk-hooks`.
 
-<CustomDivider middleText="Mount" />
+<CustomDivider />
 
 ## Mount Entry Point
 
@@ -221,7 +221,7 @@ export function mount(container: HTMLElement, context: ShellContext) {
 
 The function returns a cleanup callback. The shell calls it when the user navigates away.
 
-<CustomDivider middleText="Run" />
+<CustomDivider />
 
 ## Run the Plugin
 
@@ -233,7 +233,7 @@ From the NaaP repo root:
 
 The script rebuilds the plugin bundle and reloads the shell. Open `http://localhost:3000` and sign in. The sidebar now contains a **Network snapshot** entry. Click it. The panel mounts, fetches Orchestrators through `api.get('/livepeer/orchestrators?limit=5')`, and renders the list.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -245,7 +245,7 @@ The script rebuilds the plugin bundle and reloads the shell. Open `http://localh
 
 **TypeScript can't find `@naap/plugin-sdk`.** The SDK is a workspace package, not a published npm package. Run `npm install` from the repo root, not from the plugin directory.
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

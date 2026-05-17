@@ -1,0 +1,356 @@
+---
+title: 'Transcoding Direct Quickstart'
+sidebarTitle: 'Transcoding Quickstart'
+description: >-
+  Run a Livepeer gateway and orchestrator locally in fifteen minutes. RTMP in, HLS out, no ETH, no GPU.
+keywords:
+  - livepeer
+  - transcoding
+  - go-livepeer
+  - rtmp
+  - hls
+  - quickstart
+  - gateway
+  - self-hosted
+  - off-chain
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: beginner
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Run the gateway and orchestrator locally. Publish RTMP, pull HLS, fifteen minutes. CPU only. No ETH, no GPU, no network registration.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+By the end of this quickstart you'll have a Livepeer gateway and orchestrator running on one machine, transcoded a test stream end-to-end, and verified an HLS playlist with three renditions (240p, 360p, 720p). The path uses `-network offchain` mode, which exercises the full job lifecycle without any on-chain dependencies. Once this works, you understand the network-direct video path; on-chain production setup uses the same architecture with payment envelopes attached.
+
+Personas 2 and 4 both start here. Persona 2 (video platform builders) takes this forward into VOD, webhooks, and player integration. Persona 4 (live-video-first builders) tunes for sub-three-second latency. Operators running gateways in production should follow the <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="production checklist" newline={false} /> in the Gateways tab.
+
+<CustomDivider />
+
+## Required Tools
+
+Three things on one Linux amd64 machine:
+
+- `go-livepeer` binary or Docker
+- `ffmpeg` for the test stream
+- Three free terminals
+
+No Arbitrum wallet, no API keys, no GPU.
+
+<Tabs>
+  <Tab title="Binary">
+    Download the latest `go-livepeer` release for Linux amd64:
+
+    ```bash
+    # Check https://github.com/livepeer/go-livepeer/releases for the latest version
+    curl -LO https://github.com/livepeer/go-livepeer/releases/download/v0.8.10/livepeer-linux-amd64.tar.gz
+    tar -xzf livepeer-linux-amd64.tar.gz
+    chmod +x livepeer livepeer_cli
+    ./livepeer -version
+    ```
+  </Tab>
+  <Tab title="Docker">
+    Pull the image:
+
+    ```bash
+    docker pull livepeer/go-livepeer:master
+    ```
+
+    Every `./livepeer` command below has a Docker equivalent: replace `./livepeer` with `docker run --rm -v ~/.lpData:/root/.lpData --network host livepeer/go-livepeer:master`. The flags are identical.
+  </Tab>
+</Tabs>
+
+Install `ffmpeg`:
+
+```bash
+# Ubuntu / Debian
+sudo apt install ffmpeg
+
+# macOS
+brew install ffmpeg
+```
+
+<Note>
+  The `-gateway` flag replaces the older `-broadcaster` flag. If you see `-broadcaster` in community guides, substitute `-gateway`. The old flag still works in some builds and is deprecated.
+</Note>
+
+<CustomDivider />
+
+## Orchestrator Setup
+
+<Steps>
+  <Step title="Run go-livepeer in orchestrator mode">
+    First terminal:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -transcoder \
+      -network offchain \
+      -serviceAddr 127.0.0.1:8936 \
+      -cliAddr 127.0.0.1:7936 \
+      -datadir ~/.lpData-orch
+    ```
+
+    | Flag | Effect |
+    |---|---|
+    | `-orchestrator` | Accept jobs from gateways |
+    | `-transcoder` | Attach a local transcoder; CPU transcoding via `libx264` |
+    | `-network offchain` | Local job routing, no Ethereum dependency |
+    | `-serviceAddr 127.0.0.1:8936` | gRPC address the gateway connects to |
+    | `-cliAddr 127.0.0.1:7936` | CLI management port |
+    | `-datadir ~/.lpData-orch` | Data directory, kept separate from the gateway |
+  </Step>
+
+  <Step title="Confirm it's listening">
+    Expected log lines:
+
+    ```
+    I0000 Starting Livepeer node
+    I0000 Orchestrator registered with service address 127.0.0.1:8936
+    I0000 Listening for jobs
+    ```
+
+    Leave this terminal running.
+  </Step>
+</Steps>
+
+<Note>
+  `-orchestrator` and `-transcoder` together run in one process. In production these are typically split: orchestrator on a small VPS handling routing and payments, transcoder on a GPU machine. Tutorial 3 in the Gateways tab covers the split.
+</Note>
+
+<CustomDivider />
+
+## Gateway Setup
+
+<Steps>
+  <Step title="Run go-livepeer in gateway mode">
+    Second terminal:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -network offchain \
+      -orchAddr 127.0.0.1:8936 \
+      -rtmpAddr 127.0.0.1:1935 \
+      -httpAddr 127.0.0.1:8935 \
+      -cliAddr 127.0.0.1:5935 \
+      -datadir ~/.lpData-gw
+    ```
+
+    | Flag | Effect |
+    |---|---|
+    | `-gateway` | Accept RTMP streams from publishers |
+    | `-network offchain` | Matches the orchestrator |
+    | `-orchAddr 127.0.0.1:8936` | Point at the local orchestrator |
+    | `-rtmpAddr 127.0.0.1:1935` | RTMP ingest port |
+    | `-httpAddr 127.0.0.1:8935` | HTTP port the HLS playlist is pulled from |
+    | `-cliAddr 127.0.0.1:5935` | CLI management port |
+    | `-datadir ~/.lpData-gw` | Data directory, separate from orchestrator |
+  </Step>
+
+  <Step title="Confirm it's listening">
+    Expected log lines:
+
+    ```
+    I0000 Starting Livepeer node
+    I0000 RTMP Server listening on rtmp://127.0.0.1:1935
+    I0000 HTTP Server listening on http://127.0.0.1:8935
+    I0000 Registered orchestrator: 127.0.0.1:8936
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  `-orchAddr` accepts a comma-separated list. Off-chain mode requires an explicit list because there's no on-chain registry. On-chain mode removes this flag; the registry supplies orchestrators automatically.
+</Note>
+
+<CustomDivider />
+
+## Stream Publishing
+
+Third terminal. Pick one option below.
+
+<Tabs>
+  <Tab title="Test pattern">
+    No source file needed; `ffmpeg` generates one:
+
+    ```bash
+    ffmpeg \
+      -f lavfi \
+      -i testsrc=duration=60:size=1280x720:rate=30 \
+      -c:v libx264 \
+      -b:v 2000k \
+      -f flv \
+      rtmp://127.0.0.1:1935/live/test_stream
+    ```
+  </Tab>
+  <Tab title="Sample file">
+    ```bash
+    ffmpeg \
+      -re \
+      -i /path/to/video.mp4 \
+      -c:v libx264 \
+      -b:v 2000k \
+      -f flv \
+      rtmp://127.0.0.1:1935/live/test_stream
+    ```
+
+    The `-re` flag reads input at native frame rate, simulating a live stream. Skip it and `ffmpeg` pushes the file as fast as possible, which overwhelms the orchestrator buffer.
+  </Tab>
+</Tabs>
+
+The stream key (`test_stream`) is arbitrary in off-chain mode. The gateway accepts any key.
+
+Expected `ffmpeg` output:
+
+```
+Output #0, flv, to 'rtmp://127.0.0.1:1935/live/test_stream':
+  Stream #0:0: Video: h264, yuv420p, 1280x720, 2000 kb/s, 30 fps
+frame=   30 fps= 30 q=23.0 size=     320kB time=00:00:01.00 bitrate=2621.4kbits/s
+```
+
+<CustomDivider />
+
+## Output Verification
+
+<Steps>
+  <Step title="Pull the HLS playlist">
+    ```bash
+    curl http://127.0.0.1:8935/stream/test_stream.m3u8
+    ```
+
+    Expected response:
+
+    ```
+    #EXTM3U
+    #EXT-X-VERSION:3
+    #EXT-X-STREAM-INF:PROGRAM-ID=0,BANDWIDTH=400000,RESOLUTION=426x240
+    test_stream_240p0.m3u8
+    #EXT-X-STREAM-INF:PROGRAM-ID=0,BANDWIDTH=800000,RESOLUTION=640x360
+    test_stream_360p0.m3u8
+    #EXT-X-STREAM-INF:PROGRAM-ID=0,BANDWIDTH=2000000,RESOLUTION=1280x720
+    test_stream_720p0.m3u8
+    ```
+
+    Three renditions confirm the orchestrator successfully transcoded the source. 240p, 360p, and 720p are the default profile.
+  </Step>
+
+  <Step title="Play it (optional)">
+    ```bash
+    ffplay http://127.0.0.1:8935/stream/test_stream.m3u8
+    ```
+
+    Or paste the URL into VLC, OBS, or any HLS-capable player.
+  </Step>
+
+  <Step title="Watch the gateway logs">
+    The gateway terminal shows the job flow:
+
+    ```
+    I0000 Received RTMP stream: test_stream
+    I0000 Starting session with orchestrator 127.0.0.1:8936
+    I0000 Segment 0 sent to orchestrator
+    I0000 Segment 0 transcoded, 3 renditions received
+    I0000 Segment 1 sent to orchestrator
+    ```
+
+    Every two-second chunk goes to the orchestrator, comes back transcoded, and joins the HLS playlist.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Job Lifecycle
+
+```
+ffmpeg
+  +-> RTMP publish to Gateway port 1935
+        +-> Gateway creates a session, selects Orchestrator (127.0.0.1:8936)
+              +-> Gateway splits stream into ~2s segments
+                    +-> Each segment sent to Orchestrator via gRPC
+                          +-> Orchestrator transcodes to 240p / 360p / 720p (CPU)
+                                +-> Transcoded segments returned to Gateway
+                                      +-> Gateway assembles HLS playlist + segments
+                                            +-> curl / ffplay pulls the HLS
+```
+
+The full job lifecycle ran. The only piece off-chain mode skips is the payment envelope; segment routing, transcoding, and delivery are identical to a production gateway.
+
+Four ideas underpin what just happened.
+
+**Session.** The gateway creates a session per stream key. The session persists until the publisher disconnects or the gateway shuts down.
+
+**Segment.** A two-second chunk of video. The gateway sends segments to the orchestrator independently and in order.
+
+**Off-chain routing.** Without `-network offchain`, the gateway needs an Arbitrum RPC and a funded PM deposit. Off-chain mode keeps the routing logic intact and leaves the payment envelope empty.
+
+**Transcoding profiles.** The orchestrator applied the default 240p, 360p, and 720p at 30fps. Customise via `transcodingOptions.json` passed to the gateway.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="No orchestrators found or connection refused on 8936">
+    Start the orchestrator before the gateway. Confirm the `Listening for jobs` log line in terminal 1, then start the gateway in terminal 2.
+  </Accordion>
+  <Accordion title="ffmpeg exits with Connection refused">
+    The gateway's RTMP server isn't running, or the port is wrong. Confirm the gateway terminal shows `RTMP Server listening on rtmp://127.0.0.1:1935`. If `-rtmpAddr` was changed, update the `ffmpeg` command to match.
+  </Accordion>
+  <Accordion title="HLS playlist returns 404">
+    Wait three to five seconds after `ffmpeg` starts. The gateway only creates the playlist once it has received and forwarded at least one segment. If it persists, check the stream key matches between `ffmpeg` and `curl`.
+  </Accordion>
+  <Accordion title="Playlist exists but has zero segments">
+    The gateway received the stream and the orchestrator failed to transcode. Check the orchestrator terminal for errors. Common cause: `libx264` missing from the `go-livepeer` build. Switch to the Docker path.
+  </Accordion>
+  <Accordion title="Port conflict: address already in use">
+    Check what's holding the port:
+
+    ```bash
+    lsof -i :1935   # RTMP
+    lsof -i :8935   # Gateway HTTP
+    lsof -i :8936   # Orchestrator gRPC
+    ```
+
+    Kill the conflicting process, or change `-rtmpAddr`, `-httpAddr`, and `-serviceAddr` to free ports.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Ingest and Playback" icon="play" href="/v2/developers/build/video/ingest-and-playback">
+    RTMP, WHIP, and WebRTC ingest; HLS, LL-HLS, and DASH playback.
+  </Card>
+  <Card title="Codec Support" icon="layer-group" href="/v2/developers/build/video/codec-support">
+    H.264, H.265, AV1, transcoding profiles, custom `transcodingOptions.json`.
+  </Card>
+  <Card title="VOD and Recording" icon="bookmark" href="/v2/developers/build/video/vod-and-recording">
+    Stream recording, archive playback, asset management.
+  </Card>
+  <Card title="Low-Latency Live Streaming" icon="bolt" href="/v2/developers/build/tutorials/low-latency-live-streaming-app">
+    Sub-3s glass-to-glass with WebRTC ingest and LL-HLS.
+  </Card>
+</CardGroup>
+
+For production gateway operation, including on-chain mode and GPU transcoding, follow the <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="production checklist" newline={false} />.

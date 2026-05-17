@@ -1,0 +1,151 @@
+---
+title: "Creative Kit"
+sidebarTitle: "Creative Kit"
+description: >-
+  @livepeer/creative-kit: reusable framework for building creative AI
+  applications on Livepeer. ArtifactStore, CommandRouter, CapabilityResolver,
+  InfiniteBoard, ChatPanel, Timeline, and export pipeline.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - '@livepeer/creative-kit'
+  - ArtifactStore
+  - CommandRouter
+  - CapabilityResolver
+  - InfiniteBoard
+  - ChatPanel
+  - Timeline
+  - creative AI framework
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>@livepeer/creative-kit is the framework layer between @livepeer/agent (runtime) and your application. It provides state management, routing, UI components, and export pipelines for creative AI apps.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+`@livepeer/creative-kit` is the reusable framework for building creative AI applications on Livepeer infrastructure. It sits between the `@livepeer/agent` runtime (which handles the LLM-to-tool loop) and the application layer (which provides the user interface and domain logic).
+
+Storyboard is the reference application built on creative-kit. Any application that needs an AI-driven canvas, chat interface, or media generation pipeline can use the same components.
+
+Source: [`livepeer/storyboard`](https://github.com/livepeer/storyboard) `packages/creative-kit/src/`
+
+<CustomDivider />
+
+## Module architecture
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Module</TableCell>
+      <TableCell header>Purpose</TableCell>
+      <TableCell header>Key exports</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Stores**</TableCell>
+      <TableCell>State management for canvas, chat, projects, and history</TableCell>
+      <TableCell>`createArtifactStore`, `createChatStore`, `createProjectStore`, `createHistoryManager`, `createTimelineStore`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Routing**</TableCell>
+      <TableCell>Command parsing, model selection, intent classification, and skill resolution</TableCell>
+      <TableCell>`createCommandRouter`, `createCapabilityResolver`, `createIntentClassifier`, `routeModel`, `resolveSkills`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Streaming**</TableCell>
+      <TableCell>Pipeline registry, graph building, and recipe management</TableCell>
+      <TableCell>`createPipelineRegistry`, `BUILTIN_RECIPES`, `buildSimpleGraph`, `buildYouTubeGraph`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Agent**</TableCell>
+      <TableCell>Request queuing, error handling, creative memory, confirmation gates, DAG execution, and export</TableCell>
+      <TableCell>`createRequestQueue`, `createCreativePipeline`, `executeDAG`, `exportToJson`, `exportForSocial`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**UI**</TableCell>
+      <TableCell>Canvas, chat, timeline, and skill browser components</TableCell>
+      <TableCell>`InfiniteBoard`, `ArtifactCard`, `ChatPanel`, `MessageBubble`, `TimelineView`, `SkillBrowser`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## State management
+
+**ArtifactStore** manages canvas state: artifacts (cards on the canvas), edges (connections between artifacts), viewport (pan/zoom), and selection. Each artifact has a position, size, type, and content payload.
+
+```typescript
+import { createArtifactStore } from '@livepeer/creative-kit';
+
+const store = createArtifactStore({ maxHistory: 50 });
+store.addArtifact({ type: 'image', content: { url: '...' }, x: 100, y: 200 });
+```
+
+**ProjectStore** manages batch generation pipelines: a sequence of work items (image, video, audio, text) with status tracking and dependency ordering.
+
+**HistoryManager** provides undo/redo with named snapshots. It tracks canvas state changes and lets users revert to any previous state.
+
+**TimelineStore** provides a multi-track timeline for director mode: tracks, clips, takes, and a playhead for sequencing media into a linear output.
+
+<CustomDivider />
+
+## Command and model routing
+
+**CommandRouter** maps slash commands (`/story`, `/film`, `/stream`) to handler functions. Register custom commands for your application:
+
+```typescript
+import { createCommandRouter } from '@livepeer/creative-kit';
+
+const router = createCommandRouter();
+router.register('generate', async (args, context) => {
+  // handle /generate command
+});
+```
+
+**CapabilityResolver** selects the best model for a request based on capability requirements, GPU load, and fallback chains. It implements the automatic fallback: if `flux-dev` rejects a request, it tries `flux-schnell`, then `recraft-v4`.
+
+**IntentClassifier** determines what the user wants from a natural language prompt (generate image, animate, edit, stream, export) and routes to the correct pipeline.
+
+<CustomDivider />
+
+## UI components
+
+All UI components are unstyled React components. Bring your own CSS or Tailwind.
+
+**InfiniteBoard** renders the canvas with pan, zoom, drag, and selection. Artifacts render as cards on the board.
+
+**ChatPanel** renders the conversation interface with message bubbles, tool pills (showing which AI tool is running), and styled prompts.
+
+**TimelineView** renders the multi-track timeline for director mode with track lanes, clip blocks, a time ruler, and a playhead.
+
+**SkillBrowser** and **SkillCard** render the skill installation UI for browsing and installing agent skills.
+
+<CustomDivider />
+
+## Agent utilities
+
+**CreativePipeline** orchestrates a multi-step generation workflow: intent classification, model selection, inference execution, result placement on canvas, and error recovery.
+
+**DAG executor** runs directed acyclic graphs of generation tasks with dependency resolution and parallel execution where possible.
+
+**Export pipeline** converts canvas content to JSON, HTML storyboards, video manifests, and social media formats (with per-platform crop and resolution).
+
+**Creative memory** tracks user preferences (preferred models, styles, subjects) and applies them as prompt prefixes in future requests. Preferences decay over time.
+
+<CustomDivider />
+
+The [@livepeer/agent SDK](/v2/developers/build/ai-and-agents/agents/agent-sdk) covers the runtime layer that creative-kit builds on. [Storyboard](/v2/developers/build/ai-and-agents/agents/storyboard) is the reference application.

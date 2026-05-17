@@ -1,15 +1,18 @@
 ---
 title: AI Features
 sidebarTitle: AI Features
-description: 'AI assistants, agent adapters, skills, and automated pipelines available in this docs repo.'
+description: AI assistants, agent adapters, skills, public AI artifacts, and automated AI-facing pipelines in the docs repo.
+audience: developer
+pageType: overview
+purpose: overview
 status: current
-lastVerified: 2026-03-27
+lastVerified: 2026-05-14
 keywords:
   - livepeer
   - ai features
+  - ai agents
   - skills
-  - agents
-  - pipelines
+  - llms
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
@@ -19,155 +22,72 @@ keywords:
 
 # AI Features
 
-This repo has AI capabilities at three levels: reader-facing assistants, contributor-facing agent tooling, and automated pipelines that keep content fresh without human intervention.
+The AI layer has two audiences: readers who consume AI-ready docs artifacts, and contributors or agents who use repo-native adapters, skills, and governance workflows. The ownerless standard applies to both: AI outputs must be generated from canonical sources, and AI agents must follow the same gates as humans.
 
-For governance and registry details, see [`docs-guide/tooling/ai-tools.mdx`](../tooling/ai-tools.mdx).
+## Public AI Surfaces
 
-## AI Assistants for Readers
-
-### Mintlify AI Assistant
-
-Built into [docs.livepeer.org](https://docs.livepeer.org). Uses agentic RAG with tool-calling to answer questions from the published docs. No configuration required.
-
-Conversation analytics are available in the Mintlify dashboard and surface unanswered questions as content gap signals.
-
-### llms.txt
-
-This repo governs `llms.txt` as a committed AI-first public root artifact. It is generated from the repo docs navigation by `operations/scripts/generators/ai/llm/generate-llms-files.js`. `llms-full.txt` is retired and not part of the active root contract.
-
-### MCP Server
-
-Mintlify provides an auto-syncing MCP server that lets Claude, Cursor, and Windsurf query the published docs in real time:
-
-```bash icon="terminal"
-npx mcp add livepeer
-```
+| Surface | Purpose | Canonical source | Repair or generation path |
+| --- | --- | --- | --- |
+| `llms.txt` | AI-first root artifact for crawlers and assistant ingestion. | `docs.json`, docs content, `operations/scripts/generators/ai/llm/generate-llms-files.js` | `node operations/scripts/generators/ai/llm/generate-llms-files.js --write` |
+| `sitemap-ai.xml` | AI-oriented sitemap for docs retrieval. | `docs.json`, `operations/scripts/generators/content/seo/generate-ai-sitemap.js` | `lpd ai-sitemap --write` |
+| Mintlify AI assistant | Reader-facing assistant backed by published docs. | Published Mintlify docs site | Fix source pages and redeploy, not assistant answers directly. |
+| Mintlify MCP | External tool access to published docs. | Mintlify project configuration | Validate published docs and route coverage. |
 
 ## Agent Adapters
 
-[`AGENTS.md`](../../AGENTS.md) is the baseline instruction set. Every AI agent reads it first, then loads its native adapter for tool-specific rules.
+| Agent | Repo adapter | Role |
+| --- | --- | --- |
+| Codex | `.github/AGENTS.md`, `.codex/task-contract.yaml` | Task isolation, branch contracts, staged scope validation, no-stash safety. |
+| Claude Code | `.claude/CLAUDE.md`, `.claude/skills/` | Project context, canonical skills, session workflows. |
+| Cursor | `.cursor/rules/repo-governance.mdc`, `.cursor/rules/no-deletions.mdc` | Governance and deletion guardrails. |
+| Windsurf | `.windsurf/rules/repo-governance.md` | Governance and repo safety rules. |
+| Augment | `.augment/rules/` | Governance, git safety, and deletion guardrails. |
+| GitHub Copilot | `.github/copilot-instructions.md` | Inline coding guidance. |
 
-| Agent | Adapter | Scope |
-|---|---|---|
-| Claude Code | `.claude/CLAUDE.md` | Full project context, session management, co-work skills |
-| Cursor | `.cursor/rules/repo-governance.mdc` + `no-deletions.mdc` | Governance rules, deletion guards |
-| Windsurf | `.windsurf/rules/repo-governance.md` | Governance rules |
-| GitHub Copilot | `.github/copilot-instructions.md` | Inline code suggestions |
-| Augment Code | `.augment/rules/` (3 files) | Governance, git safety, deletion guards |
-| Codex | `.github/AGENTS.md` | Task isolation, checkpoints, lock contracts |
+All adapters inherit the root baseline in `AGENTS.md`. Adapter-specific files should only add tool-specific behavior, not contradict root governance.
 
-### Codex Branch Contract
+## Skills and Agent Workflows
 
-AI agent implementation branches use `codex/<issue-id>-<slug>` naming. These branches are hook-enforced with:
+There are 34 local skills under `ai-tools/ai-skills/`. They fall into seven practical groups:
 
-- Task contract file: `.codex/task-contract.yaml`
-- Pre-push validation: contract + scope + non-fast-forward block
-- PR body generation: `node operations/scripts/dispatch/ai/codex/create-codex-pr.js --create`
+| Group | Skills | Purpose |
+| --- | --- | --- |
+| Session and process | `thread`, `pm`, `research`, `design`, `build`, `iterate`, `close`, `dispatch`, `agent-brief`, `diagnose`, `propagate` | Plan, research, design, execute, review, and close work with evidence. |
+| Content and docs | `docs-copy`, `page-authoring`, `content-pipeline-pass-a`, `content-pipeline-pass-b`, `content-pipeline-tab-map` | Produce and review docs using the content pipeline. |
+| Review and audit | `repo-audit-orchestrator`, `docs-coverage-and-route-integrity-audit`, `docs-quality-and-freshness-audit`, `rubric-static-review`, `script-footprint-and-usage-audit` | Find structural, content, and governance issues. |
+| Governance creation | `create-action`, `create-component`, `create-script`, `skill-docs`, `generated-mdx-banners-governance` | Scaffold governed artifacts with required metadata. |
+| Component governance | `component-layout-governance`, `create-component` | Keep UI primitives aligned with the component framework. |
+| Cleanup | `cleanup-quarantine-manager`, `script-footprint-and-usage-audit` | Classify, quarantine, and retire stale artifacts through approved paths. |
+| Agent packaging | `cross-agent-packager`, `browser`, `product-thinking`, `style-and-language-homogenizer-en-gb` | Package skills and support specialized execution. |
 
-Full policy: [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx)
+## AI Governance Contracts
 
-## AI Skills
+| Contract | Why it matters | Validation surface |
+| --- | --- | --- |
+| Agent baseline freshness | All AI adapters should reflect the same core repo rules. | `operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js` |
+| Codex task isolation | AI task branches must declare scope and avoid overlapping or hidden work. | `.codex/task-contract.yaml`, `operations/scripts/validators/ai/codex/validate-locks.js` |
+| Skill registry parity | Skills and generated agent packs should remain synchronized. | `ai-tools/registry/`, `operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js` |
+| Public AI artifacts | AI-facing root files must be generated and validated from current nav/content. | `lpd ai-sitemap --check`, llms file validators |
 
-28 skills provide structured workflows for both humans and agents. Invoke with `/skill-name` in Claude Code or follow the SKILL.md instructions directly.
+## AI Pipeline Risks
 
-### Co-work and Process (9 skills)
+| Risk | Current evidence | Required fix |
+| --- | --- | --- |
+| Skill count drift | `docs-guide/features/ai-features.mdx` previously documented 28 skills; live inventory has 34. | Use generated skill indexes or cite live inventory rather than hand-maintained counts. |
+| Old validator references | Some guides still point at missing or renamed validator paths. | Route AI-tool checks through current `operations/scripts/generators/governance/catalogs/*` and compliance validators. |
+| Agent adapter duplication | Multiple adapters repeat governance rules. | Keep root policy in `AGENTS.md` and make adapters thin, tool-specific extensions. |
+| AI artifact drift | `llms.txt`, `sitemap-ai.xml`, and docs indexes can become stale after nav or content moves. | Regenerate in the same change as route/content movement and run staged validation. |
 
-| Skill | Purpose |
-|---|---|
-| `/thread` | Session anchor, drift prevention, finalisation reports |
-| `/pm` | Project management, priorities, bottlenecks, risks |
-| `/research` | Agent-delegated investigation, synthesise and recommend |
-| `/design` | First-principles co-creation, architecture with test criteria |
-| `/build` | Agent-delegated execution against approved design |
-| `/iterate` | Review against criteria and best practice |
-| `/dispatch` | Parallel agent coordinator for batch work |
-| `/agent-brief` | Standard instruction template for spawned agents |
-| `/diagnose` | Systematic debugging, root-cause analysis |
+## Contributor Rules
 
-### Content Pipeline (4 skills)
+- Do not edit generated AI artifacts by hand.
+- Do not add a new skill without a `SKILL.md`, registry path, and validation story.
+- Do not treat AI-generated reports as source of truth unless their generator and source inputs are named.
+- Do not bypass branch or deletion rules for AI work.
 
-| Skill | Purpose |
-|---|---|
-| `content-pipeline-pass-a` | Content layer writing (audience, voice, veracity flags) |
-| `content-pipeline-pass-b` | Structure and layout pass |
-| `content-pipeline-tab-map` | Tab-level IA mapping |
-| `page-authoring` | Single-page authoring workflow |
+## Related
 
-### Audit and Governance (8 skills)
-
-| Skill | Purpose |
-|---|---|
-| `repo-audit-orchestrator` | Full repo audit coordination |
-| `docs-coverage-and-route-integrity-audit` | Navigation and routing coverage |
-| `docs-quality-and-freshness-audit` | Content quality and staleness |
-| `script-footprint-and-usage-audit` | Script usage analysis |
-| `component-layout-governance` | Component placement rules |
-| `generated-mdx-banners-governance` | Generated file banner integrity |
-| `cleanup-quarantine-manager` | Quarantine and cleanup workflows |
-| `cross-agent-packager` | Cross-agent context packaging |
-
-### Review and Specialised (7 skills)
-
-| Skill | Purpose |
-|---|---|
-| `docs-review-packet-generation` | Review packet assembly |
-| `docs-review-fix-execution` | Fix execution from review findings |
-| `rubric-static-review` | Rubric-based static content review |
-| `docs-copy` | Copy editing pass |
-| `style-and-language-homogenizer-en-gb` | UK English style enforcement |
-| `product-thinking` | Product-oriented analysis |
-| `skill-docs` | Skill documentation generation |
-
-### Skill Chaining
-
-Skills chain in a standard workflow: `/thread` (anchor) then `/pm` (plan) then `/research` (investigate) then `/design` (architect) then `/build` (execute) then `/iterate` (review).
-
-### Portable Templates
-
-10 portable skill templates live in `ai-tools/ai-skills/templates/`. These can be synced to Codex or other environments:
-
-```bash icon="terminal"
-node operations/scripts/dispatch/ai/agents/sync-codex-skills.js
-# or: bash tools/lpd setup --yes (includes skill sync)
-```
-
-## AI-Powered Pipelines
-
-### Glossary Companion Generation
-
-Extracts glossary data from `SearchTable` components in MDX pages and writes companion JSON files for AI and crawler discoverability.
-
-- Generator: `operations/scripts/generators/content/reference/generate-glossary-companions.js`
-- CI generate: `.github/workflows/generate-ai-companions.yml` (push to deploy branch)
-- CI check: `.github/workflows/check-ai-companions.yml` (PR gate)
-
-### Content Health Automation
-
-Weekly scheduled workflow (`content-health.yml`) scans for stale pages, broken links, and content drift. Outputs reports to `workspace/reports/`.
-
-### Language Translation
-
-Translation pipeline for multi-locale content. Frontmatter taxonomy validator at `tools/lib/docs/frontmatter-taxonomy.js` enforces valid locale values.
-
-## Contributing AI Tools
-
-### Write a new skill
-
-1. Copy a template from `ai-tools/ai-skills/templates/`
-2. Create `ai-tools/ai-skills/your-skill/SKILL.md`
-3. Follow the SKILL.md format: metadata block, when to use, steps, principles
-4. Register in `ai-tools/registry/ai-tools-registry.json`
-5. Run the validator: `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check`
-
-### Add rules
-
-Rules live in `ai-tools/ai-rules/`:
-
-- `best-practices.md` - general AI agent best practices
-- `HUMAN-OVERRIDE-POLICY.md` - when humans can override AI safety rules
-- `ROLLBACK-GUIDE.md` - how to roll back AI-generated changes
-- `rules/` - granular rule files
-
-### Agent packs
-
-Pre-packaged agent configurations in `ai-tools/agent-packs/` for Claude, Codex, Cursor, Windsurf, and portable skills. Generated from templates and registry data.
+- `docs-guide/tooling/ai-tools.mdx`
+- `docs-guide/policies/agent-governance-framework.mdx`
+- `docs-guide/policies/ownerless-governance.mdx`
+- `ai-tools/registry/ai-tools-inventory.md`

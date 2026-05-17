@@ -1,30 +1,84 @@
 ---
 title: "Plugins and extensions"
 sidebarTitle: "Overview"
-description: "Build plugins on the Livepeer NaaP platform: overview, when to use NaaP, and the path to a published plugin."
-pageType: concept
-audience: developer
-purpose: orient
-complexity: intermediate
-lifecycleStage: build
+description: >-
+  NaaP (Network as a Platform) is the official Livepeer network portal and plugin
+  platform. Build, install, and publish modular tools for managing Livepeer infrastructure.
 keywords:
-  - plugins
-  - naap
+  - NaaP
   - network as a platform
-  - extensions
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+  - plugin platform
+  - developer portal
+  - operator dashboard
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-veracityStatus: unverified
 ---
 
-{/* STATUS: SPLIT-STUB — first half of split from developers1/guides/beta-projects/naap.mdx (12.5 KB).
-  Source for reference (DO NOT COPY VERBATIM — extract overview-shaped content only):
-  - developers1/guides/beta-projects/naap.mdx — overview-shaped sections
-  Second half goes to naap-architecture.mdx (architecture-shaped sections).
-  Canonical: livepeer/naap repo README + operator.livepeer.org content.
-*/}
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-This page is in progress.
+<CenteredContainer preset="readable90">
+  <Tip>NaaP (Network as a Platform) is the live Livepeer network portal at operator.livepeer.org. It is a micro-frontend shell that loads independent plugins at runtime. You can use the platform today and build plugins with the `@naap/plugin-sdk` CLI.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+NaaP is an official Livepeer project maintained in the [`livepeer/naap`](https://github.com/livepeer/naap) repository. The platform is live at [operator.livepeer.org](https://operator.livepeer.org), with full developer documentation at [operator.livepeer.org/docs](https://operator.livepeer.org/docs).
+
+The platform gives operators, developers, and governance participants a single interface for managing Livepeer infrastructure. It is extensible by design: any team can build and publish a plugin that inherits auth, navigation, theming, and database infrastructure from the shell.
+
+<Warning>
+  NaaP is in active beta development. Breaking changes to the plugin SDK may occur between releases. Check the [NaaP changelog](https://operator.livepeer.org/docs/community/changelog) before upgrading.
+</Warning>
+
+<CustomDivider />
+
+## Resources
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Resource</TableCell>
+      <TableCell header>Link</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Live platform**</TableCell>
+      <TableCell>[operator.livepeer.org](https://operator.livepeer.org)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Developer docs**</TableCell>
+      <TableCell>[operator.livepeer.org/docs](https://operator.livepeer.org/docs)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Quickstart**</TableCell>
+      <TableCell>[operator.livepeer.org/docs/getting-started/quickstart](https://operator.livepeer.org/docs/getting-started/quickstart)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**SDK hooks reference**</TableCell>
+      <TableCell>[operator.livepeer.org/docs/api-reference/sdk-hooks](https://operator.livepeer.org/docs/api-reference/sdk-hooks)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**AI prompt templates**</TableCell>
+      <TableCell>[operator.livepeer.org/docs/prompts/how-to-use](https://operator.livepeer.org/docs/prompts/how-to-use)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**GitHub repository**</TableCell>
+      <TableCell>[github.com/livepeer/naap](https://github.com/livepeer/naap)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+The [NaaP architecture](/v2/developers/build/plugins-and-extensions/naap-architecture) page covers the micro-frontend design, ShellContext interface, and request flow. The [building a plugin](/v2/developers/build/plugins-and-extensions/building-a-plugin) page covers the CLI, scaffold, and SDK hooks.

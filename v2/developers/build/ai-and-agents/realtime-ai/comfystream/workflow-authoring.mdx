@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
@@ -40,7 +39,7 @@ ComfyStream applies ComfyUI workflows to incoming video frames in real time. The
 
 This guide covers building a workflow suitable for streaming, installing ComfyStream, and connecting it to a live video source.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -49,7 +48,7 @@ This guide covers building a workflow suitable for streaming, installing ComfySt
 - Python 3.10+ with PyTorch installed
 - FFmpeg available on PATH
 
-<CustomDivider middleText="Installing ComfyStream" />
+<CustomDivider />
 
 ## Installation
 
@@ -83,7 +82,7 @@ This guide covers building a workflow suitable for streaming, installing ComfySt
   </StyledStep>
 </StyledSteps>
 
-<CustomDivider middleText="Building a Streaming Workflow" />
+<CustomDivider />
 
 ## Workflow Structure
 
@@ -99,7 +98,7 @@ When ComfyStream runs this workflow, it intercepts the Load Image node to inject
 
 Export the workflow in API format from ComfyUI: **Workflow > Export (API Format)**. This produces a JSON file that ComfyStream loads at startup.
 
-<CustomDivider middleText="Starting the Server" />
+<CustomDivider />
 
 ## Running ComfyStream
 
@@ -120,23 +119,25 @@ For remote server deployments, allow inbound and outbound UDP traffic on ports 1
 python server/app.py --workspace /path/to/ComfyUI --media-ports 10000,10001,10002
 ```
 
-<CustomDivider middleText="Connecting to a Livepeer Gateway" />
+<CustomDivider />
 
 ## Gateway Integration
 
 To route a ComfyStream instance through the Livepeer network, the orchestrator connects to the ComfyStream service over the trickle protocol. The orchestrator discovers the service address and forwards jobs from gateway clients to it.
 
-See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc" label="ComfyStream as BYOC" newline={false} /> for how to register a ComfyStream instance as a BYOC container with a Livepeer orchestrator so it appears as a routable `live-video-to-video` capability on the network.
+See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc" label="ComfyStream as BYOC" newline={false} /> for how to register a ComfyStream instance as a BYOC container with a Livepeer orchestrator so it appears as a routable `live-video-to-video` capability on the network.
 
 <CustomDivider />
 
 ## Related Pages
 
+The workflow is ready for live use. Register it as a BYOC container to make it available on the network via [ComfyStream as BYOC](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc).
+
 <CardGroup cols={2}>
   <Card
     title="ComfyStream as BYOC"
     icon="box"
-    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc"
     arrow
     horizontal
   >
@@ -154,7 +155,7 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/comfystream-
   <Card
     title="PyTrickle Overview"
     icon="code"
-    href="/v2/developers/build/ai-and-agents/pytrickle/overview"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview"
     arrow
     horizontal
   >

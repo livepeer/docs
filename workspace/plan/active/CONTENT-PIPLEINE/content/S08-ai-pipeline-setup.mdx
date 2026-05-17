@@ -33,7 +33,7 @@ This page takes an operator with go-livepeer installed and VRAM confirmed throug
 
 {/* Design flag: BYOC (custom Docker containers for non-standard AI models) is a distinct setup path not covered here. A dedicated BYOC page may be warranted in future. */}
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ Before configuring AI pipelines:
 - The AI runner image is pulled: `docker pull livepeer/ai-runner:latest`
 - The Docker socket is mounted in the go-livepeer container (`/var/run/docker.sock:/var/run/docker.sock`)
 
-<CustomDivider middleText="VRAM Planning" />
+<CustomDivider />
 
 ## Plan VRAM allocation
 
@@ -102,7 +102,7 @@ VRAM determines which pipelines and models the node supports. Each warm model oc
 
 For dual-mode operators running video transcoding alongside AI: NVENC/NVDEC use dedicated silicon and consume negligible VRAM. The AI model weights set the practical limit. A 24 GB GPU leaves room for video sessions alongside one warm SDXL-class model.
 
-<CustomDivider middleText="Configure aiModels.json" />
+<CustomDivider />
 
 ## Configure aiModels.json
 
@@ -209,7 +209,7 @@ The warm model (`text-to-image`) loads at startup. The cold models (`audio-to-te
 
 {/* VERIFY: Current recommended model IDs and price_per_unit values at tools.livepeer.cloud/ai/network-capabilities */}
 
-<CustomDivider middleText="Warm vs Cold" />
+<CustomDivider />
 
 ## Warm vs cold models
 
@@ -225,7 +225,7 @@ A **warm** model is pre-loaded into GPU VRAM at node startup. It serves inferenc
   Gateways may skip orchestrators whose models are cold for latency-sensitive requests. Prioritise warming the model with the highest gateway demand in your target pipeline.
 </Note>
 
-<CustomDivider middleText="LLM Pipeline" />
+<CustomDivider />
 
 ## LLM pipeline (Ollama runner)
 
@@ -307,7 +307,7 @@ The `url` references the Docker service name. Both containers must share the sam
 
 </Steps>
 
-<CustomDivider middleText="Capability Advertisement" />
+<CustomDivider />
 
 ## Advertise capabilities to gateways
 
@@ -325,7 +325,7 @@ curl http://localhost:7935/getNetworkCapabilities | python3 -m json.tool
 
 Pipelines missing after 10 minutes: check that the AI runner container is running (`docker ps`), that the model loaded without errors (`docker logs <container>`), and that `aiModels.json` is valid JSON with correct field names.
 
-<CustomDivider middleText="First Inference" />
+<CustomDivider />
 
 ## Process the first inference request
 
@@ -384,7 +384,7 @@ Common errors:
 - `Failed to load model` -- model_id mismatch or network error during download.
 - `model lookup failed` -- HuggingFace cannot find the model_id, or gated-model access is missing.
 
-<CustomDivider middleText="Model Downloads" />
+<CustomDivider />
 
 ## Model download mechanics
 

@@ -38,7 +38,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 Livepeer pricing is decentralised: orchestrators advertise prices per pipeline type and model, and gateways filter by their configured maximum. There is no central price list. The prices below reflect community gateway defaults and typical orchestrator ranges as of May 2026.
 
-<CustomDivider middleText="Pricing Model" />
+<CustomDivider />
 
 ## Billing Units
 
@@ -71,7 +71,7 @@ Livepeer pricing is decentralised: orchestrators advertise prices per pipeline t
 
 All prices are denominated in wei (ETH on Arbitrum One). The `TicketBroker` contract settles winning tickets; the expected payment per ticket equals `faceVal × winProb`.
 
-<CustomDivider middleText="Community Gateway" />
+<CustomDivider />
 
 ## Community Gateway
 
@@ -81,7 +81,7 @@ The community gateway does not publish a fixed price schedule. It accepts jobs w
 
 **Rate limiting:** The community gateway applies rate limiting to unauthenticated requests. Sustained high-volume traffic will be throttled. There is no published rate limit figure; if requests begin returning `429` responses, reduce request frequency or move to a dedicated gateway.
 
-<CustomDivider middleText="Network Pricing Discovery" />
+<CustomDivider />
 
 ## Discovering Current Prices
 
@@ -93,7 +93,7 @@ To find current prices:
 2. **GetOrchestratorInfo RPC:** gateways call this to retrieve price and capability data directly from orchestrators during session setup
 3. **Livepeer Explorer:** `explorer.livepeer.org` shows historical per-unit prices for transcoding orchestrators
 
-<CustomDivider middleText="Setting Prices (Orchestrators)" />
+<CustomDivider />
 
 ## Orchestrator Pricing Reference
 
@@ -136,7 +136,7 @@ Orchestrators configure pricing per pipeline in `aiModels.json`. The `price_per_
   </tbody>
 </StyledTable>
 
-For transcoding, `-pricePerUnit` is set in wei per pixel at node startup rather than in `aiModels.json`.
+For transcoding, `-pricePerUnit` is set in wei per pixel at node startup, not in `aiModels.json`.
 
 <Note>
   Setting `price_per_unit: 0` makes the orchestrator accessible at any gateway's configured maximum price. Use `0` for development and test environments; set a positive value in production to recover infrastructure costs.

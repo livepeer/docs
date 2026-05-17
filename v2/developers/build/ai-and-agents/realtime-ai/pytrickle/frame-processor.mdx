@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
@@ -38,11 +37,11 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 PyTrickle's processing surface is the `FrameProcessor` base class. Subclass it, implement the async methods below, and pass an instance to `StreamServer`. The SDK manages connection lifecycle, decoding, encoding, and transport.
 
-<CustomDivider middleText="FrameProcessor Methods" />
+<CustomDivider />
 
 ## FrameProcessor
 
-### initialize()
+### Initialize Method
 
 ```python
 async def initialize(self) -> None
@@ -52,7 +51,7 @@ Called once before the first frame is delivered. Load AI models, allocate CUDA t
 
 ---
 
-### process_video_async()
+### Process Video Async Method
 
 ```python
 async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]
@@ -77,7 +76,7 @@ def _run_model(self, tensor):
 
 ---
 
-### process_audio_async()
+### Process Audio Async Method
 
 ```python
 async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]
@@ -87,7 +86,7 @@ Called for each decoded audio frame. Return a list of `AudioFrame` objects (pass
 
 ---
 
-### update_params()
+### Update Params Method
 
 ```python
 def update_params(self, params: dict) -> None
@@ -105,7 +104,7 @@ def update_params(self, params: dict):
         self.strength = float(params["strength"])
 ```
 
-<CustomDivider middleText="VideoFrame" />
+<CustomDivider />
 
 ## VideoFrame
 
@@ -148,7 +147,7 @@ Represents a single decoded video frame.
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="AudioFrame" />
+<CustomDivider />
 
 ## AudioFrame
 
@@ -181,7 +180,7 @@ Represents a decoded audio buffer.
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="StreamServer" />
+<CustomDivider />
 
 ## StreamServer
 
@@ -259,7 +258,7 @@ StreamServer(
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Framerate Control" />
+<CustomDivider />
 
 ## Framerate and Throughput
 
@@ -269,13 +268,15 @@ Set `max_framerate` to the throughput your model can sustain. For StreamDiffusio
 
 <CustomDivider />
 
+The [PyTrickle quickstart](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart) walks through a complete FrameProcessor from scratch. The [PyTrickle reference](/v2/developers/resources/reference/pytrickle-reference) covers the full API surface.
+
 ## Related Pages
 
 <CardGroup cols={2}>
   <Card
     title="PyTrickle Quickstart"
     icon="bolt"
-    href="/v2/developers/build/ai-and-agents/pytrickle/quickstart"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart"
     arrow
     horizontal
   >
@@ -284,7 +285,7 @@ Set `max_framerate` to the throughput your model can sustain. For StreamDiffusio
   <Card
     title="ComfyStream as BYOC"
     icon="box"
-    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc"
     arrow
     horizontal
   >

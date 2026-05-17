@@ -38,7 +38,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 Gateways fund two accounts in the `TicketBroker` contract on Arbitrum One before sending jobs: a sender deposit and a penalty escrow (reserve). These ETH balances back the probabilistic micropayment tickets the gateway sends to orchestrators.
 
-<CustomDivider middleText="Account Types" />
+<CustomDivider />
 
 ## Deposit vs Reserve
 
@@ -66,7 +66,7 @@ Gateways fund two accounts in the `TicketBroker` contract on Arbitrum One before
 
 Orchestrators query the gateway's deposit before accepting a ticket. If `deposit < faceVal`, the ticket is invalid and the job is rejected. Most orchestrators also apply a minimum deposit threshold above `faceVal` to account for concurrent sessions.
 
-<CustomDivider middleText="Funding" />
+<CustomDivider />
 
 ## Funding Deposits via livepeer_cli
 
@@ -99,9 +99,9 @@ cast send <TICKET_BROKER_ADDRESS> \
   --private-key <GATEWAY_KEY>
 ```
 
-Replace `<TICKET_BROKER_ADDRESS>` with the address from the <LinkArrow href="/v2/developers/resources/contract-addresses" label="Contract Addresses" newline={false} /> reference.
+Replace `<TICKET_BROKER_ADDRESS>` with the address from the <LinkArrow href="/v2/about/resources/reference/livepeer-contract-addresses" label="Contract Addresses" newline={false} /> reference.
 
-<CustomDivider middleText="Withdrawing" />
+<CustomDivider />
 
 ## Withdrawing Deposits
 
@@ -115,7 +115,7 @@ livepeer_cli -withdraw-deposit
 
 The unlock period prevents gateways from withdrawing funds that have already been committed to in-flight tickets. Orchestrators can still redeem outstanding winning tickets during the unlock period.
 
-<CustomDivider middleText="Monitoring" />
+<CustomDivider />
 
 ## Checking Deposit Status
 
@@ -156,7 +156,7 @@ console.log('reserve:', ethers.formatEther(info.reserve.funds));
   <Card title="Payments Overview" icon="grid" href="/v2/developers/guides/payments/overview" arrow horizontal>
     Payment modes and gateway deposit flow overview.
   </Card>
-  <Card title="Contract Addresses" icon="file-code" href="/v2/developers/resources/contract-addresses" arrow horizontal>
+  <Card title="Contract Addresses" icon="file-code" href="/v2/about/resources/reference/livepeer-contract-addresses" arrow horizontal>
     TicketBroker address on Arbitrum One.
   </Card>
 </CardGroup>

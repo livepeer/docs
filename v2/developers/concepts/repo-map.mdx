@@ -43,7 +43,7 @@ The Livepeer GitHub organisation hosts over 170 public repositories. This page g
 
 For why each layer exists, see <LinkArrow href="/v2/developers/concepts/landscape" label="Landscape" newline={false} />. For where each persona enters the stack, see <LinkArrow href="/v2/developers/concepts/infra-stack" label="Infra Stack" newline={false} />.
 
-<CustomDivider middleText="Core Runtime" />
+<CustomDivider />
 
 ## Core Runtime Repositories
 
@@ -60,7 +60,7 @@ Every Livepeer network role runs from one of these binaries. Every other layer i
 
 `go-livepeer` is the foundation. When AI inference is enabled, it spawns `ai-runner` Docker containers per GPU and proxies inference requests via a local REST interface. `lpms` is the media-processing library it uses for transcoding.
 
-<CustomDivider middleText="On-Chain Protocol" />
+<CustomDivider />
 
 ## On-Chain Protocol Repositories
 
@@ -74,7 +74,7 @@ Cryptoeconomic contracts deployed on Arbitrum One. `go-livepeer` calls these for
 
 The `confluence` branch of `livepeer/protocol` is the deployed Arbitrum version. The `streamflow` branch covers the L1 contracts (`LivepeerToken` and `BridgeMinter` only; all other core protocol contracts are paused on L1).
 
-<CustomDivider middleText="Gateway API and Operator Tools" />
+<CustomDivider />
 
 ## Gateway API Surface
 
@@ -90,7 +90,7 @@ REST APIs and operator tooling that sit on top of `go-livepeer`.
 The internal `livepeer-data-mcp` server is not a developer surface. It backs internal operations only.
 </Note>
 
-<CustomDivider middleText="Real-Time Pipeline Tooling" />
+<CustomDivider />
 
 ## Real-Time Pipeline Repositories
 
@@ -107,7 +107,7 @@ Live-video-to-video workflows, BYOC containers, trickle transport.
 
 ComfyStream sits above `ai-runner` on the real-time path and uses `pytrickle` to exchange frames with an orchestrator. A BYOC developer using `pytrickle` directly implements the same `FrameProcessor` interface that ComfyStream uses internally.
 
-<CustomDivider middleText="Application SDKs" />
+<CustomDivider />
 
 ## Application SDK Repositories
 
@@ -124,11 +124,11 @@ Client libraries for calling the network from an application.
 `livepeer-js` and `ui-kit` refer to the same active repository. The historical `livepeer-js` namespace redirects to `ui-kit`.
 </Note>
 
-<CustomDivider middleText="Agent and Creative Tooling" />
+<CustomDivider />
 
 ## Agent and Creative Repositories
 
-Agent SDKs and frameworks built on top of the network. Several packages are not yet published to npm.
+Agent SDKs and frameworks built on top of the network. Some packages are not yet published to npm.
 
 | Repo | Tag | Role | Status |
 |---|---|---|---|
@@ -138,7 +138,7 @@ Agent SDKs and frameworks built on top of the network. Several packages are not 
 
 The two SDK packages live inside the `storyboard` monorepo until they ship on npm. Clone the repo to use them today.
 
-<CustomDivider middleText="Monitoring and Observability" />
+<CustomDivider />
 
 ## Monitoring Repositories
 
@@ -151,7 +151,7 @@ Operator observability; mostly community-maintained.
 | [rickstaa/livepeer-reward-watcher](https://github.com/rickstaa/livepeer-reward-watcher) | Community | Alerts when an orchestrator is at risk of missing a reward call | rickstaa |
 | Stronk-Tech ecosystem | Community | Suite of operator tools: OrchestratorTracker, LivepeerPerformanceAI, LivepeerExplorer, StronkAI | Captain Stronk |
 
-<CustomDivider middleText="Governance and Coordination" />
+<CustomDivider />
 
 ## Governance Repositories
 
@@ -163,7 +163,7 @@ Async governance and async-first coordination.
 | [livepeer/coordination](https://github.com/livepeer/coordination) | Official | Async-first governance coordination via GitHub issues |
 | [livepeer/roadmap](https://github.com/livepeer/roadmap) | Official | Community-visible roadmap using GitHub Projects |
 
-<CustomDivider middleText="Documentation and Indexing" />
+<CustomDivider />
 
 ## Documentation and Discovery Repositories
 
@@ -172,7 +172,7 @@ Async governance and async-first coordination.
 | [livepeer/docs](https://github.com/livepeer/docs) | Official | This documentation site. MDX, Mintlify |
 | [livepeer/awesome-livepeer](https://github.com/livepeer/awesome-livepeer) | Community | Curated list of projects, tutorials, demos. Also at `livepeer.cool` |
 
-<CustomDivider middleText="Solutions" />
+<CustomDivider />
 
 ## Solutions Repositories
 
@@ -183,7 +183,7 @@ Hosted products built on the network. Documented under <LinkArrow href="/v2/solu
 | `livepeer/studio` | Official `[Solution; see Solutions tab]` | Full Studio monolith: auth, billing, API keys, multistream, recording, signing keys, metrics |
 | Daydream | Official `[Solution; see Solutions tab]` | Hosted real-time AI video API and consumer app, built on ComfyStream |
 
-<CustomDivider middleText="Cross-Layer Dependencies" />
+<CustomDivider />
 
 ## Layer Dependencies
 
@@ -199,7 +199,7 @@ The AI Gateway API is the standard REST interface that all SDK consumers reach t
 
 `ui-kit` is independent of the AI and protocol path. It provides Player and Broadcast components for browser applications and works against any compatible gateway.
 
-<CustomDivider middleText="Where to Contribute" />
+<CustomDivider />
 
 ## Contribution Entry Points
 
@@ -212,4 +212,4 @@ The AI Gateway API is the standard REST interface that all SDK consumers reach t
 | Frontend SDK (player, React components) | `livepeer/ui-kit`; open issues, `#developers` Discord |
 | Documentation | `livepeer/docs`; branch `docs-v2-dev`, contribution guide |
 
-<LinkArrow href="/v2/developers/learn/where-to-find/contributing" label="Contribution paths" newline={false} /> covers the broader process.
+<LinkArrow href="/v2/developers/resources/contributing" label="Contribution paths" newline={false} /> covers the broader process.

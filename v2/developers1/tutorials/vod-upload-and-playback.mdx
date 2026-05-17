@@ -38,7 +38,7 @@ This tutorial runs go-livepeer in broadcaster mode on Arbitrum One, sends a VOD 
 
 A hosted alternative exists (Livepeer Studio) and absorbs every operational concern below. The Studio version of this workflow is documented in <LinkArrow href="/v2/solutions/studio" label="Studio paths" newline={false} />.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ A hosted alternative exists (Livepeer Studio) and absorbs every operational conc
 - A short MP4 file (under 100 MB for fast iteration)
 - A directory for transcoded output. The Gateway writes to local disk by default; for production, configure S3 or IPFS instead.
 
-<CustomDivider middleText="Run the Gateway" />
+<CustomDivider />
 
 ## Run the Gateway
 
@@ -84,7 +84,7 @@ curl http://localhost:8935/status
 
 A healthy Gateway responds with JSON describing the node version, ETH address, and current Orchestrator pool.
 
-<CustomDivider middleText="Submit a VOD" />
+<CustomDivider />
 
 ## VOD Submission
 
@@ -105,7 +105,7 @@ The response includes a job identifier the Gateway uses to track the transcode:
 }
 ```
 
-<CustomDivider middleText="Poll" />
+<CustomDivider />
 
 ## Polling for Completion
 
@@ -134,7 +134,7 @@ A completed response includes the playback manifest URL:
 
 If your installed go-livepeer version uses different paths, the same fields appear under different routes; the source of truth is the Gateway binary you are running.
 
-<CustomDivider middleText="Player" />
+<CustomDivider />
 
 ## Playback
 
@@ -185,7 +185,7 @@ npm run dev
 
 Open `http://localhost:3000`. The player loads the HLS manifest from the Gateway and plays the transcoded output.
 
-<CustomDivider middleText="Storage" />
+<CustomDivider />
 
 ## Storage
 
@@ -197,13 +197,13 @@ The Gateway writes transcoded segments to its `-dataDir` by default. That is fin
 
 **Gateway-local.** Acceptable for a single-host deployment behind a CDN. The Gateway disk becomes the origin.
 
-<CustomDivider middleText="Codecs" />
+<CustomDivider />
 
 ## Codecs
 
 The example above transcodes a single 720p H.264 rendition. The network supports a wider profile set: 240p, 360p, 480p, 720p, 1080p at H.264, plus HEVC and AV1 where Orchestrators offer those capabilities. Codec availability varies by Orchestrator. See <LinkArrow href="/v2/developers/build/codec-support" label="Codec support" newline={false} /> for current network coverage.
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

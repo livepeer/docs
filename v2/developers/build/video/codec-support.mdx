@@ -1,24 +1,103 @@
 ---
 title: "Codec support"
-sidebarTitle: "Codec support"
-description: "Codec support on the Livepeer network: overview, configuration, network-direct path."
-pageType: guide
+sidebarTitle: "Codec Support"
+description: >-
+  Video and audio codecs supported by the Livepeer network for transcoding,
+  ingest, and playback. Container formats, codec profiles, and limitations.
+pageType: reference
 audience: developer
-purpose: build
-complexity: intermediate
-lifecycleStage: build
+status: current
+lastVerified: '2026-05-15'
 keywords:
   - codec support
-  - livepeer video
-  - network-direct
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+  - H.264
+  - VP8
+  - HEVC
+  - container format
+  - transcoding codec
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-veracityStatus: unverified
 ---
 
-{/* STATUS: STUB — NET-NEW. Persona served: P2 + P4. Canonical sources: go-livepeer README + lpms README + Frameworks-network docs. */}
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 
-This page is in progress.
+<CustomDivider />
+
+Livepeer transcoding supports a range of video and audio codecs for ingest, processing, and output. The underlying media library is LPMS (Livepeer Media Server), which uses FFmpeg and NVIDIA hardware encoding/decoding.
+
+<CustomDivider />
+
+## Video codecs
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Codec</TableCell>
+      <TableCell header>Ingest</TableCell>
+      <TableCell header>Transcode output</TableCell>
+      <TableCell header>HW acceleration</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**H.264 (AVC)**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes (default)</TableCell>
+      <TableCell>NVENC/NVDEC</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**H.265 (HEVC)**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>NVENC/NVDEC</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**VP8**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Software only</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**VP9**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Limited</TableCell>
+      <TableCell>Software only</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+H.264 is the default output codec for HLS delivery. NVIDIA GPU-accelerated encoding (NVENC) and decoding (NVDEC) are used when available; software fallback handles non-NVIDIA environments.
+
+<CustomDivider />
+
+## Container formats
+
+| Format | Ingest | Output |
+|---|---|---|
+| RTMP/FLV | Yes (live ingest) | No |
+| MP4 | Yes (VOD upload) | Yes (VOD download) |
+| HLS (MPEG-TS segments) | No | Yes (live + VOD playback) |
+| WebM | Yes (VOD upload) | No |
+| MOV, AVI, MKV, WMV | Yes (VOD upload) | No |
+
+VOD upload accepts MP4, MOV, AVI, WebM, MKV, WMV, and FLV. Files up to 10 GB are supported.
+
+<CustomDivider />
+
+## Audio codecs
+
+| Codec | Ingest | Output |
+|---|---|---|
+| AAC | Yes | Yes (default for HLS) |
+| MP3 | Yes (VOD) | No |
+| Opus | Yes (WebRTC) | Yes (WebRTC) |
+
+AAC is the default audio codec for HLS output. WebRTC sessions use Opus.
+
+<CustomDivider />
+
+The [transcoding](/v2/developers/build/video/transcoding-direct-quickstart) page covers transcoding profiles and configuration. The [LPMS integration](/v2/developers/build/video/lpms-integration) page covers the underlying media library.

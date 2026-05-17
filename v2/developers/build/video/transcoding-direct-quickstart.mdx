@@ -42,7 +42,7 @@ By the end of this quickstart you'll have a Livepeer gateway and orchestrator ru
 
 Personas 2 and 4 both start here. Persona 2 (video platform builders) takes this forward into VOD, webhooks, and player integration. Persona 4 (live-video-first builders) tunes for sub-three-second latency. Operators running gateways in production should follow the <LinkArrow href="" label="" newline={false} /> in the Gateways tab.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -91,7 +91,7 @@ brew install ffmpeg
   The `-gateway` flag replaces the older `-broadcaster` flag. If you see `-broadcaster` in community guides, substitute `-gateway`. The old flag still works in some builds and is deprecated.
 </Note>
 
-<CustomDivider middleText="Start Orchestrator" />
+<CustomDivider />
 
 ## Orchestrator Setup
 
@@ -136,7 +136,7 @@ brew install ffmpeg
   `-orchestrator` and `-transcoder` together run in one process. In production these are typically split: orchestrator on a small VPS handling routing and payments, transcoder on a GPU machine. Tutorial 3 in the Gateways tab covers the split.
 </Note>
 
-<CustomDivider middleText="Start Gateway" />
+<CustomDivider />
 
 ## Gateway Setup
 
@@ -182,7 +182,7 @@ brew install ffmpeg
   `-orchAddr` accepts a comma-separated list. Off-chain mode requires an explicit list because there's no on-chain registry. On-chain mode removes this flag; the registry supplies orchestrators automatically.
 </Note>
 
-<CustomDivider middleText="Publish Stream" />
+<CustomDivider />
 
 ## Stream Publishing
 
@@ -227,7 +227,7 @@ Output #0, flv, to 'rtmp://127.0.0.1:1935/live/test_stream':
 frame=   30 fps= 30 q=23.0 size=     320kB time=00:00:01.00 bitrate=2621.4kbits/s
 ```
 
-<CustomDivider middleText="Verify Output" />
+<CustomDivider />
 
 ## Output Verification
 
@@ -276,7 +276,7 @@ frame=   30 fps= 30 q=23.0 size=     320kB time=00:00:01.00 bitrate=2621.4kbits/
   </Step>
 </Steps>
 
-<CustomDivider middleText="What Happened" />
+<CustomDivider />
 
 ## Job Lifecycle
 
@@ -294,7 +294,7 @@ ffmpeg
 
 The full job lifecycle ran. The only piece off-chain mode skips is the payment envelope; segment routing, transcoding, and delivery are identical to a production gateway.
 
-Four ideas underpin what just happened.
+Four ideas underpin the completed run.
 
 **Session.** The gateway creates a session per stream key. The session persists until the publisher disconnects or the gateway shuts down.
 
@@ -304,7 +304,7 @@ Four ideas underpin what just happened.
 
 **Transcoding profiles.** The orchestrator applied the default 240p, 360p, and 720p at 30fps. Customise via `transcodingOptions.json` passed to the gateway.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -334,7 +334,7 @@ Four ideas underpin what just happened.
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

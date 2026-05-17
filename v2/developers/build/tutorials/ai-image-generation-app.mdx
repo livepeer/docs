@@ -41,7 +41,7 @@ By the end of this tutorial you'll have a deployable Next.js 15 application that
 
 This is the Persona 1 builder activation moment: the AI Jobs Quickstart proved the API call works; this tutorial proves it ships. Replace the community gateway with a paid one when you deploy to users.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -51,7 +51,7 @@ This is the Persona 1 builder activation moment: the AI Jobs Quickstart proved t
 
 No API key needed for development. The community gateway accepts unauthenticated POSTs for experimentation; production deployments use a paid gateway with a Bearer token.
 
-<CustomDivider middleText="Project Bootstrap" />
+<CustomDivider />
 
 ## Project Bootstrap
 
@@ -89,7 +89,7 @@ No API key needed for development. The community gateway accepts unauthenticated
   </Step>
 </Steps>
 
-<CustomDivider middleText="Server Action" />
+<CustomDivider />
 
 ## Server Action
 
@@ -164,7 +164,7 @@ The server action runs server-side, which means the gateway call happens on your
 
 The action validates the prompt, calls the gateway, and returns a typed result. Validation runs server-side, which means client-side bypass isn't possible.
 
-<CustomDivider middleText="UI Form" />
+<CustomDivider />
 
 ## UI Form Component
 
@@ -173,9 +173,9 @@ Save as `src/app/components/PromptForm.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { generateImage, type GenerationResult } from '../actions';
+const { useState } = React;
+const { useFormStatus } = ReactDOM;
+// Import generateImage and GenerationResult from ../actions.
 
 const MODELS = [
   { id: 'ByteDance/SDXL-Lightning', label: 'SDXL-Lightning (fast)' },
@@ -237,7 +237,7 @@ export function PromptForm({
 
 `useFormStatus` reads the submission state of the parent form, which gives the button a `pending` flag without any extra wiring. The `MODELS` array maps to the warm models verified in the <LinkArrow href="/v2/developers/build/ai-and-agents/model-support" label="Model Support" newline={false} /> reference.
 
-<CustomDivider middleText="Image Gallery" />
+<CustomDivider />
 
 ## Image Gallery
 
@@ -249,7 +249,7 @@ Save as `src/app/components/Gallery.tsx`:
 'use client';
 
 import Image from 'next/image';
-import type { GenerationResult } from '../actions';
+// Import GenerationResult from ../actions.
 
 export function Gallery({ items }: { items: GenerationResult[] }) {
   if (items.length === 0) {
@@ -295,7 +295,7 @@ const config: NextConfig = {
 export default config;
 ```
 
-<CustomDivider middleText="Page Composition" />
+<CustomDivider />
 
 ## Page Composition
 
@@ -304,10 +304,10 @@ Save as `src/app/page.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
-import { PromptForm } from './components/PromptForm';
-import { Gallery } from './components/Gallery';
-import type { GenerationResult } from './actions';
+const { useState } = React;
+// Import PromptForm from ./components/PromptForm.
+// Import Gallery from ./components/Gallery.
+// Import GenerationResult from ./actions.
 
 export default function HomePage() {
   const [items, setItems] = useState<GenerationResult[]>([]);
@@ -335,7 +335,7 @@ npm run dev
 
 Open `http://localhost:3000`. Type a prompt, click **Generate**, and the gallery populates with your first image.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -351,7 +351,7 @@ The community gateway is shaped for experimentation. Production deployments need
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -373,7 +373,9 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+You have a deployed Next.js app generating images through Livepeer AI. The same server action pattern works for all nine batch pipelines; swap the endpoint and request body to add image-to-video, audio-to-text, or any other pipeline.
 
 ## Next Steps
 

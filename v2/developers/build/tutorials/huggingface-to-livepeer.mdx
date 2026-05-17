@@ -46,7 +46,7 @@ network, and callable through a gateway you operate. The example model is
 - The model is advertised on `tools.livepeer.cloud/ai/network-capabilities`
 - A request through your self-hosted gateway returns a successful inference result
 
-<CustomDivider middleText="Scope" />
+<CustomDivider />
 
 ## Scope and intent
 
@@ -60,11 +60,11 @@ variant. It is not the right tutorial if:
 - your model needs custom Python code (preprocessing, postprocessing, novel architecture, or non-standard
   input or output shape). See the custom pipeline path.
 - your model ships as an arbitrary container with its own protocol. See the BYOC path.
-- your model is an LLM you want to run via Ollama rather than the standard `livepeer/ai-runner` image. The
+- your model is an LLM you want to run via Ollama instead of the standard `livepeer/ai-runner` image. The
   same overall flow applies but the runner image and `aiModels.json` entry differ. See the LLM variant note
   at the end.
 
-<CustomDivider middleText="Pipelines" />
+<CustomDivider />
 
 ## Built-in pipelines
 
@@ -149,7 +149,7 @@ inference task.
 If your model fits the input and output shape of one of these, take this tutorial. If not, the model needs
 either a custom pipeline or a BYOC container.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -186,7 +186,7 @@ Each requirement is a hard prerequisite, not a soft one. Stop here if any is not
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Step 1: Model directory" />
+<CustomDivider />
 
 ## Step 1: Choose the model directory
 
@@ -200,7 +200,7 @@ mkdir -p "$LP_AI_MODELS_DIR"
 This is the path you pass to `go-livepeer` via `-aiModelsDir`. The runner reads weights from `/models` inside
 the container, which maps to this directory on the host.
 
-<CustomDivider middleText="Step 2: Declare the model" />
+<CustomDivider />
 
 ## Step 2: Declare the model in aiModels.json
 
@@ -253,7 +253,7 @@ Each field, grounded in the schema parsed by `go-livepeer`:
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Step 3: Download weights" />
+<CustomDivider />
 
 ## Step 3: Pre-download the model weights
 
@@ -297,7 +297,7 @@ Expect SDXL's standard layout: `model_index.json`, `unet/`, `vae/`, `text_encode
 `tokenizer/`, `tokenizer_2/`, `scheduler/`. If the directory is empty or partial, re-run the command.
 `huggingface_hub` resumes partial downloads.
 
-<CustomDivider middleText="Step 4: Start orchestrator" />
+<CustomDivider />
 
 ## Step 4: Start the orchestrator with the new model
 
@@ -359,7 +359,7 @@ Watch the logs. A successful warm load looks like a runner-container start, a mo
 [`livepeer/ai-worker/runner/src/runner/main.py`](https://github.com/livepeer/ai-worker/blob/main/runner/src/runner/main.py)
 (FastAPI app definition).
 
-<CustomDivider middleText="Step 5: Verify capability" />
+<CustomDivider />
 
 ## Step 5: Verify on the network capabilities tool
 
@@ -391,7 +391,7 @@ If your orchestrator is not in the list, the model is not visible to the network
 
 Resolve any of these before continuing.
 
-<CustomDivider middleText="Step 6: Inference test" />
+<CustomDivider />
 
 ## Step 6: Send a test inference request
 
@@ -473,7 +473,7 @@ A successful response means your model is reachable across the protocol layer th
   Step 6b succeeds, never as the primary verification.
 </Note>
 
-<CustomDivider middleText="Step 7: Confirm the loop" />
+<CustomDivider />
 
 ## Step 7: Confirm the loop is closed
 
@@ -487,7 +487,7 @@ The tutorial is complete when all four are observable:
 If any one of these is missing, the model is not yet on the network. Resolve before relying on the path for
 paid traffic.
 
-<CustomDivider middleText="Operational notes" />
+<CustomDivider />
 
 ## Operational notes
 
@@ -512,7 +512,7 @@ paid traffic.
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="LLM variant" />
+<CustomDivider />
 
 ## LLM variant via Ollama
 
@@ -542,7 +542,7 @@ Otherwise the pattern is identical: declare in `aiModels.json`, ensure the runne
 `go-livepeer`, verify on the capabilities tool, test through your self-hosted gateway with an
 OpenAI-compatible chat completion request.
 
-<CustomDivider middleText="Troubleshooting" />
+<CustomDivider />
 
 ## Troubleshooting
 
@@ -558,7 +558,7 @@ OpenAI-compatible chat completion request.
   </Accordion>
   <Accordion title="Localhost works but gateway fails" icon="globe">
     Confirm `serviceAddr` is reachable from outside your network. Open the relevant port at the firewall,
-    confirm DNS, confirm the orchestrator is binding to a public interface and not just `localhost`.
+    confirm DNS, and confirm the orchestrator is binding to a public interface instead of `localhost`.
   </Accordion>
   <Accordion title="Inference returns low-quality output" icon="image">
     Check that you are using the SDXL Lightning recommended sampling (4 steps, low guidance). Different SDXL
@@ -566,7 +566,7 @@ OpenAI-compatible chat completion request.
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Sources" />
+<CustomDivider />
 
 ## Sources
 
@@ -593,6 +593,8 @@ Every claim in this tutorial is grounded in one of the following readable refere
 </AccordionGroup>
 
 <CustomDivider />
+
+Your model is now running on the Livepeer network, advertised to gateways, and callable through your self-hosted gateway. For custom architectures that do not fit a native pipeline, see the [advanced paths](/v2/developers/build/tutorials/huggingface-to-livepeer-advanced).
 
 ## Related pages
 

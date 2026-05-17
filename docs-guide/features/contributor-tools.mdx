@@ -1,0 +1,100 @@
+---
+title: Contributor Tools
+sidebarTitle: Contributor Tools
+description: Contributor-facing tools for setup, local preview, validation, hooks, editor support, scoped docs profiles, and governed page movement.
+audience: developer
+pageType: overview
+purpose: overview
+status: current
+lastVerified: 2026-05-14
+keywords:
+  - livepeer
+  - contributor tools
+  - lpd
+  - vscode
+  - hooks
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Contributor Tools
+
+Contributor tools should make the correct workflow the easiest workflow: setup, preview, validate, repair, and move pages through repo-backed commands rather than private maintainer knowledge.
+
+## Primary Tools
+
+| Tool | Path | Purpose |
+| --- | --- | --- |
+| `lpd` CLI | `tools/lpd` | Unified command surface for setup, doctor, dev server, tests, hooks, scripts, repair, AI sitemap, and governed page moves. |
+| Git hooks | `.githooks/` | Local staged checks, no-deletion checks, pre-push task contracts, browser verification helpers. |
+| Scoped preview tooling | `tools/dev/preview/` | Mintlify launchers, scoped docs config generation, watcher patches, custom loader. |
+| Authoring helpers | `tools/dev/authoring/` | Local MDX formatting and callout helpers. |
+| Editor extensions | `tools/editor-extensions/` | VS Code extensions for authoring tools, component picker, MDX preview, markdown list helpers. |
+| VS Code workspace config | `.vscode/` | Recommended extensions, settings, tasks, snippets, MCP config. |
+| Repo libraries | `tools/lib/` | Shared JS modules used by validators, generators, hooks, and governance scripts. |
+
+## `lpd` Workflows
+
+| Workflow | Command |
+| --- | --- |
+| First-time setup | `bash tools/lpd setup --yes` |
+| Environment check | `PATH="/opt/homebrew/bin:$PATH" bash tools/lpd doctor --strict` when Homebrew Node is not on shell PATH |
+| Start docs locally | `lpd dev -- --port <non-reserved-port>` |
+| Scoped docs preview | `lpd dev --scoped --scope-version v2 --scope-language en --scope-prefix v2/orchestrators` |
+| Staged validation | `lpd test --staged` |
+| CI-like local validation | `lpd ci --skip-browser` |
+| Generate AI sitemap | `lpd ai-sitemap --write` |
+| Move a page | `lpd move-page <old> <new> --check` then rerun without `--check` after review |
+| Repair a governed surface | `lpd repair --surface <id> --staged --write` |
+
+## Environment Notes
+
+The non-interactive Codex shell used for this audit did not include `/opt/homebrew/bin` on `PATH`, so `node`, `npm`, and `mintlify` were initially hidden. Discovery found:
+
+- Homebrew Node: `/opt/homebrew/bin/node`, version `v22.22.2`
+- NVM Node: `~/.nvm/versions/node/v22.22.1/bin/node`
+- Mintlify: `/opt/homebrew/bin/mintlify`, version `4.2.446`
+- `lpd doctor` passes when `/opt/homebrew/bin` is added to `PATH`
+
+Do not report required tools as unavailable until checking version managers, repo wrappers, setup docs, and common install paths.
+
+## Editor Tooling
+
+| Surface | Use |
+| --- | --- |
+| `.vscode/extensions.json` | Recommended local extensions. |
+| `.vscode/settings.json` | Workspace settings. |
+| `.vscode/tasks.json` | Repeatable editor tasks. |
+| `.vscode/components.code-snippets` | Component snippets. |
+| `.vscode/templates.code-snippets` | Template snippets. |
+| `.vscode/mdx.code-snippets` | MDX authoring helpers. |
+| `tools/editor-extensions/install.sh` | Installs local VS Code extensions and verifies packaged extension parity. |
+
+## Contributor Safety Rules
+
+- Install hooks before substantial work: `bash .githooks/install.sh`.
+- Do not use `--no-verify` unless explicitly authorized by a human override policy.
+- Do not edit `.allowlist` casually; human commits require the `allowlist-edit=true` trailer.
+- Do not delete tracked files without the governed deletion approval path.
+- Do not use port `3000` for direct Mintlify preview or port `3333` via `lpd dev` in agent sessions.
+- Do not switch branches in the existing worktree.
+
+## Tooling Gaps
+
+| Gap | Evidence | Required action |
+| --- | --- | --- |
+| PATH assumptions still leak into commands | `lpd doctor` warned until `/opt/homebrew/bin` was loaded. | Update tooling docs to show PATH discovery/remediation for non-interactive shells. |
+| Backup artifacts are tracked | `.vscode/livepeer-legacy.code-snippets.bak` and workspace `.bak` files are present. | Classify as compatibility aliases or remove through governed deletion. |
+| Tool catalogs can drift | `tools/script-index.md` contains legacy-looking script paths. | Regenerate script indexes and verify generated catalogs. |
+| Node module directories exist under governed roots | `tools/node_modules/` and `operations/tests/node_modules/` are installed dependencies and intentionally ignored by most audits. | Keep selection helpers excluding `node_modules`; do not include them in reports or docs counts. |
+
+## Related
+
+- `docs-guide/tooling/lpd-cli.mdx`
+- `docs-guide/tooling/dev-tools.mdx`
+- `docs-guide/contributing/contributing.mdx`
+- `docs-guide/contributing/local-preview.mdx`
+- `.githooks/README.md`

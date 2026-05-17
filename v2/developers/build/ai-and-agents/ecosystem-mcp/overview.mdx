@@ -27,7 +27,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
@@ -40,7 +39,7 @@ The Model Context Protocol (MCP) is an open standard for connecting AI applicati
 
 Livepeer has two relevant MCP surfaces: the documentation MCP served by Mintlify at `docs.livepeer.org/mcp`, which gives AI tools access to this documentation corpus; and the Livepeer AI pipeline REST API, which can be wrapped as an MCP tool server to give agents direct access to inference endpoints.
 
-<CustomDivider middleText="Docs MCP" />
+<CustomDivider />
 
 ## Livepeer Docs MCP
 
@@ -48,9 +47,9 @@ The Livepeer documentation site serves an MCP endpoint at `https://docs.livepeer
 
 Connecting an MCP-compatible tool to this endpoint allows it to search and retrieve current Livepeer documentation before generating responses, reducing hallucination on Livepeer-specific API shapes, configuration flags, and pipeline details.
 
-See <LinkArrow href="/v2/developers/build/ai-and-agents/mcp/docs-mcp" label="Docs MCP" newline={false} /> for connection instructions for Cursor, Claude Desktop, and Windsurf.
+See <LinkArrow href="/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp" label="Docs MCP" newline={false} /> for connection instructions for Cursor, Claude Desktop, and Windsurf.
 
-<CustomDivider middleText="Livepeer AI via MCP" />
+<CustomDivider />
 
 ## Using Livepeer AI Pipelines as MCP Tools
 
@@ -100,9 +99,9 @@ async def call_tool(name: str, arguments: dict):
             return [types.TextContent(type="text", text=data["images"][0]["url"])]
 ```
 
-<CustomDivider middleText="Agent Context" />
+<CustomDivider />
 
-## llms.txt
+## LLMS.txt Reference
 
 The Livepeer documentation exposes an `llms.txt` file at `https://docs.livepeer.org/llms.txt` following the emerging `llms.txt` convention. This file provides a structured index of documentation pages for LLM consumption, formatted for direct inclusion in agent context windows.
 
@@ -112,11 +111,13 @@ Agents and coding tools that support `llms.txt` discovery can use this file to e
 
 ## Related Pages
 
+The [Livepeer Docs MCP](/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp) is the fastest way to query Livepeer documentation from Claude Code, Cursor, or any MCP host.
+
 <CardGroup cols={2}>
   <Card
     title="Docs MCP Connection"
     icon="plug"
-    href="/v2/developers/build/ai-and-agents/mcp/docs-mcp"
+    href="/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp"
     arrow
     horizontal
   >

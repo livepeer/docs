@@ -42,7 +42,7 @@ By the end of this tutorial you'll have a Next.js 15 app with two pages: a broad
 
 This is the Persona 4 activation moment: the sub-three-second path that the RTMP-and-HLS Transcoding Quickstart can't deliver. The `@livepeer/react` library handles both sides; the orchestration is one Next.js project, two route components, and one environment variable.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -52,7 +52,7 @@ This is the Persona 4 activation moment: the sub-three-second path that the RTMP
 
 `@livepeer/react` works against any WHIP/WHEP-compliant endpoint. Self-hosted gateways need WebRTC ingest enabled; see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />. Paid gateway providers expose WHIP and WHEP out of the box.
 
-<CustomDivider middleText="Latency Budget" />
+<CustomDivider />
 
 ## Latency Budget
 
@@ -69,7 +69,7 @@ Total typically lands between 500ms and 2 seconds in good conditions. The three-
 
 B-frames are the gotcha. If the encoder emits B-frames, WebRTC frame ordering breaks and the player falls back to HLS. Force `bframes=0` and `keyint=1` on any encoder you control. Browser-native WebRTC encoders default to compliant settings; OBS, FFmpeg, and other external encoders need explicit configuration.
 
-<CustomDivider middleText="Project Bootstrap" />
+<CustomDivider />
 
 ## Project Bootstrap
 
@@ -113,7 +113,7 @@ B-frames are the gotcha. If the encoder emits B-frames, WebRTC frame ordering br
   </Step>
 </Steps>
 
-<CustomDivider middleText="Stream Creation" />
+<CustomDivider />
 
 ## Stream Creation Endpoint
 
@@ -146,7 +146,7 @@ export async function POST(req: Request) {
 
 The `record: false` flag keeps the stream live-only. To save to a VOD asset for replay, set `record: true`; the gateway records the stream to an asset that survives after the broadcaster disconnects.
 
-<CustomDivider middleText="Broadcaster Page" />
+<CustomDivider />
 
 ## Broadcaster Page
 
@@ -155,7 +155,7 @@ Save as `src/app/broadcast/page.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
+const { useState } = React;
 import * as Broadcast from '@livepeer/react/broadcast';
 import { getIngest } from '@livepeer/react/external';
 
@@ -228,7 +228,7 @@ export default function BroadcastPage() {
 
 `getIngest(streamKey, { baseUrl })` builds the full WHIP URL by combining your gateway's base URL with the stream key. The `Broadcast.Root` component negotiates SDP, manages ICE, and sends media tracks via WebRTC. STUN/TURN servers come from the gateway response.
 
-<CustomDivider middleText="Viewer Page" />
+<CustomDivider />
 
 ## Viewer Page
 
@@ -237,7 +237,7 @@ Save as `src/app/watch/[playbackId]/page.tsx`:
 ```tsx
 'use client';
 
-import { use, useEffect, useState } from 'react';
+const { use, useEffect, useState } = React;
 import * as Player from '@livepeer/react/player';
 
 interface PageProps {
@@ -292,7 +292,7 @@ export default function WatchPage({ params }: PageProps) {
 
 The Player accepts an array of source candidates, ordered by preference. WebRTC first; HLS as the fallback when the browser can't negotiate WebRTC or the stream has B-frames. `autoPlay` paired with `volume={0}` is the browser-compatible autoplay pattern; some browsers block autoplay with sound.
 
-<CustomDivider middleText="Run" />
+<CustomDivider />
 
 ## First Stream
 
@@ -308,7 +308,7 @@ Open two tabs.
 
 To verify glass-to-glass, point the camera at a stopwatch and view both tabs side-by-side. The viewer should show roughly the same time as the broadcaster.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -326,7 +326,7 @@ Five things change between this local setup and a production deployment.
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -348,7 +348,9 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+You have sub-3-second glass-to-glass streaming using WHIP ingest and WHEP playback. For standard HLS delivery (higher latency, broader compatibility), the same stream object serves both transports simultaneously.
 
 ## Next Steps
 

@@ -1,0 +1,94 @@
+---
+title: "Browser and mobile gateways"
+sidebarTitle: "Browser and Mobile"
+description: >-
+  Gateway access patterns for browser-based and mobile applications: managed
+  gateway providers, CORS keys, and architectural constraints.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - browser gateway
+  - mobile gateway
+  - CORS
+  - managed gateway
+  - client-side
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Browser and mobile applications cannot run go-livepeer directly. Use a managed gateway provider with a CORS-enabled API key, or proxy requests through your backend.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Running a gateway requires a go-livepeer process, an Ethereum keystore, and direct network access. Browser and mobile applications cannot do this. Two patterns exist for client-side Livepeer access.
+
+<CustomDivider />
+
+## Managed gateway with CORS key
+
+The simplest pattern: use a gateway provider's endpoint with a CORS-enabled API key. The key is safe to embed in client-side code because it is scoped to specific resource IDs.
+
+```typescript
+// React Native or browser JavaScript
+const response = await fetch('https://provider-gateway.example.com/text-to-image', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${CORS_API_KEY}\`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    prompt: 'a mountain at dawn',
+    model_id: 'SG161222/RealVisXL_V4.0_Lightning',
+  }),
+});
+```
+
+CORS-enabled keys restrict access to specific assets and streams. A leaked CORS key cannot access other resources in the account.
+
+<CustomDivider />
+
+## Backend proxy pattern
+
+For applications that need full API access or cannot use CORS keys:
+
+```
+Browser / Mobile App
+  │
+  │ fetch('/api/livepeer/text-to-image', { body })
+  │
+  ▼
+Your Backend (Node, Python, Go)
+  │
+  │ livepeer SDK with backend API key
+  │
+  ▼
+Gateway Provider or Self-Hosted Gateway
+```
+
+The backend holds the API key and proxies requests. The client never sees the key. This pattern works for any client platform and gives the backend full control over rate limiting, authentication, and request filtering.
+
+<CustomDivider />
+
+## Video playback on mobile
+
+For video playback, the `@livepeer/react` Player works in React Native via the `react-native-video` bridge. For non-React-Native mobile apps, use the native platform's HLS player (AVPlayer on iOS, ExoPlayer on Android) with the standard Livepeer HLS URL:
+
+```
+https://livepeercdn.studio/hls/{playbackId}/index.m3u8
+```
+
+No SDK or special integration required. The URL is a standard HLS manifest.
+
+<CustomDivider />
+
+The [AI authentication guide](/v2/developers/guides/auth-and-security/ai-authentication) covers CORS key types and backend key security. The [community gateway](/v2/developers/guides/gateways-as-developer/community-gateway) covers the unauthenticated development endpoint.

@@ -35,7 +35,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 The Studio API manages the full livestream lifecycle: creation, ingest, transcoding, and delivery. You push video via RTMP; Livepeer handles transcoding to adaptive bitrate HLS.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -43,7 +43,7 @@ The Studio API manages the full livestream lifecycle: creation, ingest, transcod
 - SDK installed: `npm install livepeer` / `pip install livepeer` / `go get github.com/livepeer/livepeer-go`
 - An RTMP encoder: OBS Studio, ffmpeg, or a custom stream producer
 
-<CustomDivider middleText="Create the Stream" />
+<CustomDivider />
 
 ## Step 1 -- Create a stream
 
@@ -115,7 +115,7 @@ The response includes:
 - `streamKey` -- the key portion of the RTMP URL, for encoders that take URL and key separately
 - `playbackId` -- use this to construct the HLS playback URL
 
-<CustomDivider middleText="Push to Ingest" />
+<CustomDivider />
 
 ## Step 2 -- Push your stream
 
@@ -135,7 +135,7 @@ ffmpeg -re -i input.mp4 \
   -f flv rtmp://rtmp.livepeer.com/live/<your-stream-key>
 ```
 
-<CustomDivider middleText="Playback" />
+<CustomDivider />
 
 ## Step 3 -- Play back the stream
 
@@ -169,7 +169,7 @@ hls.loadSource(`https://livepeercdn.studio/hls/${playbackId}/index.m3u8`);
 hls.attachMedia(videoElement);
 ```
 
-<CustomDivider middleText="Stream Status" />
+<CustomDivider />
 
 ## Checking stream status
 

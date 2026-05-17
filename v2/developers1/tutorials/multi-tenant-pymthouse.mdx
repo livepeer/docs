@@ -40,7 +40,7 @@ PymtHouse is the open-source clearinghouse for Livepeer applications. It runs th
 
 The architectural pattern PymtHouse implements is documented in <LinkArrow href="/v2/developers/guides/payments/clearinghouse-pattern" label="Clearinghouse pattern" newline={false} />. This tutorial wires an app against the running platform.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ export M2M_SECRET="pmth_cs_yourSecret"
 
 Store the M2M credentials in your backend secret manager. Never expose them to a browser, mobile app, or CLI.
 
-<CustomDivider middleText="Two-Client Model" />
+<CustomDivider />
 
 ## Two-Client Model
 
@@ -74,7 +74,7 @@ Scopes are configured on each client separately. The public client carries `sign
 
 The presence of `users:token` on the **public** client controls billing mode: with it, usage is attributed per end user; without it, usage rolls up to the app.
 
-<CustomDivider middleText="Machine Token" />
+<CustomDivider />
 
 ## Machine Token
 
@@ -93,7 +93,7 @@ The response is a JSON object with `access_token`, `expires_in`, and `scope`. Re
 
 In production, cache the machine token in memory for the duration in `expires_in` and refresh before expiry. Re-issuing on every request adds an unnecessary round trip.
 
-<CustomDivider middleText="User Provisioning" />
+<CustomDivider />
 
 ## User Provisioning
 
@@ -113,7 +113,7 @@ curl -sS \
 
 A `200` response confirms the user exists in the app's tenant. `externalUserId` is your stable join key between your application and PymtHouse; store nothing else from the response.
 
-<CustomDivider middleText="User Token" />
+<CustomDivider />
 
 ## User-Scoped JWT
 
@@ -130,7 +130,7 @@ USER_JWT=$(curl -sS \
 
 Forward this JWT to PymtHouse services in the `Authorization: Bearer` header on behalf of the user. The JWT is the only credential the user-facing path ever carries; the M2M secret never leaves the backend.
 
-<CustomDivider middleText="Node Backend" />
+<CustomDivider />
 
 ## Node Backend
 
@@ -215,7 +215,7 @@ const { access_token } = await mintUserJwt('user-123');
 console.log('User JWT:', access_token.slice(0, 40) + '...');
 ```
 
-<CustomDivider middleText="Billing" />
+<CustomDivider />
 
 ## Billing Summary
 
@@ -281,7 +281,7 @@ The `timeline` array contains one entry per calendar day in the period, with zer
 
 For per-user attribution, query the Usage API at `GET /api/v1/apps/{clientId}/usage` (documented in the PymtHouse repo at `docs/builder-api.md`).
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -293,7 +293,7 @@ For per-user attribution, query the Usage API at `GET /api/v1/apps/{clientId}/us
 
 **Mismatched IDs.** `PUBLIC_CLIENT_ID` must be the `app_…` id throughout the URL path. The `m2m_…` id is only used in the token endpoint body and Basic auth. Cross-wiring these surfaces as `401` or `404`.
 
-<CustomDivider middleText="Discovery" />
+<CustomDivider />
 
 ## Discovery
 
@@ -305,7 +305,7 @@ curl -sS "${BASE_URL}/api/v1/oidc/.well-known/openid-configuration" | jq .
 
 The `token_endpoint`, `jwks_uri`, `issuer`, and other standard OIDC fields are returned. Validate every JWT against `jwks_uri` at request time. Embedding a key in your codebase breaks on rotation.
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

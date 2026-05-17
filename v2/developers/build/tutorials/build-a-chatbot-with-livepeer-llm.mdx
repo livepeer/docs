@@ -42,7 +42,7 @@ By the end of this tutorial you'll have a Next.js 15 chatbot that takes user mes
 
 This is the Persona 1 activation moment for text inference. The image generation tutorial proved the batch path; this one proves the streaming path. The wire format you'll handle here works against any OpenAI-compatible endpoint, which means swapping providers is a URL change.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -52,7 +52,7 @@ This is the Persona 1 activation moment for text inference. The image generation
 
 No API key needed for development. The community gateway at `dream-gateway.livepeer.cloud` accepts unauthenticated POSTs to the LLM endpoint for experimentation.
 
-<CustomDivider middleText="Project Bootstrap" />
+<CustomDivider />
 
 ## Project Bootstrap
 
@@ -81,7 +81,7 @@ No API key needed for development. The community gateway at `dream-gateway.livep
   </Step>
 </Steps>
 
-<CustomDivider middleText="Streaming Route" />
+<CustomDivider />
 
 ## Streaming Route Handler
 
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
 
 Three things to notice. `export const runtime = 'edge'` runs the handler on Edge runtime, which keeps cold-start low and streams responses without buffering. The `stream: true` flag in the request body asks the LLM endpoint for Server-Sent Events instead of a single JSON response. The handler pipes the response body directly through; no SSE parsing on the server side, no JSON deserialisation. The browser parses the stream.
 
-<CustomDivider middleText="Wire Format" />
+<CustomDivider />
 
 ## SSE Wire Format
 
@@ -154,7 +154,7 @@ data: {"choices":[{"delta":{"content":"","role":"assistant"},"finish_reason":"st
 
 Each `data:` line is one token (or a small group of tokens) wrapped in OpenAI's chat completions chunk shape. The final chunk has empty `content` and `finish_reason: "stop"`. The client concatenates the `content` fields as they arrive and renders them incrementally.
 
-<CustomDivider middleText="Chat UI" />
+<CustomDivider />
 
 ## Chat UI Component
 
@@ -165,7 +165,7 @@ Save as `src/app/components/Chat.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
+const { useState } = React;
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -290,14 +290,14 @@ export function Chat() {
 
 The reader loop pulls bytes from the response stream, decodes them, and splits on newlines. The `buffer` handles the case where a chunk lands mid-line. For each complete `data:` line, the handler parses the JSON, extracts the token from `choices[0].delta.content`, and appends it to the last assistant message. The loop exits when `finish_reason: "stop"` arrives.
 
-<CustomDivider middleText="Page Composition" />
+<CustomDivider />
 
 ## Page Composition
 
 Save as `src/app/page.tsx`:
 
 ```tsx
-import { Chat } from './components/Chat';
+// Import Chat from ./components/Chat.
 
 export default function HomePage() {
   return (
@@ -322,7 +322,7 @@ npm run dev
 
 Open `http://localhost:3000`. Type a message, hit Send, and tokens stream into the response bubble.
 
-<CustomDivider middleText="Model Selection" />
+<CustomDivider />
 
 ## Model Selection
 
@@ -337,7 +337,7 @@ The community gateway routes any `model` value to whichever orchestrator has the
 
 Any Ollama-compatible model works. Cold-start (30 seconds to a few minutes) applies to models not currently loaded on any orchestrator. For consistent latency in production, run your own gateway with the target model pre-loaded; see <LinkArrow href="/v2/developers/build/ai-and-agents/model-support" label="Model Support" newline={false} />.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -353,7 +353,7 @@ The community gateway is shaped for experimentation. Production chat needs four 
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -375,7 +375,9 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+You have a streaming chatbot on the Livepeer LLM pipeline. The same endpoint shape works for any Ollama-compatible model; switch the `model` field to try Mistral, Gemma, or Qwen variants.
 
 ## Next Steps
 

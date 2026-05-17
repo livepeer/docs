@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
@@ -38,7 +37,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 The Livepeer `ComfyUI-Stream-Pack` (`livepeer/ComfyUI-Stream-Pack`) is a suite of custom ComfyUI nodes for building real-time video and audio processing workflows with ComfyStream. Standard ComfyUI workflows operate on static images or pre-rendered video files. AI Stream Pack introduces node categories that accept live streams as first-class inputs, enabling the same node graph authoring experience for real-time pipelines.
 
-<CustomDivider middleText="Node Categories" />
+<CustomDivider />
 
 ## Node Categories
 
@@ -67,7 +66,7 @@ The node pack uses three categories based on the role each node plays in a workf
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Control Nodes" />
+<CustomDivider />
 
 ## Control Nodes
 
@@ -76,13 +75,13 @@ Control Nodes are the input/output layer of a streaming workflow. The current pa
 - **`LoadTensor`**: loads tensor data from a live stream for real-time processing. This is the entry point for video frames in a streaming workflow.
 - **`LoadAudioTensor`**: processes real-time audio input, delivering audio data into the workflow for audio-aware pipelines.
 
-Both nodes replace the static `Load Image` pattern used in batch ComfyUI workflows. In a streaming context, they receive frames from the ComfyStream server on each forward pass rather than reading from disk.
+Both nodes replace the static `Load Image` pattern used in batch ComfyUI workflows. In a streaming context, they receive frames from the ComfyStream server on each forward pass instead of reading from disk.
 
 <Note>
   Foundation Nodes and Light Nodes are defined in the node pack architecture but have no shipped implementations in the current release. The Control Nodes (`LoadTensor`, `LoadAudioTensor`) are the active entry points for streaming workflows.
 </Note>
 
-<CustomDivider middleText="Installation" />
+<CustomDivider />
 
 ## Installation
 
@@ -97,7 +96,7 @@ git clone https://github.com/livepeer/ComfyUI-Stream-Pack.git
 
 After restarting ComfyUI, the `LoadTensor` and `LoadAudioTensor` nodes appear in the node menu under the Livepeer category.
 
-<CustomDivider middleText="Usage Pattern" />
+<CustomDivider />
 
 ## Using Stream Pack Nodes in a Workflow
 
@@ -108,19 +107,21 @@ A streaming workflow replaces the static `Load Image` node with `LoadTensor`. Th
 3. Export the workflow in API format
 4. Point ComfyStream at the exported JSON
 
-ComfyStream's server intercepts the `LoadTensor` node at runtime and injects decoded video frames. The downstream nodes process each frame as they would a static image input, but the forward pass is called once per incoming frame rather than once per workflow execution.
+ComfyStream's server intercepts the `LoadTensor` node at runtime and injects decoded video frames. The downstream nodes process each frame as they would a static image input, but the forward pass is called once per incoming frame, not once per workflow execution.
 
-See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for the full workflow setup and streaming server configuration.
+See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for the full workflow setup and streaming server configuration.
 
 <CustomDivider />
 
 ## Related Pages
 
+Stream Pack nodes work inside ComfyStream workflows. See the [ComfyStream overview](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview) for the full real-time pipeline architecture.
+
 <CardGroup cols={2}>
   <Card
     title="Workflow Authoring"
     icon="workflow"
-    href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring"
     arrow
     horizontal
   >
@@ -138,7 +139,7 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-aut
   <Card
     title="ComfyStream as BYOC"
     icon="box"
-    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc"
     arrow
     horizontal
   >
@@ -147,7 +148,7 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-aut
   <Card
     title="PyTrickle Overview"
     icon="code"
-    href="/v2/developers/build/ai-and-agents/pytrickle/overview"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview"
     arrow
     horizontal
   >

@@ -45,7 +45,7 @@ This is the Persona 2 and Persona 3 join: the platform builder shipping operator
   NaaP is an official Livepeer project in active beta. Breaking changes to the plugin SDK may occur between releases. Check the changelog at `operator.livepeer.org/docs/community/changelog` before upgrading.
 </Warning>
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -56,7 +56,7 @@ This is the Persona 2 and Persona 3 join: the platform builder shipping operator
 
 The full platform runs locally via `./bin/start.sh` in the cloned NaaP repository. First run installs dependencies, starts Postgres, runs schema migrations, builds plugin bundles, and starts the shell. Subsequent starts take 6-8 seconds.
 
-<CustomDivider middleText="Architecture" />
+<CustomDivider />
 
 ## Plugin Architecture
 
@@ -88,7 +88,7 @@ interface ShellContext {
 
 Plugin backends run at `/api/v1/[plugin-name]/*` in production (Vercel) and proxy to standalone Express backends on ports 4001-4012 in local development. The same route handlers serve both environments.
 
-<CustomDivider middleText="Local Setup" />
+<CustomDivider />
 
 ## Platform Bootstrap
 
@@ -117,7 +117,7 @@ Plugin backends run at `/api/v1/[plugin-name]/*` in production (Vercel) and prox
   </Step>
 </Steps>
 
-<CustomDivider middleText="Scaffold" />
+<CustomDivider />
 
 ## Plugin Scaffold
 
@@ -171,14 +171,14 @@ Plugin backends run at `/api/v1/[plugin-name]/*` in production (Vercel) and prox
   </Step>
 </Steps>
 
-<CustomDivider middleText="Frontend" />
+<CustomDivider />
 
 ## Frontend Implementation
 
 The plugin entry point receives `ShellContext` via the `useShell()` hook. Save as `src/index.tsx`:
 
 ```tsx
-import { useEffect, useState } from 'react';
+const { useEffect, useState } = React;
 import { useShell, useAuth } from '@naap/plugin-sdk';
 
 interface OrchestratorRecord {
@@ -256,7 +256,7 @@ export default function OrchestratorHealthPlugin() {
 
 The plugin imports only `@naap/plugin-sdk` and pulls every shell service through hooks. `useShell()` returns navigation, notifications, and logger; `useAuth()` returns the authenticated user. No direct calls to shell internals.
 
-<CustomDivider middleText="Backend" />
+<CustomDivider />
 
 ## Backend Routes
 
@@ -320,7 +320,7 @@ Wire the route handler in `src/api/index.ts`:
 
 ```ts
 import { Router } from 'express';
-import { listOrchestrators } from './orchestrators';
+// Import listOrchestrators from ./orchestrators.
 
 const router = Router();
 
@@ -331,7 +331,7 @@ export default router;
 
 The shell mounts this router at `/api/v1/orchestrator-health/`. Every request gets pre-authenticated by the shell middleware; the route handler trusts that the request has a valid user.
 
-<CustomDivider middleText="Schema" />
+<CustomDivider />
 
 ## Database Schema
 
@@ -370,7 +370,7 @@ CREATE INDEX IF NOT EXISTS idx_events_orch
 
 Schema isolation is enforced at the Postgres level. Other plugins' role grants don't include the `orchestrator_health` schema, so cross-plugin reads fail with `permission denied` even if a plugin tries to escape its boundary.
 
-<CustomDivider middleText="Inter-Plugin Events" />
+<CustomDivider />
 
 ## Inter-Plugin Communication
 
@@ -399,7 +399,7 @@ function MyComponent() {
 
 Event types follow a `[domain].[verb]` convention. The shell broadcasts events for plugin lifecycle (`plugin.installed`, `plugin.removed`), auth (`user.signed-in`, `user.signed-out`), and theme (`theme.changed`). Custom events use your plugin's namespace (`orchestrator-health.alert`).
 
-<CustomDivider middleText="Publication" />
+<CustomDivider />
 
 ## Marketplace Publication
 
@@ -431,7 +431,7 @@ NaaP ships a Plugin Publisher plugin (one of the 12 default plugins) that handle
   </Step>
 </Steps>
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -449,7 +449,7 @@ Six things change between the local development flow and a published plugin.
 
 **Changelog discipline.** The NaaP platform itself ships breaking SDK changes between beta releases. Subscribe to the changelog at `operator.livepeer.org/docs/community/changelog` and test against the next beta before it ships stable.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -471,7 +471,9 @@ Six things change between the local development flow and a published plugin.
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+Your plugin is registered in the NaaP Shell and accessible from the portal. Publish it to the plugin registry to make it available to other NaaP operators.
 
 ## Next Steps
 

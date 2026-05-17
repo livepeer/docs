@@ -1,18 +1,18 @@
 ---
 title: Data Integrations
 sidebarTitle: Data Integrations
-description: >-
-  This document maps primary API/data integrations used by docs content and
-  automations.
+description: Map of OpenAPI specs, structured data feeds, generated references, and external data update pipelines used by the docs repo.
+audience: developer
+pageType: overview
+purpose: overview
+status: current
+lastVerified: 2026-05-14
 keywords:
   - livepeer
   - data integrations
-  - primary
-  - api
-  - data
-  - integrations
-  - docs content
-  - automation
+  - openapi
+  - external data
+  - generated data
 'og:image': /snippets/assets/media/og-images/fallback.png
 'og:image:alt': Livepeer Docs social preview image
 'og:image:type': image/png
@@ -20,9 +20,24 @@ keywords:
 'og:image:height': 630
 ---
 
-## API Specifications
+# Data Integrations
 
-Canonical API/spec files in `api/`:
+Data integrations keep the docs current without turning MDX pages into manually maintained databases. The ownerless rule is simple: source data, transformation code, generated output, validation, and repair commands must be visible in the repo.
+
+## Integration Families
+
+| Family | Purpose | Canonical inputs | Outputs |
+| --- | --- | --- | --- |
+| OpenAPI and endpoint references | Maintain API reference integrity across Studio, Gateway, AI Worker, CLI, and related specs. | `api/`, `operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh` | API reference pages and OpenAPI validation reports. |
+| Contract addresses | Fetch, verify, transform, and render canonical contract data. | `operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js`, `operations/scripts/config/dep-contract-addresses-authority.json` | `snippets/data/contract-addresses/*` |
+| Release and gateway globals | Keep latest release and gateway configuration data current. | Live release/config sources, fetch scripts under `operations/scripts/integrators/maintenance/` | `snippets/data/globals/latestRelease.jsx`, `snippets/data/gateways/*` |
+| Social and community feeds | Aggregate forum, Ghost, GitHub, Discord, RSS, YouTube, Luma, and showcase data. | Fetchers under `operations/scripts/integrators/copy/social-feeds/` and `operations/scripts/integrators/copy/showcase/` | `snippets/data/social-feeds/*`, `snippets/data/showcase-feed/*` |
+| Exchange and ecosystem data | Update exchange/reference surfaces. | `operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js` | `snippets/data/exchanges/exchangesData.jsx`, snapshots |
+| Glossary and reference maps | Generate discoverable glossary and badge/icon reference data. | `operations/scripts/generators/content/reference/`, `snippets/data/reference-maps/` | glossary outputs, companion files, reference maps |
+
+## API Specification Surface
+
+The `api/` root is reserved for API specs and API workspace material. Active examples include:
 
 - `api/openapi.yaml`
 - `api/openapi.json`
@@ -31,51 +46,50 @@ Canonical API/spec files in `api/`:
 - `api/ai-worker.yaml`
 - `api/cli-http.yaml`
 
-Related generation helpers:
+Validation and generation should use current `operations/scripts/` paths, not legacy `operations/scripts/snippets/` paths.
 
-- `operations/scripts/snippets/fetch-openapi-specs.sh`
-- `operations/scripts/snippets/generate-api-docs.sh`
+## Structured Data Outputs
 
-## Automated External Data Feeds
+| Output path | Consumer type | Notes |
+| --- | --- | --- |
+| `snippets/data/contract-addresses/` | Components and docs pages | Includes JSON, JSX, health, branch-watch, and view-model files. |
+| `snippets/data/social-feeds/` | Feed integrator components | Forum, Ghost, Discord, Luma, YouTube, and last-updated modules. |
+| `snippets/data/showcase-feed/` | Showcase pages and components | Populated data should be generated from the showcase pipeline. |
+| `snippets/data/snapshots/` | Evidence and cache snapshots | Should stay bounded by retention and freshness rules. |
+| `snippets/data/references/` | Reference components | Chainlist and related static reference data. |
+| `snippets/data/reference-maps/` | UI/content mapping | Badge and icon maps consumed by docs tooling. |
 
-Core external feed outputs:
+## Validation and Repair
 
-- Forum -> `snippets/data/social-feeds/forumData.jsx`
-- Ghost blog -> `snippets/data/social-feeds/ghostBlogData.jsx`
-- YouTube -> `snippets/data/social-feeds/youtubeData.jsx`
-- Release/global state -> `snippets/data/globals/latestRelease.jsx`
-- Showcase -> `snippets/data/showcase-feed/showcaseData.jsx`
+| Concern | Check | Repair path |
+| --- | --- | --- |
+| OpenAPI reference integrity | `node operations/tests/integration/openapi-reference-audit.js --full --strict` | Update spec mapping and affected MDX endpoint references together. |
+| AI sitemap data | `lpd ai-sitemap --check` | `lpd ai-sitemap --write` |
+| Contract address data | Contract verifier tests under `operations/scripts/integrators/content/data/test/` | Re-run fetch and transform scripts, then verify outputs. |
+| External feed freshness | Scheduled freshness/data workflows and freshness reports | Run the matching `integrator-*` workflow or fetch script. |
+| Generated catalog drift | catalog validators and generators | Regenerate catalogs from source data. |
 
-Pipeline definitions:
+## Data Integration Rules
 
-- GitHub workflows under `.github/workflows/update-*.yml`
-- n8n assets under `snippets/assets/data/n8n/`
+- Keep source data, transform code, and rendered outputs separate.
+- Do not put fetch logic inside MDX pages.
+- Do not hand-edit generated data without documenting why generation cannot repair it.
+- Store secrets in GitHub Actions or documented secret surfaces, not committed data files.
+- Write deterministic outputs so diffs are reviewable.
+- Treat snapshots and reports as retention-bound artifacts, not permanent active content.
 
-## Internal Data Layers
+## Gaps To Address
 
-- Route/link maps: `snippets/data/*/hrefs.jsx`
-- Domain data modules: `snippets/data/**/*.jsx`
-- Variables/meta docs snippets: `snippets/data/variables*.mdx`
-- AI sitemap: `sitemap-ai.xml` (generated by `operations/scripts/generators/content/seo/generate-ai-sitemap.js`, refreshed via `.github/workflows/generate-ai-sitemap.yml`)
-
-## Integrations Mentioned in Product Docs
-
-The repository includes integration-oriented docs for:
-
-- LPT and related exchange/reference data surfaces
-- Explorer and protocol/resource integrations
-- GitHub and ecosystem summaries via automation outputs
-
-Use public docs pages for user-facing detail and this file for maintainer location mapping.
-
-## Operational Notes
-
-- Treat generated data artifacts as derived state.
-- Update pipeline scripts/workflows, then regenerate artifacts and indexes.
-- Prefer deterministic outputs and stable write paths for CI predictability.
+| Gap | Evidence | Required action |
+| --- | --- | --- |
+| Legacy path references in docs | Previous feature docs referenced `operations/scripts/snippets/*`, but live fetch/generation scripts are under `operations/scripts/integrators/` and `operations/scripts/generators/`. | Sweep docs-guide and tooling docs for old script paths and replace with current paths. |
+| Snapshot/report bloat | Script footprint audit flags large report and snapshot artifacts under `workspace/reports/`. | Apply report retention policy and keep concise summaries tracked. |
+| n8n ownership uncertainty | n8n references appear in older docs, but live repo evidence centers on GitHub Actions and `operations/scripts/`. | Inventory any tracked n8n JSON before preserving or purging. |
 
 ## Related
 
-- Workflow inventory: [workflows-catalog.mdx](../catalog/workflows-catalog.mdx)
-- Script inventory: [scripts-catalog.mdx](../catalog/scripts-catalog.mdx)
-- Pipeline map: [automations.md](./automations.mdx)
+- [Automations](./automations.mdx)
+- `docs-guide/repo-ops/secrets/solutions-secrets.mdx`
+- `docs-guide/frameworks/script-framework.mdx`
+- `operations/scripts/integrators/`
+- `snippets/data/`

@@ -36,7 +36,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
 Browser-to-browser sub-3-second latency through Livepeer requires control over both ends of the chain: the WebRTC ingest at the Gateway and the LL-HLS chunk pacing on playback. Hosted Gateways add hops that push real-world latency above this floor. This tutorial runs the Gateway locally and the app against that Gateway.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ Browser-to-browser sub-3-second latency through Livepeer requires control over b
 - Node.js 20 or later, npm
 - A reachable HTTPS endpoint. WebRTC ingest needs TLS. For local development, use `ngrok http 8935` or `cloudflared tunnel --url http://localhost:8935` to expose the Gateway over HTTPS.
 
-<CustomDivider middleText="Run the Gateway" />
+<CustomDivider />
 
 ## Run the Gateway
 
@@ -82,7 +82,7 @@ ngrok http 8935
 
 Note the HTTPS URL ngrok returns. You will use it as the base URL in the app.
 
-<CustomDivider middleText="Bootstrap the App" />
+<CustomDivider />
 
 ## Bootstrap the App
 
@@ -93,7 +93,7 @@ cd livepeer-live-app
 npm install @livepeer/react
 ```
 
-<CustomDivider middleText="Provider" />
+<CustomDivider />
 
 ## LivepeerProvider Configuration
 
@@ -131,7 +131,7 @@ NEXT_PUBLIC_GATEWAY_URL=https://your-ngrok-id.ngrok.app
 
 The `studioProvider` name is historical; it accepts any compatible Gateway URL.
 
-<CustomDivider middleText="Broadcast" />
+<CustomDivider />
 
 ## Broadcast Component
 
@@ -163,7 +163,7 @@ export default function BroadcastPage() {
 
 Add `NEXT_PUBLIC_STREAM_KEY=test-stream-key` to `.env.local`. Self-hosted Gateways accept any stream key by default; you can scope keys via webhook auth (see <LinkArrow href="/v2/gateways/run-a-gateway/configure" label="Configure a gateway" newline={false} />).
 
-<CustomDivider middleText="Player" />
+<CustomDivider />
 
 ## Player Component
 
@@ -195,7 +195,7 @@ export default function WatchPage() {
 
 The `lowLatency` prop activates LL-HLS playback paths in the player.
 
-<CustomDivider middleText="Test" />
+<CustomDivider />
 
 ## End-to-End Test
 
@@ -212,7 +212,7 @@ Open two browser tabs:
 
 Measure latency by pointing the broadcaster's camera at a stopwatch on a second device or by clapping. Latency floor in this configuration is 2 to 3 seconds. Earlier results indicate transcoding latency from the Orchestrator side.
 
-<CustomDivider middleText="Tuning" />
+<CustomDivider />
 
 ## Latency Tuning
 
@@ -224,7 +224,7 @@ Three settings most affect the latency floor:
 
 **Network path between broadcaster, Gateway, and Orchestrator.** A Gateway co-located with the Orchestrator removes one round trip. A broadcaster on the same continent as the Gateway removes another.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Checklist
 

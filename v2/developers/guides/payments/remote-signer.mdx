@@ -41,7 +41,7 @@ The Livepeer gateway is responsible for two distinct concerns: media routing (re
 
 The remote signer architecture, introduced in go-livepeer PRs #3791 and #3822, separates them. The signer service holds the Ethereum key and handles all payment logic. The gateway handles media. A gateway client makes HTTP calls to the signer for each payment operation; the signer returns signed tickets and updated payment state.
 
-<CustomDivider middleText="Goals" />
+<CustomDivider />
 
 ## Remote Signing Goals
 
@@ -53,7 +53,7 @@ Three problems motivated the design:
 
 **Clearinghouses.** The remote signer design allows a third-party clearinghouse to operate the signer on behalf of multiple gateways. Each gateway operator pays the clearinghouse in a traditional currency; the clearinghouse settles with orchestrators via PM under the hood. Gateway operators no longer need to hold ETH or manage Arbitrum operations.
 
-<CustomDivider middleText="Protocol" />
+<CustomDivider />
 
 ## Signing Protocol
 
@@ -76,7 +76,7 @@ Gateway → Signer: signTicket(updatedSignerState, updatedTicketParams)
 
 The `signerState` carries the accumulated PM session bookkeeping (elapsed time, balance tracking, nonce counters). The signer updates this state on each call and returns it alongside the signed ticket. The gateway stores and forwards the state; it never interprets it.
 
-<CustomDivider middleText="Statelessness" />
+<CustomDivider />
 
 ## Stateless Signer Design
 
@@ -90,7 +90,7 @@ Consequences of this design:
 - Restarting the signer does not lose session state: the gateway retains the last known state and resumes correctly
 - Sending stale or null state after the first call leads to nonce repetition and invalid tickets. Gateway implementations must persist and forward state correctly
 
-<CustomDivider middleText="Scope" />
+<CustomDivider />
 
 ## Current Scope
 
@@ -100,7 +100,7 @@ Transcoding handles payments differently: tickets are signed with the segment ha
 
 The service registry (orchestrator discovery via Arbitrum contract) is also not handled by the remote signer. Discovery is a separate concern; local gateway clients use explicit orchestrator URI lists or external discovery services.
 
-<CustomDivider middleText="Security" />
+<CustomDivider />
 
 ## Security Properties
 
@@ -108,7 +108,7 @@ The service registry (orchestrator discovery via Arbitrum contract) is also not 
 
 **Reduced blast radius.** In the monolith, all gateway instances share a single Ethereum key. With remote signing, gateway instances do not hold the key at all. Compromise of a gateway binary does not yield the key.
 
-**Guardrails over open signing.** The signer implements the PM protocol with proper guardrails (balance checks, nonce tracking, fee limits) rather than blindly signing arbitrary payloads. This limits the damage from an exploited signer compared to a general signing endpoint.
+**Guardrails over open signing.** The signer implements the PM protocol with proper guardrails (balance checks, nonce tracking, fee limits) instead of blindly signing arbitrary payloads. This limits the damage from an exploited signer compared to a general signing endpoint.
 
 <Note>
   Remote signing does not provide signing key management or rotation. The signer service must be secured, backed up, and operated with the same care as any Ethereum hot wallet holding operational funds.

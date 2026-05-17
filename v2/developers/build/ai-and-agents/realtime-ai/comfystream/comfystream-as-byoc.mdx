@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
@@ -38,9 +37,9 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
 A ComfyStream instance running locally or on a remote server can receive jobs from the Livepeer network by registering with an orchestrator as a BYOC (Bring Your Own Compute) container. Once registered, the orchestrator advertises the `live-video-to-video` capability to gateways, and incoming real-time AI jobs are forwarded to the ComfyStream service over the trickle protocol.
 
-This page assumes a ComfyStream instance is already running and accessible. See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for installation and startup.
+This page assumes a ComfyStream instance is already running and accessible. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for installation and startup.
 
-<CustomDivider middleText="Requirements" />
+<CustomDivider />
 
 ## Requirements
 
@@ -50,7 +49,7 @@ This page assumes a ComfyStream instance is already running and accessible. See 
 
 The orchestrator and ComfyStream can run on the same machine or on separate hosts provided the orchestrator can reach the ComfyStream HTTP port.
 
-<CustomDivider middleText="Configuration" />
+<CustomDivider />
 
 ## Registering with the Orchestrator
 
@@ -99,7 +98,7 @@ The orchestrator and ComfyStream can run on the same machine or on separate host
   </StyledStep>
 </StyledSteps>
 
-<CustomDivider middleText="Parameter Updates" />
+<CustomDivider />
 
 ## Dynamic Parameters
 
@@ -109,7 +108,7 @@ ComfyStream passes these updates to the running workflow as ComfyUI node paramet
 
 The update request body is a JSON object mapping node IDs to parameter values. The exact schema depends on the workflow; refer to the workflow JSON for node IDs and parameter names.
 
-<CustomDivider middleText="Network Considerations" />
+<CustomDivider />
 
 ## Remote Deployments
 
@@ -125,11 +124,13 @@ The trickle protocol transmits video segments over HTTP. No UDP ports are requir
 
 ## Related Pages
 
+Your ComfyStream instance is now a registered BYOC capability on the network. Gateways route `live-video-to-video` jobs to it via the AI Service Registry.
+
 <CardGroup cols={2}>
   <Card
     title="Workflow Authoring"
     icon="workflow"
-    href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring"
     arrow
     horizontal
   >
@@ -156,7 +157,7 @@ The trickle protocol transmits video segments over HTTP. No UDP ports are requir
   <Card
     title="PyTrickle Overview"
     icon="code"
-    href="/v2/developers/build/ai-and-agents/pytrickle/overview"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview"
     arrow
     horizontal
   >

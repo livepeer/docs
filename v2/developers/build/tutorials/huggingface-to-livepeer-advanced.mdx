@@ -50,7 +50,7 @@ determines which path you take.
 None of the paths use Studio or Daydream. All verification runs through your own infrastructure plus public
 dashboards.
 
-<CustomDivider middleText="The three paths" />
+<CustomDivider />
 
 ## Path summary
 
@@ -81,7 +81,7 @@ dashboards.
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Decision flow" />
+<CustomDivider />
 
 ## Decision flow
 
@@ -217,12 +217,12 @@ matching client side route work to it. There is no upstream PR required: BYOC is
 precisely so model providers can ship without modifying `livepeer/ai-worker` or `livepeer/go-livepeer`.
 
 The trade-off: BYOC requires gateway-side implementation work for any gateway operator who wants to call your
-capability. You are not just shipping a model; you are shipping a small protocol that gateways must adopt.
+capability. You are shipping both a model and a small protocol that gateways must adopt.
 
 **Take Path 3** if your model needs a non-standard protocol and you are willing to coordinate with gateway
 operators (or run your own gateway) to drive adoption.
 
-<CustomDivider middleText="Common ground" />
+<CustomDivider />
 
 ## Shared prerequisites
 
@@ -259,7 +259,7 @@ These are identical regardless of path. They are prerequisites, not part of any 
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Path differences" />
+<CustomDivider />
 
 ## Path differences at a glance
 
@@ -306,7 +306,7 @@ These are identical regardless of path. They are prerequisites, not part of any 
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Path 1: Existing pipeline" />
+<CustomDivider />
 
 ## Path 1: Configure an existing pipeline
 
@@ -509,7 +509,7 @@ name stays the same as long as the new model fits the same I/O shape.
   pull happens through Ollama's tag system. Reference: [Ollama tag library](https://ollama.com/library).
 </Note>
 
-<CustomDivider middleText="Path 2: Custom pipeline" />
+<CustomDivider />
 
 ## Path 2: Build a custom pipeline
 
@@ -837,7 +837,7 @@ You have completed the local part of Path 2 when:
 You have completed the on-network part when both PRs merge, your orchestrator advertises the pipeline on the
 capabilities tool, and a self-hosted gateway request succeeds.
 
-<CustomDivider middleText="Path 3: BYOC" />
+<CustomDivider />
 
 ## Path 3: Bring Your Own Container
 
@@ -849,7 +849,7 @@ BYOC is the path that does not require modifying `livepeer/ai-worker` or `livepe
 trade-off is that gateways must implement your capability's protocol on their side. You are coordinating with
 gateway operators or running your own gateway.
 
-### When BYOC fits
+### BYOC Fit Criteria
 
 BYOC fits if at least one of the following is true:
 
@@ -1100,7 +1100,7 @@ You have completed Path 3 when:
 3. A request through your self-hosted gateway, addressed to your capability name, returns the expected output
    from your container
 
-<CustomDivider middleText="Operational notes" />
+<CustomDivider />
 
 ## Operational notes
 
@@ -1111,7 +1111,7 @@ You have completed Path 3 when:
   </Accordion>
   <Accordion title="Reach (BYOC)" icon="signal">
     Your capability is callable only by gateways that have implemented your client-side protocol. Until other
-    gateway operators adopt your capability, you are effectively running both ends – orchestrator and
+    gateway operators adopt your capability, you are running both ends – orchestrator and
     gateway – yourself. This is normal for BYOC during bootstrap.
   </Accordion>
   <Accordion title="Iterating on the protocol (BYOC)" icon="code-branch">
@@ -1129,9 +1129,9 @@ You have completed Path 3 when:
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Out of scope" />
+<CustomDivider />
 
-## What this guide omits
+## Scope exclusions
 
 - **Studio.** Not used in any verification step. All inference verification runs through a self-hosted
   `go-livepeer -gateway`.
@@ -1143,7 +1143,7 @@ You have completed Path 3 when:
 - **Pricing recommendations.** No specific wei value is recommended as competitive. The reader is sent to the
   live capabilities dashboard to compare. The wei figures shown in JSON examples are illustrative.
 
-<CustomDivider middleText="Sources" />
+<CustomDivider />
 
 ## Sources
 
@@ -1177,6 +1177,8 @@ You have completed Path 3 when:
 </AccordionGroup>
 
 <CustomDivider />
+
+You now have three structurally different paths for putting a Hugging Face model on Livepeer. The right choice depends on whether your model fits an existing pipeline shape, needs custom pre/post-processing, or requires a fully custom container.
 
 ## Related pages
 

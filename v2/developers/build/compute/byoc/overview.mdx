@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
@@ -40,7 +39,7 @@ BYOC (Bring Your Own Compute) is the mechanism for registering custom inference 
 
 BYOC containers implement a small HTTP contract: a `/health` endpoint for liveness checks, and a pipeline-specific inference endpoint (e.g. `/live/video-to-video` or `/text-to-image`). The orchestrator manages the trickle protocol transport, payment tickets, and capability advertisement.
 
-<CustomDivider middleText="Container Contract" />
+<CustomDivider />
 
 ## HTTP Contract
 
@@ -77,9 +76,9 @@ For real-time pipelines (`live-video-to-video`), the container additionally expo
 | `/api/stream/update` | POST | Receive parameter updates |
 | `/api/stream/status` | GET | Return session status |
 
-PyTrickle's `StreamServer` implements all four real-time endpoints automatically. See <LinkArrow href="/v2/developers/build/ai-and-agents/pytrickle/overview" label="PyTrickle" newline={false} /> for the implementation pattern.
+PyTrickle's `StreamServer` implements all four real-time endpoints automatically. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview" label="PyTrickle" newline={false} /> for the implementation pattern.
 
-<CustomDivider middleText="Registration" />
+<CustomDivider />
 
 ## Registering with an Orchestrator
 
@@ -116,7 +115,7 @@ Fields:
 
 After updating `aiModels.json`, restart the orchestrator to pick up the new registration.
 
-<CustomDivider middleText="Capability Advertisement" />
+<CustomDivider />
 
 ## Network Discovery
 
@@ -126,7 +125,7 @@ The capability is advertised as `pipeline/model_id`, e.g. `live-video-to-video/c
 
 The network capability dashboard at `tools.livepeer.cloud/ai/network-capabilities` shows which BYOC capabilities are warm across the active set.
 
-<CustomDivider middleText="Payment" />
+<CustomDivider />
 
 ## Payment Flow
 
@@ -135,6 +134,8 @@ BYOC containers receive the same probabilistic micropayment flow as native ai-ru
 `price_per_unit` in `aiModels.json` sets the price the orchestrator charges the gateway per compute unit. For `live-video-to-video`, the unit is typically per-frame or per-second depending on orchestrator configuration. For batch pipelines, pricing follows the same per-output-unit model as native pipelines.
 
 <CustomDivider />
+
+The [BYOC quickstart](/v2/developers/build/compute/byoc/byoc-quickstart) walks through the full cycle from FrameProcessor to registered network capability in 25 minutes.
 
 ## Related Pages
 
@@ -145,10 +146,10 @@ BYOC containers receive the same probabilistic micropayment flow as native ai-ru
   <Card title="BYOC Production" icon="server" href="/v2/developers/build/compute/byoc/byoc-production" arrow horizontal>
     Deploying BYOC containers at scale: resource management, error handling, monitoring.
   </Card>
-  <Card title="ComfyStream as BYOC" icon="workflow" href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc" arrow horizontal>
+  <Card title="ComfyStream as BYOC" icon="workflow" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc" arrow horizontal>
     Worked example of registering a ComfyStream real-time pipeline as BYOC.
   </Card>
-  <Card title="PyTrickle" icon="code" href="/v2/developers/build/ai-and-agents/pytrickle/overview" arrow horizontal>
+  <Card title="PyTrickle" icon="code" href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview" arrow horizontal>
     Python SDK that implements the BYOC real-time container contract.
   </Card>
 </CardGroup>

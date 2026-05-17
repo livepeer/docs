@@ -40,7 +40,7 @@ Livepeer's video infrastructure separates ingest, transcoding, and delivery into
 
 The three primary video workloads are live streams, video-on-demand (VOD) assets, and direct transcoding. All three go through the same underlying network: gateway nodes receive video segments, route them to orchestrators, and return transcoded output.
 
-<CustomDivider middleText="Workload Types" />
+<CustomDivider />
 
 ## Live Streams
 
@@ -65,7 +65,7 @@ console.log(stream.stream.rtmpIngestUrl);   // push here from OBS/FFmpeg
 console.log(stream.stream.playbackUrl);     // HLS playback URL
 ```
 
-See <LinkArrow href="/v2/developers/build/video/ingest" label="Ingest" newline={false} /> for ingest configuration, webhook setup, and stream key management.
+See <LinkArrow href="/v2/developers/build/video/ingest-and-playback" label="Ingest" newline={false} /> for ingest configuration, webhook setup, and stream key management.
 
 ## VOD Assets
 
@@ -80,15 +80,15 @@ const asset = await client.asset.createViaUrl({
 
 After transcoding, the asset has a `playbackId` usable with the `@livepeer/react` Player component or any HLS player.
 
-See <LinkArrow href="/v2/developers/build/video/vod" label="VOD" newline={false} /> for upload, status polling, and playback integration.
+See <LinkArrow href="/v2/developers/build/video/vod-and-recording" label="VOD" newline={false} /> for upload, status polling, and playback integration.
 
 ## Direct Transcoding
 
 For applications that manage their own segmented video and need only the transcoding step, the go-livepeer broadcaster gateway exposes an HTTP endpoint that accepts segments and returns transcoded output. This is the lowest-level integration point and the path LPMS embeds.
 
-See <LinkArrow href="/v2/developers/build/video/transcoding" label="Transcoding" newline={false} /> for the segment submission API and profile configuration.
+See <LinkArrow href="/v2/developers/build/video/transcoding-direct-quickstart" label="Transcoding" newline={false} /> for the segment submission API and profile configuration.
 
-<CustomDivider middleText="SDK vs Direct Gateway" />
+<CustomDivider />
 
 ## Access Paths
 
@@ -119,9 +119,9 @@ See <LinkArrow href="/v2/developers/build/video/transcoding" label="Transcoding"
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="SDK Reference" />
+<CustomDivider />
 
-## livepeer SDK
+## Livepeer SDK
 
 The `livepeer` JavaScript SDK (`npm install livepeer`) and `livepeer` Python SDK (`pip install livepeer`) both wrap the Livepeer REST API. They cover streams, assets, webhooks, playback policies, access control, and viewership metrics.
 
@@ -134,16 +134,16 @@ Both SDKs are generated from the Livepeer OpenAPI specification at `api/openapi.
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest-and-playback" arrow horizontal>
     RTMP ingest configuration, stream keys, and webhook event handling.
   </Card>
-  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod" arrow horizontal>
+  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod-and-recording" arrow horizontal>
     Asset upload, transcoding profiles, and HLS playback URL generation.
   </Card>
-  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding" arrow horizontal>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding-direct-quickstart" arrow horizontal>
     Direct segment transcoding via the broadcaster gateway and LPMS.
   </Card>
-  <Card title="LPMS" icon="server" href="/v2/developers/build/video/lpms" arrow horizontal>
+  <Card title="LPMS" icon="server" href="/v2/developers/build/video/lpms-integration" arrow horizontal>
     Livepeer Media Server: embeddable Go library for RTMP-in, HLS-out pipelines.
   </Card>
 </CardGroup>

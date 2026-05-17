@@ -27,7 +27,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
@@ -41,7 +40,7 @@ AI agents running on frameworks like elizaOS need inference compute for image ge
 
 The Agent SPE (Special Purpose Entity), funded by the Livepeer treasury, focuses on integrating Livepeer inference into leading agent frameworks and building tooling for autonomous video agents.
 
-<CustomDivider middleText="Framework Integrations" />
+<CustomDivider />
 
 ## Eliza Plugin
 
@@ -68,9 +67,9 @@ Set `LIVEPEER_GATEWAY_URL` in your environment to point to a gateway. The commun
 
 **LLM provider**: Livepeer is also available as an LLM provider in elizaOS (PR #2154). This routes the agent's language model calls through the Livepeer `llm` pipeline, which exposes an OpenAI-compatible completions endpoint backed by network orchestrators.
 
-See <LinkArrow href="/v2/developers/tutorials/eliza-livepeer-plugin" label="Eliza Livepeer Plugin tutorial" newline={false} /> for a full walkthrough of both integrations.
+See <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin" label="Eliza Livepeer Plugin tutorial" newline={false} /> for a full walkthrough of both integrations.
 
-<CustomDivider middleText="Agent Patterns" />
+<CustomDivider />
 
 ## Using AI Pipelines from Agents
 
@@ -119,17 +118,17 @@ The nine batch pipelines cover the inference tasks most agents need:
 
 See <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="AI Pipelines" newline={false} /> for endpoint shapes and request schemas.
 
-<CustomDivider middleText="Custom Agent Runners" />
+<CustomDivider />
 
 ## BYOC Containers for Agents
 
 Agents that need custom inference logic (fine-tuned models, proprietary pipelines, or non-standard modalities) can run as BYOC (Bring Your Own Compute) containers registered with a Livepeer orchestrator. The orchestrator handles capability advertisement, job routing, and probabilistic micropayment settlement. The BYOC container only needs to expose an HTTP endpoint matching the pipeline contract.
 
-This pattern suits autonomous agents that process jobs continuously rather than on-demand: an agent running a persistent embedding pipeline, a custom vision model, or a specialised audio processor registers once and receives routed jobs as demand arrives on the network.
+This pattern suits autonomous agents that process jobs continuously instead of on demand: an agent running a persistent embedding pipeline, a custom vision model, or a specialised audio processor registers once and receives routed jobs as demand arrives on the network.
 
 See <LinkArrow href="/v2/developers/build/compute/byoc/overview" label="BYOC Overview" newline={false} /> for the container interface and registration steps.
 
-<CustomDivider middleText="VTuber and Streaming Agents" />
+<CustomDivider />
 
 ## Autonomous Streaming Agents
 
@@ -139,7 +138,7 @@ The architecture combines the `live-video-to-video` pipeline for real-time avata
 
 This is the primary production use case for agent-driven `live-video-to-video` traffic on the network as of 2025.
 
-<CustomDivider middleText="Agent SPE" />
+<CustomDivider />
 
 ## Agent SPE
 
@@ -149,13 +148,15 @@ The Agent SPE maintains a developer presence in the elizaOS Discord and provides
 
 <CustomDivider />
 
+The [Eliza Livepeer plugin tutorial](/v2/developers/build/tutorials/eliza-livepeer-plugin) is the complete walkthrough for building an agent with Livepeer inference. For Storyboard's agent runtime, see [@livepeer/agent](/v2/developers/build/ai-and-agents/agents/storyboard).
+
 ## Related Pages
 
 <CardGroup cols={2}>
   <Card
     title="Eliza Plugin Tutorial"
     icon="robot"
-    href="/v2/developers/tutorials/eliza-livepeer-plugin"
+    href="/v2/developers/build/tutorials/eliza-livepeer-plugin"
     arrow
     horizontal
   >

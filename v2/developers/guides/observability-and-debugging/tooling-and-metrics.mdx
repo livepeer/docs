@@ -26,7 +26,6 @@ lastVerified: '2026-05-13'
 ---
 
 import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
-import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
@@ -37,7 +36,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 go-livepeer emits Prometheus metrics when started with the `-metrics` flag. The `livepeer/monitor` Docker image bundles Prometheus, Grafana, and starter dashboard templates for monitoring both broadcaster (gateway) and orchestrator nodes.
 
-<CustomDivider middleText="Enabling Metrics" />
+<CustomDivider />
 
 ## Enabling Prometheus Metrics
 
@@ -59,9 +58,9 @@ livepeer -broadcaster -metrics -cliAddr 127.0.0.1:7935 ...
 livepeer -orchestrator -transcoder -metrics -cliAddr 127.0.0.1:7936 ...
 ```
 
-<CustomDivider middleText="livepeer/monitor" />
+<CustomDivider />
 
-## livepeer/monitor Docker Container
+## Livepeer Monitor Docker Container
 
 The `livepeer/monitor` container starts a Prometheus + Grafana stack pre-configured for go-livepeer. Point it at the metrics endpoints of your nodes via environment variables:
 
@@ -77,7 +76,7 @@ Grafana is available at `http://localhost:3000` after startup. The bundled dashb
 
 For Kubernetes deployments, the container supports automatic Prometheus service discovery via the `LP_PROM_KUBE_SCRAPE_VALUE` environment variable, which sets the `prometheus.io/scrape` label matcher.
 
-<CustomDivider middleText="Key Metrics" />
+<CustomDivider />
 
 ## Key Prometheus Metrics
 
@@ -96,7 +95,7 @@ go-livepeer exposes metrics with the `livepeer_` prefix. Useful metrics include:
 
 The full metric list is available at `/metrics` on any running go-livepeer node.
 
-<CustomDivider middleText="Custom Prometheus Setup" />
+<CustomDivider />
 
 ## Manual Prometheus Configuration
 
@@ -124,6 +123,8 @@ scrape_configs:
 The `livepeer_node_type` label is used by the bundled Grafana dashboard templates to distinguish node types. Including it when using custom Prometheus keeps dashboards compatible with the official templates.
 
 <CustomDivider />
+
+The `livepeer/monitor` Docker container is the fastest path to a working monitoring stack. Point it at your node's metrics endpoint and Grafana dashboards appear at `localhost:3000`.
 
 ## Related Pages
 

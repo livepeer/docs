@@ -35,7 +35,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 A Livepeer live event stream supports three features layered on top of basic RTMP ingest: simultaneous restreaming to third-party RTMP destinations (multistream), automatic recording to a VOD asset, and playback access control via JWT tokens or webhook verification.
 
-<CustomDivider middleText="Multistream" />
+<CustomDivider />
 
 ## Multistream Targets
 
@@ -70,7 +70,7 @@ const { stream } = await client.stream.create({
 
 The `profile` field specifies which transcoding rendition to forward. Omitting it sends the original ingest quality.
 
-<CustomDivider middleText="Recording" />
+<CustomDivider />
 
 ## Recording
 
@@ -95,7 +95,7 @@ When the stream goes idle, Livepeer generates a VOD asset from the recording. Th
 const recordings = await client.stream.getAll({ streamId: stream.id });
 ```
 
-<CustomDivider middleText="Access Control" />
+<CustomDivider />
 
 ## Playback Access Control
 
@@ -134,7 +134,7 @@ const { stream } = await client.stream.create({
 
 For each playback request, Livepeer calls your webhook URL with the request context. Your application returns 200 to allow or 4xx to deny.
 
-<CustomDivider middleText="Stream Operations" />
+<CustomDivider />
 
 ## Updating and Terminating Streams
 
@@ -166,13 +166,13 @@ console.log(current.lastSeen);    // epoch ms of last frame received
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest-and-playback" arrow horizontal>
     RTMP ingest configuration and stream creation.
   </Card>
-  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod" arrow horizontal>
+  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod-and-recording" arrow horizontal>
     Working with recorded assets after a stream ends.
   </Card>
-  <Card title="Player" icon="play" href="/v2/developers/build/applications/player" arrow horizontal>
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/frontend-react-player" arrow horizontal>
     @livepeer/react Player for HLS and low-latency WebRTC playback.
   </Card>
   <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>

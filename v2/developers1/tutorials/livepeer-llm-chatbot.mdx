@@ -35,7 +35,7 @@ import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
 
 The Livepeer LLM endpoint accepts an OpenAI Chat Completions request body (`model`, `messages`) and returns OpenAI-shaped JSON. It supports Server-Sent Event streaming when `stream: true` is set. The request is a single `POST` to `https://livepeer.studio/api/beta/generate/llm`.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ The Livepeer LLM endpoint accepts an OpenAI Chat Completions request body (`mode
 
 The LLM pipeline runs on Ollama-compatible model runners on the Livepeer Network. `meta-llama/Meta-Llama-3.1-8B-Instruct` is the default warm model and requires 8 GB of VRAM on the Orchestrator side.
 
-<CustomDivider middleText="Direct Call" />
+<CustomDivider />
 
 ## First Call with curl
 
@@ -85,7 +85,7 @@ The response is OpenAI-shaped:
 }
 ```
 
-<CustomDivider middleText="Node Client" />
+<CustomDivider />
 
 ## Node Client
 
@@ -128,7 +128,7 @@ node chat.mjs
 
 The first request to a cold model takes 30 to 60 seconds. Subsequent requests on a warm model complete in 1 to 5 seconds depending on model size and output length.
 
-<CustomDivider middleText="Streaming" />
+<CustomDivider />
 
 ## Streaming
 
@@ -178,7 +178,7 @@ while (true) {
 
 Tokens print to the terminal as they arrive.
 
-<CustomDivider middleText="Browser UI" />
+<CustomDivider />
 
 ## Browser UI
 
@@ -292,13 +292,13 @@ node server.mjs
 
 Open `http://localhost:3000`. Type a message, click Send, watch tokens render in real time.
 
-<CustomDivider middleText="Models" />
+<CustomDivider />
 
 ## Model Selection
 
 Pass any Ollama-compatible model ID in the `model` field. The default warm model on the network is `meta-llama/Meta-Llama-3.1-8B-Instruct`. Other models cold-start on the first request, which adds initial latency. Network capability and warm-model lists change; check current availability at `tools.livepeer.cloud/ai/network-capabilities` before pinning a model in production.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -310,7 +310,7 @@ Pass any Ollama-compatible model ID in the `model` field. The default warm model
 
 **HTTP 429.** Rate limit reached. Sleep and retry; rate limits scale with Studio plan.
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

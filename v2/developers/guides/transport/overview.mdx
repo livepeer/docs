@@ -39,7 +39,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 Livepeer's video pipeline spans four distinct transport layers. The choice of protocol at each layer is determined by the requirements of that layer: encoder compatibility at ingest, CDN delivery at playback, sub-second latency in the browser, and persistent low-latency framing for real-time AI.
 
-<CustomDivider middleText="Protocol Map" />
+<CustomDivider />
 
 ## Protocol by Layer
 
@@ -85,7 +85,7 @@ Livepeer's video pipeline spans four distinct transport layers. The choice of pr
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="RTMP" />
+<CustomDivider />
 
 ## RTMP (Ingest)
 
@@ -95,9 +95,9 @@ The stream name is taken from the first path segment of the RTMP URL: `rtmp://lo
 
 RTMP is an ingest-only protocol in modern Livepeer deployments. Playback goes through HLS or WebRTC.
 
-See <LinkArrow href="/v2/developers/guides/transport/rtmp" label="RTMP" newline={false} /> for flag reference and stream key configuration.
+See <LinkArrow href="/v2/developers/guides/transport/trickle-protocol" label="RTMP" newline={false} /> for flag reference and stream key configuration.
 
-<CustomDivider middleText="HLS" />
+<CustomDivider />
 
 ## HLS (Playback)
 
@@ -105,9 +105,9 @@ HLS (HTTP Live Streaming) is the standard delivery format for VOD assets and sta
 
 HLS carries 5-15 seconds of glass-to-glass latency for live streams due to segment buffering. This is acceptable for event streams and VOD but not for interactive scenarios.
 
-See <LinkArrow href="/v2/developers/guides/transport/hls" label="HLS" newline={false} /> for manifest structure and ABR configuration.
+See <LinkArrow href="/v2/developers/guides/transport/trickle-protocol" label="HLS" newline={false} /> for manifest structure and ABR configuration.
 
-<CustomDivider middleText="WebRTC" />
+<CustomDivider />
 
 ## WebRTC (Low-Latency Live)
 
@@ -117,9 +117,9 @@ WHIP was standardised by the IETF as RFC 9725 in March 2025. It provides a singl
 
 WebRTC requires ICE server infrastructure (STUN/TURN) for NAT traversal. Livepeer's managed gateway infrastructure handles this; self-hosted gateways require ICE server configuration.
 
-See <LinkArrow href="/v2/developers/guides/transport/webrtc" label="WebRTC" newline={false} /> for WHIP/WHEP endpoint details and ICE configuration.
+See <LinkArrow href="/v2/developers/guides/transport/trickle-protocol" label="WebRTC" newline={false} /> for WHIP/WHEP endpoint details and ICE configuration.
 
-<CustomDivider middleText="Trickle" />
+<CustomDivider />
 
 ## Trickle (Real-Time AI)
 
@@ -134,13 +134,13 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/overview" la
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="RTMP" icon="broadcast" href="/v2/developers/guides/transport/rtmp" arrow horizontal>
+  <Card title="RTMP" icon="broadcast" href="/v2/developers/guides/transport/trickle-protocol" arrow horizontal>
     go-livepeer RTMP ingest: flags, stream keys, and webhook authentication.
   </Card>
-  <Card title="HLS" icon="film" href="/v2/developers/guides/transport/hls" arrow horizontal>
+  <Card title="HLS" icon="film" href="/v2/developers/guides/transport/trickle-protocol" arrow horizontal>
     HLS output format, ABR manifest structure, and segment delivery.
   </Card>
-  <Card title="WebRTC" icon="zap" href="/v2/developers/guides/transport/webrtc" arrow horizontal>
+  <Card title="WebRTC" icon="zap" href="/v2/developers/guides/transport/trickle-protocol" arrow horizontal>
     WHIP/WHEP endpoints, ICE configuration, and low-latency playback.
   </Card>
   <Card title="Real-Time AI Overview" icon="video" href="/v2/developers/build/ai-and-agents/realtime-ai/overview" arrow horizontal>

@@ -37,7 +37,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 Livepeer accepts live video via RTMP. A stream object holds the ingest configuration, transcoding profiles, and generates the HLS playback URL. The stream key embedded in the ingest URL authenticates the push; only a client with the correct key can publish to that stream.
 
-<CustomDivider middleText="Creating a Stream" />
+<CustomDivider />
 
 ## Stream Creation
 
@@ -82,7 +82,7 @@ result = client.stream.create(components.NewStreamPayload(
 stream = result.stream
 ```
 
-<CustomDivider middleText="Ingest Configuration" />
+<CustomDivider />
 
 ## Pushing a Stream
 
@@ -102,7 +102,7 @@ ffmpeg -re -i input.mp4 \
 
 The go-livepeer broadcaster gateway also accepts RTMP on port 1935 when running in broadcaster mode, routing segments directly through the Livepeer network without a managed API layer.
 
-<CustomDivider middleText="Transcoding Profiles" />
+<CustomDivider />
 
 ## Transcoding Profiles
 
@@ -122,7 +122,7 @@ Profile fields:
 
 The HLS manifest at `stream.playbackUrl` lists all renditions. ABR players select the appropriate rendition based on available bandwidth.
 
-<CustomDivider middleText="Webhooks" />
+<CustomDivider />
 
 ## Stream Events
 
@@ -167,16 +167,16 @@ Key stream events:
 ## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod" arrow horizontal>
+  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod-and-recording" arrow horizontal>
     Upload and transcode video-on-demand assets via the same SDK.
   </Card>
   <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>
     Access paths and workload comparison for Livepeer video.
   </Card>
-  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding" arrow horizontal>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding-direct-quickstart" arrow horizontal>
     Direct transcoding for applications managing their own segments.
   </Card>
-  <Card title="Player" icon="play" href="/v2/developers/build/applications/player" arrow horizontal>
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/frontend-react-player" arrow horizontal>
     Embed the @livepeer/react Player component to play back HLS streams.
   </Card>
 </CardGroup>

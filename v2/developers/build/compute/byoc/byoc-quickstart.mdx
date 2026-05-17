@@ -39,15 +39,15 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 By the end of this quickstart you'll have a custom Docker container running as a Bring Your Own Container (BYOC) pipeline on a local Livepeer network, a job routed to it through a gateway and orchestrator, and verified output coming back. The path uses a green-tint frame processor (the simplest possible BYOC contract) and `-network offchain` mode. Once this works, you understand the full BYOC lifecycle; production deployment is the same architecture against a registered orchestrator with on-chain payment attached.
 
-This is the Persona 3 activation moment. The transcoding quickstart proved the gateway-orchestrator-pipeline lifecycle; this quickstart proves you can plug arbitrary compute into it. The reference applications live at <LinkArrow href="" label="" newline={false} /> and the SDK at <LinkArrow href="" label="" newline={false} />.
+This is the Persona 3 activation moment. The transcoding quickstart proved the gateway-orchestrator-pipeline lifecycle; this quickstart proves you can plug arbitrary compute into it. The reference applications live at <LinkArrow href="/v2/developers/build/video/transcoding-direct-quickstart" label="transcoding quickstart" newline={false} /> and the SDK at <LinkArrow href="/v2/developers/build/video/transcoding-direct-quickstart" label="transcoding quickstart" newline={false} />.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
 Four things on one Linux amd64 machine:
 
-- `go-livepeer` binary or Docker (from the <LinkArrow href="" label="" newline={false} />)
+- `go-livepeer` binary or Docker (from the <LinkArrow href="/v2/developers/guides/local-development/overview" label="local development" newline={false} />)
 - Docker Engine 24 or later
 - Python 3.10 or later with `pip`
 - Four free terminals
@@ -55,10 +55,10 @@ Four things on one Linux amd64 machine:
 No GPU, no Arbitrum wallet, no API keys.
 
 <Note>
-  This quickstart assumes you completed the <LinkArrow href="" label="" newline={false} /> or have `go-livepeer` installed and verified. Run `./livepeer -version` to confirm.
+  This quickstart assumes you completed the <LinkArrow href="/v2/developers/guides/local-development/overview" label="local development" newline={false} /> or have `go-livepeer` installed and verified. Run `./livepeer -version` to confirm.
 </Note>
 
-<CustomDivider middleText="Processor Build" />
+<CustomDivider />
 
 ## Container Build
 
@@ -155,7 +155,7 @@ The simplest BYOC contract is one Python class with one method: receive raw byte
   </Step>
 </Steps>
 
-<CustomDivider middleText="Container Isolation Test" />
+<CustomDivider />
 
 ## Container Isolation Test
 
@@ -198,7 +198,7 @@ Before wiring into the network, confirm the container starts cleanly and accepts
   </Step>
 </Steps>
 
-<CustomDivider middleText="Network Wiring" />
+<CustomDivider />
 
 ## Network Wiring
 
@@ -255,7 +255,7 @@ The container is a capability. The orchestrator advertises that capability to th
   </Step>
 </Steps>
 
-<CustomDivider middleText="First Job" />
+<CustomDivider />
 
 ## First Job
 
@@ -320,7 +320,7 @@ The container is a capability. The orchestrator advertises that capability to th
   </Step>
 </Steps>
 
-<CustomDivider middleText="Lifecycle Exercised" />
+<CustomDivider />
 
 ## Job Lifecycle
 
@@ -338,7 +338,7 @@ Python client
 
 The full job lifecycle ran with custom compute in the middle. The only piece off-chain mode skips is the payment envelope; routing and execution are identical to a production gateway.
 
-Four ideas underpin what just happened.
+Four ideas underpin the completed run.
 
 **Capability.** A named identifier (`green-tint-cpu`) that the orchestrator advertises and the gateway routes against. Any unique string works. Production orchestrators publish their capability set to the on-chain registry.
 
@@ -346,9 +346,9 @@ Four ideas underpin what just happened.
 
 **FrameProcessor contract.** One required method: `process(bytes) -> bytes`. Optional `initialize()` runs once on container start; optional `shutdown()` runs on job end. Any Python library that runs in the container can be loaded in `initialize()`.
 
-**Per-second compute.** In on-chain mode, BYOC jobs are paid per second of GPU compute under <LinkArrow href="" label="" newline={false} />. Off-chain mode skips payment but exercises the same routing.
+**Per-second compute.** In on-chain mode, BYOC jobs are paid per second of GPU compute under <LinkArrow href="/v2/developers/guides/payments/per-second-compute" label="per-second compute" newline={false} />. Off-chain mode skips payment but exercises the same routing.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -376,7 +376,7 @@ Four ideas underpin what just happened.
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 
@@ -387,7 +387,7 @@ Four ideas underpin what just happened.
   <Card title="BYOC Production" icon="server" href="/v2/developers/build/compute/byoc/byoc-production">
     Public registry, container hosting, scaling, monitoring.
   </Card>
-  <Card title="BYOC SDK" icon="code" href="/v2/developers/resources/reference/byoc-sdk">
+  <Card title="BYOC SDK" icon="code" href="/v2/developers/resources/reference/sdks">
     `@muxionlabs/byoc-sdk` for browser clients with WebRTC streaming.
   </Card>
   <Card title="Per-Second Compute" icon="dollar-sign" href="/v2/developers/guides/payments/per-second-compute">
@@ -395,4 +395,4 @@ Four ideas underpin what just happened.
   </Card>
 </CardGroup>
 
-For ComfyUI-based real-time pipelines, ComfyStream is already BYOC-compatible. See <LinkArrow href="" label="" newline={false} />.
+For ComfyUI-based real-time pipelines, ComfyStream is already BYOC-compatible. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc" label="ComfyStream as BYOC" newline={false} />.

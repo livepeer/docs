@@ -30,14 +30,14 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>The live-video-to-video pipeline bills per wall-clock second of active inference. The gateway pays based on elapsed time at regular intervals rather than per output pixel or per request.</Tip>
+  <Tip>The live-video-to-video pipeline bills per wall-clock second of active inference. The gateway pays based on elapsed time at regular intervals, not per output pixel or per request.</Tip>
 </CenteredContainer>
 
 ---
 
-The `live-video-to-video` (Cascade) pipeline operates as a persistent streaming session rather than a discrete request-response exchange. Standard per-pixel or per-request billing does not map naturally to this model. Instead, Livepeer uses per-second compute billing for live AI: the gateway pays for the time the orchestrator's GPU is actively running inference for the session.
+The `live-video-to-video` (Cascade) pipeline operates as a persistent streaming session instead of a discrete request-response exchange. Standard per-pixel or per-request billing does not map naturally to this model. Instead, Livepeer uses per-second compute billing for live AI: the gateway pays for the time the orchestrator's GPU is actively running inference for the session.
 
-<CustomDivider middleText="Billing Model" />
+<CustomDivider />
 
 ## Fee Calculation
 
@@ -54,7 +54,7 @@ This fee is expressed in ETH (wei). The PM mechanism translates it into a ticket
 
 Payments are sent at regular intervals during the session. The orchestrator returns updated ticket parameters after each payment; the gateway uses those parameters for the next payment in the series.
 
-<CustomDivider middleText="Orchestrator Pricing" />
+<CustomDivider />
 
 ## Configuring Pricing
 
@@ -76,11 +76,11 @@ Orchestrators set per-second pricing for AI pipelines in `aiModels.json`. The pr
 
 Gateways set a maximum acceptable price via `-maxPricePerUnit`. Orchestrators whose `price_per_unit` exceeds this maximum are excluded from selection for that session.
 
-<CustomDivider middleText="Payment State" />
+<CustomDivider />
 
 ## State Management
 
-Per-second billing requires stateful bookkeeping: the gateway must track how much time has elapsed since the last payment and how much ETH has been committed. In the remote signer model, this bookkeeping lives in the signer service rather than the gateway:
+Per-second billing requires stateful bookkeeping: the gateway must track how much time has elapsed since the last payment and how much ETH has been committed. In the remote signer model, this bookkeeping lives in the signer service instead of the gateway:
 
 - The gateway sends `signerState` (the accumulated bookkeeping state from the previous signing call) with each `signTicket` request
 - The signer updates the state (records elapsed time, adjusts balance) and returns the updated `signerState` alongside the signed ticket
@@ -90,7 +90,7 @@ This design makes the signer stateless across restarts: the gateway carries the 
 
 Failure to send the correct updated state (or sending stale state) leads to invalid tickets due to repeated nonces or incorrect fee calculations.
 
-<CustomDivider middleText="Session Lifecycle" />
+<CustomDivider />
 
 ## Payment Intervals
 

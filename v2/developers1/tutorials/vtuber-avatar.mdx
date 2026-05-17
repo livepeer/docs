@@ -36,7 +36,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
 The pipeline this tutorial builds is the inference layer that VTuber apps consume. It does not produce a rigged 3D model, a Live2D model, or face-tracking metadata. It produces a transformed video stream where each frame of the webcam feed has been run through a Stable Diffusion model conditioned on the input frame.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -47,7 +47,7 @@ The pipeline this tutorial builds is the inference layer that VTuber apps consum
 
 Two paths reach the same end state. Path A uses a RunPod template and skips local environment setup. Path B sets up ComfyStream on a local host.
 
-<CustomDivider middleText="Path A" />
+<CustomDivider />
 
 ## Path A: RunPod Template
 
@@ -69,7 +69,7 @@ The fastest route. RunPod provides a community template that boots ComfyStream w
 
 </StyledSteps>
 
-<CustomDivider middleText="Path B" />
+<CustomDivider />
 
 ## Path B: Local Install
 
@@ -103,7 +103,7 @@ python main.py --listen
 
 The exact dependency set drifts. If install fails, follow `github.com/livepeer/comfystream` and `github.com/livepeer/ComfyUI-Stream-Pack` README files at HEAD.
 
-<CustomDivider middleText="Workflow" />
+<CustomDivider />
 
 ## Base Workflow
 
@@ -124,7 +124,7 @@ Two parameters dominate latency and quality:
 
 Load the example workflow shipped with ComfyStream: in ComfyUI, click `Load` and select `custom_nodes/comfystream/workflows/base.json` (the filename in the repo at HEAD; check the path if it has moved).
 
-<CustomDivider middleText="First Run" />
+<CustomDivider />
 
 ## First Run
 
@@ -137,7 +137,7 @@ In the ComfyStream panel:
 
 Expected frame rates on the reference configuration (RTX 4090, TAESD on, short `t_index_list`, no TensorRT): 12 to 18 FPS at 512x512 input.
 
-<CustomDivider middleText="Performance" />
+<CustomDivider />
 
 ## Performance Tuning
 
@@ -149,7 +149,7 @@ Three changes most affect frame rate:
 
 **Diffusion step count.** Reduce `t_index_list` length. Each step adds a full denoising pass per frame.
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
 
 ## Next Steps
 

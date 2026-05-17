@@ -43,7 +43,7 @@ By the end of this tutorial you'll have a Next.js 15 app that accepts video file
 
 This is the Persona 2 activation moment for VOD. The live streaming tutorial proved the real-time path; this one proves the persistent-asset path. Most video platforms ship both; the Asset API plus the Stream API together cover the full "Mux with AI bolted on" surface.
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -54,7 +54,7 @@ This is the Persona 2 activation moment for VOD. The live streaming tutorial pro
 
 The Asset API is standardised across providers. The tutorial below works against any provider that implements the Livepeer Asset API or a self-hosted gateway built on the open spec.
 
-<CustomDivider middleText="Asset Lifecycle" />
+<CustomDivider />
 
 ## Asset Lifecycle
 
@@ -69,7 +69,7 @@ An asset passes through four phases between upload and playback.
 
 The transition from `uploading` to `processing` to `ready` happens server-side after the TUS upload completes. Five webhook events expose lifecycle transitions to your backend: `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`. For development the tutorial below polls `GET /asset/{id}`; production setups use the webhooks.
 
-<CustomDivider middleText="Project Bootstrap" />
+<CustomDivider />
 
 ## Project Bootstrap
 
@@ -106,7 +106,7 @@ The transition from `uploading` to `processing` to `ready` happens server-side a
   </Step>
 </Steps>
 
-<CustomDivider middleText="Upload Endpoints" />
+<CustomDivider />
 
 ## Upload Endpoints
 
@@ -165,7 +165,7 @@ export async function GET(
 
 The status endpoint returns the asset phase (`waiting`, `uploading`, `processing`, `ready`, `failed`). The client polls this endpoint until `ready` arrives.
 
-<CustomDivider middleText="Upload Component" />
+<CustomDivider />
 
 ## Upload Component
 
@@ -174,7 +174,7 @@ Save as `src/app/components/Uploader.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
+const { useState } = React;
 import * as tus from 'tus-js-client';
 
 interface UploadResult {
@@ -282,7 +282,7 @@ export function Uploader({
 
 Three things to notice. The TUS client uploads in 5 MB chunks, which means a dropped network connection resumes from the last successful chunk on retry. The polling loop runs at 5-second intervals for 10 minutes; production replaces this with a webhook subscription. The component is fully client-side after the asset is created; the file never touches your Next.js host.
 
-<CustomDivider middleText="Playback Page" />
+<CustomDivider />
 
 ## Playback Page
 
@@ -326,7 +326,7 @@ export default async function WatchPage({ params }: PageProps) {
 
 This is a server component. The `livepeer.playback.get()` call runs at request time on the server, builds the source array via `getSrc()`, and hands it to the Player. The Player accepts HLS, MP4, and WebRTC source candidates; for VOD it picks HLS by default and falls through to MP4 if the asset has static MP4 renditions enabled.
 
-<CustomDivider middleText="Home Page" />
+<CustomDivider />
 
 ## Home Page
 
@@ -335,8 +335,8 @@ Save as `src/app/page.tsx`:
 ```tsx
 'use client';
 
-import { useState } from 'react';
-import { Uploader } from './components/Uploader';
+const { useState } = React;
+// Import Uploader from ./components/Uploader.
 
 export default function HomePage() {
   const [uploaded, setUploaded] = useState<{
@@ -379,7 +379,7 @@ npm run dev
 
 Open `http://localhost:3000`. Pick a video file; watch the upload progress bar, then the processing phase, then the watch link. Click through to playback.
 
-<CustomDivider middleText="Webhooks" />
+<CustomDivider />
 
 ## Production Webhooks
 
@@ -397,7 +397,7 @@ Register a webhook endpoint at your gateway provider's webhook configuration pag
 
 The polling loop in the `Uploader` component above is replaceable with a webhook listener that updates a database row, which the client subscribes to via Server-Sent Events or WebSocket.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -417,7 +417,7 @@ Six things change between this local setup and a production deployment.
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -439,7 +439,9 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+You have a working upload-to-playback pipeline. The asset lifecycle (upload, transcode, play) is the same for all VOD content; the next step is adding [access control](/v2/developers/guides/auth-and-security/access-control) for gated content.
 
 ## Next Steps
 

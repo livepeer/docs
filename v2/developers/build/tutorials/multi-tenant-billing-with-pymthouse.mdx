@@ -46,7 +46,7 @@ This is the Persona 2 activation moment for SaaS. The VOD and live-streaming tut
   pymthouse is a community project by John ([@eliteprox](https://github.com/eliteprox)) in active beta, not an official Livepeer Foundation product. Verify compatibility with the current go-livepeer release before production deployment. The hosted service is free during beta.
 </Warning>
 
-<CustomDivider middleText="Required Tools" />
+<CustomDivider />
 
 ## Required Tools
 
@@ -57,7 +57,7 @@ This is the Persona 2 activation moment for SaaS. The VOD and live-streaming tut
 
 Self-hosting pymthouse adds a Postgres database, the Next.js app, and a `go-livepeer` signer sidecar. Full deployment instructions live in the pymthouse repository at <LinkArrow href="https://github.com/eliteprox/pymthouse" label="github.com/eliteprox/pymthouse" newline={false} />. The tutorial below uses the hosted path for the shortest time-to-running.
 
-<CustomDivider middleText="Architecture" />
+<CustomDivider />
 
 ## Pymthouse Responsibilities
 
@@ -91,7 +91,7 @@ Your App
 
 Your app exchanges its confidential client credentials for a user-scoped token, sends the inference request through pymthouse, and pymthouse handles ticket signing and usage recording transparently.
 
-<CustomDivider middleText="Pymthouse Setup" />
+<CustomDivider />
 
 ## Pymthouse Setup
 
@@ -117,7 +117,7 @@ Your app exchanges its confidential client credentials for a user-scoped token, 
   </Step>
 </Steps>
 
-<CustomDivider middleText="Project Bootstrap" />
+<CustomDivider />
 
 ## Project Bootstrap
 
@@ -151,7 +151,7 @@ Your app exchanges its confidential client credentials for a user-scoped token, 
   </Step>
 </Steps>
 
-<CustomDivider middleText="User Provisioning" />
+<CustomDivider />
 
 ## User Provisioning
 
@@ -244,7 +244,7 @@ export async function mintUserToken(userId: string) {
 
 The admin token (`client_credentials` grant) is your app authenticating to pymthouse. The user token (RFC 8693 token exchange) is one of your end users authenticating through your app's namespace. Cache the admin token in memory; mint user tokens per request.
 
-<CustomDivider middleText="Inference Endpoint" />
+<CustomDivider />
 
 ## Inference Endpoint
 
@@ -300,7 +300,7 @@ export async function POST(req: Request) {
 
 Two things differ from a direct Livepeer call. First, the request goes to pymthouse's inference endpoint, not directly to the Livepeer gateway; pymthouse forwards after signing. Second, the bearer token is the user-scoped pymthouse token, not a static gateway API key. The token tells pymthouse who to bill.
 
-<CustomDivider middleText="Usage Dashboard" />
+<CustomDivider />
 
 ## Usage Dashboard
 
@@ -402,7 +402,7 @@ export default async function Dashboard() {
 
 The `total_eth` value is derived from the wei-denominated source; precision degrades past 8 decimals because of JavaScript number conversion. For exact billing display, keep the value in wei and format with a BigInt-aware decimal library.
 
-<CustomDivider middleText="Production" />
+<CustomDivider />
 
 ## Production Considerations
 
@@ -420,7 +420,7 @@ Five things change between this local setup and a production deployment.
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
-<CustomDivider middleText="Common Errors" />
+<CustomDivider />
 
 ## Common Errors
 
@@ -442,7 +442,9 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Next Steps" />
+<CustomDivider />
+
+You have a working multi-tenant app with per-user billing backed by pymthouse's OIDC identity and usage ledger. The same pattern extends beyond AI inference to any Livepeer pipeline type.
 
 ## Next Steps
 
