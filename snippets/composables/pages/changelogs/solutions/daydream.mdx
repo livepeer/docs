@@ -46,6 +46,33 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="Scope: v0.2.5" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.5", description: "This release focuses on LTX-2 improvements and a sweep of bug fixes and stability improvements." }} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
+  ## Scope: v0.2.5
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **LTX-2 improvements** – Skips CPU offload on high-VRAM GPUs for faster generation, and the first pipeline call now waits for stream-wired prompts so your intended prompt lands on the first frame.
+  - **Portable workflow exports** – Workflow exports now bundle referenced images, audio, and video so shared workflows work out of the box on import.
+  - **Inline pipeline error surfacing** – Pipeline failures appear as toasts and inline overlays on sinks and Video Output, with clearer fatal-error handling.
+
+  #### Updates
+
+  - **Local sinks while connected to cloud** – Syphon, NDI, and Spout sinks keep working when running in cloud mode, with cloud-rendered frames teed into local senders.
+  - **Connected parameter edges honored at session start** – Producer-node values flow into the initial session payload instead of being overwritten by stale defaults.
+
+  #### Bug Fixes
+
+  - **A/V desync after hold/resume** – Audio and video buffers are now flushed on pipeline discontinuity to prevent drift.
+  - **LoRA compatibility** – Incompatible LoRAs now fail fast with a typed error naming the mismatched layer, and the LoRA picker warns when a configured path is missing.
+  - **Workflow imports with embedded media** – Increased the trickle JSONL reader size so larger embedded-asset imports succeed.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.2.5" iconLeft="github" />
+</Update>
+
 <Update label="Scope: v0.2.4" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.4", description: "This release introduces the Node Abstraction, LTX-2 improvements, and a sweep of UX polish and bug fixes." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.4
 
