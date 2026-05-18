@@ -26,12 +26,4 @@
 | `operations/scripts/snippets/test-scripts.sh` | Snippet test runner — runs basic validation on snippet scripts | `bash operations/scripts/snippets/test-scripts.sh [flags]` | docs |
 | `operations/scripts/validators/content/language-translation/test-mintlify-version-language-toggle.js` | Mintlify language toggle checker — validates Mintlify version supports language toggle feature | `node operations/scripts/i18n/test-mintlify-version-language-toggle.js [flags]` | docs |
 | `operations/scripts/validators/content/structure/test-v2-pages.js` | V2 page tester — validates v2 pages via Puppeteer browser rendering | `node operations/scripts/test-v2-pages.js [flags]` | docs |
-| `operations/scripts/x-archive/.verify-large-change.sh` | Large change verifier — blocks or warns when a commit touches an unusually large number of files | `bash operations/scripts/verify/.verify-large-change.sh [flags]` | docs |
-| `operations/scripts/x-archive/batch-update-og-image.sh` | Deprecated wrapper for the legacy bulk OG image replacement helper. Use the canonical OG generator workflow instead. | `bash tools/dev/batch-update-og-image.sh` | docs |
-| `operations/scripts/x-archive/codex-safe-merge-with-stash.js` | Deprecated compatibility shim — blocks stash-based Codex merge flow and directs users to task-finalize, lock-release, and task-cleanup | `node operations/scripts/codex-safe-merge-with-stash.js [flags]` | docs |
-| `operations/scripts/x-archive/pre-commit-v1` | Pre-commit hook orchestrator — runs structural checks, unit tests, codex validation, and docs-index freshness check before allowing commit | `bash .githooks/pre-commit [flags]` | docs |
-| `operations/scripts/x-archive/replace-og-image.py` | Deprecated wrapper for the legacy OG image replacement helper. Use the canonical OG generator workflow instead. | `python3 tools/dev/replace-og-image.py` | docs |
-| `operations/scripts/x-archive/seo-generator-safe.js` | Deprecated wrapper for the legacy safe SEO generator. Use the canonical OG generator workflow instead. | `node tools/dev/seo-generator-safe.js` | docs |
-| `operations/scripts/x-archive/update-all-og-images.js` | Deprecated wrapper for legacy bulk OG image replacement. Use the canonical OG generator workflow instead. | `node tools/dev/update-all-og-images.js` | docs |
-| `operations/scripts/x-archive/update-og-image.js` | Deprecated wrapper for legacy OG image replacement. Use the canonical OG generator workflow instead. | `node tools/dev/update-og-image.js` | docs |
 {/* SCRIPT-INDEX:END */}

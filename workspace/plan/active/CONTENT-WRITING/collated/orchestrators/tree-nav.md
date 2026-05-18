@@ -1,1 +1,0 @@
-/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-tree-nav.md

@@ -1,7 +1,0 @@
-## Pages
-
-## Scripts
-
-## Components
-
-## Other ?

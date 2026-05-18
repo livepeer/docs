@@ -1,1 +1,0 @@
-../decisions/cross-tab-journeys.md

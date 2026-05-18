@@ -167,34 +167,6 @@ function detectBackupArtifacts(issues, files) {
     });
 }
 
-function detectPlaceholderScripts(issues) {
-  const targets = [
-    'operations/scripts/archive/fixtures/allowed.js',
-    'operations/scripts/archive/fixtures/allowed-script.js',
-    'operations/scripts/archive/fixtures/allowed-test.js'
-  ];
-
-  targets.forEach((target) => {
-    if (!fs.existsSync(path.join(REPO_ROOT, target))) return;
-    const text = readText(target);
-    const stripped = text
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\/\/.*$/gm, '')
-      .trim();
-
-    if (/^test\s*$/.test(stripped)) {
-      addIssue(issues, {
-        id: 'placeholder-script',
-        title: 'Placeholder script is discoverable as runnable',
-        severity: 'critical',
-        path: target,
-        evidence: 'Script body is only `test` and fails when executed.',
-        recommendation: 'Quarantine or replace with explicit fixture guard that exits 0 with clear message.'
-      });
-    }
-  });
-}
-
 function detectDuplicatePairs(issues, files) {
   const rootScripts = files
     .filter((file) => file.relPath.startsWith('operations/scripts/'))
@@ -333,7 +305,6 @@ function main() {
 
   const issues = [];
   detectBackupArtifacts(issues, files);
-  detectPlaceholderScripts(issues);
   detectDuplicatePairs(issues, files);
   detectReportBloat(issues);
   detectScriptAuditSignals(issues);
