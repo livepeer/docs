@@ -1,0 +1,121 @@
+---
+title: File Placement Reference
+sidebarTitle: File Placement
+description: >-
+  Decision guide for where to place component and script files. Canonical placement
+  rules derived from the component and script governance frameworks.
+keywords:
+  - file placement
+  - component placement
+  - script placement
+  - folder structure
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-07
+sourceDoc: workspace/thread-outputs/research/component-script-placement-reference.md
+---
+
+# File Placement Reference
+
+Read this before writing any component or script file. Canonical placement rules derived from the [component framework](/docs-guide/frameworks/component-framework-canonical) and [script framework](/docs-guide/frameworks/script-framework) governance specifications.
+
+---
+
+## Components
+
+Root: `snippets/components/`
+
+### Categories (ask these questions in order)
+
+| Question | If yes | Folder |
+|---|---|---|
+| Is it a single visual atom with no children, no fetching, no arrangement? | **element** | `elements/` |
+| Does it hold, group, or spatially arrange other components? | **wrapper** | `wrappers/` |
+| Does it take content and present it in a formatted way? | **display** | `displays/` |
+| Is it part of the page's outer structure, typically used once? | **scaffolding** | `scaffolding/` |
+| Does it fetch, embed, or bind to external/third-party data? | **integrator** | `integrators/` |
+| Is it a non-component config/theme object? | **config** | `config/` |
+
+### Sub-niches by category
+
+- **elements:** a11y, buttons, callouts, icons, images, links, math, social, spacing, text
+- **wrappers:** accordions, cards, containers, grids, lists, steps, tables
+- **displays:** code, diagrams, quotes, response-fields, video
+- **scaffolding:** frame-mode, heroes, portals
+- **integrators:** blog, embeds, feeds, video-data
+
+### Placement path
+
+```
+snippets/components/<category>/<subniche>/ComponentName.jsx
+```
+
+### Common mistakes
+
+| Wrong | Right | Why |
+|---|---|---|
+| BadgeWrapper in `elements/` | BadgeWrapper in `wrappers/` | Category is determined by what the component DOES, not what it is named after |
+| New component in closest-sounding folder | Read the 6 questions above | Pattern-matching on name produces wrong placement. Use the decision questions |
+| Component in repo root | Never | All components go in `snippets/components/<category>/<subniche>/` |
+
+### Required JSDoc header (7 tags)
+
+```
+@component, @type, @subniche, @status, @description, @accepts, @dataSource (if integrator)
+```
+
+---
+
+## Scripts
+
+Root: `operations/scripts/`
+
+### Types (Layer 1)
+
+| Type | Folder | What it does |
+|---|---|---|
+| **audit** | `audits/` | Read-only scan, measure, report |
+| **generator** | `generators/` | Produce new files from source data |
+| **validator** | `validators/` | Enforce rules with pass/fail gate |
+| **remediator** | `remediators/` | Bulk fix or repair existing files |
+| **dispatch** | `dispatch/` | Dispatch work to other scripts or agents |
+| **automation** | `automations/` | Automated pipelines: translation, data fetching, transforms |
+
+### Concerns (Layer 2)
+
+| Concern | Folder | What it covers |
+|---|---|---|
+| **content** | `content/` | Docs pages, copy, SEO, veracity, quality |
+| **components** | `components/` | Component library, registry, CSS, naming |
+| **governance** | `governance/` | Scripts about scripts, repo structure, agent docs |
+| **ai** | `ai/` | LLM files, agent packaging, skills sync |
+
+### Placement path
+
+```
+operations/scripts/<type>/<concern>/<niche>/script-name.js
+```
+
+### Required JSDoc header (11 tags, strict order)
+
+```
+@script, @type, @concern, @niche, @purpose, @description, @mode, @pipeline, @scope, @usage, @policy
+```
+
+---
+
+## Before writing ANY file
+
+1. Determine the category using the decision questions (components) or type+concern (scripts)
+2. Check the target folder exists
+3. If unsure, state: "This component does [X]. That makes it a [category] because [reasoning]. Placing at [path]. Confirm?"
+4. Never place files based on name pattern-matching. Always reason from what the component/script DOES
+
+---
+
+## Canonical sources
+
+- Components: [Component Framework](/docs-guide/frameworks/component-framework-canonical)
+- Scripts: [Script Framework](/docs-guide/frameworks/script-framework)
+- Repo structure: [Repo Structure](/docs-guide/frameworks/repo-structure)

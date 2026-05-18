@@ -54,7 +54,7 @@ Streamplace solves three integration scenarios that the lower-level Livepeer pri
 | Decentralised social platform needing provenance | C2PA signing and Ethereum attestation on every video segment |
 | Web3 app needing censorship-resistant streaming | Self-hostable node with Livepeer network transcoding |
 
-The integration path is a Streamplace node plus the `@streamplace/sdk` TypeScript package. The node handles ingest, segmentation, provenance signing, and transcoding dispatch to Livepeer; the SDK gives your app a typed client and a React player component.
+The integration path is a Streamplace node plus the SDK package documented by the Streamplace team. The node handles ingest, segmentation, provenance signing, and transcoding dispatch to Livepeer; the SDK gives your app a typed client and a React player component.
 
 <CustomDivider />
 
@@ -65,14 +65,14 @@ Streamplace runs production BYOC workloads on the Livepeer network. The relation
 | Layer | Component |
 |---|---|
 | Application | Your AT Protocol or Web3 app |
-| Video API | `@streamplace/sdk`, `StreamplacePlayer` React component |
+| Video API | Streamplace SDK, `StreamplacePlayer` React component |
 | Node | Streamplace node binary (ingest, provenance, dispatch) |
 | Network | Livepeer gateway and orchestrator pool |
 | Compute | BYOC containers running on Livepeer orchestrators |
 
 The Streamplace node is the boundary between your application and the Livepeer network. Most developers integrate at the SDK layer and let the node handle the network plumbing. Operators self-host the node for full control; managed deployments use the Streamplace-operated node infrastructure.
 
-For context on BYOC as the underlying compute mechanism, see <LinkArrow href="/v2/developers/build/compute/byoc/overview" label="BYOC Overview" newline={false} />. For the AI Jobs API path without the AT Protocol layer, see <LinkArrow href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart" label="AI Jobs Direct Quickstart" newline={false} />.
+For context on BYOC as the underlying compute mechanism, see [BYOC Overview](/v2/developers/build/compute/byoc/overview). For the AI Jobs API path without the AT Protocol layer, see [AI Jobs Direct Quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart).
 
 <CustomDivider />
 
@@ -101,10 +101,10 @@ Time to first stream is under fifteen minutes following the canonical guide.
 
 | Resource | Link |
 |---|---|
-| Streamplace homepage | <LinkArrow href="https://stream.place" label="stream.place" newline={false} /> |
-| Streamplace documentation | <LinkArrow href="https://docs.stream.place" label="docs.stream.place" newline={false} /> |
-| Streamplace repository | <LinkArrow href="https://git.stream.place" label="git.stream.place" newline={false} /> |
-| Streamplace GitHub mirror | <LinkArrow href="https://github.com/streamplace/streamplace" label="github.com/streamplace/streamplace" newline={false} /> |
+| Streamplace homepage | [stream.place](https://stream.place) |
+| Streamplace documentation | [docs.stream.place](https://docs.stream.place) |
+| Streamplace repository | [git.stream.place](https://git.stream.place) |
+| Streamplace GitHub mirror | [github.com/streamplace/streamplace](https://github.com/streamplace/streamplace) |
 | Streamplace Discord | Available via the Solutions overview |
 
 For deep technical questions about Streamplace internals, the architecture and provenance documentation at `docs.stream.place` is the authoritative source. The Streamplace team maintains it directly.
@@ -112,6 +112,14 @@ For deep technical questions about Streamplace internals, the architecture and p
 <CustomDivider />
 
 Your Streamplace BYOC container is running on the network. The same container pattern works for any Python model; swap the inference logic inside `process_frame()` and redeploy.
+
+## AI agent prompt
+
+```text
+Build the "Streamplace BYOC Integration" tutorial by following the current Streamplace documentation as the source of truth. Verify the install path from https://stream.place/docs and the active repository metadata from https://github.com/streamplace/streamplace before choosing package names. Create a minimal TypeScript app that connects to a Streamplace node, starts or references a livestream, embeds the Streamplace player component documented upstream, and records the Livepeer/BYOC relationship in comments. Use placeholders for STREAMPLACE_NODE_URL=<node URL>, STREAMPLACE_AUTH_TOKEN=<token if required>, and LIVEPEER_GATEWAY_URL=<gateway URL if required>. Do not assume @streamplace/sdk is published to npm unless the package check succeeds; if it is unavailable, install exactly as the Streamplace docs prescribe.
+```
+
+<CustomDivider />
 
 ## Next Steps
 

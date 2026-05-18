@@ -1,0 +1,135 @@
+---
+title: Data Integration Pipeline
+sidebarTitle: Data Integration
+description: >-
+  Full pipeline reference for external data feeds. Covers social feeds, changelogs,
+  contract addresses, release versions, translations, and freshness monitoring.
+keywords:
+  - data integration
+  - external feeds
+  - social feeds
+  - changelogs
+  - contract addresses
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-08
+---
+
+# Data Integration Pipeline
+
+> **Gate:** P5/P5-auto (scheduled with auto-commit) + P6 (manual dispatch)
+> **Trigger:** Cron schedules (weekly), repository_dispatch, workflow_dispatch
+> **Workflows:** `integrator-copy-update-*.yml` + `integrator-maintenance-update-*.yml`
+
+---
+
+## Overview: what feeds into the docs
+
+```mermaid
+graph LR
+    subgraph External Sources
+        DISCORD["Discord API"]
+        YOUTUBE["YouTube API"]
+        GITHUB["GitHub Releases"]
+        FORUM["Forum API"]
+        GHOST["Ghost Blog RSS"]
+        RSS["External RSS"]
+        CHAIN["Blockchain RPC"]
+    end
+
+    subgraph Integrator Scripts
+        FD["fetch-discord-data"]
+        FY["fetch-youtube-data"]
+        FG["fetch-github-data"]
+        FF["fetch-forum-data"]
+        FB["fetch-ghost-blog-data"]
+        FR["fetch-rss-blog-data"]
+        FC["fetch-contract-addresses"]
+        FL["update-livepeer-release"]
+    end
+
+    subgraph Data Files
+        DD["discordData.jsx"]
+        YD["youtubeData.jsx"]
+        GD["githubData.jsx"]
+        FDD["forumData.jsx"]
+        BD["ghostBlogData.jsx"]
+        RD["rssData.jsx"]
+        CD["contract-addresses/*.json"]
+        LR["latestRelease.jsx"]
+    end
+
+    DISCORD --> FD --> DD
+    YOUTUBE --> FY --> YD
+    GITHUB --> FG --> GD
+    FORUM --> FF --> FDD
+    GHOST --> FB --> BD
+    RSS --> FR --> RD
+    CHAIN --> FC --> CD
+    GITHUB --> FL --> LR
+```
+
+---
+
+## Feed schedule
+
+| Feed | Workflow | Schedule | Source | Output |
+|------|----------|----------|--------|--------|
+| Discord announcements | `integrator-copy-update-discord-data.yml` | Weekly | Discord API (bot token) | `snippets/data/social-feeds/discordAnnouncementsData.jsx` |
+| YouTube videos | `integrator-copy-update-youtube-data.yml` | Weekly | YouTube Data API | `snippets/data/social-feeds/youtubeData.jsx` |
+| GitHub activity | `integrator-copy-update-github-data.yml` | Weekly | GitHub API | `snippets/data/social-feeds/githubData.jsx` |
+| Forum posts | `integrator-copy-update-forum-data.yml` | Weekly | Forum API | `snippets/data/social-feeds/forumData.jsx` |
+| Ghost blog | `integrator-copy-update-ghost-blog-data.yml` | Weekly | RSS (blog.livepeer.org) | `snippets/data/social-feeds/ghostBlogData.jsx` |
+| RSS blogs | `integrator-copy-update-rss-blog-data.yml` | Weekly | External RSS feeds | `snippets/data/social-feeds/rssData.jsx` |
+| Changelogs | `integrator-copy-update-changelogs.yml` | Weekly Monday | GitHub/GitLab Releases | `snippets/data/changelogs/{product}/CHANGELOG.json` |
+| Contract addresses | `integrator-maintenance-update-contract-addresses.yml` | On-demand | Blockchain RPC + Etherscan | `snippets/data/contract-addresses/*.json` |
+| Release version | `integrator-maintenance-update-release-version.yml` | On-demand | GitHub Releases (go-livepeer) | `snippets/data/globals/latestRelease.jsx` |
+| Translations | `integrator-copy-update-translations.yml` | On-demand | OpenRouter LLM API | `v2/{language}/**/*.mdx` |
+| Large assets | `integrator-maintenance-update-large-assets.yml` | Manual | Git history | Branch migration logs |
+
+---
+
+## Freshness monitoring
+
+```mermaid
+graph TD
+    CRON["Daily 08:00 UTC<br/>audit-health-scan-data-freshness.yml"] --> SCAN["Check file modification dates"]
+    SCAN --> GREEN["GREEN: < 24h old"]
+    SCAN --> YELLOW["YELLOW: 24-72h old"]
+    SCAN --> RED["RED: > 72h stale"]
+    RED --> ISSUE["Create GitHub issue<br/>health:data-freshness label"]
+```
+
+**Monitored files:**
+- `snippets/data/social-feeds/ghostBlogData.jsx`
+- `snippets/data/social-feeds/discordAnnouncementsData.jsx`
+- `snippets/data/social-feeds/forumData.jsx`
+- `snippets/data/social-feeds/youtubeData.jsx`
+- `snippets/data/showcase-feed/showcaseData.jsx`
+- `snippets/data/globals/latestRelease.jsx`
+
+---
+
+## Contract addresses pipeline (detailed)
+
+```mermaid
+graph TD
+    TRIGGER["Manual dispatch or<br/>repository_dispatch"] --> FETCH["fetch-contract-addresses.js"]
+    FETCH --> DISCOVER["Discovery<br/>(known addresses)"]
+    DISCOVER --> TRUTH["Truth recovery<br/>(blockchain RPC calls)"]
+    TRUTH --> PROVENANCE["Provenance resolution<br/>(ABI sources, Etherscan)"]
+    PROVENANCE --> ENRICH["Enrichment<br/>(metadata, networks)"]
+    ENRICH --> OUTPUT["snippets/data/<br/>contract-addresses/*.json"]
+    FETCH --> INCIDENTS["Incident reporting<br/>(missing/broken contracts)"]
+    INCIDENTS --> ISSUE["GitHub issue"]
+```
+
+---
+
+## Gaps
+
+- **No auto-retrigger for stale feeds:** Freshness monitor creates issues but does not re-dispatch the integrator workflow. Manual intervention required
+- **Social feed scripts in wrong location:** `.github/scripts/fetch-*.js` marked for migration to `operations/scripts/` per D-ACT-06 but not yet moved
+- **Translation pipeline manual only:** No scheduled periodic re-translation check. No webhook for upstream source changes
+- **Contract addresses workflow never dispatched on production branch:** Exists only on `docs-v2-dev`. Must be cherry-picked to `docs-v2` for live use (flagged P0)

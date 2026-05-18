@@ -1,0 +1,84 @@
+---
+title: Workspace Lifecycle Policy
+sidebarTitle: Workspace Lifecycle
+description: TTL and retention rules for all _workspace/ directories across the repo.
+owner: "@livepeer/docs-team"
+status: active
+version: "1.0"
+created: 2026-03-21
+lastUpdated: 2026-03-21
+---
+
+# Workspace Lifecycle Policy
+
+> Defines the retention rules and permitted contents for `_workspace/` directories across every folder in the repo.
+
+---
+
+## Scope
+
+| In scope | Out of scope |
+|----------|--------------|
+| All `_workspace/` directories at any depth in the repo | `workspace/` root directory (planning workspace — separate governance) |
+| Scratch files, drafts, notes, and archive content under `_workspace/` | `workspace/plan/active/` plan files (no TTL; removed when plan closes) |
+| `docs-guide/_workspace/`, `v2/**/_workspace/` | Content pages in nav paths |
+
+---
+
+## Standard `_workspace/` Subdirectory Structure
+
+Each `_workspace/` in a content section should use this structure:
+
+```
+_workspace/
+├── notes/      ← planning notes, decisions, todo lists (30-day TTL)
+├── drafts/     ← in-progress content not yet nav-ready (30-day TTL)
+├── research/   ← background reading, source material (30-day TTL)
+├── reviews/    ← review packets, audit outputs (30-day TTL)
+└── archive/    ← deprecated content staging (90-day TTL then delete)
+```
+
+Not every `_workspace/` needs all subdirs. Only create what is in use.
+
+---
+
+## Rules
+
+1. **30-day TTL — scratch directories** — files in `notes/`, `drafts/`, `research/`, and `reviews/` that have not been modified in 30 days must be actioned (promoted to nav, moved to archive, or deleted). Stale scratch is not an asset.
+
+2. **90-day TTL — archive** — files in `archive/` that have not been promoted back to active use in 90 days must be permanently deleted. Archive is a staging area, not long-term storage.
+
+3. **`_workspace/` is not a nav path** — no file under any `_workspace/` may appear in `docs.json`. All `_workspace/` directories are covered by `.mintignore`.
+
+4. **No non-standard folder names** — inside a content folder, planning files must live in `_workspace/`. Using `x-archived/`, `x-deprecated/`, `_archive/`, `_contextData_/`, `_move_me/`, or similar ad-hoc names is not permitted for new work. Existing non-standard folders must be migrated to `_workspace/` as part of folder governance work.
+
+5. **One `_workspace/` per folder** — each content folder gets exactly one `_workspace/`. Do not create multiple archive strategies or staging variants within the same folder.
+
+6. **`index.md` nav-stub exemption** — a bare `index.md` inside a `_workspace/` subdirectory used only to suppress Mintlify "empty folder" warnings is exempt from TTL. These stubs are 0-byte or contain only a comment. They are never promoted to nav.
+
+---
+
+## Enforcement
+
+| Mechanism | Trigger | Script / Tool |
+|-----------|---------|---------------|
+| Scheduled retention sweep | Weekly (Monday 08:00 UTC) | `.github/workflows/tasks-retention.yml` *(stub — not yet implemented)* |
+| Manual TTL review | Human review during plan execution | Human process; flagged during folder governance work |
+
+> **Note:** `tasks-retention.yml` is currently a stub. Full automated TTL enforcement is planned but not yet implemented. Until then, TTL rules are enforced by the human reviewer during active governance work.
+
+---
+
+## Exceptions
+
+- **`workspace/plan/active/` plan folders** — active plans have no TTL. They are closed (moved to `workspace/plan/complete/`) when work is done, not when they go stale.
+- **`workspace/plan/complete/` archive** — completed plan folders are retained indefinitely as a decision record unless explicitly purged.
+- **`_workspace/archive/` during active migration** — files being migrated as part of an approved plan step are exempt from TTL for the duration of that plan phase.
+
+---
+
+## Related
+
+- [Docs Guide Structure Policy](docs-guide-structure-policy)
+- [V2 Folder Governance](v2-folder-governance)
+- [Root Allowlist Governance](root-allowlist-governance)

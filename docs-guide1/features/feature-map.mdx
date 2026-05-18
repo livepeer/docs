@@ -1,0 +1,111 @@
+---
+title: Feature Map
+sidebarTitle: Feature Map
+description: Ownerless contributor map of the major Livepeer Docs repository systems, philosophy, governance contracts, and implementation surfaces.
+audience: developer
+pageType: overview
+purpose: overview
+status: current
+lastVerified: 2026-05-14
+keywords:
+  - livepeer
+  - feature map
+  - ownerless repository
+  - contributor guide
+  - repo systems
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Feature Map
+
+This repository is a docs-as-infrastructure system, not a folder of pages. The intended operating model is ownerless: every governed surface should declare its canonical source, validator, repair path, and primary gate so a contributor or agent can diagnose and repair drift without private maintainer context.
+
+Use this page as the high-level system map. Use the linked feature pages for implementation details and the gap analysis for purge, migration, and remediation work.
+
+## Core Philosophy
+
+| Principle | What it means in this repo | Primary evidence |
+| --- | --- | --- |
+| Ownerless governance | A surface is not production-ready unless it has one canonical source, one validator, one repair path, and one primary gate. | `docs-guide/policies/ownerless-governance.mdx`, `operations/governance/config/ownerless-governance-surfaces.json` |
+| Source of truth before convenience | Generated outputs, indexes, and registries must be regenerated from canonical inputs rather than hand-edited. | `docs-guide/policies/source-of-truth-policy.mdx`, `operations/governance/config/generated-artifacts.json` |
+| Root causes over bypasses | Failures should be repaired in the policy, generator, source data, or validator that owns the drift. Ignoring files or hiding failures is not sufficient. | `AGENTS.md`, `.githooks/`, `docs-guide/policies/quality-gates.mdx` |
+| Layered enforcement | Fast local checks stay in pre-commit; branch and AI task checks stay in pre-push; broad browser/link/network sweeps belong in CI or scheduled jobs. | `docs-guide/policies/infrastructure-principles.mdx`, `operations/tests/WHEN-TESTS-RUN.md` |
+| Public docs and repo ops are one product | Content, components, data feeds, automation, AI artifacts, and governance docs must evolve together. | `docs.json`, `v2/`, `snippets/`, `operations/`, `docs-guide/` |
+
+## Feature Index
+
+| Feature area | Purpose | Main page | Core surfaces |
+| --- | --- | --- | --- |
+| AI features and pipelines | Agent adapters, skills, AI-public artifacts, AI sitemap, llms.txt, and agent governance. | [AI Features](./ai-features.mdx) | `AGENTS.md`, `ai-tools/`, `.claude/`, `.codex/`, `.cursor/`, `.windsurf/`, `.augment/`, `llms.txt`, `sitemap-ai.xml` |
+| UI system | Component taxonomy, templates, snippets, styling, and MDX authoring primitives. | [UI System](./ui-system.mdx) | `snippets/components/`, `snippets/templates/`, `.vscode/*.code-snippets`, `style.css` |
+| Automations | GitHub Actions, scheduled checks, CI gates, dispatchers, remediators, and workflow governance. | [Automations](./automations.mdx) | `.github/workflows/`, `.github/workspace/`, `operations/scripts/`, `operations/tests/` |
+| Data integrations | OpenAPI specs, contract-address feeds, release data, social/community feeds, exchanges data, and generated reference data. | [Data Integrations](./data-integrations.mdx) | `api/`, `snippets/data/`, `operations/scripts/integrators/`, `operations/scripts/generators/` |
+| Adaptive architecture | Self-remediation model: validators detect drift, remediators repair drift, generators rebuild derived state, and reports identify backlog. | [Adaptive Architecture](./adaptive-architecture.mdx) | `operations/governance/`, `operations/scripts/remediators/`, `workspace/reports/`, `.githooks/` |
+| Contributor tools | Local CLI, hooks, editor extensions, preview tooling, scoped docs configs, and contribution workflows. | [Contributor Tools](./contributor-tools.mdx) | `tools/lpd`, `tools/dev/`, `tools/editor-extensions/`, `.githooks/`, `.vscode/` |
+| Gap analysis | Implementation-ready cleanup and alignment backlog. | [Gap Analysis](./gap-analysis.mdx) | `v2/`, `workspace/`, `docs-guide/features/`, `operations/scripts/`, `.github/workflows/` |
+
+## System Map
+
+| Layer | Runtime role | Canonical sources | Derived outputs | Primary gates |
+| --- | --- | --- | --- | --- |
+| Navigation and routing | Defines the published Mintlify site, versions, tabs, groups, redirects, branding, and route membership. | `docs.json` | Mintlify site, generated docs indexes, route lists | `operations/scripts/validators/content/structure/lint-structure.js`, `lpd test --staged` |
+| Content | User-facing docs, internal docs, legacy docs, and section workspaces. | `v2/`, `docs-guide/`, frozen `v1/` | `docs-index.json`, generated catalogs, browser reports | Content validators, page rendering checks, link audits |
+| Components and templates | Shared presentation and authoring primitives for MDX pages. | `snippets/components/`, `snippets/templates/` | component registry, component docs, VS Code snippets | component validators, template generator tests |
+| Data | Structured data consumed by pages and integrator components. | `api/`, `snippets/data/`, external source configs | generated API docs, snapshots, feed data, reference maps | OpenAPI reference audit, freshness checks, data-fetch workflows |
+| Operations | Scripts, tests, hooks, CI workflows, and repair commands. | `operations/scripts/`, `operations/tests/`, `.github/workflows/`, `.githooks/` | reports, generated governance maps, CI artifacts | pre-commit, PR CI, scheduled workflows |
+| Governance | Machine-readable policy, surface ownership by contract, root allowlist, generated artifact manifest, approval policy. | `operations/governance/config/`, `docs-guide/policies/`, `docs-guide/frameworks/` | repo governance maps, root allowlist, compliance reports | governance validators, approval labels, hook checks |
+| AI agent layer | Tool-specific adapters and reusable skills for agents. | `AGENTS.md`, native adapters, `ai-tools/ai-skills/` | agent packs, synced Codex skills, skill indexes | agent docs freshness, Codex branch contract checks |
+
+## Current Inventory Snapshot
+
+As of 2026-05-14, static inspection and repo audit commands found:
+
+| Inventory | Count or state |
+| --- | --- |
+| Root docs navigation page references | 1,561 total page references in `docs.json` |
+| v2 references in nav | 726 page references |
+| docs-guide references in nav | 55 page references |
+| Active v2 MDX outside workspaces/design lanes | 1,125 files |
+| GitHub workflows | 50 workflow files in `.github/workflows/` |
+| Operations scripts | 263 JS/SH/Python files under `operations/scripts/`, including archive and x-archive lanes |
+| Active JSX components | 59 JSX files under `snippets/components/`, including 24 in `x-archive/` |
+| AI skills | 34 `SKILL.md` workflows under `ai-tools/ai-skills/` |
+| V2 folder cleanup rows | 307 rows from the v2 folder governance cleanup matrix |
+| Script footprint findings | 24 findings: 0 critical, 0 high, 4 medium, 20 low |
+
+## Contributor Operating Loop
+
+1. Read the relevant governance entry point before editing: start with `docs-guide/policies/governance-index.mdx`.
+2. Identify the canonical source for the surface being changed.
+3. Change the source, generator, validator, or policy that owns the behavior.
+4. Regenerate derived outputs instead of hand-editing them.
+5. Run the smallest relevant validator, usually `lpd test --staged`.
+6. If a failure appears, fix the owning source or repair command rather than suppressing the failure.
+7. For route or nav work, treat `docs.json` as production infrastructure and validate route impact.
+
+## What Good Looks Like
+
+Every major feature should satisfy this contract:
+
+| Requirement | Acceptance check |
+| --- | --- |
+| Discoverable | The feature has a feature page, framework, policy, catalog entry, or generated registry entry. |
+| Governed | The canonical source and allowed write paths are documented. |
+| Validated | A contributor can run a deterministic check locally or in CI. |
+| Repairable | The repair path is exact and does not depend on private knowledge. |
+| Bounded | Workspaces, archives, generated files, and public pages are separated by structure and selection helpers. |
+| Purgeable | Legacy paths have explicit migration, archive, or deletion criteria. |
+
+## Related Pages
+
+- [AI Features](./ai-features.mdx)
+- [UI System](./ui-system.mdx)
+- [Automations](./automations.mdx)
+- [Data Integrations](./data-integrations.mdx)
+- [Adaptive Architecture](./adaptive-architecture.mdx)
+- [Contributor Tools](./contributor-tools.mdx)
+- [Gap Analysis](./gap-analysis.mdx)

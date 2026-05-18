@@ -16,8 +16,10 @@ keywords:
 'og:image:height': 630
 pageType: tutorial
 audience: developer
+purpose: build
 status: current
 lastVerified: 2026-04-05
+veracityStatus: verified
 ---
 
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
@@ -39,7 +41,7 @@ Combining IPFS with Livepeer creates a fully decentralised video pipeline: conte
 ## Prerequisites
 
 - Node.js 18 or later
-- An API key from [livepeer.com](https://livepeer.com)
+- A gateway provider API key or a self-hosted gateway that exposes the Livepeer Asset API
 - A web3.storage account and API token from [web3.storage](https://web3.storage)
 
 ```bash
@@ -84,7 +86,10 @@ npm install livepeer @web3-storage/w3up-client
     ```typescript
     import { Livepeer } from 'livepeer';
 
-    const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+    const client = new Livepeer({
+      apiKey: process.env.LIVEPEER_API_KEY,
+      serverURL: process.env.LIVEPEER_API_URL,
+    });
 
     // Import the IPFS-hosted video into Livepeer for transcoding
     const response = await client.asset.create({
@@ -126,7 +131,7 @@ npm install livepeer @web3-storage/w3up-client
     import * as Player from '@livepeer/react/player';
 
     export const IPFSVideoPlayer = ({ playbackId }: { playbackId: string }) => (
-      <Player.Root src={`https://livepeercdn.studio/asset/hls/${playbackId}/index.m3u8`}>
+      <Player.Root src={`${process.env.NEXT_PUBLIC_PLAYBACK_BASE_URL}/asset/hls/${playbackId}/index.m3u8`}>
         <Player.Container>
           <Player.Video />
           <Player.Controls />
@@ -139,6 +144,14 @@ npm install livepeer @web3-storage/w3up-client
   </StyledStep>
 
 </StyledSteps>
+
+<CustomDivider />
+
+## AI agent prompt
+
+```text
+Build the "Store and play videos on IPFS" tutorial as a runnable Node/TypeScript workflow. Create a fresh project, install livepeer and @web3-storage/w3up-client, and implement scripts that upload ./my-video.mp4 to web3.storage, import the resulting https://w3s.link/ipfs/<cid> URL into a Livepeer-compatible Asset API, poll until the asset is ready, and print the playback ID. Use these placeholders exactly: LIVEPEER_API_URL=<gateway asset API base URL>, LIVEPEER_API_KEY=<gateway provider API key>, WEB3_STORAGE_EMAIL=<email>, WEB3_STORAGE_SPACE_DID=<space DID>, NEXT_PUBLIC_PLAYBACK_BASE_URL=<provider playback base URL>. Do not use Livepeer Studio-specific URLs or keys. Include package.json scripts, TypeScript source files, .env.example, error handling for failed asset states, and a final verification command that proves a playback URL can be constructed from the returned playback ID.
+```
 
 <CustomDivider />
 

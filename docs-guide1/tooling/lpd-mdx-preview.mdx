@@ -1,0 +1,1178 @@
+---
+title: 'lpd-mdx-preview — VS Code Extension'
+sidebarTitle: 'MDX Preview'
+description: 'Canonical reference for the lpd-mdx-preview VS Code extension. Covers installation, usage, component rendering tiers, and every supported component with props.'
+pageType: reference
+purpose: source_of_truth
+audience: maintainer
+status: current
+lastVerified: '2026-04-04'
+keywords:
+  - vscode extension
+  - mdx preview
+  - mintlify preview
+  - livepeer components
+  - mermaid
+  - lpd-mdx-preview
+  - authoring tools
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+## Overview
+
+`lpd-mdx-preview` is a VS Code extension that renders `.mdx` and `.md` files in a side panel with governed Mintlify built-ins, Livepeer custom component renderers, and Mermaid diagrams. It is the primary local authoring preview tool for this repo, but runtime-dependent surfaces still need verification in a Mintlify dev session.
+
+**Keybinding:** `Cmd+Shift+V` (Mac) / `Ctrl+Shift+V` (Windows/Linux)
+
+**Location:** `tools/editor-extensions/lpd-mdx-preview/`
+
+<CustomDivider />
+
+## Repo Context
+
+<Tree>
+  <Tree.Folder name="tools/editor-extensions/lpd-mdx-preview" defaultOpen>
+    <Tree.File name="extension.js" />
+    <Tree.File name="package.json" />
+    <Tree.File name="README.md" />
+    <Tree.Folder name="lib">
+      <Tree.File name="mdx-parser.js" />
+      <Tree.File name="component-map.js" />
+      <Tree.File name="mintlify-components.js" />
+      <Tree.File name="webview-template.js" />
+    </Tree.Folder>
+    <Tree.Folder name="media">
+      <Tree.File name="preview.css" />
+      <Tree.File name="preview.js" />
+      <Tree.File name="icon.png" />
+      <Tree.File name="markdown-it.min.js" />
+      <Tree.File name="mermaid.min.js" />
+    </Tree.Folder>
+    <Tree.File name="lpd-mdx-preview-0.0.2.vsix" />
+  </Tree.Folder>
+</Tree>
+
+<CustomDivider />
+
+## Installation
+
+Works in VS Code, Cursor, and Windsurf (all VS Code forks). The same `.vsix` file installs in all three.
+
+**All editors at once (recommended):**
+
+```bash
+bash tools/editor-extensions/install.sh
+```
+
+Detects which editors are installed (`~/.vscode`, `~/.cursor`, `~/.windsurf`) and deploys to each.
+
+The installer verifies that the checked-in `.vsix` matches source before installing. If the package is stale, the install fails and prints the exact rebuild command.
+
+**Manual install:**
+
+Extensions sidebar → `...` menu → **Install from VSIX** → select `tools/editor-extensions/lpd-mdx-preview/lpd-mdx-preview-0.0.2.vsix`.
+
+**Rebuild after source changes:**
+
+```bash
+cd tools/editor-extensions/lpd-mdx-preview
+npx @vscode/vsce package --no-dependencies -o lpd-mdx-preview-0.0.2.vsix
+```
+
+Then re-run `install.sh` or reinstall manually.
+
+<CustomDivider />
+
+## Usage
+
+<AccordionGroup>
+  <Accordion title="Open preview">
+    Open any `.mdx` or `.md` file, then press `Cmd+Shift+V` (Mac) or `Ctrl+Shift+V` (Windows/Linux).
+
+    The preview opens in a side panel and updates automatically as you type (300ms debounce).
+  </Accordion>
+  <Accordion title="Theme">
+    The preview detects your VS Code colour theme automatically (`auto` mode). You can override this in settings:
+
+    ```json
+    "livepeer.mdxPreview.theme": "dark"
+    ```
+
+    Options: `auto` | `light` | `dark`
+  </Accordion>
+  <Accordion title="Frontmatter display">
+    Frontmatter is stripped from the preview body and rendered as a header bar showing: `title`, `pageType`, `audience`, `status`, `purpose`, and `lastVerified`.
+  </Accordion>
+  <Accordion title="Mermaid diagrams">
+    Fenced code blocks tagged with `mermaid` are rendered using the bundled Mermaid.js with Livepeer theme colours. Diagrams update live as you edit.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Component Rendering Tiers
+
+<StyledTable>
+  <thead>
+    <TableRow header>
+      <TableCell header>Tier</TableCell>
+      <TableCell header>Source</TableCell>
+      <TableCell header>Rendering</TableCell>
+      <TableCell header>Count</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**1 — Mintlify built-ins**</TableCell>
+      <TableCell>`lib/mintlify-components.js`</TableCell>
+      <TableCell>Styled HTML for common built-ins including callouts, cards, tabs, tables, Tree, and API doc primitives; `OpenAPI` remains descriptive</TableCell>
+      <TableCell>20+</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**2 — Livepeer custom**</TableCell>
+      <TableCell>`lib/component-map.js`</TableCell>
+      <TableCell>Full styled HTML matching component output — containers, dividers, links, media</TableCell>
+      <TableCell>~50</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**3 — Placeholder**</TableCell>
+      <TableCell>`lib/component-map.js` → `renderPlaceholder()`</TableCell>
+      <TableCell>Dashed border box with tag name + props visible; children rendered inside</TableCell>
+      <TableCell>All others</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+Custom components (your own project `.jsx` files) fall into Tier 3 — they render as labelled placeholders with their children content visible. Most Mintlify built-ins and the Livepeer component library render as styled HTML, but runtime-heavy built-ins such as `OpenAPI` remain approximate.
+</Note>
+
+<CustomDivider />
+
+## Component Reference
+
+### Tier 1 — Mintlify Built-ins
+
+<AccordionGroup>
+  <Accordion title="Note / Tip / Warning / Info">
+    **Purpose:** Callout boxes for supplementary information.
+
+    ```mdx
+    <Note>Standard info callout.</Note>
+    <Tip>Helpful suggestion.</Tip>
+    <Warning>Something to watch out for.</Warning>
+    <Info>Neutral informational note.</Info>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | _(none)_ | — | — | Content passed as children |
+  </Accordion>
+  <Accordion title="Callout">
+    **Purpose:** Generic callout with a custom Font Awesome icon.
+
+    ```mdx
+    <Callout icon="rocket">Custom callout with icon.</Callout>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `icon` | string | `info` | Font Awesome icon name (e.g. `rocket`, `star`) |
+  </Accordion>
+  <Accordion title="Card">
+    **Purpose:** Linked or unlinked content card with optional icon and arrow.
+
+    ```mdx
+    <Card title="Gateway Setup" icon="server" href="/v2/gateways/setup" arrow>
+      Run your first gateway in minutes.
+    </Card>
+
+    <Card title="Horizontal" icon="code" href="/v2/developers" arrow horizontal>
+      Displayed inline.
+    </Card>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Card heading |
+    | `icon` | string | — | Font Awesome icon name |
+    | `href` | string | — | Link target; wraps card in `<a>` |
+    | `arrow` | boolean | `false` | Appends `→` to title |
+    | `horizontal` | boolean | `false` | Inline flex layout |
+  </Accordion>
+  <Accordion title="CardGroup">
+    **Purpose:** Responsive grid wrapper for `<Card>` components.
+
+    ```mdx
+    <CardGroup cols={2}>
+      <Card title="One" />
+      <Card title="Two" />
+    </CardGroup>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `cols` | 1 \| 2 \| 3 \| 4 | `2` | Number of grid columns |
+  </Accordion>
+  <Accordion title="Tabs / Tab">
+    **Purpose:** Interactive tabbed content sections.
+
+    ```mdx
+    <Tabs>
+      <Tab title="On-chain" icon="link">Content for tab one.</Tab>
+      <Tab title="Off-chain" icon="cloud">Content for tab two.</Tab>
+    </Tabs>
+    ```
+
+    **Tab props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | `Tab` | Tab label |
+    | `icon` | string | — | Font Awesome icon name |
+  </Accordion>
+  <Accordion title="Accordion / AccordionGroup">
+    **Purpose:** Collapsible content sections. Rendered as `<details>/<summary>` in the preview.
+
+    ```mdx
+    <AccordionGroup>
+      <Accordion title="From a Cloud Background?" icon="cloud">
+        Content here.
+      </Accordion>
+    </AccordionGroup>
+    ```
+
+    **Accordion props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | `Details` | Summary/header text |
+    | `icon` | string | — | Font Awesome icon name |
+  </Accordion>
+  <Accordion title="Steps / Step">
+    **Purpose:** Numbered step-by-step walkthrough.
+
+    ```mdx
+    <Steps>
+      <Step title="Install dependencies">Run `npm install`.</Step>
+      <Step title="Configure">Set your environment variables.</Step>
+    </Steps>
+    ```
+
+    **Step props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Step heading |
+  </Accordion>
+  <Accordion title="Frame">
+    **Purpose:** Bordered container for isolating content visually. No props — content as children.
+
+    ```mdx
+    <Frame>
+      <img src="/path/to/image.png" />
+    </Frame>
+    ```
+  </Accordion>
+  <Accordion title="Columns">
+    **Purpose:** Two-column layout grid. No props.
+
+    ```mdx
+    <Columns>
+      <div>Left</div>
+      <div>Right</div>
+    </Columns>
+    ```
+  </Accordion>
+  <Accordion title="Expandable">
+    **Purpose:** Show/hide toggle for secondary content.
+
+    ```mdx
+    <Expandable title="Advanced options">Hidden until expanded.</Expandable>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | `Show more` | Toggle label |
+  </Accordion>
+  <Accordion title="CodeBlock">
+    **Purpose:** Code block container. Rendered as plain `<pre><code>` in the preview without syntax highlighting.
+
+    ```mdx
+    <CodeBlock language="bash">livepeer -gateway</CodeBlock>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `language` | string | — | Language identifier (e.g. `bash`, `json`) |
+  </Accordion>
+  <Accordion title="Icon">
+    **Purpose:** Inline Font Awesome icon.
+
+    ```mdx
+    <Icon icon="rocket" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `icon` | string | — | Font Awesome icon name |
+    | `name` | string | — | Alias for `icon` |
+  </Accordion>
+  <Accordion title="Update">
+    **Purpose:** Changelog or versioned annotation with a label.
+
+    ```mdx
+    <Update label="Q4 2025">Off-chain gateway mode shipped.</Update>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `label` | string | — | Date or version label |
+    | `date` | string | — | Alias for `label` |
+  </Accordion>
+  <Accordion title="ResponseField">
+    **Purpose:** API response field documentation row.
+
+    ```mdx
+    <ResponseField name="id" type="string">
+      Unique identifier for the job.
+    </ResponseField>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `name` | string | — | Field name (rendered in accent colour) |
+    | `type` | string | — | Data type label |
+  </Accordion>
+  <Accordion title="ParamField">
+    **Purpose:** API parameter documentation row.
+
+    ```mdx
+    <ParamField path="streamId" type="string" required>
+      Stream identifier passed in the URL path.
+    </ParamField>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `path` | string | — | Path parameter name |
+    | `query` | string | — | Query parameter name |
+    | `body` | string | — | Request-body field name |
+    | `header` | string | — | Header name |
+    | `type` | string | — | Data type label |
+    | `required` | boolean | `false` | Adds a required marker |
+  </Accordion>
+  <Accordion title="Danger">
+    **Purpose:** High-severity callout variant.
+
+    ```mdx
+    <Danger>Do not expose this secret in client-side code.</Danger>
+    ```
+  </Accordion>
+  <Accordion title="Badge">
+    **Purpose:** Inline pill label with accent styling.
+
+    ```mdx
+    <Badge color="var(--accent)">Preview</Badge>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `color` | string | `var(--accent)` | Accent colour used for border, text, and background tint |
+    | `text` | string | — | Fallback text when no children are passed |
+  </Accordion>
+  <Accordion title="CodeGroup">
+    **Purpose:** Group multiple code blocks in one bordered container.
+
+    ```mdx
+    <CodeGroup>
+      <CodeBlock language="bash">npm install</CodeBlock>
+      <CodeBlock language="bash">npm run dev</CodeBlock>
+    </CodeGroup>
+    ```
+  </Accordion>
+  <Accordion title="Tree / Tree.Folder / Tree.File">
+    **Purpose:** Repo-style file tree rendering using canonical Mintlify syntax.
+
+    ```mdx
+    <Tree>
+      <Tree.Folder name="src" defaultOpen>
+        <Tree.File name="index.js" />
+      </Tree.Folder>
+    </Tree>
+    ```
+
+    **Tree.Folder props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `name` | string | `folder` | Folder label |
+    | `defaultOpen` | boolean | `false` | Expands the folder by default |
+
+    **Tree.File props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `name` | string | `file` | File label |
+  </Accordion>
+  <Accordion title="OpenAPI">
+    **Purpose:** API reference embed. The preview renders a descriptive placeholder rather than the full interactive Mintlify API experience.
+
+    ```mdx
+    <OpenAPI method="get" path="/asset/{id}" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `method` | string | — | HTTP method label |
+    | `path` | string | — | API path shown in the placeholder |
+    | `openapi` | string | — | Alias for `path` |
+  </Accordion>
+  <Accordion title="StyledTable / TableRow / TableCell">
+    **Purpose:** Styled HTML table with header and body rows.
+
+    ```mdx
+    <StyledTable>
+      <TableRow header>
+        <TableCell header>Column A</TableCell>
+        <TableCell header>Column B</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Value</TableCell>
+        <TableCell>Value</TableCell>
+      </TableRow>
+    </StyledTable>
+    ```
+
+    **TableRow props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `header` | boolean | `false` | Renders row with header background |
+
+    **TableCell props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `header` | boolean | `false` | Renders as `<th>` with bold weight |
+  </Accordion>
+</AccordionGroup>
+
+### Tier 2 — Livepeer Custom Components
+
+#### Spacing
+
+<AccordionGroup>
+  <Accordion title="CustomDivider">
+    **Purpose:** Horizontal rule with optional centred label text.
+
+    **Location:** `snippets/components/elements/spacing/Divider.jsx`
+
+    ```mdx
+    <CustomDivider />
+    <CustomDivider />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `middleText` | string | — | Text centred in the divider |
+    | `text` | string | — | Alias for `middleText` |
+  </Accordion>
+  <Accordion title="Spacer">
+    **Purpose:** Explicit vertical whitespace block.
+
+    ```mdx
+    <Spacer height="48px" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `height` | string | `24px` | CSS height value |
+    | `size` | string | — | Alias for `height` |
+  </Accordion>
+  <Accordion title="Divider">
+    **Purpose:** Plain `<hr>` divider. No props.
+
+    ```mdx
+    <Divider />
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Containers
+
+<AccordionGroup>
+  <Accordion title="CenteredContainer">
+    **Purpose:** Constrains content width and centres it horizontally.
+
+    **Location:** `snippets/components/wrappers/containers/Containers.jsx`
+
+    ```mdx
+    <CenteredContainer maxWidth="960px">
+      Content here.
+    </CenteredContainer>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `maxWidth` | string | `100%` | CSS max-width value |
+  </Accordion>
+  <Accordion title="BorderedBox">
+    **Purpose:** Card-like container with a visible border.
+
+    ```mdx
+    <BorderedBox borderColor="#2d9a67" padding="24px">
+      Content here.
+    </BorderedBox>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `borderColor` | string | `var(--border)` | CSS border colour |
+    | `backgroundColor` | string | `var(--card-bg)` | CSS background colour |
+    | `padding` | string | `16px` | CSS padding |
+  </Accordion>
+  <Accordion title="FullWidthContainer">
+    **Purpose:** Forces content to full available width. No props.
+
+    ```mdx
+    <FullWidthContainer>Content here.</FullWidthContainer>
+    ```
+  </Accordion>
+  <Accordion title="FlexContainer">
+    **Purpose:** Flexbox layout wrapper.
+
+    ```mdx
+    <FlexContainer direction="row" gap="16px" align="center">
+      <div>Item A</div>
+      <div>Item B</div>
+    </FlexContainer>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `direction` | string | — | CSS `flex-direction` (`row`, `column`) |
+    | `gap` | string | `12px` | CSS gap |
+    | `align` | string | — | CSS `align-items` |
+    | `justify` | string | — | CSS `justify-content` |
+    | `wrap` | boolean | `false` | Enables `flex-wrap: wrap` |
+  </Accordion>
+  <Accordion title="GridContainer">
+    **Purpose:** CSS Grid layout wrapper.
+
+    ```mdx
+    <GridContainer columns="repeat(3, 1fr)" gap="16px">
+      <div>Cell 1</div>
+      <div>Cell 2</div>
+      <div>Cell 3</div>
+    </GridContainer>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `columns` | string | — | CSS `grid-template-columns` value |
+    | `gap` | string | `12px` | CSS gap |
+  </Accordion>
+  <Accordion title="ScrollBox">
+    **Purpose:** Scrollable container with a fixed maximum height.
+
+    ```mdx
+    <ScrollBox maxHeight="300px">Long content here.</ScrollBox>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `maxHeight` | string | `400px` | CSS max-height value |
+  </Accordion>
+</AccordionGroup>
+
+#### Diagrams
+
+<AccordionGroup>
+  <Accordion title="ScrollableDiagram">
+    **Purpose:** Horizontally scrollable wrapper for Mermaid or wide diagram content.
+
+    **Location:** `snippets/components/displays/diagrams/ScrollableDiagram.jsx`
+
+    ````mdx
+    <ScrollableDiagram title="Gateway Role Evolution" maxHeight="420px">
+    ```mermaid
+    flowchart LR
+      A --> B
+    ```
+    </ScrollableDiagram>
+    ````
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Label shown above the diagram |
+    | `maxHeight` | string | — | CSS max-height to constrain tall diagrams |
+  </Accordion>
+</AccordionGroup>
+
+#### Links
+
+<AccordionGroup>
+  <Accordion title="LinkArrow">
+    **Purpose:** Inline text link with `→` suffix.
+
+    **Location:** `snippets/components/elements/links/Links.jsx`
+
+    ```mdx
+    <LinkArrow href="/v2/gateways/concepts/capabilities" label="Gateway Capabilities" newline={false} />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `href` | string | `#` | Link target |
+    | `label` | string | — | Link text |
+    | `text` | string | — | Alias for `label` |
+    | `newline` | boolean | `true` | If `false`, renders inline (no line break) |
+  </Accordion>
+  <Accordion title="GotoLink">
+    **Purpose:** Arrow-prefixed inline link.
+
+    ```mdx
+    <GotoLink href="/v2/gateways">Go to Gateways</GotoLink>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `href` | string | `#` | Link target |
+    | `label` | string | — | Override link text (otherwise uses children) |
+  </Accordion>
+  <Accordion title="GotoCard">
+    **Purpose:** Card that links to a destination.
+
+    ```mdx
+    <GotoCard href="/v2/gateways/setup">Setup content here.</GotoCard>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `href` | string | `#` | Link target |
+  </Accordion>
+</AccordionGroup>
+
+#### Text & Headings
+
+<AccordionGroup>
+  <Accordion title="Subtitle">
+    **Purpose:** Styled italic accent text. Used below page titles. No props.
+
+    ```mdx
+    <Subtitle>Understand how gateways route workloads.</Subtitle>
+    ```
+  </Accordion>
+  <Accordion title="Quote / FrameQuote">
+    **Purpose:** Blockquote with Livepeer accent border. `FrameQuote` adds an outer border frame. No props.
+
+    ```mdx
+    <Quote>Gateways are the demand side of the network.</Quote>
+    <FrameQuote>Framed and quoted.</FrameQuote>
+    ```
+  </Accordion>
+  <Accordion title="H1 / H2 / H3 / H4 / H5 / H6">
+    **Purpose:** Heading components with optional Font Awesome icon prefix. Used on FrameMode pages.
+
+    ```mdx
+    <H2 icon="server">Gateway Setup</H2>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `icon` | string | — | Font Awesome icon name shown before heading text |
+  </Accordion>
+  <Accordion title="P">
+    **Purpose:** Explicit paragraph wrapper. Used on FrameMode pages. No props.
+
+    ```mdx
+    <P>Body text content here.</P>
+    ```
+  </Accordion>
+  <Accordion title="CopyText">
+    **Purpose:** Inline code-styled text value.
+
+    ```mdx
+    <CopyText text="livepeer -gateway -orchAddr 0x..." />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `text` | string | — | Text to display as inline code |
+    | `value` | string | — | Alias for `text` |
+  </Accordion>
+  <Accordion title="CardTitleTextWithArrow / AccordionTitleWithArrow">
+    **Purpose:** Composable title elements with `→` suffix. No props — content as children.
+
+    ```mdx
+    <CardTitleTextWithArrow>Quick Start</CardTitleTextWithArrow>
+    <AccordionTitleWithArrow>Show Details</AccordionTitleWithArrow>
+    ```
+  </Accordion>
+  <Accordion title="PageHeader">
+    **Purpose:** Centred page title and subtitle block. Used on portal/landing pages.
+
+    ```mdx
+    <PageHeader title="Livepeer Gateways" subtitle="Everything you need to run a gateway node." />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Main heading |
+    | `subtitle` | string | — | Subtitle below the heading |
+  </Accordion>
+</AccordionGroup>
+
+#### Cards
+
+<AccordionGroup>
+  <Accordion title="DisplayCard">
+    **Purpose:** Standalone content card with title and icon.
+
+    ```mdx
+    <DisplayCard title="Run a Gateway" icon="server">
+      Step-by-step instructions.
+    </DisplayCard>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Card heading |
+    | `icon` | string | — | Font Awesome icon name |
+  </Accordion>
+  <Accordion title="WidthCard">
+    **Purpose:** Card constrained to a max width and centred.
+
+    ```mdx
+    <WidthCard width="600px">Constrained content.</WidthCard>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `width` | string | `100%` | CSS max-width |
+    | `maxWidth` | string | — | Alias for `width` |
+  </Accordion>
+  <Accordion title="InlineImageCard">
+    **Purpose:** Card with an image on the left and content on the right.
+
+    ```mdx
+    <InlineImageCard src="/snippets/assets/logos/Livepeer-Logo-Symbol.svg">
+      Description text here.
+    </InlineImageCard>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `src` | string | — | Image source URL |
+  </Accordion>
+  <Accordion title="InteractiveCard">
+    **Purpose:** Card with a heading and freeform children content.
+
+    ```mdx
+    <InteractiveCard title="Configuration">Content here.</InteractiveCard>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Card heading |
+  </Accordion>
+  <Accordion title="CardCarousel">
+    **Purpose:** Horizontally scrollable row of cards. No props.
+
+    ```mdx
+    <CardCarousel>
+      <Card title="A" />
+      <Card title="B" />
+    </CardCarousel>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Callout Banners
+
+<AccordionGroup>
+  <Accordion title="CustomCallout">
+    **Purpose:** Styled callout with a custom icon (emoji or character).
+
+    ```mdx
+    <CustomCallout icon="🔧">Manual configuration required.</CustomCallout>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `icon` | string | `ℹ️` | Icon character or emoji |
+  </Accordion>
+  <Accordion title="TipWithArrow">
+    **Purpose:** Tip callout with a `💡` icon. No props — content as children.
+
+    ```mdx
+    <TipWithArrow>Use the remote signer to skip ETH setup.</TipWithArrow>
+    ```
+  </Accordion>
+  <Accordion title="ComingSoonCallout / PreviewCallout / ReviewCallout">
+    **Purpose:** Status banners indicating a feature is pending, in preview, or under review. No props.
+
+    ```mdx
+    <ComingSoonCallout>Dashboard analytics</ComingSoonCallout>
+    <PreviewCallout>Python SDK support</PreviewCallout>
+    <ReviewCallout>Pricing model — subject to change</ReviewCallout>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Media
+
+<AccordionGroup>
+  <Accordion title="Image">
+    **Purpose:** Image with optional caption.
+
+    ```mdx
+    <Image src="/snippets/assets/diagrams/gateway-flow.png" alt="Gateway flow" caption="Traffic routing through the gateway layer" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `src` | string | — | Image URL |
+    | `alt` | string | — | Alt text |
+    | `caption` | string | — | Caption displayed below image |
+  </Accordion>
+  <Accordion title="LinkImage">
+    **Purpose:** Clickable image that links to a URL.
+
+    ```mdx
+    <LinkImage src="/snippets/assets/logos/Livepeer-Logo-Symbol.svg" href="https://livepeer.org" alt="Livepeer" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `src` | string | — | Image URL |
+    | `href` | string | `#` | Link target |
+    | `alt` | string | — | Alt text |
+  </Accordion>
+  <Accordion title="YouTubeVideo">
+    **Purpose:** Embedded YouTube player (16:9 aspect ratio).
+
+    ```mdx
+    <YouTubeVideo id="dQw4w9WgXcQ" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `id` | string | — | YouTube video ID |
+    | `videoId` | string | — | Alias for `id` |
+  </Accordion>
+  <Accordion title="TitledVideo">
+    **Purpose:** Video or media block with a heading label.
+
+    ```mdx
+    <TitledVideo title="Gateway Demo">
+      <video src="/assets/demo.mp4" controls />
+    </TitledVideo>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Heading displayed above the media |
+  </Accordion>
+</AccordionGroup>
+
+#### Steps
+
+<AccordionGroup>
+  <Accordion title="StyledSteps / StyledStep">
+    **Purpose:** Custom step list with numbered indicators and a connecting line.
+
+    ```mdx
+    <StyledSteps>
+      <StyledStep title="Configure your node">Edit the config file.</StyledStep>
+      <StyledStep title="Start the service">Run `systemctl start livepeer`.</StyledStep>
+    </StyledSteps>
+    ```
+
+    **StyledStep props:**
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | — | Step heading |
+  </Accordion>
+  <Accordion title="ListSteps">
+    **Purpose:** Alias for `StyledSteps`. Same rendering, same props.
+
+    ```mdx
+    <ListSteps>
+      <StyledStep title="Step one">Content</StyledStep>
+    </ListSteps>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Grids & Layouts
+
+<AccordionGroup>
+  <Accordion title="QuadGrid">
+    **Purpose:** Two-column grid (2×n). No props.
+
+    ```mdx
+    <QuadGrid>
+      <Card title="A" />
+      <Card title="B" />
+    </QuadGrid>
+    ```
+  </Accordion>
+  <Accordion title="AccordionLayout / AccordionGroupList">
+    **Purpose:** Flex column wrappers for custom accordion arrangements. No props.
+
+    ```mdx
+    <AccordionLayout>
+      <Accordion title="Item">Content</Accordion>
+    </AccordionLayout>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Tables
+
+<AccordionGroup>
+  <Accordion title="DynamicTable">
+    **Purpose:** Scrollable table wrapper. No props — pass raw HTML table elements as children.
+
+    ```mdx
+    <DynamicTable>
+      <tr><th>Column</th></tr>
+    </DynamicTable>
+    ```
+  </Accordion>
+  <Accordion title="SearchTable">
+    **Purpose:** Filterable table — live text search and category dropdown. Fully interactive in deployed Mintlify (uses `useState`). Renders as a static mock in the preview: non-functional search bar + category dropdown chrome + full table body. An `⚡ interactive — static in preview` badge is shown to set expectations.
+
+    ```mdx
+    <SearchTable searchPlaceholder="Search terms…" categoryLabel="All categories">
+      <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td>Example</td><td>Description</td></tr>
+    </SearchTable>
+    ```
+
+    | Prop | Type | Default | Purpose |
+    |---|---|---|---|
+    | `searchPlaceholder` | string | `Search…` | Placeholder text in the search input |
+    | `categoryLabel` | string | `All categories` | Label for the category dropdown |
+    | `searchColumns` | array | — | Columns to include in search (passed to SearchTable.jsx) |
+
+    **SEO note:** Custom components render client-side only — table rows are not in the initial HTML. Acceptable trade-off for reference/glossary pages.
+  </Accordion>
+</AccordionGroup>
+
+#### Hero & Portal Scaffolding
+
+<AccordionGroup>
+  <Accordion title="HeroSectionContainer / HeroContentContainer / PortalHeroContent / PortalContentContainer">
+    **Purpose:** Structural wrappers for full-width portal and hero layouts on FrameMode pages. No props on any of these.
+
+    ```mdx
+    <HeroSectionContainer>
+      <HeroContentContainer>
+        <PortalHeroContent>Hero copy here.</PortalHeroContent>
+      </HeroContentContainer>
+    </HeroSectionContainer>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Icons & Indicators
+
+<AccordionGroup>
+  <Accordion title="LivepeerIcon">
+    **Purpose:** Inline Livepeer brand indicator badge. No props.
+
+    ```mdx
+    <LivepeerIcon />
+    ```
+  </Accordion>
+  <Accordion title="BlinkingIcon">
+    **Purpose:** Animated icon badge (animation runs in Mintlify; static badge in preview).
+
+    ```mdx
+    <BlinkingIcon icon="terminal" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `icon` | string | `terminal` | Font Awesome icon name |
+  </Accordion>
+  <Accordion title="DownloadButton">
+    **Purpose:** Inline download link styled as a button.
+
+    ```mdx
+    <DownloadButton href="/assets/config.yaml" label="Download config" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `href` | string | `#` | Download URL |
+    | `label` | string | `Download` | Button label text |
+  </Accordion>
+</AccordionGroup>
+
+#### Embeds & Social
+
+<AccordionGroup>
+  <Accordion title="MarkdownEmbed">
+    **Purpose:** Bordered container for embedded markdown content. No props.
+
+    ```mdx
+    <MarkdownEmbed>Embedded content here.</MarkdownEmbed>
+    ```
+  </Accordion>
+  <Accordion title="ExternalContent">
+    **Purpose:** Framed container for external or imported content with a title header.
+
+    ```mdx
+    <ExternalContent title="API Response">Response body here.</ExternalContent>
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `title` | string | `External Content` | Header label |
+  </Accordion>
+  <Accordion title="SocialLinks">
+    **Purpose:** Social media link row. Fully interactive in Mintlify; renders as static note in preview. No props.
+
+    ```mdx
+    <SocialLinks />
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Math
+
+<AccordionGroup>
+  <Accordion title="MathInline / MathBlock">
+    **Purpose:** Mathematical expression display. Rendered as styled `<code>` in preview (not LaTeX-rendered).
+
+    ```mdx
+    <MathInline expression="E = mc^2" />
+    <MathBlock expression="\sum_{i=1}^{n} x_i" />
+    ```
+
+    | Prop | Type | Default | Description |
+    | --- | --- | --- | --- |
+    | `expression` | string | — | Mathematical expression string |
+    | `math` | string | — | Alias for `expression` |
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Tier 3 — Placeholder Rendering
+
+Any component not in Tier 1 or Tier 2 renders as:
+
+```text
+┌ - - - - - - - - - - - - - - ┐
+  &lt;ComponentName prop="value"&gt;
+  [children rendered here]
+└ - - - - - - - - - - - - - - ┘
+```
+
+Props are shown truncated to 40 characters. Children render inside so content remains readable.
+
+To promote a component from Tier 3 to Tier 2, add a renderer function to `lib/component-map.js` under the `livepeerComponents` object.
+
+### Interactive components
+
+Some Tier 2 components use React hooks (`useState`, `useEffect`) and are fully interactive in deployed Mintlify but cannot run in the VS Code webview (Node.js environment, no React runtime). These render as **static mocks** — they show the correct UI chrome but do not respond to input.
+
+Currently affected: `SearchTable`, `SocialLinks`, `MarkdownEmbed`, and `OpenAPI`.
+
+These components display an `⚡ interactive — static in preview` badge so authors know to verify their behaviour in a Mintlify dev session, not just the local preview.
+
+Data-feed integrators (`ShowcaseCards`, `CoinGeckoExchanges`, `LumaEvents`, `DiscordAnnouncements`, `TwitterTimeline`) fall to Tier 3 placeholders for the same reason — they fetch live data and cannot be meaningfully mocked offline.
+
+<CustomDivider />
+
+## Configuration
+
+| Setting | Type | Default | Options | Description |
+| --- | --- | --- | --- | --- |
+| `livepeer.mdxPreview.theme` | string | `auto` | `auto` \| `light` \| `dark` | Preview colour theme. `auto` matches VS Code. |
+
+<CustomDivider />
+
+## Architecture
+
+<AccordionGroup>
+  <Accordion title="extension.js — Entry point">
+    Registers two commands (`livepeer.openMdxPreview`, `livepeer.openMdxPreviewToSide`), the `Cmd+Shift+V` keybinding, and two event listeners (document change → debounced re-render; theme change → full re-render). Manages a `Map` of open panels keyed by document URI.
+  </Accordion>
+  <Accordion title="lib/mdx-parser.js — Segment parser">
+    Parses raw MDX text into a flat array of typed segments: `frontmatter`, `import`, `markdown`, `mermaid`, `codeblock`, `jsx`, `jsx-expression`. Regex-based extraction — not a full MDX compiler, for robustness with non-standard MDX.
+  </Accordion>
+  <Accordion title="lib/mintlify-components.js — Tier 1 renderers">
+    Functions for the governed Mintlify built-ins used by this repo, including canonical `Tree.Folder` / `Tree.File` rendering and descriptive placeholders where full runtime parity is not practical in the preview. Each function signature: `(props, childrenHtml) => htmlString`.
+  </Accordion>
+  <Accordion title="lib/component-map.js — Tier 2 renderers + dispatch">
+    Livepeer custom component renderers. Merges with Tier 1 into `COMPONENT_MAP`. Exports `renderSegments()` which dispatches each segment to its renderer or falls through to `renderPlaceholder()`.
+  </Accordion>
+  <Accordion title="lib/webview-template.js — HTML shell">
+    Builds the full webview HTML document including CSP headers, Font Awesome CDN (`fa 6.5.1`), local CSS/JS `vscode-resource:` URIs, and the rendered body.
+  </Accordion>
+  <Accordion title="media/preview.js — Client-side logic">
+    Runs inside the webview. Initialises Mermaid.js with Livepeer theme vars, processes `.lpd-md-raw` blocks with markdown-it, and handles tab switching interactions.
+  </Accordion>
+  <Accordion title="media/preview.css — Theme & component styles">
+    CSS custom properties for light and dark themes using the governed Livepeer accent variables from `style.css`. Styles for all Tier 1 and Tier 2 component classes.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Future Features
+
+<AccordionGroup>
+  <Accordion title="Lazy-load Mermaid.js ✓ Implemented">
+    `renderSegments()` returns `{ html, hasMermaid }`. The webview template conditionally injects `<script src="${mermaidUri}">` only when `hasMermaid` is `true`. Pages without Mermaid diagrams skip the 2.45 MB bundle entirely.
+  </Accordion>
+  <Accordion title="Promote Tier 3 components on demand">
+    Any component that falls through to the placeholder renderer can be promoted to Tier 2 by adding a renderer function to `lib/component-map.js` under `livepeerComponents`. The function signature is `(props, childrenHtml) => htmlString`.
+
+    Priority candidates based on usage frequency in the repo:
+    - `Snippet` (used in composable page patterns)
+    - data-feed integrators that could be represented by stable static mocks
+    - additional low-use repo components that currently fall through to generic placeholders
+  </Accordion>
+  <Accordion title="Syntax highlighting for code blocks">
+    Code blocks are currently rendered as plain `<pre><code>` without syntax colouring. Adding `highlight.js` (vendored, ~50 KB minified) as a third media asset and calling `hljs.highlightAll()` in `preview.js` would add language-aware colouring for all fenced blocks.
+  </Accordion>
+  <Accordion title="Live scroll sync">
+    Sync the scroll position of the preview panel to the cursor position in the editor. VS Code's built-in Markdown preview uses `editor/scroll` messages via the webview messaging API. The same pattern can be applied here: on `onDidChangeTextEditorVisibleRanges`, post a message to the webview to scroll to the corresponding rendered element.
+  </Accordion>
+  <Accordion title="Custom component hot-reload ✓ Implemented">
+    `onDidSaveTextDocument` watches for any `.jsx` save in the workspace and re-renders all open preview panels. Component source changes are reflected immediately without touching the `.mdx` file.
+  </Accordion>
+  <Accordion title="Collapsible JSX comment blocks ✓ Implemented (v0.0.2)">
+    Multi-line `{/* ... */}` comment blocks — typically template instructions or reviewer flags — are rendered as collapsed `<details>` elements instead of leaking into the preview as visible text. Single-line `{/* ... */}` comments are still silently stripped. The collapsible uses a dashed border and muted palette to distinguish it from content.
+
+    **Parser**: `lib/mdx-parser.js` detects `{/*` without a same-line `*/}` and collects lines until the closing `*/}`, emitting a `jsx-comment` segment.
+
+    **Renderer**: `lib/component-map.js` handles `jsx-comment` as `<details class="lpd-comment">` with a `💬 comment` summary and pre-formatted body.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## References
+
+<CardGroup cols={3}>
+  <Card title="Extension source" icon="code" href="/tools/editor-extensions/lpd-mdx-preview/extension.js" arrow>
+    Entry point and command registration.
+  </Card>
+  <Card title="Component map" icon="map" href="/tools/editor-extensions/lpd-mdx-preview/lib/component-map.js" arrow>
+    Tier 2 renderers and dispatch logic.
+  </Card>
+  <Card title="Authoring tools" icon="screwdriver-wrench" href="/tools/editor-extensions/authoring-tools" arrow>
+    Other VS Code tools in this repo.
+  </Card>
+</CardGroup>

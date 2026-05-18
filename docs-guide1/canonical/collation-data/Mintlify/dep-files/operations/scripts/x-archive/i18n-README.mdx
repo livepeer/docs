@@ -1,0 +1,162 @@
+# Docs Translation Pipeline (v1)
+
+This folder contains the script-first translation pipeline used by the GitHub Actions workflow in `.github/workflows/translate-docs.yml`.
+
+## Goals
+
+- Translate `v2` docs pages into other languages (current rollout defaults: `es`, `fr`, `cn`; CLI alias `zh-CN` -> `cn`)
+- Generate localized MDX files under `v2/<lang>/...` (Mintlify-compatible route shape)
+- Update `docs.json` v2 `languages[]` using English (`en`) as the source template
+- Keep runs reviewable via PRs (manual trigger first)
+
+## Files
+
+- `translate-docs.js` — main content translation CLI (MDX + frontmatter + route-map)
+- `generate-localized-docs-json.js` — updates root `docs.json` v2 language nodes
+- `validate-generated.js` — parses generated localized MDX files to catch syntax issues
+- `lib/` — shared route, provider, MDX, and docs.json localization helpers
+- `test/` — unit tests for the i18n pipeline internals
+
+## Config
+
+Primary config is `/tools/i18n/config.json`.
+
+Key settings:
+
+- `targetLanguages`
+- `languageCodeMap` (for example `zh-CN -> cn`)
+- `generatedRoot`
+- `generatedPathStyle` (`v2_language_prefix` for `v2/<lang>/...`)
+- `provider.modelCandidates` (defaults to an explicit OpenRouter `:free` fallback chain)
+- `translationRules` (frontmatter labels, docs.json labels, preserve terms)
+- `qualityGates`
+
+## Local Usage (Safe)
+
+### 1. Install tool deps
+
+```bash
+cd tools
+npm install
+```
+
+### 2. Run i18n unit tests
+
+```bash
+npm run test:i18n
+```
+
+### 2b. `lpd` equivalents (repo-preferred operator entrypoint)
+
+```bash
+./lpd tools i18n translate-docs -- --help
+./lpd tools i18n generate-localized-docs-json -- --help
+./lpd tools i18n validate-generated -- --help
+```
+
+### 3. Dry-run translation (mock provider)
+
+```bash
+node scripts/i18n/translate-docs.js \
+  --provider mock \
+  --dry-run \
+  --scope-mode prefixes \
+  --prefixes v2/about/livepeer-network \
+  --max-pages 3 \
+  --languages es \
+  --route-map /tmp/i18n-route-map.json \
+  --report-json /tmp/i18n-translate-report.json
+```
+
+### 4. Dry-run docs.json localization (mock provider)
+
+```bash
+node scripts/i18n/generate-localized-docs-json.js \
+  --provider mock \
+  --dry-run \
+  --languages es \
+  --route-map /tmp/i18n-route-map.json \
+  --report-json /tmp/i18n-docs-json-report.json
+```
+
+Note: `mock` provider writes are blocked by default in non-dry runs to prevent `[es]`-style fixture prefixes from contaminating localized `v2/<lang>/*` routes or `docs.json`. Use `--allow-mock-write` only for intentional fixture/testing scenarios.
+
+## Local Usage (OpenRouter)
+
+The checked-in default config is **OpenRouter free-only** (explicit `:free` model IDs, not `openrouter/auto`).
+You can change `provider.modelCandidates` in `/tools/i18n/config.json` if you want a different free fallback order.
+
+Set environment variables:
+
+```bash
+export OPENROUTER_API_KEY=...
+export OPENROUTER_HTTP_REFERER=https://github.com/<org>/<repo>
+export OPENROUTER_APP_NAME=livepeer-docs-i18n
+```
+
+### Optional local paid-model override (without changing repo defaults)
+
+If you want to test paid models locally, copy the config and override model candidates in a temp file:
+
+```bash
+jq '.provider.modelCandidates=["openrouter/auto"]' tools/i18n/config.json > /tmp/i18n-config-paid.json
+```
+
+Then pass `--config /tmp/i18n-config-paid.json` to the i18n CLIs. This keeps the repo default free-only configuration intact.
+
+Then run:
+
+```bash
+node tools/scripts/i18n/translate-docs.js \
+  --languages es,fr,zh-CN \
+  --scope-mode changed_since_ref \
+  --base-ref docs-v2 \
+  --max-pages 20 \
+  --route-map /tmp/i18n-route-map.json \
+  --report-json /tmp/i18n-translate-report.json
+```
+
+If not using `--dry-run`, follow with:
+
+```bash
+node tools/scripts/i18n/generate-localized-docs-json.js \
+  --write \
+  --languages es,fr,zh-CN \
+  --route-map /tmp/i18n-route-map.json \
+  --report-json /tmp/i18n-docs-json-report.json
+
+node tools/scripts/i18n/validate-generated.js \
+  --languages es,fr,zh-CN \
+  --route-map /tmp/i18n-route-map.json \
+  --report-json /tmp/i18n-validate-report.json
+```
+
+If you are previewing locally in Mintlify after `docs.json` changes, restart `mintlify dev`. Mintlify can cache nav state and continue showing stale labels until restart.
+
+## Validation Checklist (Pre-Deployment to `docs-v2`)
+
+Run these before enabling regular workflow usage:
+
+1. `npm --prefix tools run test:i18n`
+2. Translation dry-run on a small prefix with OpenRouter (`--max-pages 1-3`)
+3. Non-dry-run on a small prefix in a feature branch
+4. `./lpd tools i18n generate-localized-docs-json -- ...`
+5. `node tools/scripts/i18n/validate-generated.js ...`
+6. `node tests/unit/docs-navigation.test.js` (check-only by default; add `--write-report` to refresh navigation reports)
+7. Review generated localized MDX diff and `docs.json` language nodes manually
+8. Validate rendered pages in Mintlify dev on the feature branch
+9. After `docs.json` regeneration, restart Mintlify and recheck nav tabs/anchors/groups (page titles can still be English when routes fall back)
+
+## Current Limitations (v1)
+
+- JSX/MDX component text is intentionally not translated yet (safer syntax preservation)
+- Internal link rewriting is markdown-link focused (not JSX `href` props)
+- `docs.json` route rewrites require localized files to exist unless quality gate is changed
+- Partial-scope runs intentionally produce mixed-language locale UIs (translated `tab`/`anchor`/`group` labels, English fallback page titles for untranslated routes)
+- Workflow is manual (`workflow_dispatch`) by design for review-first rollout
+
+## Mintlify Route Compatibility (Important)
+
+- Localized `v2` routes must use `v2/<lang>/...` (for example `v2/es/home/mission-control`)
+- The previous `v2/i18n/<lang>/...` route shape is deprecated for Mintlify versioned docs because it can break version/language UI context resolution
+- `v1` remains English-only in this rollout; the localization generator intentionally mutates only `v2.languages[]`

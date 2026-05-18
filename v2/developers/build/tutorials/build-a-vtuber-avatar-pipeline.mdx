@@ -38,7 +38,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 ---
 
-By the end of this tutorial you'll have a working VTuber pipeline: webcam input flows into a ComfyStream workflow that extracts pose keypoints, conditions a StreamDiffusion model on those keypoints, and emits an animated avatar matching your pose in real time. The output streams back to the browser via WebRTC. Latency budget is under 100ms end-to-end on adequate hardware.
+By the end of this tutorial you'll have a working VTuber pipeline: webcam input flows into a ComfyStream workflow that extracts pose keypoints, conditions a StreamDiffusion model on those keypoints, and emits an animated avatar matching your pose in realtime. The output streams back to the browser via WebRTC. Latency budget is under 100ms end-to-end on adequate hardware.
 
 This is the Persona 1 and Persona 4 join: the agent builder who needs a face for their AI character, and the live-video builder who needs sub-second-latency video transformation. The Agent SPE built the first production avatar pipeline on this stack; the recipe below is what you replicate when you build the second.
 
@@ -76,7 +76,7 @@ Three alternative conditioning paths exist for different effects:
 | Conditioning | Effect | When to use |
 |---|---|---|
 | DWPose | Pose-only, full character replacement | VTuber avatars, character swaps |
-| Depth (DepthAnything / MiDaS) | Preserves 3D structure | Stylised real you, scene transformation |
+| Depth (DepthAnything / MiDaS) | Preserves 3D structure | Stylised camera subject, scene transformation |
 | Canny / Sketch | Preserves edges | Line-art or comic effects |
 
 The walk-through below uses DWPose. Swap nodes to switch effect type without changing the rest of the pipeline.
@@ -167,9 +167,9 @@ A first run that takes longer than ten minutes usually means the model is too bi
 
 ## Latency Tuning
 
-VTuber latency is the difference between your real movement and the avatar's responding movement. Under 100ms reads as instant; over 200ms reads as broken. Three levers move the number.
+VTuber latency is the difference between your physical movement and the avatar's responding movement. Under 100ms reads as instant; over 200ms reads as broken. Three levers move the number.
 
-**Model step count.** A 25-step DDIM run is unusable in real time. LCM (1-2 steps) and Lightning (4 steps) variants are the realistic options. The visual quality difference at 512x512 is acceptable; the latency difference is not.
+**Model step count.** A 25-step DDIM run is unusable in realtime. LCM (1-2 steps) and Lightning (4 steps) variants are the realistic options. The visual quality difference at 512x512 is acceptable; the latency difference is not.
 
 **Resolution.** 512x512 at 30 FPS is achievable on an RTX 4090 with StreamDiffusion. 768x768 drops to ~20 FPS. 1024x1024 drops to ~12 FPS. Most VTuber output destinations (Twitch, YouTube Live) downscale anyway, so 512x512 source is usually correct.
 
@@ -230,6 +230,14 @@ Full real-time hardening guidance in <LinkArrow href="/v2/orchestrators/guides/a
 <CustomDivider />
 
 You have a real-time avatar pipeline running at 20+ FPS through ComfyStream. The StreamDiffusion nodes accept any pose-conditioned model; swap the checkpoint to change the avatar style without changing the pipeline architecture.
+
+## AI agent prompt
+
+```text
+Complete the "VTuber Avatar Pipeline" tutorial using a current ComfyStream instance. Verify the ComfyStream quickstart path, then create or load a workflow that accepts webcam or RTMP frames, uses DWPose or the available pose node, applies a StreamDiffusion/LCM or Lightning avatar model at 512x512, and outputs a realtime transformed stream. Use placeholders for COMFYSTREAM_URL=<ComfyStream server>, INPUT_STREAM_URL=<webcam or RTMP source>, OUTPUT_STREAM_URL=<viewer URL>, AVATAR_CHECKPOINT=<model checkpoint>, and GPU_TARGET=<GPU type>. Include workflow import steps, first-run commands, latency checks, tuning for step count/resolution/TensorRT/SSF, and verification that the output stream updates under 200 ms target latency on supported hardware. Do not require Livepeer Studio.
+```
+
+<CustomDivider />
 
 ## Next Steps
 

@@ -1,0 +1,108 @@
+---
+title: Component Health Pipeline
+sidebarTitle: Component Health
+description: >-
+  Full pipeline reference for component governance. Covers naming, CSS, scope
+  isolation, immutability, registry generation, and documentation.
+keywords:
+  - component governance
+  - component registry
+  - naming conventions
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-08
+---
+
+# Component Health Pipeline
+
+> **Gate:** P3 (advisory — part of content quality suite)
+> **Trigger:** PR touching `snippets/components/**`
+> **Workflow:** Sub-job of `validator-copy-check-content-quality-suite.yml`
+
+---
+
+## What happens when component files change
+
+```mermaid
+graph TD
+    PR["PR touches<br/>snippets/components/"] --> NAMING["check-naming-conventions.js<br/>PascalCase filenames"]
+    PR --> SCOPE["check-mdx-component-scope.js<br/>No leaked imports"]
+    PR --> CSS["check-component-css.js<br/>CSS standards"]
+    PR --> DOCS["check-component-docs.js<br/>JSDoc 7-tag header"]
+    PR --> IMMUT["check-component-immutability.js<br/>Protected components unchanged"]
+    PR --> HEALTH["check-component-health.js<br/>Overall health check"]
+    PR --> LAYOUT["component-layout-governance.js<br/>Layout contract compliance"]
+
+    NAMING --> RESULT{All pass?}
+    SCOPE --> RESULT
+    CSS --> RESULT
+    DOCS --> RESULT
+    IMMUT --> RESULT
+    HEALTH --> RESULT
+    LAYOUT --> RESULT
+
+    RESULT -->|Yes| REGEN["generate-component-registry.js<br/>--validate-only"]
+    RESULT -->|No| WARN["PR warning"]
+    REGEN --> OK["Registry valid"]
+```
+
+## What happens post-merge
+
+```mermaid
+graph TD
+    MERGE["Push to docs-v2"] --> REGISTRY["generate-component-registry.js"]
+    REGISTRY --> JSON["component-registry.json<br/>(updated)"]
+    MERGE --> DOCS["generate-component-docs.js"]
+    DOCS --> MDX["Component documentation<br/>(updated)"]
+```
+
+---
+
+## Validators
+
+| Script | What it checks |
+|--------|----------------|
+| `check-naming-conventions.js` | PascalCase filenames, kebab-case folders |
+| `check-mdx-component-scope.js` | No React hooks, no SSR, Mintlify-safe imports |
+| `check-component-css.js` | CSS-in-JS standards, no global styles |
+| `check-component-docs.js` | 7-tag JSDoc header present and complete |
+| `check-component-immutability.js` | Protected components not modified without approval |
+| `check-component-health.js` | Overall component health (imports, exports, size) |
+| `component-layout-governance.js` | Page layout contract compliance |
+
+---
+
+## Generators
+
+| Script | What it produces |
+|--------|-----------------|
+| `generate-component-registry.js` | Component registry JSON with all components classified |
+| `generate-component-docs.js` | Component documentation pages |
+| `generate-component-examples.js` | Example code snippets for each component |
+| `generate-ui-templates.js` | UI template pages |
+
+---
+
+## Remediators
+
+| Script | What it fixes |
+|--------|---------------|
+| `repair-component-metadata.js` | Repairs component metadata and JSDoc headers |
+
+---
+
+## Audits
+
+| Script | What it reports |
+|--------|----------------|
+| `scan-component-imports.js` | Import dependency graph across all components |
+| `audit-component-usage.js` | Which components are used, which are orphaned |
+
+---
+
+## Gaps
+
+- **Registry validation not blocking:** `generate-component-registry.js --validate-only` uses continue-on-error in CI
+- **Badges sub-niche undocumented:** Component framework acknowledges this gap but has not been updated
+- **No auto-repair workflow:** Component metadata repair requires manual invocation

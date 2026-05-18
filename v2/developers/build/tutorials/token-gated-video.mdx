@@ -16,8 +16,10 @@ keywords:
 'og:image:height': 630
 pageType: tutorial
 audience: developer
+purpose: build
 status: current
 lastVerified: 2026-04-05
+veracityStatus: verified
 ---
 
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
@@ -45,8 +47,8 @@ Viewer wallet → Lit Network (ownership check) → Signed JWT → Livepeer CDN 
 
 Three systems interact:
 - **Lit Protocol** -- verifies on-chain conditions (NFT ownership) and issues access control conditions (ACCs) that gate a symmetric encryption key or a signed payload
-- **Livepeer Studio** -- creates a JWT-protected asset and provides a signing key
-- **Livepeer CDN** -- validates the JWT on every playback request at the edge
+- **Livepeer-compatible gateway** -- creates a JWT-protected asset and provides a signing key
+- **Playback gateway or CDN** -- validates the JWT on every playback request at the edge
 
 <CustomDivider />
 
@@ -54,7 +56,7 @@ Three systems interact:
 
 - Node.js 18 or later
 - A deployed NFT contract (ERC-721) on Ethereum mainnet or any supported chain
-- A Livepeer Studio API key with a JWT-protected asset already created
+- A gateway provider API key or self-hosted gateway with JWT playback access control enabled
 - Familiarity with React and ethers.js or wagmi
 
 ```bash
@@ -206,7 +208,7 @@ npm install livepeer @livepeer/react @lit-protocol/lit-node-client ethers
 
       return (
         <Player.Root
-          src={`https://livepeercdn.studio/asset/hls/${playbackId}/index.m3u8`}
+          src={`${process.env.NEXT_PUBLIC_PLAYBACK_BASE_URL}/asset/hls/${playbackId}/index.m3u8`}
           jwt={jwt}
         >
           <Player.Container>
@@ -258,6 +260,14 @@ The access control conditions accept any Lit-supported chain and condition type:
     </TableRow>
   </tbody>
 </StyledTable>
+
+<CustomDivider />
+
+## AI agent prompt
+
+```text
+Build the "Token-gate videos with Lit Protocol" tutorial as a React/TypeScript app. Create a project that installs livepeer, @livepeer/react, @lit-protocol/lit-node-client, ethers, wagmi, and the wallet connector dependencies needed by wagmi. Use placeholders for LIVEPEER_API_URL=<gateway asset API base URL>, LIVEPEER_API_KEY=<gateway provider API key>, NEXT_PUBLIC_PLAYBACK_BASE_URL=<provider playback base URL>, NEXT_PUBLIC_ACCESS_CONTROL_PUBLIC_KEY=<Livepeer signing key public ID>, LIVEPEER_ACCESS_CONTROL_PRIVATE_KEY=<private signing key>, NFT_CONTRACT_ADDRESS=<ERC-721 contract>, and CHAIN=<Lit-supported chain>. Implement server-side signing-key and JWT helpers, Lit access-control conditions for ERC-721 ownership, a wallet-gated React player, and a README with exact run and verification steps. Do not use Livepeer Studio keys or hardcoded livepeercdn.studio URLs.
+```
 
 <CustomDivider />
 
