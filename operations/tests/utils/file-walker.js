@@ -6,8 +6,8 @@
  * @scope             tests
  * @owner             docs
  * @needs             E-C6, F-C1
- * @purpose-statement File tree walker — recursively finds files matching patterns. Used by pre-commit hook and validators.
- * @pipeline          indirect — library module
+ * @purpose-statement File tree walker - recursively finds files matching patterns. Used by pre-commit hook and validators.
+ * @pipeline          indirect - library module
  * @dualmode          dual-mode (document flags)
  * @usage             node operations/tests/utils/file-walker.js [flags]
  */

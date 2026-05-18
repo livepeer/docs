@@ -1,0 +1,232 @@
+---
+title: Repo Gap Analysis
+sidebarTitle: Gap Analysis
+description: "Implementation-ready audit of surfaces that do not yet align with the ownerless, self-governing repository model."
+audience: developer
+pageType: reference
+purpose: reference
+status: current
+lastVerified: 2026-05-14
+keywords:
+  - livepeer
+  - gap analysis
+  - repo audit
+  - cleanup
+  - ownerless governance
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Repo Gap Analysis
+
+This document is the implementation backlog for moving the repo closer to the ownerless governance standard: every surface should be discoverable, validated, repairable, bounded, and purgeable.
+
+Audit date: 2026-05-14.
+
+Evidence used:
+
+- static repo inventory
+- `PATH="/opt/homebrew/bin:$PATH" bash tools/lpd doctor --json`
+- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --report-md /tmp/v2-folder-governance-cleanup-matrix.md --report-json /tmp/v2-folder-governance-cleanup-matrix.json --as-of 2026-05-14`
+- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full --output-dir /tmp`
+- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check`
+
+## Executive Findings
+
+| Priority | Gap | Evidence | Required outcome |
+| --- | --- | --- | --- |
+| P0 | Governance map generated output is stale. | `generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` | Regenerate the map and verify generated artifact governance. |
+| P0 | V2 non-publishable content is not fully normalized away from publishable trees. | V2 cleanup matrix reports 307 rows: 235 `_workspace` targets and 72 `x-deprecated` targets. | Execute approved move waves and update file-selection helpers. |
+| P1 | Script metadata compliance debt remains high. | Script footprint audit cites 218 template non-compliant scripts in the existing script baseline. | Backfill required script headers and enforce with script governance validation. |
+| P1 | Large tracked reports and backup artifacts violate retention expectations. | Script footprint audit reports 24 findings: 4 medium, 20 low. | Apply report retention policy and remove backup artifacts through governed deletion. |
+| P1 | Feature docs were stale and referenced old paths. | Prior `automations.mdx` contained TODO markers and old `tasks/staging` references. | Keep feature maps tied to live inventory and add freshness checks for docs-guide feature pages. |
+| P2 | Component archive and count drift reduce trust in UI docs. | Live inventory has 59 JSX files, including 24 under `snippets/components/x-archive/`; governance index says component counts are partially stale. | Regenerate component docs and decide archive retention/deletion. |
+| P2 | Tool discovery depends on shell PATH assumptions. | Non-interactive shell lacked Node/Mintlify on `PATH`; Homebrew and NVM installs existed. | Document and automate PATH discovery in setup/doctor output. |
+
+## Purge and Remediation Queue
+
+### 1. Governance Artifacts
+
+| Item | Current problem | Implementation steps | Validation |
+| --- | --- | --- | --- |
+| `docs-guide/repo-ops/config/repo-governance-map.mdx` | Generated governance map is stale. | Run `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write`. Review generated changes only. | Re-run the same command with `--check`. |
+| Generated artifact policy coverage | Generated maps can drift if not checked after feature/page changes. | Confirm `operations/governance/config/generated-artifacts.json` includes every generated docs-guide catalog/map touched by the repo. | Run generated artifact validators and `lpd test --staged`. |
+| Feature docs freshness | Feature docs are hand-maintained and can drift from live scripts/workflows. | Add a docs-guide freshness audit that checks feature pages for old workflow names, old script roots, TODO markers, and missing linked files. | New validator should fail on synthetic stale fixture and pass current pages. |
+
+### 2. V2 Folder Governance
+
+The cleanup matrix found:
+
+| Metric | Count |
+| --- | ---: |
+| Total rows | 307 |
+| Recommended `_workspace` lane | 235 |
+| Recommended `x-deprecated` lane | 72 |
+| Core scope | 266 |
+| Internal scope | 41 |
+| Largest section | `gateways` with 199 rows |
+| Next largest section | `internal` with 41 rows |
+| Orchestrators rows | 39 |
+
+Implementation order:
+
+1. Update `.mintignore` and shared selection helpers so `_workspace`, `x-deprecated`, archive, and known transitional lanes are consistently non-publishable.
+2. Run a no-write report and split rows into move waves by section.
+3. Start with `gateways`, because it carries most rows and several nested `x-resources` and `x-deprecated` lanes.
+4. Use `git mv` or repo move tooling for file moves; do not hand-copy.
+5. Preserve route behavior: if a page was ever routable, verify redirects or docs.json removal explicitly.
+6. Regenerate page/catalog indexes after each wave.
+7. Run `lpd test --staged`, then targeted link/import validation.
+
+Acceptance criteria:
+
+- No publishable route resolves into `_workspace`, `x-deprecated`, archive, or design lanes.
+- File-selection helpers used by validators and generators share the same non-publishable lane contract.
+- The cleanup matrix rows decrease after each move wave.
+
+### 3. Reports, Archives, and Backup Artifacts
+
+Script footprint audit findings:
+
+| Severity | Count | Main class |
+| --- | ---: | --- |
+| Critical | 0 | none |
+| High | 0 | none |
+| Medium | 4 | backup artifact, large repo-op reports, script overlap |
+| Low | 20 | large report artifacts and script metadata gaps |
+
+Specific purge candidates:
+
+| Path or pattern | Issue | Action |
+| --- | --- | --- |
+| `workspace/reports/contracts/recovery-20260403-013442/files/snippets/data/contract-addresses/dep-contractAddressesData.jsx.bak` | Backup file tracked in repo. | Classify with cleanup/quarantine, then remove through deletion-approved cleanup. |
+| `workspace/reports/archive/link-health/*2026-03-09*` | Large historical reports. | Replace with concise summary or archive outside tracked repo if still needed. |
+| `workspace/reports/navigation-links/LINK_TEST_REPORT.*` | Large tracked reports. | Keep latest concise status and regenerate full reports on demand. |
+| `workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json` | Medium-size generated report. | Confirm whether it is canonical. If derived, keep generated/ignored or summarize. |
+| `workspace/reports/**/files/**` | Historical full-file captures. | Retain only legally/operationally required evidence; otherwise purge by approved deletion wave. |
+| `.DS_Store` under root, `snippets/`, `v2/`, and `workspace/` | OS metadata. | Delete through approved cleanup and ensure `.gitignore` coverage. |
+| `.vscode/livepeer-legacy.code-snippets.bak` | Backup snippet file. | Document compatibility alias or delete with approval. |
+| `v2/solutions/daydream/changelog.mdx.bak` | Backup docs artifact. | Remove after verifying current changelog source. |
+
+### 4. Scripts and Tooling
+
+| Gap | Evidence | Implementation steps |
+| --- | --- | --- |
+| Script header compliance | Existing baseline reports 218 template non-compliant scripts. | Run the governance header remediator on a bounded scope, review semantic correctness, then enforce in stages. |
+| Script overlap | Existing baseline reports 1 exact overlap cluster. | Inspect overlap cluster in `workspace/reports/repo-ops/SCRIPT_AUDIT.json`, choose canonical script, convert old path to documented compatibility alias or governed deletion. |
+| Archive sprawl | Resolved for `operations/scripts/`; deprecated and legacy script copies have been removed from the active operations script library. | Keep script indexes generated from live files and avoid reintroducing archive-only script surfaces. |
+| Tool index drift | `tools/script-index.md` contains paths that look older than live taxonomy. | Regenerate script indexes using the canonical generator and verify. |
+| PATH discovery | `node` and Mintlify were installed but hidden from non-interactive shell PATH. | Enhance `lpd doctor` to print discovered common install paths when commands are hidden. |
+
+### 5. GitHub Actions
+
+| Gap | Evidence | Implementation steps |
+| --- | --- | --- |
+| Deprecated workflow remains tracked | `.github/workflows/deprecated/update-blog-data.yml` exists. | Confirm if a compatibility workflow is still referenced. If not, schedule deletion-approved retirement. |
+| Workflow docs can drift | Feature docs previously referenced old workflow names. | Make workflow catalog the source for counts and cross-link feature docs to generated catalog. |
+| Governance-sensitive workflow changes need explicit evidence | Policy requires approval labels and PR body section for governance-sensitive workflow PRs. | Add PR checklist text that points to `operations/governance/config/governance-approval-policy.json`. |
+
+### 6. Components, Templates, and UI
+
+| Gap | Evidence | Implementation steps |
+| --- | --- | --- |
+| Component archive not resolved | 24 JSX files under `snippets/components/x-archive/`. | Classify each as active alias, migration evidence, or deletion candidate. |
+| Component count drift | Governance index warns framework counts are aspirational/stale. | Regenerate component docs and update framework count claims from generated inventory. |
+| OS metadata in snippets | `.DS_Store` files exist across snippets subtrees. | Delete with approval and ensure ignore coverage. |
+| Template docs are generated but feature docs were hand-maintained | `ui-system.mdx` had a generated block while surrounding context could drift. | Keep generated template inventory in catalog; keep feature page as architectural map only. |
+
+### 7. Content and IA
+
+| Gap | Evidence | Implementation steps |
+| --- | --- | --- |
+| Duplicate developer trees | `v2/developers/`, `v2/developers1/`, and `v2/developers2/` all exist; docs.json references active v2 routes. | Produce an IA migration plan before moving or deleting. Validate docs.json, redirects, and link imports. |
+| Large workspaces mixed into content sections | Many section `_workspace`, `_design`, canonical, reviews, archive, and deprecated folders exist. | Normalize to approved lanes and apply TTL rules from `workspace-lifecycle-policy.mdx`. |
+| Legacy v1 remains large but frozen | `v1/` contains 350 files in static inventory. | Keep frozen guardrails; only edit by explicit legacy request. |
+| Internal reports are routable in some places | `v2/internal/` includes reports and RFP routes. | Confirm intended nav scope and ensure internal reports do not leak stale operational claims. |
+
+## Implementation Plan
+
+### Phase 1: Stabilize Governance Signals
+
+1. Regenerate stale governance map.
+2. Regenerate docs-guide catalogs if new feature pages are accepted.
+3. Add or update feature-page freshness checks for TODOs, missing links, and moved script roots.
+4. Run staged validation.
+
+Exit criteria:
+
+- Governance map check passes.
+- Feature docs have no TODO markers or old root references.
+- Catalogs reflect new feature pages.
+
+### Phase 2: Normalize Non-Publishable V2 Lanes
+
+1. Update ignore and selection helpers.
+2. Execute the v2 cleanup matrix by section, starting with `gateways`.
+3. Validate route, link, and import behavior after each wave.
+4. Record completed move waves in a report.
+
+Exit criteria:
+
+- Cleanup matrix rows are materially reduced.
+- No routed page resolves into non-publishable lanes.
+
+### Phase 3: Purge Retention Violations
+
+1. Classify backup files, `.DS_Store`, and large report artifacts.
+2. Replace full historical reports with concise summaries where possible.
+3. Use deletion-approved commits for tracked removals.
+4. Add or verify ignore coverage.
+
+Exit criteria:
+
+- Script footprint audit no longer reports backup artifacts.
+- Large tracked reports are either justified or removed.
+
+### Phase 4: Repair Script and Workflow Governance
+
+1. Backfill script headers in bounded batches.
+2. Resolve script overlap cluster.
+3. Retire or document deprecated workflow.
+4. Regenerate script and workflow catalogs.
+
+Exit criteria:
+
+- Script template non-compliance count trends to zero.
+- Workflow catalog and live workflows agree.
+
+### Phase 5: Consolidate UI and IA Debt
+
+1. Classify archived components.
+2. Regenerate component catalogs and docs.
+3. Produce a dedicated developers/developers1/developers2 IA migration plan.
+4. Execute only approved IA changes with docs.json and redirect validation.
+
+Exit criteria:
+
+- Component counts are generated and trustworthy.
+- Duplicate developer trees have an approved migration path.
+
+## Non-Acceptance Criteria
+
+The following do not satisfy this gap analysis:
+
+- Adding ignore rules without moving, validating, or documenting the underlying source of drift.
+- Deleting files without dependency checks and required deletion approval.
+- Hand-editing generated outputs without fixing the generator or canonical source.
+- Leaving old docs paths as undocumented compatibility aliases.
+- Treating workspace reports as permanent source of truth.
+- Running only a superficial command when repo tooling provides a deeper validator.
+
+## Next Concrete Commands
+
+```bash
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --report-md workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md --report-json workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json --as-of 2026-05-14
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full --output-dir workspace/reports/repo-ops
+lpd test --staged
+```

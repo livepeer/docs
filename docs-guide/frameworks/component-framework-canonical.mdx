@@ -1,5 +1,5 @@
 ---
-title: Component Framework — Canonical Taxonomy
+title: Component Framework – Canonical Taxonomy
 sidebarTitle: Component Taxonomy
 description: >-
   Canonical folder structure, categories, sub-niches, and JSDoc standard for
@@ -19,9 +19,9 @@ keywords:
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-owner: '@livepeer/docs-team'
+owner: "@livepeer/docs-team"
 status: active
-version: '1.0'
+version: "1.0"
 created: 2026-03-21T00:00:00.000Z
 lastUpdated: 2026-03-21T00:00:00.000Z
 lastVerified: 2026-04-07
@@ -31,7 +31,7 @@ pageType: reference
 purpose: reference
 ---
 
-# Component Framework — Canonical Taxonomy
+# Component Framework – Canonical Taxonomy
 
 Canonical folder structure, per-component file listing, decision rules, and JSDoc standard for `snippets/components/`. This is the primary reference for authoring and governing components in the Livepeer Docs v2 library.
 
@@ -233,10 +233,10 @@ snippets/
 ```
 
 > **Tier 2 companion files** (props-extracted components) live adjacent to their MDX pages, not here:
-> `v2/[section]/[page-slug]-data.json` — same slug as the page, with `-data` suffix.
+> `v2/[section]/[page-slug]-data.json` – same slug as the page, with `-data` suffix.
 > Written at page-authoring time; see `@aiDiscoverability` section below.
 
-<CustomDivider middleText="Decision Rules" />
+<CustomDivider />
 
 ## Decision Rules
 
@@ -258,16 +258,16 @@ snippets/
 | displays | 17 | 5 |
 | scaffolding | 20 | 4 |
 | integrators | 20 | 4 |
-| config | 1 | — |
+| config | 1 | – |
 | **Total** | **118** | **30** |
 
-<CustomDivider middleText="JSDoc Standard" />
+<CustomDivider />
 
 ## Component JSDoc header standard
 
 Every exported component must include a JSDoc header block with these 7 core tags.
 Hook-using components additionally require `@aiDiscoverability`.
-No other governance tags should be used — removed tags (`@owner`, `@category`,
+No other governance tags should be used – removed tags (`@owner`, `@category`,
 `@tier`, `@contentAffinity`, `@decision`, `@duplicates`, `@lastMeaningfulChange`,
 `@breakingChangeRisk`, `@dependencies`, `@usedIn`) must not appear.
 
@@ -276,12 +276,12 @@ No other governance tags should be used — removed tags (`@owner`, `@category`,
 | Tag | Required | What it does | Values / format |
 |---|---|---|---|
 | `@component` | Yes | Component identity | Export name (PascalCase) |
-| `@type` | Yes | Layer 1 — what kind of component | `elements`, `wrappers`, `displays`, `scaffolding`, `integrators`, `config` |
-| `@subniche` | Yes | Layer 2 — specific sub-concern | Matches folder name: `buttons`, `icons`, `images`, `links`, `text`, `math`, `callouts`, `spacing`, `social`, `a11y`, `containers`, `cards`, `lists`, `steps`, `accordions`, `tables`, `grids`, `code`, `video`, `quotes`, `diagrams`, `response-fields`, `frame-mode`, `heroes`, `portals`, `page-containers`, `feeds`, `blog`, `embeds`, `video-data` |
+| `@type` | Yes | Layer 1 – what kind of component | `elements`, `wrappers`, `displays`, `scaffolding`, `integrators`, `config` |
+| `@subniche` | Yes | Layer 2 – specific sub-concern | Matches folder name: `buttons`, `icons`, `images`, `links`, `text`, `math`, `callouts`, `spacing`, `social`, `a11y`, `containers`, `cards`, `lists`, `steps`, `accordions`, `tables`, `grids`, `code`, `video`, `quotes`, `diagrams`, `response-fields`, `frame-mode`, `heroes`, `portals`, `page-containers`, `feeds`, `blog`, `embeds`, `video-data` |
 | `@status` | Yes | Lifecycle state | `stable`, `experimental`, `deprecated`, `broken` |
-| `@description` | Yes | One-line human-readable description | Plain English sentence — what it renders and when to use it |
+| `@description` | Yes | One-line human-readable description | Plain English sentence – what it renders and when to use it |
 | `@dataSource` | If integrator | Where external data comes from | `none`, `prop`, `CoinGecko API`, `fetch(url)`, `automation/blog`, etc. |
-| `@accepts` | Yes | Extensibility declaration — what the consumer can customise | Comma-separated: `children`, `style`, `className`, `...rest` |
+| `@accepts` | Yes | Extensibility declaration – what the consumer can customise | Comma-separated: `children`, `style`, `className`, `...rest` |
 | `@aiDiscoverability` | If hook-using | Companion file requirement for AI/crawler access | `snapshot`, `props-extracted`, `none` |
 
 After the header block, each prop gets a standard `@param`:
@@ -297,16 +297,16 @@ After the header block, each prop gets a standard `@param`:
 
 | Tag | Reason |
 |---|---|
-| `@owner` | Ownerless governance — was always `docs` for every component |
+| `@owner` | Ownerless governance – was always `docs` for every component |
 | `@category` | Replaced by `@type` (aligned with script governance) |
-| `@tier` | primitive/composite/pattern — replaced by `@type`/`@subniche` |
+| `@tier` | primitive/composite/pattern – replaced by `@type`/`@subniche` |
 | `@contentAffinity` | Not queried by anyone in practice |
-| `@decision` | All said KEEP — served its purpose during audit |
+| `@decision` | All said KEEP – served its purpose during audit |
 | `@duplicates` | All resolved during restructure |
-| `@lastMeaningfulChange` | Not maintained — git blame is authoritative |
-| `@breakingChangeRisk` | All said "low" — not differentiated |
+| `@lastMeaningfulChange` | Not maintained – git blame is authoritative |
+| `@breakingChangeRisk` | All said "low" – not differentiated |
 | `@dependencies` | Listed sibling exports, not actual import deps |
-| `@usedIn` | Stale immediately — `scan-component-imports.js` is the live source |
+| `@usedIn` | Stale immediately – `scan-component-imports.js` is the live source |
 
 ### @status values
 
@@ -315,7 +315,7 @@ After the header block, each prop gets a standard `@param`:
 | `stable` | Production-ready, actively used in v2 pages |
 | `experimental` | Working but API may change |
 | `deprecated` | Still exported for backward compat, do not use in new pages |
-| `broken` | Non-functional (e.g. empty stubs) — flagged for removal or rewrite |
+| `broken` | Non-functional (e.g. empty stubs) – flagged for removal or rewrite |
 
 ### @accepts values
 
@@ -335,15 +335,15 @@ Not required on pure/presentational components.
 
 | Value | Meaning | Companion file location |
 |---|---|---|
-| `snapshot` | Fetches external data at runtime — content invisible to crawlers/AI without a static counterpart | `snippets/data/snapshots/[source-id].json` (central, API-scoped, CI-regenerated) |
-| `props-extracted` | Renders props-driven data through interactive/paginated UI — full data set not in static HTML | `v2/[section]/[page-slug]-data.json` (adjacent to the MDX page) |
-| `none` | Uses hooks for UI state only (zoom, scroll hint, lazy visibility) — no content hidden from crawlers | No companion needed |
+| `snapshot` | Fetches external data at runtime – content invisible to crawlers/AI without a static counterpart | `snippets/data/snapshots/[source-id].json` (central, API-scoped, CI-regenerated) |
+| `props-extracted` | Renders props-driven data through interactive/paginated UI – full data set not in static HTML | `v2/[section]/[page-slug]-data.json` (adjacent to the MDX page) |
+| `none` | Uses hooks for UI state only (zoom, scroll hint, lazy visibility) – no content hidden from crawlers | No companion needed |
 
 **How it works in Mintlify**: `.json` files placed alongside `.mdx` pages in `v2/` are served as static assets at their URL path. A file at `v2/developers/glossary-data.json` is accessible at `https://[domain]/v2/developers/glossary-data.json` and readable by AI crawlers, agents, and LLM pipelines without any build config.
 
 **Write-time obligation**: any author or agent writing a page that uses a `props-extracted` component must create the companion `.json` alongside the MDX.
 
-<CustomDivider middleText="Example Headers" />
+<CustomDivider />
 
 ## Example headers
 
@@ -382,7 +382,7 @@ Not required on pure/presentational components.
  */
 ```
 
-**Integrator (snapshot — external fetch):**
+**Integrator (snapshot – external fetch):**
 ```js
 /**
  * @component   CoinGeckoExchanges
@@ -400,7 +400,7 @@ Not required on pure/presentational components.
  */
 ```
 
-**Hook-using wrapper (props-extracted — interactive UI hides data):**
+**Hook-using wrapper (props-extracted – interactive UI hides data):**
 ```js
 /**
  * @component   SearchTable

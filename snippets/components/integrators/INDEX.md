@@ -1,7 +1,7 @@
-<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
-<!-- Generator: operations/scripts/generators/components/library/generate-component-index.js -->
-<!-- Generated: 2026-04-08T15:37:55.953Z -->
-<!-- Components: 19 | Category: integrators -->
+{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
+{/* Generator: operations/scripts/generators/components/library/generate-component-index.js */}
+{/* Generated: 2026-05-18T10:41:16.360Z */}
+{/* Components: 19 | Category: integrators */}
 
 # Integrators — Component Index
 
@@ -17,7 +17,7 @@ Quick-reference table. For full documentation see [LIBRARY.md](LIBRARY.md).
 | 6 | **CoinGeckoExchanges** | `Coingecko.jsx` | feeds | 🟢 stable | 2 | Sortable table of exchanges listing a token. Keyboard-accessible sort headers. |
 | 7 | **ColumnsBlogCardLayout** | `BlogCards.jsx` | blog | 🟢 stable | 2 | Multi-column BlogCard layout using Mintlify Columns. |
 | 8 | **DiscordAnnouncements** | `BlogCards.jsx` | blog | 🟢 stable | 7 | Discord announcement feed with parsed markdown content. Sanitised HTML. |
-| 9 | **ExternalContent** | `DataEmbed.jsx` | embeds | 🟢 stable | 0 | Fetches and renders external markdown with scrollable container and source link. |
+| 9 | **ExternalContent** | `DataEmbed.jsx` | embeds | 🟢 stable | 0 | Frames external source content with a scrollable container and source link. |
 | 10 | **ForumLatestLayout** | `BlogCards.jsx` | blog | 🟢 stable | 3 | Latest forum topics with banner image and topic cards. |
 | 11 | **LatestVersion** | `Release.jsx` | feeds | 🧪 experimental | 0 | Displays the latest release version string from automation data. |
 | 12 | **LumaEvents** | `BlogCards.jsx` | blog | 🟢 stable | 1 | Upcoming/past event cards from Luma calendar data. |

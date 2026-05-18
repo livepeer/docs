@@ -1,0 +1,378 @@
+---
+title: 'Low-Latency Live Streaming App'
+sidebarTitle: 'Low-Latency Streaming'
+description: >-
+  Build a sub-3-second glass-to-glass streaming app. WHIP ingest, WHEP playback, HLS fallback, Next.js 15 + @livepeer/react.
+keywords:
+  - livepeer
+  - low latency
+  - live streaming
+  - whip
+  - whep
+  - webrtc
+  - hls
+  - tutorial
+  - nextjs
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Browser-to-browser live streaming under three seconds of glass-to-glass latency. WHIP in, WHEP out, HLS fallback for incompatible browsers.</Tip>
+</CenteredContainer>
+
+---
+
+By the end of this tutorial you'll have a Next.js 15 app with two pages: a broadcaster that captures camera and microphone in the browser and ingests via WHIP, and a viewer that plays the same stream via WHEP with HLS fallback. Glass-to-glass latency runs 0.5 to 3 seconds with WebRTC end-to-end; 8 to 20 seconds when the viewer falls back to HLS.
+
+This is the Persona 4 activation moment: the sub-three-second path that the RTMP-and-HLS Transcoding Quickstart can't deliver. The `@livepeer/react` library handles both sides; the orchestration is one Next.js project, two route components, and one environment variable.
+
+<CustomDivider />
+
+## Required Tools
+
+- Node.js 20 or later
+- A WebRTC-capable Livepeer gateway endpoint (paid provider, self-hosted, or any third-party WHIP/WHEP endpoint)
+- A code editor
+
+`@livepeer/react` works against any WHIP/WHEP-compliant endpoint. Self-hosted gateways need WebRTC ingest enabled; see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />. Paid gateway providers expose WHIP and WHEP out of the box.
+
+<CustomDivider />
+
+## Latency Budget
+
+The three-second target breaks down across four hops.
+
+| Hop | Latency budget | Lever |
+|---|---|---|
+| Camera to encoder | 30-50ms | Browser-native; no tuning |
+| WHIP ingest to gateway | 50-200ms | Network distance to gateway |
+| Gateway transcode (passthrough) | 100-300ms | B-frames=0, keyframe interval=1 |
+| WHEP playback to viewer | 50-200ms | Network distance from gateway |
+
+Total typically lands between 500ms and 2 seconds in good conditions. The three-second target absorbs jitter buffers, ICE renegotiation, and the worst geographic case.
+
+B-frames are the gotcha. If the encoder emits B-frames, WebRTC frame ordering breaks and the player falls back to HLS. Force `bframes=0` and `keyint=1` on any encoder you control. Browser-native WebRTC encoders default to compliant settings; OBS, FFmpeg, and other external encoders need explicit configuration.
+
+<CustomDivider />
+
+## Project Bootstrap
+
+<Steps>
+  <Step title="Create the project">
+    ```bash
+    npx create-next-app@latest livepeer-low-latency \
+      --typescript \
+      --tailwind \
+      --app \
+      --src-dir \
+      --import-alias "@/*"
+    cd livepeer-low-latency
+    ```
+  </Step>
+
+  <Step title="Install @livepeer/react">
+    ```bash
+    npm install @livepeer/react livepeer
+    ```
+
+    `@livepeer/react` provides the `Broadcast` (WHIP) and `Player` (WHEP) primitives. The `livepeer` package is the Node SDK used server-side to create streams against your gateway provider.
+  </Step>
+
+  <Step title="Configure environment variables">
+    Save as `.env.local`:
+
+    ```bash
+    # Stream creation endpoint (your gateway provider's API)
+    LIVEPEER_API_URL=https://<your-gateway-provider>/api
+    LIVEPEER_API_KEY=<your-api-key>
+
+    # WebRTC ingest base (WHIP endpoint)
+    NEXT_PUBLIC_WEBRTC_INGEST_BASE=https://<your-gateway>/webrtc
+
+    # WebRTC playback base (WHEP endpoint)
+    NEXT_PUBLIC_WEBRTC_PLAYBACK_BASE=https://<your-gateway>/webrtc
+    ```
+
+    The ingest and playback bases point at your gateway's WHIP and WHEP endpoints. Most gateway providers expose both at predictable paths; check the provider's documentation for the exact URLs. For self-hosted gateways, see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Stream Creation Endpoint
+
+Streams are created server-side so the API key stays out of the browser. The handler returns a `streamKey` and a `playbackId`; the browser uses them to broadcast and play back.
+
+Save as `src/app/api/streams/route.ts`:
+
+```ts
+import { Livepeer } from 'livepeer';
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY!,
+  serverURL: process.env.LIVEPEER_API_URL!,
+});
+
+export async function POST(req: Request) {
+  const { name } = (await req.json()) as { name: string };
+
+  const result = await livepeer.stream.create({
+    name,
+    record: false,
+  });
+
+  return Response.json({
+    streamKey: result.stream?.streamKey,
+    playbackId: result.stream?.playbackId,
+  });
+}
+```
+
+The `record: false` flag keeps the stream live-only. To save to a VOD asset for replay, set `record: true`; the gateway records the stream to an asset that survives after the broadcaster disconnects.
+
+<CustomDivider />
+
+## Broadcaster Page
+
+Save as `src/app/broadcast/page.tsx`:
+
+```tsx
+'use client';
+
+const { useState } = React;
+import * as Broadcast from '@livepeer/react/broadcast';
+import { getIngest } from '@livepeer/react/external';
+
+interface StreamInfo {
+  streamKey: string;
+  playbackId: string;
+}
+
+export default function BroadcastPage() {
+  const [stream, setStream] = useState<StreamInfo | null>(null);
+
+  async function createStream() {
+    const res = await fetch('/api/streams', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: `live-${Date.now()}` }),
+    });
+    const data = await res.json();
+    setStream(data);
+  }
+
+  if (!stream) {
+    return (
+      <main className="max-w-2xl mx-auto p-8">
+        <h1 className="text-2xl font-bold mb-4">Broadcast</h1>
+        <button
+          onClick={createStream}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Create Stream
+        </button>
+      </main>
+    );
+  }
+
+  const ingestUrl = getIngest(stream.streamKey, {
+    baseUrl: process.env.NEXT_PUBLIC_WEBRTC_INGEST_BASE,
+  });
+
+  return (
+    <main className="max-w-2xl mx-auto p-8 space-y-4">
+      <h1 className="text-2xl font-bold">Broadcast</h1>
+      <Broadcast.Root ingestUrl={ingestUrl}>
+        <Broadcast.Container className="w-full aspect-video bg-black rounded">
+          <Broadcast.Video title="Broadcasting" className="w-full h-full" />
+          <Broadcast.Controls className="absolute bottom-4 left-4 flex gap-2">
+            <Broadcast.EnabledTrigger className="bg-red-600 text-white px-3 py-1 rounded text-sm">
+              <Broadcast.EnabledIndicator asChild matcher={false}>
+                <span>Start</span>
+              </Broadcast.EnabledIndicator>
+              <Broadcast.EnabledIndicator asChild matcher={true}>
+                <span>Stop</span>
+              </Broadcast.EnabledIndicator>
+            </Broadcast.EnabledTrigger>
+          </Broadcast.Controls>
+        </Broadcast.Container>
+      </Broadcast.Root>
+      <p className="text-sm text-gray-600">
+        Playback ID: <code>{stream.playbackId}</code>
+      </p>
+      <p className="text-sm">
+        <a href={`/watch/${stream.playbackId}`} className="text-blue-600 underline">
+          Open viewer in another tab
+        </a>
+      </p>
+    </main>
+  );
+}
+```
+
+`getIngest(streamKey, { baseUrl })` builds the full WHIP URL by combining your gateway's base URL with the stream key. The `Broadcast.Root` component negotiates SDP, manages ICE, and sends media tracks via WebRTC. STUN/TURN servers come from the gateway response.
+
+<CustomDivider />
+
+## Viewer Page
+
+Save as `src/app/watch/[playbackId]/page.tsx`:
+
+```tsx
+'use client';
+
+const { use, useEffect, useState } = React;
+import * as Player from '@livepeer/react/player';
+
+interface PageProps {
+  params: Promise<{ playbackId: string }>;
+}
+
+export default function WatchPage({ params }: PageProps) {
+  const { playbackId } = use(params);
+  const [src, setSrc] = useState<Player.Src[] | null>(null);
+
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_WEBRTC_PLAYBACK_BASE;
+    const sources: Player.Src[] = [
+      {
+        type: 'webrtc',
+        src: `${base}/${playbackId}`,
+        mime: null,
+        width: null,
+        height: null,
+      },
+      // Fallback to HLS if WebRTC negotiation fails
+      {
+        type: 'hls',
+        src: `${base?.replace('/webrtc', '/hls')}/${playbackId}/index.m3u8`,
+        mime: 'application/vnd.apple.mpegurl',
+        width: null,
+        height: null,
+      },
+    ];
+    setSrc(sources);
+  }, [playbackId]);
+
+  if (!src) {
+    return <main className="p-8">Loading…</main>;
+  }
+
+  return (
+    <main className="max-w-2xl mx-auto p-8 space-y-4">
+      <h1 className="text-2xl font-bold">Live Stream</h1>
+      <Player.Root src={src} autoPlay volume={0}>
+        <Player.Container className="w-full aspect-video bg-black rounded overflow-hidden">
+          <Player.Video title="Live" className="w-full h-full" />
+        </Player.Container>
+      </Player.Root>
+      <p className="text-sm text-gray-600">
+        Playback ID: <code>{playbackId}</code>
+      </p>
+    </main>
+  );
+}
+```
+
+The Player accepts an array of source candidates, ordered by preference. WebRTC first; HLS as the fallback when the browser can't negotiate WebRTC or the stream has B-frames. `autoPlay` paired with `volume={0}` is the browser-compatible autoplay pattern; some browsers block autoplay with sound.
+
+<CustomDivider />
+
+## First Stream
+
+```bash
+npm run dev
+```
+
+Open two tabs.
+
+**Tab 1**: `http://localhost:3000/broadcast`. Click **Create Stream**. The browser requests camera permission. Click **Start** to begin broadcasting.
+
+**Tab 2**: `http://localhost:3000/watch/<playback-id>` using the playback ID from tab 1. The viewer connects via WebRTC and the live feed appears with sub-three-second latency.
+
+To verify glass-to-glass, point the camera at a stopwatch and view both tabs side-by-side. The viewer should show roughly the same time as the broadcaster.
+
+<CustomDivider />
+
+## Production Considerations
+
+Five things change between this local setup and a production deployment.
+
+**Authentication.** Add user authentication to the `/api/streams` endpoint so anonymous visitors can't create streams. Pair stream creation with JWT-based access control on playback.
+
+**Stream lifecycle.** Streams persist on your gateway even after the broadcaster disconnects. Add a cleanup task or use the gateway's automatic-cleanup setting to release inactive streams.
+
+**Recording.** Set `record: true` when creating streams that should survive as VOD assets. The gateway records to an asset accessible via the `playbackId` after the live stream ends.
+
+**Geographic distribution.** A single-region gateway adds latency for distant viewers. For global low-latency, use a gateway provider with multi-region ingest and playback.
+
+**Player fallback ordering.** The player ranks sources by preference. On some networks (corporate firewalls, VPNs) WebRTC fails to negotiate; HLS fallback takes over. Test both paths under expected viewer network conditions.
+
+Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="WebRTC negotiation fails, viewer falls back to HLS immediately">
+    Two likely causes. First, B-frames are enabled on the encoder; the browser-native encoder is compliant by default, but external encoders need `bframes=0`. Second, STUN/TURN is blocked by the network. Test on a different network or VPN to isolate.
+  </Accordion>
+  <Accordion title="Broadcaster shows preview but stream never starts">
+    `forceEnabled` defaults to false, which means the browser previews before transmitting. Click the **Start** trigger to begin broadcasting. To stream immediately on permission grant, set `forceEnabled={true}` on `Broadcast.Root`.
+  </Accordion>
+  <Accordion title="Viewer shows black screen with WebRTC source selected">
+    SDP negotiation succeeded but media isn't flowing. Check the browser console for ICE failures. On restrictive networks, TURN relays are necessary; confirm your gateway provider includes TURN servers in the SDP answer.
+  </Accordion>
+  <Accordion title="Latency above 5 seconds when both sides on WebRTC">
+    Network distance to the gateway. Check the gateway's geographic location relative to broadcaster and viewer. For multi-region, use a provider with edge ingest and playback.
+  </Accordion>
+  <Accordion title="Stream key visible in browser dev tools">
+    The stream key is intentionally client-side because the broadcaster needs it to ingest. Treat it as a session-scoped credential; rotate it on session start, never reuse across users. Consider one-time stream keys for high-value content.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+You have sub-3-second glass-to-glass streaming using WHIP ingest and WHEP playback. For standard HLS delivery (higher latency, broader compatibility), the same stream object serves both transports simultaneously.
+
+## AI agent prompt
+
+```text
+Build the "Low-Latency Live Streaming App" tutorial as a Next.js App Router project. Create a TypeScript app, install @livepeer/react and livepeer, and use placeholders LIVEPEER_API_URL=<gateway provider API base URL>, LIVEPEER_API_KEY=<gateway provider API key>, NEXT_PUBLIC_WEBRTC_INGEST_BASE=<WHIP base URL>, and NEXT_PUBLIC_WEBRTC_PLAYBACK_BASE=<WHEP base URL>. Implement a server route that creates a stream and returns streamKey plus playbackId, a broadcaster page using @livepeer/react/broadcast and getIngest, and a viewer page using @livepeer/react/player with WebRTC then HLS fallback. Include run commands, browser verification for /broadcast and /watch/[playbackId], and troubleshooting for ICE/TURN failures. Keep the gateway API key server-side and do not use Livepeer Studio-specific endpoints.
+```
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="VOD Upload and Playback" icon="upload" href="/v2/developers/build/tutorials/vod-upload-and-playback">
+    Persist streams as VOD assets and play them back later.
+  </Card>
+  <Card title="Transcoding Quickstart" icon="film" href="/v2/developers/build/video/transcoding-direct-quickstart">
+    The lower-latency-floor RTMP+HLS path for self-hosted setups.
+  </Card>
+  <Card title="Gateway Setup" icon="server" href="/v2/gateways/quickstart/gateway-setup">
+    Self-host a WebRTC-capable gateway end-to-end.
+  </Card>
+  <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
+    Auth, rate limits, geographic distribution, observability.
+  </Card>
+</CardGroup>

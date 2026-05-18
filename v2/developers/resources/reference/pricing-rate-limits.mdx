@@ -1,131 +1,162 @@
 ---
-title: Pricing and rate limits
-sidebarTitle: "Pricing & Rate Limits"
-description: "Livepeer Studio pricing tiers, transcoding costs, AI inference pricing, and rate limit configuration for developers."
-lifecycleStage: discover
-complexity: intermediate
+title: 'Pricing and Rate Limits'
+sidebarTitle: 'Pricing and Rate Limits'
+description: >-
+  Pricing model for Livepeer AI inference and transcoding: per-unit billing,
+  network pricing vs managed pricing, and rate limit behaviour.
 keywords:
-  - livepeer pricing
+  - livepeer
+  - pricing
   - rate limits
-  - transcoding cost
-  - AI inference cost
-  - Studio billing
+  - per pixel
+  - wei per pixel
+  - per second compute
+  - AI inference pricing
+  - TicketBroker
+  - pricePerUnit
 'og:image': /snippets/assets/site/og-image/en/developers.png
 'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 pageType: reference
-purpose: reference
 audience: developer
 status: current
-lastVerified: 2026-04-05T00:00:00.000Z
+lastVerified: '2026-05-13'
 ---
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>The free tier covers development and small-scale testing. Production applications require the Growth tier or above. AI inference pricing is set by orchestrators and not fixed by Studio.</Tip>
+  <Tip>Livepeer network pricing is set by orchestrators and discovered at session time. There is no fixed price list. Check tools.livepeer.cloud/ai/network-capabilities for current warm capabilities and the community gateway's accepted price range.</Tip>
 </CenteredContainer>
 
 ---
 
-<CustomDivider middleText="Studio Pricing Tiers" />
+Livepeer pricing is decentralised: orchestrators advertise prices per pipeline type and model, and gateways filter by their configured maximum. There is no central price list. The prices below reflect community gateway defaults and typical orchestrator ranges as of May 2026.
 
-## Studio pricing tiers
+<CustomDivider />
+
+## Billing Units
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
-      <TableCell header>Tier</TableCell>
-      <TableCell header>Monthly</TableCell>
-      <TableCell header>Transcoding</TableCell>
-      <TableCell header>Concurrent viewers</TableCell>
-      <TableCell header>Storage</TableCell>
+      <TableCell header>Workload</TableCell>
+      <TableCell header>Billing unit</TableCell>
+      <TableCell header>Unit definition</TableCell>
     </TableRow>
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>**Free**</TableCell>
-      <TableCell>$0</TableCell>
-      <TableCell>1,000 min/month included</TableCell>
-      <TableCell>30</TableCell>
-      <TableCell>Included</TableCell>
+      <TableCell>Transcoding</TableCell>
+      <TableCell>Wei per pixel</TableCell>
+      <TableCell>Total output pixels across all renditions per segment</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Growth**</TableCell>
-      <TableCell>$100 minimum</TableCell>
-      <TableCell>$0.33 per 60 min transcoded (after included)</TableCell>
-      <TableCell>50,000</TableCell>
-      <TableCell>Included</TableCell>
+      <TableCell>Batch AI inference (all pipelines except live-video-to-video)</TableCell>
+      <TableCell>Orchestrator-defined per request or per output</TableCell>
+      <TableCell>Varies by pipeline type and orchestrator configuration</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Enterprise**</TableCell>
-      <TableCell>$2,500 (annual commit)</TableCell>
-      <TableCell>Custom</TableCell>
-      <TableCell>Custom (SLA-backed)</TableCell>
-      <TableCell>Custom</TableCell>
+      <TableCell>Live AI (`live-video-to-video`)</TableCell>
+      <TableCell>Wei per second</TableCell>
+      <TableCell>Wall-clock seconds of active inference session</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
-Current pricing is confirmed at https://livepeer.studio/pricing. The table above reflects pricing as of April 2026.
-
-<CustomDivider middleText="AI Inference Pricing" />
-
-## AI inference pricing
-
-AI inference cost is **orchestrator-set**, not fixed by Studio. Orchestrators set their own prices per pipeline. The Studio-managed gateway routes to the cheapest available orchestrator by default.
-
-The indicative rate for text-to-image inference is approximately **$0.019 per megapixel of output** (illustrative -- actual rates vary by orchestrator and network conditions).
-
-**Cost estimation example (text-to-image at 1024x1024):**
-- Output area: 1,024 x 1,024 = 1,048,576 pixels = ~1.05 megapixels
-- At $0.019/MP: approximately $0.020 per image
-- At 1,000 images/day: approximately $20/day
-
-Check your actual costs in the Studio billing dashboard after the first week of production traffic. AI inference costs appear as a line item separate from transcoding costs.
-
-<CustomDivider middleText="Rate Limits" />
-
-## Rate limits
-
-Rate limits are per API key and enforced by the Studio gateway. Limits are visible in the Studio dashboard under **Settings > API Keys > [key name] > Rate Limits**.
-
-Default limits by tier:
-- **Free:** Lower request/minute limits; not suitable for sustained load
-- **Growth:** Standard production limits; sufficient for most applications
-- **Enterprise:** Custom limits by agreement
-
-When a rate limit is exceeded, the API returns `429 Too Many Requests`. Implement exponential backoff in your retry logic to handle `429` responses gracefully.
-
-Rate limit headers are included in every response:
-
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 42
-X-RateLimit-Reset: 1712345678
-```
-
-<CustomDivider middleText="Credits" />
-
-## Streaming credits
-
-Studio offers streaming credits for qualifying projects (open-source, non-profit, hackathon participants). Apply via the Studio dashboard or by contacting support@livepeer.org.
-
-Credit allocation is at Livepeer's discretion and subject to review.
+All prices are denominated in wei (ETH on Arbitrum One). The `TicketBroker` contract settles winning tickets; the expected payment per ticket equals `faceVal × winProb`.
 
 <CustomDivider />
 
-## Related pages
+## Community Gateway
+
+The community gateway at `dream-gateway.livepeer.cloud` is operated by the Livepeer Foundation for development access. It routes to whichever orchestrators in the active set are warm for the requested pipeline.
+
+The community gateway does not publish a fixed price schedule. It accepts jobs within the orchestrator price range active on the network at request time. For development and low-volume testing this is adequate; for production workloads with cost predictability requirements, operate a self-hosted gateway with `-maxPricePerUnit` configured.
+
+**Rate limiting:** The community gateway applies rate limiting to unauthenticated requests. Sustained high-volume traffic will be throttled. There is no published rate limit figure; if requests begin returning `429` responses, reduce request frequency or move to a dedicated gateway.
+
+<CustomDivider />
+
+## Discovering Current Prices
+
+Orchestrators advertise AI pipeline pricing in `aiModels.json` and register this data via the AI Service Registry on Arbitrum One. Gateways query this at session establishment.
+
+To find current prices:
+
+1. **Network capability dashboard:** `tools.livepeer.cloud/ai/network-capabilities` shows warm pipelines and model IDs across the active orchestrator set, but does not display per-orchestrator pricing
+2. **GetOrchestratorInfo RPC:** gateways call this to retrieve price and capability data directly from orchestrators during session setup
+3. **Livepeer Explorer:** `explorer.livepeer.org` shows historical per-unit prices for transcoding orchestrators
+
+<CustomDivider />
+
+## Orchestrator Pricing Reference
+
+Orchestrators configure pricing per pipeline in `aiModels.json`. The `price_per_unit` field is in wei and its meaning varies by pipeline:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Recommended unit interpretation</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image`</TableCell>
+      <TableCell>Wei per image generated</TableCell>
+      <TableCell>Set to 0 to offer free access during development</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image`</TableCell>
+      <TableCell>Wei per image output</TableCell>
+      <TableCell>Same as text-to-image</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>Wei per second of audio transcribed</TableCell>
+      <TableCell>Longer audio = higher expected fee</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`llm`</TableCell>
+      <TableCell>Wei per completion</TableCell>
+      <TableCell>No token-count billing; flat per-call pricing</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`live-video-to-video`</TableCell>
+      <TableCell>Wei per second of inference</TableCell>
+      <TableCell>Billed by elapsed session time, not frame count</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+For transcoding, `-pricePerUnit` is set in wei per pixel at node startup, not in `aiModels.json`.
+
+<Note>
+  Setting `price_per_unit: 0` makes the orchestrator accessible at any gateway's configured maximum price. Use `0` for development and test environments; set a positive value in production to recover infrastructure costs.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="AI Production Checklist" icon="list-check" href="/v2/developers/guides/ai/production-checklist">
-    Cost estimation, monitoring, and launch readiness for AI applications.
+  <Card title="Probabilistic Micropayments" icon="coin" href="/v2/developers/guides/payments/probabilistic-micropayments" arrow horizontal>
+    How prices translate to PM ticket face values and win probabilities.
   </Card>
-  <Card title="APIs" icon="plug" href="/v2/developers/resources/reference/apis">
-    Full endpoint reference and OpenAPI spec.
+  <Card title="Per-Second Compute" icon="clock" href="/v2/developers/guides/payments/per-second-compute" arrow horizontal>
+    Per-second billing model for the live-video-to-video pipeline.
+  </Card>
+  <Card title="Orchestrator Selection" icon="server" href="/v2/developers/guides/payments/orchestrator-selection-and-pricing" arrow horizontal>
+    How gateways filter orchestrators by price and capability.
+  </Card>
+  <Card title="ETH Escrow" icon="lock" href="/v2/developers/guides/payments/eth-escrow-and-deposits" arrow horizontal>
+    TicketBroker deposits that cover expected payment for jobs submitted.
   </Card>
 </CardGroup>

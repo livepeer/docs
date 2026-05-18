@@ -1,7 +1,7 @@
-<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
-<!-- Generator: operations/scripts/generators/components/library/generate-component-index.js -->
-<!-- Generated: 2026-04-08T15:37:55.952Z -->
-<!-- Components: 10 | Category: wrappers -->
+{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
+{/* Generator: operations/scripts/generators/components/library/generate-component-index.js */}
+{/* Generated: 2026-05-18T10:41:16.358Z */}
+{/* Components: 10 | Category: wrappers */}
 
 # Wrappers — Component Index
 

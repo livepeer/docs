@@ -1,11 +1,11 @@
 ---
-title: 'Scripts Catalog'
-sidebarTitle: 'Scripts Catalog'
-description: 'Generated catalog of all governed repository scripts, grouped by type with pipeline flow diagram.'
+title: "Scripts Catalog"
+sidebarTitle: "Scripts Catalog"
+description: "Generated catalog of all governed repository scripts, grouped by type with pipeline flow diagram."
 consumer: [human, agent]
 maintenance: generated
 status: active
-generator: 'operations/tests/unit/script-docs.test.js'
+generator: "operations/tests/unit/script-docs.test.js"
 keywords: ['livepeer', 'scripts catalog', 'aggregate inventory', 'repository', 'scripts', 'pipeline']
 ---
 
@@ -24,7 +24,7 @@ Run command: node operations/tests/unit/script-docs.test.js --write --rebuild-in
 **Important**: Do not manually edit this file; run `node operations/tests/unit/script-docs.test.js --write --rebuild-indexes`. <br/>
 </Note>
 
-The governed script library currently indexes **366** script(s).
+The governed script library currently indexes **408** script(s).
 
 ## Pipeline Flow
 
@@ -32,38 +32,37 @@ The governed script library currently indexes **366** script(s).
 flowchart LR
   DEV([👤 Developer])
 
-  subgraph P1["🔴 P1 — Commit Gate (49)"]
+  subgraph P1["🔴 P1 — Commit Gate (48)"]
     direction TB
     c0["pre-commit"]
-    c1["page-imports-audit.js"]
-    c2["page-links-audit.js"]
+    c1["sync-generated-files.js"]
+    c2["generate-docs-guide-components-index.js"]
     c3["task-preflight.js"]
-    c4["page-integrity-dispatch.js"]
-    c5["sync-generated-files.js"]
-    c6["generate-docs-guide-components-index.js"]
-    c7["validate-locks.js"]
-    c8["enforce-generated-file-banners.js"]
-    c9["validate-codex-task-contract.js"]
-    c10["audit-script-inventory.js"]
-    c11["pre-commit-v1"]
-    cmore["... 37 more"]
+    c4["validate-locks.js"]
+    c5["validate-component-creation.js"]
+    c6["enforce-generated-file-banners.js"]
+    c7["check-new-file-governance.js"]
+    c8["validate-codex-task-contract.js"]
+    c9["audit-script-inventory.js"]
+    c10["browser.test.js"]
+    c11["v2-link-audit.js"]
+    cmore["... 36 more"]
   end
 
-  subgraph P2["🟠 P2 — Push Gate (13)"]
+  subgraph P2["🟠 P2 — Push Gate (12)"]
     direction TB
     p0["pre-push"]
-    p1["update-livepeer-release.js"]
-    p2["generate-glossary-companions.js"]
-    p3["generate-docs-guide-indexes.js"]
-    p4["generate-docs-guide-pages-index.js"]
-    p5["validate-locks.js"]
-    p6["test-v2-pages.js"]
-    p7["validate-codex-task-contract.js"]
-    p8["openapi-reference-audit.js"]
-    p9["run-all.js"]
-    p10["run-pr-checks.js"]
-    p11["docs-guide-sot.test.js"]
-    pmore["... 1 more"]
+    p1["generate-glossary-companions.js"]
+    p2["generate-docs-guide-indexes.js"]
+    p3["generate-docs-guide-pages-index.js"]
+    p4["validate-locks.js"]
+    p5["test-v2-pages.js"]
+    p6["validate-codex-task-contract.js"]
+    p7["openapi-reference-audit.js"]
+    p8["run-all.js"]
+    p9["run-pr-checks.js"]
+    p10["docs-guide-sot.test.js"]
+    p11["update-livepeer-release.test.js"]
   end
 
   subgraph P3["🟡 P3 — PR Gate (45)"]
@@ -71,33 +70,33 @@ flowchart LR
     r0["check-codex-pr-overlap.js"]
     r1["generate-component-registry.js"]
     r2["generate-docs-index.js"]
-    r3["generate-script-registry.js"]
-    r4["generate-snippets-registry.js"]
-    r5["generate-root-governance-artifacts.js"]
-    r6["check-component-docs.js"]
-    r7["check-component-css.js"]
-    r8["test-v2-pages.js"]
-    r9["validate-codex-task-contract.js"]
-    r10["check-pr-template.js"]
-    r11["openapi-reference-audit.js"]
+    r3["generate-snippets-registry.js"]
+    r4["generate-root-governance-artifacts.js"]
+    r5["check-component-docs.js"]
+    r6["check-component-css.js"]
+    r7["test-v2-pages.js"]
+    r8["validate-codex-task-contract.js"]
+    r9["check-pr-template.js"]
+    r10["openapi-reference-audit.js"]
+    r11["run-all.js"]
     rmore["... 33 more"]
   end
 
-  subgraph P5_P6["🔵 P5/P6 — Scheduled (16)"]
+  subgraph P5_P6["🔵 P5/P6 — Scheduled (14)"]
     direction TB
-    s0["fetch-forum-data.js"]
-    s1["fetch-youtube-data.js"]
-    s2["project-showcase-sync.js"]
-    s3["scan-component-imports.js"]
-    s4["page-imports-audit.js"]
-    s5["page-links-audit.js"]
-    s6["page-integrity-dispatch.js"]
-    s7["governance-pipeline.js"]
-    s8["generate-llms-files.js"]
-    s9["generate-component-registry.js"]
-    s10["generate-docs-index.js"]
-    s11["generate-ai-sitemap.js"]
-    smore["... 4 more"]
+    s0["scan-component-imports.js"]
+    s1["page-links-audit.js"]
+    s2["page-integrity-dispatch.js"]
+    s3["governance-pipeline.js"]
+    s4["generate-llms-files.js"]
+    s5["generate-component-registry.js"]
+    s6["generate-docs-index.js"]
+    s7["generate-ai-sitemap.js"]
+    s8["fetch-config-flags.js"]
+    s9["fetch-exchanges-data.js"]
+    s10["repair-component-metadata.js"]
+    s11["openapi-reference-audit.js"]
+    smore["... 2 more"]
   end
 
   DEV -->|commit| P1
@@ -112,407 +111,364 @@ flowchart LR
 
 | Script | Description | Pipeline | Concern | Usage |
 |---|---|---|---|---|
-| `audit-component-usage.js` | Component usage auditor — scans pages for component usage patterns and reports statistics | manual | components | `node operations/scripts/audits/components/documentation/audit-component-usage.js` |
-| `audit-copy-patterns.js` | Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report. | manual | content | `node operations/scripts/audits/content/quality/audit-copy-patterns.js --tab &lt;name&gt; &#124; --all [--output &lt;file&gt;]` |
-| `audit-glossary-gaps.js` | Glossary gap auditor — scans v2 MDX pages for terminology candidates not | manual | content | `node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]` |
-| `audit-icon-usage.js` | Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop | manual | content | `node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]` |
-| `audit-media-assets.js` | Audits repo media assets, references, ignore leakage, and externalized asset branch inventory. | manual | content | `node operations/scripts/audits/content/quality/audit-media-assets.js [flags]` |
-| `audit-python.py` | Python page audit utility — validates routed docs files, snippet imports, and internal links, then writes page-audit reports | manual | content | `python3 operations/scripts/audits/content/quality/audit-python.py [flags]` |
-| `audit-script-categories.js` | Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports | manual | governance | `node operations/scripts/audits/governance/scripts/audit-script-categories.js [flags]` |
-| `audit-tasks-folders.js` | Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves | manual | governance | `node operations/scripts/audits/governance/repo/audit-tasks-folders.js [flags]` |
-| `audit-v2-usefulness.js` | Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification | manual | content | `node operations/scripts/audits/content/quality/audit-v2-usefulness.js [flags]` |
-| `docs-page-research.js` | Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports. | manual | content | `node operations/scripts/audits/content/veracity/docs-page-research.js [flags]` |
-| `docs-quality-and-freshness-audit.js` | Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content | manual | content | `node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]` |
-| `docs-research-adjudication.js` | Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition. | manual | content | `node operations/scripts/audits/content/veracity/docs-research-adjudication.js [flags]` |
-| `generate-content-gap-reconciliation.js` | Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts | manual | content | `node operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]` |
-| `generate-v2-folder-governance-cleanup-matrix.js` | V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied. | manual | governance | `node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md &lt;path&gt;] [--report-json &lt;path&gt;] [--as-of &lt;YYYY-MM-DD&gt;]` |
-| `scan-component-imports.js` | Scans MDX imports to produce component-usage-map.json and detect @usedIn drift. | P6 | components | `node operations/scripts/audits/components/library/scan-component-imports.js [--verify] [--since &lt;commit&gt;]` |
-| `script-footprint-and-usage-audit.js` | Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo | manual | governance | `node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]` |
-| `style-and-language-homogenizer-en-gb.js` | EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content | manual | content | `node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]` |
-| `terminology-search.js` | Terminology search — searches glossary/terminology data for definitions | manual | content | `node operations/scripts/audits/content/reference/terminology-search.js [flags]` |
-
-## ⚙️ Automations
-
-| Script | Description | Pipeline | Concern | Usage |
-|---|---|---|---|---|
-| `add-callouts.js` | Callout inserter — adds Note/Tip/Warning callout components to MDX files based on content patterns | manual | governance | `node tools/dev/authoring/add-callouts.js [flags]` |
-| `blockchain-page-spec.js` |  | manual | content |  |
-| `branch-watch.js` |  | manual | content |  |
-| `catalog-config.js` |  | manual | content |  |
-| `cleanup-local-dev-sessions.js` | Local dev session cleanup — preserves Mint on port 3333 and terminates stale Playwright plus non-3333 Mint session trees | manual | governance | `node operations/scripts/integrators/governance/cleanup-local-dev-sessions.js [--apply] [--install-cron] [--remove-cron] [--keep-port 3333]` |
-| `cli-guardrails.test.js` |  | manual | content | `node operations/scripts/i18n/test/cli-guardrails.test.js [flags]` |
-| `constants.js` |  | manual | content |  |
-| `contract-address-routes.test.js` |  | manual | content |  |
-| `contract-verifier.test.js` |  | manual | content |  |
-| `contracts-browser-harness.js` | Unified scoped-browser harness for the contracts recovery browser gates. | manual | testing | `node operations/tests/contracts-browser-harness.js` |
-| `convert-rss-to-mdx.js` | RSS-to-MDX converter — imports RSS feed items and converts to MDX page format | manual | content | `node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [flags]` |
-| `cross-agent-packager.js` | Cross-agent packager — bundles audit reports and repo state into agent-consumable packages | manual | ai | `node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]` |
-| `debug-mint-dev.js` | Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues | manual | governance | `node tools/dev/preview/debug-mint-dev.js [flags]` |
-| `docs-json-localizer.test.js` |  | manual | content | `node operations/scripts/i18n/test/docs-json-localizer.test.js [flags]` |
-| `ensure-mint-watcher-patch.sh` | Mint watcher patcher — applies patch to fix Mintlify file watcher issues in dev mode | manual | governance | `bash tools/dev/preview/ensure-mint-watcher-patch.sh [flags]` |
-| `export-portable-skills.js` | Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift. | manual | ai | `node operations/scripts/integrators/ai/agents/export-portable-skills.js --write&#124;--check [--skills name[,name...]]` |
-| `fetch-contract-addresses.js` | Thin CLI entrypoint for the chain-first contracts pipeline. | manual | content | `node .github/scripts/fetch-contract-addresses.js [--dry-run] [--check] [--skip-verify]` |
-| `fetch-contract-addresses.test.js` |  | manual | content |  |
-| `fetch-discord-announcements.js` | Fetches announcements from Discord channels via bot token. Writes per-product | manual | content | `node .github/scripts/fetch-discord-announcements.js` |
-| `fetch-external-docs.sh` | External docs fetcher — pulls doc fragments from external GitHub repos into snippets/composables/pages/shared/ for inclusion in builds | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh [flags]` |
-| `fetch-ghost-blog-data.js` | Fetches Livepeer blog posts via public RSS feed (blog.livepeer.org/rss/). No API key required. Writes to snippets/data/social-feeds/ghostBlogData.jsx. | manual | content | `node .github/scripts/fetch-ghost-blog-data.js` |
-| `fetch-github-discussions.js` | Fetches latest GitHub Discussions via public GraphQL API, writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-github-discussions.js` |
-| `fetch-github-releases.js` | Fetches latest GitHub Releases via public REST API, writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-github-releases.js` |
-| `fetch-lpt-exchanges.sh` | LPT exchange data fetcher — pulls exchange listing data for LPT token pages | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh [flags]` |
-| `fetch-openapi-specs.sh` | OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages | manual | content | `bash operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh [flags]` |
-| `fetch-rss-blog-data.js` | Generic RSS blog fetcher. Reads product config, fetches RSS feeds (Ghost, Leaflet, etc.), writes per-product JSX data files. | manual | content | `node .github/scripts/fetch-rss-blog-data.js` |
-| `format-mdx.js` | MDX formatter — applies the repo-owned conservative MDX formatter used by the Livepeer authoring extension. | manual | governance | `node tools/dev/authoring/format-mdx.js [--check&#124;--write] [--files a,b]` |
-| `frontmatter.test.js` |  | manual | content | `node operations/scripts/i18n/test/frontmatter.test.js [flags]` |
-| `generate-changelog.js` | Unified changelog generator for all changelog targets (solutions, contracts, resources). | manual | content | `CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]` |
-| `generate-localized-docs-json.js` | Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json | manual | content | `node operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js [flags]` |
-| `generate-mint-dev-scope.js` | Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages | manual | governance | `node tools/dev/preview/generate-mint-dev-scope.js [flags]` |
-| `incidents.js` |  | manual | content |  |
-| `lock-release.js` | Codex lock release utility — releases stale codex lock files | manual | ai | `node operations/scripts/integrators/ai/codex/lock-release.js [flags]` |
-| `mdx-translate.test.js` |  | manual | content | `node operations/scripts/i18n/test/mdx-translate.test.js [flags]` |
-| `mint-custom-loader.sh` | Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source. | manual | governance | `bash tools/dev/preview/mint-custom-loader.sh [flags]` |
-| `mint-dev.sh` | Mintlify dev server launcher — starts mint dev with correct configuration | manual | governance | `bash tools/dev/preview/mint-dev.sh [flags]` |
-| `pipeline.js` |  | manual | content |  |
-| `playwright-blockchain-contracts.js` | CP-7: Verifies the blockchain-contracts page renders from generated pipeline data, | manual | testing | `node operations/tests/playwright-blockchain-contracts.js` |
-| `playwright-contract-addresses.js` | CP-6: Verifies the canonical contract-addresses reference page, the dedicated verifier page, | manual | testing | `node operations/tests/playwright-contract-addresses.js` |
-| `provenance.test.js` |  | manual | content | `node operations/scripts/i18n/test/provenance.test.js [flags]` |
-| `provider-openrouter.test.js` |  | manual | content | `node operations/scripts/i18n/test/provider-openrouter.test.js [flags]` |
-| `publish-v2-internal-reports.js` | Report publisher — publishes v2 internal audit reports to configured output locations | manual | governance | `node operations/scripts/integrators/governance/pipelines/publish-v2-internal-reports.js [flags]` |
-| `rename-vscode-codex-chat.js` | VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing. | manual | governance | `node tools/dev/editor/rename-vscode-codex-chat.js --title "New title" [--workspace &lt;path&gt;]` |
-| `solidity-parser.js` |  | manual | content |  |
-| `spec.js` |  | manual | content |  |
-| `studio-docs-migration.js` | Migrates livepeer-studio subfolder path references after moving | manual | content | `node operations/scripts/integrators/content/studio-docs-migration.js [--write]` |
-| `sync-codex-skills.js` | Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode. | manual | ai | `node operations/scripts/integrators/ai/agents/sync-codex-skills.js [flags]` |
-| `task-cleanup.js` | Codex task cleanup utility — reports and prunes merged clean worktrees plus stale local codex branches after merge | manual | ai | `node operations/scripts/integrators/ai/codex/task-cleanup.js [flags]` |
-| `task-preflight.js` | Codex task preflight — generates task setup files and validates preconditions | P1 | ai | `node operations/scripts/integrators/ai/codex/task-preflight.js [flags]` |
-| `translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | manual | content | `node operations/scripts/integrators/content/language-translation/translate-docs.js [flags]` |
-| `validate-generated.js` | Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity | manual | content | `node operations/scripts/integrators/content/language-translation/validate-generated.js [flags]` |
+| `audit-ai-discoverability.js` | Audit JSX components for AI discoverability compliance: missing tags on hook-using components, missing companion JSON files. | manual | maintenance | `node operations/scripts/audits/components/library/audit-ai-discoverability.js [--json] [--md] [--staged]` |
+| `audit-component-styles.js` | Audit JSX components for style pattern violations: inline styles, top-level constants, missing named style objects. | manual | maintenance | `node operations/scripts/audits/components/library/audit-component-styles.js [--json] [--md] [--staged] [--fix-preview]` |
+| `audit-component-usage.js` | Component usage auditor – scans pages for component usage patterns and reports statistics | manual | maintenance | `node operations/scripts/audits/components/documentation/audit-component-usage.js` |
+| `audit-copy-patterns.js` | Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report. | manual | health | `node operations/scripts/audits/content/quality/audit-copy-patterns.js --tab &lt;name&gt; &#124; --all [--output &lt;file&gt;]` |
+| `audit-glossary-gaps.js` | Glossary gap auditor – scans v2 MDX pages for terminology candidates not | manual | maintenance | `node operations/scripts/audits/content/reference/audit-glossary-gaps.js [flags]` |
+| `audit-icon-usage.js` | Icon usage auditor – scans v2 and docs-guide MDX pages for icon prop | manual | maintenance | `node operations/scripts/audits/content/reference/audit-icon-usage.js [flags]` |
+| `audit-media-assets.js` | Audits repo media assets, references, ignore leakage, and externalized asset branch inventory. | manual | health | `node operations/scripts/audits/content/quality/audit-media-assets.js [flags]` |
+| `audit-python.py` | Python page audit utility – validates routed docs files, snippet imports, and internal links, then writes page-audit reports | manual | health | `python3 operations/scripts/audits/content/quality/audit-python.py [flags]` |
+| `audit-script-categories.js` | Script auditor – analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports | manual | governance | `node operations/scripts/audits/governance/scripts/audit-script-categories.js [flags]` |
+| `audit-tasks-folders.js` | Tasks folder auditor – checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves | manual | governance | `node operations/scripts/audits/governance/repo/audit-tasks-folders.js [flags]` |
+| `audit-v2-usefulness.js` | Usefulness auditor – scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification | manual | health | `node operations/scripts/audits/content/quality/audit-v2-usefulness.js [flags]` |
+| `docs-page-research.js` | Docs page research runner – extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports. | manual | health | `node operations/scripts/audits/content/veracity/docs-page-research.js [flags]` |
+| `docs-quality-and-freshness-audit.js` | Content freshness audit – checks for TODO/TBD/Coming Soon markers, thin pages, stale content | manual | health | `node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]` |
+| `docs-research-adjudication.js` | Docs research adjudication ledger – validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition. | manual | health | `node operations/scripts/audits/content/veracity/docs-research-adjudication.js [flags]` |
+| `generate-content-gap-reconciliation.js` | Content-gap reconciliation generator – compares blueprint coverage against v2 MDX and writes reconciliation artefacts | manual | maintenance | `node operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js [flags]` |
+| `generate-v2-folder-governance-cleanup-matrix.js` | V2 folder governance cleanup matrix generator – inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied. | manual | governance | `node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md &lt;path&gt;] [--report-json &lt;path&gt;] [--as-of &lt;YYYY-MM-DD&gt;]` |
+| `page-imports-audit.js` | Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports. | manual | health | `node operations/scripts/audits/content/health/page-imports-audit.js [--staged&#124;--scope routable-v2&#124;repo&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--output-dir &lt;dir&gt;]` |
+| `page-links-audit.js` | Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links. | P6 | health | `node operations/scripts/audits/content/health/page-links-audit.js [--full&#124;--staged&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--external-policy classify&#124;validate] [--output-dir &lt;dir&gt;]` |
+| `scan-component-imports.js` | Scans MDX imports to produce component-usage-map.json and detect @usedIn drift. | P6 | maintenance | `node operations/scripts/audits/components/library/scan-component-imports.js [--verify] [--since &lt;commit&gt;]` |
+| `script-footprint-and-usage-audit.js` | Script footprint auditor – analyses script file sizes, dependencies, and usage patterns across the repo | manual | governance | `node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]` |
+| `style-and-language-homogenizer-en-gb.js` | EN-GB style homogeniser – finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content | manual | brand | `node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]` |
+| `terminology-search.js` | Terminology search – searches glossary/terminology data for definitions | manual | maintenance | `node operations/scripts/audits/content/reference/terminology-search.js [flags]` |
 
 ## 🏭 Generators
 
 | Script | Description | Pipeline | Concern | Usage |
 |---|---|---|---|---|
-| `docs-path-sync.js` | Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates. | manual | governance | `const sync = require('./docs-path-sync');` |
-| `generate-ai-sitemap.js` | AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator). | P6 | content | `node operations/scripts/generators/content/seo/generate-ai-sitemap.js [flags]` |
-| `generate-ai-skills-indexes.js` |  | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check&#124;--write]` |
+| `create-codex-pr.test.js` | Tests create-codex-pr.js – validates PR creation logic and branch naming | manual |  | `node operations/tests/unit/create-codex-pr.test.js [flags]` |
+| `docs-research-packet.test.js` | Tests docs-research-packet.js – validates nav, manifest, and path tranche derivation plus packet-summary rollups for the generic research packet engine. | manual |  | `node operations/tests/unit/docs-research-packet.test.js` |
+| `generate-ai-sitemap.js` | AI sitemap generator – produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator). | P6 | discoverability | `node operations/scripts/generators/content/seo/generate-ai-sitemap.js [flags]` |
+| `generate-ai-skills-indexes.js` | * @mode read-only | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check&#124;--write]` |
 | `generate-ai-tools-inventory.js` | Generates the AI tools inventory report from the registry. Split from validate-ai-tools-registry.js. | manual | governance | `node operations/scripts/generators/governance/reports/generate-ai-tools-inventory.js [--output &lt;path&gt;]` |
-| `generate-ai-tools-registry-artifacts.js` | Syncs missing AI-tools registry artifact entries for canonical skill templates, exported portable skills, and repo-local skill roots from the live filesystem. | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js [--write&#124;--check]` |
+| `generate-ai-tools-registry-artifacts.js` | Keep ai-tools/registry/ai-tools-registry.json aligned with live skill/template/export files so ownerless governance coverage stays complete. | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js [--write&#124;--check]` |
 | `generate-ai-tools-visual-library.js` | Generates the canonical AI-tools visual library for GitHub workflows and dispatcher actions, plus staged audit outputs. | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js [--check&#124;--write]` |
-| `generate-api-docs.sh` | API docs generator — generates API reference pages from OpenAPI specs | manual | content | `bash operations/scripts/generators/content/reference/generate-api-docs.sh [flags]` |
-| `generate-component-docs.js` | Generates published component library MDX pages from the registry. Replaces update-component-library.sh. | manual | components | `node operations/scripts/generators/components/documentation/generate-component-docs.js [--dry-run&#124;--fix&#124;--write&#124;--check] [--template-only] [--category &lt;name&gt;]` |
-| `generate-component-examples.js` | Keeps per-file example MDX files in sync with the component registry. | manual | components |  |
-| `generate-component-registry.js` | Parses JSDoc from all component exports and produces component-registry.json. | P3, P5, P6 | components | `node operations/scripts/generators/components/library/generate-component-registry.js [--validate-only]` |
+| `generate-api-docs.sh` | API docs generator – generates API reference pages from OpenAPI specs | manual | maintenance | `bash operations/scripts/generators/content/reference/generate-api-docs.sh [flags]` |
+| `generate-component-docs.js` | Generates published component library MDX pages from the registry. Replaces update-component-library.sh. | manual | maintenance | `node operations/scripts/generators/components/documentation/generate-component-docs.js [--dry-run&#124;--fix&#124;--write&#124;--check] [--template-only] [--category &lt;name&gt;]` |
+| `generate-component-examples.js` | Keeps per-file example MDX files in sync with the component registry | manual | maintenance | `node operations/scripts/generators/components/library/generate-component-examples.js [--scaffold] [--fix-imports] [--check]` |
+| `generate-component-index.js` | Generates per-grouping INDEX.md quick-reference tables from component-registry.json | manual | maintenance | `node operations/scripts/generators/components/library/generate-component-index.js [--dry-run] [--check] [--category elements]` |
+| `generate-component-library.js` | Generates per-grouping LIBRARY.md files and a root LIBRARY.md index from | manual | maintenance | `node operations/scripts/generators/components/library/generate-component-library.js [--dry-run] [--check] [--category elements]` |
+| `generate-component-registry.js` | Parses JSDoc from all component exports and produces component-registry.json. | P3, P5, P6 | maintenance | `node operations/scripts/generators/components/library/generate-component-registry.js [--validate-only]` |
+| `generate-component-snippets.js` | Generate VS Code snippet definitions from component-registry.json. | manual | maintenance | `node operations/scripts/generators/components/library/generate-component-snippets.js [--check] [--write]` |
 | `generate-docs-guide-components-index.js` | Generates components-catalog.mdx in docs-guide/catalog/ from component-registry.json and component-usage-map.json. | P1 | governance | `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix&#124;--write&#124;--check]` |
 | `generate-docs-guide-indexes.js` | Generates docs-guide workflow/template catalogs and optionally verifies freshness | P2 | governance | `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]` |
 | `generate-docs-guide-pages-index.js` | Generates the docs-guide pages catalog | P2 | governance | `node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]` |
-| `generate-docs-index.js` | Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo. | P3, P6 | content | `node operations/scripts/generators/content/catalogs/generate-docs-index.js [flags]` |
-| `generate-glossary-companions.js` | Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages | P2 | content | `node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]` |
-| `generate-glossary.js` | Glossary generator — produces glossary data file from terminology sources | manual | content | `node operations/scripts/generators/content/reference/generate-glossary.js [flags]` |
-| `generate-hero-background.js` |  | manual | media |  |
-| `generate-hero-image.js` |  | manual | media |  |
-| `generate-llms-files.js` |  | P6 | ai | `node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]` |
-| `generate-og-images.js` | Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews. | manual | content | `node operations/scripts/generators/content/seo/generate-og-images.js [--dry-run] [--only &lt;locale:section-id&#124;fallback&gt;]` |
-| `generate-pages-index.js` | Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index | manual | content | `node operations/scripts/generators/content/catalogs/generate-pages-index.js [flags]` |
-| `generate-repo-governance-status.js` | Generates the repo-governance map and deterministic status reports from the canonical top-level governance registry. | manual | governance | `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js [--write&#124;--check]` |
-| `generate-root-governance-artifacts.js` |  | P3 | governance | `node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js [--write&#124;--check]` |
-| `generate-script-registry.js` | Derives tools/config/registry/script-registry.json from JSDoc headers across all governed | P3 | governance | `node operations/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]` |
-| `generate-snippets-registry.js` |  | P3 | governance | `node operations/scripts/generators/governance/catalogs/generate-snippets-registry.js [--write&#124;--check]` |
-| `generate-ui-templates.js` | Generates the UI template catalog and VS Code snippets from canonical template/component sources. | manual | components | `node operations/scripts/generators/components/library/generate-ui-templates.js [flags]` |
-| `mintlify-canonical-sync.js` | Shared Mintlify canonical sync library — loads the Mintlify consumer registry, validates cleanup state, and plans deterministic reference rewrites. | manual | governance | `const sync = require('./mintlify-canonical-sync');` |
+| `generate-docs-index.js` | Docs index generator – produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo. | P3, P6 | maintenance | `node operations/scripts/generators/content/catalogs/generate-docs-index.js [flags]` |
+| `generate-glossary-companions.js` | Companion JSON generator – extracts SearchTable itemsList data from glossary MDX pages | P2 | maintenance | `node operations/scripts/generators/content/reference/generate-glossary-companions.js [--dry-run] [--check]` |
+| `generate-glossary.js` | Glossary generator – produces glossary data file from terminology sources | manual | maintenance | `node operations/scripts/generators/content/reference/generate-glossary.js [flags]` |
+| `generate-governance-map.js` | Walks all GOVERNANCE.md markers, validates links, detects staleness, and generates the governance map | manual | governance | `node operations/scripts/generators/governance/map/generate-governance-map.js [--write&#124;--check&#124;--json]` |
+| `generate-hero-background.js` | generate hero background | manual | * @niche media | `node operations/scripts/generators/media/generate-hero-background.js` |
+| `generate-hero-image.js` | generate hero image | manual | * @niche media | `node operations/scripts/generators/media/generate-hero-image.js` |
+| `generate-llms-files.js` | * @mode read-only | P6 | discoverability | `node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]` |
+| `generate-og-images.js` | Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews. | manual | discoverability | `node operations/scripts/generators/content/seo/generate-og-images.js [--dry-run] [--only &lt;locale:section-id&#124;fallback&gt;]` |
+| `generate-pages-index.js` | Pages index generator – generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index | manual | maintenance | `node operations/scripts/generators/content/catalogs/generate-pages-index.js [flags]` |
+| `generate-repo-governance-status.js` | Generates the top-level repo-governance map and status reports from the canonical steady-state registry. | manual | governance | `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js [--write&#124;--check]` |
+| `generate-root-governance-artifacts.js` | Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports. | P3 | governance | `node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js [--write&#124;--check]` |
+| `generate-script-registry.js` | Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth. | manual | governance | `node operations/scripts/generators/governance/catalogs/generate-script-registry.js [--dry-run]` |
+| `generate-snippets-registry.js` | Generates the snippets root registry from the live snippets filesystem plus structured folder metadata embedded in snippets/guide.mdx. | P3 | governance | `node operations/scripts/generators/governance/catalogs/generate-snippets-registry.js [--write&#124;--check]` |
+| `generate-ui-templates.js` | Generates the UI template catalog and VS Code snippets from canonical template/component sources. | manual | maintenance | `node operations/scripts/generators/components/library/generate-ui-templates.js [flags]` |
 | `new-script.js` | $&#123;params.summary&#125;`, | manual | governance | <code>$&#123;cmd&#125; [flags]`,</code> |
-| `og-image-policy.js` | OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata. | manual | governance | `node operations/scripts/config/og-image-policy.js [flags]` |
+| `orchestrator-guides-research-review.test.js` | Tests orchestrator-guides-research-review.js – validates live Orchestrators Guides tranche extraction, report summary helpers, and registry-drift detection for the research packet generator. | manual |  | `node operations/tests/unit/orchestrator-guides-research-review.test.js` |
 
 ## ✅ Validators
 
 | Script | Description | Pipeline | Concern | Usage |
 |---|---|---|---|---|
-| `agent-write-admission.test.js` |  | manual |  | `node operations/tests/unit/agent-write-admission.test.js [--staged&#124;--files a,b]` |
-| `audit-script-inventory.js` | Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category. | P1 | governance | `node operations/scripts/validators/governance/pr/audit-script-inventory.js [--fix] [--dry-run] [--staged-only&#124;--staged] [--files &lt;path[,path...]&gt;] [--quiet] [--json] [--md] [--output &lt;dir&gt;] [--verbose]` |
-| `check-agent-docs-freshness.js` |  | manual | governance | `node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold &lt;days&gt;] [--json]` |
-| `check-anchor-usage.js` | Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page | manual | content | `node operations/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope &lt;glob&gt;]` |
-| `check-companion-manifest.js` |  | manual | governance |  |
-| `check-component-css.js` | Validates component files against component governance styling rules. | P3 | components | `node operations/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]` |
-| `check-component-docs.js` | Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata. | P3 | components | `node operations/scripts/validators/components/documentation/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]` |
-| `check-component-health.js` | Checks component library health: | manual | components |  |
+| `agent-write-admission.test.js` | Enforces narrow agent-write admission rules for staged or explicit files: no tracked local-only outputs and no undeclared root writes. | manual |  | `node operations/tests/unit/agent-write-admission.test.js [--staged&#124;--files a,b]` |
+| `ai-tools-registry.test.js` | Validates the AI-tools registry contract, full tracked ai-tools coverage, and the Wave 1 inventory source-of-truth boundary. | P1, P3 |  | `node operations/tests/unit/ai-tools-registry.test.js [--staged&#124;--files path[,path]]` |
+| `ai-tools-visual-library.test.js` | Validates that the canonical AI-tools visual library is current, complete, and synchronized with the repo workflow inventory. | P1, P3 |  | `node operations/tests/unit/ai-tools-visual-library.test.js [--staged] [--files path[,path]]` |
+| `audit-script-inventory-repair-rules.test.js` | Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety. | manual |  | `node operations/tests/unit/audit-script-inventory-repair-rules.test.js` |
+| `audit-script-inventory.js` | Audit the governed script corpus and regenerate the canonical script inventory outputs from current headers and filesystem state. | P1 | governance | `node operations/scripts/validators/governance/pr/audit-script-inventory.js [--fix] [--dry-run] [--staged-only&#124;--staged] [--files &lt;path[,path...]&gt;] [--quiet] [--json] [--md] [--output &lt;dir&gt;] [--verbose]` |
+| `authoring-tools.test.js` | Unit tests for repo-owned authoring tools – verifies MDX formatting and real-path completion/validation helpers. | P1, P3 |  | `node operations/tests/unit/authoring-tools.test.js` |
+| `browser.test.js` | Puppeteer browser integration test – renders pages from docs.json and checks for console errors, load failures, and visual regressions | P1 |  | `node operations/tests/integration/browser.test.js [flags]` |
+| `check-agent-docs-freshness.js` | * @mode read-only | manual | governance | `node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold &lt;days&gt;] [--json]` |
+| `check-agent-docs-freshness.test.js` | Tests the agent governance freshness validator against the canonical runtime file set. | P1, P3 |  | `node operations/tests/unit/check-agent-docs-freshness.test.js` |
+| `check-anchor-usage.js` | Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page | manual | health | `node operations/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope &lt;glob&gt;]` |
+| `check-companion-manifest.js` | check companion manifest | manual | governance | `node operations/scripts/validators/governance/ai/check-companion-manifest.js` |
+| `check-component-css.js` | Validates component files against component governance styling rules. | P3 | maintenance | `node operations/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]` |
+| `check-component-docs.js` | Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata. | P3 | maintenance | `node operations/scripts/validators/components/documentation/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]` |
+| `check-component-health.js` | Checks component library health: imports, exports, registry sync, and usage patterns | manual | maintenance | `node operations/scripts/validators/components/library/check-component-health.js [--check] [--report]` |
 | `check-component-immutability.js` | Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label. | manual | governance | `node operations/scripts/validators/governance/pr/check-component-immutability.js --base-ref main` |
-| `check-description-quality.js` | Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse | manual | content | `node operations/scripts/validators/content/structure/check-description-quality.js [--path &lt;repo-path&gt;] [--strict]` |
-| `check-docs-path-sync.js` | Docs path sync validator — detects staged page moves that require docs.json or governed path reference rewrites. | manual | content | `node operations/scripts/validators/content/structure/check-docs-path-sync.js --staged` |
-| `check-double-headers.js` | Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content. | manual | content | `node operations/scripts/validators/content/structure/check-double-headers.js [--staged&#124;--file &lt;path&gt;&#124;--files &lt;a,b&gt;] [--fix]` |
-| `check-governance-approvals.js` | Enforces human approval labels and PR-body evidence for governance-sensitive pull requests. | manual | governance | `node operations/scripts/validators/governance/pr/check-governance-approvals.js [--base-ref &lt;branch&gt;] [--files &lt;path[,path...]&gt;] [--json]` |
-| `check-grammar-en-gb.js` | Deterministic UK English grammar checker for prose content with optional conservative autofix for safe rules. | manual | content | `node operations/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full&#124;changed] [--file &lt;path[,path...]&gt;] [--fix] [--strict]` |
-| `check-mdx-component-scope.js` | Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components. | manual | components | `node operations/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]` |
-| `check-mdx-safe-markdown.js` | Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns. | manual | content | `node operations/scripts/validators/content/structure/check-mdx-safe-markdown.js [--staged&#124;--files a,b] [--json]` |
-| `check-mintlify-canonical-sync.js` | Validates that the Mintlify canonical source, public wrapper, archived legacy sources, and registered consumers stay synchronized. | manual | governance | `node operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js [--staged] [--json]` |
-| `check-naming-conventions.js` | Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components. | manual | components | `node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration&#124;strict-camel&#124;strict-pascal]` |
-| `check-no-ai-stash.sh` | AI stash enforcer — blocks push if AI temporary/stash files are present in working tree | manual | ai | `bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]` |
-| `check-page-endings.js` | Validates that English v2 MDX pages end with an approved navigational or closing element | manual | content | `node operations/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]` |
+| `check-component-props.js` | Component prop governance validator. Checks Tab/Accordion icon props, code block metadata, Card CustomCardTitle usage, inline styles, CustomDivider placement, Mermaid colour governance, and import ordering across v2 MDX pages (checks 5.18-5.20, 5.22, 5.26-5.28, 5.34). | manual | maintenance | `node operations/scripts/validators/components/library/check-component-props.js [--scope=full&#124;changed] [--json] [--md] [--help]` |
+| `check-component-props.test.js` | Unit tests for check-component-props.js validator. Tests each check function with inline MDX fixtures. | manual |  | `node operations/tests/unit/check-component-props.test.js` |
+| `check-description-quality.js` | Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse | manual | health | `node operations/scripts/validators/content/structure/check-description-quality.js [--path &lt;repo-path&gt;] [--strict]` |
+| `check-docs-guide-reference-freshness.js` | Checks docs-guide feature/reference pages for missing internal links, retired root references, unmanaged TODO markers, and missing evidence dates. | manual | governance | `node operations/scripts/validators/governance/compliance/check-docs-guide-reference-freshness.js [--json] [--include-reference]` |
+| `check-docs-path-sync.js` | Docs path sync validator – detects staged page moves that require docs.json or governed path reference rewrites. | manual | health | `node operations/scripts/validators/content/structure/check-docs-path-sync.js --staged` |
+| `check-double-headers.js` | Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content. | manual | health | `node operations/scripts/validators/content/structure/check-double-headers.js [--staged&#124;--file &lt;path&gt;&#124;--files &lt;a,b&gt;] [--fix]` |
+| `check-governance-approvals.js` | Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence. | manual | governance | `node operations/scripts/validators/governance/pr/check-governance-approvals.js [--base-ref &lt;branch&gt;] [--files &lt;path[,path...]&gt;] [--json]` |
+| `check-governance-markers.js` | Validates GOVERNANCE.md presence in all required folders and checks link integrity | manual | governance | `node operations/scripts/validators/governance/compliance/check-governance-markers.js [--json]` |
+| `check-grammar-en-gb.js` | Deterministic UK English grammar checker for prose content with optional conservative autofix for safe rules. | manual | brand | `node operations/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full&#124;changed] [--file &lt;path[,path...]&gt;] [--fix] [--strict]` |
+| `check-jsdoc-headers.js` | Validates that all JS files in governed locations have core JSDoc tags | manual | governance | `node operations/scripts/validators/governance/compliance/check-jsdoc-headers.js [--json]` |
+| `check-mdx-component-scope.js` | Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components. | manual | maintenance | `node operations/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]` |
+| `check-mdx-safe-markdown.js` | Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns. | manual | health | `node operations/scripts/validators/content/structure/check-mdx-safe-markdown.js [--staged&#124;--files a,b] [--json]` |
+| `check-mintlify-canonical-sync.js` | Enforce the Mintlify canonical-sync contract so archived legacy sources stay moved, registered consumers stay updated, and retained-source logs match the registry. | manual | governance | `node operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js [--staged] [--json]` |
+| `check-mintlify-canonical-sync.test.js` | Tests the Mintlify canonical-sync registry, validator, and remediator contract against the canonical cleanup surfaces. | P1, P3 |  | `node operations/tests/unit/check-mintlify-canonical-sync.test.js [--staged]` |
+| `check-naming-conventions.js` | Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components. | manual | maintenance | `node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration&#124;strict-camel&#124;strict-pascal]` |
+| `check-new-file-governance.js` | Validates newly staged files have required governance metadata (JSDoc, frontmatter, workflow headers) | P1 | governance | `node operations/scripts/validators/governance/compliance/check-new-file-governance.js [--all&#124;--staged]` |
+| `check-no-ai-stash.sh` | AI stash enforcer – blocks push if AI temporary/stash files are present in working tree | manual | discoverability | `bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]` |
+| `check-page-endings.js` | Validates that English v2 MDX pages end with an approved navigational or closing element | manual | health | `node operations/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]` |
 | `check-pr-template.js` | Enforces that PR descriptions include required change and rationale sections before merge | P3 | governance | `PR_BODY="..." node operations/scripts/enforcers/pr/check-pr-template.js` |
-| `check-proper-nouns.js` | Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens. | manual | content | `node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file &lt;path[,path...]&gt;] [--fix]` |
-| `check-repo-governance-sync.js` | Validates that the top-level repo-governance registry, generated outputs, and referenced steady-state paths stay aligned. | manual | governance | `node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js [--json]` |
-| `check-root-governance-sync.js` |  | manual | governance | `node operations/scripts/validators/governance/compliance/check-root-governance-sync.js [--json]` |
-| `component-layout-governance.js` | Component layout governance validator — checks v2 page layouts against approved component contracts | manual | components | `node operations/scripts/validators/components/library/component-layout-governance.js [flags]` |
-| `docs-fact-registry.js` | Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner. | manual | content | `node operations/scripts/audits/content/veracity/docs-fact-registry.js [flags]` |
-| `enforce-generated-file-banners.js` | Validates "do not edit" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js. | P1 | content | `node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]` |
-| `governance-approval-policy.test.js` |  | P3 |  | `node operations/tests/unit/governance-approval-policy.test.js` |
-| `imports-cli.test.js` |  | manual |  | `node operations/tests/unit/imports-cli.test.js` |
-| `imports.test.js` | Compatibility wrapper for page-imports-audit.js that preserves the legacy imports.test surface while delegating to the canonical operations audit. | P1, P3 | content | `node operations/tests/unit/imports.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
-| `links-cli.test.js` |  | manual |  | `node operations/tests/unit/links-cli.test.js` |
-| `links-imports.test.js` | Compatibility alias for links.test.js that preserves the legacy links-imports entrypoint while delegating to the link-only validator. | P1, P3 | content | `node operations/tests/unit/links-imports.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
-| `links.test.js` | Fast link validator for staged and repo-scoped markdown/MDX checks, with explicit file-read failures and JSX href detection for local validation lanes. | P1, P3 | content | `node operations/tests/unit/links.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
-| `lint-copy.js` | Enforce banned word and phrase rules on MDX content files. | manual | content | `node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]` |
-| `lint-patterns.js` | Enforce Tier 2 copy pattern rules on MDX content files. | manual | content | `node operations/scripts/validators/content/copy/lint-patterns.js [file or glob] [flags]` |
-| `lint-structure.js` | Enforce structural rules on MDX content files. | manual | content | `node operations/scripts/validators/content/structure/lint-structure.js [file] [flags]` |
-| `page-imports-audit.js` | Canonical page import audit — validates page-reachable MDX, JS, JSX, TS, TSX, and JSON imports and forbids React runtime imports on Mintlify page surfaces. | P1, P5 | content | `node operations/scripts/audits/content/health/page-imports-audit.js [--staged&#124;--scope routable-v2&#124;repo&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--output-dir &lt;dir&gt;]` |
-| `page-imports-audit.test.js` |  | manual |  | `node operations/tests/unit/page-imports-audit.test.js` |
-| `page-integrity-dispatch.test.js` |  | manual |  | `node operations/tests/unit/page-integrity-dispatch.test.js` |
-| `page-integrity-rolling-issue.test.js` |  | manual |  | `node operations/tests/unit/page-integrity-rolling-issue.test.js` |
-| `page-links-audit.js` | Canonical page-link audit — validates internal page refs, anchors, JSX link props, and optional external URL health for v2 page surfaces. | P1, P5, P6 | content | `node operations/scripts/audits/content/health/page-links-audit.js [--full&#124;--staged&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--external-policy classify&#124;validate] [--output-dir &lt;dir&gt;]` |
-| `repo-governance-sync.test.js` |  | P3 |  | `node operations/tests/unit/repo-governance-sync.test.js` |
+| `check-proper-nouns.js` | Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens. | manual | brand | `node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file &lt;path[,path...]&gt;] [--fix]` |
+| `check-repo-governance-sync.js` | Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths. | manual | governance | `node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js [--json]` |
+| `check-root-governance-sync.js` | Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest. | manual | governance | `node operations/scripts/validators/governance/compliance/check-root-governance-sync.js [--json]` |
+| `check-script-locations.js` | Validates all JS files are in governed locations per the script framework | manual | governance | `node operations/scripts/validators/governance/compliance/check-script-locations.js [--json]` |
+| `check-translation-freshness.js` | Compares modification dates of source pages to translations, flags stale translations | manual | integrations | `node operations/scripts/validators/content/language-translation/check-translation-freshness.js [--json]` |
+| `check-voice-register.js` | Checks MDX pages with audience frontmatter for prohibited phrases from the wrong voice register | manual | brand | `node operations/scripts/validators/content/copy/check-voice-register.js [--json]` |
+| `check-workflow-governance.js` | Checks every .github/workflows/*.yml for: (1) governance comment headers | manual | governance | `node operations/scripts/validators/governance/pr/check-workflow-governance.js [--check&#124;--json&#124;--fix-audit]` |
+| `check-workflow-headers.js` | Validates that GitHub Actions workflow YAML files have governance comment headers | manual | governance | `node operations/scripts/validators/governance/compliance/check-workflow-headers.js [--json]` |
+| `cli-guardrails.test.js` | Tests i18n CLI guardrails – validates argument validation and safety checks | manual | integrations | `node operations/scripts/i18n/test/cli-guardrails.test.js [flags]` |
+| `codex-commit.test.js` | Tests codex-commit.js – validates commit message generation and contract compliance | manual |  | `node operations/tests/unit/codex-commit.test.js [flags]` |
+| `codex-skill-sync.test.js` | Tests sync-codex-skills.js – validates skill file and companion bundle synchronisation between sources | manual |  | `node operations/tests/unit/codex-skill-sync.test.js [flags]` |
+| `component-governance-generators.test.js` | Verifies component governance generators produce coherent registry, usage-map, and docs outputs. | P1 |  | `node operations/tests/unit/component-governance-generators.test.js` |
+| `component-governance-utils.test.js` | Verifies shared component governance utility parsing, scanning, and archive exclusion behavior. | P1 |  | `node operations/tests/unit/component-governance-utils.test.js` |
+| `component-layout-governance.js` | Component layout governance validator – checks v2 page layouts against approved component contracts | manual | maintenance | `node operations/scripts/validators/components/library/component-layout-governance.js [flags]` |
+| `contracts-addresses-pipeline.test.js` | Regression tests for the contracts proof catalog, generated registry output, shared contracts surface wiring, blocking anomaly behavior, workflow cadence alignment, and route freshness dependencies. | P1 |  | `node operations/tests/unit/contracts-addresses-pipeline.test.js` |
+| `contracts-view-model.test.js` | Focused regression tests for the shared contracts view-model helper surface. | P3 |  | `node operations/tests/unit/contracts-view-model.test.js` |
+| `copy-lint.test.js` | Copy lint unit suite – validates fixture-driven copy-governance checks and runs changed-file scoped lint aggregation for authored docs pages. | P1, P3 |  | `node operations/tests/unit/copy-lint.test.js [--staged] [--files &lt;a,b,c&gt;]` |
+| `docs-authoring-rules.test.js` | Verifies guide-layout warning rules and deterministic code-block icon repair for authored docs pages. | P1 |  | `node operations/tests/unit/docs-authoring-rules.test.js` |
+| `docs-fact-registry.js` | Docs fact registry validator – validates repo-native research claim registries and provides normalized claim-family data for the manual research runner. | manual | health | `node operations/scripts/audits/content/veracity/docs-fact-registry.js [flags]` |
+| `docs-fact-registry.test.js` | Tests docs-fact-registry.js – validates claim-family registry schema checks and normalized loading by domain. | manual |  | `node operations/tests/unit/docs-fact-registry.test.js [flags]` |
+| `docs-guide-sot.test.js` | Validates docs-guide source-of-truth coverage, README pointers, and generated index freshness | P1, P2, P3 |  | `node operations/tests/unit/docs-guide-sot.test.js [flags]` |
+| `docs-json-localizer.test.js` | Tests docs-json-localizer – validates locale docs.json transformation logic | manual | integrations | `node operations/scripts/i18n/test/docs-json-localizer.test.js [flags]` |
+| `docs-navigation.test.js` | Validates docs.json page-entry syntax, reports missing routes, warns on orphaned canonical v2 pages, suggests remaps, and optionally applies approved remaps | P1, P3, P6 |  | `node operations/tests/unit/docs-navigation.test.js [flags]` |
+| `docs-page-research.test.js` | Tests docs-page-research.js – validates claim extraction, contradiction detection, and evidence-source adapters for the experimental research runner. | manual |  | `node operations/tests/unit/docs-page-research.test.js [flags]` |
+| `docs-page-scope.test.js` | Verifies generated authored-page scope helpers so warning-only validators skip generated docs pages while keeping authored pages in scope. | P1 |  | `node operations/tests/unit/docs-page-scope.test.js` |
+| `docs-path-sync.test.js` | Unit tests for docs path sync – validates staged move detection, deterministic docs.json/reference rewrites, validator behavior, and remediator write mode. | P1, P3 |  | `node operations/tests/unit/docs-path-sync.test.js` |
+| `docs-research-adjudication.test.js` | Tests docs-research-adjudication.js – validates adjudication-ledger schema, report-aware outcome recording, and trust-tier summary rules for measured research-skill review outcomes. | manual |  | `node operations/tests/unit/docs-research-adjudication.test.js [flags]` |
+| `docs-route-scope.test.js` | Verifies docs.json-derived tab and group route scopes resolve to live files. | P1 |  | `node operations/tests/unit/docs-route-scope.test.js` |
+| `domain-pages-audit.js` | Audits deployed docs page HTTP status codes (v1, v2, or both) and emits a stable JSON report | manual |  | `node operations/tests/integration/domain-pages-audit.js [flags]` |
+| `enforce-generated-file-banners.js` | Validates "do not edit" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js. | P1 | health | `node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check [--staged]` |
+| `export-portable-skills.test.js` | Tests export-portable-skills.js – validates portable skill export packs from canonical templates. | P1, P3 |  | `node operations/tests/unit/export-portable-skills.test.js [flags]` |
+| `frontmatter-taxonomy.test.js` | Verifies shared docs frontmatter taxonomy normalization and purpose mapping. | P1 | governance | `node operations/tests/unit/frontmatter-taxonomy.test.js` |
+| `frontmatter.test.js` | Tests frontmatter parser – validates frontmatter read/write roundtrip | manual | integrations | `node operations/scripts/i18n/test/frontmatter.test.js [flags]` |
+| `generated-artifacts-policy.test.js` | Tests generated artifact governance manifest – validates enums, path matching, and hook-policy expectations | manual |  | `node operations/tests/unit/generated-artifacts-policy.test.js` |
+| `governance-approval-policy.test.js` | Tests the production governance approval policy and PR approval validator scenarios. | P3 |  | `node operations/tests/unit/governance-approval-policy.test.js` |
+| `imports-cli.test.js` | Unit tests for imports.test.js – validates CLI arg parsing, import resolution, and markdown exclusion. | manual |  | `node operations/tests/unit/imports-cli.test.js` |
+| `imports.test.js` | Compatibility wrapper for page-imports-audit.js that preserves the legacy imports.test surface while delegating to the canonical operations audit. | P1, P3 | health | `node operations/tests/unit/imports.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
+| `links-cli.test.js` | Unit tests for links.test.js – validates CLI arg parsing, JSX href detection, and repo-scope markdown handling. | manual |  | `node operations/tests/unit/links-cli.test.js` |
+| `links-imports.test.js` | Compatibility alias for links.test.js that preserves the legacy links-imports entrypoint while delegating to the link-only validator. | P1, P3 | health | `node operations/tests/unit/links-imports.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
+| `links.test.js` | Fast link validator for staged and repo-scoped markdown/MDX checks, with explicit file-read failures and JSX href detection for local validation lanes. | P1, P3 | health | `node operations/tests/unit/links.test.js [--dry-run] [--scope routable-v2&#124;repo] [--staged] [--files &lt;paths&gt;]` |
+| `lint-copy.js` | Enforce banned word and phrase rules on MDX content files. | manual | brand | `node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]` |
+| `lint-patterns.js` | Enforce Tier 2 copy pattern rules on MDX content files. | manual | brand | `node operations/scripts/validators/content/copy/lint-patterns.js [file or glob] [flags]` |
+| `lint-structure.js` | Enforce structural rules on MDX content files. | manual | health | `node operations/scripts/validators/content/structure/lint-structure.js [file] [flags]` |
+| `mdx-component-runtime-smoke.js` | Smoke-tests sentinel MDX routes for runtime component failures, focused on page-killing render errors from MDX-imported JSX modules. | manual |  | `node operations/tests/integration/mdx-component-runtime-smoke.js [--routes route[,route...]] [--base-url http://localhost:3000]` |
+| `mdx-component-runtime-smoke.test.js` | Unit tests for the MDX runtime smoke helpers – covers arg parsing, sentinel route selection, trigger logic, and failure classification. | manual |  | `node operations/tests/unit/mdx-component-runtime-smoke.test.js` |
+| `mdx-component-scope.test.js` | Unit tests for the MDX-facing component scope validator – covers unsafe private helpers, safe inline logic, and imported helper patterns. | manual |  | `node operations/tests/unit/mdx-component-scope.test.js` |
+| `mdx-guards.test.js` | Enforces MDX guardrails – globals imports, math delimiters, markdown table line breaks | P1, P3 |  | `node operations/tests/unit/mdx-guards.test.js [flags]` |
+| `mdx-safe-markdown.test.js` | Fixture-driven unit tests for repo-wide MDX-safe markdown repair and validation helpers. | P1 |  | `node operations/tests/unit/mdx-safe-markdown.test.js` |
+| `mdx-translate.test.js` | Tests MDX translation – validates content block translation logic | manual | integrations | `node operations/scripts/i18n/test/mdx-translate.test.js [flags]` |
+| `mdx.test.js` | Validates MDX syntax and structure – checks for parse errors, invalid JSX, broken components | P1, P3 |  | `node operations/tests/unit/mdx.test.js [flags]` |
+| `migrate-assets-to-branch.test.js` | Unit tests for migrate-assets-to-branch.js – validates CLI defaults, ambiguous basename detection, deterministic rewrites, and end-to-end branch migration in a temp git repo | manual |  | `node operations/tests/unit/migrate-assets-to-branch.test.js` |
+| `og-image-policy.test.js` | Unit tests for og-image-policy – validates route mapping, locale asset selection, fallback assignment, and URL guardrails. | manual |  | `node operations/tests/unit/og-image-policy.test.js [flags]` |
+| `openapi-reference-audit.js` | Comprehensive OpenAPI spec validation – checks references, schemas, examples. Supports --strict (validate), --fix (repair), and report modes. | P2, P3, P5, P6 |  | `node operations/tests/integration/openapi-reference-audit.js [flags]` |
+| `openapi-reference-audit.test.js` | Unit tests for openapi-reference-audit.js – tests individual audit rules and fix logic | manual |  | `node operations/tests/unit/openapi-reference-audit.test.js [flags]` |
+| `openapi-rolling-issue.test.js` | Tests OpenAPI rolling issue tracker – validates issue creation and dedup logic | manual |  | `node operations/tests/unit/openapi-rolling-issue.test.js [flags]` |
+| `ownerless-governance.test.js` | Validates the ownerless governance manifest, primary gate-layer contract, and forbidden human-owner dependency in governed policy and GitHub surfaces. | P1, P3 |  | `node operations/tests/unit/ownerless-governance.test.js [--staged&#124;--files a,b]` |
+| `page-imports-audit.test.js` | Tests page-imports-audit.js – validates forbidden React imports, missing JSON imports, and output-dir parsing. | manual |  | `node operations/tests/unit/page-imports-audit.test.js` |
+| `page-integrity-dispatch.test.js` | Tests page-integrity-dispatch.js – validates repair sequencing across page links and page imports on a temporary v2 fixture. | manual |  | `node operations/tests/unit/page-integrity-dispatch.test.js` |
+| `page-integrity-rolling-issue.test.js` | Tests page integrity rolling issue helper – validates dedup, issue action selection, and issue body structure. | manual |  | `node operations/tests/unit/page-integrity-rolling-issue.test.js` |
+| `post-remediation-verify.test.js` | 10 test cases covering registry loading, file substitution, per-file | manual | governance | `node operations/tests/unit/post-remediation-verify.test.js` |
+| `precommit-staged-cache.test.js` | Tests precommit-staged-cache.js – validates staged-tree cache hits, invalidation, and pruning | P1 |  | `node operations/tests/unit/precommit-staged-cache.test.js` |
+| `provenance.test.js` | Tests provenance tracker – validates translation provenance recording | manual | integrations | `node operations/scripts/i18n/test/provenance.test.js [flags]` |
+| `provider-openrouter.test.js` | Tests OpenRouter provider – validates API call logic and response parsing | manual | integrations | `node operations/scripts/i18n/test/provider-openrouter.test.js [flags]` |
+| `quality.test.js` | Content quality checks – validates frontmatter completeness, thin content detection, placeholder flagging | P1, P3 |  | `node operations/tests/unit/quality.test.js [flags]` |
+| `regression-bisect.js` | Uses git bisect with an automated Puppeteer test to binary-search | manual | health | `node operations/scripts/validators/content/structure/regression-bisect.js --route /v2/path --error "ReferenceError" [--good abc123] [--bad HEAD]` |
+| `remediate-styles.test.js` | Unit tests for deterministic style remediations, including audit-category aliases. | P1, P3 |  | `node operations/tests/unit/remediate-styles.test.js` |
+| `repair-governance.test.js` | Tests repair-governance.js for safe dry-run, fix, rollback, strict exit handling, and workflow contract coverage. | manual |  | `node operations/tests/unit/repair-governance.test.js` |
+| `repair-spelling.test.js` | Unit tests for repair-spelling.js – validates deterministic spelling fixes and exclusion ranges | manual |  | `node operations/tests/unit/repair-spelling.test.js [flags]` |
+| `repo-audit-pipeline.test.js` | Tests repo-audit-orchestrator.js pipeline – validates mode/scope combinations and report output | manual |  | `node operations/tests/unit/repo-audit-pipeline.test.js [flags]` |
+| `repo-governance-sync.test.js` | Tests the top-level repo-governance registry, generated map and status outputs, and sync validator. | P3 |  | `node operations/tests/unit/repo-governance-sync.test.js` |
 | `review-governance-repair-checklist.js` | Generates a review checklist for dry-run governance repair proposals that require human approval before fix mode is applied. | manual | governance | `node operations/scripts/validators/governance/compliance/review-governance-repair-checklist.js [--output &lt;dir&gt;] [--json] [--md]` |
-| `root-governance-sync.test.js` |  | P3 |  | `node operations/tests/unit/root-governance-sync.test.js` |
-| `run-pr-checks.test.js` |  | manual |  | `node operations/tests/unit/run-pr-checks.test.js` |
-| `test-mintlify-version-language-toggle.js` |  | manual | content | `node operations/scripts/i18n/test-mintlify-version-language-toggle.js [flags]` |
-| `test-v2-pages.js` |  | P2, P3 | content | `node operations/scripts/validators/content/structure/test-v2-pages.js [flags]` |
-| `v2-link-audit.js` | Compatibility wrapper for page-links-audit.js that preserves the legacy v2-link-audit entrypoint while delegating to the canonical operations audit. | P1, P5, P6 | content | `node operations/tests/integration/v2-link-audit.js [flags]` |
-| `v2-link-audit.test.js` |  | manual |  | `node operations/tests/unit/v2-link-audit.test.js [flags]` |
-| `validate-ai-tools-registry.js` | AI-tools registry validator and report writer for source-of-truth coverage, lifecycle, lane alignment, and generated inventory output. | manual | governance | `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]` |
-| `validate-codex-task-contract.js` | Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches | P1, P2, P3 | governance | `node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js [flags]` |
-| `validate-locks.js` | Codex lock validator — checks for stale or conflicting lock files before push | P1, P2 | ai | `node operations/scripts/validators/ai/codex/validate-locks.js [flags]` |
+| `root-allowlist-format.test.js` | Validates that .allowlist stays machine-readable, root-only, and aligned with the canonical root-governance manifest. | P1, P3 |  | `node operations/tests/unit/root-allowlist-format.test.js` |
+| `root-governance-sync.test.js` | Tests the canonical root-governance manifest, generated projections, and sync validator. | P3 |  | `node operations/tests/unit/root-governance-sync.test.js` |
+| `run-pr-checks.test.js` | Tests run-pr-checks lane parsing, branch-health registry coverage, and incremental summary/progress behavior. | manual |  | `node operations/tests/unit/run-pr-checks.test.js` |
+| `script-docs.test.js` | Enforces script header schema, keeps group script indexes in sync, and builds aggregate script catalog | P1, P3 |  | `node operations/tests/unit/script-docs.test.js [flags]` |
+| `skill-docs.test.js` | Validates governed skill documentation frontmatter, references, and contract integrity for canonical templates and local skill files. | P1, P3 |  | `node operations/tests/unit/skill-docs.test.js [--staged] [--files path[,path]]` |
+| `snippets-root-governance.test.js` | Validates the governed two-file snippets root model and enforces freshness for the generated snippets registry. | P3 |  | `node operations/tests/unit/snippets-root-governance.test.js` |
+| `spelling.test.js` | Spelling check – validates content against custom dictionary with en-GB rules | P1, P3 |  | `node operations/tests/unit/spelling.test.js [flags]` |
+| `style-guide.test.js` | Style guide compliance – checks en-GB conventions, heading case, formatting rules | P1, P3 |  | `node operations/tests/unit/style-guide.test.js [flags]` |
+| `sweep-console-errors.js` | Visits every v2 route registered in docs.json, captures HTTP status, | manual | health | `node operations/scripts/validators/content/structure/sweep-console-errors.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]` |
+| `sweep-delta-report.js` | Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline, | manual | health | `node operations/scripts/validators/content/structure/sweep-delta-report.js [--update-baseline] [--routes /v2/a,/v2/b] [--base-url http://localhost:3000]` |
+| `TEMPLATE.test.js` | Template for category-scoped component unit tests. | manual |  | `node operations/tests/unit/components/TEMPLATE.test.js` |
+| `test-mintlify-version-language-toggle.js` | test mintlify version language toggle | manual | integrations | `node operations/scripts/i18n/test-mintlify-version-language-toggle.js [flags]` |
+| `test-v2-pages.js` | test v2 pages | P2, P3 | health | `node operations/scripts/validators/content/structure/test-v2-pages.js [flags]` |
+| `ui-template-generator.test.js` | Validates UI template artifacts, canonical template MDX safety, and Mint parse-surface boundaries before mint dev encounters them | P1, P3 |  | `node operations/tests/unit/ui-template-generator.test.js [flags]` |
+| `update-livepeer-release.test.js` | Verifies the go-livepeer release updater writes the canonical release data module shape. | P2 |  | `node operations/tests/unit/update-livepeer-release.test.js` |
+| `v2-folder-governance-cleanup-matrix.test.js` | Unit tests for the v2 folder governance cleanup matrix generator – verifies core classification, targeting, and age-bucket rules. | manual |  | `node operations/tests/unit/v2-folder-governance-cleanup-matrix.test.js` |
+| `v2-link-audit.js` | Compatibility wrapper for page-links-audit.js that preserves the legacy v2-link-audit entrypoint while delegating to the canonical operations audit. | P1, P5, P6 | health | `node operations/tests/integration/v2-link-audit.js [flags]` |
+| `v2-link-audit.selftest.js` | Self-test suite for v2-link-audit.js – validates audit logic against known fixtures | manual |  | `node operations/tests/integration/v2-link-audit.selftest.js [flags]` |
+| `v2-link-audit.test.js` | Unit tests for v2-link-audit.js – tests individual link checking rules | manual |  | `node operations/tests/unit/v2-link-audit.test.js [flags]` |
+| `v2-wcag-audit.js` | WCAG accessibility audit for v2 pages – checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair. | P1 |  | `node operations/tests/integration/v2-wcag-audit.js [flags]` |
+| `v2-wcag-audit.selftest.js` | Self-test suite for v2-wcag-audit.js – validates WCAG audit logic against known fixtures | manual |  | `node operations/tests/integration/v2-wcag-audit.selftest.js [flags]` |
+| `v2-wcag-audit.test.js` | Unit tests for v2-wcag-audit.js – tests individual WCAG rules | manual |  | `node operations/tests/unit/v2-wcag-audit.test.js [flags]` |
+| `validate-ai-tools-registry.js` | Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned. | manual | governance | `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]` |
+| `validate-codex-task-contract.js` | Codex task contract enforcer – validates branch naming, task files, PR body, and issue state for codex branches | P1, P2, P3 | governance | `node operations/scripts/validators/governance/compliance/validate-codex-task-contract.js [flags]` |
+| `validate-codex-task-contract.test.js` | Tests validate-codex-task-contract.js – validates contract checking logic | manual |  | `node operations/tests/unit/validate-codex-task-contract.test.js [flags]` |
+| `validate-component-creation.js` | Validates new/modified .jsx files in snippets/components/ for 7-tag JSDoc presence, | P1 | maintenance | `node operations/scripts/validators/components/library/validate-component-creation.js [--check] [--fix] [--fix --verify] [--dry-run] [--staged] [--files path,path]` |
+| `validate-locks.js` | Codex lock validator – checks for stale or conflicting lock files before push | P1, P2 | discoverability | `node operations/scripts/validators/ai/codex/validate-locks.js [flags]` |
 | `validate-lpd-paths.js` | Validates that every script path referenced in `lpd` exists on disk. Parses the lpd bash CLI for node and script_path invocations and checks each file against the filesystem. Exits non-zero if any path is missing. | manual | governance | `node operations/scripts/validators/governance/repo/validate-lpd-paths.js [--json]` |
-| `verify-all-pages.js` | Loads component-library routes in a headless browser and fails on render, console, or 404 issues. | manual | content | `node operations/scripts/validators/content/structure/verify-all-pages.js` |
-| `verify-pay-orc-gate-finalize.sh` | Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions | manual | governance | `bash operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh [flags]` |
+| `verify-all-pages.js` | Loads component-library routes in a headless browser and fails on render, console, or 404 issues. | manual | health | `node operations/scripts/validators/content/structure/verify-all-pages.js` |
+| `verify-pay-orc-gate-finalize.sh` | Payment/orchestrator gate verifier – checks payment and orchestrator documentation gate conditions | manual | governance | `bash operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh [flags]` |
+| `vsix-parity.test.js` | Unit tests for repo-owned VS Code extension packaging parity – verifies the checked-in VSIX matches governed source files and stale artifacts are detected deterministically. | P1, P3 |  | `node operations/tests/unit/vsix-parity.test.js` |
 
 ## 🔧 Remediators
 
 | Script | Description | Pipeline | Concern | Usage |
 |---|---|---|---|---|
-| `add-framework-headers.js` | Inserts or extends framework headers on all repo scripts from classification data. | manual | content | `node operations/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run` |
-| `add-pagetype-mechanical.js` | Mechanically assigns pageType frontmatter to eligible v2 MDX pages. | manual | content | `node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]` |
-| `assign-purpose-metadata.js` | Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages | manual | content | `node operations/scripts/remediators/content/classification/assign-purpose-metadata.js [flags]` |
-| `fix-usage-paths.js` |  | manual | governance |  |
-| `generate-seo.js` | SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis | manual | content | `node operations/scripts/generators/content/seo/generate-seo.js [flags]` |
-| `migrate-assets-to-branch.js` | Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs. | manual | content | `node operations/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run` |
-| `quarantine-manager.js` | Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply) | manual | content | `node operations/scripts/remediators/content/repair/quarantine-manager.js [flags]` |
-| `repair-component-metadata.js` | Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components. | P6 | components | `node operations/scripts/remediators/components/library/repair-component-metadata.js [--dry-run] [--fix] [--staged]` |
-| `repair-mdx-safe-markdown.js` | Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content. | manual | content | `node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run [--staged&#124;--files a,b]` |
-| `repair-ownerless-language.js` | Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces. | manual | content | `node operations/scripts/remediators/content/style/repair-ownerless-language.js [--check&#124;--write] [--files a,b]` |
-| `repair-page-imports.js` | Deterministic page-import remediator — removes safe unused page-reachable React runtime imports and reports the remaining unresolved import findings. | manual | content | `node operations/scripts/remediators/content/repair/repair-page-imports.js [--dry-run&#124;--write] [--files &lt;paths&gt;] [--output-dir &lt;dir&gt;]` |
-| `repair-page-links.js` | Deterministic page-link remediator — rewrites safe relative internal page href literals to canonical root-level routes and reports unresolved targets. | manual | content | `node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files v2/about --report-dir operations/reports/health/page-links` |
-| `repair-relative-page-hrefs.js` | Compatibility shim for repair-page-links.js — preserves the legacy relative-href repair entrypoint while delegating to the canonical page-links remediator. | manual | content | `node operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js [flags]` |
+| `add-framework-headers.js` | Inserts or extends framework headers on all repo scripts from classification data. | manual | governance | `node operations/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run` |
+| `add-pagetype-mechanical.js` | Mechanically assigns pageType frontmatter to eligible v2 MDX pages. | manual | governance | `node operations/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]` |
+| `add-workflow-governance-headers.js` | Adds governance comment headers to GitHub Actions workflow YAML files based on their governed filename pattern | manual | governance | `node operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js [--dry-run&#124;--write]` |
+| `assign-purpose-metadata.js` | Purpose metadata assigner – fills purpose and audience frontmatter for routable v2 pages | manual | governance | `node operations/scripts/remediators/content/classification/assign-purpose-metadata.js [flags]` |
+| `fix-usage-paths.js` | fix usage paths | manual | governance | `*/` |
+| `generate-seo.js` | SEO generator – generates SEO metadata (title, description, keywords) for v2 pages from content analysis | manual | discoverability | `node operations/scripts/generators/content/seo/generate-seo.js [flags]` |
+| `migrate-assets-to-branch.js` | Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs. | manual | health | `node operations/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest workspace/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run` |
+| `normalise-frontmatter-keys.js` | Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages. | manual | governance | `node operations/scripts/remediators/content/classification/normalise-frontmatter-keys.js [--dry-run] [--write] [--staged] [--files path,path]` |
+| `quarantine-manager.js` | Quarantine manager – classifies files for quarantine (default) or applies quarantine moves (--apply) | manual | health | `node operations/scripts/remediators/content/repair/quarantine-manager.js [flags]` |
+| `remediate-em-dashes.js` | Replaces em-dashes (U+2014) with en-dashes (U+2013) in routable v2 MDX content text and user-facing frontmatter fields (title, sidebarTitle, description). Skips other frontmatter keys, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values. | manual | brand | `node operations/scripts/remediators/content/style/remediate-em-dashes.js [--dry-run&#124;--write] [--verify] [--staged] [--files path,path]` |
+| `remediate-frontmatter-quotes.js` | Standardises MDX frontmatter scalar string values to double quotes. Decodes YAML single-quoted strings (including ''-escaped apostrophes) and re-encodes them as double-quoted strings, escaping internal double quotes and backslashes. Skips multi-line block scalars (&#124; or &gt;), explicit YAML tags, sequences, and mappings. | manual | brand | `node operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js [--dry-run&#124;--write] [--verify] [--staged] [--files path,path]` |
+| `remediate-us-spelling.js` | Converts between US and UK English spellings in routable v2 MDX content text only. Default direction: US to UK (en-GB). Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values. | manual | brand | `node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run&#124;--write] [--verify] [--language en-gb&#124;en-us] [--staged] [--files path,path]` |
+| `remediate-voice-violations.js` | Self-remediates voice register violations by deleting self-referential phrases and audience-specific prohibited constructions | manual | brand | `node operations/scripts/remediators/content/copy/remediate-voice-violations.js [--dry-run&#124;--write]` |
+| `repair-ai-discoverability.js` | Repair AI discoverability compliance: add missing @aiDiscoverability tags to hook-using components, create placeholder companion JSON files. | manual | maintenance | `node operations/scripts/remediators/components/library/repair-ai-discoverability.js [--dry-run] [--write] [--staged]` |
+| `repair-component-metadata.js` | Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components. | P6 | maintenance | `node operations/scripts/remediators/components/library/repair-component-metadata.js [--dry-run] [--fix] [--staged]` |
+| `repair-component-styles.js` | Repair JSX component style violations: extract inline styles to named const, move top-level constants inside function body. | manual | maintenance | `node operations/scripts/remediators/components/library/repair-component-styles.js [--dry-run] [--write] [--staged]` |
+| `repair-governance-artifacts.js` | Regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues | manual | governance | `node operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js [--dry-run&#124;--write]` |
+| `repair-mdx-safe-markdown.js` | Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content. | manual | health | `node operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run [--staged&#124;--files a,b]` |
+| `repair-ownerless-language.js` | Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces. | manual | brand | `node operations/scripts/remediators/content/style/repair-ownerless-language.js [--check&#124;--write] [--files a,b]` |
+| `repair-page-imports.js` | Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review. | manual | health | `node operations/scripts/remediators/content/repair/repair-page-imports.js [--dry-run&#124;--write] [--files &lt;paths&gt;] [--output-dir &lt;dir&gt;]` |
+| `repair-page-links.js` | Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review. | manual | health | `node operations/scripts/remediators/content/repair/repair-page-links.js --dry-run --files v2/about --report-dir operations/reports/health/page-links` |
+| `repair-relative-page-hrefs.js` | Preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js. | manual | health | `node operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js [flags]` |
 | `repair-script-inventory.js` | Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js. | manual | governance | `node operations/scripts/remediators/governance/scripts/repair-script-inventory.js [--dry-run] [--staged-only] [--files &lt;path,...&gt;] [--json] [--md] [--output &lt;dir&gt;]` |
-| `repair-spelling.js` | Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only. | manual | content | `node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run` |
-| `sync-docs-paths.js` | Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages. | manual | content | `node operations/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run` |
-| `sync-mintlify-canonical-consumers.js` | Applies deterministic Mintlify canonical-path rewrites for registered consumers and generated path maps. | manual | content | `node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js [--staged] [--check&#124;--write] [--stage] [--json]` |
-| `update-jsdoc-headers.js` | One-time migration script that reads JSDoc headers across all | manual | governance | `node operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js [--write]` |
-| `wcag-repair-common.js` | WCAG repair shared logic — common repair functions used by WCAG audit fix mode | manual | content | `node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]` |
+| `repair-spelling.js` | Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only. | manual | health | `node operations/scripts/remediators/content/repair/repair-spelling.js --dry-run` |
+| `repair-term-capitalisation.js` | Enforces correct capitalisation of proper nouns (Livepeer, Orchestrator, Ethereum, etc.) in routable v2 MDX prose. Reads rules from tools/config/quality/term-capitalisation.json. Skips code, frontmatter, URLs, imports, JSX attributes. | manual | brand | `node operations/scripts/remediators/content/style/repair-term-capitalisation.js [--dry-run&#124;--write] [--verify] [--staged] [--files path,path]` |
+| `sync-docs-paths.js` | Docs path sync remediator – applies deterministic docs.json and governed reference rewrites for moved docs pages. | manual | health | `node operations/scripts/remediators/content/repair/sync-docs-paths.js --staged --dry-run` |
+| `sync-mintlify-canonical-consumers.js` | Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation. | manual | health | `node operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js [--staged] [--check&#124;--write] [--stage] [--json]` |
+| `update-jsdoc-headers.js` | $&#123;desc&#125;`, | manual | governance | <code>$&#123;usage&#125;`,</code> |
+| `wcag-repair-common.js` | WCAG repair shared logic – common repair functions used by WCAG audit fix mode | manual | brand | `node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]` |
 
 ## 🚦 Dispatch
 
 | Script | Description | Pipeline | Concern | Usage |
 |---|---|---|---|---|
+| `auto-remediate.js` | Central remediation dispatcher for lpd dev. Chains safe remediators in sequence: frontmatter keys, MDX safety, spelling, UK/US spelling, em-dashes, term capitalisation, page links, page imports. Each remediator runs independently – failures are logged but do not halt the chain. Always exits 0. | manual | governance | `node tools/dev/remediation/auto-remediate.js --mode startup [--staged&#124;--full] [--language en-gb&#124;en-us] [--dry-run] [--json]` |
 | `blast-radius-scanner.js` | PostToolUse hook for Edit/Write. When a file in snippets/components/, | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
-| `check-codex-pr-overlap.js` | PR enforcer — checks for conflicting codex PRs targeting the same files/branches | P3 | ai | `node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]` |
-| `codex-commit.js` | Codex commit helper — audits codex branch state and generates compliant commit messages | manual | ai | `node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]` |
-| `create-codex-pr.js` | Codex PR creator — generates codex PR with correct branch naming, labels, and body template | manual | ai | `node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]` |
-| `docs-page-research-pr-report.js` | Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up. | manual | content | `node operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]` |
-| `docs-research-packet.js` | Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup. | manual | content | `node operations/scripts/dispatch/content/veracity/docs-research-packet.js [flags]` |
+| `check-codex-pr-overlap.js` | PR enforcer – checks for conflicting codex PRs targeting the same files/branches | P3 | discoverability | `node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]` |
+| `codex-commit.js` | Codex commit helper – audits codex branch state and generates compliant commit messages | manual | discoverability | `node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]` |
+| `completion-gate.js` | PreToolUse hook for Write/Edit. Detects writes to session-log.txt, | manual | governance | `Called automatically by Claude Code PreToolUse hook. Not invoked directly.` |
+| `create-codex-pr.js` | Codex PR creator – generates codex PR with correct branch naming, labels, and body template | manual | discoverability | `node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]` |
+| `docs-page-research-pr-report.js` | Docs page research PR report – runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up. | manual | health | `node operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]` |
+| `docs-page-research-pr-report.test.js` | Tests docs-page-research-pr-report.js – validates changed-file advisory reporting for the fact-check research runner. | manual |  | `node operations/tests/unit/docs-page-research-pr-report.test.js [flags]` |
+| `docs-research-packet.js` | Docs research packet generator – derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup. | manual | health | `node operations/scripts/dispatch/content/veracity/docs-research-packet.js [flags]` |
+| `edit-loop-guard.js` | PostToolUse hook for Edit/Write. Tracks per-file edit counts within a session. | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
 | `friction-logger.js` | UserPromptSubmit hook. Scans user messages for frustration indicators | manual | governance | `Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.` |
-| `governance-pipeline.js` | Chains audit, safe repair, verification, and reporting into a single self-healing governance pipeline. | P6 | governance | `node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged&#124;--files &lt;path[,path...]&gt;&#124;--full]` |
+| `governance-pipeline.js` | Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports. | P6 | governance | `node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged&#124;--files &lt;path[,path...]&gt;&#124;--full]` |
 | `grep-loop-guard.js` | Tracks consecutive Grep calls that return no results. At 3 in a row, | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
 | `headless-batch.sh` | Executes a prompt against files non-interactively with restricted tools. Use for bulk quality checks, changelog regeneration, stale reference scans, and other well-defined batch tasks. | manual | governance | `./operations/scripts/dispatch/governance/headless-batch.sh --prompt "..." --tools "Read,Grep,Glob" --output report.md` |
 | `install.sh` | Installs git hooks by routing this worktree to .githooks via worktree-local core.hooksPath | manual | governance | `bash .githooks/install.sh [flags]` |
 | `mdx-constraints-injector.js` | UserPromptSubmit hook. Keyword-matches the user message for MDX/component/page | manual | governance | `Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.` |
+| `mdx-frontmatter-sanitise.js` | PostToolUse hook for Edit/Write on ANY .mdx file. Auto-fixes (1) duplicate frontmatter keys, (2) em-dash characters in user-facing text, and (3) single-quoted frontmatter scalars (standardises to double quotes). All fixes are applied silently to the file already on disk; the hook only emits a systemMessage when something was changed. | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
+| `mdx-render-gate.js` | PreToolUse hook for Write/Edit. Reads the verification state written by | manual | governance | `Called automatically by Claude Code PreToolUse hook. Not invoked directly.` |
+| `mdx-render-verify.js` | PostToolUse hook for Edit/Write on v2 .mdx files. Launches Puppeteer, | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
 | `mdx-validate-hook.js` | PostToolUse hook for Edit/Write on .mdx files. Uses the shared | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
 | `message-backup.js` | UserPromptSubmit hook. If a message is longer than 200 chars, saves it to | manual | governance | `Called automatically by Claude Code UserPromptSubmit hook. Not invoked directly.` |
 | `move-detect-hook.js` | PostToolUse hook on Bash. Detects mv/git mv commands targeting v2/ paths, | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
-| `orchestrator-guides-research-review.js` | Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root. | manual | content | `node operations/scripts/audits/content/veracity/orchestrator-guides-research-review.js [flags]` |
-| `page-integrity-dispatch.js` | Page integrity dispatcher — resolves page scope once, runs page link and import audits, applies deterministic repairs, reruns, and emits combined unresolved findings plus rolling-issue planning data. | P1, P5, P6 | content | `node operations/scripts/dispatch/content/health/page-integrity-dispatch.js [--staged&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--no-repair] [--issue-mode off&#124;plan] [--output-dir &lt;dir&gt;]` |
+| `orchestrator-guides-research-review.js` | Orchestrator guides research review packet wrapper – delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root. | manual | health | `node operations/scripts/audits/content/veracity/orchestrator-guides-research-review.js [flags]` |
+| `page-integrity-dispatch.js` | Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract. | P6 | health | `node operations/scripts/dispatch/content/health/page-integrity-dispatch.js [--staged&#124;--files &lt;paths&gt;&#124;--tab &lt;tab&gt;] [--strict] [--no-repair] [--issue-mode off&#124;plan] [--output-dir &lt;dir&gt;]` |
+| `page-integrity-rolling-issue.js` | Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation. | manual | health | `node operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js [flags]` |
 | `phase-gate-hook.js` | PostToolUse hook for Edit/Write. Reads phase-gate.jsonl and emits unverified | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
+| `post-remediation-verify.js` | Looks up validators for a given remediator from the registry, runs them | manual | governance | `node operations/scripts/dispatch/governance/post-remediation-verify.js --remediator &lt;path&gt; --files &lt;a,b,c&gt; [--revert-on-fail] [--json]` |
 | `post-tool-verify.js` | Tracks consecutive failures for circuit breaker. Fires after tool use failures. | manual | governance | `Called automatically by Claude Code PostToolUseFailure hook. Not invoked directly.` |
+| `pre-commit` | Pre-commit hook – hard gates only (syntax, security, safety). All soft checks run in GitHub Actions PR workflows. | P1 |  | `bash .githooks/pre-commit [flags]` |
+| `pre-commit-no-deletions` | Variant pre-commit hook that blocks file deletions (safety net for content preservation) | manual |  | `bash .githooks/pre-commit-no-deletions [flags]` |
 | `pre-compact-checkpoint.js` | Fires before Claude Code compacts context in long sessions. Reads the | manual | governance | `Called automatically by Claude Code PreCompact hook. Not invoked directly.` |
+| `pre-push` | Pre-push hook – blocks push if AI stash files present, codex locks stale, or task contract invalid | P2 |  | `bash .githooks/pre-push [flags]` |
 | `pre-tool-guard.js` | Mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes. | manual | governance | `Called automatically by Claude Code PreToolUse hook. Not invoked directly.` |
 | `read-logger.js` | PostToolUse hook on Read. Logs file paths to a session-scoped temp file. | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
-| `repo-audit-orchestrator.js` | Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack. | manual | governance | `node operations/scripts/audits/governance/repo/repo-audit-orchestrator.js [flags]` |
+| `repo-audit-orchestrator.js` | Repo audit orchestrator – dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack. | manual | governance | `node operations/scripts/audits/governance/repo/repo-audit-orchestrator.js [flags]` |
 | `run-all.js` | Main test-suite orchestrator for local, pre-commit, and package-script execution across the governed documentation validators. | P1, P2, P3 | governance | `node operations/tests/run-all.js [flags]` |
 | `run-pr-checks.js` | Changed-file PR validation orchestrator for the branch-health lane, including the strict page-integrity dispatch on changed docs pages. | P2, P3 | governance | `node operations/tests/run-pr-checks.js [flags]` |
-| `run-solutions-social-fetch.js` | Dispatches all solutions social data fetch scripts in sequence with env from a local .env file. | manual | content | `node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--env path/to/.env] [--skip youtube,discord]` |
+| `run-solutions-social-fetch.js` | Local dispatcher for all social-feed integrators. Loads .env, runs selected fetchers with --dry-run support. Mirrors dispatch-copy-update-social-feeds.yml for local testing and upgrades. | manual | integrations | `node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--mode forum,youtube] [--dry-run] [--env path/to/.env] [--skip discord]` |
+| `scope-checkpoint.js` | PostToolUse hook for Edit/Write. Tracks total edit count per session. | manual | governance | `Called automatically by Claude Code PostToolUse hook. Not invoked directly.` |
+| `server-lifecycle.js` | SessionStart hook + CLI tool. Auto-starts the Mintlify dev server via | manual | governance | `node server-lifecycle.js [health&#124;restart [scope-prefix]]` |
 | `server-manager.js` | Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check) | manual | governance | `node .githooks/server-manager.js [flags]` |
 | `session-register.js` | SessionStart hook that registers this session in a shared registry file. | manual | governance | `Called automatically by Claude Code hooks. Not invoked directly.` |
 | `session-state.js` | Reads ALL active plans and live project state. Run at session start. | manual | governance | `node operations/scripts/dispatch/governance/session-state.js` |
 | `sync-generated-files.js` | Dispatches generator scripts to sync generated catalog/index files, then validates banners. | P1 | governance | `node operations/scripts/dispatch/governance/pipelines/sync-generated-files.js --write &#124; --check [--staged]` |
-| `task-finalise.js` | Codex task finaliser — enforces task completion requirements before closing | manual | ai | `node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]` |
+| `task-finalise.js` | Codex task finaliser – enforces task completion requirements before closing | manual | discoverability | `node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]` |
 | `verify-browser.js` | Verifies browser availability for Puppeteer-based integration tests | manual | governance | `node .githooks/verify-browser.js [flags]` |
-| `verify.sh` | Pre-commit sub-hook — verifies file-walker is available and runs structural checks on staged files | manual | governance | `bash .githooks/verify.sh [flags]` |
+| `verify.sh` | Pre-commit sub-hook – verifies file-walker is available and runs structural checks on staged files | manual | governance | `bash .githooks/verify.sh [flags]` |
 
-<Accordion title="📚 Library Modules — 57">
+<Accordion title="📚 Library Modules — 56">
 
 | Module | Description | Concern |
 |---|---|---|
-| `agent-write-governance.js` |  |  |
-| `ai-tools-registry.js` |  |  |
-| `changelog.js` |  |  |
-| `codex-skill-templates.js` |  |  |
-| `common.js` |  | content |
-| `component-governance-utils.js` |  |  |
-| `concept.js` |  |  |
-| `config-validator.js` |  |  |
-| `config.js` |  | content |
-| `docs-authoring-rules.js` |  |  |
-| `docs-index-utils.js` |  |  |
-| `docs-json-localizer.js` |  | content |
-| `docs-page-scope.js` |  |  |
-| `docs-publishability.js` |  |  |
-| `docs-routes.js` |  | content |
-| `faq.js` |  |  |
-| `file-walker.js` |  |  |
-| `frontmatter-taxonomy.js` |  |  |
-| `frontmatter.js` |  | content |
-| `generated-artifacts.js` |  |  |
-| `generated-file-banners.js` |  |  |
-| `glossary.js` |  |  |
-| `how_to.js` |  |  |
-| `index.js` |  |  |
-| `journey-check.js` |  |  |
-| `landing.js` |  |  |
-| `llm-evaluator.js` |  |  |
-| `load-js-yaml.js` |  |  |
-| `load-minimatch.js` |  |  |
-| `mdx-parser.js` |  | content |
-| `mdx-parser.js` |  |  |
-| `mdx-safe-markdown.js` |  |  |
-| `mdx-translate.js` |  | content |
-| `mintignore.js` |  |  |
-| `openapi-rolling-issue.js` |  |  |
-| `overview.js` |  |  |
-| `page-integrity-rolling-issue.js` | Rolling issue helper — decides create/update/close behavior for unresolved page-integrity findings and formats issue bodies for workflow automation. | content |
-| `path-utils.js` |  | content |
-| `precommit-staged-cache.js` |  |  |
-| `provenance.js` |  | content |
-| `provider-mock.js` |  | content |
-| `provider-openrouter.js` |  | content |
-| `providers.js` |  | content |
-| `quality-gate.js` |  |  |
-| `reference.js` |  |  |
-| `repo-governance.js` |  |  |
-| `repo-node-paths.js` |  |  |
-| `resolve-scoped-docs-config.js` |  |  |
-| `root-governance.js` |  |  |
-| `rubric-loader.js` |  |  |
-| `rule-evaluators.js` |  |  |
-| `scoring.js` |  |  |
-| `script-governance-config.js` |  |  |
-| `script-header-utils.js` |  |  |
-| `spell-checker.js` |  |  |
-| `troubleshooting.js` |  |  |
-| `tutorial.js` |  |  |
+| `agent-write-governance.js` | Agent write-governance helpers – load and validate the canonical manifest for admitted agent output classes and destinations. |  |
+| `ai-tools-registry.js` | Shared loader, validator, coverage checker, and report renderer for the AI-tools registry contract and generated inventory report. |  |
+| `changelog.js` | LLM prompt template for changelog page-type usefulness evaluation. |  |
+| `codex-skill-templates.js` | Shared helper for validating, selecting, and loading canonical Codex skill templates. |  |
+| `common.js` | i18n shared utilities – common helper functions for translation pipeline | integrations |
+| `component-governance-utils.js` | Shared parsing and validation utilities for component governance scripts. |  |
+| `concept.js` | LLM prompt template for concept page-type usefulness evaluation. |  |
+| `config-validator.js` | Validates docs-usefulness config structure and field completeness. |  |
+| `config.js` | i18n configuration – language codes, locale paths, translation settings | integrations |
+| `docs-authoring-rules.js` | Shared warning-level authoring rules for guide layouts and code-block metadata, plus deterministic code-block icon repair. |  |
+| `docs-index-utils.js` | Shared utilities for docs-index.json generation – path resolution, frontmatter extraction, index merging |  |
+| `docs-json-localizer.js` | docs.json localiser engine – transforms docs.json navigation for locale variants | integrations |
+| `docs-page-scope.js` | Shared authored-page scope helpers that distinguish generated docs pages from authored docs pages for warning-only validators and reports. |  |
+| `docs-publishability.js` | Shared path publishability rules for v2 docs content and tooling. |  |
+| `docs-routes.js` | docs route resolver – maps page paths to locale-aware routes | integrations |
+| `faq.js` | LLM prompt template for faq page-type usefulness evaluation. |  |
+| `file-walker.js` | File tree walker – recursively finds files matching patterns. Used by pre-commit hook and validators. |  |
+| `frontmatter-taxonomy.js` | Shared frontmatter taxonomy utilities for routable docs pages. | governance |
+| `frontmatter.js` | Frontmatter parser/writer for translation surfaces. | copy |
+| `generated-artifacts.js` | Generated artifact governance helpers – load the manifest, validate enums, and match staged files to managed artifacts |  |
+| `generated-file-banners.js` | Generated file banner template – provides standard banner text for auto-generated files |  |
+| `glossary.js` | LLM prompt template for glossary page-type usefulness evaluation. |  |
+| `how_to.js` | LLM prompt template for how_to page-type usefulness evaluation. |  |
+| `index.js` | LLM prompt template for index page-type usefulness evaluation. |  |
+| `journey-check.js` | Evaluates docs pages against user journey completeness criteria. |  |
+| `landing.js` | LLM prompt template for landing page-type usefulness evaluation. |  |
+| `llm-evaluator.js` | Wraps LLM API calls for rubric-based page quality evaluation. |  |
+| `load-js-yaml.js` | YAML loader utility – resolves js-yaml from repo-local installs and falls back to a minimal parser for task-contract style files in bare worktrees |  |
+| `load-minimatch.js` | Glob matcher loader – resolves minimatch from repo-local installs and falls back to a simple glob matcher for bare worktrees |  |
+| `mdx-parser.js` | MDX parser for i18n – extracts translatable content blocks from MDX | integrations |
+| `mdx-parser.js` | MDX parser utility – extracts frontmatter, components, content blocks from MDX files |  |
+| `mdx-safe-markdown.js` | Shared MDX-safe markdown helpers that collect first-party markdown files, detect unsafe patterns, and apply deterministic repairs. |  |
+| `mdx-translate.js` | MDX translation engine – applies translations to MDX content blocks | integrations |
+| `mintignore.js` | Mintignore utility – reads .mintignore patterns and filters file lists |  |
+| `openapi-rolling-issue.js` | OpenAPI rolling issue utility – creates/updates GitHub issues for persistent OpenAPI audit findings |  |
+| `overview.js` | LLM prompt template for overview page-type usefulness evaluation. |  |
+| `path-utils.js` | Path utilities for i18n – locale-aware path resolution and mapping | integrations |
+| `precommit-staged-cache.js` | Shared pre-commit staged-cache helpers – fingerprint staged content plus hook inputs and persist reusable pass markers |  |
+| `provenance.js` | Translation provenance tracker – records source, timestamp, and provider for each translated segment | integrations |
+| `provider-mock.js` | Mock translation provider – returns placeholder translations for testing without API calls | integrations |
+| `provider-openrouter.js` | OpenRouter translation provider – calls OpenRouter API for actual translations | integrations |
+| `providers.js` | Provider registry – selects translation provider (OpenRouter or mock) based on configuration | integrations |
+| `quality-gate.js` | Applies pass/fail thresholds to usefulness scores. |  |
+| `reference.js` | LLM prompt template for reference page-type usefulness evaluation. |  |
+| `repo-governance.js` | Repo governance helpers – load the canonical registry, validate its schema, and expose derived state for generators and validators. |  |
+| `repo-node-paths.js` | Shared repo Node path bootstrap helpers – discover repo-local node_modules roots and provide consistent NODE_PATH setup for test and script runners. |  |
+| `resolve-scoped-docs-config.js` | Scoped docs config resolver – resolves named scoped navigation configs and explicit docs config paths for mint-dev tooling |  |
+| `root-governance.js` | Root governance helpers – load the canonical manifest, validate the governed root contract, and project derived allowlist/report state. |  |
+| `rubric-loader.js` | Loads and parses rubric YAML/JSON for page-type scoring rules. |  |
+| `rule-evaluators.js` | Evaluates individual rubric rules against page content. |  |
+| `scoring.js` | Aggregates rule scores into a final usefulness score per page. |  |
+| `script-governance-config.js` | Shared governance constants for script discovery, indexing, classification, and pipeline normalisation across the repo. |  |
+| `script-header-utils.js` | Shared helpers for extracting and reading top-of-file script governance headers without scanning into executable source. |  |
+| `spell-checker.js` | Spell checker utility – checks text against custom dictionary with en-GB locale support |  |
+| `troubleshooting.js` | LLM prompt template for troubleshooting page-type usefulness evaluation. |  |
+| `tutorial.js` | LLM prompt template for tutorial page-type usefulness evaluation. |  |
 
 </Accordion>
 
-<Accordion title="⚠️ Unclassified — 103 scripts need @type">
+<Accordion title="⚠️ Unclassified — 4 scripts need @type">
 
 | Script | Path | Pipeline | Notes |
 |---|---|---|---|
-| `pre-commit` | `.githooks/pre-commit` | P1 | Missing `@type` in JSDoc header |
-| `pre-commit-no-deletions` | `.githooks/pre-commit-no-deletions` | manual | Missing `@type` in JSDoc header |
-| `pre-push` | `.githooks/pre-push` | P2 | Missing `@type` in JSDoc header |
-| `fetch-forum-data.js` | `.github/scripts/fetch-forum-data.js` | P5, P6 | Missing `@type` in JSDoc header |
-| `fetch-youtube-data.js` | `.github/scripts/fetch-youtube-data.js` | P5, P6 | Missing `@type` in JSDoc header |
-| `project-showcase-sync.js` | `.github/scripts/project-showcase-sync.js` | P5, P6 | Missing `@type` in JSDoc header |
-| `update-livepeer-release.js` | `.github/scripts/update-livepeer-release.js` | P2 | Missing `@type` in JSDoc header |
-| `test-scripts.sh` | `operations/scripts/snippets/test-scripts.sh` | manual | Missing `@type` in JSDoc header |
-| `.verify-large-change.sh` | `operations/scripts/x-archive/.verify-large-change.sh` | manual | Missing `@type` in JSDoc header |
-| `batch-update-og-image.sh` | `operations/scripts/x-archive/batch-update-og-image.sh` | manual | Missing `@type` in JSDoc header |
-| `codex-safe-merge-with-stash.js` | `operations/scripts/x-archive/codex-safe-merge-with-stash.js` | manual | Missing `@type` in JSDoc header |
-| `pre-commit-v1` | `operations/scripts/x-archive/pre-commit-v1` | P1 | Missing `@type` in JSDoc header |
-| `replace-og-image.py` | `operations/scripts/x-archive/replace-og-image.py` | manual | Missing `@type` in JSDoc header |
-| `seo-generator-safe.js` | `operations/scripts/x-archive/seo-generator-safe.js` | manual | Missing `@type` in JSDoc header |
-| `update-all-og-images.js` | `operations/scripts/x-archive/update-all-og-images.js` | manual | Missing `@type` in JSDoc header |
-| `update-og-image.js` | `operations/scripts/x-archive/update-og-image.js` | manual | Missing `@type` in JSDoc header |
 | `contracts-validator-contract.js` | `operations/tests/contracts-validator-contract.js` | manual | Missing `@type` in JSDoc header |
-| `browser.test.js` | `operations/tests/integration/browser.test.js` | P1 | Missing `@type` in JSDoc header |
-| `domain-pages-audit.js` | `operations/tests/integration/domain-pages-audit.js` | manual | Missing `@type` in JSDoc header |
-| `mdx-component-runtime-smoke.js` | `operations/tests/integration/mdx-component-runtime-smoke.js` | manual | Missing `@type` in JSDoc header |
-| `openapi-reference-audit.js` | `operations/tests/integration/openapi-reference-audit.js` | P2, P3, P5, P6 | Missing `@type` in JSDoc header |
-| `v2-link-audit.selftest.js` | `operations/tests/integration/v2-link-audit.selftest.js` | manual | Missing `@type` in JSDoc header |
-| `v2-wcag-audit.js` | `operations/tests/integration/v2-wcag-audit.js` | P1 | Missing `@type` in JSDoc header |
-| `v2-wcag-audit.selftest.js` | `operations/tests/integration/v2-wcag-audit.selftest.js` | manual | Missing `@type` in JSDoc header |
 | `playwright-community-components.js` | `operations/tests/playwright-community-components.js` | manual | Missing `@type` in JSDoc header |
 | `playwright-studio-docs-migration.js` | `operations/tests/playwright-studio-docs-migration.js` | manual | Missing `@type` in JSDoc header |
-| `ai-tools-registry.test.js` | `operations/tests/unit/ai-tools-registry.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `ai-tools-visual-library.test.js` | `operations/tests/unit/ai-tools-visual-library.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `audit-script-inventory-repair-rules.test.js` | `operations/tests/unit/audit-script-inventory-repair-rules.test.js` | manual | Missing `@type` in JSDoc header |
-| `authoring-tools.test.js` | `operations/tests/unit/authoring-tools.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `check-agent-docs-freshness.test.js` | `operations/tests/unit/check-agent-docs-freshness.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `check-mintlify-canonical-sync.test.js` | `operations/tests/unit/check-mintlify-canonical-sync.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `cleanup-local-dev-sessions.test.js` | `operations/tests/unit/cleanup-local-dev-sessions.test.js` | manual | Missing `@type` in JSDoc header |
-| `codex-commit.test.js` | `operations/tests/unit/codex-commit.test.js` | manual | Missing `@type` in JSDoc header |
-| `codex-safe-merge-with-stash.test.js` | `operations/tests/unit/codex-safe-merge-with-stash.test.js` | manual | Missing `@type` in JSDoc header |
-| `codex-skill-sync.test.js` | `operations/tests/unit/codex-skill-sync.test.js` | manual | Missing `@type` in JSDoc header |
-| `codex-task-cleanup.test.js` | `operations/tests/unit/codex-task-cleanup.test.js` | manual | Missing `@type` in JSDoc header |
-| `codex-task-preflight.test.js` | `operations/tests/unit/codex-task-preflight.test.js` | manual | Missing `@type` in JSDoc header |
-| `component-governance-generators.test.js` | `operations/tests/unit/component-governance-generators.test.js` | P1 | Missing `@type` in JSDoc header |
-| `component-governance-utils.test.js` | `operations/tests/unit/component-governance-utils.test.js` | P1 | Missing `@type` in JSDoc header |
-| `TEMPLATE.test.js` | `operations/tests/unit/components/TEMPLATE.test.js` | manual | Missing `@type` in JSDoc header |
-| `contracts-addresses-pipeline.test.js` | `operations/tests/unit/contracts-addresses-pipeline.test.js` | P1 | Missing `@type` in JSDoc header |
-| `contracts-view-model.test.js` | `operations/tests/unit/contracts-view-model.test.js` | P3 | Missing `@type` in JSDoc header |
-| `copy-lint.test.js` | `operations/tests/unit/copy-lint.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `create-codex-pr.test.js` | `operations/tests/unit/create-codex-pr.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-authoring-rules.test.js` | `operations/tests/unit/docs-authoring-rules.test.js` | P1 | Missing `@type` in JSDoc header |
-| `docs-fact-registry.test.js` | `operations/tests/unit/docs-fact-registry.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-guide-sot.test.js` | `operations/tests/unit/docs-guide-sot.test.js` | P1, P2, P3 | Missing `@type` in JSDoc header |
-| `docs-navigation.test.js` | `operations/tests/unit/docs-navigation.test.js` | P1, P3, P6 | Missing `@type` in JSDoc header |
-| `docs-page-research-pr-report.test.js` | `operations/tests/unit/docs-page-research-pr-report.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-page-research.test.js` | `operations/tests/unit/docs-page-research.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-page-scope.test.js` | `operations/tests/unit/docs-page-scope.test.js` | P1 | Missing `@type` in JSDoc header |
-| `docs-path-sync.test.js` | `operations/tests/unit/docs-path-sync.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `docs-research-adjudication.test.js` | `operations/tests/unit/docs-research-adjudication.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-research-packet.test.js` | `operations/tests/unit/docs-research-packet.test.js` | manual | Missing `@type` in JSDoc header |
-| `docs-route-scope.test.js` | `operations/tests/unit/docs-route-scope.test.js` | P1 | Missing `@type` in JSDoc header |
-| `export-portable-skills.test.js` | `operations/tests/unit/export-portable-skills.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `frontmatter-taxonomy.test.js` | `operations/tests/unit/frontmatter-taxonomy.test.js` | P1 | Missing `@type` in JSDoc header |
-| `generated-artifacts-policy.test.js` | `operations/tests/unit/generated-artifacts-policy.test.js` | manual | Missing `@type` in JSDoc header |
-| `lpd-scoped-mint-dev.test.js` | `operations/tests/unit/lpd-scoped-mint-dev.test.js` | manual | Missing `@type` in JSDoc header |
-| `mdx-component-runtime-smoke.test.js` | `operations/tests/unit/mdx-component-runtime-smoke.test.js` | manual | Missing `@type` in JSDoc header |
-| `mdx-component-scope.test.js` | `operations/tests/unit/mdx-component-scope.test.js` | manual | Missing `@type` in JSDoc header |
-| `mdx-guards.test.js` | `operations/tests/unit/mdx-guards.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `mdx-safe-markdown.test.js` | `operations/tests/unit/mdx-safe-markdown.test.js` | P1 | Missing `@type` in JSDoc header |
 | `mdx-sanitise.test.js` | `operations/tests/unit/mdx-sanitise.test.js` | manual | Missing `@type` in JSDoc header |
-| `mdx.test.js` | `operations/tests/unit/mdx.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `migrate-assets-to-branch.test.js` | `operations/tests/unit/migrate-assets-to-branch.test.js` | manual | Missing `@type` in JSDoc header |
-| `mint-dev-locks.test.js` | `operations/tests/unit/mint-dev-locks.test.js` | manual | Missing `@type` in JSDoc header |
-| `og-image-policy.test.js` | `operations/tests/unit/og-image-policy.test.js` | manual | Missing `@type` in JSDoc header |
-| `openapi-reference-audit.test.js` | `operations/tests/unit/openapi-reference-audit.test.js` | manual | Missing `@type` in JSDoc header |
-| `openapi-rolling-issue.test.js` | `operations/tests/unit/openapi-rolling-issue.test.js` | manual | Missing `@type` in JSDoc header |
-| `orchestrator-guides-research-review.test.js` | `operations/tests/unit/orchestrator-guides-research-review.test.js` | manual | Missing `@type` in JSDoc header |
-| `ownerless-governance.test.js` | `operations/tests/unit/ownerless-governance.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `precommit-staged-cache.test.js` | `operations/tests/unit/precommit-staged-cache.test.js` | P1 | Missing `@type` in JSDoc header |
-| `quality.test.js` | `operations/tests/unit/quality.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `repair-governance.test.js` | `operations/tests/unit/repair-governance.test.js` | manual | Missing `@type` in JSDoc header |
-| `repair-spelling.test.js` | `operations/tests/unit/repair-spelling.test.js` | manual | Missing `@type` in JSDoc header |
-| `repo-audit-pipeline.test.js` | `operations/tests/unit/repo-audit-pipeline.test.js` | manual | Missing `@type` in JSDoc header |
-| `root-allowlist-format.test.js` | `operations/tests/unit/root-allowlist-format.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `script-docs.test.js` | `operations/tests/unit/script-docs.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `skill-docs.test.js` | `operations/tests/unit/skill-docs.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `snippets-root-governance.test.js` | `operations/tests/unit/snippets-root-governance.test.js` | P3 | Missing `@type` in JSDoc header |
-| `spelling.test.js` | `operations/tests/unit/spelling.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `style-guide.test.js` | `operations/tests/unit/style-guide.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `ui-template-generator.test.js` | `operations/tests/unit/ui-template-generator.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `update-livepeer-release.test.js` | `operations/tests/unit/update-livepeer-release.test.js` | P2 | Missing `@type` in JSDoc header |
-| `usefulness-journey.test.js` | `operations/tests/unit/usefulness-journey.test.js` | P3 | Missing `@type` in JSDoc header |
-| `usefulness-rubric.test.js` | `operations/tests/unit/usefulness-rubric.test.js` | P3 | Missing `@type` in JSDoc header |
-| `v2-folder-governance-cleanup-matrix.test.js` | `operations/tests/unit/v2-folder-governance-cleanup-matrix.test.js` | manual | Missing `@type` in JSDoc header |
-| `v2-wcag-audit.test.js` | `operations/tests/unit/v2-wcag-audit.test.js` | manual | Missing `@type` in JSDoc header |
-| `validate-codex-task-contract.test.js` | `operations/tests/unit/validate-codex-task-contract.test.js` | manual | Missing `@type` in JSDoc header |
-| `vsix-parity.test.js` | `operations/tests/unit/vsix-parity.test.js` | P1, P3 | Missing `@type` in JSDoc header |
-| `1-read-notion-to-csv.js` | `tools/dev/integrations/notion/1-read-notion-to-csv.js` | manual | Missing `@type` in JSDoc header |
-| `2-read-docs-to-csv.js` | `tools/dev/integrations/notion/2-read-docs-to-csv.js` | manual | Missing `@type` in JSDoc header |
-| `3-check-duplicates.js` | `tools/dev/integrations/notion/3-check-duplicates.js` | manual | Missing `@type` in JSDoc header |
-| `4-remove-duplicates.js` | `tools/dev/integrations/notion/4-remove-duplicates.js` | manual | Missing `@type` in JSDoc header |
-| `5-export-to-notion.js` | `tools/dev/integrations/notion/5-export-to-notion.js` | manual | Missing `@type` in JSDoc header |
-| `backup-notion-table.js` | `tools/dev/integrations/notion/backup-notion-table.js` | manual | Missing `@type` in JSDoc header |
-| `install-local-sync-hook.sh` | `tools/dev/integrations/notion/install-local-sync-hook.sh` | manual | Missing `@type` in JSDoc header |
-| `local-post-commit-sync.sh` | `tools/dev/integrations/notion/local-post-commit-sync.sh` | manual | Missing `@type` in JSDoc header |
-| `remove-local-sync-hook.sh` | `tools/dev/integrations/notion/remove-local-sync-hook.sh` | manual | Missing `@type` in JSDoc header |
-| `sync-v2-en-canonical.js` | `tools/dev/integrations/notion/sync-v2-en-canonical.js` | manual | Missing `@type` in JSDoc header |
-| `repair-registry.py` | `workspace/scripts/repair-registry.py` | manual | Missing `@type` in JSDoc header |
 
 </Accordion>

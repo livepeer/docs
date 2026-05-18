@@ -1,0 +1,139 @@
+---
+title: "LLM provider routing"
+sidebarTitle: "LLM Provider Routing"
+description: >-
+  @livepeer/agent supports four LLM backends: Gemini, Claude, OpenAI, and
+  Livepeer. Swap providers without changing application code.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - LLM provider
+  - Gemini
+  - Claude
+  - OpenAI
+  - Livepeer provider
+  - Daydream
+  - '@livepeer/agent'
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Provider swap is a one-line change. The AgentRunner interface is identical regardless of which LLM backend processes the request.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+`@livepeer/agent` abstracts LLM access behind a provider interface. The `AgentRunner` accepts any provider that implements the common interface; switching from Gemini to Claude or OpenAI requires changing one import and one constructor argument.
+
+<CustomDivider />
+
+## Available providers
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Provider</TableCell>
+      <TableCell header>Import</TableCell>
+      <TableCell header>API key env var</TableCell>
+      <TableCell header>Routes through</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Gemini** (default)</TableCell>
+      <TableCell>`@livepeer/agent/providers/gemini`</TableCell>
+      <TableCell>`GEMINI_API_KEY`</TableCell>
+      <TableCell>Google API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Claude**</TableCell>
+      <TableCell>`@livepeer/agent/providers/claude`</TableCell>
+      <TableCell>`ANTHROPIC_API_KEY`</TableCell>
+      <TableCell>Anthropic API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**OpenAI**</TableCell>
+      <TableCell>`@livepeer/agent/providers/openai`</TableCell>
+      <TableCell>`OPENAI_API_KEY`</TableCell>
+      <TableCell>OpenAI API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Livepeer**</TableCell>
+      <TableCell>`@livepeer/agent/providers/livepeer`</TableCell>
+      <TableCell>`DAYDREAM_API_KEY`</TableCell>
+      <TableCell>SDK Service at `sdk.daydream.monster`; routes to Gemini/Claude/OpenAI via Livepeer infrastructure</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The Livepeer provider routes all LLM calls through Livepeer infrastructure with a single Daydream API key from `daydream.live`. This is the simplest configuration: one key, one provider, all LLM backends available.
+
+<CustomDivider />
+
+## Swapping providers
+
+```typescript
+import { AgentRunner, ToolRegistry, WorkingMemoryStore, SessionMemoryStore } from '@livepeer/agent';
+
+// Option 1: Gemini directly
+import { GeminiProvider } from '@livepeer/agent/providers/gemini';
+const provider = new GeminiProvider({ apiKey: process.env.GEMINI_API_KEY! });
+
+// Option 2: Claude directly
+import { ClaudeProvider } from '@livepeer/agent/providers/claude';
+const provider = new ClaudeProvider({ apiKey: process.env.ANTHROPIC_API_KEY! });
+
+// Option 3: All LLM calls through Livepeer (single API key)
+import { LivepeerProvider } from '@livepeer/agent/providers/livepeer';
+const provider = new LivepeerProvider({ apiKey: process.env.DAYDREAM_API_KEY! });
+
+// The runner interface is identical regardless of provider
+const runner = new AgentRunner(
+  provider,
+  new ToolRegistry(),
+  new WorkingMemoryStore(),
+  new SessionMemoryStore(),
+);
+
+const result = await runner.run({ user: 'generate an image of a mountain' });
+```
+
+The `AgentRunner` calls `provider.complete()` internally. Each provider translates the common message format to its backend's native API shape. Tool calls, working memory, and session memory work identically across all providers.
+
+<CustomDivider />
+
+## CLI provider selection
+
+The CLI reads the provider from environment variables. Set the API key for the provider you want to use:
+
+```bash
+# Gemini (default if GEMINI_API_KEY is set)
+export GEMINI_API_KEY=your-key
+livepeer run flux-schnell --prompt "a mountain at dawn"
+
+# Claude
+export ANTHROPIC_API_KEY=your-key
+livepeer run flux-schnell --prompt "a mountain at dawn"
+
+# Livepeer (all backends via single key)
+export DAYDREAM_API_KEY=sk_live_xxx
+livepeer run flux-schnell --prompt "a mountain at dawn"
+```
+
+If multiple API keys are set, the CLI uses this precedence: `DAYDREAM_API_KEY` > `GEMINI_API_KEY` > `ANTHROPIC_API_KEY` > `OPENAI_API_KEY`.
+
+<CustomDivider />
+
+Source: [`livepeer/storyboard`](https://github.com/livepeer/storyboard) `packages/agent/README.md`.
+
+The [Agent SDK](/v2/developers/build/ai-and-agents/agents/agent-sdk) page covers the full `AgentRunner` API, MCP server mode, and CLI verb reference.

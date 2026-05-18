@@ -1,251 +1,201 @@
 ---
-title: SDKs
-sidebarTitle: SDKs
+title: 'SDKs'
+sidebarTitle: 'SDKs'
 description: >-
-  All official Livepeer SDKs: Studio SDK (TypeScript, Python, Go), AI SDK, and React UI Kit. Versions, install commands,
-  and links to full reference.
-lifecycleStage: discover
-complexity: intermediate
+  All official Livepeer SDKs: video API SDKs in JavaScript, Python, Go and Java,
+  AI inference SDKs in JavaScript and Python, and the @livepeer/react UI Kit.
 keywords:
-  - livepeer SDK
-  - typescript
-  - python
-  - go
-  - react
-  - npm
-  - AI SDK
+  - livepeer
+  - SDK
+  - JavaScript
+  - Python
+  - Go
+  - Java
+  - '@livepeer/react'
+  - livepeer-ai
+  - '@livepeer/ai'
+  - ui-kit
 'og:image': /snippets/assets/site/og-image/en/developers.png
 'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 pageType: reference
-purpose: reference
 audience: developer
 status: current
-lastVerified: 2026-04-05T00:00:00.000Z
+lastVerified: '2026-05-13'
 ---
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>The Studio SDK (`livepeer`) covers all Livepeer resources: streams, assets, webhooks, and AI inference. Use it for new projects. The AI SDK (`@livepeer/ai`) covers AI inference only and is in alpha.</Tip>
+  <Tip>Two SDK families exist: the Video API SDKs wrap the Livepeer REST API for stream and asset management, and the AI SDKs wrap the ai-runner inference endpoints. They are separate packages with separate version lines.</Tip>
 </CenteredContainer>
 
 ---
 
-<CustomDivider middleText="SDK Overview" />
+Livepeer publishes two families of client SDKs and one UI component library. All are generated from OpenAPI specifications and published to their respective package registries.
 
-## SDK families
+<CustomDivider />
 
-Two SDK families exist. Choose based on what you are building:
+## Video API SDKs
+
+The Video API SDKs wrap the Livepeer REST API: streams, assets, webhooks, playback, access control, viewership metrics, and transcode jobs. All four are generated from the same OpenAPI spec.
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
-      <TableCell header>SDK</TableCell>
-      <TableCell header>Package</TableCell>
-      <TableCell header>Covers</TableCell>
-      <TableCell header>Status</TableCell>
+      <TableCell header>Language</TableCell>
+      <TableCell header>Package name</TableCell>
+      <TableCell header>Install</TableCell>
+      <TableCell header>Repository</TableCell>
     </TableRow>
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>**Studio SDK -- TypeScript**</TableCell>
-      <TableCell>`livepeer` (npm)</TableCell>
-      <TableCell>Streams, assets, webhooks, signing keys, multistream, AI inference</TableCell>
-      <TableCell>Stable (v3.5.0)</TableCell>
+      <TableCell>JavaScript / TypeScript</TableCell>
+      <TableCell>`livepeer`</TableCell>
+      <TableCell>`npm install livepeer`</TableCell>
+      <TableCell>`livepeer/livepeer-js`</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Studio SDK -- Python**</TableCell>
-      <TableCell>`livepeer` (PyPI)</TableCell>
-      <TableCell>Same as TypeScript SDK</TableCell>
-      <TableCell>Stable</TableCell>
+      <TableCell>Python</TableCell>
+      <TableCell>`livepeer`</TableCell>
+      <TableCell>`pip install livepeer`</TableCell>
+      <TableCell>`livepeer/livepeer-python`</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Studio SDK -- Go**</TableCell>
+      <TableCell>Go</TableCell>
       <TableCell>`github.com/livepeer/livepeer-go`</TableCell>
-      <TableCell>Same as TypeScript SDK</TableCell>
-      <TableCell>Stable</TableCell>
+      <TableCell>`go get github.com/livepeer/livepeer-go`</TableCell>
+      <TableCell>`livepeer/livepeer-go`</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**React UI Kit**</TableCell>
-      <TableCell>`@livepeer/react` (npm)</TableCell>
-      <TableCell>Player component, Broadcast component, playback hooks</TableCell>
-      <TableCell>Stable (v4.3.2)</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**AI SDK -- TypeScript**</TableCell>
-      <TableCell>`@livepeer/ai` (npm)</TableCell>
-      <TableCell>AI inference endpoints only (all 9 batch pipelines)</TableCell>
-      <TableCell>Alpha</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**AI SDK -- Python**</TableCell>
-      <TableCell>`livepeer-ai` (PyPI)</TableCell>
-      <TableCell>AI inference endpoints only</TableCell>
-      <TableCell>Alpha</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**AI SDK -- Go**</TableCell>
-      <TableCell>`github.com/livepeer/livepeer-ai-go`</TableCell>
-      <TableCell>AI inference endpoints only</TableCell>
-      <TableCell>Alpha</TableCell>
+      <TableCell>Java</TableCell>
+      <TableCell>`studio.livepeer:livepeer`</TableCell>
+      <TableCell>Maven: `studio.livepeer:livepeer:0.5.0`</TableCell>
+      <TableCell>`livepeer/livepeer-java`</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Studio SDK" />
+**Initialisation (JavaScript):**
 
-## Studio SDK
-
-The Studio SDK is auto-generated from the Studio OpenAPI spec by [Speakeasy](https://speakeasyapi.dev) and maintained in the official Livepeer repositories. It is the recommended choice for production applications.
-
-### TypeScript / JavaScript
-
-```bash
-npm install livepeer
-```
-
-- **npm:** https://www.npmjs.com/package/livepeer
-- **GitHub:** https://github.com/livepeer/livepeer-js
-- **Version:** 3.5.0
-
-All Studio API resources are available under namespaced clients:
-
-```typescript
+```javascript
 import { Livepeer } from 'livepeer';
 const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
-
-// Video
-client.stream.create(...)
-client.stream.get(streamId)
-client.asset.create(...)
-client.asset.get(assetId)
-client.webhook.create(...)
-client.signingKey.create()
-
-// AI inference
-client.generate.textToImage(...)
-client.generate.imageToImage(...)
-client.generate.imageToVideo(...)
-client.generate.audioToText(...)
-client.generate.llm(...)
 ```
 
-### Python
-
-```bash
-pip install livepeer
-```
-
-- **PyPI:** https://pypi.org/project/livepeer/
-- **GitHub:** https://github.com/livepeer/livepeer-python
+**Initialisation (Python):**
 
 ```python
 from livepeer import Livepeer
 client = Livepeer(api_key=os.environ['LIVEPEER_API_KEY'])
 ```
 
-### Go
+The JavaScript SDK supports Node.js, Bun, Deno, and browser runtimes. The SDK throws typed errors: `SDKError` for API-level errors, `SDKValidationError` for response schema mismatches.
 
-```bash
-go get github.com/livepeer/livepeer-go
+<CustomDivider />
+
+## AI Inference SDKs
+
+The AI SDKs wrap the ai-runner gateway inference endpoints: all nine batch pipeline types. They are generated from the ai-runner OpenAPI specification and versioned independently from the Video API SDKs.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Language</TableCell>
+      <TableCell header>Package name</TableCell>
+      <TableCell header>Install</TableCell>
+      <TableCell header>Repository</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>JavaScript / TypeScript</TableCell>
+      <TableCell>`@livepeer/ai`</TableCell>
+      <TableCell>`npm install @livepeer/ai zod`</TableCell>
+      <TableCell>`livepeer/livepeer-ai-js`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Python</TableCell>
+      <TableCell>`livepeer-ai`</TableCell>
+      <TableCell>`pip install livepeer-ai`</TableCell>
+      <TableCell>`livepeer/livepeer-ai-python`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Both AI SDKs are in alpha. Pin to a specific version to avoid breaking changes between releases.
+
+**Initialisation (JavaScript):**
+
+```typescript
+import { Livepeer } from '@livepeer/ai';
+const livepeer = new Livepeer({ httpBearer: '' }); // empty = community gateway
 ```
 
-- **GitHub:** https://github.com/livepeer/livepeer-go
+**Initialisation (Python):**
 
-```go
-import livepeer "github.com/livepeer/livepeer-go"
-client := livepeer.New(livepeer.WithSecurity(os.Getenv("LIVEPEER_API_KEY")))
+```python
+from livepeer_ai import Livepeer
+client = Livepeer(http_bearer='')
 ```
 
-<CustomDivider middleText="React UI Kit" />
+See <LinkArrow href="/v2/developers/build/ai-and-agents/ai-sdks-overview" label="AI SDKs" newline={false} /> for method coverage and the `generate` namespace reference.
 
-## React UI Kit
+<Note>
+  The `livepeer/livepeer-ai-sdks` repository is deprecated and no longer maintained. Use `@livepeer/ai` (npm) and `livepeer-ai` (PyPI) instead.
+</Note>
+
+<CustomDivider />
+
+## @livepeer/react (UI Kit)
+
+`@livepeer/react` is the React component library for video playback and browser-based broadcasting. It is not a wrapper for the Video API; it is a UI component layer.
 
 ```bash
 npm install @livepeer/react
 ```
 
-- **npm:** https://www.npmjs.com/package/@livepeer/react
-- **GitHub:** https://github.com/livepeer/ui-kit
-- **Version:** 4.3.2
+Current version: 4.3.6. Supports React 17 and React 18.
 
-The UI Kit provides composable video primitives for React applications. Key components:
+Key exports:
 
-- **`Player`** -- HLS and WebRTC playback with automatic protocol selection, keyboard shortcuts, and PictureInPicture
-- **`Broadcast`** -- In-browser RTMP/WebRTC broadcasting
-- **`Controls`** -- Play, volume, fullscreen, and quality controls
+| Export | Purpose |
+|---|---|
+| `Player` | ABR HLS + WebRTC playback with WAI-ARIA keyboard shortcuts |
+| `Broadcast` | WebRTC (WHIP) browser-based publishing |
+| `Player.Root`, `Player.Video`, `Player.Container` | Composable primitives for custom player UI |
 
-```tsx
-import * as Player from '@livepeer/react/player';
+Repository: `livepeer/ui-kit`
 
-<Player.Root src="https://livepeercdn.studio/hls/{playbackId}/index.m3u8">
-  <Player.Container>
-    <Player.Video />
-    <Player.Controls />
-  </Player.Container>
-</Player.Root>
-```
-
-<CustomDivider middleText="AI SDK" />
-
-## AI SDK (alpha)
-
-The AI SDK is generated separately from the AI gateway OpenAPI spec. Use the Studio SDK for production applications; use the AI SDK for AI-inference-only projects or when you want a smaller dependency footprint.
-
-### TypeScript
-
-```bash
-npm install @livepeer/ai
-```
-
-- **npm:** https://www.npmjs.com/package/@livepeer/ai
-- **GitHub:** https://github.com/livepeer/livepeer-ai-js
-- **Default gateway:** `https://dream-gateway.livepeer.cloud` (public, non-production)
-
-```typescript
-import Livepeer from '@livepeer/ai';
-const client = new Livepeer({ httpBearer: process.env.LIVEPEER_API_KEY });
-const result = await client.generate.textToImage({ prompt: 'test' });
-```
-
-### Python
-
-```bash
-pip install livepeer-ai
-```
-
-### Go
-
-```bash
-go get github.com/livepeer/livepeer-ai-go
-```
-
-<CustomDivider middleText="Deprecated SDKs" />
-
-## Deprecated SDKs
-
-Do not use these packages in new projects:
-
-| Package | Status | Migration path |
-|---|---|---|
-| `@livepeer/webrtmp-sdk` | Deprecated | Use `@livepeer/react` Broadcast component |
-| `@livepeer/react-native` | Deprecated | Use `react-native-video` (HLS) + `react-native-webrtc` (WebRTC) |
-| Old `livepeer.js` monorepo | Archived | Migrate to `livepeer` npm v3.5.0 |
+See <LinkArrow href="/v2/developers/build/applications/frontend-react-player" label="Player" newline={false} /> for component usage and prop reference.
 
 <CustomDivider />
 
-## Related pages
+## Deprecated SDKs
+
+`@livepeer/react-native` (version 0.0.1) is no longer maintained. For React Native video playback, use `react-native-video` for HLS or `react-native-webrtc` for low-latency WebRTC.
+
+<CustomDivider />
+
+## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="SDK Integration Guide" icon="code" href="/v2/developers/build/sdk-gateway">
-    Full code examples, error handling, and retry configuration for all SDKs.
+  <Card title="AI SDKs" icon="code" href="/v2/developers/build/ai-and-agents/ai-sdks-overview" arrow horizontal>
+    AI SDK method coverage, generate namespace, and gateway configuration.
   </Card>
-  <Card title="APIs" icon="plug" href="/v2/developers/resources/reference/apis">
-    REST API reference, OpenAPI spec, and endpoint list.
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/frontend-react-player" arrow horizontal>
+    @livepeer/react Player props, ICE servers, and Broadcast component.
+  </Card>
+  <Card title="Video Overview" icon="film" href="/v2/developers/build/video/overview" arrow horizontal>
+    Video API SDK usage for streams, assets, and webhooks.
+  </Card>
+  <Card title="APIs" icon="book" href="/v2/developers/resources/reference/apis" arrow horizontal>
+    OpenAPI reference for the endpoints the SDKs wrap.
   </Card>
 </CardGroup>

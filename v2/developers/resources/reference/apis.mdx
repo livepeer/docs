@@ -1,219 +1,167 @@
 ---
-title: APIs
-sidebarTitle: APIs
-description: "Livepeer API reference: Studio REST API, AI Gateway API, authentication, base URLs, and OpenAPI spec location."
-lifecycleStage: discover
-complexity: intermediate
+title: 'APIs'
+sidebarTitle: 'APIs'
+description: >-
+  Reference index for all Livepeer APIs: the Video REST API, the AI gateway
+  inference API, and the go-livepeer node CLI/metrics API.
 keywords:
-  - livepeer API
+  - livepeer
+  - API
   - REST API
-  - AI gateway API
   - OpenAPI
-  - authentication
-  - rate limits
+  - ai-runner
+  - gateway API
+  - livepeer_cli
+  - Prometheus
+  - reference
 'og:image': /snippets/assets/site/og-image/en/developers.png
 'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
 pageType: reference
-purpose: reference
 audience: developer
 status: current
-lastVerified: 2026-04-05T00:00:00.000Z
+lastVerified: '2026-05-13'
 ---
 
-import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Two distinct APIs exist: the Studio REST API (streams, assets, webhooks) and the AI Gateway API (inference pipelines). They share the same authentication method but have separate base URLs and OpenAPI specs.</Tip>
+  <Tip>Three distinct APIs exist on Livepeer. The Video REST API manages streams and assets. The AI gateway API runs inference jobs. The go-livepeer node API exposes CLI operations and Prometheus metrics. They have separate base URLs and authentication schemes.</Tip>
 </CenteredContainer>
 
 ---
 
-<CustomDivider middleText="Studio REST API" />
+<CustomDivider />
 
-## Studio REST API
+## Livepeer Video REST API
 
-**Base URL:** `https://livepeer.studio/api`
+The Video REST API covers stream management, VOD asset upload and playback, webhooks, access control, viewership metrics, and transcode jobs. It is the API the Video SDK family (`livepeer` npm/pip/go/maven packages) wraps.
 
-**Authentication:** `Authorization: Bearer <api-key>`
+**Base URL:** `https://livepeer.com/api`
 
-**OpenAPI spec:** Available at https://livepeer.studio/api-reference (interactive) and as a downloadable JSON spec from the Studio dashboard under Developer > API Reference.
+**Authentication:** Bearer token in the `Authorization` header. API keys are managed in the Livepeer developer dashboard.
 
-### Resource endpoints
+**OpenAPI spec:** The full machine-readable specification is available from the Livepeer developer portal (OpenAPI 3.0).
+
+**Key resource groups:**
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
       <TableCell header>Resource</TableCell>
       <TableCell header>Base path</TableCell>
-      <TableCell header>Key operations</TableCell>
+      <TableCell header>Purpose</TableCell>
     </TableRow>
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>**Streams**</TableCell>
-      <TableCell>`/api/stream`</TableCell>
-      <TableCell>POST (create), GET /:id, PATCH /:id, DELETE /:id, GET (list)</TableCell>
+      <TableCell>Streams</TableCell>
+      <TableCell>`/stream`</TableCell>
+      <TableCell>Create, read, update, terminate live streams; retrieve sessions</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Assets**</TableCell>
-      <TableCell>`/api/asset`</TableCell>
-      <TableCell>POST /request-upload, GET /:id, PATCH /:id, DELETE /:id, GET (list)</TableCell>
+      <TableCell>Assets</TableCell>
+      <TableCell>`/asset`</TableCell>
+      <TableCell>Upload, transcode, retrieve, and delete VOD assets</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Webhooks**</TableCell>
-      <TableCell>`/api/webhook`</TableCell>
-      <TableCell>POST (create), GET /:id, PUT /:id, DELETE /:id, POST /:id/resend</TableCell>
+      <TableCell>Playback</TableCell>
+      <TableCell>`/playback`</TableCell>
+      <TableCell>Retrieve playback info by playback ID</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Signing keys**</TableCell>
-      <TableCell>`/api/access-control/signing-key`</TableCell>
-      <TableCell>POST (create), GET (list), DELETE /:id</TableCell>
+      <TableCell>Webhooks</TableCell>
+      <TableCell>`/webhook`</TableCell>
+      <TableCell>Create and manage event subscriptions</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Multistream targets**</TableCell>
-      <TableCell>`/api/multistream/target`</TableCell>
-      <TableCell>POST (create), GET /:id, PUT /:id, DELETE /:id</TableCell>
+      <TableCell>Multistream targets</TableCell>
+      <TableCell>`/multistream/target`</TableCell>
+      <TableCell>Register RTMP restream destinations</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Sessions**</TableCell>
-      <TableCell>`/api/session`</TableCell>
-      <TableCell>GET /:id, GET (list by stream)</TableCell>
+      <TableCell>Access control</TableCell>
+      <TableCell>`/access-control/signing-key`</TableCell>
+      <TableCell>Create and manage JWT signing keys</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Viewership</TableCell>
+      <TableCell>`/data/views`</TableCell>
+      <TableCell>Query engagement and performance metrics</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Tasks</TableCell>
+      <TableCell>`/task`</TableCell>
+      <TableCell>Monitor async transcoding jobs</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
-
-### Rate limits
-
-Rate limits are per API key and visible in the Studio dashboard under **Settings > API Keys**. The default limits for the Growth tier are sufficient for most production applications. Contact support for Enterprise rate limit increases.
-
-<CustomDivider middleText="AI Gateway API" />
-
-## AI Gateway API
-
-**Base URL (Studio-managed, production):** `https://livepeer.studio/api/beta/generate`
-
-**Base URL (public, non-production):** `https://dream-gateway.livepeer.cloud`
-
-**Authentication:** `Authorization: Bearer <api-key>` (same Studio API key)
-
-**Content type:** `application/json` for text payloads; `multipart/form-data` for file uploads (image-to-image, upscale, segment-anything-2, audio-to-text, image-to-text)
-
-### Inference endpoints
-
-<StyledTable variant="bordered">
-  <thead>
-    <TableRow header>
-      <TableCell header>Pipeline</TableCell>
-      <TableCell header>Endpoint</TableCell>
-      <TableCell header>Input</TableCell>
-      <TableCell header>Min VRAM</TableCell>
-    </TableRow>
-  </thead>
-  <tbody>
-    <TableRow>
-      <TableCell>**Text to image**</TableCell>
-      <TableCell>`POST /text-to-image`</TableCell>
-      <TableCell>JSON: `prompt`, `model_id`, `width`, `height`, `negative_prompt`, `guidance_scale`, `num_inference_steps`</TableCell>
-      <TableCell>24 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Image to image**</TableCell>
-      <TableCell>`POST /image-to-image`</TableCell>
-      <TableCell>multipart: `image` (file), `prompt`, `model_id`, `strength`</TableCell>
-      <TableCell>20 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Image to video**</TableCell>
-      <TableCell>`POST /image-to-video`</TableCell>
-      <TableCell>multipart: `image` (file), `model_id`, `width`, `height`, `fps`, `motion_bucket_id`</TableCell>
-      <TableCell>24 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Image to text**</TableCell>
-      <TableCell>`POST /image-to-text`</TableCell>
-      <TableCell>multipart: `image` (file), `model_id`, `prompt`</TableCell>
-      <TableCell>4 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Audio to text**</TableCell>
-      <TableCell>`POST /audio-to-text`</TableCell>
-      <TableCell>multipart: `audio` (file), `model_id`, `language`</TableCell>
-      <TableCell>12 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Text to speech**</TableCell>
-      <TableCell>`POST /text-to-speech`</TableCell>
-      <TableCell>JSON: `text`, `model_id`, `voice`</TableCell>
-      <TableCell>12 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Upscale**</TableCell>
-      <TableCell>`POST /upscale`</TableCell>
-      <TableCell>multipart: `image` (file), `model_id`, `prompt`</TableCell>
-      <TableCell>24 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**Segment Anything 2**</TableCell>
-      <TableCell>`POST /segment-anything-2`</TableCell>
-      <TableCell>multipart: `image` (file), `model_id`, `point_coords`, `point_labels`</TableCell>
-      <TableCell>6 GB</TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell>**LLM**</TableCell>
-      <TableCell>`POST /llm`</TableCell>
-      <TableCell>JSON: OpenAI-compatible `messages` array, `model`</TableCell>
-      <TableCell>8 GB</TableCell>
-    </TableRow>
-  </tbody>
-</StyledTable>
-
-### Common response shape
-
-All image-output pipelines return:
-
-```json
-{
-  "images": [
-    {
-      "url": "https://...",
-      "seed": 42,
-      "nsfw": false
-    }
-  ]
-}
-```
-
-Text pipelines (`llm`, `audio-to-text`, `image-to-text`) return:
-
-```json
-{ "text": "..." }
-```
-
-The LLM pipeline returns an OpenAI-compatible `choices` array in addition to the `text` field.
-
-### OpenAPI spec
-
-The AI Gateway OpenAPI spec is generated from the `ai-runner` repository via `gen_openapi.py` and output as `openapi_gateway.json`. The spec is used to auto-generate all three AI SDK language variants.
-
-The live interactive reference for the AI API is mounted in the Gateways tab documentation at `/v2/gateways/resources/reference/technical/api-reference/AI-API/ai`.
 
 <CustomDivider />
 
-## Related pages
+## AI Gateway Inference API
+
+The AI inference API is served by the Livepeer gateway for AI workloads. Each pipeline type has a dedicated endpoint. The gateway routes requests to network orchestrators running the `ai-runner` container.
+
+**Base URL:** Gateway-dependent. Community gateway: `https://dream-gateway.livepeer.cloud`. Self-hosted gateways use the configured HTTP address.
+
+**Authentication:** Bearer token when the gateway requires it; the community gateway accepts unauthenticated requests for development.
+
+**OpenAPI spec:** Generated from the `ai-runner` OpenAPI specification. Available at `https://docs.livepeer.org/api/ai-worker.yaml`.
+
+**Pipeline endpoints:**
+
+| Endpoint | Method | Pipeline |
+|---|---|---|
+| `/text-to-image` | POST | Text prompt to image |
+| `/image-to-image` | POST | Image + prompt to transformed image |
+| `/image-to-video` | POST | Image to short video |
+| `/image-to-text` | POST | Image to caption |
+| `/audio-to-text` | POST | Audio to transcript |
+| `/text-to-speech` | POST | Text to audio |
+| `/upscale` | POST | Image upscaling |
+| `/segment-anything-2` | POST | Image segmentation |
+| `/llm` | POST | OpenAI-compatible chat completions |
+| `/live/video-to-video` | POST | Real-time AI stream session (trickle) |
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="AI Pipelines" newline={false} /> for endpoint schemas and curl examples.
+
+<CustomDivider />
+
+## Go-Livepeer Node API
+
+go-livepeer nodes expose two local HTTP interfaces: the CLI interface (used by `livepeer_cli`) and the Prometheus metrics endpoint.
+
+**CLI interface:** `http://<cliAddr>/` (default: `http://127.0.0.1:7935/`)
+
+Used by `livepeer_cli` for node management operations: deposit funding, status queries, configuration updates.
+
+**Metrics endpoint:** `http://<cliAddr>/metrics`
+
+Exposes Prometheus-format metrics for scraping. Enable with the `-metrics` flag on node startup. See <LinkArrow href="/v2/developers/guides/observability-and-debugging/tooling-and-metrics" label="Tooling and Metrics" newline={false} /> for the key metric names and monitoring setup.
+
+The node API is local-only by default. Do not expose it externally without access controls.
+
+<CustomDivider />
+
+## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="SDKs" icon="code" href="/v2/developers/resources/reference/sdks">
-    Official SDK packages for TypeScript, Python, Go, and React.
+  <Card title="SDKs" icon="code" href="/v2/developers/resources/reference/sdks" arrow horizontal>
+    SDK packages that wrap the Video and AI APIs.
   </Card>
-  <Card title="SDK Integration Guide" icon="laptop-code" href="/v2/developers/build/sdk-gateway">
-    Full examples, error handling, and retry configuration.
+  <Card title="AI Pipelines" icon="cpu" href="/v2/developers/build/ai-and-agents/ai-pipelines" arrow horizontal>
+    AI inference API endpoint shapes and request schemas.
   </Card>
-  <Card title="AI Authentication" icon="lock" href="/v2/developers/guides/ai/authentication">
-    API key types and how to use them correctly.
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/auth-and-security/access-control" arrow horizontal>
+    Access control signing key API for JWT-gated playback.
+  </Card>
+  <Card title="Viewership" icon="chart" href="/v2/developers/guides/observability-and-debugging/tooling-and-metrics" arrow horizontal>
+    Viewership metrics API for engagement and performance data.
   </Card>
 </CardGroup>

@@ -1,7 +1,7 @@
-<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
-<!-- Generator: operations/scripts/generators/components/library/generate-component-index.js -->
-<!-- Generated: 2026-04-08T15:37:55.952Z -->
-<!-- Components: 49 | Category: displays -->
+{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
+{/* Generator: operations/scripts/generators/components/library/generate-component-index.js */}
+{/* Generated: 2026-05-18T10:41:16.359Z */}
+{/* Components: 49 | Category: displays */}
 
 # Displays — Component Index
 

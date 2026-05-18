@@ -1,0 +1,164 @@
+---
+title: 'Alt-Gateway Overview'
+sidebarTitle: 'Overview'
+description: >-
+  Building non-Go gateway clients using the remote signer architecture:
+  livepeer-python-gateway and the off-chain integration pattern.
+keywords:
+  - livepeer
+  - gateway
+  - remote signer
+  - livepeer-python-gateway
+  - Python
+  - off-chain
+  - OrchestratorSession
+  - probabilistic micropayments
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The remote signer architecture separates Ethereum payment signing from media routing, enabling gateway implementations in Python, Node.js, or any other runtime without the full go-livepeer binary.</Tip>
+</CenteredContainer>
+
+---
+
+go-livepeer's broadcaster mode is the canonical gateway implementation. The remote signer architecture (added in go-livepeer PRs #3791 and #3822) makes it possible to build gateway clients in other languages: your code handles media routing; a remote signer service handles all Ethereum payment operations.
+
+The primary reference implementation of a non-Go gateway is `livepeer/livepeer-python-gateway`.
+
+<CustomDivider />
+
+## Remote Signer Model
+
+A gateway performing transcoding or AI inference jobs must create probabilistic micropayment tickets signed by an Ethereum key. In the standard go-livepeer broadcaster, the node manages its own keystore. In the remote signer model, the signing operations are delegated to a separate signer service over HTTP.
+
+This separation means:
+
+- The gateway implementation (media routing, orchestrator selection, job submission) can be written in any language
+- The signer service (ETH key management, ticket signing, balance management) runs as a separate process, typically go-livepeer in signer mode or a compatible implementation
+- The gateway connects to the signer via HTTP and passes unsigned tickets to it; the signer returns signed tickets
+
+The gateway still needs to communicate with the Livepeer network protocol (orchestrator discovery, job protocol, segment submission) but does not need the full go-livepeer codebase.
+
+<CustomDivider />
+
+## Livepeer Python Gateway
+
+`livepeer/livepeer-python-gateway` is the reference Python gateway implementation. It implements orchestrator session management, payment ticket lifecycle, and live video job handling.
+
+Key components:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Class</TableCell>
+      <TableCell header>Role</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`OrchestratorSession`</TableCell>
+      <TableCell>Manages a connection to a single orchestrator, including payment state and capability negotiation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`PaymentSession`</TableCell>
+      <TableCell>Handles ticket lifecycle: creates unsigned tickets, calls the remote signer, tracks balance</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`LiveVideoJob`</TableCell>
+      <TableCell>Manages a persistent `live-video-to-video` inference session including trickle stream setup</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Working examples covering orchestrator selection, LV2V sessions, and payment integration are in `github.com/livepeer/livepeer-python-gateway/tree/main/examples`.
+
+<CustomDivider />
+
+## Discovery Patterns
+
+On-chain gateways use the Arbitrum contract registry for orchestrator discovery. Off-chain SDK clients cannot query that registry without an Ethereum dependency. Three alternatives work for Python gateway clients:
+
+**Explicit orchestrator list:** Pass orchestrator URIs directly. Suitable for development or when operating alongside trusted orchestrators.
+
+```python
+orchestrators = [
+    "https://orch-1.example.com",
+    "https://orch-2.example.com",
+]
+session = OrchestratorSession(
+    orchestrator_url=orchestrators[0],
+    signer_url="http://localhost:8936",
+)
+```
+
+**Explorer API discovery:** Query the Livepeer Explorer API to get the active orchestrator set, then filter by capability. This avoids an on-chain dependency while using current network data.
+
+**Manual AI Service Registry query:** For AI-capable orchestrators, the AI Service Registry on Arbitrum One lists registered orchestrators with their capabilities. Query it via a standard Arbitrum RPC endpoint.
+
+<CustomDivider />
+
+## Use Cases
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Use case</TableCell>
+      <TableCell header>Path</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Python ML pipeline needing real-time AI inference</TableCell>
+      <TableCell>livepeer-python-gateway with remote signer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Browser or mobile client streaming to the network</TableCell>
+      <TableCell>Custom gateway client in JS/TS with remote signer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Edge device with constrained runtime</TableCell>
+      <TableCell>Custom gateway in any language, remote signer on a companion server</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Multi-tenant platform with per-user orchestrator routing</TableCell>
+      <TableCell>Custom gateway implementing the protocol with shared signer pool</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+  The remote signer architecture requires coordination with the signer service for ticket signing on every job. The signer service must stay available; its unavailability blocks job submission.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding-direct-quickstart" arrow horizontal>
+    Direct segment transcoding: the core operation a gateway performs.
+  </Card>
+  <Card title="BYOC Overview" icon="box" href="/v2/developers/build/compute/byoc/overview" arrow horizontal>
+    Custom inference containers that gateway clients route to.
+  </Card>
+  <Card title="Real-Time AI Overview" icon="video" href="/v2/developers/build/ai-and-agents/realtime-ai/overview" arrow horizontal>
+    Cascade architecture the Python gateway LiveVideoJob class targets.
+  </Card>
+  <Card title="AI Pipelines" icon="cpu" href="/v2/developers/build/ai-and-agents/ai-pipelines" arrow horizontal>
+    Pipeline types and request schemas the gateway submits to orchestrators.
+  </Card>
+</CardGroup>
