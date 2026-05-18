@@ -1,78 +1,119 @@
 ---
-title: Workflow and Pipeline Governance Framework
-sidebarTitle: GitHub Actions
-description: >-
-  Canonical reference for workflow and pipeline architecture. Defines how automated
-  pipelines are built, what they must do, and how they are governed in this
-  ownerless, self-governed repo.
+title: "Workflow and Pipeline Governance Framework"
+sidebarTitle: "GitHub Actions"
+description: "Canonical framework for workflow and pipeline architecture. Defines what we are building, why, and the rules every workflow follows in this ownerless self-governed repo."
 keywords:
-  - github actions
-  - workflow governance
-  - pipeline architecture
-  - CI/CD
+  - "github actions"
+  - "workflow governance"
+  - "pipeline architecture"
+  - "ownerless repo"
+  - "ci/cd"
 consumer: [human, agent]
 maintenance: hand-maintained
 status: active
-lastVerified: 2026-04-07
-sourceDoc: .github/workspace/framework-canonical.md
+version: "2.0"
+lastVerified: 2026-05-18
+sourceDoc: ".github/workspace/framework-canonical.md"
 ---
 
 # Workflow and Pipeline Governance Framework
 
-Canonical reference for the Livepeer Docs workflow and pipeline architecture. 8 decisions locked (D-ACT-01 through D-ACT-08).
-
-Full specification: `.github/workspace/framework-canonical.md`
-Decisions log: `.github/workspace/decisions-log.mdx`
+This is the single canonical reference for workflows and pipelines in this repo. Read this before creating, renaming, or removing any workflow.
 
 ---
 
-## Purpose
+## Outcome we are building
 
-This repo is ownerless and self-governed. It must self-repair and self-document through automated pipelines. This framework defines how those pipelines are built, what they must do, and how they are governed.
+This repo is **ownerless and self-governed**. The product itself runs the rules: detects breaks, fixes what it can, raises issues for what it cannot, and documents every change without human babysitting. The framework below describes what that system must look like.
 
-What the product needs to do:
+**Target end state:**
 
-1. **Protect itself** - detect breaks, auto-fix what it can, raise issues for what it cannot, block bad changes
-2. **Keep itself current** - pull fresh external data, regenerate derived files, detect drift
-3. **Maintain its own standards** - enforce voice, grammar, spelling, terminology, visual identity
-4. **Make itself findable** - keep AI/search surfaces regenerated on every change
-5. **Document itself** - catalogues, indexes, registries auto-regenerate
-6. **Govern itself** - rules enforced, issues managed, drift self-healed
+1. **Approximately 10 dispatcher workflows.** Not 50, not 47. Every workflow owns a coherent pipeline: one trigger pattern, one concern, one failure mode. Maintenance scales with the number of dispatchers, not the number of scripts.
+2. **Workflows are thin dispatchers.** YAML answers when, where, with what permissions. All business logic lives in governed scripts under `operations/scripts/`. Inline JavaScript over 50 lines is a defect.
+3. **Local CLI equivalence on every dispatcher.** Any contributor (human or AI agent) can run any pipeline locally with `--dry-run`, with no CI trigger and no GitHub secrets, before pushing.
+4. **Detect, repair, escalate, verify.** Every detection routes to a response. No headless scans. No findings die in a log. Remediators support `--verify` so successful fixes survive and only regressed files revert.
+5. **Self-documenting.** The actions library, script registry, and decisions registry regenerate from data on every change. No manual documentation sync.
+6. **One taxonomy spine.** 7 types times 7 concerns times 8 pipeline tags. Every workflow and every script declares all three. The system is searchable, mappable, and predictable.
+7. **Bottom-up integrity.** Every script has a verified purpose, a known caller, an SME endorsement, and a place in the taxonomy. Orphan scripts are archived, not preserved out of caution.
+
+If any of those properties is missing, the framework is not yet implemented.
 
 ---
 
-## Pipeline Architecture (D-ACT-08)
+## What the product needs to do
+
+1. **Protect itself.** Detect breaks. Auto-fix what it can. Raise issues for what it cannot. Block bad changes at PR time.
+2. **Keep itself current.** Pull fresh external data. Regenerate derived files. Detect drift.
+3. **Maintain its own standards.** Enforce voice, grammar, spelling, terminology, visual identity.
+4. **Make itself findable.** Regenerate AI and search surfaces on every change.
+5. **Document itself.** Catalogues, indexes, registries regenerate from data.
+6. **Govern itself.** Rules enforced, issues managed, drift self-healed.
+
+Every workflow is justified by one or more of those obligations. A workflow that does not is removed.
+
+---
+
+## Pipeline architecture (D-ACT-08)
 
 ### The dispatcher model
 
-All workflow YAML files are dispatchers. They handle when, where, permissions, and orchestration. The typed work lives in scripts. The type classification comes from what the script does, not the workflow.
+Every workflow YAML is a dispatcher. Workflows handle trigger, environment, permissions, secrets, concurrency, and orchestration. They do not contain business logic. Typed work lives in scripts.
 
-| Layer | Role | Has type? |
+| Layer | Owns | Has type? |
 |---|---|---|
-| Workflow YAML | Dispatcher: trigger, permissions, environment, orchestration | No (all dispatchers) |
-| Script | Does the work: integrates, generates, validates, audits, remediates | Yes (7-type taxonomy) |
+| Workflow YAML | When, where, permissions, concurrency, commit/push, issue creation, secrets injection | No (every workflow is a dispatcher) |
+| Script | All business logic, file I/O, exit codes, dry-run, verify, structured output | Yes (7-type taxonomy) |
+
+The type prefix in the filename identifies what the script does, not what the workflow does.
 
 ### Pipeline patterns
 
+Every pipeline takes one of seven shapes.
+
 | Pattern | Shape | Example |
 |---|---|---|
-| **A: Integrate** | Fetch external data, diff check, commit | Contract address updates |
-| **B: Generate** | Build from internal data, commit | docs-index.json, llms.txt |
-| **C: Check** | Validate on PR, report pass/fail | Broken links, content quality |
-| **D: Scan, Report, Act** | Scheduled monitoring with response routing | Content freshness, asset health |
-| **E: Repair** | Fix broken state, commit or PR | Component metadata repair |
-| **F: React** | Issue/PR lifecycle events, no file changes | Label, assign, index, close |
-| **G: Orchestrate** | Dispatch children, aggregate results | Multi-script pipelines |
+| **A: Integrate** | Fetch external data, diff check, commit | Social feed updates, contract address sync |
+| **B: Generate** | Build from internal data, commit | docs-index.json, llms.txt, AI sitemap |
+| **C: Check** | Validate on PR, report pass or fail | Broken links, content quality, governance |
+| **D: Scan, report, act** | Scheduled monitoring with routed response | Data freshness, external link audit, content quality scan |
+| **E: Repair** | Fix broken state, commit or open PR | EN-GB style homogenisation, governance repair |
+| **F: React** | Issue or PR lifecycle events with no file changes | Label, assign reviewer, intake from Discord |
+| **G: Orchestrate** | Dispatch children, aggregate results | Post-merge sync, catalog generation |
 
 ### Generate/verify pairs
 
-Every generator (Pattern B) must have a matching verifier (Pattern C) that runs on PR with `--check` flag.
+Every Pattern B generator must have a matching Pattern C verifier that runs with `--check` on PR. The verifier compares the committed file to what the generator would produce. Drift fails the PR.
+
+Every Pattern E remediator must accept `--verify`. After applying fixes the script re-runs the matching validator on affected files and reverts only files that regressed. Successful fixes survive even when one file fails.
+
+### Detect, repair, escalate, verify (D-GOV-03)
+
+No headless scans. Every detection routes to one of four responses:
+
+| Detection | Route | Authority |
+|---|---|---|
+| Auto-fixable | Apply fix silently in CI | Highest preference |
+| Auto-fixable but high blast radius | Open auto-fix PR | Medium |
+| External dependency or human decision needed | Open rolling issue | Lower |
+| Schema or syntax breakage on PR | Block merge with clear error | Last resort |
+
+Rolling issues auto-close when the underlying finding clears. The pattern is implemented in `operations/scripts/interfaces/governance/lib/rolling-issue.js`.
+
+### Local CLI equivalence (D-GOV-07)
+
+Every dispatcher has a matching local script that can run the same pipeline without a CI trigger. The workflow is the CI orchestrator; the script is the portable logic. Three requirements:
+
+1. Every script accepts `--dry-run` (preview without writing)
+2. Secrets-dependent scripts degrade gracefully when secrets are absent
+3. The actions-library page documents the local invocation command
+
+This makes the repo testable by any contributor, anywhere, before pushing.
 
 ---
 
 ## Taxonomy
 
-### Types (7 values, D-ACT-01, D-ACT-07)
+### 7 types (D-ACT-01, D-ACT-07)
 
 | Type | Purpose |
 |---|---|
@@ -81,55 +122,155 @@ Every generator (Pattern B) must have a matching verifier (Pattern C) that runs 
 | `validator` | Enforces rules with pass/fail gate on PR |
 | `audit` | Read-only scheduled monitoring and reporting |
 | `remediator` | Auto-fixes broken state with optional commit |
-| `dispatch` | Orchestrates multiple scripts/workflows |
-| `interface` | Reacts to issue/PR/external events |
+| `dispatch` | Orchestrates multiple scripts or workflows |
+| `interface` | Reacts to issue, PR, or external events |
 
-### Concerns (7 values, D-ACT-05)
+### 7 concerns (D-ACT-05)
 
 | Concern | What it covers |
 |---|---|
 | `copy` | Written text, data standards, spelling, grammar |
 | `health` | Site integrity, links, rendering, freshness, assets |
-| `maintenance` | Indexes, catalogues, documentation, registries, changelogs |
+| `maintenance` | Indexes, catalogues, registries, changelogs |
 | `discoverability` | SEO, AEO, AI indexing, translation |
-| `governance` | System rules, compliance, issue/PR management |
+| `governance` | System rules, compliance, issue and PR management |
 | `brand` | Style, formatting, page structure, voice |
-| `integrations` | External data feeds, APIs, structured data pipelines |
+| `integrations` | External data feeds and APIs |
 
-### Pipeline tags (8 values, D-ACT-02)
+Concerns name the part of the system the pipeline operates on. Every script and every workflow declares one.
+
+### 8 pipeline tags (D-ACT-02)
 
 | Tag | Trigger | Authority |
 |---|---|---|
 | **P2** | PR (required check) | Blocks merge |
-| **P3** | PR (non-required) | Advisory |
-| **P4** | Push to deploy branch | Post-merge auto-commit |
-| **P5** | Schedule (read-only) | Advisory, report only |
-| **P5-auto** | Schedule + auto-commit | Writes to repo |
-| **P6** | Schedule + auto-fix | Self-heal, may create PR |
+| **P3** | PR (advisory) | Reports only |
+| **P4** | Push to deploy branch | Auto-commit |
+| **P5** | Schedule (read-only) | Advisory, rolling issue |
+| **P5-auto** | Schedule plus auto-commit | Writes to repo |
+| **P6** | Schedule plus auto-fix | Self-heal, may open PR |
 | **manual** | workflow_dispatch only | Human-triggered |
-| **event-driven** | repository_dispatch / issues | External event |
+| **event-driven** | repository_dispatch or issues | Reactive |
+
+### Naming convention (D-ACT-04)
+
+Pattern: `type-concern-verb-name.yml`
+
+Example: `integrator-maintenance-update-contract-addresses.yml`
+
+The verb is one of a closed enum of 11: `update`, `generate`, `check`, `scan`, `repair`, `dispatch`, `label`, `index`, `intake`, `close`, `assign`.
+
+The name segment describes what the workflow does, not how it is implemented. If someone unfamiliar with the repo cannot guess the purpose from the filename, the name is bad.
 
 ---
 
-## Workflow file naming (D-ACT-04)
+## Required standards
 
-**Pattern:** `type-concern-verb-name.yml`
+Every active workflow meets these. Violations block the PR via `validator-governance-check-workflow-governance.yml`.
 
-**Example:** `integrator-maintenance-update-contract-addresses.yml`
+| Standard | Source | Enforcement |
+|---|---|---|
+| Filename follows `type-concern-verb-name.yml` | D-ACT-04 | check-workflow-governance |
+| Governance comment headers (`# type:`, `# concern:`, `# pipeline:`) | D-ACT-08 | check-workflow-governance |
+| Listed in `actions-audit.json` | D-ACT-08 | check-workflow-governance |
+| Has matching docs page in `.github/workspace/actions-library/` | D-ACT-08 | check-workflow-governance |
+| Generator workflows declare `concurrency:` block | D-ACT-03 | check-workflow-governance |
+| Auto-commit workflows declare `concurrency:` | D-ACT-03 | check-workflow-governance |
+| All called scripts live under `operations/scripts/` with 11-tag JSDoc | D-ACT-06, script framework | check-jsdoc-headers |
+| Output locations follow D-ACT-09 (reports in `workspace/reports/{concern}/`, data in `snippets/data/{domain}/`) | D-ACT-09 | manual review at audit |
+| Workflows are pure dispatchers; inline scripts under 50 lines | D-ACT-08 | manual review |
+| Local CLI equivalent documented in actions-library | D-GOV-07 | manual review |
+| Required labels read from `.github/config/labels.json` | D-GOV-04 | manual review |
 
-**Segments:**
+---
 
-- **type**: one of the 7 type values
-- **concern**: one of the 7 concern values
-- **function** (11 verbs, closed enum): `update`, `generate`, `check`, `scan`, `repair`, `dispatch`, `label`, `index`, `intake`, `close`, `assign`
-- **name**: descriptive kebab-case slug
+## Self-documenting pipeline
 
-**Naming quality rule:** The name must describe what the workflow does, not how it is implemented. If someone unfamiliar with the repo cannot guess the purpose from the filename alone, the name is bad.
+The actions library at `.github/workspace/actions-library/` regenerates from `actions-audit.json` whenever workflows change. No manual sync.
+
+```
+Workflow change (push to docs-v2)
+  -> generator-governance-generate-action-docs.yml fires
+  -> Scans .github/workflows/*.yml
+  -> Regenerates actions-audit.json
+  -> Runs generate-action-pages.js
+  -> Writes one .mdx per workflow under actions-library/{type}/{concern}/
+  -> Updates catalog-index.mdx
+```
+
+The `actions-audit.json` registry is the source of truth. Documentation is derived. Editing the .mdx pages directly is wrong.
+
+---
+
+## Locked decisions
+
+17 decisions constrain the framework. Read the full text in `.github/workspace/decisions-log.mdx` and `.github/workspace/design/governance/design-overview.md`.
+
+| ID | Topic | Effect |
+|---|---|---|
+| D-ACT-01 | `interface` is the 7th type | Event-reactive workflows are not pipeline-shaped |
+| D-ACT-02 | `P5-auto` distinct from `P5` | Read-write vs read-only have different error handling |
+| D-ACT-03 | Data-feed consolidation pattern | Many similar feeds collapse into one matrix dispatcher |
+| D-ACT-04 | Naming convention | `type-concern-verb-name.yml` with closed verb enum |
+| D-ACT-05 | 7 concerns | Replaces earlier 4-concern model |
+| D-ACT-06 | Scripts live in `operations/scripts/` | No business logic in `.github/scripts/` |
+| D-ACT-07 | `automation` renamed `integrator` | Names what it does, not what it is |
+| D-ACT-08 | Workflows are dispatchers | Type reflects the script |
+| D-ACT-09 | Output location conventions | Reports, data, indexes, config each have a fixed home |
+| D-ACT-10 | Unified governance registry | `operations/governance/config/repo-governance-surfaces.json` is canonical |
+| D-GOV-01 | Governance is enforcement infrastructure | Concerns own rules; governance owns pipelines |
+| D-GOV-02 | Categories are enforcement layers | Pre-commit, PR, post-merge, scheduled, self-heal, hooks, issue lifecycle |
+| D-GOV-03 | Every detection self-repairs or escalates | No headless scans |
+| D-GOV-04 | Tooling makes correct the default | Templates, scaffolds, labels |
+| D-GOV-05 | Advisory before hard gate | New enforcement starts at P3 |
+| D-GOV-06 | Script framework aligned to actions framework | 7 types, 7 concerns |
+| D-GOV-07 | Workflow dispatchers have local CLI equivalents | Testable without CI |
+
+---
+
+## What this framework supersedes
+
+| Doc | Status | Authority |
+|---|---|---|
+| `.github/workspace/design/governance/consolidated-architecture.md` | **Superseded** | Historical 47-workflow target. Current target is ~10. Kept for design history. |
+| `.github/workspace/framework-canonical.md` | Working spec | Deeper internal detail. Synced from this published doc. |
+| `.github/workspace/outcomes.md` | Reference only | Visual maps and Mermaid diagrams. Snapshot in time. |
+
+The current consolidation execution plan lives at `/Users/alisonhaire/.claude/plans/soft-gliding-falcon.md` for the active session. When the plan completes, its outcomes fold into this framework and the plan is archived.
 
 ---
 
 ## Canonical sources
 
-- Full specification: `.github/workspace/framework-canonical.md`
-- Decisions: `.github/workspace/decisions-log.mdx`
-- Per-action docs: `.github/workspace/actions-library/`
+| Source | Role |
+|---|---|
+| This page | Published canonical framework. Read before any workflow change. |
+| `.github/workspace/decisions-log.mdx` | Locked decisions (D-ACT-01..10, D-GOV-01..07). Edit only via new decision that explicitly supersedes. |
+| `.github/workspace/framework-canonical.md` | Internal working spec. Deeper pattern detail. |
+| `.github/workspace/actions-library/actions-audit.json` | Workflow registry. Source for auto-generated docs. |
+| `.github/workspace/actions-library/` | Auto-generated per-workflow documentation. Read, do not edit. |
+| `docs-guide/frameworks/script-framework.mdx` | Companion framework for scripts under `operations/scripts/` |
+| `docs-guide/policies/governance-index.mdx` | Index of all governed surfaces. Entry point. |
+| `operations/governance/config/repo-governance-surfaces.json` | Unified governance registry. Single source for governed surfaces. |
+
+---
+
+## How to use this framework
+
+**Before creating a workflow:**
+
+1. Confirm the work cannot be done by an existing dispatcher (consolidate first)
+2. Pick the type, concern, and pipeline tag
+3. Pick a verb from the closed enum and write a filename per D-ACT-04
+4. Write the business logic as a governed script under `operations/scripts/` with 11-tag JSDoc
+5. Write the dispatcher YAML (under 50 lines of inline logic; everything else in the script)
+6. Add `--dry-run` and `--verify` to the script per D-GOV-07
+7. Register the workflow in `actions-audit.json`
+8. Open a PR. `validator-governance-check-workflow-governance.yml` confirms compliance.
+
+**Before renaming or removing a workflow:**
+
+1. Check who references it (`grep -rE workflow-name` across yml, js, json, mdx)
+2. Update every reference in the same PR
+3. Archive the old file under `.github/workflows/x-archive/` (D2 no-deletions policy)
+4. Update `actions-audit.json` and re-run the action docs generator

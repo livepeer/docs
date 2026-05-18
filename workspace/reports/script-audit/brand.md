@@ -1,6 +1,6 @@
 # SME Audit: `brand` concern
 
-> 11 scripts | Generated 2026-05-17
+> 13 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`
@@ -129,7 +129,7 @@
 
 ---
 
-## remediator (5)
+## remediator (7)
 
 ### niche: `copy` (1)
 
@@ -151,19 +151,37 @@
 
 ---
 
-### niche: `style` (4)
+### niche: `style` (6)
 
 #### `remediate-em-dashes.js`
 
 - **Path:** `operations/scripts/remediators/content/style/remediate-em-dashes.js`
 - **Purpose:** qa:content-quality
-- **Description:** Replaces em-dashes (U+2014) with en-dashes (U+2013) in routable v2 MDX content text only. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values.
+- **Description:** Replaces em-dashes (U+2014) with en-dashes (U+2013) in routable v2 MDX content text and user-facing frontmatter fields (title, sidebarTitle, description). Skips other frontmatter keys, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values.
 - **Workflow callers:** `remediator-brand-repair-frontmatter-and-em-dashes.yml`
 - **Capabilities:** `--dry-run` `--verify` `--files`
 - **Last modified:** 2026-05-04
 - **Mode:** repair
 - **Pipeline:** manual — batch remediation utility, run with --dry-run first
-- **Usage:** `node operations/scripts/remediators/content/style/remediate-em-dashes.js [--dry-run|--write|--write --verify]`
+- **Usage:** `node operations/scripts/remediators/content/style/remediate-em-dashes.js [--dry-run|--write] [--verify] [--staged] [--files path,path]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+---
+
+#### `remediate-frontmatter-quotes.js`
+
+- **Path:** `operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js`
+- **Purpose:** qa:content-quality
+- **Description:** Standardises MDX frontmatter scalar string values to double quotes. Decodes YAML single-quoted strings (including ''-escaped apostrophes) and re-encodes them as double-quoted strings, escaping internal double quotes and backslashes. Skips multi-line block scalars (| or >), explicit YAML tags, sequences, and mappings.
+- **Workflow callers:** `remediator-brand-repair-frontmatter-and-em-dashes.yml`
+- **Capabilities:** `--dry-run` `--verify` `--files`
+- **Last modified:** 2026-04-27
+- **Mode:** repair
+- **Pipeline:** PostToolUse:Edit|Write hook + remediator-brand-repair-frontmatter-quotes.yml workflow
+- **Usage:** `node operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js [--dry-run|--write] [--verify] [--staged] [--files path,path]`
 
 | Verdict | SME notes |
 |---|---|
@@ -175,13 +193,13 @@
 
 - **Path:** `operations/scripts/remediators/content/style/remediate-us-spelling.js`
 - **Purpose:** qa:content-quality
-- **Description:** Converts US English spellings to UK English in routable v2 MDX content text only. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values.
+- **Description:** Converts between US and UK English spellings in routable v2 MDX content text only. Default direction: US to UK (en-GB). Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values.
 - **Workflow callers:** `remediator-brand-repair-en-gb-style.yml`
 - **Capabilities:** `--dry-run` `--verify` `--files`
 - **Last modified:** 2026-05-04
 - **Mode:** repair
 - **Pipeline:** manual — batch remediation utility, run with --dry-run first
-- **Usage:** `node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--verify]`
+- **Usage:** `node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--language en-gb|en-us] [--staged] [--files path,path]`
 
 | Verdict | SME notes |
 |---|---|
@@ -200,6 +218,24 @@
 - **Mode:** repair
 - **Pipeline:** manual
 - **Usage:** `node operations/scripts/remediators/content/style/repair-ownerless-language.js [--check|--write] [--files a,b]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+---
+
+#### `repair-term-capitalisation.js`
+
+- **Path:** `operations/scripts/remediators/content/style/repair-term-capitalisation.js`
+- **Purpose:** qa:content-quality
+- **Description:** Enforces correct capitalisation of proper nouns (Livepeer, Orchestrator, Ethereum, etc.) in routable v2 MDX prose. Reads rules from tools/config/quality/term-capitalisation.json. Skips code, frontmatter, URLs, imports, JSX attributes.
+- **Workflow callers:** **ORPHAN — no caller**
+- **Capabilities:** `--dry-run` `--verify` `--files`
+- **Last modified:** 2026-04-16
+- **Mode:** repair
+- **Pipeline:** manual — batch remediation utility, run with --dry-run first
+- **Usage:** `node operations/scripts/remediators/content/style/repair-term-capitalisation.js [--dry-run|--write] [--verify] [--staged] [--files path,path]`
 
 | Verdict | SME notes |
 |---|---|
@@ -226,8 +262,9 @@
 ---
 
 
-## Orphan summary (1)
+## Orphan summary (2)
 
 Scripts with no workflow caller and no other script caller. Candidates for archive.
 
 - `operations/scripts/remediators/content/copy/remediate-voice-violations.js` — content:voice-compliance
+- `operations/scripts/remediators/content/style/repair-term-capitalisation.js` — qa:content-quality

@@ -165,6 +165,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/audits/content/health/audit-wcag.js",
+    "name": "audit-wcag.js",
+    "type": "audit",
+    "concern": "health",
+    "niche": "wcag",
+    "purpose": "Scheduled WCAG accessibility scan across all v2 pages",
+    "description": "Pattern D scan-report-act. Runs the WCAG audit engine in --no-fix --full mode, writes report to workspace/reports/health/wcag/, and emits a structured JSON summary on stdout so the workflow can route findings (rolling issue create/update/close).",
+    "mode": "scan",
+    "pipeline": "P5 (scheduled, advisory)",
+    "scope": "v2 MDX pages",
+    "usage": "node operations/scripts/audits/content/health/audit-wcag.js [--fail-impact minor|moderate|serious|critical] [--max-pages <n>] [--json]",
+    "policy": "D-GOV-03 (no headless scans), D-GOV-07 (local CLI equivalence)",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/audits/content/health/page-imports-audit.js",
     "name": "page-imports-audit.js",
     "type": "audit",
@@ -2610,6 +2625,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/remediators/content/health/repair-wcag.js",
+    "name": "repair-wcag.js",
+    "type": "remediator",
+    "concern": "health",
+    "niche": "wcag",
+    "purpose": "Apply deterministic WCAG accessibility fixes to v2 MDX pages",
+    "description": "Pattern E remediator. Wraps the WCAG audit engine's --fix mode to apply safe accessibility autofixes (heading hierarchy, alt text, contrast tokens). Supports --dry-run preview, --verify per-file revert on regression, and --files scoping. Paired with check-wcag in remediation-verify-registry.",
+    "mode": "repair",
+    "pipeline": "P6 (scheduled self-heal)",
+    "scope": "v2 MDX pages",
+    "usage": "node operations/scripts/remediators/content/health/repair-wcag.js [--dry-run|--write] [--verify] [--files <path[,path...]>] [--staged] [--full] [--fail-impact <level>]",
+    "policy": "D-GOV-03 (detect-repair-escalate-verify), D-GOV-07 (local CLI equivalence)",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/remediators/content/repair/migrate-assets-to-branch.js",
     "name": "migrate-assets-to-branch.js",
     "type": "remediator",
@@ -2831,21 +2861,6 @@
     "pipeline": "manual — batch remediation utility, run with --dry-run first",
     "scope": "v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)",
     "usage": "node operations/scripts/remediators/content/style/repair-term-capitalisation.js [--dry-run|--write] [--verify] [--staged] [--files path,path]",
-    "policy": "",
-    "status": "active"
-  },
-  {
-    "path": "operations/scripts/remediators/content/style/wcag-repair-common.js",
-    "name": "wcag-repair-common.js",
-    "type": "remediator",
-    "concern": "brand",
-    "niche": "style",
-    "purpose": "* @description WCAG repair shared logic — common repair functions used by WCAG audit fix mode",
-    "description": "WCAG repair shared logic — common repair functions used by WCAG audit fix mode",
-    "mode": "repair",
-    "pipeline": "manual — not yet in pipeline",
-    "scope": "operations/scripts, operations/tests/integration, workspace/reports, v2",
-    "usage": "node operations/scripts/remediators/content/style/wcag-repair-common.js [flags]",
     "policy": "",
     "status": "active"
   },
@@ -3162,6 +3177,21 @@
     "scope": "v2, operations/scripts/validators/content, operations/tests/onfig/spell-dict.json",
     "usage": "node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]",
     "policy": "",
+    "status": "active"
+  },
+  {
+    "path": "operations/scripts/validators/content/health/check-wcag.js",
+    "name": "check-wcag.js",
+    "type": "validator",
+    "concern": "health",
+    "niche": "wcag",
+    "purpose": "WCAG accessibility validation for changed v2 MDX pages",
+    "description": "PR-time advisory validator. Wraps the WCAG audit engine in --no-fix mode and reports blocking findings (impact level configurable). Exits non-zero if blocking violations are found.",
+    "mode": "check",
+    "pipeline": "P3 (PR advisory)",
+    "scope": "v2 MDX pages",
+    "usage": "node operations/scripts/validators/content/health/check-wcag.js [--files <path[,path...]>] [--staged] [--full] [--fail-impact minor|moderate|serious|critical] [--json]",
+    "policy": "D-GOV-03 (detect-repair-escalate-verify), D-GOV-07 (local CLI equivalence)",
     "status": "active"
   },
   {

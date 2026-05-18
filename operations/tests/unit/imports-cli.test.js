@@ -106,6 +106,37 @@ function runTests() {
     }
   });
 
+  runCase('Ignores imports inside indented MDX code fences', () => {
+    const fixtureDir = createFixtureDir();
+    try {
+      const pagePath = writeFixture(
+        fixtureDir,
+        'docs/page.mdx',
+        [
+          '---',
+          'title: Code sample',
+          '---',
+          '',
+          'import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"',
+          '',
+          '<Step title="Example">',
+          '  ```tsx',
+          "  import { useState } from 'react';",
+          "  import App from './App';",
+          '  ```',
+          '</Step>',
+          ''
+        ].join('\n')
+      );
+
+      const result = subject.runTests({ files: [pagePath], dryRun: true });
+      assert.strictEqual(result.passed, true);
+      assert.strictEqual(result.errors.length, 0);
+    } finally {
+      cleanupFixtureDir(fixtureDir);
+    }
+  });
+
   if (failures.length > 0) {
     console.error('\n❌ imports CLI unit tests failed\n');
     failures.forEach((failure) => console.error(`  - ${failure}`));

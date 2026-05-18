@@ -1,12 +1,14 @@
-# Workflow and Pipeline Governance Framework
+# Workflow and Pipeline Governance Framework (internal working spec)
 
-> **DEPRECATED as canonical location.** The published summary lives at `docs-guide/frameworks/github-actions.mdx`. This file remains as the full working specification. Edits here must be synced to the published version.
-
-> Canonical reference for the Livepeer Docs workflow and pipeline architecture.
-> Status: CONFIRMED. 8 decisions locked (D-ACT-01 through D-ACT-08).
-> Decisions log: `.github/workspace/decisions-log.mdx`
-> Archived product capabilities context: `.github/workspace/phase2/locked-pipelines.md`
-> Archived pipeline design context: `.github/workspace/phase2/pipeline-design/`
+> **This file is the internal working specification, not the published canonical framework.**
+>
+> **Canonical published framework:** [`docs-guide/frameworks/github-actions.mdx`](../../docs-guide/frameworks/github-actions.mdx) — read that first for what we are building, the taxonomy, and required standards.
+>
+> This file holds deeper pattern detail (pipeline shapes A-G, scan-to-act routing tables, generate/verify pair register). Edits here must be synced to the published doc.
+>
+> 17 decisions locked: D-ACT-01..10 and D-GOV-01..07. See `.github/workspace/decisions-log.mdx`.
+> Archived product capabilities context: `.github/workspace/phase2/locked-pipelines.md`.
+> Archived pipeline design context: `.github/workspace/phase2/pipeline-design/`.
 
 ---
 

@@ -1,6 +1,6 @@
 # SME Audit: `copy` concern
 
-> 11 scripts | Generated 2026-05-17
+> 11 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`
@@ -93,7 +93,7 @@
 
 - **Path:** `operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js`
 - **Purpose:** infrastructure:data-feeds
-- **Description:** Fetches latest topics and posts from Livepeer Forum API, writes to snippets/data/social-feeds/
+- **Description:** Fetches latest topics from Livepeer Forum API with category metadata, writes multiple sorted exports to snippets/data/social-feeds/forumData.jsx
 - **Workflow callers:** `dispatch-copy-update-social-feeds.yml`
 - **Capabilities:** `--dry-run`
 - **Last modified:** 2026-04-16

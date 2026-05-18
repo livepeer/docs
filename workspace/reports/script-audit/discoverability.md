@@ -1,6 +1,6 @@
 # SME Audit: `discoverability` concern
 
-> 16 scripts | Generated 2026-05-17
+> 16 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`

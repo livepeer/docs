@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated": "2026-05-01",
+    "generated": "2026-05-18",
     "generator": "consolidated-architecture-scan",
-    "workflow_count": 49,
+    "workflow_count": 52,
     "decisions": "D-ACT-01 through D-ACT-10"
   },
   "workflows": [
@@ -776,6 +776,63 @@
       "has_permissions": true,
       "has_concurrency": false,
       "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "validator-health-check-wcag.yml",
+      "name": "WCAG Accessibility Check",
+      "type": "validator",
+      "concern": "health",
+      "pipeline_tag": "P3",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/validators/content/health/check-wcag.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "audit-health-scan-wcag.yml",
+      "name": "WCAG Accessibility Scan",
+      "type": "audit",
+      "concern": "health",
+      "pipeline_tag": "P5",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/audits/content/health/audit-wcag.js"
+      ],
+      "has_inline_script": true,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": false,
+      "status": "active"
+    },
+    {
+      "file": "remediator-health-repair-wcag.yml",
+      "name": "WCAG Accessibility Repair",
+      "type": "remediator",
+      "concern": "health",
+      "pipeline_tag": "P6",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "scripts": [
+        "operations/scripts/remediators/content/health/repair-wcag.js"
+      ],
+      "has_inline_script": false,
+      "has_permissions": true,
+      "has_concurrency": true,
+      "has_auto_commit": true,
       "status": "active"
     },
     {
