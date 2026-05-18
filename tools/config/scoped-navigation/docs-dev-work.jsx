@@ -654,7 +654,7 @@ const devsDraft = {
 }
 
 
-const devsAgain = {
+const devsAgain =
                   {
                 "tab": "Developers1",
                 "icon": "display-code",

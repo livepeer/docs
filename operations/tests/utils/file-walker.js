@@ -6,8 +6,8 @@
  * @scope             tests
  * @owner             docs
  * @needs             E-C6, F-C1
- * @purpose-statement File tree walker — recursively finds files matching patterns. Used by pre-commit hook and validators.
- * @pipeline          indirect — library module
+ * @purpose-statement File tree walker - recursively finds files matching patterns. Used by pre-commit hook and validators.
+ * @pipeline          indirect - library module
  * @dualmode          dual-mode (document flags)
  * @usage             node operations/tests/utils/file-walker.js [flags]
  */
@@ -263,8 +263,9 @@ function collectFiles(dir, pattern, fileList = []) {
     const stat = fs.statSync(filePath);
 
     if (stat.isDirectory()) {
-      // Skip node_modules and .git
-      if (!file.startsWith('.') && file !== 'node_modules') {
+      // Skip non-publishable directories
+      const SKIP_DIRS = new Set(['node_modules', '_workspace', 'x-archived', '_archive', 'workspace', '.venv', '__pycache__', '.next']);
+      if (!file.startsWith('.') && !SKIP_DIRS.has(file)) {
         collectFiles(filePath, pattern, fileList);
       }
     } else if (pattern.test(file)) {
@@ -397,7 +398,7 @@ function walkDocsContentFiles(dir, out = []) {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === '.git' || entry.name === 'node_modules') continue;
+      if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_workspace' || entry.name === 'x-archived' || entry.name === '_archive' || entry.name === 'workspace') continue;
       walkDocsContentFiles(fullPath, out);
     } else if (/\.(md|mdx)$/i.test(entry.name)) {
       out.push(fullPath);

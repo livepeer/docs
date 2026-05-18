@@ -1,11 +1,7 @@
 ---
-title: Displays
-sidebarTitle: Displays
-description: "Renderers for authored content – code, video, diagrams, quotes, response fields."
-lifecycleStage: discover
-complexity: intermediate
-audience: community
-purpose: explain
+title: 'Displays'
+sidebarTitle: 'Displays'
+description: 'Renderers for authored content – code, video, diagrams, quotes, response fields.'
 pageType: reference
 ---
 
@@ -32,7 +28,7 @@ Run command: node operations/scripts/generators/components/documentation/generat
 
 Renderers for authored content – code, video, diagrams, quotes, response fields.
 
-This category currently contains **20** governed export(s).
+This category currently contains **49** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -46,31 +42,145 @@ This category currently contains **20** governed export(s).
 
 | Component | Status | Import path | Description |
 | --- | --- | --- | --- |
+| AccordionGroupList | `stable` | `/snippets/components/displays/accordions/Accordions.jsx` | Generates N numbered accordion sections inside an AccordionGroup. |
+| AccordionLayout | `stable` | `/snippets/components/displays/accordions/Accordions.jsx` | Vertical stack layout with small gap, designed for accordion content sections. |
+| BasicList | `planned` | `/snippets/components/displays/steps/Steps.jsx` | Planned list component – not yet implemented. |
+| CardCarousel | `stable` | `/snippets/components/displays/grids/Grids.jsx` | Paginated horizontal carousel with prev/next navigation and dot indicators. |
 | CardVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed inside a Card wrapper with aspect-ratio iframe. |
 | CodeComponent | `stable` | `/snippets/components/displays/code/Code.jsx` | Simple code block with title and language syntax highlighting. |
 | CodeSection | `stable` | `/snippets/components/displays/code/Code.jsx` | Expandable code section with title header. |
 | ComplexCodeBlock | `stable` | `/snippets/components/displays/code/Code.jsx` | Code block with both pre-note and post-note sections. |
 | CustomCodeBlock | `stable` | `/snippets/components/displays/code/Code.jsx` | Code block with optional pre/post notes and expandable wrapper. |
 | CustomResponseField | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Custom-styled API response field with configurable margin. |
+| DisplayCard | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Card with icon, custom title row, and body content. |
+| DynamicTable | `stable` | `/snippets/components/displays/tables/Tables.jsx` | Renders structured data as a scrollable table with section separators and accessible region. |
+| DynamicTableV2 | `experimental` | `/snippets/components/displays/tables/Tables.jsx` | Renders structured data as a scrollable table with separator rows and intrinsic-width support for fit-to-content columns. |
 | FrameQuote | `stable` | `/snippets/components/displays/quotes/Quote.jsx` | Framed blockquote with optional author, source link, and image. |
+| FunctionField | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Solidity function signature field with typed parameter pairs and optional return type. |
+| IconList | `planned` | `/snippets/components/displays/steps/Steps.jsx` | Planned icon list component – not yet implemented. |
+| InlineImageCard | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Card with inline image alongside content, using negative margin breakout. |
+| InteractiveCard | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Single interactive card with hover effects. |
+| InteractiveCards | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Multi-column layout of interactive cards. |
 | LinkedInEmbed | `stable` | `/snippets/components/displays/video/Video.jsx` | LinkedIn post embed via responsive iframe with compact layout. |
+| ListSteps | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Renders an array of step items inside Mintlify Steps component. |
+| QuadGrid | `stable` | `/snippets/components/displays/grids/Grids.jsx` | 2x2 grid with centred rotating icon overlay. Respects prefers-reduced-motion. |
 | Quote | `stable` | `/snippets/components/displays/quotes/Quote.jsx` | Styled blockquote with accent border and centred italic text. |
-| ResponseFieldAccordion | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Accordion-style response field with collapsible detail section. |
-| ResponseFieldExpandable | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Expandable response field that reveals nested content on click. |
+| ResponseFieldAccordion | `deprecated` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Accordion-style response field with collapsible detail section. |
+| ResponseFieldExpandable | `deprecated` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Expandable response field that reveals nested content on click. |
 | ResponseFieldGroup | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | Container for grouping multiple response fields with consistent spacing. |
-| ScrollableDiagram | `stable` | `/snippets/components/displays/diagrams/ScrollableDiagram.jsx` | Pannable, zoomable diagram container with zoom controls and accessible buttons. |
-| ShowcaseVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | Full-width video with negative-margin breakout and rounded frame. |
+| ScrollableDiagram | `stable` | `/snippets/components/displays/diagrams/ScrollableDiagram.jsx` | Pannable diagram container with deterministic preset zoom controls rendered without client-side React state. |
+| SearchTable | `stable` | `/snippets/components/displays/tables/Tables.jsx` | Generic filterable table wrapper with search input, category dropdown(s), and optional separators. |
+| SearchTableV2 | `experimental` | `/snippets/components/displays/tables/Tables.jsx` | Generic filterable table wrapper with intrinsic-width sizing for badge, icon, and primary text columns. |
+| ShowcaseCards | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Paginated card layout with search, category, and product filtering. |
+| ShowcaseVideo | `deprecated` | `/snippets/components/displays/video/Video.jsx` | Full-width video with negative-margin breakout and rounded frame. |
+| SolutionCard | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Card body for Solutions Portal product cards. Accepts pre-rendered JSX slots for badges, infra tags, and social links. ScrollBox is passed as a component prop for blurb rendering. |
+| SolutionItem | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Renders a solution entry with link, icon badges, and description. Designed for solution listing pages. |
+| StepLinkList | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Renders listItems as Mintlify Steps with GotoLink navigation. |
+| StepList | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Renders listItems as Mintlify Steps with title, icon, and content. |
+| StyledStep | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Single step with configurable icon, size, and per-step colour overrides. When iconColor or titleColor is set, injects a scoped CSS override that takes precedence over the parent StyledSteps colours for this step only. When neither is set, behaves identically to a plain Step pass-through. |
+| StyledSteps | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Wrapper around Mintlify Steps with custom icon styling via injected CSS. |
+| StyledTable | `stable` | `/snippets/components/displays/tables/Tables.jsx` | Full-width table with header row styling and rounded container. |
+| TableCell | `stable` | `/snippets/components/displays/tables/Tables.jsx` | Table cell that switches between th and td based on header prop. |
+| TableRow | `stable` | `/snippets/components/displays/tables/Tables.jsx` | Table row with optional header styling and hover effect. |
 | TitledVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion. |
+| UpdateLinkList | `stable` | `/snippets/components/displays/steps/Steps.jsx` | Renders update items as linked entries inside Mintlify Update component. |
+| UpdateList | `planned` | `/snippets/components/displays/steps/Steps.jsx` | Planned update list component – not yet implemented. |
 | ValueResponseField | `stable` | `/snippets/components/displays/response-fields/ResponseField.jsx` | API response field with name, type, and value display. |
 | Video | `stable` | `/snippets/components/displays/video/Video.jsx` | Basic framed video player with caption support. |
+| WidthCard | `stable` | `/snippets/components/displays/cards/Cards.jsx` | Width-constrained card wrapper with configurable percentage width. |
 | YouTubeVideo | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed via responsive iframe with aspect-ratio preservation. |
-| YouTubeVideoData | `stable` | `/snippets/components/displays/video/Video.jsx` | Renders a columned grid of YouTubeVideo embeds from an items array. |
-| YouTubeVideoDownload | `stable` | `/snippets/components/displays/video/Video.jsx` | YouTube embed with download hint text below. |
+| YouTubeVideoData | `deprecated` | `/snippets/components/displays/video/Video.jsx` | Renders a columned grid of YouTubeVideo embeds from an items array. |
+| YouTubeVideoDownload | `broken` | `/snippets/components/displays/video/Video.jsx` | YouTube embed with download hint text below (BROKEN – render content commented out). |
 
 ## Component Reference
 
+### AccordionGroupList
+Use **AccordionGroupList** when you need generates N numbered accordion sections inside an AccordionGroup..
+Source description: Generates N numbered accordion sections inside an AccordionGroup.
+**Import path**
+```jsx
+import { AccordionGroupList } from '/snippets/components/displays/accordions/Accordions.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `num` | `number` | `1` | No | Number of placeholder accordion sections to render. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### AccordionLayout
+Use **AccordionLayout** when you need vertical stack layout with small gap, designed for accordion content sections..
+Source description: Vertical stack layout with small gap, designed for accordion content sections.
+**Import path**
+```jsx
+import { AccordionLayout } from '/snippets/components/displays/accordions/Accordions.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### BasicList
+Use **BasicList** when you need planned list component – not yet implemented..
+Source description: Planned list component – not yet implemented.
+**Import path**
+```jsx
+import { BasicList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
+### CardCarousel
+Use **CardCarousel** when you need paginated horizontal carousel with prev/next navigation and dot indicators..
+Source description: Paginated horizontal carousel with prev/next navigation and dot indicators.
+**Import path**
+```jsx
+import { CardCarousel } from '/snippets/components/displays/grids/Grids.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `visibleCount` | `number` | `3` | No | Visible count used by the component. |
+| `gap` | `string` | `"var(--lp-spacing-6)"` | No | Gap used by the component. |
+| `showDots` | `boolean` | `true` | No | Boolean flag that controls component behaviour. |
+| `style` | `object` | `` | Yes | Style used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+
+
+<CustomDivider />
+
 ### CardVideo
-Use **CardVideo** when you need youTube embed inside a Card wrapper with aspect-ratio iframe.. Accepts: style, className, ...rest.
+Use **CardVideo** when you need youTube embed inside a Card wrapper with aspect-ratio iframe..
 Source description: YouTube embed inside a Card wrapper with aspect-ratio iframe.
 **Import path**
 ```jsx
@@ -78,7 +188,7 @@ import { CardVideo } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `style, className, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -92,7 +202,7 @@ import { CardVideo } from '/snippets/components/displays/video/Video.jsx'
 <CustomDivider />
 
 ### CodeComponent
-Use **CodeComponent** when you need simple code block with title and language syntax highlighting.. Accepts: className, style, ...rest.
+Use **CodeComponent** when you need simple code block with title and language syntax highlighting..
 Source description: Simple code block with title and language syntax highlighting.
 **Import path**
 ```jsx
@@ -100,7 +210,7 @@ import { CodeComponent } from '/snippets/components/displays/code/Code.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -121,7 +231,7 @@ import { CodeComponent } from '/snippets/components/displays/code/Code.jsx'
 <CustomDivider />
 
 ### CodeSection
-Use **CodeSection** when you need expandable code section with title header.. Accepts: className, style, ...rest.
+Use **CodeSection** when you need expandable code section with title header..
 Source description: Expandable code section with title header.
 **Import path**
 ```jsx
@@ -129,7 +239,7 @@ import { CodeSection } from '/snippets/components/displays/code/Code.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -142,7 +252,7 @@ import { CodeSection } from '/snippets/components/displays/code/Code.jsx'
 <CustomDivider />
 
 ### ComplexCodeBlock
-Use **ComplexCodeBlock** when you need code block with both pre-note and post-note sections.. Accepts: none.
+Use **ComplexCodeBlock** when you need code block with both pre-note and post-note sections..
 Source description: Code block with both pre-note and post-note sections.
 **Import path**
 ```jsx
@@ -170,7 +280,7 @@ import { ComplexCodeBlock } from '/snippets/components/displays/code/Code.jsx'
 <CustomDivider />
 
 ### CustomCodeBlock
-Use **CustomCodeBlock** when you need code block with optional pre/post notes and expandable wrapper.. Accepts: none.
+Use **CustomCodeBlock** when you need code block with optional pre/post notes and expandable wrapper..
 Source description: Code block with optional pre/post notes and expandable wrapper.
 **Import path**
 ```jsx
@@ -199,7 +309,7 @@ import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
 <CustomDivider />
 
 ### CustomResponseField
-Use **CustomResponseField** when you need custom-styled API response field with configurable margin.. Accepts: className, style, ...props.
+Use **CustomResponseField** when you need custom-styled API response field with configurable margin..
 Source description: Custom-styled API response field with configurable margin.
 **Import path**
 ```jsx
@@ -207,7 +317,7 @@ import { CustomResponseField } from '/snippets/components/displays/response-fiel
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...props`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -220,8 +330,85 @@ import { CustomResponseField } from '/snippets/components/displays/response-fiel
 
 <CustomDivider />
 
+### DisplayCard
+Use **DisplayCard** when you need card with icon, custom title row, and body content..
+Source description: Card with icon, custom title row, and body content.
+**Import path**
+```jsx
+import { DisplayCard } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `icon` | `string` | `` | Yes | Icon configuration used by the component. |
+| `title` | `React.ReactNode` | `` | Yes | Title text rendered by the component. |
+| `style` | `object` | `` | Yes | Style used by the component. |
+| `background` | `string` | `'var(--lp-color-bg-card)'` | No | Background used by the component. |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+
+
+<CustomDivider />
+
+### DynamicTable
+Use **DynamicTable** when you need renders structured data as a scrollable table with section separators and accessible region..
+Source description: Renders structured data as a scrollable table with section separators and accessible region.
+**Import path**
+```jsx
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `tableTitle` | `any` | `null` | No | table Title prop. |
+| `headerList` | `Array` | `[` | No | ] - header List prop. |
+| `itemsList` | `Array` | `[` | No | ] - items List prop. |
+| `monospaceColumns` | `Array` | `[` | No | ] - monospace Columns prop. |
+| `contentFitColumns` | `Array` | `[` | No | ] - Column names that should size to their contents. |
+| `margin` | `any` | `` | Yes | margin prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### DynamicTableV2
+Use **DynamicTableV2** when you need renders structured data as a scrollable table with separator rows and intrinsic-width support for fit-to-content columns..
+Source description: Renders structured data as a scrollable table with separator rows and intrinsic-width support for fit-to-content columns.
+**Import path**
+```jsx
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `experimental`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `tableTitle` | `any` | `null` | No | table Title prop. |
+| `headerList` | `Array` | `[` | No | ] - header List prop. |
+| `itemsList` | `Array` | `[` | No | ] - items List prop. |
+| `monospaceColumns` | `Array` | `[` | No | ] - monospace Columns prop. |
+| `columnWidths` | `object` | `{}` | No | Preferred minimum widths keyed by header. |
+| `columnConfig` | `object` | `{}` | No | Per-column layout flags keyed by header. |
+| `margin` | `any` | `` | Yes | margin prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
 ### FrameQuote
-Use **FrameQuote** when you need framed blockquote with optional author, source link, and image.. Accepts: children, className, style, ...props.
+Use **FrameQuote** when you need framed blockquote with optional author, source link, and image..
 Source description: Framed blockquote with optional author, source link, and image.
 **Import path**
 ```jsx
@@ -229,7 +416,7 @@ import { FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `children, className, style, ...props`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -250,8 +437,127 @@ import { FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
 
 <CustomDivider />
 
+### FunctionField
+Use **FunctionField** when you need solidity function signature field with typed parameter pairs and optional return type..
+Source description: Solidity function signature field with typed parameter pairs and optional return type.
+**Import path**
+```jsx
+import { FunctionField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `string` | `` | Yes | Function name. |
+| `params` | `string[]` | `[` | No | ] - Parameter strings in "type name" format (e.g. "bytes32 _id"). |
+| `returns` | `string` | `` | No | Return type (e.g. "address", "uint256"). |
+| `children` | `React.ReactNode` | `` | Yes | Description of the function. |
+| `line` | `boolean` | `true` | No | Show bottom border. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+| `className` | `string` | `""` | No | CSS class name. |
+
+
+<CustomDivider />
+
+### IconList
+Use **IconList** when you need planned icon list component – not yet implemented..
+Source description: Planned icon list component – not yet implemented.
+**Import path**
+```jsx
+import { IconList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
+### InlineImageCard
+Use **InlineImageCard** when you need card with inline image alongside content, using negative margin breakout..
+Source description: Card with inline image alongside content, using negative margin breakout.
+**Import path**
+```jsx
+import { InlineImageCard } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `imgProps` | `object` | `` | Yes | Img props used by the component. |
+| `imgStyle` | `object` | `` | Yes | Img style used by the component. |
+| `cardProps` | `object` | `` | Yes | Card props used by the component. |
+| `style` | `object` | `` | Yes | Style used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+
+
+<CustomDivider />
+
+### InteractiveCard
+Use **InteractiveCard** when you need single interactive card with hover effects..
+Source description: Single interactive card with hover effects.
+**Import path**
+```jsx
+import { InteractiveCard } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `mediaSrc` | `string` | `""` | No | media Src prop. |
+| `logo` | `string` | `""` | No | logo prop. |
+| `title` | `string` | `"Untitled project"` | No | title prop. |
+| `subtitle` | `string` | `""` | No | subtitle prop. |
+| `description` | `string` | `""` | No | description prop. |
+| `href` | `string` | `"#"` | No | href prop. |
+| `categoryTags` | `Array` | `[` | No | ] - category Tags prop. |
+| `productTags` | `Array` | `[` | No | ] - product Tags prop. |
+| `links` | `Array` | `[` | No | ] - links prop. |
+| `style` | `any` | `` | Yes | style prop. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `cardProps` | `any` | `` | Yes | card Props prop. |
+
+
+<CustomDivider />
+
+### InteractiveCards
+Use **InteractiveCards** when you need multi-column layout of interactive cards..
+Source description: Multi-column layout of interactive cards.
+**Import path**
+```jsx
+import { InteractiveCards } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
 ### LinkedInEmbed
-Use **LinkedInEmbed** when you need linkedIn post embed via responsive iframe with compact layout.. Accepts: none.
+Use **LinkedInEmbed** when you need linkedIn post embed via responsive iframe with compact layout..
 Source description: LinkedIn post embed via responsive iframe with compact layout.
 **Import path**
 ```jsx
@@ -273,8 +579,55 @@ import { LinkedInEmbed } from '/snippets/components/displays/video/Video.jsx'
 
 <CustomDivider />
 
+### ListSteps
+Use **ListSteps** when you need renders an array of step items inside Mintlify Steps component..
+Source description: Renders an array of step items inside Mintlify Steps component.
+**Import path**
+```jsx
+import { ListSteps } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `Array` | `` | Yes | Collection data rendered by the component. |
+| `stepsConfig` | `object` | `{}` | No | Steps config used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### QuadGrid
+Use **QuadGrid** when you need 2x2 grid with centred rotating icon overlay. Respects prefers-reduced-motion..
+Source description: 2x2 grid with centred rotating icon overlay. Respects prefers-reduced-motion.
+**Import path**
+```jsx
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `icon` | `string` | `"arrows-spin"` | No | Icon configuration used by the component. |
+| `iconSize` | `number` | `50` | No | Icon configuration used by the component. |
+| `iconColor` | `string` | `"var(--lp-color-accent)"` | No | Icon configuration used by the component. |
+| `spinDuration` | `string` | `"10s"` | No | Spin duration used by the component. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
 ### Quote
-Use **Quote** when you need styled blockquote with accent border and centred italic text.. Accepts: children, className, style, ...rest.
+Use **Quote** when you need styled blockquote with accent border and centred italic text..
 Source description: Styled blockquote with accent border and centred italic text.
 **Import path**
 ```jsx
@@ -282,7 +635,7 @@ import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `children, className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -295,16 +648,18 @@ import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 <CustomDivider />
 
 ### ResponseFieldAccordion
-Use **ResponseFieldAccordion** when you need accordion-style response field with collapsible detail section.. Accepts: className, style, ...props.
+Use **ResponseFieldAccordion** when you need accordion-style response field with collapsible detail section..
 Source description: Accordion-style response field with collapsible detail section.
 **Import path**
 ```jsx
 import { ResponseFieldAccordion } from '/snippets/components/displays/response-fields/ResponseField.jsx'
 ```
 **Metadata**
-- Status: `stable`
-- Accepts: `className, style, ...props`
+- Status: `deprecated`
+- Accepts: `none`
 - Data source: `none`
+
+Deprecation note: Use ResponseFieldGroup with component="accordion" instead. See `ResponseFieldGroup`.
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
@@ -317,16 +672,18 @@ import { ResponseFieldAccordion } from '/snippets/components/displays/response-f
 <CustomDivider />
 
 ### ResponseFieldExpandable
-Use **ResponseFieldExpandable** when you need expandable response field that reveals nested content on click.. Accepts: className, style, ...props.
+Use **ResponseFieldExpandable** when you need expandable response field that reveals nested content on click..
 Source description: Expandable response field that reveals nested content on click.
 **Import path**
 ```jsx
 import { ResponseFieldExpandable } from '/snippets/components/displays/response-fields/ResponseField.jsx'
 ```
 **Metadata**
-- Status: `stable`
-- Accepts: `className, style, ...props`
+- Status: `deprecated`
+- Accepts: `none`
 - Data source: `none`
+
+Deprecation note: Use ResponseFieldGroup with component="expandable" instead. See `ResponseFieldGroup`.
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
@@ -339,7 +696,7 @@ import { ResponseFieldExpandable } from '/snippets/components/displays/response-
 <CustomDivider />
 
 ### ResponseFieldGroup
-Use **ResponseFieldGroup** when you need container for grouping multiple response fields with consistent spacing.. Accepts: className, style, ...props.
+Use **ResponseFieldGroup** when you need container for grouping multiple response fields with consistent spacing..
 Source description: Container for grouping multiple response fields with consistent spacing.
 **Import path**
 ```jsx
@@ -347,7 +704,7 @@ import { ResponseFieldGroup } from '/snippets/components/displays/response-field
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...props`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -362,15 +719,15 @@ import { ResponseFieldGroup } from '/snippets/components/displays/response-field
 <CustomDivider />
 
 ### ScrollableDiagram
-Use **ScrollableDiagram** when you need pannable, zoomable diagram container with zoom controls and accessible buttons.. Accepts: children, className, style, ...rest.
-Source description: Pannable, zoomable diagram container with zoom controls and accessible buttons.
+Use **ScrollableDiagram** when you need pannable diagram container with deterministic preset zoom controls rendered without client-side React state..
+Source description: Pannable diagram container with deterministic preset zoom controls rendered without client-side React state.
 **Import path**
 ```jsx
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `children, className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -379,7 +736,106 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 | `title` | `string` | `""` | No | Title text rendered by the component. |
 | `maxHeight` | `string` | `"500px"` | No | Max height used by the component. |
 | `minWidth` | `string` | `"100%"` | No | Min width used by the component. |
-| `showControls` | `boolean` | `false` | No | Boolean flag that controls component behaviour. |
+| `showControls` | `boolean` | `false` | No | When true, renders preset zoom controls. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### SearchTable
+Use **SearchTable** when you need generic filterable table wrapper with search input, category dropdown(s), and optional separators..
+Source description: Generic filterable table wrapper with search input, category dropdown(s), and optional separators.
+**Import path**
+```jsx
+import { SearchTable } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `TableComponent` | `Function` | `null` | No | Table renderer component (e.g. DynamicTable). |
+| `tableTitle` | `React.ReactNode` | `null` | No | Table title. |
+| `headerList` | `Array` | `[` | No | ] - Column header names. |
+| `itemsList` | `Array` | `[` | No | ] - Row data objects. Cell values can be strings or JSX. |
+| `monospaceColumns` | `Array` | `[` | No | ] - Column indices to render in monospace. |
+| `margin` | `string` | `` | Yes | Margin passed to TableComponent. |
+| `searchPlaceholder` | `string` | `'Search...'` | No | Placeholder text for the search input. |
+| `searchColumns` | `Array` | `[` | No | ] - Column names to search against. Defaults to all headers. |
+| `categoryColumn` | `string` | `'Category'` | No | Field name the first dropdown filters on. |
+| `filterColumns` | `Array` | `[` | No | ] - Additional column names that get dropdown filters. Each scoped by selections above it. |
+| `columnWidths` | `object` | `{}` | No | Column width overrides keyed by header name. Passed to TableComponent. |
+| `contentFitColumns` | `Array` | `[` | No | ] - Column names that should size to their contents when supported by TableComponent. |
+| `columnVariant` | `object` | `{}` | No | Column display variants keyed by header name. Supported: "bold", "badge", "textIcon", "addressWrapper". |
+| `categoryBadges` | `Array` | `[` | No | ] - Array of {color, label} for "badge" variant rendering. Matched by label (case-insensitive). |
+| `textIcons` | `Array` | `[` | No | ] - Array of {label, icon} for "textIcon" variant rendering. Icon is JSX rendered inline before the label text. |
+| `showSeparators` | `boolean` | `false` | No | When true, inserts category separator rows. Labels are uppercased. |
+| `separatorColumn` | `string` | `null` | No | Override which column drives separators. Default: categoryColumn. |
+| `boldFirstColumn` | `boolean` | `true` | No | Auto-wraps first column in `<strong>` if value is a plain string. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### SearchTableV2
+Use **SearchTableV2** when you need generic filterable table wrapper with intrinsic-width sizing for badge, icon, and primary text columns..
+Source description: Generic filterable table wrapper with intrinsic-width sizing for badge, icon, and primary text columns.
+**Import path**
+```jsx
+import { SearchTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `experimental`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `TableComponent` | `Function` | `null` | No | Table renderer component (e.g. DynamicTableV2). |
+| `tableTitle` | `React.ReactNode` | `null` | No | Table title. |
+| `headerList` | `Array` | `[` | No | ] - Column header names. |
+| `itemsList` | `Array` | `[` | No | ] - Row data objects. Cell values can be strings or JSX. |
+| `monospaceColumns` | `Array` | `[` | No | ] - Column indices to render in monospace. |
+| `margin` | `string` | `` | Yes | Margin passed to TableComponent. |
+| `searchPlaceholder` | `string` | `'Search...'` | No | Placeholder text for the search input. |
+| `searchColumns` | `Array` | `[` | No | ] - Column names to search against. Defaults to all headers. |
+| `categoryColumn` | `string` | `'Category'` | No | Field name the first dropdown filters on. |
+| `filterColumns` | `Array` | `[` | No | ] - Additional column names that get dropdown filters. Each scoped by selections above it. |
+| `columnWidths` | `object` | `{}` | No | Column width overrides keyed by header name. Passed to TableComponent. |
+| `columnConfig` | `object` | `{}` | No | Optional column sizing overrides merged with V2 defaults. |
+| `columnVariant` | `object` | `{}` | No | Column display variants keyed by header name. Supported: "bold", "badge", "textIcon", "addressWrapper". |
+| `categoryBadges` | `Array` | `[` | No | ] - Array of {color, label} for "badge" variant rendering. Matched by label (case-insensitive). |
+| `textIcons` | `Array` | `[` | No | ] - Array of {label, icon} for "textIcon" variant rendering. |
+| `showSeparators` | `boolean` | `false` | No | When true, inserts category separator rows. Labels are uppercased. |
+| `separatorColumn` | `string` | `null` | No | Override which column drives separators. Default: categoryColumn. |
+| `boldFirstColumn` | `boolean` | `true` | No | Auto-wraps first column in `<strong>` if value is a plain string. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
+### ShowcaseCards
+Use **ShowcaseCards** when you need paginated card layout with search, category, and product filtering..
+Source description: Paginated card layout with search, category, and product filtering.
+**Import path**
+```jsx
+import { ShowcaseCards } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `null` | No | limit prop. |
+| `pageSize` | `number` | `10` | No | page Size prop. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -387,16 +843,18 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 <CustomDivider />
 
 ### ShowcaseVideo
-Use **ShowcaseVideo** when you need full-width video with negative-margin breakout and rounded frame.. Accepts: className, style, ...rest.
+Use **ShowcaseVideo** when you need full-width video with negative-margin breakout and rounded frame..
 Source description: Full-width video with negative-margin breakout and rounded frame.
 **Import path**
 ```jsx
 import { ShowcaseVideo } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
-- Status: `stable`
-- Accepts: `className, style, ...rest`
+- Status: `deprecated`
+- Accepts: `none`
 - Data source: `none`
+
+Deprecation note: Use TitledVideo with variant="showcase" instead. See `TitledVideo`.
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
@@ -409,8 +867,250 @@ import { ShowcaseVideo } from '/snippets/components/displays/video/Video.jsx'
 
 <CustomDivider />
 
+### SolutionCard
+Use **SolutionCard** when you need card body for Solutions Portal product cards. Accepts pre-rendered JSX slots for badges, infra tags, and social links. ScrollBox is passed as a component prop for blurb rendering..
+Source description: Card body for Solutions Portal product cards. Accepts pre-rendered JSX slots for badges, infra tags, and social links. ScrollBox is passed as a component prop for blurb rendering.
+**Import path**
+```jsx
+import { SolutionCard } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `badges` | `ReactNode` | `` | No | `Pre-rendered <BadgeWrapper badges={...} />` |
+| `logoSrc` | `string` | `` | No | Path to the product logo image. |
+| `logoAlt` | `string` | `` | No | Alt text for the logo image. |
+| `subtitle` | `string` | `` | No | Bold italic one-line product subtitle. |
+| `infraTags` | `ReactNode` | `` | No | `Pre-rendered <IconBadgeWrapper items={...} iconColor="var(--lp-color-accent)" size={12} />` |
+| `blurb` | `string` | `` | No | Product description text. Rendered inside ScrollBox. |
+| `ScrollBox` | `Component` | `` | No | ScrollBox component reference, passed from parent MDX. |
+| `logoHeight` | `string` | `` | No | Override logo container height (default '60px'). |
+| `socialLinks` | `ReactNode` | `` | No | `Pre-rendered <SocialLinks links={...} />` |
+
+**Code example**
+
+```jsx
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { SocialLinks } from '/snippets/components/elements/links/Links.jsx'
+
+<SolutionCard
+  badges={<BadgeWrapper badges={daydreamBadges} />}
+  logoSrc="/snippets/assets/logos/products/daydream-logo-dark.svg"
+  logoAlt="Daydream Logo"
+  subtitle="Open-Source Toolkit For World Models and Real-time AI Video"
+  infraTags={<IconBadgeWrapper items={daydreamInfra} iconColor="var(--lp-color-accent)" size={12} />}
+  blurb="Description here."
+  ScrollBox={ScrollBox}
+  socialLinks={<SocialLinks links={daydreamSocials} justify="center" style={{ marginTop: "var(--lp-spacing-4)", marginBottom: '-1rem' }} />}
+/>
+```
+
+<CustomDivider />
+
+### SolutionItem
+Use **SolutionItem** when you need renders a solution entry with link, icon badges, and description. Designed for solution listing pages..
+Source description: Renders a solution entry with link, icon badges, and description. Designed for solution listing pages.
+**Import path**
+```jsx
+import { SolutionItem } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `link` | `React.ReactNode` | `` | Yes | Link element (e.g. `<LinkArrow />`), rendered as the heading |
+| `iconWrapper` | `React.ReactNode` | `null` | No | Icon badges element (e.g. `<IconBadgeWrapper />`) |
+| `description` | `React.ReactNode` | `null` | No | Description text or element |
+| `divider` | `boolean` | `true` | No | Show bottom border divider |
+| `className` | `string` | `""` | No | CSS class name |
+| `style` | `object` | `{}` | No | Inline style overrides |
+
+**Code example**
+
+```jsx
+<SolutionItem
+  link={<LinkArrow href="https://daydream.live" label="Daydream" />}
+  iconWrapper={<IconBadgeWrapper items={daydreamInfra} iconColor="var(--lp-color-accent)" size={12} />}
+  description="Real-time AI video, world models"
+  divider={true}
+/>
+```
+
+<CustomDivider />
+
+### StepLinkList
+Use **StepLinkList** when you need renders listItems as Mintlify Steps with GotoLink navigation..
+Source description: Renders listItems as Mintlify Steps with GotoLink navigation.
+**Import path**
+```jsx
+import { StepLinkList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StepList
+Use **StepList** when you need renders listItems as Mintlify Steps with title, icon, and content..
+Source description: Renders listItems as Mintlify Steps with title, icon, and content.
+**Import path**
+```jsx
+import { StepList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledStep
+Use **StyledStep** when you need single step with configurable icon, size, and per-step colour overrides. When iconColor or titleColor is set, injects a scoped CSS override that takes precedence over the parent StyledSteps colours for this step only. When neither is set, behaves identically to a plain Step pass-through..
+Source description: Single step with configurable icon, size, and per-step colour overrides. When iconColor or titleColor is set, injects a scoped CSS override that takes precedence over the parent StyledSteps colours for this step only. When neither is set, behaves identically to a plain Step pass-through.
+**Import path**
+```jsx
+import { StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `any` | `` | Yes | title prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `titleSize` | `string` | `"h3"` | No | title Size prop. |
+| `iconColor` | `string\|null` | `null` | No | Per-step icon background colour override. |
+| `titleColor` | `string\|null` | `null` | No | Per-step title text colour override. |
+| `divider` | `boolean` | `false` | No | Show a divider line after the step content. |
+| `dividerMargin` | `string` | `"0.5rem 0"` | No | Margin for the trailing divider. |
+| `children` | `any` | `` | Yes | children prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledSteps
+Use **StyledSteps** when you need wrapper around Mintlify Steps with custom icon styling via injected CSS..
+Source description: Wrapper around Mintlify Steps with custom icon styling via injected CSS.
+**Import path**
+```jsx
+import { StyledSteps } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `iconColor` | `any` | `` | Yes | icon Color prop. |
+| `titleColor` | `any` | `` | Yes | title Color prop. |
+| `lineColor` | `any` | `` | Yes | line Color prop. |
+| `iconSize` | `string` | `"24px"` | No | icon Size prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+| `style` | `object` | `{}` | No | Optional inline style override. |
+
+
+<CustomDivider />
+
+### StyledTable
+Use **StyledTable** when you need full-width table with header row styling and rounded container..
+Source description: Full-width table with header row styling and rounded container.
+**Import path**
+```jsx
+import { StyledTable } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `variant` | `string` | `"default"` | No | variant prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### TableCell
+Use **TableCell** when you need table cell that switches between th and td based on header prop..
+Source description: Table cell that switches between th and td based on header prop.
+**Import path**
+```jsx
+import { TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `align` | `string` | `"left"` | No | align prop. |
+| `header` | `boolean` | `false` | No | header prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
+### TableRow
+Use **TableRow** when you need table row with optional header styling and hover effect..
+Source description: Table row with optional header styling and hover effect.
+**Import path**
+```jsx
+import { TableRow } from '/snippets/components/displays/tables/Tables.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `header` | `boolean` | `false` | No | header prop. |
+| `hover` | `boolean` | `false` | No | hover prop. |
+| `style` | `object` | `{}` | No | style prop. |
+| `className` | `string` | `''` | No | Optional CSS class override. |
+
+
+<CustomDivider />
+
 ### TitledVideo
-Use **TitledVideo** when you need auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.. Accepts: className, style, ...rest.
+Use **TitledVideo** when you need auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion..
 Source description: Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.
 **Import path**
 ```jsx
@@ -418,7 +1118,7 @@ import { TitledVideo } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -434,8 +1134,46 @@ import { TitledVideo } from '/snippets/components/displays/video/Video.jsx'
 
 <CustomDivider />
 
+### UpdateLinkList
+Use **UpdateLinkList** when you need renders update items as linked entries inside Mintlify Update component..
+Source description: Renders update items as linked entries inside Mintlify Update component.
+**Import path**
+```jsx
+import { UpdateLinkList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
+### UpdateList
+Use **UpdateList** when you need planned update list component – not yet implemented..
+Source description: Planned update list component – not yet implemented.
+**Import path**
+```jsx
+import { UpdateList } from '/snippets/components/displays/steps/Steps.jsx'
+```
+**Metadata**
+- Status: `planned`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `listItems` | `any` | `` | Yes | list Items prop. |
+
+
+<CustomDivider />
+
 ### ValueResponseField
-Use **ValueResponseField** when you need aPI response field with name, type, and value display.. Accepts: children, className, style, ...props.
+Use **ValueResponseField** when you need aPI response field with name, type, and value display..
 Source description: API response field with name, type, and value display.
 **Import path**
 ```jsx
@@ -443,7 +1181,7 @@ import { ValueResponseField } from '/snippets/components/displays/response-field
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `children, className, style, ...props`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -461,7 +1199,7 @@ import { ValueResponseField } from '/snippets/components/displays/response-field
 <CustomDivider />
 
 ### Video
-Use **Video** when you need basic framed video player with caption support.. Accepts: children, className, style, ...rest.
+Use **Video** when you need basic framed video player with caption support..
 Source description: Basic framed video player with caption support.
 **Import path**
 ```jsx
@@ -469,7 +1207,7 @@ import { Video } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `children, className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -490,8 +1228,31 @@ import { Video } from '/snippets/components/displays/video/Video.jsx'
 
 <CustomDivider />
 
+### WidthCard
+Use **WidthCard** when you need width-constrained card wrapper with configurable percentage width..
+Source description: Width-constrained card wrapper with configurable percentage width.
+**Import path**
+```jsx
+import { WidthCard } from '/snippets/components/displays/cards/Cards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `none`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `width` | `string` | `'80%'` | No | Width used by the component. |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `cardProps` | `object` | `` | No | Forwarded Card props. |
+| `className` | `string` | `""` | No | CSS class name. |
+| `style` | `object` | `{}` | No | Inline style overrides. |
+
+
+<CustomDivider />
+
 ### YouTubeVideo
-Use **YouTubeVideo** when you need youTube embed via responsive iframe with aspect-ratio preservation.. Accepts: className, style, ...rest.
+Use **YouTubeVideo** when you need youTube embed via responsive iframe with aspect-ratio preservation..
 Source description: YouTube embed via responsive iframe with aspect-ratio preservation.
 **Import path**
 ```jsx
@@ -499,7 +1260,7 @@ import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `className, style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -516,16 +1277,18 @@ import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
 <CustomDivider />
 
 ### YouTubeVideoData
-Use **YouTubeVideoData** when you need renders a columned grid of YouTubeVideo embeds from an items array.. Accepts: none.
+Use **YouTubeVideoData** when you need renders a columned grid of YouTubeVideo embeds from an items array..
 Source description: Renders a columned grid of YouTubeVideo embeds from an items array.
 **Import path**
 ```jsx
 import { YouTubeVideoData } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
-- Status: `stable`
+- Status: `deprecated`
 - Accepts: `none`
 - Data source: `none`
+
+Deprecation note: Duplicate – canonical version is in integrators/video-data/VideoData.jsx. See `VideoData.jsx`.
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
@@ -537,15 +1300,15 @@ import { YouTubeVideoData } from '/snippets/components/displays/video/Video.jsx'
 <CustomDivider />
 
 ### YouTubeVideoDownload
-Use **YouTubeVideoDownload** when you need youTube embed with download hint text below.. Accepts: className, style, ...rest.
-Source description: YouTube embed with download hint text below.
+Use **YouTubeVideoDownload** when you need youTube embed with download hint text below (BROKEN – render content commented out)..
+Source description: YouTube embed with download hint text below (BROKEN – render content commented out).
 **Import path**
 ```jsx
 import { YouTubeVideoDownload } from '/snippets/components/displays/video/Video.jsx'
 ```
 **Metadata**
-- Status: `stable`
-- Accepts: `className, style, ...rest`
+- Status: `broken`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |

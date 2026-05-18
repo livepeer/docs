@@ -1,11 +1,7 @@
 ---
-title: Scaffolding
-sidebarTitle: Scaffolding
-description: "One-per-page structural skeleton – heroes, portals, frame-mode overrides."
-lifecycleStage: discover
-complexity: intermediate
-audience: community
-purpose: explain
+title: 'Scaffolding'
+sidebarTitle: 'Scaffolding'
+description: 'One-per-page structural skeleton – heroes, portals, frame-mode overrides.'
 pageType: reference
 ---
 
@@ -32,7 +28,7 @@ Run command: node operations/scripts/generators/components/documentation/generat
 
 One-per-page structural skeleton – heroes, portals, frame-mode overrides.
 
-This category currently contains **20** governed export(s).
+This category currently contains **21** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -46,7 +42,8 @@ This category currently contains **20** governed export(s).
 
 | Component | Status | Import path | Description |
 | --- | --- | --- | --- |
-| Divider | `stable` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Horizontal rule divider for frame-mode pages. |
+| Divider | `deprecated` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Deprecated alias for FrameModeDivider. Maintained for backwards compatibility. |
+| FrameModeDivider | `stable` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Horizontal rule divider for frame-mode pages. Distinct from elements/spacing/Divider. |
 | H1 | `stable` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Heading override with optional icon prefix for frame-mode pages. |
 | H2 | `stable` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Heading override with optional icon prefix for frame-mode pages. |
 | H3 | `stable` | `/snippets/components/scaffolding/frame-mode/FrameMode.jsx` | Heading override with optional icon prefix for frame-mode pages. |
@@ -70,15 +67,34 @@ This category currently contains **20** governed export(s).
 ## Component Reference
 
 ### Divider
-Use **Divider** when you need horizontal rule divider for frame-mode pages.. Accepts: {string} colour, {string} margin, {number} opacity, {string} className, {object} style, ...rest.
-Source description: Horizontal rule divider for frame-mode pages.
+Use **Divider** when you need deprecated alias for FrameModeDivider. Maintained for backwards compatibility..
+Source description: Deprecated alias for FrameModeDivider. Maintained for backwards compatibility.
 **Import path**
 ```jsx
 import { Divider } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
+- Status: `deprecated`
+- Accepts: `none`
+- Data source: `none`
+
+Deprecation note: Use FrameModeDivider to avoid collision with elements/spacing/Divider. See `FrameModeDivider`.
+**Props**
+No documented props.
+
+
+<CustomDivider />
+
+### FrameModeDivider
+Use **FrameModeDivider** when you need horizontal rule divider for frame-mode pages. Distinct from elements/spacing/Divider..
+Source description: Horizontal rule divider for frame-mode pages. Distinct from elements/spacing/Divider.
+**Import path**
+```jsx
+import { FrameModeDivider } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
+```
+**Metadata**
 - Status: `stable`
-- Accepts: `{string} color, {string} margin, {number} opacity, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -93,7 +109,7 @@ import { Divider } from '/snippets/components/scaffolding/frame-mode/FrameMode.j
 <CustomDivider />
 
 ### H1
-Use **H1** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {any} children, {any} icon, {number} iconSize, {any} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H1** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -101,7 +117,7 @@ import { H1 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {any} icon, {number} iconSize, {any} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -111,7 +127,7 @@ import { H1 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `iconSize` | `number` | `32` | No | icon Size prop. |
 | `iconColor` | `any` | `` | Yes | icon Color prop. |
 | `align` | `string` | `"left"` | No | align prop. |
-| `gap` | `string` | `"0.75rem"` | No | gap prop. |
+| `gap` | `string` | `"var(--lp-spacing-3)"` | No | gap prop. |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -119,7 +135,7 @@ import { H1 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### H2
-Use **H2** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H2** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -127,7 +143,7 @@ import { H2 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -136,8 +152,8 @@ import { H2 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `28` | No | Size of the icon (default: 28) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.75rem"` | No | Gap between icon and text (default: "0.75rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-3)"` | No | Gap between icon and text (default: "var(--lp-spacing-3)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -145,7 +161,7 @@ import { H2 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### H3
-Use **H3** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H3** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -153,7 +169,7 @@ import { H3 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -162,8 +178,8 @@ import { H3 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `24` | No | Size of the icon (default: 24) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.5rem"` | No | Gap between icon and text (default: "0.5rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-2)"` | No | Gap between icon and text (default: "var(--lp-spacing-2)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -171,7 +187,7 @@ import { H3 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### H4
-Use **H4** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H4** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -179,7 +195,7 @@ import { H4 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -188,8 +204,8 @@ import { H4 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `20` | No | Size of the icon (default: 20) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.5rem"` | No | Gap between icon and text (default: "0.5rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-2)"` | No | Gap between icon and text (default: "var(--lp-spacing-2)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -197,7 +213,7 @@ import { H4 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### H5
-Use **H5** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H5** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -205,7 +221,7 @@ import { H5 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -214,8 +230,8 @@ import { H5 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `18` | No | Size of the icon (default: 18) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.5rem"` | No | Gap between icon and text (default: "0.5rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-2)"` | No | Gap between icon and text (default: "var(--lp-spacing-2)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -223,7 +239,7 @@ import { H5 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### H6
-Use **H6** when you need heading override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **H6** when you need heading override with optional icon prefix for frame-mode pages..
 Source description: Heading override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -231,7 +247,7 @@ import { H6 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -240,8 +256,8 @@ import { H6 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `16` | No | Size of the icon (default: 16) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.5rem"` | No | Gap between icon and text (default: "0.5rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-2)"` | No | Gap between icon and text (default: "var(--lp-spacing-2)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -249,7 +265,7 @@ import { H6 } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### HeroContentContainer
-Use **HeroContentContainer** when you need centred content container inside hero sections.. Accepts: {any} children, {string} className, {object} style, ...rest.
+Use **HeroContentContainer** when you need centred content container inside hero sections..
 Source description: Centred content container inside hero sections.
 **Import path**
 ```jsx
@@ -257,7 +273,7 @@ import { HeroContentContainer } from '/snippets/components/scaffolding/portals/P
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -270,7 +286,7 @@ import { HeroContentContainer } from '/snippets/components/scaffolding/portals/P
 <CustomDivider />
 
 ### HeroImageBackgroundComponent
-Use **HeroImageBackgroundComponent** when you need hero background with image overlay and gradient.. Accepts: {any} children, {string} className, {object} style, ...rest.
+Use **HeroImageBackgroundComponent** when you need hero background with image overlay and gradient..
 Source description: Hero background with image overlay and gradient.
 **Import path**
 ```jsx
@@ -278,7 +294,7 @@ import { HeroImageBackgroundComponent } from '/snippets/components/scaffolding/p
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -291,7 +307,7 @@ import { HeroImageBackgroundComponent } from '/snippets/components/scaffolding/p
 <CustomDivider />
 
 ### HeroOverviewContent
-Use **HeroOverviewContent** when you need hero content layout with title, icon, subtitle, and CTA slots.. Accepts: {any} children, {string} className, {object} style, ...rest.
+Use **HeroOverviewContent** when you need hero content layout with title, icon, subtitle, and CTA slots..
 Source description: Hero content layout with title, icon, subtitle, and CTA slots.
 **Import path**
 ```jsx
@@ -299,7 +315,7 @@ import { HeroOverviewContent } from '/snippets/components/scaffolding/portals/Po
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -312,7 +328,7 @@ import { HeroOverviewContent } from '/snippets/components/scaffolding/portals/Po
 <CustomDivider />
 
 ### HeroSectionContainer
-Use **HeroSectionContainer** when you need full-width hero section wrapper with min-height and gradient background.. Accepts: {any} children, {string} minHeight, {string} className, {object} style, ...rest.
+Use **HeroSectionContainer** when you need full-width hero section wrapper with min-height and gradient background..
 Source description: Full-width hero section wrapper with min-height and gradient background.
 **Import path**
 ```jsx
@@ -320,7 +336,7 @@ import { HeroSectionContainer } from '/snippets/components/scaffolding/portals/P
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} minHeight, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -334,7 +350,7 @@ import { HeroSectionContainer } from '/snippets/components/scaffolding/portals/P
 <CustomDivider />
 
 ### LogoHeroContainer
-Use **LogoHeroContainer** when you need hero banner with centred logo image, title, and subtitle.. Accepts: {string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest.
+Use **LogoHeroContainer** when you need hero banner with centred logo image, title, and subtitle..
 Source description: Hero banner with centred logo image, title, and subtitle.
 **Import path**
 ```jsx
@@ -342,7 +358,7 @@ import { LogoHeroContainer } from '/snippets/components/scaffolding/portals/Port
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -362,7 +378,7 @@ import { LogoHeroContainer } from '/snippets/components/scaffolding/portals/Port
 <CustomDivider />
 
 ### P
-Use **P** when you need paragraph override with optional icon prefix for frame-mode pages.. Accepts: {string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest.
+Use **P** when you need paragraph override with optional icon prefix for frame-mode pages..
 Source description: Paragraph override with optional icon prefix for frame-mode pages.
 **Import path**
 ```jsx
@@ -370,7 +386,7 @@ import { P } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} children, {string} icon, {number} iconSize, {string} iconColor, {string} align, {string} gap, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -379,8 +395,8 @@ import { P } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 | `icon` | `string` | `` | Yes | Optional icon name or path to theme-aware SVG |
 | `iconSize` | `number` | `16` | No | Size of the icon (default: 16) |
 | `iconColor` | `string` | `` | Yes | Color of the icon (default: theme-aware accent color) |
-| `align` | `string` | `"left"` | No | Text alignment: "left", "centre", "right" (default: "left") |
-| `gap` | `string` | `"0.5rem"` | No | Gap between icon and text (default: "0.5rem") |
+| `align` | `string` | `"left"` | No | Text alignment: "left", "center", "right" (default: "left") |
+| `gap` | `string` | `"var(--lp-spacing-2)"` | No | Gap between icon and text (default: "var(--lp-spacing-2)") |
 | `className` | `string` | `""` | No | CSS class name. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
 
@@ -388,7 +404,7 @@ import { P } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
 <CustomDivider />
 
 ### PageHeader
-Use **PageHeader** when you need page-level header with icon, title, and subtitle for frame-mode pages.. Accepts: {any} title, {any} subtitle, {any} description, {string} children, {any} titleColor, {any} subtitleColor, {any} descriptionColor, {string} className, {object} style, ...rest.
+Use **PageHeader** when you need page-level header with icon, title, and subtitle for frame-mode pages..
 Source description: Page-level header with icon, title, and subtitle for frame-mode pages.
 **Import path**
 ```jsx
@@ -396,7 +412,7 @@ import { PageHeader } from '/snippets/components/scaffolding/frame-mode/FrameMod
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} title, {any} subtitle, {any} description, {string} children, {any} titleColor, {any} subtitleColor, {any} descriptionColor, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -415,7 +431,7 @@ import { PageHeader } from '/snippets/components/scaffolding/frame-mode/FrameMod
 <CustomDivider />
 
 ### PortalCardsHeader
-Use **PortalCardsHeader** when you need section header with mission label and optional subtitle.. Accepts: {any} children, {any} title, {string} className, {object} style, ...rest.
+Use **PortalCardsHeader** when you need section header with mission label and optional subtitle..
 Source description: Section header with mission label and optional subtitle.
 **Import path**
 ```jsx
@@ -423,7 +439,7 @@ import { PortalCardsHeader } from '/snippets/components/scaffolding/portals/Port
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {any} title, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -437,7 +453,7 @@ import { PortalCardsHeader } from '/snippets/components/scaffolding/portals/Port
 <CustomDivider />
 
 ### PortalContentContainer
-Use **PortalContentContainer** when you need outer container for portal page content below the hero.. Accepts: {any} children, {string} className, {object} style, ...rest.
+Use **PortalContentContainer** when you need outer container for portal page content below the hero..
 Source description: Outer container for portal page content below the hero.
 **Import path**
 ```jsx
@@ -445,7 +461,7 @@ import { PortalContentContainer } from '/snippets/components/scaffolding/portals
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -458,7 +474,7 @@ import { PortalContentContainer } from '/snippets/components/scaffolding/portals
 <CustomDivider />
 
 ### PortalHeroContent
-Use **PortalHeroContent** when you need hero content with logo, title, tagline, description, and card grid.. Accepts: {boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest.
+Use **PortalHeroContent** when you need hero content with logo, title, tagline, description, and card grid..
 Source description: Hero content with logo, title, tagline, description, and card grid.
 **Import path**
 ```jsx
@@ -466,7 +482,7 @@ import { PortalHeroContent } from '/snippets/components/scaffolding/portals/Port
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -490,7 +506,7 @@ import { PortalHeroContent } from '/snippets/components/scaffolding/portals/Port
 <CustomDivider />
 
 ### PortalSectionHeader
-Use **PortalSectionHeader** when you need section header with icon, title, and horizontal rule.. Accepts: {any} children, {any} title, {any} icon, {string} className, {object} style, ...rest.
+Use **PortalSectionHeader** when you need section header with icon, title, and horizontal rule..
 Source description: Section header with icon, title, and horizontal rule.
 **Import path**
 ```jsx
@@ -498,7 +514,7 @@ import { PortalSectionHeader } from '/snippets/components/scaffolding/portals/Po
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {any} title, {any} icon, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -513,7 +529,7 @@ import { PortalSectionHeader } from '/snippets/components/scaffolding/portals/Po
 <CustomDivider />
 
 ### RefCardContainer
-Use **RefCardContainer** when you need container for reference cards with configurable column count.. Accepts: {any} children, {string} className, {object} style, ...rest.
+Use **RefCardContainer** when you need container for reference cards with configurable column count..
 Source description: Container for reference cards with configurable column count.
 **Import path**
 ```jsx
@@ -521,7 +537,7 @@ import { RefCardContainer } from '/snippets/components/scaffolding/portals/Porta
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -534,7 +550,7 @@ import { RefCardContainer } from '/snippets/components/scaffolding/portals/Porta
 <CustomDivider />
 
 ### Starfield
-Use **Starfield** when you need animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.. Accepts: {number} density, {string} className, {object} style, ...rest.
+Use **Starfield** when you need animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion..
 Source description: Animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.
 **Import path**
 ```jsx
@@ -542,7 +558,7 @@ import { Starfield } from '/snippets/components/scaffolding/heroes/StarfieldCanv
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{number} density, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `none`
 **Props**
 | Prop | Type | Default | Required | Description |
