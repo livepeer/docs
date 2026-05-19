@@ -58,6 +58,15 @@ Release notes for the Livepeer node software. For protocol-level changes, see th
   AUTOMATION ZONE -- entries below are populated by workflow.
   ────────────────────────────────────────────── */}
 
+<Update label="May 13, 2026" tags={["Live AI", "Trickle"]} rss={{ title: "go-livepeer weekly update — May 13, 2026", description: "New trickle /next endpoint improves first-segment reliability for Live AI publishers" }} description={<Subtitle variant="changelog">May 13, 2026</Subtitle>}>
+  ## Weekly update — May 13, 2026
+
+### New features
+
+- **Trickle `/<channel>/next` endpoint** - The trickle server now exposes a `GET /<channel>/next` route that returns the channel's next write sequence. Publisher clients can probe this endpoint before their first POST to align with the server's sequencing, which prevents the first segment from being dropped on fresh channels. This improves first-segment reliability for [Live AI](/v2/developers/concepts/ai-on-livepeer) pipelines that publish through trickle. The endpoint returns `404` if the channel does not exist and sets `Lp-Trickle-Closed: terminated` when the channel is closed.
+
+</Update>
+
 <Update label="v0.8.10" tags={["Live AI", "BYOC", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10", description: "Remote signer support for Live AI gateways, unified BYOC capability discovery, and broadcaster crash fix" }} description={<Subtitle variant="changelog">March 2026</Subtitle>}>
   ## v0.8.10
 
