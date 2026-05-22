@@ -1,23 +1,212 @@
 ---
-title: "Storage and archival"
-sidebarTitle: "Storage and archival"
-description: "Storage and archival on the Livepeer network: overview, configuration, network-direct path."
+title: "Storage and Archival"
+sidebarTitle: "Storage and Archival"
+description: >-
+  Persist Livepeer video assets across IPFS, Arweave, and gateway-managed storage. Encrypted assets, retention policies, and decentralised storage integration patterns.
+keywords:
+  - livepeer
+  - storage
+  - archival
+  - ipfs
+  - arweave
+  - web3.storage
+  - encrypted assets
+  - vod
+  - asset api
 pageType: guide
 audience: developer
 purpose: build
 complexity: intermediate
 lifecycleStage: build
-keywords:
-  - storage and archival
-  - livepeer video
-  - network-direct
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-veracityStatus: unverified
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
 ---
 
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-This page is in progress.
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Three places a Livepeer asset can live: Gateway-managed storage, IPFS, Arweave. Pick by access pattern, cost, and permanence requirements.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+A Livepeer video asset has two distinct concerns: the source file (the master from which renditions are transcoded) and the playback renditions (the HLS playlists and segment files served to viewers). Both can live on different storage layers. The Asset API supports Gateway-managed storage as the default and accepts decentralised storage URLs as either source input or persistence target.
+
+This guide covers the storage choices, the trade-offs, and the integration patterns. For the upload-to-playback path, see <LinkArrow href="/v2/developers/build/tutorials/vod-upload-and-playback">VOD Upload and Playback</LinkArrow>.
+
+<CustomDivider middleText="Storage Tiers" />
+
+## Storage Tiers
+
+Three tiers cover the spectrum from fast hot cache to permanent archive.
+
+| Tier | Where | Cost | Latency | Permanence |
+|---|---|---|---|---|
+| Gateway-managed | Gateway provider's regional storage and CDN | Highest per GB-month | Lowest playback latency | Bounded by Gateway retention policy |
+| IPFS | Content-addressed network via pinning service | Mid (storage + pinning) | Mid (depends on Gateway) | Strong while pinned |
+| Arweave | Permanent storage protocol | One-time fee, ~200-year guarantee | Slower retrieval | Strong, no ongoing payment |
+
+Most production deployments use a mix: Gateway-managed for trending content where playback latency dominates, IPFS for catalogue content with predictable access patterns, Arweave for content that must outlive any single operator.
+
+<CustomDivider middleText="Default Flow" />
+
+## Default Asset Storage
+
+When you create an asset via TUS upload or `livepeer.asset.create({ name })`, the Gateway stores the source file and transcoded renditions in its own storage. Playback URLs point to the Gateway's CDN.
+
+```ts icon="terminal"
+import { Livepeer } from 'livepeer';
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY!,
+  serverURL: process.env.LIVEPEER_API_URL!,
+});
+
+const asset = await livepeer.asset.create({
+  name: 'product-demo.mp4',
+});
+
+// asset.data.asset.playbackId is what your Player consumes
+// asset.data.tusEndpoint is where you upload the bytes
+```
+
+Gateway-managed storage gives the fastest playback because the renditions sit close to the CDN. The trade-off is retention: Gateway providers set their own retention policies. Confirm the policy before treating Gateway-managed storage as an archive.
+
+<CustomDivider middleText="IPFS Source" />
+
+## IPFS as Source
+
+You can store the master file on IPFS and have Livepeer fetch and transcode it. The original file stays on IPFS; the Gateway holds only the transcoded renditions. The pattern fits NFT video projects, decentralised social applications, and any workload where content addressing matters.
+
+The activation path is in <LinkArrow href="/v2/developers/build/tutorials/ipfs-video-integration">Store and Play Videos on IPFS</LinkArrow>. The shape is:
+
+```ts icon="terminal"
+// 1. Upload to IPFS via web3.storage (or any IPFS pinning service)
+import * as Client from '@web3-storage/w3up-client';
+
+const w3 = await Client.create();
+await w3.login('your-email@example.com');
+await w3.setCurrentSpace(/* DID */);
+const cid = await w3.uploadFile(videoFile);
+
+const ipfsUrl = `https://w3s.link/ipfs/${cid}`;
+
+// 2. Create a Livepeer asset from the IPFS URL
+const asset = await livepeer.asset.create({
+  name: 'ipfs-sourced-video',
+  url: ipfsUrl,
+});
+```
+
+The Gateway fetches the file from the supplied IPFS HTTP Gateway URL, transcodes it, and stores the renditions. The `cid` remains a stable, content-addressed reference that survives Gateway provider changes.
+
+<CustomDivider middleText="Arweave Source" />
+
+## Arweave as Source
+
+Arweave's permanent storage guarantee makes it suitable for long-tail catalogue and any content that must outlive the Gateway operator. Upload via Bundlr (or Turbo, ArDrive, or any Arweave uploader), capture the transaction ID, and pass the Arweave Gateway URL to Livepeer:
+
+```ts icon="terminal"
+// After uploading to Arweave, you have a transaction ID (txid)
+const arweaveUrl = `https://arweave.net/${txid}`;
+
+const asset = await livepeer.asset.create({
+  name: 'arweave-archive',
+  url: arweaveUrl,
+});
+```
+
+Arweave retrieval is slower than IPFS through a public Gateway, so first-fetch transcoding takes longer. Once Livepeer has the renditions, playback latency matches any other Gateway-stored asset.
+
+<CustomDivider middleText="Encrypted Assets" />
+
+## Encrypted Assets
+
+For content that must not be downloadable in raw form (paid video, gated content, sensitive recordings), encrypt the source before upload. The Gateway accepts AES-CBC encrypted video; the symmetric key is encrypted with the Gateway's public key.
+
+The Asset API supports encrypted assets natively via the `playbackPolicy` and access control fields. The Gateway decrypts on demand, gates the decrypted stream by access control policy (JWT, allow-list, signed URL), and serves encrypted segments to authorised viewers.
+
+```ts icon="terminal"
+const asset = await livepeer.asset.create({
+  name: 'gated-content',
+  playbackPolicy: {
+    type: 'jwt', // viewers present a signed JWT
+  },
+  encryption: {
+    encryptedKey: '<aes-key-encrypted-with-gateway-public-key>',
+  },
+});
+```
+
+Encrypted assets work with all three storage tiers (Gateway-managed, IPFS, Arweave). The encryption envelope persists with the file; the Gateway holds only the key wrap, not the decryption key.
+
+<CustomDivider middleText="Retention" />
+
+## Retention Policies
+
+Storage decisions extend beyond initial upload. Three retention concerns drive the archival pattern.
+
+**Gateway provider retention.** Most providers retain assets indefinitely on paid tiers, with grace periods on free tiers. Confirm the policy before relying on Gateway-managed storage as the only copy.
+
+**IPFS pinning lifecycle.** IPFS storage requires active pinning. Without a pinning service or self-hosted pinning node, files become unavailable as nodes recycle their caches. Pin every asset you want to persist; check pin status periodically.
+
+**Arweave permanence.** Arweave's protocol guarantees retrieval for at least 200 years against a one-time upload fee. No ongoing payment required, but uploads cost more upfront than IPFS for the equivalent file size. Suitable for hot-path-cold archives.
+
+For multi-tier strategies, store the source on Arweave for permanence, mirror to IPFS for fast retrieval, and pin trending content to Gateway-managed storage for low-latency playback. The Asset API supports all three as source URLs interchangeably.
+
+<CustomDivider middleText="Migration" />
+
+## Asset Migration
+
+Moving an asset between storage tiers does not require re-transcoding. The Asset API exposes the source file's storage location separately from the playback renditions. To migrate:
+
+1. Download the original source from the current tier (via the Asset API's `downloadUrl` or by retrieving from IPFS/Arweave directly)
+2. Upload to the new tier (web3.storage, Bundlr, or Gateway storage)
+3. Update the asset's `storage` field to reference the new location
+
+The playback renditions stay live throughout. Viewers consume the same playback ID; only the source backing changes.
+
+<CustomDivider middleText="Production" />
+
+## Production Considerations
+
+Six things change between a single-asset proof of concept and a production storage strategy.
+
+**Pinning redundancy.** A single pinning service is a single point of failure for IPFS-backed assets. Pin to two providers minimum for production.
+
+**Encryption key rotation.** AES-CBC keys never change for an existing encrypted asset. Plan for re-encryption if a key is compromised; this means downloading, decrypting, re-encrypting, and re-uploading.
+
+**Storage cost monitoring.** Per-GB-month costs vary 10-50x across tiers. Tag assets with their storage tier in your database; monitor monthly spend per tag.
+
+**Access control on encrypted assets.** JWT-based access control requires signed tokens with short expiries. Plan token rotation and viewer authentication before shipping encrypted content.
+
+**CDN cache warming.** Cold playback of a long-tail asset stored only on IPFS or Arweave incurs first-fetch latency. For predictable hot content, pre-warm the Gateway's cache by issuing a low-bitrate fetch ahead of expected viewer traffic.
+
+**Webhook handling for asset lifecycle.** The `asset.ready`, `asset.failed`, and `asset.deleted` webhooks fire on the storage transitions; subscribe to them in production so your application state stays consistent with the Gateway's view.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="VOD Upload and Playback" icon="upload" href="/v2/developers/build/tutorials/vod-upload-and-playback">
+    The end-to-end upload, transcode, playback path.
+  </Card>
+  <Card title="IPFS Video Integration" icon="cube" href="/v2/developers/build/tutorials/ipfs-video-integration">
+    Web3.storage + Livepeer Asset API: working example.
+  </Card>
+  <Card title="Low-Latency Streaming" icon="bolt" href="/v2/developers/build/tutorials/low-latency-live-streaming-app">
+    The live-streaming counterpart with WebRTC ingest.
+  </Card>
+  <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
+    Webhook signatures, encryption, retention, access control.
+  </Card>
+</CardGroup>

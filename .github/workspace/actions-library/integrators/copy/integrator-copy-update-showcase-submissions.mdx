@@ -5,8 +5,8 @@ description: 'Project Showcase Sync'
 pageType: reference
 purpose: reference
 audience: internal
-status: disabled
-lastVerified: '2026-04-01'
+status: active
+lastVerified: '2026-05-22'
 keywords:
   - livepeer
   - github-actions
@@ -25,8 +25,8 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 | **New name** | `integrator-copy-update-showcase-submissions.yml` |
 | **Type** | `integrator` |
 | **Concern** | `copy` |
-| **Pipeline tag** | P5-auto (scheduled + auto-commit) |
-| **Status** | disabled |
+| **Pipeline tag** | undefined |
+| **Status** | active |
 
 <CustomDivider />
 
@@ -42,7 +42,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 
 ```mermaid
 graph LR
-    TRIGGER["workflow_dispatch, repository_dispatch"] --> WF["integrator-copy-update-showcase-submissions"]
+    TRIGGER["schedule, workflow_dispatch, repository_dispatch"] --> WF["integrator-copy-update-showcase-submissions"]
     WF --> OUTPUT["output"]
 ```
 
@@ -52,6 +52,7 @@ graph LR
 
 | Trigger | Details |
 |---|---|
+| `schedule` | See workflow file |
 | `workflow_dispatch` | See workflow file |
 | `repository_dispatch` | See workflow file |
 
@@ -77,5 +78,5 @@ None identified.
 |---|---|
 | **Permissions** | Declared |
 | **Concurrency** | No |
-| **Auto-commit** | Yes |
+| **Auto-commit** | No |
 | **Inline script** | No |

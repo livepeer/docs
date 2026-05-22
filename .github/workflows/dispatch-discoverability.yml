@@ -1,0 +1,118 @@
+# type: dispatch
+# concern: discoverability
+# pipeline: composite (P3 + P5/P6 + manual + P4 post-merge)
+# dispatch-discoverability.yml — Action workflow for discoverability concern.
+name: Discoverability Pipeline
+
+on:
+  pull_request:
+    paths:
+      - "v2/**"
+      - "snippets/**"
+      - "docs.json"
+  push:
+    branches: [docs-v2]
+    paths:
+      - "v2/**"
+      - "snippets/**"
+      - "docs.json"
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode"
+        type: choice
+        options: [pr, scheduled, manual, post-merge]
+        default: manual
+      dry_run:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dispatch-discoverability-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pr-check:
+    if: github.event_name == 'pull_request'
+    name: Discoverability · PR Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: discoverability PR meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js --staged
+
+  post-merge:
+    if: github.event_name == 'push'
+    name: Discoverability · Post-merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: discoverability post-merge meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js --write
+
+  scheduled:
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'scheduled')
+    name: Discoverability · Scheduled
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: discoverability scheduled meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js $FLAGS
+
+  manual-repair:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'manual'
+    name: Discoverability · Manual Repair
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: discoverability manual repair
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/discoverability/dispatch-discoverability-repair.js $FLAGS

@@ -1,11 +1,11 @@
 # SME Audit: `integrations` concern
 
-> 29 scripts | Generated 2026-05-17
+&gt; 29 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`
 
----
+<CustomDivider />
 
 ## validator (2)
 
@@ -27,7 +27,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `test-mintlify-version-language-toggle.js`
 
@@ -45,7 +45,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ## integrator (26)
 
@@ -67,7 +67,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `branch-watch.js`
 
@@ -85,7 +85,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `catalog-config.js`
 
@@ -103,7 +103,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `constants.js`
 
@@ -121,7 +121,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `incidents.js`
 
@@ -139,7 +139,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `pipeline.js`
 
@@ -157,7 +157,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `solidity-parser.js`
 
@@ -175,7 +175,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `spec.js`
 
@@ -193,7 +193,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `fetch-external-docs.sh`
 
@@ -211,7 +211,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `fetch-lpt-exchanges.sh`
 
@@ -229,7 +229,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `fetch-openapi-specs.sh`
 
@@ -247,7 +247,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `convert-rss-to-mdx.js`
 
@@ -265,7 +265,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `language-translation` (14)
 
@@ -285,7 +285,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `common.js`
 
@@ -303,7 +303,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `config.js`
 
@@ -321,7 +321,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `docs-json-localizer.js`
 
@@ -339,7 +339,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `docs-routes.js`
 
@@ -357,7 +357,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `mdx-parser.js`
 
@@ -375,7 +375,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `mdx-translate.js`
 
@@ -393,7 +393,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `path-utils.js`
 
@@ -411,7 +411,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `provenance.js`
 
@@ -429,7 +429,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `provider-mock.js`
 
@@ -447,7 +447,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `provider-openrouter.js`
 
@@ -465,7 +465,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `providers.js`
 
@@ -483,7 +483,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `translate-docs.js`
 
@@ -501,7 +501,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `validate-generated.js`
 
@@ -519,7 +519,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ## dispatch (1)
 
@@ -528,27 +528,27 @@
 #### `run-solutions-social-fetch.js`
 
 - **Path:** `operations/scripts/dispatch/content/data/run-solutions-social-fetch.js`
-- **Purpose:** * @description Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
-- **Description:** Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
+- **Purpose:** infrastructure:data-feeds
+- **Description:** Local dispatcher for all social-feed integrators. Loads .env, runs selected fetchers with --dry-run support. Mirrors dispatch-copy-update-social-feeds.yml for local testing and upgrades.
 - **Workflow callers:** **ORPHAN — no caller**
 - **Capabilities:** `--dry-run`
 - **Last modified:** 2026-04-16
 - **Mode:** dispatch
-- **Pipeline:** manual → .env + product-social-config.json → .github/scripts/fetch-*.js → snippets/data/social-feed-solutions/{product}/*.jsx
-- **Usage:** `node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--env path/to/.env] [--skip youtube,discord]`
+- **Pipeline:** manual → .env + product-social-config.json → operations/scripts/integrators/copy/social-feeds/fetch-*.js → snippets/data/social-feeds/*.jsx + snippets/data/social-feed-solutions/{product}/*.jsx
+- **Usage:** `node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--mode forum,youtube] [--dry-run] [--env path/to/.env] [--skip discord]`
 
 | Verdict | SME notes |
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 
 ## Orphan summary (24)
 
 Scripts with no workflow caller and no other script caller. Candidates for archive.
 
-- `operations/scripts/dispatch/content/data/run-solutions-social-fetch.js` — * @description Runs the solutions social fetch suite locally so all per-solution social-feed modules under snippets/data/social-feed-solutions/ can be regenerated from config and env-backed APIs.
+- `operations/scripts/dispatch/content/data/run-solutions-social-fetch.js` — infrastructure:data-feeds
 - `operations/scripts/integrators/content/data/contracts/blockchain-page-spec.js` — content:contract-data
 - `operations/scripts/integrators/content/data/contracts/branch-watch.js` — content:contract-data
 - `operations/scripts/integrators/content/data/contracts/catalog-config.js` — content:contract-data

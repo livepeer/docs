@@ -1,24 +1,150 @@
 ---
-title: "Example applications"
-sidebarTitle: "Example applications"
-description: "Curated collection of Livepeer example applications, integrations, and ecosystem projects."
-pageType: resource
+title: "Example Applications"
+sidebarTitle: "Example Apps"
+description: >-
+  Curated example applications and starter projects across Livepeer's AI, video, and compute surfaces. Working code, tutorials, and reference implementations.
+keywords:
+  - livepeer
+  - examples
+  - starter projects
+  - tutorials
+  - sample apps
+  - reference implementations
+  - nextjs
+  - react
+pageType: reference
 audience: developer
-purpose: orient
+purpose: reference
 complexity: beginner
 lifecycleStage: discover
-keywords:
-  - example applications
-  - integrations
-  - ecosystem projects
-  - reference apps
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-veracityStatus: unverified
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
 ---
 
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-This page is in progress.
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Working starter projects across AI, video, and compute. Each one is the shortest path from clone to running app for its category.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+This page catalogues working example applications across Livepeer's developer surface: tutorial-shaped projects you can clone, run, and modify into a production app. Each example exists because a category needs a reference implementation; together they cover the AI, video, and compute surfaces that the Developers tab walks through in detail.
+
+For the underlying primitives each example uses, follow the links from the example back to the relevant concept or reference page.
+
+<CustomDivider middleText="AI Applications" />
+
+## AI Application Examples
+
+The AI surface examples cover batch inference, real-time AI, and agent frameworks. Each is a runnable starting point; copy, modify, ship.
+
+| Example | What it shows | Primary surface |
+|---|---|---|
+| <LinkArrow href="/v2/developers/build/tutorials/ai-image-generation-app">AI Image Generation App</LinkArrow> | Next.js 15 app with Server Action calling text-to-image; gallery, model picker, error handling | AI Jobs API |
+| <LinkArrow href="/v2/developers/build/tutorials/build-a-chatbot-with-livepeer-llm">LLM Chatbot</LinkArrow> | Streaming chat via Server-Sent Events on the LLM pipeline | AI Jobs API (LLM) |
+| <LinkArrow href="/v2/developers/build/tutorials/build-a-vtuber-avatar-pipeline">VTuber Avatar Pipeline</LinkArrow> | Webcam to anime avatar via ComfyStream + StreamDiffusion + DWPose | Real-time AI |
+| <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin">Eliza Livepeer Plugin</LinkArrow> | Multi-layer agent: character file, RAG, Slack and Discord clients, SwarmZero multi-agent | LLM pipeline + agent framework |
+| <LinkArrow href="/v2/developers/build/compute/byoc/byoc-quickstart">BYOC Quickstart</LinkArrow> | Custom Python container as a network capability; green-tint frame processor | BYOC |
+| <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart">ComfyStream Quickstart</LinkArrow> | First real-time AI effect on a webcam in fifteen minutes | Real-time AI |
+
+<CustomDivider middleText="Video Applications" />
+
+## Video Application Examples
+
+The video surface examples cover live streaming, VOD, and decentralised storage integration.
+
+| Example | What it shows | Primary surface |
+|---|---|---|
+| <LinkArrow href="/v2/developers/build/tutorials/low-latency-live-streaming-app">Low-Latency Live Streaming App</LinkArrow> | Sub-3s glass-to-glass WHIP ingest plus WHEP playback in Next.js | Live streaming |
+| <LinkArrow href="/v2/developers/build/tutorials/vod-upload-and-playback">VOD Upload and Playback</LinkArrow> | TUS resumable upload, asset lifecycle polling, HLS playback | VOD |
+| <LinkArrow href="/v2/developers/build/tutorials/ipfs-video-integration">IPFS Video Integration</LinkArrow> | Upload to web3.storage, fetch into Livepeer, play back with HLS | VOD + decentralised storage |
+| <LinkArrow href="/v2/developers/build/video/transcoding-direct-quickstart">Transcoding Direct Quickstart</LinkArrow> | Self-hosted Gateway and Orchestrator transcoding RTMP to HLS | Self-hosted transcoding |
+
+<CustomDivider middleText="Platform Applications" />
+
+## Platform and Integration Examples
+
+The platform surface examples cover multi-tenant SaaS patterns, NaaP plugin development, and ecosystem integrations.
+
+| Example | What it shows | Primary surface |
+|---|---|---|
+| <LinkArrow href="/v2/developers/build/tutorials/multi-tenant-billing-with-pymthouse">Multi-Tenant Billing with pymthouse</LinkArrow> | OIDC identity, per-user usage ledger, payment ticket signing | Multi-tenant SaaS |
+| <LinkArrow href="/v2/developers/build/tutorials/build-a-naap-plugin">NaaP Plugin</LinkArrow> | Scaffold, develop, and publish a NaaP plugin with ShellContext | Operator portal plugin |
+| <LinkArrow href="/v2/developers/build/tutorials/streamplace-byoc-integration">Streamplace Integration</LinkArrow> | AT Protocol-native video infrastructure routing | AT Protocol + BYOC |
+
+<CustomDivider middleText="Legacy" />
+
+## Legacy Example Applications
+
+The earlier round of example applications shipped against the v1 Livepeer Studio surface. They remain useful for patterns even though some integrations have shifted.
+
+| Example | What it shows |
+|---|---|
+| React Native Example App | YouTube clone using Livepeer React in React Native |
+| Justcast.it | One-click "start a livestream" pattern integrated against a Gateway |
+| EVM Token-Gated Livestream | Token-gated livestream creation across EVM-compatible chains |
+| Decentralised Storage Playback | Playing video from IPFS or Arweave via the Livepeer Player |
+
+These examples are linked from `livepeer/awesome-livepeer` for direct repository access.
+
+<CustomDivider middleText="By Category" />
+
+## Picking by Category
+
+Choose an example by what you want to build. The decision points:
+
+| If you're building | Start with |
+|---|---|
+| An AI image or video generation app | AI Image Generation App |
+| A chat product | LLM Chatbot, then Eliza Livepeer Plugin for agent depth |
+| A live streaming platform | Low-Latency Live Streaming App |
+| A VOD platform (Mux-shaped) | VOD Upload and Playback |
+| A custom inference pipeline | BYOC Quickstart |
+| A real-time AI effect or avatar | ComfyStream Quickstart, then VTuber Avatar Pipeline |
+| A multi-tenant SaaS on Livepeer compute | Multi-Tenant Billing with pymthouse |
+| An operator-facing dashboard plugin | NaaP Plugin |
+| A decentralised social or AT Protocol video app | Streamplace Integration |
+
+For category overlap (e.g. an AI chatbot with custom inference), start with the closer single-category example and layer in the second category's pattern once the first is running.
+
+<CustomDivider middleText="Community" />
+
+## Community Examples
+
+The full community-maintained list of examples, tutorials, demos, and integrations lives at <LinkArrow href="https://github.com/livepeer/awesome-livepeer">github.com/Livepeer/awesome-Livepeer</LinkArrow> (browseable at `livepeer.cool`). Categories include:
+
+- SDKs and developer libraries across TypeScript, Python, Go, and React
+- Orchestrator and node operator tools (monitoring, alerts, exporters)
+- Community dashboards (Dune, Explorer, performance trackers)
+- Ecosystem applications (Daydream, Streamplace, Embody, Frameworks, Harmonic)
+- No-code integration (Bubble plugin, Studio CLI scaffolds)
+
+The `awesome-livepeer` repository is open to contributions; submit a PR to add an example that's missing.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="AI Pipelines" icon="layer-group" href="/v2/developers/build/ai-and-agents/ai-pipelines">
+    The full pipeline reference behind the AI examples.
+  </Card>
+  <Card title="AI SDKs Overview" icon="code" href="/v2/developers/build/ai-and-agents/ai-sdks-overview">
+    The TypeScript and Python SDKs the examples use.
+  </Card>
+  <Card title="Awesome Livepeer" icon="github" href="https://github.com/livepeer/awesome-livepeer">
+    Full community-curated directory of tools and integrations.
+  </Card>
+  <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
+    From example to production: auth, rate limits, observability.
+  </Card>
+</CardGroup>

@@ -1,0 +1,94 @@
+# type: dispatch
+# concern: copy
+# pipeline: composite (P3 + P5/P6 + manual)
+# dispatch-copy.yml — Action workflow for copy concern.
+name: Copy Pipeline
+
+on:
+  pull_request:
+    paths:
+      - "v2/**/*.mdx"
+      - "snippets/data/**"
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode"
+        type: choice
+        options: [pr, scheduled, manual]
+        default: manual
+      dry_run:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dispatch-copy-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pr-check:
+    if: github.event_name == 'pull_request'
+    name: Copy · PR Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: copy PR meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/content/copy/dispatch-copy-check.js --staged
+
+  scheduled:
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'scheduled')
+    name: Copy · Scheduled
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: copy scheduled meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/copy/dispatch-copy-update.js $FLAGS
+
+  manual-repair:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'manual'
+    name: Copy · Manual Repair
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: copy manual repair
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/copy/dispatch-copy-repair.js $FLAGS

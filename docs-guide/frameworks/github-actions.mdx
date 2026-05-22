@@ -11,8 +11,8 @@ keywords:
 consumer: [human, agent]
 maintenance: hand-maintained
 status: active
-version: "2.0"
-lastVerified: 2026-05-18
+version: "2.1"
+lastVerified: 2026-05-19
 sourceDoc: ".github/workspace/framework-canonical.md"
 ---
 
@@ -20,7 +20,7 @@ sourceDoc: ".github/workspace/framework-canonical.md"
 
 This is the single canonical reference for workflows and pipelines in this repo. Read this before creating, renaming, or removing any workflow.
 
----
+<CustomDivider />
 
 ## Outcome we are building
 
@@ -28,17 +28,20 @@ This repo is **ownerless and self-governed**. The product itself runs the rules:
 
 **Target end state:**
 
-1. **Approximately 10 dispatcher workflows.** Not 50, not 47. Every workflow owns a coherent pipeline: one trigger pattern, one concern, one failure mode. Maintenance scales with the number of dispatchers, not the number of scripts.
+1. **Six action workflows.** One per concern. Maintenance scales with the number of concerns, not the number of scripts.
 2. **Workflows are thin dispatchers.** YAML answers when, where, with what permissions. All business logic lives in governed scripts under `operations/scripts/`. Inline JavaScript over 50 lines is a defect.
 3. **Local CLI equivalence on every dispatcher.** Any contributor (human or AI agent) can run any pipeline locally with `--dry-run`, with no CI trigger and no GitHub secrets, before pushing.
-4. **Detect, repair, escalate, verify.** Every detection routes to a response. No headless scans. No findings die in a log. Remediators support `--verify` so successful fixes survive and only regressed files revert.
-5. **Self-documenting.** The actions library, script registry, and decisions registry regenerate from data on every change. No manual documentation sync.
-6. **One taxonomy spine.** 7 types times 7 concerns times 8 pipeline tags. Every workflow and every script declares all three. The system is searchable, mappable, and predictable.
-7. **Bottom-up integrity.** Every script has a verified purpose, a known caller, an SME endorsement, and a place in the taxonomy. Orphan scripts are archived, not preserved out of caution.
+4. **Prevention at the earliest layer (D-GOV-08).** Every governance rule fires at the earliest possible layer. Detection at later layers is a fail-safe, never the primary mechanism. The five-layer chain – write time (PreToolUse hook), commit time (pre-commit), PR time (validator), post-merge (auto-repair), schedule (drift scan) – applies to every governed surface. A rule that only catches violations on schedule is a rule that lets violations land.
+5. **Detect, repair, escalate, verify.** Every detection routes to a response. No headless scans. No findings die in a log. Remediators support `--verify` so successful fixes survive and only regressed files revert.
+6. **Self-documenting.** The actions library, script registry, and decisions registry regenerate from data on every change. No manual documentation sync.
+7. **One taxonomy spine.** 7 types times 7 concerns times 8 pipeline tags. Every workflow and every script declares all three. The system is searchable, mappable, and predictable.
+8. **Bottom-up integrity.** Every script has a verified purpose, a known caller, an SME endorsement, and a place in the taxonomy. Orphan scripts are archived, not preserved out of caution.
+9. **Every folder is governed (D-GOV-08).** No commit of files that do not belong. Every folder hosting repo-influencing files declares an explicit allowlist enforced through the five-layer prevention chain.
+10. **Composable at every tier.** Every script (atomic, pipeline, meta) is independently runnable via `node` with `--dry-run`. A developer can call any pipeline directly without going through CI.
 
 If any of those properties is missing, the framework is not yet implemented.
 
----
+<CustomDivider />
 
 ## What the product needs to do
 
@@ -51,7 +54,7 @@ If any of those properties is missing, the framework is not yet implemented.
 
 Every workflow is justified by one or more of those obligations. A workflow that does not is removed.
 
----
+<CustomDivider />
 
 ## Pipeline architecture (D-ACT-08)
 
@@ -65,6 +68,475 @@ Every workflow YAML is a dispatcher. Workflows handle trigger, environment, perm
 | Script | All business logic, file I/O, exit codes, dry-run, verify, structured output | Yes (7-type taxonomy) |
 
 The type prefix in the filename identifies what the script does, not what the workflow does.
+
+### Four-tier composable dispatch architecture
+
+The repo orchestrates work through four tiers. Every script at every tier is independently runnable via `node` with `--dry-run`. A developer can call any pipeline, any meta-bundle, or any atomic directly without going through CI.
+
+| Tier | What it is | Count | Composability |
+|---|---|---|---|
+| 1. Action | Thin workflow YAML files in `.github/workflows/`. Fires on event, calls a meta dispatcher (or pipeline directly). | 6 (one per concern) | Triggered by GitHub events only – not runnable locally. |
+| 2. Meta dispatcher | Optional script that bundles related pipelines into a higher-level entry point (for example: "all health PR pipelines"). | About 20 (3 per concern average) | `node dispatch-{concern}-{verb}.js --dry-run` |
+| 3. Pipeline dispatcher | Owns one full detect-repair-verify-escalate cycle for one niche. Accepts `--mode pr\|scheduled\|manual`. | About 48 (one per niche) | `node dispatch-{niche}.js --mode pr --dry-run` |
+| 4. Atomic script | Single-purpose, type-pure (validator, audit, remediator, generator, integrator, or interface). | About 190 wired | `node {type}-{thing}.js --files {paths}` |
+
+**Naming rules:**
+
+- **Action** YAMLs: `dispatch-{concern}.yml`. Concern from the 7-enum.
+- **Meta dispatchers**: `dispatch-{concern}-{verb}.js`. Verb from the 11-enum and indicates which kind of pipelines are bundled (`check` for PR-time bundles, `scan` for scheduled bundles, `repair` for manual bundles, `generate` for post-merge bundles, `update` for scheduled integrator bundles, `react`/`intake`/`index` for event handlers).
+- **Pipeline dispatchers**: `dispatch-{niche}.js`. Verb `dispatch` because the pipeline orchestrates a full cycle (not a single verb's work). Niche is the second-level grouping inside a concern (`wcag`, `page-integrity`, `em-dashes`, `contract-addresses`, `folder-allowlist`, etc.).
+- **Atomic scripts**: verb-noun where verb matches the script's type (`check-*` for validators, `scan-*`/`audit-*` for audits, `repair-*` for remediators, `generate-*` for generators, `fetch-*`/`update-*` for integrators). One concern per atomic.
+
+**Type-purity** is enforced at the atomic and meta levels. Pipeline dispatchers are deliberately mixed-type because they implement a full cycle (a WCAG pipeline calls a validator, a remediator, and an audit – that is the cycle, not type-mixing). The dispatcher's verb is `dispatch` to signal this is intentional orchestration.
+
+**Composability worked example:**
+
+```bash icon="terminal"
+# Run one pipeline (full WCAG lifecycle)
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --dry-run
+
+# Run WCAG in scheduled mode (audit + repair + verify + escalate)
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --mode scheduled --dry-run
+
+# Run all health PR pipelines via meta
+node operations/scripts/dispatch/content/health/dispatch-health-check.js --dry-run
+
+# Run a single atomic validator (skip dispatchers)
+node operations/scripts/validators/content/health/check-wcag.js --files v2/page.mdx
+```
+
+The full structure across all 6 actions. Each action expands to its meta dispatchers; each meta expands to its pipeline dispatchers; each pipeline expands to **every atomic script needed for its full lifecycle** (detect + repair + verify + escalate). Atomics marked `(NEW – Phase 3)` do not exist yet and will be created during implementation. A pipeline is not composable if any of its lifecycle atomics is missing – every pipeline shown here is targeted at full closure.
+
+**The implicit verify step:** after a pipeline runs its repair atomics, it re-runs its detect atomics on the affected files. This is the same script invocation with `--verify` flag rather than a separate atomic. Only files that pass re-detection survive; regressed files revert.
+
+**The implicit escalate step:** every pipeline includes `lib/rolling-issue.js` to open, update, or close a rolling GitHub issue per residual finding. Auto-fixable findings never reach escalation; only what cannot be repaired by the cycle gets human attention.
+
+<Tree>
+  <Tree.Folder name="dispatch-health.yml (action)" defaultOpen>
+    <Tree.Folder name="dispatch-health-check.js (PR meta)">
+      <Tree.Folder name="dispatch-page-structure.js (pipeline)">
+        <Tree.File name="check-anchor-usage.js (validator – detect)" />
+        <Tree.File name="check-description-quality.js (validator – detect)" />
+        <Tree.File name="check-docs-path-sync.js (validator – detect)" />
+        <Tree.File name="check-double-headers.js (validator + --fix – detect/repair)" />
+        <Tree.File name="check-mdx-safe-markdown.js (validator – detect)" />
+        <Tree.File name="check-page-endings.js (validator + --fix – detect/repair)" />
+        <Tree.File name="enforce-generated-file-banners.js (validator + --fix – detect/repair)" />
+        <Tree.File name="lint-structure.js (validator – detect)" />
+        <Tree.File name="repair-mdx-safe-markdown.js (remediator – repair)" />
+        <Tree.File name="sync-docs-paths.js (remediator – repair, pairs check-docs-path-sync)" />
+        <Tree.File name="repair-anchor-usage.js (NEW – Phase 3, pairs check-anchor-usage)" />
+        <Tree.File name="repair-description-quality.js (NEW – Phase 3, advisory remediator)" />
+        <Tree.File name="repair-lint-structure.js (NEW – Phase 3, pairs lint-structure)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-page-rendering.js (pipeline)">
+        <Tree.File name="test-v2-pages.js (validator – detect)" />
+        <Tree.File name="check-broken-links.js (validator – detect)" />
+        <Tree.File name="repair-broken-links.js (NEW – Phase 3, for known-good URL replacements)" />
+        <Tree.File name="lib/rolling-issue.js (escalate – render errors typically human)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-page-integrity.js (pipeline – existing gold-standard chain)">
+        <Tree.File name="page-links-audit.js (audit – detect)" />
+        <Tree.File name="page-imports-audit.js (audit – detect)" />
+        <Tree.File name="repair-page-links.js (remediator – repair, --verify)" />
+        <Tree.File name="repair-page-imports.js (remediator – repair, --verify)" />
+        <Tree.File name="repair-mdx-safe-markdown.js (remediator – repair, --verify)" />
+        <Tree.File name="page-integrity-rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-wcag.js (pipeline)">
+        <Tree.File name="validators/content/health/check-wcag.js (validator – detect, PR mode)" />
+        <Tree.File name="audits/content/health/audit-wcag.js (audit – detect, scheduled mode)" />
+        <Tree.File name="remediators/content/health/repair-wcag.js (remediator – repair, --verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-content-quality.js (pipeline)">
+        <Tree.File name="docs-quality-and-freshness-audit.js (audit – detect)" />
+        <Tree.File name="repair-content-quality.js (NEW – Phase 3, for deterministic fixes)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-openapi-reference.js (pipeline)">
+        <Tree.File name="openapi-reference-audit.js (validator/audit – detect)" />
+        <Tree.File name="repair-openapi-reference.js (NEW – Phase 3, regen from spec source + open PR)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-health-scan.js (scheduled meta)">
+      <Tree.File name="(invokes same pipelines as PR meta, --mode scheduled – full write + verify + rolling issue)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-health-repair.js (manual meta)">
+      <Tree.File name="(invokes same pipelines, --mode manual – repair only with --verify, opens PR)" />
+    </Tree.Folder>
+  </Tree.Folder>
+
+  <Tree.Folder name="dispatch-brand.yml (action)">
+    <Tree.Folder name="dispatch-brand-check.js (PR meta)">
+      <Tree.Folder name="dispatch-em-dashes.js (pipeline)">
+        <Tree.File name="lint-em-dashes.js (validator – detect)" />
+        <Tree.File name="remediate-em-dashes.js (remediator – repair, --verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-spelling.js (pipeline)">
+        <Tree.File name="check-spelling.js (validator – detect, cspell wrapper)" />
+        <Tree.File name="repair-spelling.js (remediator – repair, --verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-proper-nouns.js (pipeline)">
+        <Tree.File name="check-proper-nouns.js (validator – detect)" />
+        <Tree.File name="repair-term-capitalisation.js (remediator – repair, Phase 3 wire)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-voice-register.js (pipeline)">
+        <Tree.File name="check-voice-register.js (validator – detect)" />
+        <Tree.File name="remediate-voice-violations.js (remediator – repair, Phase 3 wire)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-banned-words.js (pipeline)">
+        <Tree.File name="lint-banned-words.js (validator – detect)" />
+        <Tree.File name="repair-banned-words.js (NEW – Phase 3, for replaceable terms)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual – manual rewrite)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-brand-scan.js (scheduled meta)">
+      <Tree.Folder name="dispatch-style-tokens.js (pipeline)">
+        <Tree.File name="audit-component-styles.js (audit – detect)" />
+        <Tree.File name="repair-component-styles.js (remediator – repair, Phase 3 wire)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.File name="(em-dashes, spelling, proper-nouns, voice-register, banned-words pipelines also run --mode scheduled)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-brand-repair.js (manual meta)">
+      <Tree.File name="(invokes all brand pipelines, --mode manual – repair only with --verify, opens PR)" />
+    </Tree.Folder>
+  </Tree.Folder>
+
+  <Tree.Folder name="dispatch-copy.yml (action)">
+    <Tree.Folder name="dispatch-copy-check.js (PR meta)">
+      <Tree.Folder name="dispatch-canonical-sync.js (pipeline)">
+        <Tree.File name="check-mintlify-canonical-sync.js (validator – detect)" />
+        <Tree.File name="sync-mintlify-canonical-consumers.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-ownerless-language.js (pipeline)">
+        <Tree.File name="check-ownerless-language.js (NEW – Phase 3 validator)" />
+        <Tree.File name="repair-ownerless-language.js (remediator – repair, --verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-copy-update.js (scheduled meta – integrators)">
+      <Tree.Folder name="dispatch-social-feeds.js (pipeline, matrix per source)">
+        <Tree.File name="fetch-discord-announcements.js (integrator – fetch)" />
+        <Tree.File name="fetch-forum-data.js (integrator – fetch)" />
+        <Tree.File name="fetch-ghost-blog-data.js (integrator – fetch)" />
+        <Tree.File name="fetch-github-discussions.js (integrator – fetch)" />
+        <Tree.File name="fetch-rss-blog-data.js (integrator – fetch)" />
+        <Tree.File name="fetch-youtube-data.js (integrator – fetch)" />
+        <Tree.File name="validate-social-feed-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate fetch failure or stale data)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-changelogs.js (pipeline)">
+        <Tree.File name="generate-changelog.js (integrator – fetch)" />
+        <Tree.File name="validate-changelog-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-translations.js (pipeline)">
+        <Tree.File name="translate-docs.js (integrator – fetch)" />
+        <Tree.File name="check-translation-freshness.js (validator – verify)" />
+        <Tree.File name="test-mintlify-version-language-toggle.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate stale translations)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-showcase.js (pipeline)">
+        <Tree.File name="project-showcase-sync.js (integrator – fetch)" />
+        <Tree.File name="validate-showcase-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-copy-repair.js (manual meta)">
+      <Tree.File name="(invokes canonical-sync + ownerless-language pipelines, --mode manual, opens PR)" />
+    </Tree.Folder>
+  </Tree.Folder>
+
+  <Tree.Folder name="dispatch-discoverability.yml (action)">
+    <Tree.Folder name="dispatch-discoverability-check.js (PR meta)">
+      <Tree.Folder name="dispatch-ai-sitemap.js (pipeline)">
+        <Tree.File name="check-ai-sitemap.js (validator – detect drift between committed and generator output)" />
+        <Tree.File name="generate-ai-sitemap.js --check (generator – drift detection)" />
+        <Tree.File name="lib/rolling-issue.js (escalate – PR fail on drift)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-companions.js (pipeline)">
+        <Tree.File name="check-companion-manifest.js (validator – detect)" />
+        <Tree.File name="generate-glossary-companions.js --check (generator – drift)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-llms-files.js (pipeline)">
+        <Tree.File name="check-llms-files.js (validator – detect)" />
+        <Tree.File name="generate-llms-files.js --check (generator – drift)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-og-images.js (pipeline)">
+        <Tree.File name="check-og-images.js (NEW – Phase 3 validator, verify all v2 pages have OG image)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-discoverability-generate.js (post-merge meta)">
+      <Tree.Folder name="dispatch-ai-sitemap.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-ai-sitemap.js (generator – write)" />
+        <Tree.File name="check-ai-sitemap.js (validator – verify after generation)" />
+        <Tree.File name="lib/rolling-issue.js (escalate if regen fails)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-companions.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-glossary-companions.js (generator – write)" />
+        <Tree.File name="check-companion-manifest.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-llms-files.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-llms-files.js (generator – write)" />
+        <Tree.File name="check-llms-files.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-og-images.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-og-images.js (generator – write, Puppeteer)" />
+        <Tree.File name="check-og-images.js (NEW – Phase 3 validator, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate generation failure)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-discoverability-repair.js (manual meta)">
+      <Tree.Folder name="dispatch-seo-metadata.js (pipeline)">
+        <Tree.File name="audit-seo-metadata.js (NEW – Phase 3 audit, detect missing/stale SEO)" />
+        <Tree.File name="repair-seo-metadata.js (remediator – repair, --verify; Phase 3: add commit step)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+    </Tree.Folder>
+  </Tree.Folder>
+
+  <Tree.Folder name="dispatch-maintenance.yml (action)">
+    <Tree.Folder name="dispatch-maintenance-check.js (PR meta)">
+      <Tree.Folder name="dispatch-docs-index.js (pipeline)">
+        <Tree.File name="check-docs-index.js (validator – detect drift)" />
+        <Tree.File name="generate-docs-index.js --check (generator – drift detection)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-catalogs.js (pipeline)">
+        <Tree.File name="check-docs-guide-catalogs.js (validator – detect)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-component-registry.js (pipeline)">
+        <Tree.File name="check-component-health.js (validator – detect)" />
+        <Tree.File name="check-component-imports.js (validator – detect)" />
+        <Tree.File name="check-component-css.js (validator – detect)" />
+        <Tree.File name="check-naming-conventions.js (validator – detect)" />
+        <Tree.File name="check-component-pattern-compliance.js (validator – detect)" />
+        <Tree.File name="component-layout-governance.js (validator – detect)" />
+        <Tree.File name="repair-component-imports.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="repair-component-css.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="repair-naming-conventions.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="repair-component-pattern-compliance.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="repair-component-layout.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-maintenance-generate.js (post-merge meta)">
+      <Tree.Folder name="dispatch-docs-index.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-docs-index.js (generator – write)" />
+        <Tree.File name="check-docs-index.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-catalogs.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-docs-guide-indexes.js (generator – write)" />
+        <Tree.File name="generate-docs-guide-pages-index.js (generator – write)" />
+        <Tree.File name="generate-docs-guide-components-index.js (generator – write)" />
+        <Tree.File name="check-docs-guide-catalogs.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-component-registry.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-component-registry.js (generator – write)" />
+        <Tree.File name="(re-run PR-mode validators to verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-sdk-clients.js --mode post-merge (pipeline)">
+        <Tree.File name="generate-sdk-clients.sh (generator – Speakeasy CLI wrapper)" />
+        <Tree.File name="validate-sdk-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-maintenance-update.js (scheduled meta – integrators)">
+      <Tree.Folder name="dispatch-contract-addresses.js (pipeline)">
+        <Tree.File name="fetch-contract-addresses.js (integrator – fetch)" />
+        <Tree.File name="enrich-contract-data.js (integrator – fetch)" />
+        <Tree.File name="(on-chain verification built into fetch)" />
+        <Tree.File name="lib/rolling-issue.js (escalate incident)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-contract-shadow.js (pipeline)">
+        <Tree.File name="fetch-contract-addresses.js --shadow (integrator – fetch)" />
+        <Tree.File name="compare-shadow-to-production.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate divergence)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-release-version.js (pipeline)">
+        <Tree.File name="fetch-livepeer-release.js (integrator – fetch)" />
+        <Tree.File name="validate-release-version.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-large-assets.js (pipeline)">
+        <Tree.File name="sync-large-assets-to-branch.js (integrator – fetch)" />
+        <Tree.File name="(git verification built-in)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-config-flags.js (pipeline)">
+        <Tree.File name="fetch-config-flags.js (integrator – fetch)" />
+        <Tree.File name="validate-config-flags-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-exchanges-data.js (pipeline)">
+        <Tree.File name="fetch-exchanges-data.js (integrator – fetch)" />
+        <Tree.File name="validate-exchanges-schema.js (NEW – Phase 3, verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+  </Tree.Folder>
+
+  <Tree.Folder name="dispatch-governance.yml (action)">
+    <Tree.Folder name="dispatch-governance-check.js (PR meta)">
+      <Tree.Folder name="dispatch-folder-allowlist.js (pipeline – D-GOV-08)">
+        <Tree.File name="check-folder-allowlist.js (NEW – Phase 3 validator)" />
+        <Tree.File name="repair-folder-allowlist.js (NEW – Phase 3 remediator, moves drift to x-archive)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-governance-map.js (pipeline)">
+        <Tree.File name="check-governance-markers.js (validator – detect)" />
+        <Tree.File name="repair-governance-artifacts.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-workflow-governance.js (pipeline)">
+        <Tree.File name="check-workflow-governance.js (validator – detect)" />
+        <Tree.File name="add-workflow-governance-headers.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-jsdoc-headers.js (pipeline)">
+        <Tree.File name="check-jsdoc-headers.js (validator – detect)" />
+        <Tree.File name="update-jsdoc-headers.js (remediator – repair)" />
+        <Tree.File name="add-framework-headers.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-new-file-governance.js (pipeline)">
+        <Tree.File name="check-new-file-governance.js (validator – detect)" />
+        <Tree.File name="assign-purpose-metadata.js (remediator – repair)" />
+        <Tree.File name="normalise-frontmatter-keys.js (remediator – repair)" />
+        <Tree.File name="add-pagetype-mechanical.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual – human classification)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-codex-compliance.js (pipeline)">
+        <Tree.File name="validate-codex-task-contract.js (validator – detect)" />
+        <Tree.File name="repair-codex-task-contract.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-script-locations.js (pipeline)">
+        <Tree.File name="check-script-locations.js (validator – detect)" />
+        <Tree.File name="repair-script-locations.js (NEW – Phase 3 remediator, auto-move via git mv)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-script-inventory.js (pipeline)">
+        <Tree.File name="audit-script-inventory.js (audit – detect)" />
+        <Tree.File name="repair-script-inventory.js (remediator – repair)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-scan.js (scheduled meta)">
+      <Tree.Folder name="dispatch-folder-allowlist.js --mode scheduled (pipeline)">
+        <Tree.File name="audit-folder-allowlist.js (NEW – Phase 3 audit)" />
+        <Tree.File name="repair-folder-allowlist.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-workspace-retention.js (pipeline)">
+        <Tree.File name="audit-tasks-folders.js (audit – detect)" />
+        <Tree.File name="generate-v2-folder-governance-cleanup-matrix.js (audit – detect)" />
+        <Tree.File name="quarantine-manager.js (remediator – repair, Phase 3 wire)" />
+        <Tree.File name="repair-workspace-retention.js (NEW – Phase 3 remediator)" />
+        <Tree.File name="lib/rolling-issue.js (escalate residual)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-pipelines.js (pipeline – existing weekly orchestrator)">
+        <Tree.File name="governance-pipeline.js (orchestrator atomic, owns full scan+repair+verify cycle internally)" />
+      </Tree.Folder>
+      <Tree.File name="(governance-map, script-inventory, jsdoc, workflow-governance pipelines also run --mode scheduled)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-sync.js (post-merge meta – governance state repair)">
+      <Tree.Folder name="dispatch-root-governance.js (pipeline)">
+        <Tree.File name="check-root-governance-sync.js (validator – detect drift)" />
+        <Tree.File name="generate-root-governance-artifacts.js (generator – write)" />
+        <Tree.File name="generate-repo-governance-status.js (generator – write)" />
+        <Tree.File name="check-root-governance-sync.js (validator – verify)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.File name="(folder-allowlist, governance-map pipelines also run --mode post-merge for auto-archive of drift)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-self-doc.js (post-merge meta – regenerates docs)">
+      <Tree.Folder name="dispatch-action-docs.js (pipeline)">
+        <Tree.File name="generate-action-pages.js (generator – write actions-audit.json + per-workflow MDX)" />
+        <Tree.File name="check-actions-library.js (NEW – Phase 3 validator, verify catalog integrity)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+      <Tree.Folder name="dispatch-script-registry.js (pipeline – Phase 3 wire)">
+        <Tree.File name="generate-script-registry.js (generator – write)" />
+        <Tree.File name="check-script-registry.js (NEW – Phase 3 validator, verify coverage)" />
+        <Tree.File name="lib/rolling-issue.js (escalate)" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-react.js (event-driven meta – PR/issue events, no detect-repair cycle)">
+      <Tree.File name="issue-auto-label.js (interface – route on issue events)" />
+      <Tree.File name="assign-reviewers.js (interface – route on PR open)" />
+      <Tree.File name="close-linked-issues.js (interface – route on PR merge)" />
+      <Tree.File name="notify-linked-issues.js (interface – route on PR open)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-intake.js (external-event meta – no detect-repair cycle)">
+      <Tree.File name="discord-issue-intake.js (interface – route external webhook)" />
+    </Tree.Folder>
+    <Tree.Folder name="dispatch-governance-index.js (issue index meta – scheduled + on issue events)">
+      <Tree.File name="issue-indexer.js (interface – maintains rolling docs-v2 issue index)" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+
+**Phase 3 NEW atomic scripts** (created during implementation; this Tree commits to the full closure of every pipeline):
+
+| Pipeline | New atomic | Type | Purpose |
+|---|---|---|---|
+| dispatch-page-structure | `repair-anchor-usage.js` | remediator | Pairs with check-anchor-usage |
+| dispatch-page-structure | `repair-description-quality.js` | remediator | Pairs with check-description-quality |
+| dispatch-page-structure | `repair-lint-structure.js` | remediator | Pairs with lint-structure |
+| dispatch-page-rendering | `check-broken-links.js`, `repair-broken-links.js` | validator + remediator | Replace mintlify integration with first-party atomic |
+| dispatch-content-quality | `repair-content-quality.js` | remediator | For deterministic content fixes |
+| dispatch-openapi-reference | `repair-openapi-reference.js` | remediator | Regenerate from spec source, open PR |
+| dispatch-banned-words | `repair-banned-words.js` | remediator | For replaceable terms |
+| dispatch-ownerless-language | `check-ownerless-language.js` | validator | Currently only repair atomic exists |
+| dispatch-social-feeds | `validate-social-feed-schema.js` | validator | Schema verification on fetched data |
+| dispatch-changelogs | `validate-changelog-schema.js` | validator | Schema verification |
+| dispatch-showcase | `validate-showcase-schema.js` | validator | Schema verification |
+| dispatch-og-images | `check-og-images.js` | validator | Verify all v2 pages have OG image |
+| dispatch-seo-metadata | `audit-seo-metadata.js` | audit | Detect missing/stale SEO metadata |
+| dispatch-component-registry | `repair-component-imports.js`, `repair-component-css.js`, `repair-naming-conventions.js`, `repair-component-pattern-compliance.js`, `repair-component-layout.js` | remediators | Pairs with component validators |
+| dispatch-sdk-clients | `validate-sdk-schema.js` | validator | Schema verification |
+| dispatch-contract-shadow | `compare-shadow-to-production.js` | validator | Shadow-vs-production diff |
+| dispatch-release-version | `validate-release-version.js` | validator | Schema/format check |
+| dispatch-config-flags | `validate-config-flags-schema.js` | validator | Schema verification |
+| dispatch-exchanges-data | `validate-exchanges-schema.js` | validator | Schema verification |
+| dispatch-folder-allowlist | `check-folder-allowlist.js`, `audit-folder-allowlist.js`, `repair-folder-allowlist.js` | validator + audit + remediator | Full triplet per D-GOV-08 |
+| dispatch-codex-compliance | `repair-codex-task-contract.js` | remediator | For deterministic contract fixes |
+| dispatch-script-locations | `repair-script-locations.js` | remediator | Auto-move via git mv |
+| dispatch-workspace-retention | `repair-workspace-retention.js` | remediator | Auto-archive drift |
+| dispatch-action-docs | `check-actions-library.js` | validator | Verify catalog-index integrity |
+| dispatch-script-registry | `check-script-registry.js` | validator | Verify registry coverage |
+
+About 30 new atomic scripts to build in Phase 3 to close every pipeline's lifecycle.
+
+Layer-1 hooks (Claude Code PreToolUse / PostToolUse / SessionStart) are atomic scripts invoked outside the CI dispatcher tree. They live in `operations/scripts/dispatch/governance/` and are wired via `.claude/settings.json`. The CI dispatchers above never call them; they run in the local editor session before code reaches git.
+
+What the PR sees with this architecture:
+
+- PR touching `v2/*.mdx` triggers up to 6 action workflows (one per concern, filtered by `paths:`)
+- Each workflow runs ONE job per relevant trigger, with sequential steps inside calling pipeline dispatchers
+- Each job appears as ONE PR check named "Concern · PR Check" (for example, "Health · PR Check")
+- A failed step in any job fails the entire concern check with a clear log entry showing which pipeline dispatcher caught what
+
+This delivers six clear PR checks for full coverage, replacing the current 24-plus checks. Each pipeline dispatcher remains independently runnable locally via `node operations/scripts/dispatch/{content|governance}/{concern}/dispatch-{niche}.js --dry-run`.
 
 ### Pipeline patterns
 
@@ -109,7 +581,36 @@ Every dispatcher has a matching local script that can run the same pipeline with
 
 This makes the repo testable by any contributor, anywhere, before pushing.
 
----
+### Prevention at the earliest layer (D-GOV-08)
+
+Every governance rule fires at the earliest possible layer. Detection at later layers is a fail-safe, not the primary mechanism. A rule that only catches violations on schedule is a rule that lets violations land.
+
+The five enforcement layers, from earliest to latest:
+
+| Layer | Trigger | Owner | What it does |
+|---|---|---|---|
+| 1. Write time | Claude PreToolUse hook | `pre-tool-guard.js` and siblings in `operations/scripts/dispatch/governance/` | Blocks Edit/Write before the file lands. Allowlist, render gate, em-dash sanitiser, frontmatter sanitiser. |
+| 2. Commit time | `.githooks/pre-commit` | Pre-commit hook | Rejects unauthorised paths and structural violations in the staged diff. Works for contributors not running Claude Code. |
+| 3. PR time | `dispatch-{concern}.yml` PR job → `dispatch-{concern}-check.js` meta | PR validator pipelines | Server-side check on every PR. Fails the check on violations. Posts advisory comment for soft gates. |
+| 4. Post-merge | `dispatch-{concern}.yml` post-merge job → `dispatch-{concern}-sync.js` or `dispatch-{concern}-generate.js` meta | Post-merge remediators and generators | If something landed despite layers 1-3 (direct push, hook bypassed), auto-archive or auto-fix on merge. |
+| 5. Schedule | `dispatch-{concern}.yml` scheduled job → `dispatch-{concern}-scan.js` meta | Scheduled audit pipelines | Last-resort drift scan with rolling issue. Fail-safe only – anything caught here represents an upstream gate that failed. |
+
+Every dispatcher this framework targets must declare which layer it serves and confirm that earlier layers exist for the same rule. A PR validator without a write-time hook is acceptable only when the violation cannot be detected before the file is written. A scheduled scan without a PR validator is a governance gap, not a design.
+
+### Every folder is governed (D-GOV-08)
+
+No commit of files that do not belong. Every folder hosting repo-influencing files declares an explicit allowlist enforced through the five-layer prevention chain above.
+
+Allowlist rules:
+
+- Explicit, closed list (exact paths or globs)
+- Stored at `{folder}/.allowlist` for portability
+- One entry per line, documented purpose per entry
+- Registered in `operations/governance/config/repo-governance-surfaces.json` (D-ACT-10)
+
+Each governed folder has the full triplet wired: `dispatch-folder-allowlist.js --mode pr` (layer 3), `--mode post-merge` (layer 4), `--mode scheduled` (layer 5), plus the `pre-tool-guard.js` extension for layer 1 and the pre-commit gate for layer 2. The allowlist files themselves are governed by the same chain – they are the source of truth, not generated.
+
+<CustomDivider />
 
 ## Taxonomy
 
@@ -162,7 +663,9 @@ The verb is one of a closed enum of 11: `update`, `generate`, `check`, `scan`, `
 
 The name segment describes what the workflow does, not how it is implemented. If someone unfamiliar with the repo cannot guess the purpose from the filename, the name is bad.
 
----
+In the four-tier architecture, action workflows use `dispatch-{concern}.yml` (verb is `dispatch`, name is the concern). Pre-existing single-script workflows that have not yet been consolidated may still use type-prefixed names (e.g. `integrator-maintenance-update-contract-addresses.yml`) until they fold into their concern's action.
+
+<CustomDivider />
 
 ## Required standards
 
@@ -182,13 +685,13 @@ Every active workflow meets these. Violations block the PR via `validator-govern
 | Local CLI equivalent documented in actions-library | D-GOV-07 | manual review |
 | Required labels read from `.github/config/labels.json` | D-GOV-04 | manual review |
 
----
+<CustomDivider />
 
 ## Self-documenting pipeline
 
 The actions library at `.github/workspace/actions-library/` regenerates from `actions-audit.json` whenever workflows change. No manual sync.
 
-```
+``` icon="terminal"
 Workflow change (push to docs-v2)
   -> generator-governance-generate-action-docs.yml fires
   -> Scans .github/workflows/*.yml
@@ -200,11 +703,11 @@ Workflow change (push to docs-v2)
 
 The `actions-audit.json` registry is the source of truth. Documentation is derived. Editing the .mdx pages directly is wrong.
 
----
+<CustomDivider />
 
 ## Locked decisions
 
-17 decisions constrain the framework. Read the full text in `.github/workspace/decisions-log.mdx` and `.github/workspace/design/governance/design-overview.md`.
+18 decisions constrain the framework. Read the full text in `.github/workspace/decisions-log.mdx` and `.github/workspace/design/governance/design-overview.md`.
 
 | ID | Topic | Effect |
 |---|---|---|
@@ -225,27 +728,28 @@ The `actions-audit.json` registry is the source of truth. Documentation is deriv
 | D-GOV-05 | Advisory before hard gate | New enforcement starts at P3 |
 | D-GOV-06 | Script framework aligned to actions framework | 7 types, 7 concerns |
 | D-GOV-07 | Workflow dispatchers have local CLI equivalents | Testable without CI |
+| D-GOV-08 | Every folder is governed; prevention at earliest layer | Five-layer chain, no commit of files that do not belong |
 
----
+<CustomDivider />
 
 ## What this framework supersedes
 
 | Doc | Status | Authority |
 |---|---|---|
-| `.github/workspace/design/governance/consolidated-architecture.md` | **Superseded** | Historical 47-workflow target. Current target is ~10. Kept for design history. |
+| `.github/workspace/design/governance/consolidated-architecture.md` | **Superseded** | Historical 47-workflow target. Current target is 6 actions + composable dispatcher tiers. Kept for design history. |
 | `.github/workspace/framework-canonical.md` | Working spec | Deeper internal detail. Synced from this published doc. |
 | `.github/workspace/outcomes.md` | Reference only | Visual maps and Mermaid diagrams. Snapshot in time. |
 
 The current consolidation execution plan lives at `/Users/alisonhaire/.claude/plans/soft-gliding-falcon.md` for the active session. When the plan completes, its outcomes fold into this framework and the plan is archived.
 
----
+<CustomDivider />
 
 ## Canonical sources
 
 | Source | Role |
 |---|---|
 | This page | Published canonical framework. Read before any workflow change. |
-| `.github/workspace/decisions-log.mdx` | Locked decisions (D-ACT-01..10, D-GOV-01..07). Edit only via new decision that explicitly supersedes. |
+| `.github/workspace/decisions-log.mdx` | Locked decisions (D-ACT-01..10, D-GOV-01..08). Edit only via new decision that explicitly supersedes. |
 | `.github/workspace/framework-canonical.md` | Internal working spec. Deeper pattern detail. |
 | `.github/workspace/actions-library/actions-audit.json` | Workflow registry. Source for auto-generated docs. |
 | `.github/workspace/actions-library/` | Auto-generated per-workflow documentation. Read, do not edit. |
@@ -253,20 +757,19 @@ The current consolidation execution plan lives at `/Users/alisonhaire/.claude/pl
 | `docs-guide/policies/governance-index.mdx` | Index of all governed surfaces. Entry point. |
 | `operations/governance/config/repo-governance-surfaces.json` | Unified governance registry. Single source for governed surfaces. |
 
----
+<CustomDivider />
 
 ## How to use this framework
 
 **Before creating a workflow:**
 
-1. Confirm the work cannot be done by an existing dispatcher (consolidate first)
-2. Pick the type, concern, and pipeline tag
-3. Pick a verb from the closed enum and write a filename per D-ACT-04
-4. Write the business logic as a governed script under `operations/scripts/` with 11-tag JSDoc
-5. Write the dispatcher YAML (under 50 lines of inline logic; everything else in the script)
-6. Add `--dry-run` and `--verify` to the script per D-GOV-07
-7. Register the workflow in `actions-audit.json`
-8. Open a PR. `validator-governance-check-workflow-governance.yml` confirms compliance.
+1. Confirm the work cannot be done by an existing dispatcher (consolidate first – there are only 6 actions, one per concern)
+2. Identify the concern, the niche, and the trigger pattern
+3. Add or extend a pipeline dispatcher (`dispatch-{niche}.js`) under the right concern folder
+4. Add the atomic scripts as needed under the matching type folders, each with 11-tag JSDoc
+5. Add `--dry-run` and `--verify` to every script per D-GOV-07
+6. Register the workflow in `actions-audit.json`
+7. Open a PR. `validator-governance-check-workflow-governance.yml` confirms compliance.
 
 **Before renaming or removing a workflow:**
 

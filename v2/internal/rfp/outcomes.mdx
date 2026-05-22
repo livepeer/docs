@@ -1,22 +1,77 @@
 ---
-title: Outcomes
-sidebarTitle: Outcomes
-description: Outcomes of the Livepeer Documentation Restructure RFP
-lifecycleStage: discover
-complexity: intermediate
-purpose: operations
-pageType: guide
+title: "Outcomes"
+sidebarTitle: "Outcomes"
+description: "Outcomes delivered against the Livepeer Documentation Restructure RFP. Summary view; the full audited deliverable matrix lives in the RFP report."
+lifecycleStage: "discover"
+complexity: "intermediate"
+purpose: "operations"
+pageType: "guide"
 keywords:
   - livepeer
   - internal
   - rfp
   - outcomes
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-audience: internal
-lastVerified: 2026-03-17T00:00:00.000Z
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+audience: "internal"
+lastVerified: "2026-05-22"
 ---
 
+This page is the outcomes summary. The full audited deliverable matrix lives in [RFP Report](/v2/internal/rfp/report) and the long-form work audit lives at `v2/internal/rfp/reports/livepeer-docs-v2-report.md`.
+
+## Headline outcomes
+
+| Outcome | State as of 2026-05-22 | Evidence |
+| --- | --- | --- |
+| v2 documentation site live on Mintlify | Delivered | docs.livepeer.org/v2, deployed from `docs-v2` |
+| v1 preserved with version switcher and redirects | Delivered | docs.livepeer.org/v1 |
+| Stakeholder-focused information architecture | Delivered | 10 top-level tabs (home, about, community, Delegators, developers, Gateways, internal, Orchestrators, resources, solutions); persona-led navigation |
+| AI-ready distribution layer | Delivered with maintenance gaps | `llms.txt`, AI-enriched sitemap, hosted MCP, Mintlify chat assistant, 6 native agent adapters |
+| 4-persona maintenance workflow | Substantially delivered, ongoing refinement | Style guide, contribution workflow, agent governance, decision registry, CODEOWNERS, 8 issue templates |
+| Documentation-as-infrastructure operating model | Delivered beyond original scope | Self-remediating ownerless governance spine; manifest-driven validators, remediators, generators, audits |
+| AI skill system for contributors and agents | Delivered (post-handover) | 34 canonical `SKILL.md` workflows under `ai-tools/ai-skills/` |
+| Component library, templates, style governance | Delivered | 132 component registry exports, 30+ templates, `--lp-*` design tokens, styles remediation 3,986 → 0 non-mermaid violations |
+| Automation pipeline | Delivered (post-handover, ongoing refinement) | 11 active workflows (4-tier composable architecture, May 2026 refactor), 253 operations scripts |
+| Contracts pipeline (gold-standard data integration) | Delivered | Daily cron + shadow verification, bytecode auth against Arbitrum + Ethereum, incident issue templates |
+| Local contributor toolchain | Delivered | `lpd` CLI, `.githooks/`, scoped Mintlify preview, 4 VS Code extensions |
+
+## Outcomes by RFP deliverable
+
+For the per-deliverable status grid (Completed / Partial / Blocked / Cancelled) with evidence and notes, see the `StyledTable` in [RFP Report](/v2/internal/rfp/report). The mapping below summarises the current state per deliverable bucket:
+
+1. **Documentation Strategy** – complete. Persona-first IA, deprecation matrix, platform evaluation (14 platforms), Mintlify selection.
+2. **Content Rewrites** – complete in shape, refinement ongoing. All 10 tabs published. Gateways verify, monitor, and connect threads built or shipping. v2 cleanup backlog acknowledged and tracked in `docs-guide/features/gap-analysis.mdx`.
+3. **v1 Live with redirects + SEO/AEO/WCAG/analytics/i18n** – mostly complete. v1 + version switcher live, SEO generator expanded, AEO partial (no CI gate yet), WCAG audited and partially repaired, analytics partial, i18n switcher live with no published translations.
+4. **Public maintenance workflow** – substantially advanced beyond proposal. Style guide extended, contribution workflow plus agent governance plus native adapters, ownerless governance formalised, CODEOWNERS preserved, decision registry added, 8 issue templates with auto-label + auto-assign.
+
+## Outcomes outside the original RFP scope
+
+Work delivered after handover (February 2026) that the original RFP did not commission:
+
+- Ownerless governance spine: 13 frameworks, 18 policies, 5 standards, decisions registry, ownerless surface manifest (8 contracted surfaces).
+- 34 canonical AI skills covering session lifecycle, content pipelines, audits, and governance creation.
+- Native agent adapters extended to Codex and Augment alongside Claude, Cursor, Windsurf, and Copilot.
+- Cross-agent packager + portable skill exports.
+- Governance map generator and weekly repair workflow.
+- 11-tag script JSDoc standard and 7-tag component JSDoc standard.
+- Styles governance pipeline with `--verify` regression check.
+- UK spelling and em-dash remediators with zone-aware frontmatter handling.
+- `/propagate` skill and move-detect hook for renames.
+- Asset Pipeline (PR #851) with 3-layer verification gate.
+- Changelog Pipeline (24 registered targets, 19 resource pages).
+- Zombie-process prevention (SessionStart + SessionEnd + UserPromptSubmit hooks).
+- Docs Library at `docs-guide/docs-library/index.mdx` with pipeline concern pages.
+
+## Known open gaps
+
+For the actionable backlog with file paths and acceptance criteria, see [Gap Analysis](/docs-guide/features/gap-analysis). The largest open items as of 2026-05-22:
+
+- 218 operations scripts pending the 11-tag JSDoc backfill.
+- 307-row v2 folder cleanup matrix (235 `_workspace`, 72 `x-deprecated` candidates).
+- OpenAPI fetcher covers 2 of 5 specs and has no scheduled workflow.
+- Manual-only generators: `generate-og-images.js`, `generate-seo.js` (P0 flags from 2026-03-30).
+- `update-contract-addresses.yml` has never been dispatched on the default branch (P0 flag from 2026-03-31).
+- Luma social feed has not refreshed since 2026-03-18.

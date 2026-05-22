@@ -1,13 +1,13 @@
 # SME Audit: `health` concern
 
-> 37 scripts | Generated 2026-05-17
+&gt; 40 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`
 
----
+<CustomDivider />
 
-## audit (9)
+## audit (10)
 
 ### niche: `health` (2)
 
@@ -18,7 +18,7 @@
 - **Description:** Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
 - **Workflow callers:** **ORPHAN — no caller**
 - **Capabilities:** `--dry-run` `--files`
-- **Last modified:** 2026-04-09
+- **Last modified:** 2026-05-18
 - **Mode:** scan
 - **Pipeline:** manual
 - **Usage:** `node operations/scripts/audits/content/health/page-imports-audit.js [--staged|--scope routable-v2|repo|--files <paths>|--tab <tab>] [--strict] [--output-dir <dir>]`
@@ -27,7 +27,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `page-links-audit.js`
 
@@ -45,7 +45,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `quality` (5)
 
@@ -65,7 +65,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `audit-media-assets.js`
 
@@ -83,7 +83,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `audit-python.py`
 
@@ -101,7 +101,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `audit-v2-usefulness.js`
 
@@ -119,7 +119,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `docs-quality-and-freshness-audit.js`
 
@@ -137,7 +137,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `veracity` (2)
 
@@ -157,7 +157,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `docs-research-adjudication.js`
 
@@ -175,9 +175,29 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
-## validator (14)
+### niche: `wcag` (1)
+
+#### `audit-wcag.js`
+
+- **Path:** `operations/scripts/audits/content/health/audit-wcag.js`
+- **Purpose:** Scheduled WCAG accessibility scan across all v2 pages
+- **Description:** Pattern D scan-report-act. Runs the WCAG audit engine in --no-fix --full mode, writes report to workspace/reports/health/wcag/, and emits a structured JSON summary on stdout so the workflow can route findings (rolling issue create/update/close).
+- **Workflow callers:** `audit-health-scan-wcag.yml`
+- **Capabilities:** (no flags)
+- **Last modified:** never-committed
+- **Mode:** scan
+- **Pipeline:** P5 (scheduled, advisory)
+- **Usage:** `node operations/scripts/audits/content/health/audit-wcag.js [--fail-impact minor|moderate|serious|critical] [--max-pages <n>] [--json]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+<CustomDivider />
+
+## validator (15)
 
 ### niche: `structure` (13)
 
@@ -198,7 +218,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-description-quality.js`
 
@@ -217,7 +237,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-docs-path-sync.js`
 
@@ -236,7 +256,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-double-headers.js`
 
@@ -255,7 +275,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-mdx-safe-markdown.js`
 
@@ -273,7 +293,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-page-endings.js`
 
@@ -292,7 +312,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `enforce-generated-file-banners.js`
 
@@ -310,7 +330,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `lint-structure.js`
 
@@ -329,7 +349,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `regression-bisect.js`
 
@@ -347,7 +367,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `sweep-console-errors.js`
 
@@ -365,7 +385,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `sweep-delta-report.js`
 
@@ -383,7 +403,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `test-v2-pages.js`
 
@@ -401,7 +421,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `verify-all-pages.js`
 
@@ -419,7 +439,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `veracity` (1)
 
@@ -439,9 +459,29 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
-## remediator (9)
+### niche: `wcag` (1)
+
+#### `check-wcag.js`
+
+- **Path:** `operations/scripts/validators/content/health/check-wcag.js`
+- **Purpose:** WCAG accessibility validation for changed v2 MDX pages
+- **Description:** PR-time advisory validator. Wraps the WCAG audit engine in --no-fix mode and reports blocking findings (impact level configurable). Exits non-zero if blocking violations are found.
+- **Workflow callers:** `validator-health-check-wcag.yml`
+- **Capabilities:** `--files`
+- **Last modified:** never-committed
+- **Mode:** check
+- **Pipeline:** P3 (PR advisory)
+- **Usage:** `node operations/scripts/validators/content/health/check-wcag.js [--files <path[,path...]>] [--staged] [--full] [--fail-impact minor|moderate|serious|critical] [--json]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+<CustomDivider />
+
+## remediator (10)
 
 ### niche: `repair` (9)
 
@@ -461,7 +501,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `quarantine-manager.js`
 
@@ -479,7 +519,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-mdx-safe-markdown.js`
 
@@ -497,7 +537,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-page-imports.js`
 
@@ -515,7 +555,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-page-links.js`
 
@@ -533,7 +573,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-relative-page-hrefs.js`
 
@@ -551,7 +591,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-spelling.js`
 
@@ -569,7 +609,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `sync-docs-paths.js`
 
@@ -587,7 +627,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `sync-mintlify-canonical-consumers.js`
 
@@ -605,7 +645,28 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
+
+### niche: `wcag` (1)
+
+#### `repair-wcag.js`
+
+- **Path:** `operations/scripts/remediators/content/health/repair-wcag.js`
+- **Purpose:** Apply deterministic WCAG accessibility fixes to v2 MDX pages
+- **Description:** Pattern E remediator. Wraps the WCAG audit engine's --fix mode to apply safe accessibility autofixes (heading hierarchy, alt text, contrast tokens). Supports --dry-run preview, --verify per-file revert on regression, and --files scoping. Paired with check-wcag in remediation-verify-registry.
+- **Workflow callers:** `remediator-health-repair-wcag.yml`
+- **Script callers:** 1 other script(s)
+- **Capabilities:** `--dry-run` `--verify` `--files`
+- **Last modified:** never-committed
+- **Mode:** repair
+- **Pipeline:** P6 (scheduled self-heal)
+- **Usage:** `node operations/scripts/remediators/content/health/repair-wcag.js [--dry-run|--write] [--verify] [--files <path[,path...]>] [--staged] [--full] [--fail-impact <level>]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+<CustomDivider />
 
 ## dispatch (5)
 
@@ -628,7 +689,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `page-integrity-rolling-issue.js`
 
@@ -646,7 +707,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `veracity` (3)
 
@@ -666,7 +727,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `docs-research-packet.js`
 
@@ -684,7 +745,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `orchestrator-guides-research-review.js`
 
@@ -702,7 +763,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 
 ## Orphan summary (15)

@@ -1,23 +1,172 @@
 ---
-title: "Trickle protocol"
-sidebarTitle: "Trickle protocol"
-description: "The Livepeer trickle protocol – what it is, how it works, why real-time AI pipelines use it."
+title: "Trickle Protocol"
+sidebarTitle: "Trickle Protocol"
+description: >-
+  HTTP-based streaming protocol for low-latency frame transport between gateway, orchestrator, and inference container. The transport layer for real-time AI and BYOC.
+keywords:
+  - livepeer
+  - trickle protocol
+  - http streaming
+  - real-time ai
+  - byoc
+  - frame transport
+  - cascade
+  - pytrickle
+  - comfystream
 pageType: concept
 audience: developer
 purpose: explain
 complexity: advanced
-lifecycleStage: discover
-keywords:
-  - trickle protocol
-  - transport
-  - real-time
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-veracityStatus: unverified
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
 ---
 
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-This page is in progress.
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>HTTP-based streaming protocol from j0sh/http-trickle. Splits a stream into short segments, delivers each immediately. The transport beneath real-time AI and BYOC.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The trickle protocol is the HTTP-based streaming protocol that carries frames between a Livepeer Gateway, an Orchestrator, and an inference container during real-time AI sessions. It sits beneath ComfyStream and PyTrickle; it is the wire format that makes sub-second video transformation viable on a network without dedicated streaming infrastructure.
+
+This page covers the protocol concepts, the channel model, and the relationship to higher layers. For the activation path that uses trickle under the hood, see <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart">ComfyStream Quickstart</LinkArrow>. The reference implementation lives at `github.com/j0sh/http-trickle`.
+
+<CustomDivider middleText="Design" />
+
+## Design Principles
+
+Trickle exists because HLS is too slow for real-time AI and WebRTC is too complex for backend-to-backend frame transport. Four principles drove its design.
+
+**HTTP only.** Every message is an HTTP POST or GET. No custom socket protocol, no signalling layer, no STUN/TURN. Any environment that speaks HTTP can participate.
+
+**Streaming, not buffering.** A trickle channel splits a media stream into short sequential segments and delivers each segment as soon as it is produced. The client can begin processing before the full stream arrives. End-to-end latency drops below a second for typical workloads.
+
+**Named streams over connections.** A trickle channel is a named resource. Multiple producers can publish to the same channel; multiple consumers can subscribe. The protocol does not couple identity to the transport connection.
+
+**Preconnect for zero-latency segment boundaries.** Subscribers can preconnect to the next sequence number while the current segment is still arriving. The gap between two segments becomes near-zero, which is what makes the protocol viable for frame-rate-bound pipelines.
+
+<CustomDivider middleText="Channel Model" />
+
+## Channel Model
+
+A trickle session typically opens four to five channels per real-time AI workload.
+
+| Channel | Direction | Carries |
+|---|---|---|
+| `video-in` | Gateway → Orchestrator | Source video frames from the client |
+| `video-out` | Orchestrator → Gateway | Transformed video frames from the pipeline |
+| `audio-in` | Gateway → Orchestrator | Source audio (optional, paired with video) |
+| `audio-out` | Orchestrator → Gateway | Processed audio (optional, paired with video) |
+| `control` | Bidirectional | Pipeline parameter updates, status messages |
+
+Each channel has a name (e.g. `stream_abc123_video_in`), a sequence number per segment, and a content type. The Gateway opens channels on session start and tears them down on session end. Pipeline parameter updates flow over the control channel without interrupting the video channels.
+
+<CustomDivider middleText="Wire Shape" />
+
+## Wire Shape
+
+The protocol exposes three HTTP endpoints per channel.
+
+**Publish a segment.**
+``` icon="terminal"
+POST /trickle/{channel}/{seq}
+Content-Type: video/mp2t (or appropriate media type)
+[binary segment data]
+```
+The publisher writes one segment per sequence number. Segments are short (typically 2-10 frames or 100-500ms of media) so latency stays low.
+
+**Subscribe to a segment.**
+
+``` icon="terminal"
+GET /trickle/{channel}/{seq}
+```
+
+Returns the segment for the requested sequence number. If the segment has not yet been published, the connection blocks until it arrives or until a configured timeout. This long-poll pattern is what allows subscribers to preconnect.
+
+**Channel metadata.**
+
+``` icon="terminal"
+GET /trickle/{channel}
+```
+
+Returns current channel state (latest sequence number, channel parameters, status). Used by the Gateway and Orchestrator to coordinate session lifecycle.
+
+<CustomDivider middleText="Embedded" />
+
+## Embedded in go-livepeer
+
+The trickle server is logical, not a separate service. It runs inside `go-livepeer` on both the Gateway side and the Orchestrator side. From a deployment perspective, there is no extra process to install or port to expose beyond the standard go-livepeer ports.
+
+The Gateway exposes trickle channels to its connected clients (browser apps via WebRTC, Python clients via PyTrickle). The Orchestrator exposes trickle channels to the inference container it spawns (ComfyStream container, PyTrickle BYOC container, custom Docker image). Both sides speak the same protocol; the channel names differ per session.
+
+<CustomDivider middleText="Higher Layers" />
+
+## Relationship to Higher Layers
+
+Two SDKs sit on top of the trickle protocol.
+
+**ComfyStream.** Wraps ComfyUI workflows as trickle producers and consumers. A ComfyStream container subscribes to a video-in channel, runs the workflow per frame, and publishes the result to the video-out channel. Workflow authors never write trickle code; the framework handles channel setup, segmentation, and parameter updates. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview">ComfyStream Overview</LinkArrow>.
+
+**PyTrickle.** The Python SDK for custom real-time processing services. Where ComfyStream targets ComfyUI workflows, PyTrickle exposes a lower-level `FrameProcessor` abstraction for arbitrary Python processing logic: custom AI models, frame filters, streaming analytics. PyTrickle handles the trickle protocol; the developer implements `process_video_async` and optionally `process_audio_async`. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview">PyTrickle Overview</LinkArrow>.
+
+BYOC containers that implement the trickle protocol directly (without PyTrickle) work too; PyTrickle is a convenience, not a requirement. The protocol contract is `github.com/j0sh/http-trickle`.
+
+<CustomDivider middleText="Scope" />
+
+## Protocol Scope
+
+Trickle is the transport between Gateway and inference container. It is not a viewer-facing playback protocol.
+
+| Where trickle is used | Where it is not used |
+|---|---|
+| Gateway ↔ Orchestrator (real-time AI session) | Browser ↔ Gateway (use WebRTC or HLS) |
+| Orchestrator ↔ Inference container (ComfyStream, BYOC) | Gateway ↔ Viewer (use HLS, LL-HLS, MP4) |
+| Pipeline parameter updates during a session | RTMP ingest (use the standard RTMP path) |
+
+For viewer-facing playback, the Gateway translates trickle output into WebRTC (for low-latency live) or HLS (for general-purpose playback). The viewer never sees a trickle channel directly.
+
+<CustomDivider middleText="Latency" />
+
+## Latency Characteristics
+
+Trickle's segment-level cadence determines pipeline latency. A short segment (one to three frames) keeps end-to-end latency below 100ms for typical real-time AI workloads but increases HTTP overhead per frame. A longer segment (10-30 frames) amortises overhead but raises latency.
+
+Typical configuration:
+
+| Use case | Segment size | End-to-end latency |
+|---|---|---|
+| Real-time AI (StreamDiffusion, ComfyStream) | 1-3 frames | 50-150 ms |
+| BYOC with batch inference per segment | 5-15 frames | 200-500 ms |
+| Live transcoding (legacy use) | 2 seconds | 2-4 seconds |
+
+ComfyStream defaults are tuned for sub-second latency. Custom BYOC containers can tune segment size in the `StreamServer` configuration.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ComfyStream Overview" icon="diagram-project" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview">
+    The primary higher layer over trickle: ComfyUI workflows as real-time pipelines.
+  </Card>
+  <Card title="PyTrickle Overview" icon="code" href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview">
+    The Python SDK for custom real-time services over trickle.
+  </Card>
+  <Card title="BYOC Overview" icon="cube" href="/v2/developers/build/compute/byoc/overview">
+    Bring Your Own Container; trickle is the wire format underneath.
+  </Card>
+  <Card title="Real-Time AI Overview" icon="bolt" href="/v2/developers/build/ai-and-agents/realtime-ai/overview">
+    The Cascade architecture trickle enables.
+  </Card>
+</CardGroup>

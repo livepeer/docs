@@ -365,6 +365,21 @@ NODE
     fi
 fi
 
+# Folder allowlist check (D-GOV-08 layer 2) — runs check-folder-allowlist.js against staged paths
+if [ "$SKIP_STRUCTURE_CHECK" != "1" ] && [ -f operations/scripts/validators/governance/repo/check-folder-allowlist.js ]; then
+    if ! node operations/scripts/validators/governance/repo/check-folder-allowlist.js >/dev/null 2>&1; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  D-GOV-08: FOLDER ALLOWLIST VIOLATIONS DETECTED              ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        node operations/scripts/validators/governance/repo/check-folder-allowlist.js 2>&1 | head -30 || true
+        echo ""
+        echo -e "${YELLOW}Run: node operations/scripts/dispatch/governance/dispatch-folder-allowlist.js --mode manual --write${NC}"
+        echo -e "${YELLOW}to archive drift files via git mv to x-archive/.${NC}"
+        WARNINGS+=("❌ Folder allowlist violations (D-GOV-08)")
+    fi
+fi
+
 # Root directory structure against allowlist
 if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
     echo -e "${YELLOW}⚠️  Structure checks bypassed (SKIP_STRUCTURE_CHECK=1)${NC}"

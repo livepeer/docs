@@ -370,6 +370,54 @@ node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js --dry-
 
 **Impact:** All existing workflows already comply via D-ACT-08 (scripts carry the type). The new requirement is that every script must also support `--dry-run`. The `check-workflow-governance.js` validator should be extended to verify this. Actions-library docs pages should include the local invocation command.
 
+### D-GOV-08: Every folder is governed. No commit of files that do not belong.
+
+**Date:** 2026-05-19
+**Status:** Confirmed
+**Decision:** Every folder hosting repo-influencing files must have an explicit allowlist enforced at five layers: write time, commit time, PR time, post-merge, and on schedule. No file lands in any folder unless explicitly permitted. Detection is a fail-safe — prevention happens at the earliest layer.
+
+**The five-layer prevention chain (applies to every governed folder):**
+
+| Layer | Gate | Mechanism |
+|---|---|---|
+| 1. Write time | Claude PreToolUse hook | `pre-tool-guard.js` blocks Edit/Write to folders with allowlist if path not permitted |
+| 2. Commit time | `.githooks/pre-commit` | Pre-commit hook rejects unauthorized paths in staged diff |
+| 3. PR time | `check-folder-allowlist` validator | PR validator fails check on unauthorized paths |
+| 4. Post-merge | `repair-folder-allowlist` remediator | If something landed despite 1-3, auto-archive on merge to `x-archive/` via `git mv` (D2 no-deletions) |
+| 5. Schedule | `audit-folder-allowlist` scan | Drift scan + rolling issue as last-resort fail-safe |
+
+**Governed folders (each must have all 5 layers wired before Phase 2 dispatchers ship):**
+
+- Repository root (`/`) — `.allowlist` exists; layers 3-5 partial; layers 1-2 missing
+- `.github/` — `.github/.allowlist` MISSING; all 5 layers missing
+- `v2/` — covered by docs.json + structure validators; layer audit pending
+- `operations/scripts/` — covered by `check-script-locations`; layer audit pending
+- `snippets/` — covered by snippets-registry validators; layer audit pending
+- `tools/config/` — coverage status pending audit
+- `docs-guide/` — coverage status pending audit
+- `ai-tools/` — coverage status pending audit
+- `workspace/` — internal workspace; allowlist scope to be defined
+- Any folder added later — must register an allowlist before its first non-trivial file
+
+**Allowlist rules:**
+
+- Explicit, closed list (entries are exact paths or globs)
+- No HTML comments in the file
+- One entry per line
+- Documented purpose per entry (why it belongs there)
+- Stored at `{folder}/.allowlist` for portability
+- Registered in `operations/governance/config/repo-governance-surfaces.json` so the surface appears in the unified registry (D-ACT-10)
+
+**Reasoning:** The `.github/` root accumulated stale files (`actions-readme.mdx`, `actions-registry.md`, `script-index.md`, `future-recommendations.md`, `docs-reviewers.txt`, `dep-CODEOWNERS`) because no layer enforced an allowlist for that folder. The framework was supposed to prevent this. The failure was treating detection (layer 5) as the primary mechanism instead of prevention at layers 1-2. This decision makes prevention the rule and detection the fail-safe.
+
+**Impact:**
+
+- Phase 2 dispatcher design must enumerate every governed folder and confirm all 5 layers are wired or scoped into Phase 3
+- New scripts to write: `check-folder-allowlist.js`, `repair-folder-allowlist.js`, `audit-folder-allowlist.js`. The `pre-tool-guard.js` hook must be extended with allowlist enforcement
+- New surface entries in `repo-governance-surfaces.json` for every governed folder
+- The five new scripts hook into the Phase 2 dispatchers already in scope (`dispatch-governance-check-pr`, `dispatch-governance-repair-post-merge`, `dispatch-governance-scan-scheduled`, `dispatch-governance-repair-self-heal`)
+- Phase 3 wiring task: backfill allowlists for every folder before consolidation ships
+
 <CustomDivider />
 
 ## Pending Decisions

@@ -1,11 +1,11 @@
 # SME Audit: `maintenance` concern
 
-> 33 scripts | Generated 2026-05-17
+&gt; 35 scripts | Generated 2026-05-18
 > Walk through each script. Set verdict per row. SME notes column free-form.
 >
 > **Verdict options:** `keep` / `refactor` / `merge` / `archive` / `unknown`
 
----
+<CustomDivider />
 
 ## audit (8)
 
@@ -27,7 +27,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `library` (3)
 
@@ -47,7 +47,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `audit-component-styles.js`
 
@@ -65,7 +65,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `scan-component-imports.js`
 
@@ -83,7 +83,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `reconciliation` (1)
 
@@ -103,7 +103,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `reference` (3)
 
@@ -123,7 +123,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `audit-icon-usage.js`
 
@@ -141,7 +141,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `terminology-search.js`
 
@@ -159,7 +159,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ## validator (8)
 
@@ -181,7 +181,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `library` (7)
 
@@ -201,7 +201,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-component-health.js`
 
@@ -220,7 +220,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-component-props.js`
 
@@ -238,7 +238,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-mdx-component-scope.js`
 
@@ -256,7 +256,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `check-naming-conventions.js`
 
@@ -274,7 +274,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `component-layout-governance.js`
 
@@ -292,7 +292,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `validate-component-creation.js`
 
@@ -311,7 +311,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ## generator (12)
 
@@ -333,7 +333,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-pages-index.js`
 
@@ -351,7 +351,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `documentation` (1)
 
@@ -372,7 +372,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `library` (6)
 
@@ -392,7 +392,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-component-index.js`
 
@@ -410,7 +410,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-component-library.js`
 
@@ -428,7 +428,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-component-registry.js`
 
@@ -446,7 +446,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-component-snippets.js`
 
@@ -464,7 +464,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-ui-templates.js`
 
@@ -482,7 +482,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ### niche: `reference` (3)
 
@@ -502,7 +502,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-glossary-companions.js`
 
@@ -521,7 +521,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `generate-glossary.js`
 
@@ -539,7 +539,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 ## remediator (3)
 
@@ -561,7 +561,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-component-metadata.js`
 
@@ -580,7 +580,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 #### `repair-component-styles.js`
 
@@ -598,9 +598,9 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
-## integrator (2)
+## integrator (4)
 
 ### niche: `contracts` (1)
 
@@ -620,7 +620,45 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
+
+### niche: `data-feeds` (2)
+
+#### `fetch-config-flags.js`
+
+- **Path:** `operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js`
+- **Purpose:** _(missing)_
+- **Description:** Fetches go-livepeer CLI flags from source code on GitHub, parses flag definitions, writes structured JSX data for SearchTable consumption.
+- **Workflow callers:** `integrator-maintenance-update-config-flags.yml`
+- **Capabilities:** `--dry-run`
+- **Last modified:** 2026-04-15
+- **Mode:** _(unset)_
+- **Pipeline:** P5-auto (scheduled, weekly)
+- **Usage:** `node operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js [--dry-run]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+<CustomDivider />
+
+#### `fetch-exchanges-data.js`
+
+- **Path:** `operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js`
+- **Purpose:** _(missing)_
+- **Description:** Fetches LPT exchange tickers from CoinGecko API, classifies CEX/DEX, writes structured JSX data for SearchTable consumption.
+- **Workflow callers:** `integrator-maintenance-update-exchanges-data.yml`
+- **Capabilities:** `--dry-run`
+- **Last modified:** 2026-04-15
+- **Mode:** _(unset)_
+- **Pipeline:** P5-auto (scheduled, weekly)
+- **Usage:** `node operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js [--dry-run]`
+
+| Verdict | SME notes |
+|---|---|
+| _(pending)_ | _(pending)_ |
+
+<CustomDivider />
 
 ### niche: `release` (1)
 
@@ -640,7 +678,7 @@
 |---|---|
 | _(pending)_ | _(pending)_ |
 
----
+<CustomDivider />
 
 
 ## Orphan summary (10)

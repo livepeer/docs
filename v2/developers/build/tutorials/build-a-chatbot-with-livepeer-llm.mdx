@@ -1,6 +1,6 @@
 ---
-title: 'Chatbot with Livepeer LLM'
-sidebarTitle: 'LLM Chatbot'
+title: "Chatbot with Livepeer LLM"
+sidebarTitle: "LLM Chatbot"
 description: >-
   Build a streaming chatbot on the Livepeer LLM pipeline. Next.js Route Handler, SSE, OpenAI-compatible.
 keywords:
@@ -36,9 +36,9 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
   <Tip>OpenAI-compatible chat completions, streamed via Server-Sent Events, on decentralised GPU. Fifteen minutes from `create-next-app` to streaming chat.</Tip>
 </CenteredContainer>
 
----
+<CustomDivider />
 
-By the end of this tutorial you'll have a Next.js 15 chatbot that takes user messages, streams responses from the Livepeer LLM pipeline token-by-token, and maintains conversation history. The LLM pipeline is OpenAI-compatible at the wire level: it accepts `messages` arrays, returns `choices[0].delta.content` chunks, and behaves like any other chat completions endpoint. The orchestrator pool runs Ollama-backed inference on GPUs as small as 8 GB.
+By the end of this tutorial you'll have a Next.js 15 chatbot that takes user messages, streams responses from the Livepeer LLM pipeline token-by-token, and maintains conversation history. The LLM pipeline is OpenAI-compatible at the wire level: it accepts `messages` arrays, returns `choices[0].delta.content` chunks, and behaves like any other chat completions endpoint. The Orchestrator pool runs Ollama-backed inference on GPUs as small as 8 GB.
 
 This is the Persona 1 activation moment for text inference. The image generation tutorial proved the batch path; this one proves the streaming path. The wire format you'll handle here works against any OpenAI-compatible endpoint, which means swapping providers is a URL change.
 
@@ -50,7 +50,7 @@ This is the Persona 1 activation moment for text inference. The image generation
 - `npm`, `pnpm`, or `yarn`
 - A code editor
 
-No API key needed for development. The community gateway at `dream-gateway.livepeer.cloud` accepts unauthenticated POSTs to the LLM endpoint for experimentation.
+No API key needed for development. The community Gateway at `dream-gateway.livepeer.cloud` accepts unauthenticated POSTs to the LLM endpoint for experimentation.
 
 <CustomDivider />
 
@@ -58,7 +58,7 @@ No API key needed for development. The community gateway at `dream-gateway.livep
 
 <Steps>
   <Step title="Create the project">
-    ```bash
+    ```bash icon="terminal"
     npx create-next-app@latest livepeer-chatbot \
       --typescript \
       --tailwind \
@@ -72,12 +72,12 @@ No API key needed for development. The community gateway at `dream-gateway.livep
   <Step title="Configure environment variables">
     Save as `.env.local`:
 
-    ```bash
+    ```bash icon="terminal"
     LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud
     LIVEPEER_LLM_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
     ```
 
-    The warm model on the community gateway is Llama 3.1 8B Instruct. Cold-start applies to any other model: 30 seconds to a few minutes for the first request while the orchestrator loads the weights.
+    The warm model on the community Gateway is Llama 3.1 8B Instruct. Cold-start applies to any other model: 30 seconds to a few minutes for the first request while the Orchestrator loads the weights.
   </Step>
 </Steps>
 
@@ -89,7 +89,7 @@ Server actions can't stream responses cleanly. Route handlers can; the standard 
 
 Save as `src/app/api/chat/route.ts`:
 
-```ts
+```ts icon="terminal"
 import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
@@ -140,7 +140,7 @@ Three things to notice. `export const runtime = 'edge'` runs the handler on Edge
 
 The LLM endpoint streams chunks in this shape:
 
-```
+``` icon="terminal"
 data: {"choices":[{"delta":{"content":"Live","role":"assistant"},"finish_reason":null}]}
 
 data: {"choices":[{"delta":{"content":"peer","role":"assistant"},"finish_reason":null}]}
@@ -162,10 +162,10 @@ The UI maintains a list of messages and appends to the last assistant message as
 
 Save as `src/app/components/Chat.tsx`:
 
-```tsx
+```tsx icon="terminal"
 'use client';
 
-const { useState } = React;
+import { useState } from 'react';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -296,8 +296,8 @@ The reader loop pulls bytes from the response stream, decodes them, and splits o
 
 Save as `src/app/page.tsx`:
 
-```tsx
-// Import Chat from ./components/Chat.
+```tsx icon="terminal"
+import { Chat } from './components/Chat';
 
 export default function HomePage() {
   return (
@@ -316,7 +316,7 @@ export default function HomePage() {
 
 Run the dev server:
 
-```bash
+```bash icon="terminal"
 npm run dev
 ```
 
@@ -326,7 +326,7 @@ Open `http://localhost:3000`. Type a message, hit Send, and tokens stream into t
 
 ## Model Selection
 
-The community gateway routes any `model` value to whichever orchestrator has the requested weights warm. Llama 3.1 8B Instruct is the default warm model on the network. Three other Ollama-compatible models are commonly available:
+The community Gateway routes any `model` value to whichever Orchestrator has the requested weights warm. Llama 3.1 8B Instruct is the default warm model on the network. Three other Ollama-compatible models are commonly available:
 
 | Model | VRAM | Notes |
 |---|---|---|
@@ -335,15 +335,15 @@ The community gateway routes any `model` value to whichever orchestrator has the
 | `google/gemma-2-9b-it` | 10 GB | Google's open instruction model |
 | `Qwen/Qwen2.5-7B-Instruct` | 8 GB | Strong on code and reasoning |
 
-Any Ollama-compatible model works. Cold-start (30 seconds to a few minutes) applies to models not currently loaded on any orchestrator. For consistent latency in production, run your own gateway with the target model pre-loaded; see <LinkArrow href="/v2/developers/build/ai-and-agents/model-support" label="Model Support" newline={false} />.
+Any Ollama-compatible model works. Cold-start (30 seconds to a few minutes) applies to models not currently loaded on any Orchestrator. For consistent latency in production, run your own Gateway with the target model pre-loaded; see <LinkArrow href="/v2/developers/build/ai-and-agents/model-support" label="Model Support" newline={false} />.
 
 <CustomDivider />
 
 ## Production Considerations
 
-The community gateway is shaped for experimentation. Production chat needs four changes.
+The community Gateway is shaped for experimentation. Production chat needs four changes.
 
-**Authentication.** Swap to a paid gateway and add `Authorization: Bearer ${process.env.LIVEPEER_API_KEY}` to the fetch headers in the route handler.
+**Authentication.** Swap to a paid Gateway and add `Authorization: Bearer ${process.env.LIVEPEER_API_KEY}` to the fetch headers in the route handler.
 
 **Conversation persistence.** The current implementation holds messages in client state, which means refresh loses the conversation. Persist to a database keyed by user and session.
 
@@ -359,10 +359,10 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
 
 <AccordionGroup>
   <Accordion title="Gateway returns 502 immediately">
-    The route handler couldn't reach the gateway. Confirm `LIVEPEER_GATEWAY_URL` is set; the Edge runtime doesn't read variables from `.env.local` in production unless they're declared in `next.config.ts` or as Edge-runtime env vars.
+    The route handler couldn't reach the Gateway. Confirm `LIVEPEER_GATEWAY_URL` is set; the Edge runtime doesn't read variables from `.env.local` in production unless they're declared in `next.config.ts` or as Edge-runtime env vars.
   </Accordion>
   <Accordion title="Stream starts then stalls mid-response">
-    The orchestrator timed out or the model unloaded. Retry the request; the network routes to a different orchestrator on retry.
+    The Orchestrator timed out or the model unloaded. Retry the request; the network routes to a different Orchestrator on retry.
   </Accordion>
   <Accordion title="Tokens arrive in big chunks instead of streaming">
     A proxy (Cloudflare, nginx, Vercel) is buffering. Confirm the `Cache-Control: no-cache` and `Content-Type: text/event-stream` headers are set on the response. For Cloudflare, disable response buffering on the route.
@@ -378,14 +378,6 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
 <CustomDivider />
 
 You have a streaming chatbot on the Livepeer LLM pipeline. The same endpoint shape works for any Ollama-compatible model; switch the `model` field to try Mistral, Gemma, or Qwen variants.
-
-## AI agent prompt
-
-```text
-Build the "Chatbot with Livepeer LLM" tutorial as a Next.js App Router project. Create a TypeScript app, add LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud to .env.local, implement src/app/api/chat/route.ts as a streaming Server-Sent Events route that forwards OpenAI-compatible chat completion requests to the Livepeer LLM endpoint, and build a client chat UI that appends streamed tokens in place. Use model "meta-llama/Meta-Llama-3.1-8B-Instruct" by default and expose a small model selector for Mistral, Gemma, and Qwen variants. Include run commands, a curl test for the route, browser verification at http://localhost:3000, and production notes that any LIVEPEER_API_KEY must stay server-side. Do not use Studio.
-```
-
-<CustomDivider />
 
 ## Next Steps
 

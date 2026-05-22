@@ -1,0 +1,185 @@
+---
+title: Root Allowlist Governance
+sidebarTitle: Root Allowlist Governance
+description: Canonical policy for what belongs at repo root, how .allowlist is authored, and how root changes are reviewed safely.
+keywords:
+  - livepeer
+  - root allowlist
+  - repository structure
+  - governance
+  - root files
+  - pre-commit
+  - cleanup
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Root Allowlist Governance
+
+This document is the normative policy for repo-root governance.
+
+The live inventory is generated, not maintained here. Use these surfaces together:
+
+- Canonical contract: `operations/governance/config/root-governance.json`
+- Generated root projection: `.allowlist`
+- Generated live map: `docs-guide/repo-ops/config/root-governance-map.mdx`
+- Generated sync reports: `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.{json,md}`
+
+## Policy
+
+`.allowlist` is machine-readable input to the root-structure gate in `.githooks/pre-commit`.
+
+It must never be used as:
+
+- a notes file
+- a migration plan
+- a report sink
+- a place to pre-allow future paths
+
+Human-authored root decisions belong in `operations/governance/config/root-governance.json`. `.allowlist` is a generated projection.
+
+## Root Admission Rules
+
+An entry may remain at repo root only when at least one of these is true:
+
+- the platform discovers it by fixed root path
+- the repo uses it as a root entrypoint or contract
+- the published URL contract depends on the root path
+- the repo has explicitly approved it as a root subsystem
+
+Everything else must live in an existing governed subtree such as:
+
+- `docs-guide/**` for policy and maintainer docs
+- `operations/**` and `tools/**` for scripts and runtime logic
+- `workspace/**` for plans, audits, reports, and local scratch outputs
+
+## Generated Governance Model
+
+The root-governance generator must deterministically write:
+
+- `.allowlist`
+- `docs-guide/repo-ops/config/root-governance-map.mdx`
+- `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json`
+- `workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md`
+
+The validator `operations/scripts/validators/governance/compliance/check-root-governance-sync.js` must fail when those outputs drift from `operations/governance/config/root-governance.json`.
+
+## Root Hygiene Rules
+
+`.allowlist` may contain only:
+
+- root-level entries
+- blank lines
+- `#` comment lines
+
+It may not contain:
+
+- nested paths
+- HTML comments
+- prose paragraphs
+- report output
+- retired entries
+
+Root clutter is forbidden. Examples:
+
+- `.DS_Store`
+- `.cache/`
+- `.playwright-cli/`
+- backup files
+- debug logs
+
+Local browser captures must go to `workspace/reports/_local/playwright/**`.
+
+Local `.env` compatibility is allowed only as an untracked root file. It is not part of the governed root set.
+
+## Approved Root Decisions In This Model
+
+The following decisions are locked into the current governance contract:
+
+- `ai-tools/` is an approved root subsystem and must not be treated as accidental root drift in this pass.
+- `docs-index.json`, `llms.txt`, and `sitemap-ai.xml` are ratified AI-first public root artifacts.
+- `llms-full.txt` is retired and must not be regenerated or documented as active.
+- `.cursorrules` is retired and must not be recreated as a governed root surface.
+
+## Change Process
+
+When root governance changes:
+
+1. Edit `operations/governance/config/root-governance.json`.
+2. Regenerate root-governance outputs.
+3. Update manual policy docs that describe the rules, not the live inventory.
+4. Run the root-governance validator and affected generated-artifact checks.
+
+Do not hand-edit `.allowlist` as the primary source of truth.
+
+## Related
+
+- [`docs-guide/repo-ops/config/root-governance-map.mdx`](/docs-guide/repo-ops/config/root-governance-map)
+- [`docs-guide/repo-ops/config/repo-config-map.mdx`](/docs-guide/repo-ops/config/repo-config-map)
+- [`docs-guide/policies/agent-governance-framework.mdx`](/docs-guide/policies/agent-governance-framework)
+- `operations/scripts/generators/content/catalogs/generate-docs-index.js`
+- `operations/scripts/generators/ai/llm/generate-llms-files.js`
+- `operations/scripts/generators/content/seo/generate-ai-sitemap.js`
+- `tools/lib/docs/docs-index-utils.js`
+- `operations/scripts/integrators/content/language-translation/translate-docs.js`
+- `docs-guide/contributing/contributing.mdx`
+- `docs-guide/contributing/git-hooks.mdx`
+- `docs-guide/contributing/agent-instructions.mdx`
+
+## `api/` Governance
+
+`api/` is a schema-only directory. It contains OpenAPI specification files referenced by the docs platform for API reference rendering.
+
+Rules:
+
+1. **Spec files only** — `api/` must contain only OpenAPI/JSON schema files (`.yaml`, `.json`). No `.mdx` page content, no `.backup` files, no partial mirrors.
+2. **No backup files** — `openapi.yaml.backup` and similar were removed as part of Phase 0 cleanup (2026-03-21). Future backups belong in `_workspace/archive/` if they exist at all.
+3. **No duplicate subdirs** — `api/worker/` was removed (2026-03-21) as it was an exact mirror of `api/` root files. If worker-specific specs diverge in the future, they get their own named spec file in `api/`, not a subdirectory mirror.
+4. **Size** — specs are schema-only; they should remain small. If a spec exceeds 500 KB, review for consolidation.
+
+Current spec inventory:
+
+| File | Purpose |
+|------|---------|
+| `api/gateway.openapi.yaml` | Gateway API spec |
+| `api/openapi.yaml` | Primary public API spec |
+| `api/openapi.json` | JSON mirror of openapi.yaml |
+| `api/ai-worker.yaml` | AI Worker API spec |
+| `api/cli-http.yaml` | CLI HTTP API spec |
+| `api/studio.yaml` | Studio API spec |
+
+<CustomDivider />
+
+## `_workspace/` Standard for Root Folders
+
+Every named root folder (excluding dot-dirs, `v1/`, and `v2/`) may contain a `_workspace/` subdirectory for maintainer-only scratch, planning, and archive material.
+
+**Folders with `_workspace/` (created 2026-03-21):**
+
+| Folder | `_workspace/` subdirs |
+|--------|-----------------------|
+| `ai-tools/` | `skill-research/`, `rule-drafts/`, `archive/` |
+| `api/` | (root — use for spec-related scratch only) |
+| `docs-guide/` | `archive/`, `drafts/` |
+| `snippets/` | (root — use for component/asset scratch) |
+| `tools/` | (root — use for tooling scratch) |
+| `workspace/` | N/A — the folder is itself the workspace |
+
+**Rules:**
+1. `_workspace/` under a root folder must not appear in `docs.json` navigation.
+2. All root-folder `_workspace/` dirs are covered by `.mintignore` patterns (`/ai-tools/_workspace/**`, `/api/_workspace/**`, `/snippets/_workspace/**`, `/tools/_workspace/**`).
+3. The approved subdir names match the `v2/` section `_workspace/` contract: `notes/`, `plans/`, `research/`, `reviews/`, `drafts/`, `handoff/`, `archive/`, `deprecated/`, `context-data/`, `staging/`.
+4. Root-folder `_workspace/` content follows the same TTL rules as `docs-guide/_workspace/`: 30-day TTL for scratch (notes, drafts, research, reviews), 90-day TTL for archive.
+
+<CustomDivider />
+
+### Official external sources
+
+- [Mintlify settings](https://mintlify.com/docs/settings)
+- [Mintlify files and root path behavior](https://www.mintlify.com/docs/create/files)
+- [Mintlify llms.txt](https://www.mintlify.com/docs/ai/llmstxt)
+- [Mintlify Assistant](https://www.mintlify.com/docs/guides/assistant)
+- [GitHub security policy locations](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository)
