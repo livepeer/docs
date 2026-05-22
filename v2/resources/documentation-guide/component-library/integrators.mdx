@@ -1,11 +1,7 @@
 ---
-title: Integrators
-sidebarTitle: Integrators
-description: "Fetches, embeds, or binds to external data – feeds, embeds, video, APIs."
-lifecycleStage: discover
-complexity: intermediate
-audience: community
-purpose: explain
+title: 'Integrators'
+sidebarTitle: 'Integrators'
+description: 'Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.'
 pageType: reference
 ---
 
@@ -30,9 +26,9 @@ Run command: node operations/scripts/generators/components/documentation/generat
 
 ## Integrators
 
-Fetches, embeds, or binds to external data – feeds, embeds, video, APIs.
+Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.
 
-This category currently contains **18** governed export(s).
+This category currently contains **19** governed export(s).
 
 ### Decision Tree Excerpt
 
@@ -40,7 +36,7 @@ This category currently contains **18** governed export(s).
 2. Part of the page's outer structure, typically used once? → `scaffolding/`
 3. Takes content and presents it in a formatted way? → `displays/`
 4. Exists to hold, group, or arrange other things? → `wrappers/`
-5. Single visual piece – no wrapping, no arranging, no fetching? → `elements/`
+5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`
 
 ### Summary Table
 
@@ -58,17 +54,18 @@ This category currently contains **18** governed export(s).
 | ForumLatestLayout | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Latest forum topics with banner image and topic cards. |
 | LatestVersion | `experimental` | `/snippets/components/integrators/feeds/Release.jsx` | Displays the latest release version string from automation data. |
 | LumaEvents | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Upcoming/past event cards from Luma calendar data. |
-| MarkdownEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Fetches and renders remote markdown content. |
 | PdfEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a PDF in a framed iframe with caption. |
 | PostCard | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Post card with gradient header, scrollable content, and metadata. |
-| ShowcaseCards | `experimental` | `/snippets/components/displays/cards/Cards.jsx` | Paginated project showcase with search, filtering, and media cards. |
+| RssBlogCard | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Blog card for RSS feed data. Matches BlogCard visual quality with icon title, metadata row, scrollable plain text excerpt, and scroll hint. Use for non-Ghost blog sources (Daydream, Streamplace, etc.). |
+| RssBlogCardLayout | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources). |
+| SolidityEmbed | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded. |
 | TwitterTimeline | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Embeds a Twitter/X timeline feed widget via iframe. |
 | YouTubeVideoData | `stable` | `/snippets/components/integrators/video-data/VideoData.jsx` | Renders YouTube video data with video embed and metadata columns. |
 
 ## Component Reference
 
 ### BlogCard
-Use **BlogCard** when you need blog post card with scrollable content, metadata, and CTA.. Accepts: {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest.
+Use **BlogCard** when you need blog post card with scrollable content, metadata, and CTA..
 Source description: Blog post card with scrollable content, metadata, and CTA.
 **Import path**
 ```jsx
@@ -76,7 +73,7 @@ import { BlogCard } from '/snippets/components/integrators/blog/BlogCards.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} excerpt, {any} readingTime, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -100,7 +97,7 @@ import { BlogCard } from '/snippets/components/integrators/blog/BlogCards.jsx'
 <CustomDivider />
 
 ### BlogDataLayout
-Use **BlogDataLayout** when you need single-column BlogCard stack.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **BlogDataLayout** when you need single-column BlogCard stack..
 Source description: Single-column BlogCard stack.
 **Import path**
 ```jsx
@@ -108,7 +105,7 @@ import { BlogDataLayout } from '/snippets/components/integrators/blog/BlogCards.
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -122,7 +119,7 @@ import { BlogDataLayout } from '/snippets/components/integrators/blog/BlogCards.
 <CustomDivider />
 
 ### CardBlogDataLayout
-Use **CardBlogDataLayout** when you need grid layout rendering BlogCards from an items array.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **CardBlogDataLayout** when you need grid layout rendering BlogCards from an items array..
 Source description: Grid layout rendering BlogCards from an items array.
 **Import path**
 ```jsx
@@ -130,7 +127,7 @@ import { CardBlogDataLayout } from '/snippets/components/integrators/blog/BlogCa
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -144,7 +141,7 @@ import { CardBlogDataLayout } from '/snippets/components/integrators/blog/BlogCa
 <CustomDivider />
 
 ### CardColumnsPostLayout
-Use **CardColumnsPostLayout** when you need multi-column PostCard layout.. Accepts: {number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **CardColumnsPostLayout** when you need multi-column PostCard layout..
 Source description: Multi-column PostCard layout.
 **Import path**
 ```jsx
@@ -152,7 +149,7 @@ import { CardColumnsPostLayout } from '/snippets/components/integrators/blog/Blo
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{number} cols, {Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -167,7 +164,7 @@ import { CardColumnsPostLayout } from '/snippets/components/integrators/blog/Blo
 <CustomDivider />
 
 ### CardInCardLayout
-Use **CardInCardLayout** when you need postCards rendered inside Card wrappers.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **CardInCardLayout** when you need postCards rendered inside Card wrappers..
 Source description: PostCards rendered inside Card wrappers.
 **Import path**
 ```jsx
@@ -175,7 +172,7 @@ import { CardInCardLayout } from '/snippets/components/integrators/blog/BlogCard
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -189,7 +186,7 @@ import { CardInCardLayout } from '/snippets/components/integrators/blog/BlogCard
 <CustomDivider />
 
 ### CoinGeckoExchanges
-Use **CoinGeckoExchanges** when you need sortable table of exchanges listing a token. Keyboard-accessible sort headers.. Accepts: {string} coinId, {string} className, {object} style, ...rest.
+Use **CoinGeckoExchanges** when you need sortable table of exchanges listing a token. Keyboard-accessible sort headers..
 Source description: Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
 **Import path**
 ```jsx
@@ -197,7 +194,7 @@ import { CoinGeckoExchanges } from '/snippets/components/integrators/feeds/Coing
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} coinId, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `CoinGecko API`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -210,7 +207,7 @@ import { CoinGeckoExchanges } from '/snippets/components/integrators/feeds/Coing
 <CustomDivider />
 
 ### ColumnsBlogCardLayout
-Use **ColumnsBlogCardLayout** when you need multi-column BlogCard layout using Mintlify Columns.. Accepts: {Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest.
+Use **ColumnsBlogCardLayout** when you need multi-column BlogCard layout using Mintlify Columns..
 Source description: Multi-column BlogCard layout using Mintlify Columns.
 **Import path**
 ```jsx
@@ -218,7 +215,7 @@ import { ColumnsBlogCardLayout } from '/snippets/components/integrators/blog/Blo
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {number} cols, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -233,7 +230,7 @@ import { ColumnsBlogCardLayout } from '/snippets/components/integrators/blog/Blo
 <CustomDivider />
 
 ### DiscordAnnouncements
-Use **DiscordAnnouncements** when you need discord announcement feed with parsed markdown content. Sanitised HTML.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **DiscordAnnouncements** when you need discord announcement feed with parsed markdown content. Sanitised HTML..
 Source description: Discord announcement feed with parsed markdown content. Sanitised HTML.
 **Import path**
 ```jsx
@@ -241,7 +238,7 @@ import { DiscordAnnouncements } from '/snippets/components/integrators/blog/Blog
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/discord`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -255,7 +252,7 @@ import { DiscordAnnouncements } from '/snippets/components/integrators/blog/Blog
 <CustomDivider />
 
 ### ExternalContent
-Use **ExternalContent** when you need fetches and renders external markdown with scrollable container and source link.. Accepts: {string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest.
+Use **ExternalContent** when you need fetches and renders external markdown with scrollable container and source link..
 Source description: Fetches and renders external markdown with scrollable container and source link.
 **Import path**
 ```jsx
@@ -263,7 +260,7 @@ import { ExternalContent } from '/snippets/components/integrators/embeds/DataEmb
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `fetch(url)`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -280,7 +277,7 @@ import { ExternalContent } from '/snippets/components/integrators/embeds/DataEmb
 <CustomDivider />
 
 ### ForumLatestLayout
-Use **ForumLatestLayout** when you need latest forum topics with banner image and topic cards.. Accepts: {Array} items, {any} limit, {string} className, {object} style, ...rest.
+Use **ForumLatestLayout** when you need latest forum topics with banner image and topic cards..
 Source description: Latest forum topics with banner image and topic cards.
 **Import path**
 ```jsx
@@ -288,7 +285,7 @@ import { ForumLatestLayout } from '/snippets/components/integrators/blog/BlogCar
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {any} limit, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/forum`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -302,7 +299,7 @@ import { ForumLatestLayout } from '/snippets/components/integrators/blog/BlogCar
 <CustomDivider />
 
 ### LatestVersion
-Use **LatestVersion** when you need displays the latest release version string from automation data.. Accepts: {any} version, {string} className, {object} style, ...rest.
+Use **LatestVersion** when you need displays the latest release version string from automation data..
 Source description: Displays the latest release version string from automation data.
 **Import path**
 ```jsx
@@ -310,7 +307,7 @@ import { LatestVersion } from '/snippets/components/integrators/feeds/Release.js
 ```
 **Metadata**
 - Status: `experimental`
-- Accepts: `{any} version, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `release-version workflow`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -323,7 +320,7 @@ import { LatestVersion } from '/snippets/components/integrators/feeds/Release.js
 <CustomDivider />
 
 ### LumaEvents
-Use **LumaEvents** when you need upcoming/past event cards from Luma calendar data.. Accepts: {any} data, {any} limit, {string} type, {string} className, {object} style, ...rest.
+Use **LumaEvents** when you need upcoming/past event cards from Luma calendar data..
 Source description: Upcoming/past event cards from Luma calendar data.
 **Import path**
 ```jsx
@@ -331,7 +328,7 @@ import { LumaEvents } from '/snippets/components/integrators/blog/BlogCards.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} data, {any} limit, {string} type, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `Luma API`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -345,29 +342,8 @@ import { LumaEvents } from '/snippets/components/integrators/blog/BlogCards.jsx'
 
 <CustomDivider />
 
-### MarkdownEmbed
-Use **MarkdownEmbed** when you need fetches and renders remote markdown content.. Accepts: {string} url, {string} className, {object} style, ...rest.
-Source description: Fetches and renders remote markdown content.
-**Import path**
-```jsx
-import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
-```
-**Metadata**
-- Status: `stable`
-- Accepts: `{string} url, {string} className, {object} style, ...rest`
-- Data source: `fetch(url)`
-**Props**
-| Prop | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| `url` | `string` | `` | Yes | Destination URL used by the component. |
-| `className` | `string` | `""` | No | CSS class name. |
-| `style` | `object` | `{}` | No | Inline style overrides. |
-
-
-<CustomDivider />
-
 ### PdfEmbed
-Use **PdfEmbed** when you need embeds a PDF in a framed iframe with caption.. Accepts: {React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest.
+Use **PdfEmbed** when you need embeds a PDF in a framed iframe with caption..
 Source description: Embeds a PDF in a framed iframe with caption.
 **Import path**
 ```jsx
@@ -375,7 +351,7 @@ import { PdfEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{React.ReactNode} title, {string} src, {string} height, {string} width, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `iframe(src)`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -391,7 +367,7 @@ import { PdfEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
 <CustomDivider />
 
 ### PostCard
-Use **PostCard** when you need post card with gradient header, scrollable content, and metadata.. Accepts: {any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest.
+Use **PostCard** when you need post card with gradient header, scrollable content, and metadata..
 Source description: Post card with gradient header, scrollable content, and metadata.
 **Import path**
 ```jsx
@@ -399,7 +375,7 @@ import { PostCard } from '/snippets/components/integrators/blog/BlogCards.jsx'
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{any} title, {any} content, {any} href, {string} author, {any} datePosted, {any} replyCount, {string} icon, {string} authorIcon, {string} dateIcon, {string} cta, {any} img, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/blog`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -421,31 +397,66 @@ import { PostCard } from '/snippets/components/integrators/blog/BlogCards.jsx'
 
 <CustomDivider />
 
-### ShowcaseCards
-Use **ShowcaseCards** when you need paginated project showcase with search, filtering, and media cards.. Accepts: {Array} items, {number} limit, {number} pageSize, {string} className, {object} style, ...rest.
-Source description: Paginated project showcase with search, filtering, and media cards.
+### RssBlogCard
+Use **RssBlogCard** when you need blog card for RSS feed data. Matches BlogCard visual quality with icon title, metadata row, scrollable plain text excerpt, and scroll hint. Use for non-Ghost blog sources (Daydream, Streamplace, etc.)..
+Source description: Blog card for RSS feed data. Matches BlogCard visual quality with icon title, metadata row, scrollable plain text excerpt, and scroll hint. Use for non-Ghost blog sources (Daydream, Streamplace, etc.).
 **Import path**
 ```jsx
-import { ShowcaseCards } from '/snippets/components/displays/cards/Cards.jsx'
+import { RssBlogCard } from '/snippets/components/integrators/blog/BlogCards.jsx'
 ```
 **Metadata**
-- Status: `experimental`
-- Accepts: `{Array} items, {number} limit, {number} pageSize, {string} className, {object} style, ...rest`
-- Data source: `prop (items)`
+- Status: `stable`
+- Accepts: `none`
+- Data source: `automation/rss`
+**Props**
+No documented props.
+
+
+<CustomDivider />
+
+### RssBlogCardLayout
+Use **RssBlogCardLayout** when you need multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources)..
+Source description: Multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources).
+**Import path**
+```jsx
+import { RssBlogCardLayout } from '/snippets/components/integrators/blog/BlogCards.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `automation/rss`
+**Props**
+No documented props.
+
+
+<CustomDivider />
+
+### SolidityEmbed
+Use **SolidityEmbed** when you need fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded..
+Source description: Fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded.
+**Import path**
+```jsx
+import { SolidityEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+```
+**Metadata**
+- Status: `stable`
+- Accepts: `none`
+- Data source: `fetch(url) — raw GitHub .sol file`
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
-| `items` | `Array` | `[` | No | ] - Collection data rendered by the component. |
-| `limit` | `number` | `null` | No | Limit used by the component. |
-| `pageSize` | `number` | `10` | No | Page size used by the component. |
-| `className` | `string` | `""` | No | CSS class name. |
+| `url` | `string` | `` | Yes | Raw GitHub URL to the .sol file. |
+| `title` | `React.ReactNode` | `` | No | Optional title displayed above the code block. Accepts strings or components. |
+| `filename` | `string` | `` | No | Filename shown on the CodeBlock header. |
+| `maxHeight` | `string` | `"500px"` | No | Max height of the code container. |
 | `style` | `object` | `{}` | No | Inline style overrides. |
+| `className` | `string` | `""` | No | CSS class name. |
 
 
 <CustomDivider />
 
 ### TwitterTimeline
-Use **TwitterTimeline** when you need embeds a Twitter/X timeline feed widget via iframe.. Accepts: {string} className, {object} style, ...rest.
+Use **TwitterTimeline** when you need embeds a Twitter/X timeline feed widget via iframe..
 Source description: Embeds a Twitter/X timeline feed widget via iframe.
 **Import path**
 ```jsx
@@ -453,7 +464,7 @@ import { TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmb
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `feed.mikle.com widget`
 **Props**
 | Prop | Type | Default | Required | Description |
@@ -465,7 +476,7 @@ import { TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmb
 <CustomDivider />
 
 ### YouTubeVideoData
-Use **YouTubeVideoData** when you need renders YouTube video data with video embed and metadata columns.. Accepts: {Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest.
+Use **YouTubeVideoData** when you need renders YouTube video data with video embed and metadata columns..
 Source description: Renders YouTube video data with video embed and metadata columns.
 **Import path**
 ```jsx
@@ -473,7 +484,7 @@ import { YouTubeVideoData } from '/snippets/components/integrators/video-data/Vi
 ```
 **Metadata**
 - Status: `stable`
-- Accepts: `{Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest`
+- Accepts: `none`
 - Data source: `automation/youtube`
 **Props**
 | Prop | Type | Default | Required | Description |
