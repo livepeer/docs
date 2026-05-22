@@ -21,7 +21,7 @@ const {
   scanMDXImports
 } = require('../../../../../tools/lib/governance/component-governance-utils');
 
-const REPORT_PATH = path.join(REPO_ROOT, 'tasks', 'reports', 'repo-ops', 'component-usage-audit.json');
+const REPORT_PATH = path.join(REPO_ROOT, 'workspace', 'reports', 'repo-ops', 'component-usage-audit.json');
 
 const V2_DOC_ROOTS = [
   'v2/pages',

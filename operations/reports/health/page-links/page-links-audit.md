@@ -3,11 +3,11 @@
 Operator note: external HTTP/HTTPS links are classified only and marked as `🟡 untested-external` in this phase.
 
 ## Run Metadata
-- Timestamp: 2026-05-22T03:56:50.591Z
+- Timestamp: 2026-05-22T06:36:27.505Z
 - Mode: full
 - Strict: false (internal refs only)
 - Files analyzed: 1104
-- Total extracted references: 7361
+- Total extracted references: 7367
 - Report JSON: operations/reports/health/page-links/page-links-audit.json
 
 ## Summary Counts
@@ -17,8 +17,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---:|
 | empty | 135 |
 | external-https | 3952 |
-| internal-relative | 454 |
-| internal-rooted | 2819 |
+| internal-relative | 452 |
+| internal-rooted | 2827 |
 | mailto | 1 |
 
 ### By Status
@@ -26,7 +26,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---:|
 | 🟡 untested-external | 3952 |
 | missing | 745 |
-| ok | 2524 |
+| ok | 2530 |
 | ok-folder-route | 4 |
 | skipped | 136 |
 
@@ -1765,7 +1765,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-relative | ../frameworks/ai-tools-governance.mdx | docs-guide/frameworks/ai-tools-governance.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/repo-structure.mdx | docs-guide/frameworks/repo-structure.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/content-writing.mdx | docs-guide/frameworks/content-writing.mdx | true | ok |  |  |  |
-| internal-relative | ../standards/voice-rules.mdx | docs-guide/standards/voice-rules.mdx | true | ok |  |  |  |
+| internal-relative | ../standards/voice-and-copy.mdx | docs-guide/standards/voice-and-copy.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/page-taxonomy-framework.mdx | docs-guide/frameworks/page-taxonomy-framework.mdx | true | ok |  |  |  |
 | internal-relative | ../standards/frontmatter.mdx | docs-guide/standards/frontmatter.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/doc-item-model.mdx | docs-guide/frameworks/doc-item-model.mdx | true | ok |  |  |  |
@@ -1777,13 +1777,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-relative | ../frameworks/script-framework.mdx | docs-guide/frameworks/script-framework.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/file-placement.mdx | docs-guide/frameworks/file-placement.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/content-writing.mdx | docs-guide/frameworks/content-writing.mdx | true | ok |  |  |  |
-| internal-relative | ../standards/voice-rules.mdx | docs-guide/standards/voice-rules.mdx | true | ok |  |  |  |
+| internal-relative | ../standards/voice-and-copy.mdx | docs-guide/standards/voice-and-copy.mdx | true | ok |  |  |  |
 | internal-relative | ../standards/frontmatter.mdx | docs-guide/standards/frontmatter.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/github-actions.mdx | docs-guide/frameworks/github-actions.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/repo-structure.mdx | docs-guide/frameworks/repo-structure.mdx | true | ok |  |  |  |
 | internal-relative | ../frameworks/file-placement.mdx | docs-guide/frameworks/file-placement.mdx | true | ok |  |  |  |
 | internal-relative | docs-guide-structure-policy | docs-guide/policies/docs-guide-structure-policy.mdx | true | ok |  |  |  |
-| internal-relative | ../standards/voice-rules.mdx | docs-guide/standards/voice-rules.mdx | true | ok |  |  |  |
+| internal-relative | ../standards/voice-and-copy.mdx | docs-guide/standards/voice-and-copy.mdx | true | ok |  |  |  |
 | internal-relative | ../standards/naming-conventions.mdx | docs-guide/standards/naming-conventions.mdx | true | ok |  |  |  |
 | internal-relative | ../standards/frontmatter.mdx | docs-guide/standards/frontmatter.mdx | true | ok |  |  |  |
 | internal-relative | ../decisions/registry.md | docs-guide/decisions/registry.md | true | ok |  |  |  |
@@ -1920,7 +1920,6 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-relative | ./features/gap-analysis.mdx | docs-guide/features/gap-analysis.mdx | true | ok |  |  |  |
 | internal-relative | ./features/visual-explainer-workflows.mdx | docs-guide/features/visual-explainer-workflows.mdx | true | ok |  |  |  |
 | internal-relative | ./tooling/lpd-cli.mdx | docs-guide/tooling/lpd-cli.mdx | true | ok |  |  |  |
-| internal-relative | ./tooling/dev-tools.mdx | docs-guide/tooling/dev-tools.mdx | true | ok |  |  |  |
 | internal-relative | ./tooling/lpd-mdx-preview.mdx | docs-guide/tooling/lpd-mdx-preview.mdx | true | ok |  |  |  |
 | internal-relative | ./tooling/content-brief-template.md | docs-guide/tooling/content-brief-template.md | true | ok |  |  |  |
 | internal-relative | ./tooling/reference-maps/icon-map.mdx | docs-guide/tooling/reference-maps/icon-map.mdx | true | ok |  |  |  |
@@ -1983,7 +1982,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### docs-guide/standards/voice-rules.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| (none) |  |  |  |  |  |  |  |
+| internal-rooted | /docs-guide/standards/voice-and-copy | docs-guide/standards/voice-and-copy.mdx | true | ok |  |  |  |
 
 ### docs-guide/tooling/ai-tools.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2001,7 +2000,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### docs-guide/tooling/dev-tools.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | ./reference-maps/icon-map.mdx | docs-guide/tooling/reference-maps/icon-map.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/features/contributor-tools | docs-guide/features/contributor-tools.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/features/contributor-tools#vs-code-snippets | docs-guide/features/contributor-tools.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/features/contributor-tools#editor-tooling | docs-guide/features/contributor-tools.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/features/contributor-tools#lpd-workflows | docs-guide/features/contributor-tools.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/tooling/lpd-cli | docs-guide/tooling/lpd-cli.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/tooling/lpd-mdx-preview | docs-guide/tooling/lpd-mdx-preview.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/tooling/reference-maps/icon-map | docs-guide/tooling/reference-maps/icon-map.mdx | true | ok |  |  |  |
 
 ### docs-guide/tooling/lpd-mdx-preview.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |

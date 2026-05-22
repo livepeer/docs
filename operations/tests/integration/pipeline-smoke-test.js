@@ -91,6 +91,14 @@ function smokeTest(scriptAbs) {
 }
 
 function main() {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log('Usage: node operations/tests/integration/pipeline-smoke-test.js [--json]');
+    console.log('');
+    console.log('Smoke-tests every dispatcher under operations/scripts/dispatch/. Each is run with --help and --mode pr --dry-run.');
+    console.log('Infrastructure-dependent dispatchers are skipped by design.');
+    console.log('Exits 0 if all tests pass, 1 if any fail.');
+    process.exit(0);
+  }
   const json = process.argv.includes('--json');
   const dispatchers = findDispatchers(DISPATCH_ROOT);
 

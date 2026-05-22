@@ -111,8 +111,9 @@ function main() {
     case 'pr': code = modePr(args); break;
     case 'scheduled': code = modeScheduled(args); break;
     case 'manual': code = modeManual(args); break;
+    case 'post-merge': code = modeScheduled({ ...args, write: args.write || false }); break;
     default:
-      console.error(`Unknown --mode ${args.mode}. Use pr | scheduled | manual.`);
+      console.error(`Unknown --mode ${args.mode}. Use pr | scheduled | manual | post-merge.`);
       process.exit(2);
   }
   process.exit(code);

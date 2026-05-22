@@ -2,15 +2,12 @@
 
 Generated 2026-05-22
 
-**Total drift entries: 1**
+**Total drift entries: 0**
 
 ## .
 
 - Permitted: 35
-- Drift: 1
-
-Drift entries:
-- tasks/
+- Drift: 0
 
 ## .github
 

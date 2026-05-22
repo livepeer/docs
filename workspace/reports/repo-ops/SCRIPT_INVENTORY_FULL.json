@@ -1,16 +1,21 @@
 {
-  "generated_at": "2026-05-22T03:56:40.755Z",
-  "mode": "audit",
+  "generated_at": "2026-05-22T06:37:21.942Z",
+  "mode": "dry-run",
   "scope": "staged",
-  "scoped_script_paths": [],
+  "scoped_script_paths": [
+    "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+    "operations/tests/integration/dispatch-concern-simulation.js",
+    "operations/tests/integration/pipeline-functional-tests.js",
+    "operations/tests/integration/pipeline-smoke-test.js"
+  ],
   "output_dir": "workspace/reports/repo-ops",
   "summary": {
-    "total_scripts": 0,
+    "total_scripts": 4,
     "by_trigger": {
       "Unmanaged": 0,
-      "Orphaned": 0,
+      "Orphaned": 2,
       "P1": 0,
-      "P2": 0,
+      "P2": 2,
       "P3": 0,
       "P5": 0,
       "P6": 0,
@@ -20,16 +25,16 @@
     "grade_distribution": {
       "A": 0,
       "B": 0,
-      "C": 0,
-      "F": 0
+      "C": 1,
+      "F": 3
     },
     "pipeline_verification": {
       "MATCH": 0,
-      "MISMATCH": 0,
+      "MISMATCH": 4,
       "MISSING": 0
     },
     "classification_sync": {
-      "in_json": 0,
+      "in_json": 4,
       "not_in_json": 0,
       "phantom": 0
     },
@@ -43,8 +48,114 @@
     },
     "Orphaned": {
       "label": "Orphaned",
-      "scripts": [],
-      "count": 0
+      "scripts": [
+        {
+          "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+          "script": "dispatch-folder-allowlist",
+          "category": "dispatch",
+          "purpose": "Pipeline dispatcher for D-GOV-08 folder-allowlist enforcement (full lifecycle)",
+          "scope": "all governed folders (any folder declaring .allowlist)",
+          "domain": "",
+          "needs": "D-GOV-08 (every folder is governed); D-GOV-03 (detect-repair-escalate-verify)",
+          "purpose_statement": "Pipeline orchestrator. Mode-driven entry point: --mode pr (detect + advisory comment), --mode scheduled (audit + repair + verify + rolling issue), --mode manual (repair-only with --verify). Wraps the three atomic scripts (check / audit / repair) into one composable lifecycle. Independently runnable locally via `node dispatch-folder-allowlist.js --dry-run`.",
+          "pipeline_declared": "P2/P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)",
+          "usage": "node operations/scripts/dispatch/governance/dispatch-folder-allowlist.js [--mode pr|scheduled|manual] [--dry-run|--write] [--verify] [--folder <path>]",
+          "header": "/**\n * @script      dispatch-folder-allowlist\n * @type        dispatch\n * @concern     governance\n * @niche       folder-allowlist\n * @purpose     Pipeline dispatcher for D-GOV-08 folder-allowlist enforcement (full lifecycle)\n * @description Pipeline orchestrator. Mode-driven entry point: --mode pr (detect + advisory comment), --mode scheduled (audit + repair + verify + rolling issue), --mode manual (repair-only with --verify). Wraps the three atomic scripts (check / audit / repair) into one composable lifecycle. Independently runnable locally via `node dispatch-folder-allowlist.js --dry-run`.\n * @mode        dispatch\n * @pipeline    P2/P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)\n * @scope       all governed folders (any folder declaring .allowlist)\n * @usage       node operations/scripts/dispatch/governance/dispatch-folder-allowlist.js [--mode pr|scheduled|manual] [--dry-run|--write] [--verify] [--folder <path>]\n * @policy      D-GOV-08 (every folder is governed); D-GOV-03 (detect-repair-escalate-verify)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": false,
+          "purpose_valid": false,
+          "scope_valid": false,
+          "triggers": [
+            {
+              "type": "script",
+              "caller": ".githooks/pre-commit",
+              "pipeline": "indirect"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "stdout",
+              "type": "stdout",
+              "call": "console"
+            }
+          ],
+          "outputs_display": "stdout only",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MISMATCH:phantom claim P2, P3, P5, P6",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "indirect via .githooks/pre-commit",
+          "grade": "F",
+          "flags": [
+            "invalid-category",
+            "invalid-purpose",
+            "invalid-scope",
+            "missing-domain",
+            "header-json-category-mismatch",
+            "phantom-pipeline"
+          ],
+          "trigger_group": "Orphaned"
+        },
+        {
+          "path": "operations/tests/integration/dispatch-concern-simulation.js",
+          "script": "dispatch-concern-simulation",
+          "category": "validator",
+          "purpose": "Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job",
+          "scope": ".github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml",
+          "domain": "",
+          "needs": "D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)",
+          "purpose_statement": "Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".",
+          "pipeline_declared": "P3 (PR-time confidence check), manual (before merge)",
+          "usage": "node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]",
+          "header": "/**\n * @script      dispatch-concern-simulation\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job\n * @description Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".\n * @mode        check\n * @pipeline    P3 (PR-time confidence check), manual (before merge)\n * @scope       .github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml\n * @usage       node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]\n * @policy      D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": true,
+          "purpose_valid": false,
+          "scope_valid": false,
+          "triggers": [
+            {
+              "type": "manual",
+              "caller": "none",
+              "pipeline": "manual"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "stdout",
+              "type": "stdout",
+              "call": "console"
+            }
+          ],
+          "outputs_display": "stdout only",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MISMATCH:phantom claim P3",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "manual (none)",
+          "grade": "F",
+          "flags": [
+            "invalid-purpose",
+            "invalid-scope",
+            "missing-domain",
+            "header-json-category-mismatch",
+            "phantom-pipeline"
+          ],
+          "trigger_group": "Orphaned"
+        }
+      ],
+      "count": 2
     },
     "P1": {
       "label": "P1 - Commit gate",
@@ -53,8 +164,152 @@
     },
     "P2": {
       "label": "P2 - Push gate",
-      "scripts": [],
-      "count": 0
+      "scripts": [
+        {
+          "path": "operations/tests/integration/pipeline-functional-tests.js",
+          "script": "pipeline-functional-tests",
+          "category": "validator",
+          "purpose": "Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)",
+          "scope": "operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/",
+          "domain": "",
+          "needs": "D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)",
+          "purpose_statement": "Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.",
+          "pipeline_declared": "P3 (PR-time gate), P5 (scheduled CI verification)",
+          "usage": "node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]",
+          "header": "/**\n * @script      pipeline-functional-tests\n * @type        validator\n * @concern     governance\n * @niche       pipeline-tests\n * @purpose     Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)\n * @description Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.\n * @mode        check\n * @pipeline    P3 (PR-time gate), P5 (scheduled CI verification)\n * @scope       operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/\n * @usage       node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]\n * @policy      D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": true,
+          "purpose_valid": false,
+          "scope_valid": true,
+          "triggers": [
+            {
+              "type": "workflow-push",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P2"
+            },
+            {
+              "type": "workflow-pr",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P3"
+            },
+            {
+              "type": "workflow-schedule",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P5",
+              "cron": "0 7 * * *"
+            },
+            {
+              "type": "workflow-dispatch",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P6"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "stdout",
+              "type": "stdout",
+              "call": "console"
+            }
+          ],
+          "outputs_display": "stdout only",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MISMATCH:undeclared automation P2, P6",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "P2 (Governance Pipeline); P3 (Governance Pipeline); P5 (Governance Pipeline cron 0 7 * * *); P6 (Governance Pipeline)",
+          "grade": "C",
+          "flags": [
+            "invalid-purpose",
+            "missing-domain",
+            "header-json-category-mismatch",
+            "undeclared-automation"
+          ],
+          "trigger_group": "P2"
+        },
+        {
+          "path": "operations/tests/integration/pipeline-smoke-test.js",
+          "script": "pipeline-smoke-test",
+          "category": "validator",
+          "purpose": "Universal smoke test for all pipeline dispatchers — runs each in --dry-run --mode pr, asserts clean exit, reports per-pipeline status",
+          "scope": "all pipeline + meta dispatchers",
+          "domain": "",
+          "needs": "D-GOV-07 (every script is locally runnable); D-GOV-03 (detect-repair-verify)",
+          "purpose_statement": "Discovers every dispatch-{niche}.js under operations/scripts/dispatch/, runs each in safe mode, captures exit codes, reports pass/fail summary. Foundational test that asserts the architecture is wired correctly. Functional depth (synthetic violations + repair + verify cycles) lives in per-pipeline tests under operations/tests/integration/dispatch-*.test.js.",
+          "pipeline_declared": "manual (run before any dispatcher merge)",
+          "usage": "node operations/tests/integration/pipeline-smoke-test.js [--json]",
+          "header": "/**\n * @script      pipeline-smoke-test\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Universal smoke test for all pipeline dispatchers — runs each in --dry-run --mode pr, asserts clean exit, reports per-pipeline status\n * @description Discovers every dispatch-{niche}.js under operations/scripts/dispatch/, runs each in safe mode, captures exit codes, reports pass/fail summary. Foundational test that asserts the architecture is wired correctly. Functional depth (synthetic violations + repair + verify cycles) lives in per-pipeline tests under operations/tests/integration/dispatch-*.test.js.\n * @mode        check\n * @pipeline    manual (run before any dispatcher merge)\n * @scope       all pipeline + meta dispatchers\n * @usage       node operations/tests/integration/pipeline-smoke-test.js [--json]\n * @policy      D-GOV-07 (every script is locally runnable); D-GOV-03 (detect-repair-verify)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": true,
+          "purpose_valid": false,
+          "scope_valid": false,
+          "triggers": [
+            {
+              "type": "workflow-push",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P2"
+            },
+            {
+              "type": "workflow-pr",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P3"
+            },
+            {
+              "type": "workflow-schedule",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P5",
+              "cron": "0 7 * * *"
+            },
+            {
+              "type": "workflow-dispatch",
+              "caller": ".github/workflows/dispatch-governance.yml",
+              "workflow": "Governance Pipeline",
+              "pipeline": "P6"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "stdout",
+              "type": "stdout",
+              "call": "console"
+            }
+          ],
+          "outputs_display": "stdout only",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MISMATCH:undeclared automation P2, P3, P5, P6",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "P2 (Governance Pipeline); P3 (Governance Pipeline); P5 (Governance Pipeline cron 0 7 * * *); P6 (Governance Pipeline)",
+          "grade": "F",
+          "flags": [
+            "invalid-purpose",
+            "invalid-scope",
+            "missing-domain",
+            "header-json-category-mismatch",
+            "undeclared-automation"
+          ],
+          "trigger_group": "P2"
+        }
+      ],
+      "count": 2
     },
     "P3": {
       "label": "P3 - PR gate",
@@ -82,13 +337,297 @@
       "count": 0
     }
   },
-  "scripts": [],
+  "scripts": [
+    {
+      "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+      "script": "dispatch-folder-allowlist",
+      "category": "dispatch",
+      "purpose": "Pipeline dispatcher for D-GOV-08 folder-allowlist enforcement (full lifecycle)",
+      "scope": "all governed folders (any folder declaring .allowlist)",
+      "domain": "",
+      "needs": "D-GOV-08 (every folder is governed); D-GOV-03 (detect-repair-escalate-verify)",
+      "purpose_statement": "Pipeline orchestrator. Mode-driven entry point: --mode pr (detect + advisory comment), --mode scheduled (audit + repair + verify + rolling issue), --mode manual (repair-only with --verify). Wraps the three atomic scripts (check / audit / repair) into one composable lifecycle. Independently runnable locally via `node dispatch-folder-allowlist.js --dry-run`.",
+      "pipeline_declared": "P2/P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)",
+      "usage": "node operations/scripts/dispatch/governance/dispatch-folder-allowlist.js [--mode pr|scheduled|manual] [--dry-run|--write] [--verify] [--folder <path>]",
+      "header": "/**\n * @script      dispatch-folder-allowlist\n * @type        dispatch\n * @concern     governance\n * @niche       folder-allowlist\n * @purpose     Pipeline dispatcher for D-GOV-08 folder-allowlist enforcement (full lifecycle)\n * @description Pipeline orchestrator. Mode-driven entry point: --mode pr (detect + advisory comment), --mode scheduled (audit + repair + verify + rolling issue), --mode manual (repair-only with --verify). Wraps the three atomic scripts (check / audit / repair) into one composable lifecycle. Independently runnable locally via `node dispatch-folder-allowlist.js --dry-run`.\n * @mode        dispatch\n * @pipeline    P2/P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)\n * @scope       all governed folders (any folder declaring .allowlist)\n * @usage       node operations/scripts/dispatch/governance/dispatch-folder-allowlist.js [--mode pr|scheduled|manual] [--dry-run|--write] [--verify] [--folder <path>]\n * @policy      D-GOV-08 (every folder is governed); D-GOV-03 (detect-repair-escalate-verify)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": false,
+      "purpose_valid": false,
+      "scope_valid": false,
+      "triggers": [
+        {
+          "type": "script",
+          "caller": ".githooks/pre-commit",
+          "pipeline": "indirect"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "stdout",
+          "type": "stdout",
+          "call": "console"
+        }
+      ],
+      "outputs_display": "stdout only",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MISMATCH:phantom claim P2, P3, P5, P6",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "indirect via .githooks/pre-commit",
+      "grade": "F",
+      "flags": [
+        "invalid-category",
+        "invalid-purpose",
+        "invalid-scope",
+        "missing-domain",
+        "header-json-category-mismatch",
+        "phantom-pipeline"
+      ],
+      "trigger_group": "Orphaned"
+    },
+    {
+      "path": "operations/tests/integration/dispatch-concern-simulation.js",
+      "script": "dispatch-concern-simulation",
+      "category": "validator",
+      "purpose": "Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job",
+      "scope": ".github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml",
+      "domain": "",
+      "needs": "D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)",
+      "purpose_statement": "Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".",
+      "pipeline_declared": "P3 (PR-time confidence check), manual (before merge)",
+      "usage": "node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]",
+      "header": "/**\n * @script      dispatch-concern-simulation\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job\n * @description Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".\n * @mode        check\n * @pipeline    P3 (PR-time confidence check), manual (before merge)\n * @scope       .github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml\n * @usage       node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]\n * @policy      D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": true,
+      "purpose_valid": false,
+      "scope_valid": false,
+      "triggers": [
+        {
+          "type": "manual",
+          "caller": "none",
+          "pipeline": "manual"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "stdout",
+          "type": "stdout",
+          "call": "console"
+        }
+      ],
+      "outputs_display": "stdout only",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MISMATCH:phantom claim P3",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "manual (none)",
+      "grade": "F",
+      "flags": [
+        "invalid-purpose",
+        "invalid-scope",
+        "missing-domain",
+        "header-json-category-mismatch",
+        "phantom-pipeline"
+      ],
+      "trigger_group": "Orphaned"
+    },
+    {
+      "path": "operations/tests/integration/pipeline-functional-tests.js",
+      "script": "pipeline-functional-tests",
+      "category": "validator",
+      "purpose": "Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)",
+      "scope": "operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/",
+      "domain": "",
+      "needs": "D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)",
+      "purpose_statement": "Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.",
+      "pipeline_declared": "P3 (PR-time gate), P5 (scheduled CI verification)",
+      "usage": "node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]",
+      "header": "/**\n * @script      pipeline-functional-tests\n * @type        validator\n * @concern     governance\n * @niche       pipeline-tests\n * @purpose     Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)\n * @description Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.\n * @mode        check\n * @pipeline    P3 (PR-time gate), P5 (scheduled CI verification)\n * @scope       operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/\n * @usage       node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]\n * @policy      D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": true,
+      "purpose_valid": false,
+      "scope_valid": true,
+      "triggers": [
+        {
+          "type": "workflow-push",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P2"
+        },
+        {
+          "type": "workflow-pr",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P3"
+        },
+        {
+          "type": "workflow-schedule",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P5",
+          "cron": "0 7 * * *"
+        },
+        {
+          "type": "workflow-dispatch",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P6"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "stdout",
+          "type": "stdout",
+          "call": "console"
+        }
+      ],
+      "outputs_display": "stdout only",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MISMATCH:undeclared automation P2, P6",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "P2 (Governance Pipeline); P3 (Governance Pipeline); P5 (Governance Pipeline cron 0 7 * * *); P6 (Governance Pipeline)",
+      "grade": "C",
+      "flags": [
+        "invalid-purpose",
+        "missing-domain",
+        "header-json-category-mismatch",
+        "undeclared-automation"
+      ],
+      "trigger_group": "P2"
+    },
+    {
+      "path": "operations/tests/integration/pipeline-smoke-test.js",
+      "script": "pipeline-smoke-test",
+      "category": "validator",
+      "purpose": "Universal smoke test for all pipeline dispatchers — runs each in --dry-run --mode pr, asserts clean exit, reports per-pipeline status",
+      "scope": "all pipeline + meta dispatchers",
+      "domain": "",
+      "needs": "D-GOV-07 (every script is locally runnable); D-GOV-03 (detect-repair-verify)",
+      "purpose_statement": "Discovers every dispatch-{niche}.js under operations/scripts/dispatch/, runs each in safe mode, captures exit codes, reports pass/fail summary. Foundational test that asserts the architecture is wired correctly. Functional depth (synthetic violations + repair + verify cycles) lives in per-pipeline tests under operations/tests/integration/dispatch-*.test.js.",
+      "pipeline_declared": "manual (run before any dispatcher merge)",
+      "usage": "node operations/tests/integration/pipeline-smoke-test.js [--json]",
+      "header": "/**\n * @script      pipeline-smoke-test\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Universal smoke test for all pipeline dispatchers — runs each in --dry-run --mode pr, asserts clean exit, reports per-pipeline status\n * @description Discovers every dispatch-{niche}.js under operations/scripts/dispatch/, runs each in safe mode, captures exit codes, reports pass/fail summary. Foundational test that asserts the architecture is wired correctly. Functional depth (synthetic violations + repair + verify cycles) lives in per-pipeline tests under operations/tests/integration/dispatch-*.test.js.\n * @mode        check\n * @pipeline    manual (run before any dispatcher merge)\n * @scope       all pipeline + meta dispatchers\n * @usage       node operations/tests/integration/pipeline-smoke-test.js [--json]\n * @policy      D-GOV-07 (every script is locally runnable); D-GOV-03 (detect-repair-verify)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": true,
+      "purpose_valid": false,
+      "scope_valid": false,
+      "triggers": [
+        {
+          "type": "workflow-push",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P2"
+        },
+        {
+          "type": "workflow-pr",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P3"
+        },
+        {
+          "type": "workflow-schedule",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P5",
+          "cron": "0 7 * * *"
+        },
+        {
+          "type": "workflow-dispatch",
+          "caller": ".github/workflows/dispatch-governance.yml",
+          "workflow": "Governance Pipeline",
+          "pipeline": "P6"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "stdout",
+          "type": "stdout",
+          "call": "console"
+        }
+      ],
+      "outputs_display": "stdout only",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MISMATCH:undeclared automation P2, P3, P5, P6",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "P2 (Governance Pipeline); P3 (Governance Pipeline); P5 (Governance Pipeline cron 0 7 * * *); P6 (Governance Pipeline)",
+      "grade": "F",
+      "flags": [
+        "invalid-purpose",
+        "invalid-scope",
+        "missing-domain",
+        "header-json-category-mismatch",
+        "undeclared-automation"
+      ],
+      "trigger_group": "P2"
+    }
+  ],
   "discrepancies": {
-    "phantom_pipeline_claims": [],
-    "undeclared_automation": [],
+    "phantom_pipeline_claims": [
+      {
+        "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js"
+      },
+      {
+        "path": "operations/tests/integration/dispatch-concern-simulation.js"
+      }
+    ],
+    "undeclared_automation": [
+      {
+        "path": "operations/tests/integration/pipeline-functional-tests.js"
+      },
+      {
+        "path": "operations/tests/integration/pipeline-smoke-test.js"
+      }
+    ],
     "not_in_json": [],
     "phantom_json_entries": [],
-    "header_json_mismatches": []
+    "header_json_mismatches": [
+      {
+        "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+        "category_match": false,
+        "purpose_match": true
+      },
+      {
+        "path": "operations/tests/integration/dispatch-concern-simulation.js",
+        "category_match": false,
+        "purpose_match": true
+      },
+      {
+        "path": "operations/tests/integration/pipeline-functional-tests.js",
+        "category_match": false,
+        "purpose_match": true
+      },
+      {
+        "path": "operations/tests/integration/pipeline-smoke-test.js",
+        "category_match": false,
+        "purpose_match": true
+      }
+    ]
   },
   "outputChains": [],
   "warnings": [],
@@ -1542,9 +2081,11 @@
     "operations/tests/fixtures/mdx-safe-markdown/repair-cases.json",
     "operations/tests/fixtures/mdx-safe-markdown/validator-cases.json",
     "operations/tests/integration/browser.test.js",
+    "operations/tests/integration/dispatch-concern-simulation.js",
     "operations/tests/integration/domain-pages-audit.js",
     "operations/tests/integration/mdx-component-runtime-smoke.js",
     "operations/tests/integration/openapi-reference-audit.js",
+    "operations/tests/integration/pipeline-functional-tests.js",
     "operations/tests/integration/pipeline-smoke-test.js",
     "operations/tests/integration/v2-link-audit.js",
     "operations/tests/integration/v2-link-audit.selftest.js",
@@ -2414,6 +2955,7 @@
     "tools/lib/governance/generated-artifacts.js",
     "tools/lib/governance/generated-file-banners.js",
     "tools/lib/governance/pipeline-mode.js",
+    "tools/lib/governance/pipeline-test-harness.js",
     "tools/lib/governance/repo-governance.js",
     "tools/lib/governance/root-governance.js",
     "tools/lib/governance/script-governance-config.js",
@@ -9758,6 +10300,7 @@
     "workspace/reports/governance/folder-allowlist/audit.json",
     "workspace/reports/governance/folder-allowlist/audit.md",
     "workspace/reports/governance/gap-report.mdx",
+    "workspace/reports/governance/pipeline-test-coverage.md",
     "workspace/reports/handover/2026-04-15-REQUIREMENTS.md",
     "workspace/reports/handover/2026-04-15-critical-review.md",
     "workspace/reports/health/wcag/wcag-audit.json",
@@ -15209,6 +15752,21 @@
       "status": "active"
     },
     {
+      "path": "operations/tests/integration/dispatch-concern-simulation.js",
+      "name": "dispatch-concern-simulation.js",
+      "type": "validator",
+      "concern": "governance",
+      "niche": "pipelines",
+      "purpose": "Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job",
+      "description": "Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".",
+      "mode": "check",
+      "pipeline": "P3 (PR-time confidence check), manual (before merge)",
+      "scope": ".github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml",
+      "usage": "node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]",
+      "policy": "D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)",
+      "status": "active"
+    },
+    {
       "path": "operations/tests/integration/domain-pages-audit.js",
       "name": "domain-pages-audit.js",
       "type": "validator",
@@ -15251,6 +15809,21 @@
       "scope": "full-repo",
       "usage": "node operations/tests/integration/openapi-reference-audit.js [flags]",
       "policy": "F-R17",
+      "status": "active"
+    },
+    {
+      "path": "operations/tests/integration/pipeline-functional-tests.js",
+      "name": "pipeline-functional-tests.js",
+      "type": "validator",
+      "concern": "governance",
+      "niche": "pipeline-tests",
+      "purpose": "Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)",
+      "description": "Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.",
+      "mode": "check",
+      "pipeline": "P3 (PR-time gate), P5 (scheduled CI verification)",
+      "scope": "operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/",
+      "usage": "node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]",
+      "policy": "D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)",
       "status": "active"
     },
     {
@@ -17579,6 +18152,21 @@
       "status": "active"
     },
     {
+      "path": "tools/lib/governance/pipeline-test-harness.js",
+      "name": "pipeline-test-harness.js",
+      "type": "",
+      "concern": "",
+      "niche": "",
+      "purpose": "Shared synthetic-violation test harness for pipeline dispatchers (D-GOV-03 detect-repair-verify)",
+      "description": "Reusable test driver: drops a synthetic-violation fixture, runs the detect step, asserts violation found, runs the repair step, asserts violation fixed, re-runs detect to verify clean, restores baseline.",
+      "mode": "",
+      "pipeline": "",
+      "scope": "",
+      "usage": "",
+      "policy": "D-GOV-03 (every pipeline must prove its detect-repair-verify cycle on synthetic violations before shipping)",
+      "status": "active"
+    },
+    {
       "path": "tools/lib/governance/repo-governance.js",
       "name": "repo-governance.js",
       "type": "utility",
@@ -17653,5 +18241,115 @@
       "policy": "",
       "status": "active"
     }
-  ]
+  ],
+  "repair": {
+    "mode": "dry-run",
+    "dry_run": true,
+    "fixes": {
+      "json_phantoms_removed": 0,
+      "json_entries_added": 0,
+      "json_entries_updated": 4,
+      "headers_category_added": 0,
+      "headers_purpose_added": 0,
+      "headers_domain_added": 4,
+      "headers_script_added": 0,
+      "headers_usage_added": 0,
+      "headers_scope_added": 0,
+      "headers_needs_added": 0,
+      "headers_purpose_statement_added": 0,
+      "headers_pipeline_corrected": 0,
+      "indexes_regenerated": true,
+      "total_fixes": 8,
+      "files_modified": [],
+      "planned_files": [
+        ".githooks/script-index.md",
+        ".github/script-index.md",
+        "docs-guide/catalog/scripts-catalog.mdx",
+        "docs-guide/indexes/scripts-index.mdx",
+        "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+        "operations/scripts/script-index.md",
+        "operations/tests/integration/dispatch-concern-simulation.js",
+        "operations/tests/integration/pipeline-functional-tests.js",
+        "operations/tests/integration/pipeline-smoke-test.js",
+        "operations/tests/script-index.md",
+        "tools/config/registry/script-index.md",
+        "tools/config/registry/script-registry.json",
+        "tools/dev/script-index.md",
+        "tools/lib/script-index.md",
+        "workspace/scripts/script-index.md"
+      ]
+    },
+    "needs_human": [
+      {
+        "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+        "missing": [
+          "@category",
+          "@purpose",
+          "@scope",
+          "@pipeline"
+        ]
+      },
+      {
+        "path": "operations/tests/integration/dispatch-concern-simulation.js",
+        "missing": [
+          "@purpose",
+          "@scope",
+          "@pipeline"
+        ]
+      },
+      {
+        "path": "operations/tests/integration/pipeline-functional-tests.js",
+        "missing": [
+          "@purpose",
+          "@pipeline"
+        ]
+      },
+      {
+        "path": "operations/tests/integration/pipeline-smoke-test.js",
+        "missing": [
+          "@purpose",
+          "@scope",
+          "@pipeline"
+        ]
+      }
+    ],
+    "projected_summary": {
+      "total_scripts": 4,
+      "grade_distribution": {
+        "A": 0,
+        "B": 0,
+        "C": 3,
+        "F": 1
+      },
+      "pipeline_verification": {
+        "MATCH": 0,
+        "MISMATCH": 4,
+        "MISSING": 0
+      },
+      "classification_sync": {
+        "in_json": 4,
+        "not_in_json": 0,
+        "phantom": 0
+      }
+    }
+  },
+  "projected_summary": {
+    "total_scripts": 4,
+    "grade_distribution": {
+      "A": 0,
+      "B": 0,
+      "C": 3,
+      "F": 1
+    },
+    "pipeline_verification": {
+      "MATCH": 0,
+      "MISMATCH": 4,
+      "MISSING": 0
+    },
+    "classification_sync": {
+      "in_json": 4,
+      "not_in_json": 0,
+      "phantom": 0
+    }
+  }
 }

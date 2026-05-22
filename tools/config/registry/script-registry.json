@@ -5070,6 +5070,21 @@
     "status": "active"
   },
   {
+    "path": "operations/tests/integration/dispatch-concern-simulation.js",
+    "name": "dispatch-concern-simulation.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "pipelines",
+    "purpose": "Validate every dispatch-{concern}.yml workflow can be triggered locally — proves YAML wiring, job structure, script existence, and mode-flag interfaces match per-job",
+    "description": "Loads each .github/workflows/dispatch-{concern}.yml, parses the YAML, walks each job's steps, extracts the dispatcher scripts referenced, verifies each exists and exposes the modes/flags the workflow uses. For each job, runs the referenced dispatcher's --help to confirm its CLI is wired. This is the local equivalent of pushing each workflow to GitHub and watching it parse — what 5.4 of the GitHub Actions Governance plan calls \"end-to-end CI dry-run\".",
+    "mode": "check",
+    "pipeline": "P3 (PR-time confidence check), manual (before merge)",
+    "scope": ".github/workflows/dispatch-{brand,copy,discoverability,governance,health,maintenance}.yml",
+    "usage": "node operations/tests/integration/dispatch-concern-simulation.js [--concern <name>]",
+    "policy": "D-GOV-07 (local CLI equivalence); D-ACT-08 (dispatchers = workflow YAML)",
+    "status": "active"
+  },
+  {
     "path": "operations/tests/integration/domain-pages-audit.js",
     "name": "domain-pages-audit.js",
     "type": "validator",
@@ -5112,6 +5127,21 @@
     "scope": "full-repo",
     "usage": "node operations/tests/integration/openapi-reference-audit.js [flags]",
     "policy": "F-R17",
+    "status": "active"
+  },
+  {
+    "path": "operations/tests/integration/pipeline-functional-tests.js",
+    "name": "pipeline-functional-tests.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "pipeline-tests",
+    "purpose": "Functional detect-repair-verify tests for foundational governance/content pipelines (D-GOV-03 proof)",
+    "description": "Runs synthetic-violation cycles against the 10 foundational pipeline dispatchers. Each test drops a known-bad fixture, runs detect, asserts the violation is found, runs repair (where supported), asserts the violation is gone, re-runs detect to verify clean. Honest exit codes — non-zero if any pipeline cannot prove its lifecycle.",
+    "mode": "check",
+    "pipeline": "P3 (PR-time gate), P5 (scheduled CI verification)",
+    "scope": "operations/scripts/dispatch/governance/, operations/scripts/dispatch/content/",
+    "usage": "node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]",
+    "policy": "D-GOV-03 (every pipeline proves its detect-repair-verify cycle); D-GOV-07 (local CLI equivalence)",
     "status": "active"
   },
   {
@@ -7437,6 +7467,21 @@
     "scope": "",
     "usage": "",
     "policy": "D-GOV-07 (local CLI equivalence); D-GOV-03 (detect-repair-escalate-verify)",
+    "status": "active"
+  },
+  {
+    "path": "tools/lib/governance/pipeline-test-harness.js",
+    "name": "pipeline-test-harness.js",
+    "type": "",
+    "concern": "",
+    "niche": "",
+    "purpose": "Shared synthetic-violation test harness for pipeline dispatchers (D-GOV-03 detect-repair-verify)",
+    "description": "Reusable test driver: drops a synthetic-violation fixture, runs the detect step, asserts violation found, runs the repair step, asserts violation fixed, re-runs detect to verify clean, restores baseline.",
+    "mode": "",
+    "pipeline": "",
+    "scope": "",
+    "usage": "",
+    "policy": "D-GOV-03 (every pipeline must prove its detect-repair-verify cycle on synthetic violations before shipping)",
     "status": "active"
   },
   {

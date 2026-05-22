@@ -163,6 +163,13 @@ const TESTS = [
 
 function main() {
   const argv = process.argv.slice(2);
+  if (argv.includes('--help') || argv.includes('-h')) {
+    console.log('Usage: node operations/tests/integration/pipeline-functional-tests.js [--only <name>] [--json]');
+    console.log('');
+    console.log('Runs synthetic-violation detect-repair-verify cycles against foundational pipelines.');
+    console.log('Exits 0 if all tests pass, 1 if any fail.');
+    process.exit(0);
+  }
   const onlyIdx = argv.indexOf('--only');
   const only = onlyIdx >= 0 ? argv[onlyIdx + 1] : null;
   const json = argv.includes('--json');

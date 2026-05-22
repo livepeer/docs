@@ -1,6 +1,6 @@
 # OpenAPI Reference Audit
 
-Generated: 2026-05-22T03:56:51.957Z
+Generated: 2026-05-22T06:36:31.411Z
 Mode: full
 Strict: false
 Fix enabled: false

@@ -715,7 +715,7 @@ function toRouteFromFilePath(filePath) {
 }
 
 function loadLinkMissingRefsMap(repoRoot) {
-  const reportPath = path.join(repoRoot, "tasks", "reports", "navigation-links", "LINK_TEST_REPORT.json");
+  const reportPath = path.join(repoRoot, "workspace", "reports", "navigation-links", "LINK_TEST_REPORT.json");
   const report = readJsonSafe(reportPath, null);
   const map = new Map();
   if (!report || !Array.isArray(report.files)) return map;
@@ -747,7 +747,7 @@ function isBlockingImpact(impact) {
 }
 
 function loadWcagBlockingMap(repoRoot) {
-  const reportPath = path.join(repoRoot, "tasks", "reports", "quality-accessibility", "v2-wcag-audit-report.json");
+  const reportPath = path.join(repoRoot, "workspace", "reports", "quality-accessibility", "v2-wcag-audit-report.json");
   const report = readJsonSafe(reportPath, null);
   const map = new Map();
   if (!report || !Array.isArray(report.results)) return map;
