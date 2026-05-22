@@ -1,0 +1,66 @@
+---
+title: Livepeer Objectif du jeton
+sidebarTitle: Objectif
+keywords:
+  - livepeer
+  - delegators
+  - about lpt livepeer token
+  - purpose
+  - delegation
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9scHQvYWJvdXQvcHVycG9zZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2xwdC9hYm91dC9wdXJwb3NlIiwic291cmNlSGFzaCI6IjAzM2EzMTE2MjhlOGVhNjFhZjEzYzhmODFkMGQ2NDBjYWEzZmI3NGI4NjY0NDA1MTA1M2I4ZDMxMmFkZjIzOWIiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMDFUMTA6NDY6MTIuMDU0WiJ9 */}
+## Objectif de LPT
+
+LPT est l'actif natif du protocole Livepeer et remplit trois fonctions distinctes :
+
+- **Collatéral de sécurité** – Les orchestrators doivent bloquer LPT pour participer à l'ensemble actif. Le blocage agit comme collatéral contre les comportements incorrects et détermine la quantité de travail qu'un orchestrator peut effectuer. Les délégués bloquent LPT auprès des orchestrators et partagent les récompenses. Bien que le rappel soit actuellement désactivé, l'existence d'une monnaie bloquable permet au réseau d'imposer des pénalités économiques à l'avenir.
+
+- **Distribution des récompenses** – Nouvelles unités de LPT créées par inflation sont distribuées proportionnellement au blocage. Cela fait de LPT un « token de travail » : plus un orchestrator a de blocage, plus il reçoit de récompenses inflationnistes. Les délégués partagent ces récompenses en fonction de la part de récompense configurée par l'orchestrator. Les frais payés en ETH sont également répartis selon le blocage, alignant les incitations sur les deux sources de revenus.
+
+- **Pouvoir de gouvernance** – Le poids de vote dans les propositions d'amélioration Livepeer (LIPs) est proportionnel aux LPT bloqués. Les détenteurs de jetons peuvent proposer des modifications du protocole, voter sur les affectations du trésor et diriger les mises à niveau du réseau. Les délégués influencent indirectement la gouvernance en choisissant des orchestrators qui représentent leurs préférences.
+
+Il est important de noter que LPT n'est pas utilisé pour payer des travaux. Les diffuseurs et les développeurs d'IA paient en ETH ou en jeton de gaz sous-jacent, tandis que les orchestrators gagnent des frais en ETH. Cette séparation évite de confondre les dynamiques d'offre et de demande (poussées par les charges de travail vidéo/IA) avec l'incitation à la sécurité (poussée par LPT). Cela permet également à Livepeer d'utiliser le marché des gaz d'Ethereum pour les paiements tout en maintenant un modèle de sécurité indépendant.
+
+### Offre et inflation
+
+LPT a été lancé avec une offre initiale fixe de 25,8 millions de jetons et continue d'augmenter via une inflation dynamique. Contrairement au calendrier déterministe de réduction de Bitcoin, l'émission de Livepeer s'adapte aux conditions du réseau. Au début de chaque tour, le BondingManager crée de nouveaux LPT, les ajoute à l'offre totale et les distribue aux orchestrators actifs proportionnellement à leur participation. L'algorithme expose plusieurs paramètres ajustables :
+
+- Distribution initiale et verrouillages – À la création, LPT a été alloué aux investisseurs initiaux, aux fondateurs, aux membres de la communauté et à un trésor de protocole. De nombreuses allocations ont été libérées sur plusieurs années pour aligner les intérêts à long terme. La majorité de l'offre en circulation est maintenant détenue par la communauté.
+
+- Inflation adaptative – Le taux d'inflation répond à la participation au staking : si moins de 50 % de LPT est lié, le taux augmente ; si plus de 50 % est lié, le taux diminue. Cette boucle de rétroaction maintient le réseau sécurisé en incitant au lien supplémentaire lorsqu'il est nécessaire tout en réduisant la dilution lorsqu'une sécurité suffisante est présente. Au début, l'inflation dépassait 13 % par an ; avec l'augmentation de la participation, la communauté a voté pour réduire l'émission de base à environ 6 à 8 % et pour diriger une partie vers le trésor de la communauté.
+La formule précise est l'inflation := inflation ± inflationChangeRate selon que le ratio lié est supérieur ou inférieur au taux cible de liaison (initialement 50 %). inflationChangeRate détermine la vitesse à laquelle le taux s'ajuste (par exemple, 0,0005 par tour). Comme les tours durent environ 21 heures, les ajustements s'accumulent progressivement. Ce design évite les chocs brutaux tout en guidant le réseau vers le niveau cible de participation.
+
+- Multiplicateur de staking et longueur du tour – La sécurité du protocole dépend non seulement du pourcentage de LPT lié, mais aussi de la capacité de travail par unité de staking. À mesure que la demande pour le débit vidéo/IA croît, la gouvernance peut augmenter le nombre d'orchestrateurs actifs (via numActiveTranscoders) pour agrandir l'offre. À l'inverse, si la demande diminue, l'inflation continue de distribuer des récompenses mais les revenus des orchestrateurs diminuent, signalant aux opérateurs de réduire leur capacité.
+
+- Ajustements futurs – La gouvernance conserve la capacité à modifier les paramètres d'inflation via des LIPs. Par exemple, la communauté pourrait mettre en place des calendriers de division par deux, rediriger une plus grande part vers le trésor ou introduire de nouveaux mécanismes de récompense. En codifiant l'inflation dans la gouvernance, Livepeer peut s'adapter aux conditions réseau changeantes.
+Au-delà des ajustements de paramètres, les propositions futures pourraient explorer des mécanismes de brûlage de jetons (par exemple, brûler une partie des pénalités de slash), le verrouillage de veLPT (modèles de vote en escrow pour accorder plus de poids aux détenteurs à long terme) ou une inflation spécifique à L2 (différencier l'émission sur Arbitrum par rapport au mainnet). Chaque changement nécessiterait une analyse économique approfondie et un vote de la gouvernance.
+
+### Trésorerie de la communauté
+Le protocole dirige une part de l'inflation vers un trésor de la communauté sur la chaîne. Dans sa première itération, 10 % des LPT nouvellement créés ont été envoyés à un multisig contrôlé par la Fondation Livepeer et les gardiens de la communauté. Le but du trésor est de financer des biens publics, des recherches, des initiatives de marketing et des outils qui bénéficient à l'ensemble de l'écosystème. Des exemples incluent des subventions pour améliorer l'infrastructure de surveillance, des recherches sur la transcodification vérifiable et le soutien aux développeurs. Lorsque le solde du trésor a atteint un plafond prédéfini, les contributions ont été suspendues ; les LIPs futurs peuvent ajuster le taux ou reprendre le financement.
+
+Les fonds du trésor ne s'accumulent pas automatiquement auprès des orchestrateurs ou des délégués. Les propositions de dépenses doivent être approuvées par la gouvernance, assurant ainsi la transparence et la responsabilité. Les entités à usage spécifique (SPE) peuvent demander des allocations pour exécuter des projets ciblés (par exemple, la construction d'un cadre de vérification, le développement de nouveaux codecs) et doivent rendre compte des jalons. Cette structure transforme l'inflation en un investissement dirigé par la communauté dans la santé à long terme du protocole, plutôt que simplement en dilution.
+
+Pour s'assurer que les dépenses du trésor s'alignent sur les objectifs du protocole, la communauté Livepeer a expérimenté des cadres pour le financement des biens publics. Un exemple est le modèle de subvention basé sur les jalons transparents : les candidats soumettent des budgets et des livrables, les fonds sont versés par tranches à la réalisation et les progrès sont publiquement rapportés sur le forum. Un autre exemple est le financement quadratique, qui pourrait matcher les dons de la communauté provenant du trésor pour signaler un fort soutien de base. Les discussions ont également exploré le financement rétroactif du style du réseau Regen, où les contributions sont récompensées après avoir démontré un impact. Ces expériences reflètent un mouvement plus large dans la gouvernance décentralisée vers une allocation de ressources plus inclusive et responsable.
+
+### Distribution des récompenses
+
+Il y a deux flux de revenus dans Livepeer :
+
+1. ETH fees – Lorsque les diffuseurs ou les développeurs d'IA récupèrent les billets gagnants, ETH est transféré de leur dépôt à l'orchestrator. L'orchestrator partage un pourcentage configurable de ces frais avec ses délégués (feeShare). Un taux de frais élevé attire les délégués mais réduit la marge de l'orchestrator.
+
+2. LPT inflation – À chaque tour, le BondingManager appelle reward() pour chaque orchestrateur actif. Le contrat émet de nouveaux LPT proportionnels au montant total de la mise de l'orchestrateur (les LPT bloqués + les délégations) et les transfère à l'orchestrateur. L'orchestrateur partage ensuite la récompense avec les délégués selon sa part de récompense (pourcentage qu'il conserve). Les délégués appellent claimEarnings() pour collecter les LPT et ETH accumulés.
+
+Le lien est non-custodien : les LPT des délégués restent dans le BondingManager. Pour retirer, un délégué initie un déblocage. Après une période de décongélation d'un tour (environ 21 heures), ils peuvent retirer leur principal et toutes les récompenses non réclamées. Cette période de déblocage empêche le basculement rapide de la mise et permet du temps pour appliquer les sanctions (lorsque activé).
+
+La configuration des parts de récompense et des frais crée un marché de tarification. Les orchestrateurs doivent décider de la part des récompenses à conserver par rapport à celle à partager pour attirer les délégués. Les délégués évaluent ensuite les orchestrateurs en fonction de leur disponibilité, de la qualité de la transcodification, de la part des frais, de la part des récompenses et de l'alignement avec la gouvernance. La concurrence résultante améliore la qualité des services et décentralise le pouvoir.
+
+Capitalisation des récompenses et capture de l'inflation
+
+Comme l'inflation est distribuée de façon continue, les délégués bénéficient de la capitalisation régulière de leurs revenus en appelant claimEarnings() ou en liant davantage de LPT. Ne pas réclamer pendant plusieurs tours ne fait pas perdre les récompenses, mais peut retarder la capitalisation et réduire le rendement effectif en raison de la dilution. Certains opérateurs utilisent des bots pour automatiser claimEarnings() pour leurs délégués, facilitant ainsi la capitalisation et économisant des frais de gaz en regroupant les appels.
+
+_**Fuite de récompenses et « interrupteur de frais »**_
+
+Historiquement Livepeer a distribué toutes les récompenses inflationnistes aux orchestrators et à leurs délégués, tandis qu'une part fixe des frais allait aux délégués des orchestrators via le feeShare. Des discussions récentes ont exploré l'introduction d'un « interrupteur de frais » qui orienterait une partie des frais vers le trésor de la communauté ou brûlerait une partie des frais pour réduire l'offre. Un tel changement nécessiterait un LIP et une analyse économique. Les partisans affirment que l'alignement des flux de frais sur le financement des biens publics pourrait déconnecter la croissance du réseau de l'inflation ; les opposants préviennent que la réduction des revenus des orchestrators pourrait réduire la capacité de service. À l'early 2026, aucun interrupteur de frais n'a été mis en œuvre, mais le débat souligne que la distribution des récompenses est un espace de conception en évolution.
+
+### 

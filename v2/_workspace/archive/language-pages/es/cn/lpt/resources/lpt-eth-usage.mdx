@@ -1,0 +1,45 @@
+---
+title: LPT & ETH Token Functions
+sidebarTitle: Protocol Token Flows
+description: What the LPT & ETH Tokens are used for in the Livepeer Protocol
+keywords:
+  - livepeer
+  - delegators
+  - token resources
+  - lpt eth usage
+  - token
+  - functions
+  - tokens
+  - protocol
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UiLCJzb3VyY2VIYXNoIjoiMDkxNWU3YmI4NGM5NjAzMDEwYzhhOTA5YTMyZmFkNGYyMDgzYThmNTRmY2M0YzBhMDU5MGFhMjZmMjM2OWUxMiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMToyNjozNi4xNzZaIn0= */}
+<Note>
+  {' '}
+  This is wild to me that Gateways do not use LPT to pay orchestrators. Need to dig
+  into the why more
+</Note>
+
+### 支付层
+
+Livepeer 协议使用两种不同的货币用于不同的目的：
+
+| 货币 | 用途                            | 使用方                   |
+| -------- | ---------------------------------- | ------------------------- |
+| ETH/Wei  | 服务费用（转码、AI） | 网关 → 协调者  |
+| LPT      | 质押、治理、奖励       | 协调者、委托者 |
+
+这种分离是故意的：ETH 处理实际的服务费用，而 LPT 处理协议治理和质押。
+这种设计使服务费用在稳定货币中保持可预测性，同时允许 LPT 执行其治理功能
+
+**价格配置**价格可以以 wei 指定，或从法定货币转换而来[starter.go:891-908](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go#L891-L908)
+
+```go
+pricePerUnit, currency, err := parsePricePerUnit(*cfg.PricePerUnit)
+// Supports: "1000", "0.50USD", "1.5EUR" etc.
+// Converts to wei for actual payments
+```
+
+## ETH 支付
+
+网关使用 ETH（以太坊）支付转码和 AI 处理服务，而不是 Livepeer 代币（LPT）。支付系统基于以太坊的货币。

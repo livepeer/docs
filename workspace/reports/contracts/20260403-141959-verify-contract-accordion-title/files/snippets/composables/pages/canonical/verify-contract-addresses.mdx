@@ -1,0 +1,112 @@
+import { InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+import { ContractVerifier } from '/snippets/components/integrators/feeds/ContractVerifier.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+
+## Verifier Widget: Verify Contract Address
+
+Use the tool below to query the blockchain directly from your browser.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<Icon icon="info-circle" color="var(--accent)" />} title="How this widget and registry work" />}>
+  This widget is a browser-side checker layered on top of the generated contracts registry on this page. The registry itself is
+  not hand-maintained. It is produced by the contracts refresh pipeline:
+
+  1. `update-contract-addresses.yml` runs daily, on upstream repo dispatch events, or on a manual run.
+  2. `.github/scripts/fetch-contract-addresses.js` loads the proof catalog, the governor manifest, the previous payload, and the
+     previous branch-watch snapshot.
+  3. The pipeline resolves each known contract family, verifies bytecode and controller or proxy relationships on Arbitrum One
+     and Ethereum Mainnet, and enriches rows with explorer and provenance metadata.
+  4. It rebuilds the active, implementation, non-active, and historical datasets, then derives the supporting blockchain
+     contracts data from the same resolved payload.
+  5. It writes new files only if validation passes. On failure, it writes health checks and incident artifacts, updates or opens
+     a GitHub issue, and does not publish replacement data.
+
+  This widget then lets you check that published registry directly from your browser. No backend, no API keys, no sign-in.
+
+  <StyledSteps>
+    <StyledStep title="Look up a contract by name" icon="terminal">
+      Select any Livepeer contract from the dropdown. For contracts registered in the on-chain Controller, the widget calls
+      `getContract()` via a public Arbitrum RPC and compares the returned address against the published registry on this page.
+      For standalone and utility contracts outside the Controller, it verifies the address directly on
+      [Blockscout](https://arbitrum.blockscout.com), confirming that it is a deployed, verified contract.
+    </StyledStep>
+    <StyledStep title="Verify an address you already have" icon="magnifying-glass">
+      Paste any address and the widget queries the [Blockscout API](https://arbitrum.blockscout.com) to check whether it is a
+      contract, whether its source code is verified, and what its explorer label is. It then cross-references the address against
+      the generated contract data on this page.
+    </StyledStep>
+  </StyledSteps>
+
+  <Note>
+    Three public RPC endpoints are tried in sequence with automatic failover:
+    [arb1.arbitrum.io](https://arb1.arbitrum.io/rpc),
+    [publicnode.com](https://arbitrum-one-rpc.publicnode.com),
+    [drpc.org](https://arbitrum.drpc.org).
+
+    If all are unreachable, the widget shows a `cast` command you can run locally.
+    Queries only fire when you click a button, never on page load.
+    No data leaves your browser except to these public endpoints.
+
+    Full list of public Arbitrum One RPCs: [Chainlist](https://chainlist.org/chain/42161).
+  </Note>
+</Accordion>
+
+<br/>
+
+<BorderedBox variant="accent">
+  <ContractVerifier data={contractAddresses} />
+</BorderedBox>
+
+### No-Trust On-chain Address Verification
+
+Every Arbitrum One contract address can be independently verified by querying the Controller on-chain. No trust in documentation
+or widgets is required.
+
+<Accordion title={<CustomCardTitle variant="accordion" icon={<Icon icon="key" color="var(--accent)" />} title="See steps to verify an address on-chain" />}>
+  <StyledSteps>
+    <StyledStep title={<span>Call <code>getContract</code> on the Controller</span>} icon="terminal">
+      Query `getContract(keccak256("<ContractName>"))` on the Controller at `0xD8E8328501E9645d16Cf49539efC04f734606ee4`
+      (Arbitrum One, chain 42161). The returned address is the current registered implementation.
+
+      ```bash title="Controller getContract Example" icon="terminal"
+      # Example: verify BondingManager proxy address
+      cast call 0xD8E8328501E9645d16Cf49539efC04f734606ee4 \
+          "getContract(bytes32)(address)" \
+          $(cast keccak "BondingManager") \
+          --rpc-url https://arb1.arbitrum.io/rpc
+      ```
+
+      A registered contract returns a non-zero 42-character address:
+
+      ```txt title="Example Controller Response" icon="terminal"
+      0x35Bcf3c30594191d53231E4FF333E8A770453e40
+      ```
+
+      If the output is `0x0000000000000000000000000000000000000000`, the contract name is misspelled or does not exist on this chain.
+
+      <InlineDivider margin="0.5rem 0" />
+    </StyledStep>
+
+    <StyledStep title={<span>Cross Check Against Published Proof</span>} icon="triangle-exclamation">
+      Confirm the returned address matches the current row on this page, then inspect the row's source link and explorer link.
+      The page publishes the same verified address, chain, and source provenance that the contracts pipeline generated on the last
+      successful run.
+
+      <InlineDivider margin="0.5rem 0" />
+    </StyledStep>
+
+    <StyledStep title="Inspect on Arbiscan" icon="triangle-exclamation">
+      Paste the address into [Arbiscan](https://arbiscan.io) or [Blockscout](https://arbitrum.blockscout.com) to confirm:
+
+      - **Contract label** - the header shows "Livepeer: [ContractName]" or "Livepeer: Proxy [ContractName]"
+      - **Verified source** - the Contract tab has a green checkmark
+      - **Deployer** - deployed by `0x5C83dC...` (the Livepeer Foundation deployer)
+      - **Transaction history** - at least several transactions going back to the deployment date
+
+      <Danger> An address that returns no label, unverified bytecode, zero transactions, or "This address is not a contract" is not a Livepeer protocol contract.</Danger>
+      <InlineDivider margin="0.2rem 0" />
+    </StyledStep>
+  </StyledSteps>
+</Accordion>

@@ -1,0 +1,49 @@
+---
+title: Jouer un actif
+description: >-
+  Jouer des actifs VOD avec le lecteur Livepeer ou un lecteur HLS/MP4
+  personnalisé.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9wbGF5YmFjay1hc3NldC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vdmlkZW8tb24tZGVtYW5kL3BsYXliYWNrLWFzc2V0Iiwic291cmNlSGFzaCI6ImE2YWE3ZjJmNDgwYmExNTY5ODNlY2Q4OTM1NDVlZGNmNmZlZGM4YjBmOTZkMDUyOGVmODZkMmI5NTRhYmVlNGIiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mzk6NDYuNTc2WiJ9 */}
+<Warning>
+  Prefer calling the API from your backend. CORS-enabled API keys are deprecated.
+</Warning>
+
+## Livepeer Joueur (recommandé)
+
+Récupérez les informations de lecture sur le serveur, puis passez la source au Joueur :
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+export async function getPlaybackSource(playbackId) {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function AssetPlayer({ src }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video />
+        <Player.Controls><Player.PlayPauseTrigger /></Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+Voir [Joueur et intégration](../player).
+
+## Joueur personnalisé
+
+Appelez le [API Info de lecture](https://livepeer.studio/docs/api-reference/playback/get) avec l'ID de lecture. Utilisez les URL HLS ou MP4 renvoyées dans n'importe quel lecteur qui les prend en charge. Les actifs courts (moins de ~2 minutes) ont souvent des versions MP4 pour un démarrage rapide.
+
+## Intégrer
+
+```html
+<iframe src="https://lvpr.tv?v=PLAYBACK_ID" allowfullscreen allow="autoplay" frameborder="0"></iframe>
+```
+
+Options : `&muted=false`, `&autoplay=false`, `&loop=true`. Voir [Jouer un direct](../livestream/playback-livestream) pour les options spécifiques au flux.

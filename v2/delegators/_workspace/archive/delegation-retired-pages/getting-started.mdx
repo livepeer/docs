@@ -1,0 +1,203 @@
+---
+title: 'Delegating LPT: Getting Started'
+sidebarTitle: Getting Started
+description: >-
+  How to delegate LPT to an orchestrator, earn rewards, and participate in
+  Livepeer network security - a step-by-step guide for new delegators.
+keywords:
+  - livepeer
+  - delegate lpt
+  - staking
+  - delegation
+  - orchestrator
+  - rewards
+  - bonding
+  - livepeer explorer
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: concept
+pageType: guide
+audience: delegator
+lastVerified: 2026-03-17
+status: current
+---
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+
+Delegating LPT means bonding your tokens to an orchestrator on the Livepeer network. In return, you share in the orchestrator's rewards - both inflationary LPT and usage-based ETH fees. Your tokens remain under your control throughout.
+
+This guide walks you through the full process: from understanding what you're doing to claiming your first rewards.
+
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** LPT in wallet, small ETH balance on Arbitrum for gas, and a target orchestrator shortlist
+- **Time:** 5 minutes
+- **Outcome:** Wallet connected in Explorer and delegation transaction ready
+- **First action:** Open [explorer.livepeer.org](https://explorer.livepeer.org), compare Reward Cut/Fee Cut, then initiate bond
+
+</BorderedBox>
+
+<CustomDivider />
+
+## What Is Delegation?
+
+Livepeer uses a delegated proof-of-stake model. Orchestrators (GPU node operators) must bond LPT to participate. Their stake weight determines how much work they receive and how many inflationary rewards they earn. Delegators strengthen orchestrators by adding their stake on top.
+
+In exchange, delegators receive a share of the orchestrator's rewards - the percentage set by the orchestrator's `rewardCut` and `feeShare` parameters.
+
+**Key facts:**
+- Your LPT stays in the Livepeer BondingManager contract - it is non-custodial
+- You can only delegate to one orchestrator at a time
+- Unbonding takes approximately 21 hours (one round) before you can withdraw
+- Not delegating means your LPT is being diluted by inflation earned by active delegators
+
+<Note>
+ If less than ~50% of LPT is bonded, inflation increases to incentivise more delegation. If more than ~50% is bonded, inflation decreases. Unbonded LPT holders miss out on this inflation - diluted by those who delegate.
+</Note>
+
+<CustomDivider />
+
+## What You Earn
+
+Delegators can earn from two sources:
+
+**Inflationary LPT** - New LPT is minted each round proportional to stake. Orchestrators keep their `rewardCut` percentage and distribute the rest to delegators proportionally.
+
+**ETH Fees** - Gateways pay orchestrators ETH for transcoding and AI inference jobs. Orchestrators keep their `feeShare` cut and distribute the rest to delegators proportionally.
+
+Returns depend on: the orchestrator's commission settings, their performance (how much work they win), network usage levels, and the current inflation rate.
+
+<CustomDivider />
+
+## Before You Start
+
+You need:
+- LPT tokens in an Ethereum-compatible wallet (MetaMask, Coinbase Wallet, WalletConnect-compatible)
+- ETH on Arbitrum One for gas fees (gas costs are low on Arbitrum - a few cents per transaction)
+- LPT bridged to Arbitrum One (Livepeer operates on Arbitrum L2)
+
+<Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/gateways/setup/requirements/on-chain-setup/bridge-lpt-to-arbitrum" arrow horizontal>
+ If your LPT is on Ethereum mainnet, bridge it to Arbitrum One first.
+</Card>
+
+<CustomDivider />
+
+## Step-by-Step: How to Delegate
+
+<StyledSteps>
+  <StyledStep title="Go to the Livepeer Explorer">
+ Navigate to [explorer.livepeer.org](https://explorer.livepeer.org) and connect your wallet. The Explorer is the primary interface for delegation and reward claiming.
+
+    <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow horizontal>
+ Connect your wallet and manage your stake.
+    </Card>
+  </StyledStep>
+
+  <StyledStep title="Choose an Orchestrator">
+ Browse the orchestrator list. Key metrics to evaluate:
+
+    - **Reward Cut** - The percentage of LPT rewards the orchestrator keeps. Lower means more for delegators.
+    - **Fee Cut** - The percentage of ETH fees the orchestrator keeps. Lower means more ETH for delegators.
+    - Explorer/UI 'Fee Cut' corresponds to protocol `feeShare`.
+    - **Delegated Stake** - Total LPT staked to this orchestrator. Higher = more work, but also more competition for rewards.
+    - **Activation Status** - Active orchestrators are in the current round's active set and eligible to earn rewards.
+    - **Performance** - Uptime, transcoding success rate, and job completion history.
+
+    <Tip>
+ A low reward cut sounds attractive, but only matters if the orchestrator is actively earning. Look for orchestrators with consistent uptime and a track record of calling `Reward()` each round - inactive orchestrators don't distribute any rewards.
+    </Tip>
+  </StyledStep>
+
+  <StyledStep title="Approve and Bond LPT">
+ On the orchestrator's Explorer page, click **Delegate** and enter the amount of LPT to bond. You will sign two transactions:
+
+    1. **Approve** - Authorizes the BondingManager contract to transfer your LPT
+    2. **Bond** - Locks your LPT and attributes your stake to the orchestrator
+
+ Both transactions require a small amount of ETH for Arbitrum gas fees.
+  </StyledStep>
+
+  <StyledStep title="Monitor Your Position">
+ After bonding, the Explorer shows your delegated position, the orchestrator's current stats, and your accumulated (unclaimed) rewards.
+
+ Your rewards accumulate each round automatically. You do not need to take any action for rewards to accrue - but you need to call `claimEarnings` to realize them.
+  </StyledStep>
+
+  <StyledStep title="Claim Your Earnings">
+ Rewards accumulate in the BondingManager contract. To realize them (move them into your bonded balance), you must call `claimEarnings`. You can do this from the Explorer under your account page.
+
+    <Note>
+ Not claiming for many rounds does not forfeit rewards - but it can reduce effective yield due to missed compounding. Some orchestrators run automated bots that claim earnings for their delegators.
+    </Note>
+  </StyledStep>
+
+  <StyledStep title="Unbond (When You Want to Withdraw)">
+ To withdraw your LPT:
+
+    1. Click **Undelegate** on the Explorer - this initiates an unbonding lock
+    2. Wait approximately 21 hours (one round thawing period)
+    3. Click **Withdraw** to return LPT to your wallet
+
+ The unbonding period exists to allow the protocol time to enforce any slashing penalties before stake is withdrawn.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider />
+
+## Risk Factors
+
+<BorderedBox variant="accent" padding="16px">
+
+Delegation is not risk-free. Understand these before bonding:
+
+- **Operator underperformance** - If your orchestrator stops calling `Reward()`, you earn no LPT inflation. Choose operators with consistent history.
+- **Slashing** - Currently disabled on Livepeer, but the mechanism exists. Future activation could penalise delegators for orchestrator misbehaviour.
+- **Market volatility** - LPT and ETH prices fluctuate. Your returns in USD terms depend on token prices, beyond reward percentages.
+- **Concentration risk** - Large orchestrators with many delegators earn more work but distribute rewards across more stake. Consider diversification across the ecosystem.
+- **Unbonding delay** - Your stake is locked during the ~21 hour unbonding period and cannot be moved quickly in response to market events.
+
+</BorderedBox>
+
+<CustomDivider />
+
+## Reward Calculation Reference
+
+Your LPT reward per round from inflation:
+
+```text icon="terminal"
+Your share = Orchestrator's inflation reward × (1 - rewardCut) × (your stake / total orchestrator stake)
+```
+
+Your ETH reward per round from fees:
+
+```text icon="terminal"
+Your share = Orchestrator's ETH fee revenue × (feeShare) × (your stake / total orchestrator stake)
+```
+
+The actual inflation reward each round depends on the current inflation rate and total supply. View live rates at the [Livepeer Explorer](https://explorer.livepeer.org).
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="LPT Token Purpose" icon="coins" href="/v2/delegators/concepts/purpose" arrow>
+ Why LPT exists: security, rewards, and governance.
+  </Card>
+  <Card title="Protocol Economics" icon="chart-line" href="/v2/about/protocol/economics" arrow>
+ How rewards and fees flow through the network.
+  </Card>
+  <Card title="Delegation Overview" icon="scroll" href="/v2/delegators/delegation/overview" arrow>
+ Technical protocol-level overview of delegation mechanics.
+  </Card>
+  <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow>
+ Browse orchestrators and manage your stake.
+  </Card>
+</CardGroup>

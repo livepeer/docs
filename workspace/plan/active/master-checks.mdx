@@ -1,0 +1,882 @@
+---
+title: Master Review Pipeline — Content Writing
+lastAudited: 2026-03-24
+status: draft
+---
+
+# Master Review Pipeline — Content Writing
+
+> Audit of the review infrastructure for the Livepeer Docs v2 content-writing pipeline.
+> Sources: all files listed in the task brief, read in full during this session.
+> This document is a findings report — not an execution plan. Changes require human approval.
+
+---
+
+## Per-Page Review Requirements
+
+### What review checks are needed, by page type
+
+The canonical taxonomy defines 7 page types. Review requirements split into two tiers: **universal checks** (apply to every page regardless of type) and **type-specific checks** (vary by pageType). Below is the complete breakdown.
+
+---
+
+### Universal Checks (all 7 page types)
+
+These 9 categories apply regardless of `pageType`. Source: `v2/orchestrators/_workspace/canonical/checks.mdx`.
+
+| # | Category | What it checks | Pass/fail criteria |
+|---|---|---|---|
+| 1 | Frontmatter & taxonomy | All 10 required fields present; canonical 7-type pageType; canonical 15-value purpose; canonical 7-token audience; veracityStatus honest | Zero missing fields; zero deprecated enum values; veracityStatus = verified only if all REVIEW flags cleared |
+| 2 | Voice & copy | Banned words absent; banned phrases absent; banned constructions absent; opening order correct; paragraph discipline; audience register; UK English | Zero violations from the banned list; every value claim concrete and quantified; no US spellings |
+| 3 | Section naming & headings | Every heading scores ≥20/25 on the 5-dimension naming rubric; no generic structure words as headings | All H2/H3 score ≥20/25; no standalone "Overview", "Types", "Details", "Getting Started" as headings |
+| 4 | Page structure & content architecture | One purpose, one audience, one job; adjacency check (prev/next page); no dead ends; prerequisites stated; no content duplication | Purpose statable in one sentence: "This page lets the [AUDIENCE] [concrete action]" |
+| 5 | Layout, components & template | Correct template for pageType + pageVariant; required sections present; only approved components used; no TODO/TBD in published content | Zero render errors; zero unapproved components; correct template applied |
+| 6 | Veracity & factual accuracy | Every factual claim citable; code/commands tested; no deprecated APIs; numbers are real; REVIEW flags for unverified claims; veracityStatus honest | ≥90% auto-clearance rate against 45-source veracity library; zero open-ended research tasks |
+| 7 | Navigation & information architecture | Page in docs.json; navigation matches file system; no structural orphans; audience journey complete | Zero orphaned pages; zero phantom nav entries |
+| 8 | Links & rendering | All internal links resolve; all external links live; all snippet imports resolve; all images load; page renders without error | Zero 404s; zero render errors; zero broken imports |
+| 9 | Process & governance | Human sign-off recorded; consuming decisions in registry; gate prerequisites met; phase ordering respected | No page ships on agent self-assessment; every correction routes through feedback-routing-map |
+
+**Data/context needed for universal checks:**
+- `docs.json` — for navigation and structural claims
+- `voice-rules.md` — for per-audience voice rules
+- `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` — for locked structural decisions
+- `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` — for gate status
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` — 45-source library for factual claims
+- Phase 1 audience design output for the tab (for persona fit check)
+- Tab map at `v2/[tab]/_workspace/tab-map.md` (for adjacency check)
+
+---
+
+### Type-Specific Checks
+
+Beyond the 9 universal categories, each page type carries specific structural requirements:
+
+#### `navigation` — pure routing pages
+
+- **Primary information type**: structural
+- **Required sections**: routing cards to all sections within the tab; self-identification prompt if multiple paths exist
+- **Specific check**: D-NAV-01 compliance — single shared navigation file per tab for multi-path tabs (locked decision)
+- **Specific check**: No prose orientation paragraph — orientation is implicit in card value propositions
+- **Specific check**: No instructional content — routing only
+- **Component requirement**: Card or CardGroup — no content components
+- **Data needed**: Tab's arriving question (from Phase 1 output); D-NAV-01 locked decision
+
+#### `concept` — explains how something works
+
+- **Primary information type**: conceptual, narrative, analytical
+- **Permitted secondary types**: factual
+- **Required sections**: Opening orientation (what mechanism this explains); core mechanism; implications or outcomes
+- **Specific check**: No step-by-step procedures — those belong in `instruction`
+- **Specific check**: Exit state must be "reader can describe or reason about X" — not "reader can do X"
+- **Specific check**: Diagrams and prose together — code blocks only if explaining a mechanism, not demonstrating a procedure
+- **Data needed**: What mental model the reader needs; what conceptual gap this fills in the tab journey
+
+#### `tutorial` — end-to-end guided learning
+
+- **Primary information type**: procedural, technical, narrative
+- **Required sections**: Prerequisites (explicit); ordered steps with verification; final outcome statement
+- **Specific check**: Every step executable; verification step at the end
+- **Specific check**: Prerequisites section is complete and accurate — missing prerequisites are a publication blocker
+- **Specific check**: No skippable steps — tutorials are end-to-end; on-demand depth goes in guides
+- **Component requirement**: `<Steps>` or `<StyledSteps>` — numbered lists are not acceptable for procedures
+- **Data needed**: Live system access for step verification; confirmed prerequisite list
+
+#### `guide` — opinionated guidance for a specific outcome
+
+- **Primary information type**: analytical, evaluative, conceptual, narrative
+- **Permitted secondary types**: factual
+- **Required sections**: The job (what outcome the guide helps achieve); the considerations or options; guidance toward the outcome; next steps
+- **Specific check**: Guide takes a position — not "here are your options" but "here is how to decide"
+- **Specific check**: No step-by-step procedures as the primary content — those belong in linked `instruction` pages
+- **Specific check**: Evidence for evaluative claims must be real and sourced
+- **Data needed**: Source evidence for any evaluative claims; the reader's decision or outcome being guided toward
+
+#### `instruction` — step-by-step procedure
+
+- **Primary information type**: procedural, technical
+- **Permitted secondary types**: factual, structural
+- **Required sections**: Prerequisites (exact, not vague); numbered steps; verification step; next steps
+- **Specific check**: Every step tested and confirmed to produce stated output
+- **Specific check**: Quickstart variant: first working state achievable in under 30 minutes
+- **Specific check**: Troubleshooting variant: symptom-first ordering (not alphabetical, not system-chronological)
+- **Component requirement**: `<Steps>` component family — never numbered prose lists
+- **Data needed**: Live system access; exact environment for testing; version pinned
+
+#### `reference` — structured lookup
+
+- **Primary information type**: factual, technical, structural, change
+- **Permitted secondary types**: none
+- **Required sections**: Structured lookup surface (table, ParamField, ResponseField, or similar); source and date for time-sensitive values
+- **Specific check**: No narrative framing before reference content — reader arrives knowing what to look up
+- **Specific check**: Compendium variant (FAQ, glossary): question-led scan surface with canonical links
+- **Specific check**: Changelog variant: version/date anchoring mandatory; breaking vs non-breaking labels in structure
+- **Veracity standard**: Very high for all sections — reference pages have the highest factual bar
+- **Data needed**: Primary authoritative sources for every value; staleness category for each claim type
+
+#### `resource` — curated discovery
+
+- **Primary information type**: structural, evaluative, narrative
+- **Required sections**: What the resource collection is for; curated items with value propositions; filtering or categorisation if more than 5 items
+- **Specific check**: Knowledge-hub variant: external content only — no instructional content mixed in
+- **Specific check**: No TODO/Coming Soon — a resource page with placeholder items is a dead end
+- **Data needed**: Current status of external links; value proposition for each curated item
+
+---
+
+## Existing Review Infrastructure
+
+### What currently exists — full inventory
+
+#### A. Prompt-level infrastructure (the primary review engine)
+
+| Name | Location | What it checks | Maturity |
+|---|---|---|---|
+| `content-pass.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | 7-phase content review: audience fit, purpose, information types, voice, veracity flags, structure. 4 modes: REVIEW, WRITE, REWRITE, AUDIT | Tested on Gateways (pilot complete); AUDIT mode built; awaiting test runs. Not production-approved. |
+| `layout-pass.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md` | Template selection, component placement, frontmatter completion, section naming check, render validation | Exists and structured; test status unknown. |
+| `veracity-pass.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | 7-phase veracity pass: claim classification, confidence scoring, REVIEW marker placement, veracityStatus setting, glossary update loop | DRAFT status — awaiting 1 review agent + 3 test runs + human approval. Not production-ready. |
+| `structure-audit.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/` (referenced in pack-guide; prompt file not confirmed to exist) | Tab-level structural audit: page inventory, ideal→canonical mapping, gap analysis, orphan analysis, cross-tab audit | Pack guide exists; prompt file existence not confirmed. |
+| `audience-design-v3.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/versions/audience-design-v3.md` | Phase 1 audience design: personas, JTBDs, ideal section structure | Multiple tested versions exist (v1, v2, v3); v3 is current. |
+
+#### B. Pack guides (per-phase operational guides)
+
+| Name | Location | What it does | Maturity |
+|---|---|---|---|
+| Phase 1 pack guide | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/pack-guide.md` | Pre-flight, running order, dos/don'ts, common failure modes for audience design | Complete; describes 3-file input pack requirement |
+| Phase 2 pack guide | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/pack-guide.md` | Pre-flight, running order, dos/don'ts, common failure modes for structure audit | Complete |
+| Phase 3 pack guide | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/pack-guide.md` | Pre-flight, running order, modes, failure modes for content pass | Complete |
+| Phase 4 pack guide | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/pack-guide.md` | Pre-flight, running order, failure modes for layout pass | Complete |
+| Phase 7 pack guide | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/pack-guide.md` | Test run instructions, human checkpoint, known failure modes for veracity pass | Complete; explicitly requires 3 test runs before production |
+
+#### C. Canonical checks document
+
+| Name | Location | What it checks | Maturity |
+|---|---|---|---|
+| `checks.mdx` | `v2/orchestrators/_workspace/canonical/checks.mdx` | 9 check categories × ~50 numbered checks with pass criteria, frameworks, and tools for each. Includes a mandatory report format, verdict scale, and severity definitions. | Most complete review reference in the repo. Production-quality. |
+
+#### D. Skill files (agent-invokable tools)
+
+| Name | Location | What it checks | Maturity |
+|---|---|---|---|
+| `content-pipeline-pass-a` | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | Content layer review/write: audience fit, purpose, information types, voice, veracity, structure | Defined; references `content-pass.md` and `voice-rules.md` as required loads; no test record found |
+| `content-pipeline-pass-b` | `ai-tools/ai-skills/content-pipeline-pass-b/SKILL.md` | Layout and style: template selection, component placement, frontmatter, naming check, render validation | Defined; references `layout-pass.md` and `section-naming.md`; no test record found |
+| `content-pipeline-tab-map` | `ai-tools/ai-skills/content-pipeline-tab-map/SKILL.md` | Produces the tab map (Phase 2 structure audit output) | Skill file exists; prompt file status uncertain |
+| `page-authoring` | `ai-tools/ai-skills/page-authoring/SKILL.md` | New page authoring: frontmatter, page-type/purpose alignment, MDX constraints, validation | Mature; references live validation scripts; includes 5-Whys pre-writing process |
+| `docs-copy` | `ai-tools/ai-skills/docs-copy/SKILL.md` | Routes copy planning, rewriting, review, and claim-sensitive updates | Mature; 5-mode routing (copy-plan, copy-rewrite, copy-review, claim-update, section-strategy) |
+| `rubric-static-review` | `ai-tools/ai-skills/rubric-static-review/SKILL.md` | Static rubric-based code review scored 0–100 by category | Mature; designed for code repos, not docs pages specifically |
+| `style-and-language-homogenizer-en-gb` | `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` | UK English enforcement; runs as script | Script-backed; production-ready |
+| `docs-quality-and-freshness-audit` | `ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md` | TODO/TBD markers, thin content, freshness risk | Script-backed; production-ready |
+| `docs-review-fix-execution` | `ai-tools/ai-skills/docs-review-fix-execution/SKILL.md` | Execution loop for applying review findings | Exists; maturity unknown |
+| `docs-review-packet-generation` | `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md` | Generates review packets for human review | Exists; maturity unknown |
+| `component-layout-governance` | `ai-tools/ai-skills/component-layout-governance/SKILL.md` | Component layout validation against contracts by page type | Script-backed; production-ready |
+
+#### E. Framework and rule files
+
+| Name | Location | What it provides | Status |
+|---|---|---|---|
+| `Frameworks.mdx` | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Full taxonomy (pageType, pagePurpose, audience, complexity, lifecycleStage, information type, veracity); voice rules; content rules; section naming rubric; design rules | Canonical source of truth; locked |
+| `veracity.md` | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | Veracity standards per information type; status enum; pipeline rules | LOCKED 2026-03-23 |
+| `veracity-library.md` | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | 45 authoritative sources with tier, staleness risk, update frequency | Complete |
+| `voice-rules.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` | Per-audience voice rules for all 7 audiences | LOCKED; covers all 7 audiences as of the current version |
+| `content-pipeline-framework.md` | `workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md` | Audience, persona, and purpose definitions | Exists |
+| `information-type.md` | `workspace/plan/active/CONTENT-WRITING/Frameworks/information-type.md` | 9 information type definitions | Exists |
+| `section-naming.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | Section naming rubric: 5 dimensions, 12-candidate generation method, scoring | Exists |
+| `decision-registry.md` | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | All locked structural decisions with reversal conditions | 1 locked decision (D-NAV-01); 1 open proposal |
+| `tab-status.md` | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate tracking board | Current and maintained |
+| `feedback-routing-map.md` | `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | Correction → definition file routing | Listed as required gate dependency; existence confirmed |
+
+#### F. Automated scripts (infrastructure layer)
+
+| Name | Command | What it checks | Status |
+|---|---|---|---|
+| `docs-quality-and-freshness-audit.js` | `node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full` | TODO/TBD markers; thin content; freshness risk | Production-ready |
+| `style-and-language-homogenizer-en-gb.js` | `node operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full` | UK English; style consistency | Production-ready |
+| `component-layout-governance.js` | `node operations/scripts/validators/components/library/component-layout-governance.js --scope full` | Page composition vs component layout contracts | Production-ready |
+| `check-docs-path-sync.js` | `operations/scripts/validators/content/structure/check-docs-path-sync.js` | Internal link resolution | Exists; used in checks.mdx |
+| `frontmatter-taxonomy.js` | `tools/config/frontmatter-taxonomy.js` | Frontmatter field validation | Exists but uses OLD 12-type schema — does not validate canonical 7-type pageType values. Known gap. |
+| `run-all.js` | `node operations/tests/run-all.js` | Full test suite | Exists; `npx mintlify dev` for render validation |
+
+#### G. The agent-packs CLAUDE.md (audit pipeline definition)
+
+| Name | Location | What it does | Status |
+|---|---|---|---|
+| `CLAUDE.md` | `ai-tools/agent-packs/claude/CLAUDE.md` | Defines 6-step static-first audit pipeline for Claude Code: script-footprint → quality-freshness → style-homogenizer → component-layout → quarantine-manager → cross-agent-packager | Auto-generated by `cross-agent-packager.js`. Do not edit manually. This is a repo ops pipeline, not a content review pipeline. |
+
+#### H. Orchestrators-specific standards
+
+| Name | Location | What it provides | Status |
+|---|---|---|---|
+| `01-CORE-NEEDS-AND-STANDARDS.md` | `workspace/plan/active/ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` | Orchestrators-specific voice register, terminology lock, page structure rules, component conventions, quality gates | Active reference for orchestrators content pass |
+
+---
+
+## Proposed Master Review Pipeline
+
+### A complete, ordered pipeline from "written" to "approved"
+
+This pipeline applies to any single page. The phases are sequential; no phase starts until the preceding phase is complete and human-approved.
+
+---
+
+### Phase 0 — Pre-flight dependency check (before any review work)
+
+**Purpose**: Confirm all inputs required by the review are present. A review run on incomplete inputs produces wasted output.
+
+**Input required**:
+- Page file path
+- Tab name
+
+**What to verify**:
+- [ ] Phase 1 audience design output exists for this tab
+- [ ] Tab map exists at `v2/[tab]/_workspace/tab-map.md`
+- [ ] Page exists in `docs.json`
+- [ ] Terminology is locked for this tab (Phase 3.5 complete)
+- [ ] `veracity-library.md` is accessible
+- [ ] `veracity.md` status is LOCKED
+- [ ] `feedback-routing-map.md` exists
+
+**Tool**: Manual pre-flight check using pack-guide.md for Phase 3 (content-pass pack-guide)
+
+**Output**: Pre-flight pass/fail with specific blocking items named
+
+**Pass criteria**: All dependencies confirmed at their exact paths. Any missing dependency stops the review.
+
+**Current gap**: No automated pre-flight script exists. Pre-flight is a manual human step.
+
+---
+
+### Phase 1 — Structural position check (naming audit — Phase 8 in the pipeline)
+
+**Purpose**: Lock section headings before veracity markers are placed. If headings change after veracity markers are placed, the markers become orphaned.
+
+**Input required**:
+- Page file
+- Section naming rubric (`workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md`)
+
+**What to check**:
+- Score every H2 and H3 against the 5-dimension naming rubric (Precision, Depth, Stability, Clarity, Conciseness)
+- Minimum score: 20/25
+- Headings scoring below 20 must be revised before the review continues
+
+**Tool**: Manual review using `Frameworks.mdx §4.1` + `section-naming.md`; Phase 5 of `layout-pass.md`
+
+**Output**: Heading score table per heading (dimension breakdown, not just aggregate); list of revisions required
+
+**Pass criteria**: All H2/H3 headings score ≥20/25. No generic structure words ("Overview", "Details", "Basics") standing alone as headings.
+
+**Current gap**: No automated heading scorer. The `rubric-static-review` skill is not scoped for this. Manual execution only.
+
+**CRITICAL NOTE**: This phase (naming audit = "Phase 8" in the pipeline) must run BEFORE Phase 2 below (veracity = "Phase 7" in the pipeline). This counter-intuitive ordering is locked in the pipeline spec.
+
+---
+
+### Phase 2 — Frontmatter and taxonomy check
+
+**Purpose**: Confirm the page is correctly classified before reviewing content. Wrong classification produces wrong content checks.
+
+**Input required**:
+- Page file
+- `Frameworks.mdx §1` (canonical enum tables)
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md` (deprecated alias migration map)
+
+**What to check** (checks 1.1–1.12 from `checks.mdx`):
+- All 10 required frontmatter fields present
+- `pageType` uses canonical 7-type schema
+- `purpose` uses canonical 15-value set
+- `audience` uses canonical 7-token set
+- `complexity` and `lifecycleStage` use canonical values
+- `veracityStatus` present and honest
+- `description` subject-first, ≤160 chars, no self-reference
+- OG image block complete
+
+**Tool**: Manual check + `tools/config/frontmatter-taxonomy.js` (with caveat — see Validation Flags)
+
+**Output**: Frontmatter table per field: present?, value, pass/fail, notes
+
+**Pass criteria**: Zero missing fields; zero deprecated enum values; veracityStatus = unverified for any new or AI-generated content.
+
+**Current gap**: `frontmatter-taxonomy.js` uses old 12-type schema. Running it will flag canonical 7-type values as invalid. Human must override the validator output.
+
+---
+
+### Phase 3 — Structure and content architecture check
+
+**Purpose**: Confirm the page does one job for one audience, with correct adjacency to surrounding pages.
+
+**Input required**:
+- Page file
+- Phase 1 audience design output for this tab (for persona fit)
+- Tab map at `v2/[tab]/_workspace/tab-map.md` (for PREV_PAGE / NEXT_PAGE)
+
+**What to check** (checks 4.1–4.10 from `checks.mdx`, Phases 2–3 and 7 of `content-pass.md`):
+- Purpose statable in one sentence: "This page lets the [AUDIENCE] [concrete action]"
+- PREV_PAGE / NEXT_PAGE adjacency coherent
+- Scope is single (one job, not two)
+- No dead ends (page has a next step)
+- Prerequisites stated or linked
+- Information type per section correct for `pageType`
+- No content duplication from adjacent pages
+
+**Tool**: `content-pipeline-pass-a` skill invoking `content-pass.md` Phases 2, 3, and 7
+
+**Output**: Structured findings per check; verdict: PASS / NEEDS WORK / REWRITE REQUIRED
+
+**Pass criteria**: Purpose statable in one sentence; adjacency coherent; single scope; no orphan sections; no pre-emptions from NEXT_PAGE.
+
+**Current gap**: Requires tab map to exist. If tab map is absent, adjacency check degrades to PREV_PAGE/NEXT_PAGE fields only. Tab maps do not yet exist for most tabs (gate is locked).
+
+---
+
+### Phase 4 — Voice and copy check
+
+**Purpose**: Confirm the page sounds like the Livepeer docs voice, serves the correct audience register, and contains no prohibited language.
+
+**Input required**:
+- Page file
+- `voice-rules.md` (per-audience rules)
+- Audience token from frontmatter (to select correct audience section)
+
+**What to check** (checks 2.1–2.11 from `checks.mdx`; Phase 5 of `content-pass.md`):
+- UK English throughout (no US spellings)
+- Zero banned words: `effectively, essentially, basically, meaningful, significant, real` (as intensifier), `various, several, obviously, clearly`
+- Zero banned phrases (full list in `content-pass.md §5.1`)
+- Zero banned constructions: `not [X]` in value statements; unresolved `if [condition]` in body prose; `This page [verb]`; `can/may [verb]` in value claims
+- Opening order: value/outcome before mechanism
+- Paragraph discipline: one paragraph, one job; lead sentence states the fact; final sentence ends on fact, number, or next step
+- Audience register correct (per-audience prohibited phrases absent)
+- No passive value statements
+
+**Tool**: `content-pipeline-pass-a` skill invoking `content-pass.md` Phase 5; `style-and-language-homogenizer-en-gb.js` for UK English
+
+**Output**: Per-rule verdict (PASS / FAIL / PARTIAL) for every voice check; every FAIL quotes exact failing text and writes corrected version
+
+**Pass criteria**: Zero universal blocking violations; zero audience-specific prohibited phrases; every FAIL has a named fix.
+
+**Current gap**: `style-and-language-homogenizer-en-gb.js` catches spelling; it does not catch banned phrases or constructions — those require the prompt-based check. No automated banned-phrase scanner exists at the page level (though `banned-words.txt` and `banned-phrases.txt` exist as source files).
+
+---
+
+### Phase 5 — Information type and veracity preparation
+
+**Purpose**: Tag every section with its information type to determine the veracity standard that applies. This is the prerequisite for Phase 6 (veracity pass).
+
+**Input required**:
+- Page file
+- `Frameworks.mdx §1.6` (information type definitions and permitted types by pageType)
+- `veracity.md` (standard per information type)
+
+**What to check** (Phase 4 of `content-pass.md`):
+- For each section: identify information type (`factual`, `technical`, `procedural`, `change`, `evaluative`, `structural`, `analytical`, `conceptual`, `narrative`)
+- Confirm information type is permitted for the page's `pageType`
+- Identify veracity standard: very high / high / medium / lower
+- Flag structural mismatches (information type doesn't fit pageType)
+
+**Tool**: `content-pipeline-pass-a` skill invoking `content-pass.md` Phase 4
+
+**Output**: Per-section table: section heading, information type, permitted for pageType?, veracity standard
+
+**Pass criteria**: Every section has an identified information type; no structural mismatches; information types match permitted types for pageType.
+
+**Current gap**: No automation. Manual execution only. This classification is required input to Phase 6 — if Phase 5 is skipped, Phase 6 has no basis for knowing which claims need verification.
+
+---
+
+### Phase 6 — Veracity pass
+
+**Purpose**: Verify factual accuracy of claims in the page. Place REVIEW markers on unverifiable claims. Set `veracityStatus` in frontmatter.
+
+**Input required**:
+- Page file (post-Phase 1 — section headings must be final)
+- `veracity-library.md` (45-source library — must be loaded from file, not recalled from memory)
+- `veracity.md` (LOCKED — confirm status before running)
+- Phase 5 output (information type classification per section)
+- `docs.json` (for structural claim verification)
+- Tab terminology lock (Phase 3.5 output for this tab)
+
+**What to check** (full `veracity-pass.md` phases 1–7):
+- Phase 1: read and map the page; claim list per section
+- Phase 2: classify each claim (25 claim types defined)
+- Phase 3: apply confidence scoring matrix and auto-resolve rules
+- Phase 4: place REVIEW markers before flagged blocks (never inline)
+- Phase 5: mixed-type page handling; worst-case status derivation
+- Phase 6: set `veracityStatus` in frontmatter; produce Phase 6 summary
+- Phase 7: glossary update loop — route verified terminology back to `v2/[tab]/resources/glossary.mdx`
+
+**CRITICAL rules**:
+- Governance-controlled values are NEVER auto-resolved (inflation rate, bonding target, unbonding period, active set size, treasury parameters, reward cut rate, fee share defaults)
+- Contract addresses are NEVER auto-resolved
+- External RPC URLs are NEVER auto-resolved
+- Economic data requires staleness date — always flag with re-verify schedule
+- REVIEW markers go BEFORE the flagged block, never inline in prose
+
+**Tool**: `veracity-pass.md` prompt; no automated equivalent exists
+
+**Output**: Page with REVIEW markers added; `veracityStatus` updated in frontmatter; Phase 6 summary (section breakdown, REVIEW count, governance flag count, open items list); Phase 7 glossary update
+
+**Pass criteria**: Every governance-controlled value has a REVIEW marker; REVIEW markers placed before blocks (not inline); `veracityStatus` set correctly; Phase 6 summary present and complete; no content changes — veracity pass adds markers only.
+
+**Current gap**: `veracity-pass.md` is marked DRAFT. It requires 1 review agent + 3 test runs + human approval before production use. `veracity.md` and `veracity-library.md` are LOCKED. The glossary update step (Phase 7 of the veracity pass) assumes `v2/[tab]/resources/glossary.mdx` exists — this file may not exist for all tabs. The two framework files it references (`workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` and `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md`) do exist and are complete.
+
+---
+
+### Phase 7 — Layout and component check
+
+**Purpose**: Apply MDX layer to approved content. Template, components, frontmatter completion, render validation.
+
+**Input required**:
+- Approved Pass A content (post-veracity pass)
+- `layout-pass.md` prompt
+- `section-naming.md`
+- Template file from `snippets/templates/pages/` (matched to pageType + pageVariant)
+- Component registry at `snippets/components/`
+
+**What to check** (full `layout-pass.md` phases 1–6):
+- Phase 1: template selection (pageType + pageVariant → template)
+- Phase 2: section structure mapping — every section maps to a template slot
+- Phase 3: component selection — per information type, per pageType rules
+- Phase 4: frontmatter completion — all required fields; canonical enum values only
+- Phase 5: section naming check — every H2 and H3 against naming rubric
+- Phase 6: render validation — MDX syntax, component validity, link paths, UK English
+
+**Rules**:
+- No content changes in this phase — content changes return to Pass A
+- No REVIEW flags removed — all carry through from Pass A
+- `status: draft` if any REVIEW flag remains unresolved; `status: current` only if all verified
+- No components not in `snippets/components/` registry
+
+**Tool**: `content-pipeline-pass-b` skill invoking `layout-pass.md`; `npx mintlify dev` for render validation
+
+**Output**: Production-ready `.mdx` file written to PAGE_PATH; list of flagged human-approval decisions
+
+**Pass criteria**: Template matched; every section has a template slot; all REVIEW flags from Pass A present in output; frontmatter complete; no MDX syntax errors; `status: draft` if any REVIEW flags remain.
+
+**Current gap**: `tools/config/component-layout-profile.json` uses deprecated pageType names — do not use as authority for component selection. Use canonical schema directly. `frontmatter-taxonomy.js` validator will flag canonical 7-type values as invalid until updated.
+
+---
+
+### Phase 8 — Navigation and IA check
+
+**Purpose**: Confirm the page is correctly placed in the information architecture and reachable from the navigation.
+
+**Input required**:
+- Page file path
+- `docs.json`
+- Tab map at `v2/[tab]/_workspace/tab-map.md`
+
+**What to check** (checks 7.1–7.9 from `checks.mdx`):
+- Page exists in `docs.json`
+- Navigation matches file system
+- Tab entry portal routes to this section
+- No structural orphans
+- Audience journey complete (entry → depth → exit)
+- Cross-tab graduation paths exist where applicable
+- File in correct lane (`v2/<section>/` for publishable; `_workspace/` for non-publishable)
+- File naming conventions (prefixes: `s-`, `r-`, `rs-`, `rcs-`, `x-`, `dep-`)
+
+**Tool**: `operations/scripts/validators/content/structure/check-docs-path-sync.js`; manual docs.json check
+
+**Output**: Navigation check results per check
+
+**Pass criteria**: Page in docs.json; no orphans; journey complete; correct file lane.
+
+**Current gap**: `check-docs-path-sync.js` validates links but a full navigation audit requires manual review of docs.json structure.
+
+---
+
+### Phase 9 — Links and rendering
+
+**Purpose**: Confirm the page renders cleanly and all links resolve.
+
+**Input required**:
+- Page file (final MDX)
+- Live system for render validation
+
+**What to check** (checks 8.1–8.6 from `checks.mdx`):
+- All internal links resolve
+- All external links live
+- All snippet imports resolve
+- All images load
+- Page renders without error
+- No TODO/TBD/Coming Soon in published content
+
+**Tool**: `npx mintlify dev`; `operations/scripts/validators/content/structure/check-docs-path-sync.js`
+
+**Output**: Render result; link check results
+
+**Pass criteria**: Zero 404s; zero render errors; zero broken imports; page loads fully.
+
+**Current gap**: External link validation requires either a live-check script or manual verification. No automated external link checker is listed in the reviewed infrastructure.
+
+---
+
+### Phase 10 — Human sign-off and gate update
+
+**Purpose**: Record human approval; update tab status board; route any corrections.
+
+**Input required**:
+- Review report from all preceding phases
+- `decision-registry.md` (for any structural decisions the page depends on)
+- `tab-status.md`
+
+**What to confirm**:
+- All REVIEW markers cleared or human-approved for publication as `status: draft`
+- Any structural decisions the page depends on are in `decision-registry.md`
+- Gate status updated in `tab-status.md`
+- Any corrections routed through `feedback-routing-map.md`
+
+**Tool**: Manual human step
+
+**Output**: Signed-off page; updated `tab-status.md`; any new decisions in `decision-registry.md`
+
+**Pass criteria**: Human explicit sign-off recorded. No page ships on agent self-assessment.
+
+---
+
+## Gaps and Missing Infrastructure
+
+### Gap 1 — `veracity-pass.md` is DRAFT; not approved for production use
+
+**Severity**: CRITICAL for Phase 7 (veracity) work
+
+The veracity pass prompt exists at `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` and is well-structured. However, it is explicitly marked DRAFT in its header and in `PROJECT-MANAGEMENT-CANONICAL.md`. The pack guide requires 3 test runs with human sign-off before production. No test runs have been recorded.
+
+This means the current active priority (Phase 7 veracity pass on S01–S12 Orchestrators content) is operating without an approved prompt. This is a workflow risk.
+
+**What is needed**: 3 test runs on pages with CLI flag claims, governance-controlled values, and mixed information types. Human sign-off on results before production use.
+
+---
+
+### Gap 2 — `frontmatter-taxonomy.js` uses old 12-type schema
+
+**Severity**: HIGH for automated validation
+
+The validator at `tools/config/frontmatter-taxonomy.js` is identified in multiple places as using the old 12-type schema. It will flag canonical 7-type values (`concept`, `instruction`, `guide`, `resource`, `navigation`) as invalid. This makes CI fail on correct content.
+
+The `layout-pass.md` explicitly flags this: "This pass produces frontmatter using the canonical 7-type schema. Pages with new canonical values will fail CI until the validator is updated."
+
+**What is needed**: Update `frontmatter-taxonomy.js` to recognise the canonical 7-type schema. Until then, add `{/* REVIEW: new-schema frontmatter — pending validator update */}` to all pages using canonical values.
+
+---
+
+### Gap 3 — `component-layout-profile.json` uses deprecated pageType names
+
+**Severity**: HIGH for component selection
+
+The `content-pass.md` Phase 4b explicitly notes: "`tools/config/component-layout-profile.json` uses deprecated pageType names (`landing`, `how_to`, `overview`, etc.) that do not align with the canonical 7-type schema. Do not treat it as authoritative for component selection until it is updated."
+
+**What is needed**: Update `component-layout-profile.json` to use canonical 7-type schema values.
+
+---
+
+### Gap 4 — No Phase 8 (naming audit) automated tool
+
+**Severity**: MEDIUM
+
+Section naming must be manually scored against the 5-dimension rubric. The rubric exists and is well-defined in `Frameworks.mdx §4.1`, but no automation applies it. Given that every heading on every page must score ≥20/25, this is a significant manual overhead at scale.
+
+**What is needed**: A script or skill that reads a page's headings, scores them against the rubric, and flags headings below 20/25.
+
+---
+
+### Gap 5 — No automated banned-phrase or banned-construction scanner
+
+**Severity**: MEDIUM
+
+`banned-words.txt` and `banned-phrases.txt` exist at `tools/lib/copy-governance/`. The `style-and-language-homogenizer-en-gb.js` script exists. However, the Phase 4 voice check (banned phrases, banned constructions) is prompt-based only. No script scans for specific banned phrases or the structural constructions (`not [X]` as value statement; `can/may [verb]` in value claims; `if [condition]` in body prose).
+
+**What is needed**: A banned-phrase scanner that works at the page level and reports specific matches with line numbers.
+
+---
+
+### Gap 6 — Tab maps do not exist for most tabs
+
+**Severity**: HIGH for content pass quality
+
+The `content-pass.md` pack-guide states: "Tab map exists (`v2/[tab]/_workspace/tab-map.md`) ... Pass A degrades without journey context — PREV_PAGE and NEXT_PAGE become guesses." Tab maps exist for the ORCHS pipeline output (`workspace/plan/active/CONTENTI-PIPLEINE/`) but not in the canonical location (`v2/[tab]/_workspace/tab-map.md`).
+
+Without tab maps, the adjacency check (Phase 3 of the pipeline above) cannot confirm correct PREV_PAGE/NEXT_PAGE. The content pass can run with degraded adjacency context, but the check is explicitly weakened.
+
+**What is needed**: Tab maps committed at `v2/[tab]/_workspace/tab-map.md` for each tab before the content pass runs on that tab's pages.
+
+---
+
+### Gap 7 — `structure-audit.md` (Phase 2 prompt) file existence unconfirmed
+
+**Severity**: MEDIUM
+
+The Phase 2 pack guide references a `structure-audit.md` prompt, but the Glob search did not confirm the file exists in `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/`. The `content-pipeline-tab-map` skill exists and the pack guide exists — but the underlying prompt file is unconfirmed.
+
+**What is needed**: Confirm `structure-audit.md` exists. If not, the Phase 2 tab map skill has a missing prompt.
+
+---
+
+### Gap 8 — Glossary files may not exist per tab for Phase 7 glossary update
+
+**Severity**: MEDIUM for veracity pass
+
+The veracity pass Phase 7 (glossary update loop) writes to `v2/[tab]/resources/glossary.mdx`. This file must be the human-authored, authoritative version — not `resources/compendium/glossary.mdx` (AI-generated, unverified). If `resources/glossary.mdx` does not exist for a tab, Phase 7 of the veracity pass cannot write to it.
+
+**What is needed**: Confirm `v2/[tab]/resources/glossary.mdx` exists for each tab before the veracity pass runs on that tab's pages.
+
+---
+
+### Gap 9 — `voice-rules.md` coverage gap note is now resolved but should be verified
+
+**Severity**: LOW
+
+The `phase-resources.md` for Phase 3 states: "Voice rules are operator-only: `voice-rules.md` was built for gateway/orchestrator audiences." However, the current `voice-rules.md` (status: LOCKED) explicitly states it "covers all 7 audiences: gateway, orchestrator, developer, builder, delegator, community, founder." The phase-resources.md file may be out of date.
+
+**What is needed**: Confirm `voice-rules.md` contains sections for all 7 audiences. If so, update `phase-resources.md` to remove the incorrect operator-only warning.
+
+---
+
+### Gap 10 — No external link validator
+
+**Severity**: LOW for immediate work; MEDIUM at publication
+
+No automated external link checker is referenced in the reviewed infrastructure. External links are manually verified or caught post-publication.
+
+**What is needed**: An external link validation script or CI check, particularly for pages in the `reference` pageType which carry the highest factual standard.
+
+---
+
+## Validation Flags
+
+Items that appear designed but may not have been tested, reference missing files, or contain instructions that cannot be verified from the current state of the repo.
+
+---
+
+### VF-01 — `veracity-pass.md` is DRAFT; self-referencing framework files that must exist before it can run
+
+**Severity**: CRITICAL
+
+`veracity-pass.md` references two framework files in its context block:
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` — LOCKED (confirmed to exist)
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` — complete, 45 sources (confirmed to exist)
+
+Both referenced files exist and are locked. However, `veracity-pass.md` itself is DRAFT and has not had the required 3 test runs. Any use of this prompt in production before the test runs and human sign-off is proceeding without validation.
+
+---
+
+### VF-02 — `content-pass.md` Phase 3 resource list references `pack-guide.md` as "to be built"
+
+**Severity**: HIGH
+
+The `phase-resources.md` for Phase 3 opens with: "Prompt: To be built — read `Prompts/deprecated/level-2-pass-a-content.md` and `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` before designing." This contradicts the fact that `content-pass.md` exists and is a complete prompt. The `phase-resources.md` file appears to be out of date — written before `content-pass.md` was built.
+
+**Action needed**: Update `phase-resources.md` to reflect that the Phase 3 prompt (`content-pass.md`) is complete and tested on Gateways. Remove the "to be built" note.
+
+---
+
+### VF-03 — `content-pipeline-pass-a/SKILL.md` references a `content-pipeline-framework.md` at a path that may not match the actual file
+
+**Severity**: MEDIUM
+
+The skill file states: "Load `workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md` — for audience, persona, and purpose definitions." This file exists in the `Frameworks/` directory. However, the skill also references "Load `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` — for Phase 6 veracity standards." The veracity.md in the `content-pass.md` prompt is Phase 6, but the skill's Phase 6 is "veracity check" — not the same as the standalone veracity pass (which is Phase 7 in the pipeline). Numbering confusion between the 7-phase content-pass internal structure and the pipeline phase numbering creates a risk of agents applying the wrong phase numbering.
+
+**Action needed**: Add a clarifying note to the skill file distinguishing "Phase 6 veracity check within content-pass" from "Phase 7 veracity pass" (the standalone `veracity-pass.md` prompt).
+
+---
+
+### VF-04 — `page-authoring/SKILL.md` frontmatter schema conflicts with canonical schema
+
+**Severity**: MEDIUM
+
+`page-authoring/SKILL.md` lists a frontmatter example that includes `pageType: guide` and `purpose: orientation` — but `orientation` is a deprecated alias (canonical is `orient`). The skill also includes `status: current` and `lastVerified: YYYY-MM-DD` which are not in the canonical 10-field required set from `checks.mdx`. The skill's "Canonical `pageType` and `purpose` values live in `tools/lib/frontmatter-taxonomy.js`" instruction is also problematic because that validator uses the old schema.
+
+**Action needed**: Update `page-authoring/SKILL.md` to use canonical 7-type schema throughout; fix deprecated aliases; clarify that `frontmatter-taxonomy.js` uses old schema and is not currently authoritative for canonical values.
+
+---
+
+### VF-05 — `rubric-static-review/SKILL.md` is scoped for code repos, not docs content
+
+**Severity**: LOW
+
+`rubric-static-review` is a general-purpose 0–100 rubric-based code review tool. It is listed in `CLAUDE.md` as a skill to verify before use in the docs review pipeline, but its scoring categories (architecture, security, reliability, performance) are not directly applicable to documentation content. It would need significant adaptation to serve as a docs quality review tool.
+
+**Action needed**: If `rubric-static-review` is intended for use in the docs review pipeline, define a docs-specific adaptation of the rubric (mapping to the 9 check categories in `checks.mdx`). Otherwise, remove it from the docs review skill list.
+
+---
+
+### VF-06 — Phase 8 (naming audit) ordering must precede Phase 7 (veracity) — counter-intuitive and easy to violate
+
+**Severity**: HIGH
+
+The pipeline spec explicitly requires Phase 8 (naming audit) to run before Phase 7 (veracity pass). This is because veracity markers are placed in section context — if section headings change after markers are placed, the markers become orphaned. The numbering (Phase 8 before Phase 7) is counter-intuitive and multiple places in the documentation note this risk. No automated enforcement prevents Phase 7 from running before Phase 8.
+
+**Action needed**: Add a pre-flight check to `veracity-pass.md` (beyond the existing checkbox) that requires the agent to confirm naming audit output exists for this page before proceeding. The current checkbox exists but is not enforced programmatically.
+
+---
+
+### VF-07 — `checks.mdx` references `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md` which may not exist
+
+**Severity**: LOW
+
+`checks.mdx §2` references `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md` as the "Voice testing methodology" for check 2.9. The `PROJECT-MANAGEMENT-CANONICAL.md` Part 8 lists `prompt-testing-protocol.md` as completed ("Simplified protocol: 1 review agent + 3 test runs"). Existence should be confirmed before using it as a reference.
+
+---
+
+### VF-08 — `content-pass.md` Phase 4b annotation: `component-layout-profile.json` is deprecated
+
+**Severity**: MEDIUM
+
+The content-pass prompt itself contains an annotation stating that `tools/config/component-layout-profile.json` uses deprecated pageType names and should not be treated as authoritative for component selection. This means the primary component guidance document for Pass B is itself unreliable. Component selection in the layout pass must use the canonical schema directly from `Frameworks.mdx` until `component-layout-profile.json` is updated.
+
+**Action needed**: Track this as a blocking item for Phase 4 (layout pass) quality. Document as a known gap in `blocking-items.md`.
+
+---
+
+### VF-09 — `docs-review-fix-execution` and `docs-review-packet-generation` skills: maturity unknown
+
+**Severity**: LOW
+
+Two skills exist at `ai-tools/ai-skills/docs-review-fix-execution/SKILL.md` and `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md`. These appear relevant to the review pipeline but were not included in the CLAUDE.md skills-to-verify list and their maturity is unknown. They should be assessed before use.
+
+---
+
+### VF-10 — Phase 3 `phase-resources.md` lists all resources as `not tested`
+
+**Severity**: MEDIUM
+
+Every resource in the Phase 3 resource list carries status `⬜ not tested`. This includes resources flagged as critical inputs (Brand & Copy Guide, voice-rules.md, veracity.md, content-pipeline-framework.md). The file states: "No source is trusted until tested." Running Phase 3 with untested resources is an accepted risk for early pipeline runs, but this status should be tracked and resolved before production use.
+
+**Action needed**: Run Phase 3 on known-good pages using each critical resource and record results. Update test status in `phase-resources.md`.
+
+---
+
+_Audited: 2026-03-24_
+_Sources read: all files specified in the task brief. Every file reference in this document was read directly during this session._
+
+---
+
+## Critical Review — 2026-03-24
+
+### What Holds Up
+
+**File existence claims are largely accurate.** All primary prompt files exist at the stated paths: `content-pass.md`, `veracity-pass.md`, `layout-pass.md`, `structure-audit.md`, all 5 pack guides, `veracity.md`, `veracity-library.md`, `voice-rules.md`, `section-naming.md`, `content-pipeline-framework.md`, `feedback-routing-map.md`, `cross-tab-journeys.md`, `terminology-tracking.md`, `frontmatter-taxonomy-update.md`, `framework-index-canonical.md`. All automated scripts exist at their stated paths (`check-docs-path-sync.js`, `component-layout-governance.js`, `docs-quality-and-freshness-audit.js`, `style-and-language-homogenizer-en-gb.js`). All skill files in Section D exist.
+
+**The maturity characterisation for automated scripts is correct.** The three scripts labelled "production-ready" (style homogenizer, quality/freshness audit, component-layout-governance) exist and appear complete. The "script-backed" labels are accurate.
+
+**The canonical taxonomy tables (Section 1 of `checks.mdx`) accurately reflect what is in `Frameworks.mdx`.** The 7 pageTypes, 15 purpose values, 7 audience tokens, complexity values, and lifecycleStage values are correctly reproduced. The deprecated alias list (12-type schema values) is accurate.
+
+**The DRAFT status of `veracity-pass.md` is correctly flagged** throughout the document. The file itself opens with `Status: DRAFT — awaiting human approval after test runs`. This is consistently reported as a CRITICAL gap.
+
+**The tab gate status table (Section E `tab-status.md`)** is accurately described. No tab has IA Approved, Terminology Locked, Structure Approved, Content Pass Open, Veracity Done, or Layout Done. All gates are closed.
+
+**The `structure-audit.md` file does exist** (Gap 7 reports existence as "unconfirmed"). The file is confirmed at `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md`. Gap 7 overstates the uncertainty.
+
+**The phase ordering (naming before veracity)** is correctly identified as counter-intuitive and correctly flagged as a risk (VF-06). The ordering requirement is documented in the pipeline spec.
+
+**The `content-pipeline-pass-a` skill** accurately requires a tab map before running and degrades gracefully when one is absent. The SKILL.md matches what master-checks.mdx describes.
+
+**The `page-taxonomy-framework.mdx` caveat is correct.** master-checks.mdx flags it as the "older 12-type version — cross-check against canonical 7-type". Confirmed: the file exists at `docs-guide/frameworks/page-taxonomy-framework.mdx` and the cross-check warning is accurate.
+
+**The glossary authority distinction is correctly drawn.** `v2/resources/resources/compendium/glossary.mdx` (AI-generated) and `v2/orchestrators/resources/glossary.mdx` (per-tab authoritative version) both exist. The trust hierarchy master-checks.mdx describes is correct.
+
+---
+
+### What Is Wrong or Misleading
+
+**Claim: "`frontmatter-taxonomy.js` exists at `tools/config/frontmatter-taxonomy.js`"**
+What is actually true: This file does NOT exist. Glob of `tools/config/` reveals no `frontmatter-taxonomy.js`. The file at `tools/config/` is `component-layout-profile.json`, `component-layout-profile.schema.json`, and other config files — no frontmatter validator JS file. Every reference to this validator throughout master-checks.mdx (Phase 2 tool, Gap 2, VF-04) is pointing to a non-existent file. The `plan-canonical.md` itself notes the new field validators for `persona`, `industry`, `niche`, `lifecycleStage`, `veracityStatus` are missing — suggesting the file was planned but never built, or exists under a different path. This is not a file with an outdated schema. It is a missing file.
+Severity: HIGH — automated frontmatter validation is cited as available throughout the pipeline but does not exist.
+
+**Claim: "`01-CORE-NEEDS-AND-STANDARDS.md` frontmatter schema is canonical"**
+What is actually true: The frontmatter schema in `workspace/plan/active/ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` lists deprecated pageType values: `landing | overview | concept | instruction | guide | navigation | reference | faq | troubleshooting`. These are OLD 12-type schema values. The canonical 7-type schema does not include `landing`, `faq`, or `troubleshooting` as pageTypes — those are either deprecated entirely or replaced by `pageVariant` values (`quickstart`, `troubleshooting` are pageVariants, not pageTypes). master-checks.mdx lists `01-CORE-NEEDS-AND-STANDARDS.md` as "Active reference for orchestrators content pass" without flagging that its frontmatter schema is incompatible with the canonical 7-type taxonomy. Any agent using this file as an authority for orchestrators content pass frontmatter will produce wrong pageType values.
+Severity: CRITICAL — the primary Orchestrators-specific standards file contains frontmatter schema that directly contradicts the canonical taxonomy.
+
+**Claim: "`v2/resources/glossary.mdx` (human-reviewed, authoritative)"**
+What is actually true: `v2/resources/glossary.mdx` does NOT exist. The actual glossary files are at `v2/resources/livepeer-glossary.mdx` (a data-backed glossary) and `v2/resources/resources/compendium/glossary.mdx` (AI-generated). The per-tab authoritative glossaries are at `v2/orchestrators/resources/glossary.mdx` and `v2/gateways/resources/glossary.mdx`. The path `v2/resources/glossary.mdx` resolves to nothing. This path is used in `checks.mdx §6.7` as "Glossary (authoritative)" and in multiple other places. Any agent or pipeline step that tries to read this file as the authoritative glossary will get a file-not-found error.
+Severity: HIGH — a frequently cited authoritative reference file does not exist at the stated path.
+
+**Claim: "glossary files per tab for Phase 7 glossary update" — Gap 8 states this "may not exist for all tabs"**
+What is actually true: This is partially wrong in both directions. `v2/orchestrators/resources/glossary.mdx` and `v2/gateways/resources/glossary.mdx` DO exist. However, `v2/lpt/resources/glossary.mdx`, `v2/about/resources/glossary.mdx`, and `v2/developers/resources/glossary.mdx` do NOT exist. Gap 8 is correct that the files may not exist, but it does not name which tabs have glossaries and which do not. For the current active priority (Orchestrators veracity pass), the glossary file exists, so Phase 7 of the veracity pass is not blocked on glossary absence for this tab.
+Severity: MEDIUM — the gap is real but imprecisely scoped. For Orchestrators specifically, no blocker.
+
+**Claim: Phase 3 in the per-page pipeline ("Structure and content architecture check") cites `content-pipeline-pass-a` as the tool**
+What is actually true: The `content-pipeline-pass-a` skill SKILL.md explicitly states it requires the tab map (`v2/[tab]/_workspace/tab-map.md`) before running, and falls back to PREV_PAGE/NEXT_PAGE fields only if absent. No tab map exists at the canonical path `v2/[tab]/_workspace/tab-map.md` for any tab. The pipeline's Phase 0 pre-flight check includes "Tab map exists at `v2/[tab]/_workspace/tab-map.md`" as a required dependency. This means Phase 3 as described cannot fully execute for any tab right now — it will always run in degraded mode. master-checks.mdx documents this in Gap 6, but does not draw the explicit consequence: the proposed pipeline as written fails its own pre-flight check for every tab currently.
+Severity: HIGH — the pipeline fails pre-flight on its own declared dependency for all tabs.
+
+**Claim: Phase 9 pre-flight check "Terminology is locked for this tab (Phase 3.5 complete)" is a gate dependency**
+What is actually true: Per `tab-status.md`, no tab has Terminology Locked. The ORCHS pipeline tracker shows `03.5-terminology-lock.md` as DONE within the CONTENTI-PIPLEINE workspace, but this is workspace output, not the gate artefact required by tab-status.md. The gate definition requires the BLOCKING items resolved and recorded in `decision-registry.md` with human sign-off. Per `decision-registry.md`, no terminology lock decision has been recorded. The Phase 0 pre-flight as designed would block every tab. master-checks.mdx does not flag this explicitly — it only says "Terminology is locked for this tab (Phase 3.5 complete)" as a pre-flight item without noting that this gate is currently closed for all tabs.
+Severity: HIGH — the pre-flight gate dependency is unmet for all tabs and this is not clearly flagged.
+
+**Claim: `content-pass.md` has been "Tested on Gateways (pilot complete)"**
+What is actually true: `plan-canonical.md` says "Content pass prompt (WRITE/REVIEW/REWRITE modes) — untested" in its current state assessment. The master-checks.mdx inventory entry says "Tested on Gateways (pilot complete); AUDIT mode built; awaiting test runs. Not production-approved." These two characterisations conflict. The AUDIT mode being "awaiting test runs" while the REVIEW mode is "pilot complete on Gateways" is a distinction master-checks.mdx makes but does not make clear: only specific modes have been tested, not the full prompt. An agent reading the inventory table would see "tested on Gateways" and treat the tool as production-ready — which it is not uniformly.
+Severity: MEDIUM — the testing status statement is misleading by omission: mode-specific test coverage is not visible in the table.
+
+**Claim: "`v2/orchestrators/_workspace/canonical/checks.mdx` — Production-quality. Most complete review reference in the repo."**
+What is actually true: `checks.mdx` is the verified canonical reference, and the characterisation is accurate as far as the content goes. However, `checks.mdx` also references `workspace/plan/active/CONTENT-WRITING/content-pipeline-canonical.md` (line 153) as a source for "Definition of Good (all levels)." That file path does not appear in any confirmed file listing. The `plan-canonical.md` exists, but `content-pipeline-canonical.md` is listed in the READ-EVERY-TIME directory. master-checks.mdx does not flag this potential discrepancy.
+Severity: LOW — single missing file reference inside checks.mdx, but not a master-checks.mdx error per se.
+
+---
+
+### Items Needing Validation Before Any Pipeline Use
+
+**1. `veracity-pass.md` — DRAFT, zero test runs recorded**
+Cannot be used in production. The current active priority (Phase 7 veracity pass on S01–S12) is running on an unvalidated prompt. Required before use: 1 review agent pass, 3 test runs on pages with governance-controlled values and CLI flags, human sign-off. The pack-guide specifies this requirement explicitly.
+
+**2. `content-pipeline-pass-a` skill (Phase 3 structure check, Phase 4 voice check, Phase 5 info-type check)**
+No test record exists. master-checks.mdx marks it "no test record found." It references `content-pass.md` (pilot-tested on Gateways, REVIEW mode only) but the skill itself has never been validated end-to-end. An agent invoking this skill is executing an untested wrapper around a partially tested prompt.
+
+**3. `content-pipeline-pass-b` skill (Phase 7 layout check)**
+No test record exists. References `layout-pass.md` (existence confirmed, test status unknown). Cannot be used in production without validation on a known-good page first.
+
+**4. `docs-review-fix-execution` and `docs-review-packet-generation` skills**
+Maturity unknown. Not in the CLAUDE.md skills-to-verify list. Cannot be incorporated into the pipeline without assessment.
+
+**5. `01-CORE-NEEDS-AND-STANDARDS.md` frontmatter schema (Orchestrators)**
+Must not be used as a frontmatter authority until the pageType list is corrected to the canonical 7-type schema. Currently lists `landing`, `faq`, `troubleshooting` as pageType values — all deprecated. An agent following this file's frontmatter block will produce non-canonical taxonomy.
+
+**6. `component-layout-profile.json`**
+Known to use deprecated pageType names. master-checks.mdx flags this (Gap 3, VF-08). Must not be used as component selection authority until updated. Use `Frameworks.mdx` directly.
+
+**7. `page-authoring/SKILL.md` frontmatter example**
+Contains `purpose: orientation` (deprecated alias; canonical is `orient`). Any agent following the SKILL.md example verbatim will produce a frontmatter violation on the first field it sets. Must be corrected before use.
+
+**8. Automated frontmatter validator**
+Does not exist at the stated path (`tools/config/frontmatter-taxonomy.js`). Before the pipeline can use automated frontmatter validation, the file must be located or confirmed as absent, and the pipeline documentation updated accordingly.
+
+---
+
+### Pipeline Gaps Not Flagged
+
+**No gate enforcement between pipeline phases.** The pipeline correctly lists pre-flight items, but there is no enforcement mechanism. Phase 6 (veracity pass) is currently running on Orchestrators content (per CLAUDE.md session log and TRACKER.md) while `veracity-pass.md` is DRAFT and the naming audit (Phase 1 of the per-page pipeline) has not been run on S01–S12. The pipeline ordering is documented; the gates are not enforced.
+
+**No Brand & Copy Guide integration.** `plan-canonical.md` explicitly lists "Brand & Copy Guide not integrated as base layer in `voice-rules.md` or `content-pass.md`" as a P0 gap. master-checks.mdx references the Brand & Copy Guide in `01-CORE-NEEDS-AND-STANDARDS.md §8` as a key reference file, but does not flag its absence from the voice and content pass foundations as a gap. Pages written without Brand & Copy Guide integration may pass all 9 check categories and still not match the brand voice baseline.
+
+**No feedback loop from review corrections back to standards.** `plan-canonical.md` identifies this as the "single biggest structural gap" in the system: corrections applied to pages are never propagated to the standards that generated the errors. master-checks.mdx documents the feedback-routing-map in Category 9 (check 9.6) as a routing mechanism, but does not flag the absence of a working feedback loop as a systemic pipeline gap. The routing map exists; the loop does not run.
+
+**No record of which Orchestrators S01–S12 pages have had the naming audit (Phase 1 in the per-page pipeline) run.** The TRACKER.md shows Phase 6 (content writing) as DONE and Phase 7 (veracity) as PENDING. There is no separate phase entry for the naming audit. If S01–S12 go into the veracity pass without heading scores confirmed, the VF-06 risk (orphaned veracity markers if headings change later) is live.
+
+**`checks.mdx §1.12` OG image block requirement not in master-checks.mdx Phase 2 checklist.** master-checks.mdx Phase 2 (frontmatter check) lists the 10 required fields but does not include the OG image block as a separate verification step. `checks.mdx` check 1.12 is explicit: "All 5 OG fields present with correct fallback path." The Phase 2 output format does not include OG image block verification.
+
+**Tab map location mismatch not resolved.** master-checks.mdx (Gap 6) notes tab maps exist in `workspace/plan/active/CONTENTI-PIPLEINE/` but not at `v2/[tab]/_workspace/tab-map.md`. It states what is needed but does not flag that the existing ORCHS tab map at the workspace path needs to be moved to the canonical location before the content-pipeline-pass-a skill can use it. The gap description implies the maps need to be created; they have been created — they are in the wrong location.
+
+---
+
+### Recommendations
+
+**1. (BLOCKING) Correct the frontmatter schema in `01-CORE-NEEDS-AND-STANDARDS.md` before any further Orchestrators content work.** The file is listed as the primary Orchestrators content pass reference and its pageType list (`landing | overview | faq | troubleshooting`) directly contradicts the canonical schema. Any agent following it produces wrong output. Fix: replace the frontmatter block with the canonical 7-type schema. This takes one edit and unblocks all subsequent Orchestrators content work.
+
+**2. (BLOCKING for Phase 7) Run 3 test passes on `veracity-pass.md` before using it on S01–S12.** The test pages should include at least one page with governance-controlled values, one with CLI flag claims, and one with mixed information types. Record results. Get human sign-off. Until this is done, the current Orchestrators veracity priority is running without a validated prompt.
+
+**3. (HIGH) Correct the `v2/resources/glossary.mdx` path error throughout.** The authoritative site-level glossary is at `v2/resources/livepeer-glossary.mdx`, not `v2/resources/glossary.mdx`. Update `checks.mdx §6.7`, the veracity pass framework, and any other reference. Per-tab authoritative glossaries are at `v2/[tab]/resources/glossary.mdx`.
+
+**4. (HIGH) Confirm or document the absence of `tools/config/frontmatter-taxonomy.js`.** Every reference to automated frontmatter validation in the pipeline assumes this file exists. If it does not, remove all references to it and mark automated frontmatter validation as "not available" in the pipeline. If it exists under a different path, update all references.
+
+**5. (HIGH) Move the ORCHS tab map from workspace to canonical location.** `workspace/plan/active/CONTENTI-PIPLEINE/03-tab-map.md` exists but `v2/orchestrators/_workspace/tab-map.md` does not. The content-pipeline-pass-a skill reads from the canonical location only. Moving the file (or creating a symlink/copy) unblocks the adjacency check for all Orchestrators pages without requiring any new work.
+
+**6. (HIGH) Add explicit gate-closed warnings to the pipeline phases that are currently unexecutable.** Phase 0 pre-flight items "Tab map exists at `v2/[tab]/_workspace/tab-map.md`" and "Terminology is locked for this tab" are currently failing for all tabs. The pipeline as written will fail its own pre-flight on every tab. Add a note to Phase 0 identifying which of these checks are known-blocked and what the workaround is (e.g., degraded adjacency mode, or explicit human override).
+
+**7. (MEDIUM) Update `page-authoring/SKILL.md` frontmatter example.** Replace `purpose: orientation` with `purpose: orient`. Remove or annotate the `status` and `lastVerified` fields that are not in the canonical required set. Add a note that `frontmatter-taxonomy.js` is not the canonical authority.
+
+**8. (MEDIUM) Add an explicit Phase 1 naming audit entry to the ORCHS TRACKER.md.** The pipeline requires naming audit before veracity pass. TRACKER.md has no entry for this step. Before Phase 7 (veracity) runs on S01–S12, record heading scores for all 12 pages and confirm all H2/H3 score ≥20/25. This takes one session and closes VF-06 for the Orchestrators tab.
+
+**9. (MEDIUM) Clarify content-pass.md test status per mode in the infrastructure inventory table.** Current entry says "Tested on Gateways (pilot complete)." Add: which modes were tested (REVIEW only? WRITE? REWRITE? AUDIT?), what the test result was, and what remains untested. An agent reading the current table treats the prompt as uniformly validated.
+
+**10. (LOW) Resolve the conflict between `plan-canonical.md` and master-checks.mdx on `content-pass.md` test status.** `plan-canonical.md` says "content pass prompt — untested." master-checks.mdx says "Tested on Gateways (pilot complete)." One of these is wrong or both are referring to different scopes. The authoritative test record should be in `prompt-testing-protocol.md` or the pack-guide. Confirm and align.
+
+---
+
+_Critical review by: Claude Code (Sonnet 4.6) · 2026-03-24_
+_Files read for this review: master-checks.mdx, CLAUDE.md, Frameworks.mdx, checks.mdx, decision-registry.md, tab-status.md, plan-canonical.md, 01-CORE-NEEDS-AND-STANDARDS.md, 00-TRACKER.md, content-pass.md (header), veracity-pass.md (header + claim table), content-pipeline-pass-a/SKILL.md, page-authoring/SKILL.md (header). File existence verified via Glob for all 30+ referenced paths._

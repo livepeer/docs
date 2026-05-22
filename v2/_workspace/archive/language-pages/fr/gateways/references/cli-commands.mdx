@@ -1,0 +1,94 @@
+---
+title: Commandes CLI de la passerelle
+description: 'Référence : liste complète des commandes CLI pour les passerelles Livepeer'
+sidebarTitle: Commandes CLI
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - cli commands
+  - gateway
+  - commands
+  - reference
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9yZWZlcmVuY2VzL2NsaS1jb21tYW5kcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL3JlZmVyZW5jZXMvY2xpLWNvbW1hbmRzIiwic291cmNlSGFzaCI6ImM5MGM0NjY5YWQzNjNjYWE4MjJjOGUwNTEwNmNlMjcyNTQ2YTU3YzUxZmFlY2NiYjkxOWNhN2VhYTNhZWRkODYiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MTk6MDguOTIzWiJ9 */}
+# Livepeer Commandes CLI
+<Card title="CLI Tools Codebase" href="https://github.com/livepeer/wiki" icon="github" arrow horizontal>
+  View CLI Tools Codebase on Github
+</Card>
+
+
+## Référence rapide
+
+| Catégorie | Commandes | Type de nœud |
+|----------|----------|-----------|
+| **Général** | Obtenir l&apos;état du nœud, Afficher les paramètres du protocole, Liste des orchestrateurs, Initialiser le tour | Tout |
+| **Passerelle/Animateur** | Définir la configuration de diffusion, Définir le prix maximum par capacité, Déposer/retirer des fonds | Passerelle |
+| **Orchestrateur** | Activer l'orchestrateur, Configurer, Définir le prix, Appeler la récompense, Voter | Orchestrateur |
+| **Ethereum** | Transférer des jetons, Définir les prix de gaz, Demander des jetons de test, Signer un message | Tout (sur la chaîne) |
+| **Staking** | Lier, Délier, Rélier, Retirer les fonds/frais | Tous |
+
+---
+
+## Liste détaillée des commandes
+
+### Commandes générales (tous les types de nœuds)
+- **Obtenir l'état du nœud** - Afficher les informations du nœud, les soldes et la configuration 
+- **Afficher les paramètres du protocole** - Afficher l'état et les paramètres du protocole 
+- **Liste des orchestrateurs enregistrés** - Afficher les orchestrateurs disponibles 
+- **Initialiser le tour** - Initialiser un nouveau tour du protocole 
+
+### Commandes du Gateway/Broadcasteur
+- **Configurer la configuration de diffusion** - Configurer les options de transcodage et le prix maximum 
+- **Définir le prix maximum par capacité** - Définir les tarifs pour les capacités d'IA 
+- **Déposer des fonds pour la diffusion** - Ajouter ETH pour payer les orchestrateurs 
+- **Débloquer les fonds de diffusion** - Débloquer les fonds déposés 
+- **Retirer les fonds de diffusion** - Retirer les fonds débloqués 
+
+### Commandes de l'orchestrateur
+- **Activer l'orchestrateur** - Processus en plusieurs étapes pour devenir un orchestrateur 
+- **Configurer l'orchestrateur** - Mettre à jour le prix, la part des gains, la part des frais, l'URI du service 
+- **Appeler les récompenses** - Réclamer les récompenses de l'orchestrateur pour le tour en cours 
+- **Définir la valeur faciale maximale du ticket** - Configurer la valeur maximale du ticket 
+- **Définir le prix pour le diffuseur** - Définir un prix spécifique pour un diffuseur 
+- **Définir le nombre maximum de sessions** - Limiter les sessions de transcodage simultanées 
+- **Votez dans un sondage de gouvernance** - Participer à la gouvernance du protocole 
+- **Votez sur une proposition de trésorerie** - Voter sur les propositions de trésorerie 
+
+### Commandes de mise en staking et de jeton
+- **Lier des jetons** - Déléguer LPT à un orchestrator 
+- **Délaisser des jetons** - Retirer des jetons délégués (début de la période de désengagement) 
+- **Re-déléguer des jetons** - Re-déléguer des jetons en période de désengagement 
+- **Retirer le stake** - Retrait de la mise non liée achevée 
+- **Retrait des frais** - Retrait des frais gagnés (ETH) 
+- **Opérations Ethereum** - Transfert de LPT vers une autre adresse 
+
+### Opérations Ethereum
+- **Définir le prix maximum de la gaz** - Configurer le prix maximum de gaz pour les transactions 
+- **Définir le prix minimum de la gaz** - Configurer le prix minimum de gaz pour les transactions 
+- **Obtenir un test LPT** - Demander des jetons de test (seulement sur le réseau de test) 
+- **Obtenez un test ETH** - Instructions pour le faucet du testnet ETH 
+- **Signer un message** - Signer un message avec la clé privée du nœud 
+- **Signer des données typées** - Signer des données typées EIP-712 
+
+## Points de terminaison de l'API HTTP
+
+Les commandes de la CLI correspondent aux points de terminaison HTTP sur le serveur CLI (port par défaut 5935) :
+
+- `/status` - Statut du nœud
+- `/protocolParameters` - Informations sur le protocole
+- `/registeredOrchestrators` - Liste des orchestrateurs
+- `/bond`, `/unbond`, `/rebond` - Opérations de mise en staking
+- `/activateOrchestrator` - Activation de l'orchestrateur
+- `/setBroadcastConfig` - Configuration de la diffusion
+- `/setMaxPriceForCapability` - Tarification de l'IA
+- `/reward` - Réclamer les récompenses
+- `/transferTokens` - Transferts de jetons
+- `/signMessage` - Signature de messages
+
+## Remarques
+
+- Les commandes sont filtrées en fonction du type de nœud - certaines ne s'affichent que pour les orchestrateurs ou les passerelles 
+- Les commandes de testnet (comme obtenir des jetons de test) ne s'affichent que sur les réseaux de test 
+- L'interface CLI se connecte à l'API HTTP du nœud, généralement sur le port 5935 pour les passerelles et 7935 pour les orchestrateurs 

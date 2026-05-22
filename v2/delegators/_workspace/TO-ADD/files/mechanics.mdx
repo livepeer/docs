@@ -1,0 +1,145 @@
+---
+title: Protocol Mechanics
+sidebarTitle: Mechanics
+description: >-
+  How rounds, reward calls, the BondingManager, and reward accumulation work in the Livepeer protocol — the technical layer beneath delegation.
+keywords:
+  - livepeer
+  - protocol mechanics
+  - rounds
+  - reward call
+  - BondingManager
+  - claimEarnings
+  - active set
+  - cumulative reward factor
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: explain
+status: current
+lastVerified: 2026-04-06
+---
+
+Delegation generates returns through a set of on-chain mechanisms that operate on a fixed time unit — the round. Understanding how rounds, reward calls, and reward accumulation interact tells you why your orchestrator's reliability matters as much as their commission rate.
+
+---
+
+## Rounds
+
+A round is the Livepeer protocol's fundamental time unit. Each round covers approximately 5,760 Arbitrum blocks — roughly one day, though this varies with Arbitrum block production rates.
+
+Round boundaries trigger:
+- Active set election (which orchestrators earn this round)
+- Inflation rate adjustment
+- Reward distribution eligibility
+
+The current round number and timing are visible on [explorer.livepeer.org](https://explorer.livepeer.org).
+
+---
+
+## The active set
+
+At the start of each round, the protocol selects the top orchestrators by total bonded stake to form the active set — the only operators eligible to receive transcoding and AI inference jobs and earn inflation rewards that round.
+
+Orchestrators outside the active set earn nothing, regardless of uptime or commission settings. As a delegator, your stake only earns if your orchestrator holds an active set position.
+
+<Info>
+  The active set size is a governance-controlled protocol parameter. See [Protocol Parameters](/v2/delegators/resources/reference/protocol-parameters) for the current value verified against the BondingManager contract.
+</Info>
+
+---
+
+## The Reward() call
+
+Each round, active orchestrators must call the `Reward()` function on-chain. This call:
+
+1. Triggers the BondingManager to calculate that round's inflation allocation for the orchestrator's pool
+2. Mints new LPT via the Minter contract
+3. Distributes the minted LPT across all bonded stake in the pool, after the orchestrator retains their `rewardCut`
+
+**If an orchestrator does not call `Reward()` in a round, no LPT is minted for that pool.** The allocation is not deferred to the next round — it is permanently forfeit for every delegator in that pool.
+
+Reward calls require a small ETH balance to cover Arbitrum gas. Operators who let their ETH run to zero stop calling until they top up. This is the primary cause of missed reward calls.
+
+---
+
+## The BondingManager
+
+The BondingManager is the central Livepeer smart contract managing all bonding, unbonding, reward accounting, and earnings. When you delegate:
+
+- Your LPT is transferred into the BondingManager contract
+- Your stake is attributed to your chosen orchestrator
+- Your pending balance grows each round your orchestrator calls `Reward()`
+
+The BondingManager tracks earnings using a **cumulative reward factor**: a running multiplier that grows each round when `Reward()` is called. This design means the contract does not need to update every delegator's state every round — it calculates each delegator's accumulated earnings on demand when they claim, using the difference between the factor at their last claim and the current factor.
+
+The result is automatic compounding: as your pending rewards grow and accrue into your bonded balance (when you claim), the growing balance earns on a progressively larger base.
+
+---
+
+## claimEarnings()
+
+`claimEarnings()` is the on-chain function that moves accumulated rewards into your bonded balance. You can call it directly or it is triggered automatically by the following actions:
+
+| Action | claimEarnings() called automatically |
+|---|---|
+| Adding to your bond (bond again) | ✅ Before updating amount |
+| Unbonding | ✅ Before reducing amount |
+| Rebonding | ✅ Before increasing amount |
+| Redelegating to new orchestrator | ✅ Before transfer |
+| Explicit claim via Explorer | ✅ Direct call |
+
+### ⚠️ Claim timing — critical protocol behaviour
+
+When `claimEarnings()` executes, the BondingManager records your `lastClaimRound` as the **current round at the time of the call**.
+
+**If your orchestrator has not yet called `Reward()` for the current round at the moment you claim, you forfeit that round's rewards and fees entirely.** The contract will not retroactively credit you for that round — your `lastClaimRound` has already advanced past it.
+
+This means:
+
+- **Claim at the end of rounds** — after your orchestrator has already called `Reward()` for that round
+- **Do not claim at the start of a round** — before your orchestrator has acted
+
+This behaviour is confirmed by Livepeer Foundation Engineering (Discord, April 2026). The Livepeer Explorer is implementing a UI warning (PR #613) to flag this timing risk. Check the Explorer for the current state of this indicator before claiming.
+
+Since `claimEarnings()` is also triggered automatically by bond, unbond, rebond, and redelegate actions, the same timing risk applies when performing any of those operations at the start of a round.
+
+---
+
+## Checking pending rewards
+
+Two BondingManager functions return your current position without claiming:
+
+- **`pendingStake(address, endRound)`** — Total bonded stake including unclaimed rewards
+- **`pendingFees(address, endRound)`** — Pending ETH fees not yet claimed
+
+Both are readable via [Arbiscan](https://arbiscan.io) by calling the BondingManager contract directly, or surfaced through the Explorer UI on your account page.
+
+---
+
+## Governance checkpoints
+
+The BondingVotes contract (ERC-5805) records a snapshot of each delegator's bonded stake at the end of each round. These snapshots are used to calculate voting power for governance proposals — your vote weight is your bonded balance at the block when the proposal was created, not your current balance.
+
+This prevents stake manipulation immediately before votes. It also means your governance weight is calculated from your historical position, so a recent large bond increase may not immediately affect your voting power on proposals created before that bond.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    How reward formulas use these mechanics to calculate your returns.
+  </Card>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claiming, compounding, and the full unbonding flow.
+  </Card>
+  <Card title="Protocol Parameters" icon="sliders" href="/v2/delegators/resources/reference/protocol-parameters" arrow>
+    Live governance-controlled values — active set size, unbonding period, and more.
+  </Card>
+  <Card title="Contract Addresses" icon="file-contract" href="/v2/delegators/resources/reference/contracts" arrow>
+    Deployed BondingManager and related contracts on Arbitrum One.
+  </Card>
+</CardGroup>

@@ -1,0 +1,38 @@
+---
+title: SDK 概述
+description: 适用于 Livepeer Studio API 的服务器和客户端 SDK：TypeScript、Go、Python 和 React。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3JlZmVyZW5jZS9zZGtzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9yZWZlcmVuY2Uvc2RrcyIsInNvdXJjZUhhc2giOiJiN2U1OWRhMjhjMmIzMWVlYTYyOTZjZDgyMmYyZjFlYmI0ZjQ0OGFjZDIxMWJjZGVmMzVmN2QzMWI5N2ExZDBiIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjQ2OjE5Ljc0OVoifQ== */}
+使用 Livepeer Studio **SDKs** 来调用 API 并以更少的样板代码构建播放或广播 UI。
+
+## 服务器端 SDK
+
+安装您语言的 SDK 并使用您的 API 密钥进行初始化。从您的 **后端** only.
+
+| 语言 | 包 | 文档 |
+|----------|---------|------|
+| **TypeScript / JavaScript** | [livepeer](https://www.npmjs.com/package/livepeer) | npm, [Livepeer Studio 文档](https://livepeer.studio/docs) |
+| **Go** | [livepeer-go](https://pkg.go.dev/github.com/livepeer/livepeer-go) | pkg.go.dev |
+| **Python** | [Livepeer](https://pypi.org/project/livepeer) | PyPI |
+
+示例（Node）:
+
+```js
+const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+const { data } = await livepeer.stream.create({ name: "my-stream" });
+```
+
+## React 组件
+
+**[@livepeer/react](https://www.npmjs.com/package/@livepeer/react)** 提供:
+
+- **播放器** - 可组合的播放（直播和点播，WebRTC + HLS/MP4 回退）。参见 [播放器和嵌入](../player)。
+- **广播** - 浏览器中的 WebRTC 广播。参见 [从浏览器进行直播](../livestream/livestream-from-browser).
+
+与您现有的 React 应用一起使用；这些组件可与 Livepeer Studio API 和可选的 Studio 提供商配合使用。
+
+## 快速链接
+
+- [快速入门](../quickstart) - 使用 SDK 进行第一次直播或资产。
+- [API 概述](./api) - 认证和 API 基础知识。
+- [Livepeer Studio 文档](https://livepeer.studio/docs) - 完整的 SDK 和 API 参考。

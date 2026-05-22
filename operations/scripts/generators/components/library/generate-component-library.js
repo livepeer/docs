@@ -194,10 +194,10 @@ function generateCategoryLibrary(category, components, usageLookup) {
   const sortedSubs = Object.keys(subgroups).sort();
 
   const lines = [
-    '{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}',
-    `{/* Generator: ${SCRIPT_PATH} */}`,
-    `{/* Generated: ${now} */}`,
-    `{/* Regenerate: node ${SCRIPT_PATH} --category ${category} */}`,
+    '<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->',
+    `<!-- Generator: ${SCRIPT_PATH} -->`,
+    `<!-- Generated: ${now} -->`,
+    `<!-- Regenerate: node ${SCRIPT_PATH} --category ${category} -->`,
     '',
     `# ${CATEGORY_LABELS[category] || category} Component Library`,
     '',
@@ -235,10 +235,10 @@ function generateRootLibrary(groups, usageLookup, registry) {
   const top20 = allComponents.slice(0, 20);
 
   const lines = [
-    '{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}',
-    `{/* Generator: ${SCRIPT_PATH} */}`,
-    `{/* Generated: ${now} */}`,
-    `{/* Regenerate: node ${SCRIPT_PATH} */}`,
+    '<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->',
+    `<!-- Generator: ${SCRIPT_PATH} -->`,
+    `<!-- Generated: ${now} -->`,
+    `<!-- Regenerate: node ${SCRIPT_PATH} -->`,
     '',
     '# Component Library',
     '',
@@ -300,7 +300,7 @@ function main() {
 
     if (args.mode === 'check') {
       const existing = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : '';
-      const strip = (s) => s.replace(/\{\/\* Generated: .* \*\/\}/g, '{/* Generated: CHECK */}');
+      const strip = (s) => s.replace(/<!-- Generated: .* -->/g, '<!-- Generated: CHECK -->');
       if (strip(content) !== strip(existing)) {
         console.log(`STALE: ${path.relative(REPO_ROOT, outputPath)}`);
         staleCount++;
@@ -321,7 +321,7 @@ function main() {
 
     if (args.mode === 'check') {
       const existing = fs.existsSync(rootPath) ? fs.readFileSync(rootPath, 'utf8') : '';
-      const strip = (s) => s.replace(/\{\/\* Generated: .* \*\/\}/g, '{/* Generated: CHECK */}');
+      const strip = (s) => s.replace(/<!-- Generated: .* -->/g, '<!-- Generated: CHECK -->');
       if (strip(rootContent) !== strip(existing)) {
         console.log(`STALE: ${path.relative(REPO_ROOT, rootPath)}`);
         staleCount++;

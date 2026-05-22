@@ -1,0 +1,146 @@
+---
+title: Provenancia y metadatos
+description: >-
+  Cómo se manifiestan C2PA, las firmas de Ethereum y el esquema de metadatos de
+  Streamplace crean video con derechos verificables.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace provenance
+  - provenance
+  - metadata
+  - manifests
+  - ethereum
+  - signatures
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLXByb3ZlbmFuY2UubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLXByb3ZlbmFuY2UiLCJzb3VyY2VIYXNoIjoiZDU0MGFhZDg3NjEyZDNhZTQ1MTdhYWIyNjEzZGUxZDdkY2Q5MjhjODg1MjFlYjYxMDBiZTQzZWRhMzJkMGIzNCIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxODowODowMS41NTFaIn0= */}
+---
+
+Streamplace es la primera capa de infraestructura de video descentralizada que combina:
+
+- **Manifestos de autenticidad de contenido C2PA**
+- **Firmas criptográficas basadas en Ethereum**
+- **Un sistema completo de metadatos para derechos, advertencias y reglas de distribución**
+
+Esto crea un pipeline de video_verificable, evidente de manipulación y consciente de derechos_ adecuado para redes sociales descentralizadas, periodismo, ecosistemas de creadores y plataformas nativas de Web3.
+
+---
+
+# 🛡️ ¿Por qué la procedencia es importante?
+
+Las plataformas tradicionales de video no ofrecen garantías sobre:
+
+- Quién creó un video
+- Si ha sido alterado
+- Si los derechos o advertencias asociados a él son auténticos
+
+Streamplace resuelve esto asegurando que **cada segmento de video de 1 segundo lleve una prueba criptográfica** de origen y política.
+
+---
+
+# 🧬 Diagrama de la Pipeline de Procedencia
+
+```mermaid
+flowchart LR
+    A[MP4 Segment (1s)] --> B[C2PA Manifest]
+    A --> C[Ethereum Signature]
+    B --> D[Composite Provenance]
+    C --> D
+    D --> E[Transcoding on Livepeer]
+    E --> F[Playback + Verification]
+```
+
+---
+
+# 🔐 Manifestos C2PA
+
+Cada segmento incluye un **Manifesto C2PA (Credenciales de Contenido)**, que:
+
+- Captura la identidad del creador
+- Incluye declaraciones sobre derechos, fuentes, ediciones y advertencias
+- Proporciona un sello criptográfico evidente de manipulación
+
+La procedencia C2PA es _basado en estándares_, lo que hace que la salida de Streamplace sea compatible con las herramientas utilizadas por:
+
+- Adobe
+- Microsoft
+- Nikon
+- The Content Authenticity Initiative
+
+Referencia: [https://spec.c2pa.org/](https://spec.c2pa.org/)
+
+---
+
+# 🔏 Firmas de Ethereum
+
+Además de C2PA, Streamplace adjunta **firmas de Ethereum** que:
+
+- Vinculan la identidad del creador al contenido
+- Integrarse con sistemas de identidad Web3
+- Permitir verificación en cadena
+
+Esto crea una_capa de procedencia dual_: estándares abiertos + identidad descentralizada.
+
+---
+
+# 🧱 Esquema de metadatos (Derechos, Advertencias, Políticas)
+
+Streamplace define un sistema de metadatos rico bajo "`place.stream.metadata.*`".
+
+Campos clave:
+
+- `contentRights` - licencia, atribución, derechos de autor
+- `contentWarnings` - seguridad, contenido gráfico, luces parpadeantes, etc.
+- `distributionPolicy` - reglas de retención, permisos de sindicación, geografía
+- `configuration` - preferencias de reproducción
+- `story/series` metadatos - episodio, capítulo, continuidad
+
+Docs: [https://stream.place/docs/video-metadata/metadata-record/](https://stream.place/docs/video-metadata/metadata-record/)
+
+---
+
+# 🌐 Cómo los metadatos + la procedencia sobreviven al transcoding
+
+Una innovación de diseño importante: **la procedencia persiste incluso después de Livepeer transcoding**.
+
+El proceso:
+
+1. Streamplace inserta la procedencia en cada segmento antes de enviarlo a Livepeer.
+2. Los orquestadores transcodifican los segmentos sin eliminar la procedencia.
+3. Streamplace reconstruye los manifiestos con la procedencia intacta.
+4. Los clientes de reproducción pueden verificar las firmas de forma independiente.
+
+Esto crea una **cadena de autenticidad de extremo a extremo**, incluso a través de cómputo descentralizado.
+
+---
+
+# 🧩 Casos de uso ejemplos
+
+### **1. Redes sociales descentralizadas**
+
+Los usuarios obtienen videos con derechos automáticos, advertencias y autoría.
+
+### **2. Periodismo ciudadano**
+
+Los segmentos pueden verificarse de forma independiente para autenticidad.
+
+### **3. Plataformas de la economía de creadores**
+
+Los metadatos de derechos viajan con el contenido, permitiendo la atribución automática.
+
+### **4. Herramientas de moderación**
+
+Las plataformas pueden confiar en metadatos integrados en lugar de señales propiedad de la plataforma.
+
+---
+
+# 📚 Páginas relacionadas
+
+- [Visión general de Streamplace](/solutions/streamplace/overview)
+- [Cómo funciona Streamplace](/solutions/streamplace/introduction/streamplace-guide)
+- [Arquitectura](/solutions/streamplace/introduction/streamplace-architecture)
+- [Modelo de financiación SPE](/solutions/streamplace/introduction/streamplace-funding-model)
+- [Guía de integración para desarrolladores](/solutions/streamplace/introduction/streamplace-integration)

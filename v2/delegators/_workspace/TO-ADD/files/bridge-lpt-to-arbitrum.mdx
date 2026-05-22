@@ -1,0 +1,129 @@
+---
+title: Bridge LPT to Arbitrum
+sidebarTitle: Bridge LPT to Arbitrum
+description: >-
+  Move LPT from Ethereum mainnet or a centralised exchange to Arbitrum One — a prerequisite for delegation on the Livepeer network.
+keywords:
+  - livepeer
+  - bridge LPT
+  - arbitrum
+  - L2 migration
+  - LPT arbitrum
+  - staking prerequisites
+  - centralised exchange
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: instruction
+audience: delegator
+purpose: build
+status: current
+lastVerified: 2026-04-06
+---
+
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+Livepeer delegation runs on Arbitrum One. LPT on Ethereum mainnet or held on a centralised exchange must reach an Arbitrum One wallet before you can bond. This page covers both paths.
+
+---
+
+## Before you start
+
+You need:
+- A self-custody wallet (MetaMask, Coinbase Wallet, or any WalletConnect-compatible wallet)
+- The wallet configured for Arbitrum One — add the network at [chainlist.org](https://chainlist.org) if it does not appear
+- ETH on Ethereum mainnet for bridge gas (typically $5–20 depending on conditions)
+- A small ETH balance on Arbitrum One for future delegation transactions — under $1 is sufficient
+
+---
+
+## Path A — LPT in a wallet on Ethereum mainnet
+
+Use the [Arbitrum Bridge](https://bridge.arbitrum.io) or the [Livepeer L2 Migration Tool](https://explorer.livepeer.org/migrate) if you have legacy LPT bonded on the L1 protocol.
+
+<StyledSteps>
+
+<StyledStep title="Go to bridge.arbitrum.io and connect your wallet">
+  Navigate to [bridge.arbitrum.io](https://bridge.arbitrum.io). Connect the wallet holding your LPT on Ethereum mainnet.
+
+  Select **Ethereum → Arbitrum One** as the direction. Select **LPT** as the token (search by name or contract address: `0x58b6A8A3302369DAEc383334672404Ee733aB239`).
+</StyledStep>
+
+<StyledStep title="Enter the amount and approve">
+  Enter the amount of LPT to bridge. Review the estimated gas cost on Ethereum mainnet — this is the primary cost of the operation.
+
+  Approve the bridge contract to spend your LPT, then confirm the deposit transaction. Both require gas on Ethereum mainnet.
+</StyledStep>
+
+<StyledStep title="Wait for the deposit to process">
+  Arbitrum bridge deposits take approximately 10–30 minutes to finalise. The bridge UI shows progress. You do not need to take any action during this period.
+</StyledStep>
+
+<StyledStep title="Verify your LPT on Arbitrum One">
+  After the deposit finalises, switch your wallet network to Arbitrum One. Your LPT balance should appear in the wallet and in the [Livepeer Explorer](https://explorer.livepeer.org).
+
+  For on-chain verification: go to [arbiscan.io](https://arbiscan.io), enter your wallet address, and check the token balances tab.
+</StyledStep>
+
+</StyledSteps>
+
+<Tip>
+  The Livepeer L2 Migration Tool at [explorer.livepeer.org/migrate](https://explorer.livepeer.org/migrate) handles legacy LPT bonded in the L1 Livepeer protocol. Use it if you were a delegator on the original Ethereum mainnet deployment.
+</Tip>
+
+---
+
+## Path B — LPT on a centralised exchange {#from-a-centralised-exchange}
+
+Most centralised exchanges cannot bridge directly to Arbitrum — you must withdraw to a wallet first.
+
+### Step 1 — Check which network your exchange supports for LPT withdrawals
+
+Before withdrawing, confirm whether your exchange supports:
+
+- **Arbitrum One withdrawals** — You can withdraw LPT directly to an Arbitrum One address. Skip bridging entirely.
+- **Ethereum mainnet withdrawals only** — You receive LPT on Ethereum mainnet. Follow Path A above to bridge from there.
+
+<Warning>
+  Withdrawing to the wrong network means your tokens are inaccessible. Confirm the network your exchange sends LPT on before initiating a withdrawal. When in doubt, withdraw to Ethereum mainnet and bridge — it costs more in gas but is always safe.
+</Warning>
+
+### Step 2a — If your exchange supports Arbitrum withdrawals
+
+1. Initiate a withdrawal from the exchange to your Arbitrum One wallet address
+2. Confirm the destination network is **Arbitrum One** (not Ethereum, not other L2s)
+3. Wait for the exchange's processing time — typically 10–60 minutes
+4. Verify your LPT balance in [explorer.livepeer.org](https://explorer.livepeer.org) or [arbiscan.io](https://arbiscan.io)
+
+### Step 2b — If your exchange only supports Ethereum mainnet withdrawals
+
+1. Withdraw LPT from the exchange to an Ethereum mainnet wallet address
+2. Ensure you have ETH on Ethereum mainnet for gas
+3. Follow **Path A** above to bridge your LPT to Arbitrum One
+
+### Getting ETH on Arbitrum for gas
+
+After bridging LPT, you need a small ETH balance on Arbitrum One for delegation transactions. Options:
+
+- Bridge ETH using [bridge.arbitrum.io](https://bridge.arbitrum.io) — select ETH as the token
+- Withdraw ETH directly to Arbitrum from an exchange that supports it
+- Use a fiat-to-Arbitrum on-ramp (available in some regions via Coinbase, Transak, and others)
+
+Under $1 of ETH covers all delegation gas costs with room to spare.
+
+---
+
+## Verify before delegating
+
+With LPT on Arbitrum One and a small ETH balance for gas, you are ready to delegate.
+
+<CardGroup cols={2}>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Evaluate and select an orchestrator before bonding.
+  </Card>
+  <Card title="Delegate Your LPT" icon="play" href="/v2/delegators/delegation/delegate-your-lpt" arrow>
+    Step-by-step tutorial — connect wallet, sign two transactions, confirm on-chain.
+  </Card>
+</CardGroup>

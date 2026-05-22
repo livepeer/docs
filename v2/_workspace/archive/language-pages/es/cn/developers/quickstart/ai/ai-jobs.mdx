@@ -1,0 +1,164 @@
+---
+title: AI 工作快速入门
+description: 使用 AI API 向 Livepeer 网关发送您的第一个 AI 工作，包含经过 GitHub 验证的端点引用和利益相关者签字检查表。
+keywords:
+  - livepeer
+  - ai jobs
+  - quickstart
+  - ai api
+  - gateway
+  - text-to-image
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL3F1aWNrc3RhcnQvYWkvYWktam9icy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2RldmVsb3BlcnMvcXVpY2tzdGFydC9haS9haS1qb2JzIiwic291cmNlSGFzaCI6IjU0NDNkODg0ODkzZmIzNDVmMGY3MjcyM2IzOWIxMDdlNzY5MmU3ZDI1ZmMwZGIyZWM1NTdlMzRhZTIwMDVkMmEiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTI6MjI6MDYuNjg4WiJ9 */}
+# AI Jobs Quickstart
+
+通过 Livepeer 网关提交您的第一个AI推理任务，验证响应结构，然后进入更高级的管道。
+
+## AI就绪摘要（供人类和助手使用）
+
+- 使用AI网关基础URL：`https://livepeer.studio/api/beta/generate`
+- 通过以下方式认证：`Authorization: Bearer <LIVEPEER_API_KEY>`
+- 开始使用`POST /text-to-image`用于简单的请求/响应模式
+- 其他AI作业端点遵循相同的认证/基础URL模式
+- 最终默认流程仍需要利益相关者批准
+
+## 审查状态
+
+此快速入门在结构上已完整且有源代码支持，但**仍需要利益相关者签字确认** 以确认规范的 AI 管道流程和默认示例 `model_id`.
+
+## 1. 先决条件
+
+- 一个 Livepeer API 密钥（仅限后端使用）
+- `curl`（并可选地 `jq`）
+- 一个已知良好的 `model_id` 由利益相关者批准用于用户文档
+
+## 2. 基础 URL 和认证
+
+使用 Livepeer AI 网关基础 URL 和 Bearer 认证:
+
+- 基础 URL: `https://livepeer.studio/api/beta/generate`
+- 认证头: `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+最小连接性检查：
+
+```bash
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  https://livepeer.studio/api/beta/generate/health
+```
+
+如果身份验证和路由正常工作，您应该从健康端点收到 JSON 响应。
+
+## 3. 提交一个 AI 任务（文本到图像启动流程）
+
+`POST /text-to-image` 是当前 AI 网关规范中最简单的仅 JSON AI 任务端点。
+
+### 示例请求体
+
+`model_id` 是规范中必需的。在生产文档中，请使用已获得利益相关者批准的模型 ID。
+
+```json
+{
+  "model_id": "<MODEL_ID>",
+  "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+  "width": 1024,
+  "height": 576,
+  "num_images_per_prompt": 1
+}
+```
+
+### 示例 curl 请求
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/beta/generate/text-to-image" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "<MODEL_ID>",
+    "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+    "width": 1024,
+    "height": 576,
+    "num_images_per_prompt": 1
+  }'
+```
+
+## 4. 读取响应
+
+AI 网关规范定义了`ImageResponse` 作为一个具有 `images` 数组的对象。每个项包括:
+
+- `url` (生成的媒体 URL)
+- `seed`
+- `nsfw`
+
+示例响应格式（仅保留规范中定义的字段）：
+
+```json
+{
+  "images": [
+    {
+      "url": "https://example-cdn/path/to/output.png",
+      "seed": 123456789,
+      "nsfw": false
+    }
+  ]
+}
+```
+
+## 5. 故障排除
+
+### `401 Unauthorized`
+
+- 确认 Bearer 令牌有效
+- 确认标题完全匹配 `Authorization: Bearer ...`
+
+### `422 Validation Error`
+
+- 检查必填字段 (`model_id`, `prompt`)
+- 检查请求正文的 JSON 格式
+- 检查字段类型 (`width`/`height` 应为整数)
+
+### `500 Internal Server Error`
+
+- 重试请求
+- 检查网关健康检查端点
+- 如果持续存在，请收集请求ID/日志上下文并通过当前支持路径升级
+
+## 6. 什么是“AI作业”（范围说明）
+
+此快速入门使用`text-to-image`作为起始流程，因为它在当前网关规范中是简单的JSON端点模式。
+
+相同的认证/基础URL模式也适用于其他AI作业端点，例如：
+
+- `image-to-image`
+- `image-to-video`
+- `upscale`
+- `audio-to-text`
+- `segment-anything-2`
+- `llm`
+- `image-to-text`
+- `live-video-to-video`
+- `text-to-speech`
+
+## 7. 在标记最终版本之前需要利益相关者签字确认
+
+- 确认规范的面向用户的“AI Jobs”流程
+- 确认默认的`model_id`以在示例中发布
+- 确认应排除的任何已弃用的流程/端点
+- 确认必要的注意事项（限制、模型可用性、定价、认证/注册变更）
+
+## 8. 后续步骤
+
+- [AI API 门户](/gateways/references/api-reference/AI-API/ai)
+- [文本到图像端点参考](/gateways/references/api-reference/AI-API/text-to-image)
+- [AI 管道概述](/developers/ai-pipelines/overview)
+- [BYOC（自备计算）](/developers/ai-pipelines/byoc)
+
+## 标准参考（以来源为权威）
+
+- GitHub (primary): [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml)
+- GitHub (primary): [livepeer/ai-runner `gateway.openapi.yaml`](https://github.com/livepeer/ai-runner/blob/main/gateway.openapi.yaml)
+- GitHub (primary): [livepeer/ai-runner README](https://github.com/livepeer/ai-runner/blob/main/README.md)
+- DeepWiki（仅证实）：[livepeer/ai-runner | DeepWiki](https://deepwiki.com/livepeer/ai-runner)
+- 本地仓库文档引用（未经验证，直到交叉核对）：`/gateways/references/api-reference/AI-API/ai`，`/gateways/references/api-reference/AI-API/text-to-image`

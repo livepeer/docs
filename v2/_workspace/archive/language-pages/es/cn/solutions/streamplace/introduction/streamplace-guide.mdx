@@ -1,0 +1,120 @@
+---
+title: 如何使用 Streamplace
+description: 对输入、分段、来源、转码和交付的逐步解释。
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace guide
+  - works
+  - explanation
+  - ingest
+  - segmentation
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWd1aWRlLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL3N0cmVhbXBsYWNlL2ludHJvZHVjdGlvbi9zdHJlYW1wbGFjZS1ndWlkZSIsInNvdXJjZUhhc2giOiJjYWMxMjkxNDcyN2JkOWFhYTA1OTRjYzkxMmFjYmFlOTRkMDgxZmQzMDI2YWIyODU4NDFmMDQ0YzYwMjI4OGE0IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE4OjEyOjE0LjMyMFoifQ== */}
+---
+
+Streamplace 将直播转换为**可验证的、具有权利意识的、去中心化的视频管道** 直接连接到 Livepeer 网络。
+
+以下是完整的端到端工作流程。
+
+---
+
+## 🧩 端到端流程图
+
+```mermaid
+flowchart TD
+    A[User Livestreams / Social App] --> B[Streamplace Node]
+    B --> C[Segment MP4s (1s)]
+    C --> D[C2PA Manifest + Ethereum Signature]
+    D --> E[Send to Livepeer Broadcaster]
+    E --> F[Orchestrators Transcode GPU]
+    F --> G[Return ABR Streams]
+    G --> H[Streamplace Manifests + Metadata]
+    H --> I[Viewers Watch + Verify Provenance]
+```
+
+---
+
+## 🔍 分步分解
+
+### **1. 接入**
+
+Streamplace 支持多种接入方法：
+
+- WHIP / WHEP
+- RTMP
+- 浏览器原生 WebRTC
+
+这些输入直接进入 Streamplace 节点。
+
+---
+
+### **2. 分段**
+
+Streamplace 将传入的视频拆分为**1 秒的 MP4 分段**，从而实现：
+
+- 按分段的身份验证
+- 细粒度的元数据控制
+- 高效的转码分发
+- 模块化点播组装
+
+---
+
+### **3. 权威层**
+
+每个片段都会获得:
+
+- 一个 **C2PA 内容真实性声明**，并且
+- 一个 **以太坊签名** 与创作者身份相关联。
+
+这确保了视频每个部分的完整性、可验证性和不可否认性。
+
+---
+
+### **4. 通过 Livepeer 进行转码**
+
+Streamplace 将片段分发到 **Livepeer 去中心化 GPU 网络**:
+
+- 协调者转码片段
+- 生成多比特率 (ABR) 输出
+- 端到端保留出处
+
+---
+
+### **5. 清单重建**
+
+Streamplace 重新构建:
+
+- HLS 清单
+- WebRTC 流
+- 元数据丰富的播放结构
+
+片段、签名、元数据和播放上下文被合并成一个连贯的输出。
+
+---
+
+### **6. 播放与验证**
+
+用户将收到:
+
+- HLS 或 WebRTC 输出
+- 具有来源意识的视频流
+- 自动权利、警告和归属
+
+播放器可以独立验证:
+
+- C2PA 清单
+- 以太坊签名
+- 权利与分发策略
+
+---
+
+## 📚 相关页面
+
+- [概述](/solutions/streamplace/overview)
+- [架构](/solutions/streamplace/introduction/streamplace-architecture)
+- [来源和元数据](/solutions/streamplace/introduction/streamplace-provenance)
+- [集成指南](/solutions/streamplace/introduction/streamplace-integration)

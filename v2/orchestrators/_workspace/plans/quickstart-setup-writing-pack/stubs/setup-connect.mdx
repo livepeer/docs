@@ -1,0 +1,137 @@
+---
+title: 'Connect to Arbitrum'
+sidebarTitle: 'Connect'
+description: 'Connect the orchestrator to the Livepeer protocol on Arbitrum - fund the wallet, stake LPT, register the service URI, and activate on-chain.'
+keywords:
+  - livepeer
+  - orchestrator
+  - Arbitrum
+  - connect
+  - stake
+  - LPT
+  - activate
+  - service URI
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+---
+{/* TODO: authoring skill compliance */}
+
+{/* PAGE STRUCTURE:
+
+## Connect to the Livepeer Protocol
+
+This page covers everything needed to go from a locally-running orchestrator
+to an on-chain, protocol-connected node. Includes funding, staking, registration,
+and activation.
+
+<Warning>
+This step requires arbETH (for gas) and LPT (for staking). Acquiring these
+may take hours to days depending on exchange availability and bridging.
+See Resources > Arbitrum Exchanges for where to acquire.
+</Warning>
+
+### Step 1: Verify Arbitrum RPC connection
+The -ethUrl flag connects to Arbitrum. Verify the RPC endpoint responds:
+```bash
+curl <RPC_URL> -X POST -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+```
+Link to Resources > Arbitrum RPCs for public and private RPC options.
+
+### Step 2: Fund the wallet with arbETH
+The orchestrator wallet needs ETH on Arbitrum for gas.
+- Check wallet address: livepeer_cli or startup logs show the address
+- Transfer arbETH from exchange or bridge from L1
+- Recommended: 0.05+ ETH for initial transactions (activation, reward calls)
+- Link to Resources > Arbitrum Exchanges
+
+### Step 3: Acquire and stake LPT
+LPT must be bonded to enter the active set for video transcoding.
+- Acquire LPT on Arbitrum (exchange or bridge)
+- Bond LPT to self via livepeer_cli:
+  - Start livepeer_cli: `livepeer_cli -host 127.0.0.1 -http 7935`
+  - Select bond option
+  - Enter amount to stake
+- Check current active set threshold on Explorer before deciding amount
+- Note: AI-only operators need minimal LPT (just enough to activate)
+
+{/* REVIEW: confirm current livepeer_cli option numbers for bonding */}
+
+### Step 4: Register service URI
+The service URI is how gateways find the orchestrator.
+- Must be publicly reachable (not localhost)
+- Format: https://your-domain:8935 or http://your-ip:8935
+- Set via livepeer_cli or -serviceAddr flag at startup
+- Test reachability from external machine before registering
+
+### Step 5: Activate on-chain
+Register as an orchestrator on the Livepeer protocol:
+- Use livepeer_cli activation option
+- Set reward cut and fee cut (percentages for delegator split)
+- Transaction costs gas (arbETH)
+- After activation: node appears in orchestrator pool
+
+{/* REVIEW: confirm livepeer_cli option number for activation */}
+
+### Step 6: Register AI capabilities (if AI enabled)
+For AI orchestrators: register on AIServiceRegistry
+- -aiServiceRegistry flag enables this
+- Capabilities from aiModels.json are advertised on-chain
+- Verify at tools.livepeer.cloud/ai/network-capabilities
+
+### Step 7: Verify on Explorer
+Check explorer.livepeer.org:
+- Node appears in orchestrator list
+- Service URI is correct and reachable
+- Stake amount shown
+- Reward cut and fee cut displayed
+- For AI: capabilities visible
+
+### Step 8: Enable reward calling
+- Add -reward flag to startup (automatic calling each round)
+- Or call manually via livepeer_cli each round (~22 hours)
+- Missing a round = permanently forfeited LPT
+- Link to Config and Optimisation > Reward Call Tuning for gas economics
+
+## Troubleshooting Connection Issues
+
+<AccordionGroup>
+  <Accordion title="RPC connection failing" icon="link-slash">
+    Check -ethUrl endpoint. Try alternative RPC. See Resources > Arbitrum RPCs.
+  </Accordion>
+  <Accordion title="Service URI not reachable" icon="globe">
+    Check firewall, NAT, DNS. Test from external machine. See Troubleshooting.
+  </Accordion>
+  <Accordion title="Not in active set after activation" icon="users">
+    Check stake vs current threshold on Explorer. May need more LPT or delegation.
+  </Accordion>
+</AccordionGroup>
+
+## Next Step
+Link to Verify page.
+
+*/}
+
+{/*
+  PURPOSE:
+  Connect the orchestrator to the Livepeer protocol on Arbitrum. Covers: RPC
+  verification, wallet funding, LPT staking, service URI registration, on-chain
+  activation, AI capability registration, Explorer verification, and reward
+  calling enablement. This is the heaviest step - may take hours due to
+  LPT acquisition.
+
+  SECTION: Setup (step 3 of 4)
+  JOB STORIES: J1
+
+  CROSS-REFS:
+  - Resources > Arbitrum RPCs - RPC endpoints
+  - Resources > Arbitrum Exchanges - acquiring ETH and LPT
+  - Config and Optimisation > Reward Call Tuning - gas economics
+  - Monitoring and Tools > Explorer Operations - using Explorer
+*/}

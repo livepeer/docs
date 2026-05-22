@@ -1,0 +1,1304 @@
+{
+  "generated_at": "2026-03-16T04:05:27.162Z",
+  "scope": {
+    "target_files": [
+      "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "v2/gateways/guides/roadmap-and-funding/operator-support.mdx"
+    ]
+  },
+  "claims_reviewed": [
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "extracted_claims": [
+        "{ / TODO: Terminology Validation: Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology Verify: ~~Mermaid diagrams use theme colours~~ (N/A ASCII diagram kept intentionally) ~~Fontawesome icons are used on accordions and tabs~~ ~~Tables use StyledTable component~~ ~~No em dashes are used (instead use standard )~~ UK spelling is used ~~Headers are concise and technical no long headers or questions (aim for max 3 words)~~ ~~CustomDivider is used~~ Placeholders for Media & Video Resources are in comments with a TODO for a human.",
+        "(N/A) ~~REVIEW flags are in JSX flags for a human.~~ Human: H1 removed (was repeating frontmatter title) \"Why clearinghouses exist\" removed (redundant with payment guide router) \"Clearinghouse vs remote signer\" trimmed to brief statement with link PM internals cross referenced instead of duplicated Voice converted to entity led throughout Port 8937 → 8935 Broken link payment paths → payment guide Em dashes removed /} Protocol status: The clearinghouse protocol was implemented in and and is operational.",
+        "Public Use Status No public clearinghouse service has reached general availability as of early 2026.",
+        "Note that Payment Clearinghouses are designed to become independent economic actors in the Livepeer Network providing services for a fee to end users.",
+        "A clearinghouse manages payments, not the pipeline.",
+        "Building A Clearinghouse For operators building gateway as a service infrastructure (a \"Provider\" or NaaP operator), the minimum components are: Component Purpose Starting point Remote signer instances ETH custody and PM signing User management API key issuance, SIWE login Standard web auth + SIWE libraries Accounting service Track usage per API key, manage credits Custom or off the shelf billing tooling Billing layer Invoice developers in chosen currency Stripe, crypto payment processors, etc.",
+        "Current Status Beta While a fully productionised public clearinghouse matures, the following access points exist: Community remote signer (testing): hosted by Elite Encoder, free ETH for testing.",
+        "Livepeer Tools: the current community tool suite for network monitoring and Gateway observability.",
+        "Video transcoding operators have no clearinghouse option at present: remote signing is not supported for that workload, so self management is the only path."
+      ],
+      "matched_claim_families": [
+        "gw-clearinghouse-public-readiness",
+        "gw-community-signer-testing-surface",
+        "gw-offchain-payment-obligation"
+      ]
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "extracted_claims": [
+        "Livepeer fees between Gateways and Orchestrators are settled in ETH on Arbitrum One via probabilistic micropayment (PM) tickets.",
+        "Gateways can configure price caps in wei or in USD (converted at runtime via a Chainlink price feed).",
+        "Next step: Video On chain video gateway } icon=\"link\" Video transcoding requires the on chain self managed path.",
+        "Remote signing is not supported for video workloads.",
+        "Next step: Dual On chain dual gateway } icon=\"link\" Because the video component requires on chain payments, a dual gateway follows the on chain self managed path.",
+        "Fund the gateway, then configure pricing for both video (per pixel) and AI (per pipeline).",
+        "Function { On chain Processes } { Off chain Delegates } Protocol integration Connects to Livepeer protocol on Arbitrum None no blockchain interaction at the gateway Orchestrator discovery Automatic via protocol Manual ( ) or via discovery endpoint Payment signing Gateway signs PM tickets directly Remote signer or clearinghouse signs tickets ETH required in gateway Yes deposit + reserve on Arbitrum No held by signer or clearinghouse Private key in gateway Yes No Video transcoding Supported Not supported (requires on chain) AI inference Supported Supported (Live AI via remote signer) Off chain does not mean free.",
+        "Supported for Live AI workloads and SDK based gateways.",
+        "Not supported for video transcoding.",
+        "No public clearinghouse is at general availability as of early 2026.",
+        "Set maximum prices per pipeline and model."
+      ],
+      "matched_claim_families": [
+        "gw-clearinghouse-public-readiness",
+        "gw-community-signer-testing-surface",
+        "gw-offchain-payment-obligation",
+        "gw-price-cap-role",
+        "gw-remote-signer-current-scope"
+      ]
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "extracted_claims": [
+        "Pricing Mechanics Livepeer workload fees are denominated in ETH (wei), with an option to configure caps in USD (converted at runtime via a ).",
+        "Query current rates via or before setting caps.",
+        "The gateway calculates fees based on the resolution and length of each transcoded segment.",
+        "Video transcoding requires on chain operational mode.",
+        "Key flags: Flag Type Default Description int (wei) or USD string (any price) Maximum price per pixels int How many pixels constitute one pricing unit bool Accept any price if no Orchestrators are in range Fee calculation: The effective cap is wei per pixels.",
+        "A 1920x1080 frame contains 2,073,600 pixels.",
+        "With a cap of 1,000 wei per pixel and of 1, that frame costs at most 2,073,600 wei (about 0.000002 ETH).",
+        "USD pricing To configure caps in USD rather than wei, pass a USD value: This requires a Chainlink ETH/USD price feed configured via .",
+        "USD denominated pricing with a Chainlink feed stabilises the effective cost but requires the oracle to be reachable and accurate.",
+        "Each pipeline and model can have its own price cap, and the unit of measurement varies by pipeline type.",
+        "Payment types The AI payment system uses three models depending on the pipeline: Payment type Used for Unit Per pixel Image and video generation pipelines Per request Single output pipelines One payment per API call Live video interval Live AI (live video to video) Time based, every N seconds The pipeline uses interval based payments controlled by .",
+        "All other AI pipelines use per pixel or per request models based on their output type."
+      ],
+      "matched_claim_families": [
+        "gw-price-cap-role"
+      ]
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "extracted_claims": [
+        "Current scope: Realtime AI Video (live video to video) workloads only.",
+        "Remote signing is not supported for video transcoding.",
+        "Remote signers were introduced in and , in January 2026.",
+        "signature When a Gateway contacts an Orchestrator, it must provide an authentication signature.",
+        "HTTP 480 expired ticket params If the signer returns HTTP status 480, the ticket parameters from the Orchestrator have expired.",
+        "Prerequisites A binary that includes remote signer support (confirm with ; see for the implementation) A funded Ethereum account on Arbitrum One for the signer (the Gateway itself needs no ETH) An Arbitrum RPC endpoint accessible from the signer host Network connectivity from the Gateway host to the signer service Running the Signer Run in signer mode on a dedicated host or process: The signer service binds to port 7936 by default.",
+        "This port must be reachable from the Gateway host.",
+        "Check that payments are flowing via : Operational Rules Running a remote signer in production requires attention to a few non obvious rules.",
+        "This state must be passed back to the next call for the same session.",
+        "Do not make concurrent calls for the same session.",
+        "State advances sequentially; concurrent calls produce conflicting states and invalid tickets.",
+        "Multiple sessions can run concurrently, each with their own state chain."
+      ],
+      "matched_claim_families": [
+        "gw-community-signer-testing-surface",
+        "gw-offchain-payment-obligation",
+        "gw-remote-signer-current-scope"
+      ]
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "extracted_claims": [
+        "The Livepeer ecosystem provides funding, programmes, and community resources for Gateway operators at every stage from first time builders to production platform operators.",
+        "Currently funded SPEs operating Gateways: SPE What it funds Status Livepeer Cloud SPE Free public AI and video Gateways Active LLM SPE LLM inference routing on the Livepeer network Active How to propose an SPE: 1.",
+        "Engage the community on and 2.",
+        "Write a proposal with clear public benefit, verifiable milestones, and realistic budget 3.",
+        "Post to the Livepeer Forum for community discussion 4.",
+        "Submit for on chain governance vote (token holder approval) 5.",
+        "Execute and report on milestones For the full SPE guide, see .",
+        "The Livepeer Foundation runs a programme for startups and teams building AI powered video products on Livepeer.",
+        "Accepted teams receive: Network resources and compute credits Technical support from the Livepeer engineering team Investor introductions and go to market guidance Community visibility This programme is specifically for teams building products that route AI inference through the Livepeer network.",
+        "The AI Video Startup Programme runs in cohorts.",
+        "Check or the for current application windows.",
+        "Forum threads are indexed by search engines and serve as a permanent record."
+      ],
+      "matched_claim_families": [
+        "gw-clearinghouse-public-readiness",
+        "gw-community-signer-testing-surface",
+        "gw-discord-community-signal",
+        "gw-spe-funded-provider-examples",
+        "gw-startup-program-current"
+      ]
+    }
+  ],
+  "verified_claims": [
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "claim_family": "off-chain-payment-obligation",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "registry_status": "verified",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "confidence": "high",
+      "summary": "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "AI Off chain AI gateway } icon=\"cloud\" The gateway holds no ETH and no Ethereum key.",
+            "Payments are handled by a connected remote signer or clearinghouse.",
+            "Once a public clearinghouse reaches GA, this becomes a pure API key sign up.",
+            "The gateway holds an Ethereum keystore, signs PM tickets directly, and needs a funded deposit and reserve on Arbitrum."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "snippets": [
+            "(N/A) ~~REVIEW flags are in JSX flags for a human.~~ Human: H1 removed (was repeating frontmatter title) \"Why clearinghouses exist\" removed (redundant with payment guide router) \"Clearinghouse vs remote signer\" trimmed to brief statement with link PM internals cross referenced instead of duplicated Voice converted to entity led throughout Port 8937 → 8935 Broken link payment paths → payment guide Em dashes removed /} Protocol status: The clearinghouse protocol was implemented in and and is operational.",
+            "Public Use Status No public clearinghouse service has reached general availability as of early 2026.",
+            "The community remote signer hosted by Elite Encoder ( ) provides a testing surface in the interim.",
+            "A Payment Clearinghouse is a third party service that takes over all Ethereum related responsibilities from gateway operators and application developers."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "snippets": [
+            "A remote signer is a standalone mode that takes over all Ethereum related responsibilities from the Gateway: signing payment tickets, managing PM session state, and providing the authentication signature for Orchestrator info requests.",
+            "The Gateway communicates with the signer over the network and holds no Ethereum private key.",
+            "Remote signers were introduced in and , in January 2026.",
+            "A remote signer separates these concerns."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        }
+      ],
+      "contradictions": [],
+      "notes": "This family exists to stop docs from collapsing 'off-chain' into 'no payment flow'. It is factual, not stylistic."
+    },
+    {
+      "claim_id": "gw-price-cap-role",
+      "claim_family": "price-cap-role",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "registry_status": "verified",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "confidence": "high",
+      "summary": "Gateway pricing docs should keep the role of caps aligned: on-chain caps act as marketplace filters, while off-chain caps act as safety ceilings for known orchestrators. The same claim family also covers how `-ignoreMaxPriceIfNeeded` changes job-failure behavior.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+          "snippets": [
+            "The Operational mode determines context: on chain gateways filter Orchestrators from an open marketplace, while off chain gateways set safety ceilings for known Orchestrators specified via .",
+            "The price cap acts as a marketplace filter it determines the range of the network the gateway can access.",
+            "In this context, the price cap acts as a safety ceiling it prevents unexpected cost spikes if an Orchestrator raises prices, but it does not filter from a marketplace."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "snippets": [],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-price-cap-role"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "claim_id": "gw-price-cap-role"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-price-cap-role"
+        }
+      ],
+      "contradictions": [],
+      "notes": "This is a routing-and-cost semantics family, not a navigation concern. It exists to catch factual drift in how gateway operators reason about price caps and fallback behavior."
+    }
+  ],
+  "conflicted_claims": [
+    {
+      "claim_id": "gw-remote-signer-current-scope",
+      "claim_family": "remote-signer-current-scope",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "registry_status": "time-sensitive",
+      "status": "conflicted",
+      "freshness_class": "review-on-change",
+      "confidence": "low",
+      "summary": "Remote-signer docs should keep the current support boundary explicit: remote signing is a current payment path for Live AI / real-time AI workloads, and it is not supported for video transcoding.",
+      "evidence": [
+        {
+          "type": "github-pr",
+          "ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "GitHub evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "snippets": [
+            "Current scope: Realtime AI Video (live video to video) workloads only.",
+            "Remote signing is not supported for video transcoding.",
+            "A remote signer is a standalone mode that takes over all Ethereum related responsibilities from the Gateway: signing payment tickets, managing PM session state, and providing the authentication signature for Orchestrator info requests.",
+            "Remote signers were introduced in and , in January 2026."
+          ],
+          "values": [
+            "Current scope",
+            "not supported for video transcoding"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "Payments are handled by a connected remote signer or clearinghouse.",
+            "Next step: AI SDK or non Go gateway } icon=\"code\" Non Go gateways (Python, mobile, browser) use the remote signer path via the Livepeer SDK.",
+            "The SDK handles PM signing interaction with the remote signer.",
+            "A clearinghouse runs remote signer instances, holds ETH, and adds user management, accounting, and billing."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-remote-signer-current-scope"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-remote-signer-current-scope"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "remote-signer-current-scope",
+          "claim_id": "gw-remote-signer-current-scope",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+              "values": [
+                "Current scope",
+                "not supported for video transcoding"
+              ],
+              "snippet": "Current scope: Realtime AI Video (live video to video) workloads only."
+            },
+            {
+              "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+              "values": [],
+              "snippet": "Payments are handled by a connected remote signer or clearinghouse."
+            }
+          ],
+          "best_known_truth": "Remote-signer docs should keep the current support boundary explicit: remote signing is a current payment path for Live AI / real-time AI workloads, and it is not supported for video transcoding.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This family is likely to change as remote signer support evolves, so it should stay review-on-change even when the current docs agree."
+    },
+    {
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "claim_family": "clearinghouse-public-readiness",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "registry_status": "time-sensitive",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "Gateway payment docs should describe clearinghouse status with current precision: the protocol is implemented, but no public clearinghouse is generally available yet. Community-hosted signer access is a testing bridge, not evidence of GA.",
+      "evidence": [
+        {
+          "type": "github-pr",
+          "ref": "https://github.com/livepeer/go-livepeer/pull/3791",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "GitHub evidence matched"
+        },
+        {
+          "type": "github-pr",
+          "ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "GitHub evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "snippets": [
+            "Public Use Status No public clearinghouse service has reached general availability as of early 2026.",
+            "The community remote signer hosted by Elite Encoder ( ) provides a testing surface in the interim.",
+            "Current Status Beta While a fully productionised public clearinghouse matures, the following access points exist: Community remote signer (testing): hosted by Elite Encoder, free ETH for testing."
+          ],
+          "values": [
+            "general availability",
+            "public clearinghouse"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "Once a public clearinghouse reaches GA, this becomes a pure API key sign up.",
+            "No public clearinghouse is at general availability as of early 2026."
+          ],
+          "values": [
+            "general availability",
+            "public clearinghouse"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-clearinghouse-public-readiness"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-clearinghouse-public-readiness"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-clearinghouse-public-readiness"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "clearinghouse-public-readiness",
+          "claim_id": "gw-clearinghouse-public-readiness",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+              "values": [
+                "general availability",
+                "public clearinghouse"
+              ],
+              "snippet": "Public Use Status No public clearinghouse service has reached general availability as of early 2026."
+            },
+            {
+              "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+              "values": [
+                "general availability",
+                "public clearinghouse"
+              ],
+              "snippet": "Once a public clearinghouse reaches GA, this becomes a pure API key sign up."
+            }
+          ],
+          "best_known_truth": "Gateway payment docs should describe clearinghouse status with current precision: the protocol is implemented, but no public clearinghouse is generally available yet. Community-hosted signer access is a testing bridge, not evidence of GA.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This family should stay explicit about protocol readiness versus public-service readiness. The docs should not blur implementation status into GA claims."
+    },
+    {
+      "claim_id": "gw-discord-community-signal",
+      "claim_family": "community-signal",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "registry_status": "unverified",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "When gateway docs rely on community support or current market/pricing conditions, the research runner should surface any repo-available Discord/community signals instead of treating chat as invisible.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": ".github/workflows/discord-issue-intake.yml",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "snippets": [
+            "This page documents real applications and community projects that are already running, gives you tooling references, and points to Foundation programmes for new builders.",
+            "AI workloads generated over $63,700 in revenue in Q2 2025 (over 55% of total protocol fees) Related: the Cloud SPE has built a custom Ollama based AI Runner optimised for GPUs with as little as 8GB VRAM Gateway Projects livepeer python gateway (j0sh) Community Project What it is: A Python implementation of the Livepeer gateway client.",
+            "Repository: Examples: Community Remote Signer (Elite Encoder) Community Project What it is: A publicly hosted remote signer endpoint maintained by community operator Elite Encoder.",
+            "What it enables: Any developer can run an off chain gateway without holding any ETH, by pointing at this community signer."
+          ],
+          "values": [
+            "Community",
+            "community"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "The Livepeer ecosystem provides funding, programmes, and community resources for Gateway operators at every stage from first time builders to production platform operators.",
+            "This page covers what support is available and how to access it.",
+            "Engage the community on and 2.",
+            "Post to the Livepeer Forum for community discussion 4."
+          ],
+          "values": [
+            "community"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-discord-community-signal"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-discord-community-signal"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "community-signal",
+          "claim_id": "gw-discord-community-signal",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+              "values": [
+                "Community",
+                "community"
+              ],
+              "snippet": "This page documents real applications and community projects that are already running, gives you tooling references, and points to Foundation programmes for new builders."
+            },
+            {
+              "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+              "values": [
+                "community"
+              ],
+              "snippet": "The Livepeer ecosystem provides funding, programmes, and community resources for Gateway operators at every stage from first time builders to production platform operators."
+            }
+          ],
+          "best_known_truth": "When gateway docs rely on community support or current market/pricing conditions, the research runner should surface any repo-available Discord/community signals instead of treating chat as invisible.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "Phase 1 only uses persisted or repo-available Discord signals, not live chat ingestion."
+    },
+    {
+      "claim_id": "gw-spe-funded-provider-examples",
+      "claim_family": "ecosystem-provider-examples",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "registry_status": "verified",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+      "evidence": [
+        {
+          "type": "forum-topic",
+          "ref": "https://forum.livepeer.org/t/spe-milestone-report/3035",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "forum topic matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "snippets": [
+            "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc.",
+            "Streamplace SPE funded Commercial Product What it is: A decentralised livestreaming platform built on the AT Protocol (Bluesky ecosystem).",
+            "Streamplace enables peer to peer live video broadcasting with no centralised infrastructure requirement.",
+            "Gateway role: Streamplace embeds a Livepeer video gateway directly in its platform to handle live transcoding."
+          ],
+          "values": [
+            "LLM",
+            "Livepeer Cloud",
+            "Streamplace"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process.",
+            "SPEs run public Gateways that serve the broader network public access, new capabilities, increased demand without needing a commercial revenue stream from day one.",
+            "Currently funded SPEs operating Gateways: SPE What it funds Status Livepeer Cloud SPE Free public AI and video Gateways Active LLM SPE LLM inference routing on the Livepeer network Active How to propose an SPE: 1.",
+            "Execute and report on milestones For the full SPE guide, see ."
+          ],
+          "values": [
+            "LLM",
+            "Livepeer Cloud"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "snippets": [
+            "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant.",
+            "A Special Purpose Entity (SPE) is an organisation funded by the Livepeer treasury through a governance proposal.",
+            "SPEs are purpose built: each one has a defined mandate, a requested budget, and milestones it is accountable to deliver.",
+            "Token holders vote on SPE proposals."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "ecosystem-provider-examples",
+          "claim_id": "gw-spe-funded-provider-examples",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+              "values": [
+                "LLM",
+                "Livepeer Cloud",
+                "Streamplace"
+              ],
+              "snippet": "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc."
+            },
+            {
+              "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+              "values": [
+                "LLM",
+                "Livepeer Cloud"
+              ],
+              "snippet": "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process."
+            },
+            {
+              "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+              "values": [],
+              "snippet": "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant."
+            }
+          ],
+          "best_known_truth": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "Provider listings are high-risk for factual drift and should be tied to public evidence."
+    }
+  ],
+  "time_sensitive_claims": [
+    {
+      "claim_id": "gw-community-signer-testing-surface",
+      "claim_family": "community-signer-testing-surface",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "registry_status": "time-sensitive",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "confidence": "medium",
+      "summary": "Docs that mention the Elite Encoder community signer should keep its role narrow and explicit: a repo/community-backed testing surface for early off-chain experimentation, not a generic production recommendation.",
+      "evidence": [
+        {
+          "type": "repo-discord-signal",
+          "ref": ".github/workflows/discord-issue-intake.yml",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo Discord/community signal matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "For testing, use the community signer at ."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "snippets": [
+            "The community remote signer hosted by Elite Encoder ( ) provides a testing surface in the interim."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "snippets": [
+            "Security With a remote signer correctly deployed: The Gateway process holds no Ethereum private key A fully compromised Gateway cannot sign payment tickets or drain ETH funds independently The signer's state is cryptographically signed and cannot be forged by the Gateway Multiple Gateway instances can be keyless, reducing the blast radius of any single compromise What a remote signer does not protect against: A compromise of the signer service itself (the signer holds the actual key) Unlimited ticket requests from a compromised Gateway (rate limiting is the signer's responsibility) Video transcoding workloads (not in scope) Community Signer A community operated remote signer is available for testing and early development: Elite Encoder Remote Signer: This instance provides free ETH for testing."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "The community signer is not for production workloads without understanding the custody implications."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-community-signer-testing-surface"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-community-signer-testing-surface"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-community-signer-testing-surface"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-community-signer-testing-surface"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Phase 1 evidence should use repo-available community signals plus current docs, not live Discord scraping. This family keeps that role visible in the outputs."
+    },
+    {
+      "claim_id": "gw-startup-program-current",
+      "claim_family": "programme-availability",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "registry_status": "time-sensitive",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "confidence": "medium",
+      "summary": "Gateway support content should only describe the AI Video Startup Program with the level of certainty supported by current official and forum evidence.",
+      "evidence": [
+        {
+          "type": "official-page",
+          "ref": "https://www.livepeer.org/dev-hub",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "official page matched"
+        },
+        {
+          "type": "forum-topic",
+          "ref": "https://forum.livepeer.org/t/2024-end-of-year-update-livepeer-cloud-spe/2678",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "forum topic matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "The AI Video Startup Programme runs in cohorts."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "snippets": [
+            "If you are an individual developer looking to experiment, the AI Video Startup Programme is the more appropriate route.",
+            "Gateway tutorials, operator support, community tooling ( ).",
+            "SPE vs AI Video Startup Programme These are two different things serving different purposes: SPE grant AI Video Startup Programme For Organisations building public benefit gateway infrastructure Individual developers or startups building AI powered products on Livepeer Funding source LPT treasury Foundation budget Accountability On chain governance + milestone reporting Foundation programme management Timeline Multi month proposals with defined terms Programme cohort Suitable for Public gateways, ecosystem tooling, clearinghouse infrastructure App development, using (not necessarily running) Livepeer Further reading Livepeer Forum (proposals and discussion): Livepeer governance overview: see the Community and Governance tab in these docs Cloud SPE gateway and tutorials: NaaP dashboard reference implementation: Next steps Commercial business models for gateway operators who do not need treasury funding."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-startup-program-current"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-startup-program-current"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Current availability and cohort timing must be checked against current public surfaces."
+    }
+  ],
+  "unverified_or_historical_claims": [],
+  "cross_page_contradictions": [
+    {
+      "claim_family": "remote-signer-current-scope",
+      "claim_id": "gw-remote-signer-current-scope",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "values": [
+            "Current scope",
+            "not supported for video transcoding"
+          ],
+          "snippet": "Current scope: Realtime AI Video (live video to video) workloads only."
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "values": [],
+          "snippet": "Payments are handled by a connected remote signer or clearinghouse."
+        }
+      ],
+      "best_known_truth": "Remote-signer docs should keep the current support boundary explicit: remote signing is a current payment path for Live AI / real-time AI workloads, and it is not supported for video transcoding.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "clearinghouse-public-readiness",
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "values": [
+            "general availability",
+            "public clearinghouse"
+          ],
+          "snippet": "Public Use Status No public clearinghouse service has reached general availability as of early 2026."
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "values": [
+            "general availability",
+            "public clearinghouse"
+          ],
+          "snippet": "Once a public clearinghouse reaches GA, this becomes a pure API key sign up."
+        }
+      ],
+      "best_known_truth": "Gateway payment docs should describe clearinghouse status with current precision: the protocol is implemented, but no public clearinghouse is generally available yet. Community-hosted signer access is a testing bridge, not evidence of GA.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "community-signal",
+      "claim_id": "gw-discord-community-signal",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "values": [
+            "Community",
+            "community"
+          ],
+          "snippet": "This page documents real applications and community projects that are already running, gives you tooling references, and points to Foundation programmes for new builders."
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "values": [
+            "community"
+          ],
+          "snippet": "The Livepeer ecosystem provides funding, programmes, and community resources for Gateway operators at every stage from first time builders to production platform operators."
+        }
+      ],
+      "best_known_truth": "When gateway docs rely on community support or current market/pricing conditions, the research runner should surface any repo-available Discord/community signals instead of treating chat as invisible.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "ecosystem-provider-examples",
+      "claim_id": "gw-spe-funded-provider-examples",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "values": [
+            "LLM",
+            "Livepeer Cloud",
+            "Streamplace"
+          ],
+          "snippet": "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc."
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "values": [
+            "LLM",
+            "Livepeer Cloud"
+          ],
+          "snippet": "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process."
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "values": [],
+          "snippet": "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant."
+        }
+      ],
+      "best_known_truth": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    }
+  ],
+  "propagation_queue": [
+    {
+      "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-discord-community-signal"
+    },
+    {
+      "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-clearinghouse-public-readiness"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-community-signer-testing-surface"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-clearinghouse-public-readiness"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-community-signer-testing-surface"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-price-cap-role"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-remote-signer-current-scope"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "update-now",
+      "claim_id": "gw-price-cap-role"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-community-signer-testing-surface"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-remote-signer-current-scope"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-price-cap-role"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-clearinghouse-public-readiness"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-community-signer-testing-surface"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-discord-community-signal"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-startup-program-current"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-startup-program-current"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-remote-signer-current-scope",
+      "type": "github-pr",
+      "ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "GitHub evidence matched"
+    },
+    {
+      "claim_id": "gw-remote-signer-current-scope",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-remote-signer-current-scope",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "type": "github-pr",
+      "ref": "https://github.com/livepeer/go-livepeer/pull/3791",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "GitHub evidence matched"
+    },
+    {
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "type": "github-pr",
+      "ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "GitHub evidence matched"
+    },
+    {
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-community-signer-testing-surface",
+      "type": "repo-discord-signal",
+      "ref": ".github/workflows/discord-issue-intake.yml",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo Discord/community signal matched"
+    },
+    {
+      "claim_id": "gw-community-signer-testing-surface",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-community-signer-testing-surface",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-discord-community-signal",
+      "type": "repo-file",
+      "ref": ".github/workflows/discord-issue-intake.yml",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-spe-funded-provider-examples",
+      "type": "forum-topic",
+      "ref": "https://forum.livepeer.org/t/spe-milestone-report/3035",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "forum topic matched"
+    },
+    {
+      "claim_id": "gw-price-cap-role",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-price-cap-role",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "gw-startup-program-current",
+      "type": "official-page",
+      "ref": "https://www.livepeer.org/dev-hub",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "official page matched"
+    },
+    {
+      "claim_id": "gw-startup-program-current",
+      "type": "forum-topic",
+      "ref": "https://forum.livepeer.org/t/2024-end-of-year-update-livepeer-cloud-spe/2678",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "forum topic matched"
+    }
+  ],
+  "validation": {
+    "target_files": 5,
+    "claim_families": 8,
+    "contradictions": 4,
+    "evidence_sources": 17
+  }
+}

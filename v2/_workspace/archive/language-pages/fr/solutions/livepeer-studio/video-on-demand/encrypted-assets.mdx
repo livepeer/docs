@@ -1,0 +1,21 @@
+---
+title: Actifs chiffrés
+description: >-
+  Téléchargez et lisez la vidéo chiffrée avec Livepeer Studio et contrôlez
+  l'accès.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9lbmNyeXB0ZWQtYXNzZXRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby92aWRlby1vbi1kZW1hbmQvZW5jcnlwdGVkLWFzc2V0cyIsInNvdXJjZUhhc2giOiI0OGY1MWEwYmI1NTk1NzFmYzhlODYzMzBjMTQ2NTgxNmMzODk4MzFlNTBhY2NiYzQwNzNjOGI1OWE0YmE3MzM1IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI4VDEyOjQwOjMyLjQwNloifQ== */}
+Livepeer Studio prend en charge **crypté** des actifs vidéo : vous chiffrez le fichier avec AES-CBC, chiffrez la clé avec la clé publique de Livepeer, puis téléversez. La lecture peut être conditionnée par [contrôle d’accès](../access-control/overview).
+
+<Info>
+  Encryption uses AES-CBC (256-bit). Compatible with Web Crypto and protocols like Lit.
+</Info>
+
+## Flux
+
+1. Générez une clé AES de 256 bits et chiffrez la vidéo (IV aléatoire, remplissage PKCS#7).
+2. Récupérez la clé publique de Livepeer depuis `GET https://livepeer.studio/api/access-control/public-key` (avec une clé API Bearer).
+3. Chiffrez la clé symétrique avec cette clé publique (format SPKI dans les navigateurs).
+4. Créez un actif avec la clé chiffrée (base64) et téléversez le fichier chiffré via l'URL TUS retournée.
+
+La lecture est protégée par votre politique de lecture (webhook ou JWT). Seuls les spectateurs autorisés y ont accès. Pour le code complet et l'intégration Lit, consultez le [Livepeer Studio docs](https://livepeer.studio/docs).

@@ -1,0 +1,19 @@
+---
+title: 加密资产
+description: 上传并播放加密视频，使用 Livepeer Studio 并控制访问。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9lbmNyeXB0ZWQtYXNzZXRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby92aWRlby1vbi1kZW1hbmQvZW5jcnlwdGVkLWFzc2V0cyIsInNvdXJjZUhhc2giOiI0OGY1MWEwYmI1NTk1NzFmYzhlODYzMzBjMTQ2NTgxNmMzODk4MzFlNTBhY2NiYzQwNzNjOGI1OWE0YmE3MzM1IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI4VDE2OjUyOjA5LjY2NFoifQ== */}
+Livepeer Studio 支持 **加密的** 视频资产：您使用 AES-CBC 加密文件，使用 Livepeer 的公钥加密密钥，然后上传。播放可以通过 [访问控制](../access-control/overview).
+
+<Info>
+  Encryption uses AES-CBC (256-bit). Compatible with Web Crypto and protocols like Lit.
+</Info>
+
+## 流程
+
+1. 生成一个 256 位的 AES 密钥并加密视频（随机 IV，PKCS#7 填充）。
+2. 从 Livepeer 获取公钥 `GET https://livepeer.studio/api/access-control/public-key`（使用 Bearer API 密钥）。
+3. 使用该公钥加密对称密钥（浏览器中的 SPKI 格式）。
+4. 使用加密密钥（base64）创建资产，并通过返回的 TUS URL 上传加密文件。
+
+播放受您的播放策略（webhook 或 JWT）保护。只有授权的观看者才能访问。完整代码和 Lit 集成请参阅 [Livepeer Studio 文档](https://livepeer.studio/docs).

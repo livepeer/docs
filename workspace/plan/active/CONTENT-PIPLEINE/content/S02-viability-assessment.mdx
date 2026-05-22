@@ -1,0 +1,121 @@
+---
+title: 'Is This Viable for My Hardware and Situation?'
+description: 'Evaluate whether your GPU, capital, and operating capacity qualify for meaningful income on the Livepeer network — and which path fits.'
+pageType: concept
+audience: orchestrator
+purpose: evaluate
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - viability
+  - feasibility
+  - hardware requirements
+  - economics
+  - earnings
+  - GPU operator
+  - cost analysis
+---
+
+Running a Livepeer node is an investment of hardware, time, and potentially LPT. This page gives you the framework to make a go/no-go decision before committing to setup.
+
+## What orchestrators earn
+
+Two separate revenue streams exist, with different mechanics and dependencies.
+
+| Revenue stream | How it works | Depends on |
+| --- | --- | --- |
+| **ETH service fees** | Gateways pay per transcoding segment or AI inference job via probabilistic micropayment tickets redeemed on Arbitrum | Capability, pricing, performance, uptime, gateway selection |
+| **LPT inflation rewards** | Protocol mints LPT each round (~22 hours); active orchestrators claim their share by calling `Reward()` once per round | Total bonded stake (self + delegated), inflation rate, reward call reliability |
+
+Running the software alone does not create either stream. ETH fees depend on gateways sending work. LPT rewards depend on stake, active set membership, and a node that calls `Reward()` reliably.
+
+## Cost categories
+
+<Accordion title="Hardware">
+Workload type determines the minimum GPU requirement.
+
+- **Video transcoding:** Any NVIDIA GPU with NVENC/NVDEC. Consumer RTX cards (3060, 3070, 4090) are common.
+- **AI inference (batch):** 8-24 GB VRAM depending on pipelines. An RTX 3090 (24 GB) is the practical minimum for competitive diffusion pipelines.
+- **AI inference (Cascade/live):** 24 GB VRAM minimum. These pipelines require models warm at all times.
+
+Hardware already owned has zero ongoing capital cost. Hardware purchased specifically for Livepeer needs an explicit amortisation model.
+</Accordion>
+
+<Accordion title="LPT stake (path-dependent)">
+**Solo video orchestrator:** Must be in the active set. LPT must be acquired and bonded. This is the primary entry barrier.
+
+**AI-focused operator:** Minimal LPT (enough to activate). AI routing prioritises capability and price over stake.
+
+**Pool node:** No LPT required. The pool operator manages staking.
+
+{/* VERIFY: current active set size and minimum stake threshold [explorer.livepeer.org] */}
+</Accordion>
+
+<Accordion title="ETH for gas">
+The orchestrator wallet needs ETH on Arbitrum One for ongoing transactions: `Reward()` calls (~$0.01-0.12 per call), ticket redemptions (~$0.01-0.05 per batch), and one-time activation. Budget approximately $5-15/month for a mid-volume node. A depleted ETH wallet causes missed reward rounds (LPT permanently forfeited) and unredeemed winning tickets (ETH permanently lost).
+
+{/* VERIFY: current Arbitrum gas ranges [arbiscan.io/gastracker] */}
+</Accordion>
+
+<Accordion title="Electricity and bandwidth">
+GPU power draw is the primary ongoing cost. An RTX 4090 at full load costs approximately 30-60 GBP/month at UK residential rates.
+
+Video transcoding requires approximately 6 Mbps download and 5.6 Mbps upload per concurrent stream. AI inference has a lighter bandwidth profile per job.
+
+{/* VERIFY: electricity cost estimates against current rates */}
+</Accordion>
+
+<Accordion title="Ongoing time">
+- Initial setup: 4-16 hours (varies by path)
+- Monitoring and maintenance: 1-3 hours per week once stable
+- go-livepeer updates: 30-60 minutes per release
+
+Pool nodes have minimal ongoing time investment. Solo orchestrators require consistent monitoring, particularly for reward call reliability.
+</Accordion>
+
+## Three viability questions
+
+These are the fastest way to rule a path in or out.
+
+### 1. Is reward calling profitable at my stake level?
+
+Calling `Reward()` costs gas. If stake is small, the LPT earned per round may be worth less than the gas cost. Check [explorer.livepeer.org](https://explorer.livepeer.org/orchestrators) and find the "Estimated Reward This Round" for orchestrators at your stake level. If that LPT value (converted to ETH) is less than approximately 0.00005 ETH, the gas cost exceeds the reward at typical Arbitrum rates.
+
+{/* VERIFY: gas-vs-reward threshold [arbiscan.io, explorer.livepeer.org] */}
+
+### 2. Can the node compete on pricing and capability?
+
+**Video transcoding:** Gateways filter by stake position and price. If `-pricePerUnit` is above a gateway's `-maxPricePerUnit`, that gateway sends no jobs regardless of hardware.
+
+**AI inference:** Gateways filter first by capability (is the requested pipeline available?), then by price. A well-configured AI node with warm models competes from day one without active set membership.
+
+Check competitive pricing at [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators).
+
+### 3. Is the setup stable enough?
+
+Missing reward rounds forfeits LPT permanently. Failing to complete routed jobs damages performance reputation and reduces future job flow. When sustained ~95%+ uptime is unrealistic, the pool node path is more appropriate than solo operation.
+
+## For delegators considering operation
+
+If you currently delegate LPT and are evaluating whether to run your own node, the comparison is between continued delegation returns and the operational cost of running hardware. Factor in: hardware purchase or colocation cost, electricity, ETH for gas, and the time commitment of 1-3 hours per week. Your existing LPT becomes your self-stake — the question is whether the additional control and direct earnings justify the operational overhead compared to the yield you receive as a delegator.
+
+## Video vs AI: which workload to start with
+
+| | Video transcoding | AI inference |
+| --- | --- | --- |
+| **Active set required** | Yes (high LPT barrier) | No (capability-based routing) |
+| **Revenue stability** | Stable and continuous for active streams | Variable — demand-dependent by pipeline |
+| **GPU dependency** | Recommended; CPU possible | Required (VRAM-constrained) |
+| **Revenue per job** | Low per segment; high volume | Higher per inference job; lower volume |
+| **Setup complexity** | Lower; standard go-livepeer flags | Higher; `aiModels.json`, model downloads, VRAM management |
+
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for currently routed AI pipelines and prices before deciding which to load.
+
+## Research tools
+
+Check the live market before committing:
+
+- **[explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators)** — current active orchestrators, stake, fee volumes, and commission rates.
+- **[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** — which AI pipelines and models are currently served and at what prices.
+- **[Livepeer Discord — #orchestrators](https://discord.gg/livepeer)** — active operators discuss current earnings, pricing, and hardware.

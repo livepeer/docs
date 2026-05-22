@@ -1,0 +1,94 @@
+---
+title: Linux Supported Distributions & Information
+description: >-
+  Livepeer supports building from source on these Linux distributions: -
+  **Ubuntu 20.04+ (**tested in CI) - **Debian** and derivatives -
+  **CentOS/RHEL** (with...
+keywords:
+  - livepeer
+  - new
+  - gateways new
+  - get started
+  - groups
+  - linux
+  - linuxsupport
+  - supported
+  - distributions
+  - information
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+### Supported Distributions
+Livepeer supports building from source on these Linux distributions:
+
+- **Ubuntu 20.04+ (**tested in CI)
+- **Debian** and derivatives
+- **CentOS/RHEL** (with adjustments)
+- **Arch Linux** (community supported)
+
+Architectures supported:
+
+- **x86_64/amd64** - Primary platform
+- **ARM64/aarch64** - For ARM servers
+
+### System Requirements & Packages
+- **Go 1.21+** (as specified in go.mod)
+- <Icon icon="warning" color="orange"/> **FFmpeg** (required for video transcoding)
+- Build tools: **make**, **gcc/clang**, **pkg-config**
+- **Git** for version control
+
+<Warning>
+ **FFmpeg** is a common cause of errors when building from source.
+
+ It **must be installed in a specific location** and not conflict with any existing ffmpeg installations.
+
+ **Livepeer uses a custom build of `ffmpeg`** that is installed as part of the build process.
+
+ If you have `ffmpeg` installed already, it is recommended to remove it before building Livepeer.
+</Warning>
+
+{/* <Danger> Verify below installs are correct </Danger>
+```bash ffmpeg install icon="warning" lines
+export ROOT=$HOME/buildoutput
+export LD_LIBRARY_PATH=$ROOT/compiled/lib/ export
+PKG_CONFIG_PATH=$ROOT/compiled/lib/pkgconfig
+export PATH=$ROOT/compiled/bin/:$PATH
+
+./install_ffmpeg.sh $ROOT
+``` */}
+
+{/* eliteproxy */}
+{/* ```bash lines icon="warning" Linux Dependencies for Livepeer
+sudo apt-get update && sudo apt-get -y install build-essential pkg-config autoconf git curl wget
+sudo apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev
+sudo apt-get -y install clang-tools
+``` */}
+
+```bash Install Dependencies icon="terminal" lines
+# Update package lists
+sudo apt update
+
+# Install build essentials
+sudo apt install -y build-essential make git
+
+# Install FFmpeg dependencies
+sudo apt install -y software-properties-common curl apt-transport-https lsb-release
+
+# Add LLVM repository for clang
+curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+sudo add-apt-repository "deb https://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-14 main"
+
+# Install remaining dependencies
+sudo apt update
+sudo apt install -y clang-14 clang-tools-14 lld-14 pkg-config autoconf python3 \
+ protobuf-compiler libx11-dev libbz2-dev libbzip3-dev
+
+# Set clang as default
+sudo update-alternatives --install /usr/bin/clang /usr/bin/clang-14 30
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-14 30
+sudo update-alternatives --install /usr/bin/ld /usr/bin/lld-14 30
+```

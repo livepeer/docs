@@ -1,0 +1,85 @@
+---
+title: 'Check Broken Links'
+sidebarTitle: 'Broken Links'
+description: 'Check Broken Links'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - validator
+  - health
+  - broken-links
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/broken-links.yml` |
+| **New name** | `validator-health-check-broken-links.yml` |
+| **Type** | `validator` |
+| **Concern** | `health` |
+| **Pipeline tag** | P3 (soft gate, advisory) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["pull_request, workflow_dispatch"] --> WF["broken-links"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `pull_request` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`
+
+**Canonical repo-root link auditor:**
+- `operations/scripts/audits/content/health/page-links-audit.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- Advisory-only workflow surface. The canonical repo-root internal-link owner is `page-links-audit.js`, which also inspects link-bearing MDX/JSX props during strict audits and remediation passes.
+
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Stays separate |
+| **Dry-run** | No |
+| **Concurrency** | No |
+| **Error reporting** | summary |
+| **Auto-commit** | No |

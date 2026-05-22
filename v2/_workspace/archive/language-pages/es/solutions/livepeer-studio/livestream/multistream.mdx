@@ -1,0 +1,31 @@
+---
+title: Multistream
+description: >-
+  Envía una transmisión en vivo a múltiples destinos RTMP/RTMPS (por ejemplo,
+  Twitch, YouTube).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0iLCJzb3VyY2VIYXNoIjoiODlkYjFjZDdhZDFmNzQ0YjkzZjJjYzlhYTM0YjZhMmEyZmVjNjZjY2QxZDEzMjY4ZTFmNTViZWQ2YzM1YTA5YyIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyNjowNC4yNzJaIn0= */}
+Multistreaming envía su transmisión de Livepeer Studio a múltiples **RTMP/RTMPS** destinos (por ejemplo, Twitch, YouTube Live, Facebook Live). Configure **destinos multistream** por transmisión en el panel de control o mediante la API.
+
+## Conceptos
+
+- **Destino multistream** = URL de entrada + clave de transmisión opcional + representación opcional. Crear mediante[API Multistream](https://livepeer.studio/docs/api-reference/multistream/create) o inline en[stream create](https://livepeer.studio/docs/api-reference/stream/create) / [actualización de transmisión](https://livepeer.studio/docs/api-reference/stream/update).
+- Los objetivos son**por transmisión**; las nuevas transmisiones no las heredan.
+- **Los cambios se aplican a la próxima sesión.**Si la transmisión está en vivo, los nuevos/actualizados objetivos se usan después de que finalice la sesión actual.
+
+## Panel de control
+
+1. Ir a [Transmisiones](https://livepeer.studio/dashboard/streams), abre una transmisión.
+2. **Visión general** tab → **Objetivos de multistream** → **Crear**.
+3. Ingrese nombre, **URL de entrada** (obligatorio), clave de transmisión opcional y perfil de rendición.
+4. Guardar. Alternar, editar o eliminar destinos de la misma sección.
+
+## API
+
+- Añadir destino: [Añadir destino multistream](https://livepeer.studio/docs/api-reference/stream/add-multistream-target)o en la transmisión crear/actualizar.
+- Eliminar: [Eliminar objetivo multistream](https://livepeer.studio/docs/api-reference/stream/delete-multistream-target).
+
+## Monitoreo
+
+- **Salud** pestaña: objetivos mostrar **Activo** o **Inactivo** (puede tener un ligero retraso).
+- **Webhooks:** `multistream.connected`, `multistream.error`, `multistream.disconnected`. Ver [Escuchar eventos](../analytics/listen-to-events).

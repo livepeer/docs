@@ -1,0 +1,142 @@
+---
+title: 将您的 GPU 添加到 Livepeer
+sidebarTitle: 协调器设置
+description: 以协调器身份运行 go-livepeer：列出 GPU，启动节点，为您的账户充值，并在 Livepeer 网络上激活。
+keywords:
+  - livepeer
+  - orchestrators
+  - quickstart
+  - add your gpu
+  - orchestrator setup
+  - go-livepeer
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3F1aWNrc3RhcnQvb3JjaGVzdHJhdG9yLXNldHVwLm1keCIsInNvdXJjZVJvdXRlIjoidjIvb3JjaGVzdHJhdG9ycy9xdWlja3N0YXJ0L29yY2hlc3RyYXRvci1zZXR1cCIsInNvdXJjZUhhc2giOiJjMTlmMDFkODViNTIxYTUwOWJkODY2NmU4MGYzOTExNDlkZjk1Y2ExMzc1MWUwZGE3Yzk5NjU5NDBlZjhhNjk5IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE0OjMwOjEwLjgzMVoifQ== */}
+import { PreviewCallout } from '/snippets/components/elements/callouts/Callouts.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+
+<PreviewCallout />
+
+此快速入门通过以协调器模式运行 Livepeer 网络的 **go-livepeer** 客户端，将您的 GPU 连接到 Arbitrum 网络。您将安装（或使用 Docker），连接到 Arbitrum，设置定价并激活。有关完整的安装指南（二进制文件、Docker、源代码），请参见 [安装 go-livepeer](/v2/orchestrators/setup/install-go-livepeer)。有关连接到 Arbitrum（RPC，托管与自托管），请参见 [连接到 Arbitrum](/v2/orchestrators/setup/install-go-livepeer).
+
+## 先决条件
+
+- 命令行熟悉度; `wget` 或 `curl`; [grpcurl](https://github.com/fullstorydev/grpcurl) 可选，用于测试。
+- [NVIDIA 驱动程序](https://www.nvidia.com/Download/index.aspx) 如果使用 GPU 转码则需要安装。
+- 访问一个 [Arbitrum RPC 端点](../setting-up-an-orchestrator/connect-to-arbitrum)（托管或自托管）。
+- **go-livepeer** [已安装](/v2/orchestrators/setup/install-go-livepeer) (二进制或Docker).
+
+<Note> Non-NVIDIA GPU support may be added in the future. This guide assumes NVIDIA GPUs for transcoding.</Note>
+
+<StyledSteps>
+  <StyledStep title="List your GPUs">
+    Before starting the node, confirm your GPUs are visible. With the NVIDIA driver installed, run:
+
+    <CustomCodeBlock
+      codeString={`nvidia-smi -L`}
+      language="bash"
+      icon="terminal"
+    />
+
+    Example output (5 GPUs, IDs 0–4):
+
+    <CustomCodeBlock
+      codeString={`GPU 0: GeForce GTX 1070 Ti (UUID: GPU-fcbaffa0-...)
+GPU 1: GeForce GTX 1070 Ti (UUID: GPU-d46a085e-...)
+...`}
+      language="text"
+      icon="terminal"
+    />
+  </StyledStep>
+
+  <StyledStep title="Run livepeer in orchestrator mode">
+    Start the node with the required flags. Replace placeholders with your values.
+
+    <CustomCodeBlock
+      codeString={`livepeer \\
+  -network arbitrum-one-mainnet \\
+  -ethUrl <ETH_URL> \\
+  -orchestrator \\
+  -transcoder \\
+  -nvidia <NVIDIA_DEVICE_IDS> \\
+  -pricePerUnit <PRICE_PER_UNIT> \\
+  -serviceAddr <HOSTNAME_OR_IP:8935>`}
+      language="bash"
+      icon="terminal"
+    />
+
+    <Accordion title="Key flags" icon="list">
+      - **-ethUrl** - Arbitrum RPC URL. See [Connect to Arbitrum](../setting-up-an-orchestrator/connect-to-arbitrum).
+      - **-ethAcctAddr** - (Optional) ETH account address if you already have a keystore.
+      - **-orchestrator** / **-transcoder** - Run as orchestrator with GPU transcoding.
+      - **-nvidia** - Comma-separated GPU IDs (e.g. `0,1,2`). Omit for CPU-only.
+      - **-pricePerUnit** - Price in wei per pixel. Required at startup; can be changed later.
+      - **-serviceAddr** - Public address for incoming requests (hostname:port preferred over IP).
+    </Accordion>
+
+    <Tip> Keystore default: `~/.lpData/arbitrum-one-mainnet/keystore`. If no account exists, you will be prompted to create one and set a passphrase. Guard the private key and passphrase; they control your wallet and funds.</Tip>
+  </StyledStep>
+
+  <StyledStep title="Confirm the node is listening">
+    When the node is ready, logs should show:
+
+    <CustomCodeBlock
+      codeString={`Listening for RPC on :8935
+Received Ping request`}
+      language="text"
+      icon="terminal"
+    />
+  </StyledStep>
+
+  <StyledStep title="Fund your account">
+    To activate on Livepeer you need:
+    - **ETH** (Arbitrum) - for transaction fees. Start with a small amount; the CLI will warn if balance is low.
+    - **LPT** - to stake and join the active set. Check the [Explorer](https://explorer.livepeer.org/) for the 100th orchestrator’s stake; you need at least that much to enter the top 100.
+
+    <Warning> If your orchestrator leaves the active set (top 100 by stake), it will not be reactivated automatically unless you re-register or your stake changes so you re-enter the top 100.</Warning>
+  </StyledStep>
+
+  <StyledStep title="Activate your orchestrator">
+    Use **livepeer_cli** or the [Explorer](https://explorer.livepeer.org/) to bond LPT to yourself, set reward cut, fee share, price, and service address. Once transactions confirm, your orchestrator joins the active set in the next round.
+
+    See [Staking LPT](../advanced-setup/staking-LPT) and [Rewards and fees](../advanced-setup/rewards-and-fees) for economics. Full activation steps are in the [Install guide](/v2/orchestrators/setup/install-go-livepeer#activate).
+  </StyledStep>
+</StyledSteps>
+
+## 参考页面
+
+<Columns cols={2}>
+  <Card
+    title="Install go-livepeer"
+    icon="download"
+    href="/v2/orchestrators/setup/install-go-livepeer"
+    arrow
+  >
+    Binary, Docker, and build from source.
+  </Card>
+  <Card
+    title="Connect to Arbitrum"
+    icon="plug"
+    href="../setting-up-an-orchestrator/connect-to-arbitrum"
+    arrow
+  >
+    Hosted RPC vs self-hosted node.
+  </Card>
+  <Card
+    title="CLI flags reference"
+    icon="terminal"
+    href="../references/cli-flags"
+    arrow
+  >
+    Full flag list and gRPC mapping.
+  </Card>
+  <Card
+    title="Orchestrator FAQ"
+    icon="circle-question"
+    href="../references/faq"
+    arrow
+  >
+    Common questions and troubleshooting.
+  </Card>
+</Columns>

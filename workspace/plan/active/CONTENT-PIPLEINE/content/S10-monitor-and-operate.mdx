@@ -1,0 +1,375 @@
+---
+title: 'Monitor and Operate Day-to-Day'
+sidebarTitle: 'Monitor & Operate'
+description: 'Key metrics to watch, alerting setup, routine operational tasks, and their cadence for running a Livepeer orchestrator in production.'
+pageType: guide
+audience: orchestrator
+purpose: operate
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - monitoring
+  - operations
+  - Prometheus
+  - Grafana
+  - reward call
+  - performance score
+  - session volume
+  - gas management
+  - software updates
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+
+<Tip>
+  Three signals demand daily attention: reward call status, ETH balance for gas, and performance score. Everything else is weekly or event-driven.
+</Tip>
+
+Your node is live and receiving work. This page establishes the monitoring routine and operational cadence that keeps it earning reliably.
+
+<CustomDivider middleText="Key Metrics" />
+
+## What to watch
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Metric</TableCell>
+      <TableCell header>Where to check</TableCell>
+      <TableCell header>Healthy range</TableCell>
+      <TableCell header>Cadence</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Reward call status</TableCell>
+      <TableCell>Explorer reward history; Arbiscan</TableCell>
+      <TableCell>100% call rate — no missed rounds</TableCell>
+      <TableCell>Daily</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>ETH balance (Arbitrum)</TableCell>
+      <TableCell>Arbiscan; `curl localhost:7935/status`</TableCell>
+      <TableCell>Above 0.02 ETH at all times</TableCell>
+      <TableCell>Daily</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Performance score</TableCell>
+      <TableCell>Prometheus metrics; Explorer</TableCell>
+      <TableCell>Stable or improving week over week</TableCell>
+      <TableCell>Daily</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Session volume</TableCell>
+      <TableCell>Prometheus `livepeer_current_sessions_total`</TableCell>
+      <TableCell>Consistent with network demand</TableCell>
+      <TableCell>Daily</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Segment success rate</TableCell>
+      <TableCell>Prometheus `rate(livepeer_transcode_success_total[5m])`</TableCell>
+      <TableCell>Above 99%</TableCell>
+      <TableCell>Weekly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Ticket redemptions</TableCell>
+      <TableCell>Prometheus ticket metrics; Arbiscan</TableCell>
+      <TableCell>No gap between winning and redeemed tickets</TableCell>
+      <TableCell>Weekly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI pipeline warm status</TableCell>
+      <TableCell>tools.livepeer.cloud/ai/network-capabilities</TableCell>
+      <TableCell>Primary pipeline shows Warm</TableCell>
+      <TableCell>Weekly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>GPU temperature and VRAM</TableCell>
+      <TableCell>`nvidia-smi`</TableCell>
+      <TableCell>Temperature below 85C; VRAM not at 100%</TableCell>
+      <TableCell>Weekly</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* VERIFY: Confirm Prometheus metric names (livepeer_current_sessions_total, livepeer_transcode_success_total) against go-livepeer monitor/census.go. */}
+
+<CustomDivider middleText="Monitoring Setup" />
+
+## Prometheus and Grafana
+
+Enable the Prometheus endpoint with the `-monitor` flag at startup:
+
+```bash icon="terminal" filename="enable-monitoring"
+livepeer \
+  -orchestrator \
+  -transcoder \
+  -monitor \
+  -metricsPerStream \
+  ...
+```
+
+Metrics are exposed at `http://localhost:7935/metrics`.
+
+### Fastest path: Docker monitoring stack
+
+Livepeer maintains a Docker image bundling Prometheus and Grafana with starter dashboards:
+
+```bash icon="terminal" filename="docker-monitoring"
+docker run --net=host \
+  --env LP_MODE=standalone \
+  --env LP_NODES=localhost:7935 \
+  livepeer/monitoring:latest
+```
+
+Grafana is available at `http://localhost:3000` (default credentials: `admin` / `admin`).
+
+{/* VERIFY: Confirm livepeer/monitoring Docker image is still maintained and compatible with current go-livepeer. [source: github.com/livepeer/livepeer-monitoring] */}
+
+For multi-node setups, pass a comma-separated list of nodes:
+
+```bash icon="terminal" filename="multi-node-monitoring"
+docker run --net=host \
+  --env LP_MODE=standalone \
+  --env LP_NODES=node1.example.com:7935,node2.example.com:7935 \
+  livepeer/monitoring:latest
+```
+
+### Custom Prometheus setup
+
+Add go-livepeer as a scrape target in your existing `prometheus.yml`:
+
+```yaml icon="code" filename="prometheus.yml"
+scrape_configs:
+  - job_name: 'livepeer-orchestrator'
+    static_configs:
+      - targets: ['localhost:7935']
+    scrape_interval: 15s
+    metrics_path: /metrics
+```
+
+## Alerting
+
+Configure alerts for the failure modes that cost money:
+
+```yaml icon="code" filename="prometheus-alerts.yml"
+groups:
+  - name: livepeer-orchestrator
+    rules:
+
+      - alert: LowETHBalance
+        expr: "livepeer_eth_balance < 0.02"
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ETH balance below 0.02 - reward calls and ticket redemptions will fail"
+
+      - alert: OrchestratorAtCapacity
+        expr: "livepeer_current_sessions_total >= livepeer_max_sessions"
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Session limit reached for 5+ minutes - jobs are being rejected"
+
+      - alert: TranscodeFailureRate
+        expr: "rate(livepeer_transcode_failed_total[10m]) > 0.1"
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Transcode failure rate above 10% over 10 minutes"
+```
+
+{/* VERIFY: Confirm metric names livepeer_eth_balance, livepeer_current_sessions_total, livepeer_max_sessions, livepeer_transcode_failed_total against current go-livepeer source. */}
+
+<CustomDivider middleText="Routine Tasks" />
+
+## Operational cadence
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Task</TableCell>
+      <TableCell header>Cadence</TableCell>
+      <TableCell header>What to do</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Check reward call history</TableCell>
+      <TableCell>Daily</TableCell>
+      <TableCell>Verify no missed rounds on Explorer. A missed round permanently forfeits that round's inflation for you and your delegators.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Check ETH balance</TableCell>
+      <TableCell>Daily</TableCell>
+      <TableCell>Keep above 0.02 ETH on Arbitrum. Reward calls cost approximately $0.01-$0.12 each. Top up before the balance drops below the threshold.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Review performance score</TableCell>
+      <TableCell>Daily</TableCell>
+      <TableCell>A declining score reduces job routing probability. Investigate latency or failure rate increases immediately.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>go-livepeer software updates</TableCell>
+      <TableCell>Per release</TableCell>
+      <TableCell>Watch the go-livepeer GitHub releases page. Update promptly — new releases often include gateway compatibility changes that affect job routing.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI model updates</TableCell>
+      <TableCell>Weekly</TableCell>
+      <TableCell>Check tools.livepeer.cloud for demand shifts. Rotate warm model if a higher-demand model is available for your pipeline.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>GPU health check</TableCell>
+      <TableCell>Weekly</TableCell>
+      <TableCell>Run `nvidia-smi` to check temperature and VRAM. Temperature above 85C indicates cooling issues. VRAM at 100% indicates pressure from AI models.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Review delegator activity</TableCell>
+      <TableCell>Weekly</TableCell>
+      <TableCell>Check Explorer for unbonding delegators. A pattern of departures signals reward call reliability or cut competitiveness issues.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Ticket redemption audit</TableCell>
+      <TableCell>Weekly</TableCell>
+      <TableCell>Compare winning tickets against redeemed tickets. A gap indicates ETH balance issues or TicketBroker errors.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Pricing review</TableCell>
+      <TableCell>Monthly</TableCell>
+      <TableCell>Compare your price against the active set on Explorer. Adjust if market rates have shifted or if job volume has changed.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="AI Runner Monitoring" />
+
+## Monitoring AI runner containers
+
+AI inference runs in the `ai-runner` Docker container alongside go-livepeer. Monitor it separately for faster signal on AI-specific issues.
+
+```bash icon="terminal" filename="check-ai-runner"
+# Container status
+docker ps --filter name=livepeer-ai-runner
+
+# Follow logs live
+docker logs -f livepeer-ai-runner
+
+# Resource usage
+docker stats livepeer-ai-runner
+```
+
+Key log messages to act on:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Message</TableCell>
+      <TableCell header>Action</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`Error loading model`</TableCell>
+      <TableCell>Check VRAM availability and model ID spelling in aiModels.json</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`CUDA out of memory`</TableCell>
+      <TableCell>Reduce `-maxSessions` or `capacity` in aiModels.json; consider making secondary models cold</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`Container health check failed`</TableCell>
+      <TableCell>Restart the AI runner container; check for VRAM exhaustion</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Log Management" />
+
+## Log capture
+
+For production nodes, capture logs to a file alongside terminal output:
+
+```bash icon="terminal" filename="log-capture"
+livepeer \
+  -orchestrator \
+  -transcoder \
+  -monitor \
+  ... \
+  2>&1 | tee /var/log/livepeer/livepeer.log
+```
+
+Useful search patterns for daily review:
+
+```bash icon="terminal" filename="log-search"
+# Reward calls
+grep -i "reward" /var/log/livepeer/livepeer.log | tail -10
+
+# Errors only
+grep -i "error\|fail\|crit" /var/log/livepeer/livepeer.log | tail -20
+
+# Job activity
+grep -i "got segment\|RunAI request" /var/log/livepeer/livepeer.log | tail -10
+```
+
+For `systemd`-managed services:
+
+```bash icon="terminal" filename="journalctl-search"
+journalctl -u livepeer --since "1 hour ago"
+journalctl -u livepeer -p err    # errors only
+```
+
+<CustomDivider middleText="Tools Reference" />
+
+## Tools at a glance
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Question</TableCell>
+      <TableCell header>Tool</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Am I in the active set?</TableCell>
+      <TableCell>Livepeer Explorer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Did I miss any reward rounds?</TableCell>
+      <TableCell>Explorer reward call history</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Is my node processing jobs right now?</TableCell>
+      <TableCell>Prometheus session count; or `-v 6` logs</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Are my AI pipelines visible?</TableCell>
+      <TableCell>tools.livepeer.cloud/ai/network-capabilities</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Is my pricing competitive?</TableCell>
+      <TableCell>Explorer — compare against active set</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>What is the network-wide state?</TableCell>
+      <TableCell>Dune dashboards (growth, governance, token)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+<CardGroup cols={2}>
+  <Card title="Optimise Earnings" icon="chart-line" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Adjust pricing, stake positioning, and AI model strategy to increase job volume and margins.
+  </Card>
+  <Card title="Diagnose and Fix" icon="triangle-exclamation" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting">
+    When monitoring reveals a problem — structured diagnostic paths for common failures.
+  </Card>
+</CardGroup>

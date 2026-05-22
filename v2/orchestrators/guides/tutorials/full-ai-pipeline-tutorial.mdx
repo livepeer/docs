@@ -45,7 +45,7 @@ This tutorial runs a complete local AI inference pipeline: a gateway receives a 
 - The response returns through the gateway to the caller
 - Each step is visible in the respective logs
 
-<CustomDivider />
+<CustomDivider middleText="Architecture" />
 
 ## Pipeline architecture
 
@@ -67,7 +67,7 @@ Client
 
 The gateway and orchestrator run as separate processes. In production, they run on separate machines. This tutorial runs both locally to make the log trace visible end-to-end.
 
-<CustomDivider />
+<CustomDivider middleText="Prerequisites" />
 
 ## Prerequisites
 
@@ -104,7 +104,7 @@ The gateway and orchestrator run as separate processes. In production, they run 
 
 No ETH wallet, Arbitrum RPC, or on-chain registration required. This tutorial runs off-chain.
 
-<CustomDivider />
+<CustomDivider middleText="Step 1: Prepare" />
 
 ## Step 1: Download the model
 
@@ -132,7 +132,7 @@ Verify:
 ls -lh ~/.lpData/models/
 ```
 
-<CustomDivider />
+<CustomDivider middleText="Step 2: Configure aiModels.json" />
 
 ## Step 2: Write aiModels.json
 
@@ -151,7 +151,7 @@ EOF
 
 `price_per_unit` sets the orchestrator's sell-side price. The gateway's buy-side cap must be at or above this value for the job to route. In Step 4 the gateway is started with no explicit price cap, so it accepts any price.
 
-<CustomDivider />
+<CustomDivider middleText="Step 3: Start Orchestrator" />
 
 ## Step 3: Start the orchestrator
 
@@ -198,7 +198,7 @@ curl http://localhost:7935/registeredOrchestrators
 
 Expected: a JSON array with your orchestrator at `127.0.0.1:8935`.
 
-<CustomDivider />
+<CustomDivider middleText="Step 4: Start Gateway" />
 
 ## Step 4: Start the gateway
 
@@ -250,7 +250,7 @@ curl http://localhost:8936/health
 
 Expected: `{"status":"ok"}`
 
-<CustomDivider />
+<CustomDivider middleText="Step 5: Send Request Through Gateway" />
 
 ## Step 5: Send an inference request through the gateway
 
@@ -283,7 +283,7 @@ ls -lh pipeline-output.png
 
 Expected: `pipeline-output.png: PNG image data` with a non-zero file size.
 
-<CustomDivider />
+<CustomDivider middleText="Step 6: Trace the Log Trail" />
 
 ## Step 6: Trace the request through logs
 
@@ -326,7 +326,7 @@ docker logs <ai-runner-container> 2>&1 | tail -20
 
 Expected entries include model inference steps and output dimensions.
 
-<CustomDivider />
+<CustomDivider middleText="What Just Happened" />
 
 ## What happened
 

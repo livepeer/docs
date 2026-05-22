@@ -1,0 +1,387 @@
+---
+title: Configuration des tarifs
+description: Configurer les tarifs pour les services de passerelle Livepeer
+sidebarTitle: Configuration des tarifs
+icon: hand-holding-dollar
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - configure
+  - pricing configuration
+  - pricing
+  - configuration
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2NvbmZpZ3VyZS9wcmljaW5nLWNvbmZpZ3VyYXRpb24ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2NvbmZpZ3VyZS9wcmljaW5nLWNvbmZpZ3VyYXRpb24iLCJzb3VyY2VIYXNoIjoiOTQxZDVlNWI2YTkzYjc0NWZjOTZjYzdjNzU0YmFjY2E5N2Q5ZGRiOWJhY2ExNzRiNWU0Nzg5ZjQ2YmVkZjM4MSIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTEyMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQwNTo0MTowNS4xMjdaIn0= */}
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+<Danger> OK / complete - but needs edit & format </Danger>
+
+Les passerelles dans Livepeer configurent les prix pour contrôler les coûts et les marges.
+En tant que consommateurs de services de transcodage vidéo et d'IA, les passerelles définissent les prix maximum
+qu'elles sont prêtes à payer aux Orchestrateurs pour le travail de traitement.
+
+## Concepts de tarification
+
+#### Devise de paiement
+
+Tous les paiements sont effectués en <Badge color="green">ETH(wei)</Badge> - **pas** Livepeer jetons (LPT).
+
+#### Modèles de tarification
+
+<Warning> Format me.</Warning>
+
+1. <Badge color="blue">Video Transcoding</Badge>: Par segment vidéo traité
+
+- Unité : Pixels traités (largeur x hauteur)
+- Calcul : pixels traités × prix par pixel
+
+2. <Badge color="purple"> AI Processing</Badge>: Tarifé par capacité /
+modèle.{' '}
+
+- Unité : Prix par capacité/modèle
+- Calcul :
+  - Paiements par pixel : Calculés comme largeur × hauteur × sorties
+  - Paiements par requête : Paiement unique par requête d'IA
+  - Paiements vidéo en direct : Paiements basés sur des intervalles pendant le streaming (configurable)
+
+{/* ### Setting Price Limits For Work Performed by Orchestrators */}
+
+## Drapeaux de configuration de tarification
+
+#### Drapeaux principaux de transcodage vidéo
+
+<Card>
+  <Badge color="blue">Video</Badge>
+  <ResponseField name="-maxPricePerUnit" type="int" default="0 (wei)">
+    Maximum price per pixelsPerUnit (in wei `integer` or a custom currency
+    format like 0.50USD or 0.02USD) for transcoding work
+    <Note>
+      {' '}
+      All pricing is in `wei` unless currency conversion is configured{' '}
+    </Note>
+  </ResponseField>
+  <ResponseField name="-pixelsPerUnit" type="int" default="1">
+    Number of pixels per pricing unit
+  </ResponseField>
+  <ResponseField name="-ignoreMaxPriceIfNeeded" type="boolean" default="false">
+    Allow exceeding max price if no suitable Orchestrator exists
+  </ResponseField>
+</Card>
+
+#### Drapeaux principaux de traitement IA
+
+<Card>
+  <Badge color="purple">AI</Badge> 
+  <ResponseField name="-maxPricePerCapability" type="string" default="none">
+  JSON list (or `path/to/ai-pricing.json` file) of maximum prices per AI capability/model
+
+      ```json icon="file" ExampleFormat.json
+      {
+        "capabilities_prices": [
+          {
+            "pipeline": "text-to-image",
+            "model_id": "stabilityai/sd-turbo",
+            "price_per_unit": 1000,
+            "pixels_per_unit": 1
+          }
+        ]
+      }
+      ```
+
+  </ResponseField>
+  <ResponseField name="-livePaymentInterval" type="duration" default="5s">
+    Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
+
+    {/*
+    Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
+    Payment Processor: It's passed to the LivePaymentProcessor which handles the timing of payment transactions live_payment_processor.go:33-42
+    Gateway-Orchestrator Communication: Specifically for "Gateway <> Orchestrator Payments for Live AI Video" as stated in the flag description.
+    You only need to configure this flag if:
+
+    You're running a gateway that processes Live AI Video streams
+    You need to customize the payment frequency (default is 5 seconds)
+    You're working with orchestrators that require payment processing for AI workloads
+
+    For standard offchain gateway operations without AI video processing, the default behavior is sufficient and you don't need to set this flag.
+    */}
+
+  </ResponseField>
+</Card>
+
+{/* ### Price Calculation
+
+The actual price calculation happens in the orchestrator's `priceInfo` function, which:
+
+1. Checks for fixed prices per manifest ID
+2. Gets base price from Orchestrator configuration
+3. For AI workloads, sums prices of individual capability/model pairs
+4. Applies auto-adjustment based on transaction costs if enabled */}
+
+## Calcul et processus de paiement des frais
+
+<Warning> Format me. Add diagram </Warning>
+
+Les passerelles paient les frais via différents mécanismes selon le type de charge de travail :
+
+_Transcodage vidéo_
+
+- Paiements par segment : Chaque segment vidéo génère un ticket de paiement -> [<Icon icon="github" /> segment_rpc.go :](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+- Calcul des frais : Basé sur les pixels traités × prix par pixel -> [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+
+_Traitement IA_
+
+- Paiements par pixel : Calculés comme largeur × hauteur × sorties [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+- Vidéo en direct : Utilise des paiements basés sur des intervalles pendant le streaming [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+_Flux de traitement des paiements_
+
+1. La passerelle envoie le paiement avec le segment/requête à l'orchestrateur [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+2. L'orchestrateur valide le paiement et met à jour le solde [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+3. Les frais sont débités du compte de solde de la passerelle [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+## Méthodes de configuration
+
+<Warning> Format me. </Warning>
+Les passerelles définissent les prix maximum qu'elles sont prêtes à payer via des drapeaux de configuration dans
+le `transcodingConfig.json` ou directement dans la CLI.
+
+1. **Ligne de commande** drapeaux
+   ```bash
+     -maxPricePerUnit=1000 \
+     -pixelsPerUnit=1
+   ```
+2. **Configuration JSON** fichier (format texte brut clé-valeur)
+
+   Pour les capacités IA, utilisez des fichiers JSON avec une tarification spécifique au modèle
+
+3. **API HTTP** - peut être utilisée à l'exécution pour effectuer des ajustements sans redémarrage
+   - /setBroadcastConfig : Définir la tarification générale
+   - /setMaxPriceForCapability: Définir le prix du modèle IA
+4. **Outil CLI**
+
+   Utilisez livepeer_cli -> **Option 16**: "Définir la configuration de diffusion"
+
+## Configuration de l'Orchestrateur et informations tarifaires (Référence de la passerelle)
+
+Une référence pour les opérateurs de passerelle sur la façon dont les orchestrateurs configurent les tarifs et les frais des services.
+
+#### Tarification par passerelle (peut être définie par les orchestrateurs)
+
+Les orchestrateurs peuvent définir des prix spécifiques pour chaque passerelle en utilisant
+`-pricePerGateway` [<Icon icon="github" /> starter.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go)
+
+```json
+{
+  "gateways": [
+    {
+      "ethaddress": "0x123...",
+      "priceperunit": 0.5,
+      "currency": "USD",
+      "pixelsperunit": 1000000000000
+    }
+  ]
+}
+```
+
+#### Calcul du prix
+
+<Warning> Repeated </Warning>
+
+Le calcul réel du prix se produit dans le fichier de l'orchestrateur `priceInfo` fonction [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+1. Vérifie les prix fixes par ID de manifeste
+2. Récupère le prix de base à partir de la configuration de l'orchestrateur
+3. Pour les charges de travail IA, additionne les prix des paires capacité/modèle individuelles
+4. Applique un ajustement automatique basé sur les coûts de transaction si activé
+
+#### Ajustement dynamique du prix
+
+Les orchestrateurs peuvent activer les ajustements automatiques des prix basés sur les coûts de transaction – c'est pourquoi il est important de définir les drapeaux maxPricing -> [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+```go
+if !orch.node.AutoAdjustPrice {
+    return basePrice, nil
+}
+// Apply overhead multiplier based on tx costs
+overhead := big.NewRat(1, 1)
+if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
+    txCostMultiplier, err := orch.node.Recipient.TxCostMultiplier(sender)
+    if txCostMultiplier.Cmp(big.NewRat(0, 1)) > 0 {
+        overhead = overhead.Add(overhead, new(big.Rat).Inv(txCostMultiplier))
+    }
+}
+```
+
+## Liste complète des drapeaux de configuration de la tarification des passerelles
+
+#### Drapeaux de tarification du transcodage vidéo
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerUnit',
+      Default: '0',
+      Purpose: 'Maximum price per pixelsPerUnit for transcoding',
+    },
+    {
+      Flag: '-pixelsPerUnit',
+      Default: '1',
+      Purpose: 'Number of pixels per pricing unit',
+    },
+    {
+      Flag: '-ignoreMaxPriceIfNeeded',
+      Default: 'false',
+      Purpose: 'Allow exceeding max price if no suitable orchestrator exists',
+    },
+    {
+      Flag: '-priceFeedAddr',
+      Default: 'Chainlink ETH/USD address',
+      Purpose: 'Price feed for currency conversion',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Drapeaux de tarification du traitement IA
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerCapability',
+      Default: '""',
+      Purpose: 'JSON list of prices per AI pipeline/model',
+    },
+    {
+      Flag: '-aiModels',
+      Default: '""',
+      Purpose: 'Model configurations with pricing info',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Drapeaux des tickets de paiement
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-ticketEV',
+      Default: '8000000000',
+      Purpose: 'Expected value for payment tickets',
+    },
+    {
+      Flag: '-maxFaceValue',
+      Default: '0',
+      Purpose: 'Maximum ticket face value in wei',
+    },
+    {
+      Flag: '-maxTicketEV',
+      Default: '3000000000000',
+      Purpose: 'Maximum acceptable expected value per ticket',
+    },
+    {
+      Flag: '-maxTotalEV',
+      Default: '20000000000000',
+      Purpose: 'Maximum acceptable expected value per payment',
+    },
+    {
+      Flag: '-depositMultiplier',
+      Default: '1',
+      Purpose: 'Deposit multiplier for ticket faceValue',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Drapeaux de gaz et de transaction (affectent la tarification)
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    { Flag: '-minGasPrice', Default: '0', Purpose: 'Minimum gas price in wei' },
+    { Flag: '-maxGasPrice', Default: '0', Purpose: 'Maximum gas price in wei' },
+    { Flag: '-gasLimit', Default: '0', Purpose: 'Gas limit for transactions' },
+    {
+      Flag: '-txTimeout',
+      Default: '5m',
+      Purpose: 'Transaction timeout duration',
+    },
+    {
+      Flag: '-maxTxReplacements',
+      Default: '1',
+      Purpose: 'Max transaction replacements',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Tarification spécifique à l'orchestrateur (à titre de référence)
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-pricePerUnit',
+      Default: '0',
+      Purpose: 'Price per pixelsPerUnit (orchestrator only)',
+    },
+    {
+      Flag: '-pricePerGateway',
+      Default: '""',
+      Purpose: 'Per-gateway pricing (orchestrator only)',
+    },
+    {
+      Flag: '-autoAdjustPrice',
+      Default: 'true',
+      Purpose: 'Auto-adjust prices based on gas costs',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Notes
+
+- **Drapeaux de passerelle** contrôlent ce que vous **payez** (prix max)
+- **Drapeaux d'orchestrateur** contrôlent ce que vous **facturez** (prix réels)
+- La tarification IA utilise le `maxPricePerCapability` structure JSON pour la tarification par modèle
+- Tous les prix peuvent être spécifiés en wei ou avec un suffixe de devise (par ex., "0.50USD")
+- Les valeurs par défaut "0" signifient accepter n'importe quel prix ou utiliser les paramètres par défaut du système
+
+## Pages liées
+
+<Columns cols={2}>
+  <Card
+      title="Gateway Economics"
+      href="../../about/economics"
+      icon="hand-holding-dollar"
+      arrow
+      >
+      How gateways earn fees for services
+  </Card>
+
+  <Card 
+        title="Funding Your Gateway"
+        href="../requirements/on-chain%20setup/fund-gateway"
+        icon="coins"
+        arrow
+        >
+      How to fund your gateway.
+  </Card>
+</Columns>
+
+<Expandable title="old content">  
+OLD
+
+Gateways in Livepeer set prices and pay fees through a multi-layered system that includes
+price limits, per-gateway pricing, and payment processing for both video transcoding and AI workloads.
+
+Gateways use a probabilistic micropayment system where they generate payment tickets for work done.
+The system supports both traditional video transcoding (per segment) and AI processing (per pixel)
+with different pricing models but unified payment infrastructure.
+
+</Expandable>

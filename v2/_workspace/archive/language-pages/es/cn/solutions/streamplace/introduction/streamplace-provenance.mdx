@@ -1,0 +1,144 @@
+---
+title: 来源与元数据
+description: C2PA 如何体现、以太坊签名以及 Streamplace 元数据模式如何创建可验证的、具有权利意识的视频。
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace provenance
+  - provenance
+  - metadata
+  - manifests
+  - ethereum
+  - signatures
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLXByb3ZlbmFuY2UubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLXByb3ZlbmFuY2UiLCJzb3VyY2VIYXNoIjoiZDU0MGFhZDg3NjEyZDNhZTQ1MTdhYWIyNjEzZGUxZDdkY2Q5MjhjODg1MjFlYjYxMDBiZTQzZWRhMzJkMGIzNCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxODoxNDowOC4wODdaIn0= */}
+---
+
+Streamplace 是第一个去中心化的视频基础设施层，结合了：
+
+- **C2PA 内容真实性声明**
+- **基于以太坊的加密签名**
+- **完整的元数据系统，用于权利、警告和分发规则**
+
+这创建了一个 _可验证、可察觉篡改、具有权利意识的视频处理流程_适用于去中心化社交网络、新闻业、创作者生态系统和Web3原生平台。
+
+---
+
+# 🛡️ 为什么来源很重要
+
+传统视频平台无法保证以下内容：
+
+- 谁创建了视频
+- 视频是否被修改过
+- 附加在其上的权利或警告是否真实
+
+Streamplace 通过确保 **每个 1 秒的视频片段都带有加密证明** 来源和策略。
+
+---
+
+# 🧬 来源流程图
+
+```mermaid
+flowchart LR
+    A[MP4 Segment (1s)] --> B[C2PA Manifest]
+    A --> C[Ethereum Signature]
+    B --> D[Composite Provenance]
+    C --> D
+    D --> E[Transcoding on Livepeer]
+    E --> F[Playback + Verification]
+```
+
+---
+
+# 🔐 C2PA 清单
+
+每个片段都包含一个 **C2PA（内容凭证）清单**，其中：
+
+- 记录创作者身份
+- 包含关于权利、来源、编辑和警告的声明
+- 提供可检测篡改的密码学封印
+
+C2PA出处是_基于标准_, 使 Streamplace 的输出与以下工具的工具链兼容：
+
+- Adobe
+- Microsoft
+- Nikon
+- 内容真实性倡议
+
+参考文献: [https://spec.c2pa.org/](https://spec.c2pa.org/)
+
+---
+
+# 🔏 Ethereum 签名
+
+除了 C2PA，Streamplace 还附加了 **Ethereum 签名** 这样:
+
+- 将创作者身份绑定到内容
+- 与Web3身份系统集成
+- 允许链上验证
+
+这创建了_双重来源层_：开放标准 + 去中心化身份。
+
+---
+
+# 🧱 元数据模式（权利、警告、政策）
+
+Streamplace 定义了一个丰富的元数据系统，位于 `place.stream.metadata.*`.
+
+关键字段:
+
+- `contentRights` - 许可证、署名、版权
+- `contentWarnings` - 安全性、图像内容、闪烁灯光等
+- `distributionPolicy` - 保留规则、分发权限、地理区域
+- `configuration` - 播放偏好
+- `story/series` 元数据 - 集数、章节、连续性
+
+文档: [https://stream.place/docs/video-metadata/metadata-record/](https://stream.place/docs/video-metadata/metadata-record/)
+
+---
+
+# 🌐 如何使元数据和来源在转码后仍然存在
+
+一个主要的设计创新: **来源在 Livepeer 转码后仍然存在**.
+
+流程：
+
+1. Streamplace 在将每个片段发送到 Livepeer 之前将其嵌入出处信息。
+2. 协调者对片段进行转码，但不会删除出处信息。
+3. Streamplace 重新构建清单，同时保留出处信息。
+4. 播放客户端可以独立验证签名。
+
+这创建了一个**端到端的真实性链**，即使在去中心化计算中也是如此。
+
+---
+
+# 🧩 示例用例
+
+### **1. 去中心化社交媒体网络**
+
+用户可以获得带有自动权利、警告和作者身份的视频。
+
+### **2. 公民新闻**
+
+片段可以独立验证真实性。
+
+### **3. 创作者经济平台**
+
+权利元数据会随内容一起传输，从而实现自动归属。
+
+### **4. 审核工具**
+
+平台可以依赖嵌入的元数据，而不是平台拥有的信号。
+
+---
+
+# 📚 相关页面
+
+- [Streamplace 概述](/solutions/streamplace/overview)
+- [Streamplace 如何工作](/solutions/streamplace/introduction/streamplace-guide)
+- [架构](/solutions/streamplace/introduction/streamplace-architecture)
+- [SPE 资金模型](/solutions/streamplace/introduction/streamplace-funding-model)
+- [开发者集成指南](/solutions/streamplace/introduction/streamplace-integration)

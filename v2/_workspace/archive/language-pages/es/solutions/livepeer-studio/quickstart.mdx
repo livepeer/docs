@@ -1,0 +1,95 @@
+---
+title: Inicio rápido
+description: >-
+  Crea una cuenta, obtén una clave de API y agrega video en vivo o bajo demanda
+  en menos de 5 minutos.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3F1aWNrc3RhcnQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3F1aWNrc3RhcnQiLCJzb3VyY2VIYXNoIjoiYWYxOGU4M2MwN2QwMmExM2FmMDgzY2E4YzhlMTc2Yjc3ODQzMmMwODY5MjJiNmJkZjZmYzdjNzdhOTc5NzNkYyIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoxMjoyNS4xMThaIn0= */}
+Empieza con Livepeer Studio creando una cuenta, una clave de API y luego usando el SDK para reproducir un video (por ejemplo, un activo que subiste en el panel de control).
+
+## 1. Crea una cuenta y una clave de API
+
+1. Ve a [Livepeer Studio](https://livepeer.studio) y crea una cuenta.
+2. Abre el **Desarrolladores** área y haga clic en **Crear clave de API**.
+3. Almacene la clave de API de forma segura (por ejemplo, en variables de entorno). Úsela desde su **backend**al llamar a la API de Livepeer Studio.
+
+<Warning>
+  **CORS-enabled API keys** are not recommended and will be deprecated. Make requests to the Livepeer Studio API from your backend and never expose your secret API key in the browser.
+</Warning>
+
+<Info>
+  Use separate accounts or [projects](/solutions/livepeer-studio/reference/managing-projects) for development and production to keep environments isolated.
+</Info>
+
+## 2. Instalar el SDK
+
+Este ejemplo utiliza el SDK de JavaScript y la biblioteca Livepeer React:
+
+```bash
+npm install livepeer @livepeer/react
+```
+
+## 3. Configurar el cliente
+
+Agregue su clave de API a las variables de entorno, luego cree el cliente Livepeer (por ejemplo, en un contexto de backend o servidor):
+
+```tsx
+import Livepeer from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY,
+});
+```
+
+## 4. Obtener información de reproducción
+
+Use the client to fetch playback info for an asset (for example, one you uploaded in the dashboard). You need the asset’s **playback ID**:
+
+```ts
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "f5eese9wwl88k4g8"; // replace with your playback ID
+
+export async function getPlaybackSource() {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+```
+
+## 5. Play the asset
+
+Use the Livepeer Player to play the video. Fetch the source on the server (e.g. in a React Server Component or API route), then pass it to the Player:
+
+```tsx
+import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+
+export function DemoPlayer({ src }: { src: Src[] | null }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Video" />
+        <Player.Controls className="flex items-center justify-center">
+          <Player.PlayPauseTrigger className="w-10 h-10">
+            <Player.PlayingIndicator asChild matcher={false}>
+              <PlayIcon />
+            </Player.PlayingIndicator>
+            <Player.PlayingIndicator asChild>
+              <PauseIcon />
+            </Player.PlayingIndicator>
+          </Player.PlayPauseTrigger>
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+## Next steps
+
+- [Crear una transmisión en vivo](/solutions/livepeer-studio/livestream/create-livestream) - Crear una transmisión y obtener una clave de transmisión y un ID de reproducción.
+- [Subir un activo](/solutions/livepeer-studio/video-on-demand/upload-asset) - Subir archivos de video y reproducirlos.
+- [Escuchar eventos de activo](/solutions/livepeer-studio/analytics/listen-to-events) - Usar webhooks para reaccionar cuando los activos estén listos o fallen.
+- [Visión general de los SDK](/solutions/livepeer-studio/reference/sdks) - TypeScript, Go, Python y React.
+- [Visión general de la API](/solutions/livepeer-studio/reference/api) - Autenticación y conceptos básicos de la API.

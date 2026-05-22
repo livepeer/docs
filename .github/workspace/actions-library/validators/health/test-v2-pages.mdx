@@ -1,0 +1,83 @@
+---
+title: 'Docs CI - V2 Browser Sweep'
+sidebarTitle: 'V2 Browser Sweep'
+description: 'Docs CI - V2 Browser Sweep'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - validator
+  - health
+  - test-v2-pages
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/test-v2-pages.yml` |
+| **New name** | `validator-health-check-page-rendering.yml` |
+| **Type** | `validator` |
+| **Concern** | `health` |
+| **Pipeline tag** | P3 (soft gate, advisory) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["push, pull_request, workflow_dispatch"] --> WF["test-v2-pages"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `push` | See workflow file |
+| `pull_request` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `operations/scripts/automations/content/data/fetching/fetch-external-docs.sh`
+
+<CustomDivider />
+
+## Known Issues
+
+None identified.
+
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Overlaps with test-suite.yml — merge as a job within test-suite |
+| **Dry-run** | No |
+| **Concurrency** | Yes |
+| **Error reporting** | summary |
+| **Auto-commit** | No |

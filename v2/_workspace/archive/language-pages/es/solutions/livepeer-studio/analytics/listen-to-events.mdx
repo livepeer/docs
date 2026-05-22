@@ -1,0 +1,43 @@
+---
+title: Escuchar eventos
+description: >-
+  Usar webhooks para reaccionar a eventos de transmisión y activos (iniciado,
+  listo, fallido, etc.).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FuYWx5dGljcy9saXN0ZW4tdG8tZXZlbnRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hbmFseXRpY3MvbGlzdGVuLXRvLWV2ZW50cyIsInNvdXJjZUhhc2giOiIwNzhmNGZmMjllMDVmNWU4YzQ2NzBhOGVkMmRhMDhhNTY4NGYwMjI5M2YxZTMxYmJhZGMzZDJiZTc4NDJkNThiIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjEzOjUwLjc4OVoifQ== */}
+Use **webhooks** para recibir notificaciones cuando los flujos o los activos cambien de estado, para que su aplicación pueda actualizar la interfaz de usuario, iniciar el procesamiento o manejar errores.
+
+## Eventos de activo
+
+| Evento | Cuando se dispara |
+|-------|----------------|
+| `asset.created` | Asset creado a demanda |
+| `asset.updated` | Asset actualizado (por ejemplo, URL de reproducción disponible) |
+| `asset.ready` | Asset listo con todas las versiones transcodificadas |
+| `asset.failed` | Carga o procesamiento fallido |
+| `asset.deleted` | Asset eliminado |
+
+Configura un punto de conexión de webhook, luego en [Desarrolladores → Webhooks](https://livepeer.studio/dashboard/developers/webhooks) cree un webhook con su URL y seleccione los eventos de activo que necesite. Vea [Webhooks](webhooks) para verificación de firma y formato de carga útil.
+
+## Eventos de transmisión
+
+| Evento | Cuando se dispara |
+|-------|----------------|
+| `stream.started` | La transmisión está activa; la URL de HLS funciona |
+| `stream.idle` | La transmisión ya no está activa |
+| `recording.started` | La grabación comenzó en la transmisión activa |
+| `recording.ready` | La grabación está lista para descargar |
+| `recording.waiting` | La transmisión terminó con la grabación; procesamiento (a menudo ~5 min) |
+| `multistream.connected` | Conectado al destino multistream |
+| `multistream.error` | Error al conectar o transmitir al destino |
+| `multistream.disconnected` | El multistream al destino finalizó |
+
+Crea un webhook y selecciona los eventos de transmisión, grabación o multistream. Su punto de conexión recibirá el tipo de evento y el objeto relacionado (transmisión, sesión, etc.) en el cuerpo de la solicitud.
+
+## Pasos de configuración
+
+1. Implemente un punto de conexión POST que devuelva 2XX y verifique la `Livepeer-Signature` encabezado.
+2. En Studio, agrega la URL del webhook y elige los eventos.
+3. Maneja la `event` y `event_object` en tu código (por ejemplo, actualiza la base de datos, notifica al usuario, reintenta en caso de error).
+
+Ver [Webhooks](webhooks) y [Configurar y escuchar webhooks](https://livepeer.studio/docs) para configuración completa y verificación de firma.

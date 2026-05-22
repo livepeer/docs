@@ -1,0 +1,33 @@
+---
+title: Aperçu du vidéo à la demande
+description: >-
+  Concepts pour le VOD dans Livepeer Studio : actifs, lecture, enregistrements,
+  extraits et actifs chiffrés.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vdmlkZW8tb24tZGVtYW5kL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6ImE5YmQyMTI1ODRkYTEwMTFiMDYwY2JjY2ViZGZmM2QxNjE4ZWRhYWM3YzgzNDEyZDFjNDk0MzYyNGNmNzAyMmIiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mzk6MjMuNjI0WiJ9 */}
+Un **actif** dans Livepeer Studio est un objet vidéo que vous créez en téléchargeant un fichier, ou en créant une **enregistrement** ou **segment** d'un flux. Les actifs ont un identifiant unique et **ID de lecture** ; Livepeer gère les URLs de stockage, de conversion et de lecture.
+
+## Création des actifs
+
+- **Télécharger** - Utilisez le [API de chargement d'actif](https://livepeer.studio/docs/api-reference/asset/upload) (TUS recommandé pour les chargements résumables) ou [chargement via URL](https://livepeer.studio/docs/api-reference/asset/upload-via-url).[Télécharger un actif](./upload-asset).
+- **Enregistrement** - Lorsque l'enregistrement est activé sur un flux, la session peut être stockée en tant qu'actif lorsque le flux se termine.
+- **Extrait** - Les extraits créés à partir d'un flux en direct sont stockés en tant qu'actifs. Voir [Extraire un flux en direct](../livestream/clip-livestream).
+
+Webhooks : `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`.
+
+## Lecture
+
+- Utilisez le **ID de lecture** avec le [Livepeer Lecteur](../player) ou le [API Informations de lecture](https://livepeer.studio/docs/api-reference/playback/get) pour obtenir les URLs HLS/MP4.
+- Les actifs courts peuvent avoir des versions MP4 pour un temps d'initialisation rapide ; les actifs plus longs utilisent HLS. Les métriques de visionnage sont disponibles via la[API de visionnage](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics).
+
+## Actifs chiffrés
+
+Vous pouvez télécharger **vidéo chiffrée** (AES-CBC, clé chiffrée avec la clé publique de Livepeer) et contrôler l'accès via [contrôle d'accès](../access-control/overview). Voir [actifs chiffrés](./encrypted-assets).
+
+## Guides
+
+- [Télécharger un actif](./upload-asset)
+- [Lire un actif](./playback-asset)
+- [Actifs chiffrés](./encrypted-assets)
+- [Miniatures (VOD)](./thumbnails-vod)
+- [Transcoder une vidéo](./transcode-video)

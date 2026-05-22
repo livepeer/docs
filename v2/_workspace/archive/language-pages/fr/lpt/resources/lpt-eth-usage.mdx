@@ -1,0 +1,45 @@
+---
+title: LPT & ETH Fonctions du jeton
+sidebarTitle: Flux du jeton du protocole
+description: À quoi servent les jetons LPT & ETH dans le protocole Livepeer
+keywords:
+  - livepeer
+  - delegators
+  - token resources
+  - lpt eth usage
+  - token
+  - functions
+  - tokens
+  - protocol
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UiLCJzb3VyY2VIYXNoIjoiMDkxNWU3YmI4NGM5NjAzMDEwYzhhOTA5YTMyZmFkNGYyMDgzYThmNTRmY2M0YzBhMDU5MGFhMjZmMjM2OWUxMiIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMToyNjoxMy44MjlaIn0= */}
+<Note>
+  {' '}
+  This is wild to me that Gateways do not use LPT to pay orchestrators. Need to dig
+  into the why more
+</Note>
+
+### Couches de paiement
+
+Le protocole Livepeer utilise deux devises distinctes pour des objectifs différents :
+
+| Devise | Objectif                            | Utilisé par                   |
+| -------- | ---------------------------------- | ------------------------- |
+| ETH/Wei  | Paiements de service (transcodage, IA) | Portails → Orchestrateurs  |
+| LPT      | Paiement de garantie, gouvernance, récompenses       | Orchestrateurs, Délégués |
+
+La séparation est intentionnelle : ETH gère les paiements de service réels, tandis que LPT gère la gouvernance du protocole et le paiement de garantie.
+Ce design rend les coûts de service prévisibles dans une monnaie stable tout en permettant à LPT de remplir sa fonction de gouvernance
+
+**Configuration du prix**Les prix peuvent être spécifiés en wei ou convertis à partir de devises fiat[starter.go:891-908](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go#L891-L908)
+
+```go
+pricePerUnit, currency, err := parsePricePerUnit(*cfg.PricePerUnit)
+// Supports: "1000", "0.50USD", "1.5EUR" etc.
+// Converts to wei for actual payments
+```
+
+## ETH Paiements
+
+Les passerelles paient les services de transcodage et de traitement d'IA à l'aide de ETH (Ethereum), et non de jetons Livepeer (LPT). Le système de paiement est basé sur la monnaie d'Ethereum.

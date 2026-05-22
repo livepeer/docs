@@ -1,0 +1,30 @@
+---
+title: Télécharger un actif
+description: >-
+  Téléchargez des fichiers vidéo vers Livepeer Studio avec des téléchargements
+  reprises TUS ou PUT.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQiLCJzb3VyY2VIYXNoIjoiNTkyZjZjZTNhYTA3MDY1NDZiNmQ4Y2E5MWIwZDNmOWRmNDIwZDJlYTE5MWZkNjUyZjQ4NmNlNDY1YjNkYjMyOSIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozOTozNS42OThaIn0= */}
+Téléchargez des vidéos via l'API Studio Livepeer.**TUS chargement reprise** est recommandé ;**PUT** est également pris en charge.
+
+<Info>
+  TUS supports resumable uploads and is recommended for all uploads, especially large files.
+</Info>
+
+## Créez un téléchargement avec le SDK
+
+Depuis votre backend, créez un actif pour obtenir une URL de chargement (TUS ou PUT) :
+
+```javascript
+const { data } = await livepeer.asset.create({ name: "my-video.mp4" });
+// data.tusUploadUrl for TUS client on frontend
+// data.asset has asset id
+```
+
+Utilisez le **URL de chargement TUS** avec un [client TUS](https://github.com/TUS/TUS-js-client) sur le frontend pour charger le fichier. Lorsque le traitement est terminé, utilisez l'actif **ID de lecture** pour le lire. Voir [Jouer un actif](./playback-asset) et [Écouter les événements](../analytics/listen-to-events).
+
+## Étapes suivantes
+
+- [Jouer un actif](./playback-asset)
+- [Actifs chiffrés](encrypted-assets)
+- [Miniatures (VOD)](./thumbnails-vod)

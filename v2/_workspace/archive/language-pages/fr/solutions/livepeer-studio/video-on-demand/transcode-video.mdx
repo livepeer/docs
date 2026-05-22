@@ -1,0 +1,34 @@
+---
+title: Transcoder une vidéo
+description: >-
+  Utilisez l'API Transcode pour transcoder une vidéo depuis et vers un stockage
+  compatible S3 (par exemple, Storj, W3S).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8iLCJzb3VyY2VIYXNoIjoiODRiYmIxZWM2YjVkNzUwYzBjODQxMzk3ZDE5YjU4MmZhMjg0ODg5MTY4ZTQyNDkwM2YzYTMxYzFjMDBiZTFlNyIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzo0MDozMi45MjVaIn0= */}
+Le Studio Livepeer **API de transcodage** vous permet de transcoder des fichiers vidéo stockés dans **stockage compatible S3** (par exemple Storj, W3S, AWS S3). Vous spécifiez un emplacement d'entrée (bucket/chemin) et des emplacements de sortie pour HLS et/ou MP4 ; Livepeer transcode et écrit les résultats dans votre stockage.
+
+<Info>
+  The Transcode API works with any S3-compatible provider. You need valid S3 credentials (access key, secret key, endpoint, bucket) for both the source and destination.
+</Info>
+
+## Prérequis
+
+- Un [Livepeer Studio account](https://livepeer.studio) et [clé API](../reference/api).
+- Fichier vidéo déjà téléchargé dans votre bac compatible S3 (par exemple via Storj uplink, AWS CLI ou SDK S3).
+- Identifiants S3 avec accès en lecture au chemin source et accès en écriture au chemin de sortie.
+
+## Flux de base
+
+1. **Obtenir des identifiants S3** pour votre fournisseur (par exemple : [Identifiants S3 Storj](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway)).
+2. **Appelez l'API Transcode** avec :
+   - `input`: type `s3`, point de terminaison, identifiants, conteneur, chemin vers la vidéo source.
+   - `storage`: type `s3`, point de terminaison, identifiants, conteneur (et éventuellement un préfixe de chemin pour les sorties).
+   - `outputs`: par exemple "`hls: { path: "/output/hls" }`", `mp4: { path: "/output/mp4" }`.
+3. Interrogez la tâche renvoyée ou écoutez les webhooks jusqu'à ce que le travail soit terminé. Les fichiers de sortie apparaissent dans votre bucket aux chemins donnés.
+
+Pour la forme exacte de la demande et de la réponse, consultez le [référence de l'API de transcodage](https://livepeer.studio/docs/api-reference/transcode/create). Les exemples de code pour Node.js et d'autres langues sont disponibles dans les [Livepeer Studio docs](https://livepeer.studio/docs).
+
+## Guides
+
+- [Télécharger un actif](./upload-asset) - Pour télécharger et jouer dans le pipeline Studio (TUS/PUT).
+- [Aperçu des VOD](./overview) - Actifs, lecture et stockage.

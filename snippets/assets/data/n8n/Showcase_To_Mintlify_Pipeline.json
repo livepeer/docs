@@ -1,0 +1,550 @@
+{
+  "name": "Project Submission Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "formSubmit"
+      },
+      "id": "google-form-trigger",
+      "name": "Google Forms Trigger",
+      "type": "n8n-nodes-base.googleFormTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Submissions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now }}",
+            "title": "={{ $json.title }}",
+            "subtitle": "={{ $json.subtitle }}",
+            "href": "={{ $json.href }}",
+            "mediaSrc": "={{ $json.mediaSrc }}",
+            "logo": "={{ $json.logo }}",
+            "categoryTags": "={{ $json.categoryTags }}",
+            "productTags": "={{ $json.productTags }}",
+            "description": "={{ $json.description }}",
+            "cta": "={{ $json.cta }}",
+            "links": "={{ JSON.stringify($json.links) }}",
+            "discordUsername": "={{ $json.discordUsername }}",
+            "status": "pending",
+            "submissionId": "={{ $json.responseId }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-to-sheet",
+      "name": "Save to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate all fields\nconst data = $input.first().json;\nconst errors = [];\n\n// Required fields check\nconst required = ['title', 'subtitle', 'href', 'description', 'discordUsername'];\nfor (const field of required) {\n  if (!data[field] || data[field].trim() === '') {\n    errors.push(`Missing required field: ${field}`);\n  }\n}\n\n// URL validation helper\nfunction isValidUrl(string) {\n  try {\n    new URL(string);\n    return true;\n  } catch (_) {\n    return false;\n  }\n}\n\n// Validate main href\nif (data.href && !isValidUrl(data.href)) {\n  errors.push('Invalid project URL (href)');\n}\n\n// Validate mediaSrc\nif (data.mediaSrc && !isValidUrl(data.mediaSrc)) {\n  errors.push('Invalid media source URL');\n}\n\n// Validate logo\nif (data.logo && !isValidUrl(data.logo)) {\n  errors.push('Invalid logo URL');\n}\n\n// Validate links object\nif (data.links) {\n  try {\n    const links = typeof data.links === 'string' ? JSON.parse(data.links) : data.links;\n    for (const [key, value] of Object.entries(links)) {\n      if (value && !isValidUrl(value)) {\n        errors.push(`Invalid ${key} link`);\n      }\n    }\n  } catch (e) {\n    errors.push('Invalid links format');\n  }\n}\n\nreturn {\n  json: {\n    ...data,\n    isValid: errors.length === 0,\n    errors: errors,\n    errorMessage: errors.join(', ')\n  }\n};"
+      },
+      "id": "validate-submission",
+      "name": "Validate Submission",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid }}",
+              "value2": false
+            }
+          ]
+        }
+      },
+      "id": "check-if-valid",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "url": "https://discord.com/api/users/@me/channels",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipient_id",
+              "value": "={{ $json.discordUserId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "create-dm-channel-invalid",
+      "name": "Create DM Channel (Invalid)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 150]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "url": "https://discord.com/api/channels/={{ $json.id }}/messages",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "=Thank you for submitting **{{ $('Validate Submission').item.json.title }}**!\n\nUnfortunately, your submission has validation errors:\n{{ $('Validate Submission').item.json.errorMessage }}\n\nPlease correct these issues and resubmit. Thanks!"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-dm-invalid",
+      "name": "Send DM (Invalid Submission)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 150]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "url": "=YOUR_DISCORD_WEBHOOK_URL",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "=## 🚀 New Project Submission: **{{ $json.title }}**"
+            },
+            {
+              "name": "embeds",
+              "value": "=[{\n  \"title\": \"{{ $json.title }}\",\n  \"description\": \"{{ $json.subtitle }}\\n\\n**Description:** {{ $json.description }}\",\n  \"url\": \"{{ $json.href }}\",\n  \"color\": 5814783,\n  \"fields\": [\n    { \"name\": \"Categories\", \"value\": \"{{ $json.categoryTags }}\", \"inline\": true },\n    { \"name\": \"Products\", \"value\": \"{{ $json.productTags }}\", \"inline\": true },\n    { \"name\": \"Submitted by\", \"value\": \"{{ $json.discordUsername }}\", \"inline\": false }\n  ],\n  \"thumbnail\": { \"url\": \"{{ $json.logo }}\" },\n  \"footer\": { \"text\": \"Submission ID: {{ $json.submissionId }}\" }\n}]"
+            },
+            {
+              "name": "components",
+              "value": "=[{\n  \"type\": 1,\n  \"components\": [\n    {\n      \"type\": 2,\n      \"style\": 3,\n      \"label\": \"✅ Approve\",\n      \"custom_id\": \"approve_{{ $json.submissionId }}\"\n    },\n    {\n      \"type\": 2,\n      \"style\": 4,\n      \"label\": \"❌ Deny\",\n      \"custom_id\": \"deny_{{ $json.submissionId }}\"\n    }\n  ]\n}]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-approval-message",
+      "name": "Send Approval Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "discord-interaction",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "discord-webhook",
+      "name": "Discord Interaction Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 600],
+      "webhookId": "YOUR_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Discord interaction\nconst body = $input.first().json.body;\nconst customId = body.data?.custom_id || '';\nconst interactionType = body.type;\n\n// Type 3 = Message Component (button click)\n// Type 5 = Modal Submit\n\nif (interactionType === 3) {\n  // Button click\n  const submissionId = customId.split('_')[1];\n  const action = customId.startsWith('approve') ? 'approve' : 'deny';\n  \n  return {\n    json: {\n      interactionType: 'button',\n      action: action,\n      submissionId: submissionId,\n      userId: body.member?.user?.id || body.user?.id,\n      interactionToken: body.token,\n      interactionId: body.id\n    }\n  };\n} else if (interactionType === 5) {\n  // Modal submit\n  const submissionId = body.data.custom_id.split('_')[1];\n  const reason = body.data.components[0].components[0].value;\n  \n  return {\n    json: {\n      interactionType: 'modal',\n      submissionId: submissionId,\n      denyReason: reason,\n      userId: body.member?.user?.id || body.user?.id,\n      interactionToken: body.token,\n      interactionId: body.id\n    }\n  };\n}\n\nreturn { json: { interactionType: 'unknown' } };"
+      },
+      "id": "parse-interaction",
+      "name": "Parse Discord Interaction",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.interactionType }}",
+              "value2": "button"
+            }
+          ]
+        }
+      },
+      "id": "check-interaction-type",
+      "name": "Is Button Click?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.action }}",
+              "value2": "deny"
+            }
+          ]
+        }
+      },
+      "id": "check-action",
+      "name": "Is Deny?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 550]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "method": "POST",
+        "url": "=https://discord.com/api/v10/interactions/{{ $json.interactionId }}/{{ $json.interactionToken }}/callback",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": 9
+            },
+            {
+              "name": "data",
+              "value": "={\n  \"title\": \"Deny Submission\",\n  \"custom_id\": \"deny_modal_{{ $json.submissionId }}\",\n  \"components\": [\n    {\n      \"type\": 1,\n      \"components\": [\n        {\n          \"type\": 4,\n          \"custom_id\": \"deny_reason\",\n          \"label\": \"Reason for denial\",\n          \"style\": 2,\n          \"min_length\": 10,\n          \"max_length\": 500,\n          \"placeholder\": \"Please provide feedback for the submitter...\",\n          \"required\": true\n        }\n      ]\n    }\n  ]\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "show-deny-modal",
+      "name": "Show Deny Modal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Submissions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "approved",
+            "approvedBy": "={{ $json.userId }}",
+            "approvedAt": "={{ $now }}"
+          }
+        },
+        "options": {
+          "where": {
+            "values": [
+              {
+                "column": "submissionId",
+                "value": "={{ $json.submissionId }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "update-sheet-approved",
+      "name": "Update Sheet (Approved)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1050, 700]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Submissions",
+          "mode": "list"
+        },
+        "options": {
+          "where": {
+            "values": [
+              {
+                "column": "submissionId",
+                "value": "={{ $json.submissionId }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "get-submission-data",
+      "name": "Get Submission Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1250, 700]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build the project object for GitHub\nconst data = $input.first().json;\n\n// Parse links if it's a string\nlet links = data.links;\nif (typeof links === 'string') {\n  try {\n    links = JSON.parse(links);\n  } catch (e) {\n    links = {};\n  }\n}\n\n// Parse tags if they're strings\nconst categoryTags = typeof data.categoryTags === 'string' \n  ? data.categoryTags.split(',').map(t => t.trim())\n  : data.categoryTags;\n\nconst productTags = typeof data.productTags === 'string'\n  ? data.productTags.split(',').map(t => t.trim())\n  : data.productTags;\n\nconst projectObject = {\n  title: data.title,\n  subtitle: data.subtitle,\n  href: data.href,\n  mediaSrc: data.mediaSrc,\n  logo: data.logo,\n  categoryTags: categoryTags,\n  productTags: productTags,\n  description: data.description,\n  cta: data.cta,\n  links: links\n};\n\n// Format as JSX array element with proper indentation\nconst formattedProject = JSON.stringify(projectObject, null, 2)\n  .split('\\n')\n  .map(line => '  ' + line)\n  .join('\\n');\n\nreturn {\n  json: {\n    ...data,\n    formattedProject: formattedProject,\n    projectObject: projectObject\n  }\n};"
+      },
+      "id": "format-for-github",
+      "name": "Format for GitHub",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 700]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": "livepeer",
+        "repository": "docs",
+        "filePath": "path/to/your/projects.jsx",
+        "operation": "get"
+      },
+      "id": "get-github-file",
+      "name": "Get GitHub File",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1650, 700]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get current file content and new project\nconst currentContent = $input.first().json.content;\nconst newProject = $('Format for GitHub').first().json.formattedProject;\n\n// Decode base64 content\nconst decodedContent = Buffer.from(currentContent, 'base64').toString('utf-8');\n\n// Find the projects array\n// Looking for pattern: const projects = [ ... ];\nconst arrayStart = decodedContent.indexOf('const projects = [');\nconst arrayEnd = decodedContent.lastIndexOf('];');\n\nif (arrayStart === -1 || arrayEnd === -1) {\n  throw new Error('Could not find projects array in file');\n}\n\n// Insert new project before the closing bracket\nconst beforeArray = decodedContent.substring(0, arrayEnd);\nconst afterArray = decodedContent.substring(arrayEnd);\n\n// Add comma if there are existing projects\nconst needsComma = beforeArray.trim().endsWith('}');\nconst updatedContent = beforeArray + \n  (needsComma ? ',' : '') + \n  '\\n' + newProject + '\\n' + \n  afterArray;\n\n// Encode back to base64\nconst encodedContent = Buffer.from(updatedContent).toString('base64');\n\nreturn {\n  json: {\n    content: encodedContent,\n    sha: $input.first().json.sha,\n    message: `Add project: ${$('Format for GitHub').first().json.title}`\n  }\n};"
+      },
+      "id": "update-file-content",
+      "name": "Update File Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1850, 700]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": "livepeer",
+        "repository": "docs",
+        "filePath": "path/to/your/projects.jsx",
+        "operation": "edit",
+        "commitMessage": "={{ $json.message }}",
+        "fileContent": "={{ $json.content }}",
+        "additionalParameters": {
+          "sha": "={{ $json.sha }}"
+        }
+      },
+      "id": "commit-to-github",
+      "name": "Commit to GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [2050, 700]
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "method": "POST",
+        "url": "=https://discord.com/api/v10/interactions/{{ $('Parse Discord Interaction').item.json.interactionId }}/{{ $('Parse Discord Interaction').item.json.interactionToken }}/callback",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": 4
+            },
+            {
+              "name": "data",
+              "value": "={\n  \"content\": \"✅ Project **{{ $('Get Submission Data').item.json.title }}** has been approved and added to the docs!\",\n  \"flags\": 64\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "respond-to-approver",
+      "name": "Respond to Approver",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2250, 700]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.interactionType }}",
+              "value2": "modal"
+            }
+          ]
+        }
+      },
+      "id": "is-modal-submit",
+      "name": "Is Modal Submit?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 800]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Submissions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "denied",
+            "deniedBy": "={{ $json.userId }}",
+            "deniedAt": "={{ $now }}",
+            "denyReason": "={{ $json.denyReason }}"
+          }
+        },
+        "options": {
+          "where": {
+            "values": [
+              {
+                "column": "submissionId",
+                "value": "={{ $json.submissionId }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "update-sheet-denied",
+      "name": "Update Sheet (Denied)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [850, 900]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Submissions",
+          "mode": "list"
+        },
+        "options": {
+          "where": {
+            "values": [
+              {
+                "column": "submissionId",
+                "value": "={{ $json.submissionId }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "get-submission-for-denial",
+      "name": "Get Submission (Denial)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1050, 900]
+    }
+  ],
+  "connections": {
+    "Google Forms Trigger": {
+      "main": [[{ "node": "Save to Google Sheet", "type": "main", "index": 0 }]]
+    },
+    "Save to Google Sheet": {
+      "main": [[{ "node": "Validate Submission", "type": "main", "index": 0 }]]
+    },
+    "Validate Submission": {
+      "main": [[{ "node": "Is Valid?", "type": "main", "index": 0 }]]
+    },
+    "Is Valid?": {
+      "main": [
+        [{ "node": "Create DM Channel (Invalid)", "type": "main", "index": 0 }],
+        [{ "node": "Send Approval Message", "type": "main", "index": 0 }]
+      ]
+    },
+    "Create DM Channel (Invalid)": {
+      "main": [
+        [{ "node": "Send DM (Invalid Submission)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Discord Interaction Webhook": {
+      "main": [
+        [{ "node": "Parse Discord Interaction", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Discord Interaction": {
+      "main": [[{ "node": "Is Button Click?", "type": "main", "index": 0 }]]
+    },
+    "Is Button Click?": {
+      "main": [
+        [{ "node": "Check Action", "type": "main", "index": 0 }],
+        [{ "node": "Is Modal Submit?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Check Action": {
+      "main": [
+        [{ "node": "Show Deny Modal", "type": "main", "index": 0 }],
+        [{ "node": "Update Sheet (Approved)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Update Sheet (Approved)": {
+      "main": [[{ "node": "Get Submission Data", "type": "main", "index": 0 }]]
+    },
+    "Get Submission Data": {
+      "main": [[{ "node": "Format for GitHub", "type": "main", "index": 0 }]]
+    },
+    "Format for GitHub": {
+      "main": [[{ "node": "Get GitHub File", "type": "main", "index": 0 }]]
+    },
+    "Get GitHub File": {
+      "main": [[{ "node": "Update File Content", "type": "main", "index": 0 }]]
+    },
+    "Update File Content": {
+      "main": [[{ "node": "Commit to GitHub", "type": "main", "index": 0 }]]
+    },
+    "Commit to GitHub": {
+      "main": [[{ "node": "Respond to Approver", "type": "main", "index": 0 }]]
+    },
+    "Is Modal Submit?": {
+      "main": [
+        [{ "node": "Update Sheet (Denied)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Update Sheet (Denied)": {
+      "main": [
+        [{ "node": "Get Submission (Denial)", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

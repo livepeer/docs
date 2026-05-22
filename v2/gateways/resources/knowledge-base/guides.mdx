@@ -1,0 +1,287 @@
+---
+title: 'Gateway guides'
+sidebarTitle: 'Guides'
+description: 'Curated how-to guides, walkthroughs, and tutorials for running Livepeer gateways — covering off-chain AI setup, remote signers, BYOC, video transcoding, payments, and production operations.'
+purpose: landing
+keywords: ["livepeer", "gateway", "guides", "tutorials", "off-chain", "remote signer", "BYOC", "AI gateway", "go-livepeer"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+pageType: landing
+audience: gateway-operator
+lastVerified: '2026-03-17'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+A curated index of every how-to guide, walkthrough, and tutorial for running a Livepeer gateway. Covers off-chain AI gateways, remote signers, BYOC pipelines, video transcoding, payment mechanics, and production operations.
+
+<Note>
+This index covers operator-side setup. If you are a developer looking to **use** a gateway via the API or SDK, see the [Developers tab](/v2/developers/portal).
+</Note>
+
+<CustomDivider />
+
+## Getting started
+
+<CardGroup cols={2}>
+  <Card title="Official Gateway Setup Guide" href="https://docs.livepeer.org/gateways/run-a-gateway/gateway-setup" icon="rocket">
+    The canonical operator quickstart in these docs. Binary or Docker, gateway flags, verify the node is running. Start here.
+  </Card>
+  <Card title="Livepeer Gateway Path" href="https://docs.livepeer.org/gateways/gateway-path" icon="map">
+    Decision matrix: video vs AI gateway, on-chain vs off-chain, hosted service vs self-hosted. Choose your entry point before touching any config.
+  </Card>
+  <Card title="go-livepeer Releases (GitHub)" href="https://github.com/livepeer/go-livepeer/releases" icon="download">
+    Official binary releases for Linux (amd64 and arm64). Always download a tagged release for production use.
+  </Card>
+  <Card title="Why Run a Gateway" href="https://docs.livepeer.org/gateways/guides/operator-considerations/business-case" icon="lightbulb">
+    Business case for self-hosting: cost savings at scale, full orchestrator control, lower latency, and inference fee capture.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Off-chain AI gateway setup
+
+These guides cover the **recommended path** for AI workloads: the off-chain gateway with a remote signer, introduced in Q4 2025 via PRs [#3791](https://github.com/livepeer/go-livepeer/pull/3791) and [#3822](https://github.com/livepeer/go-livepeer/pull/3822).
+
+<Note>
+Off-chain mode removes all Ethereum dependencies from the gateway. No ETH, no Arbitrum RPC, no local signing key — all of that is handled by the remote signer. This is the correct starting point for all new AI gateway deployments.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="AI Gateway Quickstart (Off-chain)" href="https://docs.livepeer.org/gateways/quickstart/AI-prompt" icon="bolt">
+    Minimal command to run an off-chain AI gateway with Docker, pointed at a community remote signer and a local or public orchestrator.
+  </Card>
+  <Card title="Remote Signers: Design and Setup" href="https://docs.livepeer.org/gateways/payments/remote-signers" icon="key">
+    Technical explanation of what a remote signer does, the signing protocol (getOrchInfoSig → signTicket), stateless design, and how to point your gateway at one.
+  </Card>
+  <Card title="Elite Encoder Remote Signer (Community-hosted)" href="https://signer.eliteencoder.net/" icon="server">
+    Community-hosted remote signer with free ETH for testing. Confirmed operational by Elite Encoder in #local-gateways Discord.
+  </Card>
+  <Card title="Orchestrator Discovery for Off-chain Gateways" href="https://github.com/j0sh/livepeer-python-gateway/tree/main/examples" icon="search">
+    Three discovery methods: explicit orchAddr list, discovery webhook URL, or the remote signer GetOrchestrators endpoint. Python gateway SDK examples included.
+  </Card>
+  <Card title="Remote Signers Design Doc (PR #3822)" href="https://github.com/livepeer/go-livepeer/pull/3822" icon="file-code">
+    Canonical technical specification for remote signing by j0sh. PM bookkeeping, state design, alternatives considered, and security implications.
+  </Card>
+  <Card title="AI Configuration Reference" href="https://docs.livepeer.org/gateways/setup/configure/ai-configuration" icon="sliders">
+    AI-specific flags: `-aiWorker`, `-orchAddr`, `-remoteSignerAddr`, ports, and startup log verification.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## BYOC — Bring Your Own Container
+
+BYOC lets you attach any Docker container as a compute pipeline on the Livepeer network. It is the primary path for running custom AI workloads — including CPU-only pipelines — without a GPU.
+
+<CardGroup cols={2}>
+  <Card title="BYOC Smoke-Test Tutorial: CPU Gateway + Orchestrator (Off-chain)" href="/v2/gateways/guides/tutorials/byoc-cpu-tutorial" icon="cpu">
+    Step-by-step: run a gateway and orchestrator on one machine using a CPU Docker container, test end-to-end with off-chain payments via the community remote signer, then take it to production on-chain.
+  </Card>
+  <Card title="Creating a Custom Live Pipeline (ai-runner)" href="https://github.com/livepeer/ai-runner/blob/main/docs/custom-pipeline.md" icon="puzzle-piece">
+    Official guide: implement the Pipeline interface, define custom params, build a Docker image extending `livepeer/ai-runner:live-base`. Uses scope-runner as a reference.
+  </Card>
+  <Card title="Scope Runner (Reference BYOC Implementation)" href="https://github.com/livepeer/scope-runner" icon="box">
+    Production reference implementation of a custom BYOC pipeline. Use as a template when building your own container.
+  </Card>
+  <Card title="BYOC Payments (PR #3866)" href="https://github.com/livepeer/go-livepeer/pull/3866" icon="coins">
+    BYOC remote signer payments PR by Elite Encoder. Token refresh, remote signer changes for external capabilities, and how BYOC discovery differs from LV2V (no gRPC for OrchestratorInfo).
+  </Card>
+  <Card title="Python Gateway SDK with BYOC" href="https://github.com/j0sh/livepeer-python-gateway" icon="python">
+    livepeer-python-gateway supports BYOC session management, orchestrator discovery, and remote signer payments. The `examples/` folder is the best starting point.
+  </Card>
+  <Card title="ComfyUI BYOC Integration (Elite Encoder)" href="https://github.com/eliteprox/livepeer-python-gateway/commit/e80e539ee4336afe36543e1fa5380dd0d6c7c0f9" icon="wand-magic-sparkles">
+    BYOC implementation using livepeer-python-gateway as a ComfyUI node backend. Tested stable for multi-minute streams with LV2V payments and remote signer from main.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Video gateway (on-chain transcoding)
+
+<CardGroup cols={2}>
+  <Card title="Run a Video Gateway" href="https://docs.livepeer.org/gateways/setup/run-a-gateway" icon="video">
+    Full setup for a video transcoding gateway: RTMP input on port 1935, on-chain ETH key, Arbitrum RPC, and orchestrator connection.
+  </Card>
+  <Card title="On-chain Requirements" href="https://docs.livepeer.org/gateways/run-a-gateway/requirements/on-chain" icon="ethereum">
+    ETH deposit and reserve requirements, Arbitrum RPC setup, wallet management, and the `livepeer_cli` commands to deposit and activate.
+  </Card>
+  <Card title="Video Configuration" href="https://docs.livepeer.org/gateways/setup/configure/video-configuration" icon="gear">
+    Video-specific flags: `-broadcaster`, RTMP port, transcode profiles, segment size, and webhook auth config.
+  </Card>
+  <Card title="Advanced Transcoding Config" href="https://docs.livepeer.org/gateways/setup/transcoding" icon="sliders">
+    Output profiles, per-capability pricing, and `setbroadcastconfig` CLI commands for production transcoding setups.
+  </Card>
+  <Card title="Bridge LPT to Arbitrum" href="https://docs.livepeer.org/gateways/resources/technical/bridge-lpt-to-arbitrum" icon="bridge-water">
+    How to move LPT from Ethereum mainnet to Arbitrum One for on-chain registration and staking.
+  </Card>
+  <Card title="Livepeer Explorer" href="https://explorer.livepeer.org" icon="chart-bar">
+    Monitor your gateway's activity, connected orchestrators, and payment ticket activity on-chain.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Dual gateway (video and AI on the same node)
+
+<CardGroup cols={2}>
+  <Card title="Dual Configuration Guide" href="https://docs.livepeer.org/gateways/setup/configure/dual-configuration" icon="layer-group">
+    Run video transcoding and AI inference from the same go-livepeer instance. Port assignments, flag combinations, and pitfalls to avoid.
+  </Card>
+  <Card title="Gateway Architecture Overview" href="https://docs.livepeer.org/gateways/about/architecture" icon="diagram-project">
+    System diagram covering on-chain gateway, off-chain gateway, and dual-mode operation. Updated for remote signers and the clearinghouse model.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Payments and economics
+
+<CardGroup cols={2}>
+  <Card title="How Payments Work" href="https://docs.livepeer.org/gateways/payments/how-payments-work" icon="circle-dollar-to-slot">
+    PM mechanics: ticket face value, per-pixel pricing for AI inference, per-segment pricing for video, deposit/reserve lifecycle.
+  </Card>
+  <Card title="Pricing Configuration" href="https://docs.livepeer.org/gateways/setup/configure/pricing-configuration" icon="tag">
+    Set `-maxPricePerUnit` and `-maxPricePerCapability`, format the AI pricing JSON, and understand price negotiation between gateway and orchestrators.
+  </Card>
+  <Card title="Payment Clearinghouse" href="https://docs.livepeer.org/gateways/payments/payment-clearinghouse" icon="building-columns">
+    What a clearinghouse is: remote signer + user management + auth + accounting. Current status (active development) and NaaP dashboard as the reference implementation.
+  </Card>
+  <Card title="NaaP Dashboard (JWT Auth Demo)" href="https://github.com/livepeer/naap" icon="id-card">
+    Network as a Platform dashboard. Implements JWT issuer service (SIWE → user-scoped JWT) and Developer API Keys. Reference for building user auth on top of a remote signer.
+  </Card>
+  <Card title="Arbitrum Exchanges Reference" href="https://docs.livepeer.org/gateways/resources/technical/arbitrum-exchanges" icon="arrows-rotate">
+    Exchanges where you can acquire ETH on Arbitrum One for gateway PM deposits.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Orchestrator discovery
+
+<CardGroup cols={2}>
+  <Card title="Connect with Orchestrator Offerings" href="https://docs.livepeer.org/gateways/setup/connect/connect-with-offerings" icon="link">
+    How an on-chain gateway discovers and selects orchestrators: stake-weighted for video, capability-based for AI.
+  </Card>
+  <Card title="Discover Orchestrator Offerings" href="https://docs.livepeer.org/gateways/setup/connect/discover-offerings" icon="magnifying-glass">
+    Browsing available orchestrators by capability, model support, and pricing via the Livepeer Marketplace.
+  </Card>
+  <Card title="select_orchestrator.py Example (SDK)" href="https://github.com/j0sh/livepeer-python-gateway/blob/main/examples/select_orchestrator.py" icon="python">
+    Code example: discovery via the remote signer's GetOrchestrators endpoint, filtered by model ID and capability. First-response-wins selection strategy.
+  </Card>
+  <Card title="Elite Encoder: Orch List Endpoint Proposal" href="https://github.com/eliteprox/go-livepeer/commit/bf6f151dde3508646439f993610899ac04ee3f42" icon="list-check">
+    A simple HTTP endpoint for off-chain gateways to retrieve a list of on-chain orchestrators without a full Ethereum dependency. Proposed by Elite Encoder in #local-gateways.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Monitoring and operations
+
+<CardGroup cols={2}>
+  <Card title="Monitor and Optimise" href="https://docs.livepeer.org/gateways/guides/monitoring-and-tooling/monitoring-setup" icon="gauge">
+    Key metrics, ETH balance monitoring, ticket redemption rates, and log patterns indicating payment or session failures.
+  </Card>
+  <Card title="Gateway Introspection with Loki" href="https://docs.livepeer.org/gateways/gateway-tools/gateway-introspection" icon="magnifying-glass-chart">
+    Query gateway logs via the Loki API at `loki.livepeer.report`. Pre-built queries for session starts, payment failures, and orchestrator errors.
+  </Card>
+  <Card title="Gateway Middleware" href="https://docs.livepeer.org/gateways/gateway-tools/gateway-middleware" icon="shield-halved">
+    Add auth, rate limiting, and request routing in front of your gateway. Patterns for the Gateway-as-a-Service provider persona using go-livepeer webhook auth hooks.
+  </Card>
+  <Card title="Production Log Monitoring Guide (Forum)" href="https://forum.livepeer.org" icon="terminal">
+    Forum guide on structured logging, alerting, and pattern matching for production gateway nodes. Search "Production Log Monitoring" on the forum.
+  </Card>
+  <Card title="tools.livepeer.cloud — Gateway Tools" href="https://tools.livepeer.cloud" icon="toolbox">
+    Community tool suite for network operators: stream tester, orchestrator explorer, performance dashboards. Run by the Livepeer.Cloud SPE.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Community SDKs and alternative gateway implementations
+
+<CardGroup cols={2}>
+  <Card title="livepeer-python-gateway (j0sh)" href="https://github.com/j0sh/livepeer-python-gateway" icon="python">
+    Reference Python gateway SDK. Implements LV2V payments, remote signer integration, BYOC support, orchestrator discovery, and session management. Actively maintained by j0sh (Livepeer).
+  </Card>
+  <Card title="OrchestratorSession Class (Elite Encoder PR)" href="https://github.com/eliteprox/livepeer-python-gateway/tree/pr/pricing-session-orchestrator-info/examples" icon="code-branch">
+    Combines discovery, selection, payment refresh, and stream management in a single SDK entry point. Spec documented in Elite Encoder's gist.
+  </Card>
+  <Card title="j0sh Ecosystem Notes Gist" href="https://gist.github.com/j0sh/0ee58c48ac00739bd10babc44dc293da" icon="note-sticky">
+    j0sh's working notes on the gateway ecosystem: SDK design, clearinghouse thinking, discovery architecture, and open problems. Updated periodically.
+  </Card>
+  <Card title="Elite Encoder OrchestratorSession Spec" href="https://gist.github.com/eliteprox/a018fc30ee3366220873469c496b8c75" icon="file-lines">
+    Spec for the OrchestratorSession class tying payment refresh, publish, and subscription together as one managed session. The foundation of the BYOC SDK work.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Gateway-as-a-Service (Provider persona)
+
+<CardGroup cols={2}>
+  <Card title="Operator Support & Programmes" href="https://docs.livepeer.org/gateways/guides/roadmap-and-funding/operator-support" icon="briefcase">
+    Revenue models: inference fees, SPE grants, Foundation programmes, and the NaaP approach to building a gateway business on top of the Livepeer network.
+  </Card>
+  <Card title="Livepeer.Cloud — How to Run a Gateway Node" href="https://livepeer.cloud/how-to-run-a-livepeer-gateway-node" icon="cloud">
+    Livepeer.Cloud SPE's own operator guide. Real-world operational detail from an active multi-region gateway provider.
+  </Card>
+  <Card title="NaaP: Network as a Platform" href="https://github.com/livepeer/naap" icon="network-wired">
+    Dashboard and tooling for Gateway-as-a-Service operators. API key management, JWT auth, Developer API Keys, and remote signer plugin integration.
+  </Card>
+  <Card title="SPE Grants and Treasury Proposals" href="https://livepeer.org/grants" icon="file-invoice-dollar">
+    Foundation grants for gateway operators. Existing examples include the Cloud SPE and LLM SPE. Apply via the grants programme or governance forum.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Blog posts and deep dives
+
+<CardGroup cols={2}>
+  <Card title="A Real-Time Update to the Livepeer Network Vision (Nov 2025)" href="https://blog.livepeer.org/a-real-time-update-to-the-livepeer-network-vision/" icon="newspaper">
+    Clearest statement of the gateway's role: routing AI inference, 72% of fees from AI, the path to a diverse gateway ecosystem.
+  </Card>
+  <Card title="Introducing Livepeer Cascade (Feb 2025)" href="https://blog.livepeer.org/introducing-livepeer-cascade-a-vision-for-livepeers-future-in-the-age-of-real-time-ai-video/" icon="newspaper">
+    Strategic vision. Gateways are the distribution layer for real-time AI video. Contextualises the off-chain and remote signer investment.
+  </Card>
+  <Card title="Building Real-Time AI Video Effects with ComfyStream (Feb 2025)" href="https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/" icon="newspaper">
+    ComfyStream as a backend inference engine via a Livepeer gateway → orchestrator pipeline. Architecture, frame rates, and live demo.
+  </Card>
+  <Card title="ComfyUI and Real-Time Video AI Processing (Jan 2025)" href="https://blog.livepeer.org/comfyui-and-real-time-video-ai-processing/" icon="newspaper">
+    DAG architecture, pipeline design, and real-time use cases — from the gateway operator's perspective.
+  </Card>
+  <Card title="Builder Story: StreamDiffusionTD + Daydream API (Sep 2025)" href="https://blog.livepeer.org/builder-story-dotsimulate-x-daydream/" icon="newspaper">
+    Gateway + BYOC-style pipeline powering a live generative video performance using TouchDesigner + StreamDiffusion.
+  </Card>
+  <Card title="Introducing Daydream Beta (Sep 2025)" href="https://blog.livepeer.org/introducing-daydream/" icon="newspaper">
+    Daydream is a hosted gateway and API layer on top of the Livepeer network. Useful reading to understand what a hosted gateway provides before deciding whether to self-host.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Video walkthroughs
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Gateway Node Setup (YouTube — Titan Node)" href="https://www.youtube.com/results?search_query=livepeer+gateway+setup+titan+node" icon="youtube">
+    Community video walkthrough of the full gateway setup process. Covers binary install, flags, and on-chain registration.
+  </Card>
+  <Card title="ComfyStream Live AI Demo" href="https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/" icon="play">
+    Video demo of ComfyStream processing live video via a gateway → orchestrator pipeline with real-time AI effects.
+  </Card>
+  <Card title="Livepeer Dev Office Hours (bi-weekly)" href="https://www.livepeer.org/dev-hub" icon="calendar">
+    Bi-weekly video calls hosted by the Foundation. ComfyUI demos, coordinated gateway development, ecosystem priority updates. Calendar link in the Dev Hub.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+<Note>
+Missing a guide? Open an issue at [github.com/livepeer/docs/issues](https://github.com/livepeer/docs/issues) or post in [#lounge on Discord](https://discord.gg/livepeer).
+</Note>

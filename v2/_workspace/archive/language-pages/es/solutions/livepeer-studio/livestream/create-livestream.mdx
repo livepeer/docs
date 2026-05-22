@@ -1,0 +1,76 @@
+---
+title: Crear una transmisión en vivo
+description: >-
+  Crea una transmisión en vivo con la API de Studio Livepeer y obtén una clave
+  de transmisión y un ID de reproducción.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0iLCJzb3VyY2VIYXNoIjoiNTQzMGM5YWZiM2YzYjc0Y2UyZDkyZmVkZjMzZTBmYzExMjQyY2U2ODZjODU3MWVmZjBmZDY4NjA3YjJjYjA3OCIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyNDozMC4zNTRaIn0= */}
+Cree una transmisión a través de la API o SDK para obtener una **clave de transmisión** (para presentadores) y un **ID de reproducción** (para espectadores). El ejemplo siguiente utiliza la [API Crear Transmisión](https://livepeer.studio/docs/api-reference/stream/create).
+
+## Crea un stream con el SDK
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const { data } = await livepeer.stream.create({
+      name: "my-stream",
+    });
+
+    console.log("Stream key:", data.streamKey);
+    console.log("Playback ID:", data.playbackId);
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    livepeer = Livepeer(api_key=os.environ["LIVEPEER_API_KEY"])
+    response = livepeer.stream.create({"name": "my-stream"})
+
+    if response.stream:
+        print("Stream key:", response.stream.stream_key)
+        print("Playback ID:", response.stream.playback_id)
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+        "github.com/livepeer/livepeer-go"
+        "context"
+    )
+
+    func main() {
+        client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_API_KEY")))
+        ctx := context.Background()
+        res, err := client.Stream.Create(ctx, livepeer.StreamCreationPayload{
+            Name: livepeer.String("my-stream"),
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            fmt.Println("Stream key:", *res.Stream.StreamKey)
+            fmt.Println("Playback ID:", *res.Stream.PlaybackId)
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Usa la clave de transmisión y el ID de reproducción
+
+- **Clave de transmisión** - Dásela al emisor. Ellos la ingresan en OBS (o otro codificador) o la usan para[transmisión WebRTC en el navegador](livestream-from-browser). Mantén la clave de la transmisión en secreto; cualquiera que la tenga puede enviar video a la transmisión.
+- **ID de reproducción** - Úsalo en tu aplicación para reproducir la transmisión (por ejemplo, con el [Livepeer Reproductor](../player) o la [API de información de reproducción](https://livepeer.studio/docs/api-reference/playback/get). Puedes exponer el ID de reproducción a los espectadores.
+
+## Pasos siguientes
+
+- [Reproducir un livestream](./playback-livestream) - Reproduce el stream en tu aplicación.
+- [Transmitir con OBS](stream-via-obs) - Configura OBS con la clave de transmisión.
+- [Transmitir en vivo desde el navegador](livestream-from-browser) - Transmite con WebRTC desde el navegador.
+- [Multidifusión](multistream) - Envía la transmisión a múltiples destinos.

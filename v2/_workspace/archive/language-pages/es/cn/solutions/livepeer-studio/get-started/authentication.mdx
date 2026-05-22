@@ -1,0 +1,44 @@
+---
+title: 身份验证
+description: 了解如何对请求 Livepeer Studio API 进行身份验证
+keywords:
+  - livepeer
+  - studio
+  - authentication
+  - api key
+  - cors
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2dldC1zdGFydGVkL2F1dGhlbnRpY2F0aW9uLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9nZXQtc3RhcnRlZC9hdXRoZW50aWNhdGlvbiIsInNvdXJjZUhhc2giOiIzMjU3OTA2NjRhN2RiZmNkZjc2YTlhZDllYTA0MThiNGUzZWMwYzRmY2VhMmY2NGE1YjY4MGEwM2RkMDVlNjFhIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjE5OjE3LjEzNVoifQ== */}
+# 认证
+
+Livepeer API 使用 API 密钥来验证和授权请求。您可以通过 Livepeer Studio 管理和查看您的 API 密钥。发送请求时，您需要在 "`Authorization`" 标头中添加 "`Bearer`" 前缀。
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+需要注意的是，您的 API 密钥具有重要的权限，因此必须确保它们的安全和保密！请勿在 GitHub 或其他公开可访问的地方分享您的密钥 API。
+
+默认情况下，API 密钥只能从后端服务器使用。这是为了确保最大安全性，并防止您不小心将密钥 API 包含在公共网页中而暴露您的账户。
+
+## CORS-Enabled Keys
+
+<Warning>
+  Please read the below documentation in its entirety before using CORS-enabled API keys. **There is a different security model for CORS keys.**
+</Warning>
+
+Studio 支持创建 CORS-Enabled API 密钥。这是生成 API 密钥时的一个特殊选项，允许网页直接向 Studio 发起请求，而不是来自您的后端。**直接**到 Studio。
+
+### 使用 CORS 密钥的安全性
+
+**CORS-Enabled API 密钥的安全模型有所不同。** 由于任何用户都可以访问这些密钥，资产和流的ID必须对不应拥有它们的管理员控制权的人保密。例如，观看者只能访问播放ID，因为知道资产ID（以及嵌入在网页中的CORS启用API密钥）允许他们对资产进行更改。**必须** 对任何人保密，这些人不应拥有对它们的管理员控制权。例如，观看者只能访问播放ID，因为知道资产ID（以及嵌入在网页中的CORS启用API密钥）允许他们对资产进行更改。
+
+对于流也是如此 - 如果用户同时拥有流ID和CORS API密钥，他们可以修改流或查看流密钥。如果观看者拥有流ID + CORS API密钥，他们可以劫持流。**一个`playbackId` 应仅向观看者公开。**
+
+## 最佳实践
+
+1. **默认使用后端 API 密钥** - 仅在绝对必要时使用启用 CORS 的密钥
+2. **永远不要提交 API 密钥** - 使用环境变量或安全的密钥管理
+3. **定期轮换密钥** - 尤其是如果您怀疑某个密钥已被泄露
+4. **使用单独的密钥** - 用于开发和生产环境的不同密钥

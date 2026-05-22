@@ -1,0 +1,1087 @@
+{
+  "report_kind": "page-research",
+  "report_id": "page-content-research-2026-03-16-1f1683e21411",
+  "generated_at": "2026-03-16T14:10:07.527Z",
+  "scope": {
+    "target_files": [
+      "v2/gateways/guides/monitoring-and-tooling/health-checks.mdx",
+      "v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx",
+      "v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx",
+      "v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx",
+      "v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx"
+    ]
+  },
+  "claims_reviewed": [
+    {
+      "file": "v2/gateways/guides/monitoring-and-tooling/health-checks.mdx",
+      "extracted_claims": [
+        "HTTP health endpoint Confirms the gateway process is running and responding on the configured port ( default: 8935 ).",
+        "Any non 200 response or connection refused means the process is not running or the port is wrong.",
+        "Select Option 1: Get node status from the interactive menu.",
+        "Node Type Checks On chain only A Video gateway is healthy when: 1.",
+        "ETH deposit is non zero (see On chain Checks below) 3.",
+        "At least one Orchestrator is reachable 4.",
+        "Verify connected Orchestrators via (Option 1) or the HTTP API: An empty array means no Orchestrators are connected.",
+        "Test RTMP ingest Push a test stream to the RTMP port ( default: 1935 ): If the gateway is healthy, transcoding activity appears in the logs ( for verbose).",
+        "Off chain or On chain An AI gateway is healthy when: 1.",
+        "At least one Orchestrator in is reachable (off chain) or discoverable via protocol (on chain) 3.",
+        "Ask in for current addresses.",
+        "On chain (video component requires on chain) A Dual gateway runs both video and AI workloads on the same port."
+      ],
+      "matched_claim_families": []
+    },
+    {
+      "file": "v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx",
+      "extracted_claims": [
+        "The Gateway must already be running for quick verification, see .",
+        "Setup Configuration Create or update to scrape the Gateway: All Gateway types (Video, AI, Dual) expose metrics on the same port (default 8935).",
+        "Performance Metric What it shows Alert threshold Successfully transcoded segments (counter) Calculate success rate (see queries below) End to end transcoding latency Alert when avg Cumulative failed transcode count Alert on rate increase Mid stream Orchestrator changes Alert on high rate Active transcoding sessions Capacity planning Payments Metric What it shows Alert threshold Remaining ETH deposit (wei) Alert when (0.01 ETH) Remaining ETH reserve (wei) Alert when (0.005 ETH) ETH value of tickets issued Budget tracking Failed ticket creation Alert on any increase Arbitrum gas price oracle Alert on spike and are the most critical alerts.",
+        "Metric What it shows Alert threshold Active AI sessions Capacity planning Configured session limit Alert when Orchestrator discovery failures Alert on any increase Failed job submissions Alert on rate increase AI specific inference latency (per pipeline, per model) is not currently exposed via .",
+        "For AI inference latency monitoring, use or instrument the application layer.",
+        "GPU monitoring via HTTP API: Key fields to watch: / approach to 100% precedes model load failures sustained 100% during low volume periods indicates a bottleneck When to separate workloads: Consider splitting video and AI onto separate nodes when: GPU memory is consistently above 85% AI model loading causes video transcoding latency spikes rate increases during AI inference peaks See for architecture patterns.",
+        "Grafana Dashboards The Docker stack includes three starter Grafana dashboards: Active sessions, success rate, transcoding latency, and Orchestrator connectivity.",
+        "Realtime ratios, latency distribution (p50, p95, p99), and segment success/failure breakdown.",
+        "Custom panels to consider adding: Deposit depletion forecast (linear regression on over 24h) Session count vs limit as a percentage gauge AI discovery error rate overlaid with session count (correlation check) Alert Rules Critical Warning Related Pages Full table of all livepeer metrics."
+      ],
+      "matched_claim_families": []
+    },
+    {
+      "file": "v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx",
+      "extracted_claims": [
+        "Find the Gateway The Gateway's ETH address is shown in Option 1 (Get node status) under ETH Account.",
+        "Navigate to: Key Arbiscan tabs: Tab What it shows Transactions All outgoing transactions (bridging, deposits) Internal Txns Contract initiated transfers ticket redemptions appear here Token Transfers ERC 20 token movements (LPT bridging) Contract Events The contract emits events for every deposit, reserve, and redemption action: Event Meaning When it fires ETH added to Gateway deposit livepeer cli Option 11 (Deposit broadcasting funds) ETH added to reserve Reserve set during deposit flow Orchestrator redeemed a winning ticket Each winning ticket redemption Withdrawal unlock period started Unlock called on deposited funds Funds withdrawn after unlock period Withdrawal after unlock expires To find redemptions against a Gateway: filter Arbiscan events by the TicketBroker contract address, then filter by events where the field matches the Gateway address.",
+        "For the current TicketBroker address, see .",
+        "Create an Arbiscan account at 2.",
+        "Navigate to My Account Watch List Add Address 3.",
+        "Enter the Gateway ETH address 4.",
+        "Select notification triggers: \"Transaction sent to\" and \"Transaction sent from\" 5.",
+        "Gas Monitoring Arbitrum gas fees are generally 90% to over 99% cheaper than Ethereum mainnet, with typical transactions costing only a few cents (approx.",
+        "As a Layer 2 rollup, Arbitrum bundles transactions, significantly reducing costs compared to the high fees often seen on Ethereum, especially during congestion Gas Prices are not generally a cause of error since the mirgration to Arbitrum from Ethereum Mainnet.",
+        "Current Gas Price The response is in wei.",
+        "Convert to Gwei (divide by 1e9) for a human readable figure.",
+        "Gas spike response During sustained high gas periods: 1."
+      ],
+      "matched_claim_families": []
+    },
+    {
+      "file": "v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards.mdx",
+      "extracted_claims": [
+        "Quick Reference livepeer cli Option 1 (Get node status) for the current balance.",
+        "livepeer cli for what the node currently sees.",
+        "For AI Orchestrators specifically, Livepeer Tools shows which pipelines are active network wide.",
+        "livepeer cli and the HTTP API show current state only.",
+        "Overview Tool What it shows Node types Access Livepeer Explorer On chain data: Orchestrators, staking, Gateway registrations Video Dual Livepeer Tools Gateway performance metrics, network wide AI view Video AI Dual Arbiscan Contract events: ticket redemptions, deposit changes, gas Video Dual livepeer cli Local node status: deposit, reserve, sessions, config Video AI Dual CLI on host or Docker CLI HTTP API Programmatic node status and configuration Video AI Dual Tools and Dashboards Detail Livepeer Explorer The Livepeer Explorer is the primary tool for on chain data about the network.",
+        "Gateway specific views in the Explorer are currently in development.",
+        "Orchestrator discovery: Browse active Orchestrators, their capacity, advertised price per pixel, stake, and uptime.",
+        "Gateway Explorer (Preview) Status: In Development <GotoCard relativePath=\"https://explorer.livepeer.org\" icon=\"link\" label=\"Livepeer Explorer\" text=\"Browse Orchestrators, Gateways, and staking on Arbitrum One\" / <GotoCard relativePath=\"https://github.com/livepeer/explorer\" icon=\"github\" label=\"Explorer Repository\" text=\"Open source contribute or self host the Explorer\" / Cloud SPE Tools A community built dashboard providing a network wide view of Gateway and Orchestrator performance metrics.",
+        "Network wide AI view: See which AI Orchestrators are active, what pipelines they support, and approximate load.",
+        "Identify whether problems (high latency, low success rates) are localised or network wide.",
+        "Historical metrics: Unlike livepeer cli which shows current state only, Livepeer Tools provides time series charts for trend analysis.",
+        "It communicates with the node over HTTP on port 5935 (the CLI port, not the Gateway port)."
+      ],
+      "matched_claim_families": []
+    },
+    {
+      "file": "v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx",
+      "extracted_claims": [
+        "If either value is zero, top up via Option 11 (Deposit broadcasting funds).",
+        "The Gateway requires a working Arbitrum RPC to issue and track payment tickets.",
+        "Deposit and reserve must be set explicitly via after the bridge confirms.",
+        "After the transaction confirms, run Option 1 (Get node status) to verify the deposit and reserve appear in the BROADCASTER STATS section (legacy term for Gateway).",
+        "Arbitrum bridge deposits are typically confirmed within 15 minutes but can take longer during congestion.",
+        "Test the RPC with and compare to Arbiscan's current block.",
+        "If these appear during active streams: 1.",
+        "Enable verbose logging for session level detail: If the Gateway is unexpectedly calling the reward function and spending gas, ensure is set in the launch command even when using a config file.",
+        "AI Issues The Livepeer AI Gateway binary is not currently available for Windows or macOS (Intel).",
+        "Off chain AI Gateways route jobs only to Orchestrators specified in that are currently online and running the requested pipeline.",
+        "Check the list (off chain): If the Orchestrator responds with its capability list and does not include the requested pipeline, it will not accept jobs regardless of connectivity.",
+        "Finding AI capable Orchestrators: community operators share endpoints contact active Orchestrators directly search for community AI Orchestrator lists Common mistake: pointing an AI Gateway at video only Orchestrators."
+      ],
+      "matched_claim_families": []
+    }
+  ],
+  "verified_claims": [
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "claim_family": "off-chain-payment-obligation",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "registry_status": "verified",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "confidence": "high",
+      "summary": "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+      "primary_evidence": {
+        "type": "repo-file",
+        "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+        "summary": "repo evidence matched",
+        "selection_score": 190,
+        "ranking_reason": "source priority 90; 10 matched terms"
+      },
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "holds no Ethereum private key",
+            "managing PM session state",
+            "signing payment tickets",
+            "clearinghouse",
+            "holds no ETH",
+            "off-chain does not mean free",
+            "remote signer",
+            "off chain payment obligation",
+            "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+            "payment guide"
+          ],
+          "matched_terms_count": 10,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 12,
+          "historical_language_hits": 2,
+          "selection_score": 190,
+          "ranking_reason": "source priority 90; 10 matched terms",
+          "selection_role": "primary",
+          "comparison_reason": "highest ranked matched source",
+          "primary_ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "Off-chain does not mean free",
+            "PM tickets",
+            "holds no ETH",
+            "clearinghouse",
+            "remote signer",
+            "off chain payment obligation",
+            "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+            "payment guide"
+          ],
+          "matched_terms_count": 8,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 11,
+          "historical_language_hits": 1,
+          "selection_score": 170,
+          "ranking_reason": "source priority 90; 8 matched terms",
+          "selection_role": "weaker",
+          "comparison_reason": "fewer matched signals than primary evidence",
+          "primary_ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "AI Off chain AI gateway } icon=\"cloud\" The gateway holds no ETH and no Ethereum key.",
+            "Payments are handled by a connected remote signer or clearinghouse.",
+            "Once a public clearinghouse reaches GA, this becomes a pure API key sign up.",
+            "The gateway holds an Ethereum keystore, signs PM tickets directly, and needs a funded deposit and reserve on Arbitrum."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "snippets": [
+            "For AI gateways running in off chain operational mode, your gateway node itself holds no ETH.",
+            "A remote signer handles all on chain payment operations.",
+            "Factor Off chain On chain Startup cost Zero community hosted signer is free ETH deposit required (~0.065 ETH + 0.03 reserve on Arbitrum) Ongoing ETH management None remote signer handles it Monitor deposit balance; top up as it depletes ETH price exposure None abstracted by signer or clearinghouse Yes volatile ETH price affects your effective compute cost Crypto knowledge required No none required at the gateway layer Yes wallet, keystore, Arbitrum RPC, bridging Time to first job Minutes (Docker command, point at remote signer) Hours (wallet setup, bridging, funding deposit) Profit Margins Your pricing to customers is entirely at the application layer the Livepeer protocol has no concept of \"gateway fees\".",
+            "You point at a community hosted remote signer (which handles the payment layer for you), connect to orchestrators, and start routing inference requests immediately with no upfront crypto cost."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "snippets": [
+            "(N/A) ~~REVIEW flags are in JSX flags for a human.~~ Human: H1 removed (was repeating frontmatter title) \"Why clearinghouses exist\" removed (redundant with payment guide router) \"Clearinghouse vs remote signer\" trimmed to brief statement with link PM internals cross referenced instead of duplicated Voice converted to entity led throughout Port 8937 → 8935 Broken link payment paths → payment guide Em dashes removed /} Protocol status: The clearinghouse protocol was implemented in and and is operational.",
+            "Public Use Status No public clearinghouse service has reached general availability as of early 2026.",
+            "The community remote signer hosted by Elite Encoder ( ) provides a testing surface in the interim.",
+            "A Payment Clearinghouse is a third party service that takes over all Ethereum related responsibilities from gateway operators and application developers."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "snippets": [
+            "A remote signer is a standalone mode that takes over all Ethereum related responsibilities from the Gateway: signing payment tickets, managing PM session state, and providing the authentication signature for Orchestrator info requests.",
+            "The Gateway communicates with the signer over the network and holds no Ethereum private key.",
+            "Remote signers were introduced in and , in January 2026.",
+            "A remote signer separates these concerns."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "gw-offchain-payment-obligation"
+        }
+      ],
+      "contradictions": [],
+      "notes": "This family exists to stop docs from collapsing 'off-chain' into 'no payment flow'. It is factual, not stylistic."
+    }
+  ],
+  "conflicted_claims": [
+    {
+      "claim_id": "gw-spe-funded-provider-examples",
+      "claim_family": "ecosystem-provider-examples",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "registry_status": "verified",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+      "primary_evidence": {
+        "type": "forum-topic",
+        "ref": "https://forum.livepeer.org/t/spe-milestone-report/3035",
+        "summary": "forum topic matched",
+        "selection_score": 125,
+        "ranking_reason": "source priority 50; 5 matched terms; claim-family source preference 14; recency 207d; state open; current-language match 1"
+      },
+      "evidence": [
+        {
+          "type": "forum-topic",
+          "ref": "https://forum.livepeer.org/t/spe-milestone-report/3035",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "forum topic matched",
+          "matched_terms": [
+            "LLM",
+            "Livepeer Cloud",
+            "Streamplace",
+            "LLM SPE",
+            "SPE"
+          ],
+          "matched_terms_count": 5,
+          "source_rank": 50,
+          "preference_score": 14,
+          "recency_score": 3,
+          "evidence_date": "2025-08-21T11:45:27.751Z",
+          "evidence_state": "open",
+          "current_language_hits": 1,
+          "historical_language_hits": 0,
+          "selection_score": 125,
+          "ranking_reason": "source priority 50; 5 matched terms; claim-family source preference 14; recency 207d; state open; current-language match 1",
+          "selection_role": "primary",
+          "comparison_reason": "highest ranked matched source",
+          "primary_ref": "https://forum.livepeer.org/t/spe-milestone-report/3035"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "snippets": [
+            "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc.",
+            "Streamplace SPE funded Commercial Product What it is: A decentralised livestreaming platform built on the AT Protocol (Bluesky ecosystem).",
+            "Streamplace enables peer to peer live video broadcasting with no centralised infrastructure requirement.",
+            "Gateway role: Streamplace embeds a Livepeer video gateway directly in its platform to handle live transcoding."
+          ],
+          "values": [
+            "LLM",
+            "Livepeer Cloud",
+            "Streamplace"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process.",
+            "SPEs run public Gateways that serve the broader network public access, new capabilities, increased demand without needing a commercial revenue stream from day one.",
+            "Currently funded SPEs operating Gateways: SPE What it funds Status Livepeer Cloud SPE Free public AI and video Gateways Active LLM SPE LLM inference routing on the Livepeer network Active How to propose an SPE: 1.",
+            "Execute and report on milestones For the full SPE guide, see ."
+          ],
+          "values": [
+            "LLM",
+            "Livepeer Cloud"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "snippets": [
+            "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant.",
+            "A Special Purpose Entity (SPE) is an organisation funded by the Livepeer treasury through a governance proposal.",
+            "SPEs are purpose built: each one has a defined mandate, a requested budget, and milestones it is accountable to deliver.",
+            "Token holders vote on SPE proposals."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-spe-funded-provider-examples"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "ecosystem-provider-examples",
+          "claim_id": "gw-spe-funded-provider-examples",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+              "values": [
+                "LLM",
+                "Livepeer Cloud",
+                "Streamplace"
+              ],
+              "snippet": "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc."
+            },
+            {
+              "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+              "values": [
+                "LLM",
+                "Livepeer Cloud"
+              ],
+              "snippet": "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process."
+            },
+            {
+              "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+              "values": [],
+              "snippet": "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant."
+            }
+          ],
+          "best_known_truth": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "Provider listings are high-risk for factual drift and should be tied to public evidence."
+    },
+    {
+      "claim_id": "gw-self-hosted-business-case",
+      "claim_family": "business-case-viability",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/operator-considerations/business-case.mdx",
+      "registry_status": "time-sensitive",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "Gateway business-case pages should keep self-hosting viability contextual: control, cost savings, support burden, and payment complexity depend on workload volume and operational mode, not on one universal recommendation.",
+      "primary_evidence": {
+        "type": "repo-file",
+        "ref": "v2/gateways/guides/operator-considerations/business-case.mdx",
+        "summary": "repo evidence matched",
+        "selection_score": 199,
+        "ranking_reason": "source priority 90; 11 matched terms; current-language match 14; historical-language penalty 3"
+      },
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "control, cost savings, and capabilities",
+            "service margin",
+            "worth it",
+            "control",
+            "cost savings",
+            "hosted gateway",
+            "no ETH required in off-chain",
+            "self-hosted",
+            "business case viability",
+            "Gateway business-case pages should keep self-hosting viability contextual: control, cost savings, support burden, and payment complexity depend on workload volume and operational mode, not on one universal recommendation.",
+            "business case"
+          ],
+          "matched_terms_count": 11,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 14,
+          "historical_language_hits": 3,
+          "selection_score": 199,
+          "ranking_reason": "source priority 90; 11 matched terms; current-language match 14; historical-language penalty 3",
+          "selection_role": "primary",
+          "comparison_reason": "highest ranked matched source",
+          "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "Off-chain does not mean free",
+            "gateway-as-a-service operator",
+            "holds no ETH and no Ethereum key",
+            "control",
+            "no ETH required in off-chain",
+            "service margin"
+          ],
+          "matched_terms_count": 6,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 11,
+          "historical_language_hits": 1,
+          "selection_score": 155,
+          "ranking_reason": "source priority 90; 6 matched terms; current-language match 11; historical-language penalty 1",
+          "selection_role": "weaker",
+          "comparison_reason": "fewer matched signals than primary evidence",
+          "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "community resources",
+            "funding",
+            "programmes",
+            "hosted gateway",
+            "business case viability",
+            "business case"
+          ],
+          "matched_terms_count": 6,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 9,
+          "historical_language_hits": 1,
+          "selection_score": 155,
+          "ranking_reason": "source priority 90; 6 matched terms; current-language match 9; historical-language penalty 1",
+          "selection_role": "weaker",
+          "comparison_reason": "fewer matched signals than primary evidence",
+          "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "snippets": [
+            "You can point at a hosted gateway and start building in minutes.",
+            "The question is whether the control, cost savings, and capabilities of owning that layer are worth it for your situation.",
+            "A hosted gateway like , or handles all infrastructure for you and provdide an application layer for service integrations.",
+            "Best when: You are building and experimenting Volume is low to moderate You do not need custom orchestrator routing or SLA policies Crypto infrastructure is not something you want to manage Limitations at scale: You pay a service margin on every request You depend on the provider's uptime, pricing, and feature roadmap You cannot customise routing, pricing caps, or access policies You have no visibility into orchestrator selection or failure patterns Best for: application developers or businesses providing their own services."
+          ],
+          "values": [
+            "cost savings",
+            "service margin",
+            "worth it"
+          ]
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "snippets": [
+            "Controls which Orchestrators the gateway can access."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-self-hosted-business-case"
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-self-hosted-business-case"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "gw-self-hosted-business-case"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "business-case-viability",
+          "claim_id": "gw-self-hosted-business-case",
+          "pages": [
+            {
+              "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+              "values": [
+                "cost savings",
+                "service margin",
+                "worth it"
+              ],
+              "snippet": "You can point at a hosted gateway and start building in minutes."
+            },
+            {
+              "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+              "values": [],
+              "snippet": "Controls which Orchestrators the gateway can access."
+            }
+          ],
+          "best_known_truth": "Gateway business-case pages should keep self-hosting viability contextual: control, cost savings, support burden, and payment complexity depend on workload volume and operational mode, not on one universal recommendation.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This family keeps gateway economics grounded in mode-specific tradeoffs rather than generic 'worth it' language."
+    }
+  ],
+  "time_sensitive_claims": [
+    {
+      "claim_id": "gw-support-contact-channel",
+      "claim_family": "gateway-support-contact-channel",
+      "entity": "gateway",
+      "canonical_owner": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "registry_status": "time-sensitive",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "confidence": "medium",
+      "summary": "Gateway support docs should keep the current contact path explicit: `#local-gateways` on Discord is the primary real-time support channel, while Forum and GitHub are the durable channels for longer discussion and issue tracking.",
+      "primary_evidence": {
+        "type": "repo-file",
+        "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+        "summary": "repo evidence matched",
+        "selection_score": 165,
+        "ranking_reason": "source priority 90; 7 matched terms; current-language match 9; historical-language penalty 1"
+      },
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "checked_on": "2026-03-17",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched",
+          "matched_terms": [
+            "#local-gateways",
+            "Forum",
+            "GitHub",
+            "primary real-time support channel",
+            "gateway support contact channel",
+            "Gateway support docs should keep the current contact path explicit: `#local-gateways` on Discord is the primary real-time support channel, while Forum and GitHub are the durable channels for longer discussion and issue tracking.",
+            "operator support"
+          ],
+          "matched_terms_count": 7,
+          "source_rank": 90,
+          "preference_score": 0,
+          "recency_score": 0,
+          "evidence_date": "",
+          "evidence_state": "repo-current",
+          "current_language_hits": 9,
+          "historical_language_hits": 1,
+          "selection_score": 165,
+          "ranking_reason": "source priority 90; 7 matched terms; current-language match 9; historical-language penalty 1",
+          "selection_role": "primary",
+          "comparison_reason": "highest ranked matched source",
+          "primary_ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "snippets": [
+            "Post to the Livepeer Forum for community discussion 4.",
+            "Forum threads are indexed by search engines and serve as a permanent record.",
+            "Submit via Forum or GitHub PR Propose an SPE if there is a gap in Gateway capacity, capability, or adoption that treasury funding could fill Join the NaaP effort the Network as a Platform reference implementation welcomes contributors at Related Pages Build a multi tenant platform with API keys, billing, and user management."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx",
+          "snippets": [
+            "Forum proposals and active SPE discussions: For the full SPE grant process, see ."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "snippets": [],
+          "values": []
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "snippets": [
+            "Look at existing approved SPE proposals on the Forum to understand the expected format and level of detail.",
+            "Once the Forum discussion has reached rough consensus, the proposal moves to an on chain vote through the Livepeer governance contract on Arbitrum.",
+            "Most proposals include a reporting cadence typically monthly or quarterly updates posted to the Forum.",
+            "SPE vs AI Video Startup Programme These are two different things serving different purposes: SPE grant AI Video Startup Programme For Organisations building public benefit gateway infrastructure Individual developers or startups building AI powered products on Livepeer Funding source LPT treasury Foundation budget Accountability On chain governance + milestone reporting Foundation programme management Timeline Multi month proposals with defined terms Programme cohort Suitable for Public gateways, ecosystem tooling, clearinghouse infrastructure App development, using (not necessarily running) Livepeer Further reading Livepeer Forum (proposals and discussion): Livepeer governance overview: see the Community and Governance tab in these docs Cloud SPE gateway and tutorials: NaaP dashboard reference implementation: Next steps Commercial business models for gateway operators who do not need treasury funding."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx",
+          "page_class": "guide",
+          "role": "inferred-page",
+          "action": "verify-only",
+          "claim_id": "gw-support-contact-channel"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "page_class": "guide",
+          "role": "inferred-page",
+          "action": "verify-only",
+          "claim_id": "gw-support-contact-channel"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "gw-support-contact-channel"
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "page_class": "guide",
+          "role": "inferred-page",
+          "action": "verify-only",
+          "claim_id": "gw-support-contact-channel"
+        }
+      ],
+      "contradictions": [],
+      "notes": "This family was added after adjudication exposed missing coverage. It should stay advisory until stronger external confirmation paths are added."
+    }
+  ],
+  "unverified_or_historical_claims": [],
+  "cross_page_contradictions": [
+    {
+      "claim_family": "ecosystem-provider-examples",
+      "claim_id": "gw-spe-funded-provider-examples",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+          "values": [
+            "LLM",
+            "Livepeer Cloud",
+            "Streamplace"
+          ],
+          "snippet": "Gateway Operators Operator Model Gateway type Daydream Livepeer Product Commercial AI video product; subscription and per use pricing AI gateway embedded in product Livepeer Studio Livepeer Product Video API for developers; per minute pricing Video gateway (on chain) Public Livepeer Cloud SPE SPE Funded Free public gateways funded by treasury SPE grant AI and video Public LLM SPE SPE Funded LLM inference routing on Livepeer network AI gateway (LLM focused) Public Streamplace SPE Funded Decentralised livestreaming platform (AT Protocol); embedded gateway Video gateway embedded in product Commercial Products Daydream Livepeer Inc."
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "values": [
+            "LLM",
+            "Livepeer Cloud"
+          ],
+          "snippet": "Funding Paths Special Purpose Entity (SPE) grants fund Gateway operators through the Livepeer treasury governance process."
+        },
+        {
+          "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+          "values": [],
+          "snippet": "Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant."
+        }
+      ],
+      "best_known_truth": "Gateway comparison and support pages should only present provider examples that are still backed by current SPE/governance or public project evidence.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "business-case-viability",
+      "claim_id": "gw-self-hosted-business-case",
+      "pages": [
+        {
+          "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+          "values": [
+            "cost savings",
+            "service margin",
+            "worth it"
+          ],
+          "snippet": "You can point at a hosted gateway and start building in minutes."
+        },
+        {
+          "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "values": [],
+          "snippet": "Controls which Orchestrators the gateway can access."
+        }
+      ],
+      "best_known_truth": "Gateway business-case pages should keep self-hosting viability contextual: control, cost savings, support burden, and payment complexity depend on workload volume and operational mode, not on one universal recommendation.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    }
+  ],
+  "propagation_queue": [
+    {
+      "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/operator-considerations/business-case.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-self-hosted-business-case"
+    },
+    {
+      "file": "v2/gateways/guides/operator-considerations/production-gateways.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-self-hosted-business-case"
+    },
+    {
+      "file": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "gw-offchain-payment-obligation"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/gateway-showcase.mdx",
+      "page_class": "guide",
+      "role": "inferred-page",
+      "action": "verify-only",
+      "claim_id": "gw-support-contact-channel"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+      "page_class": "guide",
+      "role": "inferred-page",
+      "action": "verify-only",
+      "claim_id": "gw-support-contact-channel"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-self-hosted-business-case"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "gw-support-contact-channel"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "gw-spe-funded-provider-examples"
+    },
+    {
+      "file": "v2/gateways/guides/roadmap-and-funding/spe-grant-model.mdx",
+      "page_class": "guide",
+      "role": "inferred-page",
+      "action": "verify-only",
+      "claim_id": "gw-support-contact-channel"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "claim_id": "gw-spe-funded-provider-examples",
+      "type": "forum-topic",
+      "ref": "https://forum.livepeer.org/t/spe-milestone-report/3035",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "forum topic matched",
+      "source_rank": 50,
+      "preference_score": 14,
+      "recency_score": 3,
+      "evidence_date": "2025-08-21T11:45:27.751Z",
+      "evidence_state": "open",
+      "matched_terms": [
+        "LLM",
+        "Livepeer Cloud",
+        "Streamplace",
+        "LLM SPE",
+        "SPE"
+      ],
+      "selection_score": 125,
+      "ranking_reason": "source priority 50; 5 matched terms; claim-family source preference 14; recency 207d; state open; current-language match 1",
+      "selection_role": "primary",
+      "comparison_reason": "highest ranked matched source",
+      "primary_ref": "https://forum.livepeer.org/t/spe-milestone-report/3035"
+    },
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "holds no Ethereum private key",
+        "managing PM session state",
+        "signing payment tickets",
+        "clearinghouse",
+        "holds no ETH",
+        "off-chain does not mean free",
+        "remote signer",
+        "off chain payment obligation",
+        "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+        "payment guide"
+      ],
+      "selection_score": 190,
+      "ranking_reason": "source priority 90; 10 matched terms",
+      "selection_role": "primary",
+      "comparison_reason": "highest ranked matched source",
+      "primary_ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx"
+    },
+    {
+      "claim_id": "gw-offchain-payment-obligation",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "Off-chain does not mean free",
+        "PM tickets",
+        "holds no ETH",
+        "clearinghouse",
+        "remote signer",
+        "off chain payment obligation",
+        "Payment-path docs should keep the off-chain model precise: the gateway process may hold no ETH and no key, but off-chain still pays orchestrators through PM tickets delegated to a remote signer or clearinghouse.",
+        "payment guide"
+      ],
+      "selection_score": 170,
+      "ranking_reason": "source priority 90; 8 matched terms",
+      "selection_role": "weaker",
+      "comparison_reason": "fewer matched signals than primary evidence",
+      "primary_ref": "v2/gateways/guides/payments-and-pricing/remote-signers.mdx"
+    },
+    {
+      "claim_id": "gw-self-hosted-business-case",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/operator-considerations/business-case.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "control, cost savings, and capabilities",
+        "service margin",
+        "worth it",
+        "control",
+        "cost savings",
+        "hosted gateway",
+        "no ETH required in off-chain",
+        "self-hosted",
+        "business case viability",
+        "Gateway business-case pages should keep self-hosting viability contextual: control, cost savings, support burden, and payment complexity depend on workload volume and operational mode, not on one universal recommendation.",
+        "business case"
+      ],
+      "selection_score": 199,
+      "ranking_reason": "source priority 90; 11 matched terms; current-language match 14; historical-language penalty 3",
+      "selection_role": "primary",
+      "comparison_reason": "highest ranked matched source",
+      "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+    },
+    {
+      "claim_id": "gw-self-hosted-business-case",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "Off-chain does not mean free",
+        "gateway-as-a-service operator",
+        "holds no ETH and no Ethereum key",
+        "control",
+        "no ETH required in off-chain",
+        "service margin"
+      ],
+      "selection_score": 155,
+      "ranking_reason": "source priority 90; 6 matched terms; current-language match 11; historical-language penalty 1",
+      "selection_role": "weaker",
+      "comparison_reason": "fewer matched signals than primary evidence",
+      "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+    },
+    {
+      "claim_id": "gw-self-hosted-business-case",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "community resources",
+        "funding",
+        "programmes",
+        "hosted gateway",
+        "business case viability",
+        "business case"
+      ],
+      "selection_score": 155,
+      "ranking_reason": "source priority 90; 6 matched terms; current-language match 9; historical-language penalty 1",
+      "selection_role": "weaker",
+      "comparison_reason": "fewer matched signals than primary evidence",
+      "primary_ref": "v2/gateways/guides/operator-considerations/business-case.mdx"
+    },
+    {
+      "claim_id": "gw-support-contact-channel",
+      "type": "repo-file",
+      "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+      "checked_on": "2026-03-17",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched",
+      "source_rank": 90,
+      "preference_score": 0,
+      "recency_score": 0,
+      "evidence_date": "",
+      "evidence_state": "repo-current",
+      "matched_terms": [
+        "#local-gateways",
+        "Forum",
+        "GitHub",
+        "primary real-time support channel",
+        "gateway support contact channel",
+        "Gateway support docs should keep the current contact path explicit: `#local-gateways` on Discord is the primary real-time support channel, while Forum and GitHub are the durable channels for longer discussion and issue tracking.",
+        "operator support"
+      ],
+      "selection_score": 165,
+      "ranking_reason": "source priority 90; 7 matched terms; current-language match 9; historical-language penalty 1",
+      "selection_role": "primary",
+      "comparison_reason": "highest ranked matched source",
+      "primary_ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx"
+    }
+  ],
+  "trust_summary": {
+    "unresolved_claims": 0,
+    "contradiction_groups": 2,
+    "evidence_sources": 7,
+    "explicit_page_targets": 7,
+    "inferred_page_targets": 3
+  },
+  "validation": {
+    "target_files": 5,
+    "claim_families": 0,
+    "contradictions": 2,
+    "evidence_sources": 7
+  }
+}

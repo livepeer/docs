@@ -1,0 +1,162 @@
+---
+title: Livepeer Économie du protocole
+sidebarTitle: Économie du protocole
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - livepeer protocol economics
+  - protocol
+  - economics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MiLCJzb3VyY2VIYXNoIjoiN2RkNzJiYjNjNjAwMWMyYWE1NjY2ZjE4ZWRiN2NiNzc0Yjc3NjMzODkzZmVjZjIwMDg4M2I3YWU3NjQzZjkzYSIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDEyOjU1OjMzLjk4M1oifQ== */}
+{/* This page describes:
+6. **Economics**
+
+   * Tokenomics
+   * Inflation model
+   * Staking & delegation
+   * Reward distribution
+   * Slashing
+   * Rounds 
+   
+
+*/}
+
+Livepeer utilise à la fois son jeton natif - LPT, et Ethereum (ETH) pour alimenter son réseau et compenser les acteurs pour leurs contributions.
+Le protocole Livepeer utilise un taux d'inflation dynamique et un modèle de mise en jeu pour l'accès afin d'assurer la sécurité et la fonctionnalité du réseau.
+
+Nous aborderons la tokenomique de LPT et pourquoi déléguer aux orchestrateurs reste important même lorsque l'inflation diminue.
+
+## Flux monétaire : Économie de jeton LPT
+
+### 1. **Flux de mise en jeu (Délégateurs → Orchestrateurs)**
+
+**Étape 1 : Approbation du jeton**
+Avant de lier, les délégateurs doivent approuver le BondingManager pour transférer leurs jetons LPT.
+
+**Étape 2 : Liaison**
+Les délégateurs appellent `Bond(amount, orchestratorAddress)` qui :
+- Transfère LPT du délégateur au BondingManager
+- Met à jour la mise en jeu déléguée de l'orchestrateur
+- Calcule les indices de position de pool pour l'optimisation du gaz
+- Met à jour le pool de transcodage trié par mise 
+
+**Étape 3 : Enregistrement de l'orchestrateur**
+Pour devenir un orchestrateur, un nœud doit:
+- Premièrement, lier LPT à lui-même
+- Appeler `Transcoder(rewardCut, feeShare)` avec des paramètres de commission
+- Enregistrer l'URI de service via `SetServiceURI()`
+
+Le pool de transcodage maintient les orchestrateurs triés par mise déléguée sous forme de liste chaînée, avec des indices optimisant les insertions.
+
+### 2. **Flux de récompense (Minter → Orchestrateurs → Délégateurs)**
+
+À chaque tour, les orchestrateurs actifs peuvent appeler `Reward()` pour émettre des jetons inflationnistes:
+
+**Processus de calcul des récompenses**:
+1. L'orchestrateur appelle `Reward()` sur BondingManager
+2. BondingManager interroge `CurrentMintableTokens()` depuis Minter
+3. Minter calcule : `mintable = inflation * totalSupply / bonded`
+4. Récompense distribuée proportionnellement à la mise de l'orchestrateur
+5. L'orchestrateur conserve sa commission (rewardCut)
+6. Les récompenses restantes sont distribuées proportionnellement aux délégants
+
+**Réclamer les gains**: 
+Les délégateurs doivent appeler `ClaimEarnings(endRound)` pour réaliser leurs récompenses et frais accumulés des tours précédents.
+
+### 3. **Flux de paiement (Diffuseurs → Orchestrateurs)**
+
+Le système de paiement utilise des micropaiements probabilistes pour minimiser les transactions sur la chaîne :
+
+**Étape 1 : Dépôts du diffuseur**
+Les diffuseurs financent leur compte via `FundDepositAndReserve()`:
+- **Dépôt**: Collatéral verrouillé (ne peut pas être utilisé immédiatement)
+- **Réserve**: Pool disponible pour les rachats de tickets [14](#0-13)
+
+**Étape 2 : Création de billets hors chaîne**
+Pour chaque segment vidéo traité :
+- Le diffuseur crée un billet signé avec faceValue et winProb
+- Le billet est envoyé hors chaîne à l'orchestrateur via des en-têtes HTTP
+- La plupart des billets ne gagnent pas (par ex., 1% de probabilité de gain)
+
+**Étape 3 : Validation et mise en file d'attente des billets**
+L'orchestrateur valide le billet :
+- Vérifie la signature et l'expiration
+- Calcule si le billet gagne en utilisant `recipientRand`
+- Les billets gagnants sont mis en file d'attente dans la base de données locale
+- Suivi du MaxFloat de l'expéditeur (réserve - redemptions en attente)
+
+**Étape 4 : Rédemption sur chaîne**
+Lorsque des fonds suffisants sont disponibles:
+- L'orchestrateur appelle `RedeemWinningTicket(ticket, sig, recipientRand)`
+- TicketBroker valide le ticket par rapport à l'état sur chaîne
+- Transfère `faceValue` de la réserve du diffuseur vers l'orchestrateur
+- Met à jour `claimedReserve` dans BondingManager
+
+Cela permet une réduction de coûts d'environ 99 % par rapport aux paiements sur chaîne par segment, tout en maintenant une compensation équitable grâce à la valeur attendue probabiliste.
+
+### 4. **Flux de frais (Diffuseurs → Orchestrateurs → Délégateurs)**
+
+Les orchestrateurs gagnent des frais grâce aux redemptions de tickets:
+- Les frais s'accumulent dans le pool de gains de l'orchestrateur
+- L'orchestrateur conserve sa commission (feeShare)
+- Les frais restants sont distribués aux délégataires
+- Les délégataires réclament via `ClaimEarnings()`
+
+### 5. **Flux de retrait**
+
+**Désengagement (Délégataires)**:
+1. Appel `Unbond(amount)` - crée un verrou de désengagement
+2. Attendre `UnbondingPeriod` tours (généralement 7 tours)
+3. Appeler `WithdrawStake(unbondingLockId)` - recevoir LPT en retour
+
+**Retrait de paiement (Diffuseurs)**:
+1. Appeler `Unlock()` sur TicketBroker
+2. Attendre la période de déblocage
+3. Appeler `Withdraw()` - recevoir le dépôt restant + réserve
+
+## Intégration client
+
+Le client go-livepeer abstrait toutes les interactions contractuelles via l'interface `LivepeerEthClient` interface: [15](#0-14)
+
+**Résolution des adresses de contrat**: 
+Toutes les adresses de contrat sont découvertes dynamiquement via le registre du Contrôleur en utilisant les hachages Keccak256 des noms de contrat. Cela permet des mises à niveau de contrat sans modifier le code client.[16](#0-15)
+
+## Stratégies d'optimisation du gaz
+
+### 1. **Indices de pool**
+Lors de la mise en jeu ou de l'appel de récompense, le client calcule des "hints" (positions précédentes/suivantes dans le pool de transcodage trié) pour permettre des insertions O(1) au lieu de recherches O(n) sur la chaîne.[17](#0-16)
+
+### 2. **Opérations par lots**
+Plusieurs tickets peuvent être créés hors chaîne par lots, seuls les tickets gagnants nécessitant des transactions sur la chaîne.
+
+### 3. **Tarification dynamique du gaz**
+Le client met en œuvre une gestion sophistiquée des prix du gaz, utilisant un double de frais de base avec des plafonds spécifiés par l'utilisateur pour équilibrer la vitesse de confirmation et le coût. [18](#0-17)
+
+## Résumé : Flux monétaire complet
+
+1. **Titulaire de jetons** approuve et lie LPT → **BondingManager** (staking)
+2. **Minter** crée de nouveaux LPT → **BondingManager** → **Orchestrateurs** (récompenses d'inflation)
+3. **Orchestrateurs**distribuer les récompenses → **Délégants** (moins la commission)
+4. **Diffuseurs** dépôt LPT → **TicketBroker** (réserves de paiement)
+5. **Orchestrateurs**échanger des tickets → recevoir LPT de **Courtier de tickets**(frais)
+6. **Orchestrateurs**distribuer les frais → **Délégants**(moins commission)
+7. **Délégants**revendiquer les gains de **Gestionnaire de Bonding**(récompenses accumulées + frais)
+
+Cela crée une économie circulaire où:
+- Le staking sécurise le réseau et génère des récompenses d'inflation
+- Les orchestrateurs actifs gagnent des frais des diffuseurs
+- Les délégateurs participent aux récompenses sans exécuter d'infrastructure
+- Les paiements probabilistes permettent des micropaiements rentables
+- Tous les flux sont suivis sur la chaîne avec un coût en gaz minimal
+
+## Notes
+
+- Les contrats sont déployés sur le réseau principal Ethereum (et Arbitrum pour L2)
+- Les adresses des contrats sont stockées dans le registre du contrôleur pour la mise à niveau
+- Toutes les opérations de jetons utilisent les modèles d'approbation ERC20 standard
+- Le système prend en charge les déploiements L1 et L2 avec compatibilité ascendante
+- Les opérations basées sur les tours garantissent des mises à niveau de protocole coordonnées et des transitions d'état
+- Le système de paiement probabiliste réduit les transactions sur la chaîne d'environ 99 % tout en maintenant une valeur attendue équitable pour toutes les parties

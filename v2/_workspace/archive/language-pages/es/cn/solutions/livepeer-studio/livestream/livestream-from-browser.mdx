@@ -1,0 +1,62 @@
+---
+title: 从浏览器进行直播
+description: 使用 WebRTC 和 Livepeer 广播组件或自定义 WHIP 从浏览器进行实时广播。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbGl2ZXN0cmVhbS1mcm9tLWJyb3dzZXIubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbGl2ZXN0cmVhbS1mcm9tLWJyb3dzZXIiLCJzb3VyY2VIYXNoIjoiOGU2MWZjY2ZhYWMwZjhlOGFiZDQyNGI5NDZkZTdjNzRhMTljYmE2ZmE2ZTg2ODAwZjI5ZjBlYTgwMTVjOTUzNiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozMzo1NS44MTBaIn0= */}
+浏览器内直播将实时视频从用户设备发送到 Livepeer 通过 **WebRTC**（例如 WHIP），无需 OBS。默认情况下，它优化了低延迟。
+
+## Flow
+
+1. 通过 API 创建流并获取 **流密钥**.
+2. 通过该密钥（需要 STUN/TURN）打开与 Livepeer 的 WebRTC 连接。
+3. 在浏览器中捕获摄像头、麦克风和/或屏幕，并通过 WebRTC 发送。
+4. 观众通过流 **播放 ID** 进行观看[Livepeer 玩家](../player).
+
+## 使用 Broadcast 组件
+
+使用 `@livepeer/react`, 使用 Broadcast 原语和流摄入 URL:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+import { getIngest } from "@livepeer/react/external";
+
+const streamKey = "your-stream-key";
+
+export function DemoBroadcast() {
+  return (
+    <Broadcast.Root ingestUrl={getIngest(streamKey)}>
+      <Broadcast.Container>
+        <Broadcast.Video title="Live stream" />
+        <Broadcast.Controls>
+          <Broadcast.EnabledTrigger />
+        </Broadcast.Controls>
+      </Broadcast.Container>
+    </Broadcast.Root>
+  );
+}
+```
+
+## 可嵌入的广播
+
+```html
+<iframe
+  src="https://lvpr.tv/broadcast/STREAM_KEY"
+  allow="autoplay; camera; microphone; display-capture"
+  frameborder="0"
+></iframe>
+```
+
+替换为`STREAM_KEY`您的流密钥。
+
+## 自定义 WebRTC (WHIP)
+
+1. 发送`HEAD`到`https://livepeer.studio/webrtc/{STREAM_KEY}`并按照以下步骤操作`Location` 重定向到输入 URL。
+2. 创建 `RTCPeerConnection` 从该主机获取 ICE 服务器 (STUN/TURN)。
+3.  创建 SDP 提议，收集 ICE，将提议 POST 到输入 URL，将答案设置为远程描述。
+4.  添加媒体轨道并发送。当数据包停止时检测到广播结束；不需要 DELETE。
+
+<Warning>
+  STUN/TURN are required for in-browser broadcasting. The Broadcast component and lvpr.tv broadcast page use Livepeer's servers.
+</Warning>
+
+查看 [播放](playback-livestream) 和 [优化延迟](optimize-latency).

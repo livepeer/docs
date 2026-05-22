@@ -1,0 +1,141 @@
+---
+title: 'Gateway Overview'
+description: 'What a Livepeer gateway does, the difference between video and AI gateways, and how on-chain and off-chain operation modes work.'
+sidebarTitle: 'Overview'
+keywords: ["livepeer", "gateway", "AI gateway", "video gateway", "on-chain", "off-chain", "remote signer", "clearinghouse"]
+pageType: 'overview'
+audience: 'gateway'
+status: 'current'
+---
+
+A Livepeer gateway is the access point between an application and the Livepeer network. It receives jobs from your application, routes them to GPU operators (orchestrators), handles payment, and returns results. There are two types of gateway — video and AI — and two operation modes — on-chain and off-chain. This page explains the difference and helps you identify which applies to you.
+
+<Note>
+Most existing gateway documentation was written before off-chain mode was introduced in Q4 2025. If a guide requires you to fund an Ethereum wallet or connect to Arbitrum, it assumes on-chain mode. That requirement no longer applies to AI gateway operators. Check the date on any external guide you follow.
+</Note>
+
+---
+
+## What a gateway does
+
+At runtime, a gateway does five things:
+
+1. **Receives a job** from your application — a video segment to transcode, an image generation prompt, a live video stream for AI processing.
+2. **Selects an orchestrator** from the network using a weighted algorithm that considers stake, price, and past performance.
+3. **Forwards the job** to that orchestrator over an encrypted connection.
+4. **Handles payment** via probabilistic micropayments (PM) — small cryptographic tickets sent to the orchestrator as work progresses.
+5. **Returns the result** to your application.
+
+The gateway holds no GPU. All compute happens on orchestrators. The gateway's job is routing, payment, and result delivery — nothing more.
+
+---
+
+## Video gateway vs AI gateway
+
+The same go-livepeer binary runs both types, but the operational requirements are meaningfully different.
+
+<Tabs>
+  <Tab title="Video gateway">
+    A video gateway routes live video transcoding jobs. Your application sends an RTMP stream; the gateway forwards segments to orchestrators, collects transcoded output, and returns it.
+
+    | | |
+    |---|---|
+    | **Jobs handled** | Live video transcoding |
+    | **Input** | RTMP stream (port 1935) |
+    | **ETH required** | Yes — PM deposit and reserve on Arbitrum |
+    | **Arbitrum RPC** | Yes |
+    | **Private key on node** | Yes |
+    | **GPU on gateway** | No |
+    | **Operation mode** | On-chain only |
+
+    Video gateways are used by streaming platforms, decentralised social apps, and any application needing cost-effective live video transcoding. Running a video gateway is the original Livepeer use case and has the most mature documentation.
+  </Tab>
+  <Tab title="AI gateway">
+    An AI gateway routes AI inference jobs. Your application sends a request — generate an image, process a live video stream with a model, run an LLM prompt — and the gateway forwards it to an AI-capable orchestrator.
+
+    | | |
+    |---|---|
+    | **Jobs handled** | AI inference (text-to-image, image-to-video, live video AI, LLM, and more) |
+    | **Input** | HTTP API (port 8935) |
+    | **ETH required** | No — when using off-chain mode with a remote signer |
+    | **Arbitrum RPC** | No — off-chain mode |
+    | **Private key on node** | No — off-chain mode |
+    | **GPU on gateway** | No |
+    | **Operation mode** | Off-chain (recommended) or on-chain |
+
+    AI gateways are used by app developers building on top of Livepeer AI, teams embedding gateways directly in their services, and SDK builders targeting Python, browser, or mobile environments.
+  </Tab>
+</Tabs>
+
+---
+
+## On-chain vs off-chain mode
+
+### On-chain mode
+
+In on-chain mode, the gateway holds an Ethereum signing key, funds a PM deposit and reserve balance on Arbitrum, generates and signs payment tickets directly, and polls chain state. All video transcoding gateways operate this way. On-chain mode is also available for AI gateways if you want direct PM settlement without a third-party signer.
+
+**When to use it:** You are routing video transcoding jobs, running a public gateway-as-service, or you prefer direct control over your Ethereum account and payment flow.
+
+**What you need:** An Arbitrum wallet funded with ETH (typically ~0.065 ETH deposit + 0.03 ETH reserve to start), an Arbitrum RPC endpoint, and the private key stored in go-livepeer's keystore.
+
+### Off-chain mode
+
+In off-chain mode, the gateway delegates all Ethereum responsibilities to a **remote signer** — a separate process or hosted service that holds the ETH key and handles all PM signing. The gateway node itself has no Ethereum key, no Arbitrum dependency, and no PM accounting. From the gateway's perspective, signing is an API call.
+
+Off-chain mode was introduced in Q4 2025 for Live AI workloads. It is the recommended starting point for AI gateway operators.
+
+**When to use it:** You are building an AI application, embedding a gateway in a mobile or browser environment, using a non-Go gateway implementation, or delegating payment operations to a clearinghouse.
+
+**What you need:** Access to a remote signer — either self-hosted or via a provider. No ETH wallet, no Arbitrum RPC, no on-chain registration on the gateway node itself.
+
+---
+
+## Remote signers and clearinghouses
+
+<Accordion title="How remote signers work">
+
+A remote signer is a go-livepeer process (or third-party service) that holds the Ethereum signing key and handles all probabilistic micropayment operations on behalf of the gateway. The gateway calls the signer at session start to get an authentication signature, then calls it once per payment to sign a ticket. The signer returns a signed ticket and updated session state, which the gateway passes to the orchestrator.
+
+Signers are designed to be stateless — state is passed back and forth by the caller rather than stored on the signer itself. This means multiple signer instances can run in parallel for redundancy without needing a shared database.
+
+A **clearinghouse** goes further: it combines the remote signer with user management, authentication, accounting, and typically fiat settlement. A gateway operator points their gateway at a clearinghouse, pays in fiat or via API credit, and the clearinghouse handles all underlying crypto operations with orchestrators. The NaaP dashboard and community-hosted signers are early examples.
+
+For full technical detail on the remote signer protocol, startup configuration, and self-hosting, see [Remote Signers](/v2/gateways/advanced/remote-signers).
+
+</Accordion>
+
+---
+
+## Which type of gateway operator are you?
+
+<CardGroup cols={2}>
+  <Card title="App developer" icon="code" href="/v2/gateways/gateway-path">
+    You are building an application and want to access Livepeer AI without paying a hosted gateway fee. Off-chain AI gateway is your path.
+  </Card>
+  <Card title="Gateway-as-service provider" icon="server" href="/v2/gateways/gateway-path">
+    You want to run a public gateway that other developers can connect to and pay for. On-chain video or AI gateway with direct PM settlement.
+  </Card>
+  <Card title="SDK / alternative gateway builder" icon="brackets-curly" href="/v2/gateways/gateway-path">
+    You are building a non-Go gateway — Python, browser, or mobile. Remote signer handles all Ethereum so your implementation stays lightweight.
+  </Card>
+  <Card title="Enterprise / embedded gateway" icon="building" href="/v2/gateways/gateway-path">
+    You want a gateway embedded in your infrastructure or end-user application. Off-chain mode with clearinghouse for managed payments and auth.
+  </Card>
+</CardGroup>
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Choose your path" icon="arrow-right" href="/v2/gateways/gateway-path">
+    Decision matrix: which gateway type, ETH requirements, and where to start.
+  </Card>
+  <Card title="Gateway architecture" icon="diagram-project" href="/v2/gateways/concepts/architecture">
+    Deeper technical view of how the gateway interacts with orchestrators and the PM system.
+  </Card>
+  <Card title="Remote signers" icon="key" href="/v2/gateways/advanced/remote-signers">
+    How to set up a remote signer, self-host one, or connect to a clearinghouse.
+  </Card>
+</CardGroup>

@@ -1,0 +1,286 @@
+---
+title: Choose an Orchestrator and Delegate
+sidebarTitle: Choose an Orchestrator
+description: >-
+  How to evaluate Livepeer orchestrators on reward call reliability, commission settings, and stake concentration — and how to complete the delegation transaction.
+keywords:
+  - livepeer
+  - delegate LPT
+  - staking
+  - orchestrator selection
+  - rewardCut
+  - feeShare
+  - reward call
+  - bonding
+  - livepeer explorer
+  - arbitrum
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: delegator
+purpose: choose
+status: current
+lastVerified: 2026-04-06
+---
+
+Choosing an orchestrator is the most consequential decision you make as a delegator. A well-run orchestrator with consistent reward calls and fair commission settings earns you meaningful returns. A poorly run one — even one with a 0% commission — can earn you nothing if they never call `Reward()`.
+
+This guide walks you through evaluation criteria and ends with the delegation transaction itself.
+
+<Info>
+  **Network:** LPT staking runs on Arbitrum One. If your LPT is on Ethereum mainnet, bridge it first. See [Bridge LPT to Arbitrum](/v2/delegators/delegation/bridge-lpt-to-arbitrum).
+</Info>
+
+---
+
+## Before you start
+
+You need:
+- LPT on Arbitrum One (not Ethereum mainnet or a centralised exchange)
+- A small amount of ETH on Arbitrum One for gas — under $0.10 covers both delegation transactions
+- A compatible wallet: MetaMask, Coinbase Wallet, or any WalletConnect-compatible wallet
+
+---
+
+## Researched vs blind delegation
+
+| | Researched | Blind (lowest commission only) |
+|---|---|---|
+| Reward call history checked | ✅ | ❌ |
+| Active set status confirmed | ✅ | ❌ |
+| Commission rate contextualised | ✅ | ❌ |
+| Stake concentration considered | ✅ | ❌ |
+| Expected return | Estimated with reasonable confidence | Unpredictable |
+| Time to evaluate | ~15 minutes | ~2 minutes |
+
+An orchestrator with a 5% `rewardCut` who misses one in three reward calls delivers worse returns than one with a 10% `rewardCut` who calls `Reward()` every single round.
+
+---
+
+## Step 1 — Open the Livepeer Explorer and filter for active orchestrators
+
+Navigate to [explorer.livepeer.org](https://explorer.livepeer.org) and connect your wallet.
+
+The orchestrators page lists all registered orchestrators. The top 100 by total bonded stake form the **active set** — the only orchestrators eligible to earn inflation rewards and receive routed jobs in the current round.
+
+<Tip>
+  Filter or sort by Active first. Delegating to an inactive orchestrator means your stake contributes to their potential activation but earns nothing until they enter the active set.
+</Tip>
+
+### What the active set means
+
+At the start of each round, the protocol selects the top 100 orchestrators by bonded stake. Only these 100 earn inflation rewards or receive transcoding and AI inference jobs that round. Orchestrators outside the top 100 earn nothing regardless of their commission settings or uptime.
+
+Choose an orchestrator with a stable position well inside the top 100 — not one hovering near the boundary where a shift in other orchestrators' stake could push them out between rounds.
+
+---
+
+## Step 2 — Check reward call history
+
+This is the single most important signal. Before you look at commission rates, verify how reliably the orchestrator calls `Reward()` each round.
+
+On the orchestrator's Explorer profile, find their reward call history. A healthy orchestrator calls `Reward()` every single active round.
+
+| History | Assessment |
+|---|---|
+| 30 of last 30 rounds | Strong — delegate with confidence |
+| 27–29 of 30 | Acceptable — minor operational gaps |
+| Below 25 of 30 | Investigate before delegating |
+| Multiple consecutive misses | Reject unless there is a documented and resolved explanation |
+
+<AccordionGroup>
+
+<Accordion title="Why missed reward calls hurt more than a high commission">
+  Each missed `Reward()` call means zero LPT inflation is distributed for that round to every delegator in the pool. An orchestrator who misses 10 of 30 rounds delivers roughly a third fewer inflation rewards than their headline yield implies. A 0% `rewardCut` orchestrator who calls reward 20 of 30 rounds delivers the same effective yield as a 33% `rewardCut` orchestrator who calls every round.
+</Accordion>
+
+<Accordion title="Why do orchestrators miss reward calls?">
+  Reward calls require a small ETH balance to pay Arbitrum gas. An operator whose ETH runs to zero stops calling until they top up. Other causes include node downtime, misconfiguration after a software update, or an operator going inactive without formally leaving the network. A one-off miss differs from a structural pattern — read the history accordingly.
+</Accordion>
+
+<Accordion title="Are missed rounds recoverable?">
+  No. If an orchestrator does not call `Reward()` in a round, the inflation that would have been minted for that round's stake is not minted. It cannot be recovered retroactively.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Step 3 — Evaluate commission settings
+
+With a reliable reward-calling record confirmed, assess the commission parameters.
+
+### rewardCut — LPT inflation commission
+
+The percentage of LPT inflation rewards the orchestrator retains. The remainder is distributed to delegators.
+
+**Lower rewardCut = more for delegators.** Most competitive orchestrators sit between 0% and 20%.
+
+### feeShare — ETH fee distribution
+
+The percentage of ETH fee revenue the orchestrator passes to delegators. The Explorer displays this as **"Fee Share"**.
+
+**Higher feeShare = more for delegators.**
+
+<Warning>
+  These parameters move in opposite directions. For `rewardCut`, lower is better. For `feeShare`, higher is better. Evaluate both before deciding — do not rely on one alone.
+</Warning>
+
+### The commission rug-pull risk
+
+Orchestrators can change their commission settings at any time, effective from the next round. There is no minimum lock-in period and no advance notice requirement. A common pattern: low rates to attract delegation, then increases once the operator has accumulated sufficient stake.
+
+Check whether the Explorer exposes commission history for your orchestrator. After delegating, monitor your position periodically. If rates shift materially, redelegation to a different orchestrator requires no unbonding period.
+
+---
+
+## Step 4 — Check stake concentration
+
+Review the orchestrator's total bonded stake relative to the network.
+
+From a pure-yield perspective, the maths are the same regardless of pool size — your proportional share is what matters, not the absolute pool. From a network health perspective, delegating to smaller, consistently reliable orchestrators strengthens decentralisation and long-term protocol security.
+
+Practical guidance:
+- Orchestrators outside the top 10 by stake are generally a better choice for network health
+- Avoid orchestrators hovering near the active set boundary — one bad round for their delegators could push them out
+
+---
+
+## Step 5 — Consider longevity and alignment
+
+Optional, but worth a few minutes for anyone delegating a meaningful amount.
+
+<AccordionGroup>
+
+<Accordion title="How long have they been active?">
+  An orchestrator that has held a stable active set position for 12+ months with consistent reward calls is a meaningfully lower-risk choice than one that launched recently. Check their activation date in the Explorer.
+</Accordion>
+
+<Accordion title="Do they have a public identity?">
+  Some orchestrators operate anonymously; others run under a brand name or are associated with known Livepeer community contributors. A public identity does not guarantee performance, but it does mean reputational skin in the game.
+</Accordion>
+
+<Accordion title="Have they participated in governance?">
+  On-chain voting history is visible in the Explorer. Orchestrators who participate in governance votes are typically more invested in the long-term health of the protocol.
+</Accordion>
+
+<Accordion title="Do they communicate publicly?">
+  Some orchestrators post update notices in the Livepeer Discord [#orchestrators](https://discord.gg/livepeer) channel. This is relevant if you want advance notice of planned maintenance or commission changes.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Pre-delegation checklist
+
+Before proceeding to the delegation transaction, confirm:
+
+- [ ] Orchestrator is in the active set (top 100 by bonded stake)
+- [ ] Reward call history: 27+ of last 30 rounds called
+- [ ] `rewardCut` is competitive (typically below 20%)
+- [ ] `feeShare` is meaningful (above 50% if ETH fees matter to you)
+- [ ] Orchestrator has a stable, multi-month track record
+- [ ] Stake concentration is not so dominant that it raises centralisation concerns
+- [ ] LPT is in your wallet on Arbitrum One
+- [ ] Small ETH balance on Arbitrum One for gas
+
+---
+
+## Step 6 — Execute the delegation
+
+<Steps>
+
+<Step title="Go to the orchestrator's profile page">
+  In the [Livepeer Explorer](https://explorer.livepeer.org), navigate to the orchestrator you have chosen. Confirm their status shows as **Active** before proceeding.
+</Step>
+
+<Step title="Click Delegate and enter an amount">
+  Click the **Delegate** button on the orchestrator's profile page. Enter the amount of LPT you want to bond.
+
+  You do not have to delegate your full balance. A partial delegation keeps the remainder liquid, though unbonded LPT earns nothing and is diluted by inflation each round.
+
+  <Tip>
+    Start with a smaller amount if this is your first delegation. You can add more later by bonding again from the same wallet — no need to unbond first.
+  </Tip>
+</Step>
+
+<Step title="Sign the Approve transaction">
+  The first transaction authorises the BondingManager contract to transfer your LPT. This is a standard ERC-20 approval. No tokens move yet.
+
+  Gas cost: a few cents on Arbitrum One. Wait for confirmation before proceeding.
+</Step>
+
+<Step title="Sign the Bond transaction">
+  The second transaction executes the delegation. Your LPT moves into the BondingManager contract and your stake is attributed to the orchestrator.
+
+  Gas cost: a few cents on Arbitrum One. Wait for confirmation.
+</Step>
+
+<Step title="Verify your delegation">
+  After the Bond transaction confirms, navigate to your account page in the Explorer. You should see:
+
+  - Your bonded balance
+  - The orchestrator your stake is attributed to
+  - Pending rewards (initially zero — increases each round your orchestrator calls `Reward()`)
+
+  You can verify on-chain directly via [Arbiscan](https://arbiscan.io) by reading your address's state in the BondingManager contract.
+</Step>
+
+</Steps>
+
+---
+
+## What happens next
+
+Rewards accumulate automatically each round when your orchestrator calls `Reward()`. You do not need to take any action for rewards to accrue — but you will need to claim them to compound or withdraw.
+
+<Warning>
+  **Claim timing matters.** Do not claim earnings at the start of a round before your orchestrator has called `Reward()`. Claiming before `Reward()` is called for that round forfeits the round's rewards entirely. See [Manage Your Delegation](/v2/delegators/delegation/manage-your-delegation#claim-timing) for the full explanation.
+</Warning>
+
+---
+
+## Frequently asked questions
+
+<AccordionGroup>
+
+<Accordion title="Can I delegate to more than one orchestrator?">
+  Not from a single address. Your bonded stake is attributed to exactly one orchestrator at a time. To split across orchestrators, you need separate wallets with separate LPT balances.
+</Accordion>
+
+<Accordion title="What if my orchestrator leaves the active set after I delegate?">
+  Your stake remains bonded to them, but you earn no inflation rewards in rounds where they are inactive. Redelegate to an active orchestrator as soon as you notice — redelegation takes effect in the next round and requires no unbonding period.
+</Accordion>
+
+<Accordion title="Can I add more LPT to my existing delegation?">
+  Yes. Call `bond()` again from the same wallet to add LPT to your existing position. Your new amount is added to your current bonded balance and attributed to the same orchestrator.
+</Accordion>
+
+<Accordion title="Can I change orchestrators without unbonding?">
+  Yes. Redelegation moves your stake attribution to a new orchestrator immediately (effective next round) without going through the unbonding period. Your bonded balance stays in the contract — only the attribution changes.
+</Accordion>
+
+<Accordion title="I delegated but see no rewards yet — is something wrong?">
+  Rewards accrue each round when your orchestrator calls `Reward()`. If you delegated mid-round, wait until the following round to see your first accrual. If you see no rewards after two or three rounds, check your orchestrator's reward call history in the Explorer.
+</Accordion>
+
+<Accordion title="Is there any risk of losing my LPT?">
+  The primary risk is opportunity cost — if your orchestrator stops calling `Reward()`, you earn nothing while your stake is locked. Slashing (which would reduce your bonded balance as a protocol penalty) exists in the Livepeer protocol but is currently disabled on mainnet. Your LPT cannot be taken by the orchestrator.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claim earnings, compound, switch orchestrators, and exit your position.
+  </Card>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    How reward formulas work and what to realistically expect from your returns.
+  </Card>
+</CardGroup>

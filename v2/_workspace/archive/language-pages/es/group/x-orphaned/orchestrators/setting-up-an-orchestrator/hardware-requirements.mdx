@@ -1,0 +1,91 @@
+---
+title: Requisitos de hardware
+sidebarTitle: Requisitos de hardware
+description: >-
+  Hardware mínimo, recomendado y de producción para ejecutar un orquestador
+  Livepeer.
+keywords:
+  - livepeer
+  - orchestrators
+  - hardware
+  - GPU
+  - requirements
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL2hhcmR3YXJlLXJlcXVpcmVtZW50cy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL29yY2hlc3RyYXRvcnMvc2V0dGluZy11cC1hbi1vcmNoZXN0cmF0b3IvaGFyZHdhcmUtcmVxdWlyZW1lbnRzIiwic291cmNlSGFzaCI6IjUxNTg3MmE0MzE2YTNiODNiZmZhYjk3ZWRjZGM0MGY0M2EzZDAzMDhjMGUxMGUwZmM2YTc5MjQ1MzdjZDM3NDEiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0yMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QwNDo1MzoxMS41NDlaIn0= */}
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+Los orquestadores ejecutan **transcodificación de video** (NVENC/FFmpeg) y/o **inferencia de IA** en GPUs. El hardware afecta directamente la selección de trabajos, la reputación y los ingresos. A continuación se presentan las pautas mínimas, recomendadas y optimizadas para IA para 2026.
+
+## Mínimo (desarrollo / pruebas)
+
+<DynamicTable
+  tableTitle="Minimum specs"
+  headerList={["Component", "Minimum"]}
+  itemsList={[
+    { "Component": "GPU", "Minimum": "NVIDIA RTX 3060 / T4 (8GB VRAM)" },
+    { "Component": "CPU", "Minimum": "4 cores" },
+    { "Component": "RAM", "Minimum": "16GB" },
+    { "Component": "Storage", "Minimum": "100GB SSD" },
+    { "Component": "Network", "Minimum": "100 Mbps symmetric" },
+    { "Component": "OS", "Minimum": "Ubuntu 22.04 LTS" }
+  ]}
+/>
+
+Adecuado para testnet, cargas de trabajo de bajo volumen y aprendizaje.
+
+## Recomendado (video / producción)
+
+<DynamicTable
+  tableTitle="Recommended production (video-focused)"
+  headerList={["Component", "Recommended"]}
+  itemsList={[
+    { "Component": "GPU", "Recommended": "RTX 4080 / A4000 / L4" },
+    { "Component": "CPU", "Recommended": "8–16 cores" },
+    { "Component": "RAM", "Recommended": "32–64GB" },
+    { "Component": "Storage", "Recommended": "NVMe SSD 1TB+" },
+    { "Component": "Network", "Recommended": "1 Gbps symmetric" },
+    { "Component": "Uptime", "Recommended": "99%+ target" }
+  ]}
+/>
+
+Optimizado para transmisión en tiempo real y transcodificación multiresolución.
+
+## Inferencia de IA
+
+Las cargas de trabajo de IA están limitadas por la VRAM. Stake hace **no** determinar el enrutamiento de trabajos de IA; la capacidad y el precio sí lo hacen.
+
+<DynamicTable
+  tableTitle="AI-oriented GPUs"
+  headerList={["GPU", "Use case"]}
+  itemsList={[
+    { "GPU": "RTX 4090 (24GB)", "Use case": "Stable Diffusion, high batch" },
+    { "GPU": "A100 (40GB/80GB)", "Use case": "Enterprise inference" },
+    { "GPU": "H100", "Use case": "Advanced model serving" }
+  ]}
+/>
+
+También asegúrate de: CUDA 12+, NVIDIA Container Toolkit, buena refrigeración, almacenamiento de alta IOPS para los pesos del modelo.
+
+## Red y operaciones
+
+- **Latencia:** &lt;50 ms a regiones principales ayuda a la transmisión y la selección de gateway.
+- **Producción:** IP estática, proxy inverso (p. ej. nginx), TLS, reglas de firewall.
+- **Monitoreo:** Prometheus, Grafana, exportador NVIDIA DCGM; rastrea la utilización de GPU, VRAM, tasa de éxito de segmentos/trabajos.
+
+## Lista de verificación antes de lanzar
+
+- [ ] GPU visible a través de `nvidia-smi`
+- [ ] Docker detecta GPU (`--gpus all`)
+- [ ] CUDA funcional
+- [ ] Puertos abiertos (p. ej. 8935)
+- [ ] RPC estable Arbitrum
+- [ ] Monitoreo configurado
+
+## Ver también
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Orchestrator stats & monitoring" icon="chart-line" href="./orchestrator-stats" arrow />
+  <Card title="Data centre setup" icon="server" href="./data-centre-setup" arrow />
+</Columns>

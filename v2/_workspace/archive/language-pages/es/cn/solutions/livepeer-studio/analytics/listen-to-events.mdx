@@ -1,0 +1,41 @@
+---
+title: 监听事件
+description: 使用webhooks来响应流和资产事件（已开始、已准备、失败等）。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FuYWx5dGljcy9saXN0ZW4tdG8tZXZlbnRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hbmFseXRpY3MvbGlzdGVuLXRvLWV2ZW50cyIsInNvdXJjZUhhc2giOiIwNzhmNGZmMjllMDVmNWU4YzQ2NzBhOGVkMmRhMDhhNTY4NGYwMjI5M2YxZTMxYmJhZGMzZDJiZTc4NDJkNThiIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjIxOjEwLjU0NFoifQ== */}
+使用 **webhooks** 在流或资产状态发生变化时收到通知，这样您的应用可以更新 UI、开始处理或处理错误。
+
+## 资产事件
+
+| 事件 | 当它触发时 |
+|-------|----------------|
+| `asset.created` | 按需生成的资产 |
+| `asset.updated` | 资产已更新（例如，播放 URL 可用） |
+| `asset.ready` | 资产已准备好，所有转码版本均已生成 |
+| `asset.failed` | 上传或处理失败 |
+| `asset.deleted` | 资产已删除 |
+
+设置 Webhook 端点，然后在 [开发者 → Webhooks](https://livepeer.studio/dashboard/developers/webhooks) 使用您的 URL 创建 Webhook 并选择您需要的资产事件。参见 [Webhooks](webhooks) 了解签名验证和有效负载格式。
+
+## 流事件
+
+| 事件 | 当它触发时 |
+|-------|----------------|
+| `stream.started` | 流处于活动状态；HLS URL 可用 |
+| `stream.idle` | 流不再处于活动状态 |
+| `recording.started` | 在活动流上开始录制 |
+| `recording.ready` | 录制准备就绪，可以下载 |
+| `recording.waiting` | 流结束并已录制；正在处理（通常约5分钟） |
+| `multistream.connected` | 已连接到多流目标 |
+| `multistream.error` | 连接或流式传输到目标时出错 |
+| `multistream.disconnected` | 多流到目标已结束 |
+
+创建一个 webhook 并选择流/录制/多流事件。您的端点会收到事件类型和相关对象（流、会话等）在负载中。
+
+## 设置步骤
+
+1. 实现一个返回 2XX 并验证 `Livepeer-Signature` 标题.
+2. 在 Studio 中，添加 webhook URL 并选择事件.
+3. 处理 `event` 和 `event_object` 在您的代码中（例如，更新数据库，通知用户，失败时重试）。
+
+查看 [Webhooks](webhooks) 和 [设置并监听 Webhooks](https://livepeer.studio/docs) 以完成完整设置和签名验证。

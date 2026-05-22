@@ -1,0 +1,55 @@
+---
+title: 剪辑直播流
+description: 使用创建剪辑 API 从活跃的直播流中创建短剪辑。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY2xpcC1saXZlc3RyZWFtLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9saXZlc3RyZWFtL2NsaXAtbGl2ZXN0cmVhbSIsInNvdXJjZUhhc2giOiIxNTAxZTY3ZDA2Y2NmMmI0NTRmNmY4ZGQ0MDgxY2Y2ODRhODc3MWUxYTJkY2ZjYTAwNWFmNmI5ZmYyYzA3OGU4IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI4VDE2OjUxOjIyLjE5OVoifQ== */}
+您可以创建 **剪辑** 来自活跃的 Livepeer Studio 流，通过 API。剪辑是流的一个片段（例如最近 N 秒或选定的范围），并存储为一个 **资产**，您可以像播放任何点播资产一样回放它。
+
+<Warning>
+  Clipping is supported only for **livestreams** and **livestream recordings**. Other asset types are not supported for clipping.
+</Warning>
+
+## 剪辑工作原理
+
+- 剪辑是从 **观看者的视角**：例如，“最近 30 秒”是观看者看到的最近 30 秒（基于他们的播放头）。
+- 您发送 **开始和结束时间戳**（UNIX 毫秒）。这些通常来自播放器（例如 HLS.js `playingDate`或 Livepeer 播放器的剪辑触发器）。
+- Livepeer 创建一个 **资产** 用于剪辑。您可以轮询该资产或监听 `asset.ready` webhook 以了解剪辑何时可播放。
+
+## 通过 API 创建剪辑
+
+使用 [Create Clip API](https://livepeer.studio/docs/api-reference/stream/create-clip)，包括：
+
+- `playbackId` - **活跃流的** 播放 ID。
+- `startTime` - 剪辑的开始时间（UNIX 毫秒，来自播放头）。
+- `endTime` - 剪辑的结束时间（UNIX 毫秒）。
+- `name` - （可选）剪辑资产的名称。
+
+确保 `startTime` 在流开始时或之后，并且 `endTime` 不在未来。
+
+### 示例（Node.js）
+
+```ts
+const result = await livepeer.stream.createClip({
+  playbackId: process.env.PLAYBACK_ID_OF_RUNNING_STREAM,
+  startTime: endTime - 30000, // 30 seconds before end
+  endTime: Date.now(),
+  name: "My clip",
+});
+// result.asset has the new clip asset; result.task has the task ID
+```
+
+### 使用 Livepeer 播放器
+
+播放器的 [剪辑触发器](https://www.npmjs.com/package/@livepeer/react#player) 可以提供 `playbackId`, `startTime`，以及 `endTime`。调用 **从您的后端调用 Create Clip API**（使用相同的参数）并验证输入（例如最大剪辑长度、速率限制）。
+
+## 监控剪辑状态
+
+- **轮询** - 调用 `GET /asset/{assetId}` 直到 `asset.status` 为 `ready`.
+- **Webhook** - 订阅 `asset.ready`（以及可选地 `asset.failed`）。使用 `assetId` 从 create-clip 响应中匹配事件。
+- 剪辑资产具有 `source.type === "clip"` 和一个 `sessionId` 这样你就能判断它是剪辑。
+
+剪辑获取 **源播放** 首先（快速可播放）；在处理完成后会添加转码版本。使用剪辑的 `playbackId` 与 [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get) 或者 [Player](../player) 来播放它。
+
+## 列出流的剪辑
+
+使用 [Clips for livestream API](https://livepeer.studio/docs/api-reference/stream/get-clip)（按流或会话）列出从流创建的剪辑。

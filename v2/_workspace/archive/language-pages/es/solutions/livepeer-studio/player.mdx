@@ -1,0 +1,39 @@
+---
+title: Reproductor y embebido
+description: >-
+  Utilice el componente Livepeer Player y el reproductor embebible de lvpr.tv
+  para la reproducción.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3BsYXllci5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vcGxheWVyIiwic291cmNlSGFzaCI6IjMxYzdiYTJlZTI5ZDcxMGI4NmE4NjQ3ZTU5MDNhMDBkZWYxMGIxODc0MmIzYWZjYzBhMWIwYWYzZGQ4MWY5MTkiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MTQ6MzIuNTI1WiJ9 */}
+El **Livepeer Player** es un componente de React (y un reproductor integrable en `lvpr.tv`) para reproducir transmisiones y activos. Soporta WebRTC (bajo latencia) y HLS/MP4 como alternativa, y reporta métricas de audiencia cuando se usa con la API de Studio.
+
+## React Player
+
+Desde `@livepeer/react`, use `Player.Root`, `Player.Video`, `Player.Controls`, y otros primitivos. Pase un **src** (de `getSrc(playbackInfo)` desde el [API de Información de Reproducción](https://livepeer.studio/docs/api-reference/playback/get)) o un **playbackId** (con un proveedor). El reproductor prefiere WebRTC para transmisiones en vivo y MP4 para VOD cortos; vuelve a HLS en caso de errores o cuando WebRTC no esté disponible (por ejemplo, B-frames en la transmisión).
+
+- **Transmisión en vivo:** [Reproducir una transmisión en vivo](./livestream/playback-livestream)
+- **VOD:** [Reproducir un activo](./video-on-demand/playback-asset)
+- **Control de acceso:** Pass `accessKey` o `jwt` según sea necesario. Ver [Control de acceso](access-control/overview).
+
+## Reproductor integrable (iframe)
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **Transmisiones en vivo:** El valor predeterminado es WebRTC de baja latencia. Usar `&lowLatency=false` para HLS o `&lowLatency=force` para WebRTC solo. Usar `&clipLength=60` (máximo 120) para recortar. Usar `constant=true` para reproducción constante (por ejemplo, música).
+- **VOD:** Las opciones incluyen `&muted=false`, `&autoplay=false`, `&loop=true`.
+
+## Miniaturas
+
+- **VOD** - Las miniaturas están en la información de reproducción (WebVTT + imágenes de cuadro clave). Consulte [Miniaturas (VOD)](./video-on-demand/thumbnails-vod).
+- **Transmisión en vivo** - La información de reproducción incluye una URL de miniatura PNG que se actualiza con el último cuadro. El reproductor puede usarla como portada del video.
+
+## Métricas
+
+El reproductor Livepeer informa sobre el compromiso con Livepeer cuando se usa con la API de Studio. Consultar [audiencia y análisis](./analytics/overview) a través de la API o dashboards.

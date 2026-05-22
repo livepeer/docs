@@ -1,0 +1,98 @@
+---
+title: Aperçu des acteurs
+sidebarTitle: Aperçu des acteurs
+description: >-
+  Qui participe à Livepeer, ce que fait chaque rôle et comment les rôles
+  interagissent.
+keywords:
+  - livepeer
+  - about
+  - actors
+  - gateway
+  - orchestrator
+  - delegator
+  - developers
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL2FjdG9ycy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2Fib3V0L2xpdmVwZWVyLW5ldHdvcmsvYWN0b3JzIiwic291cmNlSGFzaCI6ImRkYWIyYTU0MDJlMmMxNGQyOGI4OWYwNzhmNjAzNWE0YjczNGQ2MjQ0MDkzZmM2NmZkZTVkN2UxNDdhZTRiNjkiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0xMjBiOmZyZWUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjZUMDc6MjY6MzcuOTg5WiJ9 */}
+et effectue les actions définies par le système. Dans l'architecture Livepeer, « acteur » est une catégorie formelle utilisée pour décrire les participants avec des responsabilités, des incitations et des interactions distinctes. Les acteurs sont fondamentaux pour décrire le fonctionnement du réseau de bout en bout du point de vue de l'ingénierie système.
+L'écosystème de Livepeer implique à la fois des acteurs du protocole (rôles on-chain) et des acteurs du réseau (participants du réseau et constructeurs)
+
+Les acteurs sont les participants qui font fonctionner le réseau Livepeer sur les plans économique et technique.
+
+## Acteurs principaux
+Le réseau Livepeer possède trois rôles d'acteurs principaux : les Orchestrateurs, les Délégateurs et les Passerelles (anciennement appelées Diffuseurs)
+. (Les Transcodeurs désignent désormais simplement les instances GPU attachées aux Orchestrateurs.) Chacun joue un rôle distinct :
+Orchestrateurs (Opérateurs de nœuds) : ils exécutent le logiciel client go-livepeer et fournissent de la puissance de calcul (généralement accélérée par GPU) pour transcoder des flux vidéo ou exécuter des tâches d’inférence IA
+. Les Orchestrateurs misent LPT (auto‑bond) pour devenir actifs : plus leur mise (et la mise déléguée) est élevée, plus ils se voient attribuer de travail
+. Ils définissent les paramètres de tarification (ETH par pixel, pourcentage de partage des frais, pourcentage de partage des récompenses) et doivent appeler des fonctions on‑chain (comme reward) pour réclamer les frais ETH et l’inflation LPT à chaque ronde
+. Pour fonctionner efficacement, les orchestrateurs utilisent généralement des encodeurs matériels (p. ex. Nvidia NVENC/NVDEC) et maintiennent une connectivité réseau solide
+.
+
+Délégateurs (Détenteurs de jetons) : tout détenteur de LPT peut miser ses jetons en les déléguant à un ou plusieurs Orchestrateurs. Cela renforce la sécurité du réseau et donne aux Délégateurs une part des récompenses. La délégation ne transfère pas la propriété du jeton – le LPT reste dans le portefeuille du délégateur, lié par le contrat de staking. En retour, les Délégateurs reçoivent une fraction des frais et de l’inflation de chaque Orchestrateur (selon les pourcentages feeShare et rewardShare choisis par l’Orchestrateur)
+. Les Délégateurs doivent rester misés (et migrés vers Arbitrum) pour continuer à gagner ; après Confluence, ne pas déplacer la mise entraînerait la perte des récompenses
+. Les Délégateurs obtiennent également des droits de gouvernance : ils peuvent détacher leur mise pour voter sur des propositions, ou voter via leur Orchestrateur
+.
+
+Passerelles (Diffuseurs/Clients) : les Passerelles sont des entités qui publient des flux vidéo ou des requêtes d’inférence IA sur le réseau (elles étaient appelées Diffuseurs avant Confluence)
+. Une Passerelle envoie des segments médias bruts au réseau avec ETH pour payer les services. Elle négocie avec les Orchestrateurs (off‑chain) pour sélectionner un travailleur approprié, attache des tickets comme promesses de paiement pour chaque segment, et reçoit finalement la sortie transcodée. Les Passerelles paient les frais ETH (on‑chain via le contrat TicketBroker) et n’ont pas besoin de LPT. Elles peuvent soit récupérer les vidéos terminées pour les utilisateurs finaux, soit les transmettre aux clients de streaming via CDN. Les Passerelles constituent le côté demande du réseau et ne gagnent pas de récompenses de mise.
+🔍 Flux de rôle clé : Délégateurs ▶ misent LPT pour soutenir les Orchestrateurs, ce qui alimente la sécurité et donne aux Délégateurs une part des récompenses
+. Orchestrateurs ▶ s’enregistrent on‑chain, déclarent capacité et tarification, puis acceptent le travail des Passerelles. Passerelles ▶ soumettent des jobs vidéo/IA (en payant les frais) aux Orchestrateurs pour traitement, recevant les données transformées.
+
+--
+
+## Résumé du rôle
+
+### Développeurs et applications
+
+- Apporter la demande au réseau
+- Intégrer via les API orientées passerelle
+- Optimiser la latence, la qualité et le coût
+
+### Opérateurs de passerelle
+
+- Fournir la prise en charge des tâches et la coordination
+- Faire correspondre les charges de travail aux orchestrateurs disponibles
+- Gérer le routage, les nouvelles tentatives et les interfaces de niveau de service
+
+### Opérateurs d'orchestrateur
+
+- Fournir une participation de calcul côté offre
+- Exécuter ou coordonner les charges de travail de transcodage et d'IA
+- Gagner des frais et des récompenses en fonction de l'activité et de la mise
+
+### Délégateurs
+
+- Lier LPT aux orchestrateurs
+- Influencer la sécurité et le poids économique
+- Participer aux résultats de récompenses et de frais
+
+## Modèle d'interaction
+
+Les applications ne coordonnent généralement pas directement avec chaque nœud de calcul.
+
+Un modèle courant est :
+
+- Application -> Gateway -> Orchestrator -> Gateway -> Application
+
+Cette séparation améliore la spécialisation des opérateurs et la composabilité du système.
+
+## Pages d'acteur
+
+- [Passerelles](/v2/about/livepeer-network/livepeer-actors/gateways)
+- [Orchestrateurs](/v2/fr/orchestrators/orchestrators-portal)
+- [Délégateurs](/v2/about/livepeer-network/livepeer-actors/delegators)
+- [Constructeurs et utilisateurs finaux](/v2/about/livepeer-network/livepeer-actors/end-users)
+
+## Pourquoi la séparation des rôles est importante
+
+- Meilleure expérience développeur du côté de la demande
+- Spécialisation opérationnelle du côté de l'offre
+- Concurrence ouverte entre les fournisseurs de services et de calcul
+- Responsabilité plus claire en matière de tarification, de performance et de fiabilité
+
+## Pages connexes
+
+- [Côté demande](/v2/about/livepeer-network/demand-side)
+- [Côté offre](/v2/about/livepeer-network/supply-side)
+- [Cycle de vie du travail](./job-lifecycle)

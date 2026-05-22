@@ -127,10 +127,10 @@ function generateCategoryIndex(category, components, usageLookup) {
   const hasUsage = Object.keys(usageLookup).length > 0;
 
   const lines = [
-    '{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}',
-    `{/* Generator: ${SCRIPT_PATH} */}`,
-    `{/* Generated: ${now} */}`,
-    `{/* Components: ${components.length} | Category: ${category} */}`,
+    '<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->',
+    `<!-- Generator: ${SCRIPT_PATH} -->`,
+    `<!-- Generated: ${now} -->`,
+    `<!-- Components: ${components.length} | Category: ${category} -->`,
     '',
     `# ${CATEGORY_LABELS[category] || category} — Component Index`,
     '',
@@ -186,9 +186,9 @@ function generateRootIndex(groups, usageLookup) {
   let totalCount = 0;
 
   const lines = [
-    '{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}',
-    `{/* Generator: ${SCRIPT_PATH} */}`,
-    `{/* Generated: ${now} */}`,
+    '<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->',
+    `<!-- Generator: ${SCRIPT_PATH} -->`,
+    `<!-- Generated: ${now} -->`,
     '',
     '# Component Index',
     '',
@@ -238,8 +238,8 @@ function main() {
 
     if (args.mode === 'check') {
       const existing = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : '';
-      const contentNoDate = content.replace(/\{\/\* Generated: .* \*\/\}/, '{/* Generated: CHECK */}');
-      const existingNoDate = existing.replace(/\{\/\* Generated: .* \*\/\}/, '{/* Generated: CHECK */}');
+      const contentNoDate = content.replace(/<!-- Generated: .* -->/, '<!-- Generated: CHECK -->');
+      const existingNoDate = existing.replace(/<!-- Generated: .* -->/, '<!-- Generated: CHECK -->');
       if (contentNoDate !== existingNoDate) {
         console.log(`STALE: ${path.relative(REPO_ROOT, outputPath)}`);
         staleCount++;
@@ -260,8 +260,8 @@ function main() {
 
     if (args.mode === 'check') {
       const existing = fs.existsSync(rootPath) ? fs.readFileSync(rootPath, 'utf8') : '';
-      const contentNoDate = rootContent.replace(/\{\/\* Generated: .* \*\/\}/g, '{/* Generated: CHECK */}');
-      const existingNoDate = existing.replace(/\{\/\* Generated: .* \*\/\}/g, '{/* Generated: CHECK */}');
+      const contentNoDate = rootContent.replace(/<!-- Generated: .* -->/g, '<!-- Generated: CHECK -->');
+      const existingNoDate = existing.replace(/<!-- Generated: .* -->/g, '<!-- Generated: CHECK -->');
       if (contentNoDate !== existingNoDate) {
         console.log(`STALE: ${path.relative(REPO_ROOT, rootPath)}`);
         staleCount++;

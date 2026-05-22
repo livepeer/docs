@@ -1,0 +1,83 @@
+---
+title: 'Update Discord Announcements Data'
+sidebarTitle: 'Discord Announcements Data'
+description: 'Update Discord Announcements Data'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - integrator
+  - copy
+  - update-discord-data
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/update-discord-data.yml` |
+| **New name** | `integrator-copy-update-social-feeds.yml` |
+| **Type** | `integrator` |
+| **Concern** | `copy` |
+| **Pipeline tag** | P5-auto (scheduled + auto-commit) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["schedule, workflow_dispatch"] --> WF["update-discord-data"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `schedule` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `.github/scripts/fetch-discord-announcements.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- No error handling
+
+**Review flags:** Merge into single matrix dispatcher (D-ACT-03)
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Identical structure to 6 other data-fetch workflows — merge into unified dispatcher |
+| **Dry-run** | No |
+| **Concurrency** | No |
+| **Error reporting** | none |
+| **Auto-commit** | Yes |

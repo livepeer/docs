@@ -1,0 +1,246 @@
+{
+  "audit_date": "2026-03-16",
+  "repo": "/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev",
+  "audited_ref": "docs-v2-dev",
+  "audited_commit": "4837b36e",
+  "scope": "copy-framework only",
+  "working_tree_ignored": true,
+  "source_truth": {
+    "brief": "Copy Governance Framework v4.0 task brief from thread",
+    "approved_defaults": [
+      "remove overlap terms from banned lists where already enforced elsewhere",
+      "keep frontmatter checks in lint-structure.js",
+      "no docs-guide/tooling manifest entry required for the brief template"
+    ],
+    "t3_corrections": [
+      "phrase-first dedupe in lint-copy.js",
+      "copy-lint.test.js merges lint-copy.js and lint-patterns.js before expected JSON comparison",
+      "every fail fixture requires an expected JSON file, including conditional-if.json and not-construction.json"
+    ],
+    "source_commits": [
+      { "commit": "479ab394", "label": "reference files" },
+      { "commit": "04319c91", "label": "lint scripts" },
+      { "commit": "119a406e", "label": "copy-lint test suite and fixtures" },
+      { "commit": "ac4f576a", "label": "docs-copy package docs" },
+      { "commit": "3cc97b7f", "label": "brief template and PR checklist integration" },
+      { "commit": "4076d04c", "label": "copy-governance report directory" },
+      { "commit": "1bf7a69e", "label": "T3 correctness fixes" },
+      { "commit": "74473da4", "label": "rollout-only scope tuning and pilot reports" }
+    ]
+  },
+  "ancestry_checks": {
+    "479ab394": false,
+    "04319c91": false,
+    "119a406e": false,
+    "ac4f576a": false,
+    "3cc97b7f": false,
+    "4076d04c": false,
+    "1bf7a69e": false,
+    "74473da4": false
+  },
+  "summary": {
+    "core_groups_total": 7,
+    "core_groups_landed": 0,
+    "core_groups_partial": 1,
+    "core_groups_missing": 6,
+    "post_impl_groups_total": 1,
+    "post_impl_groups_landed": 0,
+    "rollout_groups_total": 1,
+    "rollout_groups_landed": 0
+  },
+  "artifacts": [
+    {
+      "id": "reference-files",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["479ab394"],
+      "expected_paths": [
+        "tools/lib/copy-governance/banned-words.txt",
+        "tools/lib/copy-governance/banned-phrases.txt",
+        "ai-tools/ai-skills/docs-copy/reference/banned-words.txt",
+        "ai-tools/ai-skills/docs-copy/reference/banned-phrases.txt"
+      ],
+      "notes": "No tools/lib/copy-governance directory exists on docs-v2-dev."
+    },
+    {
+      "id": "lint-scripts",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["04319c91"],
+      "expected_paths": [
+        "tools/scripts/lint-copy.js",
+        "tools/scripts/lint-structure.js",
+        "tools/scripts/lint-patterns.js",
+        "tools/scripts/pattern-observer.js"
+      ],
+      "notes": "None of the four scripts exist on docs-v2-dev."
+    },
+    {
+      "id": "copy-lint-suite",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["119a406e"],
+      "expected_paths": [
+        "tests/unit/copy-lint.test.js",
+        "tests/copy-lint-fixtures/fixtures/pass/clean-guide.mdx",
+        "tests/copy-lint-fixtures/fixtures/fail/banned-words.mdx",
+        "tests/copy-lint-fixtures/expected/banned-words.json",
+        "tests/run-all.js (copy-lint registration)",
+        "tests/run-pr-checks.js (copy-lint registration)"
+      ],
+      "notes": "No copy-lint unit test or fixture tree exists; runner references are absent."
+    },
+    {
+      "id": "docs-copy-package-docs",
+      "phase": "core",
+      "status": "partial",
+      "source_commits": ["ac4f576a"],
+      "expected_paths": [
+        "ai-tools/ai-skills/docs-copy/SKILL.md",
+        "ai-tools/ai-skills/docs-copy/README.md",
+        "ai-tools/ai-skills/docs-copy/reference/invocation-guide.md",
+        "ai-tools/ai-skills/docs-copy/skills/copy-rules.md",
+        "ai-tools/ai-skills/docs-copy/skills/structure-rules.md",
+        "ai-tools/ai-skills/docs-copy/skills/value-prop-check.md",
+        "ai-tools/ai-skills/docs-copy/skills/persona-routing.md",
+        "ai-tools/ai-skills/docs-copy/skills/review-gate.md",
+        "ai-tools/ai-skills/docs-copy/skills/iteration-diagnostic.md",
+        "ai-tools/ai-skills/docs-copy/skills/pattern-observer.md",
+        "ai-tools/ai-skills/docs-copy/skills/skill-docs.md"
+      ],
+      "present_paths": [
+        "ai-tools/ai-skills/docs-copy/SKILL.md"
+      ],
+      "notes": "Root SKILL landed separately via commit e602e725, but the remainder of the package docs are missing."
+    },
+    {
+      "id": "brief-template",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["3cc97b7f"],
+      "expected_paths": [
+        "docs-guide/tooling/content-brief-template.md"
+      ],
+      "notes": "No content-brief template exists on docs-v2-dev."
+    },
+    {
+      "id": "pr-template-l5-integration",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["3cc97b7f"],
+      "expected_paths": [
+        ".github/pull_request_template.md"
+      ],
+      "notes": "PR template still has the generic checklist and no copy-framework-specific L5 integration."
+    },
+    {
+      "id": "report-directory",
+      "phase": "core",
+      "status": "missing",
+      "source_commits": ["4076d04c"],
+      "expected_paths": [
+        "tasks/reports/copy-governance/.gitkeep"
+      ],
+      "notes": "No copy-governance report directory exists on docs-v2-dev."
+    },
+    {
+      "id": "t3-correctness-fixes",
+      "phase": "post-implementation",
+      "status": "missing",
+      "source_commits": ["1bf7a69e"],
+      "expected_paths": [
+        "tools/scripts/lint-copy.js (phrase-first dedupe)",
+        "tests/unit/copy-lint.test.js (merged lint-copy + lint-patterns comparison)",
+        "tests/copy-lint-fixtures/expected/conditional-if.json",
+        "tests/copy-lint-fixtures/expected/not-construction.json"
+      ],
+      "notes": "Underlying files are absent, so none of the later T3 fixes are present on docs-v2-dev."
+    },
+    {
+      "id": "rollout-only-follow-up",
+      "phase": "rollout-only",
+      "status": "missing",
+      "source_commits": ["74473da4"],
+      "expected_paths": [
+        "tools/lib/copy-governance/line-scope.js",
+        "tests/copy-lint-fixtures/fixtures/pass/pattern-scope-ignores.mdx",
+        "tasks/reports/copy-governance/2026-03-16-orchestrators-guides-copy-pilot-baseline.md",
+        "tasks/reports/copy-governance/2026-03-16-orchestrators-guides-copy-pilot-tuned-comparison.md"
+      ],
+      "notes": "Rollout tuning and pilot outputs are not present on docs-v2-dev."
+    }
+  ],
+  "still_needs_to_land": [
+    {
+      "order": 1,
+      "id": "reference-files",
+      "required": true,
+      "description": "Land banned word/phrase reference files under tools/lib/copy-governance and mirrored docs-copy reference files."
+    },
+    {
+      "order": 2,
+      "id": "lint-scripts",
+      "required": true,
+      "description": "Land lint-copy.js, lint-structure.js, lint-patterns.js, and pattern-observer.js."
+    },
+    {
+      "order": 3,
+      "id": "copy-lint-suite",
+      "required": true,
+      "description": "Land the copy-lint unit test, full fixture tree, and runner wiring in tests/run-all.js and tests/run-pr-checks.js."
+    },
+    {
+      "order": 4,
+      "id": "docs-copy-package-docs",
+      "required": true,
+      "description": "Complete the docs-copy package docs by adding README, invocation guide, and skills/* files."
+    },
+    {
+      "order": 5,
+      "id": "brief-template",
+      "required": true,
+      "description": "Land docs-guide/tooling/content-brief-template.md."
+    },
+    {
+      "order": 6,
+      "id": "pr-template-l5-integration",
+      "required": true,
+      "description": "Integrate the L5 checklist additions into .github/pull_request_template.md."
+    },
+    {
+      "order": 7,
+      "id": "report-directory",
+      "required": true,
+      "description": "Land tasks/reports/copy-governance/.gitkeep."
+    },
+    {
+      "order": 8,
+      "id": "t3-correctness-fixes",
+      "required": true,
+      "description": "Apply phrase-first dedupe, merged fixture comparison, and required expected JSON completeness on top of the core landing."
+    }
+  ],
+  "rollout_only_extras": [
+    {
+      "order": 1,
+      "id": "rollout-only-follow-up",
+      "required": false,
+      "description": "Optional later landing: line-scope utility, pattern-scope regression fixture, and pilot reports from the rollout branch."
+    }
+  ],
+  "recommended_landing_order": [
+    "479ab394",
+    "04319c91",
+    "119a406e",
+    "ac4f576a",
+    "3cc97b7f",
+    "4076d04c",
+    "1bf7a69e",
+    "74473da4 (optional rollout-only)"
+  ],
+  "out_of_scope": [
+    "page-fix or live copy remediation on orchestrator pages",
+    "agent-governance/runtime-adapter work except where it overlaps copy-framework artifacts",
+    "unrelated docs-v2-dev working-tree changes"
+  ]
+}

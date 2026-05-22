@@ -1,0 +1,119 @@
+---
+title: Configura tu Orchestrator
+sidebarTitle: Agrega tu GPU a Livepeer
+description: >-
+  Configura go-livepeer después de la instalación: conexión Arbitrum, precios,
+  dirección del servicio y configuración opcional de transcodificación o IA.
+keywords:
+  - livepeer
+  - orchestrators
+  - configuration
+  - pricePerUnit
+  - serviceAddr
+  - transcoding
+  - AI
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL3F1aWNrc3RhcnQtYWRkLXlvdXItZ3B1LXRvLWxpdmVwZWVyLm1keCIsInNvdXJjZVJvdXRlIjoidjIvb3JjaGVzdHJhdG9ycy9zZXR0aW5nLXVwLWFuLW9yY2hlc3RyYXRvci9zZXR0aW5nLXVwLWFuLW9yY2hlc3RyYXRvci9xdWlja3N0YXJ0LWFkZC15b3VyLWdwdS10by1saXZlcGVlciIsInNvdXJjZUhhc2giOiIwNDBlNzU4YzAyM2ExMTg2N2Y0NGVlNTg0NDc3Y2JhYzQyOThmOGUwMGZkNTEzNDg2OTQzMWQwNWYzZWU0OGZmIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE0OjIyOjQyLjgxMloifQ== */}
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+
+Después de [instalar go-livepeer](/v2/orchestrators/setup/install-go-livepeer), configura el nodo para que los gateways puedan encontrarte y enviar trabajo. Esta página cubre las banderas principales y los archivos de configuración opcionales.
+
+## Configuración principal
+
+### Red y billetera
+
+- **-ethUrl** - Arbitrum URL de RPC. Consulte [Conéctese a Arbitrum](/v2/orchestrators/setup/install-go-livepeer).
+- **-ethAcctAddr** - (Opcional) dirección de cuenta ETH si ya tiene un archivo keystore.
+- **-network** - Usar `arbitrum-one-mainnet` para producción.
+
+### Identidad del orquestador y precios
+
+- **-serviceAddr** - Nombre de host público o IP y puerto (por ejemplo: `orchestrator.example.com:8935`). Preferir un nombre de host que controle; cambiarlo más tarde requiere una actualización en cadena.
+- **-pricePerUnit** - Precio en wei por píxel (transcodificación). Obligatorio al iniciar; puede actualizarse más tarde mediante la CLI o en cadena.
+- **-pixelsPerUnit** - Píxeles por unidad de precio (por defecto 1). Afecta cómo se calcula el precio por segmento.
+
+### GPU y modo
+
+- **-orchestrator** - Ejecutar en modo orquestador.
+- **-transcodificador** - Habilitar transcodificación con GPU.
+- **-nvidia** - Identificadores de GPU NVIDIA separados por comas (por ejemplo, `0,1`). Omitir para uso solo con CPU.
+
+Ejemplo de ejecución mínima:
+
+<CustomCodeBlock
+  codeString={`livepeer \\
+  -orchestrator \\
+  -transcoder \\
+  -network arbitrum-one-mainnet \\
+  -ethUrl <ETH_URL> \\
+  -serviceAddr <HOST:8935> \\
+  -pricePerUnit <WEI_PER_PIXEL> \\
+  -nvidia 0,1`}
+  language="bash"
+  icon="terminal"
+/>
+
+## Opcional: opciones de transcodificación
+
+Puedes definir perfiles de transcodificación en un archivo JSON y referenciarlos. Estructura de ejemplo:
+
+<CustomCodeBlock
+  codeString={`[
+  {
+    "name": "240p",
+    "width": 426,
+    "height": 240,
+    "bitrate": 250000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  },
+  {
+    "name": "720p",
+    "width": 1280,
+    "height": 720,
+    "bitrate": 3000000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  }
+]`}
+  language="json"
+  icon="brackets-curly"
+  filename="transcodingOptions.json"
+/>
+
+## Opcional: modelos de IA (orquestadores de IA)
+
+Si ejecutas inferencia de IA, crea un**aiModels.json** para especificar pipelines y modelos:
+
+<CustomCodeBlock
+  codeString={`[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "stabilityai/sd-turbo",
+    "warm": true
+  }
+]`}
+  language="json"
+  icon="brackets-curly"
+  filename="aiModels.json"
+/>
+
+Ver [pipelines de IA](../../advanced-setup/ai-pipelines) y [Desarrolladores BYOC](/developers/ai-pipelines/byoc) para configuración completa de IA.
+
+## Verificación
+
+Después de iniciar el nodo:
+
+- Los registros muestran`Listening for RPC on :8935` y no hay errores de RPC.
+- [Explorador](https://explorer.livepeer.org/) muestra su nodo después de la activación.
+- Bajo carga, el uso de la GPU (por ejemplo, `nvidia-smi`) aumenta cuando se procesan trabajos.
+
+## Ver también
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="/v2/orchestrators/setup/install-go-livepeer" arrow />
+  <Card title="Connect to Arbitrum" icon="plug" href="/v2/orchestrators/setup/install-go-livepeer" arrow />
+  <Card title="CLI flags reference" icon="terminal" href="../../references/cli-flags" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../../advanced-setup/rewards-and-fees" arrow />
+</Columns>

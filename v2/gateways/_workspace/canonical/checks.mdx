@@ -1,0 +1,548 @@
+# Per-Page Quality Checks — Canonical Reference
+
+Everything a page must pass before it ships. Organised by category, each with:
+- **What to check** (concrete items)
+- **What success looks like** (the bar)
+- **Frameworks, rules & tools that help** (where to look, what to run)
+
+Sources: `plan-canonical.md`, `content-pipeline-canonical.md`, `design-canonical.mdx`, `Frameworks.mdx`, `component-layout-decisions.mdx`, `voice-rules.md`, `section-naming.md`, `veracity.md`, `page-taxonomy-framework.mdx`, `v2-folder-governance.mdx`, `quality-gates.mdx`, `prompt-input-spec.md`, `docs-review-prompt-tiers.md`.
+
+---
+
+## 1. FRONTMATTER & TAXONOMY
+
+**What this catches**: Wrong classification, missing fields, deprecated enum values, pages that confuse the pipeline and break downstream systems.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 1.1 | All **10 required frontmatter fields** present | `title`, `sidebarTitle`, `description`, `pageType`, `audience`, `purpose`, `complexity`, `lifecycleStage`, `keywords`, OG image block — none missing, none empty |
+| 1.2 | `pageType` uses **7-type canonical schema** | One of: `concept`, `tutorial`, `guide`, `instruction`, `navigation`, `reference`, `resource`. No deprecated 12-type values (`landing`, `overview`, `how_to`, `quickstart`, `faq`, `troubleshooting`, `changelog`, `glossary`). When migrating a deprecated value, also set `pageVariant` per the §1.1 migration table in Frameworks.mdx (e.g. `quickstart` → `pageType: instruction` + `pageVariant: quickstart`; `faq` → `pageType: reference` + `pageVariant: compendium`; `glossary` → `pageType: reference` + `pageVariant: compendium`; `troubleshooting` → `pageType: instruction` + `pageVariant: troubleshooting`; `changelog` → `pageType: reference` + `pageVariant: changelog`) |
+| 1.3 | `pageVariant` valid if present | One of: `overview`, `specification`, `compendium`, `changelog`, `knowledge-hub`, `quickstart`, `troubleshooting`. `overview` is a variant, never a pageType. Several of these values correspond to deprecated-type migrations (see check 1.2 and the §1.1 migration table in Frameworks.mdx) |
+| 1.4 | `purpose` uses **15-value canonical set** | One of: `orient`, `explain`, `learn`, `choose`, `evaluate`, `start`, `build`, `configure`, `operate`, `troubleshoot`, `verify`, `integrate`, `optimise`, `reference`, `update`. No deprecated aliases (`orientation`, `concept`, `decision`, `setup`, `optimization`, `comparison`) |
+| 1.5 | `audience` uses **7-token set** | One of: `founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community`. Not old values like `general`, `everyone`, `internal`, `platform-builder`, `gateway-operator` |
+| 1.6 | `complexity` single canonical value | One of: `beginner`, `intermediate`, `advanced` |
+| 1.7 | `lifecycleStage` single canonical value | One of: `discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise` |
+| 1.8 | `veracityStatus` present and honest | One of: `verified`, `unverified`, `stale`. Default for AI-generated or unreviewed content is `unverified`. `verified` only if ALL sections pass their information-type veracity standard. `status: current` requires `veracityStatus: verified` AND zero `{/* REVIEW: */}` flags |
+| 1.9 | `industry` array valid if present | Max 2 entries from: `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer`. First entry dominates |
+| 1.10 | `niche` array valid if present | From: `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure` |
+| 1.11 | `description` well-formed | Subject-first, ≤160 chars, no self-reference ("this page"), UK English |
+| 1.12 | OG image block complete | All 5 OG fields present with correct fallback path |
+| 1.13 | `keywords` field quality | Keywords are specific, relevant, and searcher-intent-aligned. Not generic. Not synonyms of the title. Each keyword must be a term a target reader would actually search for. Bad: `"livepeer", "orchestrator"`. Good: `"run livepeer orchestrator node", "GPU transcoding setup", "AI inference pipeline livepeer"`. Cross-reference `v2/resources/glossary.mdx` — terms defined there are candidates for strong keywords |
+
+### What success looks like
+
+Every page classifiable by a cold-start agent that produces the same taxonomy a human would. Zero `missing-fields` pages site-wide. No deprecated enum values surviving in any frontmatter.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Canonical enum index | `workspace/plan/active/CONTENT-WRITING/framework-index-canonical.md` | Master list of all locked enums |
+| Frameworks.mdx | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | §1 Taxonomy Frameworks — full tables |
+| Page taxonomy framework | `docs-guide/frameworks/page-taxonomy-framework.mdx` | Frontmatter field schema (older 12-type version — cross-check against canonical 7-type) |
+| Frontmatter taxonomy update | `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md` | Deprecated alias migration map |
+| Frontmatter validator | `tools/config/frontmatter-taxonomy.js` | Automated check (needs updating to 7-type) |
+
+---
+
+## 2. VOICE & COPY
+
+**What this catches**: Generic AI slop, wrong register for the audience, US English, hedging, filler, self-referential openers, marketing language in technical content, technical language in delegator content.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 2.1 | **UK English throughout** | No US spellings: optimize→optimise, behavior→behaviour, color→colour, center→centre, labeled→labelled, canceled→cancelled, traveling→travelling, -ize→-ise (where both standard). Full table in Frameworks.mdx §2.3 |
+| 2.2 | **Zero banned words** | None of: `effectively`, `essentially`, `basically`, `meaningful`, `significant`, `real` (as intensifier), `various`, `several`, `obviously`, `clearly` |
+| 2.3 | **Zero banned phrases** | None of: "This section covers", "This page covers/explains/walks you through", "Understanding X is essential", "It is important to note", "As mentioned above", "and so on"/"etc.", "rather than", "what it takes", "it should be noted", "not just X", "can generate"/"may produce" in value claims, "The reason is straightforward", "among other factors", "low but not zero", "once X is stable", "depends on various" |
+| 2.4 | **Zero banned constructions** | No `not [X]` in value statements (state positive). No unresolved `if [condition]` in body prose. No `This page [verb]` self-reference. No `can/may [verb]` in value claims (assert directly) |
+| 2.5 | **Opening order correct** | Value or outcome before mechanism. Fact before caveat. Reader benefit before system description. Introduction opens with subject, not caveat or self-reference |
+| 2.6 | **Paragraph discipline** | One paragraph = one job. Lead sentence states the fact. Final sentence ends on fact, number, or next step — never a hedge |
+| 2.7 | **Audience register correct** | Voice matches the page's `audience` token. No orchestrator jargon on delegator pages. No marketing language on developer pages. No protocol architecture on founder pages. See per-audience rules below |
+| 2.8 | **Per-audience prohibited phrases absent** | Each audience has specific prohibited phrases (see Frameworks.mdx §2.2). E.g., orchestrator: no "easy to set up", "the network rewards you for"; gateway: no "simply", "just", "easy"; developer: no "with just a few lines"; builder: no "as you know, Livepeer is"; delegator: no "simply stake"; community: no "thriving community", "passionate contributors"; founder: no "powered by blockchain" |
+| 2.9 | **No passive value statements** | Every value claim is quantified or concrete. "Cost-effective" → "70% lower than AWS MediaConvert for 1080p". "Fast" → "sub-3-second latency" |
+| 2.10 | **No hedging openers** | Page does not open with a caveat, disclaimer, or conditional. Goes straight to the point |
+| 2.11 | **Terminology locked and consistent** | Uses terms from the locked terminology set (BYOC, NaaP, LIP-92 etc.). No deprecated or conflicted terms. Check `decisions/terminology-tracking.md` |
+
+### What success looks like
+
+Read any paragraph aloud and it sounds like a specific expert wrote it for a specific reader. No sentence could appear on any random docs site. Voice testing: score for correct register, prohibited terms absent, opening order correct, paragraph discipline — on 3 real pages per audience.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Voice rules (full) | Frameworks.mdx §2 + §3 | Universal + per-audience rules, banned words/phrases/constructions |
+| Banned words file | `tools/lib/copy-governance/banned-words.txt` | Automated check source |
+| Banned phrases file | `tools/lib/copy-governance/banned-phrases.txt` | Automated check source |
+| UK English table | Frameworks.mdx §2.3 | US→UK corrections |
+| Terminology tracking | `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md` | Locked + disputed terms |
+| Prompt testing protocol | `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md` | Voice testing methodology |
+
+---
+
+## 3. SECTION NAMING & HEADINGS
+
+**What this catches**: Generic, vague, or unstable headings that fail to communicate what a section actually contains. Structure words masquerading as meaning.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 3.1 | Every heading scores **≥20/25** on the naming rubric | 5 dimensions × 5 points: Precision, Depth, Stability, Clarity, Conciseness. **EXEMPT: `Related Pages` heading — do not score, do not include in the Heading Score Table, do not reference in check 3.2 or 3.7. It is an approved structural element. Treat as invisible to all heading checks.** |
+| 3.2 | No banned or weak standalone heading terms | Three tiers per Frameworks.mdx §4.1: **Banned** (never): `Basics`, `Notes`, `How It Works`, `See Also`, `Conclusion`, `What's Next`. **Avoid** (flag, suggest stronger): `Overview`, `Details`, `Information`, `Introduction`, `Summary`, `Options`, `Background`, `Next Steps`, `Further Reading`. **OK**: `Types`, `Modes`, `Profiles`, `Prerequisites`, `Configuration`, `Setup`, `Resources`, `Related`, etc. Banned terms also apply to heading **rename suggestions** — do not propose a fix that introduces a banned term. **EXEMPT: `Related Pages` — approved structural element, not subject to this check.** |
+| 3.3 | No literal contrast labels | No `X vs Y` headings — name the governing concept instead |
+| 3.4 | Domain-anchor rule applied | Heading includes the domain noun when needed to be interpretable in isolation (out of page context) |
+| 3.5 | Heading names the concept, not examples | "Hardware Architecture Tiers" not "NVIDIA vs AMD vs Intel" |
+| 3.6 | Title well-formed | 1–3 words, concept-derived, no banned forms. Uses the real governing concept, not a safe generic label |
+| 3.7 | Sounds like an expert editorial choice | Not a bureaucratic/safe label. Would a senior technical editor choose this heading? |
+
+### Scoring rubric (per heading)
+
+| Dimension | 5 (best) | 1 (worst) |
+|-----------|----------|-----------|
+| **Precision** | Names the exact concept | Could mean anything |
+| **Depth** | Signals the intellectual level | Surface-level label |
+| **Stability** | Survives content changes | Breaks if examples change |
+| **Clarity** | Instantly understood by target audience | Requires reading the section to understand |
+| **Conciseness** | Minimal words, maximum signal | Wordy or padded |
+
+### What success looks like
+
+A reader scanning only headings builds an accurate mental model of the page. Every heading is a "10-second test" — if you read only that heading, you know what the section delivers. Site-wide: all headings ≥20/25.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Section naming rubric | Frameworks.mdx §4.1 | Full scoring methodology, 12-candidate generation, winner filter |
+| Section naming source | `workspace/plan/active/CONTENT-WRITING/Frameworks/section-naming.md` (if available) | Canonical rubric definition |
+| Prompt input spec | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | Title rules for layout pass |
+
+---
+
+## 4. PAGE STRUCTURE & CONTENT ARCHITECTURE
+
+**What this catches**: Pages trying to do too many things, broken journeys, missing handoffs, content that doesn't serve the reader's actual job.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 4.1 | **One purpose, one audience, one job** | Page serves exactly one reader doing exactly one thing. If it serves two purposes equally, that's a content scope problem |
+| 4.2 | **Purpose statement test passes** | Can state: "This page lets the [AUDIENCE] [concrete action]." If you can't write that sentence, the page scope is wrong |
+| 4.3 | **PREV_PAGE / NEXT_PAGE adjacency correct** | Reader arriving from previous page has the knowledge needed. Reader leaving to next page knows why. No knowledge gaps in the sequence |
+| 4.4 | **No dead ends** | Every page has a clear next step. Reader always knows where to go |
+| 4.5 | **Prerequisites stated or linked** | All prerequisite knowledge explicitly stated at the top or linked. Reader achieves purpose without external context |
+| 4.6 | **Out-of-scope is clear** | What this page does NOT cover is understood (implicitly or explicitly). No scope creep |
+| 4.7 | **Information type per section is correct** | Each section's information type matches the permitted types for the page's `purpose` (see Purpose→Information Type mapping in Frameworks.mdx §1.6) |
+| 4.8 | **No content duplication from adjacent sections** | Content is not repeated from neighbouring pages or sections. If the same information appears twice, one instance is wrong |
+| 4.9 | **Section orientation page present** (section-level check) | Every section has an entry page that orients the reader |
+| 4.10 | **Cross-tab links at journey intersections** | At least 3 cross-tab links where audience journeys intersect (tab-level check) |
+| 4.11 | **No hardcoded data that exists in a data file** | Contract addresses, port numbers, pricing values, CLI flag defaults, and other structured data must be imported from their canonical data file, never hardcoded inline. If a `snippets/data/` or `operations/config/` source exists for the value, the page must consume it. Zero exceptions (per CLAUDE.md hard boundary) |
+
+### What success looks like
+
+A reader following the journey from entry to depth to exit never hits a wall, never re-reads content they've already seen, and never wonders "what am I supposed to do now?" Every page answers one arriving question completely.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Definition of Good (all levels) | `workspace/plan/active/CONTENT-WRITING/content-pipeline-canonical.md` lines 81–174 | Site/tab/section/page quality bars |
+| Content pass modes | `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md` | WRITE / REVIEW / REWRITE / AUDIT mode definitions |
+| Page brief format | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` line 692 | reader definition + one-sentence outcome + prev/next + single job + out-of-scope + human sign-off |
+| Purpose→InfoType mapping | Frameworks.mdx §1.6 | Which information types are permitted per purpose |
+| Audience design outputs | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/` | Per-tab audience analysis and journey maps |
+
+---
+
+## 5. LAYOUT, COMPONENTS & TEMPLATE
+
+**What this catches**: Wrong components for the page type, missing required sections, unapproved components, MDX that won't render, inconsistent page structure across the same pageType.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 5.1 | **Correct template for pageType + pageVariant** | Page uses the structural template defined for its type. See component-layout-decisions.mdx matrix |
+| 5.2 | **Required sections present** | Each pageType has mandatory sections. E.g., `instruction`/quickstart: Prerequisites, Steps, Next Steps. `concept`: Overview. `reference`: Reference. `guide`: Overview + Steps/H2 sections |
+| 5.3 | **Only approved components used** | Components match the "Preferred" column for the pageType. No unapproved components |
+| 5.4 | **Avoided components absent** | No TODO/TBD placeholders, no `Coming Soon`, no `PreviewCallout` where forbidden by the pageType matrix |
+| 5.5 | **Information type → component mapping correct** | `procedural` → Steps; `conceptual` → prose/Note; `reference` → table/ParamField; `multi-path` → Tabs |
+| 5.6 | **MDX renders clean** | Page renders without errors. No broken JSX, no unclosed tags, no import errors |
+| 5.7 | **No old-schema frontmatter** | No 12-type pageType values, no deprecated purpose aliases, no old audience tokens |
+| 5.8 | **CSS uses custom properties only** | No hardcoded hex colours, no ThemeData, no inline JS theme switching. Uses `var(--accent)`, `var(--text)`, etc. |
+| 5.9 | **Generated file banners intact** | Any generated file has the `generated-file-banner:v1` block and visible `<Note>` banner. Not hand-edited |
+| 5.10 | **Component naming/import conventions** | PascalCase component names, correct imports, components in semantic subdirectories per component-framework-canonical.mdx |
+
+### Component matrix (quick reference)
+
+| pageType | Required sections | Preferred components | Avoid |
+|----------|-------------------|----------------------|-------|
+| `navigation` | Portal/routing | Card, CardGroup | Content components |
+| `concept` | Overview | Accordion, AccordionGroup, CodeGroup, Tabs, Note, Info, Tip | TODO/TBD |
+| `tutorial` | Prerequisites, Steps, Next Steps | Steps, Step, CodeGroup, Tip, Warning, Check | Coming Soon |
+| `guide` | Overview, Steps or H2 | Steps, Step, CodeGroup, Note, Info, Tip, Card, CardGroup | Coming Soon, PreviewCallout |
+| `instruction` | Prerequisites, Steps | Steps, Step, CodeGroup, Warning, Check, Tip | Coming Soon, PreviewCallout |
+| `reference` | Reference | ParamField, ResponseField, CodeGroup, Tabs, Table | TODO/TBD/Coming Soon |
+| `resource` | Overview or H2 | Card, CardGroup, Table, Accordion, AccordionGroup, Note | TODO/TBD |
+
+| 5.11 | **No deprecated Mintlify component syntax; no inline component internals** | No old `<Callout>` syntax (use `<Note>`, `<Warning>`, `<Tip>`, `<Info>`). No component internals copy-pasted into MDX; import and use the component. If it does not do what you need, propose a prop addition, do not bypass it |
+| 5.12 | **Tabs must have icons** | Every `<Tab>` component must include an `icon` prop. Tabs without icons create visual inconsistency and reduce scannability. Use FontAwesome icon names that match the tab content |
+| 5.13 | **Code blocks must have icon and filename** | Every fenced code block must include `icon` and `title` attributes (e.g. `` ```bash icon="terminal" title="start-gateway.sh" ``). Icon conveys the tool; title conveys the file or command context. Bare code fences without metadata fail this check |
+| 5.14 | **Steps must use StyledSteps with accent variant** | Procedural step sequences must use `<StyledSteps>` (not raw `<Steps>`). StyledSteps should include accent styling props (`iconColor`, `titleColor` using `var(--accent)` or equivalent). Raw numbered lists or unstyled Steps components fail this check |
+| 5.15 | **Accordions must have icons** | Every `<Accordion>` component must include an `icon` prop. Accordions without icons create visual inconsistency and reduce scannability. Use FontAwesome icon names that match the accordion content |
+
+### What success looks like
+
+Every page of the same `pageType` has the same structural skeleton. A reader who has seen one `instruction` page knows exactly where to find prerequisites, steps, and next steps on any other. Zero render errors site-wide. Zero unapproved components.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Component layout matrix | `docs-guide/policies/component-layout-decisions.mdx` | Full pageType → sections → components → avoid matrix |
+| Component layout profile | `tools/config/component-layout-profile.json` | Machine-readable layout rules |
+| Component framework | `docs-guide/frameworks/component-framework-canonical.mdx` | Component taxonomy, naming, JSDoc standards |
+| Layout validator | `node operations/scripts/validators/components/library/component-layout-governance.js` | Automated layout check |
+| Style guide | `v2/resources/documentation-guide/style-guide.mdx` | CSS custom properties, colour system, three-layer framework |
+| Design canonical | `workspace/plan/active/CONTENT-WRITING/design-canonical.mdx` | Production Engine ideal state: "MDX renders clean. No unapproved components. No old-schema frontmatter. All headings specific." |
+
+---
+
+## 6. VERACITY & FACTUAL ACCURACY
+
+**What this catches**: Plausible-sounding AI hallucinations, outdated facts, untested procedures, unverifiable claims, stale information presented as current.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 6.1 | **Every factual claim citable** | Can point to a specific authoritative source for every fact. Protocol contracts, API specs, official changelogs for `factual` type. Live system testing for `procedural` type. GitHub repos for `technical` type |
+| 6.2 | **Code/commands tested** | Every code block, CLI command, and procedure has been executed in the correct environment and produces the stated output |
+| 6.3 | **No deprecated API usage** | All endpoints, SDK methods, CLI flags are current. No references to removed or renamed APIs |
+| 6.4 | **Numbers are real** | Every number (earnings, percentages, VRAM requirements, latency figures) is sourced and current. No "approximately" without a range |
+| 6.5 | **REVIEW flags for unverified claims** | Any claim that cannot yet be verified has `{/* REVIEW: [claim] — [what needs checking] */}` inline |
+| 6.6 | **veracityStatus honest** | Page-level veracityStatus reflects the weakest section. If any section at "very high" or "high" standard is unverified → page is `unverified` |
+| 6.7 | **Authoritative vs AI-generated glossary** | Content uses `resources/glossary.mdx` (human-reviewed, authoritative). Never trusts `resources/compendium/glossary.mdx` (AI-generated, unverified) without cross-check |
+| 6.8 | **Source staleness check** | Information sourced from fast-changing sources (API responses, smart contracts, SDK versions) is flagged for staleness risk |
+| 6.9 | **No open-ended research tasks** | Every residual veracity item has a named source and a concrete next step. No "needs more research" |
+
+### Veracity standards by information type
+
+| Information type | Standard | "Verified" means | Authoritative sources |
+|------------------|----------|-------------------|-----------------------|
+| `factual` | Very high | Every claim citable against primary source | Protocol contracts, API specs, changelogs |
+| `technical` | Very high | Code tested against live system, current codebase | go-livepeer, GitHub repos, live APIs |
+| `procedural` | Very high | Every step executed, produces stated output | Live system testing, official CLI docs |
+| `change` | Very high | Every entry confirmed against release/migration | GitHub releases, changelogs |
+| `evaluative` | High | Evidence is real, sourced, labelled if approximate | Benchmarks, analytics, actual cost data |
+| `structural` | High | Accurately reflects current site structure | docs.json, live site |
+| `analytical` | Medium | Reasoning consistent with documented behaviour | Derived from factual/technical sources |
+| `conceptual` | Medium | Mental model consistent with documented behaviour | Official docs, whitepapers |
+| `narrative` | Lower | Value framing consistent with foundation comms | Foundation communications, official positioning |
+
+### What success looks like
+
+≥90% auto-clearance rate against the 45-source veracity library. Every residual item has a named source. No open-ended research tasks. False positive rate below 5%. Zero pages with `veracityStatus: verified` that contain unchecked claims.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Veracity framework | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | Standards per information type, blocking rules |
+| Veracity source library | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | All 45 authoritative sources with tier, staleness risk, update frequency |
+| Frameworks.mdx §1.7 | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Veracity quick reference |
+| Glossary (authoritative) | `v2/resources/glossary.mdx` | Human-reviewed terms |
+| Glossary (AI, untrusted) | `v2/resources/compendium/glossary.mdx` | Must cross-check before trusting |
+
+---
+
+## 7. NAVIGATION & INFORMATION ARCHITECTURE
+
+**What this catches**: Orphaned pages, broken paths, missing from docs.json, dead-end journeys, wrong position in the tab/section hierarchy.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 7.1 | **Page exists in docs.json** | File path matches a docs.json navigation entry. No orphaned files. No phantom nav entries pointing to missing files |
+| 7.2 | **Navigation matches file system** | docs.json structure mirrors actual directory structure. Zero broken paths |
+| 7.3 | **Tab entry portal routes to all sections** | Tab root page links to every section within the tab |
+| 7.4 | **No structural orphans** | Every page reachable from at least one navigation path |
+| 7.5 | **Audience journey complete** | Entry → depth → exit with no missing steps for the tab's primary audience |
+| 7.6 | **Cross-tab graduation paths exist** | Founder→About→Builder→Developers/Gateways; Builder→Developer; Delegator→About; Orchestrator→Gateway — where applicable |
+| 7.7 | **File in correct lane** | Publishable content in `v2/<section>/`, not in `_workspace/`. Non-publishable in `_workspace/`. Deprecated in `x-deprecated/` or `x-archived/` |
+| 7.8 | **File naming conventions** | Prefixes used correctly: `s-` (setup), `r-` (reference), `rs-` (ref+setup), `rcs-` (ref+config+setup), `x-` (deprecated), `dep-` (deprecated). No `-index.mdx` suffix |
+| 7.9 | **_workspace/ TTL compliance** | Files in notes/, drafts/: ≤30 days. Files in archive/: ≤90 days. Active plans: no TTL |
+| 7.10 | **No links to `dep-` prefixed files from non-deprecated pages** | Active (non-deprecated) pages must not link to files with a `dep-` prefix. Deprecated files are not part of the live navigation and linking to them creates dead-end journeys. If the content is still needed, it should be migrated to a live page first |
+
+### What success looks like
+
+A new reader can enter any tab and navigate to any piece of information they need without hitting a dead end, a broken link, or a page that doesn't belong. docs.json is a perfect mirror of the file system. Zero orphans.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| docs.json | Root `docs.json` | Navigation source of truth |
+| V2 folder governance | `docs-guide/policies/v2-folder-governance.mdx` | Publishable vs workspace lanes, TTL rules |
+| Workspace lifecycle | `docs-guide/policies/workspace-lifecycle-policy.mdx` | Retention and cleanup rules |
+| Tab status board | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Per-tab gate tracking |
+| Cross-tab journeys | `workspace/plan/active/CONTENT-WRITING/decisions/cross-tab-journeys.md` | Graduation path definitions |
+
+---
+
+## 8. LINKS & RENDERING
+
+**What this catches**: Broken internal/external links, pages that fail to render, import errors, missing assets.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 8.1 | **All internal links resolve** | Every `[text](/path)` and `<a href>` points to an existing page |
+| 8.2 | **All external links live** | No 404s, no redirect chains, no dead domains |
+| 8.3 | **All snippet imports resolve** | Every `<Snippet file="..." />` or MDX import points to an existing snippet |
+| 8.4 | **All images load** | Every image path resolves. Image files ≤2MB. PNGs >500KB reviewed for WebP conversion |
+| 8.5 | **Page renders without error** | No JSX errors, no unclosed tags, no missing component imports, no Mintlify build errors |
+| 8.6 | **No TODO/TBD/Coming Soon in published content** | Any placeholder text belongs in `_workspace/`, not in publishable pages |
+
+### What success looks like
+
+Every link clicked works. Every page loads fully. No console errors. No missing images. No broken imports. This is table stakes.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Quality gates | `docs-guide/policies/quality-gates.mdx` | CI validation layers (pre-commit, PR, scheduled) |
+| Link health checks | PR CI pipeline | Automated link validation |
+| Snippets/assets policy | `docs-guide/policies/snippets-assets-policy.mdx` | Image size limits, directory structure |
+| Mintlify preview | Local dev server (NOT port 3000) | Render validation |
+
+---
+
+## 9. PROCESS & GOVERNANCE
+
+**What this catches**: Pages that shipped without proper review, skipped gates, missing human sign-off, decisions not in the registry.
+
+### Checks
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 9.1 | **Human sign-off recorded** | Page has been explicitly approved by a human. Agent self-reporting does not count |
+| 9.2 | **All consuming decisions in registry** | Any structural decision the page depends on exists in `decisions/decision-registry.md` with date and sign-off |
+| 9.3 | **Gate prerequisites met** | Page did not skip gates: IA Approved → Terminology Locked → Content Scan Done → Structure Approved → Content Pass Open → Veracity Done → Layout Done |
+| 9.4 | **Phase ordering respected** | Phase 8 (naming) ran BEFORE Phase 7 (veracity). No orphaned veracity markers from post-naming heading changes |
+| 9.5 | **Findings gathered before fixes** | Page went through structured review (findings report → scope approval → execution). Not fixed ad hoc |
+| 9.6 | **Feedback routed** | Any corrections found during review are routed through `decisions/feedback-routing-map.md` — not just fixed locally |
+
+### What success looks like
+
+Every shipped page has a traceable provenance: who approved it, what gates it passed, what decisions it consumed. No page ships on agent self-assessment alone. Every correction teaches the system something.
+
+### Frameworks & tools
+
+| Resource | Location | Use |
+|----------|----------|-----|
+| Decision registry | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | Authoritative decision record |
+| Tab status / gates | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | Gate tracking per tab |
+| Feedback routing | `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | Correction → standards routing |
+| Session start protocol | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` | Mandatory pre-work steps |
+| Plan canonical | `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` | Phase ordering, gate definitions |
+| What agents must never do | `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md` §6 | 12 hard prohibitions |
+
+---
+
+# REVIEW EXECUTION GUIDE
+
+## How to run a per-page review
+
+Based on `docs-review-prompt-tiers.md` Tier 3 (Single Page):
+
+### Pre-flight (before touching the page)
+1. **Check for `generated-file-banner`** — if present, read the generation script before logging any findings. Script bugs are root causes; page-level symptoms are not actionable.
+2. Read the page's frontmatter — classify against canonical enums. **Read each field value directly from the file. Do not infer `purpose` from `pageType`. Do not infer `audience` from the file path.**
+3. Identify the page's audience, purpose, and pageType — from the actual field values, not from context
+4. Load the relevant voice rules for that audience
+5. Load the component matrix for that pageType — read `docs-guide/policies/component-layout-decisions.mdx` if you need to verify component approval status
+6. Note the page's position in the journey (what comes before/after) — read `docs.json` to confirm the navigation sequence, do not infer from memory
+
+### Review pass order
+1. **Frontmatter** (Category 1) — all fields present, all values canonical
+2. **Structure** (Category 4) — one purpose, one job, prerequisites, handoffs
+3. **Headings** (Category 3) — score each ≥20/25
+4. **Voice & copy** (Category 2) — banned words, register, UK English, opening order
+5. **Layout & components** (Category 5) — correct template, approved components
+6. **Veracity** (Category 6) — claims sourced, code tested, REVIEW flags placed
+7. **Links & rendering** (Category 8) — everything resolves, page renders clean
+8. **Navigation** (Category 7) — in docs.json, reachable, no dead ends
+9. **Spelling/typo pass** — scan all visible text: headings, link text, prose, card descriptions, table cells
+
+### Verdict scale
+
+| Verdict | Meaning |
+|---------|---------|
+| **PASS** | Ships as-is. All checks pass |
+| **NEEDS WORK** | Specific fixes identified. Fix, re-check affected categories, then re-verdict |
+| **REWRITE REQUIRED** | Fundamental scope, audience, or structure problem. Page brief needed before rewrite |
+
+### Self-check (after review)
+- [ ] Introduction opens with subject, not caveat
+- [ ] No "this page" self-reference anywhere
+- [ ] Every section has a clear handoff to the next
+- [ ] Volatile content has REVIEW flag
+- [ ] All corrections routed through feedback map
+
+---
+
+## MANDATORY REPORT FORMAT
+
+Every check report must include these sections. Nothing silently skipped — every check appears as PASS, FAIL, or N/A with reason.
+
+### Frontmatter Table
+
+| Field | Present? | Value | Pass/Fail | Notes |
+|-------|----------|-------|-----------|-------|
+
+All 10 required fields (check 1.1) plus any extras. State the actual value, not just present/missing.
+
+### Categories 1–9
+
+Every numbered check must appear. If not applicable, state why: `N/A — [reason]`.
+
+### Banned Construction Scan
+
+**Scope:** all visible text including body prose, headings, frontmatter `description`, Tips, Notes, Warnings, table cells, card descriptions, **CustomDivider `middleText` props**, **AccordionGroup `title` props**, **Tabs `title` props**, and any other visible component prop.
+
+**No exemptions beyond those in checks.mdx or CLAUDE.md.** If a construction matches the pattern but its intent is unclear, flag as BORDERLINE and request human review. Do not invent exemption categories (e.g., "boundary-setter", "page-edge context").
+
+List every sentence containing "can", "may", "could", "might", "should", plus every `if [condition]` construction and every `not [X]` statement:
+
+| Line | Sentence | Word/Pattern | Classification | Flag? |
+|------|----------|--------------|----------------|-------|
+
+Classification: `value-claim` (flag) / `procedural` (ok) / `conditional caveat` (ok) / `rhetorical` (ok) / `BORDERLINE` (flag for human review).
+
+**Show the work:** list every candidate match considered, even when the result is PASS. A PASS with no candidates listed is not verifiable.
+
+### Heading Score Table
+
+Per-dimension breakdown for every heading. No aggregate scores without showing the maths.
+
+| Heading | Precision | Depth | Stability | Clarity | Conciseness | Total |
+|---------|-----------|-------|-----------|---------|-------------|-------|
+
+### Spelling/Typo Check
+
+Scan all visible text. State findings or "No typos found."
+
+### Component Matrix
+
+| Component | Used? | Appropriate for `[pageType]`? | Notes |
+|-----------|-------|-------------------------------|-------|
+
+Flag components not in the Preferred column. Flag obvious issues — no need for exhaustive cross-reference.
+
+### Cross-Category Connections
+
+When findings in different categories share a root cause, log it once here and cross-reference from each category. Do not log the same finding twice.
+
+```
+Root Cause [N]: [description]
+Affects: Cat X.Y + Cat X.Y
+Fix: [single concrete fix]
+```
+
+### Blocking Decision (when applicable)
+
+When page purpose, audience, or scope is ambiguous, state this first. All other findings are conditional on the decision.
+
+```
+Blocking Decision: [question]
+Options: [A] / [B]
+If A: [fixes that apply]
+If B: [fixes that apply]
+```
+
+---
+
+## REPORTING RULES
+
+**Fixes must be executable.** No "add appropriate X". No "or as appropriate". Specify the exact value, line, or action. Another agent must be able to execute the fix with zero additional context.
+
+**Definition strings in fixes must be REVIEW placeholders.** Any definition or explanatory text proposed as a fix must use this format: `{/* REVIEW: [term] — verify definition against [source] before inserting */}`. Do not write a definition string as if it is verified content.
+
+**Schema rules must be cited.** Any finding that asserts a schema constraint (field X requires field Y, value A requires value B) must cite the specific checks.mdx section. If no section can be cited, downgrade to INFO: "inferred policy — source required before actioning."
+
+**Read fields directly.** State the actual frontmatter field value — read it, do not infer it. Never infer `purpose` from `pageType`. Never infer `audience` from the page's file path alone.
+
+**Characterise the error correctly.** When a frontmatter value fails, state which failure type applies: (a) deprecated alias — value was valid in old schema; (b) wrong field — value is valid but placed in the wrong field (e.g. a pageType value in the purpose field); (c) invalid value — not in either schema. These are different problems with different fixes.
+
+**Evaluate the current state only.** All findings evaluate the page as it currently exists. Do not evaluate a check against a proposed post-fix state. If a check's result depends on a value you are also recommending be changed, note the dependency and evaluate the current value.
+
+**Result column must match the detail conclusion.** If the check detail says PASS, write PASS in the result column. If FAIL, write FAIL. Before finalising the report, scan every check row for result/detail contradictions and fix them.
+
+**Veracity findings: TESTED or NOT-TESTED.** Every code block, command, or factual claim must be labelled:
+- `TESTED:` — executed, produced stated output
+- `NOT-TESTED:` — not executed. State why and the risk.
+
+"REVIEW — verify this" is not a finding format.
+
+**Component approval: NOT-TESTED unless the catalog was read.** The canonical component list is `docs-guide/catalog/components-catalog.mdx`. If this file was not actually read, the component check result is NOT-TESTED. Do not mark FAIL without reading it. Layout-per-pageType rules are in `docs-guide/policies/component-layout-decisions.mdx`.
+
+**Verify every cited occurrence.** Before reporting a banned word/term, scan the file and count instances. Quote the content at the cited line. Do not report a line number without quoting the text there. Do not count from memory. Terms that appear only in the `keywords` frontmatter field are not undefined at first use in body prose — only scan body prose and visible component props for first-use violations.
+
+**Link verification.** Use `operations/scripts/validators/content/structure/check-docs-path-sync.js`. For pages with many links, verify at minimum 20% and list them in a table. A link target present in `docs.json` is not broken — verify before flagging. State the docs.json line where you confirmed presence or absence.
+
+**Navigation sequence.** Check 4.3 (PREV_PAGE/NEXT_PAGE adjacency) requires reading `docs.json` to confirm the sequence. State the specific docs.json lines consulted. Never state a navigation order from memory.
+
+**Self-consistency corrections are only complete when ALL instances are updated.** Before closing the report, verify: (1) check table result column matches the detail conclusion, (2) verdict count matches the number of FAIL entries in the check table, (3) cross-category connections do not reference retracted findings, (4) fix list does not include withdrawn fixes, (5) scores cited in verdict/narrative match the score table.
+
+**Findings must appear in all applicable sections.** A finding in the check category section must also appear in the scan table (if it's a banned construction) and the fix list (if it has a fix). If intentionally excluded, write: "Not in fix list — [reason]." No orphaned findings.
+
+**Severity levels.** Use only: CRITICAL / HIGH / MEDIUM / INFO. "LOW" is not valid — use INFO.
+
+**Em-dash prohibition applies to all visible text.** CLAUDE.md prohibits em dashes in headings, frontmatter `description`, and body prose. Not restricted to body prose only.
+
+**Heading rename suggestions** must not introduce BANNED heading terms (Frameworks.mdx §4.1), and must be checked against other existing headings on the same page. If a rename would create near-identical overlap with an existing heading, propose a disambiguated version.
+
+**veracityStatus fix must be internally consistent.** `status: current` requires `veracityStatus: verified` per check 1.8. Valid fixes: change `status` to `draft`, OR add `veracityStatus: verified` (only when content is actually verified). Never recommend `status: current` + `veracityStatus: unverified` together.
+
+**First use in Mermaid/diagram labels counts as first use.** When a term appears first in a Mermaid block or code block, the fix requires two parts: (1) a Note immediately after the diagram block, (2) an inline definition at the first prose occurrence.
+
+**Dead imports.** Do not flag. Not a content quality issue for this run.
+
+**Deduplication.** Log each finding once in the most specific category. Cross-reference from others.
+
+---
+
+# SEVERITY DEFINITIONS
+
+For logging findings:
+
+| Severity | Meaning | Action |
+|----------|---------|--------|
+| **CRITICAL** | Breaks downstream phase, produces structurally wrong output, or fails on common page type | Fix before any further work |
+| **HIGH** | Incorrect/incomplete on specific cases but does not break downstream | Fix recommended before shipping |
+| **MEDIUM** | Inconsistent but does not break downstream consumption | Monitor; fix in next pass |
+| **INFO** | Expected variation or minor style preference | Document; no action required |
+
+---
+
+# FINDINGS
+
+_Use this section to log per-page findings during reviews. Format:_
+
+```
+## [Page path]
+- **[SEVERITY]** Category [#]: [Finding description]
+  - Expected: [what should be]
+  - Found: [what is]
+  - Fix: [what to do]
+```

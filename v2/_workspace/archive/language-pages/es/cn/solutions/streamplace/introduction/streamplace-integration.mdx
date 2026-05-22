@@ -1,0 +1,140 @@
+---
+title: 开发者集成指南
+description: 如何将Streamplace集成到去中心化社交应用、Web3平台和Livepeer驱动的视频流水线中。
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace integration
+  - developer
+  - integration
+  - guide
+  - integrate
+  - decentralized
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWludGVncmF0aW9uLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL3N0cmVhbXBsYWNlL2ludHJvZHVjdGlvbi9zdHJlYW1wbGFjZS1pbnRlZ3JhdGlvbiIsInNvdXJjZUhhc2giOiJlMzJjYmNmYWQ0YWNmZGE1MjliYTAwOWRhZGY3ODIwZTdjOWYxMTZmNDYwZGQyYjAzZDBmNDA0Y2Q3Mzg0OTRlIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE4OjEzOjMwLjk0MloifQ== */}
+---
+
+# 开发者集成指南
+
+本指南解释了开发者如何将其集成到去中心化应用程序中。Streamplace 提供一个完整的**采集 → 权威性 → 转码 → 分发** 流程，可直接连接到 Livepeer 网络。
+
+您将获得：
+
+- 直播流
+- 元数据和权利管理
+- 出处（C2PA + Ethereum 签名）
+- 通过 Livepeer 的无缝转码
+- HLS/WebRTC 播放
+
+---
+
+# 🚀 快速入门
+
+## 1. 安装 Streamplace 节点
+
+```bash
+curl -s https://get.stream.place/install | bash
+```
+
+## 2. 开始直播
+
+```bash
+streamplace stream start --source webcam
+```
+
+## 3. 添加元数据
+
+配置内容权利、警告和分发政策:
+
+```json
+{
+  "contentRights": "CC-BY-4.0",
+  "contentWarnings": ["flashing lights"],
+  "distributionPolicy": {
+    "retainSegments": true,
+    "allowSyndication": true
+  }
+}
+```
+
+## 4. 使用 Streamplace SDK
+
+```ts
+import { StreamplaceClient } from '@streamplace/sdk'
+
+const sp = new StreamplaceClient()
+const stream = await sp.createStream()
+```
+
+---
+
+# 🧩 Streamplace 如何与 Livepeer 集成
+
+Streamplace 做**不**自行进行转码。相反，它：
+
+1. 对每个 MP4 段（1 秒）进行分段和签名
+2. 嵌入元数据 + 权威信息
+3. 将分段发送到 Livepeer 广播者
+4. Livepeer 网络上的协调者处理 GPU 转码
+5. Streamplace 重新生成清单并准备播放输出
+
+这将所有计算密集型工作卸载到 **去中心化 GPU 市场**.
+
+---
+
+# 📦 播放集成
+
+Streamplace 提供播放端点:
+
+- **HLS 摘要文件**
+- **WebRTC 会话**
+
+播放器可以:
+
+- 验证 C2PA 摘要文件
+- 验证以太坊签名
+- 自动显示权利/警告
+
+示例 UI 组件（React）：
+
+```jsx
+<StreamplacePlayer src={manifestUrl} showProvenance={true} />
+```
+
+---
+
+# 🔧 集成模式
+
+## 🤝 1. 社交网络（AT 协议，Fediverse）
+
+- 用户直播创建
+- 自动权利/警告浮现
+- 可追溯的动态消息
+
+## 🎥 2. 创作者平台
+
+- 按视频的所有权证明
+- 自动化许可和信用显示
+
+## 📰 3. 新闻与事实核查
+
+- 每个片段的可验证来源
+- 播放过程中内置的篡改检测
+
+## 🏛️ 4. 社区运营的视频平台
+
+- 自托管节点 + 分布式审核
+- 基于元数据的分发规则
+
+---
+
+# 📚 相关页面
+
+- [Streamplace 概览](/solutions/streamplace/overview)
+- [Streamplace 如何工作](/solutions/streamplace/introduction/streamplace-guide)
+- [架构](/solutions/streamplace/introduction/streamplace-architecture)
+- [来源与元数据](/solutions/streamplace/introduction/streamplace-provenance)
+- [SPE资金模型](/solutions/streamplace/introduction/streamplace-funding-model)

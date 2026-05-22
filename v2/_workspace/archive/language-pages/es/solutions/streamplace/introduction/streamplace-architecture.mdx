@@ -1,0 +1,211 @@
+---
+title: Arquitectura de Streamplace
+description: >-
+  Arquitectura detallada que muestra Streamplace, Livepeer, Orchestrators,
+  procedencia y capas de usuario.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace architecture
+  - architecture
+  - detailed
+  - showing
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWFyY2hpdGVjdHVyZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9zdHJlYW1wbGFjZS9pbnRyb2R1Y3Rpb24vc3RyZWFtcGxhY2UtYXJjaGl0ZWN0dXJlIiwic291cmNlSGFzaCI6IjRiMWFmYTJkMzM2OGYyNzMyNWM4MDRjNGU3ZjRlZDIxNzU1Y2U2ZTdhMmJkNThlYjMxNjJmOTM2NjcyYjdhNDMiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTg6MDY6NTIuMzIzWiJ9 */}
+---
+
+Streamplace se sitúa entre las aplicaciones sociales descentralizadas y la red Livepeer para proporcionar un**proceso completo de ingesta → origen → codificación → distribución**pipeline.
+
+Esta página sintetiza el modelo arquitectónico completo, incluyendo:
+
+- responsabilidades de Streamplace SPE
+- arquitectura de nodo y SDK
+- Flujo de procedencia de C2PA + Ethereum
+- Livepeer rol de emisor y orquestador
+- Reproducción y verificación del usuario
+
+---
+
+# 🧩 Diagrama de arquitectura de alto nivel
+
+```mermaid
+flowchart TB
+
+    subgraph DAO[Livepeer Foundation / DAO]
+        T[Treasury Grants & Governance]
+    end
+
+    subgraph SPE[Streamplace SPE]
+        S1[Node / SDK / APIs]
+        S2[Metadata Schema]
+        S3[C2PA + Ethereum Signatures]
+    end
+
+    subgraph Social[Decentralized Social Apps]
+        U1[AT Protocol Apps]
+        U2[Fediverse Clients]
+        U3[Web3 Video Platforms]
+    end
+
+    subgraph Node[Streamplace Node]
+        N1[Ingest WHIP/WHEP/RTMP]
+        N2[Segment MP4 (1s)]
+        N3[Embed Metadata + Rights]
+        N4[Apply Provenance]
+    end
+
+    subgraph Livepeer[Livepeer Network]
+        B[Broadcaster]
+        O[Orchestrators - GPU]
+        V[Verifiability Layer]
+    end
+
+    subgraph Playback[Playback Layer]
+        P[HLS/WebRTC Player]
+    end
+
+    DAO --> SPE
+    Social --> Node
+    SPE --> Node
+    Node --> Livepeer
+    Livepeer --> Playback
+```
+
+---
+
+# 🧠 Explicaciones de las capas de arquitectura
+
+## 1. **Livepeer Foundation / DAO (Capas de financiación)**
+
+El Tesoro de Livepeer financia Streamplace como una**Entidad con Propósito Especial**para entregar:
+
+- infraestructura de video de código abierto
+- sistemas de procedencia
+- un nodo + SDK usable por cualquier aplicación social descentralizada
+
+Esto garantiza la sostenibilidad a largo plazo y alineación con los principios de bienes públicos.
+
+---
+
+## 2. **Capa SPE de Streamplace**
+
+Las responsabilidades de Streamplace incluyen:
+
+- diseñar y mantener la **nodo de transmisión**
+- proporcionando desarrollador **SDKs + APIs**
+- gestionando el **esquema de metadatos** (`place.stream.metadata.*`)
+- desarrollando el **pipeline de probabilidad C2PA + Ethereum**
+
+Esta capa envía infraestructura, no una plataforma alojada.
+
+---
+
+## 3. **Capa de Aplicación / Cliente (Aplicaciones de Redes Sociales Descentralizadas)**
+
+Las aplicaciones integran el SDK de Streamplace para:
+
+- iniciar transmisiones en vivo
+- configurar metadatos (derechos, advertencias, políticas)
+- autenticar creadores mediante billeteras o sistemas de identidad
+
+Ejemplos:
+
+- aplicaciones de AT Protocol
+- Clientes de Fediverse
+- Herramientas para creadores de Web3
+
+---
+
+## 4. **Capa de nodo de Streamplace (Ingesta y Proveniencia)**
+
+El nodo de Streamplace realiza la mayor parte del trabajo técnico pesado:
+
+### Ingesta
+
+Soporta:
+
+- WHIP / WHEP
+- RTMP
+- WebRTC en el navegador
+
+### Segmentación
+
+Divide el video en **segmentos de MP4 de 1 segundo**.
+
+### Procedencia
+
+Cada segmento recibe:
+
+- **manifesto C2PA**
+- **firma de Ethereum** para la vinculación de identidad
+
+### Incorporación de metadatos
+
+Adjunta:
+
+- derechos de contenido
+- política de distribución
+- avisos de contenido
+- configuración de reproducción
+
+---
+
+## 5. **Livepeer Capa de red**
+
+Una vez que Streamplace empaqueta los segmentos, pasa el video a Livepeer.
+
+**Rol del emisor:**
+
+- recibe segmentos firmados
+- los envía a los orquestadores
+
+**Orquestadores:**
+
+- codificación acelerada por GPU
+- generación de ABR (bits múltiples)
+- puede incluir metadatos del entorno
+
+**Capa de verificabilidad:**
+
+- garantiza una codificación correcta
+- habilita la entrega minimizada en confianza
+
+---
+
+## 6. **Capa de Distribución (Salida de Streamplace)**
+
+Streamplace reconstruye:
+
+- manifestos HLS
+- salidas de sesión WebRTC
+- estructuras de reproducción enriquecidas con metadatos
+
+También asegura:
+
+- la integridad de la procedencia se mantiene de extremo a extremo
+- se aplican las reglas de distributionPolicy
+
+---
+
+## 7. **Capa de reproducción (para el usuario)**
+
+Los usuarios reciben:
+
+- flujos HLS o WebRTC
+- metadatos, advertencias, visualizaciones de derechos
+- proveniencia verificable (C2PA + Ethereum)
+
+Esto hace que el video **confiable, consciente de los derechos y resistente a la censura**.
+
+---
+
+# 🔗 Páginas relacionadas
+
+- [Visión general](/solutions/streamplace/overview)
+- [Cómo funciona Streamplace](/solutions/streamplace/introduction/streamplace-guide)
+- [Procedencia y metadatos](/solutions/streamplace/introduction/streamplace-provenance)
+- [Modelo de financiación](/solutions/streamplace/introduction/streamplace-funding-model)
+- [Guía de integración para desarrolladores](/solutions/streamplace/introduction/streamplace-integration)

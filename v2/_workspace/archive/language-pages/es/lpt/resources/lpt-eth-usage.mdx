@@ -1,0 +1,45 @@
+---
+title: LPT & ETH Funciones del token
+sidebarTitle: Flujos del token del protocolo
+description: ¿Para qué se utilizan los tokens LPT & ETH en el protocolo Livepeer?
+keywords:
+  - livepeer
+  - delegators
+  - token resources
+  - lpt eth usage
+  - token
+  - functions
+  - tokens
+  - protocol
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9scHQvcmVzb3VyY2VzL2xwdC1ldGgtdXNhZ2UiLCJzb3VyY2VIYXNoIjoiMDkxNWU3YmI4NGM5NjAzMDEwYzhhOTA5YTMyZmFkNGYyMDgzYThmNTRmY2M0YzBhMDU5MGFhMjZmMjM2OWUxMiIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMToyNTo0OC4zMzBaIn0= */}
+<Note>
+  {' '}
+  This is wild to me that Gateways do not use LPT to pay orchestrators. Need to dig
+  into the why more
+</Note>
+
+### Capas de pago
+
+El protocolo Livepeer utiliza dos monedas distintas para diferentes propósitos:
+
+| Moneda | Propósito                            | Usado por                   |
+| -------- | ---------------------------------- | ------------------------- |
+| ETH/Wei  | Pagos de servicio (transcodificación, IA) | Puertas de enlace → Orquestadores  |
+| LPT      | Staking, gobernanza, recompensas       | Orquestadores, Delegadores |
+
+La separación es intencional: ETH maneja los pagos reales de servicio, mientras que LPT maneja la gobernanza del protocolo y el staking.
+Este diseño mantiene los costos de servicio predecibles en una moneda estable, mientras permite que LPT cumpla su función de gobernanza
+
+**Configuración de precios**Los precios se pueden especificar en wei o convertidos de divisas fiduciarias[starter.go:891-908](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go#L891-L908)
+
+```go
+pricePerUnit, currency, err := parsePricePerUnit(*cfg.PricePerUnit)
+// Supports: "1000", "0.50USD", "1.5EUR" etc.
+// Converts to wei for actual payments
+```
+
+## ETH Pagos
+
+Los gateways pagan por los servicios de transcodificación y procesamiento de IA utilizando ETH (Ethereum), no tokens Livepeer (LPT). El sistema de pago se basa en la moneda de Ethereum.

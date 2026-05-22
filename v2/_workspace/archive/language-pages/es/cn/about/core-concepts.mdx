@@ -1,0 +1,126 @@
+---
+title: Livepeer 核心概念
+sidebarTitle: Livepeer 核心概念
+description: 对 Livepeer 实时 AI 与视频网络的关键概念和架构的高级介绍
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - livepeer core concepts
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9jb3JlLWNvbmNlcHRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvY29yZS1jb25jZXB0cyIsInNvdXJjZUhhc2giOiJiNTVlZjBkMjdhZDk2MGQxMzNkMjY0YWFmYjUzNjdiZDM5YmM4MTRhM2Q1ZDlmOTMxYzIwYmI1MTUwZTIzYzY5IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDE3OjA4OjQ2LjQwNloifQ== */}
+import Protocol from "/snippets/pages/01_ABOUT/concepts/protocol.mdx"
+import Network from "/snippets/pages/01_ABOUT/concepts/network.mdx"
+import Actors from "/snippets/pages/01_ABOUT/concepts/actors.mdx"
+
+### 概览与分离
+
+Livepeer 被设计为一个模块化的视频/AI 网络，基于最小化的链上协议。该协议在以太坊上管理资产和激励，而链下网络负责转码和 AI 处理的繁重工作。官方文档明确区分了这些领域：
+
+链上协议 – 智能合约持有来自广播者和编排者的 ETH 存款；铸造并分发 LPT 质押代币；发行概率支付票据；执行质押、惩罚和奖励规则；并管理治理。该协议不进行视频转码或运行 AI。其作用是协调支付并维护去信任化状态。
+
+链下网络 – 编排节点运行 Livepeer 软件以执行转码和 AI 工作负载。它们在价格、质量和延迟上竞争。视频/AI 任务和路由完全在链下进行。像 Livepeer Studio 和社区网关等服务位于该层之上。
+
+桥接 – 广播者将 ETH 存入协议，并随每个片段发送概率票据。编排者在链上兑换获胜票据以获取 ETH 费用，而工作本身在链下交付。LPT 不用于支付服务；它仅用于质押、委托和治理。
+
+这些边界确保协议保持轻量且抗审查。任何提议的更改都必须尊重这种分离--重计算必须保持在链下，而金融规则和治理则位于链上U
+
+{/* <Frame> */}
+  <Tabs>
+    <Tab title="Overview">
+      <Overview />
+    </Tab>
+    <Tab title="Protocol">
+      <Protocol />
+    </Tab>
+    <Tab title="Network">
+      <Network />
+    </Tab>
+    <Tab title="Actors">
+      <Actors />
+    </Tab>
+
+  </Tabs>
+{/* </Frame> */}
+
+### 定义
+
+**Livepeer 协议**
+
+协议是规则集 + 链上逻辑，负责治理：
+
+**Livepeer 网络**
+
+网络是实际运行的机器系统，执行工作：
+
+**Livepeer 参与者**
+
+一个 Livepeer 参与者是指任何在 Livepeer 协议或网络中参与并执行系统定义操作的角色或实体。
+
+
+# 概览
+
+Livepeer 是一个面向视频流和 AI 的全栈平台。视频流软件由一个参与者网络支撑，这些参与者执行在 Livepeer 网络中计算、转码和编排视频与 AI 任务所需的工作。
+
+Livepeer 协议是底层代码，强制执行机制和规则，以确保这些去中心化参与者的可靠性、合作性和协调性。
+
+# 核心概念
+
+## Livepeer 协议
+
+协议是规则集 + 链上逻辑，管理：
+
+- 质押
+- 委托
+- 通胀与奖励
+- 编排者选择
+- 削减
+- 概率支付
+- 验证规则
+
+强制正确行为的经济和协调层。
+
+## Livepeer 网络
+
+网络是实际运行的执行工作机器系统：
+
+- 编排器（GPU 节点）
+- 转码器 / 工作人员
+- 网关
+- 广播者
+- 验证流程
+- 作业路由
+- 实时 AI 与视频计算
+
+它是实时运行视频和 AI 作业的去中心化 GPU 网格。
+
+## 协议 vs 网络
+
+| 层                 | 描述                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Livepeer 协议** | 链上加密经济激励与协调; 质押; 支付.        |
+| **Livepeer 网络**  | 链下节点执行实时工作（转码, 推理, 路由）。  |
+| **关系**      | 网络 _运行_ 计算; 协议 _治理、保障并支付_ 它。 |
+
+
+# 链上 vs 链下
+
+Livepeer 协议 = Arbitrum One (L2)
+Livepeer 代币 (LPT) = 以太坊主网 (L1)
+Livepeer 网络 (GPU 节点 + 网关) = 链下执行层
+
+# Livepeer 参与者
+
+一个 Livepeer 参与者是指任何在 Livepeer 协议或网络中参与并执行系统定义操作的角色或实体。
+在 Livepeer 架构中，“参与者”是用于描述具有不同职责、激励和交互的参与方的正式类别。
+参与者对于从系统工程视角端到端描述网络如何运作至关重要。
+
+Livepeer 的生态系统包括协议参与者（链上角色）和社区参与者（网络参与者和构建者）
+
+<Note>INSERT LIVEPEER ACTOR DIAGRAM HERE \[THIS ONE LOOKS OLD (whitpaper)</Note>
+
+<Note>Actor diagram placeholder removed pending final approved asset.</Note>

@@ -1,0 +1,45 @@
+---
+title: Contrôle d'accès avec webhooks
+description: >-
+  Contrôlez la lecture en utilisant un webhook qui valide le spectateur et
+  renvoie autoriser ou refuser.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL3dlYmhvb2tzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hY2Nlc3MtY29udHJvbC93ZWJob29rcyIsInNvdXJjZUhhc2giOiI1OTFiMDk4NjJkMjM4YmVlMTQ1N2JjZmU3YjYyMTVjNjkxOGY1MGY4NzVlMTkwYmJhNGEwNjhhZjc5ZGM2Y2I5IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI4VDEyOjQxOjI4LjY0MFoifQ== */}
+Avec **webhook** contrôle d'accès, lorsqu'un spectateur tente de lire du contenu restreint, Livepeer Studio appelle votre point de terminaison. Vous renvoyez 2XX pour autoriser, ou non-2XX pour refuser.
+
+## 1. Créer un webhook de contrôle d'accès
+
+Dans [Livepeer Studio → Developers → Webhooks](https://livepeer.studio/dashboard/developers/webhooks), créez un webhook avec le type **playback.accessControl** et l'URL de votre point de terminaison (par ex. `https://yourdomain.com/api/check-access`).
+
+## 2. Créer du contenu restreint
+
+Lors de la création du flux ou de l'actif, définissez `playbackPolicy` sur le type de webhook ainsi que votre ID de webhook et le contexte :
+
+```ts
+await livepeer.stream.create({
+  name: "Gated stream",
+  playbackPolicy: {
+    type: "webhook",
+    webhookId: "<webhook_id>",
+    webhookContext: { assetId: "...", userId: "..." },
+  },
+});
+```
+
+Même idée pour `livepeer.asset.create` avec `playbackPolicy`.
+
+## 3. Configurer le lecteur
+
+Passez un **clé d'accès** (par ex. jeton de session ou identifiant utilisateur) au lecteur. Le lecteur l'envoie à Livepeer, qui le transmet à votre webhook :
+
+```tsx
+<Player.Root src={src} accessKey={getAccessKeyForUser()}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+## 4. Gérer le webhook
+
+Votre point de terminaison reçoit un POST avec `accessKey` et `context`. Validez la clé (par ex. vérifiez l'authentification, l'abonnement). Retournez **2XX** pour autoriser la lecture, **non-2XX** pour refuser.
+
+**Lecteur personnalisé :** Pour WebRTC ou HLS, envoyez la clé d'accès dans le `Livepeer-Access-Key` en-tête ou comme paramètre de requête `accessKey` sur l'URL de lecture.

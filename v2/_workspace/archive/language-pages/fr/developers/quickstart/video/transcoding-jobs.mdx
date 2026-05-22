@@ -1,0 +1,221 @@
+---
+title: Démarrage rapide des tâches de transcodage
+description: >-
+  Soumettez une tâche de transcodage Studio Livepeer, interrogez le statut de la
+  tâche et vérifiez la fin de l'exécution. Conçu à partir de la spécification
+  OpenAPI Studio validée sur GitHub et en attente d'une revue de précision TD.
+keywords:
+  - livepeer
+  - transcoding jobs
+  - quickstart
+  - studio api
+  - transcode
+  - tasks api
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL3F1aWNrc3RhcnQvdmlkZW8vdHJhbnNjb2Rpbmctam9icy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2RldmVsb3BlcnMvcXVpY2tzdGFydC92aWRlby90cmFuc2NvZGluZy1qb2JzIiwic291cmNlSGFzaCI6IjA1OTIxYmU4ZjM1MmQzNDM5MjljNzM0M2Q3MDhkNjA4OGEzMzJjNDY2YjhkMGI3ZWVlZDExNzc5ODExOGRhMWIiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6Mzg6NTguMzQ1WiJ9 */}
+# Démarrage rapide des tâches de transcodage
+
+Soumettez une tâche de transcodage à la demande via l'API Studio Livepeer et suivez sa progression jusqu'à son achèvement à l'aide de l'API Tasks.
+
+## Résumé prêt pour l'IA (pour les humains et les assistants)
+
+- Utilisez l'URL de base de l'API Studio :`https://livepeer.studio/api`
+- Soumettez des tâches avec`POST /transcode`
+- Le transcodage est asynchrone ; interrogez `GET /task/{id}`
+- Une réussite "`POST /transcode` retourne une "`task.id`
+- Revue technique finale requise par Rick (TD)
+
+## Statut de la revue
+
+Ce guide de démarrage rapide est structuralement complet et basé sur la spécification OpenAPI Studio validée sur GitHub, mais **la revue de Rick (TD) est requise** avant la publication finale pour la précision du flux canonique et les paramètres par défaut visibles aux utilisateurs.
+
+## 1. Prérequis
+
+- Une clé API Livepeer (utilisation uniquement côté serveur)
+- `curl` (et éventuellement `jq`)
+- Vidéo d'entrée accessible via HTTP**ou** une source compatible S3
+- Destination du stockage de sortie (preuve de délégation S3-compatible ou web3.storage)
+
+## 2. URL de base et authentification
+
+- URL de base : `https://livepeer.studio/api`
+- En-tête d'authentification : `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+```bash
+export LIVEPEER_API_KEY="<YOUR_API_KEY>"
+```
+
+## 3. Soumettre un travail de transcodage
+
+La spécification Studio exige :
+
+- `input`
+- `storage`
+- `outputs`
+
+L'exemple ci-dessous utilise :
+
+- URL d'entrée HTTP
+- Stockage de sortie compatible S3
+- Sorties HLS + MP4
+
+### Corps de la requête exemple
+
+```json
+{
+  "input": {
+    "url": "https://example.com/video.mp4"
+  },
+  "storage": {
+    "type": "s3",
+    "endpoint": "https://gateway.storjshare.io",
+    "bucket": "outputbucket",
+    "credentials": {
+      "accessKeyId": "<ACCESS_KEY_ID>",
+      "secretAccessKey": "<SECRET_ACCESS_KEY>"
+    }
+  },
+  "outputs": {
+    "hls": {
+      "path": "/samplevideo/hls"
+    },
+    "mp4": {
+      "path": "/samplevideo/mp4"
+    }
+  },
+  "profiles": [
+    {
+      "name": "720p",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 3000000,
+      "fps": 30
+    }
+  ]
+}
+```
+
+### Requête curl exemple
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/transcode" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": { "url": "https://example.com/video.mp4" },
+    "storage": {
+      "type": "s3",
+      "endpoint": "https://gateway.storjshare.io",
+      "bucket": "outputbucket",
+      "credentials": {
+        "accessKeyId": "<ACCESS_KEY_ID>",
+        "secretAccessKey": "<SECRET_ACCESS_KEY>"
+      }
+    },
+    "outputs": {
+      "hls": { "path": "/samplevideo/hls" },
+      "mp4": { "path": "/samplevideo/mp4" }
+    },
+    "profiles": [
+      {
+        "name": "720p",
+        "width": 1280,
+        "height": 720,
+        "bitrate": 3000000,
+        "fps": 30
+      }
+    ]
+  }'
+```
+
+## 4. Capturez l'ID de la tâche
+
+La transcodification est asynchrone. La réponse est un`task` objet. Enregistrez le`id` champ et interrogez l'endpoint de la tâche.
+
+Format de réponse exemple (réduit) :
+
+```json
+{
+  "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "type": "transcode-file",
+  "status": {
+    "phase": "pending",
+    "updatedAt": 1587667174725
+  }
+}
+```
+
+## 5. Interroger l'état de la tâche
+
+Utilisez `GET /task/{id}`jusqu'à ce que `status.phase`soit `completed`ou `failed`.
+
+```bash
+TASK_ID="<TASK_ID_FROM_TRANSCODE_RESPONSE>"
+
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  "https://livepeer.studio/api/task/$TASK_ID"
+```
+
+Les phases définies dans la spécification Studio incluent :
+
+- `pending`
+- `waiting`
+- `running`
+- `failed`
+- `completed`
+- `cancelled`
+
+## 6. Vérifier la complétude et les sorties
+
+Quand `status.phase` est `completed`:
+
+- Confirmez que la tâche n'a pas signalé une "`errorMessage`
+- Examinez les métadonnées de sortie de la tâche et/ou les identifiants d'actifs liés
+- Vérifiez les chemins de sortie que vous avez demandés sous "`outputs`" dans votre stockage de destination
+
+## 7. Cas d'échec courants
+
+### `401 Unauthorized`
+
+- Clé API invalide
+- En-tête manquant/incorrect `Authorization`header
+
+### `422 Validation Error`
+
+- Champs obligatoires manquants (`input`, `storage`, `outputs`)
+- Schéma invalide`input` (différence entre URL et objet S3)
+- Schéma invalide`profiles` forme
+
+### La tâche entre dans`failed`
+
+- Vérifier`status.errorMessage`
+- Vérifier que l'URL d'entrée est accessible au service
+- Vérifier les identifiants de stockage de sortie et les autorisations du bac
+- Relancer avec une combinaison de profil/minimale sortie d'abord
+
+## 8. Vérification par Rick (TD) (bloquant avant la publication finale)
+
+- Confirmer le flux de transcodage visible par l'utilisateur pour les documents 2026
+- Confirmer les exemples de profil par défaut recommandés
+- Confirmer les attentes de sondage et les directives de vérification de la fin
+- Confirmer que les exemples obsolètes doivent être supprimés/étiquetés
+- Confirmer la limite avec les API en temps réel (ce qui appartient ailleurs)
+
+## 9. Étapes suivantes
+
+- [Référence de l'endpoint Créer un travail de transcodage](/solutions/livepeer-studio/api-reference/transcode/create)
+- [Aperçu de l'API de transcodage](/solutions/livepeer-studio/api-reference/transcode/overview)
+- [Aperçu de l'API des tâches](/solutions/livepeer-studio/api-reference/tasks/overview)
+- [Référence de l'endpoint Get Task](/solutions/livepeer-studio/api-reference/tasks/get)
+- [Aperçu de l'API Studio](/solutions/livepeer-studio/reference/api)
+- [Aperçu des SDK](/solutions/livepeer-studio/reference/sdks)
+
+## Références canoniques (source de vérité en premier)
+
+- GitHub (principal) : [livepeer/docs `api/studio.yaml`](https://github.com/livepeer/docs/blob/main/api/studio.yaml)
+- GitHub (principal) : [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml) (pour le contexte de balise `generate`tag)
+- DeepWiki (seulement pour vérification) : [livepeer/docs | DeepWiki](https://deepwiki.com/livepeer/docs)
+- Références de docs locales (non validées jusqu'à vérification croisée) : `/solutions/livepeer-studio/api-reference/transcode/create`, `/solutions/livepeer-studio/api-reference/tasks/get`

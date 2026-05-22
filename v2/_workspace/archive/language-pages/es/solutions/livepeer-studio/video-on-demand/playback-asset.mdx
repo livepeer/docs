@@ -1,0 +1,49 @@
+---
+title: Reproducir un activo
+description: >-
+  Reproducir activos VOD con el Livepeer Player o un reproductor HLS/MP4
+  personalizado.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9wbGF5YmFjay1hc3NldC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vdmlkZW8tb24tZGVtYW5kL3BsYXliYWNrLWFzc2V0Iiwic291cmNlSGFzaCI6ImE2YWE3ZjJmNDgwYmExNTY5ODNlY2Q4OTM1NDVlZGNmNmZlZGM4YjBmOTZkMDUyOGVmODZkMmI5NTRhYmVlNGIiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mzc6NTQuOTExWiJ9 */}
+<Warning>
+  Prefer calling the API from your backend. CORS-enabled API keys are deprecated.
+</Warning>
+
+## Livepeer Player (recomendado)
+
+Recupera la información de reproducción en el servidor y luego pasa la fuente al Player:
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+export async function getPlaybackSource(playbackId) {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function AssetPlayer({ src }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video />
+        <Player.Controls><Player.PlayPauseTrigger /></Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+Ver[Player y embeber](../player).
+
+## Player personalizado
+
+Llama a la [API de Información de Reproducción](https://livepeer.studio/docs/api-reference/playback/get) con el ID de reproducción. Usa las URLs HLS o MP4 devueltas en cualquier reproductor que las soporte. Los activos cortos (menos de ~2 minutos) suelen tener versiones MP4 para un inicio rápido.
+
+## Incorporar
+
+```html
+<iframe src="https://lvpr.tv?v=PLAYBACK_ID" allowfullscreen allow="autoplay" frameborder="0"></iframe>
+```
+
+Opciones: `&muted=false`, `&autoplay=false`, `&loop=true`. Ver [Reproducir una transmisión en vivo](../livestream/playback-livestream) para opciones específicas de la transmisión.

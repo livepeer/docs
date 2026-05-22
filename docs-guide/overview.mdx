@@ -1,144 +1,70 @@
 ---
-title: "Docs Guide"
-sidebarTitle: "Guide"
-description: "Overview of the Docs-Guide, including philosophy, personas, and structure."
-audience: community
-persona: community
-pageType: guide
+title: 'Docs Guide Overview'
+sidebarTitle: 'Docs Guide'
+description: 'Internal source of truth for repository features and functionality'
+keywords:
+  [
+    'livepeer',
+    'docs guide',
+    'internal',
+    'source of truth',
+    'repository',
+    'features',
+    'functionality',
+  ]
 ---
 
-import DocsPhilosophyContent from "/snippets/composables/pages/internal/docs-philosophy.mdx";
+# Docs Guide (Internal Source of Truth)
 
-import { Quote } from "/snippets/components/displays/quotes/Quote.jsx";
-import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx";
+This section is the canonical landing page for repository features, operating rules, and supporting catalogs. Use it as the repo systems map, not as a replacement for executable code, tests, or generated indexes.
 
-{/* # Aims - Documentation Philosophy & RFP Aim Delivery */}
-<Quote author="Livepeer Foundation RFP" source="September 2024">
-    "Restructure, refresh, and modernize Livepeer's documentation so that it is **stakeholder-focused**, **AI-first**, and **future-proofed**. It should cater to the core personas of the Livepeer project: developers, delegators, gateway operators and orchestrators."
-    <br/>
-    <br/>
-    <span style={{ opacity: 0.7, fontStyle: "italic", color: "var(--text)", fontSize: "0.8rem" }}>  - [Livepeer Foundation RFP, September 2024](https://forum.livepeer.org/t/rfp-documentation-restructure/3071) <Icon icon="arrow-up-right" size={12} color="var(--accent)" /> </span>
-</Quote>
+## Source-of-Truth Model
 
-<CustomDivider />
+- Runtime behavior: source of truth is code and tests.
+- Feature and operations navigation: source of truth is this `docs-guide/` section.
+- Public docs UX/content: source of truth is Mintlify pages under `v2/`.
+- Generated catalogs: source of truth is generator scripts; generated files are read-only outputs.
 
-# Repo Features
-<Columns cols={2}>
-    <Card title="AI Features" href="/docs-guide/" horizontal arrow/>
-    <Card title="Adaptive Architecture" href="/docs-guide/" horizontal arrow/>
-    <Card title="UX & Components" href="/docs-guide/" horizontal arrow/>
-</Columns>
+See [source-of-truth-policy.mdx](./policies/source-of-truth-policy.mdx) for full boundaries.
 
-# Contributing
-<Columns cols={2}>
-    <Card title="Contributing" href="/docs-guide/" horizontal arrow/>
-    <Card title="Github Guide" href="/docs-guide/" horizontal arrow/>
-    <Card title="Repo Tooling" href="/docs-guide/" horizontal arrow/>
-</Columns>
+## Section Routes
 
-{/* <Danger> Needs Fixing - this is not the right navigation. </Danger>
+| Section | Purpose | Canonical entry points |
+| --- | --- | --- |
+| Contributing | How to work in the repo safely and consistently | [contributing.mdx](./contributing/contributing.mdx), [mintlify.mdx](./contributing/mintlify.mdx) |
+| Features | Major repo systems, automation surfaces, and functional maps | [feature-map.mdx](./features/feature-map.mdx), [architecture-map.mdx](./features/architecture-map.mdx), [automations.mdx](./features/automations.mdx), [data-integrations.mdx](./features/data-integrations.mdx), [ui-system.mdx](./features/ui-system.mdx), [visual-explainer-workflows.mdx](./features/visual-explainer-workflows.mdx) |
+| Tooling | CLI, developer tooling support, and reusable authoring reference maps | [lpd-cli.mdx](./tooling/lpd-cli.mdx), [dev-tools.mdx](./tooling/dev-tools.mdx), [content-brief-template.md](./tooling/content-brief-template.md), [icon-map.mdx](./tooling/reference-maps/icon-map.mdx) |
+| Frameworks | Guides, helpers, structural models, and improvement workflows | [content-system.mdx](./frameworks/content-system.mdx), [component-governance.mdx](./frameworks/component-governance.mdx), [research-skill-workflow.mdx](./frameworks/research-skill-workflow.mdx) |
+| Policies | Enforced rules, prohibited actions, gate-owned controls, and audit standards | [source-of-truth-policy.mdx](./policies/source-of-truth-policy.mdx), [generated-artifact-and-hook-governance.mdx](./policies/generated-artifact-and-hook-governance.mdx), [v2-folder-governance.mdx](./policies/v2-folder-governance.mdx), [quality-gates.mdx](./policies/quality-gates.mdx), [audit-system-overview.mdx](./policies/audit-system-overview.mdx), [skill-pipeline-map.mdx](./policies/skill-pipeline-map.mdx), [cleanup-quarantine-policy.mdx](./policies/cleanup-quarantine-policy.mdx), [component-layout-decisions.mdx](./policies/component-layout-decisions.mdx), [infrastructure-principles.mdx](./policies/infrastructure-principles.mdx), [ownerless-governance.mdx](./policies/ownerless-governance.mdx), [root-allowlist-governance.mdx](./policies/root-allowlist-governance.mdx), [agent-governance-framework.mdx](./policies/agent-governance-framework.mdx) |
+| Catalog | Generated catalogs plus manual reference indexes | [ai-tools.mdx](./catalog/ai-tools.mdx), [ui-templates.mdx](./catalog/ui-templates.mdx), [pages-catalog.mdx](./catalog/pages-catalog.mdx), [components-catalog.mdx](./catalog/components-catalog.mdx), [scripts-catalog.mdx](./catalog/scripts-catalog.mdx), [workflows-catalog.mdx](./catalog/workflows-catalog.mdx), [templates-catalog.mdx](./catalog/templates-catalog.mdx) |
 
-<Columns cols={2}>
-    <Card title="Contributing" href="/docs-guide/" horizontal arrow/>
-    <Card title="AI Features" href="/docs-guide/" horizontal arrow/>
-    <Card title="Adaptive Architecture" href="/docs-guide/" horizontal arrow/>
-    <Card title="UX & Components" href="/docs-guide/" horizontal arrow/>
-    <Card title="Repo Tooling" href="/docs-guide/" horizontal arrow/>
-    <Card title="Github Guide" href="/docs-guide/" horizontal arrow/>
-</Columns> */}
+## Frameworks vs Policies
 
-{/* ## Purpose & Aims
-Livepeer documentation exists as a canonical source of truth for all information related to Livepeer's technology, ecosystem, and community.
-It serves as a critical resource for educating, onboarding, and empowering our diverse range of stakeholders, including developers, delegators, gateway operators, orchestrators, and community members.
+Use `Frameworks` for guides, helpers, warnings, models, and other improvement-oriented operating guidance. Use `Policies` for enforced rules, prohibited actions, canonical path contracts, and other constraints owned by hooks, validators, or audit gates.
 
-Orient → Activate → Enable.
+`component-framework.mdx` is retained only as a compatibility page for the older route; `component-governance.mdx` is the canonical framework source. Agent governance remains in `Policies`, not `Frameworks`, because approved instruction-file locations, overlap boundaries, and retirement targets are part of the repository's enforced operating contract. The same applies to V2 folder lanes because publishability, reserved paths, and workspace boundaries are path-governance rules enforced across routing, Mint, and audit tooling.
 
-## Docs Philosophy
+Archives remain under `docs-guide/archive/` and `docs-guide/catalog/`, but archived pages are not canonical entry points and should not be surfaced in active navigation.
 
-1. Documentation is not static. It is infrastructure & must be built, maintained, and governed as such.
-2. AI is the new search, and discoverable products are AI-first
-3. Agents are the new docs consumers and users and information should be structured accordingly
+## Update Rules
 
-Journey-based, persona-first, AI-first & future-proofed documentation that is built as infrastructure, not a one-time project.
+1. Update manual docs when behavior, process, canonical boundaries, or architecture changes.
+2. Regenerate generated catalogs when scripts, workflows, or templates change:
+   - `node tools/scripts/generate-docs-guide-indexes.js --write`
+   - `node tools/scripts/generate-docs-guide-pages-index.js --write`
+   - `node tools/scripts/generate-docs-guide-components-index.js --write`
+   - `node tools/scripts/generate-ui-templates.js --write`
+   - `node tests/unit/script-docs.test.js --write --rebuild-indexes`
+   - `node tools/scripts/enforce-generated-file-banners.js --check`
+3. Re-run the docs audit pipeline when docs, scripts, reports, or routing paths change:
+   - `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full`
+   - `node tools/scripts/cross-agent-packager.js --agent-pack all`
+4. Keep `README.md` high-level and link to canonical docs-guide pages for deep detail.
+5. Keep generator scripts, generated outputs, and downstream consumers in sync whenever a catalog path or title changes.
 
-```mermaid
-flowchart TD
-    classDef stage fill:#0d0d0d,color:#fff,stroke:#2d9a67,stroke-width:1px;
-    classDef phase fill:#0d0d0d,color:#fff,stroke:#2d9a67,stroke-width:1px;
+## Related Areas
 
-    A["Stage 0: Awareness<br/>What is Livepeer?"]:::stage --> B["Stage 1: Orientation<br/>Choose builder path"]:::stage
-    B --> C["Stage 2: Activation<br/>First wins"]:::stage
-    C --> D["Stage 3: Progression<br/>Deepening skills"]:::stage
-    D --> E["Stage 4: Hero<br/>Ecosystem leadership"]:::stage
-
-    B --> B1["Paths:<br/>• Application Developer<br/>• Gateway Operator<br/>• GPU Node Operator<br/>• Protocol Developer<br/>• Tooling Developer<br/>• Community Builder"]:::phase
-    C --> C1["Each path executes its first real success milestone"]:::phase
-    D --> D1["Contribute, optimize, mentor, build advanced infra"]:::phase
-    E --> E1["Heroes lead apps, gateways, nodes, protocol, tooling, gov"]:::phase
-``` */}
-
-{/* ## Livepeer Personas */}
-
-{/* <AccordionGroup>
-    <Accordion title="Orchestrator">
-        Orchestrators are responsible for coordinating the work of multiple nodes in the Livepeer network. They need documentation that helps them understand their role, configure their systems, and optimize their performance.
-        <AccordionGroup title="Orchestrator Sub-Personas">
-            <Accordion title="New Orchestrator">
-                New Orchestrators are individuals who are new to the Livepeer network and are looking to set up their first node. They need documentation that provides a clear, step-by-step guide to getting started with Livepeer.
-                Jouney:
-                1. Introduction to Livepeer and its value proposition
-            </Accordion>
-            <Accordion title="Experienced Orchestrator">
-                Experienced Orchestrators are individuals who have been running nodes for some time and are looking to optimize their performance or expand their operations. They need documentation that provides advanced tips, best practices, and troubleshooting guides.
-            </Accordion>
-        </AccordionGroup>
-    </Accordion>
-    <Accordion title="Delegator">
-        Delegators are individuals who delegate their tokens to orchestrators in the Livepeer network. They need documentation that helps them understand the delegation process, choose orchestrators, and manage their stakes effectively.
-    </Accordion>
-    <Accordion title="Solution Integrator">
-        Solution Integrators are individuals or organizations that integrate Livepeer's technology into their own solutions. They need documentation that helps them understand how to leverage Livepeer's offerings to enhance their products and services.
-    </Accordion>
-    <Accordion title="Developer">
-        Developers are building with Livepeer's APIs, SDKs, and tools. They are looking for clear, concise documentation that helps them understand how to use Livepeer's offerings to build their applications.
-    </Accordion>
-    <Accordion title="Gateway Operator">
-        Gateway Operators are running Livepeer's software to contribute to the network and earn rewards. They need documentation that helps them set up, manage, and optimize their nodes effectively.
-    </Accordion>
-    <Accordion title="Community">
-        Community members are individuals who are interested in learning about Livepeer, staying updated on its developments, and engaging with other members. They need documentation that provides an accessible introduction to Livepeer's technology, use cases, and impact.
-    </Accordion>
-</AccordionGroup>
-
- <Columns cols={2}>
-    <Card title="Overview of the Docs-Guide" horizontal href="/docs-guide/overview" arrow/>
-    <Card title="Overview of the Docs-Guide" horizontal href="/docs-guide/overview" arrow/>
- </Columns> */}
-
-{/* ## Docs Structure
-
-The IA has been defined to be consistent as much as possible across the personas.
-
-The main sections are
-- */}
-
-{/* <Tabs>
-    <Tab label="About">
-        <Text>Details about the navigation structure of the docs.</Text>
-        <Accordion>
-        </Accordion>
-    </Tab>
-    <Tab label="Concepts">
-        <Text>Details about the concepts covered in the docs.</Text>
-    </Tab>
-    <Tab label="Quickstart/Setup">
-        <Text>Details about the quickstart and setup guides in the docs.</Text>
-    </Tab>
-</Tabs> */}
-
-{ /*
-## Contributor Quickstart at the top
-
-## Features with specific examples and links to relevant docs pages
-
-## Ownerless Repo /Github Management Guide */}
+- Root orientation: [`README.md`](../README.md)
+- Public docs guide: [`v2/resources/documentation-guide/`](../v2/resources/documentation-guide/)
+- Contributor procedures: [`contribute/CONTRIBUTING/`](../contribute/CONTRIBUTING/)
+- Test matrices and CI behavior: [`tests/`](../tests/)

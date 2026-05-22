@@ -1,0 +1,52 @@
+{
+  "name": "livepeer-authoring-tools",
+  "displayName": "Livepeer Authoring Tools",
+  "description": "Repo-owned MDX formatting and real-path completions for Livepeer Docs.",
+  "version": "0.0.1",
+  "publisher": "livepeer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/livepeer/docs.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:mdx",
+    "onLanguage:json"
+  ],
+  "main": "./extension.js",
+  "files": [
+    "extension.js",
+    "lib/**",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Livepeer Authoring Tools",
+      "properties": {
+        "livepeer.authoringTools.docsJsonCompletions.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable repo-backed real-path completions in docs.json."
+        },
+        "livepeer.authoringTools.mdxImportCompletions.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable repo-backed MDX import completions."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "npx @vscode/vsce package"
+  }
+}

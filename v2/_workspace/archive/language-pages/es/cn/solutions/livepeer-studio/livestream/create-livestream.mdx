@@ -1,0 +1,74 @@
+---
+title: 创建一个直播
+description: 使用 Livepeer Studio API 创建一个直播并获取一个直播密钥和播放 ID。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0iLCJzb3VyY2VIYXNoIjoiNTQzMGM5YWZiM2YzYjc0Y2UyZDkyZmVkZjMzZTBmYzExMjQyY2U2ODZjODU3MWVmZjBmZDY4NjA3YjJjYjA3OCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozMjo1Mi45NzRaIn0= */}
+通过 API 或 SDK 创建流以获取一个 **流密钥**（用于广播者）和一个 **播放 ID**（用于观看者）。下面的示例使用了 [创建流 API](https://livepeer.studio/docs/api-reference/stream/create).
+
+## 使用 SDK 创建流
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const { data } = await livepeer.stream.create({
+      name: "my-stream",
+    });
+
+    console.log("Stream key:", data.streamKey);
+    console.log("Playback ID:", data.playbackId);
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    livepeer = Livepeer(api_key=os.environ["LIVEPEER_API_KEY"])
+    response = livepeer.stream.create({"name": "my-stream"})
+
+    if response.stream:
+        print("Stream key:", response.stream.stream_key)
+        print("Playback ID:", response.stream.playback_id)
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+        "github.com/livepeer/livepeer-go"
+        "context"
+    )
+
+    func main() {
+        client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_API_KEY")))
+        ctx := context.Background()
+        res, err := client.Stream.Create(ctx, livepeer.StreamCreationPayload{
+            Name: livepeer.String("my-stream"),
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            fmt.Println("Stream key:", *res.Stream.StreamKey)
+            fmt.Println("Playback ID:", *res.Stream.PlaybackId)
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## 使用流密钥和播放 ID
+
+- **流密钥** - 将此提供给主播。他们会在 OBS（或其他编码器）中输入它，或用于[基于浏览器的 WebRTC 广播](livestream-from-browser)保持流密钥的机密性；任何拥有该密钥的人都可以向流中推送视频。
+- **播放 ID** - 在您的应用中使用此 ID 来播放流（例如，使用 [Livepeer 播放器](../player) 或 [播放信息 API](https://livepeer.studio/docs/api-reference/playback/get)。您可以将播放ID暴露给观众。
+
+## 下一步
+
+- [播放直播流](./playback-livestream) - 在您的应用中播放流。
+- [通过OBS进行流媒体传输](stream-via-obs) - 使用流密钥配置OBS。
+- [从浏览器进行直播](livestream-from-browser) - 通过浏览器使用 WebRTC 进行广播。
+- [多路传输](multistream) - 将流发送到多个目标。

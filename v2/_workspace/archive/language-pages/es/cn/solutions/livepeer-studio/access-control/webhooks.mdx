@@ -1,0 +1,43 @@
+---
+title: 通过 Webhook 的访问控制
+description: 使用 Webhook 限制播放，该 Webhook 验证观看者并返回允许或拒绝。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL3dlYmhvb2tzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hY2Nlc3MtY29udHJvbC93ZWJob29rcyIsInNvdXJjZUhhc2giOiI1OTFiMDk4NjJkMjM4YmVlMTQ1N2JjZmU3YjYyMTVjNjkxOGY1MGY4NzVlMTkwYmJhNGEwNjhhZjc5ZGM2Y2I5IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjE5OjUyLjc4M1oifQ== */}
+通过 **webhook** 访问控制，当观众尝试播放受限制的内容时，Livepeer Studio 会调用您的端点。您返回 2XX 表示允许，或返回非 2XX 表示拒绝。
+
+## 1. 创建访问控制 webhook
+
+在 [Livepeer Studio → 开发者 → Webhooks](https://livepeer.studio/dashboard/developers/webhooks)，创建一个类型为 "**playback.accessControl** 的 webhook，并提供你的端点 URL（例如 "`https://yourdomain.com/api/check-access`）
+
+## 2. 创建受限制的内容
+
+在创建流或资产时，设置 `playbackPolicy`到 webhook 类型和你的 webhook ID 和上下文:
+
+```ts
+await livepeer.stream.create({
+  name: "Gated stream",
+  playbackPolicy: {
+    type: "webhook",
+    webhookId: "<webhook_id>",
+    webhookContext: { assetId: "...", userId: "..." },
+  },
+});
+```
+
+同样的想法用于`livepeer.asset.create`与`playbackPolicy`.
+
+## 3. 配置播放器
+
+传递一个**访问密钥**（例如会话令牌或用户 ID）发送到 Player。Player 会将其转发到 Livepeer，然后转发到您的网络钩子：
+
+```tsx
+<Player.Root src={src} accessKey={getAccessKeyForUser()}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+## 4. 处理网络钩子
+
+您的端点会收到一个带有`accessKey` 和 `context` 的 POST 请求。验证密钥（例如检查身份验证、订阅）。返回**2XX** 以允许播放, **非2XX** 以拒绝.
+
+**自定义播放器:** 对于 WebRTC 或 HLS, 将访问密钥发送到 `Livepeer-Access-Key` header 或查询参数 `accessKey` 在播放 URL 上。

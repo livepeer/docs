@@ -1,0 +1,37 @@
+---
+title: 播放器和嵌入
+description: 使用 Livepeer 播放器组件和 lvpr.tv 嵌入式播放器进行播放。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3BsYXllci5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vcGxheWVyIiwic291cmNlSGFzaCI6IjMxYzdiYTJlZTI5ZDcxMGI4NmE4NjQ3ZTU5MDNhMDBkZWYxMGIxODc0MmIzYWZjYzBhMWIwYWYzZGQ4MWY5MTkiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MjE6NTcuODk5WiJ9 */}
+The **Livepeer Player** 是一个 React 组件（以及在 `lvpr.tv` 处可嵌入的播放器），用于播放流和资源。它支持 WebRTC（低延迟）和 HLS/MP4 回退，并且在使用 Studio API 时会报告观看统计数据。
+
+## React Player
+
+从 `@livepeer/react`，使用 `Player.Root`，`Player.Video`，`Player.Controls`，以及其他原语。传递 **src**（来自 `getSrc(playbackInfo)` from the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get)) or a **playbackId** (with a provider). The Player prefers WebRTC for live and MP4 for short VOD; it falls back to HLS on errors or when WebRTC isn't available (e.g. B-frames in stream).
+
+- **Livestream:** [播放直播流](./livestream/playback-livestream)
+- **点播:** [播放资产](./video-on-demand/playback-asset)
+- **访问控制:** 通过 `accessKey` 或 `jwt`按需。参见 [访问控制](access-control/overview).
+
+## 可嵌入的播放器（iframe）
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **直播流:** 默认为低延迟 WebRTC。使用 `&lowLatency=false` 用于 HLS 或 `&lowLatency=force` 仅用于 WebRTC。使用 `&clipLength=60`（最多 120）用于剪辑。使用 `constant=true` 用于连续播放（例如音乐）。
+- **点播:** 可选选项包括 `&muted=false`，`&autoplay=false`，`&loop=true`。
+
+## 缩略图
+
+- **VOD** - 缩略图在播放信息中（WebVTT + 关键帧图像）。请参阅[缩略图（VOD）](./video-on-demand/thumbnails-vod).
+- **直播流** - 播放信息包含一个PNG缩略图URL，该URL会随着最新画面更新。播放器可以将其用作视频海报。
+
+## 指标
+
+当与Studio API一起使用时，Livepeer播放器会将参与度报告给Livepeer。查询[观看人数和分析](./analytics/overview) 通过 API 或仪表板。

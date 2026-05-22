@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.alison.claude-reaper</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/FUCK_CLAUDE/scripts/reap-zombie-claude.sh</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>600</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/alisonhaire/.claude/logs/reaper.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/alisonhaire/.claude/logs/reaper-error.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+<!--
+INSTALL:
+  cp scripts/com.alison.claude-reaper.plist ~/Library/LaunchAgents/
+  launchctl load ~/Library/LaunchAgents/com.alison.claude-reaper.plist
+
+UNINSTALL:
+  launchctl unload ~/Library/LaunchAgents/com.alison.claude-reaper.plist
+  rm ~/Library/LaunchAgents/com.alison.claude-reaper.plist
+
+VERIFY:
+  launchctl list | grep claude-reaper
+  cat ~/.claude/logs/reaper.log
+
+MANUAL RUN (dry run first!):
+  bash scripts/reap-zombie-claude.sh --dry-run
+  bash scripts/reap-zombie-claude.sh
+-->

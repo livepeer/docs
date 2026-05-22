@@ -1,0 +1,162 @@
+---
+title: Livepeer 协议经济学
+sidebarTitle: 协议经济学
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - livepeer protocol economics
+  - protocol
+  - economics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MiLCJzb3VyY2VIYXNoIjoiN2RkNzJiYjNjNjAwMWMyYWE1NjY2ZjE4ZWRiN2NiNzc0Yjc3NjMzODkzZmVjZjIwMDg4M2I3YWU3NjQzZjkzYSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDEzOjM5OjA0LjUzNVoifQ== */}
+{/* This page describes:
+6. **Economics**
+
+   * Tokenomics
+   * Inflation model
+   * Staking & delegation
+   * Reward distribution
+   * Slashing
+   * Rounds 
+   
+
+*/}
+
+Livepeer 使用其原生代币 LPT 以及以太坊 (ETH) 为其网络提供动力，并补偿参与者的贡献。
+The Livepeer 协议采用动态通胀率和质押访问模型，以确保网络的安全性和功能性。
+
+我们将讨论 LPT 的代币经济学，以及即使通胀逐渐降低，委托给编排者仍然重要的原因。
+
+## 资金流动：LPT 代币经济学
+
+### 1. **质押流程（委托者 → 编排者）**
+
+**步骤 1：代币批准**
+在绑定之前，委托者必须批准 BondingManager 转移他们的 LPT 代币。
+
+**步骤 2：绑定**
+委托人调用 `Bond(amount, orchestratorAddress)` 其功能:
+- 将 LPT 从委托人转移到 BondingManager
+- 更新协调器的委托抵押
+- 计算池位置提示以实现燃气优化
+- 更新按抵押排序的转码器池 
+
+**步骤 3：协调器注册**
+要成为协调器，节点必须:
+- 首先将 LPT 绑定到自身
+- 调用 `Transcoder(rewardCut, feeShare)` 以佣金参数
+- 通过注册服务 URI `SetServiceURI()`
+
+转码器池将指挥者按委托质押排序为链表，并使用提示来优化插入。
+
+### 2. **奖励流程（铸造者 → 指挥者 → 委托者）**
+
+每轮，活跃的指挥者可以调用 `Reward()` 以铸造通胀代币:
+
+**奖励计算流程**:
+1. Orchestrator 调用 `Reward()` 在 BondingManager
+2. BondingManager 查询 `CurrentMintableTokens()` 从 Minter
+3. Minter 计算: `mintable = inflation * totalSupply / bonded`
+4. 奖励按协调方质押比例分配
+5. 协调方保留其佣金（rewardCut）
+6. 剩余奖励按委托人比例分配
+
+**领取收益**:
+委托人必须调用 `ClaimEarnings(endRound)` 以实现他们从过去回合中累积的奖励和费用。
+
+### 3. **支付流程（广播方 → 协调方）**
+
+支付系统采用概率微支付以减少链上交易：
+
+**步骤 1：广播者存款**
+广播者通过 `FundDepositAndReserve()`:
+- **存款**: 锁定抵押品（无法立即使用）
+- **储备**: 可用于票券兑换的可用池 [14](#0-13)
+
+**步骤 2：离链票券创建**
+每个处理的视频片段：
+- 广播方使用 faceValue 和 winProb 创建签名票券
+- 票券通过 HTTP 头部离链发送给编排器
+- 大多数票券不中奖（例如，1% 的中奖概率）
+
+**步骤 3：票券验证与排队**
+编排器验证票券：
+- 检查签名和过期时间
+- 计算票券是否中奖，使用 `recipientRand`
+- 中奖票券已排队到本地数据库
+- 跟踪发送者的 MaxFloat（预留 - 待处理赎回）
+
+**步骤 4：链上赎回**
+当有足够资金时:
+- Orchestrator 调用 `RedeemWinningTicket(ticket, sig, recipientRand)`
+- TicketBroker 验证票券与链上状态的一致性
+- 转移 `faceValue` 从广播者的储备到编排者
+- 更新 `claimedReserve` 在 BondingManager
+
+这实现了相对于每个片段的链上支付约99%的成本降低，同时通过概率期望值保持公平补偿。
+
+### 4. **费用流 (Broadcasters → Orchestrators → Delegators)**
+
+编排者从票券兑换中赚取费用：
+- 费用累积在协调者的收益池中
+- 协调者保留他们的佣金（feeShare）
+- 剩余费用分配给委托人
+- 委托人通过 `ClaimEarnings()`
+
+### 5. **提款流程**
+
+**解除质押（委托人）**}
+1. 调用 `Unbond(amount)` - 创建解绑锁
+2. 等待 `UnbondingPeriod` 轮（通常为 7 轮）
+3. 调用 `WithdrawStake(unbondingLockId)` - 收到 LPT
+
+**支付提取（广播者）**:
+1. 调用 `Unlock()` 在 TicketBroker
+2. 等待解锁期
+3. 调用 `Withdraw()` - 接收剩余存款 + 预留
+
+## 客户端集成
+
+go-livepeer 客户端通过 ... 抽象所有合约交互 `LivepeerEthClient` 接口: [15](#0-14)
+
+**合约地址解析**: 
+所有合约地址通过使用合约名称的 Keccak256 哈希值在 Controller 注册表中动态发现。这使得合约可以升级，而无需更改客户端代码。[16](#0-15)
+
+## 燃气优化策略
+
+### 1. **池子提示**
+在绑定或调用奖励时，客户端会计算 "hints"（已排序转码器池中的前后位置），以实现 O(1) 插入，而不是在链上进行 O(n) 搜索。[17](#0-16)
+
+### 2. **批量操作**
+可以批量在链下创建多个票券，只有中奖票券需要链上交易。
+
+### 3. **动态燃气价格**
+客户端实现了复杂的燃气价格管理，使用 2 倍基准费并配合用户指定的上限，以平衡确认速度和成本。[18](#0-17)
+
+## 摘要：完整的资金流动
+
+1. **代币持有者**批准并绑定 LPT → **BondingManager** (质押)
+2. **Minter**铸造新的 LPT → **BondingManager** → **协调者**（通胀奖励）
+3. **协调者**分发奖励 → **委托者**（扣除佣金）
+4. **广播者** 存入 LPT → **TicketBroker** （支付储备）
+5. **编排者** 赎回票据 → 收到 LPT 来自 **TicketBroker** （费用）
+6. **编排者** 分配费用 → **委托人** （扣除佣金）
+7. **委托人** 领取收益来自 **BondingManager** （累计奖励 + 费用）
+
+这创建了一个循环经济：
+- 质押保障网络安全并获得通胀奖励
+- 活跃的编排者从广播方获得费用
+- 委托者在不运行基础设施的情况下参与奖励
+- 概率支付实现成本高效的微支付
+- 所有流量在链上跟踪，且燃气开销最小
+
+## 注释
+
+- 合约已部署在以太坊主网（以及 Arbitrum 用于 L2）
+- 合约地址存储在 Controller 注册表中以实现可升级性
+- 所有代币操作使用标准的 ERC20 批准模式
+- 系统支持 L1 和 L2 部署，并向后兼容
+- 基于轮次的操作确保协议升级和状态转换的协调
+- 概率支付系统将链上交易减少约 ~99%，同时保持所有方的公平期望价值

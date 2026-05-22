@@ -1,0 +1,255 @@
+---
+title: 协议概览
+sidebarTitle: 概览
+description: >-
+  本节概述了在链上 Livepeer
+  协议的设计、合约架构、质押与奖励机制、激励对齐以及治理模型，该协议规定了工作如何协调、保障安全与奖励，以及升级如何被提议和实施。
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol overview
+  - protocol
+  - overview
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+audience: all
+aim: What the protocol is. What it secures. What it does not do
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2Fib3V0L2xpdmVwZWVyLXByb3RvY29sL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6ImZlNDYyOGVjYWQ0OTU3YmFlN2M0ZTQyN2U4YzJlNThiZmQ2MDNjZTc5YWM5ZThiNjY2NmM4ZjBkOWE2MWMxNTYiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0yMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yNlQxMzoxMjoxNy41OTVaIn0= */}
+import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
+import { AccordionTitleWithArrow } from '/snippets/components/elements/text/Text.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+{/* 
+This page describes:
+1. **Protocol Overview**
+
+   * What the protocol is
+   * What it secures
+   * What it does *not* do
+
+---
+
+# Protocol Function */}
+
+<div style={{ display: "flex", justifyContent: "center"}}>
+  <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow> 
+</div>
+
+<Quote> 
+The Protocol is the **on-chain coordination, security and economic layer** responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants. It leverages unique cyrptoeconomic primitives to create the conditions for a secure, open marketplace enabling performant, verifiable media and AI compute workloads. 
+</Quote>
+
+#### <Icon icon="map-location" size={22} color="var(--accent)" /> {" "} 协议章节地图
+{/* This section describes the Livepeer protocol, the on‑chain smart contracts that secure the network and coordinate incentives.
+It emphasises the hard boundary between the on‑chain logic and the off‑chain network, explains the key economic mechanisms and governance rules, and defines the actors involved. 
+The goal is to provide a complete, self‑contained description of how the protocol works and how it interacts with the larger Livepeer ecosystem. */}
+<Columns cols={2}>
+    <Accordion title={<AccordionTitleWithArrow text="Core Mechanisms" href="./core-mechanisms" />} icon="cubes-stacked" >
+        The core mechanisms of the Livepeer protocol:
+        * Staking
+        * Delegation
+        * Reward distribution
+        * Inflation model
+        * Slashing
+        * Rounds
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Livepeer Token" href="./livepeer-token" />} icon="coin">
+        The Livepeer Token (LPT) utility and role in the protocol.
+        * Purpose of LPT
+        * Security model
+        * Inflation mechanics
+        * Not used for job payments (ETH is)
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Governance Model" href="./governance-model" />} icon="gears">
+        The governance model of the Livepeer protocol.
+        * Purpose
+        * LIPs (Livepeer Improvement Proposals)
+        * Voting
+        * Upgrade process
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Treasury" href="./treasury" />} icon="money-bill">
+        The role of the treasury in the Livepeer protocol.
+        * Funding source
+        * Inflation allocation
+        * Grants / SPEs
+        * Budget governance
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Protocol Economics" href="./protocol-economics" />} icon="coins">
+        The economics and reward model of the Livepeer protocol.
+        * Inflation vs usage-based fees
+        * Participation rate mechanics
+        * Security assumptions
+        * Incentive alignment
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Technical Architecture" href="./technical-architecture" />} icon="code-fork">
+        The technical architecture of the Livepeer protocol.
+        * Architecture Diagrams
+        * Smart contracts
+        * On-chain components
+        * How protocol interacts with network
+    </Accordion>
+</Columns>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+{/* The protocol governs how work is secured, rewarded and coordinated and how upgrades are proposed and implemented. */}
+
+{/* Livepeer does not route jobs or perform compute itself. Instead, it creates and secures an open marketplace where anyone can stake, delegate, propose changes, or serve compute through external orchestrator software. */}
+
+## 协议设计 101
+在任何涉及独立参与者的去中心化系统中，必须提供：
+- **奖励系统** 包括
+    - **激励** 让参与者诚实行动并合作（通常基于博弈论）
+    - **惩罚** 用于惩罚负面行为
+- **协调机制** 用于达成系统状态的一致
+- **支付系统** 为补偿参与者的有用工作/贡献
+- **治理系统** 为随时间演进协议规则并确保网络的增长与健康.
+
+协议是提供这些机制的基础逻辑，以确保所期望的网络结果尽可能高效、可靠且公平地实现。在 Livepeer 的案例中，这意味着为一个强大、开放的基础设施网络创造条件，该网络提供一个成本效益高、性能优异且安全的视频流与 AI 管道的市场.
+
+<Tip> 
+    If you're interested in learning more about game theory, mechanism design and token economics for building digital ecosystems, [this module](https://tokenflows.xyz/tutorials/introduction-tutorials/module3/) is a good primer. 
+    {/* <br/><br/>  */}
+    {/* Yale also offers an academic theoretical overview of Game Theory Economics in this [Open Yale Course](https://oyc.yale.edu/economics/econ-159)   */}
+</Tip>
+
+## Livepeer 白皮书
+
+Livepeer 的 [原始白皮书](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md)（发布于 2017）深入探讨了 Livepeer 协议背后的基础系统设计和经济激励对齐。
+
+<FrameQuote>
+The **Livepeer Protocol defines how the various actors** in a live streaming ecosystem **participate in a secure and economically rational way** ...[incl] the economic incentives for encouraging participation in the network in a secure and game-theoretic manner.
+</FrameQuote>
+
+白皮书概述了一个雄心勃勃的系统设计，旨在为完全去中心化的实时视频流网络提供 _“世界上最开放的视频基础设施”_. 
+
+<Card title={<div style={{ color: "var(--accent)", marginBottom: "-1rem" }}><Icon icon="scroll" size={22} color="var(--accent)" /> {" "}Livepeer Whitepaper</div>} href="../resources/livepeer-whitepaper" arrow cta="Read the full Livepeer Whitepaper" /> 
+    {/* The original Livepeer whitepaper centred on 4 key ideas: 
+    - _**Incentivized Participation**_,
+    - _**Trustless Verification**_, 
+    - _**Open Participation**_ and 
+    - _**Economic Security**_ via Token. */}
+{/* </Card> */}
+
+## 核心设计目标
+Livepeer 白皮书聚焦于3个核心设计目标： 
+- _**可持续且对齐的激励**_: 为运营商和代币持有者创建经济对齐，以维持服务质量、正常运行时间和安全性。
+- _**无信任验证**_: 确保链下视频工作诚实高效地完成，无需可信中介。
+- _**可组合治理**_: 通过代币治理实现 Livepeer 的开放参与和经济安全，用于协议升级和金库支出，基于链上代币治理--由 LPT 持有者驱动。
+
+
+## 指导原则
+
+去中心化：最小化对任何单一协调者的信任；基于质押的选择确保广泛参与。
+
+经济对齐：协调者和委托者因诚实工作获得奖励，因不当行为受到惩罚；广播者仅为实际服务付费。
+
+可扩展性与成本效率：Streamflow 和概率微支付可扩展至数百万流，而无需每个片段的链上调用；Arbitrum 减少费用开销。
+
+模块化：协议将核心质押/治理与支付通道分离，支持未来升级而无需完全重写。
+
+开放参与：任何人都可以成为协调器或代表，并通过 LIPs 提出改进建议，促进开放且不断演进的生态系统。
+
+## Livepeer 协议
+{/* Livepeer’s protocol layer is a secure, flexible foundation for an open decentralised real-time media and AI compute substrate. 
+
+With dynamic inflation, robust bonding mechanics, transparent governance, and treasury flows, it aligns economic incentives with network health - without embedding any assumptions about the off-chain workloads. */}
+
+{/* ## Protocol Features */}
+_Livepeer 协议基于核心加密经济原语，提供 **可验证的信任、协调和透明治理**网络内行动的轨道，以实现最佳网络结果。 
+
+这些原语支撑着经济安全和博弈论合作框架，塑造理性参与网络主体的行为，以提供 **成本效益高、性能优异的实时媒体流和 AI 计算工作负载** - 使得无许可、全球、 **开放参与**.
+
+这些区块链原语也提供了基础的 **全球支付系统** 使网络能够无缝扩展到全球边界并创建一个**按需、基于使用的市场**.
+
+此外，协议定义了治理模型，以随时间演进协议规则，确保网络的增长与健康，并动态响应市场机会。
+
+{/* Deployment to a base blockchain provides the universal payment system and trusted coordination layer for the network. */}
+
+{/* ## Protocol Architecture
+Livepeer’s protocol layer lives entirely on Arbitrum as of 2025, following the Confluence upgrade and full L2 migration. 
+
+Its smart contract architecture includes the following primary modules:
+
+<DynamicTable
+  headerList={["Contract", "Purpose"]}
+  itemsList={[
+    { "Contract": "BondingManager", "Purpose": "Handles staking, delegation, inflation distribution, slashing" },
+    { "Contract": "RoundsManager", "Purpose": "Defines protocol rounds (approx. 21.5 hours) for reward calculations" },
+    { "Contract": "Minter", "Purpose": "Mints LPT per round via dynamic inflation targeting bonding rate" },
+    { "Contract": "TicketBroker", "Purpose": "Escrows broadcaster ETH deposits and settles winning ticket claims" },
+    { "Contract": "Governor", "Purpose": "Executes approved proposals after voting delay & timelock" },
+    { "Contract": "PollCreator", "Purpose": "Creates snapshot-style on-chain polls (used for signaling, LIPs)" },
+    { "Contract": "Treasury", "Purpose": "Accumulates protocol LPT and authorizes grants via LIPs" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+Contracts are upgradeable via a governance-controlled proxy and follow [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) and [OpenZeppelin upgrade patterns](https://docs.openzeppelin.com/contracts/4.x/upgradeable#how_proxy_works). All major protocol actors interact with these contracts to perform bonding, claim rewards, submit proposals, or redeem fees. */}
+
+## 参与者与角色
+ Livepeer 协议定义了3个主要参与者角色，具有不同的职责和激励：
+<DynamicTable
+  headerList={["Role", "Stake Required", "Responsibilities", "Earns"]}
+  itemsList={[
+    { "Role": "Orchestrator", "Stake Required": "Yes (LPT)", "Responsibilities": "Run transcoding/AI node, redeem tickets", "Earns": "ETH fees, LPT rewards" },
+    { "Role": "Delegator", "Stake Required": "Yes (LPT)", "Responsibilities": "Bond to Orchestrator", "Earns": "Share of ETH + LPT rewards" },
+    { "Role": "Gateway (Broadcaster)", "Stake Required": "No", "Responsibilities": "Submits video jobs, sends ETH tickets", "Earns": "Transcoded/processed output" },
+  ]}
+/>
+
+## 协议架构
+
+{/* The core [protocol](https://wikipedia.com/wiki/Protocol) is implemented by `go-livepeer` and on-chain Ethereum smart contracts (now on Arbitrum L2 after the Confluence upgrade) that enforce the rules of the network. */}
+
+{/* The Livepeer protocol is implemented by the [`go-livepeer`](https://github.com/livepeer/go-livepeer) codebase and deployed on [Arbitrum One](https://arbitrum.io/) (with the token deployed on Ethereum L1). */}
+
+该协议使用一组[以太坊智能合约](/v2/resources/references/contract-addresses)来在链上执行质押、绑定、削减和奖励规则，而网络节点处理实际的计算任务。
+
+这 **安全（链上）的分离** 从 **执行（链下）** 是使 Livepeer 能够在互联网规模上演进为模块化、可验证的计算基础设施的关键。
+
+在 Livepeer 协议中，合约有 3 个核心功能：
+1. _**核心协议功能**_
+2. _**代币与支付模型**_
+3. _**治理系统**_
+
+它们提供动态通胀、稳健的绑定机制、透明的治理和财政流动，能够将经济激励与网络健康对齐--而不嵌入任何关于链下工作负载的假设。
+
+<Card title={<div style={{ marginBottom: "0.5rem" }} >Protocol Contracts </div>} icon="cubes" href="../resources/blockchain-contracts" horizontal arrow cta={<a href ="/v2/resources/references/contract-addresses"> Contract Addresses </a>}> 
+    See the `Blockchain Contracts` resource page for a deep dive on the technical details and architecture of the Livepeer Protocol Contracts. 
+</Card>
+
+{/* They describe:
+- LivepeerToken (LPT) ownership and delegation
+- Staking and selection of active transcoder operators (orchestrators)
+- Distribution of inflationary rewards and fees to participants
+- Time-based progression of the protocol through rounds
+- Payment processing through a probabilistic micropayment system
+- Upgrade process and mechanics for the protocol
+- Treasury and spending proposals */}
+
+下一节将描述协议合约提供的核心组件和机制，以及它们的运作方式。
+
+
+
+{/* Protocol Definition */}
+
+{/* Protocol Positioning
+- depin */}
+
+
+{/* Protocol Function */}
+
+
+{/* Protocol Components
+- staking
+- delegation
+- inflation & rewards
+- orchestrator selection
+- slashing
+- probabilistic payments
+- verification rules */}
+

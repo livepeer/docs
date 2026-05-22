@@ -1,0 +1,167 @@
+---
+title: Démarrage rapide pour les emplois d'IA
+description: >-
+  Envoyez votre premier travail d'IA à un Livepeer via l'API IA, avec des
+  références d'extrémité validées par GitHub et une liste de vérification de
+  validation par un responsable.
+keywords:
+  - livepeer
+  - ai jobs
+  - quickstart
+  - ai api
+  - gateway
+  - text-to-image
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL3F1aWNrc3RhcnQvYWkvYWktam9icy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2RldmVsb3BlcnMvcXVpY2tzdGFydC9haS9haS1qb2JzIiwic291cmNlSGFzaCI6IjU0NDNkODg0ODkzZmIzNDVmMGY3MjcyM2IzOWIxMDdlNzY5MmU3ZDI1ZmMwZGIyZWM1NTdlMzRhZTIwMDVkMmEiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTI6MjE6MTQuOTQyWiJ9 */}
+# Démarrage rapide pour emplois d'IA
+
+Soumettez votre premier travail d'inférence IA via une passerelle Livepeer, vérifiez la forme de la réponse, puis développez vers des pipelines plus avancés.
+
+## Résumé prêt pour l'IA (pour les humains et les assistants)
+
+- Utilisez l'URL de base du passerelle IA : `https://livepeer.studio/api/beta/generate`
+- Authentifiez-vous avec `Authorization: Bearer <LIVEPEER_API_KEY>`
+- Commencez par `POST /text-to-image` pour un modèle de demande/réponse simple
+- Les autres points de terminaison de tâches d'IA suivent le même modèle d'authentification/URL de base
+- Le flux de pipeline par défaut final nécessite toujours l'approbation du partie prenante
+
+## Statut de la revue
+
+Ce démarrage rapide est structuralement complet et source, mais **la validation de la partie prenante est toujours requise** pour confirmer le flux de pipeline d'IA canonique et l'exemple par défaut`model_id`.
+
+## 1. Prérequis
+
+- Une clé API Livepeer (utilisation uniquement côté serveur)
+- `curl` (et éventuellement`jq`)
+- Un bon point de terminaison "`model_id` approuvé par les parties prenantes pour les documents destinés aux utilisateurs
+
+## 2. URL de base et authentification
+
+Utilisez l'URL de base du portail AI Livepeer et l'authentification Bearer :
+
+- URL de base : `https://livepeer.studio/api/beta/generate`
+- En-tête d'authentification : `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+Vérification de connectivité minimale :
+
+```bash
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  https://livepeer.studio/api/beta/generate/health
+```
+
+Si l'authentification et le routage fonctionnent, vous devriez recevoir une réponse JSON depuis le point de terminaison de santé.
+
+## 3. Soumettre une tâche IA (flux de démarrage text-to-image)
+
+`POST /text-to-image` est le point de terminaison de tâche IA uniquement JSON le plus simple dans la spécification actuelle de la passerelle IA.
+
+### Corps de la demande exemple
+
+`model_id` est requis par la spécification. Utilisez un identifiant de modèle approuvé par un partie prenante pour les documents de production.
+
+```json
+{
+  "model_id": "<MODEL_ID>",
+  "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+  "width": 1024,
+  "height": 576,
+  "num_images_per_prompt": 1
+}
+```
+
+### Exemple de requête curl
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/beta/generate/text-to-image" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "<MODEL_ID>",
+    "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+    "width": 1024,
+    "height": 576,
+    "num_images_per_prompt": 1
+  }'
+```
+
+## 4. Lire la réponse
+
+La spécification de la passerelle IA définit`ImageResponse` comme un objet avec un`images` tableau. Chaque élément inclut :
+
+- `url` (URL du média généré)
+- `seed`
+- `nsfw`
+
+Format de réponse exemple (réduit aux champs définis dans la spécification :
+
+```json
+{
+  "images": [
+    {
+      "url": "https://example-cdn/path/to/output.png",
+      "seed": 123456789,
+      "nsfw": false
+    }
+  ]
+}
+```
+
+## 5. Dépannage
+
+### `401 Unauthorized`
+
+- Vérifiez que le jeton Bearer est valide
+- Vérifiez que l'en-tête est exactement "`Authorization: Bearer ...`
+
+### `422 Validation Error`
+
+- Vérifiez les champs requis (`model_id`, `prompt`)
+- Vérifier le format JSON du corps de la demande
+- Vérifier les types de champ (`width`/`height` doit être des entiers)
+
+### `500 Internal Server Error`
+
+- Réessayer la demande
+- Vérifier le point de terminaison de santé de la passerelle
+- Si cela persiste, collectez l'identifiant de la demande / le contexte de journalisation et faites remonter le problème par le canal de support actuel
+
+## 6. Qu'est-ce qu'une « tâche d'IA » (note sur la portée)
+
+Ce démarrage rapide utilise`text-to-image` comme flux de départ car c'est le modèle d'endpoint JSON le plus simple dans la spécification actuelle de la passerelle.
+
+Le même modèle d'URL d'authentification / de base s'applique également à d'autres points de terminaison de tâche d'IA tels que :
+
+- `image-to-image`
+- `image-to-video`
+- `upscale`
+- `audio-to-text`
+- `segment-anything-2`
+- `llm`
+- `image-to-text`
+- `live-video-to-video`
+- `text-to-speech`
+
+## 7. Approbation des parties prenantes obligatoires avant de marquer comme final
+
+- Confirmer le flux « AI Jobs » visible aux utilisateurs
+- Confirmer la valeur par défaut`model_id` pour publier dans les exemples
+- Confirmer les flux/points de terminaison obsolètes qui doivent être exclus
+- Confirmer les avertissements requis (limites, disponibilité des modèles, tarification, modifications d'authentification/inscription)
+
+## 8. Étapes suivantes
+
+- [Portail d'API IA](/gateways/references/api-reference/AI-API/ai)
+- [Référence de point de terminaison texte-image](/gateways/references/api-reference/AI-API/text-to-image)
+- [Aperçu des pipelines IA](/developers/ai-pipelines/overview)
+- [BYOC (Bring Your Own Compute)](/developers/ai-pipelines/byoc)
+
+## Références canoniques (source de vérité en premier lieu)
+
+- GitHub (principal) : [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml)
+- GitHub (principal) : [livepeer/ai-runner `gateway.openapi.yaml`](https://github.com/livepeer/ai-runner/blob/main/gateway.openapi.yaml)
+- GitHub (principal) : [README de livepeer/ai-runner](https://github.com/livepeer/ai-runner/blob/main/README.md)
+- DeepWiki (seulement pour vérification) : [livepeer/ai-runner | DeepWiki](https://deepwiki.com/livepeer/ai-runner)
+- Références de documentation locale (non validées jusqu'à vérification croisée) : `/gateways/references/api-reference/AI-API/ai`, `/gateways/references/api-reference/AI-API/text-to-image`

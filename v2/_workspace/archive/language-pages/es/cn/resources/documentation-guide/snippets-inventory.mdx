@@ -1,0 +1,220 @@
+---
+sidebarTitle: 代码片段库存
+title: 代码片段文件夹库存
+description: >-
+  此页面提供了 `/snippets` 目录中所有文件和文件夹的全面库存。代码片段文件夹是所有自定义组件、数据、脚本和用于 Livepeer
+  文档的资源的中心位置。
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - snippets
+  - inventory
+  - components
+  - data
+  - scripts
+  - automations
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkiLCJzb3VyY2VIYXNoIjoiNjI0NDFjNTIxMTFmNDgxNTc5MzllZTU5NDM2Mzg1NTlhNGQyNGFkYTA5NzliYjg4YTU3ZjUwMzRhOTE1Y2MwNiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMjo1ODoxMS4xNDRaIn0= */}
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+
+## 概述
+
+代码片段文件夹包含：
+
+- **组件** - 按用途组织的自定义 React/JSX 组件
+- **数据** - 可重用的数据文件（代码字符串、变量、API 规范）
+- **页面** - 模块化 MDX 内容导入主文档页面
+- **脚本** - 自动化和生成脚本
+- **自动化** - 数据获取和处理自动化文件
+- **资产** - 图像、徽标、媒体文件和静态资源
+- **样式** - 主题和样式定义
+- **片段Wiki** - 关于片段系统的内部文档
+
+## 目录结构
+
+### 组件 (`/snippets/components/`)
+
+按用途组织的自定义 React/JSX 组件。当前活动组件库使用 5 个生产类别，外加 `_archive/` 用于保留待审查的旧版模块。
+
+#### 基础组件 (`/snippets/components/primitives/`)
+- `buttons.jsx` - 按钮组件 (DownloadButton)
+- `divider.jsx` - 自定义分割线组件 (CustomDivider)
+- `icons.jsx` - Livepeer 品牌图标 (LivepeerIcon, LivepeerSVG, 等等)
+- `links.jsx` - 链接和导航组件 (GotoLink, GotoCard, CustomCallout, 等等)
+- `text.jsx` - 文本组件 (Subtitle, CopyText, 等等)
+
+#### 布局 (`/snippets/components/layout/`)
+- `cards.jsx` - 卡片布局组件 (PostCard, BlogCard, ScrollBox)
+- `lists.jsx` - 列表组件 (BasicList, IconList, StepList, 等等)
+- `listSteps.jsx` - 用于将列表渲染为步骤的 ListSteps 组件
+- `steps.jsx` - 样式化步骤组件 (StyledSteps, StyledStep)
+- `table.jsx` - 动态表格组件
+- `quadGrid.jsx` - QuadGrid 布局组件
+- `text.jsx` - 文本布局组件 (AccordionLayout)
+
+#### 内容 (`/snippets/components/content/`)
+- `code.jsx` - 代码显示组件 (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
+- `externalContent.jsx` - ExternalContent 组件用于加载外部文档
+- `math.jsx` - MathInline 和 MathBlock 辅助组件
+- `quote.jsx` - Quote 和 FrameQuote 组件
+- `release.jsx` - LatestVersion 组件
+- `responseField.jsx` - API 响应字段组件 (ResponseFieldGroup, ValueResponseField 等)
+- `video.jsx` - 视频、嵌入和下载组件
+- `zoomableDiagram.jsx` - ScrollableDiagram 组件
+
+#### 数据 (`/snippets/components/data/`)
+- `coingecko.jsx` - CoinGeckoExchanges 组件
+- `data.jsx` - 博客、论坛、活动和社交流布局组件
+- `embed.jsx` - MarkdownEmbed、TwitterTimeline 和 PdfEmbed 组件
+- `showcaseCards.jsx` - ShowcaseCards 组件
+- `videoData.jsx` - YouTubeVideoData 辅助组件
+
+#### 页面结构 (`/snippets/components/page-structure/`)
+- `frameMode.jsx` - Frame 模式标题和排版组件
+- `heroGif.jsx` - 星场动画组件
+- `portals.jsx` - 门户页面布局组件
+
+#### 归档 (`/snippets/components/_archive/`)
+- 仅用于迁移审查的保留旧版源码和退役目录
+
+### 数据 (`/snippets/data/`)
+
+可重用的数据文件，用于代码字符串、变量和引用:
+
+- `gateways/` - 与网关相关的数据文件
+  - `code.jsx` - Docker 和安装代码字符串
+  - `flags.jsx` - 配置标志
+  - `quickstart.jsx` - 快速入门数据
+  - `linux/` - Linux 专用代码数据
+- `references/` - 参考数据
+  - `chainlist.jsx` - Chainlist RPC 数据
+- `variables/` - 变量定义
+  - `home.mdx` - 首页变量
+  - `variables.mdx` - 全局变量
+- `API/` - 与API相关的数据
+  - `README.md` - API文档生成指南
+  - `openapi.yaml` - OpenAPI规范
+
+### 页面 (`/snippets/pages/`)
+
+模块化 MDX 内容导入到主文档页面：
+
+- `00_HOME/` - 首页内容
+- `01_ABOUT/` - 关于部分内容
+- `04_GATEWAYS/` - 网关文档内容
+  - `run/quickstart/` - 按操作系统和模式查看快速入门
+- `05_GPUS/` - 与 GPU 相关的内容
+- `08_SHARED/` - 共享页面内容
+
+### 脚本 (`/tools/scripts/snippets/`)
+
+自动化和生成脚本:
+
+- `update-component-library.sh` - 自动更新组件库列表
+- `generate-api-docs.sh` - 从 OpenAPI 规范生成 API 文档
+- `generate-seo.js` - 生成 SEO 元数据
+- `fetch-external-docs.sh` - 获取外部文档
+- `fetch-openapi-specs.sh` - 获取 OpenAPI 规范
+- `fetch-lpt-exchanges.sh` - 获取 LPT 交易所数据
+- `generate-data/` - 数据生成脚本
+  - `scripts/terminology-search.js` - 发现术语表术语
+  - `scripts/generate-glossary.js` - 生成术语表术语
+- `paths.config.json` - 脚本路径的配置
+
+### 自动化 (`/snippets/automations/`)
+
+数据获取和处理自动化文件：
+
+- `blog/` - 博客数据（Ghost 博客集成）
+- `discord/` - Discord 公告数据
+- `forum/` - 论坛数据集成
+- `globals/` - 全局自动化数据（版本等）
+- `luma/` - Luma 日历集成
+- `youtube/` - YouTube 数据集成
+- `showcase/` - 展示项目数据
+- `scripts/` - n8n 工作流脚本 (JSON)
+
+### 资产 (`/snippets/assets/`)
+
+静态资源，包括图片、标志和媒体:
+
+- `logos/` - Livepeer 标志和品牌素材
+- `domain/` - 按章节组织的领域特定素材
+- `media/` - 媒体文件（GIF、图片、视频）
+- `site/` - 网站通用素材（favicon、图片）
+- `data/` - 数据文件（HTML 导出等）
+
+### 样式（`/snippets/styles/`)
+
+- 旧版主题样式文件 - 已弃用，建议改用 `style.css` 中的 CSS 自定义属性
+
+### SnippetsWiki (`/snippets/snippetsWiki/`)
+
+关于片段系统的内部文档：
+
+- `index.mdx` - 代码片段文件夹概述
+- `mintlify-behaviour.mdx` - 与Mintlify相关的模式和陷阱
+- `theme-colors.mdx` - 主题颜色系统文档
+- `componentLibrary/` - 组件库文档
+  - `index.mdx` - 自动生成的组件结构（由脚本更新）
+  - `examples/` - 组件示例
+
+## 文件数量摘要
+
+- **组件**: ~50+ JSX/TSX 文件，分布在 5 个活动类别中，另有 `_archive/` 用于迁移审查
+- **数据文件**: ~20+ JSX/MDX 文件
+- **页面模块**: ~20+ MDX 文件
+- **脚本**: ~10+ shell/JS 脚本
+- **自动化**: ~15+ JSX/JSON 文件
+- **资源**: 100+ 图像/媒体文件
+- **总计**: 200+ 个文件在代码片段文件夹中
+
+## 使用模式
+
+### 导入组件
+
+```jsx
+// Import from components
+import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { GotoCard } from "/snippets/components/elements/links/Links.jsx";
+import { CustomCodeBlock } from "/snippets/components/displays/code/Code.jsx";
+```
+
+### 导入数据
+
+```jsx
+// Import data files
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
+import { latestVersion } from "/snippets/automations/globals/globals.jsx";
+```
+
+### 导入页面模块
+
+```jsx
+// Import MDX page modules
+import ProjectShowcase from "/snippets/pages/00_HOME/project-showcase.mdx";
+```
+
+## 自动化
+
+组件库列表是自动化的:
+
+**脚本:** `tools/scripts/snippets/update-component-library.sh`
+
+**输出:** `snippets/snippetsWiki/componentLibrary/index.mdx`
+
+**用法:**
+```bash
+./tools/scripts/snippets/update-component-library.sh
+```
+
+此脚本自动生成一个 Tree 结构，列出所有组件在 `snippets/components/`。
+
+## 相关资源
+
+- [组件库](./component-library) - 详细的组件参考
+- [样式指南](./style-guide) - 样式和 Mintlify 的注意事项
+- [代码片段维基](/snippets/snippetsWiki/index) - 内部代码片段文档
+- [Mintlify 行为指南](/snippets/snippetsWiki/mintlify-behaviour) - Mintlify 特定的模式

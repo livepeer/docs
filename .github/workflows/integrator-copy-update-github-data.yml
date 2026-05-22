@@ -1,0 +1,22 @@
+# type: integrator
+# concern: copy
+# pipeline: P5-auto
+name: Update GitHub Discussions & Releases Data
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Daily at 02:00 UTC
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+
+jobs:
+  update-github-data:
+    uses: ./.github/workflows/dispatch-copy-update-social-feeds.yml
+    with:
+      mode: github
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

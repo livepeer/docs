@@ -1,0 +1,34 @@
+---
+title: 通过 OBS 流媒体传输
+description: 将 OBS Studio 配置为通过 RTMP 将流传输到 Livepeer Studio 并使用流密钥。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMiLCJzb3VyY2VIYXNoIjoiZTgzOGU5ZGY4NDkxM2I3NDFhNTE1ZWZhMjc2OGY5YzEzZDA5NjZlMmNjZmZjNGJiMjlhNGU1OTUyYzVjMDlhNiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozMzo0MC4xODZaIn0= */}
+[OBS Studio](https://obsproject.com/) 是广播到 Livepeer Studio 的常见选择。使用您从 [创建的流](create-livestream) 的流密钥配置 OBS。
+
+## 获取流密钥
+
+[创建直播流](create-livestream) 并复制 **流密钥**。主播在 OBS 中输入此密钥。
+
+## 配置 OBS
+
+1. 在 OBS 中： **设置 → 流**.
+2. 设置 **服务** 为 **显示全部...** 然后 **Livepeer Studio**, 或者 **自定义**.
+3. 对于 **自定义**: 设置 **服务器**到仪表板中的输入 URL（例如 `rtmp://livepeer.studio/live`)，并将 **流密钥**设置为您的流密钥。
+4. **输出** 选项卡: ** 输出模式** = ** 高级**, **关键帧间隔** = **1**.
+5. 保存并 **开始流媒体**。
+
+<Info>
+  Use **Keyframe Interval: 1** and disable **B-frames** (`bframes=0` in x264 options) for best compatibility with WebRTC playback. See [Optimize latency](optimize-latency).
+</Info>
+
+## 播放
+
+观众使用流 **播放 ID** 在 [Livepeer 播放器](./playback-livestream) 或任何 HLS/WebRTC 播放器。
+
+## 推荐的 OBS 设置
+
+**低延迟:** 关键帧间隔 1, CRF 25 或 CBR, 高档配置, `bframes=0`, 分辨率 720p 或 1080p。
+
+**平衡:** 关键帧间隔 2, CRF 25, 无 B-frame 覆盖。
+
+参见 [优化延迟](optimize-latency) 以获取完整配置文件。

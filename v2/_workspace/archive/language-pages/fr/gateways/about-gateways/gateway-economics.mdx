@@ -1,0 +1,290 @@
+---
+title: Économie de la passerelle
+description: Découvrez l'économie de l'exécution d'une passerelle Livepeer
+sidebarTitle: Économie
+keywords:
+  - livepeer
+  - gateways
+  - about gateways
+  - gateway economics
+  - gateway
+  - economics
+  - learn
+  - running
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9hYm91dC1nYXRld2F5cy9nYXRld2F5LWVjb25vbWljcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL2Fib3V0LWdhdGV3YXlzL2dhdGV3YXktZWNvbm9taWNzIiwic291cmNlSGFzaCI6IjVkYjNlMjEyZDAwMjg0ZTRjMTI2YWQ3OTIyYTYwOWY0YjgxYzU5ZjFkZjc3NDQyYTdmODFiMmE2ZDFiOGIzMWUiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MDI6MDcuMzQwWiJ9 */}
+# Économie de la passerelle dans Livepeer
+
+Les passerelles dans Livepeer ne gagnent pas d'argent au niveau du protocole_(mais elles peuvent gagner de l'argent au niveau de l'application métier)_ (bien qu'elles puissent gagner de l'argent au niveau de l'application métier)_)_.
+
+Livepeer suit un modèle de fournisseur de services où les passerelles sont des clients qui achètent des services de traitement médiatique et d'IA au réseau.
+Les bénéficiaires au niveau du protocole sont les orchestrateurs, les transcodeurs, les travailleurs d'IA et les redempteurs qui fournissent le travail informatique
+et les services blockchain.
+
+**Le flux de paiement**
+
+Dans le modèle économique de Livepeer, les passerelles sont des consommateurs de services de traitement médiatique :
+
+- Les passerelles paient les orchestrateurs pour le codage/la tâche d'IA via des tickets de paiement
+- Les orchestrateurs paient les transcodeurs/travailleurs d'IA qui effectuent le travail réel
+- Les redempteurs gagnent des frais en redémarrant les tickets de paiement gagnants sur la blockchain
+
+## Qui gagne réellement de l'argent ?
+
+<div style={{ overflowX: 'auto', marginBottom: '24px' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: '#fff' }}>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          Node Type
+        </th>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          How They Earn Money
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Orchestrator
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Receives payments from gateways for coordinating work
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Transcoder
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for video transcoding work
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          AI Worker
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for AI model inference
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Redeemer
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Earns fees for redeeming winning tickets on blockchain
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Gateway
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          PAYS for services (does not earn)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Coûts de la passerelle
+
+Les passerelles encourrent des coûts pour :
+
+- La transcodage vidéo : par segment en fonction des pixels traités
+- Le traitement par IA : par pixel en fonction des dimensions de sortie
+- Vidéo en direct avec IA : paiements basés sur l'intervalle pendant la diffusion
+
+### Devise de la passerelle
+
+Les passerelles paient les services de transcoding et de traitement d'IA à l'aide de ETH (Ethereum), et non de jetons Livepeer (LPT).
+
+Le système de paiement est basé sur la devise d'Ethereum.
+
+<div style={{ overflowX: 'auto' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: 'white' }}>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Currency
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Purpose
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Used By
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          ETH/Wei
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Service payments (transcoding, AI)
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Gateways → Orchestrators
+        </td>
+      </tr>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>LPT</td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Staking, governance, rewards
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Orchestrators, Delegators
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+ETH gère les paiements réels des services, tandis que LPT gère la gouvernance du protocole et le staking. Ce design maintient les coûts des services prévisibles dans une devise stable, tout en permettant à LPT de remplir sa fonction de gouvernance.
+
+### Pourquoi exécuter une passerelle ?
+
+Si les passerelles ne gagnent pas d'argent, pourquoi en exécuter une ?
+
+- Exécuter votre propre Gateway signifie que vous ne payez pas de frais pour acheminer via le Gateway d'une autre partie
+- Les fournisseurs de contenu exécutent des gateways pour traiter leur propre contenu vidéo/IA et garantir les SLA sur leurs Orchestrators.
+- Les fournisseurs de services peuvent facturer aux utilisateurs finaux des tarifs plus élevés que ceux qu'ils paient aux Orchestrators en tant que frais de service
+- Les plateformes intégrées utilisent des gateways en tant que composant des services médiatiques plus larges
+
+## Bénéfices de l'arbitrage des Gateways
+
+Les Gateways gagnent de l'argent grâce à l'arbitrage commercial :
+
+- Les fournisseurs de contenu paient les passerelles pour les services de traitement vidéo/IA
+- Les passerelles paient les orchestrateurs pour le travail informatique réel
+
+La différence est la marge bénéficiaire de la passerelle
+
+## Structure des frais de la passerelle
+
+En tant qu'opérateur de passerelle, vous ne définissez pas de "frais" au niveau du protocole dans Livepeer - vous définissez**la tarification commerciale** au niveau de l'application.
+Le protocole ne contrôle que ce que vous **payez** les orchestrateurs, et non ce que vous **facturez** les clients.
+
+### Coûts au niveau du protocole (Ce que vous payez)
+
+Vous contrôlez vos coûts grâce à ces indicateurs de configuration[1](#10-0) :
+
+```bash
+# Maximum you'll pay per pixel for transcoding
+-maxPricePerUnit=1000
+
+# Maximum you'll pay per AI capability/model
+-maxPricePerCapability='{"capabilities_prices": [{"pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "price_per_unit": 1000}]}'
+```
+
+### Tarification au niveau de l'entreprise (Ce que vous facturez)
+
+Vos frais réels aux utilisateurs finaux sont définis au niveau de l'application, en dehors du protocole Livepeer.
+
+Les approches courantes comprennent :
+
+1. **Tarification par demande**: Tarification par appel d'API à votre passerelle
+2. **Tarification selon l'utilisation**: Tarification par minute de vidéo ou par génération d'IA
+3. **Modèles d'abonnement**: Frais mensuels pour l'accès aux services de votre passerelle
+
+### Exemple d'implémentation
+
+Voici comment vous implémenteriez la logique de tarification dans votre application :
+
+```go
+// Your application code (not in Livepeer protocol)
+func calculateUserPrice(requestType string, pixels int64) float64 {
+    basePrice := getYourBusinessPrice(requestType)
+    yourCost := getOrchestratorCost(pixels)
+    profitMargin := 0.20 // 20% margin
+
+    return basePrice + yourCost*profitMargin
+}
+```
+
+### Découverte des prix
+
+Utilisez la CLI pour découvrir les prix des orchestrateurs et définir vos marges :
+
+```bash
+livepeer_cli
+# Select "Set broadcast config" to see current market rates
+# Then set your max prices accordingly
+```
+
+Votre « frais » est la différence entre ce que les clients vous paient et ce que vous payez aux orchestrateurs pour le traitement.
+
+### Étude de cas : Streamplace
+
+[Streamplace](https://stream.place)est une passerelle qui fournit des services de traitement vidéo aux créateurs de contenu.
+Les créateurs paient Streamplace pour le traitement vidéo, et Streamplace paie les orchestrateurs pour le travail réel.
+La marge bénéficiaire de Streamplace est la différence entre ce que paient les créateurs et ce que Streamplace paie aux orchestrateurs.
+
+[Daydream](https://daydream.live)est un autre exemple de passerelle qui fournit des services de traitement vidéo par IA.
+Les développeurs et les créateurs paient Daydream pour le traitement vidéo par IA, et Daydream paie les orchestrateurs pour le travail réel.
+La marge bénéficiaire de Daydream est la différence entre ce que paient les créateurs et ce que Daydream paie aux orchestrateurs.

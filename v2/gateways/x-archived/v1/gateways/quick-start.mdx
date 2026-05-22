@@ -1,0 +1,128 @@
+---
+title: Quickstart
+description:
+  "Learn how to create an API key and start adding live and on-demand video to
+  your app or website!"
+icon: "bolt"
+---
+
+First, go to [Livepeer Studio](https://livepeer.studio), if you haven't already,
+and create an account. Once you've created an account, you'll be able to create
+an API key by clicking on the "Create API Key" button on Developers page.
+
+<Warning>
+  We do not recommend using ["CORS-enabled" API
+  keys](/api-reference/overview/authentication) - they will be deprecated in an
+  upcoming release. We recommend making requests from your backend to the
+  Livepeer Studio API.
+</Warning>
+
+<Frame>
+  ![Livepeer Studio - Create API key
+  page](/v1/images/tutorials/studio-create-api.png)
+</Frame>
+
+You can now use this API key in Livepeer SDKs and APIs in order to authenticate
+your requests and start building.
+
+<Info>
+  We recommend creating separate accounts for your development and production
+  environments. This will allow you to easily isolate your environments. We will
+  be shipping a solution for multi-environment management soon.
+</Info>
+
+In this exampe, we will use Javascript anld React to upload a video. Make sure
+to set up a React app first.
+
+## Install the JS SDK and Livepeer React
+
+We install both the NodeJS SDK (which works in all JS environments with `fetch`)
+and the Livepeer React library, which provides composable React primitives for
+building video apps.
+
+```
+npm install livepeer @livepeer/react
+```
+
+## Set up the SDK
+
+Add an API key to the environment variables, and construct a new Livepeer SDK
+client.
+
+```tsx
+import Livepeer from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: process.env.YOUR_PRIVATE_API_KEY,
+});
+```
+
+## Retrieve playback info
+
+We can now use the SDK on the backend to fetch the playback info for our asset.
+
+This asset was uploaded using the dashboard, but this can also be an asset
+created from an application.
+
+```ts
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "f5eese9wwl88k4g8";
+
+export const getPlaybackSource = () => {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+
+  const src = getSrc(playbackInfo.playbackInfo);
+
+  return src;
+};
+```
+
+## Play the asset
+
+We can now use Player component from the SDK to play a video. In the below
+example, we style the elements with Tailwind, but you can use any styling
+solution:
+
+```tsx
+import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+import { vodSource } from "./source";
+
+export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
+
+        <Player.Controls className="flex items-center justify-center">
+          <Player.PlayPauseTrigger className="w-10 h-10">
+            <Player.PlayingIndicator asChild matcher={false}>
+              <PlayIcon />
+            </Player.PlayingIndicator>
+            <Player.PlayingIndicator asChild>
+              <PauseIcon />
+            </Player.PlayingIndicator>
+          </Player.PlayPauseTrigger>
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+};
+```
+
+## Start building
+
+Check out the [SDKs](/sdks/introduction) and
+[API Reference](/api-reference/overview/introduction) pages to learn more about
+how to use the SDKs and API to build your application.
+
+You can also refer to the [Guides](/developers/guides/overview) section for more
+in-depth tutorials on how to use the SDKs and API to build specific
+applications.
+
+Don't know where to start? Check out these four tutorials:
+
+- [Learn how to create a livestream](/developers/guides/create-livestream)
+- [Learn how to listen to asset events](/developers/guides/listen-to-asset-events)

@@ -1,0 +1,180 @@
+---
+title: Setup paths
+sidebarTitle: Setup Paths
+description: >-
+  Four quickstart tracks for building on Livepeer: AI inference, real-time AI video, video transcoding, and OSS
+  contribution.
+lifecycleStage: setup
+complexity: beginner
+keywords:
+  - livepeer
+  - quickstart
+  - AI inference
+  - ComfyStream
+  - video transcoding
+  - setup
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: navigation
+purpose: choose
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Each quickstart reaches a working first result. Pick the track that matches your goal -- they use different tools and do not overlap.</Tip>
+</CenteredContainer>
+
+---
+
+Choose the quickstart for your build goal. If you are unsure which applies, use the <a href="/v2/developers/navigator">navigator</a> to compare paths first.
+
+<CustomDivider middleText="Quickstart Tracks" />
+
+## AI inference
+
+**Goal:** Make a working API call to a Livepeer AI pipeline.
+
+**Time:** 10 minutes.
+
+**Prerequisites:** API key from [Livepeer Studio](https://livepeer.studio). No GPU. No local node.
+
+**What you build:** A `POST /text-to-image` call that returns a generated image, using curl or an SDK of your choice.
+
+**SDK options:** `livepeer` (npm v3.5.0 / PyPI), `@livepeer/ai` (alpha, AI-only).
+
+<CardGroup cols={1}>
+  <Card title="AI Quickstart" icon="bolt" href="/v2/developers/get-started/ai-quickstart" arrow>
+    First API call, error handling, and next steps in under 10 minutes.
+  </Card>
+</CardGroup>
+
+<CustomDivider middleText="Real-Time AI Video" />
+
+## Real-time AI video
+
+**Goal:** Apply a ComfyUI workflow to a live webcam or video stream.
+
+**Time:** 30-60 minutes (includes environment setup).
+
+**Prerequisites:**
+- NVIDIA GPU (RTX 3090 or better recommended)
+- ComfyUI installed and working
+- Python 3.12, CUDA 12.5+, Miniconda
+
+**What you build:** A ComfyStream server connected to the Livepeer network, with a live webcam feed processed through an SD1.5 workflow at real-time frame rates.
+
+<CardGroup cols={1}>
+  <Card title="ComfyStream Quickstart" icon="video" href="/v2/developers/get-started/comfystream-quickstart" arrow>
+    ComfyStream install, SD1.5 workflow, and webcam-to-processed-stream in 30 minutes.
+  </Card>
+</CardGroup>
+
+<CustomDivider middleText="Video Streaming" />
+
+## Video transcoding and streaming
+
+**Goal:** Create a livestream or transcode a video asset using the Studio API.
+
+**Time:** 15 minutes.
+
+**Prerequisites:** API key from [Livepeer Studio](https://livepeer.studio). SDK installed.
+
+**What you build:** A stream with an RTMP ingest URL and an HLS playback URL, tested end-to-end.
+
+**SDK install:**
+
+```bash
+# TypeScript / JavaScript
+npm install livepeer
+
+# Python
+pip install livepeer
+
+# Go
+go get github.com/livepeer/livepeer-go
+```
+
+<CardGroup cols={1}>
+  <Card title="Transcoding Quickstart" icon="film" href="/v2/developers/get-started/transcoding-quickstart" arrow>
+    Create a stream, get the ingest URL, test with OBS or ffmpeg.
+  </Card>
+</CardGroup>
+
+<CustomDivider middleText="OSS Contribution" />
+
+## OSS contribution
+
+**Goal:** Get the Livepeer codebase running locally and make your first contribution.
+
+**Time:** 1-2 hours (includes testnet setup).
+
+**Prerequisites:** Go 1.21+ for go-livepeer; Python 3.12 for ai-runner or ComfyStream; Docker.
+
+**What you build:** A local testnet with one orchestrator and one gateway running, capable of processing test jobs.
+
+<CardGroup cols={1}>
+  <Card title="Contributor Quickstart" icon="code" href="/v2/developers/get-started/contributor-quickstart" arrow>
+    Clone go-livepeer, start a local testnet, and submit your first test job.
+  </Card>
+</CardGroup>
+
+<CustomDivider middleText="Not Sure?" />
+
+## Not sure which path fits?
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>If you want to...</TableCell>
+      <TableCell header>Use this track</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Call AI inference from an app without a GPU</TableCell>
+      <TableCell>AI inference</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Apply AI effects to a live camera feed in real time</TableCell>
+      <TableCell>Real-time AI video (ComfyStream)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Run your own custom model on the network</TableCell>
+      <TableCell>BYOC -- see <a href="/v2/developers/build/byoc">BYOC Guide</a></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Transcode video or run a livestream</TableCell>
+      <TableCell>Video transcoding</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Contribute to go-livepeer or ai-runner</TableCell>
+      <TableCell>OSS contribution</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Run your own gateway node</TableCell>
+      <TableCell>Gateways tab -- different from developer paths</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Navigator" icon="map" href="/v2/developers/navigator">
+    Full path comparison with decision framework and per-path descriptions.
+  </Card>
+  <Card title="Workload Fit" icon="scale-balanced" href="/v2/developers/build/workload-fit">
+    Studio API vs self-hosted gateway vs BYOC vs ComfyStream -- when to use each.
+  </Card>
+</CardGroup>

@@ -1,0 +1,167 @@
+---
+title: Inicio rápido para trabajos de IA
+description: >-
+  Envía tu primer trabajo de IA a una puerta de enlace Livepeer usando la API de
+  IA, con referencias de puntos finales validadas por GitHub y una lista de
+  verificación de aprobación por parte de un responsable.
+keywords:
+  - livepeer
+  - ai jobs
+  - quickstart
+  - ai api
+  - gateway
+  - text-to-image
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL3F1aWNrc3RhcnQvYWkvYWktam9icy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2RldmVsb3BlcnMvcXVpY2tzdGFydC9haS9haS1qb2JzIiwic291cmNlSGFzaCI6IjU0NDNkODg0ODkzZmIzNDVmMGY3MjcyM2IzOWIxMDdlNzY5MmU3ZDI1ZmMwZGIyZWM1NTdlMzRhZTIwMDVkMmEiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTI6MjA6MTcuMDU3WiJ9 */}
+# Inicio rápido para trabajos de IA
+
+Envía tu primer trabajo de inferencia de IA a través de una puerta de enlace Livepeer, verifica la forma de la respuesta y luego ramifícate hacia pipelines más avanzados.
+
+## Resumen listo para IA (para humanos y asistentes)
+
+- Usa la URL base de la puerta de enlace de IA: `https://livepeer.studio/api/beta/generate`
+- Autenticarse con `Authorization: Bearer <LIVEPEER_API_KEY>`
+- Empieza con `POST /text-to-image` para un patrón de solicitud/respuesta simple
+- Otros puntos finales de trabajo de IA siguen el mismo patrón de autenticación/URL base
+- El flujo de la canalización predeterminada final aún requiere aprobación de los responsables
+
+## Estado de revisión
+
+Este inicio rápido es estructuralmente completo y respaldado por código fuente, pero **la aprobación del responsable aún es necesaria** para confirmar el flujo de la canalización de IA canónica y el ejemplo predeterminado`model_id`.
+
+## 1. Requisitos previos
+
+- Una clave de API Livepeer (solo para uso en el backend)
+- `curl` (y opcionalmente`jq`)
+- Un buen conocido `model_id` aprobado por los interesados para documentación orientada al usuario
+
+## 2. URL base y autenticación
+
+Use la URL base del puerta de enlace de IA Livepeer y autenticación Bearer:
+
+- URL base: `https://livepeer.studio/api/beta/generate`
+- Encabezado de autenticación: `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+Verificación de conectividad mínima:
+
+```bash
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  https://livepeer.studio/api/beta/generate/health
+```
+
+Si la autenticación y el enrutamiento funcionan, deberías recibir una respuesta JSON desde el punto final de salud.
+
+## 3. Envía un trabajo de IA (flujo de inicio de texto a imagen)
+
+`POST /text-to-image`es el endpoint de trabajo de IA solo JSON más simple en la especificación actual de la puerta de enlace de IA.
+
+### Cuerpo de solicitud de ejemplo
+
+`model_id`es requerido por la especificación. Usa un ID de modelo aprobado por un interesado para los documentos de producción.
+
+```json
+{
+  "model_id": "<MODEL_ID>",
+  "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+  "width": 1024,
+  "height": 576,
+  "num_images_per_prompt": 1
+}
+```
+
+### Solicitud curl de ejemplo
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/beta/generate/text-to-image" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "<MODEL_ID>",
+    "prompt": "A cinematic still of a lighthouse on a rocky coast at sunrise",
+    "width": 1024,
+    "height": 576,
+    "num_images_per_prompt": 1
+  }'
+```
+
+## 4. Leer la respuesta
+
+La especificación de la puerta de enlace de IA define`ImageResponse` como un objeto con un`images` arreglo. Cada elemento incluye:
+
+- `url` (URL de medios generados)
+- `seed`
+- `nsfw`
+
+Forma de respuesta de ejemplo (recortada a los campos definidos en la especificación):
+
+```json
+{
+  "images": [
+    {
+      "url": "https://example-cdn/path/to/output.png",
+      "seed": 123456789,
+      "nsfw": false
+    }
+  ]
+}
+```
+
+## 5. Solución de problemas
+
+### `401 Unauthorized`
+
+- Confirme que el token de portador es válido
+- Confirme que el encabezado es exactamente `Authorization: Bearer ...`
+
+### `422 Validation Error`
+
+- Compruebe los campos obligatorios (`model_id`, `prompt`)
+- Comprobar el formato JSON del cuerpo de la solicitud
+- Comprobar los tipos de campo (`width`/`height` debe ser enteros)
+
+### `500 Internal Server Error`
+
+- Volver a intentar la solicitud
+- Comprueba el punto de conexión de estado de la puerta de enlace
+- Si persiste, recopila el identificador de solicitud/contenido de registro y escálalo a través del actual camino de soporte
+
+## 6. ¿Qué se considera una "tarea de IA" (nota de alcance)
+
+Este inicio rápido utiliza`text-to-image` como el flujo de inicio porque es el patrón de punto de conexión JSON más simple en la especificación actual de la puerta de enlace.
+
+El mismo patrón de autenticación/URL base también se aplica a otros puntos de conexión de tarea de IA, como:
+
+- `image-to-image`
+- `image-to-video`
+- `upscale`
+- `audio-to-text`
+- `segment-anything-2`
+- `llm`
+- `image-to-text`
+- `live-video-to-video`
+- `text-to-speech`
+
+## 7. Aprobación de los interesados antes de marcar como final
+
+- Confirmar el flujo de trabajo "AI Jobs" de cara al usuario
+- Confirmar el predeterminado`model_id` para publicar en ejemplos
+- Confirmar cualquier flujo/endpoint obsoleto que deba excluirse
+- Confirmar las advertencias necesarias (límites, disponibilidad de modelos, precios, cambios de autenticación/registro)
+
+## 8. Pasos siguientes
+
+- [Portal de la API de IA](/gateways/references/api-reference/AI-API/ai)
+- [Referencia del punto de conexión de texto a imagen](/gateways/references/api-reference/AI-API/text-to-image)
+- [Visión general de las pipelines de IA](/developers/ai-pipelines/overview)
+- [BYOC (Trae tu propio cómputo)](/developers/ai-pipelines/byoc)
+
+## Referencias canónicas (primero la fuente de verdad)
+
+- GitHub (primario): [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml)
+- GitHub (primario): [livepeer/ai-runner `gateway.openapi.yaml`](https://github.com/livepeer/ai-runner/blob/main/gateway.openapi.yaml)
+- GitHub (primario): [README de livepeer/ai-runner](https://github.com/livepeer/ai-runner/blob/main/README.md)
+- DeepWiki (solo verificación): [livepeer/ai-runner | DeepWiki](https://deepwiki.com/livepeer/ai-runner)
+- Referencias de documentación locales del repositorio (no validadas hasta que se verifiquen): `/gateways/references/api-reference/AI-API/ai`, `/gateways/references/api-reference/AI-API/text-to-image`

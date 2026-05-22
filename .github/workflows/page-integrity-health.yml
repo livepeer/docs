@@ -1,0 +1,185 @@
+name: Page Integrity Health
+
+on:
+  schedule:
+    - cron: '30 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  page-integrity-health:
+    name: page-integrity-health
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_BRANCH }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run page integrity dispatch
+        id: page-integrity
+        continue-on-error: true
+        run: |
+          node operations/scripts/dispatch/content/health/page-integrity-dispatch.js \
+            --strict \
+            --issue-mode plan \
+            --output-dir /tmp/page-integrity
+
+      - name: Upload page integrity reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-integrity-report
+          path: |
+            /tmp/page-integrity
+          retention-days: 7
+
+      - name: Publish summary
+        if: always()
+        run: |
+          echo "## Page Integrity Dispatch" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Workflow mode: audit + safe repair + rerun" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Dispatch step outcome: ${{ steps.page-integrity.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -f /tmp/page-integrity/page-integrity-dispatch.json ]; then
+            node -e "const fs=require('fs'); const p='/tmp/page-integrity/page-integrity-dispatch.json'; const j=JSON.parse(fs.readFileSync(p,'utf8')); const out=[]; out.push('- Entry files: '+((j.entryFiles||[]).length)); out.push('- Initial link findings: '+(j.initial?.links ?? 0)); out.push('- Initial import findings: '+(j.initial?.imports ?? 0)); out.push('- Final link findings: '+(j.final?.links ?? 0)); out.push('- Final import findings: '+(j.final?.imports ?? 0)); out.push('- Unresolved findings: '+((j.unresolvedFindings||[]).length)); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out.join('\n')+'\n');"
+          else
+            echo "- JSON report missing; check run logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Ensure rolling issue labels
+        if: github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const labels = [
+              { name: 'docs-v2', color: '0e8a16', description: 'Docs V2 maintenance and tooling' },
+              { name: 'help wanted', color: '008672', description: 'Extra attention is needed' },
+              { name: 'status: needs-routing', color: 'f9d0c4', description: 'Awaiting repository routing' },
+              { name: 'type: bug', color: 'd73a4a', description: 'Behavior is incorrect' },
+              { name: 'area: ci-cd', color: '5319e7', description: 'CI/CD automation and workflows' }
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                try {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description
+                  });
+                } catch (createError) {
+                  if (createError.status !== 422) throw createError;
+                }
+              }
+            }
+
+      - name: Sync rolling page integrity issue
+        if: github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          PAGE_INTEGRITY_JSON: /tmp/page-integrity/page-integrity-dispatch.json
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const helpers = require(path.join(
+              process.env.GITHUB_WORKSPACE || process.cwd(),
+              'operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js'
+            ));
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const reportPath = process.env.PAGE_INTEGRITY_JSON;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            if (!fs.existsSync(reportPath)) {
+              core.warning(`Dispatch report not found at ${reportPath}; skipping issue sync.`);
+              return;
+            }
+
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            const findings = Array.isArray(report.unresolvedFindings) ? report.unresolvedFindings : [];
+
+            async function findExistingIssue() {
+              const query = `repo:${owner}/${repo} is:issue in:body "page-integrity-dispatch"`;
+              const result = await github.rest.search.issuesAndPullRequests({ q: query, per_page: 20 });
+              const issue = helpers.findMarkerIssue(result.data.items || [], helpers.ROLLING_ISSUE_MARKER);
+              if (!issue) return null;
+              const issueResp = await github.rest.issues.get({ owner, repo, issue_number: issue.number });
+              return issueResp.data;
+            }
+
+            const existing = await findExistingIssue();
+            const action = helpers.getIssueAction({
+              existingIssue: existing,
+              unresolvedCount: findings.length
+            });
+
+            if (action === 'close') {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: helpers.buildResolutionComment(runUrl)
+              });
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                state: 'closed'
+              });
+              return;
+            }
+
+            if (action === 'noop') {
+              return;
+            }
+
+            const body = helpers.buildIssueBody({
+              runUrl,
+              topFindings: helpers.buildTopFindings(findings, 30),
+              unresolvedCount: findings.length,
+              scannedFiles: Array.isArray(report.entryFiles) ? report.entryFiles.length : 0,
+              linksSummary: { unresolvedCount: report.final?.links || 0, fileCount: 0 },
+              importsSummary: { errorCount: report.final?.imports || 0, fileCount: 0 }
+            });
+
+            if (action === 'create') {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title: helpers.ROLLING_ISSUE_TITLE,
+                body,
+                labels: helpers.ROLLING_ISSUE_LABELS
+              });
+              return;
+            }
+
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: existing.number,
+              title: helpers.ROLLING_ISSUE_TITLE,
+              body,
+              labels: helpers.ROLLING_ISSUE_LABELS,
+              state: 'open'
+            });

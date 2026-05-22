@@ -1,0 +1,35 @@
+---
+title: Contrôle d'accès avec des JWT
+description: >-
+  Protéger la lecture en utilisant des JWT signés, afin que seuls les
+  spectateurs possédant un jeton valide puissent regarder.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL2p3dC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYWNjZXNzLWNvbnRyb2wvand0Iiwic291cmNlSGFzaCI6ImU0MTYyMzk4Mjg5MzM5ZGIxNzI3NzQxY2VhZDk0NGZiMmY5ZDkxN2QxNGZkNjk1Yjk0MWUwMjlkY2Q0NjdkNGYiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MTY6MjUuMjkwWiJ9 */}
+Avec le contrôle d'accès par **JWT**, vous marquez un flux ou un actif comme étant protégé. Les spectateurs doivent envoyer un **JWT** signé avec une clé de signature de Studio **clé de signature**. Vous émettez des JWT depuis votre backend après validation de l'utilisateur.
+
+## 1. Créer une clé de signature
+
+Dans le tableau de bord ou via la [API de clé de signature](https://livepeer.studio/docs/api-reference/signing-key/create), créez une clé de signature. Stockez la **clé privée** dans votre backend (env) et utilisez la **clé publique** dans Studio pour la vérification.
+
+## 2. Créer du contenu restreint
+
+Définir `playbackPolicy.type` à `"jwt"`lors de la création du flux ou de l'actif :
+
+```ts
+await livepeer.stream.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+await livepeer.asset.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+```
+
+## 3. Signez et retournez un JWT depuis votre API
+
+Dans une route backend (par exemple `/api/sign-jwt`), validez l'utilisateur, puis signez un JWT avec la clé privée. Incluez `playbackId`, l'expiration et toutes les revendications personnalisées. Retournez le jeton au client. Utilisez `@livepeer/core/crypto` `signAccessJwt` ou toute bibliothèque JWT avec les mêmes revendications Livepeer attendues (voir [Livepeer Studio docs](https://livepeer.studio/docs).)
+
+## 4. Transmettez le JWT au Player
+
+```tsx
+<Player.Root src={src} jwt={jwt}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+**Player personnalisé :** Envoyez le JWT dans l'`Livepeer-Jwt` en-tête pour WebRTC/HLS, ou en tant que paramètre de requête `jwt` sur l'URL de lecture.

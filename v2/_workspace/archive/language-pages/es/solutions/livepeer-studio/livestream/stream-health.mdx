@@ -1,0 +1,39 @@
+---
+title: Salud de la transmisión
+description: >-
+  Monitorear la salud de la transmisión en vivo: codificación, estado en tiempo
+  real, destinos de multitransmisión, tasa de ingesta y registros.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLWhlYWx0aC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9zdHJlYW0taGVhbHRoIiwic291cmNlSGFzaCI6ImM4MWNkZTc5MWVlNjI4NjY2ODEwZmEzZjNjZTQ3YmM0NzQ5ODdhYjE4ZGEwYjM4M2E4NDVhOGEwMTY5ZjgzYjUiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mjc6MTcuNDY3WiJ9 */}
+La salud de la transmisión en Livepeer Studio le da una vista rápida de si una transmisión funciona correctamente y dónde podrían estar los problemas.
+
+## Estado general de la salud
+
+- **Saludable** - Todos los controles de salud están en un buen estado.
+- **No saludable** - Uno o más controles indican un problema.
+- **Inactivo** - La transmisión no está activa actualmente.
+
+## Comprobaciones de estado
+
+- **Codificación en transmisión** - Estado correcto significa que hay varios perfiles codificados disponibles para reproducción. Estado incorrecto significa que solo está disponible la fuente; revise los registros y la configuración de su codificador (por ejemplo, OBS).
+- **En tiempo real** - Indica si la transcodificación es más rápida que en tiempo real (baja latencia). Configuraciones inusuales pueden hacer que esto sea inapropiado.
+- **Multistreaming** - Estado de los objetivos de multistreaming: **Inactivo** (stream o multistream no activo), **Pendiente** (conectando), **En línea** (conectado), **Fuera de línea** (error). Corrija la URL de entrada del destino o la clave de transmisión o el servicio de destino si un destino permanece fuera de línea.
+
+## Registros
+
+La pestaña de Salud (o API) muestra los registros de la transmisión: por ejemplo, transmisión iniciada/parada, multitransmisión conectada/desconectada, y **errores de codificación** (por ejemplo, formato de píxel no compatible). Úselos para corregir la configuración del codificador o de recepción.
+
+## Tasa de recepción de sesión
+
+La **tasa de recepción de sesión**es la tasa de bits del video recibido por Livepeer, actualizado aproximadamente cada 10 segundos. Una tasa de bits estable y razonable sugiere un codificador y una red buenos; una tasa de bits baja o inestable puede indicar problemas con la configuración del codificador o la conexión.
+
+## Dónde ver la salud
+
+- **Panel de control** - Abra la transmisión en el [Livepeer Studio dashboard](https://livepeer.studio/dashboard/streams) y use la **Salud** pestaña. Verá el estado, las comprobaciones, los registros y un gráfico de la tasa de ingestión para la sesión activa.
+- **API** - Use [Obtener transmisión](https://livepeer.studio/docs/api-reference/stream/get) y [Obtener sesión](https://livepeer.studio/docs/api-reference/session/get) para datos de transmisión y sesión (por ejemplo.`sourceSegmentsDuration`, duración de la sesión). Las condiciones y métricas de salud detalladas pueden exponerse a través de la API; consulte la última[referencia de la API](https://livepeer.studio/docs) para ver los campos actuales.
+
+## Solución de problemas
+
+- **Transcodificación no saludable** - Consulte el registro de eventos en busca de errores (por ejemplo, formato de entrada no compatible). Ajuste OBS o su codificador (resolución, códec, intervalo de clave de imagen) y reinicie la transmisión.
+- **Multistream fuera de línea** - Verifique la URL de entrada del destino y la clave de transmisión; corrija el destino de multistream y inicie una nueva sesión.
+- **Tasa de entrada baja o fluctuante** - Verifique la velocidad de carga del emisor y la configuración de bit rate del codificador/intervalo de clave de imagen. Vea [Transmitir mediante OBS](stream-via-obs) y [Optimizar latencia](optimize-latency).

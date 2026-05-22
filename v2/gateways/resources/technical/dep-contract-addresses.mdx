@@ -1,0 +1,202 @@
+---
+title: Contract Addresses
+sidebarTitle: Contract Addresses
+description: 'Look up current Livepeer protocol contract addresses across supported networks and deployed versions — Arbitrum Mainnet (active) and Ethereum Mainnet (legacy).'
+purpose: reference
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - contract addresses
+  - contract
+  - addresses
+  - arbitrum
+  - ticketbroker
+pageType: 'reference'
+audience: gateway-operator
+lastVerified: 2026-03-17
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/*
+  SOURCE: Ported from v2/resources/references/contract-addresses.mdx (docs-v2 branch)
+  Also informed by v2/about/resources/blockchain-contracts.mdx (architecture context)
+
+  Gateway-relevant contracts highlighted:
+  - TicketBroker (Proxy): deposit/reserve management, ticket redemptions
+  - ServiceRegistry: video orchestrator service URI registration
+  - AIServiceRegistry: AI orchestrator capability registration
+  - BondingManager: staking, orchestrator selection
+  - RoundsManager: protocol round management
+
+  CROSS-REFS:
+  - Guides → Monitoring & Troubleshooting → Tools & Dashboards (Arbiscan section)
+  - Guides → Monitoring & Troubleshooting → Monitoring Setup (On-Chain Monitoring section)
+  - Guides → Payments & Pricing → Fund Your Gateway (deposit/reserve via TicketBroker)
+*/}
+
+Addresses of deployed contracts of the Livepeer protocol on multiple networks.
+
+## Current
+
+### Arbitrum Mainnet
+
+All contracts on Arbitrum Mainnet implement the Delta version of the protocol.
+
+- **Governor**: [`0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6`](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6)
+- **Controller**: [`0xD8E8328501E9645d16Cf49539efC04f734606ee4`](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4)
+- **LivepeerToken**: [`0x289ba1701C2F088cf0faf8B3705246331cB8A839`](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839)
+- **Minter**: [`0xc20DE37170B45774e6CD3d2304017fc962f27252`](https://arbiscan.io/address/0xc20DE37170B45774e6CD3d2304017fc962f27252)
+- **BondingManager (Proxy)**: [`0x35Bcf3c30594191d53231E4FF333E8A770453e40`](https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40)
+- **BondingManager (Target)**: [`0xF62C30242fccd3a46721f155d4d367De3fD5B3b3`](https://arbiscan.io/address/0xF62C30242fccd3a46721f155d4d367De3fD5B3b3)
+- **TicketBroker (Proxy)**: [`0xa8bB618B1520E284046F3dFc448851A1Ff26e41B`](https://arbiscan.io/address/0xa8bB618B1520E284046F3dFc448851A1Ff26e41B)
+- **TicketBroker (Target)**: [`0xea1b0F6c8D158328a6e3D3F924B86A759F41465c`](https://arbiscan.io/address/0xea1b0F6c8D158328a6e3D3F924B86A759F41465c)
+- **RoundsManager (Proxy)**: [`0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f`](https://arbiscan.io/address/0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f)
+- **RoundsManager (Target)**: [`0x92d804Ed49D92438aEA6fe552BD9163aacb7E841`](https://arbiscan.io/address/0x92d804Ed49D92438aEA6fe552BD9163aacb7E841)
+- **BondingVotes (Proxy)**: [`0x0B9C254837E72Ebe9Fe04960C43B69782E68169A`](https://arbiscan.io/address/0x0B9C254837E72Ebe9Fe04960C43B69782E68169A)
+- **BondingVotes (Target)**: [`0x68AF80376Bc1CA0C25a83b28e5570E8c7bdD3119`](https://arbiscan.io/address/0x68AF80376Bc1CA0C25a83b28e5570E8c7bdD3119)
+- **Treasury**: [`0xf82C1FF415F1fCf582554fDba790E27019c8E8C4`](https://arbiscan.io/address/0xf82C1FF415F1fCf582554fDba790E27019c8E8C4)
+- **LivepeerGovernor (Proxy)**: [`0xcFE4E2879B786C3aa075813F0E364bb5acCb6aa0`](https://arbiscan.io/address/0xcFE4E2879B786C3aa075813F0E364bb5acCb6aa0)
+- **LivepeerGovernor (Target)**: [`0xd2Ce37BCB287CaDc40647f567C2D3C4220901634`](https://arbiscan.io/address/0xd2Ce37BCB287CaDc40647f567C2D3C4220901634)
+- **ServiceRegistry (Proxy)**: [`0xC92d3A360b8f9e083bA64DE15d95Cf8180897431`](https://arbiscan.io/address/0xC92d3A360b8f9e083bA64DE15d95Cf8180897431)
+- **ServiceRegistry (Target)**: [`0x38093CDca43aeCd7bb474983519A246e93A3b0a7`](https://arbiscan.io/address/0x38093CDca43aeCd7bb474983519A246e93A3b0a7)
+- **AIServiceRegistry (Target)**: [`0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) (detached from controller)
+- **SortedDoublyLL**: [`0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb`](https://arbiscan.io/address/0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb)
+- **PollCreator**: [`0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6`](https://arbiscan.io/address/0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6)
+- **MerkleSnapshot**: [`0x10736ffaCe687658F88a46D042631d182C7757f7`](https://arbiscan.io/address/0x10736ffaCe687658F88a46D042631d182C7757f7)
+- **DelegatorPool**: [`0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567`](https://arbiscan.io/address/0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567)
+- **L2LPTDataCache**: [`0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1`](https://arbiscan.io/address/0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1)
+- **L2LPTGateway**: [`0x6D2457a4ad276000A615295f7A80F79E48CcD318`](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318)
+- **L2Migrator (Proxy)**: [`0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085`](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085)
+- **L2Migrator (Target)**: [`0x93BB030735747708b4D33093A98d4c804Cd6B58C`](https://arbiscan.io/address/0x93BB030735747708b4D33093A98d4c804Cd6B58C)
+
+### Ethereum Mainnet
+
+The following contracts on Ethereum Mainnet implement the Delta version of the protocol:
+
+- Governor
+- LivepeerToken
+- L1Escrow
+- L1LPTDataCache
+- L1LPTGateway
+- L1Migrator
+- BridgeMinter
+
+Since the Confluence upgrade, the protocol has been deployed to Arbitrum Mainnet and all contracts on Ethereum Mainnet besides the above are paused.
+
+- **Governor**: [`0xFC3CBed6A3476F7616CC70f078397700136eEBFd`](https://etherscan.io/address/0xFC3CBed6A3476F7616CC70f078397700136eEBFd)
+- **Controller**: [`0xf96d54e490317c557a967abfa5d6e33006be69b3`](https://etherscan.io/address/0xf96d54e490317c557a967abfa5d6e33006be69b3)
+- **LivepeerToken**: [`0x58b6a8a3302369daec383334672404ee733ab239`](https://etherscan.io/address/0x58b6a8a3302369daec383334672404ee733ab239)
+- **Minter**: [`0x505F8c2ee81f1C6fa0D88e918eF0491222E05818`](https://etherscan.io/address/0x505F8c2ee81f1C6fa0D88e918eF0491222E05818)
+- **BondingManager (Proxy)**: [`0x511bc4556d823ae99630ae8de28b9b80df90ea2e`](https://etherscan.io/address/0x511bc4556d823ae99630ae8de28b9b80df90ea2e)
+- **BondingManager (Target)**: [`0x5FE3565dB7F1Dd8d6A9E968D45BD2Aee3836a1D4`](https://etherscan.io/address/0x5FE3565dB7F1Dd8d6A9E968D45BD2Aee3836a1D4)
+- **TicketBroker (Proxy)**: [`0x5b1ce829384eebfa30286f12d1e7a695ca45f5d2`](https://etherscan.io/address/0x5b1ce829384eebfa30286f12d1e7a695ca45f5d2)
+- **TicketBroker (Target)**: [`0x6F582E2bB19ac31D4B1e6eDD0c2eFEabD700f808`](https://etherscan.io/address/0x6F582E2bB19ac31D4B1e6eDD0c2eFEabD700f808)
+- **RoundsManager (Proxy)**: [`0x3984fc4ceeef1739135476f625d36d6c35c40dc3`](https://etherscan.io/address/0x3984fc4ceeef1739135476f625d36d6c35c40dc3)
+- **RoundsManager (Target)**: [`0xC89fE48382F8fda6992dC590786A84275bCD1C57`](https://etherscan.io/address/0xC89fE48382F8fda6992dC590786A84275bCD1C57)
+- **ServiceRegistry (Proxy)**: [`0x406a112f3218b988c66778fd72fc8467f2601366`](https://etherscan.io/address/0x406a112f3218b988c66778fd72fc8467f2601366)
+- **ServiceRegistry (Target)**: [`0x72d9dfa25f75a5f2c27b7336e643a559ae6aeb8e`](https://etherscan.io/address/0x72d9dfa25f75a5f2c27b7336e643a559ae6aeb8e)
+- **GenesisManager**: [`0x3a9543d4767b2c914ea22fd0b07e17b0901aaebf`](https://etherscan.io/address/0x3a9543d4767b2c914ea22fd0b07e17b0901aaebf)
+- **MerkleMine**: [`0x8e306b005773bee6ba6a6e8972bc79d766cc15c8`](https://etherscan.io/address/0x8e306b005773bee6ba6a6e8972bc79d766cc15c8)
+- **MultiMerkleMine**: [`0x182ebf4c80b28efc45ad992ecbb9f730e31e8c7f`](https://etherscan.io/address/0x182ebf4c80b28efc45ad992ecbb9f730e31e8c7f)
+- **SortedDoublyLL**: [`0x1a0b2ca69ca2c7f96e2529faa6d63f881655d81a`](https://etherscan.io/address/0x1a0b2ca69ca2c7f96e2529faa6d63f881655d81a)
+- **Refunder**: [`0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2`](https://etherscan.io/address/0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2)
+- **PollCreator**: [`0xBf824EDb6b94D9B52d972d5B25bCc19b4e6E3F3C`](https://etherscan.io/address/0xBf824EDb6b94D9B52d972d5B25bCc19b4e6E3F3C)
+- **MerkleSnapshot**: [`0x24ebEd82c681f435E944BEEbFAEEAaE443D08438`](https://etherscan.io/address/0x24ebEd82c681f435E944BEEbFAEEAaE443D08438)
+- **L1Escrow**: [`0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A`](https://etherscan.io/address/0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A)
+- **L1LPTDataCache**: [`0x1d24838b35A9c138Ac157A852e19e948aD6323D7`](https://etherscan.io/address/0x1d24838b35A9c138Ac157A852e19e948aD6323D7)
+- **L1LPTGateway**: [`0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676`](https://etherscan.io/address/0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676)
+- **L1Migrator**: [`0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A`](https://etherscan.io/address/0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A)
+- **BridgeMinter**: [`0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405`](https://etherscan.io/address/0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405)
+
+## Historical (DEPRECATED - FOR REFERENCE ONLY)
+
+### Arbitrum Mainnet
+
+#### BondingManager (Target)
+
+- **V1**: [`0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6`](https://arbiscan.io/address/0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6)
+- **V2**: [`0xC40df4db2f99e7e235780A93B192F1a934f0c45b`](https://arbiscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
+- **V3**: [`0x3757DB506ECd9CBE643660C0F5b70db5b321202C`](https://arbiscan.io/address/0x3757DB506ECd9CBE643660C0F5b70db5b321202C)
+- **V4**: [`0x0f9C425E7374602C20370d3fd263155B4c3bDc91`](https://arbiscan.io/address/0x0f9C425E7374602C20370d3fd263155B4c3bDc91)
+- **V5**: [`0x3a941e1094B9E33efABB26a9047a8ABb4b257907`](https://arbiscan.io/address/0x3a941e1094B9E33efABB26a9047a8ABb4b257907)
+- **V6**: [`0x9c9209c9ff6996513b3673d69ee7b36a6c58a8cf`](https://arbiscan.io/address/0x9c9209c9ff6996513b3673d69ee7b36a6c58a8cf)
+- **V7**: [`0x363cdB9BaE210Ef182c60b5a496139E980330127`](https://arbiscan.io/address/0x363cdB9BaE210Ef182c60b5a496139E980330127)
+- **V8**: [`0x557093B1Ab53412166beAd939f34244170b6525B`](https://arbiscan.io/address/0x557093B1Ab53412166beAd939f34244170b6525B)
+- **V9**: [`0x6b397f20DC227B4E23fEc20BBDBe166d0DFFC452`](https://arbiscan.io/address/0x6b397f20DC227B4E23fEc20BBDBe166d0DFFC452)
+- **V10**: [`0xd1C1F5d44D8F83ca2A05Baf40461e550cFDDecA2`](https://arbiscan.io/address/0xd1C1F5d44D8F83ca2A05Baf40461e550cFDDecA2)
+
+#### BondingVotes (Target)
+
+- **V1**: [`0x1561fC5F7Efc049476224005DFf38256dccfc509`](https://arbiscan.io/address/0x1561fC5F7Efc049476224005DFf38256dccfc509)
+
+#### TicketBroker (Target)
+
+- **V1**: [`0x7Beb84c52ce96DFd90431FAA97378994a8baa6df`](https://arbiscan.io/address/0x7Beb84c52ce96DFd90431FAA97378994a8baa6df)
+- **V2**: [`0xD906D192e2503Aafd1BC5F5fc4163E842D5B1d6e`](https://arbiscan.io/address/0xD906D192e2503Aafd1BC5F5fc4163E842D5B1d6e)
+
+#### Minter
+
+- **V1**: [`0x4969dcCF5186e1c49411638fc8A2a020Fdab752E`](https://arbiscan.io/address/0x4969dcCF5186e1c49411638fc8A2a020Fdab752E)
+
+#### L2Migrator (Target)
+
+- **V1**: [`0x4F59b39e2ea628fe8371BDfd51B063319339c7EE`](https://arbiscan.io/address/0x4F59b39e2ea628fe8371BDfd51B063319339c7EE)
+
+### Ethereum Mainnet
+
+#### LivepeerVerifier
+
+- **V1**: [`0xf623811b08b45792d0223d77d9c922dae29712ec`](https://etherscan.io/address/0xf623811b08b45792d0223d77d9c922dae29712ec)
+- **V2**: [`0xe4be2a35dec0063f9dfccb9b740b1acb7eefefec`](https://etherscan.io/address/0xe4be2a35dec0063f9dfccb9b740b1acb7eefefec)
+
+#### Minter
+
+- **V1**: [`0x8573f2f5a3bd960eee3d998473e50c75cdbe6828`](https://etherscan.io/address/0x8573f2f5a3bd960eee3d998473e50c75cdbe6828)
+
+#### BondingManager (Target)
+
+- **V1**: [`0x81eb0b10ff8703905904e4d91cf6aa575d59736f`](https://etherscan.io/address/0x81eb0b10ff8703905904e4d91cf6aa575d59736f)
+- **V2**: [`0x5A9512826EAAF1FE4190f89443314E95A515fE24`](https://etherscan.io/address/0x5A9512826EAAF1FE4190f89443314E95A515fE24)
+- **V3**: [`0x633101b3f15f93c5f415830d48e56b9b1f7ba584`](https://etherscan.io/address/0x633101b3f15f93c5f415830d48e56b9b1f7ba584)
+- **V4**: [`0x05C03EA0039f2e828A725A82939fc1e90de38B44`](https://etherscan.io/address/0x05C03EA0039f2e828A725A82939fc1e90de38B44)
+- **V5**: [`0xCBAa6eA4886b535FC7ABACe3F3985Ed03b3b80a0`](https://etherscan.io/address/0xCBAa6eA4886b535FC7ABACe3F3985Ed03b3b80a0)
+- **V6**: [`0xDC6eE74A18994caD3876a078B6fa4920FD9C507d`](https://etherscan.io/address/0xDC6eE74A18994caD3876a078B6fa4920FD9C507d)
+- **V7**: [`0x1a6007d1D0583452Bd6f45a4e1a9190B15Fbd7E3`](https://etherscan.io/address/0x1a6007d1D0583452Bd6f45a4e1a9190B15Fbd7E3)
+- **V8**: [`0xef5E170b679ddaF5e22ADC10fD23DDdB79E3C0c5`](https://etherscan.io/address/0xef5E170b679ddaF5e22ADC10fD23DDdB79E3C0c5)
+- **V9**: [`0xc8a695155648F18B0cfd6989498B6f8b2c4cc56A`](https://etherscan.io/address/0xc8a695155648F18B0cfd6989498B6f8b2c4cc56A)
+- **V10**: [`0x35F99F326681FE4F38719491be48Ab4950795013`](https://etherscan.io/address/0x35F99F326681FE4F38719491be48Ab4950795013)
+- **V11**: [`0xAC0153a8C5227e43506901a4f3f83FD000c8178f`](https://etherscan.io/address/0xAC0153a8C5227e43506901a4f3f83FD000c8178f)
+- **V12**: [`0x246edEBae14b186a67e3d466A485321169a8bcD5`](https://etherscan.io/address/0x246edEBae14b186a67e3d466A485321169a8bcD5)
+- **V13**: [`0x223398d0BF9cc24960b3886CC481dBf5276EdeD2`](https://etherscan.io/address/0x223398d0BF9cc24960b3886CC481dBf5276EdeD2)
+- **V14**: [`0x0da7c263eCF5cD3ddba275b9A2D63320E28fD287`](https://etherscan.io/address/0x0da7c263eCF5cD3ddba275b9A2D63320E28fD287)
+
+#### JobsManager (Proxy)
+
+- **V1**: [`0xbf07ff45f14c9ff0571b9fbdc7e2b62d29931224`](https://etherscan.io/address/0xbf07ff45f14c9ff0571b9fbdc7e2b62d29931224)
+
+#### JobsManager (Target)
+
+- **V1**: [`0x68b463bca7d561118636e9f028ff0f2e8398dd6a`](https://etherscan.io/address/0x68b463bca7d561118636e9f028ff0f2e8398dd6a)
+- **V2**: [`0xB620c762dd4bC350602936d7401BB8393Ee6687c`](https://etherscan.io/address/0xB620c762dd4bC350602936d7401BB8393Ee6687c)
+- **V3**: [`0x8eade5eec609572bf53deadb88d36f862ddec517`](https://etherscan.io/address/0x8eade5eec609572bf53deadb88d36f862ddec517)
+
+#### RoundsManager (Target)
+
+- **V1**: [`0xa3aa52ce79e85a21d9ccda705c57e426b160112c`](https://etherscan.io/address/0xa3aa52ce79e85a21d9ccda705c57e426b160112c)
+- **V2**: [`0x857d4bf18a80f03d3d11f438825cd3d0aa0d9d68`](https://etherscan.io/address/0x857d4bf18a80f03d3d11f438825cd3d0aa0d9d68)
+
+#### MerkleProof
+
+- **V1**: [`0x289ba1701c2f088cf0faf8b3705246331cb8a839`](https://etherscan.io/address/0x289ba1701c2f088cf0faf8b3705246331cb8a839)
+
+#### ECRecovery
+
+- **V1**: [`0xd8e8328501e9645d16cf49539efc04f734606ee4`](https://etherscan.io/address/0xd8e8328501e9645d16cf49539efc04f734606ee4)
+
+#### JobLib
+
+- **V1**: [`0x4969dccf5186e1c49411638fc8a2a020fdab752e`](https://etherscan.io/address/0x4969dccf5186e1c49411638fc8a2a020fdab752e)

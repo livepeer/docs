@@ -1,0 +1,159 @@
+---
+title: 'Verify Your Setup'
+sidebarTitle: 'Verify'
+description: 'Verify the orchestrator is on-chain, processing jobs, and healthy - video transcoding test, AI inference test, Explorer check, and basic monitoring confirmation.'
+keywords:
+  - livepeer
+  - orchestrator
+  - verify
+  - test
+  - health check
+  - monitoring
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+---
+{/* TODO: authoring skill compliance */}
+
+{/* PAGE STRUCTURE:
+
+## Verify Your Setup
+
+Final setup page. Confirms everything works end-to-end.
+Covers verification for all 3 node modes + basic monitoring checks.
+
+This page absorbs the basic monitoring verification that was previously in
+r-monitor.mdx. Full monitoring setup is in Guides > Monitoring and Tools.
+
+<StyledSteps>
+
+### Step 1: Check node status
+```bash
+curl http://localhost:7935/status | jq
+```
+Expected: nodeType, version, eth account, balance visible.
+Note: CLI uses legacy term "BroadcasterNode" for gateway/orchestrator.
+
+### Step 2: Check on Explorer
+- Go to explorer.livepeer.org
+- Find the orchestrator by address
+- Verify: active set membership (if staked enough), service URI, pricing, cuts
+- For AI: verify capabilities at tools.livepeer.cloud/ai/network-capabilities
+
+### Step 3: Verify video transcoding (if video/dual mode)
+Send a test stream:
+```bash
+ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+  -c:v libx264 -f flv rtmp://localhost:1935/test_stream
+```
+Check logs for "Got segment" and "Transcode result" messages.
+Check HLS output: ffprobe http://localhost:8935/stream/test_stream.m3u8
+
+### Step 4: Verify AI inference (if AI/dual mode)
+Send a test request:
+```bash
+curl -X POST http://localhost:8935/text-to-image \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "<your-configured-model>",
+    "prompt": "a test image",
+    "width": 512,
+    "height": 512,
+    "num_inference_steps": 4
+  }'
+```
+A JSON response with `images` array confirms AI routing works.
+
+### Step 5: Verify reward calling
+If -reward flag is set:
+- Wait for next round (~22 hours max)
+- Check Explorer for reward call in round history
+- Or check logs for "Reward call" message
+
+If manual calling:
+- Use livepeer_cli to call Reward()
+- Verify on Explorer
+
+### Step 6: Basic monitoring check
+Verify Prometheus metrics endpoint responds:
+```bash
+curl -s http://localhost:7935/metrics | head -20
+```
+Key metrics to confirm:
+- livepeer_versions_info (node version)
+- livepeer_transcoders_count (connected transcoders, should be &gt;= 1)
+
+For full monitoring setup (Grafana, alerting, dashboards), see
+Guides > Monitoring and Tools > Metrics and Alerting.
+
+</StyledSteps>
+
+## Common Issues
+
+<AccordionGroup>
+  <Accordion title="No transcoding output" icon="film">
+    Check: GPU detected (-nvidia flag), RTMP port open, orchestrator logs for errors.
+    See Guides > Monitoring and Tools > Troubleshooting.
+  </Accordion>
+  <Accordion title="AI request returns error" icon="brain">
+    Check: AI runner container running (docker ps), model loaded (container logs),
+    aiModels.json format correct.
+    See Guides > Monitoring and Tools > Troubleshooting.
+  </Accordion>
+  <Accordion title="Not on Explorer" icon="magnifying-glass">
+    Check: activation transaction succeeded, service URI registered, enough stake.
+    See Setup > Connect for the activation steps.
+  </Accordion>
+  <Accordion title="Reward call not appearing" icon="gift">
+    Check: -reward flag set, ETH balance sufficient for gas, node online during round.
+    See Guides > Config and Optimisation > Reward Call Tuning.
+  </Accordion>
+</AccordionGroup>
+
+## Setup Complete
+
+<Note>
+The node is now on-chain, processing jobs, and verified. The next step is
+operational: pricing, earning, and optimisation. These are covered in the
+Guides section.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Staking and Earning" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
+    How orchestrators earn from service fees and inflation rewards.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Set competitive prices to attract work from gateways.
+  </Card>
+  <Card title="Monitoring and Tools" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox">
+    Full monitoring setup, Explorer guide, and troubleshooting.
+  </Card>
+  <Card title="Workload Options" icon="list-check" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
+    Expand or change workloads based on demand and hardware.
+  </Card>
+</CardGroup>
+
+*/}
+
+{/*
+  PURPOSE:
+  Final setup page. Verifies everything works: on-chain status, video transcoding,
+  AI inference, reward calling, and basic monitoring. Absorbs basic monitoring
+  checks from r-monitor.mdx. Links forward to Guides for full monitoring,
+  pricing, and earning guidance. Clearly marks the boundary: "Setup is complete.
+  Earning starts in Guides."
+
+  SECTION: Setup (step 4 of 4 - final)
+  JOB STORIES: J1
+
+  CROSS-REFS:
+  - Guides > Monitoring and Tools - full monitoring setup
+  - Guides > Staking and Earning - earning guidance
+  - Guides > Config and Optimisation - pricing and tuning
+  - Guides > Monitoring and Tools > Troubleshooting - if verification fails
+*/}

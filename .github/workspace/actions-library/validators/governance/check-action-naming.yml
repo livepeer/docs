@@ -1,0 +1,98 @@
+# validator-governance-check-action-naming.yml
+#
+# PR check that validates workflow filenames match the naming convention:
+#   type-concern-verb-name.yml
+#
+# Type: validator | Concern: governance | Pipeline: P3 (soft gate)
+# Decision: D-ACT-04 (naming convention), D-ACT-05 (concerns), D-ACT-07 (types)
+
+name: Check Action Naming Convention
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check-naming:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate workflow filenames
+        run: |
+          set -euo pipefail
+
+          TYPES="integrator|generator|validator|audit|remediator|dispatch|interface"
+          CONCERNS="integrations|copy|maintenance|health|discoverability|governance|brand"
+          VERBS="update|generate|check|scan|repair|dispatch|label|index|intake|close|assign"
+
+          # Pattern: type-concern-verb-name.yml (verb is optional for dispatch type)
+          PATTERN="^(${TYPES})-(${CONCERNS})-(${VERBS})-[a-z0-9]([a-z0-9-]*[a-z0-9])?\.yml$"
+          DISPATCH_PATTERN="^dispatch-(${CONCERNS})-[a-z0-9]([a-z0-9-]*[a-z0-9])?\.yml$"
+
+          ERRORS=0
+          CHECKED=0
+          SKIPPED=0
+
+          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
+            [ -f "$f" ] || continue
+            filename=$(basename "$f")
+
+            # Skip known exceptions (to be removed in Phase 6)
+            # Legacy files that haven't been renamed yet
+            if [[ "$filename" =~ ^(deprecated) ]]; then
+              SKIPPED=$((SKIPPED + 1))
+              continue
+            fi
+
+            CHECKED=$((CHECKED + 1))
+
+            if [[ "$filename" =~ $PATTERN ]] || [[ "$filename" =~ $DISPATCH_PATTERN ]]; then
+              echo "  PASS: $filename"
+            else
+              echo "  FAIL: $filename"
+              echo "        Expected: type-concern-verb-name.yml"
+              echo "        Types: $TYPES"
+              echo "        Concerns: $CONCERNS"
+              echo "        Verbs: $VERBS"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          echo ""
+          echo "Checked: $CHECKED | Passed: $((CHECKED - ERRORS)) | Failed: $ERRORS | Skipped: $SKIPPED"
+
+          # Step summary
+          {
+            echo "## Action Naming Convention Check"
+            echo ""
+            echo "| Metric | Count |"
+            echo "|---|---|"
+            echo "| Checked | $CHECKED |"
+            echo "| Passed | $((CHECKED - ERRORS)) |"
+            echo "| Failed | $ERRORS |"
+            echo "| Skipped | $SKIPPED |"
+            echo ""
+            if [ $ERRORS -gt 0 ]; then
+              echo "**$ERRORS workflow(s) do not match the naming convention.**"
+              echo ""
+              echo "Expected pattern: \`type-concern-verb-name.yml\`"
+              echo ""
+              echo "See \`.github/workspace/framework-canonical.md\` section 4.1 for the full enum reference."
+            else
+              echo "All workflow filenames match the naming convention."
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+          # Soft gate: report but do not fail the build (yet)
+          # Uncomment the next line to make this a hard gate:
+          # if [ $ERRORS -gt 0 ]; then exit 1; fi
+          exit 0

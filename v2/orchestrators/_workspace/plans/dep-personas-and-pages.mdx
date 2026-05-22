@@ -1,0 +1,879 @@
+---
+title: 'Personas-and-pages Temp file'
+sidebarTitle: Personas-and-pages
+description: 'Description of personas-and-pages'
+audience: developer
+pageType: landing
+purpose: landing
+status: draft
+lastVerified: 2026-03-11
+keywords:
+  - livepeer
+  - keyword
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+
+# Personas and Journeys
+
+### PART 1 — PERSONA RESEARCH
+Sources: Livepeer Forum, Livepeer.org/orchestrate, Mirror.xyz, Messari Q1–Q3 2025, Live Pioneers KYO series, Udemy course descriptions, Cloud SPE blog, go-livepeer GitHub, community Discord intelligence, RFP documentation.
+
+Persona A — The Solo GPU Operator ("The Miner")
+Background
+Former crypto miner (ETH, GPU mining) who transitioned to Livepeer after Ethereum's proof-of-stake switch made GPU mining unprofitable. Has 1–4 consumer NVIDIA GPUs (RTX 2060–3080 class), typically running on home broadband or a small VPS. Technically capable but not a devops professional. Usually solo, sometimes part of Video Miner or Titan Node pool.
+Motivations
+
+Passive income from existing hardware (ETH fees + LPT staking rewards)
+Crypto community participation — this is part identity, part finance
+"Set and forget" operation; doesn't want daily hands-on management
+
+Entry Points
+
+GPU mining communities (reddit r/gpumining, Discord, Telegram)
+Udemy course ("How to start a Livepeer Orchestrator and make passive income")
+Video Miner and Titan Node websites
+YouTube "passive income with GPU" content
+Live Pioneers community content
+
+Key Questions at Each Stage
+
+Orienting: What is this and is it worth my time? How much will I earn?
+Decision: Should I run a solo orchestrator or join a pool? What LPT do I need?
+Activation: How do I install go-livepeer? How do I configure it? What flags do I need?
+Operational: Why aren't I getting jobs? How do I set price per pixel? How do I monitor earnings?
+Deepening: Should I add AI pipelines to increase income? How?
+Reference: CLI flags, Livepeer Explorer, pricing tools
+
+Pain Points (confirmed from forum + community sources)
+
+LPT acquisition barrier — must acquire/stake LPT before earning; this blocks many entrants
+Pool vs solo confusion — unclear in existing docs when you need full orchestrator vs pool worker
+Price per pixel — no guidance on competitive pricing; operators discuss this extensively on Discord
+Port forwarding / networking — serviceAddr setup trips up home users
+"Orchestrator not available" errors on startup — recurrent newbie forum complaint
+Monitoring — Grafana setup is complex; most users want a simpler status check
+
+Hardware Profile
+RTX 2060–3080 (8–12GB VRAM), 1–4 GPUs, consumer home machine or budget VPS
+
+Persona B — The Pool Worker ("The Easy Earner")
+Background
+Has one or more consumer GPUs and wants to earn from Livepeer without the complexity of running a full orchestrator node (which requires significant LPT stake to compete). Joins Video Miner, Titan Node, LivePool, or another community pool as a worker node. Contributes GPU compute; the pool orchestrator handles on-chain operations.
+Motivations
+
+Earn passive income from GPU without needing to acquire large LPT stake
+Simplicity — just run a transcoder/worker process
+
+Entry Points
+
+Video Miner website, Titan Node marketing, community Discord
+"Know Your Orchestrator" content from Live Pioneers
+Pool-specific documentation (outside livepeer.org)
+
+Key Questions
+
+Orienting: What's the difference between a pool worker and a solo orchestrator?
+Activation: How do I join a pool? Do I run go-livepeer differently?
+Operational: How do I check my earnings? How does the pool distribute rewards?
+
+Pain Points
+
+The distinction between "running an orchestrator" and "joining a pool as a worker" is buried in docs
+Community pools page lists pools but doesn't explain the operational model
+No single clear "join a pool" guide — most pool documentation lives outside Livepeer's docs
+
+Hardware Profile
+Single GPU (RTX 1070Ti–3070, 8GB VRAM), often home machine
+
+Persona C — The Infrastructure Engineer ("The Pro Operator")
+Background
+Already running a Livepeer orchestrator with 4–20 GPUs, often in a data centre or hosted environment. Strong devops background — comfortable with Docker, Kubernetes (or k3s), Prometheus/Grafana monitoring, Linux system administration. Looking to optimise earnings and expand into AI workloads.
+Motivations
+
+Maximise ROI from GPU infrastructure
+Add AI inference pipelines on top of existing transcoding for additional fee revenue
+Build reliable, monitored, scalable infrastructure
+
+Entry Points
+
+Already deep in Livepeer ecosystem — uses explorer.livepeer.org, Livepeer Discord orchestrating channel
+Follows Livepeer blog, Messari reports
+Cloud SPE blog posts (e.g., Ollama-based LLM runner guide)
+
+Key Questions
+
+Operational: How do I set up AI Runner containers? What VRAM do I need per pipeline?
+Deepening: How do I set up remote workers (BYOC)? How do I host and manage models?
+Deepening: How do I run an orchestrator pool and let others join?
+Reference: CLI flags, aiModels.json schema, pricing reference for AI jobs vs transcoding
+
+Pain Points
+
+AI pipeline configuration (aiModels.json) is underdocumented
+Remote worker setup requires Discord spelunking
+No clear earnings optimisation guide for operators with mixed workloads
+Run-a-pool documentation is thin
+BYOC/model hosting guidance scattered across multiple sources
+
+Hardware Profile
+4–20+ NVIDIA GPUs (RTX 3090, A5000, or server-class), data centre or hosted provider, Docker-native setup
+
+Persona D — The Enterprise / Data Centre Operator ("The Business")
+Background
+Runs professional GPU infrastructure — either a GPU cloud provider evaluating Livepeer as an additional workload, or a business building Livepeer-native compute services. Evaluating at a business level: ROI, compliance, SLA reliability, programmatic management.
+Motivations
+
+New revenue stream on existing GPU assets
+Build a Livepeer compute business (e.g., Livepeer.Cloud SPE model)
+Evaluate protocol economics before committing significant capital
+
+Entry Points
+
+Livepeer Foundation BD outreach, conferences
+Messari State of Livepeer reports
+livepeer.org/orchestrate
+Seeing Livepeer mentioned in AI compute context (Cascade, Daydream)
+
+Key Questions
+
+Orienting: What is the business model? What are the economics at scale? How does LPT stake affect earnings?
+Decision: Is this worth running as a business? What's the regulatory/compliance posture?
+Activation: How do we provision infrastructure at scale? What's the data centre setup guide?
+Operational: How do we manage multi-region orchestrators? How do we publish offerings?
+Deepening: How do we run a pool and onboard other operators?
+
+Pain Points
+
+No enterprise-facing section in current docs
+Economics at scale are not documented (data-centre-setup is a stub)
+No programmatic management documentation
+Protocol economics scattered across Livepeer.org, forum, Messari — not in docs
+
+Hardware Profile
+A100/H100/4090 server GPUs, multi-region, hundreds of GPUs, cloud or colo data centre
+
+Persona E — The AI Compute Specialist ("The AI Native")
+Background
+ML engineer, AI researcher, or AI startup operator. Came to Livepeer through the AI subnet launch (Q3 2024), Daydream, or Cascade announcements. Interested in Livepeer as a decentralised compute layer for AI inference rather than transcoding. May have no prior Livepeer or crypto background.
+Motivations
+
+Earn revenue serving open-source AI models at scale
+Access decentralised GPU compute for AI workloads
+Build on or contribute to open AI infrastructure (anti-centralisation values)
+
+Entry Points
+
+Livepeer blog posts (Mirror.xyz — "Introducing Livepeer AI")
+Real-Time Video AI Bootcamp (Encode Club, Q1 2025)
+ComfyStream integration announcements
+Daydream / Cascade product announcements
+Cloud SPE blog (Ollama runner guide, Nov 2025)
+
+Key Questions
+
+Orienting: How does the Livepeer AI network work? What pipelines are supported? How is pricing set?
+Decision: What hardware do I need? What's the VRAM minimum per pipeline?
+Activation: Realtime AI quickstart vs batch AI quickstart — which do I choose?
+Operational: How do I configure aiModels.json? How do I keep models warm? How do I set pricing?
+Deepening: How do I host custom models (BYOC)? How do remote workers scale capacity?
+Reference: Pipeline docs, model compatibility list, CLI flags for AI-specific flags
+
+Pain Points
+
+"Realtime AI" vs "Batch AI" distinction not clearly explained before quickstart
+aiModels.json format and valid model IDs are not well-documented
+Docker container management for AI Runner is complex
+Minimum VRAM requirements vary by pipeline/model and change frequently
+No pricing guidance for AI jobs (what's competitive? what earns the most?)
+"Cascade" pipeline (for streaming AI agents) lacks dedicated setup documentation
+
+Hardware Profile
+RTX 4090 (24GB VRAM), A100/H100, cloud instances — high VRAM priority
+
+Persona Summary Matrix
+DimensionA: Solo MinerB: Pool WorkerC: Pro OperatorD: EnterpriseE: AI NativeLPT backgroundMediumLowHighLow-MedLowTechnical levelMediumLowHighVery HighVery HighGPU scale1–4 consumer1 consumer4–20 pro100+ server1–4 high-VRAMPrimary job typeTranscodingTranscodingMixedMixedAI inferenceEntry blockerLPT stakePool clarityAI configEconomicsQuickstart pathCritical docPool vs solo guidejoin-a-poolAI pipelinesenterprise setupAI quickstartsJourney stage at arrivalPos 2–3Pos 3Pos 4–5Pos 2–3Pos 3
+
+
+# Pages
+Use this page-by-page breakdown.
+
+# Landing
+
+## Portal
+
+Purpose: high-level router into the orchestrator docs.
+
+Should include:
+
+* what this section is
+* who it is for
+* the main buckets:
+
+  * Concepts
+  * Get Started
+  * Setup
+  * Operations
+  * Guides
+  * Reference
+* short one-line description for each bucket
+* key entry paths:
+
+  * I want to run my own orchestrator
+  * I want to add AI to a node
+  * I want to join a pool
+  * I want to understand how orchestrators work
+* visual navigation cards
+* recommended next step chooser
+
+Should not include:
+
+* deep technical explanation
+* detailed setup steps
+* protocol deep dive
+
+## Starmap
+
+Purpose: persona and intent routing.
+
+Should include:
+
+* who are you?
+
+  * solo GPU owner
+  * pool contributor
+  * independent operator
+  * fleet/data centre operator
+  * AI-focused operator
+* what are you trying to do?
+
+  * understand orchestrators
+  * get to first job
+  * add AI workloads
+  * optimise earnings
+  * troubleshoot
+* journey paths by persona
+* “start here if…” routes
+* decision tree
+* section audience definitions
+
+Should not include:
+
+* actual tutorials
+* CLI details
+* protocol mechanics beyond minimal routing context
+
+---
+
+# Concepts
+
+## Role
+
+Purpose: define what an orchestrator is.
+
+Should include:
+
+* orchestrator definition
+* orchestrator as supply-side compute operator
+* the multi-role nature:
+
+  * compute provider
+  * model/pipeline operator
+  * stake-bearing actor
+  * governance participant
+  * market participant
+  * reputation/delegation attractor
+* role & purpose in Livepeer
+* why orchestrators matter to the network
+* role variants / operator profiles
+* relation to delegators and gateways
+* brief governance role
+* concept overview of the rest of the Concepts section
+
+Should not include:
+
+* install steps
+* pricing strategy depth
+* detailed staking how-to
+* troubleshooting
+
+## Capabilities
+
+Purpose: what orchestrators can do.
+
+Should include:
+
+* core services:
+
+  * video transcoding
+  * AI inference
+  * custom/container workloads if supported
+* protocol capabilities
+* operational responsibilities at a high level
+* model hosting / selection conceptually
+* service boundaries
+* what orchestrators provide vs what gateways/apps provide
+
+Should not include:
+
+* per-model configuration steps
+* advanced operational playbooks
+* rewards mechanics detail
+
+## Workloads
+
+Purpose: what kinds of jobs orchestrators process.
+
+Should include:
+
+* workload categories
+* video workloads
+* AI workloads
+* real-time vs batch framing if relevant
+* outputs/results at a high level
+* job-type distinctions
+* how workloads influence hardware and configuration needs
+
+Should not include:
+
+* exact config commands
+* pipeline deployment walkthroughs
+* pricing optimisation depth
+
+## Architecture
+
+Purpose: where orchestrators sit in the system.
+
+Should include:
+
+* layer position in the Livepeer stack
+* key actors:
+
+  * applications
+  * gateways
+  * orchestrators
+  * delegators
+  * end users
+  * workers / pipelines if relevant
+* system interactions
+* request flow
+* key components
+* high-level diagrams
+* connection to staking/payment systems at concept level
+
+Should not include:
+
+* full CLI reference
+* setup commands
+* operational monitoring procedures
+
+## Incentives
+
+Purpose: explain participation logic, value flow, and tradeoffs.
+
+Should include:
+
+* participation requirements
+* stake-for-access framing
+* fees & rewards at high level
+* costs & commitments
+* stake & delegation effects
+* governance value / strategic upside
+* why operators participate
+* high-level tradeoffs:
+
+  * stake
+  * hardware
+  * uptime
+  * operational effort
+  * competitiveness
+
+Should not include:
+
+* detailed reward calculation formulas unless essential
+* step-by-step staking instructions
+* payment troubleshooting
+
+## Governance
+
+Purpose: explain orchestrators as governance actors.
+
+Should include:
+
+* voting participation
+* proposal impact
+* governance weight and stake relationship
+* treasury / stewardship context
+* operator responsibilities during upgrades
+* governance as part of orchestrator identity
+
+Should not include:
+
+* full governance tutorial if that belongs in token/governance docs
+* exhaustive proposal history
+
+---
+
+# Get Started
+
+## Choose Your Path
+
+Purpose: choose the right operational entry path.
+
+Should include:
+
+* decision matrix by:
+
+  * hardware
+  * LPT/stake availability
+  * technical depth
+  * goals
+* recommended paths:
+
+  * run a full orchestrator
+  * join a pool
+  * start with AI workloads
+  * start with video workloads
+* “best for” cards
+* minimum prerequisites by path
+* expected complexity level
+
+Should not include:
+
+* full tutorial steps
+* detailed economics
+
+## Quickstart
+
+Purpose: shortest route to first success.
+
+Should include:
+
+* prerequisite checklist
+* shortest setup sequence
+* first-job objective
+* minimum viable config
+* verification steps
+* where to look in Explorer / logs / stats
+* what success looks like
+
+Should not include:
+
+* every edge case
+* deep background explanation
+
+## GPU Setup
+
+Purpose: fast-start path for standard GPU node setup.
+
+Should include:
+
+* minimal requirements
+* install and configure summary
+* connect/register summary
+* test and verify
+* path to full Setup section
+
+Should not include:
+
+* all advanced options inline
+* deep AI pipeline explanation unless this page is AI-specific
+
+## AI Video Setup
+
+Purpose: quickstart for AI-video capable node path.
+
+Should include:
+
+* what makes this path different
+* model/pipeline prerequisites
+* hardware implications
+* shortest supported route to first AI-video workload
+* verification of working AI-video output
+
+Should not include:
+
+* exhaustive model catalog
+* advanced optimisation
+
+## AI Setup (Experimental)
+
+Purpose: early/unstable AI setup paths.
+
+Should include:
+
+* experimental status warning
+* supported/unsupported boundaries
+* setup outline
+* risk caveats
+* links to stable routes
+
+Should not include:
+
+* presentation as standard/default path
+
+---
+
+# Setup
+
+## Requirements
+
+Purpose: prerequisites before installation.
+
+Should include:
+
+* hardware requirements
+* GPU guidance
+* software dependencies
+* wallet/network prerequisites
+* LPT/stake prerequisites where relevant
+* environment assumptions
+* hosted vs local considerations
+
+Should not include:
+
+* install commands in depth
+
+## Install
+
+Purpose: install the software stack.
+
+Should include:
+
+* install go-livepeer
+* dependency installation
+* Docker vs bare metal paths if both supported
+* version compatibility notes
+* initial sanity checks
+
+Should not include:
+
+* full runtime config depth
+* protocol/economic explanation
+
+## Configure
+
+Purpose: node configuration.
+
+Should include:
+
+* wallet and network config
+* pricing and offering settings
+* model/pipeline config at setup level
+* runtime flags overview
+* environment variables if used
+* configuration file structure
+
+Should not include:
+
+* troubleshooting every config failure
+* deep pricing strategy
+
+## Connect
+
+Purpose: join the network and expose offerings.
+
+Should include:
+
+* connect to Arbitrum
+* registration/joining steps
+* publishing offerings
+* stake-linked connection requirements
+* activation prerequisites
+
+Should not include:
+
+* long conceptual staking explanation
+
+## Test
+
+Purpose: prove the node works.
+
+Should include:
+
+* local validation
+* test job flow
+* first receipt of work
+* health checks
+* explorer/stats verification
+* expected outputs
+
+Should not include:
+
+* performance optimisation depth
+
+## Monitor
+
+Purpose: verify health after setup.
+
+Should include:
+
+* key metrics to watch
+* orchestrator stats
+* earnings visibility basics
+* job receipt visibility
+* uptime/performance checks
+* where to look for failures
+
+Should not include:
+
+* full advanced observability stack unless minimal
+
+---
+
+# Operations
+
+## Optimisation
+
+Purpose: improve competitiveness and outcomes.
+
+Should include:
+
+* pricing strategy concepts
+* workload selection strategy
+* GPU utilisation
+* multi-GPU considerations
+* performance tuning
+* operational efficiency
+* capacity planning
+
+Should not include:
+
+* basic setup steps
+
+## Troubleshooting
+
+Purpose: diagnose and resolve problems.
+
+Should include:
+
+* node not receiving jobs
+* GPU/runtime errors
+* connection issues
+* earnings not showing
+* offering/publication issues
+* pipeline/model failures
+* common cause → check → fix format
+
+Should not include:
+
+* broad conceptual explanation
+
+## Staking
+
+Purpose: operational stake management.
+
+Should include:
+
+* operational role of self-stake
+* practical stake management
+* cuts/commission settings if relevant
+* operator-side staking decisions
+* interaction with competitiveness
+
+Should not include:
+
+* broad token theory duplicated from token docs
+
+## Rewards & Fees
+
+Purpose: operational handling of value flows.
+
+Should include:
+
+* reward handling
+* fee flows
+* payment expectations
+* operational implications of reward/fee settings
+* how to inspect/verify them in practice
+
+Should not include:
+
+* full incentives overview duplicated from Concepts
+
+## Hosting
+
+Purpose: deployment environment choices.
+
+Should include:
+
+* local vs hosted vs data centre
+* operational tradeoffs
+* reliability and scaling implications
+* remote infrastructure considerations
+* security basics
+
+Should not include:
+
+* generic cloud theory
+
+## AI Models
+
+Purpose: operating model-dependent AI workloads.
+
+Should include:
+
+* model loading considerations
+* memory/runtime implications
+* compatibility concerns
+* operational management of models
+* selection tradeoffs
+
+Should not include:
+
+* broad AI theory
+
+## AI Pipelines
+
+Purpose: operating pipeline-based workloads.
+
+Should include:
+
+* pipeline concepts in operator practice
+* configuring/running pipelines
+* operational concerns
+* common pipeline patterns
+* performance/runtime considerations
+
+Should not include:
+
+* purely conceptual AI marketing copy
+
+## Payments
+
+Purpose: payment operations.
+
+Should include:
+
+* payment flow overview from operator perspective
+* clearing/settlement operational concerns
+* payment-related checks
+* common payment issues
+
+Should not include:
+
+* duplicate incentives overview
+
+---
+
+# Guides
+
+## Join a Pool
+
+Purpose: task guide for pool participation path.
+
+Should include:
+
+* who this is for
+* prerequisites
+* contribution flow
+* expected tradeoffs vs solo operation
+* verification steps
+
+## Run an Orchestrator
+
+Purpose: practical end-to-end operator walkthrough.
+
+Should include:
+
+* condensed path from prep to live node
+* cross-links into Setup and Operations
+* real operator flow
+
+## Use the Explorer
+
+Purpose: practical monitoring and verification guide.
+
+Should include:
+
+* how to find your node
+* how to verify jobs/earnings/stake visibility
+* common checks
+
+## Configure AI Pipelines
+
+Purpose: specific task-led AI pipeline guide.
+
+Should include:
+
+* pipeline setup path
+* examples
+* checks
+* operational notes
+
+## Understand Incentives
+
+Purpose: practical operator-facing incentive guide.
+
+Should include:
+
+* how incentives affect decisions in practice
+* stake, fees, rewards, delegation, competitiveness
+* scenario framing
+
+---
+
+# Reference
+
+## Technical Architecture
+
+Purpose: canonical deep technical reference.
+
+Should include:
+
+* deeper architecture detail than Concepts
+* components, flows, interfaces, system diagrams
+
+## CLI Reference
+
+Purpose: exact command reference.
+
+Should include:
+
+* flags
+* commands
+* parameters
+* examples
+
+## Contract Addresses
+
+Purpose: exact network contract lookup.
+
+Should include:
+
+* current addresses
+* environment/network distinctions
+* usage notes
+
+## FAQ
+
+Purpose: concise answers to recurring questions.
+
+Should include:
+
+* short-form practical answers
+* links out to canonical pages
+
+## Help & Community
+
+Purpose: support routing.
+
+Should include:
+
+* where to ask for help
+* community links
+* escalation paths
+
+## Resource List
+
+Purpose: curated external/internal supporting materials.
+
+Should include:
+
+* useful links
+* repos
+* dashboards
+* talks
+* blog/forum references
+
+If you want, next step should be turning this into a **table with columns: Page | Purpose | Must Include | Must Exclude | Existing Source Pages**.

@@ -1,0 +1,32 @@
+---
+title: 转码视频
+description: 使用 Transcode API 将视频从 S3 兼容存储（例如 Storj、W3S）转码为所需格式。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8iLCJzb3VyY2VIYXNoIjoiODRiYmIxZWM2YjVkNzUwYzBjODQxMzk3ZDE5YjU4MmZhMjg0ODg5MTY4ZTQyNDkwM2YzYTMxYzFjMDBiZTFlNyIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im1ldGEtbGxhbWEvbGxhbWEtMy4zLTcwYi1pbnN0cnVjdDpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDAzOjE1OjM5LjM2M1oifQ== */}
+Livepeer工作室 **转码API**让您转码存储在 **S3兼容**存储（例如Storj，W3S，AWS S3）中的视频文件。您指定输入位置（存储桶/路径）和HLS和/或MP4的输出位置；Livepeer转码并将结果写入您的存储。
+
+<Info>
+  The Transcode API works with any S3-compatible provider. You need valid S3 credentials (access key, secret key, endpoint, bucket) for both the source and destination.
+</Info>
+
+## 先决条件
+
+- 一个 [Livepeer工作室账户](https://livepeer.studio)和 [API密钥](../reference/api)。
+- 视频文件已上传到您的S3兼容存储桶（例如通过Storj uplink，AWS CLI或S3 SDK）。
+- 具有源路径读取访问权限和输出路径写入访问权限的S3凭据。
+
+## 基本流程
+
+1. **获取S3凭据 **用于您的提供程序（例如 [Storj S3凭据](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway)）。
+2. **调用转码API **，使用：
+   - `input`: 类型 `s3`, 端点，凭据，存储桶，源视频的路径。
+   - `storage`: 类型 `s3`, 端点，凭据，存储桶（和可选的输出路径前缀）。
+   - `outputs`: 例如 `hls: { path: "/output/hls" }`, `mp4: { path: "/output/mp4" }`。
+3. 轮询返回的任务或监听Webhook，直到作业完成。输出文件出现在存储桶中的指定路径。
+
+有关确切的请求形状和响应，请参阅 [转码API参考](https://livepeer.studio/docs/api-reference/transcode/create)。Node.js和其他语言的代码示例可在 [Livepeer工作室文档](https://livepeer.studio/docs)中找到。
+
+## 指南
+
+- [上传资产 ](./upload-asset)- 上传和在工作室管道中播放（TUS/PUT）。
+- [VOD概述 ](./overview)- 资产，播放和存储。

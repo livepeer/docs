@@ -1,0 +1,57 @@
+---
+title: Couper un flux en direct
+description: >-
+  Créer des courts extraits à partir de flux en direct actifs à l'aide de l'API
+  Create Clip.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY2xpcC1saXZlc3RyZWFtLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9saXZlc3RyZWFtL2NsaXAtbGl2ZXN0cmVhbSIsInNvdXJjZUhhc2giOiIxNTAxZTY3ZDA2Y2NmMmI0NTRmNmY4ZGQ0MDgxY2Y2ODRhODc3MWUxYTJkY2ZjYTAwNWFmNmI5ZmYyYzA3OGU4IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjMwOjM4LjUxOVoifQ== */}
+Vous pouvez créer **clips** à partir des flux Studio Livepeer actifs via l'API. Un clip est un segment du flux (par exemple, les dernières N secondes ou une plage choisie) et est stocké en tant qu'**actif** que vous pouvez rejouer comme n'importe quel actif VOD.
+
+<Warning>
+  Clipping is supported only for **livestreams** and **livestream recordings**. Other asset types are not supported for clipping.
+</Warning>
+
+## Comment fonctionne le clipping
+
+- Les clips sont créés à partir de la perspective de l'**utilisateur**: par exemple, « les 30 dernières secondes » sont les 30 dernières secondes que l'utilisateur a vues (en fonction de la position de lecture).
+- Vous envoyez **les horodatages de début et de fin** (millisecondes UNIX). Ces valeurs proviennent généralement du lecteur (par exemple, HLS.js `playingDate` ou le déclencheur de clip du Livepeer joueur)
+- Livepeer crée un**actif** pour la clip. Vous pouvez interroger l'actif ou écouter le`asset.ready`webhook pour savoir quand la clip est jouable.
+
+## Créer un clip via l'API
+
+Utilisez l'[API Create Clip](https://livepeer.studio/docs/api-reference/stream/create-clip) avec :
+
+- `playbackId` - L'**ID de lecture de la diffusion active**.
+- `startTime` - Début de la bande (en ms UNIX, à partir du point de lecture).
+- `endTime` - Fin de la bande (en ms UNIX).
+- `name` - (Facultatif) Nom pour l'actif de la bande.
+
+Assurez-vous que`startTime` est à partir du début du flux et que`endTime` n'est pas dans le futur.
+
+### Exemple (Node.js)
+
+```ts
+const result = await livepeer.stream.createClip({
+  playbackId: process.env.PLAYBACK_ID_OF_RUNNING_STREAM,
+  startTime: endTime - 30000, // 30 seconds before end
+  endTime: Date.now(),
+  name: "My clip",
+});
+// result.asset has the new clip asset; result.task has the task ID
+```
+
+### Avec le Livepeer Player
+
+Le Player’s [Déclencheur de Clip](https://www.npmjs.com/package/@livepeer/react#player) peut fournir `playbackId`, `startTime`, et `endTime`. Appelez l'API **Create Clip API depuis votre backend** (avec les mêmes paramètres) et valider l'entrée (par exemple, longueur maximale de la bande, limitation de débit).
+
+## Surveiller l'état de la bande
+
+- **Interrogation** - Appeler `GET /asset/{assetId}` jusqu'à `asset.status` est `ready`.
+- **Webhooks** - S'abonner à `asset.ready` (et éventuellement `asset.failed`). Utilisez la `assetId` de la réponse create-clip pour correspondre à l'événement.
+- L'actif du clip a `source.type === "clip"` et un `sessionId` donc vous pouvez savoir qu'il s'agit d'un clip.
+
+Les extraits ont **lecture source** en premier (lisible rapidement) ; les versions transcodées sont ajoutées une fois le traitement terminé. Utilisez `playbackId` avec le [API Info de lecture](https://livepeer.studio/docs/api-reference/playback/get) ou le [Joueur](../player) pour le jouer.
+
+## Lister les extraits d'une diffusion
+
+Utilisez le [API Clips pour diffusion en direct](https://livepeer.studio/docs/api-reference/stream/get-clip) (par diffusion ou session) pour lister les extraits créés à partir d'une diffusion.

@@ -1,0 +1,94 @@
+---
+title: Comandos de la CLI de Gateway
+description: 'Referencia: lista completa de comandos de la CLI para Livepeer Gateways'
+sidebarTitle: Comandos de la CLI
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - cli commands
+  - gateway
+  - commands
+  - reference
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9yZWZlcmVuY2VzL2NsaS1jb21tYW5kcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL3JlZmVyZW5jZXMvY2xpLWNvbW1hbmRzIiwic291cmNlSGFzaCI6ImM5MGM0NjY5YWQzNjNjYWE4MjJjOGUwNTEwNmNlMjcyNTQ2YTU3YzUxZmFlY2NiYjkxOWNhN2VhYTNhZWRkODYiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MTg6MDguNDA0WiJ9 */}
+# Livepeer Comandos de la CLI
+<Card title="CLI Tools Codebase" href="https://github.com/livepeer/wiki" icon="github" arrow horizontal>
+  View CLI Tools Codebase on Github
+</Card>
+
+
+## Referencia rápida
+
+| Categoría | Comandos | Tipo de nodo |
+|----------|----------|-----------|
+| **General** | Estado del nodo, Ver parámetros del protocolo, Listar orquestadores, Iniciar ronda | Todo |
+| **Gateway/Broadcaster** | Configuración de transmisión, Establecer precio máximo por capacidad, Depositar/retirar fondos | Gateway |
+| **Orquestador** | Activar orquestador, Establecer configuración, Establecer precio, Llamar recompensa, Votar | Orquestador |
+| **Ethereum** | Transferir tokens, Establecer precios de gas, Solicitar tokens de prueba, Firmar mensaje | Todos (en cadena) |
+| **Staking** | Acreditar, Desacreditar, Reacreditar, Retirar estake/comisiones | Todos |
+
+---
+
+## Lista detallada de comandos
+
+### Comandos generales (todos los tipos de nodos)
+- **Obtener estado del nodo** - Mostrar información del nodo, balances y configuración 
+- **Ver parámetros del protocolo** - Mostrar estado y parámetros del protocolo 
+- **Lista de orquestadores registrados** - Mostrar orquestadores disponibles 
+- **Iniciar ronda** - Iniciar una nueva ronda del protocolo 
+
+### Comandos de Gateway/Broadcaster
+- **Configurar configuración de transmisión** - Configurar opciones de transcodificación y precio máximo 
+- **Establecer precio máximo por capacidad** - Establecer precios para capacidades de IA 
+- **Depositar fondos para transmisión** - Agregar ETH para pagar a los orquestadores 
+- **Desbloquear fondos de transmisión** - Desbloquear fondos depositados 
+- **Retirar fondos de transmisión** - Retirar fondos desbloqueados 
+
+### Comandos del orquestador
+- **Activar el orquestador** - Proceso de varios pasos para convertirse en orquestador 
+- **Configuración del orquestador** - Actualizar precio, porcentaje de recompensa, participación en tarifas, URI del servicio 
+- **Invocar recompensa** - Cobrar recompensas del orquestador para la ronda actual 
+- **Establecer el valor nominal máximo del boleto** - Configurar el valor máximo del boleto 
+- **Establecer el precio para el retransmisor** - Establecer un precio específico para un retransmisor 
+- **Establecer el número máximo de sesiones** - Limitar las sesiones de transcodificación simultáneas 
+- **Vota en la encuesta de gobernanza** - Participar en la gobernanza del protocolo 
+- **Vota en la propuesta de tesorería** - Vota en las propuestas de tesorería 
+
+### Comandos de staking y token
+- **Aportar tokens** - Delegar LPT a un orquestador 
+- **Desvincular tokens** - Eliminar tokens delegados (comienza el período de desvinculación) 
+- **Revincular tokens** - Revincular tokens en estado de desvinculación 
+- **Retirar la participación** - Retirar el stake desvinculado completado 
+- **Retirar comisiones** - Retirar las comisiones ganadas (ETH) 
+- **Operaciones de Ethereum** - Transferir LPT a otra dirección 
+
+### Operaciones de Ethereum
+- **Establecer precio máximo de gas** - Configurar gas máximo para transacciones 
+- **Establecer precio mínimo de gas** - Configurar gas mínimo para transacciones 
+- **Obtener prueba LPT** - Solicitar tokens de prueba (solo en testnet) 
+- **Obtén una prueba ETH** - Instrucciones para el faucet de la red de prueba ETH 
+- **Firmar mensaje** - Firmar mensaje con la clave privada del nodo 
+- **Firmar datos tipados** - Firmar datos tipados EIP-712 
+
+## Puntos finales de la API HTTP
+
+Los comandos de la CLI se asignan a puntos finales HTTP en el servidor CLI (puerto predeterminado 5935):
+
+- `/status` - Estado del nodo
+- `/protocolParameters` - Información del protocolo
+- `/registeredOrchestrators` - Lista de orquestadores
+- `/bond`, `/unbond`, `/rebond` - Operaciones de staking
+- `/activateOrchestrator` - Activación del orchestrator
+- `/setBroadcastConfig` - Configuración de transmisión
+- `/setMaxPriceForCapability` - Precios de IA
+- `/reward` - Cobrar recompensas
+- `/transferTokens` - Transferencias de tokens
+- `/signMessage` - Firmado de mensajes
+
+## Notas
+
+- Los comandos se filtran según el tipo de nodo: algunos solo aparecen para orquestadores o puertas de enlace 
+- Comandos de testnet (como obtener tokens de prueba) solo aparecen en redes de prueba 
+- La CLI se conecta a la API HTTP del nodo, normalmente en el puerto 5935 para puertas de enlace y 7935 para orquestadores 

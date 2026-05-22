@@ -1,0 +1,124 @@
+---
+title: 'Configure Your Orchestrator'
+sidebarTitle: 'Configure'
+description: 'Set operational flags for video transcoding, AI inference, or dual mode - docker-compose templates, pricing, networking, and GPU assignment.'
+keywords:
+  - livepeer
+  - orchestrator
+  - configure
+  - docker-compose
+  - flags
+  - video
+  - AI
+  - dual mode
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+---
+{/* TODO: authoring skill compliance */}
+
+{/* PAGE STRUCTURE:
+
+## Configure Your Orchestrator
+
+All 3 node modes on one page using Tabs inside BorderedBox.
+
+<BorderedBox variant="accent">
+<Tabs>
+  <Tab title="Video" icon="video">
+    ### Video Transcoding Configuration
+    docker-compose template with:
+    - -orchestrator -transcoder
+    - -network arbitrum-one-mainnet
+    - -ethUrl <RPC>
+    - -serviceAddr <PUBLIC:8935>
+    - -nvidia <GPU_IDS>
+    - -pricePerUnit <WEI>
+    - -v 6
+    Ports: 8935 (service), 7935 (CLI/metrics)
+    Volume mounts for persistent data
+    Explain each flag briefly
+  </Tab>
+
+  <Tab title="AI" icon="brain">
+    ### AI Inference Configuration
+    docker-compose template with:
+    - All video flags PLUS:
+    - -aiWorker
+    - -aiModels /path/to/aiModels.json
+    - AI runner service (livepeer/ai-runner)
+    Write minimal aiModels.json with one model
+    For LLM: different runner (Ollama) - brief note, link to llm-pipeline-setup
+    -aiServiceRegistry for on-chain AI capability registration
+  </Tab>
+
+  <Tab title="Dual Mode" icon="layer-group">
+    ### Dual Mode Configuration (Video + AI)
+    docker-compose template combining both:
+    - All video flags + all AI flags
+    - Both services in one compose file
+    Note: NVENC uses dedicated silicon (does not compete with CUDA for AI)
+    VRAM sharing: one warm AI model + video transcoding fits in 24 GB
+    Link to dual-mode-configuration in guides for VRAM coexistence details
+  </Tab>
+</Tabs>
+</BorderedBox>
+
+## Common Configuration
+
+### Networking
+- -serviceAddr: must be public IP or domain, reachable from internet
+- Port 8935: the service port gateways connect to
+- Port 7935: CLI and metrics (keep localhost-only unless monitoring externally)
+- Firewall: port 8935 must be open inbound
+
+### GPU Selection
+- -nvidia flag: specify GPU IDs (use nvidia-smi -L to list)
+- Multiple GPUs: comma-separated IDs
+- CPU fallback: omit -nvidia for CPU-only transcoding (much slower)
+
+### Pricing
+- -pricePerUnit: video pricing in wei per pixel (brief, link to pricing-strategy for full guide)
+- AI pricing: set in aiModels.json price_per_unit field
+- Link to Config and Optimisation > Pricing Strategy for competitive positioning
+
+### Persistent Data
+- Volume mount for /root/.lpData (keystore, data)
+- Volume mount for AI models directory (if AI enabled)
+
+## Verify Configuration
+Before connecting on-chain, test locally:
+```bash
+# Check node starts without errors
+docker logs <container>
+# Check GPU detected
+# Check flags applied
+```
+
+## Next Step
+Link to Connect page.
+
+*/}
+
+{/*
+  PURPOSE:
+  Configure the orchestrator for production. All 3 node modes (video, AI, dual)
+  via tabs on one page. Docker-compose templates with exact flags. Covers
+  networking, GPU selection, pricing basics, and persistent data. Does NOT cover
+  on-chain connection (that's the Connect page) or detailed pricing strategy
+  (that's Config and Optimisation).
+
+  SECTION: Setup (step 2 of 4)
+  JOB STORIES: J1
+
+  CROSS-REFS:
+  - Setup > Connect - next step
+  - Config and Optimisation > Pricing Strategy - detailed pricing
+  - Config and Optimisation > Dual Mode Configuration - VRAM coexistence
+  - Resources > Technical > CLI Flags - full flag reference
+*/}

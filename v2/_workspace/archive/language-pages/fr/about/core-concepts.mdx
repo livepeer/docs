@@ -1,0 +1,128 @@
+---
+title: Livepeer Concepts de base
+sidebarTitle: Livepeer Concepts de base
+description: >-
+  Une introduction de haut niveau aux concepts clés et à l'architecture du
+  Livepeer Réseau d'IA et de vidéo en temps réel
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - livepeer core concepts
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9jb3JlLWNvbmNlcHRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvY29yZS1jb25jZXB0cyIsInNvdXJjZUhhc2giOiJiNTVlZjBkMjdhZDk2MGQxMzNkMjY0YWFmYjUzNjdiZDM5YmM4MTRhM2Q1ZDlmOTMxYzIwYmI1MTUwZTIzYzY5IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDE2OjU2OjI1LjgxM1oifQ== */}
+import Protocol from "/snippets/pages/01_ABOUT/concepts/protocol.mdx"
+import Network from "/snippets/pages/01_ABOUT/concepts/network.mdx"
+import Actors from "/snippets/pages/01_ABOUT/concepts/actors.mdx"
+
+### Vue d'ensemble et séparation
+
+Livepeer est conçu comme un réseau vidéo/IA modulaire ancré par un protocole minimal on‑chain. Le protocole gère les actifs et les incitations sur Ethereum, tandis que le réseau off‑chain effectue le travail intensif de transcodage et de traitement IA. Les documents officiels séparent clairement ces domaines :
+
+Protocole on‑chain – les contrats intelligents détiennent les dépôts ETH des diffuseurs et des orchestrateurs ; créent et distribuent les jetons de mise LPT ; émettent des tickets de paiement probabilistes ; appliquent les règles de mise, de sanction et de récompense ; et gèrent la gouvernance. Le protocole ne transcoder pas la vidéo ni n'exécute d'IA. Son rôle est de coordonner les paiements et de maintenir un état sans confiance.
+
+Réseau off‑chain – les nœuds orchestrateurs exécutent le logiciel Livepeer pour réaliser le transcodage et les charges de travail IA. Ils sont en concurrence sur le prix, la qualité et la latence. Les tâches vidéo/IA et le routage se déroulent entièrement off‑chain. Des services comme Livepeer Studio et les passerelles communautaires se situent au-dessus de cette couche.
+
+Pont – les diffuseurs déposent ETH dans le protocole et envoient des tickets probabilistes avec chaque segment. Les orchestrateurs échangent les tickets gagnants on‑chain contre des frais ETH, tandis que le travail lui‑même est livré off‑chain. LPT n'est pas utilisé pour payer les services ; il est uniquement utilisé pour la mise, la délégation et la gouvernance.
+
+Ces limites garantissent que le protocole reste léger et résistant à la censure. Toute modification proposée doit respecter cette séparation - le calcul intensif doit rester off‑chain, tandis que les règles financières et la gouvernance résident on‑chainU
+
+{/* <Frame> */}
+  <Tabs>
+    <Tab title="Overview">
+      <Overview />
+    </Tab>
+    <Tab title="Protocol">
+      <Protocol />
+    </Tab>
+    <Tab title="Network">
+      <Network />
+    </Tab>
+    <Tab title="Actors">
+      <Actors />
+    </Tab>
+
+  </Tabs>
+{/* </Frame> */}
+
+### Définitions
+
+**Livepeer Protocole**
+
+Le protocole est l'ensemble de règles + la logique on‑chain qui régit :
+
+**Livepeer Réseau**
+
+Le réseau est le système réel en fonctionnement composé de machines exécutant le travail :
+
+**Livepeer Acteurs**
+
+Un acteur Livepeer est tout rôle ou entité qui participe au protocole ou au réseau Livepeer et exécute les actions définies par le système.
+
+
+# Vue d'ensemble
+
+Livepeer est une plateforme full‑stack pour le streaming vidéo et l'IA. Le logiciel de streaming vidéo repose sur un réseau d'acteurs qui effectuent le travail nécessaire pour calculer, transcoder et orchestrer les tâches vidéo et IA dans le réseau Livepeer.
+
+Le protocole Livepeer est le code sous‑jacent qui applique les mécanismes et règles afin d'assurer la fiabilité, la coopération et la coordination de ces acteurs décentralisés.
+
+# Concepts de base
+
+## Livepeer Protocole
+
+Le protocole est l'ensemble de règles + la logique on‑chain qui gouverne :
+
+- staking
+- délégation
+- inflation & récompenses
+- sélection d’orchestrateur
+- slashing
+- paiements probabilistes
+- règles de vérification
+
+La couche économique et de coordination qui impose un comportement correct.
+
+## Livepeer Réseau
+
+Le réseau est le système réel en fonctionnement des machines exécutant le travail :
+
+- Orchestrateurs (nœuds GPU)
+- Transcodeurs / Travailleurs
+- Passerelles
+- Diffuseurs
+- Processus de vérification
+- Routage des tâches
+- Calcul IA & vidéo en temps réel
+
+Il s'agit du maillage GPU décentralisé, en direct et opérationnel, exécutant des tâches vidéo + IA.
+
+## Protocole vs Réseau
+
+| Couche                 | Description                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Livepeer Protocole** | Incitations crypto-économiques on-chain & coordination ; staking ; paiements.        |
+| **Livepeer Réseau**  | Nœuds off-chain effectuant un travail en temps réel (transcodage, inférence, routage).  |
+| **Relation**      | Le réseau _exécute_ le calcul ; le protocole _gouverne, sécurise et paie_ il. |
+
+
+# On-chain vs Off-chain
+
+Livepeer protocole = Arbitrum One (L2)
+Livepeer jeton (LPT) = réseau principal Ethereum (L1)
+Livepeer réseau (nœuds GPU + passerelles) = couche d'exécution hors chaîne
+
+# Livepeer Acteurs
+
+Un acteur Livepeer est tout rôle ou entité qui participe au protocole ou au réseau Livepeer et effectue les actions définies par le système.
+Dans l'architecture Livepeer, « acteur » est une catégorie formelle utilisée pour décrire les participants avec des responsabilités, des incitations et des interactions distinctes.
+Les acteurs sont fondamentaux pour décrire le fonctionnement du réseau de bout en bout du point de vue de l'ingénierie système.
+
+l'écosystème de Livepeer implique à la fois les acteurs du protocole (rôles on-chain) et les acteurs communautaires (participants du réseau et constructeurs)
+
+<Note>INSERT LIVEPEER ACTOR DIAGRAM HERE \[THIS ONE LOOKS OLD (whitpaper)</Note>
+
+<Note>Actor diagram placeholder removed pending final approved asset.</Note>

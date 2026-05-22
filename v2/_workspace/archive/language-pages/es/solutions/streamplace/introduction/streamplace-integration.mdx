@@ -1,0 +1,142 @@
+---
+title: Guía de Integración para Desarrolladores
+description: >-
+  Cómo integrar Streamplace en aplicaciones sociales descentralizadas,
+  plataformas Web3 y tuberías de video impulsadas por Livepeer.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace integration
+  - developer
+  - integration
+  - guide
+  - integrate
+  - decentralized
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWludGVncmF0aW9uLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL3N0cmVhbXBsYWNlL2ludHJvZHVjdGlvbi9zdHJlYW1wbGFjZS1pbnRlZ3JhdGlvbiIsInNvdXJjZUhhc2giOiJlMzJjYmNmYWQ0YWNmZGE1MjliYTAwOWRhZGY3ODIwZTdjOWYxMTZmNDYwZGQyYjAzZDBmNDA0Y2Q3Mzg0OTRlIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE4OjA3OjIxLjgwMFoifQ== */}
+---
+
+# Guía de Integración para Desarrolladores
+
+Esta guía explica cómo los desarrolladores pueden integrar Streamplace en sus aplicaciones descentralizadas. Streamplace proporciona un proceso completo**ingestión → proveniencia → codificación → distribución** que se conecta directamente a la red Livepeer.
+
+Obtienes:
+
+- transmisión en vivo
+- metadatos y gestión de derechos
+- proveniencia (C2PA + firmas de Ethereum)
+- transcodificación sin interrupciones a través de Livepeer
+- reproducción HLS/WebRTC
+
+---
+
+# 🚀 Comienzo rápido
+
+## 1. Instalar el nodo Streamplace
+
+```bash
+curl -s https://get.stream.place/install | bash
+```
+
+## 2. Iniciar una transmisión en vivo
+
+```bash
+streamplace stream start --source webcam
+```
+
+## 3. Agregar metadatos
+
+Configurar derechos de contenido, advertencias y políticas de distribución:
+
+```json
+{
+  "contentRights": "CC-BY-4.0",
+  "contentWarnings": ["flashing lights"],
+  "distributionPolicy": {
+    "retainSegments": true,
+    "allowSyndication": true
+  }
+}
+```
+
+## 4. Usar el SDK de Streamplace
+
+```ts
+import { StreamplaceClient } from '@streamplace/sdk'
+
+const sp = new StreamplaceClient()
+const stream = await sp.createStream()
+```
+
+---
+
+# 🧩 Cómo se integra Streamplace con Livepeer
+
+Streamplace hace**no**realiza la codificación en sí misma. En su lugar,:
+
+1. Segmenta y firma cada porción MP4 (1s)
+2. Incorpora metadatos + procedencia
+3. Envía las porciones a los emisores de Livepeer
+4. Orquestadores en la red Livepeer manejan la codificación con GPU
+5. Streamplace vuelve a construir los manifiestos y prepara las salidas de reproducción
+
+Esto carga todo el trabajo intensivo de cálculo en el**mercado de GPU descentralizado**.
+
+---
+
+# 📦 Integración de reproducción
+
+Streamplace proporciona puntos finales de reproducción:
+
+- **Manifestos HLS**
+- **Sesiones WebRTC**
+
+Los reproductores pueden:
+
+- verificar manifestos C2PA
+- verificar firmas de Ethereum
+- mostrar derechos/advertencias automáticamente
+
+Componente de interfaz de usuario (React):
+
+```jsx
+<StreamplacePlayer src={manifestUrl} showProvenance={true} />
+```
+
+---
+
+# Patrones de integración
+
+## 🤝 1. Redes sociales (Protocolo AT, Fediverso)
+
+- creación de transmisiones en vivo del usuario
+- superficie automática de derechos/advertencias
+- flujos conscientes de procedencia
+
+## 🎥 2. Plataformas de creadores
+
+- pruebas de propiedad por video
+- licencias y visualización de crédito automatizadas
+
+## 📰 3. Periodismo y verificación de hechos
+
+- procedencia verificable para cada segmento
+- detección de alteraciones integrada en la reproducción
+
+## 🏛️ 4. Plataformas de video ejecutadas por la comunidad
+
+- nodo autohospedado + moderación distribuida
+- reglas de distribución basadas en metadatos
+
+---
+
+# 📚 Páginas relacionadas
+
+- [Visión general de Streamplace](/solutions/streamplace/overview)
+- [Cómo funciona Streamplace](/solutions/streamplace/introduction/streamplace-guide)
+- [Arquitectura](/solutions/streamplace/introduction/streamplace-architecture)
+- [Proveniencia y Metadatos](/solutions/streamplace/introduction/streamplace-provenance)
+- [Modelo de Financiación SPE](/solutions/streamplace/introduction/streamplace-funding-model)

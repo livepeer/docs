@@ -1,0 +1,66 @@
+---
+title: Livepeer Propósito del token
+sidebarTitle: Propósito
+keywords:
+  - livepeer
+  - delegators
+  - about lpt livepeer token
+  - purpose
+  - delegation
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9scHQvYWJvdXQvcHVycG9zZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2xwdC9hYm91dC9wdXJwb3NlIiwic291cmNlSGFzaCI6IjAzM2EzMTE2MjhlOGVhNjFhZjEzYzhmODFkMGQ2NDBjYWEzZmI3NGI4NjY0NDA1MTA1M2I4ZDMxMmFkZjIzOWIiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMDFUMTA6NDQ6MjUuNjMzWiJ9 */}
+## Propósito de LPT
+
+LPT es el activo nativo del protocolo Livepeer y cumple tres funciones distintas:
+
+- **Colateral de seguridad** – Los orchestrators deben vincular LPT para participar en el conjunto activo. El estacionamiento actúa como colateral contra el mal comportamiento y determina cuánto trabajo puede realizar un orchestrator. Los delegadores vinculan LPT a los orchestrators y comparten las recompensas. Aunque la penalización está actualmente desactivada, la existencia de un token vinculable permite alrededor de la red imponer sanciones económicas en el futuro.
+
+- **Distribución de recompensas** – Nuevo LPT acuñado a través de la inflación se distribuye proporcionalmente al estacionamiento vinculado. Esto hace que LPT sea un “token de trabajo”: cuanto más estacionamiento tenga un orchestrator, más recompensas inflacionarias recibirá. Los delegadores comparten estas recompensas en función del recorte de recompensas configurado por el orchestrator. Las tarifas pagadas en ETH también se dividen según el estacionamiento vinculado, alineando los incentivos en ambos flujos de ingresos.
+
+- **Poder de gobernanza** – El peso de voto en las Propuestas de Mejora de Livepeer (LIPs) es proporcional al LPT bloqueado. Los titulares de tokens pueden proponer cambios en el protocolo, votar en las asignaciones del tesoro y dirigir las actualizaciones de la red. Los delegadores influyen indirectamente en la gobernanza eligiendo a los orquestadores que representan sus preferencias.
+
+Importante, LPT no se utiliza para pagar por trabajo. Los emisores y los constructores de IA pagan en ETH o en el token de gas subyacente, mientras que los orquestadores ganan tarifas de ETH. Esta separación evita confundir las dinámicas de oferta y demanda (impulsadas por las cargas de trabajo de video/IA) con el incentivo de seguridad (impulsado por LPT). También permite que Livepeer aproveche el mercado de gas de Ethereum para pagos, manteniendo un modelo de seguridad independiente.
+
+### Suministro e inflación
+
+LPT se lanzó con un suministro inicial fijo de 25,8 millones de tokens y continúa expandiéndose mediante inflación dinámica. A diferencia del horario determinista de reducción de Bitcoin, la emisión de Livepeer se adapta a las condiciones de la red. Al comienzo de cada ronda, el BondingManager acuña nuevos LPT, los agrega al suministro total y los distribuye a los orquestadores activos proporcionalmente al stake. El algoritmo expone varios parámetros ajustables:
+
+- Distribución inicial y bloqueos – En el lanzamiento, LPT se asignó a inversores iniciales, fundadores, miembros de la comunidad y un tesoro protocolo. Muchas asignaciones se fueron liberando durante varios años para alinear intereses a largo plazo. La mayoría del suministro circulante ahora es poseído por la comunidad.
+
+- Inflación adaptativa – La tasa de inflación responde a la participación en el staking: si menos del 50 % de LPT está vinculado, la tasa aumenta; si más del 50 % está vinculado, la tasa disminuye. Este bucle de retroalimentación mantiene la red segura al incentivar el vínculo adicional cuando sea necesario, mientras que reduce la dilución cuando la seguridad sea suficiente. Al principio, la inflación superaba el 13 % anual; a medida que crecía la participación, la comunidad votó para reducir la emisión base a alrededor del 6-8 % y dirigir una parte a la tesorería de la comunidad.
+La fórmula exacta es inflación := inflación ± tasa de cambio de inflación, dependiendo de si la proporción vinculada está por encima o por debajo de la tasa de vinculación objetivo (inicialmente del 50 %). La tasa de cambio de inflación determina qué tan rápido se ajusta la tasa (por ejemplo, 0,0005 por ronda). Como las rondas ocurren aproximadamente cada 21 horas, los ajustes se compone gradualmente. Este diseño evita choques bruscos mientras dirige la red hacia el nivel de participación objetivo.
+
+- Multiplicador de staking y duración de la ronda – La seguridad del protocolo no depende solo del porcentaje de LPT vinculado, sino también de la capacidad de trabajo por unidad de stake. A medida que aumenta la demanda de throughput de video/IA, la gobernanza puede aumentar el número de orquestadores activos (a través de numActiveTranscoders) para ampliar la oferta. Por el contrario, si la demanda disminuye, la inflación continúa distribuyendo recompensas, pero los ingresos de los orquestadores disminuyen, señalando a los operadores que reduzcan la capacidad.
+
+- Ajustes futuros – La gobernanza conserva la capacidad de modificar los parámetros de inflación mediante LIPs. Por ejemplo, la comunidad podría implementar calendarios de reducción a la mitad, redirigir una mayor parte al tesoro o introducir nuevos mecanismos de recompensa. Al codificar la inflación en la gobernanza, Livepeer puede adaptarse a las condiciones cambiantes de la red.
+Más allá de ajustes en los parámetros, las propuestas futuras podrían explorar mecanismos de quema de tokens (por ejemplo, quemar una parte de las sanciones por slashing), bloqueo de veLPT (modelos de voto con depósito para dar más peso a los tenedores a largo plazo) o inflación específica de L2 (diferenciar la emisión en Arbitrum frente a la mainnet). Cada cambio requeriría un análisis económico exhaustivo y una votación de gobernanza.
+
+### Tesoro Comunitario
+El protocolo dirige una parte de la inflación a un tesoro comunitario en cadena. En su primera iteración, el 10 % de los LPT recién creados fluían a un multisig controlado por la Fundación Livepeer y los guardianes de la comunidad. El propósito del tesoro es financiar bienes públicos, investigación, iniciativas de marketing y herramientas que beneficien a toda la ecosistema. Ejemplos incluyen becas para mejorar la infraestructura de monitoreo, investigación sobre transcodificación verificable y apoyo a desarrolladores. Cuando el saldo del tesoro alcanzó un límite predefinido, las contribuciones se detuvieron; las LIPs futuras pueden ajustar la tasa o reanudar el financiamiento.
+
+Los fondos del tesoro no se acumulan automáticamente a los orquestadores o delegadores. Las propuestas de gasto deben ser aprobadas por la gobernanza, asegurando transparencia y responsabilidad. Las entidades de propósito especial (SPE) pueden solicitar asignaciones para ejecutar proyectos con alcance específico (por ejemplo, construir un marco de verificación, desarrollar nuevos códecs) y deben informar sobre hitos. Esta estructura convierte la inflación en una inversión dirigida por la comunidad en la salud a largo plazo del protocolo, en lugar de una simple dilución.
+
+Para garantizar que el gasto del tesoro se alinee con los objetivos del protocolo, la comunidad Livepeer ha experimentado con marcos para financiación de bienes públicos. Un ejemplo es el modelo de subvención basado en hitos transparentes: los propuestos presentan presupuestos y entregables, los fondos se liberan en tramos tras la finalización y el progreso se informa públicamente en el foro. Otro es el financiamiento cuadrático, que podría coincidir con las donaciones de la comunidad desde el tesoro para señalar un fuerte apoyo de base. También se han explorado discusiones sobre financiación retroactiva estilo red de regeneración, donde las contribuciones se recompensan después de demostrar su impacto. Estas experiencias reflejan un movimiento más amplio en la gobernanza descentralizada hacia una asignación de recursos más inclusiva y responsable.
+
+### Distribución de recompensas
+
+Hay dos fuentes de ingresos en Livepeer:
+
+1. Tarifas de ETH – Cuando los presentadores o constructores de IA redimen tickets ganadores, ETH se transfiere de su depósito al orquestador. El orquestador comparte un porcentaje configurable de estas tarifas con sus delegadores (feeShare). Un alto porcentaje de tarifas atrae a los delegadores pero reduce la margen del orquestador.
+
+2. LPT de inflación – En cada ronda, el BondingManager llama a reward() para cada orquestador activo. El contrato mints nuevos LPT proporcionalmente a la participación total del orquestador (LPT comprometidos + delegaciones) y los transfiere al orquestador. Luego, el orquestador divide la recompensa con los delegadores según su rewardCut (porcentaje que se queda). Los delegadores llaman a claimEarnings() para recoger los LPT y ETH acumulados.
+
+La vinculación es no custodial: los LPT de los delegadores permanecen dentro del BondingManager. Para retirarlos, un delegador inicia un unbond. Después de un período de enfriamiento de una ronda (actualmente ~21 horas), pueden retirar su principal y cualquier recompensa no reclamada. Este período de desvinculación evita el cambio rápido de participación y proporciona tiempo para aplicar sanciones (cuando están habilitadas).
+
+La configurabilidad de los recortes de recompensa y las participaciones en tarifas crea un mercado de precios. Los orquestadores deben decidir cuánta recompensa retener frente a compartir para atraer delegadores. Los delegadores, a su vez, evalúan a los orquestadores en función de la disponibilidad, la calidad de transcodificación, la participación en tarifas, el recorte de recompensa y la alineación con la gobernanza. La competencia resultante impulsa una mejor calidad de servicio y descentraliza el poder.
+
+Compensación de recompensas y captura de inflación
+
+Como la inflación se distribuye continuamente, los delegadores se benefician de compilar regularmente sus ganancias llamando a claimEarnings() o mediante la vinculación de más LPT. No reclamar durante muchas rondas no anula las recompensas, pero puede retrasar la comprensión y reducir el rendimiento efectivo debido a la dilución. Algunos operadores ejecutan bots para automatizar claimEarnings() para sus delegadores, suavizando la comprensión y ahorrando gas al agrupar llamadas.
+
+_**Fuga de recompensas y "interruptor de tarifas"**_
+
+Históricamente Livepeer distribuía todas las recompensas inflacionarias a los orquestadores y sus delegadores, mientras que una parte fija de tarifas iba a los delegadores de los orquestadores a través de feeShare. Se han explorado discusiones recientes sobre la introducción de un "interruptor de tarifas" que redirigiría una parte de las tarifas al tesoro comunitario o quemaría una parte de las tarifas para reducir la oferta. Tal cambio requeriría una LIP y un análisis económico. Los partidarios argumentan que alinear los flujos de tarifas con el financiamiento de bienes públicos podría desacoplar el crecimiento de la red de la inflación; los opositores advierten que reducir los ingresos de los orquestadores podría reducir la capacidad de servicio. Hasta principios de 2026, no se ha implementado ningún interruptor de tarifas, pero la conversación destaca que la distribución de recompensas es un espacio de diseño en evolución.
+
+### 

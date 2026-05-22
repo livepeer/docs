@@ -1,0 +1,31 @@
+---
+title: Webhooks
+description: 从 Livepeer Studio 接收实时事件（流、资产、录制、多流、任务、访问控制）。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FuYWx5dGljcy93ZWJob29rcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYW5hbHl0aWNzL3dlYmhvb2tzIiwic291cmNlSGFzaCI6IjQzMWFmZTIzZWMzNzA5NjdkMmVkM2JlMzU5ZTJmNmNiOTFjYmJiMzY5ZDA3MDZjNzYzYmI4MzM3N2FiNzM1NTMiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MjA6NDcuNTMxWiJ9 */}
+**Webhooks**让 Livepeer Studio 在事件发生时向您的端点发送 HTTP POST 请求。您可以对流/资产状态更改、录制、多流状态和访问控制检查做出反应。
+
+## 事件类型
+
+| 事件 | 描述 |
+|-------|-------------|
+| **流** | `stream.started`, `stream.idle` |
+| **录制** | `recording.started`, `recording.ready`, `recording.waiting` |
+| **多流** | `multistream.connected`, `multistream.error`, `multistream.disconnected` |
+| **资产** | `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted` |
+| **任务** | `task.spawned`, `task.updated`, `task.completed`, `task.failed` |
+| **访问控制** | `playback.accessControl` （用于受限制的播放；您的端点允许或拒绝） |
+
+## 设置 Webhook
+
+1. **创建一个 HTTP 端点** 在您的应用中，该端点应接受 POST 请求并快速返回 2XX（如需，可异步处理）。
+2. **在 Studio 中注册** - [开发者 → Webhooks](https://livepeer.studio/dashboard/developers/webhooks)，点击创建，输入您的URL并选择您想要的事件。
+3. **验证签名** - 每个请求都包含一个`Livepeer-Signature` 头（时间戳和HMAC）。使用您的网络钩子密钥验证它，以避免接受伪造的事件。参见[Livepeer Studio 文档](https://livepeer.studio/docs) 了解签名方案。
+
+负载字段通常包括 `webhookId`, `timestamp`, `event`, 和 `event_object`（流、资产或任务）。在签名验证中使用 `timestamp` 来防止重放攻击。
+
+## 本地开发
+
+使用隧道（例如[ngrok](https://ngrok.com)）将本地服务器公开，并将该 URL 用作 Webhook 端点。对于生产环境，请将服务器部署到公共 URL。
+
+参见[监听事件](./listen-to-events)用于资产/流事件使用和 [通过 Webhook 的访问控制](../access-control/webhooks) 用于受限制的播放。

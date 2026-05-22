@@ -1,0 +1,36 @@
+---
+title: Transmitir mediante OBS
+description: >-
+  Configura OBS Studio para transmitir en Livepeer Studio usando RTMP y la clave
+  de transmisión.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMiLCJzb3VyY2VIYXNoIjoiZTgzOGU5ZGY4NDkxM2I3NDFhNTE1ZWZhMjc2OGY5YzEzZDA5NjZlMmNjZmZjNGJiMjlhNGU1OTUyYzVjMDlhNiIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyNToyMC43NTlaIn0= */}
+[OBS Studio](https://obsproject.com/) es una opción común para transmitir en vivo a Livepeer Studio. Configura OBS con tu clave de transmisión de una [transmisión creada](create-livestream).
+
+## Obtener una clave de transmisión
+
+[Crear una transmisión en vivo](create-livestream) y copie la **clave de transmisión**. El presentador la ingresa en OBS.
+
+## Configurar OBS
+
+1. En OBS: **Configuración → Transmisión**.
+2. Establecer **Servicio** a **Mostrar todo...** luego **Livepeer Studio**, o **Personalizado**.
+3. Para **Personalizado**: establecer "**Servidor**al URL de ingestión desde el panel de control (por ejemplo, `rtmp://livepeer.studio/live`) y "**Clave de transmisión**a su clave de transmisión.
+4. **Salida** pestaña: **Modo de salida** = **Avanzado**, **Intervalo de fotogramas clave** = **1**.
+5. Guardar y **Iniciar transmisión**.
+
+<Info>
+  Use **Keyframe Interval: 1** and disable **B-frames** (`bframes=0` in x264 options) for best compatibility with WebRTC playback. See [Optimize latency](optimize-latency).
+</Info>
+
+## Reproducción
+
+Los espectadores usan el stream **ID de reproducción** en el [Livepeer Player](./playback-livestream) o cualquier reproductor HLS/WebRTC.
+
+## Configuraciones recomendadas para OBS
+
+**Baja latencia:** Intervalo de clave 1, CRF 25 o CBR, Perfil Alto, `bframes=0`, resolución 720p o 1080p.
+
+**Equilibrado:**Intervalo de fotogramas clave 2, CRF 25, sin reemplazo de fotograma B.
+
+Ver [Optimizar latencia](optimize-latency) para perfiles completos.

@@ -1,0 +1,96 @@
+---
+title: API Assets
+description: >-
+  L'API Assets est utilisée pour créer, récupérer, mettre à jour, supprimer des
+  objets d'actifs du pipeline
+keywords:
+  - livepeer
+  - studio
+  - api
+  - assets
+  - vod
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FwaS1yZWZlcmVuY2UvYXNzZXRzL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hcGktcmVmZXJlbmNlL2Fzc2V0cy9vdmVydmlldyIsInNvdXJjZUhhc2giOiI5ZTI1ZmU1ODM5NzY5ZGNjNDk1YmRiMWM5MDFjOWFjOGI1ZjFmNDc5ZGRhZTFjNWU0ZGQ4NTkyOWE0ZjY2OGM2IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjUyOjI5LjQ3OVoifQ== */}
+# API Assets
+
+L'API Assets est utilisée pour créer, récupérer, mettre à jour et supprimer des objets d'actifs du pipeline.
+
+## Objet Asset
+
+<ResponseField name="id" type="string">
+  This is a unique identifier for the asset.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Type of the asset. This can be either 'video' or 'audio'.
+</ResponseField>
+
+<ResponseField name="playbackId" type="string">
+  Used to form playback URL and storage folder.
+</ResponseField>
+
+<ResponseField name="staticMp4" type="boolean" writeOnly="true">
+  Whether to generate MP4s for the asset.
+</ResponseField>
+
+<ResponseField name="c2pa" type="boolean">
+  Attach Livepeer Studio C2PA Attestation in the output mp4 video.
+</ResponseField>
+
+<ResponseField name="playbackUrl" type="string">
+  URL for HLS playback.
+</ResponseField>
+
+<ResponseField name="downloadUrl" type="string">
+  URL to manually download the asset if desired.
+</ResponseField>
+
+<ResponseField name="playbackPolicy" type="object">
+  Reference to the playback-policy schema.
+</ResponseField>
+
+<ResponseField name="source" type="object">
+  Source of the asset, which can be URL, recording, directUpload, or clip.
+</ResponseField>
+
+<ResponseField name="creatorId" type="string">
+  Reference to the creator-id schema.
+</ResponseField>
+
+<ResponseField name="storage" type="object">
+  Information about the storage of the asset, particularly on IPFS.
+</ResponseField>
+
+<ResponseField name="status" type="object">
+  Status of the asset, including its phase, update time, and any error message.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name of the asset. This is not necessarily the filename, can be a custom name or title.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number">
+  Timestamp (in milliseconds) at which asset was created.
+</ResponseField>
+
+<ResponseField name="size" type="number">
+  Size of the asset in bytes.
+</ResponseField>
+
+<ResponseField name="hash" type="array">
+  Hash of the asset.
+</ResponseField>
+
+<ResponseField name="videoSpec" type="object">
+  Video metadata including format, duration, bitrate, and tracks information.
+</ResponseField>
+
+## Points de terminaison
+
+- [Télécharger un actif](./upload) - `POST /asset/request-upload`
+- [Télécharger un actif via une URL](./upload-via-url) - `POST /asset/request-upload/url`
+- [Obtenir l'actif](./get) - `GET /asset/{assetId}`
+- [Obtenir tous les actifs](./get-all) - `GET /asset`
+- [Mettre à jour l'actif](./update) - `PATCH /asset/{assetId}`
+- [Supprimer l'actif](./delete) - `DELETE /asset/{assetId}`
