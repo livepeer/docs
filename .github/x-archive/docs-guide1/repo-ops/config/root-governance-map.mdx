@@ -1,0 +1,119 @@
+---
+title: 'Root Governance Map'
+sidebarTitle: 'Root Governance Map'
+description: 'Generated live inventory and taxonomy map for the governed repo root.'
+consumer: [human, agent]
+maintenance: generated
+status: active
+generator: 'operations/scripts/generators/governance/root/generate-root-governance-artifacts.js'
+keywords:
+  [
+    'livepeer',
+    'root governance',
+    'allowlist',
+    'repo root',
+    'taxonomy',
+    'governance map',
+  ]
+---
+
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: operations/scripts/generators/governance/root/generate-root-governance-artifacts.js
+Purpose: Generated root inventory, placement matrix, and forbidden-root contract from the canonical root-governance manifest.
+Run when: Root-governance manifest, docs, validator, or root inventory expectations change.
+Run command: node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/root/generate-root-governance-artifacts.js`. <br/>
+**Purpose**: Keep the live root inventory and placement matrix aligned with the canonical root-governance manifest. <br/>
+**Run when**: Root-governance manifest, docs, validator, or root inventory expectations change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write`. <br/>
+</Note>
+
+# Root Governance Map
+
+This page is generated from `operations/governance/config/root-governance.json` and is the live reference for what may exist at repo root.
+
+## Governed Root Inventory
+
+Active governed root entries: 35.
+
+| Path | Type | Class | Owner | Root basis | Lifecycle | Generator | Doc refs | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `.allowlist` | file | platform_contract | docs | repo_entrypoint | active | `node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write` | `docs-guide/policies/root-allowlist-governance.mdx`<br/>`docs-guide/repo-ops/config/root-governance-map.mdx` | Generated projection consumed by the root-structure pre-commit gate. |
+| `.augment` | directory | tool_adapter | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`docs-guide/tooling/ai-tools.mdx` | Native Augment adapter root. |
+| `.claude` | directory | tool_adapter | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`docs-guide/tooling/ai-tools.mdx` | Native Claude Code adapter root. |
+| `.codex` | directory | tool_adapter | docs | fixed_path | active | n/a | `AGENTS.md`<br/>`docs-guide/policies/agent-governance-framework.mdx` | Codex task-contract and local lock root. |
+| `.cursor` | directory | tool_adapter | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`docs-guide/tooling/ai-tools.mdx` | Native Cursor adapter root. |
+| `.editorconfig` | file | docs_runtime | docs | fixed_path | active | n/a | `README.md` | Standard repo editor config lives at root for tool discovery. |
+| `.gitattributes` | file | docs_runtime | docs | fixed_path | active | n/a | `README.md` | Git attributes are fixed-path root config. |
+| `.githooks` | directory | docs_runtime | docs | repo_entrypoint | active | n/a | `README.md`<br/>`docs-guide/policies/root-allowlist-governance.mdx` | Repo hook root remains rooted because the hook installer and git config expect it. |
+| `.github` | directory | platform_contract | docs | fixed_path | active | n/a | `README.md`<br/>`docs-guide/policies/agent-governance-framework.mdx` | GitHub workflows, issue templates, and Copilot adapter require the fixed root path. |
+| `.gitignore` | file | docs_runtime | docs | fixed_path | active | n/a | `README.md`<br/>`docs-guide/policies/root-allowlist-governance.mdx` | Root ignore policy governs local-only outputs. |
+| `.mintignore` | file | platform_contract | docs | fixed_path | active | n/a | `README.md`<br/>`docs-guide/repo-ops/config/repo-config-map.mdx` | Mintlify build exclusion file is root-discovered. |
+| `.mintlify` | directory | platform_contract | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`docs-guide/tooling/ai-tools.mdx` | Mintlify runtime directory remains rooted for the assistant contract. |
+| `.prettierrc` | file | docs_runtime | docs | fixed_path | active | n/a | `README.md` | Formatter config is fixed-path root config. |
+| `.vscode` | directory | docs_runtime | docs | tool_discovery | active | n/a | `README.md` | Editor workspace settings remain in the conventional root directory. |
+| `.windsurf` | directory | tool_adapter | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`docs-guide/tooling/ai-tools.mdx` | Native Windsurf adapter root. |
+| `AGENTS.md` | file | platform_contract | docs | fixed_path | active | n/a | `docs-guide/policies/agent-governance-framework.mdx`<br/>`README.md` | Canonical repo-wide agent baseline. |
+| `LICENSE` | file | platform_contract | docs | fixed_path | active | n/a | `README.md` | Repository license stays at root. |
+| `Makefile` | file | docs_runtime | docs | repo_entrypoint | active | n/a | `README.md` | Convenience entrypoint retained at root. |
+| `README.md` | file | repo_entrypoint | docs | repo_entrypoint | active | n/a | `docs-guide/repo-ops/config/root-governance-map.mdx` | Repo entrypoint for humans and agents. |
+| `SECURITY.md` | file | platform_contract | docs | fixed_path | active | n/a | `README.md` | Security disclosure file remains rooted. |
+| `ai-tools` | directory | subsystem_root | docs | approved_subsystem | active | n/a | `docs-guide/tooling/ai-tools.mdx`<br/>`docs-guide/policies/root-allowlist-governance.mdx`<br/>`README.md` | Approved root AI-first subsystem. Governance must preserve it at root in this pass. |
+| `api` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md` | API spec root. |
+| `docs-guide` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md` | Canonical internal docs tree. |
+| `docs-index.json` | file | public_artifact | docs | public_url | active | `node operations/scripts/generators/content/catalogs/generate-docs-index.js --write` | `README.md`<br/>`docs-guide/repo-ops/config/root-governance-map.mdx` | Ratified AI-first public root artifact. |
+| `docs.json` | file | platform_contract | docs | fixed_path | active | n/a | `README.md`<br/>`docs-guide/repo-ops/config/repo-config-map.mdx` | Mintlify routing and navigation source of truth. |
+| `llms.txt` | file | public_artifact | docs | public_url | active | `node operations/scripts/generators/ai/llm/generate-llms-files.js --write` | `README.md`<br/>`docs-guide/features/ai-features.mdx`<br/>`docs-guide/repo-ops/config/root-governance-map.mdx` | Ratified AI-first public root artifact. llms-full.txt is retired. |
+| `operations` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md` | Governed scripts, validators, and tests root. |
+| `robots.txt` | file | platform_contract | docs | public_url | active | n/a | `README.md` | Public crawler contract stays at root. |
+| `sitemap-ai.xml` | file | public_artifact | docs | public_url | active | `node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write` | `README.md`<br/>`docs-guide/repo-ops/config/root-governance-map.mdx` | Ratified AI-first public root artifact. |
+| `snippets` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md`<br/>`snippets/snippets-registry.mdx` | Component, snippet, and snippet governance root. |
+| `style.css` | file | platform_contract | docs | fixed_path | active | n/a | `README.md` | Mintlify style entrypoint remains rooted. |
+| `tools` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md`<br/>`docs-guide/tooling/lpd-cli.mdx` | CLI, config, and shared library root. |
+| `v1` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md` | Frozen legacy docs tree. |
+| `v2` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md` | Active published docs tree. |
+| `workspace` | directory | subsystem_root | docs | repo_entrypoint | active | n/a | `README.md`<br/>`docs-guide/policies/root-allowlist-governance.mdx` | Governed AI working directory for plans and reports. |
+
+## Placement Matrix
+
+| Surface | Allowed paths | Notes |
+| --- | --- | --- |
+| `scripts` | `operations/scripts/**, operations/tests/**, tools/**, .githooks/**` | Executable repo automation belongs in governed script roots, not at repo root. |
+| `tooling_docs` | `docs-guide/tooling/**, docs-guide/repo-ops/**, docs-guide/policies/**` | Human-facing governance and operational docs stay under docs-guide. |
+| `public_root_artifacts` | `docs-index.json, llms.txt, sitemap-ai.xml, robots.txt` | Only explicit public/runtime contracts may remain rooted. |
+| `workspace_reports` | `workspace/reports/**` | Audits, trackers, and generated governance reports belong under workspace/reports. |
+| `local_browser_outputs` | `workspace/reports/_local/playwright/**` | Local-only browser captures must never write to repo root. |
+
+## AI-First Public Root Artifacts
+
+| Artifact | Public URL | Purpose | Generator |
+| --- | --- | --- | --- |
+| `docs-index.json` | `/docs-index.json` | Machine-readable docs inventory for AI and tooling consumers. | `node operations/scripts/generators/content/catalogs/generate-docs-index.js --write` |
+| `llms.txt` | `/llms.txt` | AI-first text index for LLM consumers. | `node operations/scripts/generators/ai/llm/generate-llms-files.js --write` |
+| `sitemap-ai.xml` | `/sitemap-ai.xml` | AI-focused sitemap for discoverability. | `node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write` |
+
+## Forbidden Root Artifacts
+
+| Path | Reason |
+| --- | --- |
+| `.DS_Store` | OS noise must be cleaned or ignored, never governed. |
+| `.cache` | Local caches belong in ignored scratch space, not repo root. |
+| `.cursorrules` | Retired legacy Cursor surface replaced by .cursor/rules/*.mdc. |
+| `.playwright-cli` | Browser automation output must live under workspace/reports/_local/playwright/. |
+| `repo-catalog.mdx` | Root placeholder docs are forbidden; governed references belong under docs-guide. |
+| `ASSISTANT.md` | Legacy assistant root files are retired from the governed root model. |
+| `Assistant.md` | Legacy assistant root files are retired from the governed root model. |
+
+## Local Compatibility Entries
+
+| Path | Tracking policy | Notes |
+| --- | --- | --- |
+| `.env` | `untracked_only` | Local compatibility env file is tolerated untracked but is never a governed root entry. |
+
+## Temporary Exceptions
+
+No temporary root exceptions are active.

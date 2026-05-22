@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Livepeer Component Registry",
+  "type": "object",
+  "required": [
+    "_meta",
+    "categories",
+    "components",
+    "deprecated"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": [
+        "generated",
+        "generator",
+        "componentCount"
+      ],
+      "properties": {
+        "generated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "componentCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "count",
+          "purpose"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "purpose": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "file",
+          "category",
+          "status",
+          "description",
+          "subniche",
+          "accepts",
+          "dataSource",
+          "params",
+          "examples"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "elements",
+              "wrappers",
+              "displays",
+              "scaffolding",
+              "integrators",
+              "config"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subniche": {
+            "type": "string"
+          },
+          "accepts": {
+            "type": "string"
+          },
+          "dataSource": {
+            "type": "string"
+          },
+          "deprecated": {
+            "type": "string"
+          },
+          "see": {
+            "type": "string"
+          },
+          "params": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "type",
+                "required",
+                "defaultValue",
+                "description"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "defaultValue": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "deprecated": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "file",
+          "category",
+          "see",
+          "deprecated"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "elements",
+              "wrappers",
+              "displays",
+              "scaffolding",
+              "integrators",
+              "config"
+            ]
+          },
+          "see": {
+            "type": "string"
+          },
+          "deprecated": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

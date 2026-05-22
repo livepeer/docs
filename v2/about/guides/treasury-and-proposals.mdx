@@ -1,0 +1,160 @@
+---
+title: "Livepeer Treasury and Proposals"
+sidebarTitle: "Treasury and Proposals"
+description: >-
+  How the Livepeer Treasury funds ecosystem growth, what Special Purpose Entities deliver, how the
+  treasury proposal lifecycle differs from a protocol LIP, and how to submit a funding proposal
+  through the LivepeerGovernor contract.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer treasury
+  - treasury proposals
+  - spe
+  - special purpose entity
+  - livepeer governor
+  - public goods funding
+  - lip-89
+  - lip-92
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+purpose: learn
+audience: general
+lastVerified: "2026-05-06"
+---
+
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<Quote>
+The Livepeer Treasury is an on-chain pool funded by 10% of every round's LPT inflation. It exists so the network can fund its own growth - public goods, core development, and ecosystem initiatives - without depending on any single entity. Allocation is decided by stake-weighted vote.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## What the treasury is
+
+The treasury is a single contract on Arbitrum One that holds LPT received from the Minter each round. It was created by [LIP-89](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0089.md), bundled into the production parameter set by [LIP-91](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0091.md), and given its 10%-of-inflation allocation by [LIP-92](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md).
+
+The treasury exists to solve a structural problem in protocol economies: the network needs ongoing development, research, and operational work, but the protocol cannot pay for these directly. Inflation is the only sustainable source of network-funded labour. Routing a fixed share into a community-controlled pool turns inflation into a public-goods budget that LPT holders allocate by vote.
+
+<DynamicTableV2
+  headerList={["Property", "Value"]}
+  itemsList={[
+    { "Property": "Funding source", "Value": "10% of each round's LPT inflation, routed automatically by the Minter" },
+    { "Property": "Custody", "Value": "On-chain, in the treasury contract on Arbitrum One" },
+    { "Property": "Allocation", "Value": "Stake-weighted on-chain vote through LivepeerGovernor" },
+    { "Property": "Established by", "Value": "LIP-89 (creation), LIP-91 (bundle), LIP-92 (10% contribution)" },
+    { "Property": "Reactivated by", "Value": "LIP-101 (January 2026), restoring the 10% treasury cut" },
+  ]}
+/>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How treasury funds reach builders
+
+Most treasury funding does not flow directly to individual contributors. It flows through Special Purpose Entities (SPEs) that take responsibility for a defined area of work and report back to the community.
+
+An SPE is a community-approved organisation - typically with a multi-person team - chartered to deliver a specific scope of work over a defined period. The SPE proposes a budget on-chain through a treasury LIP. If the proposal passes, treasury LPT is released to the SPE address. The SPE delivers the scope, publishes updates, and either renews its mandate or hands off when the work is complete.
+
+This structure exists because most ecosystem work needs continuity - core protocol maintenance, research, real-time AI development, observability tooling - and the on-chain proposal process is too slow for grant-by-grant approval. SPEs translate one-time governance approval into ongoing execution.
+
+<DynamicTableV2
+  headerList={["SPE pattern", "What it delivers"]}
+  itemsList={[
+    { "SPE pattern": "Protocol R&D", "What it delivers": "Core protocol maintenance, contract upgrades, network operations - the floor of the protocol" },
+    { "SPE pattern": "Research", "What it delivers": "Cryptoeconomic research, mechanism design, benchmarking, public-facing analysis" },
+    { "SPE pattern": "Real-time AI / Pipelines", "What it delivers": "Network-layer pipelines (real-time AI video, BYOC frameworks) without protocol changes" },
+    { "SPE pattern": "Ecosystem and Growth", "What it delivers": "Integration support, developer relations, partner onboarding" },
+    { "SPE pattern": "Observability and Tooling", "What it delivers": "Dashboards, leaderboards, subgraph maintenance, public data products" },
+  ]}
+/>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How treasury proposals differ from protocol LIPs
+
+The treasury and the core protocol use different governance contracts and slightly different rules. Mixing them up is the most common mistake new proposers make.
+
+<DynamicTableV2
+  headerList={["Property", "Protocol LIP", "Treasury Proposal"]}
+  itemsList={[
+    { "Property": "Executing contract", "Protocol LIP": "Governor", "Treasury Proposal": "LivepeerGovernor" },
+    { "Property": "What it changes", "Protocol LIP": "Protocol contracts, parameters, contract implementations", "Treasury Proposal": "Releases LPT from treasury balance to a target address" },
+    { "Property": "Submission stake", "Protocol LIP": "100 LPT (returned on pass)", "Treasury Proposal": "100 LPT (returned on pass)" },
+    { "Property": "Voting period", "Protocol LIP": "30 rounds (~3.75 days)", "Treasury Proposal": "30 rounds (~3.75 days)" },
+    { "Property": "Quorum", "Protocol LIP": "33% of bonded LPT", "Treasury Proposal": "33% of bonded LPT" },
+    { "Property": "Approval threshold", "Protocol LIP": "Majority (>50%) of votes cast", "Treasury Proposal": "Majority (>50%) of votes cast" },
+    { "Property": "Required documentation", "Protocol LIP": "Full LIP in livepeer/LIPs with technical specification", "Treasury Proposal": "Forum proposal with scope, budget, deliverables, and reporting commitments" },
+  ]}
+/>
+
+The voting mechanics are identical. The execution path and the documentation expectations differ. A protocol LIP needs a contract spec and an implementation plan. A treasury proposal needs a budget, a deliverable, and a public commitment to report back.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How to submit a treasury proposal
+
+The treasury proposal lifecycle mirrors the protocol LIP lifecycle for the on-chain stages, but the off-chain preparation is different.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Define the scope and budget" icon="ruler-combined">
+    Write a clear scope: what work, what timeline, what deliverable. Itemise the budget by category (engineering, research, infrastructure, communications). Treasury proposals without a defensible budget rarely pass.
+  </StyledStep>
+  <StyledStep title="Post a Request for Feedback on the forum" icon="comments">
+    Submit the proposal as an RFP on the <LinkArrow label="Livepeer Forum" href="https://forum.livepeer.org/c/lips/18" newline={false} />. The forum thread is where orchestrators and delegators ask questions, surface concerns, and negotiate scope. A proposal that has not been workshopped on the forum is unlikely to clear quorum.
+  </StyledStep>
+  <StyledStep title="Refine and finalise" icon="file-pen">
+    Iterate the proposal based on feedback. Lock the scope, the recipient address, and the requested LPT amount. Publish the final version on the forum with a clear "ready for on-chain submission" marker.
+  </StyledStep>
+  <StyledStep title="Submit on-chain" icon="arrow-up-right-from-square">
+    Anyone with 100 LPT can submit the proposal to the LivepeerGovernor contract. The proposal text, recipient, and amount are committed on-chain at this stage. The 100 LPT submission stake is returned if the proposal passes.
+  </StyledStep>
+  <StyledStep title="Voting period" icon="ballot">
+    A 30-round window opens. Stake-weighted voting determines the outcome under the standard 33% quorum and majority-of-cast-votes rules. The LivepeerGovernor uses the same voting weight as core governance - bonded LPT, with delegator override available.
+  </StyledStep>
+  <StyledStep title="Execution and reporting" icon="check-to-slot">
+    On a successful vote, the LivepeerGovernor releases the requested LPT to the recipient address. The funded entity is expected to deliver the agreed scope and report on progress through the forum. Treasury funding is not a one-time grant - sustained credibility requires sustained reporting.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## What treasury credibility looks like
+
+The treasury process favours proposals that are operationally serious. The pattern is consistent across passed proposals.
+
+- **Defensible budget.** Line items, not lump sums. Comparable benchmarks where possible.
+- **Track record.** A team or contributor with prior public delivery in the Livepeer ecosystem or in adjacent protocols.
+- **Concrete deliverables.** Working software, public research, measurable outputs - not "we will explore."
+- **Ongoing reporting.** Forum threads, public dashboards, regular updates. Treasury funding is a relationship, not a transaction.
+- **Network alignment.** Work that strengthens the protocol or the network - not work that benefits a single operator or vendor.
+
+Proposals that miss any one of these tend to fail to clear quorum even when individual votes are favourable. The treasury rewards rigour.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="vault" title="Governance and Treasury Reference" />} href="/v2/about/protocol/governance-and-treasury" horizontal arrow>
+    Canonical reference: full LIP catalogue, contract roles, and historical decisions.
+  </Card>
+  <Card title={<CustomCardTitle icon="ballot" title="Governance and Voting" />} href="/v2/about/guides/governance-and-voting" horizontal arrow>
+    How LIPs work end-to-end and how to use the vote that comes with bonded LPT.
+  </Card>
+  <Card title={<CustomCardTitle icon="comments" title="Livepeer Forum" />} href="https://forum.livepeer.org/c/lips/18" horizontal arrow>
+    Where every treasury proposal is workshopped before it reaches the chain.
+  </Card>
+  <Card title={<CustomCardTitle icon="github" title="LIPs Repository" />} href="https://github.com/livepeer/LIPs" horizontal arrow>
+    Treasury LIPs (LIP-89, LIP-91, LIP-92, LIP-101) and the full proposal corpus.
+  </Card>
+</Columns>

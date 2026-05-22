@@ -1,0 +1,253 @@
+# type: dispatch
+# concern: copy
+# pipeline: P4
+name: Data Refresh Governance
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "Governed data-refresh mode"
+        required: true
+        type: string
+      use_test_branch:
+        description: "Write to TEST_BRANCH instead of DEPLOY_BRANCH"
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: "Fetch and preview data without writing files or committing"
+        required: false
+        default: false
+        type: boolean
+      version:
+        description: "Optional version override for livepeer-release mode"
+        required: false
+        default: ""
+        type: string
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Governed data-refresh mode"
+        required: true
+        type: choice
+        options:
+          - forum
+          - ghost-blog
+          - youtube
+          - github
+          - discord
+          - rss-blog
+          - livepeer-release
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Fetch and preview data without writing files or committing"
+        type: boolean
+        default: false
+      version:
+        description: "Optional version override for livepeer-release mode"
+        required: false
+        type: string
+  schedule:
+    # Per-feed cron schedules. Mode resolved from cron expression in resolve-mode step.
+    - cron: "0 0 * * *"      # 00:00 UTC daily — forum + ghost-blog
+    - cron: "0 1 * * *"      # 01:00 UTC daily — discord
+    - cron: "0 2 * * *"      # 02:00 UTC daily — github
+    - cron: "0 3 * * *"      # 03:00 UTC daily — rss-blog
+    - cron: "0 0 * * 0"      # 00:00 UTC Sunday weekly — youtube
+
+jobs:
+  resolve-mode:
+    runs-on: ubuntu-latest
+    outputs:
+      modes: ${{ steps.resolve.outputs.modes }}
+    steps:
+      - name: Resolve modes from trigger
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            case "${{ github.event.schedule }}" in
+              "0 0 * * *")    echo 'modes=["forum","ghost-blog"]' >> "$GITHUB_OUTPUT" ;;
+              "0 1 * * *")    echo 'modes=["discord"]' >> "$GITHUB_OUTPUT" ;;
+              "0 2 * * *")    echo 'modes=["github"]' >> "$GITHUB_OUTPUT" ;;
+              "0 3 * * *")    echo 'modes=["rss-blog"]' >> "$GITHUB_OUTPUT" ;;
+              "0 0 * * 0")    echo 'modes=["youtube"]' >> "$GITHUB_OUTPUT" ;;
+              *)              echo 'modes=[]' >> "$GITHUB_OUTPUT" ;;
+            esac
+          else
+            echo 'modes=["${{ inputs.mode }}"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  data-refresh:
+    needs: resolve-mode
+    if: ${{ needs.resolve-mode.outputs.modes != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: ${{ fromJSON(needs.resolve-mode.outputs.modes) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.use_test_branch && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve target branch
+        id: branch
+        run: |
+          if [ "${{ inputs.use_test_branch }}" = "true" ]; then
+            echo "name=${{ vars.TEST_BRANCH }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ vars.DEPLOY_BRANCH }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Resolve dry-run flag
+        id: flags
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "dry_run_flag=--dry-run" >> "$GITHUB_OUTPUT"
+            echo "Running in dry-run mode — no files will be written"
+          else
+            echo "dry_run_flag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run selected refresh mode
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL_ID: UCzfHtZnmUzMbJDxGCwIgY2g
+        run: |
+          DRY_RUN_FLAG="${{ steps.flags.outputs.dry_run_flag }}"
+          case "${{ matrix.mode }}" in
+            forum)
+              node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js $DRY_RUN_FLAG
+              ;;
+            ghost-blog)
+              node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js $DRY_RUN_FLAG
+              ;;
+            youtube)
+              node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js $DRY_RUN_FLAG
+              ;;
+            github)
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js $DRY_RUN_FLAG
+              node operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js $DRY_RUN_FLAG
+              ;;
+            discord)
+              node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js $DRY_RUN_FLAG
+              ;;
+            rss-blog)
+              node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js $DRY_RUN_FLAG
+              ;;
+            livepeer-release)
+              if [[ -n "${{ inputs.version }}" ]]; then
+                node operations/scripts/integrators/maintenance/release/update-livepeer-release.js --version "${{ inputs.version }}"
+              else
+                node operations/scripts/integrators/maintenance/release/update-livepeer-release.js
+              fi
+              ;;
+            *)
+              echo "Unsupported data-refresh mode: ${{ matrix.mode }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Write lastUpdated timestamp
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          FORMATTED=$(date -u +"%-d %B %Y")
+          echo "export const socialFeedsLastUpdated = \"${FORMATTED}\";" > snippets/data/social-feeds/lastUpdated.jsx
+          echo "Timestamp written: ${FORMATTED}"
+
+      - name: Read updated release version
+        if: ${{ matrix.mode == 'livepeer-release' }}
+        id: version
+        run: |
+          VERSION=$(grep -oP 'latestVersion = "\K[^"]+' snippets/data/globals/latestRelease.jsx || echo "")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Updated version: ${VERSION}"
+
+      - name: Check for generated changes
+        if: ${{ inputs.dry_run != true }}
+        id: git-check
+        run: |
+          git diff --exit-code snippets/data/social-feeds/lastUpdated.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+          case "${{ matrix.mode }}" in
+            forum)
+              git diff --exit-code snippets/data/social-feeds/forumData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            ghost-blog)
+              git diff --exit-code snippets/data/social-feeds/ghostBlogData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            youtube)
+              git diff --exit-code snippets/data/social-feeds/youtubeData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            github|rss-blog)
+              git diff --exit-code snippets/data/social-feed-solutions/ || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            discord)
+              git diff --exit-code snippets/data/social-feed-solutions/ snippets/data/social-feeds/discordAnnouncementsData.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            livepeer-release)
+              git diff --exit-code snippets/data/globals/latestRelease.jsx || echo "changed=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unsupported diff mode: ${{ matrix.mode }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Commit and push if changed
+        if: ${{ inputs.dry_run != true && steps.git-check.outputs.changed == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          case "${{ matrix.mode }}" in
+            forum)
+              git add snippets/data/social-feeds/forumData.jsx snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "chore: update forum data [skip ci]"
+              ;;
+            ghost-blog)
+              git add snippets/data/social-feeds/ghostBlogData.jsx snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "chore: update Ghost blog data [skip ci]"
+              ;;
+            youtube)
+              git add snippets/data/social-feeds/youtubeData.jsx snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "Update YouTube videos - $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+              ;;
+            github)
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "chore: update GitHub discussions & releases data [skip ci]"
+              ;;
+            discord)
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/discordAnnouncementsData.jsx snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "chore: update Discord announcements data [skip ci]"
+              ;;
+            rss-blog)
+              git add snippets/data/social-feed-solutions snippets/data/social-feeds/lastUpdated.jsx
+              git commit -m "chore: update RSS blog data [skip ci]"
+              ;;
+            livepeer-release)
+              git add snippets/data/globals/latestRelease.jsx
+              git commit -m "chore: update go-livepeer release to ${{ steps.version.outputs.version }} [skip ci]"
+              ;;
+            *)
+              echo "Unsupported commit mode: ${{ matrix.mode }}"
+              exit 1
+              ;;
+          esac
+
+          git push origin HEAD:${{ steps.branch.outputs.name }}

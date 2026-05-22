@@ -1,0 +1,151 @@
+---
+title: APIs
+sidebarTitle: APIs
+description: ">-"
+pageType: reference
+purpose: reference
+audience: general
+status: current
+lastVerified: "2026-05-13"
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Three distinct APIs exist on Livepeer. The Video REST API manages streams and assets. The AI gateway API runs inference jobs. The go-livepeer node API exposes CLI operations and Prometheus metrics. They have separate base URLs and authentication schemes.</Tip>
+</CenteredContainer>
+
+---
+
+<CustomDivider />
+
+## Livepeer Video REST API
+
+The Video REST API covers stream management, VOD asset upload and playback, webhooks, access control, viewership metrics, and transcode jobs. It is the API the Video SDK family (`livepeer` npm/pip/go/maven packages) wraps.
+
+**Base URL:** `https://livepeer.com/api`
+
+**Authentication:** Bearer token in the `Authorization` header. API keys are managed in the Livepeer developer dashboard.
+
+**OpenAPI spec:** The full machine-readable specification is available from the Livepeer developer portal (OpenAPI 3.0).
+
+**Key resource groups:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Resource</TableCell>
+      <TableCell header>Base path</TableCell>
+      <TableCell header>Purpose</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Streams</TableCell>
+      <TableCell>`/stream`</TableCell>
+      <TableCell>Create, read, update, terminate live streams; retrieve sessions</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Assets</TableCell>
+      <TableCell>`/asset`</TableCell>
+      <TableCell>Upload, transcode, retrieve, and delete VOD assets</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Playback</TableCell>
+      <TableCell>`/playback`</TableCell>
+      <TableCell>Retrieve playback info by playback ID</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Webhooks</TableCell>
+      <TableCell>`/webhook`</TableCell>
+      <TableCell>Create and manage event subscriptions</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Multistream targets</TableCell>
+      <TableCell>`/multistream/target`</TableCell>
+      <TableCell>Register RTMP restream destinations</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Access control</TableCell>
+      <TableCell>`/access-control/signing-key`</TableCell>
+      <TableCell>Create and manage JWT signing keys</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Viewership</TableCell>
+      <TableCell>`/data/views`</TableCell>
+      <TableCell>Query engagement and performance metrics</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Tasks</TableCell>
+      <TableCell>`/task`</TableCell>
+      <TableCell>Monitor async transcoding jobs</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## AI Gateway Inference API
+
+The AI inference API is served by the Livepeer gateway for AI workloads. Each pipeline type has a dedicated endpoint. The gateway routes requests to network orchestrators running the `ai-runner` container.
+
+**Base URL:** Gateway-dependent. Community gateway: `https://dream-gateway.livepeer.cloud`. Self-hosted gateways use the configured HTTP address.
+
+**Authentication:** Bearer token when the gateway requires it; the community gateway accepts unauthenticated requests for development.
+
+**OpenAPI spec:** Generated from the `ai-runner` OpenAPI specification. Available at `https://docs.livepeer.org/api/ai-worker.yaml`.
+
+**Pipeline endpoints:**
+
+| Endpoint | Method | Pipeline |
+|---|---|---|
+| `/text-to-image` | POST | Text prompt to image |
+| `/image-to-image` | POST | Image + prompt to transformed image |
+| `/image-to-video` | POST | Image to short video |
+| `/image-to-text` | POST | Image to caption |
+| `/audio-to-text` | POST | Audio to transcript |
+| `/text-to-speech` | POST | Text to audio |
+| `/upscale` | POST | Image upscaling |
+| `/segment-anything-2` | POST | Image segmentation |
+| `/llm` | POST | OpenAI-compatible chat completions |
+| `/live/video-to-video` | POST | Real-time AI stream session (trickle) |
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="AI Pipelines" newline={false} /> for endpoint schemas and curl examples.
+
+<CustomDivider />
+
+## Go-Livepeer Node API
+
+go-livepeer nodes expose two local HTTP interfaces: the CLI interface (used by `livepeer_cli`) and the Prometheus metrics endpoint.
+
+**CLI interface:** `http://<cliAddr>/` (default: `http://127.0.0.1:7935/`)
+
+Used by `livepeer_cli` for node management operations: deposit funding, status queries, configuration updates.
+
+**Metrics endpoint:** `http://<cliAddr>/metrics`
+
+Exposes Prometheus-format metrics for scraping. Enable with the `-metrics` flag on node startup. See <LinkArrow href="/v2/developers/guides/observability-and-debugging/tooling-and-metrics" label="Tooling and Metrics" newline={false} /> for the key metric names and monitoring setup.
+
+The node API is local-only by default. Do not expose it externally without access controls.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="SDKs" icon="code" href="/v2/developers/resources/reference/sdks" arrow horizontal>
+    SDK packages that wrap the Video and AI APIs.
+  </Card>
+  <Card title="AI Pipelines" icon="cpu" href="/v2/developers/build/ai-and-agents/ai-pipelines" arrow horizontal>
+    AI inference API endpoint shapes and request schemas.
+  </Card>
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/auth-and-security/access-control" arrow horizontal>
+    Access control signing key API for JWT-gated playback.
+  </Card>
+  <Card title="Viewership" icon="chart" href="/v2/developers/guides/observability-and-debugging/tooling-and-metrics" arrow horizontal>
+    Viewership metrics API for engagement and performance data.
+  </Card>
+</CardGroup>

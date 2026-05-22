@@ -1,0 +1,309 @@
+---
+title: 'AI Pipelines'
+sidebarTitle: 'AI Pipelines'
+description: >-
+  Full reference for the batch AI pipelines on the Livepeer network. Request
+  shapes, response formats, per-pipeline parameters, and operational notes.
+keywords:
+  - livepeer
+  - ai pipelines
+  - text-to-image
+  - llm
+  - audio-to-text
+  - image-to-video
+  - reference
+  - api
+pageType: reference
+audience: developer
+purpose: reference
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-14
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Every batch AI pipeline uses the same HTTP POST pattern. Swap the endpoint path and the body fields; the auth, error handling, and response envelope stay identical.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer AI gateway exposes nine batch pipelines and one LLM pipeline through HTTP POST endpoints. Each pipeline accepts a JSON request body keyed by `model_id` and pipeline-specific fields, and returns a JSON response with the result. Real-time video AI (`live-video-to-video`) runs through the trickle protocol and is covered separately in the [real-time AI overview](/v2/developers/build/ai-and-agents/realtime-ai/overview).
+
+For warm models, VRAM requirements, and architecture support per pipeline, see [model support](/v2/developers/build/ai-and-agents/model-support). For SDK wrappers, see [AI SDKs](/v2/developers/build/ai-and-agents/ai-sdks-overview).
+
+<CustomDivider />
+
+## Shared conventions
+
+**Base URL:** Any Livepeer gateway endpoint. The community gateway at `https://dream-gateway.livepeer.cloud` accepts unauthenticated requests for development.
+
+**Authentication:** Bearer token when the gateway requires it. The community gateway does not require a token.
+
+**Request format:** `POST /<pipeline-endpoint>` with `Content-Type: application/json`.
+
+**`model_id` field:** Every pipeline accepts a `model_id` field specifying the Hugging Face model ID (or Ollama model ID for LLM). Omitting `model_id` uses the pipeline's default warm model.
+
+**Error responses:** `400` for malformed requests, `422` for validation errors (invalid model_id, missing required fields), `500` for inference failures. Error bodies include a `detail` field with the failure reason.
+
+**Cold model latency:** If no orchestrator has the requested model warm in GPU memory, the first request triggers a model load (30 seconds to 5 minutes depending on model size). Subsequent requests to the same model on the same orchestrator are immediate.
+
+<CustomDivider />
+
+## Pipeline reference
+
+<AccordionGroup>
+  <Accordion title="text-to-image" icon="image">
+
+    Generate images from text prompts using diffusion models (SDXL, SD 1.5, Flux).
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/text-to-image \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+        "prompt": "a glowing neural network in a dark room",
+        "width": 1024,
+        "height": 1024,
+        "guidance_scale": 7.5,
+        "num_inference_steps": 8,
+        "seed": 42
+      }'
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Hugging Face model ID. Default: `SG161222/RealVisXL_V4.0_Lightning` |
+    | `prompt` | string | Yes | Text prompt for generation |
+    | `negative_prompt` | string | No | Terms to avoid in generation |
+    | `width` | integer | No | Output width in pixels (default: 1024) |
+    | `height` | integer | No | Output height in pixels (default: 1024) |
+    | `guidance_scale` | number | No | Classifier-free guidance scale (default: 7.5) |
+    | `num_inference_steps` | integer | No | Denoising steps (default depends on model; Lightning models use 4-8) |
+    | `seed` | integer | No | Random seed for reproducibility |
+    | `num_images_per_prompt` | integer | No | Number of images to generate (default: 1) |
+    | `safety_check` | boolean | No | Run NSFW safety filter (default: true) |
+
+    **Response:** JSON object with `images` array. Each image is a `{ url, seed }` object.
+
+  </Accordion>
+
+  <Accordion title="image-to-image" icon="image">
+
+    Transform images using style transfer, enhancement, or img2img diffusion.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/image-to-image \
+      -F "model_id=timbrooks/instruct-pix2pix" \
+      -F "prompt=make it look like a watercolour painting" \
+      -F "image=@input.png" \
+      -F "strength=0.8"
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `timbrooks/instruct-pix2pix` |
+    | `image` | file | Yes | Input image (multipart form upload) |
+    | `prompt` | string | Yes | Transformation instruction |
+    | `strength` | number | No | How much to transform (0.0 = no change, 1.0 = full regeneration) |
+    | `guidance_scale` | number | No | Guidance scale (default: 7.5) |
+    | `num_inference_steps` | integer | No | Denoising steps |
+    | `seed` | integer | No | Random seed |
+    | `safety_check` | boolean | No | NSFW filter (default: true) |
+
+    **Response:** JSON with `images` array, same format as text-to-image.
+
+    <Note>image-to-image uses `multipart/form-data`, not `application/json`. The image is uploaded as a file field.</Note>
+
+  </Accordion>
+
+  <Accordion title="image-to-video" icon="film">
+
+    Animate a still image into a short video clip using Stable Video Diffusion.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/image-to-video \
+      -F "model_id=stabilityai/stable-video-diffusion-img2vid-xt" \
+      -F "image=@input.png" \
+      -F "fps=6" \
+      -F "motion_bucket_id=127"
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `stabilityai/stable-video-diffusion-img2vid-xt` |
+    | `image` | file | Yes | Input image (multipart form upload) |
+    | `fps` | integer | No | Output frames per second (default: 6) |
+    | `motion_bucket_id` | integer | No | Motion intensity (0-255; default: 127) |
+    | `seed` | integer | No | Random seed |
+    | `safety_check` | boolean | No | NSFW filter (default: true) |
+
+    **Response:** JSON with `frames` array containing frame URLs, or a video URL.
+
+    <Note>SVD outputs 14-25 frames at 576x1024 resolution. Text prompts are not used; the image is the sole conditioning input.</Note>
+
+  </Accordion>
+
+  <Accordion title="image-to-text" icon="text">
+
+    Generate captions or descriptions for images using BLIP or vision-language models.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/image-to-text \
+      -F "model_id=Salesforce/blip-image-captioning-large" \
+      -F "image=@photo.jpg"
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `Salesforce/blip-image-captioning-large` |
+    | `image` | file | Yes | Input image (multipart form upload) |
+    | `prompt` | string | No | Optional prompt to guide caption content |
+
+    **Response:** JSON with `text` field containing the generated caption.
+
+  </Accordion>
+
+  <Accordion title="audio-to-text" icon="microphone">
+
+    Transcribe audio to text with per-chunk timestamps using Whisper.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/audio-to-text \
+      -F "model_id=openai/whisper-large-v3" \
+      -F "audio=@recording.mp3"
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `openai/whisper-large-v3` |
+    | `audio` | file | Yes | Audio file (mp4, webm, mp3, flac, wav, m4a). Max 50 MB. |
+
+    **Response:** JSON with `text` (full transcript) and `chunks` array (per-segment timestamps and text).
+
+  </Accordion>
+
+  <Accordion title="text-to-speech" icon="volume">
+
+    Generate natural speech from text using Parler-TTS.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/text-to-speech \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model_id": "parler-tts/parler-tts-large-v1",
+        "text": "Livepeer is a decentralised video infrastructure network.",
+        "description": "A female speaker with a warm, clear voice and moderate pace."
+      }'
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `parler-tts/parler-tts-large-v1` |
+    | `text` | string | Yes | Text to synthesise. Max ~600 characters; chunk longer text. |
+    | `description` | string | No | Voice characteristics (speaker identity, style, audio quality) |
+
+    **Response:** JSON with `audio` object containing a URL to the generated audio file.
+
+    <Note>Requires a pipeline-specific AI Runner container. Not all orchestrators have this pipeline active.</Note>
+
+  </Accordion>
+
+  <Accordion title="upscale" icon="expand">
+
+    Upscale low-resolution images using the SD x4-Upscaler (4x super-resolution).
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/upscale \
+      -F "model_id=stabilityai/stable-diffusion-x4-upscaler" \
+      -F "image=@lowres.png" \
+      -F "prompt=high quality, sharp details"
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `stabilityai/stable-diffusion-x4-upscaler` |
+    | `image` | file | Yes | Input image (multipart form upload) |
+    | `prompt` | string | No | Optional quality guidance prompt |
+    | `seed` | integer | No | Random seed |
+    | `safety_check` | boolean | No | NSFW filter (default: true) |
+
+    **Response:** JSON with `images` array, same format as text-to-image.
+
+  </Accordion>
+
+  <Accordion title="segment-anything-2" icon="scissors">
+
+    Promptable visual segmentation for images using SAM 2 (Meta AI).
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/segment-anything-2 \
+      -F "model_id=facebook/sam2-hiera-large" \
+      -F "image=@photo.jpg" \
+      -F 'point_coords=[[500,375]]' \
+      -F 'point_labels=[1]'
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model_id` | string | No | Default: `facebook/sam2-hiera-large` |
+    | `image` | file | Yes | Input image |
+    | `point_coords` | array | No | Point prompts as `[[x,y], ...]` |
+    | `point_labels` | array | No | Labels for points (1 = foreground, 0 = background) |
+    | `box` | array | No | Bounding box prompt `[x1, y1, x2, y2]` |
+
+    **Response:** JSON with `masks`, `scores`, and `logits` arrays.
+
+  </Accordion>
+
+  <Accordion title="llm" icon="message-bot">
+
+    OpenAI-compatible chat completions using Ollama-based runner.
+
+    ```bash icon="terminal"
+    curl -X POST https://dream-gateway.livepeer.cloud/llm \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "messages": [
+          {"role": "user", "content": "Explain Livepeer in one sentence."}
+        ]
+      }'
+    ```
+
+    | Field | Type | Required | Description |
+    |---|---|---|---|
+    | `model` | string | Yes | Ollama-compatible model ID |
+    | `messages` | array | Yes | OpenAI-format message array (`role` + `content`) |
+    | `max_tokens` | integer | No | Maximum output tokens |
+    | `temperature` | number | No | Sampling temperature (0.0-2.0) |
+    | `stream` | boolean | No | Stream response tokens (SSE) |
+
+    **Response:** OpenAI-compatible chat completion object with `choices[0].message.content`.
+
+    <Note>The LLM pipeline is in beta. The request format follows the OpenAI `/v1/chat/completions` shape. Supported models include Meta-Llama-3.1-8B-Instruct (warm, 8 GB VRAM), Mistral-7B-Instruct-v0.3, Gemma-2-9b-it, and Qwen2.5-7B-Instruct.</Note>
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Operational notes
+
+**Multipart vs JSON.** Pipelines that accept file uploads (image-to-image, image-to-video, image-to-text, audio-to-text, upscale, segment-anything-2) use `multipart/form-data`. Pipelines that accept only text input (text-to-image, text-to-speech, LLM) use `application/json`.
+
+**Gateway selection.** The community gateway routes to whichever orchestrator in the active set has the requested model warm. For production, operate a self-hosted gateway with `-maxPricePerUnit` to control costs, or use a gateway provider with an API key.
+
+**`safety_check` filter.** Enabled by default on image-generating pipelines. Set to `false` to disable. The filter runs on the orchestrator side; disabling it does not affect content moderation policies that the gateway operator may enforce.
+
+The [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart) walks through the first inference call end-to-end with error handling.

@@ -1,0 +1,68 @@
+---
+title: "Livepeer Data MCP"
+sidebarTitle: "Livepeer Data MCP"
+description: >-
+  MCP server for querying Livepeer network data: orchestrator stats,
+  pipeline availability, pricing, and network health from Claude Code,
+  Cursor, or any MCP host.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - Livepeer Data MCP
+  - MCP server
+  - network data
+  - orchestrator stats
+  - pipeline availability
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The Livepeer Data MCP provides live network data (orchestrator stats, pipeline availability, pricing) as MCP tools. Connect it to Claude Code, Cursor, or any MCP host to query the network from your editor.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The Livepeer Data MCP is an MCP server that exposes Livepeer network data as queryable tools. It complements the [Livepeer Docs MCP](/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp) (which queries documentation) by providing live operational data.
+
+<Note>
+  The Livepeer Data MCP is planned but not yet publicly available. This page documents the intended design. Check the [Livepeer GitHub organisation](https://github.com/livepeer) for release status.
+</Note>
+
+<CustomDivider />
+
+## Intended tool surface
+
+The Data MCP is designed to expose:
+
+| Tool | Description |
+|---|---|
+| `network_capabilities` | List all pipelines and models currently advertised by orchestrators |
+| `orchestrator_stats` | Orchestrator count, stake distribution, active session count |
+| `pipeline_availability` | Which models are warm, on which orchestrators, with current pricing |
+| `pricing_snapshot` | Current per-pipeline pricing across the active orchestrator set |
+| `network_health` | Aggregate metrics: total stake, active orchestrators, jobs processed |
+
+These tools query the same data sources available at `tools.livepeer.cloud/ai/network-capabilities` and the Livepeer Explorer API.
+
+<CustomDivider />
+
+## Developer use cases
+
+**Debugging:** "Which orchestrators have `flux-dev` warm right now?" answers whether a cold-model timeout is expected or indicates a network issue.
+
+**Cost estimation:** "What is the current per-megapixel price for text-to-image?" informs production cost projections without leaving the editor.
+
+**Capacity planning:** "How many orchestrators support `live-video-to-video`?" determines whether real-time AI workloads have sufficient network capacity.
+
+<CustomDivider />
+
+The [Livepeer Docs MCP](/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp) covers documentation queries. The [MCP overview](/v2/developers/build/ai-and-agents/ecosystem-mcp/overview) covers the MCP ecosystem on Livepeer.

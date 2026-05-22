@@ -1,0 +1,506 @@
+---
+title: 'Eliza Livepeer Plugin'
+sidebarTitle: 'Eliza Agent'
+description: >-
+  Build an Eliza AI agent on Livepeer. Character files, RAG via knowledge files, Slack and Discord clients, multi-agent swarms with SwarmZero.
+keywords:
+  - livepeer
+  - eliza
+  - ai16z
+  - ai agent
+  - llm
+  - rag
+  - swarmzero
+  - slack
+  - discord
+  - tutorial
+  - character file
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: advanced
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Five layers of agent: model routing, character, RAG knowledge, Slack/Discord clients, multi-agent swarm. Ninety minutes to a production-shaped agent on decentralised GPU.</Tip>
+</CenteredContainer>
+
+---
+
+By the end of this tutorial you'll have an Eliza agent running on Livepeer's LLM pipeline with five capabilities layered in: model routing through the Livepeer plugin, a character file shaping personality and bio, RAG-backed answers from a knowledge corpus, Slack and Discord client connectors, and a SwarmZero multi-agent orchestration that hands off work between specialised agents. Each layer builds on the previous; you can ship after any one of them.
+
+This is the Persona 1 deep activation moment. The LLM chatbot tutorial proved Livepeer can power a chat surface; this tutorial proves it can power a character with persistent identity, retrieval-augmented context, multiple platform integrations, and team-of-agents coordination. Adapted from the Livepeer Agent SPE guide and the existing build-an-ai-agent-on-livepeer tutorial; verified against the current Eliza framework surface.
+
+<CustomDivider />
+
+## Required Tools
+
+- Node.js 22 or later
+- `pnpm` (`npm install -g pnpm`)
+- A Livepeer gateway accessible at a URL (paid provider, self-hosted, or the free `dream-gateway.livepeer.cloud` for development)
+- Optional: Slack workspace admin and Discord server admin access for the client integrations
+- Optional: Python 3.11+ for the SwarmZero multi-agent section
+- A code editor
+
+The free community gateway works for development. Production agents should run against a paid gateway with authentication; the community gateway is shared infrastructure.
+
+<CustomDivider />
+
+## Model Provider Layer
+
+Eliza supports pluggable model providers. The Livepeer plugin routes inference requests to the AI Jobs API endpoint at a Livepeer gateway.
+
+<Steps>
+  <Step title="Clone Eliza">
+    ```bash
+    git clone https://github.com/elizaos/eliza.git
+    cd eliza
+    git checkout main
+    pnpm install
+    pnpm build
+    ```
+  </Step>
+
+  <Step title="Configure the gateway">
+    Save as `.env`:
+
+    ```bash
+    # Livepeer gateway configuration
+    LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud
+    LIVEPEER_API_KEY=
+
+    # Agent identity (optional)
+    AGENT_NAME=my-livepeer-agent
+    ```
+
+    The community gateway accepts unauthenticated requests, so `LIVEPEER_API_KEY` stays empty. For a paid gateway, drop in the Bearer token.
+  </Step>
+
+  <Step title="Create a minimal character file">
+    Save as `characters/agent.character.json`:
+
+    ```json
+    {
+      "name": "Atlas",
+      "clients": [],
+      "modelProvider": "livepeer",
+      "settings": {
+        "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "secrets": {}
+      },
+      "system": "You are Atlas, an AI assistant running on decentralised GPU infrastructure via the Livepeer network.",
+      "bio": ["AI assistant on decentralised compute"],
+      "lore": [],
+      "knowledge": [],
+      "messageExamples": [],
+      "topics": ["technology", "AI"],
+      "adjectives": ["helpful", "direct"]
+    }
+    ```
+
+    The `modelProvider: "livepeer"` field routes every inference call through the Livepeer plugin. The `settings.model` value passes through to the AI Jobs API; any Ollama-compatible model on the LLM pipeline works.
+  </Step>
+
+  <Step title="Run the agent">
+    ```bash
+    pnpm start --characters="characters/agent.character.json"
+    ```
+
+    Expected output:
+
+    ```
+    [INFO] Starting agent: Atlas
+    [INFO] Model provider: livepeer
+    [INFO] Gateway: https://dream-gateway.livepeer.cloud
+    [INFO] Agent ready
+    ```
+
+    First request to a cold LLM model takes 30 to 90 seconds. Subsequent requests are fast once the model is warm.
+  </Step>
+
+  <Step title="Send a test message">
+    ```bash
+    curl -X POST http://localhost:3000/message \
+      -H "Content-Type: application/json" \
+      -d '{"text": "Introduce yourself in one sentence."}'
+    ```
+
+    The response object contains the agent's reply, generated by the Llama model on Livepeer's network.
+  </Step>
+</Steps>
+
+Layer 1 done. The agent talks. Layers 2-5 give it personality, knowledge, distribution, and teammates.
+
+<CustomDivider />
+
+## Character File Depth
+
+The character file is the single source of truth for the agent's identity. Eight fields shape behaviour.
+
+| Field | What it does |
+|---|---|
+| `name` | Display name in conversation and logs |
+| `system` | System prompt prepended to every conversation |
+| `bio` | Short biographical facts the agent draws on for self-introduction |
+| `lore` | Backstory or deep context the agent references when relevant |
+| `topics` | Subjects the agent is positioned to handle |
+| `adjectives` | Personality descriptors that shape tone |
+| `messageExamples` | Few-shot examples of conversation style |
+| `knowledge` | RAG entries the agent retrieves at inference time |
+
+A deeper character file shapes both content and tone. Update `characters/agent.character.json`:
+
+```json
+{
+  "name": "Atlas",
+  "clients": [],
+  "modelProvider": "livepeer",
+  "settings": {
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "secrets": {}
+  },
+  "system": "You are Atlas, a decentralised-AI infrastructure guide. You answer questions about Livepeer, AI agents, and decentralised GPU networks. You are direct, precise, and never use marketing language. Always cite documentation when relevant.",
+  "bio": [
+    "AI guide focused on Livepeer infrastructure",
+    "Speaks plainly about decentralised compute trade-offs",
+    "Reads documentation before answering"
+  ],
+  "lore": [
+    "Born from the Livepeer Agent SPE programme",
+    "Trained on the Livepeer documentation corpus",
+    "Refuses to recommend tools without verified evidence"
+  ],
+  "topics": [
+    "Livepeer protocol",
+    "AI inference pipelines",
+    "decentralised GPU compute",
+    "orchestrator operations",
+    "gateway architecture"
+  ],
+  "adjectives": ["direct", "evidence-based", "skeptical of hype", "concise"],
+  "messageExamples": [
+    [
+      { "user": "{{user1}}", "content": { "text": "Is Livepeer faster than OpenAI?" } },
+      {
+        "user": "Atlas",
+        "content": {
+          "text": "Faster how. For batch inference the latency depends on which orchestrator your gateway selects and whether the model is warm. Cold-start can take 30 seconds. Warm inference is competitive. There is no single answer; it's a routing problem."
+        }
+      }
+    ],
+    [
+      { "user": "{{user1}}", "content": { "text": "What can you help with?" } },
+      {
+        "user": "Atlas",
+        "content": {
+          "text": "Livepeer protocol questions, AI pipeline integration, orchestrator setup, gateway operations. I work from the docs."
+        }
+      }
+    ]
+  ],
+  "knowledge": []
+}
+```
+
+Restart the agent. The same model now responds with persistent voice. The model didn't change; the prompt did.
+
+<CustomDivider />
+
+## RAG Knowledge
+
+Eliza supports retrieval-augmented generation via the `knowledge` array. Entries are embedded at agent start and retrieved at inference time based on semantic similarity to the user's message. The Livepeer LLM pipeline handles generation; embeddings happen in Eliza's local embedding model.
+
+<Steps>
+  <Step title="Choose your knowledge corpus">
+    For a Livepeer-focused agent, the canonical corpus is the documentation. For specialised agents, this is anything: API references, internal playbooks, transcripts, GitHub issues.
+
+    Knowledge entries can be short factual strings or longer reference blocks. Eliza chunks long entries automatically.
+  </Step>
+
+  <Step title="Populate the knowledge array">
+    Update the character file:
+
+    ```json
+    "knowledge": [
+      "Livepeer's LLM pipeline runs Ollama-compatible models on decentralised GPUs. Warm models include Llama 3.1 8B Instruct (default), Mistral 7B Instruct v0.3, Gemma 2 9B IT, Qwen 2.5 7B Instruct.",
+      "Cold model load time ranges from 30 seconds to a few minutes depending on model size and GPU.",
+      "BYOC (Bring Your Own Container) lets developers run custom Python models on the network via PyTrickle. Per-second compute payment was introduced in go-livepeer PR #3641.",
+      "The community gateway at dream-gateway.livepeer.cloud is shaped for experimentation. Production workloads should run against a paid gateway or a self-hosted one.",
+      "ComfyStream extends ComfyUI with real-time video processing capability. Phase 4 (January 2026) added PyTrickle BYOC integration, multi-pipeline support, and data-channel output."
+    ]
+    ```
+
+    The agent retrieves the most relevant entry per query and includes it in the prompt context window before generation.
+  </Step>
+
+  <Step title="Load larger corpora from files">
+    For more than a handful of facts, Eliza supports knowledge file loading. The pattern reads markdown or text files from a `knowledge/` directory at boot:
+
+    ```bash
+    mkdir -p characters/atlas-knowledge
+    # Drop in .md or .txt files
+    ```
+
+    Reference the directory in the character file:
+
+    ```json
+    "knowledge": [
+      { "directory": "characters/atlas-knowledge" }
+    ]
+    ```
+
+    On agent start, Eliza walks the directory, embeds every file, and stores embeddings in its vector store.
+  </Step>
+
+  <Step title="Verify retrieval">
+    Send a message that should trigger retrieval:
+
+    ```bash
+    curl -X POST http://localhost:3000/message \
+      -H "Content-Type: application/json" \
+      -d '{"text": "How long does a cold model load take?"}'
+    ```
+
+    The response should reference the 30-seconds-to-a-few-minutes window from the knowledge entry. Without RAG, the agent would hallucinate a plausible-sounding but unverified answer.
+  </Step>
+</Steps>
+
+RAG quality depends on the corpus, not the model. A 70B model with a poor corpus underperforms an 8B model with a curated corpus. The Livepeer LLM pipeline lets you swap model sizes cheaply; invest in the corpus first.
+
+<CustomDivider />
+
+## Slack and Discord Clients
+
+Eliza ships client connectors for Slack, Discord, Twitter, and Telegram. The agent listens on the platform, treats messages as input, and responds inline. The Livepeer plugin powers every reply.
+
+<Steps>
+  <Step title="Slack: create a Slack app">
+    Open `api.slack.com/apps`, create a new app from manifest, paste:
+
+    ```yaml
+    display_information:
+      name: Atlas
+    features:
+      bot_user:
+        display_name: Atlas
+        always_online: true
+    oauth_config:
+      scopes:
+        bot:
+          - app_mentions:read
+          - chat:write
+          - im:history
+          - im:read
+          - im:write
+    settings:
+      event_subscriptions:
+        request_url: https://your-agent-host/slack/events
+        bot_events:
+          - app_mention
+          - message.im
+      socket_mode_enabled: true
+    ```
+
+    Install the app to your workspace, then capture the Bot User OAuth Token and the App-Level Token from the app settings.
+  </Step>
+
+  <Step title="Discord: create a Discord bot">
+    Open `discord.com/developers/applications`, create a new application, add a Bot user. Capture the Bot Token from the Bot tab.
+
+    Generate an OAuth2 invite URL with `bot` scope and `Send Messages`, `Read Messages`, `Read Message History` permissions. Invite the bot to your server.
+  </Step>
+
+  <Step title="Add credentials to .env">
+    ```bash
+    # Slack credentials
+    SLACK_BOT_TOKEN=xoxb-...
+    SLACK_APP_TOKEN=xapp-...
+    SLACK_SIGNING_SECRET=...
+
+    # Discord credentials
+    DISCORD_API_TOKEN=...
+    DISCORD_APPLICATION_ID=...
+    ```
+  </Step>
+
+  <Step title="Enable clients in the character file">
+    ```json
+    "clients": ["slack", "discord"]
+    ```
+
+    Restart the agent. The startup logs show both clients connecting:
+
+    ```
+    [INFO] Slack client connected as @atlas
+    [INFO] Discord client connected as Atlas#0001
+    ```
+  </Step>
+
+  <Step title="Mention the bot in either platform">
+    In Slack, `@Atlas what's BYOC?` triggers a response.
+    In Discord, `@Atlas explain warm models` triggers a response.
+
+    Both responses go through the Livepeer LLM pipeline. The same character file, the same knowledge, two distribution surfaces.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Multi-Agent Swarms
+
+A single agent reaches a ceiling. Complex workflows want multiple specialised agents handing off context. SwarmZero is a Python framework that orchestrates multi-agent workflows and supports Livepeer as the inference backend.
+
+The example below sets up two agents: a research agent that gathers facts via the Livepeer LLM, and a writer agent that composes the final answer from those facts. The orchestration runs in Python; the agents themselves run on Livepeer.
+
+<Steps>
+  <Step title="Install SwarmZero">
+    ```bash
+    pip install swarmzero
+    ```
+  </Step>
+
+  <Step title="Configure Livepeer as the LLM backend">
+    Save as `swarm.py`:
+
+    ```python
+    import os
+    from swarmzero import Agent, Swarm
+
+    LIVEPEER_GATEWAY = os.environ.get(
+        "LIVEPEER_GATEWAY_URL",
+        "https://dream-gateway.livepeer.cloud",
+    )
+    LIVEPEER_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+
+    # Shared config for every agent in the swarm
+    livepeer_config = {
+        "provider": "openai_compatible",
+        "base_url": f"{LIVEPEER_GATEWAY}/llm",
+        "model": LIVEPEER_MODEL,
+        "api_key": os.environ.get("LIVEPEER_API_KEY", "none"),
+    }
+
+    researcher = Agent(
+        name="Researcher",
+        instructions=(
+            "You are a research agent. Given a topic, list 5 key facts. "
+            "Each fact is one sentence. Return only the facts, numbered 1-5."
+        ),
+        llm_config=livepeer_config,
+    )
+
+    writer = Agent(
+        name="Writer",
+        instructions=(
+            "You are a writer. Given a topic and 5 facts about it, "
+            "write a 150-word paragraph that weaves them together. "
+            "Use a direct, evidence-based tone. No marketing language."
+        ),
+        llm_config=livepeer_config,
+    )
+
+    swarm = Swarm(
+        agents=[researcher, writer],
+        workflow=[
+            ("Researcher", "{topic}"),
+            ("Writer", "Topic: {topic}\nFacts:\n{Researcher_output}"),
+        ],
+    )
+
+    if __name__ == "__main__":
+        result = swarm.run(topic="Decentralised AI inference networks")
+        print(result["Writer_output"])
+    ```
+  </Step>
+
+  <Step title="Run the swarm">
+    ```bash
+    python swarm.py
+    ```
+
+    The Researcher fires first against the Livepeer LLM, returns five facts; the Writer takes those facts plus the topic and returns a paragraph. Two LLM calls, two specialised prompts, one Livepeer pipeline.
+
+    For longer-running swarms, add more agents to the workflow (`Reviewer`, `Translator`, `Summariser`) and chain their outputs.
+  </Step>
+</Steps>
+
+The SwarmZero pattern scales to arbitrary agent counts. Production swarms commonly run 5-20 agents per workflow, with branching, conditional handoffs, and parallel execution. Each agent inherits the Livepeer config; the network handles routing and capacity.
+
+<CustomDivider />
+
+## Production Considerations
+
+Six things change between the local agent and a production deployment.
+
+**Switch to a paid gateway.** The community gateway is for experimentation. Production agents run against a paid gateway with rate limits, authentication, and SLA.
+
+**Monitor model warmth.** Cold-start delays kill agent UX. Either pre-warm the model with a scheduled request every few minutes, or self-host an orchestrator with the target model pinned in memory.
+
+**Bound RAG corpus size.** Embedding a 10 MB corpus is fine; 10 GB is not. Chunk size, embedding model, and retrieval count all affect quality. Test retrieval against a held-out set of queries before shipping.
+
+**Rate-limit per user.** Eliza by default treats every message as a fresh request. A malicious user can drive cost. Add a per-user rate limit in the Slack and Discord adapters, and a per-agent token budget.
+
+**Character file versioning.** Treat character files as code. Commit to git, review changes, ship through CI. A character file edit changes agent behaviour as much as a model swap.
+
+**Cost observability.** Per-message inference cost scales linearly with conversation length and RAG context. Log the input/output token counts per message and aggregate by agent and user.
+
+Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="Agent starts but every response is gibberish">
+    `modelProvider` is not set to `livepeer`, or the gateway URL is wrong. Confirm `.env` has `LIVEPEER_GATEWAY_URL` set and the character file has `"modelProvider": "livepeer"`.
+  </Accordion>
+  <Accordion title="Cold-start times out after 60 seconds">
+    The default Eliza request timeout is shorter than some Livepeer cold-starts. Either increase the timeout in the Livepeer plugin config, or pre-warm the model with a one-token request on agent start.
+  </Accordion>
+  <Accordion title="RAG retrieval returns unrelated entries">
+    The embedding model is too small for the corpus complexity, or chunk size is wrong. Eliza's default chunking works for short factual entries; long-form documents need explicit chunk hints at the paragraph level, not the file level.
+  </Accordion>
+  <Accordion title="Slack bot doesn't respond to messages">
+    Three common causes. Event subscriptions weren't enabled in the Slack app manifest. The bot wasn't added to the channel (mention `@Atlas` once to trigger an invite prompt). The `SLACK_APP_TOKEN` is missing; socket mode requires both Bot and App-Level tokens.
+  </Accordion>
+  <Accordion title="Discord bot connects but messages fail with 'missing access'">
+    The bot needs the `MESSAGE CONTENT` privileged intent enabled in the Discord developer portal under the Bot tab. Without it, the bot receives empty message content.
+  </Accordion>
+  <Accordion title="SwarmZero workflow stalls on the second agent">
+    The first agent's output exceeded the second agent's context window. Either truncate the handoff in the workflow template, or switch the second agent to a model with a larger context window. Llama 3.1 8B Instruct supports 128k tokens; smaller models may not.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+You have a working Eliza agent routing inference through Livepeer. The plugin architecture supports swapping models, adding knowledge, and connecting to Slack, Discord, or Twitter without changing the Livepeer integration.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="LLM Chatbot Tutorial" icon="message" href="/v2/developers/build/tutorials/build-a-chatbot-with-livepeer-llm">
+    The web-app counterpart to the Eliza agent.
+  </Card>
+  <Card title="VTuber Avatar Pipeline" icon="person" href="/v2/developers/build/tutorials/build-a-vtuber-avatar-pipeline">
+    Pair the Eliza agent with a real-time avatar for embodied AI.
+  </Card>
+  <Card title="AI Pipelines" icon="layer-group" href="/v2/developers/build/ai-and-agents/ai-pipelines">
+    Beyond LLM: image, audio, video, segmentation pipelines.
+  </Card>
+  <Card title="Model Support" icon="cube" href="/v2/developers/build/ai-and-agents/model-support">
+    All supported models, warm status, VRAM requirements.
+  </Card>
+</CardGroup>

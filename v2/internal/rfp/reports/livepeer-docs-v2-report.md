@@ -1147,3 +1147,114 @@ The original RFP budget of $25,000 for a 250-hour engagement did not price this 
 <CustomDivider />
 
 _End of audit. This document should be treated as a living record. Alison Haire should supplement the calendar section, the email section, and the time accounting section with actuals. The Notion section should be reviewed for completeness and any missing pages added._
+
+<CustomDivider />
+
+## Part 13: Addendum — Updates 2026-02-21 → 2026-05-22
+
+**Author:** Alison Haire / Wonderland
+**Generated:** 2026-05-22
+**Status:** Append-only addendum. The historical Parts 1–12 above are the 2026-02-21 audit and are preserved intact for the contractual record.
+
+This addendum exists because the repository has moved on substantially in the three months since the original audit. Every quantitative count in Parts 4–6 is now stale. Several deliverable rows graded "Cancelled" or "Incomplete" in the 2026-02-21 record have since been delivered. Substantial new infrastructure was shipped that the original RFP did not commission. This addendum captures those changes without rewriting the historical record above.
+
+### 13.1 Numbers refresh
+
+| Claim in Parts 1–12 | 2026-02 value | 2026-05-22 value | Evidence |
+| --- | ---: | ---: | --- |
+| Operations scripts | 58-script test and maintenance suite | **320** active JS/SH/Py files under `operations/scripts/` (343 including archive lanes) | `find operations/scripts \( -name "*.js" -o -name "*.sh" -o -name "*.py" \) -not -path "*/x-archive/*" -not -path "*/archive/*" \| wc -l` |
+| GitHub Actions workflows | 17 workflows | **11 active workflows + governance interfaces** (4-tier composable refactor completed 2026-05-22) | `.github/workflows/`; D-GOV-08 lock |
+| AI skills | not mentioned in Parts 1–12 | **34** canonical `SKILL.md` workflows under `ai-tools/ai-skills/` | `find ai-tools/ai-skills -name "SKILL.md" \| wc -l` |
+| Active v2 .mdx files | not stated | **1,128** (excluding `_workspace/`, `x-archived/`, `x-deprecated/`) | `find v2 -name "*.mdx"` with exclusions |
+| docs.json registered v2 routes | not stated | **686** | `grep -c '"v2/' docs.json` |
+| Active JSX components | not stated | **35** active + 24 archived (59 file count); **132** registry exports | `find snippets/components -name "*.jsx"` + `docs-guide/config/component-registry.json` |
+| Top-level tabs | 9 (Home, About, Platforms, Developers, Gateways, GPU Nodes, Delegators, Community, Resource HUB) | **10** (home, about, community, delegators, developers, gateways, internal, orchestrators, resources, solutions) | `find v2 -maxdepth 1 -type d` |
+| v2 information architecture | "numbered prefix system 00_home → 09_internal" | Flat tab-named (`v2/home/`, `v2/about/`, ...). Numbered prefixes removed. | Live tree |
+| Governance frameworks (manual files) | "8 manual + 3 generated" | **13** frameworks + **5** standards + **18** policies + **18** GOVERNANCE.md markers + unified decision registry | `docs-guide/` |
+
+### 13.2 Substantial work delivered after handover (2026-02-22 → 2026-05-22)
+
+The original RFP did not commission the items below. They were delivered as ongoing stewardship between the February 2026 audit submission and this addendum.
+
+**Ownerless governance spine**
+- 13 published frameworks under `docs-guide/frameworks/`, 5 standards under `docs-guide/standards/`, 18 policies under `docs-guide/policies/`, 18 GOVERNANCE.md markers at canonical roots.
+- Unified decisions registry at `docs-guide/decisions/registry.md` (D-NAV, D-DG, D-GOV, D-ACT decision logs cross-indexed).
+- Locked decisions D-DG-01 through D-DG-13 (2026-05-04) establish the canonical docs-guide structure with `reference/` migration plan.
+- Ownerless surface manifest at `operations/governance/config/ownerless-governance-surfaces.json` (8 surfaces under the four-part contract; 28 more in the broader registry).
+- Governance map generator at `operations/scripts/generators/governance/reports/generate-repo-governance-status.js`.
+
+**AI agent infrastructure**
+- 34 canonical AI skills under `ai-tools/ai-skills/` covering session lifecycle (thread, pm, research, design, build, iterate, dispatch, agent-brief, diagnose, close, propagate), content pipelines, audits, and governance creation.
+- Native agent adapters extended to `.codex/` and `.augment/` alongside `.claude/`, `.cursor/`, `.windsurf/`, `.github/copilot-instructions.md`.
+- Cross-agent packager at `operations/scripts/integrators/ai/agents/cross-agent-packager.js` exports portable skills per agent.
+- `AGENTS.md` cross-agent baseline with native adapter index, source-of-truth order, response contract.
+- Codex task-isolation contract at `.codex/task-contract.yaml` plus lock files and preflight/finalise/cleanup scripts.
+
+**Script and component governance**
+- 11-tag JSDoc script standard codified at `docs-guide/frameworks/script-framework.mdx` and `docs-guide/policies/script-governance.mdx`.
+- 7-tag JSDoc component standard codified at `docs-guide/frameworks/component-framework-canonical.mdx`.
+- Script footprint and usage audit (`operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js`) baselines compliance.
+- Component registry at `docs-guide/config/component-registry.json` with 132 exports; generator regenerates registry, catalogs, and VS Code snippets from JSDoc headers.
+
+**Quality and content pipelines**
+- Styles governance pipeline (audit + remediator with `--verify` regression check + CI workflow). Repository-wide remediation reduced non-mermaid style-token violations from 3,986 to 0.
+- UK spelling and em-dash zone-aware remediators (`operations/scripts/remediators/content/style/`) covering frontmatter block scalars and per-key zoning.
+- `/propagate` skill and move-detect hook for file renames with reference rewrites.
+- Asset Pipeline (PR #851): 19 assets migrated with 3-layer verification gate.
+- Changelog Pipeline: 24 targets registered, 19 resource pages populated, nav grouped into 5 categories.
+
+**Contributor toolchain**
+- `lpd` Bash CLI as the unified contributor entry point (13 subcommands + 5 group shorthands, JSON envelope, dry-run, repo-root auto-detection, risk-gated execution).
+- Four in-repo VS Code extensions: `lpd-mdx-preview` (full component library rendering, Mermaid, hot-reload), `authoring-tools`, `components` (registry-driven picker), `markdown-list`.
+- 312 governed VS Code snippets across five `.code-snippets` files, generated from `component-registry.json`.
+- Scoped Mintlify preview (`tools/dev/preview/generate-mint-dev-scope.js`) boots filtered nav in seconds rather than ten minutes.
+- `.githooks/` pipeline: pre-commit hard gates (MDX syntax, docs.json integrity, no-deletion, .allowlist/v1 protection, Codex branch isolation) and pre-push contract enforcement.
+
+**Data integration deepening**
+- Contracts pipeline reached gold-standard maturity: daily cron at `02:00 UTC`, shadow workflow for verification-only runs, bytecode verification against Arbitrum One and Ethereum Mainnet, controller-log historical replay, branch-watch state across four upstream repos, health-check artefacts, incident issue creation on failure.
+- Release globals integrator: `snippets/data/globals/latestRelease.jsx` tracks `go-livepeer` releases with `--dry-run` support.
+- Configuration flags integrator: `snippets/data/gateways/configuration-flags.jsx` powers the configuration flags search table.
+- Exchange data integrator: CoinGecko ticker data with classification and trust scoring.
+
+**Reliability and infrastructure**
+- GitHub Actions Governance refactor (completed 2026-05-22): 53 dispatchers → 11 active workflows (6 `dispatch-{concern}.yml` + 5 governance interfaces) under a 4-tier composable architecture. 65 pipeline + meta dispatchers under `operations/scripts/dispatch/`. ~190 atomic scripts + 8 new remediators. D-GOV-08 wires "every folder governed, prevention at earliest layer" across layers 1–5. Smoke test: 66/66 passing.
+- Zombie-process prevention: 158 zombie processes killed (MCP servers, Puppeteer, stale sweeps). SessionStart cleanup expanded, SessionEnd hook added, UserPromptSubmit Chrome reaper.
+- Docs Library at `docs-guide/docs-library/index.mdx`: 8 pages with pipeline diagrams and gap analysis covering content quality, governance compliance, component health, discoverability, data integration, and copy/brand concerns.
+
+### 13.3 RFP completion matrix — rows re-graded since 2026-02-21
+
+The original `StyledTable` in `v2/internal/rfp/report.mdx` should reflect the following status changes:
+
+| Item | 2026-02-21 status | 2026-05-22 status | Reason |
+| --- | --- | --- | --- |
+| Consolidation of multiple changelogs | Cancelled (Foundation to manage) | **Partial — automated pipeline shipped, content ownership remains with Foundation** | Changelog Pipeline thread active with 24 targets registered and 19 resource pages populated; nav grouped into 5 categories. |
+| Goal-based tutorials | Incomplete | **Completed in shape, ongoing refinement** | Gateways Verify, Monitor, and Connect quickstart threads built or shipping. Cross-tab graduation paths defined. |
+| WCAG accessibility | Needs Alison input | **Audited and partially repaired** | WCAG audit at `v2/internal/reports/quality-accessibility/v2-wcag-audit.md`. Styles Governance shipped focus-visible enforcement and responsive CSS. |
+| Multilingual readiness and analytics tracking | Completed (3 translations available) | **To re-verify** | Confirm published translations against live site; analytics dashboards to be re-listed. |
+| Migration guides for Studio users | Blocked (Migration to where?) | **Likely resolvable** | Platforms/Studio relationship stabilised; Solutions tab established as the canonical home for Studio integration paths. |
+
+### 13.4 New gaps surfaced after handover
+
+These gaps did not exist in the 2026-02-21 audit because the surfaces they describe did not yet exist or had not been measured.
+
+- **218 operations scripts pending the 11-tag JSDoc backfill.** The framework was published; the legacy population has not been backfilled. Repair script (`repair-script-inventory.js`) exists. Graduated execution required.
+- **307-row v2 folder cleanup matrix.** 235 `_workspace` candidates + 72 `x-deprecated` candidates from the V2 Folder Governance audit. `gateways` carries 199 of the 307 rows. Pipeline mature; execution unstarted.
+- **OpenAPI fetcher covers 2 of 5 specs.** Studio, CLI, and the main `openapi.yaml` are not refreshed by `fetch-openapi-specs.sh`. No scheduled workflow. All five specs in `api/` were last touched 2026-03-18.
+- **Manual-only generators flagged P0.** `generate-og-images.js` (2026-03-30 flag) and `generate-seo.js` (2026-03-30 flag) have no CI workflow despite the generator workflows existing in `.github/workflows/`.
+- **`update-contract-addresses.yml` has never been dispatched.** Workflow exists only on `docs-v2-dev`; GitHub Actions only indexes workflows on the default branch. P0 flag from 2026-03-31.
+- **Luma social feed silently dead since 2026-03-18.** Other six feeds in `snippets/data/social-feeds/` refreshed together on 2026-04-14; Luma did not.
+- **Stale governance map.** `generate-repo-governance-status.js --check` self-detects `docs-guide/repo-ops/config/repo-governance-map.mdx` as stale. System flags itself; no auto-run repairs.
+- **Three duplicate v2 directories.** `v2/developers/`, `v2/developers1/`, `v2/developers2/` exist in the live tree. Gap analysis demands an IA migration plan before action.
+- **`tasks-retention.yml` is a stub.** Workspace TTL policy (30/90 days) is documented; enforcement workflow is not implemented.
+
+### 13.5 Honest framing for the Foundation
+
+The repository as of 2026-05-22 ships substantially more than the original RFP commissioned and substantially more than what was audited on 2026-02-21. It also has more visible gaps than the original audit named — not because the repository regressed, but because the new gaps describe surfaces that did not exist before this work created them. Every gap above has a documented file path and acceptance criterion and is contributor-grade work.
+
+The model the repository now operates under is honest about its limits: ownerless for routine drift, not for policy authorship or destructive operations. Eight surfaces are formally ownerless-ready. Twenty more are in the wider registry awaiting promotion. Each promotion is bounded, documented, and contributor-grade.
+
+The contractual deliverable in 2026-02-21 was a documentation restructure. What exists today is a self-remediating documentation operating system. The Foundation should expect ongoing stewardship work of the kind summarised in Sections 13.2 and 13.4 to continue under any future engagement framing.
+
+For the live audit backlog with file paths and acceptance criteria, see [`docs-guide/features/gap-analysis.mdx`](/docs-guide/features/gap-analysis). For the consolidated audit + product narratives, see `workspace/thread-outputs/repo-docs-consolidation/00-SYNTHESIS.md`.
+
+_End of Part 13 addendum. 2026-05-22._

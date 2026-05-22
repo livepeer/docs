@@ -1,0 +1,118 @@
+# type: dispatch
+# concern: maintenance
+# pipeline: composite (P3 + P5/P6 + manual + P4 post-merge)
+# dispatch-maintenance.yml — Action workflow for maintenance concern.
+name: Maintenance Pipeline
+
+on:
+  pull_request:
+    paths:
+      - "snippets/components/**"
+      - "snippets/data/**"
+      - "docs.json"
+  push:
+    branches: [docs-v2]
+    paths:
+      - "snippets/components/**"
+      - "snippets/data/**"
+      - "docs.json"
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode"
+        type: choice
+        options: [pr, scheduled, manual, post-merge]
+        default: manual
+      dry_run:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dispatch-maintenance-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pr-check:
+    if: github.event_name == 'pull_request'
+    name: Maintenance · PR Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: maintenance PR meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js --staged
+
+  post-merge:
+    if: github.event_name == 'push'
+    name: Maintenance · Post-merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: maintenance post-merge meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js --write
+
+  scheduled:
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'scheduled')
+    name: Maintenance · Scheduled
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: maintenance scheduled meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js $FLAGS
+
+  manual-repair:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'manual'
+    name: Maintenance · Manual Repair
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: maintenance manual repair
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js $FLAGS

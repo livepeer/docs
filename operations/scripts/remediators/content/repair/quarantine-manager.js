@@ -199,7 +199,7 @@ function classifyFromRetentionPolicy(entryBag, policy) {
   );
   if (!quarantineRule) return;
 
-  const quarantineRoot = path.join(REPO_ROOT, 'tasks', 'quarantine', 'repo-audit');
+  const quarantineRoot = path.join(REPO_ROOT, 'workspace', 'quarantine', 'repo-audit');
   if (!fs.existsSync(quarantineRoot)) return;
 
   walkFiles(quarantineRoot).forEach((file) => {
@@ -214,7 +214,7 @@ function classifyBackupFiles(entryBag) {
   const roots = [
     path.join(REPO_ROOT, 'operations/scripts'),
     path.join(REPO_ROOT, 'operations/tests'),
-    path.join(REPO_ROOT, 'tasks')
+    path.join(REPO_ROOT, 'workspace')
   ];
 
   roots.forEach((root) => {

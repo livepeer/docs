@@ -1,0 +1,125 @@
+---
+title: "Frameworks Network"
+sidebarTitle: "Frameworks"
+description: >-
+  Frameworks Network is a Livepeer-aligned video infrastructure stack. Hosted ingest and transcoding, self-hostable MistServer stack, and SDKs for player and broadcast.
+keywords:
+  - livepeer
+  - frameworks
+  - mistserver
+  - self-hosted
+  - streamcrafter
+  - skipper
+  - video infrastructure
+  - tutorial
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Frameworks ships a hosted video stack and a self-hostable open-source equivalent. Canonical setup lives in the Solutions tab; this page routes developers there with context.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Frameworks Network is a Livepeer-aligned video infrastructure provider operating both a hosted SaaS tier and a self-hostable open-source stack. The hosted tier runs at `app.frameworks.network`. The self-hosted stack is built on MistServer, the open-source streaming toolkit maintained by DDVTech (now operating inside Livepeer Inc).
+
+This page exists to route developers to the canonical Frameworks documentation. The setup, API reference, SDK quickstart, and self-hosting deployment instructions are maintained by the Frameworks team in the <LinkArrow href="/v2/solutions/frameworks/overview">Solutions tab</LinkArrow>.
+
+<CustomDivider middleText="When to Use" />
+
+## Selection Criteria
+
+Frameworks fits three developer scenarios that lower-level Livepeer primitives leave open.
+
+| Scenario | What Frameworks adds |
+|---|---|
+| Need a hosted live-streaming backend without managing infrastructure | `app.frameworks.network` with free tier, RTMP ingest, StreamCrafter browser broadcaster |
+| Need a sovereign deployment with full control of the stack | Self-hostable MistServer-based stack, deployable on any cloud or bare metal |
+| Need a hybrid: self-host the edge, burst to managed GPU | Hybrid mode pairs self-hosted edge with Frameworks-hosted compute |
+
+The lower-level alternative is running `go-livepeer` directly in broadcaster mode and assembling your own stack around it. Frameworks is the higher-level integration when you want the streaming surface (ingest, transcoding, recording, clips, analytics) packaged together.
+
+<CustomDivider middleText="Relationship" />
+
+## Frameworks and Livepeer
+
+Frameworks operates as a Livepeer Special Purpose Entity (SPE), funded through the treasury, with a dual-tier model: hosted SaaS plus open-source self-hostable stack.
+
+| Layer | Component |
+|---|---|
+| Application | Your video app |
+| SDKs | Frameworks Player SDK, StreamCrafter SDK, GraphQL API, MCP |
+| Routing | Skipper routing layer for ingest and processing nodes |
+| Stack | MistServer (open-source streaming toolkit) |
+| Network | Livepeer-backed compute (shared bandwidth pool, GPU workloads) |
+
+The free tier includes self-hosting capability and access to the shared bandwidth pool with Livepeer-backed compute. Paid tiers add managed scaling, enterprise support, and burst GPU.
+
+<CustomDivider middleText="Canonical Path" />
+
+## Canonical Setup Path
+
+The canonical setup, including dashboard quickstart, StreamCrafter integration, GraphQL API reference, MCP integration, and full self-hosting deployment, lives in the Solutions tab.
+
+<CardGroup cols={1}>
+  <Card title="Frameworks Overview" icon="rocket" href="/v2/solutions/frameworks/overview">
+    Start here: hosted tier, SDK quickstart, self-hosting guide. Maintained by the Frameworks team.
+  </Card>
+</CardGroup>
+
+The Solutions overview covers four paths:
+
+1. **Start from the app.** Sign up at `app.frameworks.network`, create a stream in the dashboard, go live via StreamCrafter in the browser or via OBS over RTMP
+2. **Use the SDK.** Install `@livepeer-frameworks/player-react` and configure stream and playback URLs
+3. **Use the GraphQL API or MCP.** For automation and AI-agent integration
+4. **Self-host the stack.** Follow the Frameworks docs for sovereign deployment; optionally use hybrid mode
+
+Time to first stream is under fifteen minutes on the hosted path.
+
+<CustomDivider middleText="External" />
+
+## External Resources
+
+| Resource | Link |
+|---|---|
+| Frameworks homepage | <LinkArrow href="https://app.frameworks.network">app.frameworks.network</LinkArrow> |
+| Frameworks documentation | Available via the Solutions overview |
+| Frameworks repository | Open-source MistServer-based stack; link in Solutions overview |
+| MistServer | <LinkArrow href="https://mistserver.org">mistserver.org</LinkArrow> |
+
+For deep technical questions about Frameworks internals, the architecture and deployment documentation maintained by the Frameworks team is the authoritative source.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Frameworks Overview" icon="play" href="/v2/solutions/frameworks/overview">
+    Canonical Frameworks documentation: hosted tier, SDK, self-hosting.
+  </Card>
+  <Card title="Transcoding Quickstart" icon="film" href="/v2/developers/build/video/transcoding-direct-quickstart">
+    The lower-level path: run go-livepeer broadcaster directly.
+  </Card>
+  <Card title="Low-Latency Streaming" icon="bolt" href="/v2/developers/build/tutorials/low-latency-live-streaming-app">
+    Sub-3s WHIP/WHEP path with @livepeer/react.
+  </Card>
+  <Card title="Streamplace Integration" icon="cube" href="/v2/developers/build/tutorials/streamplace-byoc-integration">
+    The AT Protocol-native video infrastructure path.
+  </Card>
+</CardGroup>

@@ -1,0 +1,86 @@
+---
+title: 'Workflows Catalog'
+sidebarTitle: 'Workflows Catalog'
+description: 'Aggregate catalog of repository GitHub workflows'
+consumer: [human, agent]
+maintenance: generated
+status: active
+generator: 'operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js'
+keywords:
+  [
+    'livepeer',
+    'workflows catalog',
+    'aggregate inventory',
+    'repository',
+    'github',
+    'workflows',
+  ]
+---
+
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js
+Purpose: Workflow inventory for docs-guide maintenance.
+Run when: GitHub workflows are added, removed, or changed.
+Run command: node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`. <br/>
+**Purpose**: Workflow inventory for docs-guide maintenance. <br/>
+**Run when**: GitHub workflows are added, removed, or changed. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write`. <br/>
+</Note>
+
+| Workflow | File | Triggers | Purpose | Blocking Policy | Outputs | Owner |
+|---|---|---|---|---|---|---|
+| workspace/ retention enforcement | `.github/workflows/audit-governance-scan-workspace-retention.yml` | schedule, workflow_dispatch | workspace/ retention enforcement | blocking by default (subject to branch protection) | workflow logs | docs |
+| Content Health Check | `.github/workflows/audit-health-scan-content-quality.yml` | schedule, workflow_dispatch | Content Health Check | advisory or partial-advisory | workflow logs | docs |
+| Pipeline Freshness Monitor | `.github/workflows/audit-health-scan-data-freshness.yml` | schedule, workflow_dispatch | Pipeline Freshness Monitor | blocking by default (subject to branch protection) | step summary | docs |
+| V2 External Link Audit (Advisory) | `.github/workflows/audit-health-scan-external-links.yml` | schedule, workflow_dispatch | V2 External Link Audit (Advisory) | advisory or partial-advisory | artifact upload, step summary | docs |
+| Page Integrity Health | `.github/workflows/audit-health-scan-page-integrity.yml` | schedule, workflow_dispatch | Page Integrity Health | advisory or partial-advisory | artifact upload, step summary | docs |
+| Data Refresh Governance | `.github/workflows/dispatch-copy-update-social-feeds.yml` | schedule, workflow_dispatch | Data Refresh Governance | blocking by default (subject to branch protection) | repository commits | docs |
+| Governance sync (post-merge) | `.github/workflows/dispatch-governance-post-merge-sync.yml` | push | Governance sync (post-merge) | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Docs Catalog Governance | `.github/workflows/dispatch-maintenance-check-catalogs.yml` | workflow_dispatch | Docs Catalog Governance | blocking by default (subject to branch protection) | repository commits | docs |
+| Generate AI Sitemap | `.github/workflows/generator-discoverability-generate-ai-sitemap.yml` | push, workflow_dispatch | Generate AI Sitemap | blocking by default (subject to branch protection) | repository commits | docs |
+| Generate AI Companion Files | `.github/workflows/generator-discoverability-generate-companions.yml` | push, workflow_dispatch | Generate AI Companion Files | blocking by default (subject to branch protection) | repository commits | docs |
+| Generate llms.txt | `.github/workflows/generator-discoverability-generate-llms-files.yml` | push, workflow_dispatch | Generate llms.txt | blocking by default (subject to branch protection) | repository commits | docs |
+| Generate OG Images | `.github/workflows/generator-discoverability-generate-og-images.yml` | push, workflow_dispatch | Generate OG Images | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Generate Action Documentation | `.github/workflows/generator-governance-generate-action-docs.yml` | push, workflow_dispatch | Generate Action Documentation | blocking by default (subject to branch protection) | step summary, repository commits | docs |
+| Generate Docs Guide Catalogs | `.github/workflows/generator-maintenance-generate-catalogs.yml` | push, workflow_dispatch | Generate Docs Guide Catalogs | blocking by default (subject to branch protection) | workflow logs | docs |
+| Generate Component Registry | `.github/workflows/generator-maintenance-generate-component-registry.yml` | push, workflow_dispatch | Generate Component Registry | blocking by default (subject to branch protection) | workflow logs | docs |
+| Generate Docs Index | `.github/workflows/generator-maintenance-generate-docs-index.yml` | push, workflow_dispatch | Generate Docs Index | blocking by default (subject to branch protection) | workflow logs | docs |
+| Generate | `.github/workflows/generator-maintenance-generate-sdk-clients.yml` | schedule, workflow_dispatch | Generate | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Update Changelogs | `.github/workflows/integrator-copy-update-changelogs.yml` | repository_dispatch, schedule, workflow_dispatch | Update Changelogs | advisory or partial-advisory | repository commits | docs |
+| Project Showcase Sync | `.github/workflows/integrator-copy-update-showcase-submissions.yml` | repository_dispatch, schedule, workflow_dispatch | Project Showcase Sync | blocking by default (subject to branch protection) | workflow logs | docs |
+| Docs Translation Pipeline | `.github/workflows/integrator-copy-update-translations.yml` | workflow_dispatch | Docs Translation Pipeline | blocking by default (subject to branch protection) | artifact upload, step summary, PR comments/metadata | docs |
+| Update Configuration Flags | `.github/workflows/integrator-maintenance-update-config-flags.yml` | schedule, workflow_dispatch | Update Configuration Flags | blocking by default (subject to branch protection) | repository commits | docs |
+| Update Contract Addresses Shadow | `.github/workflows/integrator-maintenance-update-contract-addresses-shadow.yml` | repository_dispatch, schedule, workflow_dispatch | Update Contract Addresses Shadow | advisory or partial-advisory | artifact upload | docs |
+| Update Contract Addresses | `.github/workflows/integrator-maintenance-update-contract-addresses.yml` | repository_dispatch, schedule, workflow_dispatch | Update Contract Addresses | advisory or partial-advisory | artifact upload, repository commits | docs |
+| Update Exchanges Data | `.github/workflows/integrator-maintenance-update-exchanges-data.yml` | schedule, workflow_dispatch | Update Exchanges Data | blocking by default (subject to branch protection) | repository commits | docs |
+| Sync Large Assets | `.github/workflows/integrator-maintenance-update-large-assets.yml` | push, schedule, workflow_dispatch | Sync Large Assets | blocking by default (subject to branch protection) | repository commits | docs |
+| Update Livepeer Release Version | `.github/workflows/integrator-maintenance-update-release-version.yml` | repository_dispatch, schedule, workflow_dispatch | Update Livepeer Release Version | blocking by default (subject to branch protection) | workflow logs | docs |
+| Auto Assign Docs Reviewers | `.github/workflows/interface-governance-assign-reviewers.yml` | pull_request | Auto Assign Docs Reviewers | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Close Linked Issues (docs-v2 Merge) | `.github/workflows/interface-governance-close-linked-issues.yml` | pull_request | Close Linked Issues (docs-v2 Merge) | blocking by default (subject to branch protection) | workflow logs | docs |
+| Docs v2 Issue Indexer | `.github/workflows/interface-governance-index-issues.yml` | schedule, workflow_dispatch | Docs v2 Issue Indexer | blocking by default (subject to branch protection) | workflow logs | docs |
+| Discord Issue Intake | `.github/workflows/interface-governance-intake-discord-issues.yml` | repository_dispatch | Discord Issue Intake | blocking by default (subject to branch protection) | workflow logs | docs |
+| Issue Auto Label | `.github/workflows/interface-governance-label-issues.yml` | pull_request | Issue Auto Label | blocking by default (subject to branch protection) | workflow logs | docs |
+| EN-GB Style Homogenisation | `.github/workflows/remediator-brand-repair-en-gb-style.yml` | workflow_dispatch | EN-GB Style Homogenisation | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Repair Frontmatter Quotes & Em-Dashes | `.github/workflows/remediator-brand-repair-frontmatter-and-em-dashes.yml` | pull_request, workflow_dispatch | Repair Frontmatter Quotes & Em-Dashes | blocking by default (subject to branch protection) | step summary, PR comments/metadata, repository commits | docs |
+| Styles Governance | `.github/workflows/remediator-brand-repair-style-tokens.yml` | schedule, workflow_dispatch | Styles Governance | advisory or partial-advisory | artifact upload, PR comments/metadata | docs |
+| SEO Metadata Refresh | `.github/workflows/remediator-discoverability-repair-seo-metadata.yml` | workflow_dispatch | SEO Metadata Refresh | blocking by default (subject to branch protection) | repository commits | docs |
+| Governance Repair | `.github/workflows/remediator-governance-repair-pipelines.yml` | schedule, workflow_dispatch | Governance Repair | blocking by default (subject to branch protection) | artifact upload, step summary, PR comments/metadata | docs |
+| Check Copy Standards | `.github/workflows/validator-brand-check-copy-standards.yml` | pull_request, workflow_dispatch | Check Copy Standards | blocking by default (subject to branch protection) | step summary, PR comments/metadata | docs |
+| Docs CI - Content Quality Suite | `.github/workflows/validator-copy-check-content-quality-suite.yml` | pull_request, push, workflow_dispatch | Docs CI - Content Quality Suite | advisory or partial-advisory | step summary, PR comments/metadata | docs |
+| Verify AI Sitemap | `.github/workflows/validator-discoverability-check-ai-sitemap.yml` | pull_request, push, workflow_dispatch | Verify AI Sitemap | blocking by default (subject to branch protection) | workflow logs | docs |
+| Check AI Companion Files | `.github/workflows/validator-discoverability-check-companions.yml` | pull_request, push, workflow_dispatch | Check AI Companion Files | blocking by default (subject to branch protection) | workflow logs | docs |
+| Verify llms.txt Files | `.github/workflows/validator-discoverability-check-llms-files.yml` | pull_request, push, workflow_dispatch | Verify llms.txt Files | blocking by default (subject to branch protection) | workflow logs | docs |
+| Codex Governance | `.github/workflows/validator-governance-check-codex-compliance.yml` | pull_request | Codex Governance | blocking by default (subject to branch protection) | workflow logs | docs |
+| Check Governance Map | `.github/workflows/validator-governance-check-governance-map.yml` | pull_request, schedule, workflow_dispatch | Check Governance Map | advisory or partial-advisory | workflow logs | docs |
+| Check Workflow Governance | `.github/workflows/validator-governance-check-workflow-governance.yml` | pull_request, workflow_dispatch | Check Workflow Governance | blocking by default (subject to branch protection) | workflow logs | docs |
+| Check Broken Links | `.github/workflows/validator-health-check-broken-links.yml` | pull_request, workflow_dispatch | Check Broken Links | advisory or partial-advisory | step summary | docs |
+| OpenAPI Reference Validation | `.github/workflows/validator-health-check-openapi-reference.yml` | pull_request, push, schedule, workflow_dispatch | OpenAPI Reference Validation | blocking by default (subject to branch protection) | artifact upload, step summary, PR comments/metadata | docs |
+| Docs CI - V2 Browser Sweep | `.github/workflows/validator-health-check-page-rendering.yml` | pull_request, push, workflow_dispatch | Docs CI - V2 Browser Sweep | advisory or partial-advisory | artifact upload, PR comments/metadata | docs |
+| Check Page Structure | `.github/workflows/validator-health-check-page-structure.yml` | pull_request, workflow_dispatch | Check Page Structure | advisory or partial-advisory | step summary | docs |
+| Check Docs Guide Catalogs | `.github/workflows/validator-maintenance-check-catalogs.yml` | pull_request, push, workflow_dispatch | Check Docs Guide Catalogs | blocking by default (subject to branch protection) | workflow logs | docs |
+| Check Docs Index | `.github/workflows/validator-maintenance-check-docs-index.yml` | pull_request, push, workflow_dispatch | Check Docs Index | blocking by default (subject to branch protection) | workflow logs | docs |

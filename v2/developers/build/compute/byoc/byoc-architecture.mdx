@@ -1,0 +1,105 @@
+---
+title: "BYOC architecture"
+sidebarTitle: "Architecture"
+description: >-
+  BYOC container architecture: FrameProcessor interface, StreamServer, Docker
+  packaging, aiModels.json registration, and the orchestrator-to-container flow.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - BYOC architecture
+  - FrameProcessor
+  - StreamServer
+  - aiModels.json
+  - Docker container
+  - AI Service Registry
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>A BYOC container is a Docker image that implements FrameProcessor. The orchestrator loads it, routes trickle frames to it, and advertises its capabilities to gateways via the AI Service Registry.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+BYOC (Bring Your Own Container) lets you deploy custom AI models on the Livepeer network. The architecture has three layers: your model code wrapped in a `FrameProcessor`, a `StreamServer` that handles trickle transport, and a Docker container that the orchestrator manages.
+
+<CustomDivider />
+
+## Three-layer architecture
+
+```
+Gateway
+  │ live-video-to-video request
+  ▼
+Orchestrator (go-livepeer)
+  │ routes to container via Docker socket
+  ▼
+BYOC Container (Docker)
+  ├── StreamServer (PyTrickle)
+  │     ├── trickle subscribe (input frames)
+  │     └── trickle publish (output frames)
+  └── FrameProcessor (your model code)
+        └── process_frame(VideoFrame) -> VideoFrame
+```
+
+**FrameProcessor** is the interface you implement. It receives `VideoFrame` objects (raw pixel data + PTS timestamp) and returns processed `VideoFrame` objects. Your model logic goes in `process_frame()`.
+
+**StreamServer** wraps the FrameProcessor and handles trickle transport: subscribing to input frames, calling your processor, and publishing output frames. PyTrickle provides this out of the box.
+
+**Docker container** packages the StreamServer, FrameProcessor, model weights, and dependencies. The orchestrator manages the container lifecycle via the Docker socket.
+
+<CustomDivider />
+
+## Capability registration
+
+The orchestrator advertises your container's capabilities to the network through `aiModels.json`:
+
+```json
+{
+  "pipeline": "live-video-to-video",
+  "model_id": "my-custom-model",
+  "price_per_unit": 3000,
+  "warm": true,
+  "container": "my-registry/my-model:latest",
+  "url": "http://localhost:8100"
+}
+```
+
+| Field | Description |
+|---|---|
+| `pipeline` | Always `live-video-to-video` for BYOC containers |
+| `model_id` | Your chosen model identifier; gateways use this to route requests |
+| `price_per_unit` | Wei per compute unit (orchestrator-set) |
+| `warm` | Whether the model is pre-loaded in GPU memory |
+| `container` | Docker image reference |
+| `url` | Local HTTP endpoint where the container listens |
+
+Gateways discover your capability through the AI Service Registry on-chain and the orchestrator's `GetOrchestratorInfo` response.
+
+<CustomDivider />
+
+## Health check contract
+
+Every BYOC container must expose a `/health` endpoint:
+
+```python
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+```
+
+The orchestrator polls `/health` to determine container readiness. A container that does not return `{"status": "ok"}` is not advertised to gateways.
+
+<CustomDivider />
+
+The [BYOC quickstart](/v2/developers/build/compute/byoc/byoc-quickstart) walks through building and registering a container. The [FrameProcessor reference](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/frame-processor) covers the processing API.

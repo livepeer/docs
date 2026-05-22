@@ -98,7 +98,7 @@ function parseArgs(argv, repoRoot) {
   const args = {
     mode: 'full',
     files: [],
-    outDir: path.join(repoRoot, 'tasks', 'reports', 'quality-accessibility', 'docs-usefulness', 'latest'),
+    outDir: path.join(repoRoot, 'workspace', 'reports', 'quality-accessibility', 'docs-usefulness', 'latest'),
     format: ['jsonl', 'csv', 'json', 'md'],
     maxPages: null,
     llm: false,

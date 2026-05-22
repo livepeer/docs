@@ -1,0 +1,190 @@
+---
+title: "Livepeer Python Gateway"
+sidebarTitle: "Python Gateway"
+description: >-
+  The reference Python gateway implementation. OrchestratorSession, PaymentSession, LiveVideoJob; off-chain orchestrator discovery; integration with the remote signer.
+keywords:
+  - livepeer
+  - python
+  - gateway
+  - orchestrator-session
+  - payment-session
+  - live-video-job
+  - remote-signer
+  - off-chain
+  - alt-gateway
+pageType: reference
+audience: developer
+purpose: reference
+complexity: advanced
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>The reference non-Go Gateway. Pythonic API over Orchestrator discovery, ticket lifecycle, and live-video job management; delegates Ethereum signing to a remote signer.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+`livepeer/livepeer-python-gateway` is the first non-Go Gateway implementation on Livepeer. It exists because the <LinkArrow href="/v2/developers/build/alt-gateways/remote-signer-integration">remote signer architecture</LinkArrow> separates Ethereum payment signing from media routing, which means a Gateway client can be written in any language without dragging in `go-livepeer`'s Ethereum dependencies. The Python Gateway is the canonical reference for what that looks like.
+
+This page covers the three classes you interact with, the discovery patterns that replace on-chain registry lookup, and where the working examples live. The remote signer protocol itself is on a separate page; this one is the client surface.
+
+<CustomDivider middleText="Components" />
+
+## Class Reference
+
+The Python Gateway organises around three classes. Together they cover Orchestrator session lifecycle, payment ticket handling, and persistent live-video sessions.
+
+| Class | Role |
+|---|---|
+| `OrchestratorSession` | Manages a connection to a single Orchestrator: handshake, capability negotiation, payment state |
+| `PaymentSession` | Handles probabilistic micropayment ticket lifecycle: creates unsigned tickets, calls the remote signer, tracks balance |
+| `LiveVideoJob` | Manages a persistent `live-video-to-video` inference session including trickle stream setup |
+
+The classes compose: an `OrchestratorSession` holds a `PaymentSession`, and a `LiveVideoJob` runs against an `OrchestratorSession`. For batch jobs (one-shot inference), `OrchestratorSession` plus `PaymentSession` are enough. For live video, all three.
+
+<CustomDivider middleText="Basic Usage" />
+
+## Minimal Session
+
+```python icon="terminal"
+from livepeer_python_gateway import OrchestratorSession
+
+session = OrchestratorSession(
+    orchestrator_url="https://orch-1.example.com",
+    signer_url="http://localhost:8936",
+)
+
+# Fetch the orchestrator's advertised capabilities
+info = session.get_orchestrator_info()
+print(info.capabilities)
+
+# Submit a job to a known pipeline
+response = session.submit_job(
+    pipeline="text-to-image",
+    request={
+        "model_id": "ByteDance/SDXL-Lightning",
+        "prompt": "A coffee shop at sunset",
+        "width": 1024,
+        "height": 1024,
+    },
+)
+```
+
+The `signer_url` points to a running remote signer (typically `go-livepeer` in signer mode). The session holds no Ethereum state itself: every payment ticket flows through the signer, which signs and returns the ticket plus updated bookkeeping state.
+
+<CustomDivider middleText="Discovery" />
+
+## Orchestrator Discovery
+
+On-chain Gateways query the Arbitrum contract registry to find Orchestrators. Off-chain Python clients cannot do that without an Ethereum dependency. Three alternatives work for Python Gateway clients.
+
+**Explicit Orchestrator list.** Pass Orchestrator URIs directly. Suitable for development or when operating alongside trusted Orchestrators.
+
+```python icon="terminal"
+orchestrators = [
+    "https://orch-1.example.com",
+    "https://orch-2.example.com",
+]
+session = OrchestratorSession(
+    orchestrator_url=orchestrators[0],
+    signer_url="http://localhost:8936",
+)
+```
+
+**Explorer API discovery.** Query the Livepeer Explorer API to get the active Orchestrator set, then filter by capability. This avoids an on-chain dependency while using current network data.
+
+**AI Service Registry query.** For AI-capable Orchestrators, the AI Service Registry on Arbitrum One lists registered Orchestrators with their capabilities. Query it via a standard Arbitrum RPC endpoint. This is the closest off-chain equivalent of the full on-chain discovery flow.
+
+Pick by environment: explicit lists for testing, Explorer API for production batch workloads, AI Service Registry when capability filtering matters and you can afford an Arbitrum RPC dependency.
+
+<CustomDivider middleText="Live Video" />
+
+## Live Video Job
+
+`LiveVideoJob` manages a persistent live-video-to-video session. The class handles trickle stream setup, periodic payment intervals via the remote signer, and parameter updates during the session.
+
+```python icon="terminal"
+from livepeer_python_gateway import OrchestratorSession, LiveVideoJob
+
+session = OrchestratorSession(
+    orchestrator_url="https://orch-1.example.com",
+    signer_url="http://localhost:8936",
+)
+
+job = LiveVideoJob(
+    session=session,
+    pipeline_params={
+        "model_id": "live-video-to-video",
+        "workflow": "streamdiffusion-sd15-pose",
+    },
+)
+
+# Start the session; opens trickle channels (video in, video out, control, audio)
+job.start()
+
+# Update pipeline parameters mid-stream
+job.update_params({"prompt": "anime style, green hair"})
+
+# Stop and clean up
+job.stop()
+```
+
+Payment intervals during the session inherit from `LivePaymentSender` in the remote signer. The Python Gateway does not implement its own payment scheduling; it forwards state and signed-ticket responses between the session and the signer.
+
+<CustomDivider middleText="Use Cases" />
+
+## Use Cases
+
+The Python Gateway exists for cases where go-livepeer's broadcaster mode is impractical.
+
+| Use case | Why Python Gateway |
+|---|---|
+| Python ML pipeline calling Livepeer inference | Same-process integration with PyTorch, NumPy, ML libraries |
+| Edge device with constrained runtime | Smaller footprint than full go-livepeer; signer runs on companion server |
+| Multi-tenant platform with per-user Orchestrator routing | Custom routing logic in application code |
+| Research or experimentation against the protocol | Faster iteration than recompiling go-livepeer |
+
+The remote signer architecture requires coordination with the signer service for ticket signing on every job. The signer service must stay available; its unavailability blocks job submission. Plan for failover.
+
+<CustomDivider middleText="Examples" />
+
+## Working Examples
+
+The repository ships runnable examples covering Orchestrator selection, live-video-to-video sessions, and payment integration:
+
+`github.com/livepeer/livepeer-python-gateway/tree/main/examples`
+
+Start with the off-chain explicit-Orchestrator example. Once that runs, the live-video-to-video example exercises the trickle protocol and payment session together.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Alt-Gateways Overview" icon="diagram-project" href="/v2/developers/build/alt-gateways/overview">
+    The off-chain client pattern and why non-Go Gateways exist.
+  </Card>
+  <Card title="Remote Signer Integration" icon="key" href="/v2/developers/build/alt-gateways/remote-signer-integration">
+    How payment signing is delegated to a separate service.
+  </Card>
+  <Card title="Per-Second Compute" icon="dollar-sign" href="/v2/developers/guides/payments/per-second-compute">
+    The billing model the Python Gateway implements for live video.
+  </Card>
+  <Card title="Real-Time AI Overview" icon="bolt" href="/v2/developers/build/ai-and-agents/realtime-ai/overview">
+    The Cascade architecture the LiveVideoJob class targets.
+  </Card>
+</CardGroup>

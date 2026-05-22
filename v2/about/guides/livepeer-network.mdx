@@ -1,0 +1,143 @@
+---
+title: "How the Livepeer Network Extends the Protocol"
+sidebarTitle: "Livepeer Network"
+description: >-
+  The Livepeer Network is the off-chain execution layer that turns the Protocol's rules into
+  a working open marketplace for video and AI compute. This guide explains where the protocol
+  ends, where the network begins, and what the network adds on top.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer
+  - livepeer network
+  - off-chain execution
+  - marketplace
+  - capability advertisement
+  - byoc
+  - real-time ai
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+purpose: learn
+audience: general
+lastVerified: "2026-05-06"
+---
+
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<Quote>
+The Livepeer Protocol defines the rules. The Livepeer Network is what those rules produce - an open, off-chain marketplace where gateways find orchestrators, jobs are negotiated and dispatched, and the Protocol's settlement primitives turn off-chain work into on-chain payment.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## The protocol-network boundary
+
+The protocol enforces. The network executes. Each side owns a different set of responsibilities, and most operational confusion comes from blurring the line.
+
+<DynamicTableV2
+  headerList={["Concern", "Protocol owns it", "Network owns it"]}
+  itemsList={[
+    { "Concern": "Active set membership", "Protocol owns it": "Yes - sorted by total bonded stake on-chain", "Network owns it": "No" },
+    { "Concern": "Round progression", "Protocol owns it": "Yes - RoundsManager advances rounds", "Network owns it": "No" },
+    { "Concern": "Per-job orchestrator selection", "Protocol owns it": "No", "Network owns it": "Yes - gateway-side, off-chain" },
+    { "Concern": "Capability advertisement", "Protocol owns it": "No", "Network owns it": "Yes - orchestrator HTTP endpoints" },
+    { "Concern": "Price negotiation", "Protocol owns it": "No", "Network owns it": "Yes - gateway/orchestrator handshake" },
+    { "Concern": "Job dispatch and segment delivery", "Protocol owns it": "No", "Network owns it": "Yes - direct gateway-to-orchestrator" },
+    { "Concern": "Payment settlement", "Protocol owns it": "Yes - TicketBroker redeems winning tickets", "Network owns it": "Off-chain ticket issuance" },
+    { "Concern": "Inflationary rewards", "Protocol owns it": "Yes - Minter and BondingManager", "Network owns it": "No" },
+    { "Concern": "Governance outcomes", "Protocol owns it": "Yes - LivepeerGovernor executes", "Network owns it": "No" },
+  ]}
+/>
+
+The protocol cares only about the things that need cryptographic finality. Everything that needs flexibility, negotiation, or low latency lives on the network.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## What the network adds
+
+The protocol's rules are general. The network is where those rules meet specific workloads, specific topologies, and specific demand patterns.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Discovery and selection" icon="magnifying-glass">
+    Gateways query the on-chain ServiceRegistry for the active set, then probe orchestrators directly to read their advertised capabilities, prices, and availability. Selection is a gateway decision - the protocol expresses eligibility, not preference.
+  </StyledStep>
+  <StyledStep title="Capability advertisement" icon="bullhorn">
+    Each orchestrator publishes the workloads it can serve - video transcoding profiles, AI inference pipelines, real-time AI sessions, BYOC containers. The advertisement is a bitstring that gateways can filter against without an on-chain lookup.
+  </StyledStep>
+  <StyledStep title="Job dispatch" icon="paper-plane">
+    Gateways send segments or inference requests directly to the chosen orchestrator over HTTP, RTMP, or the trickle protocol for real-time AI. The network carries the data; the chain never sees it.
+  </StyledStep>
+  <StyledStep title="Real-time and BYOC pipelines" icon="bolt">
+    The protocol's rules say nothing about pipelines. The network defines built-in pipelines for video transcoding and AI inference, plus a Bring-Your-Own-Container (BYOC) extension that lets developers attach new workload classes without a protocol change.
+  </StyledStep>
+  <StyledStep title="Off-chain coordination" icon="diagram-project">
+    Gateway-orchestrator handshakes, capability negotiation, and session establishment all happen off-chain at HTTP latency. The protocol's round timer (~24 hours on Arbitrum) is far too slow for per-segment coordination - the network operates at frame and segment timescales.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How a job moves through the network
+
+A typical video or AI job touches the chain only twice: once when the gateway funds its TicketBroker deposit, and once when the orchestrator redeems a winning ticket. Everything in between is the network.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Gateway funds a deposit" icon="wallet">
+    Gateway transfers ETH into the TicketBroker, establishing both a deposit (drawn against per ticket) and a reserve (collateral that proves the gateway can pay).
+  </StyledStep>
+  <StyledStep title="Gateway selects orchestrators" icon="filter">
+    Gateway reads the active set, queries candidates for capabilities and prices, applies its own performance criteria, and assembles a working set of orchestrators for the session.
+  </StyledStep>
+  <StyledStep title="Job dispatch begins" icon="play">
+    Gateway sends segments or inference inputs directly to the chosen orchestrator over HTTP or the trickle protocol. Each segment carries an off-chain probabilistic micropayment ticket signed by the gateway.
+  </StyledStep>
+  <StyledStep title="Orchestrator delivers output" icon="arrow-right-arrow-left">
+    Orchestrator transcodes or runs inference, returns the output to the gateway, and accumulates tickets locally.
+  </StyledStep>
+  <StyledStep title="Winning ticket settles on-chain" icon="ticket">
+    When a ticket clears the winning probability threshold, the orchestrator submits it to the TicketBroker, which pays out ETH from the gateway's deposit. Most tickets never settle. The expected value across all tickets matches the work performed.
+  </StyledStep>
+</StyledSteps>
+
+The network does not need to involve the chain to coordinate, dispatch, or deliver. It only needs the chain to hold the active set, the deposit, and the right to redeem.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where the network goes beyond the original protocol
+
+The original whitepaper described a video transcoding marketplace. The network has since extended itself - usually without changing the protocol - to handle:
+
+- **AI inference**, sharing the same orchestrator role and economic primitives but with different capability advertisements and pipeline shapes.
+- **Real-time AI video**, over the trickle protocol, with frame-level latency budgets that the round-based protocol layer never needs to know about.
+- **Bring-Your-Own-Container (BYOC) workloads**, where any developer can publish a container that orchestrators run for arbitrary compute-bound tasks. The protocol still settles payment; the network defines the pipeline.
+- **Special Purpose Entities (SPEs)**, which build network-layer features (real-time AI, BYOC frameworks, observability tooling) under treasury funding without needing a protocol upgrade.
+
+The pattern is consistent: keep the protocol minimal, extend the network. New workloads, new pipelines, new participants - all added without a protocol change. The on-chain rules stay small. The off-chain marketplace grows.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="circle-nodes" title="Network Design" />} href="/v2/about/network/design" horizontal arrow>
+    Canonical reference: network role, design properties, and actor map.
+  </Card>
+  <Card title={<CustomCardTitle icon="store" title="Marketplace Model" />} href="/v2/about/network/marketplace-model" horizontal arrow>
+    Posted-price market shape, work and value flow, honesty enforcement.
+  </Card>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Job Pipelines" />} href="/v2/about/network/job-pipelines" horizontal arrow>
+    Workload classes, job lifecycle, built-in pipelines, BYOC.
+  </Card>
+  <Card title={<CustomCardTitle icon="sitemap" title="Network Architecture" />} href="/v2/about/network/architecture" horizontal arrow>
+    Topology, traffic planes, on-chain anchor contracts, observability.
+  </Card>
+</Columns>

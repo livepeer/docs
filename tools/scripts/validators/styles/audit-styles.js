@@ -25,7 +25,7 @@ const REPORT_DIR = path.join(REPO_ROOT, 'workspace', 'reports', 'styles');
 const EXCLUDE_PATTERNS = [
   '_workspace', 'archive', 'language-pages', 'x-deprecated',
   'x-archived', 'node_modules', '.claude', '_dep-docs',
-  'tasks/context_data', 'x-resources', 'internal/assets/transcripts',
+  'x-resources', 'internal/assets/transcripts',
   'internal/rfp'
 ];
 

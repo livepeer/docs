@@ -1,0 +1,273 @@
+---
+title: "Dispatch Pipelines Reference"
+sidebarTitle: "Dispatch Pipelines"
+description: "Operator guide for the 4-tier composable dispatch architecture. How to run a pipeline locally, add a new pipeline, and the mode contract reference."
+keywords:
+  - "dispatch pipelines"
+  - "github actions"
+  - "local cli"
+  - "ownerless repo"
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+version: "1.0"
+lastVerified: 2026-05-22
+---
+
+# Dispatch Pipelines – Operator Reference
+
+This is the operator guide for the 4-tier composable dispatch architecture defined in the [Workflow and Pipeline Governance Framework](./github-actions.mdx). Read the framework first for the why; read this for the how.
+
+<CustomDivider />
+
+## The four tiers
+
+``` icon="terminal"
+Tier 1: Action workflow (.github/workflows/dispatch-{concern}.yml)
+  ↓ fires on GitHub event, calls a meta dispatcher
+Tier 2: Meta dispatcher (operations/scripts/dispatch/.../dispatch-{concern}-{verb}.js)
+  ↓ bundles related pipelines, passes --mode flag
+Tier 3: Pipeline dispatcher (operations/scripts/dispatch/.../dispatch-{niche}.js)
+  ↓ owns one full detect-repair-verify-escalate cycle
+Tier 4: Atomic script (operations/scripts/{type}/{concern}/{niche}/*.js)
+       single-purpose, type-pure
+```
+
+Every tier is independently runnable via `node` with `--dry-run`. No tier is mandatory – call any level directly.
+
+<CustomDivider />
+
+## How to run a pipeline locally
+
+### Just one pipeline (most common)
+
+```bash icon="terminal"
+# Run the WCAG pipeline end-to-end (PR mode = detect + advisory)
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --dry-run
+
+# Run in scheduled mode (detect + repair + verify + rolling-issue)
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --mode scheduled --dry-run
+
+# Run in manual mode (repair only, with --verify)
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --mode manual --write --verify
+
+# Scope to specific files
+node operations/scripts/dispatch/content/health/dispatch-wcag.js --files v2/gateways/setup/connect.mdx
+```
+
+### A bundle of pipelines (concern meta)
+
+```bash icon="terminal"
+# Run all health PR-time pipelines (folder structure, integrity, rendering, wcag, content-quality, openapi)
+node operations/scripts/dispatch/content/health/dispatch-health-check.js --dry-run --staged
+
+# Run all brand scheduled pipelines (em-dashes, spelling, voice, banned words, style tokens, grammar)
+node operations/scripts/dispatch/content/brand/dispatch-brand-scan.js --dry-run
+
+# Manual repair across brand
+node operations/scripts/dispatch/content/brand/dispatch-brand-repair.js --write --verify
+```
+
+### Just one atomic (skip dispatchers)
+
+```bash icon="terminal"
+# Run the single validator directly
+node operations/scripts/validators/content/health/check-wcag.js --files v2/page.mdx --no-fix
+
+# Or a remediator directly
+node operations/scripts/remediators/content/health/repair-wcag.js --write --verify --files v2/page.mdx
+```
+
+<CustomDivider />
+
+## Mode contract
+
+Every pipeline dispatcher accepts the same flag set. Meta dispatchers also accept these and forward them.
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--mode pr` | yes (default) | PR-time check + advisory; no auto-fix unless paired with label override |
+| `--mode scheduled` | – | Full audit + repair + verify + rolling-issue escalation |
+| `--mode manual` | – | Manual repair only with `--verify`; typically opens a PR |
+| `--mode post-merge` | – | Regeneration + verify (used by generators on push to deploy branch) |
+| `--dry-run` | yes (default) | Preview without writes |
+| `--write` | – | Apply changes |
+| `--verify` | – | Post-repair re-check; per-file revert on regression |
+| `--files <paths>` | – | Comma-separated list of files to scope to |
+| `--staged` | – | Scope to git-staged files (PR-typical) |
+| `--full` | – | Scope to full v2/ tree |
+| `--json` | – | Machine-readable output |
+| `--help` | – | Print usage |
+
+**Defaults:** if no scope flag is provided, the pipeline defaults to `--staged` (PR-typical). If neither `--dry-run` nor `--write` is provided, defaults to `--dry-run` (safe).
+
+<CustomDivider />
+
+## Inventory of pipelines by concern
+
+| Concern | Pipelines | Action workflow |
+|---|---|---|
+| Health | 6: page-structure, page-integrity, page-rendering, wcag, content-quality, openapi-reference | `dispatch-health.yml` |
+| Brand | 7: em-dashes, spelling, proper-nouns, voice-register, banned-words, style-tokens, grammar-en-gb | `dispatch-brand.yml` |
+| Copy | 6: canonical-sync, ownerless-language, social-feeds (matrix of 6 sources), changelogs, translations, showcase | `dispatch-copy.yml` |
+| Discoverability | 5: ai-sitemap, companions, llms-files, og-images, seo-metadata | `dispatch-discoverability.yml` |
+| Maintenance | 10: docs-index, catalogs, component-registry, sdk-clients, contract-addresses (+shadow), release-version, large-assets, config-flags, exchanges-data | `dispatch-maintenance.yml` |
+| Governance | 12: folder-allowlist, governance-map, workflow-governance, jsdoc-headers, new-file-governance, codex-compliance, script-locations, script-inventory, workspace-retention, pipelines, root-governance, action-docs, script-registry | `dispatch-governance.yml` |
+
+Plus 5 standalone interfaces under `interface-governance-*.yml` (event-driven, distinct secrets boundaries).
+
+<CustomDivider />
+
+## How to add a new pipeline
+
+The 4-tier architecture means adding a pipeline is mostly a script-writing exercise. The action workflow rarely changes.
+
+### Step 1 – pick the concern and niche
+
+The concern is one of: `copy`, `health`, `maintenance`, `discoverability`, `governance`, `brand`. The niche is a second-level grouping inside that concern (for example `health/wcag`, `brand/em-dashes`, `governance/folder-allowlist`).
+
+If the niche is new (not in the inventory above), the pipeline goes under that concern's existing action workflow.
+
+### Step 2 – write the atomic scripts the pipeline needs
+
+A pipeline implements the full detect-repair-verify-escalate cycle, so it typically needs:
+
+- At least one validator or audit atomic (`check-*.js` or `audit-*.js`) that detects the violation
+- Where deterministic repair is possible, a paired remediator (`repair-*.js`) that applies the fix and supports `--verify`
+- Where no deterministic repair is possible, no remediator – escalation via `lib/rolling-issue.js` is the response
+
+All atomics live under `operations/scripts/{type}/{concern}/{niche}/`. Every atomic has the 11-tag JSDoc header (see [Script Framework](./script-framework.mdx)).
+
+### Step 3 – write the pipeline dispatcher
+
+Create `operations/scripts/dispatch/{content|governance}/{concern}/dispatch-{niche}.js`. Use the existing dispatchers as templates. The shape:
+
+```javascript icon="terminal"
+const { parsePipelineArgs, runAtomic, printPipelineHelp } = require('tools/lib/governance/pipeline-mode');
+
+const ATOMICS = {
+  check: '...',
+  audit: '...',
+  repair: '...',
+};
+
+function modePr(args) { /* call check atomics with scope */ }
+function modeScheduled(args) { /* call audit, then repair if --write, then verify */ }
+function modeManual(args) { /* call repair with --verify */ }
+```
+
+### Step 4 – wire into the concern's meta dispatchers
+
+Add the pipeline filename to the relevant meta dispatcher arrays:
+
+- PR-time: `operations/scripts/dispatch/.../dispatch-{concern}-check.js`
+- Scheduled: `operations/scripts/dispatch/.../dispatch-{concern}-scan.js`
+- Manual: `operations/scripts/dispatch/.../dispatch-{concern}-repair.js`
+
+The action workflow at `.github/workflows/dispatch-{concern}.yml` already calls the meta dispatchers and needs no edit.
+
+### Step 5 – verify
+
+```bash icon="terminal"
+# Smoke test
+node operations/tests/integration/pipeline-smoke-test.js
+
+# Run the new pipeline directly
+node operations/scripts/dispatch/.../dispatch-{niche}.js --dry-run --staged
+
+# Run the meta that bundles it
+node operations/scripts/dispatch/.../dispatch-{concern}-check.js --dry-run --staged
+```
+
+<CustomDivider />
+
+## Type purity rule (D-ACT-08)
+
+Atomic scripts must be type-pure: a `check-*` is only a validator, a `repair-*` is only a remediator. The dispatcher's verb is `dispatch` (a meta-verb) because pipelines orchestrate a full cycle that crosses atomic types – this is intentional, not type-mixing.
+
+If you find yourself wanting `check-wcag` to also write fixes, **stop**. Split into `check-wcag` (validator) and `repair-wcag` (remediator) and let the pipeline orchestrate them. The dispatcher is where mixing happens.
+
+<CustomDivider />
+
+## Five-layer prevention chain (D-GOV-08)
+
+Every governance rule fires at the earliest possible layer. Detection at later layers is a fail-safe, never the primary mechanism.
+
+| Layer | Trigger | Where | Example |
+|---|---|---|---|
+| 1. Write time | Claude PreToolUse hook | `operations/scripts/dispatch/governance/pre-tool-guard.js` | Blocks Edit to disallowed `.github/` paths before write |
+| 2. Commit time | git pre-commit hook | `.githooks/pre-commit` | Rejects unauthorised paths in staged diff |
+| 3. PR time | PR validator job | `dispatch-{concern}.yml` PR job → `dispatch-{concern}-check.js` | Fails the PR check |
+| 4. Post-merge | Post-merge repair job | `dispatch-{concern}.yml` post-merge job → `dispatch-{concern}-sync.js` | Auto-archives drift on merge |
+| 5. Schedule | Scheduled scan job | `dispatch-{concern}.yml` scheduled job → `dispatch-{concern}-scan.js` | Last-resort drift scan, opens rolling issue |
+
+When you add a new governance rule, ask: which is the **earliest** layer that can enforce this? Wire the rule there. The later layers are backstops, not the primary mechanism.
+
+<CustomDivider />
+
+## Common patterns
+
+### Pattern: drift detection between committed file and generator output
+
+Used for `ai-sitemap`, `llms-files`, `companions`, `docs-index`, `catalogs`, `component-registry`. The validator IS the generator with `--check` mode.
+
+```bash icon="terminal"
+node operations/scripts/generators/.../generate-X.js --check  # exits non-zero if drift
+node operations/scripts/generators/.../generate-X.js --write  # regenerates
+```
+
+The pipeline dispatcher calls `--check` in PR mode and `--write` in post-merge mode.
+
+### Pattern: scheduled scan-report-act
+
+Used for `wcag`, `page-integrity`, `governance-map`, `workspace-retention`. Scheduled run does: audit + repair + verify + rolling-issue escalation for residual.
+
+```bash icon="terminal"
+node operations/scripts/dispatch/.../dispatch-X.js --mode scheduled --write --verify
+```
+
+The pipeline opens, updates, or closes a rolling issue per residual finding.
+
+### Pattern: integrator fetch + commit
+
+Used for `social-feeds`, `contract-addresses`, `release-version`, `large-assets`, `config-flags`, `exchanges-data`, `changelogs`, `translations`. Scheduled fetch from external source, validate schema, commit.
+
+```bash icon="terminal"
+node operations/scripts/dispatch/.../dispatch-X.js --mode scheduled --write
+```
+
+If the external source is unreachable or returns invalid data, the pipeline opens a rolling issue and the next scheduled run retries.
+
+<CustomDivider />
+
+## Local CLI parity (D-GOV-07)
+
+Every dispatcher works locally the same way it works in CI. The action workflow only adds:
+- Checkout + setup-node + npm ci
+- Permissions (read/write/issues/pull-requests)
+- Concurrency control
+- Commit + push (for write modes)
+- `peter-evans/create-pull-request@v7` (for manual-repair jobs)
+
+The dispatcher script itself is identical in CI and locally. This means **any failure you can reproduce in CI you can reproduce locally** by running the same dispatcher with the same flags.
+
+<CustomDivider />
+
+## Smoke test
+
+```bash icon="terminal"
+node operations/tests/integration/pipeline-smoke-test.js
+```
+
+Runs every dispatcher (currently 65) in `--mode pr --dry-run --staged` and reports pass/fail. 66/66 passing as of Phase 4 close (2026-05-22). Three dispatchers excluded by design (need live infrastructure: Mintlify dev server, RPC URL, full-scope scans).
+
+<CustomDivider />
+
+## Where to learn more
+
+- [Workflow and Pipeline Governance Framework](./github-actions.mdx) – the canonical architecture, taxonomy, decisions
+- `.github/workspace/actions-library/summary.md` – current workflow inventory at a glance
+- `.github/workspace/actions-library/catalog-index.mdx` – auto-generated per-workflow index
+- `.github/workspace/decisions-log.mdx` – full text of all 18 locked decisions
+- [Script Framework](./script-framework.mdx) – atomic script standards (11-tag JSDoc, folder placement)
+- [Governance Index](../policies/governance-index.mdx) – all 13 governed surfaces, section 10 covers GitHub Actions

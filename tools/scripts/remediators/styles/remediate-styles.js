@@ -105,8 +105,7 @@ const STANDARD_MERMAID_INIT = "%%{init: {'theme': 'base', 'themeVariables': {'pr
 
 const EXCLUDE_PATTERNS = [
   '_workspace', 'archive', 'language-pages', 'x-deprecated',
-  'x-archived', 'node_modules', '.claude', '_dep-docs',
-  'tasks/context_data'
+  'x-archived', 'node_modules', '.claude', '_dep-docs'
 ];
 
 function shouldExclude(filePath) {

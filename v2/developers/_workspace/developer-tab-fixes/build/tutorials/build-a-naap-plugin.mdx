@@ -1,0 +1,493 @@
+---
+title: 'Build a NaaP Plugin'
+sidebarTitle: 'NaaP Plugin'
+description: >-
+  Scaffold, develop, and publish a NaaP plugin. Micro-frontend architecture, ShellContext, plugin manifest, marketplace publication.
+keywords:
+  - livepeer
+  - naap
+  - plugin
+  - micro-frontend
+  - tutorial
+  - operator portal
+  - plugin sdk
+  - ecosystem
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Scaffold a plugin, mount it inside the NaaP shell, ship it to the marketplace. Auth, navigation, theming, and a Postgres schema come free.</Tip>
+</CenteredContainer>
+
+---
+
+By the end of this tutorial you'll have a NaaP plugin running locally inside the `operator.livepeer.org` shell, a backend API that queries a Postgres schema isolated to your plugin, and a `plugin.json` manifest ready to publish to the marketplace. The plugin uses `ShellContext` for auth, navigation, and theme, which means you write product code without rebuilding the infrastructure underneath it.
+
+This is the Persona 2 and Persona 3 join: the platform builder shipping operator tooling and the compute primitive builder shipping a network utility. NaaP is where both audiences ship UI that reaches the Livepeer operator community directly.
+
+<Warning>
+  NaaP is an official Livepeer project in active beta. Breaking changes to the plugin SDK may occur between releases. Check the changelog at `operator.livepeer.org/docs/community/changelog` before upgrading.
+</Warning>
+
+<CustomDivider />
+
+## Required Tools
+
+- Node.js 20 or later
+- Docker (for the local PostgreSQL container)
+- Git
+- A code editor
+
+The full platform runs locally via `./bin/start.sh` in the cloned NaaP repository. First run installs dependencies, starts Postgres, runs schema migrations, builds plugin bundles, and starts the shell. Subsequent starts take 6-8 seconds.
+
+<CustomDivider />
+
+## Plugin Architecture
+
+NaaP is a micro-frontend platform. The shell is a Next.js 15 host application at `operator.livepeer.org`. Plugins are compiled to UMD bundles that the shell loads at runtime via a plugin registry. Each plugin owns a full vertical slice.
+
+| Layer | What the plugin owns | What the shell provides |
+|---|---|---|
+| Frontend | React components, routes, custom UI | Layout, navigation, theme, notifications |
+| Backend | API logic, business rules | Auth middleware, request envelope, error handling |
+| Database | Schema definitions, queries | Shared Postgres, per-plugin schema isolation |
+| Identity | Plugin-scoped permissions | OIDC auth, RBAC, user context |
+
+Every plugin receives a `ShellContext` object on mount. This is the entire interface between a plugin and the platform. Plugins do not import shell internals directly.
+
+```ts
+interface ShellContext {
+  auth: IAuthService;                  // Authentication and authorisation
+  navigate: NavigateFunction;          // Client-side navigation
+  eventBus: IEventBus;                 // Inter-plugin communication
+  theme: IThemeService;                // Theme management
+  notifications: INotificationService; // Toast notifications
+  integrations: IIntegrationService;   // AI, storage, email
+  logger: ILoggerService;              // Structured logging
+  permissions: IPermissionService;     // Permission checking
+  tenant?: ITenantService;             // Tenant context
+  team?: ITeamContext;                 // Team context
+}
+```
+
+Plugin backends run at `/api/v1/[plugin-name]/*` in production (Vercel) and proxy to standalone Express backends on ports 4001-4012 in local development. The same route handlers serve both environments.
+
+<CustomDivider />
+
+## Platform Bootstrap
+
+<Steps>
+  <Step title="Clone the platform">
+    ```bash
+    git clone https://github.com/livepeer/naap.git
+    cd naap
+    ```
+  </Step>
+
+  <Step title="Start the platform">
+    ```bash
+    ./bin/start.sh
+    ```
+
+    First run takes 5-10 minutes. The script installs dependencies, starts Postgres via Docker, runs schema migrations, generates `.env` files, builds plugin bundles, and starts the shell.
+
+    Subsequent runs take 6-8 seconds.
+  </Step>
+
+  <Step title="Open the shell">
+    Navigate to `http://localhost:3000`. The NaaP shell loads with the default plugins installed. Sign in with the development credentials displayed in the terminal output.
+
+    The 12 default plugins cover developer, operator, monitoring, and governance use cases. Your custom plugin will mount alongside them after scaffolding.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Plugin Scaffold
+
+<Steps>
+  <Step title="Install the SDK">
+    In a separate terminal:
+
+    ```bash
+    npm install -g @naap/plugin-sdk
+    ```
+  </Step>
+
+  <Step title="Scaffold a new plugin">
+    ```bash
+    naap-plugin create orchestrator-health
+    cd orchestrator-health
+    ```
+
+    The CLI scaffolds a complete plugin skeleton: React entry point, backend route handlers, plugin manifest, Postgres schema migration, and test harness.
+  </Step>
+
+  <Step title="Edit the manifest">
+    Open `plugin.json`:
+
+    ```json
+    {
+      "id": "orchestrator-health",
+      "name": "Orchestrator Health",
+      "version": "0.1.0",
+      "category": "monitoring",
+      "description": "Monitors orchestrator uptime, ticket rejection rates, and capacity utilisation.",
+      "icon": "heart-pulse",
+      "permissions": ["network:read", "orchestrator:read"],
+      "navigation": {
+        "label": "Orchestrator Health",
+        "icon": "heart-pulse",
+        "order": 50
+      }
+    }
+    ```
+
+    The five required fields are `id`, `name`, `version`, `category`, and `permissions`. The shell uses `id` for routing (`/orchestrator-health`), database namespacing (`orchestrator_health` schema), and API path (`/api/v1/orchestrator-health/*`).
+  </Step>
+
+  <Step title="Start the dev server">
+    ```bash
+    naap-plugin dev
+    ```
+
+    The plugin hot-reloads inside the shell at `http://localhost:3000/orchestrator-health`. Edit React components and see changes within a second.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Frontend Implementation
+
+The plugin entry point receives `ShellContext` via the `useShell()` hook. Save as `src/index.tsx`:
+
+```tsx
+import { useEffect, useState } from 'react';
+import { useShell, useAuth } from '@naap/plugin-sdk';
+
+interface OrchestratorRecord {
+  ethAddress: string;
+  uptimePercent: number;
+  rejectedTicketsLast24h: number;
+  capacityUtilisation: number;
+}
+
+export default function OrchestratorHealthPlugin() {
+  const { navigate, notifications, logger } = useShell();
+  const { user } = useAuth();
+  const [orchestrators, setOrchestrators] = useState<OrchestratorRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/v1/orchestrator-health/orchestrators');
+        const body = (await res.json()) as {
+          success: boolean;
+          data?: OrchestratorRecord[];
+        };
+        if (body.success && body.data) {
+          setOrchestrators(body.data);
+        }
+      } catch (err) {
+        logger.error('Failed to load orchestrators', { err });
+        notifications.error('Could not load orchestrator data');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [logger, notifications]);
+
+  if (loading) {
+    return <div className="p-8">Loading orchestrator health…</div>;
+  }
+
+  return (
+    <main className="p-8 space-y-4">
+      <header>
+        <h1 className="text-2xl font-bold">Orchestrator Health</h1>
+        <p className="text-sm text-gray-600">Signed in as {user?.email}</p>
+      </header>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b">
+            <th className="text-left p-2">Address</th>
+            <th className="text-left p-2">Uptime</th>
+            <th className="text-left p-2">Rejected (24h)</th>
+            <th className="text-left p-2">Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orchestrators.map((o) => (
+            <tr
+              key={o.ethAddress}
+              className="border-b hover:bg-gray-50 cursor-pointer"
+              onClick={() => navigate(`/orchestrator-health/${o.ethAddress}`)}
+            >
+              <td className="p-2 font-mono text-sm">{o.ethAddress}</td>
+              <td className="p-2">{o.uptimePercent.toFixed(1)}%</td>
+              <td className="p-2">{o.rejectedTicketsLast24h}</td>
+              <td className="p-2">{(o.capacityUtilisation * 100).toFixed(0)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </main>
+  );
+}
+```
+
+The plugin imports only `@naap/plugin-sdk` and pulls every shell service through hooks. `useShell()` returns navigation, notifications, and logger; `useAuth()` returns the authenticated user. No direct calls to shell internals.
+
+<CustomDivider />
+
+## Backend Routes
+
+Plugin backends run as route handlers under `/api/v1/[plugin-name]/*`. The standard response envelope wraps every response.
+
+Save as `src/api/orchestrators.ts`:
+
+```ts
+import type { Request, Response } from 'express';
+import { db } from '@naap/database';
+
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  meta?: { page?: number; limit?: number; total?: number };
+  error?: { code: string; message: string };
+}
+
+interface OrchestratorRecord {
+  ethAddress: string;
+  uptimePercent: number;
+  rejectedTicketsLast24h: number;
+  capacityUtilisation: number;
+}
+
+export async function listOrchestrators(
+  req: Request,
+  res: Response<ApiResponse<OrchestratorRecord[]>>,
+) {
+  try {
+    const rows = await db.query(
+      `SELECT eth_address, uptime_percent, rejected_24h, capacity_util
+       FROM orchestrator_health.orchestrators
+       ORDER BY uptime_percent DESC
+       LIMIT 100`,
+    );
+
+    const data: OrchestratorRecord[] = rows.map((r: any) => ({
+      ethAddress: r.eth_address,
+      uptimePercent: Number(r.uptime_percent),
+      rejectedTicketsLast24h: Number(r.rejected_24h),
+      capacityUtilisation: Number(r.capacity_util),
+    }));
+
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'database_error',
+        message: 'Failed to load orchestrators',
+      },
+    });
+  }
+}
+```
+
+The `@naap/database` module exposes the shared Postgres connection. Plugin schemas are isolated by Postgres schema name; the orchestrator-health plugin owns the `orchestrator_health` schema and cannot read or write to other plugins' schemas.
+
+Wire the route handler in `src/api/index.ts`:
+
+```ts
+import { Router } from 'express';
+import { listOrchestrators } from './orchestrators';
+
+const router = Router();
+
+router.get('/orchestrators', listOrchestrators);
+
+export default router;
+```
+
+The shell mounts this router at `/api/v1/orchestrator-health/`. Every request gets pre-authenticated by the shell middleware; the route handler trusts that the request has a valid user.
+
+<CustomDivider />
+
+## Database Schema
+
+Plugins ship migrations under `migrations/`. The CLI generates timestamped files; the migration runs on shell startup and is idempotent.
+
+Save as `migrations/001_init.sql`:
+
+```sql
+-- Plugin schema: orchestrator_health
+-- Owned exclusively by the orchestrator-health plugin.
+
+CREATE SCHEMA IF NOT EXISTS orchestrator_health;
+
+CREATE TABLE IF NOT EXISTS orchestrator_health.orchestrators (
+  eth_address       VARCHAR(42)  PRIMARY KEY,
+  uptime_percent    DECIMAL(5,2) NOT NULL DEFAULT 0,
+  rejected_24h      INTEGER      NOT NULL DEFAULT 0,
+  capacity_util     DECIMAL(4,3) NOT NULL DEFAULT 0,
+  last_updated      TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_orch_uptime
+  ON orchestrator_health.orchestrators (uptime_percent DESC);
+
+CREATE TABLE IF NOT EXISTS orchestrator_health.health_events (
+  id            SERIAL PRIMARY KEY,
+  eth_address   VARCHAR(42) NOT NULL,
+  event_type    VARCHAR(50) NOT NULL,
+  payload       JSONB,
+  recorded_at   TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_events_orch
+  ON orchestrator_health.health_events (eth_address, recorded_at DESC);
+```
+
+Schema isolation is enforced at the Postgres level. Other plugins' role grants don't include the `orchestrator_health` schema, so cross-plugin reads fail with `permission denied` even if a plugin tries to escape its boundary.
+
+<CustomDivider />
+
+## Inter-Plugin Communication
+
+Plugins communicate through the shell's event bus. Use it to publish notable state changes (a new orchestrator detected, an alert threshold crossed) without coupling plugins to each other.
+
+```tsx
+import { useEventBus } from '@naap/plugin-sdk';
+
+function MyComponent() {
+  const eventBus = useEventBus();
+
+  // Publish: tell every other plugin an orchestrator went unhealthy
+  function alertUnhealthy(ethAddress: string) {
+    eventBus.publish('orchestrator.unhealthy', { ethAddress, ts: Date.now() });
+  }
+
+  // Subscribe: react to events from other plugins
+  useEffect(() => {
+    const unsub = eventBus.subscribe('plugin.installed', (payload) => {
+      console.log('Another plugin installed:', payload);
+    });
+    return unsub;
+  }, [eventBus]);
+}
+```
+
+Event types follow a `[domain].[verb]` convention. The shell broadcasts events for plugin lifecycle (`plugin.installed`, `plugin.removed`), auth (`user.signed-in`, `user.signed-out`), and theme (`theme.changed`). Custom events use your plugin's namespace (`orchestrator-health.alert`).
+
+<CustomDivider />
+
+## Marketplace Publication
+
+NaaP ships a Plugin Publisher plugin (one of the 12 default plugins) that handles marketplace submission. The flow:
+
+<Steps>
+  <Step title="Validate the bundle">
+    ```bash
+    naap-plugin validate
+    ```
+
+    The validator checks the manifest, schema migrations, permission declarations, and bundle size. Errors block publication; warnings allow but flag for review.
+  </Step>
+
+  <Step title="Build the production bundle">
+    ```bash
+    naap-plugin build --production
+    ```
+
+    Output goes to `dist/`. The UMD bundle is what the shell loads at runtime.
+  </Step>
+
+  <Step title="Publish via the Plugin Publisher plugin">
+    Open the Plugin Publisher plugin in the live shell at `operator.livepeer.org/plugin-publisher`. Upload the bundle plus the `plugin.json` manifest. The publisher walks the same validation, then submits to the marketplace queue for review.
+  </Step>
+
+  <Step title="Marketplace review">
+    Plugins go through a review process before listing. Reviews check for security issues (escalating permissions, cross-plugin schema access, unsafe network calls) and UX consistency. Approved plugins appear in the Plugin Marketplace plugin for any operator to install.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Production Considerations
+
+Six things change between the local development flow and a published plugin.
+
+**Permission scoping.** Declare only the permissions your plugin actually uses. Marketplace review rejects overscoped manifests. If the plugin reads orchestrator data, request `orchestrator:read`, not `network:write`.
+
+**Schema migrations are forward-only.** Once a migration runs in production, you cannot undo it. Test migrations against a fresh database before publishing; never edit a published migration file.
+
+**Backend cold-start.** Vercel functions cold-start on first request after idle. For plugins that need consistent latency, batch initial loads or use the shell's caching layer.
+
+**AI prompt templates.** The Prompts section in the NaaP docs ships eight templates for plugin scaffolding, UI design, testing, and publishing. Paste them into any AI assistant for boilerplate generation.
+
+**Versioning.** Use semantic versioning for the manifest `version` field. Breaking changes (manifest schema shifts, permission additions) increment major. Bug fixes increment patch.
+
+**Changelog discipline.** The NaaP platform itself ships breaking SDK changes between beta releases. Subscribe to the changelog at `operator.livepeer.org/docs/community/changelog` and test against the next beta before it ships stable.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="Plugin fails to load with 'invalid manifest'">
+    The `plugin.json` is missing a required field or has an invalid value. Run `naap-plugin validate` for specific errors. The five required fields are `id`, `name`, `version`, `category`, `permissions`.
+  </Accordion>
+  <Accordion title="`/api/v1/[plugin]/*` returns 401 in local dev">
+    The Express backend is running on the right port (4001-4012) but the shell isn't proxying to it. Restart the shell with `./bin/start.sh --restart-shell` to pick up the new plugin's route handlers.
+  </Accordion>
+  <Accordion title="Postgres schema 'permission denied' on plugin query">
+    The plugin schema didn't exist before the route handler ran. Confirm `migrations/001_init.sql` ran during `./bin/start.sh`; the schema name must match `plugin.json`'s `id` with hyphens converted to underscores (`orchestrator-health` becomes `orchestrator_health`).
+  </Accordion>
+  <Accordion title="`useShell()` throws 'shell context unavailable'">
+    The plugin is being rendered outside the shell. Either you're loading it directly (not through `naap-plugin dev`), or a parent component caught the React tree and broke context propagation. The plugin only works inside the shell host.
+  </Accordion>
+  <Accordion title="Event bus subscriptions fire stale data">
+    `useEventBus()` returns a new `subscribe` function on every render unless wrapped in `useCallback`. The subscriber closure captures stale state. Pass the values you need to the publisher; don't rely on closure over render-time state.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+Your plugin is registered in the NaaP Shell and accessible from the portal. Publish it to the plugin registry to make it available to other NaaP operators.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="NaaP Docs" icon="book" href="https://operator.livepeer.org/docs">
+    Full developer documentation, SDK hooks reference, prompt templates.
+  </Card>
+  <Card title="NaaP Repo" icon="github" href="https://github.com/livepeer/naap">
+    Source code, contribution guide, issue tracker.
+  </Card>
+  <Card title="Pymthouse Tutorial" icon="dollar-sign" href="/v2/developers/build/tutorials/multi-tenant-billing-with-pymthouse">
+    Pair a NaaP plugin with pymthouse for billed multi-tenant access.
+  </Card>
+  <Card title="Eliza Plugin Tutorial" icon="robot" href="/v2/developers/build/tutorials/eliza-livepeer-plugin">
+    Build an AI agent plugin for the Eliza framework.
+  </Card>
+</CardGroup>

@@ -1,0 +1,330 @@
+---
+title: "Build a chatbot with the Livepeer LLM endpoint"
+sidebarTitle: "Livepeer LLM chatbot"
+description: >-
+  Build a Node.js chatbot that streams chat completions from the Livepeer LLM endpoint, then a minimal browser UI on top.
+keywords:
+  - livepeer LLM
+  - chatbot
+  - tutorial
+  - chat completions
+  - streaming
+  - Llama
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-05-11
+complexity: intermediate
+lifecycleStage: discover
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>A Node.js script first, then a browser page. Both stream chat completions from the Livepeer LLM endpoint over HTTP and Server-Sent Events.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The Livepeer LLM endpoint accepts an OpenAI Chat Completions request body (`model`, `messages`) and returns OpenAI-shaped JSON. It supports Server-Sent Event streaming when `stream: true` is set. The request is a single `POST` to `https://livepeer.studio/api/beta/generate/llm`.
+
+<CustomDivider />
+
+## Prerequisites
+
+- Node.js 20 or later, npm
+- A Livepeer Studio API key. The LLM endpoint is hosted by Studio at `https://livepeer.studio/api/beta/generate/llm`. Sign in at `livepeer.studio` and create a key under Developers, API Keys.
+- A terminal
+
+The LLM pipeline runs on Ollama-compatible model runners on the Livepeer Network. `meta-llama/Meta-Llama-3.1-8B-Instruct` is the default warm model and requires 8 GB of VRAM on the Orchestrator side.
+
+<CustomDivider />
+
+## First Call with curl
+
+Confirm the endpoint is reachable from your network and your API key is valid:
+
+```bash icon="terminal"
+export LIVEPEER_API_KEY="your-studio-key"
+
+curl -X POST https://livepeer.studio/api/beta/generate/llm \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "messages": [
+      {"role": "user", "content": "Reply with one sentence: what is decentralised inference?"}
+    ]
+  }'
+```
+
+The response is OpenAI-shaped:
+
+```json icon="terminal"
+{
+  "id": "...",
+  "object": "chat.completion",
+  "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Decentralised inference runs model execution on a network of independent compute nodes coordinated by an open protocol."
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}
+```
+
+<CustomDivider />
+
+## Node Client
+
+Create a project:
+
+```bash icon="terminal"
+mkdir livepeer-llm-chat && cd livepeer-llm-chat
+npm init -y
+```
+
+Create `chat.mjs`:
+
+```js icon="terminal"
+const LIVEPEER_API_KEY = process.env.LIVEPEER_API_KEY;
+const URL = 'https://livepeer.studio/api/beta/generate/llm';
+
+const res = await fetch(URL, {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${LIVEPEER_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+    messages: [
+      { role: 'user', content: 'Name three GPU-bound workloads.' },
+    ],
+  }),
+});
+
+const data = await res.json();
+console.log(data.choices[0].message.content);
+```
+
+Run it:
+
+```bash icon="terminal"
+node chat.mjs
+```
+
+The first request to a cold model takes 30 to 60 seconds. Subsequent requests on a warm model complete in 1 to 5 seconds depending on model size and output length.
+
+<CustomDivider />
+
+## Streaming
+
+Replace `chat.mjs` to stream Server-Sent Events as tokens generate. The endpoint returns one `data: {...}` line per token; the stream ends with `data: [DONE]`.
+
+```js icon="terminal"
+const LIVEPEER_API_KEY = process.env.LIVEPEER_API_KEY;
+const URL = 'https://livepeer.studio/api/beta/generate/llm';
+
+const res = await fetch(URL, {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${LIVEPEER_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+    messages: [
+      { role: 'user', content: 'Write a one-paragraph explainer about probabilistic micropayments.' },
+    ],
+    stream: true,
+  }),
+});
+
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let buffer = '';
+
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) break;
+  buffer += decoder.decode(value, { stream: true });
+
+  let lineEnd;
+  while ((lineEnd = buffer.indexOf('\n')) >= 0) {
+    const line = buffer.slice(0, lineEnd).trim();
+    buffer = buffer.slice(lineEnd + 1);
+    if (!line.startsWith('data:')) continue;
+    const payload = line.slice(5).trim();
+    if (payload === '[DONE]') process.exit(0);
+    const chunk = JSON.parse(payload);
+    const delta = chunk.choices?.[0]?.delta?.content;
+    if (delta) process.stdout.write(delta);
+  }
+}
+```
+
+Tokens print to the terminal as they arrive.
+
+<CustomDivider />
+
+## Browser UI
+
+For a browser chat, proxy the streaming through a small Node server. The browser cannot call `livepeer.studio` directly without exposing the API key. Create `server.mjs`:
+
+```js icon="terminal"
+import http from 'node:http';
+import { readFile } from 'node:fs/promises';
+
+const LIVEPEER_API_KEY = process.env.LIVEPEER_API_KEY;
+const URL = 'https://livepeer.studio/api/beta/generate/llm';
+
+http.createServer(async (req, res) => {
+  if (req.method === 'GET' && req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(await readFile('./index.html'));
+    return;
+  }
+
+  if (req.method === 'POST' && req.url === '/stream') {
+    let body = '';
+    for await (const chunk of req) body += chunk;
+    const { message } = JSON.parse(body);
+
+    const upstream = await fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LIVEPEER_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+        messages: [{ role: 'user', content: message }],
+        stream: true,
+      }),
+    });
+
+    res.writeHead(200, {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Transfer-Encoding': 'chunked',
+    });
+
+    const reader = upstream.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let lineEnd;
+      while ((lineEnd = buffer.indexOf('\n')) >= 0) {
+        const line = buffer.slice(0, lineEnd).trim();
+        buffer = buffer.slice(lineEnd + 1);
+        if (!line.startsWith('data:')) continue;
+        const payload = line.slice(5).trim();
+        if (payload === '[DONE]') { res.end(); return; }
+        try {
+          const chunk = JSON.parse(payload);
+          const delta = chunk.choices?.[0]?.delta?.content;
+          if (delta) res.write(delta);
+        } catch {}
+      }
+    }
+    res.end();
+    return;
+  }
+
+  res.writeHead(404);
+  res.end();
+}).listen(3000, () => console.log('http://localhost:3000'));
+```
+
+Create `index.html`:
+
+```html icon="terminal"
+<!doctype html>
+<html>
+<body style="font-family:system-ui;max-width:640px;margin:2rem auto;padding:1rem">
+  <h1>Livepeer chat</h1>
+  <textarea id="input" rows="3" style="width:100%;padding:.5rem"></textarea>
+  <button id="send" style="padding:.5rem 1rem;margin-top:.5rem">Send</button>
+  <pre id="out" style="white-space:pre-wrap;margin-top:1rem;padding:1rem;background:#f5f5f5;border-radius:6px"></pre>
+  <script>
+    document.getElementById('send').onclick = async () => {
+      const message = document.getElementById('input').value;
+      const out = document.getElementById('out');
+      out.textContent = '';
+      const res = await fetch('/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        out.textContent += decoder.decode(value, { stream: true });
+      }
+    };
+  </script>
+</body>
+</html>
+```
+
+Run:
+
+```bash icon="terminal"
+node server.mjs
+```
+
+Open `http://localhost:3000`. Type a message, click Send, watch tokens render in real time.
+
+<CustomDivider />
+
+## Model Selection
+
+Pass any Ollama-compatible model ID in the `model` field. The default warm model on the network is `meta-llama/Meta-Llama-3.1-8B-Instruct`. Other models cold-start on the first request, which adds initial latency. Network capability and warm-model lists change; check current availability at `tools.livepeer.cloud/ai/network-capabilities` before pinning a model in production.
+
+<CustomDivider />
+
+## Common Errors
+
+**HTTP 401, unauthorised.** Studio API key missing, expired, or wrong header format. The header is `Authorization: Bearer <key>`.
+
+**HTTP 422, validation error.** Request body fails the schema. Check that `messages` is a non-empty array and that each entry has a `role` and `content`.
+
+**HTTP 500 or 504, model load timeout.** No Orchestrator currently serves the requested model warm, or cold start exceeded the Gateway timeout. Retry after 60 seconds or switch to `meta-llama/Meta-Llama-3.1-8B-Instruct`.
+
+**HTTP 429.** Rate limit reached. Sleep and retry; rate limits scale with Studio plan.
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Build an Eliza AI agent" icon="robot" href="/v2/developers/build/tutorials/eliza-livepeer-plugin">
+    Wire the LLM endpoint into the Eliza multi-agent framework as a model provider.
+  </Card>
+  <Card title="Model support" icon="database" href="/v2/developers/build/model-support">
+    Pipelines, warm models, and VRAM requirements across the network.
+  </Card>
+  <Card title="AI pipelines" icon="layer-group" href="/v2/developers/build/ai-pipelines">
+    Image, video, audio, and text pipelines.
+  </Card>
+  <Card title="Pricing and rate limits" icon="coins" href="/v2/developers/resources/pricing-rate-limits">
+    Per-pipeline pricing and quota detail.
+  </Card>
+</CardGroup>

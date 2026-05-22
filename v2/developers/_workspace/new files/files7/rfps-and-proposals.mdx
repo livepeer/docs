@@ -1,0 +1,138 @@
+---
+title: 'RFPs and Treasury Proposals'
+sidebarTitle: 'RFPs and Proposals'
+description: >-
+  How the Livepeer treasury funds development through SPE proposals, the RFP
+  process, and the on-chain governance vote cycle.
+keywords:
+  - livepeer
+  - RFP
+  - SPE
+  - treasury
+  - governance
+  - on-chain proposal
+  - LPT
+  - BondingManager
+  - forum
+  - funding
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>SPEs are multi-month funded programmes approved by on-chain LPT holder vote. RFPs are scoped tasks funded from a pre-approved SPE pool. RFPs are faster; SPEs are larger. Both pay in LPT.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer community treasury holds LPT accumulated from the protocol's inflation mechanism. Token holders vote on proposals to direct treasury funds toward specific programmes, infrastructure, and developer grants through the on-chain governance system.
+
+<CustomDivider />
+
+## Treasury Mechanics
+
+Protocol inflation mints new LPT each round. A portion of each round's inflation accrues to the treasury rather than to delegators. The treasury balance and its governance are managed through the Livepeer Governor contract on Arbitrum One.
+
+Token holders vote on treasury proposals with voting power proportional to their staked LPT. Proposals that reach quorum and pass the approval threshold receive LPT transfers from the treasury to the designated SPE multi-sig or recipient address.
+
+<CustomDivider />
+
+## Special Purpose Entities (SPEs)
+
+An SPE (Special Purpose Entity) is a funded working group created to execute on a specific programme over a defined period. SPEs are accountable to the community through regular reporting.
+
+**Lifecycle:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Stage</TableCell>
+      <TableCell header>Where</TableCell>
+      <TableCell header>What happens</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>1. Pre-proposal</TableCell>
+      <TableCell>Livepeer Forum (Treasury category)</TableCell>
+      <TableCell>Abstract, budget, timeline, team, deliverables posted for community feedback</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>2. Community discussion</TableCell>
+      <TableCell>Forum + Discord</TableCell>
+      <TableCell>Questions answered, scope refined, community signals gathered</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>3. On-chain proposal</TableCell>
+      <TableCell>Livepeer governance (explorer.livepeer.org)</TableCell>
+      <TableCell>Formal proposal submitted; voting opens</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>4. Vote</TableCell>
+      <TableCell>On-chain</TableCell>
+      <TableCell>LPT holders vote; proposals passing quorum and approval threshold are funded</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>5. Execution</TableCell>
+      <TableCell>Off-chain (SPE team)</TableCell>
+      <TableCell>Work executed; regular reporting to community</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>6. Retrospective</TableCell>
+      <TableCell>Forum</TableCell>
+      <TableCell>Final report published; basis for renewal proposals</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+SPE proposals that have the most success are well-validated during the pre-proposal stage. Posting a pre-proposal and engaging with the community for two to four weeks before submitting on-chain significantly increases the probability of passing.
+
+<CustomDivider />
+
+## RFPs (Network Engineering SPE)
+
+RFPs are scoped engineering tasks funded from the Network Engineering SPE's pre-approved pool, without requiring a standalone on-chain vote. The SPE holds a delegated budget and disburses it to selected contributors for work in the $2k–$20k range.
+
+The full RFP process is described in the Network Engineering SPE documentation at `forum.livepeer.org/t/pre-proposal-network-engineering-spe/3240`.
+
+Key differences from a full SPE proposal:
+
+| | RFP | SPE |
+|---|---|---|
+| Approval required | SPE team (no on-chain vote) | LPT holder vote |
+| Typical size | $2k–$20k | $50k–$300k+ |
+| Typical duration | 2–8 weeks | 3–12 months |
+| Process time | Days to weeks | Weeks to months |
+
+<CustomDivider />
+
+## Governance Resources
+
+- **Forum:** `forum.livepeer.org` (Treasury category for all pre-proposals and governance discussions)
+- **Roadmap:** `roadmap.livepeer.org` (Public roadmap suggestions and open RFPs)
+- **Explorer:** `explorer.livepeer.org` (On-chain governance proposals and voting)
+- **Discord:** `#governance` and `#builders` channels for informal community discussion
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Grants and Programmes" icon="coins" href="/v2/developers/opportunities/grants-and-programmes" arrow horizontal>
+    Applying to open RFPs and submitting retroactive grants.
+  </Card>
+  <Card title="Builder Opportunities" icon="grid" href="/v2/developers/opportunities/overview" arrow horizontal>
+    Overview of all funding mechanisms.
+  </Card>
+</CardGroup>

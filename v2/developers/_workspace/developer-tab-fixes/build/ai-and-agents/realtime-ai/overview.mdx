@@ -1,0 +1,146 @@
+---
+title: 'Real-Time AI'
+sidebarTitle: 'Overview'
+description: >-
+  How the Cascade architecture transforms live video streams frame by frame using
+  ComfyUI workflows connected to Livepeer orchestrators over the trickle protocol.
+keywords:
+  - livepeer
+  - real-time AI
+  - Cascade
+  - live-video-to-video
+  - ComfyStream
+  - trickle protocol
+  - WebRTC
+  - frame processing
+  - StreamDiffusion
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Real-time AI on Livepeer transforms a live video stream frame by frame. You send a stream; the network applies a ComfyUI workflow to each frame and returns the transformed stream in real time.</Tip>
+</CenteredContainer>
+
+---
+
+The batch AI pipelines on Livepeer handle request-response jobs: send an asset, receive a result. Real-time AI is different. The `live-video-to-video` pipeline maintains a persistent connection between a source stream and a processing pipeline, applying model inference to each frame as it arrives. The output is a transformed stream rather than a finished file.
+
+This architecture is called Cascade. Daydream uses Cascade for its generative video platform. The same infrastructure powers VTuber avatar pipelines and real-time AI filter tools like StreamDiffusionTD.
+
+<CustomDivider />
+
+## Cascade Architecture
+
+Cascade routes a live stream through four components: a gateway, an orchestrator, an ai-runner container running a real-time pipeline, and the trickle protocol connecting them.
+
+The trickle protocol (from `github.com/j0sh/http-trickle`) is an HTTP-based streaming protocol that splits a media stream into short sequential segments, delivering each segment as soon as it is produced rather than buffering for a fixed window. This allows the pipeline to begin processing frames before the stream has been fully received, keeping end-to-end latency low.
+
+The request flow:
+
+1. A source sends a stream (WebRTC or RTMP) to a gateway endpoint
+2. The gateway opens a persistent `POST /live/video-to-video` session with an orchestrator
+3. The orchestrator forwards frames to an `ai-runner` container running a ComfyUI or custom real-time pipeline
+4. The pipeline applies model inference per frame and returns transformed frames over the trickle channel
+5. The gateway delivers the output stream back to the client
+
+The orchestrator and ai-runner communicate over trickle. Dynamic parameter updates can be sent to the running pipeline without interrupting the stream, using the `POST /live/video-to-video/update` endpoint.
+
+<CustomDivider />
+
+## ComfyStream
+
+ComfyStream is the primary development tool for building Cascade pipelines. It is a ComfyUI custom node that runs img2img workflows on live video streams. The `livepeer/comfystream` repository is the canonical upstream; active development moved there from the original `yondonfu/comfystream` fork.
+
+ComfyStream adds a WebRTC server and browser UI alongside the ComfyUI node. The server accepts a webcam or RTMP stream, runs it through a standard ComfyUI workflow JSON file, and streams the output frames back to the connected peer.
+
+Key properties of ComfyStream:
+
+- Works with any existing ComfyUI workflow in API format. Workflows built in ComfyUI desktop work unchanged.
+- Custom nodes from your existing ComfyUI workspace are reused automatically when processing the video stream.
+- Deployment options include Docker (`livepeer/comfystream` image), the RunPod `livepeer-comfystream` template, Tensordock via the provided Python script, and Ansible playbooks for any cloud provider.
+- Installation as a standalone package: `pip install git+https://github.com/livepeer/comfystream.git`
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for how to build and connect a ComfyUI workflow to a live stream.
+
+<CustomDivider />
+
+## PyTrickle
+
+PyTrickle (`livepeer/pytrickle`) is the Python SDK for building custom real-time processing services over the trickle protocol. Where ComfyStream wraps ComfyUI, PyTrickle provides the lower-level `FrameProcessor` abstraction for arbitrary Python processing logic: AI models, custom filters, streaming analytics, or any async frame-by-frame computation.
+
+A PyTrickle service exposes an HTTP API that the Livepeer orchestrator connects to directly. The service handles video decoding, frame delivery, and video encoding; you implement `process_video_async` and optionally `process_audio_async`.
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/pytrickle/overview" label="PyTrickle Overview" newline={false} /> for installation and the `FrameProcessor` pattern.
+
+<CustomDivider />
+
+## Getting a Real-Time Pipeline Running
+
+A developer working on a real-time pipeline needs:
+
+1. A ComfyUI installation with the workflow they want to apply to video
+2. ComfyStream installed as a custom node, or a PyTrickle service implementing the pipeline
+3. A Livepeer gateway endpoint routing the `live-video-to-video` pipeline to an orchestrator that supports real-time AI
+
+For development, the public community gateway at `dream-gateway.livepeer.cloud` routes real-time AI jobs to orchestrators with available Cascade capacity. For production, a self-hosted gateway or a dedicated gateway partner provides guaranteed capacity and predictable routing.
+
+<Note>
+  Real-time AI is in beta. Pipeline availability depends on orchestrators running the `ai-runner` container with real-time support enabled. Check `tools.livepeer.cloud/ai/network-capabilities` for current warm orchestrators on the `live-video-to-video` pipeline.
+</Note>
+
+<CustomDivider />
+
+The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart) is the fastest path to a working real-time pipeline. For custom Python models outside ComfyUI, start with [PyTrickle](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview).
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card
+    title="Workflow Authoring"
+    icon="workflow"
+    href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring"
+    arrow
+    horizontal
+  >
+    Building and connecting ComfyUI workflows to live video streams with ComfyStream.
+  </Card>
+  <Card
+    title="ComfyStream as BYOC"
+    icon="box"
+    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    arrow
+    horizontal
+  >
+    Running ComfyStream as a registered BYOC container on Livepeer orchestrators.
+  </Card>
+  <Card
+    title="PyTrickle Overview"
+    icon="code"
+    href="/v2/developers/build/ai-and-agents/pytrickle/overview"
+    arrow
+    horizontal
+  >
+    Python SDK for custom real-time processing services over the trickle protocol.
+  </Card>
+  <Card
+    title="AI Pipelines"
+    icon="cpu"
+    href="/v2/developers/build/ai-and-agents/ai-pipelines"
+    arrow
+    horizontal
+  >
+    Batch pipeline types and the live-video-to-video endpoint reference.
+  </Card>
+</CardGroup>

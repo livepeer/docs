@@ -1,0 +1,249 @@
+---
+title: 'VTuber Avatar Pipeline'
+sidebarTitle: 'VTuber Pipeline'
+description: >-
+  Build a real-time VTuber avatar pipeline on ComfyStream. Pose-conditioned StreamDiffusion, sub-100ms latency, 25 FPS on an RTX 4090.
+keywords:
+  - livepeer
+  - vtuber
+  - avatar
+  - comfystream
+  - streamdiffusion
+  - dwpose
+  - controlnet
+  - real-time ai
+  - tutorial
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: advanced
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Webcam in, anime avatar out, sub-100ms end-to-end. Pose-conditioned StreamDiffusion on ComfyStream. RTX 4090 for 25 FPS at 512x512.</Tip>
+</CenteredContainer>
+
+---
+
+By the end of this tutorial you'll have a working VTuber pipeline: webcam input flows into a ComfyStream workflow that extracts pose keypoints, conditions a StreamDiffusion model on those keypoints, and emits an animated avatar matching your pose in real time. The output streams back to the browser via WebRTC. Latency budget is under 100ms end-to-end on adequate hardware.
+
+This is the Persona 1 and Persona 4 join: the agent builder who needs a face for their AI character, and the live-video builder who needs sub-second-latency video transformation. The Agent SPE built the first production avatar pipeline on this stack; the recipe below is what you replicate when you build the second.
+
+<CustomDivider />
+
+## Required Tools
+
+- A working ComfyStream instance from the <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart" label="ComfyStream Quickstart" newline={false} />: RunPod, Docker, or local
+- NVIDIA GPU with 16 GB+ VRAM. RTX 3090 minimum; RTX 4090 recommended for 25 FPS
+- ComfyUI with the workflow editor accessible (port 8188 on a running ComfyStream container)
+- A webcam, or an RTMP source publishing to the gateway
+
+VRAM source: the <LinkArrow href="/v2/orchestrators/resources/reference/gpu-support" label="GPU Support Matrix" newline={false} />. Avatar workflows compound a base diffusion model (8-12 GB) plus pose ControlNet (2-4 GB) plus VAE and TensorRT engines (2 GB), so headroom matters more than for plain StreamDiffusion.
+
+<CustomDivider />
+
+## Pipeline Shape
+
+A VTuber pipeline is a chain of four nodes inside one ComfyStream workflow:
+
+```
+LoadTensor (webcam frame)
+  ↓
+DWPose Estimator (extracts pose keypoints from the frame)
+  ↓
+StreamDiffusionSampler (generates avatar conditioned on pose + prompt)
+  ↓
+SaveTensor (publishes back to the WebRTC stream)
+```
+
+The input frame never reaches the model directly. Only the pose keypoints do, which means the model has no visual information about you; it generates an entirely new character from the prompt, posed exactly like you. Move your hand, the avatar moves its hand. Tilt your head, the avatar tilts its head.
+
+Three alternative conditioning paths exist for different effects:
+
+| Conditioning | Effect | When to use |
+|---|---|---|
+| DWPose | Pose-only, full character replacement | VTuber avatars, character swaps |
+| Depth (DepthAnything / MiDaS) | Preserves 3D structure | Stylised real you, scene transformation |
+| Canny / Sketch | Preserves edges | Line-art or comic effects |
+
+The walk-through below uses DWPose. Swap nodes to switch effect type without changing the rest of the pipeline.
+
+<CustomDivider />
+
+## Workflow Authoring
+
+<Steps>
+  <Step title="Open ComfyUI">
+    With the ComfyStream container running, open the ComfyUI editor at `http://localhost:8188`. The blank workflow canvas appears.
+  </Step>
+
+  <Step title="Add the input and output nodes">
+    Right-click the canvas, search and add:
+
+    - `LoadTensor`: pulls the live video frame
+    - `SaveTensor`: publishes the processed frame back
+
+    Connect `LoadTensor.image` → (later, the model output) → `SaveTensor.image`.
+  </Step>
+
+  <Step title="Add pose extraction">
+    Add `DWPose Estimator` (or `OpenPose Estimator` if DWPose is not available in your ComfyStream image). Connect `LoadTensor.image` → `DWPose.image`. The node outputs a `pose_keypoints` map and a rendered pose image.
+
+    DWPose is in `ComfyUI-controlnet-aux`, which ships in `livepeer/comfystream` by default.
+  </Step>
+
+  <Step title="Add StreamDiffusion with pose conditioning">
+    Add three nodes:
+
+    - `StreamDiffusionCheckpoint`: loads the base diffusion model
+    - `StreamDiffusionConfig`: sets CFG, t-index, acceleration mode
+    - `StreamDiffusionSampler`: runs inference per frame
+
+    Configure the checkpoint to an SD 1.5 model (or SDXL variant if VRAM permits). Lightning or LCM variants give the lowest latency.
+
+    Connect `DWPose.pose_image` → `StreamDiffusionSampler.control_image`. Set `control_type` to `openpose` in the sampler config.
+  </Step>
+
+  <Step title="Set the avatar prompt">
+    Add a `CLIPTextEncode` node and connect it to `StreamDiffusionSampler.positive`. Enter a prompt that describes the avatar:
+
+    ```
+    1girl, anime, green hair, blue eyes, plain white background,
+    high quality, detailed, sharp focus
+    ```
+
+    Add a negative prompt to suppress artefacts:
+
+    ```
+    blurry, low quality, distorted hands, extra limbs, watermark
+    ```
+
+    Connect the negative encode to `StreamDiffusionSampler.negative`.
+  </Step>
+
+  <Step title="Wire the output">
+    Connect `StreamDiffusionSampler.image` → `SaveTensor.image`. The workflow is complete.
+  </Step>
+
+  <Step title="Export in API format">
+    Enable Developer Mode in ComfyUI settings, then use **Save (API Format)** to produce the JSON file. Place it in your ComfyStream `workflows/` directory.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## First Run
+
+<Steps>
+  <Step title="Load the workflow in ComfyStream">
+    Switch to the ComfyStream UI on port 8889. Pick your new workflow from the selector. First run triggers TensorRT compilation: 2-10 minutes depending on model size and GPU.
+  </Step>
+
+  <Step title="Connect your webcam">
+    Pick your webcam from the camera input dropdown. The browser requests camera permission.
+  </Step>
+
+  <Step title="Press Run">
+    Compilation completes. The avatar appears in the output panel, posed as you are. Move; the avatar moves.
+  </Step>
+</Steps>
+
+A first run that takes longer than ten minutes usually means the model is too big for the GPU and TensorRT is swapping. Drop to a smaller checkpoint (SD 1.5 LCM instead of SDXL Lightning) and retry.
+
+<CustomDivider />
+
+## Latency Tuning
+
+VTuber latency is the difference between your real movement and the avatar's responding movement. Under 100ms reads as instant; over 200ms reads as broken. Three levers move the number.
+
+**Model step count.** A 25-step DDIM run is unusable in real time. LCM (1-2 steps) and Lightning (4 steps) variants are the realistic options. The visual quality difference at 512x512 is acceptable; the latency difference is not.
+
+**Resolution.** 512x512 at 30 FPS is achievable on an RTX 4090 with StreamDiffusion. 768x768 drops to ~20 FPS. 1024x1024 drops to ~12 FPS. Most VTuber output destinations (Twitch, YouTube Live) downscale anyway, so 512x512 source is usually correct.
+
+**TensorRT compilation.** Once per deployment, compile the model to a TensorRT engine. Runtime speedup is 2-4x with no visual quality cost. ComfyStream handles compilation automatically on first workflow load.
+
+**Stochastic Similarity Filter.** StreamDiffusion's SSF skips inference on near-identical frames. For VTuber content where the streamer often sits relatively still, SSF lifts effective FPS by 30-50% with no quality drop. Enable in `StreamDiffusionConfig.enable_similar_image_filter = true`.
+
+<CustomDivider />
+
+## Agent-Controlled Avatars
+
+The avatar so far mirrors your pose. To drive the avatar from an AI agent (text in, motion and speech out), three additions wire on top:
+
+**LLM for character voice.** Route agent text generation through the <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="LLM pipeline" newline={false} />. The chatbot tutorial covers the wire format.
+
+**Text-to-speech for character voice.** Route the LLM output through the `text-to-speech` batch pipeline (`parler-tts/parler-tts-large-v1`). The TTS warm model accepts a `description` parameter for voice characteristics.
+
+**Lip-sync conditioning.** For lip-synced output, add an audio-driven pose node that maps the TTS audio to lip and jaw keypoints. The Agent SPE production pipeline uses this approach; the exact node varies by model. As of Phase 4 the Daydream stack uses a custom audio-to-pose adapter not yet released as an open custom node.
+
+For an end-to-end agent + avatar setup, see the <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin" label="Eliza plugin tutorial" newline={false} />; Eliza handles character files, RAG, and multi-agent orchestration.
+
+<CustomDivider />
+
+## Production Considerations
+
+Local execution proves the pipeline. Production shipping needs three more layers.
+
+**Dedicated GPU per stream.** Real-time AI assigns a GPU to a stream for its full duration. A four-viewer concurrent test needs four GPUs in your orchestrator pool, or four orchestrators with one GPU each. Test under expected concurrency; orchestrator availability for `live-video-to-video` is lower than for batch pipelines at peak network load.
+
+**Gateway routing.** Self-hosted gateways pick the orchestrator running your ComfyStream image. Production deployments either run a gateway pool or use a paid gateway provider with BYOC routing enabled.
+
+**Stream out to viewers.** ComfyStream emits WebRTC. For broadcast to Twitch, YouTube Live, or a player, restream through OBS, a media server (e.g. MediaMTX), or a dedicated forwarder. Direct WebRTC-to-RTMP bridges are available; ComfyStream itself does not re-encode for those targets.
+
+Full real-time hardening guidance in <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup" label="Realtime AI Setup" newline={false} /> (Orchestrators tab; same primitives apply to single-user deployments).
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="DWPose node not found">
+    `ComfyUI-controlnet-aux` is missing from the ComfyStream image you're using. The official `livepeer/comfystream:latest` includes it. For custom builds, install with `pip install -r requirements.txt` from the `ComfyUI-controlnet-aux` repo and restart the server.
+  </Accordion>
+  <Accordion title="Output avatar drifts off-pose by 200ms">
+    Pose extraction latency added to inference latency. Drop to a smaller pose model (`DWPose-S` instead of `DWPose-L`), or use OpenPose if DWPose latency dominates. Confirm with `nvidia-smi` that GPU utilisation is high; low utilisation means a CPU bottleneck on pose extraction.
+  </Accordion>
+  <Accordion title="Output avatar identity shifts frame-to-frame">
+    Without IP-Adapter or LoRA, StreamDiffusion's character identity drifts because each frame is sampled independently. Add an IP-Adapter node with a reference image of the target avatar, or train a character LoRA and load it via `StreamDiffusionConfig.loras`.
+  </Accordion>
+  <Accordion title="FPS stable but choppy playback">
+    Network jitter or browser-side rendering. WebRTC is sensitive to packet loss; on a remote ComfyStream instance, confirm the UDP port range 1024-65535 is open both ways. For local instances with choppy playback, the issue is usually the browser; test in Chrome before debugging the pipeline.
+  </Accordion>
+  <Accordion title="OOM on first compilation">
+    TensorRT compilation allocates extra VRAM temporarily. A 16 GB GPU running a workflow that fits in 14 GB at runtime may OOM at compile. Either compile on a larger GPU and copy the engine, or drop to a smaller base model.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+You have a real-time avatar pipeline running at 20+ FPS through ComfyStream. The StreamDiffusion nodes accept any pose-conditioned model; swap the checkpoint to change the avatar style without changing the pipeline architecture.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Workflow Authoring" icon="diagram-project" href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring">
+    Deep guide on ComfyStream workflow construction, control flow, custom nodes.
+  </Card>
+  <Card title="Eliza Plugin Tutorial" icon="robot" href="/v2/developers/build/tutorials/eliza-livepeer-plugin">
+    Agent character files, RAG, multi-agent orchestration.
+  </Card>
+  <Card title="LLM Chatbot Tutorial" icon="message" href="/v2/developers/build/tutorials/build-a-chatbot-with-livepeer-llm">
+    Wire LLM-driven dialogue into the avatar.
+  </Card>
+  <Card title="Realtime AI Setup (Operator)" icon="server" href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup">
+    Orchestrator-side primitives, capacity planning, GPU selection.
+  </Card>
+</CardGroup>

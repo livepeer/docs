@@ -1,0 +1,79 @@
+---
+title: "Applications"
+sidebarTitle: "Overview"
+description: >-
+  Build frontend applications on Livepeer using the React Player and Broadcast
+  components, or integrate directly with hls.js for non-React environments.
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - applications
+  - player
+  - broadcast
+  - react
+  - hls.js
+  - frontend
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The @livepeer/react package provides Player and Broadcast components that handle ABR selection, WebRTC fallback, and WHIP publishing. For non-React environments, use hls.js directly with Livepeer playback URLs.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Livepeer provides three frontend integration paths depending on your framework and requirements.
+
+**`@livepeer/react` Player** handles HLS and WebRTC playback with automatic ABR (adaptive bitrate) selection, poster images, and playback metrics. It accepts a `playbackId` from any stream or asset and negotiates the best transport automatically.
+
+**`@livepeer/react` Broadcast** provides browser-based WHIP publishing for live streams. Users can stream directly from the browser without OBS or external encoders.
+
+**hls.js (non-React)** works with any framework. Livepeer playback URLs are standard HLS manifests; any HLS-compatible player works. Use hls.js for Vue, Svelte, Angular, or vanilla JavaScript applications.
+
+<CustomDivider />
+
+## Quick start
+
+```bash
+npm install @livepeer/react
+```
+
+```tsx
+import * as Player from '@livepeer/react/player';
+
+export function VideoPlayer({ playbackId }: { playbackId: string }) {
+  return (
+    <Player.Root src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8`}>
+      <Player.Container>
+        <Player.Video />
+        <Player.Controls>
+          <Player.PlayPauseTrigger />
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+<CustomDivider />
+
+<CardGroup cols={3}>
+  <Card title="React Player" icon="play" href="/v2/developers/build/applications/frontend-react-player">
+    HLS and WebRTC playback with ABR, poster, and metrics.
+  </Card>
+  <Card title="React Broadcast" icon="video" href="/v2/developers/build/applications/frontend-react-broadcast">
+    Browser-based WHIP publishing for live streams.
+  </Card>
+  <Card title="Core Web (hls.js)" icon="code" href="/v2/developers/build/applications/frontend-core-web">
+    Framework-agnostic HLS playback for Vue, Svelte, and vanilla JS.
+  </Card>
+</CardGroup>

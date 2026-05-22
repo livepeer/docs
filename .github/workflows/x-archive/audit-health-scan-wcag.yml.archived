@@ -1,0 +1,95 @@
+# type: audit
+# concern: health
+# pipeline: P5
+name: WCAG Accessibility Scan
+
+on:
+  schedule:
+    # Weekly Sunday 04:00 UTC
+    - cron: '0 4 * * 0'
+  workflow_dispatch:
+    inputs:
+      fail_impact:
+        description: "Track findings at or above this impact"
+        required: false
+        type: choice
+        default: 'serious'
+        options:
+          - minor
+          - moderate
+          - serious
+          - critical
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  scan-wcag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Run WCAG audit
+        id: audit
+        run: |
+          node operations/scripts/audits/content/health/audit-wcag.js \
+            --fail-impact "${{ inputs.fail_impact || 'serious' }}" \
+            --json > /tmp/wcag-audit-result.json
+          PASSED=$(node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/wcag-audit-result.json','utf8')).passed)")
+          BLOCKING=$(node -e "console.log(JSON.parse(require('fs').readFileSync('/tmp/wcag-audit-result.json','utf8')).blocking)")
+          echo "passed=$PASSED" >> "$GITHUB_OUTPUT"
+          echo "blocking=$BLOCKING" >> "$GITHUB_OUTPUT"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wcag-audit-report
+          path: workspace/reports/health/wcag/
+          retention-days: 30
+
+      - name: Open or update rolling issue
+        if: steps.audit.outputs.passed == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            let report = '(report unavailable)';
+            try { report = fs.readFileSync('workspace/reports/health/wcag/wcag-audit.md', 'utf8').slice(0, 60000); } catch (_) {}
+            const blocking = '${{ steps.audit.outputs.blocking }}';
+            const body = [
+              '## WCAG Accessibility Scan',
+              '',
+              `${blocking} blocking finding(s) detected by the scheduled scan.`,
+              '',
+              '### Report',
+              '',
+              report,
+            ].join('\n');
+            await ri.upsert({
+              github, context, core,
+              label: 'health:wcag',
+              title: 'WCAG accessibility: findings detected',
+              body,
+            });
+
+      - name: Close rolling issue if clean
+        if: steps.audit.outputs.passed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const ri = require('./operations/scripts/interfaces/governance/lib/rolling-issue.js');
+            await ri.close({ github, context, core, label: 'health:wcag', reason: 'No blocking WCAG findings' });

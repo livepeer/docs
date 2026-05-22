@@ -1,0 +1,113 @@
+---
+title: UI System
+sidebarTitle: UI System
+description: Internal map of the component library, templates, snippets, style governance, and UI authoring contracts.
+audience: developer
+pageType: overview
+purpose: overview
+status: current
+lastVerified: 2026-05-14
+keywords:
+  - livepeer
+  - ui system
+  - components
+  - templates
+  - snippets
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# UI System
+
+The UI system is the shared presentation layer for MDX content. Its job is to make reusable patterns easy without letting one-off page styling become the default architecture.
+
+## UI Surfaces
+
+| Surface | Purpose | Canonical governance |
+| --- | --- | --- |
+| `snippets/components/` | JSX component library for MDX pages. | `docs-guide/frameworks/component-framework-canonical.mdx` |
+| `snippets/templates/` | Page and block templates for repeatable authoring. | `snippets/guide.mdx`, `docs-guide/catalog/ui-templates.mdx` |
+| `.vscode/*.code-snippets` | Editor snippets for MDX, components, and templates. | generated from template/component registries where applicable |
+| `style.css` | Global Mintlify CSS and design tokens. | `docs-guide/frameworks/styles-engineering-guide.mdx` |
+| `snippets/assets/` | Logos, images, media, diagrams, and OG assets. | `docs-guide/policies/snippets-assets-policy.mdx` |
+| `snippets/composables/` | Portable authored MDX composition blocks. | `snippets/guide.mdx` and component/content governance |
+
+## Component Taxonomy
+
+Live inventory found 59 JSX component files under `snippets/components/`, including 24 in `x-archive/`.
+
+| Category | Live count | Intended role |
+| --- | ---: | --- |
+| `elements/` | 10 | Small primitives such as buttons, links, icons, text, spacing, images, and callouts. |
+| `wrappers/` | 3 | Components that group or arrange child content. |
+| `displays/` | 10 | Renderers for code, diagrams, tables, video, quotes, and response fields. |
+| `scaffolding/` | 3 | Page-level layout and hero structures. |
+| `integrators/` | 8 | Components that render external or structured data feeds. |
+| `config/` | 1 | Shared UI configuration. |
+| `x-archive/` | 24 | Superseded components retained for review or compatibility. |
+
+The component framework still contains aspirational or stale counts. Contributors should validate against the filesystem before relying on counts in narrative docs.
+
+## Template System
+
+Templates live under `snippets/templates/` and are surfaced through:
+
+- `docs-guide/catalog/ui-templates.mdx`
+- `docs-guide/catalog/templates-catalog.mdx`
+- `.vscode/templates.code-snippets`
+- preview routes in the docs guide where configured
+
+The current template families are:
+
+| Family | Examples |
+| --- | --- |
+| Page templates | overview, how-to, tutorial, reference, FAQ, troubleshooting, portal, landing frame, OpenAPI endpoint, multi-view setup |
+| Block templates | comparison matrix, comparison table, related pages cards, related pages CTA |
+| Docs-guide templates | feature map, framework page, policy page, tooling reference page, script catalog, component catalog |
+
+[//]: # (AUTO-GENERATED:UI-TEMPLATES:START)
+<Note>
+**Generated section**: This section is synchronized by `operations/scripts/generators/components/library/generate-ui-templates.js`. Do not edit the generated block by hand. <br/>
+</Note>
+
+### Generated Template Inventory
+
+Run `node operations/scripts/generators/components/library/generate-ui-templates.js --write` to refresh this generated section from `snippets/templates/**`.
+[//]: # (AUTO-GENERATED:UI-TEMPLATES:END)
+
+## Style Governance
+
+| Rule | Why it exists | Source |
+| --- | --- | --- |
+| Use CSS custom properties for theme colors and repeated tokens. | Avoid hardcoded styling that breaks theme behavior. | `docs-guide/frameworks/styles-engineering-guide.mdx` |
+| Prefer existing components and templates before new UI. | Reduce duplicated presentation logic. | `docs-guide/frameworks/component-governance.mdx` |
+| Keep page structure in MDX and reusable behavior in JSX components. | Preserve Mintlify compatibility and authoring clarity. | Mintlify canonical constraints |
+| Generated component docs and registries must be regenerated. | Avoid stale catalogs and snippet drift. | component generators under `operations/scripts/generators/components/` |
+
+## Authoring Workflow
+
+1. Check `snippets/components/` and `docs-guide/catalog/components-catalog.mdx` before creating UI.
+2. If a template exists, start from `snippets/templates/` or generated VS Code snippets.
+3. If a new component is required, place it in the correct taxonomy folder and add required metadata.
+4. Keep data outside the component unless the component is explicitly an integrator.
+5. Run component and staged validation before handing work back.
+
+## UI System Gaps
+
+| Gap | Evidence | Required action |
+| --- | --- | --- |
+| Archived components are still mixed into live inventory counts. | 24 JSX files are under `snippets/components/x-archive/`. | Decide which are compatibility shims, then either document alias status or schedule governed deletion. |
+| Component framework count drift | Governance index states component counts are partially stale. | Regenerate component indexes and update framework claims from live inventory. |
+| `.DS_Store` files in snippets | Static scan found `.DS_Store` files in `snippets/`, assets, components, data, and templates. | Purge generated OS files through approved deletion flow and ensure ignore coverage. |
+| Backup editor snippet | `.vscode/livepeer-legacy.code-snippets.bak` is tracked. | Classify as compatibility evidence or remove through governed deletion. |
+
+## Related
+
+- `docs-guide/frameworks/component-framework-canonical.mdx`
+- `docs-guide/frameworks/styles-engineering-guide.mdx`
+- `docs-guide/catalog/components-catalog.mdx`
+- `docs-guide/catalog/ui-templates.mdx`
+- `snippets/guide.mdx`

@@ -1,0 +1,182 @@
+---
+title: 'Live Events'
+sidebarTitle: 'Live Events'
+description: >-
+  Managing live event streams on Livepeer: multistream targets, recording,
+  access control, and stream lifecycle operations.
+keywords:
+  - livepeer
+  - live events
+  - multistream
+  - recording
+  - access control
+  - stream management
+  - playback policy
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Livepeer streams support simultaneous multistream destinations, automatic recording, and token-gated playback through playback policies, all configurable at stream creation or via update.</Tip>
+</CenteredContainer>
+
+---
+
+A Livepeer live event stream supports three features layered on top of basic RTMP ingest: simultaneous restreaming to third-party RTMP destinations (multistream), automatic recording to a VOD asset, and playback access control via JWT tokens or webhook verification.
+
+<CustomDivider />
+
+## Multistream Targets
+
+Multistream simultaneously pushes a live stream to additional RTMP destinations (YouTube Live, Twitch, custom RTMP servers) alongside Livepeer transcoding.
+
+Create a multistream target:
+
+```javascript
+import { Livepeer } from 'livepeer';
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+const target = await client.multistream.createTarget({
+  url: 'rtmp://a.rtmp.youtube.com/live2/<youtube-stream-key>',
+  name: 'YouTube Live',
+  disabled: false,
+});
+```
+
+Attach the target to a stream at creation or via update:
+
+```javascript
+const { stream } = await client.stream.create({
+  name: 'my-event',
+  profiles: [...],
+  multistream: {
+    targets: [
+      { id: target.multistreamTarget.id, profile: '720p' },
+    ],
+  },
+});
+```
+
+The `profile` field specifies which transcoding rendition to forward. Omitting it sends the original ingest quality.
+
+<CustomDivider />
+
+## Recording
+
+Set `record: true` on stream creation to automatically archive the stream to a VOD asset:
+
+```javascript
+const { stream } = await client.stream.create({
+  name: 'recorded-event',
+  profiles: [...],
+  record: true,
+  recordingSpec: {
+    profiles: [
+      { name: '720p', bitrate: 3000000, fps: 30, width: 1280, height: 720 },
+    ],
+  },
+});
+```
+
+When the stream goes idle, Livepeer generates a VOD asset from the recording. The `stream.recording.ready` webhook fires when the asset is available. Retrieve the recording:
+
+```javascript
+const recordings = await client.stream.getAll({ streamId: stream.id });
+```
+
+<CustomDivider />
+
+## Playback Access Control
+
+By default, streams are publicly playable. Restrict playback using a playback policy:
+
+**JWT-based access control:**
+
+```javascript
+const signingKey = await client.accessControl.createSigningKey();
+
+const { stream } = await client.stream.create({
+  name: 'private-event',
+  profiles: [...],
+  playbackPolicy: {
+    type: 'jwt',
+    webhookContext: {},
+  },
+});
+```
+
+Livepeer validates a signed JWT in the `accessKey` query parameter of every playback request. Your application issues tokens signed with the signing key private key.
+
+**Webhook-based access control:**
+
+```javascript
+const { stream } = await client.stream.create({
+  name: 'webhook-gated',
+  profiles: [...],
+  playbackPolicy: {
+    type: 'webhook',
+    webhookId: '<your-webhook-id>',
+    webhookContext: { eventId: 'event-2026' },
+  },
+});
+```
+
+For each playback request, Livepeer calls your webhook URL with the request context. Your application returns 200 to allow or 4xx to deny.
+
+<CustomDivider />
+
+## Updating and Terminating Streams
+
+Update a stream's configuration while it is active:
+
+```javascript
+await client.stream.update(stream.id, {
+  record: true,
+  multistream: { targets: [...] },
+});
+```
+
+Terminate an active stream (force-disconnects the RTMP publisher):
+
+```javascript
+await client.stream.terminate(stream.id);
+```
+
+Retrieve stream status:
+
+```javascript
+const { stream: current } = await client.stream.get(stream.id);
+console.log(current.isActive);    // true while RTMP is connected
+console.log(current.lastSeen);    // epoch ms of last frame received
+```
+
+<CustomDivider />
+
+Multistream, recording, and access control are all configurable at stream creation or via update. See [ingest](/v2/developers/build/video/ingest) for the stream creation flow.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+    RTMP ingest configuration and stream creation.
+  </Card>
+  <Card title="VOD" icon="film" href="/v2/developers/build/video/vod" arrow horizontal>
+    Working with recorded assets after a stream ends.
+  </Card>
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/player" arrow horizontal>
+    @livepeer/react Player for HLS and low-latency WebRTC playback.
+  </Card>
+  <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>
+    Access paths and workload types for Livepeer video.
+  </Card>
+</CardGroup>

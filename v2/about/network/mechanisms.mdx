@@ -1,0 +1,416 @@
+---
+title: Network Core Mechanisms
+sidebarTitle: Core Mechanisms
+description: "How the Livepeer Network coordinates work off-chain: orchestrator discovery, capability advertising, session selection, job dispatch, ticket plumbing, settlement triggers, and the round-driven heartbeat."
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer network mechanisms
+  - orchestrator discovery
+  - capability advertising
+  - off-chain payment
+  - probabilistic micropayments
+  - settlement
+  - go-livepeer
+'og:image': /snippets/assets/media/og-images/en/about.png
+'og:image:alt': Livepeer Docs social preview image for About
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+pageVariant: explain
+purpose: explain
+audience: community
+status: current
+veracityStatus: verified
+lastVerified: 2026-05-06
+aim: How the off-chain Network coordinates jobs, prices, payments, and round transitions
+---
+
+import { CustomCardTitle, Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<Quote>
+The Network's mechanics live off-chain. Discovery, capability matching, session selection, job dispatch, and ticket plumbing all run between gateway and orchestrator without touching the chain. The chain comes in at three triggers: deposit, winning-ticket redemption, and per-round reward.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
+
+## Mechanism Map
+
+Seven mechanisms run continuously across the Network. Each answers a different coordination problem; none requires central scheduling. The on-chain Protocol is referenced for ground truth (stake, deposits, registry) but is not in the per-job hot path.
+
+<DynamicTableV2
+  headerList={['Mechanism', 'What it coordinates', 'Where it runs']}
+  itemsList={[
+    {
+      Mechanism: <Subtitle variant="changelog">**Orchestrator Discovery**</Subtitle>,
+      'What it coordinates': 'Gateway finds candidate orchestrators by reading the on-chain registry and the operator pool',
+      'Where it runs': 'Gateway-side, against subgraph or `ServiceRegistry`',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Capability Advertising**</Subtitle>,
+      'What it coordinates': 'Orchestrator publishes its capability bitstring, model loadouts, prices, and ticket parameters',
+      'Where it runs': 'Orchestrator-side, served via `OrchestratorInfo` over gRPC',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Session Selection**</Subtitle>,
+      'What it coordinates': 'Gateway scores candidates, filters on capability and price, opens a session with the chosen orchestrator',
+      'Where it runs': 'Gateway-side, parallel `GetOrchestratorInfo` RPC',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Job Dispatch**</Subtitle>,
+      'What it coordinates': 'Per-segment or per-frame work hand-off, with a ticket attached to each unit',
+      'Where it runs': 'Gateway-to-orchestrator HTTP for batch; trickle protocol for real-time',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Ticket Plumbing**</Subtitle>,
+      'What it coordinates': 'Off-chain construction, signing, validation, and accumulation of probabilistic micropayment tickets',
+      'Where it runs': 'In-band with each segment; signed by gateway, validated by orchestrator',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Settlement Triggers**</Subtitle>,
+      'What it coordinates': 'When the off-chain layer reaches into the on-chain Protocol: gateway funding, winning-ticket redemption, per-round reward',
+      'Where it runs': 'On Arbitrum One; triggered by gateway or orchestrator based on local state',
+    },
+    {
+      Mechanism: <Subtitle variant="changelog">**Round Heartbeat**</Subtitle>,
+      'What it coordinates': 'How the off-chain Network reacts to round transitions: active set lock, reward call window, parameter freeze',
+      'Where it runs': 'Detected off-chain via `RoundsManager`; observed by every participant',
+    },
+  ]}
+/>
+
+The first five mechanisms run thousands of times per minute across the Network. The last two are anchor points: settlement happens occasionally, the heartbeat once per round.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Property Provenance
+
+Every property the Network preserves traces back to a specific protocol decision: a Livepeer Improvement Proposal that ratified the change, and a contract or codebase that implements it. The provenance is what lets a researcher cite the running Network with confidence.
+
+<DynamicTableV2
+  headerList={['Network property', 'Ratified by', 'Implemented in']}
+  itemsList={[
+    {
+      'Network property': <Subtitle variant="changelog">**Off-chain settlement (PM tickets)**</Subtitle>,
+      'Ratified by': 'Streamflow spec (2019), refined by LIP-36 cumulative earnings, LIP-52 snapshot claim',
+      'Implemented in': '`pm/` package in `go-livepeer`; `TicketBroker` contract on Arbitrum One',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**Active set election**</Subtitle>,
+      'Ratified by': 'Streamflow spec; LIP-83 round-length adjustment',
+      'Implemented in': '`BondingManager`, `RoundsManager` contracts',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**Service URI advertisement**</Subtitle>,
+      'Ratified by': 'LIP-9 (ServiceRegistry)',
+      'Implemented in': '`ServiceRegistry` contract; `discovery/` package in `go-livepeer`',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**On-chain governance**</Subtitle>,
+      'Ratified by': 'LIP-89, LIP-91, LIP-92 (Delta upgrade, 2023)',
+      'Implemented in': '`LivepeerGovernor`, `BondingVotes`, `Treasury` contracts',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**Arbitrum deployment**</Subtitle>,
+      'Ratified by': 'LIP-73 (Confluence, 2022)',
+      'Implemented in': 'Full contract redeployment to Arbitrum One',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**SPE funding convention**</Subtitle>,
+      'Ratified by': 'LIP-90 (Funding Entity Conventions, 2023)',
+      'Implemented in': 'Social convention; Treasury proposals route through SPEs',
+    },
+    {
+      'Network property': <Subtitle variant="changelog">**AI extension and BYOC**</Subtitle>,
+      'Ratified by': 'AI Video SPE Stage 1 through Stage 4 (LIP-90 convention, 2023 to 2024); LIP-100 Cascade (proposed May 2025)',
+      'Implemented in': '`ai/`, `byoc/`, `trickle/` packages in `go-livepeer`; `ai-runner` repository',
+    },
+  ]}
+/>
+
+AI extension was bootstrapped without a dedicated LIP. From 2023, the LIP-90 SPE convention authorised AI work by funding the AI Video Special Purpose Entity through Stages 1 to 4, demonstrating a deliberate property of the SPE model: pipeline-level capability does not need a hard fork. LIP-100 (Cascade, proposed May 2025) later formalised AI-first gateways as a protocol-level upgrade, ratifying what the SPE pipeline had already shipped.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Orchestrator Discovery
+
+Discovery is the first thing a gateway does. It reads the on-chain registry to get a list of operator addresses, then resolves each address to a service URI and asks for capability and price.
+
+The discovery loop lives in `discovery/discovery.go`. A gateway holds an `OrchestratorPool` of `[]*url.URL` candidate orchestrators, loaded from the Livepeer subgraph or supplied as a static list. The gateway calls `GetOrchestratorInfo` on each in parallel.
+
+<DynamicTableV2
+  headerList={['Step', 'What happens']}
+  itemsList={[
+    {
+      Step: <Subtitle variant="changelog">**1. Pool load**</Subtitle>,
+      'What happens': 'Gateway loads candidate orchestrator URIs from the subgraph (`Transcoder.serviceURI`) or from configured static list',
+    },
+    {
+      Step: <Subtitle variant="changelog">**2. Parallel probe**</Subtitle>,
+      'What happens': 'Gateway issues `GetOrchestratorInfo` to every candidate concurrently. Initial timeout is 3 seconds; if no candidate responds, the timeout doubles up to a `maxGetOrchestratorCutoffTimeout` of 6 seconds',
+    },
+    {
+      Step: <Subtitle variant="changelog">**3. Latency sort**</Subtitle>,
+      'What happens': 'Successful responses are sorted ascending by measured RPC latency. Suspended orchestrators (those that previously failed jobs) are filtered through `suspensionqueue`',
+    },
+    {
+      Step: <Subtitle variant="changelog">**4. Pool refresh**</Subtitle>,
+      'What happens': 'The candidate list refreshes periodically; orchestrators that drop out of the active set are removed when their stake falls below the threshold',
+    },
+  ]}
+/>
+
+The pool is a moving target. Active orchestrators come and go each round; suspensions clear after a cooldown. Discovery reruns on every new session and on a periodic refresh.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Capability Advertising
+
+Capability advertising is what an orchestrator publishes so a gateway can decide whether to send work. The advertisement is the response to `GetOrchestratorInfo` and carries everything the gateway needs to evaluate the operator.
+
+<DynamicTableV2
+  headerList={['Field', 'What it carries']}
+  itemsList={[
+    {
+      Field: <Subtitle variant="changelog">**Capabilities**</Subtitle>,
+      'What it carries': 'A bitstring of supported capabilities. Each bit corresponds to a distinct workload (transcoding profile, AI pipeline, BYOC capability)',
+    },
+    {
+      Field: <Subtitle variant="changelog">**Capability constraints**</Subtitle>,
+      'What it carries': 'Per-capability map keyed by model identifier. Each entry records whether the model is warm-loaded, per-model concurrency capacity, runner version',
+    },
+    {
+      Field: <Subtitle variant="changelog">**PriceInfo**</Subtitle>,
+      'What it carries': 'Price-per-unit (price per pixel for transcoding, per-model price for AI). Held in `CapabilityPriceMenu` for AI workloads',
+    },
+    {
+      Field: <Subtitle variant="changelog">**TicketParams**</Subtitle>,
+      'What it carries': '`faceValue`, `winProb`, `recipientRandHash`, `seed`, `expirationBlock`, `expirationParams`. The gateway uses these to construct valid tickets',
+    },
+    {
+      Field: <Subtitle variant="changelog">**Address**</Subtitle>,
+      'What it carries': 'Orchestrator ETH address; ticket payouts settle to this address on-chain',
+    },
+    {
+      Field: <Subtitle variant="changelog">**Nodes**</Subtitle>,
+      'What it carries': 'Optional `[]string` advertising additional `OrchestratorNode` instances behind the same operator',
+    },
+  ]}
+/>
+
+Capability matching uses `caps.bitstring.CompatibleWith()` defined in `core/capabilities.go`. The check at the gateway is a simple AND across the bitstrings: the gateway's required capability bits must be a subset of the orchestrator's offered bits, and all per-model constraints must be satisfiable.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Session Selection
+
+Selection is the gateway's decision: of the candidates that returned valid `OrchestratorInfo`, which one to open the session with. The decision combines capability match, price ceiling, latency, and operator reputation.
+
+<DynamicTableV2
+  headerList={['Selection criterion', 'How the gateway applies it']}
+  itemsList={[
+    {
+      'Selection criterion': <Subtitle variant="changelog">**Capability match**</Subtitle>,
+      'How the gateway applies it': 'Hard filter. An orchestrator that does not advertise the required capability is not considered',
+    },
+    {
+      'Selection criterion': <Subtitle variant="changelog">**Price ceiling**</Subtitle>,
+      'How the gateway applies it': 'Hard filter. Gateway has a max price-per-unit for the workload; orchestrators above the ceiling are dropped',
+    },
+    {
+      'Selection criterion': <Subtitle variant="changelog">**Latency**</Subtitle>,
+      'How the gateway applies it': 'Soft sort. Sorted ascending by the RPC round-trip measured during discovery',
+    },
+    {
+      'Selection criterion': <Subtitle variant="changelog">**Reputation**</Subtitle>,
+      'How the gateway applies it': 'Soft penalty. Orchestrators that previously failed jobs are suspended for a cooldown; persistent failures push them down the candidate list',
+    },
+    {
+      'Selection criterion': <Subtitle variant="changelog">**Stake weight**</Subtitle>,
+      'How the gateway applies it': 'Optional. Some gateways prefer higher-staked orchestrators as a reliability proxy; not enforced at the protocol layer',
+    },
+  ]}
+/>
+
+Once selected, the gateway opens a session by sending the first segment with an attached ticket. The orchestrator validates the ticket, queues the segment, and processes the work. The session stays open for the duration of the job; for live workloads it stays open until the stream ends.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Job Dispatch
+
+Job dispatch is the per-unit hand-off. Each segment or frame travels with a ticket attached.
+
+The dispatch loop is in `core/orchestrator.go:transcodeSegmentLoop`. Each orchestrator session has a `SegmentChan` of buffer size `maxSegmentChannels = 4`. The gateway POSTs each segment with a `TicketSenderParams`; the orchestrator's `ProcessPayment` validates the ticket via `Recipient.ReceiveTicket`, debits the gateway's session balance, and routes the segment to either a local transcoder or, if `TranscoderManager` is set, a remote transcoder selected by `selectTranscoder` from the `byLoadFactor`-sorted pool.
+
+<DynamicTableV2
+  headerList={['Workload class', 'Transport', 'Cadence', 'Failure recovery']}
+  itemsList={[
+    {
+      'Workload class': <Subtitle variant="changelog">**Batch transcoding**</Subtitle>,
+      Transport: 'HTTP POST per segment; result returned synchronously',
+      Cadence: 'Sub-second for live; throughput-oriented for VOD',
+      'Failure recovery': 'Retry up to `maxAttempts`, then `SwapOrchestrator` (re-discover, reselect)',
+    },
+    {
+      'Workload class': <Subtitle variant="changelog">**Batch AI inference**</Subtitle>,
+      Transport: 'HTTP POST with inference payload; result returned synchronously',
+      Cadence: 'Seconds to tens of seconds per inference',
+      'Failure recovery': 'Same retry-then-swap pattern; cold model load triggers warmup not retry',
+    },
+    {
+      'Workload class': <Subtitle variant="changelog">**Real-time AI**</Subtitle>,
+      Transport: 'Trickle protocol channels (video, audio, control); frames flow continuously',
+      Cadence: 'Sub-second per frame',
+      'Failure recovery': 'Session re-establishes against next candidate; in-flight frames lost',
+    },
+  ]}
+/>
+
+A single `OrchestratorNode` accepts at most `MaxSessions` concurrent sessions (default 10, raised by `SetMaxSessions` or auto-adjusted by `AutoSessionLimit`). Sessions inactive for `transcodeLoopTimeout` (70 seconds) are torn down.
+
+<Card title={<CustomCardTitle icon="diagram-project" title="Job Pipelines" />} href="/v2/about/network/job-pipelines" horizontal arrow > Workload classes, lifecycle, state machine, failure modes. </Card>
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Ticket Plumbing
+
+Tickets are how value moves off-chain. Every dispatched segment carries one. Most are losing tickets that never settle; only winning tickets reach the chain.
+
+A ticket is a signed message with five fields the gateway sets and one the orchestrator validates:
+
+<DynamicTableV2
+  headerList={['Ticket field', 'Set by', 'Purpose']}
+  itemsList={[
+    {
+      'Ticket field': <Subtitle variant="changelog">**`faceValue`**</Subtitle>,
+      'Set by': 'Gateway',
+      Purpose: 'ETH paid to the orchestrator on a winning ticket',
+    },
+    {
+      'Ticket field': <Subtitle variant="changelog">**`winProb`**</Subtitle>,
+      'Set by': 'Gateway',
+      Purpose: 'Probability the ticket wins. `expectedValue = faceValue × winProb` matches the contracted price for the work',
+    },
+    {
+      'Ticket field': <Subtitle variant="changelog">**`recipientRandHash`**</Subtitle>,
+      'Set by': 'Orchestrator (in advertisement)',
+      Purpose: 'Hash committing the orchestrator to a randomness value; revealed at redemption',
+    },
+    {
+      'Ticket field': <Subtitle variant="changelog">**`seed`**</Subtitle>,
+      'Set by': 'Gateway',
+      Purpose: 'Per-ticket randomness contributing to the win check',
+    },
+    {
+      'Ticket field': <Subtitle variant="changelog">**`senderNonce`**</Subtitle>,
+      'Set by': 'Gateway',
+      Purpose: 'Monotonic counter preventing ticket replay',
+    },
+    {
+      'Ticket field': <Subtitle variant="changelog">**`sig`**</Subtitle>,
+      'Set by': 'Gateway',
+      Purpose: 'Signature over the ticket fields, validated by `Recipient.ReceiveTicket`',
+    },
+  ]}
+/>
+
+The win check combines `seed`, the orchestrator's `recipientRand`, and the round's stored block hash: `H(sig, recipientRand) < winProb × 2^256`. Neither party can predict winners alone. The orchestrator queues winning tickets locally and redeems them on-chain in batches when gas conditions are favourable.
+
+<Tip>
+The expected value of any single ticket is `faceValue × winProb`. A gateway sets the win probability so that per-segment expected payment matches the work being purchased. Orchestrators batch winning tickets and choose redemption timing.
+</Tip>
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Settlement Triggers
+
+Settlement is when the off-chain layer reaches into the on-chain Protocol. Three triggers cover every on-chain transaction in the per-job loop.
+
+<DynamicTableV2
+  headerList={['Trigger', 'Initiated by', 'On-chain effect']}
+  itemsList={[
+    {
+      Trigger: <Subtitle variant="changelog">**Gateway funding**</Subtitle>,
+      'Initiated by': 'Gateway calls `fundDepositAndReserve()` on `TicketBroker`',
+      'On-chain effect': 'ETH moves from gateway wallet to its `TicketBroker` account; deposit covers active session liquidity, reserve covers redemption if deposit is exhausted',
+    },
+    {
+      Trigger: <Subtitle variant="changelog">**Winning ticket redemption**</Subtitle>,
+      'Initiated by': 'Orchestrator calls `redeemWinningTicket()` on `TicketBroker`',
+      'On-chain effect': 'Contract validates ticket against on-chain state, transfers ETH from gateway deposit to orchestrator fee pool via `BondingManager`. Emits `WinningTicketRedeemed` and `WinningTicketTransfer`',
+    },
+    {
+      Trigger: <Subtitle variant="changelog">**Per-round reward**</Subtitle>,
+      'Initiated by': 'Active orchestrator calls `reward()` once per round',
+      'On-chain effect': 'Mints round inflation via `Minter`, routes treasury cut, distributes remainder by stake share, accrues delegator share to claim queue. Emits `Reward`',
+    },
+  ]}
+/>
+
+Three more on-chain events are gateway-side and run alongside but outside the per-job loop:
+
+- **Gateway exit:** gateway calls `unlock()` then `withdraw()` on `TicketBroker` to recover unredeemed deposit and reserve
+- **Bond changes:** delegator or orchestrator calls `bond()`, `unbond()`, `rebond()`, `withdrawStake()` on `BondingManager`
+- **Service URI updates:** orchestrator calls `setServiceURI()` on `ServiceRegistry` when its endpoint changes
+
+For the on-chain mechanics that back each trigger, see <LinkArrow href="/v2/about/protocol/mechanisms" label="Protocol Core Mechanisms" newline={false} />.
+
+<CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
+
+## Round Heartbeat
+
+Rounds are the on-chain Protocol's clock. Round transitions ripple through the off-chain Network in three ways.
+
+<DynamicTableV2
+  headerList={['Round event', 'How the Network reacts']}
+  itemsList={[
+    {
+      'Round event': <Subtitle variant="changelog">**Round opens**</Subtitle>,
+      'How the Network reacts': 'Active set locks for the new round. Any orchestrator that bonded mid-round becomes eligible at this boundary. Active orchestrators record the new round number locally for reward-call eligibility',
+    },
+    {
+      'Round event': <Subtitle variant="changelog">**Reward call window**</Subtitle>,
+      'How the Network reacts': 'Each active orchestrator can call `reward()` at most once per round. The off-chain logic schedules this call early in the round to avoid the round-end lock. Missing the call forfeits the round\'s LPT inflation share',
+    },
+    {
+      'Round event': <Subtitle variant="changelog">**Round-end lock**</Subtitle>,
+      'How the Network reacts': 'In the final blocks of a round, parameter updates (`rewardCut`, `feeShare`) and bond changes are blocked on-chain. Off-chain capability advertisement and pricing can still change, but they cannot affect the round in progress',
+    },
+    {
+      'Round event': <Subtitle variant="changelog">**Round close → next round opens**</Subtitle>,
+      'How the Network reacts': 'Anyone (typically an orchestrator) calls `initializeRound()`. Round number increments; new active set is fixed; new mintable rewards are unlocked',
+    },
+  ]}
+/>
+
+The off-chain Network does not stop or slow down at round boundaries. Job dispatch, ticket exchange, and discovery continue. What changes is which orchestrators are eligible for the next round's reward call and which are now in the active set.
+
+<Tip>
+Round length on Arbitrum One is approximately 21 hours (~5,760 L2 blocks). A given orchestrator that misses `reward()` in a round forfeits that round's LPT inflation for itself and its delegators. The off-chain operator software typically schedules the reward call early in each round to avoid the round-end lock.
+</Tip>
+
+<CustomDivider />
+
+## Related Pages
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Network Architecture" />} href="/v2/about/network/architecture" horizontal arrow>
+    Topology, traffic planes, on-chain anchor.
+  </Card>
+  <Card title={<CustomCardTitle icon="store" title="Marketplace" />} href="/v2/about/network/marketplace" horizontal arrow>
+    Market shape, settlement boundary, probabilistic micropayments, trust.
+  </Card>
+  <Card title={<CustomCardTitle icon="route" title="Job Pipelines" />} href="/v2/about/network/job-pipelines" horizontal arrow>
+    Workload classes, lifecycle, state machine, failure modes.
+  </Card>
+  <Card title={<CustomCardTitle icon="cogs" title="Protocol Core Mechanisms" />} href="/v2/about/protocol/mechanisms" horizontal arrow>
+    On-chain mechanics: rounds, staking, rewards, payments, upgrades.
+  </Card>
+</Columns>

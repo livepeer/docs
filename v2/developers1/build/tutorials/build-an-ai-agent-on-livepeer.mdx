@@ -1,0 +1,210 @@
+---
+title: Build an AI agent on Livepeer
+sidebarTitle: AI Agent Tutorial
+description: >-
+  Build an AI agent using the Eliza framework with Livepeer as the model provider for decentralised GPU inference. A
+  complete tutorial with working code.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer AI agent
+  - Eliza
+  - ai16z
+  - decentralised AI
+  - LLM inference
+  - tutorial
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+purpose: build
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>This tutorial walks through building a working Eliza AI agent that routes all inference through Livepeer's decentralised GPU network. Time to complete: approximately 30 minutes.</Tip>
+</CenteredContainer>
+
+---
+
+<Note>
+This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https://mirror.xyz/agent-spe.eth/oxs8VxEvKN88IeTwD-YQMucoDGqfNRz_mIlbUKkwOTg), published as part of the Agent SPE incentive programme. The original tutorial was written by the Agent SPE team and made available under an open licence.
+</Note>
+
+[Eliza](https://github.com/elizaos/eliza) is an open-source multi-agent framework (ai16z) that supports pluggable model providers. The Livepeer plugin routes Eliza's LLM inference requests to the Livepeer AI gateway, where they run on decentralised GPU infrastructure rather than centralised cloud providers.
+
+**What you will build:** An Eliza agent that uses Livepeer as its LLM backend, running `meta-llama/Meta-Llama-3.1-8B-Instruct` (or any Ollama-compatible model) on the network.
+
+<CustomDivider />
+
+## Prerequisites
+
+- Node.js 22 or later
+- pnpm (`npm install -g pnpm`)
+- A Livepeer Studio API key from [livepeer.studio](https://livepeer.studio) -- free tier covers this tutorial
+
+<CustomDivider />
+
+## Build your agent
+
+<StyledSteps iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
+
+  <StyledStep title="Clone the Eliza repository" icon="download">
+    ```bash
+    git clone https://github.com/elizaos/eliza.git
+    cd eliza
+    git checkout main
+    pnpm install
+    pnpm build
+    ```
+  </StyledStep>
+
+  <StyledStep title="Configure your environment" icon="gear">
+    Create a `.env` file in the project root:
+
+    ```bash
+    # .env
+    # Livepeer gateway configuration
+    LIVEPEER_GATEWAY_URL=https://livepeer.studio/api/beta/generate
+    LIVEPEER_API_KEY=your-studio-api-key-here
+
+    # Agent identity (optional -- Eliza generates defaults if omitted)
+    AGENT_NAME=my-livepeer-agent
+    ```
+
+    The `LIVEPEER_GATEWAY_URL` points to the Studio-managed gateway. For testing with the free public gateway, use `https://dream-gateway.livepeer.cloud` instead -- but do not use the public gateway in production.
+  </StyledStep>
+
+  <StyledStep title="Create your character file" icon="user">
+    Create `characters/my-agent.character.json`:
+
+    ```json
+    {
+      "name": "LivepeerAgent",
+      "clients": [],
+      "modelProvider": "livepeer",
+      "settings": {
+        "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "secrets": {}
+      },
+      "system": "You are a helpful AI assistant running on decentralised GPU infrastructure via the Livepeer network. Answer questions clearly and concisely.",
+      "bio": [
+        "AI assistant powered by decentralised compute",
+        "Runs on Livepeer's global GPU network"
+      ],
+      "lore": [],
+      "knowledge": [],
+      "messageExamples": [
+        [
+          {
+            "user": "{{user1}}",
+            "content": { "text": "What can you help me with?" }
+          },
+          {
+            "user": "LivepeerAgent",
+            "content": {
+              "text": "I can answer questions, help with code, and discuss topics across many domains. My inference runs on the Livepeer decentralised GPU network."
+            }
+          }
+        ]
+      ],
+      "topics": ["technology", "AI", "decentralisation", "general knowledge"],
+      "adjectives": ["helpful", "precise", "direct"]
+    }
+    ```
+
+    The `modelProvider: "livepeer"` field tells Eliza to route all inference through the Livepeer plugin. The `model` value in settings must be a model supported by the Livepeer LLM pipeline -- any Ollama-compatible model works, including Llama, Mistral, Gemma, and Qwen variants.
+  </StyledStep>
+
+  <StyledStep title="Run the agent" icon="play">
+    ```bash
+    pnpm start --characters="characters/my-agent.character.json"
+    ```
+
+    On first run, Eliza initialises the agent, loads the character file, and connects to the Livepeer gateway. You should see:
+
+    ```
+    [INFO] Starting agent: LivepeerAgent
+    [INFO] Model provider: livepeer
+    [INFO] Gateway: https://livepeer.studio/api/beta/generate
+    [INFO] Agent ready
+    ```
+
+    If the LLM pipeline is cold (model not yet loaded on any orchestrator), the first request may take 30-90 seconds. Subsequent requests are fast once the model is warm.
+  </StyledStep>
+
+  <StyledStep title="Test the agent" icon="flask">
+    With the agent running, open a second terminal and send a test message via the Eliza CLI or REST interface:
+
+    ```bash
+    # If Eliza's REST interface is enabled (default port 3000)
+    curl -X POST http://localhost:3000/message \
+      -H "Content-Type: application/json" \
+      -d '{"text": "Explain what Livepeer is in one sentence."}'
+    ```
+
+    Expected response (content will vary):
+
+    ```json
+    {
+      "text": "Livepeer is a decentralised protocol that provides GPU compute for AI inference and video transcoding, powered by a network of orchestrators staking LPT."
+    }
+    ```
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider />
+
+## What to build next
+
+With a working agent, three natural extensions exist:
+
+**Switch the model** -- Change `settings.model` in your character file to any Ollama-compatible model available on the Livepeer network. The LLM pipeline accepts arbitrary model IDs; see the <a href="/v2/developers/build/model-support">model support page</a> for supported variants.
+
+**Add memory and knowledge** -- Eliza supports RAG (retrieval-augmented generation) via knowledge files and vector stores. Add entries to the `knowledge` array in your character file to give the agent domain-specific context.
+
+**Integrate with Slack or Discord** -- The Eliza framework includes client connectors for Slack, Discord, and Twitter. Add `"slack"` or `"discord"` to the `clients` array and configure the respective credentials in `.env`.
+
+**Build a multi-agent swarm** -- The SwarmZero framework integrates with Livepeer's inference APIs and supports multi-agent orchestration. See the [SwarmZero Livepeer example](https://docs.swarmzero.ai/examples/swarms/livepeer-youtube-video-generator-swarm) for a working YouTube video generator swarm.
+
+<CustomDivider />
+
+## Supported LLM models
+
+The Livepeer LLM pipeline uses an Ollama-based runner. Any Ollama-compatible model works. Warm models respond immediately; others cold-start on the first request.
+
+| Model | Warm on network | VRAM required |
+|---|---|---|
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | Yes | 8 GB |
+| `mistralai/Mistral-7B-Instruct-v0.3` | Check network | 8 GB |
+| `google/gemma-2-9b-it` | Check network | 10 GB |
+| `Qwen/Qwen2.5-7B-Instruct` | Check network | 8 GB |
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="AI Quickstart" icon="bolt" href="/v2/developers/get-started/ai-quickstart">
+    Make a direct API call to any AI pipeline without a framework.
+  </Card>
+  <Card title="Model Support" icon="database" href="/v2/developers/build/model-support">
+    All supported pipelines, warm models, and VRAM requirements.
+  </Card>
+  <Card title="BYOC" icon="box" href="/v2/developers/build/byoc">
+    Deploy a custom model container for workloads not covered by standard pipelines.
+  </Card>
+  <Card title="AI Troubleshooting" icon="triangle-exclamation" href="/v2/developers/guides/ai/troubleshooting">
+    Diagnose cold model timeouts, auth errors, and validation failures.
+  </Card>
+</CardGroup>

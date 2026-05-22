@@ -1,0 +1,51 @@
+# type: validator
+# concern: health
+# pipeline: P3
+name: Check Broken Links
+
+on:
+  pull_request:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  broken-links:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Limit scanner input to docs content and config needed for link resolution.
+          sparse-checkout: |
+            docs.json
+            .mintignore
+            v2
+            snippets
+            operations/scripts/snippets
+          sparse-checkout-cone-mode: false
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Mintlify globally
+        run: npm ci -g mintlify
+
+      - name: Fetch external snippets
+        run: bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
+
+      - name: Run broken-links check
+        continue-on-error: true
+        run: npx mintlify broken-links
+
+      - name: Broken-links note
+        if: always()
+        run: |
+          echo "Broken-links is advisory only (non-blocking) while legacy link cleanup is in progress." >> $GITHUB_STEP_SUMMARY

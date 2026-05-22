@@ -1,0 +1,131 @@
+---
+title: "AI Gateway API"
+sidebarTitle: "AI Gateway API"
+description: >-
+  HTTP API reference for the Livepeer AI gateway: batch inference endpoints,
+  LLM endpoint, request formats, and response shapes.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - AI gateway API
+  - inference API
+  - text-to-image
+  - LLM API
+  - batch inference
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<CustomDivider />
+
+The AI gateway exposes inference endpoints via HTTP POST. All endpoints accept JSON or multipart form data and return JSON responses.
+
+<CustomDivider />
+
+## Endpoint summary
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Endpoint</TableCell>
+      <TableCell header>Method</TableCell>
+      <TableCell header>Content-Type</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`/text-to-image`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>application/json</TableCell>
+      <TableCell>Generate images from text prompts</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/image-to-image`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>Transform images (style transfer, enhancement)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/image-to-video`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>Animate still images into video clips</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/image-to-text`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>Generate captions from images</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/audio-to-text`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>Speech recognition with timestamps</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/text-to-speech`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>application/json</TableCell>
+      <TableCell>Generate speech from text</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/upscale`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>4x super-resolution upscaling</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/segment-anything-2`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>multipart/form-data</TableCell>
+      <TableCell>Promptable visual segmentation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/llm`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>application/json</TableCell>
+      <TableCell>OpenAI-compatible chat completions</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/live-video-to-video`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>application/json</TableCell>
+      <TableCell>Start a real-time AI video session (returns trickle URLs)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Authentication
+
+All endpoints accept an optional `Authorization: Bearer <key>` header. The community gateway (`dream-gateway.livepeer.cloud`) does not require authentication. Production gateways require an API key.
+
+<CustomDivider />
+
+## Error responses
+
+| Status | Meaning |
+|---|---|
+| 400 | Malformed request body |
+| 401 | Invalid or missing API key |
+| 422 | Validation error (invalid model_id, missing required field) |
+| 429 | Rate limit exceeded |
+| 500 | Inference error on the orchestrator |
+| 503 | Model is cold (loading); retry with backoff |
+
+Error bodies include a `detail` field with the failure reason. For 422 errors, `detail` is an array of field-level validation errors.
+
+<CustomDivider />
+
+The [AI pipelines](/v2/developers/build/ai-and-agents/ai-pipelines) page documents per-pipeline request schemas and curl examples. The [SDKs](/v2/developers/resources/reference/sdks) wrap these endpoints with typed interfaces.
