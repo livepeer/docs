@@ -1,0 +1,57 @@
+---
+title: Recortar una transmisión en vivo
+description: >-
+  Crea clips cortos de transmisiones en vivo activas utilizando la API de Crear
+  Clip.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY2xpcC1saXZlc3RyZWFtLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9saXZlc3RyZWFtL2NsaXAtbGl2ZXN0cmVhbSIsInNvdXJjZUhhc2giOiIxNTAxZTY3ZDA2Y2NmMmI0NTRmNmY4ZGQ0MDgxY2Y2ODRhODc3MWUxYTJkY2ZjYTAwNWFmNmI5ZmYyYzA3OGU4IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjI2OjQ2Ljk1OFoifQ== */}
+Puedes crear **clips** de transmisiones activas de Livepeer Studio a través de la API. Un clip es un segmento de la transmisión (por ejemplo, los últimos N segundos o un rango elegido) y se almacena como un **activo** que puedes reproducir como cualquier activo de VOD.
+
+<Warning>
+  Clipping is supported only for **livestreams** and **livestream recordings**. Other asset types are not supported for clipping.
+</Warning>
+
+## Cómo funciona la creación de clips
+
+- Los clips se crean desde la perspectiva del **espectador**: por ejemplo, "últimos 30 segundos" son los últimos 30 segundos que el espectador vio (según su posición de reproducción).
+- Envías **marcas de tiempo de inicio y final** (milisegundos UNIX). Estas normalmente provienen del reproductor (por ejemplo, HLS.js `playingDate` o el disparador de clip del Livepeer Player)
+- Livepeer crea un**activo** para el clip. Puedes consultar el activo o escuchar la`asset.ready`webhook para saber cuándo el clip es jugable.
+
+## Crear un clip mediante la API
+
+Usa la [API Crear Clip](https://livepeer.studio/docs/api-reference/stream/create-clip) con:
+
+- `playbackId` - El **ID de reproducción de la transmisión activa.** 
+- `startTime` - Inicio del fragmento (ms UNIX, desde la posición de reproducción).
+- `endTime` - Fin del fragmento (ms UNIX).
+- `name` - (Opcional) Nombre para el recurso del fragmento.
+
+Asegúrate de que`startTime` esté en o después del inicio de la transmisión y`endTime` no esté en el futuro.
+
+### Ejemplo (Node.js)
+
+```ts
+const result = await livepeer.stream.createClip({
+  playbackId: process.env.PLAYBACK_ID_OF_RUNNING_STREAM,
+  startTime: endTime - 30000, // 30 seconds before end
+  endTime: Date.now(),
+  name: "My clip",
+});
+// result.asset has the new clip asset; result.task has the task ID
+```
+
+### Con el Livepeer Player
+
+El Player’s [Clip trigger](https://www.npmjs.com/package/@livepeer/react#player) puede proporcionar `playbackId`, `startTime`, y `endTime`. Llama a la **API Create Clip desde tu backend** (con los mismos parámetros) y valida la entrada (por ejemplo, longitud máxima del clip, limitación de velocidad).
+
+## Supervisa el estado del clip
+
+- **Búsqueda periódica** - Llamar a `GET /asset/{assetId}` hasta `asset.status` es `ready`.
+- **Webhooks** - Suscribirse a `asset.ready` (y opcionalmente `asset.failed`). Usa la `assetId` del resultado de create-clip para coincidir con el evento.
+- El activo del clip tiene `source.type === "clip"` y un `sessionId` por lo que puedes saber que es un clip.
+
+Los clips obtienen **reproducción de origen** primero (reproducible rápidamente); las versiones transcodificadas se agregan cuando finaliza el procesamiento. Use la `playbackId` con la [API de Información de Reproducción](https://livepeer.studio/docs/api-reference/playback/get) o la [Reproductor](../player) para reproducirlo.
+
+## Listar clips de una transmisión
+
+Usa la[API Clips para transmisión en vivo](https://livepeer.studio/docs/api-reference/stream/get-clip) (por transmisión o sesión) para listar los clips creados a partir de una transmisión.

@@ -1,0 +1,290 @@
+---
+title: Economía de la puerta de enlace
+description: Aprende sobre la economía de ejecutar un Livepeer Gateway
+sidebarTitle: Economía
+keywords:
+  - livepeer
+  - gateways
+  - about gateways
+  - gateway economics
+  - gateway
+  - economics
+  - learn
+  - running
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9hYm91dC1nYXRld2F5cy9nYXRld2F5LWVjb25vbWljcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL2Fib3V0LWdhdGV3YXlzL2dhdGV3YXktZWNvbm9taWNzIiwic291cmNlSGFzaCI6IjVkYjNlMjEyZDAwMjg0ZTRjMTI2YWQ3OTIyYTYwOWY0YjgxYzU5ZjFkZjc3NDQyYTdmODFiMmE2ZDFiOGIzMWUiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTM6NTk6NTMuMDc5WiJ9 */}
+# Economía de la puerta de enlace en Livepeer
+
+Las puertas de enlace en Livepeer no ganan dinero en el nivel_protocolo_ (aunque pueden ganar dinero en el nivel_aplicación empresarial_).
+
+Livepeer sigue un modelo de proveedor de servicios donde los gateways son clientes que compran servicios de procesamiento de medios y IA desde la red.
+Los ganadores a nivel del protocolo son los orchestrators, transcodificadores, trabajadores de IA y redeemers que proporcionan el trabajo computacional
+y servicios de blockchain.
+
+**Flujo de Pago**
+
+En el modelo económico de Livepeer, los gateways son consumidores de servicios de procesamiento de medios:
+
+- Los gateways pagan a los Orchestrators por transcoding/ trabajo de IA mediante tickets de pago
+- Los Orchestrators pagan a los Transcodificadores/Trabajadores de IA que realizan el trabajo real
+- Los Redeemers ganan tarifas al redimir tickets de pago ganadores en cadena
+
+## ¿Quién realmente gana dinero?
+
+<div style={{ overflowX: 'auto', marginBottom: '24px' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: '#fff' }}>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          Node Type
+        </th>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          How They Earn Money
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Orchestrator
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Receives payments from gateways for coordinating work
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Transcoder
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for video transcoding work
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          AI Worker
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for AI model inference
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Redeemer
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Earns fees for redeeming winning tickets on blockchain
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Gateway
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          PAYS for services (does not earn)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Costos de la puerta de enlace
+
+Las puertas de enlace incurrir en costos por:
+
+- Transcodificación de video: Por segmento basado en píxeles procesados
+- Procesamiento de IA: Por píxel basado en las dimensiones de salida
+- Vídeo en vivo de IA: Pagos basados en intervalos durante la transmisión
+
+### Moneda de la puerta de enlace
+
+Las puertas de enlace pagan por los servicios de transcodificación y procesamiento de IA utilizando ETH (Ethereum), no con tokens Livepeer (LPT).
+
+El sistema de pago se basa en la moneda de Ethereum.
+
+<div style={{ overflowX: 'auto' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: 'white' }}>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Currency
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Purpose
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Used By
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          ETH/Wei
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Service payments (transcoding, AI)
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Gateways → Orchestrators
+        </td>
+      </tr>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>LPT</td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Staking, governance, rewards
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Orchestrators, Delegators
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+ETH maneja los pagos reales de los servicios, mientras que LPT maneja la gobernanza del protocolo y el estaking. Este diseño mantiene los costos de los servicios predecibles en una moneda estable, mientras permite que LPT cumpla su función de gobernanza.
+
+### ¿Por qué ejecutar una puerta de enlace?
+
+Si las puertas de enlace no ganan dinero, ¿por qué ejecutar una?
+
+- Ejecutar su propio Gateway significa que no paga una tarifa para enrutar a través de otro Gateway de una parte externa
+- Los proveedores de contenido ejecutan gateways para procesar su propio contenido de video/IA y garantizar los SLAs en sus Orchestrators.
+- Los proveedores de servicios pueden cobrar a los usuarios finales tarifas más altas de lo que pagan a los Orchestrators como tarifas de servicio
+- Las plataformas integradas utilizan gateways como parte de servicios de medios más grandes
+
+## Ganancias por arbitraje de Gateways
+
+Los Gateways ganan dinero mediante arbitraje empresarial:
+
+- Los proveedores de contenido pagan a los gateways por servicios de procesamiento de video/IA
+- Los gateways pagan a los orchestrators por el trabajo computacional real
+
+La diferencia es la margen de beneficio del gateway
+
+## Estructura de tarifas del gateway
+
+Como operador de gateway, no estableces "tarifas" a nivel de protocolo en Livepeer - estableces**precios comerciales** en la capa de aplicación.
+El protocolo solo controla lo que usted **paga** a los orquestadores, no lo que usted **carga** a los clientes.
+
+### Costos a Nivel de Protocolo (Lo que Paga)
+
+Controlas tus costos mediante estas banderas de configuración [1](#10-0) :
+
+```bash
+# Maximum you'll pay per pixel for transcoding
+-maxPricePerUnit=1000
+
+# Maximum you'll pay per AI capability/model
+-maxPricePerCapability='{"capabilities_prices": [{"pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "price_per_unit": 1000}]}'
+```
+
+### Precios a Nivel Empresarial (Lo que Cobras)
+
+Tus tarifas reales a los usuarios finales se establecen en la capa de la aplicación, fuera del protocolo Livepeer.
+
+Los enfoques comunes incluyen:
+
+1. **Precios por solicitud**: Cargo por llamada a la API a su gateway
+2. **Precios basados en el uso**: Cargo por minuto de video o por generación de IA
+3. **Modelos de suscripción**: Tarifas mensuales para acceder a los servicios de su gateway
+
+### Ejemplo de implementación
+
+Así es como implementarías la lógica de precios en tu aplicación:
+
+```go
+// Your application code (not in Livepeer protocol)
+func calculateUserPrice(requestType string, pixels int64) float64 {
+    basePrice := getYourBusinessPrice(requestType)
+    yourCost := getOrchestratorCost(pixels)
+    profitMargin := 0.20 // 20% margin
+
+    return basePrice + yourCost*profitMargin
+}
+```
+
+### Descubrimiento de precios
+
+Utiliza la CLI para descubrir los precios de los orquestadores y establecer tus márgenes:
+
+```bash
+livepeer_cli
+# Select "Set broadcast config" to see current market rates
+# Then set your max prices accordingly
+```
+
+Tu "tarifa" es la diferencia entre lo que pagan los clientes y lo que pagas a los orquestadores por el procesamiento.
+
+### Estudio de caso: Streamplace
+
+[Streamplace](https://stream.place)es una puerta de entrada que proporciona servicios de procesamiento de video a creadores de contenido.
+Los creadores pagan a Streamplace por el procesamiento de video, y Streamplace paga a los orquestadores por el trabajo real.
+La margen de beneficio de Streamplace es la diferencia entre lo que pagan los creadores y lo que paga a los orquestadores.
+
+[Daydream](https://daydream.live)es otro ejemplo de una puerta de entrada que proporciona servicios de procesamiento de video de inteligencia artificial.
+Los desarrolladores y creadores pagan a Daydream por el procesamiento de video de inteligencia artificial, y Daydream paga a los orquestadores por el trabajo real.
+La margen de beneficio de Daydream es la diferencia entre lo que pagan los creadores y lo que paga a los orquestadores.

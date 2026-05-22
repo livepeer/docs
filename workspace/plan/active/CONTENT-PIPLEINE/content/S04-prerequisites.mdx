@@ -1,0 +1,184 @@
+---
+title: 'Prerequisites'
+description: 'Hardware, software, wallet, network, and token requirements that must be in place before installing go-livepeer — separated by operator path.'
+pageType: concept
+audience: orchestrator
+purpose: learn
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - prerequisites
+  - hardware
+  - GPU
+  - NVIDIA
+  - CUDA
+  - ETH wallet
+  - LPT
+  - service URI
+  - VRAM
+  - Arbitrum
+---
+
+Confirm every item on this page before proceeding to installation. Issues discovered after setup are harder to diagnose and waste time.
+
+## Hardware
+
+Requirements differ by workload path. Confirm the GPU, VRAM, and system specs for your chosen path.
+
+<Tabs>
+  <Tab title="Video transcoding">
+
+| Component | Minimum | Recommended |
+| --- | --- | --- |
+| **GPU** | Any NVIDIA with NVENC/NVDEC | RTX 3060+ (consumer) or T4+ (data centre) |
+| **VRAM** | 4 GB | 8 GB+ |
+| **CPU** | 4 cores | 8 cores |
+| **RAM** | 16 GB | 32 GB |
+| **Storage** | 50 GB SSD | 100 GB NVMe SSD |
+
+CPU-only transcoding works for testing. Production video nodes need GPU acceleration for reliable throughput.
+
+  </Tab>
+  <Tab title="AI inference">
+
+| Component | Minimum | Recommended |
+| --- | --- | --- |
+| **GPU** | NVIDIA with CUDA support | RTX 3090 / 4090 / A100 |
+| **VRAM** | 8 GB (quantised LLMs only via Ollama) | 24 GB+ (diffusion, LLM, audio, vision) |
+| **CPU** | 4 cores | 8 cores |
+| **RAM** | 16 GB | 32 GB |
+| **Storage** | 100 GB SSD | 250 GB+ NVMe SSD (AI model weights) |
+
+VRAM determines which AI pipelines the node can serve. 8 GB runs quantised LLMs only. 24 GB+ unlocks diffusion, audio, vision, and Cascade AI pipelines.
+
+  </Tab>
+  <Tab title="Dual mode (video + AI)">
+
+| Component | Minimum | Recommended |
+| --- | --- | --- |
+| **GPU** | NVIDIA with NVENC + CUDA | RTX 3090 / 4090 (24 GB VRAM) |
+| **VRAM** | 16 GB | 24 GB+ (one warm AI model + video transcoding) |
+| **CPU** | 4 cores | 8+ cores |
+| **RAM** | 16 GB | 32 GB |
+| **Storage** | 100 GB SSD | 250 GB+ NVMe SSD |
+
+NVENC/NVDEC (video) use dedicated silicon separate from CUDA cores (AI). Both workloads share VRAM. A 24 GB GPU supports video transcoding alongside one warm AI model.
+
+  </Tab>
+</Tabs>
+
+## Software
+
+| Requirement | Detail | Verify |
+| --- | --- | --- |
+| **OS** | Linux (Ubuntu 22.04+ recommended). Video-only also works on Windows (WSL2) and macOS. AI and dual mode require Linux. | `uname -a` |
+| **NVIDIA driver** | Version 525+ (Linux) or 527+ (Windows) | `nvidia-smi` |
+| **CUDA** | 12.0+ (or use the Docker image, which bundles CUDA) | `nvcc --version` |
+| **Docker** | Required for the AI runner. Recommended for all paths. | `docker run --gpus all nvidia/cuda:12.0-base nvidia-smi` |
+| **NVIDIA Container Toolkit** | Required for GPU passthrough in Docker | See [NVIDIA install guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) |
+
+{/* VERIFY: CUDA 12.0 minimum against current AI runner base image [github.com/livepeer/go-livepeer] */}
+
+## Network and service URI
+
+| Requirement | Detail |
+| --- | --- |
+| **Port 8935 TCP** | Open to the public internet (firewall, router NAT, cloud security group). This is how gateways reach the orchestrator. |
+| **Static IP or hostname** | Required for the service URI. Dynamic DNS acceptable for home connections. |
+| **Bandwidth** | 100 Mbps symmetric minimum. 1 Gbps recommended for multi-stream video. AI inference requires less bandwidth per job. |
+| **Latency** | Under 50 ms to major regions improves gateway selection probability. |
+
+A node without a reachable service URI cannot receive routed work. Confirm reachability before proceeding to setup.
+
+```bash
+# Run from a DIFFERENT machine to verify port 8935 is reachable
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+## ETH wallet
+
+The orchestrator needs an Ethereum wallet on Arbitrum One. go-livepeer creates one on first run, or you can use an existing account.
+
+The wallet needs ETH on Arbitrum for gas:
+
+| Transaction type | Approximate cost | Frequency |
+| --- | --- | --- |
+| Activation | ~0.0001 ETH | One-time |
+| `Reward()` call | ~0.000005-0.00005 ETH | Once per round (~22 hours) |
+| Ticket redemption | ~0.00002-0.0001 ETH per batch | Multiple times daily at volume |
+
+**Recommended minimum balance:** 0.05 ETH on Arbitrum One.
+
+Bridge ETH from Ethereum mainnet via [bridge.arbitrum.io](https://bridge.arbitrum.io), or withdraw directly from an exchange that supports Arbitrum One (Binance, Coinbase, Kraken).
+
+## Arbitrum RPC endpoint
+
+The `-ethUrl` flag requires an Arbitrum One RPC endpoint. Options:
+
+- **Alchemy** (free tier available)
+- **Infura**
+- **QuickNode**
+- Public endpoint for quick validation: `https://arb1.arbitrum.io/rpc`
+
+For production, use a dedicated endpoint. The public endpoint is suitable for initial testing only.
+
+## LPT (path-dependent)
+
+<Warning>
+LPT requirements vary by path. Read the section that matches your identified path from S01.
+</Warning>
+
+### Solo orchestrator (video transcoding path)
+
+LPT is required for active set membership. The node must hold and stake enough LPT to rank among the top orchestrators by total bonded stake. The threshold changes as the network grows — check [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) for the current minimum.
+
+{/* VERIFY: current active set size and minimum viable stake [explorer.livepeer.org] */}
+
+LPT is available on exchanges that support the Arbitrum One network. Plan for hours to days for acquisition and bridging.
+
+### AI-focused operator
+
+Minimal LPT is needed — enough to activate the orchestrator on-chain. AI inference routing does not use active set selection. Capability, price, and model warmth determine job routing.
+
+### Pool node operators: no LPT required
+
+Pool nodes do not stake LPT. The pool operator handles all on-chain operations, including staking and reward calling. Pool nodes contribute GPU capacity and receive off-chain payouts arranged directly with the pool operator.
+
+## Quick verification
+
+Run these commands to confirm prerequisites are met before proceeding to installation:
+
+```bash
+# GPU visible and driver installed
+nvidia-smi
+
+# CUDA version (skip if using Docker)
+nvcc --version
+
+# Docker GPU passthrough works
+docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+
+# Arbitrum RPC reachable
+curl -s https://arb1.arbitrum.io/rpc \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' | python3 -m json.tool
+
+# Port 8935 reachable (run from a DIFFERENT machine)
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+## Ready
+
+Once all items pass for your path, proceed to installation.
+
+<CardGroup cols={2}>
+  <Card title="Install go-livepeer" href="#" arrow>
+    Download and install the go-livepeer binary or Docker image.
+  </Card>
+  <Card title="Full Hardware Reference" href="#" arrow>
+    Detailed GPU tiers, NVENC session limits, VRAM per AI pipeline, and capacity testing with livepeer_bench.
+  </Card>
+</CardGroup>
+
+{/* VERIFY: update Card href values once final IA is confirmed */}

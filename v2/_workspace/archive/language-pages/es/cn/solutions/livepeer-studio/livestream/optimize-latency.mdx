@@ -1,0 +1,45 @@
+---
+title: 优化延迟
+description: 通过 WebRTC 和 HLS 实现低延迟或超低延迟，并调整 OBS 和浏览器内广播设置。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3B0aW1pemUtbGF0ZW5jeS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9vcHRpbWl6ZS1sYXRlbmN5Iiwic291cmNlSGFzaCI6IjljNDIwZTQzZjZjMWU1ZThhNzNjZjM4ZWJiN2I5M2I2NTI1MTFjZGQ0ZDI5NzM1NjIxNDEwYzQ0OWU0N2U3NmYiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MzY6MTguNjM0WiJ9 */}
+延迟是指在摄像头前发生的事情和观众看到它之间的时间差。**超低延迟**（大约 0.5–3 秒）对于交互来说效果很好；**标准延迟**（例如使用 HLS 时约 10–20 秒）对于许多其他用例来说已经足够。
+
+## 协议
+
+- **WebRTC** - 最适合低延迟（约0.5–3秒）。使用支持WebRTC的播放器（例如[Livepeer 播放器](../player)）。
+- **HLS** - 更广泛的兼容性；通常延迟约10–20秒。使用推荐的低延迟设置，HLS在Livepeer Studio上可以达到约10秒。
+
+根据是否需要实时交互（WebRTC）或最大兼容性（HLS）进行选择。
+
+## 最低延迟：WebRTC 播放
+
+- 使用 **WebRTC** 进行播放（例如 Livepeer 播放器，使用默认设置）。
+- 浏览器内的直播已经优化为低延迟。
+- **如果流包含B帧，则无法进行WebRTC播放**并且播放器会回退到HLS。因此，对于WebRTC：
+  - 使用**OBS**: 将关键帧间隔设置为**1** 并禁用 B-frames (`bframes=0`)。如果可用，请在 OBS 中使用 Livepeer Studio 预设。
+  - 参见 [通过 OBS 流媒体](stream-via-obs) 以获取推荐的设置。
+
+## OBS 低延迟设置
+
+- **关键帧间隔** - 更低的值意味着更低的延迟。使用 **1** 以获得最低延迟（和 WebRTC 兼容性）。
+- **码率控制** - CRF 或 CBR；更高的比特率通常意味着更好的质量，但需要更多带宽。不要超过您的上传容量。
+- **B-frames** - 设置为**0** 用于 WebRTC 和最低延迟。B-frames 可提高压缩率，但会增加延迟并破坏 WebRTC 的顺序。
+
+参见[通过 OBS 流媒体传输](stream-via-obs)用于完整的推荐配置文件（低延迟、平衡、高质量）。
+
+## 浏览器内直播
+
+浏览器内的 WebRTC 直播默认是低延迟的。观众可以通过以下方式观看：
+
+- **WebRTC** - ~0.5–3 秒（使用 Livepeer 播放器或另一个 WebRTC/WHEP 播放器）。
+- **HLS** - ~8–10 秒，如果您更喜欢或 WebRTC 不可用。
+
+查看 [从浏览器直播](livestream-from-browser)。
+
+## 烟雾测试
+
+1. 打开 `https://lvpr.tv?v=<playbackId>` 并检查延迟。
+2. 如果延迟较高（>15 秒 HLS 或 &gt;4 秒 WebRTC），问题可能在于**输入**：关键帧间隔、比特率或 B-帧。调整 OBS/编码器并重试。
+3. 如需，与另一个 HLS 播放器进行比较；Livepeer 播放器的 HLS 默认设置旨在平衡延迟和稳定性。
+4. 对于持续的问题，请联系 [Livepeer Studio team](https://livepeer.studio) 或社区支持。

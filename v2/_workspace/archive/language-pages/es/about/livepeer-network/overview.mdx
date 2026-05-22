@@ -1,0 +1,43 @@
+---
+title: Livepeer Visión general de la red
+sidebarTitle: Visión general de la red
+description: Una visión general de la red Livepeer y sus componentes.
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - network overview
+  - network
+  - overview
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvbGl2ZXBlZXItbmV0d29yay9vdmVydmlldyIsInNvdXJjZUhhc2giOiIxNTk5ODQ5NmFmMGUzNGZkNGFhMzg2OTgyNGZjNTEyZTFkYTU0YTA1ODZlYmQ0OWQ3N2EyMTNlZDg2MDAwM2JlIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI0VDE3OjI3OjMxLjk2NloifQ== */}
+Livepeer define el protocolo central las condiciones para que la red proporcione servicios de video en tiempo real y cómputo de IA. La red es la capa de ejecución. Es el sistema real de máquinas que realizan el trabajo para ejecutar la visión del producto.
+- Gateways (transmisores) envían trabajos (video o IA) a la red desde aplicaciones o servicios
+- Los nodos orquestadores (stakers) procesan y calculan el trabajo, y 
+- Los delegadores hacen stake de tokens para apoyar la gobernanza y la seguridad de la red
+
+## Componentes de la Red
+
+### Tipos de Nodo
+La implementación del protocolo define varios roles de nodo (no todos son actores formales de la red) que ejecutan cooperativamente el protocolo para proporcionar las funciones deseadas de la red.
+
+- **Nodo Transmisor**: Se centra en LivepeerServer que gestiona rtmpConnections y BroadcastSessionsManager
+- **Nodo Gateway**: Añade AISessionManager y controladores HTTP de IA sobre la funcionalidad del transmisor
+- **Nodo Orquestador**: Utiliza la estructura orchestrator con SegmentChans para la distribución de trabajos y Recipient para los pagos
+- **Nodo Transcodificador**: RemoteTranscoderManager coordina la transcodificación local o remota a través de LocalTranscoder
+- **Nodo Trabajador de IA**: RemoteAIWorkerManager gestiona contenedores Docker que ejecutan modelos de IA
+
+### Componentes Principales
+- LivepeerNode: Un nodo de interfaz implementado por todos los demás tipos de nodo en la red (gateway/transmisor, orquestador, transcodificador)
+- Servidor de Medios (`LivpeerServer`): LivepeerServer gestiona el procesamiento de medios y sirve endpoints HTTP/RTMP, proporcionando 
+    - Ingesta RTMP para transmisiones en vivo
+    - Push HTTP para segmentos de video
+    - Endpoints de reproducción HLS
+    - Gestión de conexiones activas
+- Gestor de Sesiones de Transmisión: 
+- Orquestador
+- Transcodificador
+- Gateway IA 
+- Trabajadores de IA 
+

@@ -1,0 +1,71 @@
+---
+title: Jouer un flux en direct
+description: >-
+  Jouez des flux en direct dans votre application avec le Livepeer Player ou un
+  lecteur HLS/WebRTC personnalisé.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vcGxheWJhY2stbGl2ZXN0cmVhbS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9wbGF5YmFjay1saXZlc3RyZWFtIiwic291cmNlSGFzaCI6ImJkY2JiM2FjOTI4ZGRjNmI3NDdjYTkwZTk3ZjJmYjg0MmM5Y2VmZWVjMTgyNTQxZTRjODQxYjUwMGUyZmIyODUiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mjg6NDkuNjM2WiJ9 */}
+<Warning>
+  Prefer making API requests from your backend. Avoid CORS-enabled API keys; they are deprecated. Fetch playback info on the server and pass the source to the player.
+</Warning>
+
+## Utilisation du Livepeer Player (recommandé)
+
+Le Livepeer Player gère le WebRTC (faible latence) et la chute HLS. Récupérez les informations de lecture sur le serveur, puis passez la source analysée au Player :
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "YOUR_PLAYBACK_ID";
+
+// On the server (e.g. React Server Component or API route):
+export async function getPlaybackSource() {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function LiveStreamPlayer({ src }: { src: Src[] | null }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
+        <Player.Controls>
+          <Player.PlayPauseTrigger />
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+## Utilisation de votre propre player
+
+1. **Récupérer les informations de lecture** à partir de la [API des informations de lecture](https://livepeer.studio/docs/api-reference/playback/get) avec le `playbackId`.
+2. La réponse inclut des sources telles que :
+   - **HLS** - `application/vnd.apple.mpegurl` URL (par exemple `https://livepeercdn.studio/hls/{playbackId}/index.m3u8`.)
+   - **WebRTC** - Pour une faible latence ; utilisez un lecteur compatible WebRTC/WHEP. L'API peut retourner une source WebRTC ; les serveurs STUN/TURN sont fournis dans la réponse SDP.
+3. Transmettez l'URL choisie (ou SDP) à un lecteur qui prend en charge HLS ou WebRTC (par exemple, Video.js, HLS.js ou un client WHEP).
+
+<Info>
+  If the stream contains **B-frames**, WebRTC playback may not be available; playback will fall back to HLS. Instruct OBS users to use keyframe interval 1 and disable B-frames. See [Stream via OBS](stream-via-obs).
+</Info>
+
+## Lecteur intégrable
+
+Vous pouvez intégrer le lecteur hébergé avec un iframe :
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **Faible latence** - Les diffusions en direct utilisent WebRTC par défaut. Utilisez `&lowLatency=false` pour forcer HLS, ou `&lowLatency=force` pour forcer WebRTC.
+- **Couper** - Ajoutez `&clipLength=60` (maximum 120 secondes) pour permettre aux spectateurs de capturer.
+- **Autre** - `&muted=false`, `&autoplay=false`, `&loop=true`, `constant=true` (pour une diffusion constante, par exemple de la musique).
+
+Voir [Player et intégration](../player) pour plus d'options.

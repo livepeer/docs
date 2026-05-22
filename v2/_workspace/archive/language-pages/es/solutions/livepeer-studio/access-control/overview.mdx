@@ -1,0 +1,16 @@
+---
+title: Visión general del control de acceso
+description: Restringir la reproducción de transmisiones y activos con webhooks o JWT.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hY2Nlc3MtY29udHJvbC9vdmVydmlldyIsInNvdXJjZUhhc2giOiJhNmY5NGFiZDZkNjgzMDljNTliZWNhZWRlMDg1MTdkODNkY2QxOThiNWY1ODY2MGVmNjBiZjc4YzFkMjA3M2MzIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjEyOjQ5Ljc1OFoifQ== */}
+Livepeer Studio le permite restringir quién puede ver transmisiones y activos. Dos opciones:
+
+## Basado en webhook
+
+Establezca una política de reproducción mediante webhook. Cuando alguien intenta reproducir, Studio llama a su URL con una clave de acceso y contexto. Devuelva 2XX para permitir, cualquier otro código para denegar. Vea[Control de acceso con webhooks](webhooks).
+
+## Basado en JWT
+
+Establezca una política de reproducción JWT. Los espectadores deben enviar un JWT firmado con una clave que cree en Studio. Emita JWTs desde su backend después de validar al usuario. Vea [Control de acceso con JWTs](jwt).
+
+Ambos imponen en la reproducción: sin una clave válida o un JWT, la reproducción se deniega.

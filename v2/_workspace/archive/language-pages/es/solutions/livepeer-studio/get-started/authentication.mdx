@@ -1,0 +1,44 @@
+---
+title: Autenticación
+description: Aprende cómo autenticar solicitudes a la API de Livepeer Studio
+keywords:
+  - livepeer
+  - studio
+  - authentication
+  - api key
+  - cors
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2dldC1zdGFydGVkL2F1dGhlbnRpY2F0aW9uLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9nZXQtc3RhcnRlZC9hdXRoZW50aWNhdGlvbiIsInNvdXJjZUhhc2giOiIzMjU3OTA2NjRhN2RiZmNkZjc2YTlhZDllYTA0MThiNGUzZWMwYzRmY2VhMmY2NGE1YjY4MGEwM2RkMDVlNjFhIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI4VDEyOjMyOjIyLjk1OFoifQ== */}
+# Autenticación
+
+Livepeer API uses API keys to verify and authorize requests. You can manage and review your API keys through Livepeer Studio. You need to pass your API key in the `Authorization` header with a `Bearer` prefijo al enviar una solicitud.
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+¡Es importante notar que tus claves API tienen privilegios significativos, por lo que es esencial mantenerlas seguras y protegidas! Evita compartir tus claves API secretas en GitHub u otros lugares de acceso público.
+
+Por defecto, las claves API solo pueden usarse desde un servidor backend. Esto es para garantizar la máxima seguridad y evitar que expongas accidentalmente tu cuenta al incluir la clave API secreta en una página web pública.
+
+## Claves habilitadas para CORS
+
+<Warning>
+  Please read the below documentation in its entirety before using CORS-enabled API keys. **There is a different security model for CORS keys.**
+</Warning>
+
+Studio admite la creación de claves API habilitadas para CORS. Esta es una opción especial al generar una clave API que permite que una página web haga solicitudes **directamente** a Studio, en lugar de provenir de tu backend.
+
+### Seguridad con claves CORS
+
+**El modelo de seguridad es diferente para las claves API habilitadas para CORS.** Dado que cualquier usuario tiene acceso a estas claves, los IDs de los activos y streams **deben** mantenerse en secreto de cualquier persona que no deba tener control administrativo sobre ellos. Por ejemplo, un espectador solo debe tener acceso al ID de reproducción, ya que conocer el ID del activo (junto con la clave API habilitada para CORS, que está incrustada en la página web) les permite hacer cambios al activo.
+
+Lo mismo ocurre con los streams: si un usuario tiene acceso a un ID de stream junto con la clave API CORS, puede modificar el stream o ver la clave del stream. Si un espectador tuviera acceso al ID del stream + la clave API CORS, podría secuestrar el stream. ** Un `playbackId` debería exponerse solo al espectador.**
+
+## Mejores prácticas
+
+1. **Usa claves API backend por defecto** - Usa claves habilitadas para CORS solo cuando sea absolutamente necesario
+2. **Nunca comprometas claves API** - Usa variables de entorno o gestión segura de secretos
+3. **Rota las claves regularmente** - Especialmente si sospechas que una clave ha sido comprometida
+4. **Usa claves separadas** - Claves diferentes para entornos de desarrollo y producción

@@ -1,0 +1,31 @@
+---
+title: Multistream
+description: >-
+  Envoyez une diffusion en direct vers plusieurs destinations RTMP/RTMPS (par
+  exemple, Twitch, YouTube).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0iLCJzb3VyY2VIYXNoIjoiODlkYjFjZDdhZDFmNzQ0YjkzZjJjYzlhYTM0YjZhMmEyZmVjNjZjY2QxZDEzMjY4ZTFmNTViZWQ2YzM1YTA5YyIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozMDowMy41NjBaIn0= */}
+Multistreaming envoie votre diffusion Livepeer Studio vers plusieurs **RTMP/RTMPS** destinations (par exemple Twitch, YouTube Live, Facebook Live). Configurez les cibles multistream **multistream targets** par diffusion dans le tableau de bord ou via l'API.
+
+## Concepts
+
+- **Objectif multistream** = URL d'ingestion + clé de flux facultative + rendu facultatif. Créer via [API Multistream](https://livepeer.studio/docs/api-reference/multistream/create) ou inline dans [create stream](https://livepeer.studio/docs/api-reference/stream/create) / [mise à jour du flux](https://livepeer.studio/docs/api-reference/stream/update).
+- Les cibles sont**par flux**; les nouveaux flux ne les héritent pas.
+- **Les modifications s'appliquent à la prochaine session.**Si le flux est en direct, les cibles nouvelles/mises à jour sont utilisées après la fin de la session en cours.
+
+## Tableau de bord
+
+1. Aller à [Flux](https://livepeer.studio/dashboard/streams), ouvrez un flux.
+2. **Aperçu** onglet → **Cibles Multistream** → **Créer**.
+3. Entrez le nom, **URL d'ingestion** (obligatoire), clé de diffusion facultative et profil de rendu.
+4. Enregistrer. Activer, modifier ou supprimer les cibles depuis la même section.
+
+## API
+
+- Ajouter une cible :[Ajouter une cible multistream](https://livepeer.studio/docs/api-reference/stream/add-multistream-target) ou dans la diffusion en direct créer/modifier.
+- Supprimer : [Supprimer la cible multistream](https://livepeer.studio/docs/api-reference/stream/delete-multistream-target).
+
+## Surveillance
+
+- **Santé** onglet : cibles affichées **Actif** ou **Hors ligne** (peut être légèrement retardé).
+- **Webhooks :** `multistream.connected`, `multistream.error`, `multistream.disconnected`. Voir [Écouter les événements](../analytics/listen-to-events).

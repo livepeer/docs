@@ -1,0 +1,83 @@
+---
+title: 'Governance Repair'
+sidebarTitle: 'Governance Repair'
+description: 'Governance Repair'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - remediator
+  - governance
+  - repair-governance
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/repair-governance.yml` |
+| **New name** | `remediator-governance-repair-pipelines.yml` |
+| **Type** | `remediator` |
+| **Concern** | `governance` |
+| **Pipeline tag** | P6 (self-heal) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["schedule, workflow_dispatch"] --> WF["repair-governance"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `schedule` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `operations/scripts/dispatch/governance/pipelines/governance-pipeline.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- References undefined inputs.use_test_branch
+
+**Review flags:** Dead code (undefined input)
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Stays separate |
+| **Dry-run** | Yes |
+| **Concurrency** | No |
+| **Error reporting** | robust |
+| **Auto-commit** | No |

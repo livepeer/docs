@@ -1,0 +1,290 @@
+---
+title: 网关经济学
+description: 了解运行 Livepeer 网关的经济学
+sidebarTitle: 经济学
+keywords:
+  - livepeer
+  - gateways
+  - about gateways
+  - gateway economics
+  - gateway
+  - economics
+  - learn
+  - running
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9hYm91dC1nYXRld2F5cy9nYXRld2F5LWVjb25vbWljcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL2Fib3V0LWdhdGV3YXlzL2dhdGV3YXktZWNvbm9taWNzIiwic291cmNlSGFzaCI6IjVkYjNlMjEyZDAwMjg0ZTRjMTI2YWQ3OTIyYTYwOWY0YjgxYzU5ZjFkZjc3NDQyYTdmODFiMmE2ZDFiOGIzMWUiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MDQ6MjguOTYzWiJ9 */}
+# 网关经济学在 Livepeer
+
+在 Livepeer 中的网关不会在 _协议层面_ 获得收益（尽管它们可以在 _业务应用层面_ 获得收益）。
+
+Livepeer 采用服务提供商模型，其中网关是向网络购买媒体和 AI 处理服务的客户。
+实际在协议层获得收益的是编排者、转码器、AI 工作者和赎回者，他们提供计算工作
+和区块链服务。
+
+**支付流程**
+
+在 Livepeer 的经济模型中，网关是媒体处理服务的消费者：
+
+- 网关通过支付票证向编排者支付转码/AI 工作费用
+- 编排者向执行实际工作的转码器/AI 工作者支付费用
+- 赎回者通过在链上赎回中奖的支付票证赚取费用
+
+## 谁实际上赚了钱？
+
+<div style={{ overflowX: 'auto', marginBottom: '24px' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: '#fff' }}>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          Node Type
+        </th>
+        <th
+          style={{
+            padding: '12px 16px',
+            textAlign: 'left',
+            fontWeight: '600',
+            borderBottom: '2px solid #2d9a67',
+          }}
+        >
+          How They Earn Money
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Orchestrator
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Receives payments from gateways for coordinating work
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Transcoder
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for video transcoding work
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          AI Worker
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Gets paid by orchestrators for AI model inference
+        </td>
+      </tr>
+      <tr
+        style={{
+          borderBottom: '1px solid #333',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Redeemer
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          Earns fees for redeeming winning tickets on blockchain
+        </td>
+      </tr>
+      <tr
+        style={{ borderBottom: '1px solid #333', backgroundColor: '#1a1a1a' }}
+      >
+        <td
+          style={{ padding: '10px 16px', color: '#2d9a67', fontWeight: '500' }}
+        >
+          Gateway
+        </td>
+        <td style={{ padding: '10px 16px' }}>
+          PAYS for services (does not earn)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### 网关成本
+
+网关会产生以下成本：
+
+- 视频转码：按每段处理的像素数计算
+- AI 处理：按输出尺寸的每像素计算
+- 实时 AI 视频：在流媒体期间按时间段支付
+
+### 网关货币
+
+网关使用 ETH (以太坊) 支付转码和AI处理服务，而不是 Livepeer 代币 (LPT)。
+
+支付系统基于以太坊的货币构建。
+
+<div style={{ overflowX: 'auto' }}>
+  <table
+    style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: '#2d9a67', color: 'white' }}>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Currency
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Purpose
+        </th>
+        <th
+          style={{
+            border: '1px solid #333',
+            padding: '12px 16px',
+            textAlign: 'left',
+          }}
+        >
+          Used By
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          ETH/Wei
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Service payments (transcoding, AI)
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Gateways → Orchestrators
+        </td>
+      </tr>
+      <tr>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>LPT</td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Staking, governance, rewards
+        </td>
+        <td style={{ border: '1px solid #333', padding: '10px 16px' }}>
+          Orchestrators, Delegators
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+ETH 负责实际的服务支付，而 LPT 负责协议治理和质押。这种设计使服务成本在稳定货币中保持可预测性，同时允许 LPT 执行其治理功能。
+
+### 为什么运行网关？
+
+如果网关无法赚钱，为什么还要运行？
+
+- 运行自己的网关意味着您无需支付费用即可通过其他人的网关进行路由
+- 内容提供商运行网关以处理自己的视频/AI内容，并确保对其编排者的SLA。
+- 服务提供商可能向终端用户收取比他们支付给编排者的服务费更高的费用
+- 集成平台将网关作为更大媒体服务的一部分
+
+## 网关套利收益
+
+网关通过商业套利赚钱：
+
+- 内容提供商为视频/AI处理服务支付网关
+- 网关为实际计算工作支付协调器
+
+差异是网关的利润空间
+
+## 网关费用结构
+
+作为网关运营商，您不会在 Livepeer 中设置协议级别的“费用” - 您设置**商业定价** 在应用层。
+协议仅控制您支付给 **运营者**，而不是您向 **收取**客户。
+
+### 协议级成本（您支付的费用）
+
+您可以通过这些配置标志控制成本[1](#10-0) :
+
+```bash
+# Maximum you'll pay per pixel for transcoding
+-maxPricePerUnit=1000
+
+# Maximum you'll pay per AI capability/model
+-maxPricePerCapability='{"capabilities_prices": [{"pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "price_per_unit": 1000}]}'
+```
+
+### 企业级定价（您向用户收取的费用）
+
+您对最终用户的实际费用是在应用层设置的，而不是在 Livepeer 协议中。
+
+常见的方法包括：
+
+1. **按请求定价**: 按到您的网关的每次API调用收费
+2. **按使用量定价**: 按视频分钟数或AI生成次数收费
+3. **订阅模式**: 为访问您的网关服务支付每月费用
+
+### 实现示例
+
+以下是您在应用程序中实现定价逻辑的方式：
+
+```go
+// Your application code (not in Livepeer protocol)
+func calculateUserPrice(requestType string, pixels int64) float64 {
+    basePrice := getYourBusinessPrice(requestType)
+    yourCost := getOrchestratorCost(pixels)
+    profitMargin := 0.20 // 20% margin
+
+    return basePrice + yourCost*profitMargin
+}
+```
+
+### 价格发现
+
+使用 CLI 发现协调器价格并设置您的利润率：
+
+```bash
+livepeer_cli
+# Select "Set broadcast config" to see current market rates
+# Then set your max prices accordingly
+```
+
+您的“费用”是客户支付给您和您支付给协调器用于处理的金额之间的差额。
+
+### 案例研究：Streamplace
+
+[Streamplace](https://stream.place)是一个网关，为内容创作者提供视频处理服务。
+创作者支付 Streamplace 进行视频处理，而 Streamplace 支付协调者实际的工作费用。
+Streamplace 的利润率是创作者支付的金额与它支付给协调者的金额之间的差额。
+
+[Daydream](https://daydream.live)是另一个提供 AI 视频处理服务的网关。
+开发者和创作者支付 Daydream 进行 AI 视频处理，而 Daydream 支付协调者实际的工作费用。
+Daydream 的利润率是创作者支付的金额与它支付给协调者的金额之间的差额。

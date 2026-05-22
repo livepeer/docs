@@ -1,0 +1,94 @@
+---
+title: 网关 CLI 命令
+description: 参考：Livepeer 网关的完整 CLI 命令列表
+sidebarTitle: CLI 命令
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - cli commands
+  - gateway
+  - commands
+  - reference
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9yZWZlcmVuY2VzL2NsaS1jb21tYW5kcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2dhdGV3YXlzL3JlZmVyZW5jZXMvY2xpLWNvbW1hbmRzIiwic291cmNlSGFzaCI6ImM5MGM0NjY5YWQzNjNjYWE4MjJjOGUwNTEwNmNlMjcyNTQ2YTU3YzUxZmFlY2NiYjkxOWNhN2VhYTNhZWRkODYiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MjA6MDkuNzg2WiJ9 */}
+# Livepeer CLI 命令
+<Card title="CLI Tools Codebase" href="https://github.com/livepeer/wiki" icon="github" arrow horizontal>
+  View CLI Tools Codebase on Github
+</Card>
+
+
+## 快速参考
+
+| 类别 | 命令 | 节点类型 |
+|----------|----------|-----------|
+| **常规** | 获取节点状态，查看协议参数，列出协调器，初始化轮次 | 全部 |
+| **网关/广播器** | 设置广播配置，设置每项功能的最大价格，存款/取款 | 网关 |
+| **协调器** | 激活协调器，设置配置，设置价格，调用奖励，投票 | 协调器 |
+| **以太坊** | 转移代币，设置Gas价格，请求测试代币，签名消息 | 全部（链上） |
+| **质押** | 质押，取消质押，重新质押，提取质押/费用 | 全部 |
+
+---
+
+## 详细命令列表
+
+### 通用命令（所有节点类型）
+- **获取节点状态** - 显示节点信息、余额和配置 
+- **查看协议参数** - 显示协议状态和参数 
+- **列出已注册的协调器** - 显示可用的协调器 
+- **初始化轮次** - 初始化新的协议轮次 
+
+### 网关/主播命令
+- **设置广播配置** - 配置转码选项和最高价格 
+- **设置每项功能的最高价格** - 为AI功能设置定价 
+- **存入广播资金** - 添加 ETH 以支付协调者 
+- **解锁广播资金** - 解锁存入的资金 
+- **提取广播资金** - 提取已解锁的资金 
+
+### 协调者命令
+- **激活协调器** - 成为协调器的多步骤过程 
+- **设置协调器配置** - 更新价格、奖励分成、费用分享、服务 URI 
+- **调用奖励** - 为当前轮次领取协调器奖励 
+- **设置最大票面价值** - 配置最大票面价值 
+- **设置主播价格** - 为特定主播设置价格 
+- **设置最大会话数** - 限制同时转码会话数 
+- **在治理投票中投票** - 参与协议治理 
+- **对储备金提案进行投票** - 对储备金提案进行投票 
+
+### 质押和代币命令
+- **绑定代币** - 将 LPT 委托给协调器 
+- **解除质押代币** - 移除已委托的代币（开始解除质押期） 
+- **重新质押代币** - 重新质押处于解除质押状态的代币 
+- **提取质押** - 完成解押质押金的提取 
+- **提取费用** - 提取已获得的费用 (ETH) 
+- **转移代币** - 将 LPT 转移到另一个地址 
+
+### 以太坊操作
+- **设置最大Gas价格** - 为交易配置最大Gas 
+- **设置最小Gas价格** - 为交易配置最小Gas 
+- **获取测试 LPT** - 请求测试代币（仅限测试网） 
+- **获取测试 ETH** - 测试网 ETH 的使用说明 
+- **签署消息** - 使用节点的私钥签署消息 
+- **签署类型化数据** - 签署 EIP-712 类型化数据 
+
+## HTTP API 端点
+
+CLI 命令映射到 CLI 服务器上的 HTTP 端点（默认端口 5935）：
+
+- `/status` - 节点状态
+- `/protocolParameters` - 协议信息
+- `/registeredOrchestrators` - 协调器列表
+- `/bond`, `/unbond`, `/rebond` - 质押操作
+- `/activateOrchestrator` - 协调器激活
+- `/setBroadcastConfig` - 广播配置
+- `/setMaxPriceForCapability` - AI定价
+- `/reward` - 领取奖励
+- `/transferTokens` - 代币转账
+- `/signMessage` - 消息签名
+
+## 备注
+
+- 命令根据节点类型进行过滤 - 一些命令仅在协调器或网关上显示 
+- 测试网命令（如获取测试代币）仅在测试网络上显示 
+- CLI 连接到节点的 HTTP API，通常网关在端口 5935，协调器在端口 7935 

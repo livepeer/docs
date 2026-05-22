@@ -77,12 +77,6 @@ const REMEDIATOR_CHAIN = [
     supportsLanguage: false,
   },
   {
-    name: 'remediate-frontmatter-quotes',
-    path: 'operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js',
-    strategy: 'spawn',
-    supportsLanguage: false,
-  },
-  {
     name: 'repair-term-capitalisation',
     path: 'operations/scripts/remediators/content/style/repair-term-capitalisation.js',
     strategy: 'require',

@@ -1,0 +1,68 @@
+---
+title: SOLUTIONS-SOCIAL-DATA — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Build social and data-feed community pages for all 5 Livepeer Solutions products (Daydream, Embody, Frameworks, Livepeer Studio, Streamplace) using reusable pipelines and a layout template. Also extended the data pipeline infrastructure with multi-channel YouTube support, Discord → GitHub Actions migration, GitHub Discussions/Releases fetchers, and an RSS blog fetcher.
+
+## Verified Done
+
+All 4 phases confirmed complete per `plan.md` (each has `COMPLETE` marker and a `✅ CHECKPOINT` entry):
+
+**Phase 1 — Research & Config (COMPLETE)**
+- Web search completed for all 5 products (social channels, GitHub Discussions, Releases, blog APIs).
+- Hero video candidates identified.
+- `operations/scripts/config/product-social-config.json` created (product → social channel mapping).
+
+**Phase 2 — Pipeline Extensions (COMPLETE)**
+- `fetch-youtube-data.js` parameterised for multi-channel output (`PRODUCT_KEY` env, config-driven).
+- `.github/scripts/fetch-discord-announcements.js` built (GHA replacement for n8n Discord workflow).
+- `.github/scripts/fetch-rss-blog-data.js` built (generic RSS parser).
+- `.github/scripts/fetch-github-discussions.js` built (GraphQL API, config-driven).
+- `.github/scripts/fetch-github-releases.js` built (REST API, config-driven).
+- GHA workflows added: `update-discord-data.yml`, `update-github-data.yml`, `update-rss-blog-data.yml`.
+
+**Phase 3 — Template & Pages (COMPLETE)**
+- `snippets/templates/pages/data-imports/social-data-page.mdx` template created.
+- 5 product community pages created: `v2/solutions/daydream/community.mdx`, `v2/solutions/embody/community.mdx`, `v2/solutions/frameworks/community.mdx`, `v2/solutions/livepeer-studio/community.mdx`, `v2/solutions/streamplace/community.mdx`.
+- Related pages CardGroup added to `trending-topics.mdx`.
+- All 5 pages added to `docs.json` navigation.
+
+**Phase 4 — Validation (COMPLETE)**
+- Frontmatter schema validated (fixed `pageVariant: landing` → `overview`).
+- docs.json nav wiring verified.
+- Component imports verified.
+- 31/38 external URLs fully verified, 2 partially, 5 flagged low risk.
+- Template updated to match fixes.
+
+## Claimed Done — Unverified or Incomplete
+
+- Per-product data files (`snippets/automations/{product}/youtubeData.jsx`, etc.) are explicitly noted as not yet populated: "These files do not exist yet because the workflows only run on `main` branch and some secrets (e.g. `DISCORD_BOT_TOKEN`) need configuration first." This is acknowledged in the plan as expected — pages render without data if files are absent (conditional rendering).
+- The `.env` file in the plan root contains environment variable values (confirmed present at `SOLUTIONS-SOCIAL-DATA/.env`). This is a credentials risk — see File Inventory Flags.
+
+## In Progress
+
+Nothing. Plan is closed.
+
+## Not Started / Still To Do
+
+- External: secrets configuration in GitHub for new workflows (`DISCORD_BOT_TOKEN`, etc.) — this is an operational task outside the plan scope.
+- The plan notes: "~35 existing external links to livepeer.studio/docs — separate cleanup task to convert to relative links."
+
+## Blockers
+
+None for the plan itself. Secret configuration is an operational dependency, not a plan blocker.
+
+## File Inventory Flags
+
+- **`.env` FILE IN PLAN FOLDER** — a `.env` file exists at `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/.env`. This is a credentials risk. Secrets should not live in plan workspace folders. Verify whether this file contains actual credentials or is an example template. If it contains real keys/tokens, it must be removed immediately and rotated.
+- `_workspace/research/socials-research.md` — research artefact. Appropriate location.
+
+## Audit Notes
+
+- The all-plans-audit-2026-03-24.md confirms: "All 4 phases done, committed. 5 community pages live. Data feeds populate when workflows run on main." This matches the plan.md status exactly.
+- The plan is genuinely complete and the artefact inventory is detailed and accurate. The only outstanding items are operational (secrets) and a deferred cleanup task (link conversion).
+- The `.env` file is the one active concern from this audit. It should be investigated immediately regardless of plan completion status.
+- The plan.md is one of the most thorough in the workspace — it includes full artefact inventory, governance compliance notes, and explicit risk mitigations. The execution matched the plan.

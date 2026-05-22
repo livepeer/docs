@@ -1,0 +1,94 @@
+---
+title: 演员概览
+sidebarTitle: 演员概览
+description: 谁参与 Livepeer，每个角色的职责是什么，以及角色如何相互作用。
+keywords:
+  - livepeer
+  - about
+  - actors
+  - gateway
+  - orchestrator
+  - delegator
+  - developers
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL2FjdG9ycy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2Fib3V0L2xpdmVwZWVyLW5ldHdvcmsvYWN0b3JzIiwic291cmNlSGFzaCI6ImRkYWIyYTU0MDJlMmMxNGQyOGI4OWYwNzhmNjAzNWE0YjczNGQ2MjQ0MDkzZmM2NmZkZTVkN2UxNDdhZTRiNjkiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0yMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yNlQwNzoxODoxMy4xNTNaIn0= */}
+并执行系统定义的操作。在 Livepeer 架构中，“actor”是一个正式的类别，用于描述具有不同职责、激励和交互的参与者。Actors 对于从系统工程角度描述网络如何端到端运行至关重要。
+Livepeer 的生态系统涉及协议参与者（链上角色）和网络参与者（网络参与者和构建者)
+
+Actors 是使 Livepeer 网络在经济和技术上运作的参与者。
+
+## 核心参与者
+The Livepeer 网络有三种主要角色：Orchestrators、Delegators 和 Gateways（以前称为 Broadcasters）
+.（Transcoders 现在仅指附加到 Orchestrators 的 GPU 实例。）每个角色都有独特的职责：
+Orchestrators（节点运营商）：他们运行 go-livepeer 客户端软件，并提供计算资源（通常是 GPU 加速）来转码视频流或运行 AI 推理任务
+. Orchestrators 通过质押 LPT（自我绑定）来激活：质押越高（加上委托质押），分配给他们的工作越多
+. 他们设置定价参数（每像素 ETH，费用分成 %，奖励分成 %），并必须调用链上函数（如 reward）来领取 ETH 费用和 LPT 通胀每轮
+. 为了高效运行，Orchestrators 通常使用硬件编码器（如 Nvidia NVENC/NVDEC）并保持强大的网络连接
+.
+Delegators（代币持有者）：任何 LPT 持有者都可以通过委托给一个或多个 Orchestrators 来质押他们的代币。这增强了网络安全，并为 Delegators 提供奖励份额。委托不转移代币所有权--LPT 保留在委托者的钱包中，由质押合约绑定。作为回报，Delegators 获得每个 Orchestrator 费用和通胀的一部分（按 Orchestrator 选择的 feeShare 和 rewardShare 百分比）
+. Delegators 必须保持质押（并迁移到 Arbitrum）以继续赚取；在 Confluence 之后，未迁移质押将导致失去奖励
+. Delegators 还获得治理权：他们可以分离质押以投票提案，或通过他们的 Orchestrator 投票
+.
+Gateways（Broadcasters/Clients）：Gateways 是发布视频流或 AI 推理请求到网络的实体（在 Confluence 之前称为 Broadcasters）
+. Gateway 将原始媒体片段连同 ETH 一起发送到网络以支付服务。它与 Orchestrators（链下）协商以选择合适的工作者，附加票据作为每个片段的支付承诺，并最终收到转码后的输出。Gateways 支付 ETH 费用（通过 TicketBroker 合约链上）并不需要 LPT。它们可以检索完成的视频供最终用户使用，或通过 CDN 转发给流媒体客户端。Gateways 是网络的需求侧，不会获得质押奖励。
+🔍 关键角色流程：Delegators ▶ 质押 LPT 支持 Orchestrators，增强安全性并为 Delegators 提供奖励份额
+. Orchestrators ▶ 在链上注册，声明容量和定价，然后接受 Gateways 的工作。Gateways ▶ 提交视频/AI 作业（支付费用）给 Orchestrators 处理，收到转换后的数据。
+
+--
+
+## 角色摘要
+
+### 开发者与应用
+
+- 将需求引入网络
+- 通过面向网关的 API 集成
+- 优化延迟、质量和成本
+
+### 网关运营商
+
+- 提供工作接收和协调
+- 将工作负载匹配到可用的编排器
+- 处理路由、重试和服务级接口
+
+### 编排器运营商
+
+- 提供供应侧计算参与
+- 执行或协调转码和 AI 工作负载
+- 根据活动和质押支持赚取费用和奖励
+
+### 委托人
+
+- 将 LPT 绑定到编排器
+- 影响安全性和经济权重
+- 分享奖励和费用收益
+
+## 交互模式
+
+应用程序通常不会直接与每个计算节点协调。
+
+常见模式是：
+
+- Application -> Gateway -> Orchestrator -> Gateway -> Application
+
+这种分离提高了运营商的专业化和系统可组合性。
+
+## 演员页面
+
+- [网关](/v2/about/livepeer-network/livepeer-actors/gateways)
+- [编排器](/v2/cn/orchestrators/orchestrators-portal)
+- [委托者](/v2/about/livepeer-network/livepeer-actors/delegators)
+- [构建者和最终用户](/v2/about/livepeer-network/livepeer-actors/end-users)
+
+## 为什么角色分离很重要
+
+- 在需求端提供更好的开发者体验
+- 在供应端实现运营专业化
+- 服务和计算提供商之间的开放竞争
+- 更清晰的定价、性能和可靠性责任
+
+## 相关页面
+
+- [需求端](/v2/about/livepeer-network/demand-side)
+- [供应端](/v2/about/livepeer-network/supply-side)
+- [工作生命周期](./job-lifecycle)

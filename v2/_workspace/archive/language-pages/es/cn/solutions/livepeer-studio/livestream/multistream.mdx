@@ -1,0 +1,29 @@
+---
+title: 多流
+description: 将一个直播流发送到多个 RTMP/RTMPS 目标（例如 Twitch、YouTube）。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbXVsdGlzdHJlYW0iLCJzb3VyY2VIYXNoIjoiODlkYjFjZDdhZDFmNzQ0YjkzZjJjYzlhYTM0YjZhMmEyZmVjNjZjY2QxZDEzMjY4ZTFmNTViZWQ2YzM1YTA5YyIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozNDoyMi44MzJaIn0= */}
+多流传输将您的 Livepeer Studio 流发送到多个 **RTMP/RTMPS** 目标（例如 Twitch、YouTube Live、Facebook Live）。在仪表板或通过 API 中为每个流配置 **多流目标**。
+
+## 概念
+
+- **多流目标** = 接入 URL + 可选的流密钥 + 可选的版本。通过以下方式创建[多流 API](https://livepeer.studio/docs/api-reference/multistream/create) 或内联在[stream create](https://livepeer.studio/docs/api-reference/stream/create) / [流更新](https://livepeer.studio/docs/api-reference/stream/update).
+- 目标是**每流**；新流不会继承它们。
+- **更改将应用于下一个会话。** 如果流是直播状态，新的/更新后的目标将在当前会话结束后使用。
+
+## 仪表板
+
+1. 前往 [流](https://livepeer.studio/dashboard/streams)，打开一个流。
+2. **概述** tab → **Multistream targets** → **Create**.
+3. 输入名称，**输入 URL**（必需），可选的流密钥和画面配置文件。
+4. 保存。从同一部分切换、编辑或删除目标。
+
+## API
+
+- 添加目标：[添加多流目标](https://livepeer.studio/docs/api-reference/stream/add-multistream-target) 或在流中创建/更新。
+- 移除: [删除多流目标](https://livepeer.studio/docs/api-reference/stream/delete-multistream-target)。
+
+## 监控
+
+- **健康** tab: targets show **Active** or **Offline** (may lag slightly).
+- **Webhooks:** `multistream.connected`, `multistream.error`, `multistream.disconnected`。请参阅 [监听事件](../analytics/listen-to-events).

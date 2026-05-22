@@ -1,0 +1,903 @@
+# Canonical Frameworks, Rules & Guides
+
+All canonical taxonomy frameworks, voice rules, content rules, and design frameworks extracted from the Content Writing pipeline (`workspace/plan/active/CONTENT-WRITING/`).
+
+**Source of truth**: Each section references the source file. If a conflict arises, the source file wins.
+
+---
+
+## Table of Contents
+
+1. [Taxonomy Frameworks](#1-taxonomy-frameworks)
+   - [1.1 pageType](#11-pagetype)
+   - [1.2 pagePurpose](#12-pagepurpose)
+   - [1.3 Audience & Persona](#13-audience--persona)
+   - [1.4 Industry & Niche](#14-industry--niche)
+   - [1.5 Complexity & Lifecycle Stage](#15-complexity--lifecycle-stage)
+   - [1.6 Information Type](#16-information-type)
+   - [1.7 Veracity](#17-veracity)
+2. [Voice Rules & Guides](#2-voice-rules--guides)
+   - [2.1 Universal Voice Rules](#21-universal-voice-rules)
+   - [2.2 Per-Audience Voice Extensions](#22-per-audience-voice-extensions)
+   - [2.3 UK English Reference](#23-uk-english-reference)
+3. [Content Rules & Guides](#3-content-rules--guides)
+   - [3.1 Copy Governance — Banned Words](#31-copy-governance--banned-words)
+   - [3.2 Copy Governance — Banned Phrases](#32-copy-governance--banned-phrases)
+   - [3.3 Voice Principles](#33-voice-principles)
+   - [3.4 Deprecated & Conflicted Terms](#34-deprecated--conflicted-terms)
+4. [Design Rules & Frameworks](#4-design-rules--frameworks)
+   - [4.1 Section Naming Rubric](#41-section-naming-rubric)
+   - [4.2 Page Structure Rules](#42-page-structure-rules)
+   - [4.3 Content Pipeline Architecture](#43-content-pipeline-architecture)
+   - [4.4 Definition of Good](#44-definition-of-good)
+   - [4.5 Veracity Source Library](#45-veracity-source-library)
+
+---
+
+# 1. Taxonomy Frameworks
+
+Locked definitions governing every page in the documentation. When a page is classified, these are the values it must use.
+
+---
+
+## 1.1 pageType
+
+**Source**: `Frameworks/content-pipeline-framework.md` | **Status**: Locked
+
+7 primary types (consolidated from 12):
+
+| pageType | What it is | Variants |
+|---|---|---|
+| `navigation` | Pure routing pages — portals, tab roots | portal |
+| `concept` | Explains how something works; builds mental model | overview |
+| `tutorial` | End-to-end guided learning exercise | overview |
+| `guide` | Opinionated guidance for a specific outcome | overview |
+| `instruction` | Step-by-step procedure for a specific task | overview, quickstart, troubleshooting |
+| `reference` | Structured lookup — specification, compendium | overview, specification, compendium, changelog |
+| `resource` | Curated discovery — external tools, directories, showcases | overview, knowledge-hub |
+
+**Key decisions**:
+- `overview` is a **pageVariant**, not a pageType — cross-type variant meaning "entry/orientation page for this section"
+- `navigation` stays as primary pageType — pure routing pages
+- `resource` vs `reference` are distinct: `reference` = structured lookup; `resource` = curated discovery
+- `knowledge-hub` = `resource` variant for curated external/public content
+
+**Deprecated aliases** (old 12-type → new 7-type):
+
+| Old pageType | New pageType | pageVariant to set |
+|---|---|---|
+| `landing` | `navigation` | — |
+| `overview` | Migrate explicitly to correct new type | — |
+| `how_to` | `instruction` | — |
+| `quickstart` | `instruction` | `quickstart` |
+| `faq` | `reference` | `compendium` |
+| `troubleshooting` | `instruction` | `troubleshooting` |
+| `changelog` | `reference` | `changelog` |
+| `glossary` | `reference` | `compendium` |
+
+---
+
+## 1.2 pagePurpose
+
+**Source**: `Frameworks/pagePurpose.md` | **Status**: Locked
+
+15 intent-based purpose values (UK English):
+
+| Purpose | What the reader needs | Reader process |
+|---|---|---|
+| `orient` | Know what exists and where they fit | arrive → scan → locate → navigate |
+| `explain` | Build mental model of how something works | encounter → absorb → build model → reason |
+| `learn` | Acquire prerequisite vocabulary and conceptual primitives | lack vocab → encounter → acquire → connect → proceed |
+| `choose` | Make scoped decision between known alternatives | arrive with options → map criteria → compare → decide → justify |
+| `evaluate` | Assess viability/benchmark/comparison before committing direction | question → scope → investigate → analyse → deliberate → determine |
+| `start` | Go from zero to minimal working state fast | arrive at zero → follow steps → reach working state → know next step |
+| `build` | Complete end-to-end implementation to production-ready result | define intent → follow procedure → make decisions → implement → verify → ship |
+| `configure` | Map system options to effects for their requirements | identify requirement → locate parameter → understand effect → set value → confirm |
+| `operate` | Manage live system day-to-day | identify task → locate procedure → execute → verify → repeat |
+| `troubleshoot` | Diagnose and resolve problems | encounter problem → identify symptom → diagnose cause → apply fix → verify |
+| `verify` | Confirm system set up correctly before problems emerge | set up check → run check → compare to expected → pass or route to fix |
+| `integrate` | Connect Livepeer with another system | understand both systems → plan connection → implement bridge → test contract → verify |
+| `optimise` | Improve running system on specific metric | identify metric → understand levers → weigh trade-offs → apply changes → measure |
+| `reference` | Precise authoritative data for readers who know what they need | know what to look up → locate entry → extract exact value → return to work |
+| `update` | Know what changed, impact, required action | learn of change → assess impact → determine action → execute or note |
+
+**Deprecated aliases** (old → new):
+
+| Old | New |
+|---|---|
+| `orientation` | `orient` |
+| `concept` | `explain` |
+| `decision` | `choose` |
+| `setup` | `configure` |
+| `optimization` | `optimise` |
+| `comparison` | `evaluate` |
+
+---
+
+## 1.3 Audience & Persona
+
+**Source**: `Frameworks/content-pipeline-framework.md` | **Status**: Locked
+
+### Audience tokens (7)
+
+| Token | Who |
+|---|---|
+| `founder` | CEO/CTO evaluating Livepeer for their product or business |
+| `builder` | Building products using Livepeer APIs, SDKs, or hosted gateways |
+| `developer` | Building custom pipelines, BYOC, protocol extensions, tooling |
+| `gateway` | Running gateway infrastructure, routing traffic |
+| `orchestrator` | Running GPU nodes, providing compute |
+| `delegator` | Staking LPT tokens, participating in governance |
+| `community` | Contributors, governance participants, newcomers, researchers, internal |
+
+### Persona (per audience, optional)
+
+| Audience | Personas |
+|---|---|
+| `community` | `ambassador`, `engager`, `explorer`, `researcher`, `internal` |
+| `founder` | `technical`, `business`, `partner` |
+| `builder` | `ai`, `video`, `realtime`, `agent`, `studio`, `daydream`, `frameworks`, `streamplace`, `embody` |
+| `developer` | Pending definition |
+| `gateway` | Pending definition |
+| `orchestrator` | Pending definition |
+| `delegator` | Pending definition |
+
+---
+
+## 1.4 Industry & Niche
+
+**Source**: `Frameworks/industry.md` | **Status**: Locked
+
+### Industry tokens (array, max 2, first dominates)
+
+| Token | Domain | Terminology register |
+|---|---|---|
+| `technical` | Engineering, software, systems | Engineering precision; implementation-level |
+| `finance` | Investment, capital, financial analysis | Financial analysis; risk/return framing |
+| `economics` | Market dynamics, incentive theory, macro | Incentive structures; mechanism design |
+| `business` | Strategy, operations, management | ROI, TCO, competitive positioning |
+| `marketing` | Brand, messaging, growth | Value propositions; audience-centric |
+| `governance` | Policy, institutional decision-making | Process, quorum, proposal mechanics |
+| `broadcast` | Video production, streaming media | Codecs, bitrates, delivery protocols |
+| `AI` | Machine learning, AI infrastructure | Inference, pipelines, model serving |
+| `livepeer` | Livepeer protocol and ecosystem | Protocol-native terminology |
+
+### Niche tokens (array, cross-industry)
+
+| Token | Scope |
+|---|---|
+| `web3` | Decentralised context, on-chain, blockchain paradigms |
+| `protocol` | Livepeer protocol specifics, smart contracts, consensus |
+| `tokenomics` | LPT mechanics, staking, delegation, rewards |
+| `AI` | ML inference, model serving, compute routing |
+| `video` | Codecs, encoding, transcoding, formats |
+| `streaming` | Delivery, CDN, live/VOD, broadcast |
+| `hardware` | GPU, physical compute, datacenter specs |
+| `infrastructure` | Nodes, networking, cloud/bare-metal deployment |
+
+**Usage rule**: First industry entry dominates — sets primary vocabulary register. Second entry provides supplementary vocabulary for genuine field intersections.
+
+---
+
+## 1.5 Complexity & Lifecycle Stage
+
+**Source**: `Frameworks/complexity.md` | **Status**: Agreed
+
+### Complexity (single value)
+
+| Value | Reader assumption |
+|---|---|
+| `beginner` | New to this domain; needs definitions, simple examples, no abbreviations unexpanded |
+| `intermediate` | Working knowledge; can handle domain terms, moderate complexity, standard prerequisites |
+| `advanced` | Expert; specialised language, edge cases, optimisation techniques, minimal hand-holding |
+
+### Lifecycle Stage (single value)
+
+| Value | Reader position |
+|---|---|
+| `discover` | Finding out what exists; orientation |
+| `evaluate` | Assessing viability before committing |
+| `setup` | First-time installation and configuration |
+| `build` | Active implementation |
+| `operate` | Day-to-day running of a live system |
+| `troubleshoot` | Diagnosing and fixing problems |
+| `optimise` | Improving a running system on specific metrics |
+
+**Note**: Lifecycle stage is independent of `purpose` — they serve different functions. Lifecycle stage governs reader motivation and entry point assumptions; purpose governs page content outcome.
+
+---
+
+## 1.6 Information Type
+
+**Source**: `Frameworks/information-type.md` | **Status**: Draft
+
+9 section-level information types. **Not a frontmatter field** — determined per-section at runtime by the agent based on purpose.
+
+| Type | What it is | Veracity standard |
+|---|---|---|
+| `factual` | Verifiable, citable data (true/false, non-interpretive) | Very high |
+| `conceptual` | Explanatory content building understanding of mechanism/system | Medium |
+| `procedural` | Step-sequence: exactly what to do, in order | Very high |
+| `analytical` | Reasoned interpretation drawing conclusions from data | Medium |
+| `evaluative` | Evidence-based content supporting reader's judgment | High |
+| `structural` | Information architecture: what exists, how it relates | High |
+| `change` | Delta information: what changed, impact, action needed | Very high |
+| `narrative` | Value-proposition, motivational framing | Lower |
+| `technical` | Engineering/implementation-level, specialist knowledge | Very high |
+
+### Purpose → Information Type Mapping
+
+Each purpose permits specific information types per section:
+
+| Purpose | Primary types | Secondary types |
+|---|---|---|
+| `orient` | structural, narrative | conceptual |
+| `explain` | conceptual, technical | factual, analytical |
+| `learn` | conceptual, factual | procedural |
+| `choose` | evaluative, analytical | factual, conceptual |
+| `evaluate` | evaluative, analytical, factual | technical, conceptual |
+| `start` | procedural, factual | conceptual |
+| `build` | procedural, technical | factual, conceptual |
+| `configure` | procedural, technical, factual | conceptual |
+| `operate` | procedural, factual | technical |
+| `troubleshoot` | procedural, analytical | technical, factual |
+| `verify` | procedural, factual | technical |
+| `integrate` | procedural, technical | factual, conceptual |
+| `optimise` | analytical, procedural | technical, evaluative, factual |
+| `reference` | factual, technical | structural |
+| `update` | change, factual | procedural |
+
+---
+
+## 1.7 Veracity
+
+**Source**: `Frameworks/veracity.md` | **Status**: Locked
+
+### veracityStatus enum (3 values)
+
+| Value | Meaning |
+|---|---|
+| `verified` | Checked against authoritative sources for its information type |
+| `unverified` | Not yet checked (default for new/AI-generated content) |
+| `stale` | Was verified; source has since changed (requires re-verification) |
+
+### Pipeline blocking rules
+
+- `unverified` or `stale` at **very high** or **high** standard → **blocks publication**
+- `medium` or **lower** → requires human sign-off but does not hard-block
+
+### Veracity standards per information type
+
+| Information type | Standard | What "verified" means | Authoritative sources |
+|---|---|---|---|
+| `factual` | Very high | Every claim citable against primary source | Protocol contracts, API specs, official changelogs |
+| `technical` | Very high | Code tested against live system, current codebase | go-livepeer, GitHub repos, live API endpoints |
+| `procedural` | Very high | Every step executed in correct environment, produces stated output | Live system testing, official CLI docs |
+| `change` | Very high | Every entry confirmed against release notes, migration guides | GitHub releases, changelogs |
+| `evaluative` | High | Evidence is real, sourced, labelled if approximate | Benchmark results, analytics, actual cost data |
+| `structural` | High | Accurately reflects current site structure | docs.json, live site |
+| `analytical` | Medium | Reasoning internally consistent with documented behaviour | Derived from factual/technical sources |
+| `conceptual` | Medium | Mental model consistent with documented behaviour | Official docs, whitepapers |
+| `narrative` | Lower | Value framing consistent with foundation communications | Foundation communications, official positioning |
+
+**Key rule**: Information type is section-level; veracity status is page-level. Page is `verified` only when **all sections** pass their respective type's standard.
+
+---
+
+# 2. Voice Rules & Guides
+
+Voice governs how content sounds. Universal rules always apply first; audience rules extend them.
+
+---
+
+## 2.1 Universal Voice Rules
+
+**Source**: `Prompts/voice-rules.md` | **Status**: Locked
+
+### Opening order
+Value or outcome before mechanism. Fact before caveat. Reader benefit before system description.
+
+### Paragraph discipline
+One paragraph, one job. Lead sentence states the fact. Final sentence ends on fact, number, or next step — never a hedge.
+
+### Language
+UK English throughout. Full correction table in [2.3](#23-uk-english-reference).
+
+### Banned words (remove, do not soften)
+
+`effectively` | `essentially` | `basically` | `meaningful` | `significant` | `real` (as intensifier) | `various` | `several` | `obviously` | `clearly`
+
+### Banned phrases
+
+| Phrase | Why |
+|---|---|
+| "This section covers" | Filler opening — start with the content |
+| "This page covers / explains / walks you through" | Self-referential |
+| "Understanding X is essential" | Reader decides what is essential |
+| "It is important to note" | If important, just say it |
+| "As mentioned above" | Docs navigated non-linearly |
+| "and so on" / "etc." | List the items or don't mention them |
+| "rather than" | Often passive avoidance; state the direct rule |
+| "what it takes" | Vague — say what is required |
+| "it should be noted" | Filler |
+| "not just X" | Vague framing — state what it is |
+| "can generate" / "may produce" in value claims | Weak — assert directly |
+| "The reason is straightforward" | Often isn't; condescending |
+| "among other factors" | List the factors |
+| "low but not zero" | Quantify or remove |
+| "once X is stable" | Undefined condition |
+| "depends on various" | List what it depends on |
+
+### Banned constructions
+
+| Construction | Rule |
+|---|---|
+| `not [X]` in value statements | State positive |
+| `if [condition]` in body prose | Resolve the condition |
+| `This page [verb]` | Delete self-reference |
+| `can/may [verb]` in value claims | Assert directly |
+
+---
+
+## 2.2 Per-Audience Voice Extensions
+
+**Source**: `Prompts/voice-rules.md` | **Status**: Locked
+
+If a page serves multiple audiences (rare — avoid by design), apply rules for the primary audience and flag secondary audience content.
+
+---
+
+### `orchestrator` — node operator register
+
+**Register**: Operational and technical. Performance and economics focused. Hardware-aware.
+
+**Tone**: Practical, numbers-driven, hardware-specific. Respects their investment in hardware and time.
+
+**Do**:
+- Lead with earnings, performance, or operational outcomes
+- Use hardware-specific language: VRAM, CPU cores, NVLink, bandwidth, pipeline throughput
+- Quantify: "8 GB VRAM minimum for SDXL, 24 GB for high-res inference"
+- Distinguish paths by hardware profile
+- State prerequisites as hard requirements, not suggestions
+
+**Don't**:
+- Explain "what an orchestrator is" on operational pages
+- Use generic cloud/distributed computing language when hardware-specific terms exist
+- Present economics in vague terms ("can earn rewards")
+- Omit the hardware requirement section
+
+**Prohibited phrases**:
+- "Your orchestrator will automatically..." (unless it actually does — verify first)
+- "The network rewards you for..." (too vague)
+- "Easy to set up" / "Simple configuration"
+- Any sentence that hedges earnings without stating the mechanism
+
+---
+
+### `gateway` — infrastructure operator register
+
+**Register**: Peer-to-peer technical. Operator-to-operator. As if a senior engineer wrote notes for another senior engineer.
+
+**Tone**: Direct, factual, assumes competence. Earns trust through precision, not warmth.
+
+**Do**:
+- Lead with what the gateway gets (output, earnings, routing performance) before how to achieve it
+- Use concrete numbers: "routes ~40 jobs/second at 4% margin"
+- Assume familiarity with networking, load balancing, config files, CLI tooling
+- State commands imperatively: "Run `go-livepeer -gateway`"
+
+**Don't**:
+- Open with risk, cost, or difficulty before value
+- Explain TCP/IP, Docker, Linux fundamentals
+- Use "simply", "just", "easy", "straightforward"
+- Use questions as section headings
+
+**Prohibited phrases**:
+- "Don't worry, this is easy to configure"
+- "As a gateway operator, you will..."
+- "This document will guide you through"
+- "Remember that..." / "Keep in mind that..."
+
+---
+
+### `developer` — code-first register
+
+**Register**: Code-first. Minimal prose. Show the thing, then explain if needed.
+
+**Tone**: Technical precision. Peer-level. No ceremony.
+
+**Do**:
+- Code example first, prose explanation second
+- Function signatures, types, and interface definitions are primary content
+- Reference the actual codebase — link to GitHub
+- Be explicit about versions, breaking changes, compatibility
+- Error states, edge cases, failure modes belong in main content
+
+**Don't**:
+- Write prose explanations of what the code already shows
+- Use marketing language adjacent to technical content
+- Use `<Note>` or `<Info>` for content that belongs in the main explanation
+- Omit error states or edge cases
+
+**Prohibited phrases**:
+- "Easily integrated with your existing..."
+- "With just a few lines of code..."
+- "The SDK makes it simple to..."
+- "Don't worry about the details..."
+- "As you may know..."
+
+---
+
+### `builder` — integration-focused register
+
+**Register**: Integration-focused. Outcome-before-mechanism. API-centric.
+
+**Tone**: Direct and efficient. Treats the reader as a capable engineer who wants to ship.
+
+**Do**:
+- Lead with what the integration gives the builder's product
+- State the exact API endpoint or SDK method first, then context
+- Show working code in most-likely language (JS/TS first, then Python, then Go)
+- Show full request/response cycle
+- State prerequisites explicitly: API keys, SDK version, plan/tier
+
+**Don't**:
+- Explain the Livepeer network architecture to someone who wants to transcode a video
+- Use node-operator or gateway terminology without translating to integration implications
+- Assume knowledge of web3 mechanics without framing
+- Mix "how the protocol works" with "how to integrate"
+
+**Prohibited phrases**:
+- "As you know, Livepeer is a decentralised..."
+- "Built on blockchain technology..."
+- Any opening that explains the network before the integration value
+
+---
+
+### `delegator` — accessible, decision-support register
+
+**Register**: Accessible, plain-language, decision-support. A smart person who understands finance and risk but does not write code.
+
+**Tone**: Clear, direct, without condescension. Treats the reader as a capable decision-maker.
+
+**Do**:
+- Lead with the outcome: what does staking, delegating, or voting give them?
+- Explain protocol-specific terms on first use, then use freely
+- Use plain language for economics: "you receive X% of the rewards the orchestrator earns"
+- State the actual steps — not vague guidance
+- For governance: explain what is at stake before describing the mechanism
+
+**Don't**:
+- Use code blocks or CLI commands
+- Assume knowledge of DeFi mechanics without defining them
+- Use node-operator hardware terminology
+- Write delegation or governance as "set and forget"
+
+**Prohibited phrases**:
+- "Simply stake your tokens to..."
+- "As a delegator, you will automatically..."
+- Any claim about earnings without stating the dependency
+
+---
+
+### `community` — social/governance register
+
+**Register**: Inclusive, participatory. Peer-level social fabric. Substantive: community pages give real information, not motivation-poster content.
+
+**Tone**: Warm but not effusive. Concrete and actionable.
+
+**Do (by persona)**:
+- `explorer`: orient first, route second — they don't know their role yet
+- `ambassador`: lead with programme mechanics (how to participate, what is required)
+- `engager`: governance process is the substance — actual steps
+- `researcher`: cite primary sources; they are evaluating, not joining
+- State what participation actually requires: time, skills, tools, credentials
+
+**Don't**:
+- "thriving community", "passionate contributors", "vibrant ecosystem"
+- Aspirational prose without concrete next steps
+- Treat every community visitor as an ambassador
+- Duplicate role-specific content — link to the right tab
+
+**Prohibited phrases**:
+- "Join our thriving community!"
+- "Livepeer has a passionate and growing..."
+- "Together, we can..."
+- "The community is the heart of..."
+- "Exciting opportunity to contribute"
+
+**Positive exemplars**:
+- `explorer`: "Livepeer is a decentralised video infrastructure network. Participants can run infrastructure as a gateway or orchestrator, build products using the API, stake LPT as a delegator, or contribute to the ecosystem. Start with the section that fits your role."
+- `ambassador`: "Live Pioneers accepts applications on a rolling basis. Contributors log work in the contribution tracker and receive monthly reward distributions based on contribution categories."
+- `engager`: "The Governance Forum is where proposals are posted before going on-chain. Comments during the review period can extend the voting timeline. To vote, you need staked LPT — that is handled in the LP Token tab."
+- `researcher`: "Network utilisation data is published via the Livepeer Explorer API. Historical round data is available in the subgraph. The whitepaper (Ericsson, 2018) is the primary citation for protocol mechanics."
+
+---
+
+### `founder` — business-executive register
+
+**Register**: Executive summary style. Outcome and economics before mechanism. Business framing.
+
+**Tone**: Direct, credible. Numbers over adjectives. No hype.
+
+**Do**:
+- Lead with the business outcome: what does using Livepeer give this product or company?
+- State unit economics with actual numbers: "70% lower than AWS MediaConvert for 1080p"
+- Frame technical details as business implications: "sub-3-second latency -> usable for live commerce"
+- Distinguish `technical` founder (CTO: architecture, reliability) from `business` founder (CEO: cost, competitive fit)
+- `partner` persona: lead with process and programme mechanics
+
+**Don't**:
+- Open with protocol architecture
+- Use node/operator terminology without translating to business impact
+- Make unquantified comparative claims ("cost-effective", "highly reliable")
+- Bury the commercial case inside technical content
+
+**Prohibited phrases**:
+- "Powered by blockchain technology..."
+- "The future of decentralised..."
+- Any sentence requiring web3 understanding to evaluate the product
+
+---
+
+## 2.3 UK English Reference
+
+| US | UK |
+|---|---|
+| optimize | optimise |
+| organize | organise |
+| customize | customise |
+| recognize | recognise |
+| analyze | analyse |
+| behavior | behaviour |
+| color | colour |
+| center | centre |
+| license (noun/verb) | licence (noun) / license (verb) |
+| practice (noun/verb) | practise (verb) / practice (noun) |
+| labeled | labelled |
+| canceled | cancelled |
+| traveling | travelling |
+| -ize endings | -ise endings (where both are standard: specialise, initialise, serialise) |
+
+---
+
+# 3. Content Rules & Guides
+
+Rules governing what can and cannot appear in documentation content.
+
+---
+
+## 3.1 Copy Governance — Banned Words
+
+**Source**: `tools/lib/copy-governance/banned-words.txt` + `Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/copy-governance.md` | **Status**: Locked
+
+| Word | Why |
+|---|---|
+| effectively | Vague qualifier — state the fact directly |
+| essentially | Same as above |
+| basically | Same as above |
+| meaningful | Undefined — be specific about the metric or outcome |
+| significant | Undefined — use a number or comparison |
+| real | Meaningless emphasis |
+| various | Vague — list the things |
+| several | Same as above |
+| obviously | Condescending and often wrong for some readers |
+| clearly | Same as above |
+
+---
+
+## 3.2 Copy Governance — Banned Phrases
+
+**Source**: `tools/lib/copy-governance/banned-phrases.txt` | **Status**: Locked
+
+| Phrase | Why |
+|---|---|
+| "This section covers" | Filler opening — start with the content |
+| "The reason is straightforward" | Often isn't; condescending |
+| "Understanding X is essential" | Reader decides what's essential |
+| "It is important to note" | If it's important, just say it |
+| "As mentioned above" | Docs navigated non-linearly |
+| "among other factors" | List the factors |
+| "and so on" | List the items or don't mention them |
+| "low but not zero" | Quantify or remove |
+| "not just" | Vague framing — state what it is |
+| "rather than" | Creates passive avoidance; state the direct rule |
+| "what it takes" | Vague — say what is required |
+| "once X is stable" | Undefined condition; state the specific condition |
+| "it should be noted" | Filler — just make the point |
+| "not preference" | Unclear; state the requirement |
+| "depends on various" | List what it depends on |
+| "can generate" | Weak claim — if it generates X, say it generates X |
+| "may produce" | Same as above |
+
+---
+
+## 3.3 Voice Principles
+
+**Source**: `copy-governance.md` | **Status**: Locked
+
+### Entity-led voice
+The subject of a sentence is the system, node, user, or action — not the documentation.
+- **Do**: "The orchestrator submits a reward call each round."
+- **Don't**: "In this section, we explain how orchestrators submit reward calls."
+
+### Exit state over topic
+Every section heading and opening sentence names what the reader can do after reading, not what the section is about.
+- **Do**: "Choose an orchestrator based on reward cut, uptime, and ETH fee history."
+- **Don't**: "Orchestrator Selection Criteria"
+
+### Precision over breadth
+Say exactly what is true, not a range of things that might be true.
+- **Do**: "The unbonding period is 7 rounds (~7 days)."
+- **Don't**: "Unbonding typically takes several rounds, which may vary."
+
+### No forward-looking uncertainty about shipped features
+If it is live, state it as fact.
+- **Do**: "Governance proposals require a 33% quorum to pass."
+- **Don't**: "Governance proposals may require quorum depending on settings."
+
+---
+
+## 3.4 Deprecated & Conflicted Terms
+
+**Source**: `Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/deprecated-terms.md` | **Status**: Locked
+
+### Deprecated role terms
+
+| Old term | Current term | Notes |
+|---|---|---|
+| Broadcaster | Gateway (operator) | "Broadcaster" appears in Whitepaper and go-livepeer codebase because those predate the rename. Never use in new documentation. |
+| Pool worker | Pool node | Old term may still appear in older docs. |
+| Combined mode | (no single replacement) | Use "Dual mode" or "Dual-workload configuration" |
+| Hybrid | Dual mode | Informal term. Use "Dual mode" only. |
+| Transcoder | Varies by context | In go-livepeer, "Transcoder" = worker process in O-T split. Do not use as synonym for "Orchestrator." |
+
+### Conflicting definitions (resolved)
+
+| Term | Resolution |
+|---|---|
+| pageType enum | New 7-type set is canonical (not old 12-type) |
+| purpose enum | Intent-based 15-value set is canonical |
+| audience tokens | New 7-token set with `founder` added, `platform-builder` renamed to `builder` |
+| "Network Participant" | Avoid — use specific role labels (Orchestrator, Gateway, Delegator, Developer) |
+| DePIN | Single definition: Decentralized Physical Infrastructure Networks |
+
+### High-staleness terms (verify before using)
+
+| Term | Why it can change | Where to verify |
+|---|---|---|
+| Active set size (100) | Could change via governance | Explorer |
+| Unbonding period | Set by governance | Explorer (BondingManager) |
+| Target bonding rate (50%) | Set by governance | Delegator yield guide + LIPs |
+| Inflation adjustment rate (0.00005% per round) | Set by governance | Delegator yield guide + LIPs |
+| Treasury reward cut rate | Set by governance (LIP-92) | LIPs repo |
+| AI pipeline types and model IDs | Change with releases | go-livepeer releases + AI docs |
+| CLI flag names and defaults | Change between releases | CLI reference + latest tagged release |
+
+---
+
+# 4. Design Rules & Frameworks
+
+Architectural frameworks governing page structure, naming, and the content pipeline itself.
+
+---
+
+## 4.1 Section Naming Rubric
+
+**Source**: `Prompts/section-naming.md` | **Status**: Locked
+
+### Label classes
+
+| Class | What it does | Example |
+|---|---|---|
+| **Governing-concept label** | Names the concept those examples instantiate — **ideal** | `AI Runtime Profiles` |
+| **Content descriptor** | Names what the section is actually about | `Inference Routing` |
+| **Literal label** | Names the visible examples directly — **penalise** | `Batch vs Live Video` |
+| **Comparator label** | Names the comparison, not the content — **reject** | `Operational Workload Differences` |
+| **Generic descriptor** | Valid umbrella, too weak — **penalise** | `AI Workload Modes` |
+| **Taxonomy mismatch** | Wrong conceptual category — **reject** | calling runtime behaviour "architecture" |
+
+### Core rules
+- **Do not name the examples. Name the concept those examples instantiate.**
+- Strongly penalise literal contrast labels ("X vs Y") unless literal contrast is unquestionably clearest
+- Penalise labels that describe difference or comparison rather than the content itself
+- Penalise generic umbrella labels that do not capture the governing concept
+- Prefer titles that function as content descriptors
+- Prefer governing-concept labels over example-level labels
+
+### Scoring criteria (per candidate, 1-5 each)
+
+| Dimension | Question |
+|---|---|
+| Precision | Does it match the real content or purpose? |
+| Depth | Does it name the governing concept, not just visible examples? |
+| Stability | Would it still work if the section expands later? |
+| Clarity | Would a reader correctly predict the section from the title? |
+| Conciseness | Compact without becoming vague? |
+
+**Pass**: total >= 20/25
+
+### Standalone heading term registry
+
+Three tiers, verified 2026-03-24:
+
+| Tier | Meaning | Terms |
+|---|---|---|
+| **Banned** | Never use as a standalone H2/H3 | `Basics`, `Notes`, `How It Works`, `See Also`, `Conclusion`, `What's Next` |
+| **Avoid** | Use only when no stronger descriptor exists | `Overview`, `Details`, `Information`, `Introduction`, `Summary`, `Options`, `Background`, `Next Steps`, `Further Reading` |
+| **OK** | Acceptable standalone when content warrants | `Types`, `Modes`, `Profiles`, `Getting Started`, `Features`, `Examples`, `Benefits`, `Prerequisites`, `Requirements`, `Related`, `Configuration`, `Setup`, `Resources`, `Appendix` |
+
+**Banned** = the word communicates nothing about the specific content and has no domain anchor. Replace with the governing concept.
+
+**Avoid** = structurally weak — acceptable when the section is genuinely introductory, genuinely a summary, etc. A domain-anchored version is always stronger (`Pricing Overview` beats `Overview`).
+
+**OK** = these terms are specific enough in context. `Prerequisites` is a clear structural contract. `Types` in `Deployment Types` is fine. `Related` as a section marker for link clusters is fine.
+
+### Winner filter (all must be yes)
+1. Does this name the real governing concept — not just the examples?
+2. Is it a content descriptor, not a literal label?
+3. Is it at the right conceptual layer?
+4. Would it still work if more examples were added later?
+5. Would a reader scanning navigation understand the subject area?
+6. Is this term used at its correct meaning?
+7. Does it fit the pageType?
+8. Does it fit the purpose?
+9. Does it fit the audience?
+10. Does it sound like an expert editorial choice rather than a safe generic label?
+
+---
+
+## 4.2 Page Structure Rules
+
+**Source**: `Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/page-structure-rules.md` | **Status**: Locked
+
+### Page templates (per pageType)
+
+| Template | pageType |
+|---|---|
+| `navigation-page.mdx` | `navigation` |
+| `portal-page.mdx` | `navigation` (portal variant) |
+| `overview-page.mdx` | `concept` (overview variant) |
+| `how-to-page.mdx` | `instruction` |
+| `tutorial-page.mdx` | `tutorial` |
+| `reference-page.mdx` | `reference` |
+| `faq-page.mdx` | `reference` (compendium variant) |
+| `troubleshooting-page.mdx` | `instruction` (troubleshooting variant) |
+| `glossary-tab.mdx` | `reference` (compendium/glossary variant) |
+| `changelog.mdx` | `reference` (changelog variant) |
+
+**Template source**: `snippets/templates/pages/`
+
+### Information type → component mapping (used at Layout pass)
+
+| Information type | Component |
+|---|---|
+| procedural | `<Steps>` |
+| conceptual | prose / `<Note>` |
+| reference | table |
+| multi-path | `<Tabs>` |
+
+### Related policies
+- `docs-guide/policies/component-layout-decisions.mdx` — which components are appropriate where
+- `docs-guide/policies/quality-gates.mdx` — gate criteria before publication
+- `snippets/templates/pages/page-composition-framework.mdx` — page composition rules
+
+---
+
+## 4.3 Content Pipeline Architecture
+
+**Source**: `design-canonical.mdx` + `content-pipeline-canonical.md` | **Status**: Active
+
+### Six-system architecture
+
+| System | Job |
+|---|---|
+| **1. Standards Layer** | Locked definitions — what correct looks like (taxonomy, voice, naming, veracity) |
+| **2. Context Layer** | Per-tab canonical knowledge — audience docs, section maps, work orders (built once, reused forever) |
+| **3. Content Engine** | Write, review, rewrite content (per-page) |
+| **4. Veracity Engine** | Claim resolution against trusted source library (>=90% auto-cleared) |
+| **5. Production Engine** | MDX delivery — template, frontmatter, components |
+| **6. Feedback System** | Corrections flow back to standards + context improvements |
+
+### Pipeline levels
+
+| Level | Name | What happens | Output |
+|---|---|---|---|
+| L1 | Site | Map audiences, cross-tab journeys, tab ownership | `site-map.md` |
+| L2 | Tab | Personas, entry vectors, JTBD matrix, linear journey | `tab-audience-doc.md` |
+| L3 | Sections | IA structure, content audit, reconsolidation plan | `tab-map.md` + `group-audit.md` |
+| L4 | Page Design | Classify pageType + purpose + audience, set adjacency | Page brief |
+| L5 | Content | Write/review: audience fit, purpose, info type, voice, veracity, structure | Plain markdown + verdict |
+| L6 | Veracity | Resolve claims against 45-source trust-ranked library | Verified content + residual flags |
+| L7 | Layout | Template + components + frontmatter + heading scores | MDX file |
+| L8 | Sign-off | Human reviews residual flags only | Committed page |
+
+### Concerns separation
+
+**Content concerns**: Context, Quality, Terminology, Usefulness, Voice, Veracity
+
+**UX concerns**: Layout, Style, Homogenous structure
+
+### Feedback loop
+Every human correction cycles back:
+- Veracity correction → source trust ranking
+- Structural rejection → section map
+- Voice correction → voice-rules.md
+- Component correction → component decision rules
+
+---
+
+## 4.4 Definition of Good
+
+**Source**: `content-pipeline-canonical.md` | **Status**: Active
+
+### Site level
+- Audience journey complete for every primary audience segment
+- 0 pages with missing or wrong-type classification
+- All factual claims veracity-tracked
+- All headings score >=20/25
+- docs.json navigation fully matches file system
+
+### Tab level
+- Primary audience journey complete: entry -> depth -> exit
+- On-demand sections exist for every major post-activation need
+- At least 3 cross-tab links at journey intersections
+- Tab entry portal correctly routes to all sections
+- No dead-end pages
+
+### Section level
+- Reader can complete section's primary task without leaving for prerequisites
+- No knowledge gaps between adjacent pages
+- All pages have correct pageType for section position
+- Section orientation page present and correctly routes
+
+### Page level
+- One purpose, one audience, one job achieved before the end
+- Voice correct for audience — register, terminology, no banned words
+- All factual/technical/procedural claims verified or flagged
+- Correct template applied for pageType + pageVariant
+- All 10 frontmatter fields present and correct
+- All heading names score >=20/25
+
+---
+
+## 4.5 Veracity Source Library
+
+**Source**: `Frameworks/veracity-library.md` | **Status**: Complete (45 sources)
+
+### Source categories
+
+| Category | Examples | Veracity tier |
+|---|---|---|
+| **Protocol & On-Chain** | Whitepaper, Streamflow Spec, Smart Contract Addresses, Explorer, LIP Repository | Primary |
+| **Code Repositories** | go-livepeer, livepeer-js, LPMS, livepeer-ai-js, ComfyStream | Primary |
+| **Official Documentation** | Livepeer Docs v2, AI Documentation, API Reference, SDK Documentation | Primary |
+| **Foundation & Ecosystem** | Foundation Blog, Forum, livepeer.org, Shtuka Research | Acceptable |
+| **Community & Operator** | Forum threads, Community dashboards, Academy, Snapshot, Dune | Acceptable |
+| **External Domain** | Wikipedia, IETF/RFC, NVIDIA docs, Hugging Face, Ethereum/Arbitrum docs | Acceptable |
+
+**Not permitted**: Discord (ephemeral, unverifiable)
+
+### Usage rule
+For each claim, search sources in trust order:
+1. **Confirmed** at high confidence → clear flag, cite source, mark verified
+2. **Sources conflict** or ambiguous → keep flag, write best-confidence version, note conflict
+3. **No source found** → keep flag, write best-confidence guess
+
+---
+
+# Locked Enums — Quick Reference
+
+For copy-paste into frontmatter or prompt context blocks:
+
+```
+pageType:       navigation | concept | tutorial | guide | instruction | reference | resource
+purpose:        orient | explain | learn | choose | evaluate | start | build | configure | operate | troubleshoot | verify | integrate | optimise | reference | update
+audience:       founder | builder | developer | gateway | orchestrator | delegator | community
+complexity:     beginner | intermediate | advanced
+lifecycleStage: discover | evaluate | setup | build | operate | troubleshoot | optimise
+veracityStatus: verified | unverified | stale
+industry:       technical | finance | economics | business | marketing | governance | broadcast | AI | livepeer
+niche:          web3 | protocol | tokenomics | AI | video | streaming | hardware | infrastructure
+informationType: factual | conceptual | procedural | analytical | evaluative | structural | change | narrative | technical
+```

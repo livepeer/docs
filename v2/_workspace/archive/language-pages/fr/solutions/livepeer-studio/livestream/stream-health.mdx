@@ -1,0 +1,39 @@
+---
+title: Intégrité du flux
+description: >-
+  Surveiller l'intégrité du flux en direct : encodage, statut en temps réel,
+  cibles multistream, taux d'ingestion et journaux.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLWhlYWx0aC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9zdHJlYW0taGVhbHRoIiwic291cmNlSGFzaCI6ImM4MWNkZTc5MWVlNjI4NjY2ODEwZmEzZjNjZTQ3YmM0NzQ5ODdhYjE4ZGEwYjM4M2E4NDVhOGEwMTY5ZjgzYjUiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MzE6MTguMzA1WiJ9 */}
+La santé du flux dans Livepeer Studio vous donne un aperçu rapide de l'état du flux et des problèmes éventuels.
+
+## Statut global de la santé
+
+- **Saine** - Tous les tests de santé sont dans un bon état.
+- **Malsaine** - Un ou plusieurs tests indiquent un problème.
+- **Inactif** - Le flux n'est pas actuellement actif.
+
+## Vérifications de santé
+
+- **Transcodage** - Sain signifie que plusieurs profils transcodés sont disponibles pour la lecture. Non sain signifie qu'uniquement la source peut être disponible ; vérifiez les journaux et vos paramètres de l'encodeur (par exemple, OBS).
+- **En temps réel** - Indique si la transcodification est plus rapide que le temps réel (faible latence). Des paramètres inhabituels peuvent rendre cela instable.
+- **Multistreaming** - Statut des cibles multistream : **Inactif** (diffusion ou multistream non active), **En attente** (connecté), **En ligne** (connecté), **Hors ligne** (erreur). Corrigez l'URL d'ingestion ou la clé de diffusion de la cible ou le service de destination si une cible reste hors ligne.
+
+## Journaux
+
+L'onglet Santé (ou API) affiche les journaux du flux : par exemple, le flux a démarré/arrêté, la multistrim connectée/déconnectée, et **erreurs de transcodage** (par exemple, format de pixel non pris en charge). Utilisez-les pour corriger la configuration de l'encodeur ou de l'ingestion.
+
+## Taux d'ingestion de session
+
+Le **taux d'ingestion de session** est le débit binaire de la vidéo reçue par Livepeer, mis à jour environ toutes les 10 secondes. Un débit binaire stable et raisonnable indique un encodeur et un réseau de bonne qualité ; un débit binaire faible ou instable peut indiquer des paramètres d'encodeur ou des problèmes de connexion.
+
+## Où voir l'état de santé
+
+- **Tableau de bord** - Ouvrez le flux dans le [Livepeer Studio dashboard](https://livepeer.studio/dashboard/streams) et utilisez le **Santé** onglet. Vous verrez le statut, les vérifications, les journaux et un graphique du taux d'ingestion pour la session active.
+- **API** - Utilisez [Obtenir le flux](https://livepeer.studio/docs/api-reference/stream/get) et [Obtenir la session](https://livepeer.studio/docs/api-reference/session/get) pour les données de diffusion et de session (par exemple.`sourceSegmentsDuration`, durée de la session). Les conditions et indicateurs de santé détaillés peuvent être exposés via l'API ; consultez la dernière[référence de l'API](https://livepeer.studio/docs) pour les champs actuels.
+
+## Dépannage
+
+- **Transcodage non sain** - Vérifiez le journal d'événements pour les erreurs (par exemple, format d'entrée non pris en charge). Ajustez OBS ou votre encodeur (résolution, codec, intervalle de clé de trame) et redémarrez le flux.
+- **Multiflux hors ligne** - Vérifiez l'URL d'ingestion et la clé de flux de la destination ; corrigez le point de multistream et lancez une nouvelle session.
+- **Taux d'ingestion faible ou instable** - Vérifiez la vitesse de téléchargement du diffuseur et les paramètres de débit binaire de l'encodeur/intervalle de clé de trame. Voir [Diffuser via OBS](stream-via-obs) et [Optimiser la latence](optimize-latency).

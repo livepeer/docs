@@ -1,0 +1,43 @@
+---
+title: Livepeer Aperçu du réseau
+sidebarTitle: Aperçu du réseau
+description: Un aperçu du réseau Livepeer et de ses composants.
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - network overview
+  - network
+  - overview
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvbGl2ZXBlZXItbmV0d29yay9vdmVydmlldyIsInNvdXJjZUhhc2giOiIxNTk5ODQ5NmFmMGUzNGZkNGFhMzg2OTgyNGZjNTEyZTFkYTU0YTA1ODZlYmQ0OWQ3N2EyMTNlZDg2MDAwM2JlIiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDA2OjQ2OjA1Ljc1NVoifQ== */}
+Livepeer’s protocole de base définit les conditions pour que le réseau fournisse des services vidéo en temps réel et de calcul IA. Le réseau est la couche d'exécution. C’est le système réel de machines qui effectuent le travail pour réaliser la vision du produit.
+- Les passerelles (diffuseurs) soumettent des tâches (vidéo ou IA) au réseau depuis des applications ou des services
+- Les nœuds orchestrateurs (stakers) traitent et calculent le travail, et 
+- Les délégateurs misent des jetons pour soutenir la gouvernance et la sécurité du réseau
+
+## Composants du réseau
+
+### Types de nœuds
+L'implémentation du protocole définit plusieurs rôles de nœuds (tous ne sont pas des acteurs formels du réseau) qui exécutent de manière coopérative le protocole afin de fournir les fonctions réseau souhaitées.
+
+- **Nœud diffuseur**: Se concentre sur LivepeerServer qui gère rtmpConnections et BroadcastSessionsManager
+- **Nœud passerelle**: Ajoute AISessionManager et les gestionnaires HTTP IA au-dessus de la fonctionnalité du diffuseur
+- **Nœud orchestrateur**: Utilise la structure orchestrator avec SegmentChans pour la distribution des tâches et Recipient pour les paiements
+- **Nœud transcodeur**: RemoteTranscoderManager coordonne le transcodage local ou distant via LocalTranscoder
+- **Nœud travailleur IA**: RemoteAIWorkerManager gère les conteneurs Docker exécutant des modèles IA
+
+### Composants de base
+- LivepeerNode : Un nœud d'interface implémenté par tous les autres types de nœuds du réseau (passerelle/diffuseur, orchestrateur, transcodeur)
+- Serveur multimédia (`LivpeerServer`): LivepeerServer gère le traitement des médias et fournit des points de terminaison HTTP/RTMP, offrant 
+    - Ingestion RTMP pour les flux en direct
+    - Push HTTP pour les segments vidéo
+    - Points de terminaison de lecture HLS
+    - Gestion des connexions actives
+- Gestionnaire de sessions de diffusion : 
+- Orchestrateur
+- Transcodeur
+- Passerelle IA 
+- Travailleurs IA 
+

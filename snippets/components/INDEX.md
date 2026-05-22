@@ -1,6 +1,6 @@
-{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
-{/* Generator: operations/scripts/generators/components/library/generate-component-index.js */}
-{/* Generated: 2026-05-18T10:41:16.360Z */}
+<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
+<!-- Generator: operations/scripts/generators/components/library/generate-component-index.js -->
+<!-- Generated: 2026-04-08T15:37:55.953Z -->
 
 # Component Index
 
@@ -14,4 +14,4 @@
 | Config | 1 | 1 | 0 | 0 | 0 | [INDEX.md](config/INDEX.md) |
 
 **Total components:** 132
-**Generated:** 2026-05-18T10:41:16.360Z
+**Generated:** 2026-04-08T15:37:55.953Z

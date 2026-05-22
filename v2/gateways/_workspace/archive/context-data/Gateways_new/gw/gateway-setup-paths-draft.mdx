@@ -1,0 +1,106 @@
+---
+title: 'Choose Your Setup Path'
+description: 'Choose a Livepeer gateway setup path and confirm what you need before installing — AI gateway (off-chain), video gateway (on-chain), dual gateway, or SDK builder.'
+sidebarTitle: 'Get Started'
+keywords: ["livepeer", "gateway", "setup path", "AI gateway", "video gateway", "off-chain", "quickstart", "prerequisites"]
+pageType: 'overview'
+audience: 'gateway'
+status: 'current'
+---
+
+Before you install, confirm which setup path matches your use case and gather what you need. This page walks through the options and what each requires.
+
+---
+
+## Setup paths
+
+| Setup path | What it does | ETH required | Est. time | Start here |
+|------------|-------------|:---:|:---------:|-----------|
+| **AI Gateway — off-chain** | Routes AI inference jobs; no Ethereum on the gateway node | No | ~30 min | [AI Gateway Quickstart](/v2/gateways/get-started/ai-gateway-quickstart) |
+| **Video Gateway — on-chain** | Routes live video transcoding; full probabilistic micropayments | Yes | ~90 min | [Video Gateway Setup](/v2/gateways/get-started/gateway-setup) |
+| **Dual Gateway** | Runs both AI inference and video transcoding on one node | Yes | ~2 hrs | Video setup → then AI setup |
+| **SDK / Alternative Gateway** | Connects a non-Go gateway to the network via a remote signer | Via remote signer | Varies | [Remote Signers](/v2/gateways/advanced/remote-signers) |
+
+---
+
+## What to prepare
+
+<Tabs>
+  <Tab title="AI Gateway — off-chain">
+    ### Before you start the AI gateway quickstart, have these ready
+
+    - **Linux machine or Docker environment.** AI gateway features require Linux. Windows is not supported.
+    - **go-livepeer binary or Docker image.** Use the latest release. See [Install go-livepeer](/v2/orchestrators/setup/install-go-livepeer) for download links. [//]: # (REVIEW: Link to correct gateway install page once it exists; orchestrator install page is same binary)
+    - **A remote signer.** The off-chain gateway delegates all Ethereum signing to a separate signer process. You have two options:
+      - **Self-hosted:** Run the go-livepeer binary in signer mode on a separate host with an Ethereum key and Arbitrum RPC. See [Remote Signers](/v2/gateways/advanced/remote-signers).
+      - **Hosted signer:** Use a community or third-party hosted signer. A public example is available at `signer.eliteencoder.net`. No ETH setup required on your gateway node.
+    - **At least one orchestrator address.** Off-chain gateways cannot discover orchestrators via on-chain polling. You need either an explicit orchestrator address or access to a discovery endpoint. [//]: # (REVIEW: Link to orchestrator discovery guide once available; public discovery endpoint status TBC)
+    - **Port 8935 open** on your gateway host (HTTP API for incoming requests from your application).
+
+    **What you do not need:** an Ethereum wallet, an Arbitrum RPC endpoint, or any ETH on your gateway node.
+  </Tab>
+
+  <Tab title="Video Gateway — on-chain">
+    ### Before you start the video gateway setup, have these ready
+
+    - **Linux machine or Docker environment.**
+    - **go-livepeer binary or Docker image.** Latest release.
+    - **An Ethereum account with a private key or keystore file.** This is the account your gateway uses for PM payments. If you do not have one, go-livepeer will create one during first startup.
+    - **ETH on Arbitrum One.** You will need ETH to fund your PM deposit and reserve. A typical starting allocation is ~0.065 ETH deposit and ~0.03 ETH reserve. [//]: # (REVIEW: Rick — confirm current recommended ETH amounts; livepeer.cloud guide (April 2024\) may be outdated)
+    - **An Arbitrum One RPC endpoint.** Alchemy and Infura free tiers are sufficient for a single node. See [Connect to Arbitrum](/v2/orchestrators/setup/connect-to-arbitrum) for setup detail. [//]: # (REVIEW: This links to the orchestrator Arbitrum page; a gateway-specific equivalent may be needed)
+    - **Ports 1935 (RTMP) and 8935 (HTTP) open** on your gateway host.
+
+    **Not sure how to get ETH on Arbitrum?** Bridge ETH from Ethereum mainnet using the [Arbitrum Bridge](https://bridge.arbitrum.io) or purchase directly via an exchange that supports Arbitrum One withdrawals.
+  </Tab>
+
+  <Tab title="Dual Gateway">
+    ### Before you start the dual gateway setup, have these ready
+
+    All video gateway requirements (above), plus:
+
+    - **A separate list of AI orchestrator addresses.** AI orchestrators run with `-aiWorker` and are distinct from video transcoding orchestrators. You will configure them separately.
+    - **Understanding of port allocation.** AI orchestrators typically run on port 8936; video orchestrators on 8935. These are orchestrator-side ports and do not affect your gateway directly, but knowing this helps when debugging connectivity.
+
+    **Recommended order:** Complete the video gateway setup first and confirm it is routing jobs correctly before adding AI configuration. Debugging a dual setup from scratch is harder than debugging each in sequence.
+  </Tab>
+
+  <Tab title="SDK / Alternative Gateway">
+    ### Before you start building an SDK or alternative gateway, have these ready
+
+    The remote signer runs separately from your gateway application and holds the Ethereum key:
+
+    - **go-livepeer installed for running the remote signer.** The signer is a go-livepeer process, not a standalone binary. You run it on a host you control.
+    - **An Ethereum account with a private key or keystore file.** Held by the **signer**, not your gateway application.
+    - **An Arbitrum One RPC endpoint.** Required by the signer for PM operations.
+    - **ETH on the signer's Ethereum account.** The signer handles all PM deposits on behalf of your gateway.
+    - **Your gateway application** (Python, JavaScript, mobile, etc.) ready to connect to the remote signer API. See the [livepeer-python-gateway](https://github.com/j0sh/livepeer-python-gateway) for a reference implementation.
+
+    Your gateway application itself requires no Ethereum integration. The remote signer absorbs all PM complexity so your implementation only needs to handle media routing.
+  </Tab>
+</Tabs>
+
+---
+
+## Not ready yet?
+
+- **Need to set up an Ethereum account?** See the [MetaMask getting started guide](https://support.metamask.io/getting-started/getting-started-with-metamask/) or any Ethereum wallet documentation.
+- **Need ETH on Arbitrum?** Use the [Arbitrum Bridge](https://bridge.arbitrum.io) to move ETH from Ethereum mainnet.
+- **Need an Arbitrum RPC endpoint?** [Alchemy](https://alchemy.com) and [Infura](https://infura.io) both offer free tiers that cover a single gateway node.
+- **Not sure which path you need?** See [Gateway Paths](/v2/gateways/gateway-path) for the identity-based routing, or [Gateway Overview](/v2/gateways/concepts/overview) for the concepts.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="AI Gateway Quickstart" icon="bolt" href="/v2/gateways/get-started/ai-gateway-quickstart">
+    No ETH required. Start routing AI inference jobs in ~30 minutes.
+  </Card>
+  <Card title="Video Gateway Setup" icon="video" href="/v2/gateways/get-started/gateway-setup">
+    ETH required. Route live video transcoding with full PM control.
+  </Card>
+  <Card title="Remote Signers" icon="key" href="/v2/gateways/advanced/remote-signers">
+    Self-host a remote signer or connect to a clearinghouse. Required for SDK builders and gateway-as-service operators.
+  </Card>
+  <Card title="Gateway Overview" icon="book" href="/v2/gateways/concepts/overview">
+    Still figuring out which type of gateway you need? Start here.
+  </Card>
+</CardGroup>

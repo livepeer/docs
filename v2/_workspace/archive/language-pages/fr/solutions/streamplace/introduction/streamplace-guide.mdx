@@ -1,0 +1,122 @@
+---
+title: Comment fonctionne Streamplace
+description: >-
+  Une explication étape par étape de l'ingestion, de la segmentation, de la
+  provenance, de la transcodification et de la livraison.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace guide
+  - works
+  - explanation
+  - ingest
+  - segmentation
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWd1aWRlLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL3N0cmVhbXBsYWNlL2ludHJvZHVjdGlvbi9zdHJlYW1wbGFjZS1ndWlkZSIsInNvdXJjZUhhc2giOiJjYWMxMjkxNDcyN2JkOWFhYTA1OTRjYzkxMmFjYmFlOTRkMDgxZmQzMDI2YWIyODU4NDFmMDQ0YzYwMjI4OGE0IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE4OjA5OjMwLjcyOVoifQ== */}
+---
+
+Streamplace transforme les diffusions en direct en **vidéos décentralisées vérifiables et conscientes des droits** qui se connectent directement au réseau Livepeer.
+
+Ci-dessous, le workflow complet de bout en bout.
+
+---
+
+## 🧩 Diagramme du flux de bout en bout
+
+```mermaid
+flowchart TD
+    A[User Livestreams / Social App] --> B[Streamplace Node]
+    B --> C[Segment MP4s (1s)]
+    C --> D[C2PA Manifest + Ethereum Signature]
+    D --> E[Send to Livepeer Broadcaster]
+    E --> F[Orchestrators Transcode GPU]
+    F --> G[Return ABR Streams]
+    G --> H[Streamplace Manifests + Metadata]
+    H --> I[Viewers Watch + Verify Provenance]
+```
+
+---
+
+## 🔍 Analyse étape par étape
+
+### **1. Ingestion**
+
+Streamplace prend en charge plusieurs méthodes d'ingestion :
+
+- WHIP / WHEP
+- RTMP
+- WebRTC natif du navigateur
+
+Ces entrées alimentent directement le nœud Streamplace.
+
+---
+
+### **2. Segmentations**
+
+Streamplace divise les vidéos entrantes en**segments MP4 de 1 seconde**, permettant :
+
+- l'authentification par segment
+- le contrôle précis des métadonnées
+- dispatch de transcoding efficace
+- assemblage modulaire de VOD
+
+---
+
+### **3. Couche de provenance**
+
+Chaque segment reçoit :
+
+- un **manifeste d'authenticité du contenu C2PA**, et
+- un **signature Ethereum** liée à l'identité du créateur.
+
+Cela garantit l'intégrité, la vérifiabilité et l'incrimination pour chaque partie de la vidéo.
+
+---
+
+### **4. Transcodage via Livepeer**
+
+Streamplace dispatches segments to the **Livepeer réseau décentralisé de GPU**:
+
+- les orchestrateurs transcodent les segments
+- les sorties multi-bitrate (ABR) sont générées
+- la provenance est préservée de bout en bout
+
+---
+
+### **5. Reconstruction du manifest**
+
+Streamplace reconstruit :
+
+- manifests HLS
+- flux WebRTC
+- structures de lecture riches en métadonnées
+
+Les segments, les signatures, les métadonnées et le contexte de lecture sont fusionnés en une sortie cohérente.
+
+---
+
+### **6. Lecture et vérification**
+
+Les utilisateurs reçoivent :
+
+- sorties HLS ou WebRTC
+- flux vidéo conscients de leur provenance
+- droits automatiques, avertissements et attribution
+
+Les lecteurs peuvent vérifier indépendamment :
+
+- Manifestations C2PA
+- Signatures Ethereum
+- politiques de droits et de distribution
+
+---
+
+## 📚 Pages connexes
+
+- [Aperçu](/solutions/streamplace/overview)
+- [Architecture](/solutions/streamplace/introduction/streamplace-architecture)
+- [Origine et métadonnées](/solutions/streamplace/introduction/streamplace-provenance)
+- [Guide d'intégration](/solutions/streamplace/introduction/streamplace-integration)

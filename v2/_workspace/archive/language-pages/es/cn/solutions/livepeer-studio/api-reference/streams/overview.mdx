@@ -1,0 +1,130 @@
+---
+title: Streams API
+description: Livestream API 用于从管道中创建、检索、更新和删除流对象
+keywords:
+  - livepeer
+  - studio
+  - api
+  - streams
+  - livestream
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FwaS1yZWZlcmVuY2Uvc3RyZWFtcy9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYXBpLXJlZmVyZW5jZS9zdHJlYW1zL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6Ijc0YmIwOTFhNmMzN2ZhODNhMjBkM2U0M2UwZjgyMDc5MTgwM2JlNzMxM2UwOGM1MTI2NzQ1MWMyYTg4OWE0OTMiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6NDg6MzEuNTAxWiJ9 */}
+# 流媒体 API
+
+Livepeer API 用于从管道中创建、检索、更新和删除流对象。
+
+## 流对象
+
+<ResponseField name="id" type="string" readOnly="true">
+  Unique identifier for the stream.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name of the stream.
+</ResponseField>
+
+<ResponseField name="creatorId" type="string">
+  Reference to the creator-id schema.
+</ResponseField>
+
+<ResponseField name="lastSeen" type="number">
+  Timestamp of the last activity on the stream.
+</ResponseField>
+
+<ResponseField name="sourceSegments" type="number">
+  Number of source segments.
+</ResponseField>
+
+<ResponseField name="transcodedSegments" type="number">
+  Number of transcoded segments.
+</ResponseField>
+
+<ResponseField name="sourceSegmentsDuration" type="number">
+  Duration of all the source segments in seconds.
+</ResponseField>
+
+<ResponseField name="transcodedSegmentsDuration" type="number">
+  Duration of all the transcoded segments in seconds.
+</ResponseField>
+
+<ResponseField name="sourceBytes" type="number">
+  Total bytes of source segments.
+</ResponseField>
+
+<ResponseField name="transcodedBytes" type="number">
+  Total bytes of transcoded segments.
+</ResponseField>
+
+<ResponseField name="ingestRate" type="number">
+  Rate at which sourceBytes increases (bytes/second).
+</ResponseField>
+
+<ResponseField name="outgoingRate" type="number">
+  Rate at which transcodedBytes increases (bytes/second).
+</ResponseField>
+
+<ResponseField name="isActive" type="boolean">
+  Indicates if the stream is currently active.
+</ResponseField>
+
+<ResponseField name="isHealthy" type="object">
+  Reference to the stream-health-payload schema for health status.
+</ResponseField>
+
+<ResponseField name="issues" type="object">
+  Reference to the stream-health-payload schema for human-readable issues.
+</ResponseField>
+
+<ResponseField name="createdByTokenName" type="string" readOnly="true">
+  Name of the token used to create this stream.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number" readOnly="true">
+  Timestamp (in milliseconds) of when the stream object was created.
+</ResponseField>
+
+<ResponseField name="parentId" type="string">
+  Identifier for the parent stream object.
+</ResponseField>
+
+<ResponseField name="streamKey" type="string">
+  Key used to form the RTMP ingest URL.
+</ResponseField>
+
+<ResponseField name="playbackId" type="string">
+  Identifier used to form the playback URL.
+</ResponseField>
+
+<ResponseField name="playbackPolicy" type="object">
+  Reference to the playback-policy schema.
+</ResponseField>
+
+<ResponseField name="profiles" type="array">
+  Array of profiles detailing various streaming qualities.
+</ResponseField>
+
+<ResponseField name="record" type="boolean">
+  Indicates if the stream should be recorded.
+</ResponseField>
+
+<ResponseField name="multistream" type="object">
+  Details about multistreaming targets and their configurations.
+</ResponseField>
+
+<ResponseField name="suspended" type="boolean">
+  Indicates if the stream is currently suspended.
+</ResponseField>
+
+## 端点
+
+- [创建流](./create) - `POST /stream`
+- [获取流](./get) - `GET /stream/{id}`
+- [获取所有流](./get-all) - `GET /stream`
+- [更新流](./update) - `PATCH /stream/{id}`
+- [删除流](./delete) - `DELETE /stream/{id}`
+- [终止流](./terminate) - `POST /stream/{id}/terminate`
+- [创建剪辑](./create-clip) - `POST /stream/{id}/clip`
+- [获取剪辑](./get-clip) - `GET /stream/{id}/clip/{clipId}`
+- [添加多流目标](./add-multistream-target) - `POST /stream/{id}/multistream/target`
+- [删除多流目标](./delete-multistream-target) - `DELETE /stream/{id}/multistream/target/{targetId}`

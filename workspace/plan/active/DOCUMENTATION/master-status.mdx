@@ -1,0 +1,107 @@
+---
+title: DOCUMENTATION — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+A documentation governance plan for the Livepeer Docs v2 repository's internal operational documentation system. Scope is distinct from content writing: this plan addresses making all `docs-guide/` operational documentation findable, trusted, machine-readable, and owned — covering components, scripts, tooling, workflows, templates, UI, pages, AI tools, and repo structure.
+
+## Verified Done
+
+**Phase 1: Model and Design — COMPLETE** (per plan.md):
+- `Frameworks/doc-item-model.md` — frozen contract written
+- `docs-guide/config/` created and 5 JSON files moved, 31 consumers updated (commit `40aeb990` confirmed)
+- All 5 design decisions logged: D1 (concern as sub-folder), D-CONCERN (4 concern values), D9 (catalog rename table), D8 (JSON config files home)
+
+**Phase 2: Immediate Fixes — COMPLETE** (all 5 executed):
+- I1: Fixed wrong filename in `source-of-truth-policy.mdx`
+- I2: Fixed stale `tasks/` path in `docs-guide/docs-glossary.md`
+- I3: Re-ran `components-catalog.mdx` generator
+- I4: Deleted `v2/internal/docs-philosophy.mdx` duplicate
+- I5: Added scope cross-links to all three glossary files
+
+**Audit work — COMPLETE**:
+- 10-concern audit complete: components, scripts, tooling, workflows, templates, ui-templates, ui, pages, ai, repo-structure
+- `audits/master-audit.md` — cross-cutting synthesis with P0–P6 remediation plan
+- Individual concern audit files exist for all 10 concerns
+- `design-canonical.mdx` — system architecture document with full mermaid diagram
+- `research-best-practices.md` — exists
+- `recommendations.md` and `recommendations-pipeline.md` — exist
+
+**Sub-folder `system-canonical-design/`**: Contains 9 canonical design .mdx files (components, scripts, tooling, workflows, templates, ui-templates, ui, pages, ai, repo-structure, master). These exist as real content, not stubs.
+
+**`_archive/` folder**: Contains deprecated versions of audit, research, and design plan files — correctly archived.
+
+## Claimed Done — Unverified or Incomplete
+
+**Phase 3 / Part ① EXECUTION steps 3–5**: plan.md marks steps 1–2 as done (model written, JSON files moved) but steps 3–5 are explicitly marked ❌ Pending:
+- Step 3: Rename catalog files to concern-prefix convention — NOT done
+- Step 4: Build `governance-documentation-catalog.mdx` skeleton — NOT done
+- Step 5: Add concern navigation table to `source-of-truth-guide.mdx` — NOT done
+
+These are described as "unblocked" but not executed.
+
+**P0 items from master audit**: These are flagged as "fix immediately" but their completion is not confirmed:
+- Fix stale banner path in `generate-component-docs.js` (triggers fix for 32 v2 pages)
+- Fix stale paths in `generated-artifacts.json` (4+ entries)
+- Fix `ai-tools.mdx` missing frontmatter opening delimiter
+- Fix `dev-tools.mdx` stale Tip callout
+
+No verification that these P0 fixes have been applied exists in the plan files.
+
+## In Progress
+
+**Phase 3 / Part ① EXECUTION** — steps 3–5 are described as unblocked and ready to proceed. They appear to be the next agent-executable work.
+
+## Not Started / Still To Do
+
+**Phase 3 / Parts ② + ④ EXECUTION** — blocked on HUMAN REVIEW:
+- Apply `maintenance` + `generator`/`validator`/`lastVerified` + `consumer` + `concern` + `status` to all ~40 `docs-guide/**/*.mdx` pages
+- Populate `governance-documentation-catalog.mdx`
+- Update `AGENTS.md` with concern navigation rules
+- Update `.claude/CLAUDE.md` and adapter files
+- Write `validate-lpd-cli-freshness.js`
+
+**Phase 4 / Part ③ EXECUTION** — blocked by ①②:
+- Write 3 new validators: `docs-guide-naming-convention.js`, `validate-adapter-parity.js`, `validate-workflow-secrets.js`
+- Register 5 new ownerless surfaces
+
+**Phase 5 / Part ⑤ EXECUTION** — blocked by ①②③④:
+- Write `docs-guide/policies/documentation-governance-policy.mdx`
+- Update `source-of-truth-policy.mdx` and `source-of-truth-guide.mdx`
+- Lock the plan complete
+
+**Cross-plan handoffs** — 5 handoffs to downstream plans (REPO-STRUCTURE-GOV, SCRIPT-GOVERNANCE, COMPONENT-GOVERNANCE, AI-TOOLS, CANONICAL-TRUTH-GUIDES) are defined but not yet actioned.
+
+**Pipeline recommendations R1–R12** — the full remediation backlog from master audit. Critical path: R1 (data correctness) → R8 (dispatch layer) → R9 (governance validators) → R10 (config schemas). Not started.
+
+## Blockers
+
+| Blocker | Blocks | Owner |
+|---|---|---|
+| HUMAN REVIEW of `designing/consumer-assignments.md` — approve maintenance type per page | Phase 3 ② EXECUTION | Alison |
+| HUMAN REVIEW of `designing/consumer-assignments.md` — approve consumer/concern/status assignments | Phase 3 ④ EXECUTION | Alison |
+| Parts ①②③④ completion | Phase 5 | Sequential |
+
+## File Inventory Flags
+
+**Duplicate plan files at root**: `audit.md` is archived (its header says "This file is archived. See audits/master-audit.md") but still exists at the root alongside `audits/master-audit.md`. The root `research.md` may have a similar relationship to `designing/` files. The `_archive/` folder contains older versions. The root files are not clean stubs — they contain real audit content that predates the master synthesis.
+
+**`designing/dep-design-plan-v1.md` and `designing/design-plan.md`**: A deprecated version exists alongside the current design plan. The dep- prefix correctly flags it but the coexistence may cause confusion.
+
+**`plan-recs-agent-1.md`, `plan-recs-agent-2.md`, `plan-recs-agent-3.md`**: Three separate agent recommendation files at root. It is unclear whether these are inputs to `recommendations.md` or superseded by it. No index or README explains their status.
+
+**`context.md` at root and `designing/context.md`**: Two context files at different levels — the relationship is unclear.
+
+**`_index.md`**: Exists at root. Purpose and current accuracy not verified.
+
+**No tracker file**: This plan has no TRACKER.md or STATUS.md equivalent. Progress is tracked via `plan.md` (the execution plan) which doubles as a status document. This is functional but risks the plan document becoming conflated with execution tracking.
+
+## Audit Notes
+
+The DOCUMENTATION plan is the most execution-advanced of the 5 plans in terms of completed deliverables. Phase 1 (Model and Design) and Phase 2 (Immediate Fixes) are genuinely done with evidence (a specific commit hash `40aeb990` is cited). The 10-concern audit is thorough and the master synthesis is well-structured.
+
+The plan is currently blocked at two coordinated HUMAN REVIEW gates (② and ④) — both requiring Alison to review and approve the consumer/maintenance assignment table in `designing/consumer-assignments.md`. Once those gates open, Phases 3–5 are fully defined and agent-executable.
+
+This plan is entirely separate from the content writing pipeline — it governs operational documentation infrastructure, not end-user documentation pages. The two plans should not be conflated. ORCHS/01-CORE-NEEDS-AND-STANDARDS.md references `workspace/plan/active/DOCUMENTATION/research-best-practices.md` as a key reference file, which is the one direct dependency from the content work to this plan.

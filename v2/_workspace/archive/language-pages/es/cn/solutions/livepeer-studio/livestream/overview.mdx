@@ -1,0 +1,58 @@
+---
+title: 直播概述
+description: Livepeer Studio 中的直播概念：流、会话、输入、播放和健康状态。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXcubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXciLCJzb3VyY2VIYXNoIjoiZjliNWQ4YTIzODNmNThjYmI2OTNlNGYxYzk3Njg0ZGRjOTEyZGE2OTNlNTU0Mjk5ZTM0NmUxYTNiZDRlODQxNyIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozMjozNS42MDhaIn0= */}
+一个 **流** 在 Livepeer Studio 中是一个通过 API 创建的实时流对象。它有一个唯一的 **流 ID**, 一个 **流密钥**（用于上传），以及一个**播放ID**（用于观看者）。Livepeer 管理流的生命周期（创建、更新、删除）并通过 webhooks 通知您的应用状态变化。
+
+## 会话
+
+一个流由一个或多个**会话**-流媒体活跃的时段。同一时间只有一个会话处于活动状态。会话有自己的ID和元数据。使用 "[sessions API](https://livepeer.studio/docs/api-reference/session/get-all) 来列出流媒体的会话。
+
+## 录制
+
+如果启用了录制，该会话可以存储为 "**资产**当流结束时。Webhooks 例如 `recording.started`, `recording.ready`, 和 `recording.waiting` 会通知您的后端录制状态。最终的录制内容是一个您可以像任何 VOD 资产一样回放的资产。
+
+## 转码
+
+您可以使用以下方式将实时视频发送到流中:
+
+- **RTMP** - 默认；与 OBS 或其他 RTMP 编码器一起使用。参见[通过 OBS 流媒体传输](./stream-via-obs)。
+- **WebRTC** - 从浏览器低延迟接收。参见[从浏览器进行直播](./livestream-from-browser)。
+- **SRT** - 也支持用于输入。
+
+当流处于直播状态时，[流健康状况](./stream-health) 提供指标（例如转码状态、摄入速率）以便您监控质量和排查问题。
+
+## 多流
+
+您可以使用 [多流](./multistream) 将同一流发送到多个 RTMP/RTMPS 目标（例如 Twitch、YouTube、Facebook Live）。`multistream.connected`, `multistream.error`, `multistream.disconnected`) 报告目标状态。
+
+## 播放
+
+观众使用 **播放 ID** 来观看流媒体。 [Livepeer Player](/solutions/livepeer-studio/player) prefers WebRTC for low latency (about 0.5–3 seconds) and falls back to HLS when needed (e.g. if the stream has B-frames). Playback URLs can also be obtained from the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get).
+
+<Warning>
+  **B-frames** (bidirectional frames) can break WebRTC playback and cause fallback to HLS. With OBS, use the Livepeer Studio preset or set keyframe interval to 1 and turn off B-frames. See [Stream via OBS](./stream-via-obs).
+</Warning>
+
+## Webhooks
+
+Common stream-related events:
+
+- `stream.started` - 流正在运行，HLS URL 可用。
+- `stream.idle` - 流已不再运行。
+- `recording.*` - 录制已开始，就绪或等待中。
+- `multistream.*` - 多流目标已连接、出现错误或已断开。
+
+参见 [Webhooks](../analytics/webhooks) 和 [监听事件](../analytics/listen-to-events)。
+
+## 指南
+
+- [创建直播](./create-livestream)
+- [播放直播](./playback-livestream)
+- [通过OBS流媒体](./stream-via-obs)
+- [从浏览器直播](./livestream-from-browser)
+- [多流媒体](./multistream)
+- [剪辑直播](./clip-livestream)
+- [流媒体健康](./stream-health)
+- [优化延迟](./optimize-latency)

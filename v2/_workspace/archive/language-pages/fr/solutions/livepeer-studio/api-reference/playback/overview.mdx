@@ -1,0 +1,42 @@
+---
+title: API de lecture
+description: >-
+  L'API de lecture est utilisée pour récupérer un objet de lecture à partir de
+  la chaîne
+keywords:
+  - livepeer
+  - studio
+  - api
+  - playback
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FwaS1yZWZlcmVuY2UvcGxheWJhY2svb3ZlcnZpZXcubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FwaS1yZWZlcmVuY2UvcGxheWJhY2svb3ZlcnZpZXciLCJzb3VyY2VIYXNoIjoiNDY0YzJiNzFiNmU0NDk3ZTI4NTBlNGVlYTg1ZDA1MjRlNDQ1ODliMWMwNGE4NzM5ZGM3MzUzMzhjOGQ4NjYxMiIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxODowMjo0MC40MjdaIn0= */}
+# API de lecture
+
+L'API de lecture est utilisée pour récupérer un objet de lecture à partir de la chaîne.
+
+## Objet de lecture
+
+<ResponseField name="type" type="string">
+  Type of playback, such as live, vod, or recording.
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Metadata for the playback information. This includes details about the source, playback policy, and attestation.
+  <ResponseMetaField name="live" type="number">
+    Indicates if the playback is live (1) or not (0).
+  </ResponseMetaField>
+  <ResponseMetaField name="playbackPolicy" type="object">
+    Reference to the playback-policy schema.
+  </ResponseMetaField>
+  <ResponseMetaField name="source" type="array">
+    Array of source objects detailing the playback sources. Each source includes HRN, type, URL, size, width, height, and bitrate.
+  </ResponseMetaField>
+  <ResponseMetaField name="attestation" type="object">
+    Reference to the attestation schema.
+  </ResponseMetaField>
+</ResponseField>
+
+## Points de terminaison
+
+- [Obtenir les informations de lecture](./get) - `GET /playback/{id}`

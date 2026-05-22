@@ -1,0 +1,375 @@
+---
+title: 'Diagnose and Fix Problems'
+sidebarTitle: 'Diagnose & Fix'
+description: 'Three structured diagnostic paths for orchestrator problems: low work volume, operational errors, and performance degradation. Decision-tree format with actionable fixes.'
+pageType: guide
+audience: orchestrator
+purpose: troubleshoot
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - troubleshoot
+  - diagnose
+  - low work volume
+  - reward call failed
+  - performance score
+  - no jobs
+  - AI inference errors
+  - ticket redemption
+  - service URI
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+
+<Tip>
+  Identify which diagnostic path matches your symptom, then work through the checklist in order. Each check eliminates one cause before moving to the next.
+</Tip>
+
+Three categories of problems, three diagnostic paths. Start with the path that matches what you are seeing.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Symptom</TableCell>
+      <TableCell header>Diagnostic path</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>No jobs, few jobs, or sudden drop in job volume</TableCell>
+      <TableCell>[Path 1: Low work volume](#path-1-low-work-volume)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Failed reward calls, ticket redemption errors, software errors</TableCell>
+      <TableCell>[Path 2: Operational errors](#path-2-operational-errors)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Performance score drop, AI inference failures, latency issues</TableCell>
+      <TableCell>[Path 3: Performance degradation](#path-3-performance-degradation)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Path 1" />
+
+## Path 1: Low work volume
+
+Your node is running but receiving no jobs, fewer jobs than expected, or job volume dropped suddenly.
+
+<StyledSteps>
+
+  <StyledStep title="Check service URI reachability">
+
+    Test from a different machine (not the same server):
+
+    ```bash icon="terminal" filename="port-check"
+    curl -k https://YOUR_PUBLIC_IP:8935/status
+    ```
+
+    **No response or timeout:** Port 8935 is not reachable from the internet. This is the most common cause of zero job volume. Check:
+    - Firewall rules (UFW, iptables, cloud security groups)
+    - NAT/port forwarding configuration on your router
+    - That the service URI on-chain matches your current public IP
+
+    **Any response (including errors):** Port is reachable. Continue to the next check.
+
+  </StyledStep>
+
+  <StyledStep title="Check active set membership (video)">
+
+    Open [explorer.livepeer.org](https://explorer.livepeer.org) and search for your address.
+
+    **Status shows Inactive or not listed:** Your stake is below the current active set threshold. Options:
+    - Increase self-stake by bonding more LPT
+    - Attract delegators by offering competitive reward cut (5-15%) and maintaining 100% reward call rate
+    - Switch to AI-only mode, which does not require active set membership
+
+    **Status shows Active:** Active set is not the issue. Continue.
+
+    {/* VERIFY: Active set size is governance-controlled. Do not hard-code the number. [source: explorer.livepeer.org] */}
+
+  </StyledStep>
+
+  <StyledStep title="Check pricing against gateway caps">
+
+    ```bash icon="terminal" filename="check-price"
+    curl -s http://localhost:7935/status | jq '.PricePerUnit'
+    ```
+
+    Compare your price against active orchestrators on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Gateways apply a hard MaxPrice gate — any orchestrator priced above the threshold receives zero work from that gateway.
+
+    **Price is in the upper half or above the active set range:** Lower your `-pricePerUnit` and restart, or update via `livepeer_cli`. Position in the lower half of active prices.
+
+    **Price is competitive:** Continue.
+
+  </StyledStep>
+
+  <StyledStep title="Check capability advertisement (AI)">
+
+    ```bash icon="terminal" filename="check-capabilities"
+    curl http://localhost:7935/getNetworkCapabilities | jq
+    ```
+
+    Also check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+
+    **Pipelines missing from the registry:**
+    - Verify `aiModels.json` syntax: `jq . < aiModels.json`
+    - Confirm AI runner container is running: `docker ps | grep ai-runner`
+    - Check if model download is still in progress in container logs
+    - Restart go-livepeer to force capability re-advertisement
+
+    **Pipelines visible but still no AI jobs:**
+    - Confirm your warm model matches what gateways are requesting (check tools.livepeer.cloud for demand)
+    - Confirm per-pipeline price is competitive against other operators serving the same model
+    - Cold models incur 30-120 second load times — gateways may time out before the model loads
+
+  </StyledStep>
+
+  <StyledStep title="Check on-chain service URI match">
+
+    ```bash icon="terminal" filename="check-uri"
+    # Compare Explorer service URI with your running node
+    curl -s http://localhost:7935/status | jq '.ServiceURI'
+    ```
+
+    If the on-chain URI does not match your current public IP, gateways are connecting to the wrong address. Update via `livepeer_cli` or restart with the correct `-serviceAddr`.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<Note>
+  If all five checks pass and job volume is still low, the cause is likely network-wide demand. Check session counts for other active orchestrators on Prometheus community dashboards or Dune Analytics to confirm whether overall network traffic has decreased.
+</Note>
+
+<CustomDivider middleText="Path 2" />
+
+## Path 2: Operational errors
+
+Failed reward calls, ticket redemption failures, or software errors affecting node operation.
+
+### Reward call failures
+
+<Accordion title="Missed reward rounds despite -reward=true" icon="coins">
+
+Diagnose in order:
+
+1. **ETH balance** — low balance causes reward calls to fail silently.
+   ```bash icon="terminal" filename="check-eth"
+   curl -s http://localhost:7935/status | jq '.EthBalance'
+   ```
+   Keep above 0.02 ETH on Arbitrum at all times. Reward calls cost approximately $0.01-$0.12 each.
+
+2. **Node offline at round boundary** — a node down at the ~22-hour round boundary misses the call. Check systemd or Docker uptime logs:
+   ```bash icon="terminal" filename="check-uptime"
+   journalctl -u livepeer --since "24 hours ago" | grep -i "start\|stop\|exit"
+   ```
+
+3. **Multiple processes competing** — two go-livepeer processes sharing the same wallet submit conflicting transactions. Audit all running processes:
+   ```bash icon="terminal" filename="check-processes"
+   ps aux | grep livepeer
+   ```
+   In split setups, set `-reward=false` on all transcoder processes. Only the orchestrator process should call reward.
+
+4. **Consider Siphon** — for persistent missed rounds, the Siphon split setup runs reward calling on a dedicated stable machine independently of GPU workload.
+</Accordion>
+
+### Ticket redemption failures
+
+<Accordion title="Gap between winning tickets and redeemed tickets" icon="ticket">
+
+**Cause:** ETH balance insufficient for redemption gas, or the TicketBroker contract interaction is failing.
+
+1. Check ETH balance (same as reward call diagnosis above)
+2. Check logs for redemption errors:
+   ```bash icon="terminal" filename="check-tickets"
+   grep -i "ticket\|redeem\|broker" /var/log/livepeer/livepeer.log | tail -20
+   ```
+3. Verify your Arbitrum RPC endpoint is responsive:
+   ```bash icon="terminal" filename="check-rpc"
+   curl -X POST -H "Content-Type: application/json" \
+     --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+     YOUR_ETH_URL
+   ```
+   Expected: chain ID `0xa4b1` (Arbitrum One).
+</Accordion>
+
+### Software errors
+
+<Accordion title="Node crashes or exits unexpectedly" icon="server">
+
+1. Check exit logs:
+   ```bash icon="terminal" filename="check-exit"
+   journalctl -u livepeer -p err --since "24 hours ago"
+   # or
+   grep -i "fatal\|panic\|exit" /var/log/livepeer/livepeer.log | tail -10
+   ```
+
+2. Common causes:
+   - **CUDA driver mismatch** — verify `nvidia-smi` shows your GPU and driver version. Check go-livepeer release notes for CUDA compatibility.
+   - **Keystore file missing** — confirm keystore exists at `~/.lpData/arbitrum-one-mainnet/keystore/` with correct permissions (`chmod 600`).
+   - **RPC endpoint failures** — free-tier RPC endpoints (Alchemy, Infura) have request limits that active orchestrators can hit. Upgrade plan or switch providers.
+
+3. Ensure restart policies are configured:
+   ```bash icon="terminal" filename="restart-policy"
+   # systemd
+   sudo systemctl enable livepeer
+
+   # Docker
+   docker update --restart unless-stopped <container-name>
+   ```
+</Accordion>
+
+<Accordion title="TicketParams expired errors" icon="circle-question">
+
+This error appears when a gateway sends a payment ticket with parameters that expired before your node processed it. It is usually transient and self-resolving — the gateway retries automatically with fresh parameters.
+
+If the error appears persistently, check that your Arbitrum RPC endpoint is responsive and not rate-limited. A slow RPC causes your node to lag behind current block state.
+</Accordion>
+
+<CustomDivider middleText="Path 3" />
+
+## Path 3: Performance degradation
+
+Performance score dropping, AI inference failures, or increasing latency.
+
+### Performance score drop
+
+<StyledSteps>
+
+  <StyledStep title="Check GPU utilisation">
+
+    ```bash icon="terminal" filename="check-gpu"
+    nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu \
+      --format=csv,noheader
+    ```
+
+    **GPU utilisation sustained above 95%:** The node is overloaded. Reduce `-maxSessions` by 1-2 and observe for one round cycle.
+
+    **Temperature above 85C:** Cooling is inadequate. Address airflow or reduce workload before hardware damage occurs.
+
+    **VRAM at 100%:** AI models are consuming all available memory. Make secondary models cold or reduce `capacity` in `aiModels.json`.
+
+  </StyledStep>
+
+  <StyledStep title="Check transcoding latency">
+
+    ```bash icon="terminal" filename="check-latency"
+    curl -s http://localhost:7935/metrics | grep "transcode_duration"
+    ```
+
+    {/* VERIFY: Confirm livepeer_transcode_duration_seconds metric name against current go-livepeer. */}
+
+    **Duration above 2 seconds per session:** Segments are falling behind live pace. The GPU cannot keep up at the current session count. Reduce `-maxSessions`.
+
+    **Duration below 2 seconds:** Transcoding latency is not the issue. Continue.
+
+  </StyledStep>
+
+  <StyledStep title="Check segment failure rate">
+
+    ```bash icon="terminal" filename="check-failures"
+    curl -s http://localhost:7935/metrics | grep "transcode_failed\|transcode_success"
+    ```
+
+    **Failure rate above 1%:** Investigate the failed segments. Common causes:
+    - GPU errors (check `nvidia-smi` for hardware issues)
+    - VRAM pressure from concurrent AI models
+    - Unsupported codec in source segments (not your fault — gateway-side issue)
+
+    Check logs for specific failure details:
+    ```bash icon="terminal" filename="check-failure-logs"
+    grep -i "error\|fail" /var/log/livepeer/livepeer.log | grep -i "transcode\|segment" | tail -20
+    ```
+
+  </StyledStep>
+
+</StyledSteps>
+
+### AI inference errors
+
+<AccordionGroup>
+
+<Accordion title="CUDA out of memory during inference" icon="microchip">
+
+The inference job started but ran out of VRAM during processing.
+
+1. Check current VRAM usage: `nvidia-smi --query-gpu=memory.used,memory.free --format=csv`
+2. Reduce `capacity` in `aiModels.json` for the affected pipeline
+3. Make secondary models cold to free VRAM
+4. If the OOM occurs only for large output dimensions, the model needs more VRAM headroom than currently available
+</Accordion>
+
+<Accordion title="AI runner container in restart loop" icon="microchip">
+
+1. Check container status and restart count:
+   ```bash icon="terminal" filename="check-container"
+   docker ps -a | grep ai-runner
+   ```
+
+2. Check container logs for the root cause:
+   ```bash icon="terminal" filename="check-runner-logs"
+   docker logs --tail 50 <ai-runner-container-name>
+   ```
+
+3. Common causes:
+   - VRAM insufficient for the warm model — check model VRAM requirements against your GPU
+   - Docker socket not mounted — ensure `-v /var/run/docker.sock:/var/run/docker.sock` is in the go-livepeer launch command
+   - NVIDIA Container Toolkit not installed — test with `docker run --gpus all nvidia/cuda:12.0-base nvidia-smi`
+</Accordion>
+
+<Accordion title="Cold model loading too slowly — jobs timing out" icon="microchip">
+
+Cold models take 10-60 seconds to load on first request. Gateways may time out before loading completes, resulting in failed jobs and a degraded performance score.
+
+Fix: warm the model. Update `aiModels.json` to set `"warm": true` for the affected model and restart the AI runner container. Only one warm model per GPU is supported during the Beta phase.
+
+{/* VERIFY: Confirm one-warm-model-per-GPU Beta constraint status. [source: ai-runner release notes] */}
+</Accordion>
+
+<Accordion title="LLM pipeline (Ollama) errors" icon="microchip">
+
+1. Verify Ollama container is running and accessible:
+   ```bash icon="terminal" filename="check-ollama"
+   curl http://localhost:11434/api/version
+   ```
+
+2. Confirm both services are on the same Docker network if containerised
+3. Check that the model ID in `aiModels.json` matches an installed Ollama model:
+   ```bash icon="terminal" filename="check-ollama-models"
+   docker exec <ollama-container> ollama list
+   ```
+4. Restart go-livepeer to force capability re-advertisement
+</Accordion>
+
+</AccordionGroup>
+
+### Latency issues
+
+<Accordion title="High network latency to gateways" icon="link">
+
+Network latency between your node and gateways adds to every job's round-trip time. A home connection adds 10-50ms compared with a colocated data centre server.
+
+1. Test latency to a known gateway endpoint (if available) with `ping` or `mtr`
+2. Consider migrating to a data centre if home network latency is consistently degrading your performance score
+3. Ensure no bandwidth-intensive processes on the same connection are competing with transcoding traffic
+</Accordion>
+
+<CustomDivider middleText="Escalation" />
+
+## When self-diagnosis does not resolve the issue
+
+<CardGroup cols={3}>
+  <Card title="Discord #orchestrators" icon="discord" href="https://discord.gg/livepeer">
+    Search before posting. Most errors have been discussed and resolved by other operators.
+  </Card>
+  <Card title="go-livepeer GitHub Issues" icon="github" href="https://github.com/livepeer/go-livepeer/issues">
+    Search open and closed issues for your error message. File a new issue with logs if unresolved.
+  </Card>
+  <Card title="Metrics and Alerting" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting">
+    Set up Prometheus to capture the data needed for diagnosis before the next occurrence.
+  </Card>
+</CardGroup>

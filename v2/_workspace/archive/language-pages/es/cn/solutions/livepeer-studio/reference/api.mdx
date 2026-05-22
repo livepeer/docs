@@ -1,0 +1,31 @@
+---
+title: API 概述
+description: Livepeer Studio REST API：身份验证和基本用法。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3JlZmVyZW5jZS9hcGkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3JlZmVyZW5jZS9hcGkiLCJzb3VyY2VIYXNoIjoiY2QyMTc0YmVlNWNiOGJhMDBiZTk4Mzk0ZjYzOWQ3NzQyNDkzNzMzODE5ZjY0YWI4NjQ3NWNhNjVlODk3ZTcxNiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzo0NTo0OC42MDJaIn0= */}
+The Livepeer Studio API is **REST**-based: resource-oriented URLs, JSON request and response bodies, standard HTTP methods and status codes.
+
+## Authentication
+
+Use **API keys** 进行身份验证。在 [Livepeer Studio → Developers](https://livepeer.studio/dashboard/developers/api-keys) 中创建和管理密钥。在请求头中发送密钥:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+<Warning>
+  Keep API keys secret. Do not expose them in the browser or in public repos. Prefer backend-to-API calls. **CORS-enabled** keys are deprecated; avoid using them in frontend code.
+</Warning>
+
+## 基础 URL 和资源
+
+-  Studio API 的基础 URL 在 [Livepeer Studio API 参考](https://livepeer.studio/docs).
+- 主要资源包括：**stream**, **session**, **资产**, **播放**, **多流**, **webhook**, **signing-key**, **task**, **观众人数**, **转码**, 以及（对于AI）**生成**.
+
+## 完整参考
+
+对于端点、请求/响应结构和用法：
+
+- [Livepeer Studio API 文档](https://livepeer.studio/docs) - 完整的 API 参考和指南。
+
+使用 [SDK](./sdks) (TypeScript, Go, Python) 用于类型化客户端。有关访问控制，请参见 [API 密钥和签名密钥](https://livepeer.studio/docs) 和 [访问控制](../access-control/overview).

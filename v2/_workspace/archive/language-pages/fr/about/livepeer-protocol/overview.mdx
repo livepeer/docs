@@ -1,0 +1,258 @@
+---
+title: Aperçu du protocole
+sidebarTitle: Aperçu
+description: >-
+  Cette section décrit la conception, l'architecture des contrats, les
+  mécanismes de staking et de récompense, l'alignement des incitations et le
+  modèle de gouvernance du protocole Livepeer sur chaîne qui régit la
+  coordination, la sécurisation et la récompense du travail ainsi que la
+  proposition et la mise en œuvre des mises à jour.
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol overview
+  - protocol
+  - overview
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+audience: all
+aim: What the protocol is. What it secures. What it does not do
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2Fib3V0L2xpdmVwZWVyLXByb3RvY29sL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6ImZlNDYyOGVjYWQ0OTU3YmFlN2M0ZTQyN2U4YzJlNThiZmQ2MDNjZTc5YWM5ZThiNjY2NmM4ZjBkOWE2MWMxNTYiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0yMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yNlQxMjo0MzoyNC4xODdaIn0= */}
+import { CardTitleTextWithArrow } from '/snippets/components/elements/text/Text.jsx'
+import { AccordionTitleWithArrow } from '/snippets/components/elements/text/Text.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+{/* 
+This page describes:
+1. **Protocol Overview**
+
+   * What the protocol is
+   * What it secures
+   * What it does *not* do
+
+---
+
+# Protocol Function */}
+
+<div style={{ display: "flex", justifyContent: "center"}}>
+  <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow> 
+</div>
+
+<Quote> 
+The Protocol is the **on-chain coordination, security and economic layer** responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants. It leverages unique cyrptoeconomic primitives to create the conditions for a secure, open marketplace enabling performant, verifiable media and AI compute workloads. 
+</Quote>
+
+#### <Icon icon="map-location" size={22} color="var(--accent)" /> {" "} Carte des sections du protocole
+{/* This section describes the Livepeer protocol, the on‑chain smart contracts that secure the network and coordinate incentives.
+It emphasises the hard boundary between the on‑chain logic and the off‑chain network, explains the key economic mechanisms and governance rules, and defines the actors involved. 
+The goal is to provide a complete, self‑contained description of how the protocol works and how it interacts with the larger Livepeer ecosystem. */}
+<Columns cols={2}>
+    <Accordion title={<AccordionTitleWithArrow text="Core Mechanisms" href="./core-mechanisms" />} icon="cubes-stacked" >
+        The core mechanisms of the Livepeer protocol:
+        * Staking
+        * Delegation
+        * Reward distribution
+        * Inflation model
+        * Slashing
+        * Rounds
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Livepeer Token" href="./livepeer-token" />} icon="coin">
+        The Livepeer Token (LPT) utility and role in the protocol.
+        * Purpose of LPT
+        * Security model
+        * Inflation mechanics
+        * Not used for job payments (ETH is)
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Governance Model" href="./governance-model" />} icon="gears">
+        The governance model of the Livepeer protocol.
+        * Purpose
+        * LIPs (Livepeer Improvement Proposals)
+        * Voting
+        * Upgrade process
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Treasury" href="./treasury" />} icon="money-bill">
+        The role of the treasury in the Livepeer protocol.
+        * Funding source
+        * Inflation allocation
+        * Grants / SPEs
+        * Budget governance
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Protocol Economics" href="./protocol-economics" />} icon="coins">
+        The economics and reward model of the Livepeer protocol.
+        * Inflation vs usage-based fees
+        * Participation rate mechanics
+        * Security assumptions
+        * Incentive alignment
+    </Accordion>
+    <Accordion title={<AccordionTitleWithArrow text="Technical Architecture" href="./technical-architecture" />} icon="code-fork">
+        The technical architecture of the Livepeer protocol.
+        * Architecture Diagrams
+        * Smart contracts
+        * On-chain components
+        * How protocol interacts with network
+    </Accordion>
+</Columns>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+{/* The protocol governs how work is secured, rewarded and coordinated and how upgrades are proposed and implemented. */}
+
+{/* Livepeer does not route jobs or perform compute itself. Instead, it creates and secures an open marketplace where anyone can stake, delegate, propose changes, or serve compute through external orchestrator software. */}
+
+## Conception de protocole 101
+Dans tout système décentralisé impliquant des participants indépendants, il est essentiel de fournir :
+- **Systèmes de récompense**y compris
+    - **Incitations**pour que les participants agissent honnêtement et coopèrent (souvent fondé sur la théorie des jeux)
+    - **Pénalités**pour punir les comportements négatifs
+- **Mécanismes de coordination**pour s'accorder sur l'état du système
+- **Systèmes de paiement** pour compenser les participants pour leur travail utile / leurs contributions
+- **Systèmes de gouvernance** pour faire évoluer les règles du protocole au fil du temps et assurer la croissance & la santé du réseau.
+
+Le protocole est la logique sous-jacente qui fournit ces mécanismes pour garantir que les résultats souhaités du réseau sont atteints de manière aussi efficace, fiable et équitable que possible. Dans le cas de Livepeer, il s'agit de permettre les conditions pour un réseau d'infrastructure robuste et ouvert offrant un marché pour des flux vidéo et des pipelines d'IA rentables, performants et sécurisés.
+
+<Tip> 
+    If you're interested in learning more about game theory, mechanism design and token economics for building digital ecosystems, [this module](https://tokenflows.xyz/tutorials/introduction-tutorials/module3/) is a good primer. 
+    {/* <br/><br/>  */}
+    {/* Yale also offers an academic theoretical overview of Game Theory Economics in this [Open Yale Course](https://oyc.yale.edu/economics/econ-159)   */}
+</Tip>
+
+## Livepeer Livre blanc
+
+Livepeer’s [livre blanc original](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md) (publié en 2017) fournit une analyse approfondie de la conception fondamentale du système et de l'alignement des incitations économiques derrière le protocole Livepeer.
+
+<FrameQuote>
+The **Livepeer Protocol defines how the various actors** in a live streaming ecosystem **participate in a secure and economically rational way** ...[incl] the economic incentives for encouraging participation in the network in a secure and game-theoretic manner.
+</FrameQuote>
+
+Le livre blanc décrivait une conception de système ambitieuse pour le réseau de diffusion vidéo en direct entièrement décentralisé - visant à fournir _« l'infrastructure vidéo ouverte du monde »_.
+
+<Card title={<div style={{ color: "var(--accent)", marginBottom: "-1rem" }}><Icon icon="scroll" size={22} color="var(--accent)" /> {" "}Livepeer Whitepaper</div>} href="../resources/livepeer-whitepaper" arrow cta="Read the full Livepeer Whitepaper" /> 
+    {/* The original Livepeer whitepaper centred on 4 key ideas: 
+    - _**Incentivized Participation**_,
+    - _**Trustless Verification**_, 
+    - _**Open Participation**_ and 
+    - _**Economic Security**_ via Token. */}
+{/* </Card> */}
+
+## Objectifs de conception principaux
+Le Livepeer Whitepaper se concentre sur 3 objectifs de conception clés : 
+- _**Incitations durables et alignées**_: Créer un alignement économique pour les opérateurs et les détenteurs de tokens afin de maintenir la qualité du service, la disponibilité et la sécurité.
+- _**Vérification sans confiance**_: Garantir que le travail vidéo hors chaîne a été effectué honnêtement et efficacement sans intermédiaire de confiance.
+- _**Gouvernance composable**_: Permettre une participation ouverte et la sécurité économique de Livepeer via la gouvernance token pour les mises à jour du protocole et les dépenses du trésor via la gouvernance token sur chaîne - pilotée par les détenteurs de LPT.
+
+
+## Principes directeurs
+
+Décentralisation : minimise la confiance envers un seul orchestrateur ; la sélection basée sur la mise garantit une large participation.
+
+Alignement économique : les orchestrateurs et les délégateurs sont récompensés pour un travail honnête et pénalisés pour mauvaise conduite ; les diffuseurs ne paient que pour le service réel.
+
+Scalabilité et efficacité des coûts : Streamflow et micropaiements probabilistes s'étendent à des millions de flux sans appels sur chaîne par segment ; Arbitrum réduit les frais supplémentaires.
+
+Modularité : le protocole sépare le staking/gouvernance de base des canaux de paiement, permettant des mises à jour futures sans réécriture complète.
+
+Participation ouverte : tout le monde peut devenir orchestrateur ou délégué et proposer des améliorations via les LIP, favorisant un écosystème ouvert et en évolution.
+
+## Livepeer Protocole
+{/* Livepeer’s protocol layer is a secure, flexible foundation for an open decentralised real-time media and AI compute substrate. 
+
+With dynamic inflation, robust bonding mechanics, transparent governance, and treasury flows, it aligns economic incentives with network health - without embedding any assumptions about the off-chain workloads. */}
+
+{/* ## Protocol Features */}
+Le protocole Livepeer est basé sur des primitives crypto-économiques fondamentales qui fournissent **une confiance vérifiable, une coordination et une gouvernance transparente** des rails pour les actions effectuées au sein du réseau afin d'atteindre le résultat optimal du réseau. 
+
+Ces primitives sous-tendent la sécurité économique et les cadres de coopération théorique de jeu qui façonnent le comportement des acteurs rationnels participant au réseau afin de fournir **des flux multimédias en temps réel rentables et performants ainsi que des charges de travail de calcul IA** - permettant sans permission, mondial, **participation ouverte**.
+
+Ces primitives blockchain fournissent également la base **du système de paiement mondial** qui permet au réseau de se développer sans friction à travers les frontières mondiales et de créer un **marché à la demande, basé sur l'utilisation**.
+
+De plus, le protocole définit le modèle de gouvernance pour faire évoluer les règles du protocole au fil du temps, assurant la croissance et la santé du réseau et répondant dynamiquement aux opportunités du marché.
+
+{/* Deployment to a base blockchain provides the universal payment system and trusted coordination layer for the network. */}
+
+{/* ## Protocol Architecture
+Livepeer’s protocol layer lives entirely on Arbitrum as of 2025, following the Confluence upgrade and full L2 migration. 
+
+Its smart contract architecture includes the following primary modules:
+
+<DynamicTable
+  headerList={["Contract", "Purpose"]}
+  itemsList={[
+    { "Contract": "BondingManager", "Purpose": "Handles staking, delegation, inflation distribution, slashing" },
+    { "Contract": "RoundsManager", "Purpose": "Defines protocol rounds (approx. 21.5 hours) for reward calculations" },
+    { "Contract": "Minter", "Purpose": "Mints LPT per round via dynamic inflation targeting bonding rate" },
+    { "Contract": "TicketBroker", "Purpose": "Escrows broadcaster ETH deposits and settles winning ticket claims" },
+    { "Contract": "Governor", "Purpose": "Executes approved proposals after voting delay & timelock" },
+    { "Contract": "PollCreator", "Purpose": "Creates snapshot-style on-chain polls (used for signaling, LIPs)" },
+    { "Contract": "Treasury", "Purpose": "Accumulates protocol LPT and authorizes grants via LIPs" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+Contracts are upgradeable via a governance-controlled proxy and follow [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) and [OpenZeppelin upgrade patterns](https://docs.openzeppelin.com/contracts/4.x/upgradeable#how_proxy_works). All major protocol actors interact with these contracts to perform bonding, claim rewards, submit proposals, or redeem fees. */}
+
+## Acteurs et Rôles
+Le protocole Livepeer définit 3 rôles principaux d'acteurs avec des responsabilités et des incitations distinctes :
+<DynamicTable
+  headerList={["Role", "Stake Required", "Responsibilities", "Earns"]}
+  itemsList={[
+    { "Role": "Orchestrator", "Stake Required": "Yes (LPT)", "Responsibilities": "Run transcoding/AI node, redeem tickets", "Earns": "ETH fees, LPT rewards" },
+    { "Role": "Delegator", "Stake Required": "Yes (LPT)", "Responsibilities": "Bond to Orchestrator", "Earns": "Share of ETH + LPT rewards" },
+    { "Role": "Gateway (Broadcaster)", "Stake Required": "No", "Responsibilities": "Submits video jobs, sends ETH tickets", "Earns": "Transcoded/processed output" },
+  ]}
+/>
+
+## Architecture du protocole
+
+{/* The core [protocol](https://wikipedia.com/wiki/Protocol) is implemented by `go-livepeer` and on-chain Ethereum smart contracts (now on Arbitrum L2 after the Confluence upgrade) that enforce the rules of the network. */}
+
+{/* The Livepeer protocol is implemented by the [`go-livepeer`](https://github.com/livepeer/go-livepeer) codebase and deployed on [Arbitrum One](https://arbitrum.io/) (with the token deployed on Ethereum L1). */}
+
+Le protocole utilise une collection de [contrats intelligents Ethereum](/v2/resources/references/contract-addresses) pour appliquer les règles de staking, de bonding, de slashing et de récompense sur la chaîne, tandis que les nœuds du réseau gèrent les tâches de calcul réelles.
+
+Cette **séparation de la sécurité (sur la chaîne)** de **exécution (hors chaîne)** est ce qui permet à Livepeer d'évoluer vers une infrastructure de calcul modulaire et vérifiable à l'échelle d'internet.
+
+Il y a 3 fonctions principales des contrats dans le protocole Livepeer :
+1. _**Fonctions principales du protocole**_
+2. _**Modèle de jeton et de paiement**_
+3. _**Système de gouvernance**_
+
+Ils fournissent l'inflation dynamique, les mécanismes de mise en lien robustes, la gouvernance transparente et les flux de trésorerie, qui alignent les incitations économiques avec la santé du réseau - sans intégrer d'assumptions sur les charges de travail hors chaîne.
+
+<Card title={<div style={{ marginBottom: "0.5rem" }} >Protocol Contracts </div>} icon="cubes" href="../resources/blockchain-contracts" horizontal arrow cta={<a href ="/v2/resources/references/contract-addresses"> Contract Addresses </a>}> 
+    See the `Blockchain Contracts` resource page for a deep dive on the technical details and architecture of the Livepeer Protocol Contracts. 
+</Card>
+
+{/* They describe:
+- LivepeerToken (LPT) ownership and delegation
+- Staking and selection of active transcoder operators (orchestrators)
+- Distribution of inflationary rewards and fees to participants
+- Time-based progression of the protocol through rounds
+- Payment processing through a probabilistic micropayment system
+- Upgrade process and mechanics for the protocol
+- Treasury and spending proposals */}
+
+La section suivante décrit les composants et mécanismes principaux fournis par les contrats du protocole et leur fonctionnement.
+
+
+
+{/* Protocol Definition */}
+
+{/* Protocol Positioning
+- depin */}
+
+
+{/* Protocol Function */}
+
+
+{/* Protocol Components
+- staking
+- delegation
+- inflation & rewards
+- orchestrator selection
+- slashing
+- probabilistic payments
+- verification rules */}
+

@@ -1,0 +1,323 @@
+---
+title: 'Optimise Earnings and Performance'
+sidebarTitle: 'Optimise Earnings'
+description: 'Levers for increasing job volume, improving margins, and maximising AI throughput on a Livepeer orchestrator — pricing, stake positioning, delegation attraction, AI model warmth, VRAM allocation, and performance score improvement.'
+pageType: guide
+audience: orchestrator
+purpose: optimise
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - optimise
+  - earnings
+  - pricing
+  - stake
+  - delegation
+  - reward cut
+  - fee cut
+  - AI model warmth
+  - VRAM allocation
+  - performance score
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+
+<Tip>
+  Identify the single variable most limiting your earnings, adjust it, and measure the result over one round cycle before changing anything else. Changing multiple levers simultaneously makes it impossible to attribute the outcome.
+</Tip>
+
+Your node is operating and monitored. This page covers the levers available for increasing job volume, improving margins, and maximising throughput.
+
+<CustomDivider middleText="Earnings Model" />
+
+## Two income streams
+
+Orchestrators earn from two independent sources:
+
+1. **Service fees (ETH)** — paid per job by gateways through probabilistic micropayments. Determined by your pricing, your job volume, and ticket redemption efficiency.
+2. **Inflation rewards (LPT)** — minted per round via the `reward()` call. Determined by your total bonded stake (self-stake plus delegated stake) and whether the reward call succeeds every round.
+
+Optimisation targets one or both streams. The levers differ.
+
+<CustomDivider middleText="Pricing Adjustment" />
+
+## Pricing
+
+Pricing is the highest-impact lever for service fee income. Gateways apply a hard MaxPrice gate — an orchestrator priced above the threshold receives zero work from that gateway.
+
+### Video transcoding pricing
+
+Check the current market range on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) by comparing prices across the active set. Position your `-pricePerUnit` in the lower half of active prices when starting or when job volume is low. Increase gradually as your performance score strengthens.
+
+{/* VERIFY: Confirm current active price range on Explorer or tools.livepeer.cloud. The range shifts with ETH price and gateway cap changes. */}
+
+To price in USD (auto-converted to wei via Chainlink price feed):
+
+```bash icon="terminal" filename="usd-pricing"
+livepeer \
+  -pricePerUnit 0.41USD \
+  -pixelsPerUnit 1000000000000 \
+  ...
+```
+
+The `autoAdjustPrice` feature (enabled by default) adjusts your advertised price upward when gas costs for ticket redemption rise. Disable it only if you want a fixed price regardless of gas conditions:
+
+```bash icon="terminal" filename="disable-auto-adjust"
+-autoAdjustPrice=false
+```
+
+### AI inference pricing
+
+AI pricing is set per pipeline and per model in `aiModels.json` via the `price_per_unit` field. Each pipeline has a different unit definition (pixels for image pipelines, tokens for LLM).
+
+Check market rates on [tools.livepeer.cloud](https://tools.livepeer.cloud) and compare your per-pipeline prices against other active orchestrators serving the same models.
+
+<CustomDivider middleText="Stake Positioning" />
+
+## Stake and delegation
+
+Total bonded stake (self-stake plus delegated) determines active set rank for video transcoding and influences routing probability. Higher stake attracts more video transcoding jobs through stake-weighted gateway selection.
+
+{/* VERIFY: Confirm stake-weighted selection is still the primary video routing mechanism. [source: go-livepeer gateway selection logic] */}
+
+### Increasing self-stake
+
+Bond additional LPT to your own address through `livepeer_cli` or directly via the BondingManager contract. More self-stake improves your active set position immediately at the next round boundary.
+
+### Attracting delegators
+
+Delegators evaluate orchestrators on four criteria:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Criterion</TableCell>
+      <TableCell header>What delegators look for</TableCell>
+      <TableCell header>Your lever</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Reward cut</TableCell>
+      <TableCell>Lower reward cut means delegators keep a larger share of inflation rewards</TableCell>
+      <TableCell>Set reward cut between 5-15% to remain competitive with active set peers</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Fee cut</TableCell>
+      <TableCell>Fee share percentage determines delegator yield from ETH service fees</TableCell>
+      <TableCell>Offering 0-10% fee share is typical for competitive operators</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Reward call reliability</TableCell>
+      <TableCell>100% call rate — missed rounds reduce delegator yield directly</TableCell>
+      <TableCell>Maintain flawless reward calling; consider a Siphon split setup for reliability</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Operational track record</TableCell>
+      <TableCell>Rounds active, consistent uptime, no history of sudden cut changes</TableCell>
+      <TableCell>Build tenure; communicate cut changes in advance</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Warning>
+  Frequent or large changes to reward cut and fee cut reduce delegator confidence. If your delegator base is substantial, communicate changes through Discord or the Livepeer Forum before the on-chain transaction.
+</Warning>
+
+<Note>
+  AI inference routing does not use stake-weighted selection. AI job volume is driven by capability advertisement, pricing, and warm model availability — not stake rank. Operators focused solely on AI earnings should prioritise the AI levers below over stake positioning.
+</Note>
+
+<CustomDivider middleText="AI Throughput" />
+
+## AI model warmth and VRAM allocation
+
+For AI operators, warm model selection is the primary throughput lever. Gateways track first-response latency — nodes with warm models serving immediate responses win more jobs than nodes with cold-start delays.
+
+### Warm the highest-demand model
+
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) weekly to identify which models active gateways are requesting most. Warm the model with the highest demand for your pipeline type.
+
+To rotate the warm model, update `aiModels.json` and restart the AI runner container:
+
+```json icon="code" filename="aiModels.json"
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  },
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": false
+  }
+]
+```
+
+{/* VERIFY: Confirm one-warm-model-per-GPU Beta constraint is still in effect. [source: ai-runner release notes] */}
+
+### VRAM allocation strategy
+
+A 24 GB GPU holds one large diffusion model warm. Pair it with a VRAM-efficient pipeline (Whisper at ~3 GB, BLIP at ~1-2 GB) on a multi-GPU system to serve two revenue streams simultaneously.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Strategy</TableCell>
+      <TableCell header>When to use</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Single warm diffusion model (SDXL)</TableCell>
+      <TableCell>Single 24 GB GPU; maximise revenue on the highest-demand pipeline</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Warm diffusion + warm Whisper</TableCell>
+      <TableCell>Multi-GPU system; serve two revenue streams with different demand patterns</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Warm LLM (Llama 3.1 8B quantised)</TableCell>
+      <TableCell>8-12 GB GPU; enter the LLM pipeline market at lower VRAM cost</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Multiple cold entries</TableCell>
+      <TableCell>Maximise pipeline breadth with first-request latency trade-off</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Optimisation flags for diffusion models
+
+Apply to warm diffusion models only (`text-to-image`, `image-to-image`, `upscale` with `"warm": true`):
+
+- **SFAST** — compiles the model compute graph on first run. Up to 25% faster inference after the initial compilation pass. No quality reduction.
+- **DEEPCACHE** — caches intermediate diffusion steps. Up to 50% faster inference with minor quality reduction at high step counts. Do not use with Lightning or Turbo model variants — they are already step-optimised.
+
+```json icon="code" filename="aiModels.json-sfast"
+{
+  "pipeline": "text-to-image",
+  "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+  "price_per_unit": 4768371,
+  "warm": true,
+  "optimization_flags": { "SFAST": true }
+}
+```
+
+<Warning>
+  SFAST and DEEPCACHE cannot be combined. Set only one or neither per model entry.
+</Warning>
+
+<CustomDivider middleText="Performance Score" />
+
+## Improving performance score
+
+Performance score (latency score multiplied by success rate) directly affects gateway routing probability. A declining score means fewer jobs regardless of pricing.
+
+{/* VERIFY: Performance score formula — confirm against go-livepeer source code. */}
+
+Factors you control:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Factor</TableCell>
+      <TableCell header>How to improve</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Transcoding latency</TableCell>
+      <TableCell>Ensure `-maxSessions` leaves 20% GPU headroom above actual load. Upgrade GPU if consistently saturated.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Segment success rate</TableCell>
+      <TableCell>Investigate failed segments in logs. GPU errors, VRAM pressure, and codec issues are the primary causes.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Network latency to gateways</TableCell>
+      <TableCell>Host the node in a data centre with low latency to major gateway operators. A home connection adds 10-50ms vs a colocated server.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI inference speed</TableCell>
+      <TableCell>Warm the model (eliminates cold-start latency). Apply SFAST for diffusion models. Ensure VRAM is not under pressure from concurrent models.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Node uptime</TableCell>
+      <TableCell>Minimise restarts. Use `systemd` or Docker restart policies to recover from crashes automatically.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Capacity Tuning" />
+
+## Session capacity
+
+A `-maxSessions` value set too low wastes GPU capacity and limits earnings. Set too high, it pushes transcoding behind live segment cadence, degrades performance score, and costs you more jobs than it gains.
+
+Use `livepeer_bench` to measure your hardware limit and set `-maxSessions` to `min(hardware_limit, bandwidth_limit)` with 20% headroom.
+
+After tuning, monitor `livepeer_transcode_duration_seconds` in Prometheus. If this stays below 2 seconds per session, there is room to increase. If it exceeds 2 seconds consistently, reduce the limit.
+
+{/* VERIFY: Confirm livepeer_transcode_duration_seconds metric name against current go-livepeer. */}
+
+<CustomDivider middleText="Decision Framework" />
+
+## Which lever to pull first
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Symptom</TableCell>
+      <TableCell header>Most likely lever</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>No jobs despite active set membership</TableCell>
+      <TableCell>Pricing — check if price is above gateway MaxPrice caps</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Jobs arriving but low volume</TableCell>
+      <TableCell>Stake position — increase self-stake or attract delegators to improve routing probability</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>No AI jobs despite registered capabilities</TableCell>
+      <TableCell>Warm model — confirm the model gateways request most is warm, not cold</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Jobs arriving but low ETH earnings</TableCell>
+      <TableCell>Pricing — price may be too low relative to operating costs; raise incrementally</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Delegators leaving</TableCell>
+      <TableCell>Reward call reliability and cut competitiveness — check Explorer for missed rounds</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Performance score declining</TableCell>
+      <TableCell>GPU headroom — reduce `-maxSessions` or upgrade hardware</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+<CardGroup cols={2}>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Full pricing reference including per-gateway pricing, USD mode, and autoAdjustPrice mechanics.
+  </Card>
+  <Card title="AI Model Management" icon="memory" href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management">
+    Warm vs cold strategy, model rotation, VRAM allocation tables, and optimisation flags.
+  </Card>
+  <Card title="Capacity Planning" icon="gauge" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning">
+    Measure hardware limits with livepeer_bench and derive the correct -maxSessions value.
+  </Card>
+  <Card title="Diagnose and Fix" icon="triangle-exclamation" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting">
+    When optimisation uncovers a problem — structured diagnostic paths.
+  </Card>
+</CardGroup>

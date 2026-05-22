@@ -1,0 +1,1004 @@
+---
+sidebarTitle: Automaciones y Flujos de Trabajo
+title: Guía de Automaciones y Flujos de Trabajo
+description: >-
+  Guía completa sobre todos los scripts de automatización, flujos de trabajo de
+  GitHub Actions, automatizaciones de n8n y ganchos pre-commit en el repositorio
+  de documentación Livepeer
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - automations
+  - workflows
+  - scripts
+  - github actions
+  - n8n
+  - pre-commit
+  - hooks
+'og:image': /snippets/assets/domain/07_RESOURCES/social-preview-resources.jpg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9hdXRvbWF0aW9ucy13b3JrZmxvd3MubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9hdXRvbWF0aW9ucy13b3JrZmxvd3MiLCJzb3VyY2VIYXNoIjoiODUzODU5NmUxMjFmMzE2N2QxZmYwY2U5OWI5MDY0N2Q4MjYzZTQzOWRmZTIxN2Q3MTc5ZWZjYzE5NzAzOTlhNSIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMjowODowOS44ODRaIn0= */}
+## Visión general
+
+El repositorio de documentación utiliza múltiples sistemas de automatización para mantener el contenido actualizado, validar la calidad y agilizar los flujos de trabajo:
+
+- **GitHub Actions** - Flujos de trabajo de CI/CD para pruebas, validación y actualizaciones automatizadas
+- **n8n Workflows** - Plataforma de automatización externa para recuperación de datos y actualizaciones de contenido
+- **Scripts** - Herramientas de línea de comandos para generación de contenido, recuperación de datos y mantenimiento
+- **Ganchos de pre-commit** - Validación local para garantizar el cumplimiento de la guía de estilo
+
+<Tip>
+**Intentional Duplication:** Both GitHub Actions and n8n workflows exist for the same functionality (Ghost blog, Forum, YouTube data). This is intentional to provide flexibility for future maintainers. Use whichever platform you prefer based on your needs.
+</Tip>
+
+## Flujos de trabajo de GitHub Actions
+
+Los flujos de trabajo de GitHub Actions se encuentran en `.github/workflows/` y se ejecutan automáticamente en envíos, solicitudes de extracción o intervalos programados.
+
+### Flujos de trabajo activos
+
+#### Comprobación de enlaces rotos
+
+**Archivo:** `.github/workflows/broken-links.yml`
+
+**Propósito:** Valida que todos los enlaces de la documentación funcionen correctamente
+
+**Disparadores:**
+- Solicitudes de extracción a`main`rama
+
+**¿Qué hace?:**
+1. Instala la CLI Mintlify
+2. Ejecuta`mintlify broken-links` para revisar todos los enlaces
+3. Salida de asesoría de publicaciones en resumen de flujo de trabajo (actualmente no bloqueante)
+
+**Ejecución manual:** No disponible (solo PR)
+
+**Secretos requeridos:** Ninguno
+
+**Política:** ⚠️ Solo consejos mientras se realiza la limpieza de los enlaces antiguos (`continue-on-error: true`)
+
+---
+
+#### Docs CI - Suite de Calidad de Contenido
+
+**Archivo:** `.github/workflows/test-suite.yml`
+
+**Propósito:**Ejecuta las principales comprobaciones de calidad del contenido que bloquean la PR
+
+**Dispara:**
+- Push a `main`
+- Solicitudes de extracción a `main`o `docs-v2`
+
+**¿Qué hace (PRs):**
+1. Calcula los archivos modificados en comparación con la rama base del PR
+2. Ejecuta comprobaciones bloqueantes orientadas a archivos modificados:
+   - Guía de estilo
+   - Validación de MDX
+   - Ortografía
+   - Calidad
+   - Enlaces/importaciones
+   - Aplicación de documentación de scripts en scripts modificados
+   - Revisión estricta de enlaces V2 en páginas de documentación modificadas
+3. Ejecuta pruebas del navegador para cubrir rutas/ejecución
+4. Escribe los resultados en el resumen de paso de GitHub
+
+**Salida:**Tabla de resumen del flujo de trabajo (no se genera comentario de PR desde este flujo de trabajo)
+
+**Excepción:** Para PR de integración `docs-v2 -> main`, los errores estáticos de archivos modificados se tratan como advisos; los errores del navegador aún bloquean.
+
+---
+
+#### Generación de SDK
+
+**Archivo:** `.github/workflows/sdk_generation.yaml`
+
+**Propósito:**Genera automáticamente SDKs a partir de especificaciones OpenAPI usando Speakeasy
+
+**Disparadores:**
+- Diariamente a medianoche UTC (programado)
+- Envío manual desde la interfaz de GitHub Actions
+
+**Qué hace:**
+1. Usa la acción de generación del SDK de Speakeasy
+2. Genera SDKs para todas las API configuradas
+3. Crea solicitudes de extracción con el código generado
+
+**Ejecución manual:** 
+1. Ve a Acciones → Generación de SDK
+2. Haz clic en "Ejecutar flujo de trabajo"
+3. Opcionalmente establezca `force: true` para regenerar incluso si no hay cambios
+
+**Secretos requeridos:**
+- `SPEAKEASY_API_KEY` - Clave de API de Speakeasy para la generación del SDK
+
+---
+
+#### Docs CI - V2 Browser Sweep
+
+**Archivo:** `.github/workflows/test-v2-pages.yml`
+
+**Propósito:** Prueba todas las páginas de documentación v2 en busca de errores de consola y problemas de representación
+
+**Disparadores:**
+- Push a `main`
+- Solicitudes de extracción a `main` o `docs-v2`
+
+**¿Qué hace?:**
+1. Inicia el servidor de desarrollo Mintlify
+2. Ejecuta pruebas de Puppeteer en todas las páginas
+3. Publica los resultados como comentarios en la solicitud de extracción
+4. Carga el informe detallado de las pruebas como artefacto
+
+**Ejecución manual:**Se ejecuta automáticamente en push/PR
+
+**Secretos requeridos:** Ninguno
+
+**Salida:** 
+- Comentarios en PR con los resultados de las pruebas
+- Artículo: `v2-page-test-report.json`
+
+---
+
+#### Actualizar Livepeer Versión de lanzamiento
+
+**Archivo:** `.github/workflows/update-livepeer-release.yml`
+
+**Propósito:**Actualiza automáticamente la última versión de lanzamiento de Livepeer en el archivo de globales
+
+**Dispara:**
+- Cada 30 minutos (programado)
+- Envío manual desde la interfaz de GitHub Actions
+
+**¿Qué hace?**
+1. Obtiene la última versión de `livepeer/go-livepeer` repositorio de GitHub
+2. Compara con la versión actual en `snippets/automations/globals/globals.mdx`
+3. Actualiza el archivo si hay una nueva versión disponible
+4. Confirma y envía los cambios
+
+**Ejecución manual:**
+1. Ve a Acciones → Actualizar Livepeer Versión de lanzamiento
+2. Haz clic en "Ejecutar flujo de trabajo"
+
+**Secretos necesarios:** Ninguno (usa `GITHUB_TOKEN`)
+
+**Archivo de salida:** `snippets/automations/globals/globals.mdx`
+
+---
+
+#### Ingreso de problemas en Discord (Fase 1)
+
+**Archivo:** `.github/workflows/discord-issue-intake.yml`
+
+**Propósito:** Crea problemas en GitHub a partir de cargas útiles de entrada en Discord entregadas mediante `repository_dispatch`
+
+**Disparadores:**
+- `repository_dispatch` con tipo `discord-issue-intake`
+
+**¿Qué hace?**
+1. Valida el esquema de carga útil de distribución y los campos necesarios para la plantilla `docs_page_issue`
+2. Rechaza contenido solo con marcadores de posición o sensible a la seguridad
+3. Impone idempotencia usando `correlation_id` marcador en el cuerpo del problema
+4. Crea un problema con encabezados alineados con la plantilla y etiquetas base
+5. Mapeo de etiquetas dinámicas (`area:*`, `classification:*`, `priority:*`, `kind:*`) a `issue-auto-label.yml`
+
+**Notas del mantenedor (esquema + compatibilidad):**
+- Soporta `schema_version` `1.0.0` y `1.1.0`
+- `1.1.0` agrega los `fields.classification` necesarios para `docs_page_issue`
+- `1.0.0`los cargas útiles permanecen válidas para compatibilidad hacia atrás y producirán problemas sin una `Classification`sección (el indexador las mostrará como no clasificadas hasta que se clasifiquen)
+- Si cambia los nombres de campos o títulos de sección en los formularios de problemas, actualice ambos:
+  - `.github/workflows/discord-issue-intake.yml`(validación de carga útil + encabezados de cuerpo generados)
+  - `.github/workflows/issue-auto-label.yml`(análisis de sección / asignación de etiquetas)
+- Mantenga los encabezados del cuerpo del problema exactos (por ejemplo `### Classification`, `### Priority`) porque el análisis de etiquetas automático es basado en encabezados
+
+**Cómo implementar cambios futuros en el esquema de forma segura:**
+1. Agregue compatibilidad con la nueva versión del esquema en `.github/workflows/discord-issue-intake.yml`
+2. Mantenga la versión anterior del esquema aceptada hasta que todos los remitentes de envío estén actualizados
+3. Actualice `snippets/automations/scripts/n8n/Discord-Issue-Intake.json`emitir la nueva versión y campos
+4. Verificar que un envío de prueba cree las cabeceras y etiquetas esperadas
+
+**Secretos requeridos:**
+- Ninguno (utiliza el token de llamador repository-dispatch y GitHub Actions `GITHUB_TOKEN`)
+
+**Archivos relacionados:**
+- `snippets/automations/scripts/n8n/Discord-Issue-Intake.json`
+- `snippets/assets/scripts/n8n/README-discord-issue-intake-workflow.md`
+- `.github/workflows/issue-auto-label.yml`
+
+---
+
+#### Etiqueta Automática de Problemas
+
+**Archivo:** `.github/workflows/issue-auto-label.yml`
+
+**Propósito:** Analiza los cuerpos de los formularios de problemas y aplica/elimina etiquetas gestionadas para la triage de documentos.
+
+**Familias de etiquetas gestionadas:**
+- `area:*`
+- `classification:*` (severidad/impacto)
+- `priority:*` (programación del mantenedor)
+- `kind:*` (subtipo de problema en página de documentación)
+- `scope:*`
+
+**Notas del mantenedor (importante):**
+- El análisis se basa en encabezados de markdown exactos en los cuerpos de los problemas (por ejemplo `### Area`, `### Classification`, `### Priority`)
+- Si un encabezado se renombra en cualquier plantilla de problema, actualice `getSection(...)` uso y listas de secciones requeridas en este flujo de trabajo
+- La compatibilidad con problemas legados es intencional:
+  - `Classification` solo se trata como requerido cuando el cuerpo del problema ya contiene una `### Classification` sección
+  - Esto evita que los problemas antiguos se etiqueten automáticamente`status: needs-info`durante las ediciones de reclasificación
+- El flujo de trabajo salta el índice de problema de primer nivel docs-v2 verificando el marcador oculto:
+  - `[//]: # (docs-v2-issue-indexer)`
+  - No elimine ni renombre este marcador sin actualizar ambos flujos de trabajo
+
+**Lista de verificación de validación manual después de las ediciones:**
+1. Abra un problema de prueba de cada plantilla afectada (o edite el cuerpo de un problema de prueba existente)
+2. Confirm `classification:*` y `priority:*` etiquetas se aplican ambas
+3.  Cambiar la clasificación en el cuerpo del problema y confirmar que la etiqueta antigua `classification:*` se elimina
+4.  Confirmar que el problema de docs-v2 no se etiqueta automáticamente con `status: needs-triage`
+
+---
+
+#### Índice de problemas de Docs v2
+
+**Archivo:** `.github/workflows/docs-v2-issue-indexer.yml`
+
+**Propósito:** Mantiene un único problema de GitHub de nivel superior en ejecución que indexa`docs-v2` problemas (abiertos + recientemente cerrados).
+
+**Disparadores:**
+- `issues`eventos: abrir/editar/etiquetar/eliminar etiqueta/reabrir/cerrar
+- programado cada 6 horas
+- envío manual
+
+**¿Qué hace?:**
+1. Encuentra el problema de índice mediante un marcador oculto en el cuerpo del problema (`[//]: # (docs-v2-issue-indexer)`)
+2. Crea el problema de índice si no existe
+3. Consulta todos los problemas abiertos`docs-v2` problemas y recientemente cerrados`docs-v2` problemas (ventana predeterminada de 30 días)
+4. Genera recuentos de resumen + tablas de desglose + tablas de problemas
+5. Actualiza el mismo cuerpo del problema en su lugar solo si el contenido cambió
+
+**Notas del mantenedor (operación segura):**
+- El marcador oculto es la fuente de verdad para localizar el problema del índice. Manténlo estable a menos que actualices ambos:
+  - `.github/workflows/docs-v2-issue-indexer.yml`
+  - `.github/workflows/issue-auto-label.yml`
+- La ventana recientemente cerrada es controlada por`RECENTLY_CLOSED_DAYS` en el script de flujo de trabajo
+- El flujo de trabajo excluye intencionalmente el problema del índice de los recuentos/tablas incluso si tiene la`docs-v2` etiqueta
+- El flujo salta los bucles de activación propia al salir temprano si el cuerpo de la incidencia que activa ya contiene el marcador de índice
+- Si el cuerpo de la incidencia generado parece obsoleto, use**Acciones → Docs v2 Issue Indexer → Ejecutar flujo de trabajo**
+
+**Solución de problemas operativos:**
+- Incidencias de índice duplicadas:
+  - Asegúrese de que solo una incidencia contenga el marcador`[//]: # (docs-v2-issue-indexer)`
+  - Quita el marcador de los duplicados y luego ejecuta el flujo de trabajo manualmente
+- Etiquetas faltantes en los análisis:
+  - Comprobar`.github/workflows/issue-auto-label.yml` prefijos gestionados y análisis de etiquetas
+  - Verificar que las cabeceras del cuerpo del problema aún coincidan con las expectativas del analizador
+- Problemas abiertos no clasificados inesperados:
+  - Estos suelen ser problemas heredados (pre-clasificación) o problemas creados desde un esquema de entrada de Discord más antiguo`1.0.0`
+
+---
+
+### Flujos de obtención de datos (GitHub Actions y n8n disponibles)
+
+La implementación de GitHub Actions utiliza flujos dedicados divididos por fuente de datos (`update-forum-data.yml`, `update-ghost-blog-data.yml`, y `update-youtube-data.yml`). Las versiones de n8n de estos flujos también se mantienen para equipos que prefieren la orquestación de automatización externa.
+
+#### Actualizar datos del foro
+
+**Archivo:** `.github/workflows/update-forum-data.yml`
+
+**Estado:** ⚠️ **Alternativa a n8n** - Ver nota en el archivo de flujo
+
+**Propósito:**Obtiene los temas más recientes del foro Livepeer
+
+**Disparadores:**
+- Diariamente a medianoche UTC (programado)
+- Envío manual
+
+**¿Qué hace?**
+1. Ejecuta `.github/scripts/fetch-forum-data.js`
+2. Actualiza `snippets/data/social-feeds/forumData.jsx`
+3. Confirma y envía si se detectan cambios
+
+**Secretos requeridos:**
+- `DOCS_V2` - Token de GitHub para acceder al repositorio de documentación
+- `GHOST_CONTENT_API_KEY` - Clave de API de contenido de Ghost utilizada por `.github/scripts/fetch-ghost-blog-data.js`
+
+**Nota:** Ambos, GitHub Actions y n8n workflows, están disponibles para esta funcionalidad. Utilice el que prefiera.
+
+---
+
+#### Actualizar datos de blog de Ghost
+
+**Archivo:** `.github/workflows/update-ghost-blog-data.yml`
+
+**Estado:** ⚠️ **Alternativa a n8n** - Ver nota en archivo de flujo de trabajo
+
+**Propósito:**Obtiene las últimas entradas de blog de Ghost CMS
+
+**Dispara:**
+- Diariamente a medianoche UTC (programado)
+- Envío manual
+
+**¿Qué hace?**
+1. Ejecuta `.github/scripts/fetch-ghost-blog-data.js`
+2. Actualiza `snippets/data/social-feeds/ghostBlogData.jsx`
+3. Confirma y envía si se detectan cambios
+
+**Secretos requeridos:**
+- `DOCS_V2` - Token de GitHub para acceso al repositorio de documentación
+
+**Nota:** Ambos, GitHub Actions y n8n, tienen disponibles flujos de trabajo para esta funcionalidad. Utilice el que prefiera.
+
+---
+
+#### Actualizar YouTube Data
+
+**Archivo:** `.github/workflows/update-youtube-data.yml`
+
+**Estado:** ⚠️ **Alternativa a n8n** - Ver nota en archivo de flujo de trabajo
+
+**Propósito:**Obtiene los últimos videos de YouTube del canal Livepeer
+
+**Disparadores:**
+- Semanales el domingo a medianoche UTC (programado)
+- Envío manual
+
+**¿Qué hace?**
+1. Ejecuta `.github/scripts/fetch-youtube-data.js`
+2. Filtra los Short (≤60 segundos)
+3. Actualiza `snippets/data/social-feeds/youtubeData.jsx`
+4. Confirma y envía si se detectan cambios
+
+**Secretos requeridos:**
+- `YOUTUBE_API_KEY` - Clave de la API de datos de YouTube v3
+
+**Nota:**Ambos, GitHub Actions y flujos de trabajo de n8n, están disponibles para esta funcionalidad. Use el que prefiera.
+
+---
+
+## Flujos de automatización de n8n
+
+los flujos de trabajo de n8n son archivos JSON ubicados en `snippets/automations/scripts/n8n/`. Estos flujos de trabajo se ejecutan en una instancia externa de n8n y se pueden importar/configurar allí.
+
+<Warning>
+Most n8n workflows are currently **inactive** (`"active": false`). Only active workflows are documented below. See audit report for full status.
+</Warning>
+
+### Flujos de trabajo de n8n activos
+
+#### Eventos de Luma a Mintlify
+
+**Archivo:** `snippets/automations/scripts/n8n/Luma-To-Mintlify.json`
+
+**Estado:** ✅ **Activo**
+
+**Propósito:**Obtiene eventos del calendario de Luma y actualiza la documentación
+
+**Horario:**Semanal
+
+**¿Qué hace?:**
+1. Recupera datos iCal de la API de Luma
+2. Analiza eventos (próximos y pasados)
+3. Genera un archivo de datos JSX
+4. Confirma en GitHub en la rama`docs-v2` rama
+
+**Salida:** `snippets/data/social-feeds/lumaEventsData.jsx`
+
+**Cómo usar:**
+1. Importar archivo JSON en la instancia de n8n
+2. Configurar credenciales de GitHub
+3. Establecer el ID del calendario de Luma
+4. Activar el flujo de trabajo
+
+**Credenciales requeridas:**
+- Token de API de GitHub con acceso de escritura
+- ID del calendario Luma: `cal-X93qV3PuUH0wq0f`
+
+---
+
+#### Pipeline del Proyecto de Demostración
+
+**Archivo:** `snippets/automations/scripts/n8n/Showcase_To_Mintlify_Pipeline.json`
+
+**Estado:** ✅ **Activo**
+
+**Propósito:** Maneja las presentaciones, aprobaciones y actualizaciones de proyectos de muestra
+
+**Disparador:** Disparador de Google Sheets (sondeo cada hora)
+
+**¿Qué hace?:**
+1. Monitorea Google Sheets en busca de nuevas solicitudes de proyectos
+2. Valida los datos de la solicitud
+3. Envía notificaciones de Discord para la aprobación
+4. Descarga archivos de medios de Google Drive
+5. Actualiza `snippets/data/showcase-feed/showcaseData.jsx`cuando sea aprobado
+6. Envía notificaciones a los remitentes
+
+**Salida:** `snippets/data/showcase-feed/showcaseData.jsx`
+
+**Cómo usarlo:**
+1. Importar archivo JSON en la instancia de n8n
+2. Configurar credenciales de Google Sheets, Discord y GitHub
+3. Configurar el formulario de Google para las solicitudes
+4. Activar el flujo de trabajo
+
+**Credenciales requeridas:**
+- OAuth2 de Google Sheets
+- API del bot de Discord
+- Token de API de GitHub
+- OAuth2 de Google Drive
+
+**Dependencias:**
+- Formulario de Google para envío de proyectos
+- Hoja de Google para seguimiento de envíos
+- Servidor de Discord para flujo de aprobación
+
+---
+
+#### Entrada de problemas de Discord (Fase 1)
+
+**Archivo:** `snippets/automations/scripts/n8n/Discord-Issue-Intake.json`
+
+**Estado:** ✅ Listo para importar (predeterminado como inactivo)
+
+**Propósito:** Maneja la entrada de comandos de Discord (`/docs-issue`) y retransmite cargas útiles normalizadas a GitHub Actions.
+
+**Disparador:**webhook de interacciones de Discord (`POST`)
+
+**¿Qué hace?**
+1. Verifica las firmas de las solicitudes de Discord
+2. Impone una lista de canales permitidos y un límite de frecuencia por usuario
+3. Recopila campos de texto largo mediante un modal
+4. Muestra una vista previa con etiquetas inferidas + botones de confirmar/Cancelar
+5. Envía `repository_dispatch` a GitHub (`discord-issue-intake`)
+6. Consulta el problema creado y envía un mensaje de seguimiento con la URL del problema
+
+**Manual de operaciones:**
+- `snippets/assets/scripts/n8n/README-discord-issue-intake-workflow.md`
+
+**Variables de entorno requeridas:**
+- `DISCORD_PUBLIC_KEY`
+- `ALLOWED_CHANNEL_IDS`
+- `GITHUB_DISPATCH_TOKEN`
+- `GITHUB_OWNER`
+- `GITHUB_REPO`
+- `GITHUB_DISPATCH_EVENT_TYPE`
+- `SECURITY_REPORT_URL`
+- `RATE_LIMIT_WINDOW_SEC`
+- `RATE_LIMIT_MAX`
+- `DISCORD_ISSUE_SCHEMA_VERSION`
+- `GITHUB_POLL_ATTEMPTS`
+- `GITHUB_POLL_DELAY_MS`
+
+---
+
+### Flujos de trabajo adicionales de n8n (Alternativa a GitHub Actions)
+
+Los siguientes flujos de trabajo de n8n proporcionan implementaciones alternativas a GitHub Actions. Ambos se mantienen para flexibilidad:
+
+- **Ghost-to-Mintlify.json** - Recupera artículos de blog de Ghost (alternativa a `update-ghost-blog-data.yml`)
+- **Foro-A-Mintlify-Temas-Más-Recentes.json** - Obtiene temas de foro (alternativa a "`update-forum-data.yml`)
+- **YouTube-A-Mintlify.json** - Obtiene videos de YouTube (alternativa a "`update-youtube-data.yml`)
+- **Discord_Announce_to_Mintlify.json** - Recupera anuncios de Discord (solo n8n - no hay equivalente de GitHub Action)
+- **Discord-Issue-Intake.json** - Relay de entrada de problemas de Discord (emparejado con `.github/workflows/discord-issue-intake.yml`)
+
+<Warning>
+**Repository Configuration:** Some n8n workflows may be configured to write to `DeveloperAlly/livepeer-automations` instead of `livepeer/docs`. Before activating, verify the GitHub node is configured to write to the correct repository (`livepeer/docs`) and branch (`docs-v2`).
+</Warning>
+
+---
+
+### Flujos de utilidad
+
+#### Convertidor de MP4 a GIF
+
+**Archivo:** `snippets/automations/scripts/n8n/mp4-to-gif.json`
+
+**Propósito:** Convierte videos MP4 al formato GIF mediante un webhook
+
+**Disparador:**Webhook (solicitud POST)
+
+**¿Qué hace?**
+1. Acepta una URL de video o una ruta local
+2. Descarga el video (si se proporciona una URL)
+3. Convierte a GIF usando FFmpeg
+4. Devuelve el archivo GIF o la ruta del archivo
+
+**Cómo usar:**
+1. Importar archivo JSON en la instancia de n8n
+2. Configurar la URL del webhook
+3. Enviar una solicitud POST con la URL del video o la ruta local
+4. Recibir GIF en la respuesta
+
+**Parámetros:**
+- `video_url` (opcional) - URL del archivo de video
+- `local_path` (opcional) - Ruta del archivo local
+- `fps` (predeterminado: 10) - Cuadros por segundo
+- `width` (predeterminado: 480) - Ancho de salida
+- `start_time` (predeterminado: "0") - Tiempo de inicio en el video
+- `duration` (opcional) - Duración a convertir
+- `optimize` (predeterminado: true) - Usar optimización de paleta
+- `output_path` (opcional) - Ruta del archivo de salida
+
+---
+
+## Scripts
+
+Los scripts se organizan en varios directorios según su propósito. Todos los scripts usan la detección de raíz de repositorio basada en git con retroalimentación a`paths.config.json`.
+
+### Scripts de Generación de Contenido
+
+#### Generar Metadatos SEO
+
+**Archivo:** `tools/scripts/snippets/generate-seo.js`
+
+**Propósito:**Genera y actualiza automáticamente los metadatos SEO para las páginas de documentación en MDX
+
+**Uso:**
+```bash
+# Dry run (preview changes)
+node tools/scripts/snippets/generate-seo.js --dry-run
+
+# Process all files
+node tools/scripts/snippets/generate-seo.js
+
+# Process single file
+node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
+```
+
+**¿Qué hace?**
+1. Escanea todos los archivos MDX en `v2/pages/`
+2. Genera `keywords` a partir de la ruta del archivo, título y descripción
+3. Añade `og:image` usando imágenes de vista previa social específicas del dominio o predeterminadas
+4. Preserva los metadatos SEO existentes (no sobrescribe si ya están presentes)
+
+**Salida:**Actualiza el frontmatter en archivos MDX
+
+**Cuándo ejecutarlo:**
+- Después de crear nuevas páginas de documentación
+- Cuando se actualizan títulos o descripciones de página
+- Antes de implementar para mejorar el SEO
+
+---
+
+#### Generar documentación de API
+
+**Archivo:** `tools/scripts/snippets/generate-api-docs.sh`
+
+**Propósito:** Genera documentación de API Mintlify a partir de un archivo de especificación OpenAPI
+
+**Uso:**
+```bash
+./tools/scripts/snippets/generate-api-docs.sh <openapi-spec> <output-dir> <api-name> [github-repo-url]
+```
+
+**Ejemplo:**
+```bash
+./tools/scripts/snippets/generate-api-docs.sh \
+  ai/worker/api/openapi.yaml \
+  v2/pages/04_gateways/api-reference/AI-API \
+  "AI API" \
+  "https://github.com/livepeer/ai-worker"
+```
+
+**¿Qué hace?:**
+1. Lee una especificación OpenAPI (YAML o JSON)
+2. Crea una**página de aterrizaje** con CardGroups que enlazan a cada endpoint (agrupados por etiquetas)
+3. Crea**páginas MDX individuales**para cada endpoint con `openapi: METHOD /path`frontmatter
+4. Genera un fragmento de navegación **docs.json** listo para copiar y pegar
+
+**Estructura de salida:**
+```
+output-dir/
+├── ai-api.mdx           # Landing page with Base URLs + CardGroups
+├── text-to-image.mdx    # openapi: post /text-to-image
+├── image-to-image.mdx   # openapi: post /image-to-image
+└── ...
+```
+
+**Después de ejecutar:** Copia el fragmento de JSON generado en tu `docs.json` navegación.
+
+---
+
+#### Actualizar Component Library
+
+**Archivo:** `tools/scripts/snippets/update-component-library.sh`
+
+**Propósito:** Genera automáticamente la página de índice de la biblioteca de componentes a partir de la estructura actual `snippets/components/` de carpetas
+
+**Uso:**
+```bash
+./tools/scripts/snippets/update-component-library.sh
+```
+
+**¿Qué hace?**
+1. Escanea `snippets/components/` estructura de directorios
+2. Genera un `<Tree>` componente con todas las carpetas y archivos
+3. Actualiza `snippets/snippetsWiki/componentLibrary/index.mdx`
+
+**Salida:** Actualiza la sección generada automáticamente en `snippets/snippetsWiki/componentLibrary/index.mdx` entre las `AUTO-GENERATED` comentarios.
+
+**Cuándo ejecutarlo:**
+- Después de agregar nuevos componentes a `snippets/components/`
+- Después de reorganizar la estructura de la carpeta de componentes
+- Después de renombrar o eliminar archivos de componentes
+
+---
+
+### Scripts de obtención de datos
+
+#### Obtener especificaciones OpenAPI
+
+**Archivo:** `tools/scripts/snippets/fetch-openapi-specs.sh`
+
+**Propósito:**Obtiene archivos de especificaciones OpenAPI del repositorio livepeer/ai-runner
+
+**Uso:**
+```bash
+./tools/scripts/snippets/fetch-openapi-specs.sh
+```
+
+**¿Qué hace:**
+1. Descarga especificaciones de OpenAPI desde repositorios externos
+2. Guarda en `ai/worker/api/`
+
+**Descargar en `ai/worker/api/`:**
+- `openapi.yaml` - Especificación de la API de AI Runner
+- `gateway.openapi.yaml` - Especificación de la API AI Gateway
+
+---
+
+#### Documentación externa de consulta
+
+**Archivo:** `operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh`
+
+**Propósito:** Recupera archivos de documentación externa de otros repositorios Livepeer y los sanitiza para compatibilidad con MDX
+
+**Uso:**
+```bash
+./operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh
+```
+
+**¿Qué hace?:**
+1. Descarga la documentación de repositorios externos
+2. Limpia el contenido para compatibilidad con MDX
+3. Guarda en `snippets/composables/pages/shared/`
+
+**Descarga en `snippets/composables/pages/shared/`:**
+- `wiki-readme.mdx` - livepeer/wiki README
+- `awesome-livepeer-readme.mdx` - livepeer/awesome-livepeer README
+- `whitepaper.mdx` - Livepeer Whitepaper
+- `gwid-readme.mdx` - videoDAC/livepeer-gateway README
+- `box-additional-config.mdx` - configuración de caja go-livepeer
+
+**La limpieza incluye:**
+- Escapar llaves angulares para MDX
+- Eliminar comentarios HTML
+- Convertir etiquetas HTML a equivalentes de Markdown
+
+---
+
+#### Obtener LPT intercambios
+
+**Archivo:** `tools/scripts/snippets/fetch-lpt-exchanges.sh`
+
+**Propósito:**Obtiene las listas de intercambio de LPT de la API de CoinGecko y actualiza la página de intercambios
+
+**Uso:**
+```bash
+./tools/scripts/snippets/fetch-lpt-exchanges.sh
+```
+
+**¿Qué hace?**
+1. Obtiene datos en tiempo real de la API de CoinGecko para el token Livepeer
+2. Genera una tabla con los intercambios CEX con volumen y puntuaciones de confianza
+3. Añade información de DEX y direcciones de contrato
+4. Actualizaciones `v2/pages/06_delegators/token-resources/lpt-exchanges.mdx`
+
+**Cuándo ejecutar:**
+- Periódicamente para actualizar las listas de intercambios
+- Antes de las grandes versiones para asegurar datos actualizados
+
+---
+
+### Scripts de prueba
+
+#### Script de barrido del navegador V2 (`test:v2-pages`)
+
+**Archivo:** `tools/scripts/test-v2-pages.js`
+
+**Propósito:**Prueba todas las páginas v2 para errores de consola y problemas de representación
+
+**Uso:**
+```bash
+cd tools && npm run test:v2-pages
+# or
+node tools/scripts/test-v2-pages.js
+```
+
+**¿Qué hace?**
+1. Extrae todas las páginas v2 de `docs.json`
+2. Inicia el servidor de desarrollo Mintlify (si no está en ejecución)
+3. Prueba cada página con Puppeteer
+4. Informa sobre errores de consola, errores de página y fallas en las solicitudes
+5. Genera un informe JSON detallado
+
+**Requisitos previos:**
+- `npx mintlify dev`debe estar en ejecución (o establecer la variable de entorno)`MINT_BASE_URL`environment variable)
+- Puppeteer instalado (`npm install`)
+
+**Salida:**
+- Salida de consola con estado de paso/fallo
+- `v2-page-test-report.json` - Resultados detallados de las pruebas
+
+**Variables de entorno:**
+- `MINT_BASE_URL` - URL base para el servidor de desarrollo Mintlify (predeterminado: `http://localhost:3000`)
+
+---
+
+### Scripts de GitHub (Usados por los flujos de trabajo)
+
+Estos scripts se usan en los flujos de trabajo de GitHub y generalmente no deben ejecutarse manualmente:
+
+- **`.github/scripts/fetch-forum-data.js`** - Obtiene datos del foro (usado por `update-forum-data.yml`)
+- **`.github/scripts/fetch-ghost-blog-data.js`** - Obtiene datos del blog Ghost (usado por `update-ghost-blog-data.yml`)
+- **`.github/scripts/fetch-youtube-data.js`** - Obtiene datos de YouTube (usado por `update-youtube-data.yml`)
+
+---
+
+## Ganchos de pre-commit
+
+Los ganchos de pre-commit se ejecutan automáticamente cuando intentas hacer un commit. Enfuerzan el cumplimiento de la guía de estilo y validan la calidad del código.
+
+### Instalación
+
+**OBLIGATORIO:** Debes instalar los ganchos antes de hacer cualquier commit:
+
+```bash
+./.githooks/install.sh
+```
+
+O manualmente:
+```bash
+cp .githooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+### Lo que se comprueba
+
+#### Cumplimiento de la guía de estilo
+
+El hook de pre-commit comprueba:
+
+- ❌ **Uso de ThemeData** - Bloques obsoletos`ThemeData` imports from `themeStyles.jsx`
+- ❌ **Colores codificados** - Advierte sobre colores hexadecimales que deben usar Propiedades de CSS
+- ⚠️ **Imports relativos** - Advierte sobre rutas relativas (deben usar rutas absolutas desde la raíz)
+- ⚠️ **@mintlify/components imports** - Advierte sobre importaciones innecesarias (los componentes son globales)
+- ⚠️ **importaciones de hooks de React** - Advierte sobre importaciones innecesarias de React (los hooks son globales)
+
+#### Scripts de verificación
+
+El hook también ejecuta`.githooks/verify.sh` que comprueba:
+
+- ✅ **sintaxis MDX** - Valida el frontmatter y la estructura básica de MDX
+- ✅ **Sintaxis JSON** - Valida que los archivos JSON sean parseables
+- ✅ **Sintaxis de script en shell** - Valida scripts de shell con `bash -n`
+- ✅ **sintaxis JavaScript** - Valida archivos JS con `node --check`
+- ✅ **Mintlify config** - Valida `docs.json`/`mint.json` sintaxis
+- ✅ **Rutas de importación** - Asegura que las importaciones de fragmentos usen rutas absolutas
+- ✅ **Validación del navegador** - Prueba archivos MDX en un navegador sin interfaz gráfica (si `npx mintlify dev` está en ejecución)
+
+### ¿Qué ocurre en caso de infracción?
+
+Si intentas enviar código que viole la guía de estilo:
+
+1. El commit es **bloqueado**
+2. Recibes un mensaje de error detallado que lista todas las violaciones
+3. Debes corregir las violaciones antes de volver a hacer el commit
+
+### Validación del navegador
+
+Los hooks incluyen validación del navegador sin cabeza que prueba que los archivos MDX se renderizan realmente en el navegador. Esto captura:
+
+- Errores de tiempo de ejecución en componentes
+- Importaciones fallidas
+- Errores de consola
+- Fallas en la representación
+
+**Nota:**La validación del navegador requiere `npx mintlify dev` para que se ejecute. Si no se está ejecutando, la verificación se salta (no bloquea el commit).
+
+### Saltear ganchos (No recomendado)
+
+**⚠️ ADVERTENCIA:** Solo saltee los ganchos si tiene una razón legítima y comprende las consecuencias.
+
+Para ediciones intencionales`.allowlist` realizadas por un humano, use:
+
+```bash
+git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
+```
+
+Esto mantiene todas las otras comprobaciones pre-commit habilitadas.
+
+Para eliminaciones intencionales de archivos por un humano, use:
+
+```bash
+git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
+```
+
+Esto también mantiene todas las otras comprobaciones pre-commit habilitadas.
+
+```bash
+# Bypass pre-commit hook
+git commit --no-verify -m "message"
+```
+
+**¿Por qué esto es desalentado?**
+- Violación de la conformidad con la guía de estilo
+- Puede introducir errores que rompan la construcción
+- Hace más difícil la revisión de código
+- Puede causar problemas para otros desarrolladores
+
+Para más detalles sobre los hooks, consulte el [Documentación de Git Hooks](/contribute/CONTRIBUTING/GIT-HOOKS.md).
+
+---
+
+## Ejecutar Automatizaciones
+
+### Ejecución manual
+
+#### GitHub Actions
+
+1. Ir a **Acciones** pestaña en el repositorio de GitHub
+2. Seleccionar el flujo de trabajo que desea ejecutar
+3. Haz clic en **"Ejecutar flujo de trabajo"** botón
+4. Selecciona la rama y cualquier entrada requerida
+5. Haz clic en **"Ejecutar flujo de trabajo"** para comenzar
+
+#### Scripts
+
+La mayoría de los scripts se pueden ejecutar directamente desde la línea de comandos:
+
+```bash
+# From repository root
+node tools/scripts/snippets/generate-seo.js
+./tools/scripts/snippets/fetch-lpt-exchanges.sh
+npm run test:v2-pages
+```
+
+#### Flujos de trabajo de n8n
+
+1. Importar archivo JSON en una instancia de n8n
+2. Configurar credenciales y ajustes
+3. Activar flujo de trabajo
+4. Monitorear ejecuciones en el tablero de n8n
+
+### Ejecución programada
+
+- **GitHub Actions** - Usar `schedule` disparador con sintaxis cron
+- **Flujos de n8n** - Usar el nodo de disparo de programación con intervalo o cron
+
+### Monitoreo
+
+- **GitHub Actions** - Ver la pestaña de Acciones para ejecuciones de flujo de trabajo y registros
+- **n8n** - Ver el historial de ejecuciones en el tablero de n8n
+- **Scripts** - Ver la salida de la consola y los archivos generados
+
+---
+
+## Solución de problemas
+
+### GitHub Actions no se ejecuta
+
+**Problema:**El flujo de trabajo no se activa al hacer push/PR
+
+**Soluciones:**
+1. Compruebe la sintaxis del archivo de flujo de trabajo (el YAML debe ser válido)
+2. Verifique las condiciones de desencadenamiento que coincidan con su rama/evento
+3. Compruebe la pestaña de Acciones para mensajes de error
+4. Asegúrese de que el archivo de flujo de trabajo esté en `.github/workflows/` directorio
+
+### Scripts fallando
+
+**Problema:**Errores de script o no produce la salida esperada
+
+**Soluciones:**
+1. Verifique que el script tenga permisos de ejecución: `chmod +x script.sh`
+2. Verificar que la versión de Node.js coincida con los requisitos del script
+3. Verificar dependencias faltantes: `npm install`
+4. Revisar la documentación del script para los requisitos previos
+5. Ejecutar con salida detallada si está disponible
+
+### Hook de pre-commit no se está ejecutando
+
+**Problema:**Hook no se ejecuta en el commit
+
+**Soluciones:**
+1. Verificar que el hook esté instalado: `ls -la .git/hooks/pre-commit`
+2. Comprobar que el hook sea ejecutable: `chmod +x .git/hooks/pre-commit`
+3. Reinstalar: `./.githooks/install.sh`
+4. Comprobar `.git/hooks/pre-commit` archivo existe
+
+### Problemas de flujo de trabajo de n8n
+
+**Problema:**El flujo de trabajo falla o no actualiza archivos
+
+**Soluciones:**
+1. Verifique que el flujo de trabajo esté activo en el tablero de n8n
+2. Verificar que las credenciales estén configuradas correctamente
+3. Comprobar los registros de ejecución en n8n
+4. Verificar que el token de GitHub tenga permisos de escritura
+5. Comprobar que el nombre de la rama coincida con la configuración del flujo de trabajo
+
+### Secretos/Claves faltantes
+
+**Problema:**El flujo de trabajo falla con errores de autenticación
+
+**Soluciones:**
+1. Ve a la repositorio**Configuración → Secretos y variables → Acciones**
+2. Agrega los secretos necesarios (por ejemplo, `YOUTUBE_API_KEY`, `SPEAKEASY_API_KEY`)
+3. Verificar que los nombres de los secretos coincidan exactamente con el archivo de flujo de trabajo
+4. Para n8n, configurar credenciales en el tablero de n8n
+
+---
+
+## Prácticas recomendadas
+
+### Cuándo usar qué
+
+**GitHub Actions** - Usar para:
+- ✅ Recopilación de datos simple (llamadas a API, actualizaciones de archivos)
+- ✅ Operaciones nativas del repositorio (commits, PRs, verificaciones)
+- ✅ Flujos de trabajo de CI/CD (pruebas, validación)
+- ✅ Tareas programadas que solo necesitan acceso a GitHub
+- ✅ Cuando quieres todo en el repositorio
+
+**n8n** - Usar para:
+- ✅ Flujos de trabajo complejos de varios pasos
+- ✅ Integraciones con servicios externos (Discord, Google Sheets, Google Forms)
+- ✅ Flujos de aprobación con notificaciones
+- ✅ Flujos de trabajo que requieren interacción del usuario
+- ✅ Cuando necesitas más gestión de flujo visual
+
+**Scripts** - Usar para:
+- ✅ Tareas únicas y generación de contenido
+- ✅ Desarrollo y pruebas locales
+- ✅ Actualizaciones manuales de datos
+
+**Ganchos de pre-commit** - Usar para:
+- ✅ Garantizar la calidad del código y el cumplimiento de la guía de estilo
+- ✅ Detectar errores antes del commit
+
+### Mantener las Automatizaciones Actualizadas
+
+1. **Revisar los inventarios de flujos de trabajo** - Consultar las secciones de flujos de trabajo y scripts de esta guía para ver el estado actual de las automatizaciones
+2. **Probar antes de implementar** - Ejecutar scripts localmente antes de confirmar
+3. **Monitorear ejecuciones de flujo de trabajo** - Verificar regularmente las tablas de control de GitHub Actions y n8n
+4. **Actualizar la documentación** - Mantén este guía actualizado a medida que cambian las automatizaciones
+
+### Consideraciones de seguridad
+
+- **Nunca comprometas secretos** - Usa GitHub Secrets o credenciales de n8n
+- **Revisar los commits automáticos** - Tenga cuidado con los scripts que comprometan automáticamente
+- **Limitar los permisos de tokens** - Usar acceso de mínimo privilegio para tokens de API
+- **Auditar regularmente** - Revisar el acceso y permisos de automatización periódicamente
+
+---
+
+## Documentación relacionada
+
+- [Guía de estilo](./style-guide) - Convenciones de estilo y Mintlify errores comunes
+- [Biblioteca de componentes](./component-library) - Componentes disponibles y uso
+- [Documentación de hooks de Git](/contribute/CONTRIBUTING/GIT-HOOKS.md) - Documentación completa de hooks de pre-commit
+- [README de scripts](/tools/scripts/snippets/README.mdx) - Documentación detallada de scripts
+- [README de automatizaciones](/snippets/automations/README.mdx) - Vista general de automatizaciones
+
+---
+
+## Obtener ayuda
+
+Si encuentra problemas con las automatizaciones:
+
+1. Consulte esta guía para pasos de solución de problemas
+2. Revisar aquí las secciones de flujos de trabajo y scripts para problemas conocidos
+3. Consultar la documentación del flujo de trabajo/script
+4. Revisar los registros de ejecución (GitHub Actions o n8n)
+5. Pregunta en el repositorio o en los canales de la comunidad

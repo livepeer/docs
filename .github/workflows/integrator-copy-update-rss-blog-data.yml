@@ -1,0 +1,22 @@
+# type: integrator
+# concern: copy
+# pipeline: P5-auto
+name: Update RSS Blog Data
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # Daily at 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      use_test_branch:
+        description: "Write to TEST_BRANCH (docs-v2-dev) instead of DEPLOY_BRANCH"
+        type: boolean
+        default: false
+
+jobs:
+  update-rss-data:
+    uses: ./.github/workflows/dispatch-copy-update-social-feeds.yml
+    with:
+      mode: rss-blog
+      use_test_branch: ${{ inputs.use_test_branch || false }}
+    secrets: inherit

@@ -1,0 +1,232 @@
+---
+title: 'Video webhooks'
+sidebarTitle: 'Webhooks'
+description: >-
+  Set up Livepeer Studio webhooks to receive stream and asset events. Covers endpoint setup, signature verification, event types, and troubleshooting.
+keywords:
+  - livepeer webhooks
+  - stream events
+  - asset events
+  - signature verification
+  - HMAC
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: 2026-04-05
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Webhooks eliminate polling. Subscribe once; Studio calls your endpoint when events occur. Always verify the `Livepeer-Signature` header to reject spoofed requests.</Tip>
+</CenteredContainer>
+
+---
+
+Studio sends HTTP POST requests to your endpoint when stream or asset events occur. Your server responds with `200` to acknowledge. Any other response is treated as a failure and Studio retries.
+
+<CustomDivider middleText="Event Types" />
+
+## Available events
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Event</TableCell>
+      <TableCell header>Trigger</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`stream.started`</TableCell>
+      <TableCell>Encoder begins pushing to the RTMP ingest URL</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`stream.idle`</TableCell>
+      <TableCell>Encoder disconnects or ingest stops</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`asset.created`</TableCell>
+      <TableCell>Upload or URL-import request accepted</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`asset.ready`</TableCell>
+      <TableCell>Transcoding complete -- asset is playable</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`asset.failed`</TableCell>
+      <TableCell>Transcoding failed -- check asset status for error</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`recording.ready`</TableCell>
+      <TableCell>DVR recording is available (streams with `record: true`)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`playback.accessControl`</TableCell>
+      <TableCell>Viewer requests playback on a webhook-gated stream (must respond in 250 ms)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Create a Webhook" />
+
+## Step 1 -- Create a webhook
+
+```typescript
+import { Livepeer } from 'livepeer';
+
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+const webhook = await client.webhook.create({
+  name: 'asset-ready-handler',
+  url: 'https://your-server.com/webhooks/livepeer',
+  events: ['asset.ready', 'asset.failed'],
+  // sharedSecret: 'your-secret' -- used to verify signatures
+});
+
+console.log('Webhook ID:', webhook.webhook.id);
+```
+
+<CustomDivider middleText="Receive Events" />
+
+## Step 2 -- Handle incoming events
+
+Set up an HTTP endpoint that accepts POST requests. Express.js example:
+
+```javascript
+const express = require('express');
+const crypto = require('crypto');
+const app = express();
+
+// Use raw body for signature verification
+app.use('/webhooks/livepeer', express.raw({ type: 'application/json' }));
+
+app.post('/webhooks/livepeer', (req, res) => {
+  // Verify signature before processing (see Step 3)
+  const isValid = verifySignature(req.headers['livepeer-signature'], req.body, process.env.WEBHOOK_SECRET);
+  if (!isValid) return res.sendStatus(401);
+
+  const event = JSON.parse(req.body);
+
+  switch (event.event) {
+    case 'asset.ready':
+      console.log('Asset ready:', event.payload.id);
+      // Notify user, update database, etc.
+      break;
+    case 'asset.failed':
+      console.error('Asset failed:', event.payload.id, event.payload.error);
+      break;
+    case 'stream.started':
+      console.log('Stream live:', event.payload.id);
+      break;
+  }
+
+  res.sendStatus(200);
+});
+```
+
+<CustomDivider middleText="Signature Verification" />
+
+## Step 3 -- Verify webhook signatures
+
+Studio signs every request with HMAC-SHA256. Verifying the signature rejects spoofed or tampered requests.
+
+The `Livepeer-Signature` header format:
+
+```
+Livepeer-Signature: t=1710000000,v1=abc123def456...
+```
+
+Verification logic:
+
+```javascript
+function verifySignature(signatureHeader, rawBody, secret) {
+  if (!signatureHeader) return false;
+
+  // Parse t= and v1= from the header
+  const parts = Object.fromEntries(
+    signatureHeader.split(',').map(part => part.split('='))
+  );
+  const timestamp = parts['t'];
+  const signature = parts['v1'];
+
+  if (!timestamp || !signature) return false;
+
+  // Replay attack protection: reject events older than 5 minutes
+  const age = Date.now() / 1000 - parseInt(timestamp);
+  if (age > 300) return false;
+
+  // Compute expected signature
+  const payload = `${timestamp}.${rawBody}`;
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+
+  // Constant-time comparison to prevent timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(signature, 'hex'),
+    Buffer.from(expected, 'hex')
+  );
+}
+```
+
+<CustomDivider middleText="Local Testing" />
+
+## Testing locally
+
+Use [ngrok](https://ngrok.com) to expose your local server during development:
+
+```bash
+# Start your server
+node app.js  # listening on port 3000
+
+# In a second terminal
+ngrok http 3000
+# ngrok provides a public URL, e.g. https://abc123.ngrok.io
+```
+
+Register the ngrok URL as your webhook endpoint in Studio, or via API with the URL from ngrok.
+
+Studio's webhook dashboard at https://livepeer.studio/dashboard/developers/webhooks shows delivery history and lets you resend failed events.
+
+<CustomDivider middleText="Payload Structure" />
+
+## Webhook payload structure
+
+```json
+{
+  "webhookId": "web_abc123",
+  "createdAt": "2026-04-05T10:00:00Z",
+  "timestamp": "2026-04-05T10:01:23Z",
+  "event": "asset.ready",
+  "payload": {
+    "id": "asset_xyz789",
+    "name": "my-video.mp4",
+    "status": { "phase": "ready" },
+    "playbackId": "pla_abc123"
+  }
+}
+```
+
+The `payload` object shape varies by event type. Refer to the [Studio API Reference](https://livepeer.studio/docs) for per-event schemas.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Access Control" icon="lock" href="/v2/developers/guides/video/access-control">
+    Use `playback.accessControl` webhooks to gate content dynamically.
+  </Card>
+  <Card title="Create a Livestream" icon="video" href="/v2/developers/guides/video/create-livestream">
+    Create streams and attach webhook event subscriptions.
+  </Card>
+</CardGroup>

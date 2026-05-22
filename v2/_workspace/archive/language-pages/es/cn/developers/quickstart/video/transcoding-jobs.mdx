@@ -1,0 +1,220 @@
+---
+title: 转码任务快速入门
+description: >-
+  提交一个 Livepeer Studio 转码任务，轮询任务状态并验证完成情况。基于 GitHub 验证的 Studio OpenAPI 规范构建，并等待
+  TD 准确性审查。
+keywords:
+  - livepeer
+  - transcoding jobs
+  - quickstart
+  - studio api
+  - transcode
+  - tasks api
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL3F1aWNrc3RhcnQvdmlkZW8vdHJhbnNjb2Rpbmctam9icy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2RldmVsb3BlcnMvcXVpY2tzdGFydC92aWRlby90cmFuc2NvZGluZy1qb2JzIiwic291cmNlSGFzaCI6IjA1OTIxYmU4ZjM1MmQzNDM5MjljNzM0M2Q3MDhkNjA4OGEzMzJjNDY2YjhkMGI3ZWVlZDExNzc5ODExOGRhMWIiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6Mzk6MzQuNzk1WiJ9 */}
+# 转码任务快速入门
+
+通过 Livepeer Studio API 提交按需转码任务，并使用 Tasks API 跟踪任务直至完成。
+
+## AI就绪的摘要（供人类和助手使用）
+
+- 使用 Studio API 基础 URL：`https://livepeer.studio/api`
+- 提交任务使用 `POST /transcode`
+- 转码是异步的；轮询 `GET /task/{id}`
+- 成功`POST /transcode` 返回一个`task.id`
+- 最终技术准确性审查需要 Rick (TD) 的确认
+
+## 审查状态
+
+此快速入门在结构上已完成，并基于 GitHub 验证的 Studio OpenAPI 规范，但**需要 Rick (TD) 进行审查**在最终发布前确保规范流程的准确性以及用户界面的默认设置。
+
+## 1. 先决条件
+
+- 一个 Livepeer API 密钥（仅限后端使用）
+- `curl`（以及可选的`jq`）
+- 可通过 HTTP 访问的输入视频**或**一个 S3 兼容的源
+- 输出存储目标（S3 兼容或 web3.storage 委托证明）
+
+## 2. 基础 URL 和认证
+
+- 基础 URL: `https://livepeer.studio/api`
+- 认证头: `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+```bash
+export LIVEPEER_API_KEY="<YOUR_API_KEY>"
+```
+
+## 3. 提交转码任务
+
+Studio 规格要求：
+
+- `input`
+- `storage`
+- `outputs`
+
+下面的示例使用：
+
+- HTTP 输入 URL
+- S3 兼容的存储输出
+- HLS + MP4 输出
+
+### 示例请求体
+
+```json
+{
+  "input": {
+    "url": "https://example.com/video.mp4"
+  },
+  "storage": {
+    "type": "s3",
+    "endpoint": "https://gateway.storjshare.io",
+    "bucket": "outputbucket",
+    "credentials": {
+      "accessKeyId": "<ACCESS_KEY_ID>",
+      "secretAccessKey": "<SECRET_ACCESS_KEY>"
+    }
+  },
+  "outputs": {
+    "hls": {
+      "path": "/samplevideo/hls"
+    },
+    "mp4": {
+      "path": "/samplevideo/mp4"
+    }
+  },
+  "profiles": [
+    {
+      "name": "720p",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 3000000,
+      "fps": 30
+    }
+  ]
+}
+```
+
+### 示例 curl 请求
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/transcode" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": { "url": "https://example.com/video.mp4" },
+    "storage": {
+      "type": "s3",
+      "endpoint": "https://gateway.storjshare.io",
+      "bucket": "outputbucket",
+      "credentials": {
+        "accessKeyId": "<ACCESS_KEY_ID>",
+        "secretAccessKey": "<SECRET_ACCESS_KEY>"
+      }
+    },
+    "outputs": {
+      "hls": { "path": "/samplevideo/hls" },
+      "mp4": { "path": "/samplevideo/mp4" }
+    },
+    "profiles": [
+      {
+        "name": "720p",
+        "width": 1280,
+        "height": 720,
+        "bitrate": 3000000,
+        "fps": 30
+      }
+    ]
+  }'
+```
+
+## 4. 捕获任务 ID
+
+转码是异步的。响应是一个`task` 对象。保存`id` 字段并轮询任务端点。
+
+示例响应结构（已裁剪）：
+
+```json
+{
+  "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "type": "transcode-file",
+  "status": {
+    "phase": "pending",
+    "updatedAt": 1587667174725
+  }
+}
+```
+
+## 5. 轮询任务状态
+
+使用 `GET /task/{id}` 直到 `status.phase` 是 `completed` 或 `failed`.
+
+```bash
+TASK_ID="<TASK_ID_FROM_TRANSCODE_RESPONSE>"
+
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  "https://livepeer.studio/api/task/$TASK_ID"
+```
+
+Studio 规范中定义的阶段包括：
+
+- `pending`
+- `waiting`
+- `running`
+- `failed`
+- `completed`
+- `cancelled`
+
+## 6. 验证完成和输出
+
+当`status.phase`是`completed`:
+
+- 确认任务未报告 `errorMessage`
+- 检查任务输出元数据和/或关联的资产ID
+- 验证您在 `outputs` 的目标存储中请求的输出路径
+
+## 7. 常见故障模式
+
+### `401 Unauthorized`
+
+- 无效的API密钥
+- 缺失/错误的 `Authorization` 标题
+
+### `422 Validation Error`
+
+- 缺失必需的顶级字段 (`input`, `storage`, `outputs`)
+- 无效的 `input`模式（URL 与 S3 对象不匹配）
+- 无效的 `profiles` 结构
+
+### 任务进入 `failed`
+
+- 检查 `status.errorMessage`
+- 验证输入 URL 对服务是可访问的
+- 验证输出存储凭据和存储桶权限
+- 首先使用最小的配置文件/输出组合重新运行
+
+## 8. Rick (TD) 审核检查表（在最终发布前阻止）
+
+- 确认 2026 文档的规范用户转换流程
+- 确认推荐的默认配置文件示例
+- 确认轮询期望和完成验证指南
+- 确认已弃用的旧示例应被删除/标记
+- 确认与实时 API 的边界（哪些内容属于其他部分）
+
+## 9. 下一步
+
+- [创建转码作业端点参考](/solutions/livepeer-studio/api-reference/transcode/create)
+- [转码 API 概述](/solutions/livepeer-studio/api-reference/transcode/overview)
+- [任务 API 概述](/solutions/livepeer-studio/api-reference/tasks/overview)
+- [获取任务端点参考](/solutions/livepeer-studio/api-reference/tasks/get)
+- [工作室 API 概述](/solutions/livepeer-studio/reference/api)
+- [SDK 概述](/solutions/livepeer-studio/reference/sdks)
+
+## 规范参考（以源头为准）
+
+- GitHub（主要）：[livepeer/docs `api/studio.yaml`](https://github.com/livepeer/docs/blob/main/api/studio.yaml)
+- GitHub (primary): [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml) (for shared `generate` tag context)
+- DeepWiki (corroboration only): [livepeer/docs | DeepWiki](https://deepwiki.com/livepeer/docs)
+- 本地仓库文档引用（在交叉验证前未经过验证）：`/solutions/livepeer-studio/api-reference/transcode/create`, `/solutions/livepeer-studio/api-reference/tasks/get`

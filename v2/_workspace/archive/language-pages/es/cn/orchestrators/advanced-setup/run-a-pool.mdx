@@ -1,0 +1,44 @@
+---
+title: 运行一个池
+sidebarTitle: 运行一个池
+description: 什么是协调器池以及如何运行一个池：聚合GPU，设置条款，并列出您的池。
+keywords:
+  - livepeer
+  - orchestrators
+  - pool
+  - operator
+  - GPU pool
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL2FkdmFuY2VkLXNldHVwL3J1bi1hLXBvb2wubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9vcmNoZXN0cmF0b3JzL2FkdmFuY2VkLXNldHVwL3J1bi1hLXBvb2wiLCJzb3VyY2VIYXNoIjoiN2M3ZTkwODE4YzZlM2JmNWNmNmY4ZTYxNjY2Y2U2OTYzNTVkNzUxZGY0NGYwYmYwMjViZDVhYjJkNDI2YTAyZiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNDozMjozMi4xNzBaIn0= */}
+一个 **协调器池** 是一个 Livepeer 协调器（一个质押，一个链上身份）由 **多个 GPU** 支持，通常来自不同的所有者。池操作员运行节点，处理质押和奖励调用，并在链下将收益分配给 GPU 贡献者。
+
+## 操作员职责
+
+- 运行和维护 **go-livepeer** 节点（或等效基础设施）。
+- **质押 LPT** 并保持在活跃集合中；调用 **reward()** 每轮。
+- ** 路由任务** 跨池化 GPU；设置定价和容量。
+- ** 账户和支付** 给 GPU 提供商，根据您发布的条款（收益分成、支付时间表、最低限额）。
+
+##  要发布什么
+
+如果您接受外部GPU，请明确发布:
+
+- **硬件** - 支持的GPU和VRAM。
+- **工作负载** - 转码、AI或两者都有。
+- **收益分成** - GPU所有者与池的百分比。
+- **支付** - 资产 (ETH, USDC等)，频率，最低阈值。
+- **运行时间和操作** - 你对贡献者的要求。
+
+## 列出你的池
+
+没有官方目录。社区池列在诸如[社区池](../orchestrator-tools-and-resources/community-pools)的页面上。您可以在[论坛](https://forum.livepeer.org)或[Discord](https://discord.gg/livepeer) 以进行推广。GPU 拥有者可以按照您的指示连接（自带容器、裸机或云 GPU）。
+
+## 另请参阅
+
+<Columns cols={2}>
+  <Card title="Join a pool (for GPU owners)" icon="swimming-pool" href="../quickstart/join-a-pool" arrow />
+  <Card title="Community pools" icon="users" href="../orchestrator-tools-and-resources/community-pools" arrow />
+  <Card title="Staking LPT" icon="coins" href="./staking-LPT" arrow />
+  <Card title="Rewards and fees" icon="coins" href="./rewards-and-fees" arrow />
+</Columns>

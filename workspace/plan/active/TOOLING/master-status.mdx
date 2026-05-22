@@ -1,0 +1,53 @@
+---
+title: TOOLING — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Audit and fix the `lpd` CLI tool — a Bash script (2,148 lines, version 0.2.0) that serves as the primary developer CLI for the Livepeer Docs repo. The plan covered: stale path references after the `tools/scripts/` → `operations/scripts/` migration, documentation updates, and a self-update recommendation to prevent future breakage.
+
+## Verified Done
+
+All items confirmed done per `lpd-audit.md` status table (dated 2026-03-21 to 2026-03-22):
+
+- Path fixes — 11 stale `tools/scripts/` references updated to `operations/scripts/<type>/<concern>/<niche>/`. Done 2026-03-21.
+- `tasks → workspace` alias — already correct. Verified.
+- `run-all.js` i18n path — fixed 2026-03-21.
+- Documentation (`lpd-cli.mdx`) — updated, `status: current`, `lastVerified: 2026-03-22`.
+- Deprecated locale docs (`v2/cn/`, `v2/fr/`, `v2/es/`) — archived 2026-03-22.
+- Self-update mechanism Layer 1 — `validate-lpd-paths.js` created 2026-03-22.
+
+`lpd-command-reference.md` — a full command reference document (version 0.2.0) covering all commands: discovery, setup, dev, testing, content operations, hooks, script runner. Appears to be a snapshot/reference, not a generated file.
+
+## Claimed Done — Unverified or Incomplete
+
+- The all-plans-audit-2026-03-24.md states "Complete / 100% / PARK — done" with a note about "Optional Layer 2/3 nice-to-have." The audit notes that Layer 1 (validate-lpd-paths.js) was created but Layers 2 and 3 (scope file and docs freshness gate) are deferred.
+- Layer 2 (lpd-scope.json) and Layer 3 (docs freshness gate for lpd-cli.mdx) remain unimplemented. These are explicitly marked as optional recommendations, not blocking items.
+
+## In Progress
+
+Nothing actively in progress within this plan.
+
+## Not Started / Still To Do
+
+Optional enhancements (Layer 2/3 from `lpd-audit.md`):
+- **Layer 2** — create `tools/config/lpd-scope.json` listing every script `lpd` depends on; `validate-lpd-paths.js` reads it instead of parsing bash.
+- **Layer 3** — add `docs-guide/tooling/lpd-cli.mdx` to agent docs freshness registry so any `lpd` file change flags the docs page for review.
+- `lpd tasks` legacy alias — either document as deprecated or remove. Currently undocumented in `lpd help` or `lpd-cli.mdx`.
+
+## Blockers
+
+None. All core work is complete. Remaining items are optional enhancements.
+
+## File Inventory Flags
+
+- This plan folder contains only two files (`lpd-audit.md` and `lpd-command-reference.md`) — no plan.md, no tracker, no decision log. This is sparse but appropriate for a completed, closed plan.
+- `lpd-command-reference.md` looks like a manually maintained reference. If this is meant to stay current it needs a maintenance process, or it should be replaced by a generated doc. As of this audit it reflects version 0.2.0 — verify it matches the live `lpd` script.
+
+## Audit Notes
+
+- The plan is correctly classified as complete. All path fixes were applied; the validator was created; documentation was updated. The core problem (lpd breaking after each migration) is addressed.
+- The `lpd-audit.md` status table is accurate and detailed. No discrepancies found between stated status and file evidence.
+- Layers 2 and 3 are genuine improvements worth doing but not blocking anything. They would be a ~1-hour session to implement.
+- The folder name is minimal and the plan has no formal phases — this was a targeted fix task, not a multi-phase initiative. That is appropriate given its scope.

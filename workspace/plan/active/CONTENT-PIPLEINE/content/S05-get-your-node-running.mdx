@@ -1,0 +1,376 @@
+---
+title: 'Get Your Node Running'
+sidebarTitle: 'Node Setup'
+description: 'Install go-livepeer, configure operational flags, register on-chain, and confirm the node is live and receiving work.'
+pageType: instruction
+audience: orchestrator
+purpose: start
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - setup
+  - go-livepeer
+  - install
+  - configure
+  - activate
+  - service URI
+  - Docker
+  - Arbitrum
+lastVerified: '2026-03-23'
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+
+<Tip>
+  This page takes a prepared operator from zero to a running, registered node. Prerequisites (hardware, wallet, LPT, ETH, network access) must be confirmed before starting.
+</Tip>
+
+Follow these steps in order. Each step builds on the previous one. The full process takes 2-4 hours for video-only nodes and 4-8 hours for AI or dual mode, with most elapsed time spent on LPT acquisition and model downloads.
+
+<CustomDivider middleText="Install" />
+
+## Step 1: Install go-livepeer
+
+Docker is the recommended install path. It handles GPU passthrough via the NVIDIA Container Toolkit and matches the quickstart environment.
+
+<Steps>
+
+<Step title="Install Docker and NVIDIA Container Toolkit">
+
+```bash icon="terminal" filename="install-toolkit"
+# Install NVIDIA Container Toolkit (Ubuntu/Debian)
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+```
+
+Verify GPU passthrough:
+
+```bash icon="terminal" filename="verify-gpu"
+docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi
+```
+
+A failed `nvidia-smi` run inside Docker means the toolkit still needs configuration. Resolve that before continuing.
+
+</Step>
+
+<Step title="Pull the go-livepeer image">
+
+```bash icon="terminal" filename="pull"
+docker pull livepeer/go-livepeer:stable
+```
+
+Pin to a specific release tag in production:
+
+```bash icon="terminal" filename="pin-version"
+docker pull livepeer/go-livepeer:v0.8.9
+```
+
+{/* VERIFY: Current stable release tag at https://github.com/livepeer/go-livepeer/releases */}
+
+For AI or dual mode, also pull the AI runner:
+
+```bash icon="terminal" filename="pull-ai"
+docker pull livepeer/ai-runner:latest
+```
+
+</Step>
+
+<Step title="Verify installation">
+
+```bash icon="terminal" filename="verify"
+docker run --rm livepeer/go-livepeer:stable livepeer -version
+```
+
+</Step>
+
+</Steps>
+
+<Note>
+  Binary installs (Linux, Windows, macOS) are also supported. Download the release archive from [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases), verify the checksum, and extract to `/usr/local/bin/`. Docker remains the recommended path for production.
+</Note>
+
+<CustomDivider middleText="Configure" />
+
+## Step 2: Configure flags and docker-compose
+
+Build a `docker-compose.yml` that matches the intended workload. All three modes use the same binary and differ only by flags.
+
+<Tabs>
+  <Tab title="Video">
+
+```yaml icon="code" filename="docker-compose.yml"
+services:
+  orchestrator:
+    image: livepeer/go-livepeer:stable
+    container_name: livepeer-orchestrator
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ~/.lpData:/root/.lpData
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command:
+      - -network=arbitrum-one-mainnet
+      - -ethUrl=https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+      - -orchestrator
+      - -transcoder
+      - -nvidia=0
+      - -maxSessions=10
+      - -pricePerUnit=1000
+      - -serviceAddr=YOUR_PUBLIC_IP:8935
+      - -monitor
+      - -v=6
+```
+
+  </Tab>
+  <Tab title="AI">
+
+```yaml icon="code" filename="docker-compose.yml"
+services:
+  orchestrator:
+    image: livepeer/go-livepeer:stable
+    container_name: livepeer-ai-orchestrator
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ~/.lpData:/root/.lpData
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command:
+      - -network=arbitrum-one-mainnet
+      - -ethUrl=https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+      - -orchestrator
+      - -transcoder
+      - -nvidia=0
+      - -pricePerUnit=1000
+      - -serviceAddr=YOUR_PUBLIC_IP:8935
+      - -aiWorker
+      - -aiModels=/root/.lpData/aiModels.json
+      - -aiModelsDir=/root/.lpData/models
+      - -monitor
+      - -v=6
+```
+
+Create `~/.lpData/aiModels.json` before starting:
+
+```json icon="code" filename="~/.lpData/aiModels.json"
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  }
+]
+```
+
+<Warning>
+  The Docker socket mount (`/var/run/docker.sock`) is required. go-livepeer uses Docker-out-of-Docker to spawn AI runner containers.
+</Warning>
+
+  </Tab>
+  <Tab title="Dual Mode">
+
+Dual mode serves both video transcoding and AI inference from one process. Use the AI tab's docker-compose template and add `-maxSessions=10` (or your benchmarked limit) to the command list.
+
+  </Tab>
+</Tabs>
+
+Replace in every template:
+- `YOUR_API_KEY` -- Alchemy or Infura Arbitrum One API key
+- `YOUR_PUBLIC_IP` -- public IP address or domain name
+- `-nvidia=0` -- GPU device ID(s) from `nvidia-smi -L`
+
+<Warning>
+  Always mount `~/.lpData:/root/.lpData`. Without this volume, go-livepeer creates a new Ethereum account on every container start, losing the previous keystore and all bonded LPT.
+</Warning>
+
+Start the node and confirm clean initialisation before proceeding to on-chain registration:
+
+```bash icon="terminal" filename="start"
+docker compose up -d && docker compose logs -f 2>&1 | head -30
+```
+
+<CustomDivider middleText="Connect and Activate" />
+
+## Step 3: Connect to Arbitrum and activate on-chain
+
+<StyledSteps>
+
+  <StyledStep title="Set up an Arbitrum RPC endpoint">
+
+The `-ethUrl` flag connects go-livepeer to Arbitrum One. Use a hosted provider (Alchemy or Infura free tier) for production. The public endpoint `arb1.arbitrum.io/rpc` is for testing only -- it offers no uptime guarantee and can drop sessions during round initialisation, forfeiting that round's LPT reward.
+
+Verify the endpoint responds:
+
+```bash icon="terminal" filename="verify-rpc"
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  YOUR_RPC_URL
+```
+
+Expected: `"result":"0xa4b1"` (Arbitrum One, chain ID 42161). A `0x1` result means the endpoint is Ethereum L1 -- switch to an Arbitrum endpoint.
+
+  </StyledStep>
+
+  <StyledStep title="Identify the orchestrator wallet address">
+
+On first start, go-livepeer creates an Ethereum account. The address appears in the startup logs:
+
+```bash icon="terminal" filename="check-address"
+docker compose logs 2>&1 | grep -i "account\|address"
+```
+
+<Warning>
+  The private key is stored at `~/.lpData/arbitrum-one-mainnet/keystore`. Back it up to offline storage immediately. Loss of the keystore means permanent loss of access to the account and all bonded LPT.
+</Warning>
+
+  </StyledStep>
+
+  <StyledStep title="Fund the wallet with arbETH">
+
+All on-chain transactions (activation, reward calls, ticket redemption) consume ETH on Arbitrum. Recommended minimum: 0.05 ETH.
+
+Fund via an exchange supporting Arbitrum One withdrawals, or bridge from Ethereum L1 at [bridge.arbitrum.io](https://bridge.arbitrum.io).
+
+  </StyledStep>
+
+  <StyledStep title="Acquire and stake LPT">
+
+LPT must be bonded to the orchestrator address to enter the active set for video transcoding. Check the current threshold on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) before acquiring LPT.
+
+{/* VERIFY: Current active set threshold at https://explorer.livepeer.org */}
+
+<Note>
+  AI-only operators need enough LPT to activate on-chain but do not need active-set-level stake. AI routing is capability-based, not stake-rank-based.
+</Note>
+
+Once LPT is in the wallet, bond it via `livepeer_cli`:
+
+```bash icon="terminal" filename="bond"
+docker exec -it livepeer-orchestrator livepeer_cli
+# Select the bond/stake option and enter the amount
+```
+
+Two transactions are submitted: `approve` (authorises the staking contract) and `bond` (stakes the LPT). Wait for both to confirm on Arbitrum.
+
+  </StyledStep>
+
+  <StyledStep title="Activate and register the service URI">
+
+In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and follow the prompts:
+
+| Prompt | Recommended starting value | Notes |
+|--------|---------------------------|-------|
+| Reward cut | `10` | Percentage of LPT inflation the orchestrator keeps. |
+| Fee cut | `95` | Percentage of ETH job fees the orchestrator keeps. |
+| Service address | `YOUR_PUBLIC_IP:8935` | Must match `-serviceAddr` exactly. |
+
+{/* VERIFY: Current livepeer_cli text for multi-step activation flow against latest go-livepeer release */}
+
+The node joins the active set at the start of the next round after activation. Rounds are approximately 22 hours on Arbitrum.
+
+  </StyledStep>
+
+  <StyledStep title="Enable reward calling">
+
+go-livepeer calls `Reward()` automatically each round by default. Confirm the startup command omits `-reward=false`.
+
+A missed round forfeits that round's LPT allocation permanently. There is no catch-up mechanism.
+
+Low-stake orchestrators spending more on gas than they receive in LPT should disable automatic calling with `-reward=false` and call manually via `livepeer_cli` until stake grows.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Verify" />
+
+## Step 4: Confirm the node is live
+
+Run every applicable check before moving on to pricing, AI pipelines, or operations guides.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Check</TableCell>
+      <TableCell header>Command / location</TableCell>
+      <TableCell header>Expected</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Node status</TableCell>
+      <TableCell>`curl localhost:7935/status`</TableCell>
+      <TableCell>JSON with nodeType and address</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>GPU detected</TableCell>
+      <TableCell>Startup logs</TableCell>
+      <TableCell>`Transcoding on Nvidia GPU 0`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Port 8935 open</TableCell>
+      <TableCell>`curl -k https://YOUR_IP:8935/status` (external machine)</TableCell>
+      <TableCell>Any response (including JSON error)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Explorer listing</TableCell>
+      <TableCell>[explorer.livepeer.org](https://explorer.livepeer.org)</TableCell>
+      <TableCell>Status: Active (or Registered until next round)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Service URI correct</TableCell>
+      <TableCell>Explorer profile</TableCell>
+      <TableCell>Matches `-serviceAddr`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Prometheus metrics</TableCell>
+      <TableCell>`curl localhost:7935/metrics`</TableCell>
+      <TableCell>Metric lines returned</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI capabilities (AI/dual)</TableCell>
+      <TableCell>[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)</TableCell>
+      <TableCell>Pipelines listed as Warm</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+A connection timeout on port 8935 means the firewall is blocking it -- gateways cannot route work to an unreachable node. Resolve this before anything else.
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Set Your Pricing and Cuts" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Configure competitive video and AI prices and set reward/fee cuts.
+  </Card>
+  <Card title="Set Up AI Pipelines" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Configure aiModels.json, warm models, and capability advertisement for AI inference.
+  </Card>
+</CardGroup>

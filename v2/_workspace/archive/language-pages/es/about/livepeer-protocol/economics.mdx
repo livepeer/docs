@@ -1,0 +1,162 @@
+---
+title: Livepeer Economía de Protocolo
+sidebarTitle: Economía de Protocolo
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - livepeer protocol economics
+  - protocol
+  - economics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9hYm91dC9saXZlcGVlci1wcm90b2NvbC9lY29ub21pY3MiLCJzb3VyY2VIYXNoIjoiN2RkNzJiYjNjNjAwMWMyYWE1NjY2ZjE4ZWRiN2NiNzc0Yjc3NjMzODkzZmVjZjIwMDg4M2I3YWU3NjQzZjkzYSIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDEyOjQwOjA0LjA1MloifQ== */}
+{/* This page describes:
+6. **Economics**
+
+   * Tokenomics
+   * Inflation model
+   * Staking & delegation
+   * Reward distribution
+   * Slashing
+   * Rounds 
+   
+
+*/}
+
+Livepeer utiliza tanto su token nativo - LPT, como Ethereum (ETH) para impulsar su red y compensar a los actores por sus contribuciones.
+El protocolo Livepeer utiliza una tasa de inflación dinámica y un modelo de stake-for-access para garantizar la seguridad y funcionalidad de la red.
+
+Cubriré la tokenómica de LPT y por qué delegar a los orquestadores sigue siendo importante incluso cuando la inflación disminuye.
+
+## Flujo de dinero: Economía de tokens de LPT
+
+### 1. **Flujo de staking (Delegadores → Orquestadores)**
+
+**Paso 1: Aprobación de token**
+Antes de la vinculación, los delegadores deben aprobar al BondingManager para transferir sus tokens LPT.
+
+**Paso 2: Vinculación**
+Los delegadores llaman a `Bond(amount, orchestratorAddress)` que:
+- Transfiere LPT del delegador al BondingManager
+- Actualiza la participación delegada del orquestador
+- Calcula pistas de posición de la piscina para la optimización del gas
+- Actualiza la piscina de transcodificadores ordenada por participación 
+
+**Paso 3: Registro del orquestador**
+Para convertirse en un orquestador, un nodo debe:
+- Primer vínculo LPT a sí mismo
+- Llamar `Transcoder(rewardCut, feeShare)` con parámetros de comisión
+- Registrar URI de servicio vía `SetServiceURI()`
+
+El pool de transcodificadores mantiene los orquestadores ordenados por participación delegada como una lista enlazada, con pistas que optimizan las inserciones.
+
+### 2. **Flujo de recompensas (Minter → Orchestrators → Delegators)**
+
+Cada ronda, los orquestadores activos pueden llamar `Reward()` para acuñar tokens inflacionarios:
+
+**Proceso de Cálculo de Recompensas**:
+1. Orchestrator llama a `Reward()` en BondingManager
+2. BondingManager consulta `CurrentMintableTokens()` de Minter
+3. Minter calcula: `mintable = inflation * totalSupply / bonded`
+4. La recompensa se distribuye proporcionalmente a la participación del orquestador
+5. El orquestador conserva su comisión (rewardCut)
+6. Las recompensas restantes se distribuyen proporcionalmente a los delegadores
+
+**Reclamación de Ganancias**:
+Los delegadores deben llamar a `ClaimEarnings(endRound)` para realizar sus recompensas acumuladas y tarifas de rondas anteriores.
+
+### 3. **Flujo de Pago (Emisores → Orquestadores)**
+
+El sistema de pagos utiliza micropagos probabilísticos para minimizar las transacciones en cadena:
+
+**Paso 1: Depósitos del Broadcaster**
+Los Broadcasters financian su cuenta mediante `FundDepositAndReserve()`:
+- **Depósito**: Colateral bloqueado (no se puede usar inmediatamente)
+- **Reserva**: Fondo disponible para redenciones de tickets [14](#0-13)
+
+**Paso 2: Creación de Ticket Fuera de la Cadena**
+Para cada segmento de video procesado:
+- El emisor crea un ticket firmado con faceValue y winProb
+- Ticket enviado fuera de la cadena al orquestador mediante encabezados HTTP
+- La mayoría de los tickets no ganan (por ejemplo, 1% de probabilidad de ganar)
+
+**Paso 3: Validación y Cola de Ticket**
+El orquestador valida el ticket:
+- Verifica la firma y la expiración
+- Calcula si el ticket gana usando `recipientRand`
+- Tickets ganadores en cola en la base de datos local
+- Rastrea el MaxFloat del remitente (reserva - redenciones pendientes)
+
+**Paso 4: Redención en cadena**
+Cuando haya fondos suficientes:
+- El orquestador llama a `RedeemWinningTicket(ticket, sig, recipientRand)`
+- TicketBroker valida el ticket contra el estado en cadena
+- Transferencias `faceValue` desde la reserva del emisor al orquestador
+- Actualizaciones `claimedReserve` en BondingManager
+
+Esto logra una reducción de costos de ~99% frente a pagos en cadena por segmento, manteniendo una compensación justa mediante el valor esperado probabilístico.
+
+### 4. **Flujo de tarifas (Emisores → Orquestadores → Delegadores)**
+
+Los orquestadores ganan tarifas por redenciones de tickets:
+- Las tarifas se acumulan en el fondo de ganancias del orquestador
+- El orquestador retiene su comisión (feeShare)
+- Las tarifas restantes se distribuyen a los delegadores
+- Los delegadores reclaman a través de `ClaimEarnings()`
+
+### 5. **Flujos de retiro**
+
+**Desbloqueo (Delegadores)**}
+1. Llamar `Unbond(amount)` - crea un bloqueo de desvinculación
+2. Esperar `UnbondingPeriod` rondas (típicamente 7 rondas)
+3. Llamar `WithdrawStake(unbondingLockId)` - recibir LPT de vuelta
+
+**Retiro de Pago (Transmisores)**}
+1. Llamar `Unlock()` en TicketBroker
+2. Esperar el período de desbloqueo
+3. Llamar `Withdraw()` - recibir el depósito restante + reserva
+
+## Integración del cliente
+
+El cliente go-livepeer abstrae todas las interacciones con el contrato a través del `LivepeerEthClient` interfaz: [15](#0-14)
+
+**Resolución de Direcciones de Contrato**: 
+Todas las direcciones de contrato se descubren dinámicamente a través del registro del Controlador utilizando hashes Keccak256 de los nombres de contrato. Esto permite actualizaciones de contrato sin cambiar el código del cliente. [16](#0-15)
+
+## Estrategias de Optimización de Gas
+
+### 1. **Pistas de Pool**
+Al hacer bonding o llamar a la recompensa, el cliente calcula "pistas" (posiciones anteriores/siguientes en el pool de transcodificadores ordenado) para permitir inserciones O(1) en lugar de búsquedas O(n) en la cadena. [17](#0-16)
+
+### 2. **Operaciones por lotes**
+Se pueden crear múltiples boletos fuera de la cadena en lotes, siendo solo los boletos ganadores los que requieren transacciones en la cadena.
+
+### 3. **Fijación dinámica de precios del gas**
+El cliente implementa una gestión sofisticada del precio del gas, utilizando una tarifa base 2x con límites máximos especificados por el usuario para equilibrar la velocidad de confirmación y el costo. [18](#0-17)
+
+## Resumen: Flujo de Dinero Completo
+
+1. **Titulares de tokens** aprobar y vincular LPT → **BondingManager** (staking)
+2. **Minter** crea nuevos LPT → **BondingManager** → **Orquestadores** (recompensas por inflación)
+3. **Orquestadores** distribuir recompensas → **Delegadores** (menos comisión)
+4. **Transmisores** depositar LPT → **TicketBroker** (reservas de pago)
+5. **Orquestadores** canjear tickets → recibir LPT de **TicketBroker** (tarifas)
+6. **Orquestadores** distribuir tarifas → **Delegadores** (menos comisión)
+7. **Delegadores** reclamar ganancias de **BondingManager** (recompensas acumuladas + tarifas)
+
+Esto crea una economía circular donde:
+- El staking asegura la red y gana recompensas por inflación
+- Los orquestadores activos ganan tarifas de los broadcasters
+- Los delegadores participan en las recompensas sin ejecutar infraestructura
+- Los pagos probabilísticos permiten micropagos rentables
+- Todos los flujos se rastrean en cadena con un mínimo gasto de gas
+
+## Notas
+
+- Los contratos se despliegan en la red principal de Ethereum (y Arbitrum para L2)
+- Las direcciones de los contratos se almacenan en el registro del Controller para la capacidad de actualización
+- Todas las operaciones de token utilizan patrones de aprobación estándar ERC20
+- El sistema admite tanto implementaciones L1 como L2 con compatibilidad retroactiva
+- Las operaciones basadas en rondas garantizan actualizaciones de protocolo coordinadas y transiciones de estado
+- El sistema de pagos probabilísticos reduce las transacciones en cadena en ~99% mientras mantiene un valor esperado justo para todas las partes

@@ -1,0 +1,35 @@
+---
+title: Control de acceso con JWTs
+description: >-
+  Restringe la reproducción usando JWTs firmados para que solo los espectadores
+  con un token válido puedan ver.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL2p3dC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYWNjZXNzLWNvbnRyb2wvand0Iiwic291cmNlSGFzaCI6ImU0MTYyMzk4Mjg5MzM5ZGIxNzI3NzQxY2VhZDk0NGZiMmY5ZDkxN2QxNGZkNjk1Yjk0MWUwMjlkY2Q0NjdkNGYiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0xMjBiOmZyZWUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjhUMTI6MzQ6MzguOTg5WiJ9 */}
+Con **JWT** control de acceso, marcas una transmisión o activo como restringido. Los espectadores deben enviar un **JWT** firmado con una **clave de firma**. Emite JWTs desde tu backend después de validar al usuario.
+
+## 1. Crea una clave de firma
+
+En el panel o a través del [Signing Key API](https://livepeer.studio/docs/api-reference/signing-key/create), crea una clave de firma. Almacena la **clave privada** en tu backend (env) y usa la **clave pública** en Studio para verificación.
+
+## 2. Crea contenido restringido
+
+Establece `playbackPolicy.type` a `"jwt"` al crear la transmisión o activo:
+
+```ts
+await livepeer.stream.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+await livepeer.asset.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+```
+
+## 3. Firma y devuelve un JWT desde tu API
+
+En una ruta del backend (p.ej. `/api/sign-jwt`), valida al usuario, luego firma un JWT con la clave privada. Incluye `playbackId`, expiración y cualquier reclamo personalizado. Devuelve el token al cliente. Usa `@livepeer/core/crypto` `signAccessJwt` o cualquier biblioteca JWT con los mismos reclamos que espera Livepeer (ver [Livepeer Studio docs](https://livepeer.studio/docs)).
+
+## 4. Pasa el JWT al Reproductor
+
+```tsx
+<Player.Root src={src} jwt={jwt}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+**Reproductor personalizado:** Envía el JWT en el `Livepeer-Jwt` encabezado para WebRTC/HLS, o como parámetro de consulta `jwt` en la URL de reproducción.

@@ -1,0 +1,16 @@
+---
+title: Aperçu du contrôle d'accès
+description: Restreindre la lecture des flux et des actifs avec des webhooks ou des JWT.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hY2Nlc3MtY29udHJvbC9vdmVydmlldyIsInNvdXJjZUhhc2giOiJhNmY5NGFiZDZkNjgzMDljNTliZWNhZWRlMDg1MTdkODNkY2QxOThiNWY1ODY2MGVmNjBiZjc4YzFkMjA3M2MzIiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjE2OjAxLjEyMFoifQ== */}
+Livepeer Studio vous permet de restreindre qui peut regarder les flux et les actifs. Deux options :
+
+## Basé sur un webhook
+
+Définissez une politique de lecture via un webhook. Lorsqu'une personne tente de lire, Studio appelle votre URL avec une clé d'accès et un contexte. Renvoyez 2XX pour autoriser, un autre code pour refuser. Voir[Contrôle d'accès via des webhooks](webhooks).
+
+## Basé sur JWT
+
+Définissez une politique de lecture JWT. Les spectateurs doivent envoyer un JWT signé avec une clé que vous créez dans Studio. Vous émettez des JWT depuis votre backend après validation de l'utilisateur. Voir [Contrôle d'accès avec des JWT](jwt).
+
+Les deux imposent un contrôle à la lecture : sans clé valide ou JWT, la lecture est refusée.

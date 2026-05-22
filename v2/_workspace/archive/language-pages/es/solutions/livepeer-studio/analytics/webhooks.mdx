@@ -1,0 +1,33 @@
+---
+title: Webhooks
+description: >-
+  Reciba eventos en tiempo real de Livepeer Studio (transmisión, activo,
+  grabación, multitransmisión, tarea, control de acceso).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FuYWx5dGljcy93ZWJob29rcy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYW5hbHl0aWNzL3dlYmhvb2tzIiwic291cmNlSGFzaCI6IjQzMWFmZTIzZWMzNzA5NjdkMmVkM2JlMzU5ZTJmNmNiOTFjYmJiMzY5ZDA3MDZjNzYzYmI4MzM3N2FiNzM1NTMiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MTM6MzEuMTg5WiJ9 */}
+**Webhooks**deje que Livepeer Studio envíe solicitudes HTTP POST a su punto de conexión cuando ocurran eventos. Puede reaccionar a los cambios de estado de la transmisión/activo, grabaciones, estado de multitransmisión y verificaciones de control de acceso.
+
+## Tipos de evento
+
+| Evento | Descripción |
+|-------|-------------|
+| **Transmisión** | `stream.started`, `stream.idle` |
+| **Grabación** | `recording.started`, `recording.ready`, `recording.waiting` |
+| **Multistream** | `multistream.connected`, `multistream.error`, `multistream.disconnected` |
+| **Activo** | `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted` |
+| **Tarea** | `task.spawned`, `task.updated`, `task.completed`, `task.failed` |
+| **Control de acceso** | `playback.accessControl` (para reproducción restringida; su punto de conexión permite o deniega) |
+
+## Configura un webhook
+
+1. **Crea un punto de conexión HTTP** en tu aplicación que acepte POST y devuelva 2XX rápidamente (procese de forma asíncrona si es necesario).
+2. **Regístrese en Studio** - [Desarrolladores → Webhooks](https://livepeer.studio/dashboard/developers/webhooks), haz clic en Crear, ingresa tu URL y selecciona los eventos que desees.
+3. **Verificar firmas** - Cada solicitud incluye un`Livepeer-Signature` encabezado (marca de tiempo y HMAC). Verifícalo usando tu secreto de webhook para evitar aceptar eventos falsificados. Consulta [Livepeer Studio docs](https://livepeer.studio/docs) para el esquema de firma.
+
+Los campos de carga suelen incluir `webhookId`, `timestamp`, `event`, y `event_object` (el flujo, activo o tarea). Use `timestamp` en la verificación de firma para protegerse contra repeticiones.
+
+## Desarrollo local
+
+Use un túnel (por ejemplo: [ngrok](https://ngrok.com)) para exponer su servidor local y usar esa URL como punto de conexión de webhook. Para producción, implemente su servidor en una URL pública.
+
+Vea [Escuchar eventos](./listen-to-events) para el uso de eventos de activo/transmisión y [Control de acceso con webhooks](../access-control/webhooks) para reproducción restringida.

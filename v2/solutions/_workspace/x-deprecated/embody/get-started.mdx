@@ -1,0 +1,211 @@
+---
+title: Embody Quickstart
+sidebarTitle: Quickstart
+description: >-
+  Deploy an Embody orchestrator node and run your first real-time interactive AI avatar in under 30 minutes.
+keywords:
+  - embody
+  - livepeer
+  - quickstart
+  - avatar
+  - unreal engine
+  - real-time ai
+  - orchestrator
+  - setup
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Embody Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: platform-builder
+status: current
+lastVerified: 2026-03-25
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer width="90%">
+  <Tip>
+    Embody runs as a self-hosted orchestrator node. The stack is deployed via a single CLI script — no manual Docker configuration required.
+  </Tip>
+</CenteredContainer>
+
+Embody orchestrators render real-time interactive 3D avatars using Unreal Engine and stream output via Livepeer's GPU compute network. This guide walks from a bare GPU host to a live avatar session.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Prerequisites
+
+Your host machine must meet the following before running the setup script:
+
+- **OS**: Ubuntu 22.04 or 24.04 (x86_64)
+- **GPU**: NVIDIA GPU with NVENC/NVDEC support (RTX 3080 or equivalent minimum)
+- **VRAM**: 12 GB minimum
+- **RAM**: 32 GB minimum
+- **Storage**: 100 GB free disk space (encrypted game image is large)
+- **Docker**: v24+ with the NVIDIA Container Toolkit installed
+- **Network**: A static public IP or cloud instance with ports `8080` and `9090` accessible
+- **Access**: A Payments allowlist entry from the Embody team (required to pull the encrypted game image)
+
+<Info>
+  The Unreal Engine game image is delivered encrypted. You must be registered with the Embody Payments backend before onboarding. Contact the team via the [Livepeer Discord](https://discord.gg/livepeer) or [Embody Discord](https://discord.gg/gVmDMhYm) to get allowlisted.
+</Info>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 1: Clone the repository
+
+```bash
+git clone https://github.com/its-DeFine/Unreal_Vtuber.git
+cd Unreal_Vtuber
+```
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 2: Run the setup CLI
+
+The `embody_cli.sh` script handles onboarding, environment configuration, and container orchestration in a single interactive flow.
+
+```bash
+sudo ./scripts/embody_cli.sh
+```
+
+The CLI prompts for:
+
+- **`ORCHESTRATOR_ADDRESS`** — your payout wallet address (ETH). This registers the node with the Payments backend and determines eligibility for rewards.
+- **Edge IP** — the public IP of your host. Used to configure TURN DNAT and the signaling matchmaker allowlist.
+- **Allowed IPs** — any additional IPs permitted to reach the cluster control endpoints.
+
+Complete all prompts. The script writes your configuration to `.env` and validates that the Payments service is reachable and your address is allowlisted.
+
+<Warning>
+  If the setup script exits with a `denied` error pulling `ghcr.io/.../embody-ue-ps:*`, your host is not yet allowlisted. Run `./scripts/embody_cli.sh allowlists fix` after the Embody team confirms your address, then re-run setup.
+</Warning>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 3: Pull and decrypt the game image
+
+The Unreal Engine game image is encrypted and delivered via a Payments lease. After allowlisting, pull and decrypt it with:
+
+```bash
+sudo ./scripts/embody_cli.sh rollout
+```
+
+This fetches the encrypted artifact, verifies the lease, decrypts, and loads it into Docker. Depending on your connection speed, this takes 10-20 minutes on first run.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 4: Deploy the cluster
+
+Deploy the full stack in automatic mode:
+
+```bash
+sudo ./scripts/embody_cli.sh cluster deploy --auto --yes --pull missing
+```
+
+`--auto` selects the number of avatar slots based on available GPU VRAM. `--pull missing` pulls any container images not already present locally.
+
+The stack that starts includes:
+
+- `unreal-game` — the Pixel Streaming UE5 instance
+- `orchestrator-health` — the health and remote ops endpoint at `http://<host>:9090`
+- `orchestrator-edge-rotator` — manages edge IP rotation and bearer-token auth
+- Signaling server(s) — one per avatar slot, at `8080 + slot`
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 5: Verify the node is running
+
+Check the health endpoint:
+
+```bash
+curl http://localhost:9090/health
+```
+
+A healthy response returns `200 OK` with JSON containing the container image refs, git head, and GPU stats. Check GPU availability specifically:
+
+```bash
+curl http://localhost:9090/meta/gpu/stats
+```
+
+This returns the NVIDIA GPU inventory from `nvidia-smi`. Confirm your GPU is visible and VRAM is reported correctly.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Step 6: Open a live avatar session
+
+Navigate to [embody.zone](https://embody.zone/) in a WebRTC-capable browser (Chrome or Edge recommended). The matchmaker routes your session to a registered orchestrator. If your node is registered and healthy, it joins the available pool automatically.
+
+To test your specific node directly, connect to the signaling server on your host:
+
+```
+http://<your-host-ip>:8080
+```
+
+You should see the Pixel Streaming front end load and connect to the Unreal Engine instance. Speak or type a prompt to the avatar to verify end-to-end inference.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Day-two operations
+
+| Task | Command |
+|---|---|
+| Put avatar to sleep (stop game, keep stack running) | `sudo ./scripts/embody_cli.sh power sleep` |
+| Wake avatar | `sudo ./scripts/embody_cli.sh power wake --ttl 3600` |
+| Stage a new game image without downtime | `sudo ./scripts/embody_cli.sh rollout --stage` |
+| Apply staged image during idle window | `sudo ./scripts/embody_cli.sh rollout --apply-staged` |
+| Update the repo and recreate containers | `sudo ./scripts/embody_cli.sh ops upgrade` |
+| Check running containers and image refs | `curl http://localhost:9090/meta` |
+
+The CLI auto-updates the repo on launch by default. To disable: set `EMBODY_CLI_NO_AUTO_UPDATE=1` in `.env`.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Cluster capacity model
+
+Each avatar slot corresponds to one signaling server registration. Slots are deterministic:
+
+- Signaling port: `8080 + slot`
+- Runner port: `9877 + slot`
+- Recorder-control port: `8889 + slot`
+
+Cluster mode defaults to remote control enabled (`EXPERIMENTAL_REMOTE_CLUSTER_CONTROL=true` from v1.3.5). Remote ops endpoints are at `http://<host>:9090/cluster/*` and require IPs in your `POWER_ALLOWED_IPS` allowlist.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Troubleshooting
+
+**`denied` pulling the game image**
+Run `./scripts/embody_cli.sh allowlists fix`. If the error persists, your `ORCHESTRATOR_ADDRESS` is not yet registered with the Payments backend. Contact the Embody team.
+
+**`/health` returns non-200**
+Confirm Docker is running and the NVIDIA Container Toolkit is installed: `docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`. If this fails, reinstall the toolkit.
+
+**Signaling server not reachable**
+Check that port `8080` is open on your host firewall and cloud security group. Confirm the edge IP in `.env` matches your actual public IP.
+
+**Avatar loads but does not respond to prompts**
+Confirm the `orchestrator-health` container is running and `GET /meta/gpu/stats` returns a populated GPU list. A missing or crashed `unreal-game` container produces a connected-but-silent avatar.
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Embody Overview" icon="book-open" href="/solutions/embody/overview" arrow>
+    Product overview, key features, and Livepeer network integration.
+  </Card>
+  <Card title="Embody Changelog" icon="clock-rotate-left" href="/solutions/embody/changelog" arrow>
+    Release history and upgrade notes for the Unreal_Vtuber stack.
+  </Card>
+  <Card title="Embody Community" icon="discord" href="/solutions/embody/community" arrow>
+    Discord announcements, YouTube updates, and GitHub activity.
+  </Card>
+  <Card title="Livepeer Forum — Embody" icon="messages" href="https://forum.livepeer.org/t/embody-unreal-engine-updates/3186" arrow>
+    Technical updates, Unreal Engine integration, and SPE discussion.
+  </Card>
+</CardGroup>

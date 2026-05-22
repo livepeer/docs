@@ -1,7 +1,7 @@
-{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
-{/* Generator: operations/scripts/generators/components/library/generate-component-library.js */}
-{/* Generated: 2026-05-18T10:41:16.360Z */}
-{/* Regenerate: node operations/scripts/generators/components/library/generate-component-library.js --category scaffolding */}
+<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
+<!-- Generator: operations/scripts/generators/components/library/generate-component-library.js -->
+<!-- Generated: 2026-04-08T15:37:55.999Z -->
+<!-- Regenerate: node operations/scripts/generators/components/library/generate-component-library.js --category scaffolding -->
 
 # Scaffolding Component Library
 

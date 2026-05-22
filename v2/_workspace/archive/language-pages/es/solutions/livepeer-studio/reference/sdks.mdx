@@ -1,0 +1,38 @@
+---
+title: Visión general de los SDKs
+description: 'SDKs para el API de Livepeer Studio: TypeScript, Go, Python y React.'
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3JlZmVyZW5jZS9zZGtzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9yZWZlcmVuY2Uvc2RrcyIsInNvdXJjZUhhc2giOiJiN2U1OWRhMjhjMmIzMWVlYTYyOTZjZDgyMmYyZjFlYmI0ZjQ0OGFjZDIxMWJjZGVmMzVmN2QzMWI5N2ExZDBiIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjQzOjUwLjg3MVoifQ== */}
+Usa el Livepeer Studio **SDKs** para llamar a la API y crear interfaces de reproducción o transmisión con menos código repetitivo.
+
+## SDKs del lado del servidor
+
+Instala el SDK para tu lenguaje y inicialízalo con tu clave de API. Úsalo desde tu **backend** solo.
+
+| Idioma | Paquete | Documentación |
+|----------|---------|------|
+| **TypeScript / JavaScript** | [livepeer](https://www.npmjs.com/package/livepeer) | npm, [Livepeer Studio docs](https://livepeer.studio/docs) |
+| **Go** | [livepeer-go](https://pkg.go.dev/github.com/livepeer/livepeer-go) | pkg.go.dev |
+| **Python** | [Livepeer](https://pypi.org/project/livepeer) | PyPI |
+
+Ejemplo (Node):
+
+```js
+const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+const { data } = await livepeer.stream.create({ name: "my-stream" });
+```
+
+## Componentes de React
+
+**[@livepeer/react](https://www.npmjs.com/package/@livepeer/react)**proporciona:
+
+- **Reproductor** - Reproducción compuesta (transmisión en vivo y VOD, WebRTC + HLS/MP4 como alternativa). Ver [Reproductor e incrustación](../player).
+- **Emisión** - Emisión mediante WebRTC en el navegador. Ver [Transmitir en vivo desde el navegador](../livestream/livestream-from-browser).
+
+Úsalo con tu aplicación React existente; los componentes funcionan con la API de Livepeer Studio y el proveedor opcional de Studio.
+
+## Enlaces rápidos
+
+- [Inicio rápido](../quickstart) - Primera transmisión o activo con el SDK.
+- [Visión general de la API](./api) - Autenticación y conceptos básicos de la API.
+- [Livepeer Documentación de Studio](https://livepeer.studio/docs) - Referencia completa del SDK y la API.

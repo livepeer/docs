@@ -1,0 +1,112 @@
+---
+title: How Payments Work
+sidebarTitle: How Payments Work
+description: >-
+  Understand Livepeer's probabilistic micropayment system and what it means for
+  gateway operators managing payment signing keys, ETH balances, and on-chain
+  settlement.
+keywords:
+  - livepeer
+  - gateways
+  - payments
+  - how payments work
+  - work
+  - understand
+  - probabilistic
+  - micropayment
+  - system
+  - what
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: concept
+pageType: concept
+audience:
+  - gateway-operator
+status: production
+lastVerified: '2026-02-01'
+sourceOfTruth: 'https://github.com/livepeer/go-livepeer'
+---
+
+# How Payments Work
+
+Livepeer uses **probabilistic micropayments (PM)** to settle fees between gateways and orchestrators. Understanding this system is essential to operating a gateway responsibly — it determines your ETH obligations, your signing key security requirements, and whether you run fully on-chain or off-chain.
+
+## Why Probabilistic Micropayments?
+
+Paying for every individual AI inference job or transcoded segment on-chain would be prohibitively expensive in gas fees. Instead, Livepeer uses a lottery-style mechanism:
+
+- Gateways send orchestrators cryptographically signed **tickets** with each job.
+- Each ticket has a small probability of being a "winning ticket" worth a larger face value.
+- Orchestrators redeem winning tickets on-chain via the `TicketBroker` contract on Arbitrum.
+
+Over time, the expected value of tickets matches what would have been paid directly — but most individual exchanges happen entirely off-chain, with only winning tickets touching the blockchain.
+
+<Callout type="info">
+PM significantly reduces gas costs compared to per-transaction settlement. A gateway processing thousands of jobs per hour may only trigger a handful of on-chain redemptions.
+</Callout>
+
+## Gateway Payment Responsibilities
+
+As a gateway operator, you are responsible for the payment side of every job routed through your node. This means:
+
+### 1. ETH Deposit Balance
+
+Your gateway must maintain a funded deposit in the `TicketBroker` contract. This deposit is drawn from when orchestrators redeem winning tickets.
+
+- Minimum recommended deposit: enough to cover several hours of expected workload.
+- If your deposit falls too low, orchestrators will reject your tickets and jobs will fail.
+- Monitor your balance via `livepeer_cli` or the Livepeer Explorer at [explorer.livepeer.org](https://explorer.livepeer.org).
+
+### 2. Payment Signing Key
+
+Each ticket must be signed with your gateway's Ethereum private key. By default this key lives inside the same `go-livepeer` process handling untrusted media — a security risk if a malicious input were to exploit a vulnerability.
+
+<Callout type="warning">
+**Security concern:** A compromised gateway process could expose your signing key and drain your ETH deposit. For production deployments, consider using a [Remote Signer](/v2/gateways/payments/remote-signers) to isolate signing from media handling.
+</Callout>
+
+### 3. Ticket Parameters and Session State
+
+For Live AI workloads, the gateway tracks session state (nonce counters, cumulative fees, etc.) across a stream. This state is used to generate valid tickets at regular intervals. Sending stale or duplicated state produces invalid tickets that orchestrators reject.
+
+### 4. Reserve Balance
+
+In addition to a deposit, gateways maintain a **reserve** balance as a penalty backstop. The reserve protects orchestrators in cases of gateway non-payment and is required for participating in the network with stake-based routing.
+
+## On-Chain vs Off-Chain Operation
+
+| Mode | Description | Use case |
+|------|-------------|----------|
+| **On-chain** | Full Ethereum integration — gateway manages key, signs tickets, calls reward | Production transcoding, established gateways |
+| **Off-chain (Live AI)** | Remote Signer handles all Ethereum operations; gateway contains no private key | Live AI workloads, embedded gateways, clearinghouse architecture |
+
+For Live AI specifically, go-livepeer can operate **entirely in off-chain mode** for media handling, delegating all signing to a separately run Remote Signer service. No orchestrator changes are required.
+
+## Ticket Generation Flow
+
+When your gateway starts a Live AI session with an orchestrator:
+
+1. The orchestrator returns `ticketParams` — parameters defining valid ticket shape and pricing.
+2. Your gateway (or Remote Signer) generates and signs tickets at regular intervals.
+3. Orchestrators accumulate tickets and redeem winning ones on Arbitrum.
+4. Updated `ticketParams` are returned after each payment round, refreshing the session.
+
+## Fee Calculation for Live AI
+
+Live AI fees are calculated based on **time elapsed** at a **fixed cost per hour**, with payments generated at regular intervals (typically every 60 seconds). This differs from transcoding, where fees are calculated per pixel.
+
+The Remote Signer handles this bookkeeping automatically when used.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/payments/remote-signers">
+ Separate your signing key from your gateway process for improved security.
+  </Card>
+  <Card title="Payment Clearinghouses" icon="building-columns" href="/v2/gateways/payments/payment-clearinghouse">
+ Delegate all payment management to a third-party operator.
+  </Card>
+</CardGroup>

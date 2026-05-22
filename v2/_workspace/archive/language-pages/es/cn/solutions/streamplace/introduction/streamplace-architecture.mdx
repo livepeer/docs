@@ -1,0 +1,209 @@
+---
+title: Streamplace 架构
+description: '详细架构图展示了 Streamplace, Livepeer, Orchestrators, 权威来源和用户层。'
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace architecture
+  - architecture
+  - detailed
+  - showing
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvc3RyZWFtcGxhY2UvaW50cm9kdWN0aW9uL3N0cmVhbXBsYWNlLWFyY2hpdGVjdHVyZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9zdHJlYW1wbGFjZS9pbnRyb2R1Y3Rpb24vc3RyZWFtcGxhY2UtYXJjaGl0ZWN0dXJlIiwic291cmNlSGFzaCI6IjRiMWFmYTJkMzM2OGYyNzMyNWM4MDRjNGU3ZjRlZDIxNzU1Y2U2ZTdhMmJkNThlYjMxNjJmOTM2NjcyYjdhNDMiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTg6MTM6MDAuNTM4WiJ9 */}
+---
+
+Streamplace 位于去中心化社交应用和 Livepeer 网络之间，以提供一个**完整的摄入 → 权属 → 转码 → 分发**流程。
+
+此页面汇总了完整的架构模型，包括：
+
+- Streamplace SPE 职责
+- 节点和 SDK 架构
+- C2PA + Ethereum 权威流程
+- Livepeer 广播者 + 协调者角色
+- 用户播放和验证
+
+---
+
+# 🧩 高级架构图
+
+```mermaid
+flowchart TB
+
+    subgraph DAO[Livepeer Foundation / DAO]
+        T[Treasury Grants & Governance]
+    end
+
+    subgraph SPE[Streamplace SPE]
+        S1[Node / SDK / APIs]
+        S2[Metadata Schema]
+        S3[C2PA + Ethereum Signatures]
+    end
+
+    subgraph Social[Decentralized Social Apps]
+        U1[AT Protocol Apps]
+        U2[Fediverse Clients]
+        U3[Web3 Video Platforms]
+    end
+
+    subgraph Node[Streamplace Node]
+        N1[Ingest WHIP/WHEP/RTMP]
+        N2[Segment MP4 (1s)]
+        N3[Embed Metadata + Rights]
+        N4[Apply Provenance]
+    end
+
+    subgraph Livepeer[Livepeer Network]
+        B[Broadcaster]
+        O[Orchestrators - GPU]
+        V[Verifiability Layer]
+    end
+
+    subgraph Playback[Playback Layer]
+        P[HLS/WebRTC Player]
+    end
+
+    DAO --> SPE
+    Social --> Node
+    SPE --> Node
+    Node --> Livepeer
+    Livepeer --> Playback
+```
+
+---
+
+# 🧠 架构层解释
+
+## 1. **Livepeer 基金会 / DAO（资金层）**
+
+Livepeer 金库为 Streamplace 提供资金，作为一个**特殊目的实体**以实现：
+
+- 开源视频基础设施
+- 出处系统
+- 一个节点 + 可被任何去中心化社交应用使用的 SDK
+
+这确保了长期的可持续性，并与公共产品原则保持一致。
+
+---
+
+## 2. **Streamplace SPE 层**
+
+Streamplace 的职责包括：
+
+- 设计和维护 **流媒体节点**
+- 提供开发者 **SDKs + APIs**
+- 管理 **元数据模式** (`place.stream.metadata.*`)
+- 开发 **C2PA + Ethereum 权威溯源流程**
+
+此层提供基础设施--而非托管平台。
+
+---
+
+## 3. **应用/客户端层（去中心化社交应用）**
+
+应用集成 Streamplace SDK 以：
+
+- 开始直播流
+- 配置元数据（权限、警告、政策）
+- 通过钱包或身份系统对创作者进行身份验证
+
+示例：
+
+- AT Protocol 应用
+- Fediverse 客户端
+- Web3 创作者工具
+
+---
+
+## 4. **Streamplace 节点层（输入与溯源）**
+
+Streamplace 节点执行大部分技术上的繁重工作：
+
+### 输入
+
+支持:
+
+- WHIP / WHEP
+- RTMP
+- 浏览器 WebRTC
+
+### 分段
+
+将视频拆分为 **1秒的MP4片段**。
+
+### 来源
+
+每个片段接收：
+
+- **C2PA清单**
+- **以太坊签名**用于身份绑定
+
+### 元数据嵌入
+
+附加:
+
+- 内容权利
+- 分发策略
+- 内容警告
+- 播放配置
+
+---
+
+## 5. **Livepeer 网络层**
+
+一旦 Streamplace 打包了片段，它就会将视频交给 Livepeer。
+
+**主播角色:**
+
+- 接收已签名的片段
+- 将它们分发给编排者
+
+**编排者:**
+
+- GPU加速转码
+- ABR（多比特率）生成
+- 可能包含环境元数据
+
+**可验证性层:**
+
+- 确保正确的转码
+- 实现最小信任分发
+
+---
+
+## 6. **分发层（Streamplace 输出）**
+
+Streamplace 重新构建：
+
+- HLS 摘要文件
+- WebRTC 会话输出
+- 元数据增强的播放结构
+
+它还确保:
+
+- 端到端的来源完整性得到保留
+- distributionPolicy 规则得到执行
+
+---
+
+## 7. **播放层（面向用户）**
+
+用户接收：
+
+- HLS 或 WebRTC 流
+- 元数据、警告、权限显示
+- 可验证的来源（C2PA + Ethereum）
+
+这使得视频**值得信赖、具有权利意识且抗审查**。
+
+---
+
+# 🔗 相关页面
+
+- [概览](/solutions/streamplace/overview)
+- [如何使用 Streamplace](/solutions/streamplace/introduction/streamplace-guide)
+- [来源与元数据](/solutions/streamplace/introduction/streamplace-provenance)
+- [资金模型](/solutions/streamplace/introduction/streamplace-funding-model)
+- [开发者集成指南](/solutions/streamplace/introduction/streamplace-integration)

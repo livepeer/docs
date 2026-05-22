@@ -1,0 +1,138 @@
+---
+title: 'Orchestrator Tools'
+description: 'Tools for monitoring, verifying, and operating your Livepeer orchestrator — Explorer, payout dashboards, Prometheus metrics, and community tools.'
+sidebarTitle: 'Tools'
+pageType: 'reference'
+purpose: 'reference'
+audience: 'orchestrator'
+status: 'review'
+lastVerified: '2026-03-10'
+og:image: /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+Once your node is running, these are the tools you will use to verify you are in the active set, track earnings, monitor node health, and diagnose issues.
+
+---
+
+## Livepeer Explorer
+
+**URL:** [explorer.livepeer.org](https://explorer.livepeer.org)
+**Operated by:** Livepeer Inc
+
+The Explorer is the primary on-chain dashboard for the Livepeer protocol. It reads directly from the Arbitrum subgraph and is the authoritative source for staking and earnings data.
+
+**Key uses for orchestrators:**
+
+- **Active set status** — the protocol allows up to 100 orchestrators to receive jobs at any time, determined by total stake (own + delegated). Check your rank on the orchestrator list to confirm whether you are in the active set.
+- **Reward call history** — reward calls mint new LPT and are required each round. Missing calls loses inflation rewards. Your orchestrator page shows your call history.
+- **Earnings** — cumulative fees earned, broken down by transcoding fees (ETH) and inflation rewards (LPT).
+- **Delegator list** — see who has staked to you and their stake amounts.
+- **Fee and reward cut settings** — verify your published cuts match what you configured on-chain.
+- **Governance** — vote on Livepeer Improvement Proposals (LIPs) and treasury proposals.
+- **AI performance leaderboard** — per-orchestrator performance metrics for AI inference jobs. {/* REVIEW: verify this feature is live and functional post-RFP */}
+
+The Explorer underwent a maintenance engagement (RaidGuild, contracted late 2025) to address dependency updates, performance issues, and data accuracy. Some known issues from prior to that work may have been resolved. {/* REVIEW: confirm which specific fixes landed before publication */}
+
+---
+
+## Node Metrics (Prometheus)
+
+go-livepeer exposes a Prometheus metrics endpoint that you can scrape with any standard monitoring stack.
+
+**Enable with:**
+```bash
+livepeer \
+  -orchestrator \
+  -transcoder \
+  -monitor \        # enables the /metrics endpoint
+  ... other flags
+```
+
+**Metrics endpoint:** `http://localhost:7935/metrics`
+
+The port is the same as the CLI port (`7935` by default). The `-monitor` flag activates the `/metrics` path on that port.
+
+**What it exposes:**
+- Session counts and capacity utilisation
+- Segment success and failure rates
+- Winning ticket counts (approximated from Prometheus scrape intervals)
+- Job processing latency
+- GPU utilisation (where available)
+
+**Official monitoring stack:**
+
+Livepeer maintains a Docker image that bundles Prometheus and Grafana with starter dashboard templates:
+
+```bash
+docker run --net=host \
+  --env LP_MODE=standalone \
+  --env LP_NODES=localhost:7935 \
+  livepeer/monitoring:latest
+```
+
+Repo: [github.com/livepeer/livepeer-monitoring](https://github.com/livepeer/livepeer-monitoring)
+
+For multi-node setups, pass a comma-separated list to `LP_NODES`. For Kubernetes deployments, the image supports automatic discovery via `prometheus.io/scrape` labels.
+
+<Note>
+For an example of a production monitoring setup with alerting (Alertmanager, Loki, Grafana), see the community guide at speedybird.xyz. {/* REVIEW: verify URL before linking */}
+</Note>
+
+---
+
+## Cloud SPE Tools
+
+**URL:** [tools.livepeer.cloud](https://tools.livepeer.cloud)
+**Operated by:** Livepeer Cloud SPE (community)
+
+A community-built suite of orchestrator and network monitoring tools maintained by the Cloud SPE.
+
+**Key sections:**
+
+- **AI network capabilities** (`/ai/network-capabilities`) — lists all AI-capable orchestrators by pipeline, showing which models are warm. Use this to verify your AI pipeline registrations are visible to the network after configuring `aiModels.json`.
+- **Payout reports** — daily, weekly, and monthly earnings breakdowns per orchestrator address.
+- **Orchestrator view** — per-orchestrator statistics including pricing and job activity.
+
+<Warning>
+This is community infrastructure, not operated by the Livepeer Foundation. It has experienced intermittent availability in the past. Do not rely on it as your sole monitoring source.
+</Warning>
+
+---
+
+## Network Dashboards (Dune Analytics)
+
+For protocol-level data — inflation, staking participation, fee volumes, token distribution — the Foundation maintains Dune dashboards:
+
+| Dashboard | URL |
+|---|---|
+| Growth Dashboard | [dune.com/rickstaa/livepeer-growth-dashboard](https://dune.com/rickstaa/livepeer-growth-dashboard) |
+| Governance Dashboard | [dune.com/rickstaa/livepeer-governance-dashboard](https://dune.com/rickstaa/livepeer-governance-dashboard) |
+| Token Dashboard | [dune.com/stronk/livepeer-arbitrum](https://dune.com/stronk/livepeer-arbitrum) |
+
+{/* REVIEW: verify all three are still public and current before publication */}
+
+These are most useful for understanding macro network trends — staking participation, inflation rate, total fees — rather than per-node operational monitoring.
+
+---
+
+## Capability Testing
+
+These tools let you verify that your node is correctly serving jobs, either by submitting test transcoding segments or test AI inference requests.
+
+**Stream tester** — [github.com/livepeer/stream-tester](https://github.com/livepeer/stream-tester)
+Submits transcoding jobs to an orchestrator and measures response times and success rates. Used for transcoding capability validation.
+
+**AI job tester** — [github.com/mikezupper/livepeer-ai-job-tester](https://github.com/mikezupper/livepeer-ai-job-tester)
+Community-built tool (Cloud SPE) that submits AI inference jobs to an orchestrator and records performance. Used to verify AI pipeline availability before relying on network job routing.
+{/* REVIEW: confirm repo is still maintained */}
+
+---
+
+## See Also
+
+<CardGroup cols={2}>
+  <Card title="Earnings and Economics" href="/v2/orchestrators/advanced/earnings" />
+  <Card title="AI Pipelines" href="/v2/orchestrators/advanced/ai-pipelines" />
+  <Card title="FAQ and Troubleshooting" href="/v2/orchestrators/resources/faq" />
+  <Card title="CLI Flags Reference" href="/v2/orchestrators/resources/cli-flags" />
+</CardGroup>

@@ -1,7 +1,7 @@
-{/* GENERATED FILE - DO NOT EDIT DIRECTLY */}
-{/* Generator: operations/scripts/generators/components/library/generate-component-library.js */}
-{/* Generated: 2026-05-18T10:41:16.361Z */}
-{/* Regenerate: node operations/scripts/generators/components/library/generate-component-library.js --category integrators */}
+<!-- GENERATED FILE — DO NOT EDIT DIRECTLY -->
+<!-- Generator: operations/scripts/generators/components/library/generate-component-library.js -->
+<!-- Generated: 2026-04-08T15:37:56.003Z -->
+<!-- Regenerate: node operations/scripts/generators/components/library/generate-component-library.js --category integrators -->
 
 # Integrators Component Library
 
@@ -237,7 +237,7 @@ Fetches, embeds, or binds to external or third-party data.
 
 ### 🟢 ExternalContent
 
-> Frames external source content with a scrollable container and source link.
+> Fetches and renders external markdown with scrollable container and source link.
 
 **Import:** `import { ExternalContent } from "/snippets/components/integrators/embeds/DataEmbed.jsx";`
 **Status:** stable | **Imports:** 0
@@ -246,11 +246,8 @@ Fetches, embeds, or binds to external or third-party data.
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `sourceName` | `string` | — | Source name displayed in the component header. |
-| `sourceUrl` | `string` | — | Source URL used by the header link. |
-| `sourceLabel` | `string` | "View source" | Label used by the header link. |
-| `repoName` | `string` | — | Legacy source name alias. |
-| `githubUrl` | `string` | — | Legacy source URL alias. |
+| `repoName` | `string` | — | Repo name used by the component. |
+| `githubUrl` | `string` | — | Github url used by the component. |
 | `maxHeight` | `string` | "1000px" | Max height used by the component. |
 | `icon` | `string` | "github" | Icon configuration used by the component. |
 | `children` | `React.ReactNode` | — | Content rendered inside the component. |

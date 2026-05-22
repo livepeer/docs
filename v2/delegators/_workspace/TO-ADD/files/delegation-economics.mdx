@@ -1,0 +1,191 @@
+---
+title: Delegation Economics
+sidebarTitle: Economics
+description: >-
+  How LPT inflation rewards and ETH fee revenue are calculated, what rewardCut and feeShare mean for your returns, and why reward call consistency matters more than commission rate.
+keywords:
+  - livepeer
+  - LPT
+  - delegation economics
+  - rewardCut
+  - feeShare
+  - inflation rewards
+  - ETH fees
+  - delegator yield
+  - staking returns
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: explain
+status: current
+lastVerified: 2026-04-06
+---
+
+import { MathInline, MathBlock } from '/snippets/components/content/math.jsx'
+
+Delegating LPT earns you two income streams: newly minted LPT from protocol inflation, and ETH from the fees gateways pay for video transcoding and AI inference work. Understanding both before evaluating orchestrators prevents choosing on the wrong signal.
+
+---
+
+## Income stream 1 — LPT inflation rewards
+
+### Where new LPT comes from
+
+Each protocol round, the BondingManager mints new LPT and distributes it proportionally to all bonded stake. The amount minted is determined by a parametric inflation rate that self-adjusts each round toward a target bonding participation rate of 50% of circulating supply.
+
+If less than 50% of LPT is bonded, inflation rises each round to attract more delegation. If more is bonded, it falls. The adjustment is automatic — no governance vote required.
+
+10% of each round's issuance goes to the Community Treasury under LIP-92. The remaining 90% is distributed to active orchestrators and their delegators.
+
+<Info>
+  Current inflation rate and bonding ratio are live at [explorer.livepeer.org](https://explorer.livepeer.org). Do not use historical figures — both change every round.
+</Info>
+
+### rewardCut — your LPT commission rate
+
+`rewardCut` is the percentage of LPT inflation rewards the orchestrator retains before distributing the remainder to delegators.
+
+**Lower rewardCut = more for delegators.**
+
+| rewardCut | Orchestrator keeps | Delegators share |
+|---|---|---|
+| 0% | 0% | 100% |
+| 10% | 10% | 90% |
+| 25% | 25% | 75% |
+| 50% | 50% | 50% |
+
+### Worked example — LPT rewards
+
+This round's total minted LPT = 1,000 LPT:
+
+- Treasury receives 10%: **100 LPT**
+- Delegator-accessible issuance: **900 LPT**
+- Your orchestrator holds 5% of total bonded network stake: **45 LPT** goes to your pool
+- Orchestrator's `rewardCut` = 10%: orchestrator keeps **4.5 LPT**
+- Delegators in the pool share **40.5 LPT**
+- You hold 10% of your orchestrator's pool: **your round reward = 4.05 LPT**
+
+The formula:
+
+<MathBlock latex={String.raw`R_{delegator} = R_{round} \times 0.9 \times \frac{B_O}{B_T} \times (1 - c_O) \times \frac{b_D}{B_O}`} />
+
+Where <MathInline latex={String.raw`R_{round}`} /> is total minted LPT, <MathInline latex={String.raw`B_O / B_T`} /> is your orchestrator's share of total bonded stake, <MathInline latex={String.raw`c_O`} /> is `rewardCut`, and <MathInline latex={String.raw`b_D / B_O`} /> is your share of the orchestrator's pool.
+
+---
+
+## Income stream 2 — ETH fee revenue
+
+### Where ETH fees come from
+
+Gateways pay orchestrators in ETH for processing transcoding and AI inference jobs, via a probabilistic micropayment system. When tickets are redeemed, ETH flows to the orchestrator's on-chain balance.
+
+Fee revenue is demand-driven. An orchestrator that earns no jobs in a round distributes no fees — regardless of their commission settings. Fee income varies with network load and the orchestrator's competitive position.
+
+### feeShare — your ETH commission rate
+
+`feeShare` is the percentage of ETH fee revenue the orchestrator passes to delegators.
+
+**Higher feeShare = more for delegators.**
+
+<Warning>
+  These two parameters move in opposite directions. Lower `rewardCut` is better for delegators. Higher `feeShare` is better for delegators. The Livepeer Explorer displays `feeShare` as **"Fee Share"**. Do not confuse the two when comparing orchestrators.
+</Warning>
+
+| feeShare | Delegators receive | Orchestrator keeps |
+|---|---|---|
+| 100% | 100% of fees | 0% |
+| 80% | 80% of fees | 20% |
+| 50% | 50% of fees | 50% |
+| 0% | 0% | 100% |
+
+### Worked example — ETH fees
+
+Your orchestrator earns 0.5 ETH in fees this round. Their `feeShare` = 80%:
+
+- Delegators share: **0.4 ETH**
+- You hold 10% of the pool: **your fee share = 0.04 ETH this round**
+
+<MathBlock latex={String.raw`F_{delegator} = F_O \times f_O \times \frac{b_D}{B_O}`} />
+
+---
+
+## Why reward call consistency beats commission rate
+
+An orchestrator must call the `Reward()` function on-chain each round to trigger inflation minting for their pool. If they miss a round, **zero LPT is minted** — no catch-up, no partial distribution. The round's allocation is permanently forfeit for every delegator in that pool.
+
+| Orchestrator | rewardCut | Reward calls (last 30 rounds) | Effective LPT yield (relative) |
+|---|---|---|---|
+| A | 0% | 20 of 30 | 67% of theoretical maximum |
+| B | 10% | 30 of 30 | 90% of theoretical maximum |
+
+Orchestrator B delivers 35% more effective yield despite a higher commission rate. A 0% `rewardCut` means nothing if the orchestrator does not call `Reward()` consistently.
+
+**Check reward call history before commission rate.** The Explorer shows this per orchestrator on their profile page.
+
+---
+
+## How rewards accumulate
+
+The BondingManager uses a cumulative reward factor to track earnings without updating every delegator's state every round. Your growing bonded balance (as rewards accrue) earns on a progressively larger base — automatic compounding.
+
+Rewards sit in the contract against your account. They are not sent to your wallet. Calling `claimEarnings` moves the accrued amount into your bonded balance, where it begins compounding from the next round.
+
+### ⚠️ Claim timing — read before claiming
+
+The moment you call `claimEarnings`, the contract records your `lastClaimRound` as the current round. **If your orchestrator has not yet called `Reward()` for that round when you claim, you forfeit that round's rewards and fees entirely.** The contract will not retroactively credit you.
+
+**Claim at the end of a round, after your orchestrator has already called `Reward()` — not at the beginning.**
+
+This is a confirmed protocol behaviour, documented by Livepeer Foundation Engineering. The Livepeer Explorer is adding a warning to surface this timing risk. Full claim instructions are in [Manage Your Delegation](/v2/delegators/delegation/manage-your-delegation#claim-timing).
+
+---
+
+## Commission changes after you delegate
+
+Orchestrators can update `rewardCut` and `feeShare` at any time, effective from the next round. There is no lock-in period or advance notice requirement. Review your orchestrator's settings periodically — particularly after any change in their public activity or communications.
+
+---
+
+## What drives your actual return
+
+<AccordionGroup>
+
+<Accordion title="Inflation rate changes every round">
+  The protocol adjusts the inflation rate each round based on the bonding ratio. As more LPT is bonded toward 50%, inflation decreases. Your absolute LPT yield per round changes accordingly, even if nothing else in your position changes.
+</Accordion>
+
+<Accordion title="Fee revenue is not guaranteed">
+  ETH fees depend on transcoding and AI inference demand routed to your orchestrator. Network load varies. An orchestrator with excellent uptime may earn limited fees if routing volume is low. Look for a track record of both consistent reward calls and fee revenue.
+</Accordion>
+
+<Accordion title="Stake concentration affects your proportional share">
+  If your orchestrator attracts large inflows of new delegation after you join, your share of the pool decreases. The pool earns more total from the network, but you share it with more stake. Net effect depends on how the orchestrator's absolute earnings change relative to pool growth.
+</Accordion>
+
+<Accordion title="Unclaimed rewards do not compound">
+  Rewards accrue in contract state but do not compound until you claim them. Claiming adds them to your bonded balance, after which they earn alongside your original stake. The compounding benefit of regular claiming is material over longer time horizons.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## References
+
+- [BondingManager contract source](https://github.com/livepeer/protocol) — `confluence` branch, deployed version
+- [Explorer ROI formula](https://github.com/livepeer/explorer/blob/main/lib/roi.ts)
+- [LIP-92 — Treasury Reward Cut Rate](https://github.com/livepeer/LIPs)
+- [Protocol Parameters](/v2/delegators/resources/reference/protocol-parameters) — live governance-controlled values
+
+<CardGroup cols={2}>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Apply what you've read here — evaluate reward call history before commission rate.
+  </Card>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    Claim earnings, compound, redelegate, and exit.
+  </Card>
+</CardGroup>

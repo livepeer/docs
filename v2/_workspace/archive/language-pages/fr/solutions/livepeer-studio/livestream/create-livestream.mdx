@@ -1,0 +1,76 @@
+---
+title: Créer une diffusion en direct
+description: >-
+  Créer une diffusion en direct avec l'API Studio Livepeer et obtenir une clé de
+  diffusion et un ID de lecture.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vY3JlYXRlLWxpdmVzdHJlYW0iLCJzb3VyY2VIYXNoIjoiNTQzMGM5YWZiM2YzYjc0Y2UyZDkyZmVkZjMzZTBmYzExMjQyY2U2ODZjODU3MWVmZjBmZDY4NjA3YjJjYjA3OCIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyODozMi44NTlaIn0= */}
+Créez un flux via l'API ou le SDK pour obtenir une **clé de diffusion** (pour les diffuseurs) et une **ID de lecture** (pour les spectateurs). L'exemple ci-dessous utilise l'API [Créer un flux](https://livepeer.studio/docs/api-reference/stream/create).
+
+## Créez un flux avec le SDK
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const { data } = await livepeer.stream.create({
+      name: "my-stream",
+    });
+
+    console.log("Stream key:", data.streamKey);
+    console.log("Playback ID:", data.playbackId);
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    livepeer = Livepeer(api_key=os.environ["LIVEPEER_API_KEY"])
+    response = livepeer.stream.create({"name": "my-stream"})
+
+    if response.stream:
+        print("Stream key:", response.stream.stream_key)
+        print("Playback ID:", response.stream.playback_id)
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+        "github.com/livepeer/livepeer-go"
+        "context"
+    )
+
+    func main() {
+        client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_API_KEY")))
+        ctx := context.Background()
+        res, err := client.Stream.Create(ctx, livepeer.StreamCreationPayload{
+            Name: livepeer.String("my-stream"),
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            fmt.Println("Stream key:", *res.Stream.StreamKey)
+            fmt.Println("Playback ID:", *res.Stream.PlaybackId)
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Utilisez la clé de flux et l'ID de lecture
+
+- **Clé de flux** - Donnez-la au diffuseur. Ils l'entrent dans OBS (ou un autre encodeur) ou l'utilisent pour[diffusion WebRTC en navigateur](livestream-from-browser). Gardez la clé de diffusion secrète ; quiconque en possède une peut envoyer de la vidéo sur la diffusion.
+- **ID de lecture** - Utilisez-le dans votre application pour lire la diffusion (par exemple, avec le[Livepeer Lecteur](../player) ou l'API[Informations de lecture](https://livepeer.studio/docs/api-reference/playback/get)). Vous pouvez exposer l'ID de lecture aux spectateurs.
+
+## Étapes suivantes
+
+- [Lire un flux en direct](./playback-livestream) - Lisez le flux dans votre application.
+- [Diffuser via OBS](stream-via-obs) - Configurez OBS avec la clé de diffusion.
+- [Diffusion en direct depuis le navigateur](livestream-from-browser) - Diffusez avec WebRTC depuis le navigateur.
+- [Multidiffusion](multistream) - Envoyez le flux vers plusieurs destinations.

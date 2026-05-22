@@ -1,0 +1,93 @@
+---
+title: 快速入门
+description: 创建账户，获取API密钥，并在5分钟内添加实时或按需视频。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3F1aWNrc3RhcnQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3F1aWNrc3RhcnQiLCJzb3VyY2VIYXNoIjoiYWYxOGU4M2MwN2QwMmExM2FmMDgzY2E4YzhlMTc2Yjc3ODQzMmMwODY5MjJiNmJkZjZmYzdjNzdhOTc5NzNkYyIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoxODo1OS44MzdaIn0= */}
+通过创建帐户、API 密钥，然后使用 SDK 播放视频（例如您在仪表板中上传的资产）来开始使用 Livepeer Studio。
+
+## 1. 创建帐户和 API 密钥
+
+1. 前往 [Livepeer Studio](https://livepeer.studio) 并创建帐户。
+2. 打开 **开发者** 区域并点击 **创建 API 密钥**。
+3. 将 API 密钥安全存储（例如，存储在环境变量中）。从你的 **后端**调用 Livepeer Studio API 时。
+
+<Warning>
+  **CORS-enabled API keys** are not recommended and will be deprecated. Make requests to the Livepeer Studio API from your backend and never expose your secret API key in the browser.
+</Warning>
+
+<Info>
+  Use separate accounts or [projects](/solutions/livepeer-studio/reference/managing-projects) for development and production to keep environments isolated.
+</Info>
+
+## 2. 安装 SDK
+
+此示例使用 JavaScript SDK 和 Livepeer React 库：
+
+```bash
+npm install livepeer @livepeer/react
+```
+
+## 3. 设置客户端
+
+将您的 API 密钥添加到环境变量中，然后创建 Livepeer 客户端（例如在后端或服务器上下文中）：
+
+```tsx
+import Livepeer from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY,
+});
+```
+
+## 4. 获取播放信息
+
+使用客户端获取资产的播放信息（例如，您在仪表板中上传的资产）。您需要资产的 **播放 ID**:
+
+```ts
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "f5eese9wwl88k4g8"; // replace with your playback ID
+
+export async function getPlaybackSource() {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+```
+
+## 5. 播放资产
+
+使用 Livepeer 播放器播放视频。在服务器上获取源（例如，在 React 服务器组件或 API 路由中），然后将其传递给播放器：
+
+```tsx
+import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+
+export function DemoPlayer({ src }: { src: Src[] | null }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Video" />
+        <Player.Controls className="flex items-center justify-center">
+          <Player.PlayPauseTrigger className="w-10 h-10">
+            <Player.PlayingIndicator asChild matcher={false}>
+              <PlayIcon />
+            </Player.PlayingIndicator>
+            <Player.PlayingIndicator asChild>
+              <PauseIcon />
+            </Player.PlayingIndicator>
+          </Player.PlayPauseTrigger>
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+## 下一步
+
+- [创建直播流](/solutions/livepeer-studio/livestream/create-livestream) - 创建流并获取流密钥和播放ID。
+- [上传资产](/solutions/livepeer-studio/video-on-demand/upload-asset) - 上传视频文件并进行播放。
+- [监听资产事件](/solutions/livepeer-studio/analytics/listen-to-events) - 使用webhooks在资产准备就绪或失败时进行响应。
+- [SDK概述](/solutions/livepeer-studio/reference/sdks) - TypeScript、Go、Python 和 React。
+- [API概述](/solutions/livepeer-studio/reference/api) - 身份验证和 API 基础知识。

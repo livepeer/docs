@@ -1,0 +1,28 @@
+---
+title: Sube un activo
+description: Sube archivos de video a Livepeer Studio con cargas reanudables TUS o PUT.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQiLCJzb3VyY2VIYXNoIjoiNTkyZjZjZTNhYTA3MDY1NDZiNmQ4Y2E5MWIwZDNmOWRmNDIwZDJlYTE5MWZkNjUyZjQ4NmNlNDY1YjNkYjMyOSIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozNzo0NS44MTJaIn0= */}
+Sube videos a través de la API de Livepeer Studio. **Carga resumable TUS** se recomienda; **PUT** también es compatible.
+
+<Info>
+  TUS supports resumable uploads and is recommended for all uploads, especially large files.
+</Info>
+
+## Crea una carga con el SDK
+
+Desde su backend, cree un activo para obtener una URL de carga (TUS o PUT):
+
+```javascript
+const { data } = await livepeer.asset.create({ name: "my-video.mp4" });
+// data.tusUploadUrl for TUS client on frontend
+// data.asset has asset id
+```
+
+Use la **URL de carga TUS** con un [cliente TUS](https://github.com/TUS/TUS-js-client) en el frontend para cargar el archivo. Cuando finalice el procesamiento, use el activo **ID de reproducción** para reproducirlo. Ver [Reproducir un activo](./playback-asset) y [Escuchar eventos](../analytics/listen-to-events).
+
+## Siguientes pasos
+
+- [Reproducir un activo](./playback-asset)
+- [Activos cifrados](encrypted-assets)
+- [Vistas previas (VOD)](./thumbnails-vod)

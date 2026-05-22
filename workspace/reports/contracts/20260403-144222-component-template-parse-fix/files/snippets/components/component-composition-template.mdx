@@ -1,0 +1,402 @@
+{/*
+================================================================================
+COMPONENT AUTHORING STANDARD — Livepeer Docs v2
+================================================================================
+Canonical framework: workspace/plan/active/COMPONENT-GOVERNANCE/component-framework-canonical.md
+Published at:        docs-guide/frameworks/component-governance.mdx
+Placement rules:     workspace/thread-outputs/research/component-script-placement-reference.md
+Registry (live):     docs-guide/config/component-registry.json
+================================================================================
+*/}
+
+{/*
+================================================================================
+ALWAYS DO
+================================================================================
+
+MODULARITY & COMPOSABILITY
+  - Components must be self-contained, reusable across any page in the docs
+  - Props determine all variable content — never hardcode page-specific data
+  - Use children for slot-based composition (do not clone or mutate children)
+
+ACCESSIBILITY (WCAG 2.1 AA minimum)
+  - All interactive elements must be keyboard accessible
+  - Use semantic HTML (nav, main, article, button, etc.) — not div for everything
+  - Provide aria-label / aria-labelledby on regions, dialogs, and non-obvious controls
+  - Honour prefers-reduced-motion: wrap animations in a check:
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  - Scrollable regions: add tabIndex={0} + role="region" + aria-label so keyboard
+    users can focus and scroll. See ScrollBox.jsx for the reference implementation.
+
+STYLES
+  - Define all inline style objects as named const before the return statement
+  - Use CSS variables for all colours — never hardcode hex/rgb values:
+      colour: "var(--lp-color-text-muted)"   // muted text
+      colour: "var(--border)"                 // border colour
+      colour: "var(--background)"             // page background
+      colour: "var(--foreground)"             // primary text
+  - Spread user style AFTER internal defaults so consumers can override:
+      style={{ fontSize: 14, colour: "var(--foreground)", ...style }}
+  - Spacing via rem/em/px — no magic numbers without a comment
+
+PROP SIGNATURES
+  - Every component signature must include: className="", style={}, ...rest
+  - className and style are always last before ...rest
+  - Spread ...rest onto the outermost element for id, data-*, aria-* passthrough
+  - Provide defaults for all optional props in the destructuring signature
+  - Document every prop with @param — type, default, and a plain-English description
+
+COMPLEX PROP SHAPES
+  - If a prop is an object or array, add a TypeScript-like interface comment above
+    the @param line describing its shape. Example:
+      // ItemShape: { title: string, href: string, icon?: string }
+      @param {Array<ItemShape>} items - Navigation items to render
+
+EXPORTS
+  - Always use named exports: export function MyComponent or export const MyComponent
+  - Never use default exports — the registry and all imports expect named exports
+  - Multiple exports per file are allowed when they share a strong domain boundary
+    (e.g., StepList + StepLinkList in Lists.jsx). Do not group unrelated components.
+
+MINTLIFY NATIVE COMPONENTS
+  - Mintlify components are globally available in JSX — no import needed:
+    - https://www.mintlify.com/docs/components/index
+      e.g. <Steps>, <Step>, <AccordionGroup>, <Accordion>, <CodeBlock>
+      <Note>, <Warning>, <Tip>, <Info>, <Check>, <Icon>, <Card>, <CardGroup>
+================================================================================
+*/}
+
+{/*
+================================================================================
+NEVER DO
+================================================================================
+
+IMPORTS — CORRECTION OF COMMON MISCONCEPTIONS
+  - Components CANNOT import from other MDX pages or snippets/composables/
+  - Components CAN import other custom Livepeer components using absolute paths:
+      import { GotoLink } from "/snippets/components/elements/links/Links.jsx"
+      import { ScrollBox } from "/snippets/components/wrappers/containers/ScrollBox.jsx"
+  - When a component imports its own dependencies this way, the MDX page consuming it
+    does NOT also need to import those dependencies — the component file handles it.
+  - The MDX page only needs to import the top-level component(s) it directly uses.
+  - React: DO NOT import React. Mintlify provides it globally.
+  - CI GATE: check-mdx-component-scope.js blocks MDX pages from importing across
+    JSX component files. This gate applies to .mdx pages, not to .jsx component files.
+
+TOP-LEVEL CONSTANTS OUTSIDE EXPORTS
+  - Mintlify's MDX processor does NOT support top-level const/let/var declarations
+    outside exported component functions in JSX files. They will throw
+    ReferenceError at runtime even though they pass linting.
+  - Wrong:
+      const styles = { wrapper: { display: 'flex' } }
+      export const MyComponent = () => <div style={styles.wrapper} />
+  - Right: define constants INSIDE the component function body:
+      export const MyComponent = () => {
+        const styles = { wrapper: { display: 'flex' } }
+        return <div style={styles.wrapper} />
+      }
+  - Discovered 2026-03-28: CustomCardTitle broke when variantStyles and
+    variantIconSize were defined as top-level consts outside the export.
+
+HARDCODED DATA
+  - Never embed data inline (URLs, user lists, chart values, copy strings)
+  - All variable content must be a prop — provide a TypeScript-like description if complex
+
+HARDCODED COLOURS
+  - Never use hex (#1a1a2e), rgb(), hsl(), or named colours in style objects
+  - Always use CSS variables: var(--border), var(--foreground), var(--background)
+  - CSS variable definitions live in style.css at the repo root
+
+DEFAULT EXPORTS
+  - Never: export default function MyComponent
+  - Always: export function MyComponent or export const MyComponent = () => {}
+
+FORBIDDEN JSDOC TAGS
+  The following tags were removed from the standard and must not appear:
+  @owner             — was always "docs"; ownerless governance, redundant
+  @tier              — replaced by @category / @subcategory
+  @contentAffinity   — not queried in practice
+  @decision          — audit artefact, served its purpose
+  @duplicates        — all resolved during restructure
+  @lastMeaningfulChange — not maintained; git blame is authoritative
+  @breakingChangeRisk   — all were "low"; not differentiated
+  @dependencies      — listed sibling exports, not actual import deps
+  @usedIn            — stale immediately; scan-component-imports.js is the live source
+  @example           — not part of the canonical tag set
+
+INLINE STYLE OBJECTS IN JSX
+  - Wrong: <div style={{ display: "flex", flexDirection: "column", ... }}>
+  - Right: define const styles = { wrapper: { display: "flex", ... } } above return,
+    then use: <div style={styles.wrapper}>
+================================================================================
+*/}
+
+{/*
+================================================================================
+COMPONENT JSDOC HEADER — FULL STANDARD
+================================================================================
+
+Every exported component requires a JSDoc block with these 6 core tags (in order).
+Integrators additionally require @dataSource. Hook-using components require @aiDiscoverability.
+
+Official JSDoc 3 specification: [jsdoc.app](https://jsdoc.app/)
+Full tag index: [jsdoc.app/tags](https://jsdoc.app/tags/)
+
+TAG REFERENCE
+─────────────────────────────────────────────────────────────────────────────
+
+@component   [required]
+  The export name in PascalCase. Must exactly match the export identifier.
+  Example: @component   SearchTable
+
+@category        [required]
+  Layer 1 taxonomy. Determines the top-level folder under snippets/components/.
+  Values:
+    config       Non-component config/theme objects (e.g. MermaidColours)
+    displays     Renders authored content in a specific visual format (code blocks,
+                 diagrams, quotes, response fields, video players)
+    elements     Smallest visual atoms — no children, no fetching, no arrangement
+                 (icons, buttons, callouts, links, text primitives, spacers)
+    integrators  Fetches, embeds, or binds to external/third-party data
+                 (API feeds, embeds, blog data, social data)
+    scaffolding  One-per-page structural skeleton (heroes, portals, frame-mode elements)
+    wrappers     Holds, groups, or spatially arranges other components
+                 (accordions, cards, containers, grids, lists, steps, tables)
+
+  Decision tree (first match wins):
+    1. Does it fetch, embed, or bind to external/third-party data? → integrators
+    2. Is it part of the page's outer structure, typically used once? → scaffolding
+    3. Does it take content and present it in a formatted visual format? → displays
+    4. Does it exist to hold, group, or arrange other things? → wrappers
+    5. Is it a non-component config/theme object? → config
+    6. Default → elements
+
+@subcategory    [required]
+  Layer 2 taxonomy. Must exactly match the immediate parent folder name.
+  Values by @category:
+
+    elements:    a11y | buttons | callouts | icons | images | links |
+                 math | social | spacing | text
+
+    wrappers:    accordions | badges | cards | containers | grids |
+                 lists | steps | tables
+
+    displays:    code | diagrams | quotes | response-fields | video
+
+    scaffolding: frame-mode | heroes | page-containers | portals
+
+    integrators: blog | embeds | feeds | video-data
+
+    config:      (none — top-level config/ folder)
+
+  File must live at: snippets/components/<category>/<subcategory>/ComponentName.jsx
+  @subcategory value must match the folder name exactly or pre-commit will block.
+
+@status      [required]
+  Lifecycle state of the component.
+  Values:
+    stable       Production-ready, actively used in v2 pages
+    experimental Working but API/props may change without notice
+    deprecated   Still exported for backward compat — do not use in new pages
+    broken       Non-functional stub — flagged for removal or rewrite
+
+@description [required]
+  One-line plain-English sentence. Two parts: what it renders + when to use it.
+  UK English (-ise, -our, -re). Lead with the rendered output, not the mechanism.
+  Example: "Filterable table wrapper with search input and category dropdown."
+  Not:     "A component that allows filtering of table data."
+
+@dataSource  [required if @category is integrators, otherwise omit]
+  Where external data comes from. Be specific.
+  Values:
+    none                        No external data
+    prop                        Data passed in as a prop (no runtime fetch)
+    CoinGecko API               GET /coins/{coinId}/tickers
+    fetch(url)                  Runtime fetch to a URL — describe the URL pattern
+    automation/blog             snippets/automations/solutions/[product]/blogData.jsx
+    automation/discord          snippets/automations/solutions/[product]/discordData.jsx
+    automation/youtube          snippets/automations/solutions/[product]/youtubeData.jsx
+    GitHub API                  REST or GraphQL fetch to api.github.com
+    Luma API                    lu.ma events API
+  If data comes from a JSX automation file (e.g. discordData.jsx), the MDX page
+  imports that data and passes it as a prop — @dataSource should be "prop" and the
+  @param for the data prop should reference the automation file.
+
+@aiDiscoverability  [required if component uses React hooks; omit for pure components]
+  Declares whether a companion static file is needed for AI/crawler access.
+  Required only on components that use useState, useEffect, useRef, useCallback,
+  useMemo, or any other React hook.
+  Values:
+    snapshot         Fetches external data at runtime — content invisible to
+                     crawlers without a static counterpart.
+                     Companion location: snippets/data/snapshots/[source-id].json
+                     (central, CI-regenerated, one file per API source)
+
+    props-extracted  Renders props-driven data through interactive/paginated UI —
+                     the full dataset is not present in static HTML.
+                     Companion location: v2/[section]/[page-slug]-data.json
+                     (adjacent to the MDX page that uses this component)
+                     Write-time obligation: author or agent must create the companion
+                     .json when writing the MDX page that uses this component.
+
+    none             Uses hooks for UI state only (toggling, scroll hints,
+                     lazy visibility, animation) — no content hidden from crawlers.
+                     No companion file needed.
+
+  How companions are served: .json files in v2/ are served as static assets at their
+  URL path. A file at v2/developers/glossary-data.json is accessible at
+  https://[domain]/v2/developers/glossary-data.json — readable by AI crawlers,
+  agents, and LLM pipelines without any build config.
+
+@requiresImports  [include if this component receives other custom Livepeer components
+                  as props or slots — omit if the component handles all its own imports]
+  Names any other custom Livepeer components that the consuming MDX page must also
+  import because they are passed to this component as props (not imported inside
+  the JSX file itself).
+  Example: if MyLayout accepts a `header` prop of type React.ReactNode and the MDX
+  page is expected to pass <CustomDivider /> as that prop, then:
+  @requiresImports  CustomDivider
+
+  If this component imports all its own dependencies internally (most components do),
+  omit this tag entirely. The MDX page only needs to import the top-level component.
+
+STANDARD @param FORMAT
+  Every prop must have a @param line:
+    @param {type} [name=default] - Description in plain English.
+  For required props (no default): @param {string} title - Card heading text.
+  For optional props: @param {string} [title=""] - Optional card heading.
+  For object/array shapes, add an interface comment above the @param:
+    // ItemShape: { label: string, href: string, icon?: string }
+    @param {Array<ItemShape>} items - List of navigation items to render.
+
+================================================================================
+*/}
+
+{/*
+================================================================================
+FULL EXAMPLE HEADERS — copy the block that matches your @category and adapt it
+NOTE: In this file, JSDoc closing markers are written as  * /  (with a space)
+      to avoid ending this comment block. In your real .jsx file, remove the space.
+================================================================================
+
+── Element ──
+/**
+ * @component   CustomDivider
+ * @category        elements
+ * @subcategory    spacing
+ * @status      stable
+ * @description Themed horizontal divider with optional centre text and Livepeer logo accents.
+ *
+ * @param {string} [color="var(--border)"]  - Divider line and icon colour
+ * @param {string} [middleText=""]          - Optional text in the centre of the divider
+ * @param {string} [spacing="default"]      - Spacing preset: default | overlap | compact | wide | none
+ * @param {Object} [style={}]               - Override/merge styles on outermost element
+ * @param {string} [className=""]           - CSS class on outermost element
+ * /
+
+── Wrapper ──
+/**
+ * @component   DynamicTable
+ * @category        wrappers
+ * @subcategory    tables
+ * @status      stable
+ * @description Renders structured data as a table with optional section separators and sortable columns.
+ *
+ * @param {Array}   data                    - Array of row objects to render
+ * @param {Array}   columns                 - Column definitions. Each item: key (string), label (string), align? (left|right|center)
+ * @param {boolean} [showSeparators=false]  - Render a horizontal rule between sections
+ * @param {Object}  [style={}]              - Override/merge styles on outermost element
+ * @param {string}  [className=""]          - CSS class on outermost element
+ * /
+
+── Integrator — runtime fetch (snapshot) ──
+/**
+ * @component   CoinGeckoExchanges
+ * @category        integrators
+ * @subcategory    feeds
+ * @status      stable
+ * @description Fetches and renders a sortable table of exchanges listing a token from CoinGecko API.
+ * @dataSource  CoinGecko API
+ * @aiDiscoverability snapshot
+ *
+ * @param {string} [coinId="arbitrum"]      - CoinGecko coin identifier
+ * @param {Object} [style={}]               - Override/merge styles on outermost element
+ * @param {string} [className=""]           - CSS class on outermost element
+ * /
+
+── Integrator — prop-driven data from automa:tion file ──
+/**
+ * @component   DiscordAnnouncements
+ * @category        integrators
+ * @subcategory    feeds
+ * @status      stable
+ * @description Renders a list of Discord announcements from pre-fetched automation data.
+ * @dataSource  prop — data from snippets/automations/solutions/[product]/discordData.jsx
+ * @aiDiscoverability none
+ *
+ * ItemShape: id (string), content (string), timestamp (string), author? (string)
+ * @param {Array}  items                    - Announcement entries. Each item: id, content, timestamp, author?
+ * @param {number} [limit=10]               - Maximum entries to display
+ * @param {Object} [style={}]               - Override/merge styles on outermost element
+ * @param {string} [className=""]           - CSS class on outermost element
+ * /
+
+── Wrapper with hooks — interactive UI (props-extracted) ──
+/**
+ * @component   SearchTable
+ * @category        wrappers
+ * @subcategory    tables
+ * @status      stable
+ * @description Filterable table wrapper with search input and category dropdown.
+ * @aiDiscoverability props-extracted
+ *
+ * @param {Array}  [headerList=[]]          - Column header definitions
+ * @param {Array}  [itemsList=[]]           - Row data to render and filter
+ * @param {Array}  [searchColumns=[]]       - Column keys to include in text search
+ * @param {string} [categoryColumn="Category"] - Column used to build the category dropdown
+ * @param {Object} [style={}]               - Override/merge styles on outermost element
+ * @param {string} [className=""]           - CSS class on outermost element
+ * /
+
+── Scaffolding ──
+/**
+ * @component   Starfield
+ * @category        scaffolding
+ * @subcategory    heroes
+ * @status      stable
+ * @description Animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.
+ *
+ * @param {number} [density=1.1]            - Logo density multiplier
+ * @param {Object} [style={}]               - Override/merge styles on canvas element
+ * @param {string} [className=""]           - CSS class on canvas element
+ * /
+
+================================================================================
+*/}
+
+{/*
+================================================================================
+COMPONENT SCAFFOLD — copy this, rename ComponentName, fill in the JSDoc, build
+NOTE: replace the opening JSDoc marker below (currently shown as a comment)
+      with a real  /**  in your .jsx file, and remove the space in  * /  to close
+================================================================================
+*/}
+
+export const ComponentName = ({ exampleProp = "", style = {}, className = "" }) => {
+  const styles = {
+    wrapper: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.75rem",
+      color: "var(--foreground)",
+      ...style,
+    },
+  };
+
+  return (
+    <div style={styles.wrapper} className={className}>
+      {exampleProp && <span>{exampleProp}</span>}
+      {/* component content */}
+    </div>
+  );
+};

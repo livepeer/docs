@@ -1,0 +1,60 @@
+---
+title: Aperçu de la diffusion en direct
+description: >-
+  Concepts pour les diffusions en direct dans Livepeer Studio : flux, sessions,
+  ingestion, lecture et état de santé.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXcubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXciLCJzb3VyY2VIYXNoIjoiZjliNWQ4YTIzODNmNThjYmI2OTNlNGYxYzk3Njg0ZGRjOTEyZGE2OTNlNTU0Mjk5ZTM0NmUxYTNiZDRlODQxNyIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyODoxNy42NjNaIn0= */}
+Une **diffusion** dans Livepeer Studio est un objet de diffusion en direct que vous créez via l'API. Il possède un **identifiant de diffusion**, une **clé de diffusion** (pour l'ingestion), et un **ID de lecture** (pour les spectateurs). Livepeer gère le cycle de vie du flux (créer, mettre à jour, supprimer) et notifie votre application des changements d'état via des webhooks.
+
+## Sessions
+
+Un flux est composé d'une ou plusieurs **sessions**- périodes pendant lesquelles le flux est actif. Une seule session est active à la fois. Les sessions ont leurs propres identifiants et métadonnées. Utilisez la "[API des sessions](https://livepeer.studio/docs/api-reference/session/get-all) pour lister les sessions d'un flux.
+
+## Enregistrement
+
+Si l'enregistrement est activé, la session peut être stockée en tant que "**actif**lorsque la diffusion s'arrête. Les webhooks tels que `recording.started`, `recording.ready`, et `recording.waiting` notifient à votre backend l'état de l'enregistrement. Le résultat de l'enregistrement est un actif que vous pouvez rejouer comme n'importe quel actif VOD.
+
+## Ingestion
+
+Vous pouvez envoyer une vidéo en direct dans un flux avec :
+
+- **RTMP** - Par défaut ; à utiliser avec OBS ou d'autres encodeurs RTMP. Voir [Diffuser via OBS](./stream-via-obs).
+- **WebRTC** - Ingestion à faible latence depuis le navigateur. Voir [Diffuser en direct depuis le navigateur](./livestream-from-browser).
+- **SRT** - Pris en charge également pour l'ingestion.
+
+Lorsqu'un flux est en direct, [état du flux](./stream-health) fournit des métriques (par exemple, statut de transcodage, taux d'ingestion) pour que vous puissiez surveiller la qualité et déboguer.
+
+## Multistream
+
+Vous pouvez envoyer le même flux vers plusieurs destinations RTMP/RTMPS (par exemple, Twitch, YouTube, Facebook Live) en utilisant[multistream](./multistream). Les cibles sont configurées par flux dans le tableau de bord ou via l'API. Les webhooks (`multistream.connected`, `multistream.error`, `multistream.disconnected`) rapport sur l'état cible.
+
+## Lecture
+
+Les spectateurs utilisent le **ID de lecture** pour regarder le flux. Le [Livepeer Player](/solutions/livepeer-studio/player) préfère WebRTC pour une latence faible (environ 0,5 à 3 secondes) et passe à HLS lorsqu'il est nécessaire (par exemple, si le flux possède des images B). Les URLs de lecture peuvent également être obtenues à partir de la[API Info de lecture](https://livepeer.studio/docs/api-reference/playback/get).
+
+<Warning>
+  **B-frames** (bidirectional frames) can break WebRTC playback and cause fallback to HLS. With OBS, use the Livepeer Studio preset or set keyframe interval to 1 and turn off B-frames. See [Stream via OBS](./stream-via-obs).
+</Warning>
+
+## Webhooks
+
+Événements courants liés aux flux :
+
+- `stream.started` - Le flux est actif et l'URL HLS est disponible.
+- `stream.idle` - Le flux n'est plus actif.
+- `recording.*` - Enregistrement démarré, prêt ou en attente.
+- `multistream.*` - Cible de multistream connectée, erreur ou déconnectée.
+
+Voir [Webhooks](../analytics/webhooks) et [Écoutez les événements](../analytics/listen-to-events).
+
+## Guides
+
+- [Créer un livestream](./create-livestream)
+- [Jouer un livestream](./playback-livestream)
+- [Diffuser via OBS](./stream-via-obs)
+- [Diffusion en direct depuis le navigateur](./livestream-from-browser)
+- [Multidiffusion](./multistream)
+- [Enregistrer une diffusion en direct](./clip-livestream)
+- [Santé de la diffusion](./stream-health)
+- [Optimiser la latence](./optimize-latency)

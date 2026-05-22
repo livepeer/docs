@@ -45,7 +45,7 @@ AI model management covers the operational decisions made after models are downl
 
 Model sourcing and downloading is covered separately in <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/model-hosting" label="Model Hosting" newline={false} />.
 
-<CustomDivider />
+<CustomDivider middleText="Warm vs Cold" />
 
 ## Warm vs cold strategy
 
@@ -129,7 +129,7 @@ The `Error loading warm model` message indicates a warm model conflict. Reduce `
 
 A 24 GB GPU holds one large diffusion model warm, with a small pipeline (Whisper or BLIP) warm on the same card when using a multi-GPU system. Keep multiple large diffusion models off a single 24 GB GPU – the Beta constraint blocks it, and VRAM is insufficient anyway.
 
-<CustomDivider />
+<CustomDivider middleText="Model Rotation" />
 
 ## Model rotation by demand
 
@@ -172,7 +172,7 @@ docker restart <ai-runner-container-name>
 
 {/* FACT CHECK: Confirm that restarting only the AI runner container while leaving go-livepeer running correctly picks up aiModels.json changes. Rick to verify. */}
 
-<CustomDivider />
+<CustomDivider middleText="Optimisation Flags" />
 
 ## Optimisation flags
 
@@ -225,7 +225,7 @@ Both flags are experimental. Apply one at a time and verify output quality befor
   Reserve DEEPCACHE for standard-step models. Lightning and Turbo variants (for example `ByteDance/SDXL-Lightning` and `SG161222/RealVisXL_V4.0_Lightning`) operate at 1 to 4 inference steps, so DEEPCACHE degrades output quality without adding speed.
 </Warning>
 
-<CustomDivider />
+<CustomDivider middleText="Monitoring" />
 
 ## Monitoring model loading
 

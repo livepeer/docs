@@ -1,0 +1,89 @@
+---
+title: 硬件要求
+sidebarTitle: 硬件要求
+description: 运行 Livepeer 协调器的最低、推荐和生产硬件。
+keywords:
+  - livepeer
+  - orchestrators
+  - hardware
+  - GPU
+  - requirements
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL2hhcmR3YXJlLXJlcXVpcmVtZW50cy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL29yY2hlc3RyYXRvcnMvc2V0dGluZy11cC1hbi1vcmNoZXN0cmF0b3IvaGFyZHdhcmUtcmVxdWlyZW1lbnRzIiwic291cmNlSGFzaCI6IjUxNTg3MmE0MzE2YTNiODNiZmZhYjk3ZWRjZGM0MGY0M2EzZDAzMDhjMGUxMGUwZmM2YTc5MjQ1MzdjZDM3NDEiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MzA6MzkuMzY3WiJ9 */}
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+协调器运行**视频转码** (NVENC/FFmpeg) 和/或**AI 推理** 在 GPU 上。硬件直接影响任务选择、声誉和收入。以下是 2026 年的最低、推荐和 AI 优化指南。
+
+## 最低（开发/测试）
+
+<DynamicTable
+  tableTitle="Minimum specs"
+  headerList={["Component", "Minimum"]}
+  itemsList={[
+    { "Component": "GPU", "Minimum": "NVIDIA RTX 3060 / T4 (8GB VRAM)" },
+    { "Component": "CPU", "Minimum": "4 cores" },
+    { "Component": "RAM", "Minimum": "16GB" },
+    { "Component": "Storage", "Minimum": "100GB SSD" },
+    { "Component": "Network", "Minimum": "100 Mbps symmetric" },
+    { "Component": "OS", "Minimum": "Ubuntu 22.04 LTS" }
+  ]}
+/>
+
+适用于测试网、低流量工作负载和学习。
+
+## 推荐（视频 / 生产）
+
+<DynamicTable
+  tableTitle="Recommended production (video-focused)"
+  headerList={["Component", "Recommended"]}
+  itemsList={[
+    { "Component": "GPU", "Recommended": "RTX 4080 / A4000 / L4" },
+    { "Component": "CPU", "Recommended": "8–16 cores" },
+    { "Component": "RAM", "Recommended": "32–64GB" },
+    { "Component": "Storage", "Recommended": "NVMe SSD 1TB+" },
+    { "Component": "Network", "Recommended": "1 Gbps symmetric" },
+    { "Component": "Uptime", "Recommended": "99%+ target" }
+  ]}
+/>
+
+针对实时流媒体和多分辨率转码进行了优化。
+
+## AI 推理
+
+AI 工作负载受 VRAM 限制。质押 does **not**确定AI工作流路由；能力与价格决定。
+
+<DynamicTable
+  tableTitle="AI-oriented GPUs"
+  headerList={["GPU", "Use case"]}
+  itemsList={[
+    { "GPU": "RTX 4090 (24GB)", "Use case": "Stable Diffusion, high batch" },
+    { "GPU": "A100 (40GB/80GB)", "Use case": "Enterprise inference" },
+    { "GPU": "H100", "Use case": "Advanced model serving" }
+  ]}
+/>
+
+同时确保：CUDA 12+，NVIDIA Container Toolkit，良好的散热，高性能IOPS存储用于模型权重。
+
+## 网络和运维
+
+- **延迟：** &lt;50毫秒到主要地区有助于流媒体和网关选择。
+- **生产环境：**静态IP，反向代理（例如nginx），TLS，防火墙规则。
+- **监控：**Prometheus，Grafana，NVIDIA DCGM导出器；跟踪GPU利用率，VRAM，片段/作业成功率。
+
+## 上线前清单
+
+- [ ] GPU可通过`nvidia-smi`
+- [ ] Docker可见GPU（"`--gpus all`)
+- [ ] CUDA 功能
+- [ ] 端口开放（例如 8935）
+- [ ] 稳定 Arbitrum RPC
+- [ ] 监控已配置
+
+## 另请参阅
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Orchestrator stats & monitoring" icon="chart-line" href="./orchestrator-stats" arrow />
+  <Card title="Data centre setup" icon="server" href="./data-centre-setup" arrow />
+</Columns>

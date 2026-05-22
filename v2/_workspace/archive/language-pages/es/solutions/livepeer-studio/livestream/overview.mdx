@@ -1,0 +1,60 @@
+---
+title: Visión general de la transmisión en vivo
+description: >-
+  Conceptos para transmisiones en vivo en Livepeer Studio: transmisiones,
+  sesiones, ingest, reproducción y estado.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXcubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3ZlcnZpZXciLCJzb3VyY2VIYXNoIjoiZjliNWQ4YTIzODNmNThjYmI2OTNlNGYxYzk3Njg0ZGRjOTEyZGE2OTNlNTU0Mjk5ZTM0NmUxYTNiZDRlODQxNyIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyNDoxNS40NDVaIn0= */}
+Una **transmisión** en Livepeer Studio es un objeto de transmisión en vivo que crea mediante la API. Tiene un **ID de transmisión**, una **clave de transmisión** (para ingest), y un **ID de reproducción** (para los espectadores). Livepeer administra el ciclo de vida del stream (crear, actualizar, eliminar) y notifica a su aplicación sobre los cambios de estado mediante webhooks.
+
+## Sesiones
+
+Un stream está compuesto por una o más **sesiones**-períodos en los que la transmisión está activa. Solo hay una sesión activa a la vez. Las sesiones tienen sus propios identificadores y metadatos. Use la "[API de sesiones](https://livepeer.studio/docs/api-reference/session/get-all) para listar las sesiones de una transmisión.
+
+## Grabación
+
+Si la grabación está habilitada, la sesión se puede almacenar como un "**activo** cuando la transmisión finaliza. Los webhooks como `recording.started`, `recording.ready`, y `recording.waiting` notifican al backend sobre el estado de la grabación. El resultado de la grabación es un activo que puede reproducirse como cualquier otro activo de VOD.
+
+## Ingestión
+
+Puedes enviar video en vivo a una transmisión con:
+
+- **RTMP** - Predeterminado; úselo con OBS u otros codificadores RTMP. Vea[Transmitir mediante OBS](./stream-via-obs).
+- **WebRTC** - Ingesta de baja latencia desde el navegador. Vea[Transmitir en vivo desde el navegador](./livestream-from-browser).
+- **SRT** - También compatible para recepción.
+
+Cuando un flujo está en vivo, [salud del flujo](./stream-health) proporciona métricas (por ejemplo, estado de codificación, tasa de ingestión) para que pueda monitorear la calidad y solucionar problemas.
+
+## Multistream
+
+Puede enviar el mismo flujo a múltiples destinos RTMP/RTMPS (por ejemplo, Twitch, YouTube, Facebook Live) usando [multistream](./multistream). Los destinos se configuran por flujo en el panel de control o mediante la API. Webhooks (`multistream.connected`, `multistream.error`, `multistream.disconnected`) informe del estado del objetivo.
+
+## Reproducción
+
+Los espectadores usan el **ID de reproducción** para ver la transmisión. El [Livepeer Player](/solutions/livepeer-studio/player) prefiere WebRTC para baja latencia (aproximadamente 0,5-3 segundos) y se vuelve a HLS cuando es necesario (por ejemplo, si la transmisión tiene cuadros B). Las URL de reproducción también se pueden obtener desde la[API de Información de Reproducción](https://livepeer.studio/docs/api-reference/playback/get).
+
+<Warning>
+  **B-frames** (bidirectional frames) can break WebRTC playback and cause fallback to HLS. With OBS, use the Livepeer Studio preset or set keyframe interval to 1 and turn off B-frames. See [Stream via OBS](./stream-via-obs).
+</Warning>
+
+## Webhooks
+
+Eventos relacionados con transmisiones comunes:
+
+- `stream.started` - La transmisión está activa y la URL de HLS está disponible.
+- `stream.idle` - La transmisión ya no está activa.
+- `recording.*` - La grabación ha comenzado, está lista o está esperando.
+- `multistream.*` - El destino de multitransmisión está conectado, con error o desconectado.
+
+Ver [Webhooks](../analytics/webhooks) y [Escuchar eventos](../analytics/listen-to-events).
+
+## Guías
+
+- [Crear una transmisión en vivo](./create-livestream)
+- [Reproducir una transmisión en vivo](./playback-livestream)
+- [Transmitir mediante OBS](./stream-via-obs)
+- [Transmitir en vivo desde el navegador](./livestream-from-browser)
+- [Multitransmisión](./multistream)
+- [Grabar una transmisión en vivo](./clip-livestream)
+- [Salud de la transmisión](./stream-health)
+- [Optimizar la latencia](./optimize-latency)

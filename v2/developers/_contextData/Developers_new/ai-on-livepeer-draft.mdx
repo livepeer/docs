@@ -1,0 +1,129 @@
+---
+title: 'AI on Livepeer'
+description: 'Explains the three AI pipeline categories on the Livepeer network — batch inference, real-time AI (live-video-to-video), and LLM — so you can choose the right path for your workload.'
+sidebarTitle: 'AI on Livepeer'
+keywords: ["livepeer", "AI", "pipeline", "cascade", "batch AI", "real-time AI", "LLM", "comfystream", "inference", "developer"]
+pageType: 'concept'
+audience: 'developer'
+status: 'draft'
+---
+
+The Livepeer network supports three distinct categories of AI pipeline. Each one works differently at the protocol level — different connection models, different billing, different GPU requirements — and each one suits a different class of workload. Understanding which category fits your use case before you start building will save you significant time.
+
+## Pipeline Categories at a Glance
+
+| Category | What it does | Best for | Primary tool |
+|----------|-------------|---------|-------------|
+| Batch AI | Single request → inference → result | Image generation, transcription, upscaling, captioning | AI Gateway API |
+| Real-time AI | Persistent stream → continuous frame-by-frame output | Live video transformation, VTuber avatars, generative overlays | ComfyStream |
+| LLM | Text in → text out (OpenAI-compatible) | Chatbots, agents, copilots, text inference | LLM API (Ollama-based) |
+
+---
+
+## Batch AI Pipelines
+
+Batch AI pipelines follow a request-and-response model: your application sends a job to the network, an orchestrator processes it, and you receive the result. There is no persistent connection. The GPU is assigned to your job, completes the inference, and is released.
+
+The Livepeer network currently supports the following batch pipelines:
+
+| Pipeline | What it does | Min VRAM |
+|----------|-------------|---------|
+| `text-to-image` | Generate images from text prompts | 24 GB |
+| `image-to-image` | Style transfer, enhancement, img2img | ~16 GB |
+| `image-to-video` | Animate images into video clips | ~16 GB |
+| `image-to-text` | Generate captions or descriptions for images | 4 GB |
+| `audio-to-text` | Speech recognition (ASR) with timestamps | ~16 GB |
+| `text-to-speech` | Generate natural speech from text | ~16 GB |
+| `upscale` | Upscale low-resolution images without distortion | ~16 GB |
+| `segment-anything-2` | Promptable visual segmentation for images and video | ~16 GB |
+
+<Note>
+Orchestrators are encouraged to keep one model per pipeline "warm" on their GPU — meaning it stays loaded and ready. Requesting a model that is not currently warm on any orchestrator will still work, but the first response may be slower while the model loads. This is called a cold start. Warm model availability per pipeline is listed on each pipeline's reference page.
+</Note>
+
+Batch pipelines are accessed through the AI Gateway API. Multiple gateway providers are available — see [AI Gateways](/v2/developers/concepts/developer-stack) for options including the hosted Studio Gateway and the free community gateway.
+
+**Where to start:** [AI Quickstart](/v2/developers/get-started/ai-quickstart)
+
+---
+
+## Real-Time AI
+
+Real-time AI on Livepeer is built around the `live-video-to-video` pipeline type. Unlike batch pipelines, real-time AI maintains a persistent stream connection: video frames flow in continuously, inference runs on each frame, and transformed frames flow back out — all with sub-second latency.
+
+This represents a different infrastructure model from batch processing:
+
+- **Connection:** Persistent WebRTC or RTMP stream (not request/response)
+- **Billing:** Per second of compute (not per pixel or per output)
+- **GPU assignment:** Dedicated to your stream for its entire duration
+- **Output:** Continuous frame-by-frame results — not a single returned asset
+
+[//]: # (REVIEW: Confirm exact billing unit (per-second confirmed in go-livepeer CHANGELOG but exact pricing model for developer-facing docs needs verification with Rick/Mehrdad)
+
+This shift from batch to real-time is what the Livepeer Cascade vision describes: *"a path to transition from a pure streaming and transcoding infrastructure, to an infrastructure that could succeed at providing compute for the future of real-time AI video."* Real-time pipelines enable use cases that are simply impossible with batch processing — live avatars, interactive stream effects, and generative overlays that respond to live input.
+
+**ComfyStream** is the primary tool for building real-time AI pipelines on Livepeer. It is an open-source ComfyUI plugin (`github.com/livepeer/comfystream`) that turns ComfyUI's node-graph workflow editor into a real-time inference engine for live video. Daydream itself is built on ComfyStream — so if you are using the Daydream API, you are already running on this infrastructure. Building with ComfyStream directly gives you full control over the workflow, model selection, and pipeline composition.
+
+Use cases enabled by real-time AI on Livepeer:
+- Live video style transfer and artistic transformation
+- VTuber avatar generation and face/body tracking overlays
+- Interactive generative overlays for live streams
+- Automated video agents and real-time scene augmentation
+- Live analytics and frame-by-frame computer vision
+
+[//]: # (REVIEW: Confirm live-video-to-video production stability — is it production-ready or still in active development? go-livepeer CHANGELOG activity in main suggests functional but feature-incomplete. Verify with Rick.)
+
+**Where to start:** [ComfyStream Quickstart](/v2/developers/get-started/comfystream-quickstart)
+
+---
+
+## LLM Pipeline
+
+The LLM pipeline brings text inference to the Livepeer network using an Ollama-based runner with an OpenAI-compatible API. From a developer's perspective, it works like any other OpenAI-compatible chat completions endpoint — the difference is that your requests are routed to decentralised GPU operators rather than a centralised cloud provider.
+
+The LLM pipeline runs on a wider range of GPU hardware than diffusion-based batch pipelines — an orchestrator needs as little as 8 GB of VRAM to serve LLM workloads, making it accessible to a larger pool of network participants.
+
+[//]: # (REVIEW: Confirm LLM pipeline production status vs beta. Listed in pipeline nav and referenced in go-livepeer CHANGELOG as updated to OpenAI-compatible format — treat as available, but clarify stability level with Rick or Mehrdad before marking production-ready.)
+
+The LLM pipeline is suited for applications that need:
+- Text or code generation
+- Conversational agents or chatbots
+- AI copilots embedded in applications
+- Decentralised, open-source model inference (no proprietary API dependency)
+
+**Where to start:** [AI Quickstart](/v2/developers/get-started/ai-quickstart)
+
+[//]: # (REVIEW: Confirm whether a separate LLM-specific quickstart exists or is planned. If yes, update link.)
+
+---
+
+## Choose Your Path
+
+| If your workload is... | Use | Latency | Setup complexity |
+|------------------------|-----|---------|-----------------|
+| Generating images or video on demand | Batch AI (text-to-image, image-to-video) | Seconds | Low |
+| Processing audio to text | Batch AI (audio-to-text) | Seconds | Low |
+| Captioning or analysing images | Batch AI (image-to-text, segment-anything-2) | Seconds | Low |
+| Live video transformation, avatars, overlays | Real-time AI (live-video-to-video) | Sub-second | Medium–High |
+| Text/code inference, chatbots, agents | LLM pipeline | Seconds | Low–Medium |
+| Custom AI model or pipeline (BYOC) | Real-time AI + BYOC | Sub-second | High |
+
+<Note>
+If you are unsure whether your workload is batch or real-time, ask: does your application need to transform a live stream continuously, or does it process one piece of media at a time? Continuous live transformation → real-time AI. One-at-a-time processing → batch AI.
+</Note>
+
+---
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="AI Jobs Quickstart" href="/v2/developers/get-started/ai-quickstart">
+    Make your first batch AI inference call via the AI Gateway API.
+  </Card>
+  <Card title="ComfyStream Quickstart" href="/v2/developers/get-started/comfystream-quickstart">
+    Build and run a real-time AI video pipeline with ComfyStream.
+  </Card>
+  <Card title="AI Model Support" href="/v2/developers/build/model-support">
+    See which models are available across all pipeline types.
+  </Card>
+</CardGroup>

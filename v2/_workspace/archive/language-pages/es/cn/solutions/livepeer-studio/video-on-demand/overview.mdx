@@ -1,0 +1,31 @@
+---
+title: 按需视频概述
+description: 在 Livepeer Studio 中的 VOD 概念：资产、播放、录制、剪辑和加密资产。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vdmlkZW8tb24tZGVtYW5kL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6ImE5YmQyMTI1ODRkYTEwMTFiMDYwY2JjY2ViZGZmM2QxNjE4ZWRhYWM3YzgzNDEyZDFjNDk0MzYyNGNmNzAyMmIiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6NDE6MDMuMjE4WiJ9 */}
+一个 **资产** 在 Livepeer Studio 中是一个视频对象，您可以通过上传文件，或创建一个 **录制** 或 **片段**从流中。资产有一个唯一ID和**播放ID**；Livepeer 处理存储、转码和播放URL。
+
+## 创建资产
+
+- **上传** - 使用 [资产上传API](https://livepeer.studio/docs/api-reference/asset/upload) (推荐使用TUS可恢复上传) 或 [通过URL上传](https://livepeer.studio/docs/api-reference/asset/upload-via-url)。参见 [上传一个资产](./upload-asset)。
+- **录制** - 当流媒体的录制功能启用时，会话可以在流媒体结束时存储为资产。
+- **剪辑** - 从直播流创建的剪辑会存储为资产。参见 [对直播流进行剪辑](../livestream/clip-livestream).
+
+Webhooks: `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`.
+
+## 播放
+
+- 使用**播放 ID** 与[Livepeer 播放器](../player) 或者[播放信息 API](https://livepeer.studio/docs/api-reference/playback/get) 以获取 HLS/MP4 URL。
+- 短资产可能有 MP4 版本以实现快速首次帧时间；较长的资产使用 HLS。可通过 [观看数据 API](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics) 获取观看数据指标。
+
+## 加密资产
+
+您可以上传 **加密**视频（AES-CBC，密钥使用 Livepeer 的公钥加密）并通过 [访问控制](../access-control/overview)进行控制。参见 [加密资产](./encrypted-assets)。
+
+## 指南
+
+- [上传资产](./upload-asset)
+- [播放资产](./playback-asset)
+- [加密资产](./encrypted-assets)
+- [缩略图（VOD）](./thumbnails-vod)
+- [转码视频](./transcode-video)

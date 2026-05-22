@@ -1,0 +1,74 @@
+---
+title: Composants d'intégration
+sidebarTitle: Intégrations
+description: >-
+  Composants qui s'intègrent aux services externes et API : données d'échange de
+  CoinGecko, intégrations des réseaux sociaux et autres connecteurs de services
+  tiers
+keywords:
+  - livepeer
+  - components
+  - integrations
+  - coingecko
+  - external
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9pbnRlZ3JhdGlvbnMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9pbnRlZ3JhdGlvbnMiLCJzb3VyY2VIYXNoIjoiMjIzMTk4MGZjMjhhOGJjYzZhMTI2ZGNhZGNlMGU4OWMzYzIxYzM1MzZmNWUwYTAwNWYzNGM1NTUwMGYwYmY5NSIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMzo1MToyNy44MDBaIn0= */}
+import { CoinGeckoExchanges } from '/snippets/components/integrators/feeds/Coingecko.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
+
+<CustomDivider middleText="CoinGecko Integration" />
+
+## Intégration CoinGecko
+
+### Exchanges CoinGecko
+
+Récupère et affiche dynamiquement les échanges qui prennent en charge une pièce à partir de l'API CoinGecko. Affiche un tableau triable des échanges (CEX et DEX) avec des paires de trading, des scores de confiance et des liens.
+
+**Importation :**
+```jsx
+import { CoinGeckoExchanges } from "/snippets/components/integrators/feeds/Coingecko.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `coinId` | `string` | `"arbitrum"` | Non | L'ID de pièce CoinGecko (par exemple, "arbitrum", "ethereum", "bitcoin") |
+
+**Fonctionnalités :**
+- Récupère automatiquement les données d'échange depuis l'API CoinGecko
+- Affiche les échanges dans un tableau triable
+- Affiche le type d'échange (CEX/DEX), les paires de trading et les scores de confiance
+- Inclut des liens vers les pages de trading
+- Prise en charge du tri par nom ou par type
+- États de chargement et d'erreur
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Default (Arbitrum)">
+    <CoinGeckoExchanges />
+  </Tab>
+  <Tab title="Ethereum">
+    <CoinGeckoExchanges coinId="ethereum" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<CoinGeckoExchanges coinId="arbitrum" />
+<CoinGeckoExchanges coinId="ethereum" />
+<CoinGeckoExchanges coinId="bitcoin" />
+```
+  </Tab>
+</Tabs>
+
+**Remarque :** Ce composant effectue un appel API en direct à CoinGecko. Assurez-vous que vous ne dépassez pas les limites de taux si vous utilisez plusieurs instances sur une page.
+
+---
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>

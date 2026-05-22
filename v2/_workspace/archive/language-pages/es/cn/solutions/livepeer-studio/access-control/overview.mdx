@@ -1,0 +1,16 @@
+---
+title: 访问控制概述
+description: 通过 Webhook 或 JWT 限制流和资产的播放。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby9hY2Nlc3MtY29udHJvbC9vdmVydmlldyIsInNvdXJjZUhhc2giOiJhNmY5NGFiZDZkNjgzMDljNTliZWNhZWRlMDg1MTdkODNkY2QxOThiNWY1ODY2MGVmNjBiZjc4YzFkMjA3M2MzIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjE5OjM4LjY3MFoifQ== */}
+Livepeer Studio 允许你限制谁可以观看流和资产。有两种选项：
+
+## 基于 Webhook 的
+
+设置一个 webhook 播放策略。当有人尝试播放时，Studio 会使用访问密钥和上下文调用你的 URL。返回 2XX 表示允许，非 2XX 表示拒绝。参见 [基于 Webhook 的访问控制](webhooks).
+
+## 基于 JWT 的
+
+设置JWT播放策略。观看者必须发送由你在Studio中创建的密钥签名的JWT。你在后端在验证用户后发出JWT。参见[使用JWT进行访问控制](jwt).
+
+两者都在播放时强制执行：没有有效的密钥或JWT，播放将被拒绝。

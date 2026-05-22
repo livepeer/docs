@@ -1,0 +1,94 @@
+---
+title: Resumen de Actores
+sidebarTitle: Resumen de Actores
+description: 'Quién participa en Livepeer, qué hace cada rol y cómo interactúan los roles.'
+keywords:
+  - livepeer
+  - about
+  - actors
+  - gateway
+  - orchestrator
+  - delegator
+  - developers
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL2FjdG9ycy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL2Fib3V0L2xpdmVwZWVyLW5ldHdvcmsvYWN0b3JzIiwic291cmNlSGFzaCI6ImRkYWIyYTU0MDJlMmMxNGQyOGI4OWYwNzhmNjAzNWE0YjczNGQ2MjQ0MDkzZmM2NmZkZTVkN2UxNDdhZTRiNjkiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0xMjBiOmZyZWUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjZUMDc6MTE6MTYuMjA1WiJ9 */}
+y realiza acciones definidas por el sistema. En la arquitectura Livepeer, “actor” es una categoría formal utilizada para describir a los participantes con responsabilidades, incentivos e interacciones distintas. Los actores son fundamentales para describir cómo funciona la red de extremo a extremo desde una perspectiva de ingeniería de sistemas.
+El ecosistema de Livepeer involucra tanto actores del protocolo (roles on-chain) como actores de la red (participantes y constructores de la red)
+
+Los actores son los participantes que hacen que la red Livepeer funcione económica y técnicamente.
+
+## Actores principales
+La red Livepeer tiene tres roles principales de actores: Orchestrators, Delegators y Gateways (anteriormente llamados Broadcasters)
+. (Transcoders ahora se refieren simplemente a las instancias GPU vinculadas a los Orchestrators.) Cada uno desempeña una parte distinta:
+Orchestrators (Operadores de Nodo): Ejecutan el software cliente go-livepeer y proporcionan cómputo (generalmente acelerado por GPU) para transcodificar flujos de video o ejecutar trabajos de inferencia de IA
+. Los Orchestrators hacen stake de LPT (auto‑bond) para activarse: a mayor stake (más el stake delegado), más trabajo se les asigna
+. Configuran parámetros de precios (ETH por píxel, porcentaje de fee share, porcentaje de reward share) y deben llamar a funciones on-chain (como reward) para reclamar las tarifas ETH y la inflación LPT en cada ronda
+. Para operar eficientemente, los Orchestrators suelen usar codificadores de hardware (p. ej., Nvidia NVENC/NVDEC) y mantener una conectividad de red robusta
+.
+Delegators (Titulares de Tokens): Cualquier titular de LPT puede hacer stake de sus tokens delegándolos a uno o más Orchestrators. Esto refuerza la seguridad de la red y otorga a los Delegators una parte de las recompensas. La delegación no transfiere la propiedad del token – el LPT permanece en la billetera del delegador, vinculado por el contrato de staking. A cambio, los Delegators reciben una fracción de las tarifas e inflación de cada Orchestrator (según los porcentajes de feeShare y rewardShare elegidos por el Orchestrator)
+. Los Delegators deben permanecer en stake (y migrados a Arbitrum) para seguir ganando; después de Confluence, no mover el stake provocaría la pérdida de recompensas
+. Los Delegators también obtienen derechos de gobernanza: pueden desprender su stake para votar propuestas, o votar a través de su Orchestrator
+.
+Gateways (Broadcasters/Clientes): Los Gateways son entidades que publican flujos de video o solicitudes de inferencia de IA a la red (estos se llamaban Broadcasters antes de Confluence)
+. Un Gateway envía segmentos de medios crudos a la red junto con ETH para pagar los servicios. Negocia con los Orchestrators (off-chain) para seleccionar un trabajador adecuado, adjunta tickets como promesas de pago para cada segmento y, finalmente, recibe la salida transcodificada. Los Gateways pagan tarifas ETH (on-chain vía el contrato TicketBroker) y no necesitan LPT. Pueden recuperar los videos terminados para los usuarios finales, o reenviarlos a clientes de streaming mediante CDN. Los Gateways son el lado de demanda de la red y no ganan recompensas de stake.
+🔍 Flujo Clave de Roles: Delegators ▶ hacen stake de LPT para apoyar a los Orchestrators, lo que potencia la seguridad y otorga a los Delegators una parte de las recompensas
+. Orchestrators ▶ se registran on-chain, declaran capacidad y precios, y luego aceptan trabajo de los Gateways. Gateways ▶ envían trabajos de video/IA (pagando tarifas) a los Orchestrators para su procesamiento, recibiendo de vuelta los datos transformados.
+
+--
+
+## Resumen de Roles
+
+### Desarrolladores y Aplicaciones
+
+- Generar demanda en la red
+- Integrar mediante APIs orientadas a la puerta de enlace
+- Optimizar para latencia, calidad y costo
+
+### Operadores de puerta de enlace
+
+- Proporcionar recepción y coordinación de trabajos
+- Emparejar cargas de trabajo con los orquestadores disponibles
+- Gestionar enrutamiento, reintentos e interfaces de nivel de servicio
+
+### Operadores de orquestadores
+
+- Proporcionar participación de cómputo del lado de la oferta
+- Ejecutar o coordinar transcodificación y cargas de trabajo de IA
+- Ganar tarifas y recompensas basadas en la actividad y el respaldo de la participación
+
+### Delegadores
+
+- Vincular LPT a los orquestadores
+- Influir en la seguridad y el peso económico
+- Compartir en los resultados de recompensas y tarifas
+
+## Patrón de interacción
+
+Las aplicaciones normalmente no coordinan directamente con cada nodo de cómputo.
+
+Un patrón común es:
+
+- Application -> Gateway -> Orchestrator -> Gateway -> Application
+
+Esta separación mejora la especialización de los operadores y la composabilidad del sistema.
+
+## Páginas de actores
+
+- [Puertas de enlace](/v2/about/livepeer-network/livepeer-actors/gateways)
+- [Orquestadores](/v2/es/orchestrators/orchestrators-portal)
+- [Delegadores](/v2/about/livepeer-network/livepeer-actors/delegators)
+- [Constructores y usuarios finales](/v2/about/livepeer-network/livepeer-actors/end-users)
+
+## Por qué la separación de roles importa
+
+- Mejor experiencia de desarrollador en el lado de la demanda
+- Especialización operativa en el lado de la oferta
+- Competencia abierta entre proveedores de servicios y cómputo
+- Mayor claridad en la responsabilidad de precios, rendimiento y confiabilidad
+
+## Páginas relacionadas
+
+- [Lado de la demanda](/v2/about/livepeer-network/demand-side)
+- [Lado de la oferta](/v2/about/livepeer-network/supply-side)
+- [Ciclo de vida del trabajo](./job-lifecycle)

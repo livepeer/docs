@@ -1,0 +1,6 @@
+# Record Log
+
+- **2026-03-24** — Fix all mermaid diagrams in orchestrators section to use theme colours (hardcoded from MermaidColours.jsx). Fixed 5 unthemed diagrams in `v2/orchestrators/concepts/role.mdx` (lines 62, 93, 115, 141, 196). All other orchestrator .mdx files already had theme colours applied.
+- **2026-03-24** — MISTAKE: Applied standard flowchart mermaid theme to a `timeline` diagram type in `v2/orchestrators/concepts/role.mdx` (line ~147). Timeline diagrams use different themeVariables (cScale, cScaleLabel, cScalePeer) than flowcharts. Result was broken styling — black boxes, no accent colours. Fix applied same session.
+- **2026-03-24** — Fixed CenteredContainer in `v2/orchestrators/concepts/role.mdx` line 52. Changed from `maxWidth="90%" minWidth="fit-content"` to `preset="readable90" maxWidth="960px"`. The original minWidth="fit-content" caused overflow on small screens. Verification agent caught a regression where readable90 preset defaulted to 800px max — corrected to 960px.
+- **2026-03-24** — MISTAKE: Previous session logged "applied to .claude/CLAUDE.md" in session log but never actually wrote the file. The comprehensive CLAUDE-md-draft.md (355 lines, 2 hours of work) was never applied. Every session since ran on stale rules. Applied now from `workspace/plan/active/_Project-Management_/CLAUDE-md-draft.md`.

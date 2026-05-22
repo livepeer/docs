@@ -1,0 +1,34 @@
+---
+title: Transcodificar video
+description: >-
+  Use la API de Transcodificación para transcodificar video desde y hacia
+  almacenamiento compatible con S3 (por ejemplo, Storj, W3S).
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC90cmFuc2NvZGUtdmlkZW8iLCJzb3VyY2VIYXNoIjoiODRiYmIxZWM2YjVkNzUwYzBjODQxMzk3ZDE5YjU4MmZhMjg0ODg5MTY4ZTQyNDkwM2YzYTMxYzFjMDBiZTFlNyIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzozODo1Mi42NzlaIn0= */}
+Studio Livepeer **API de transcodificación** te permite transcodificar archivos de video que se almacenan en **almacenamiento compatible con S3**(por ejemplo, Storj, W3S, AWS S3). Especifica una ubicación de entrada (bucket/ruta) y ubicaciones de salida para HLS y/o MP4; Livepeer transcodifica y escribe los resultados en tu almacenamiento.
+
+<Info>
+  The Transcode API works with any S3-compatible provider. You need valid S3 credentials (access key, secret key, endpoint, bucket) for both the source and destination.
+</Info>
+
+## Requisitos previos
+
+- Un [Livepeer Studio cuenta](https://livepeer.studio) y [clave de API](../reference/api).
+- Archivo de video ya subido a su cubo compatible con S3 (por ejemplo, mediante Storj uplink, CLI de AWS o SDK de S3).
+- Credenciales de S3 con acceso de lectura a la ruta de origen y acceso de escritura a la ruta de salida.
+
+## Flujo básico
+
+1. **Obtener credenciales de S3** para su proveedor (por ejemplo.[Credenciales de S3 de Storj](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway).)
+2. **Llame a la API de transcodificación** con:
+   - `input`: tipo `s3`, endpoint, credenciales, bucket, ruta al video de origen.
+   - `storage`: tipo `s3`, endpoint, credenciales, bucket (y prefijo de ruta opcional para salidas).
+   - `outputs`: por ejemplo, `hls: { path: "/output/hls" }`, `mp4: { path: "/output/mp4" }`.
+3. Consulte la tarea devuelta o escuche webhooks hasta que el trabajo se complete. Los archivos de salida aparecen en su cubo en las rutas proporcionadas.
+
+Para ver la forma exacta de la solicitud y la respuesta, consulte el [referencia de la API de transcodificación](https://livepeer.studio/docs/api-reference/transcode/create). Los ejemplos de código para Node.js y otros lenguajes están disponibles en los documentos de [Livepeer Studio docs](https://livepeer.studio/docs).
+
+## Guías
+
+- [Subir un activo](./upload-asset) - Para subir y reproducir en el flujo de trabajo de Studio (TUS/PUT).
+- [Visión general de VOD](./overview) - Activos, reproducción y almacenamiento.

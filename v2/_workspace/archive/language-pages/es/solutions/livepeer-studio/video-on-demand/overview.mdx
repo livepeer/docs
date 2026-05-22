@@ -1,0 +1,33 @@
+---
+title: Visión general del video bajo demanda
+description: >-
+  Conceptos para el video bajo demanda en Livepeer Studio: activos,
+  reproducción, grabaciones, clips y activos cifrados.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vdmlkZW8tb24tZGVtYW5kL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6ImE5YmQyMTI1ODRkYTEwMTFiMDYwY2JjY2ViZGZmM2QxNjE4ZWRhYWM3YzgzNDEyZDFjNDk0MzYyNGNmNzAyMmIiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6Mzc6MzQuNjAxWiJ9 */}
+Un **activo** en Livepeer Studio es un objeto de video que creas al subir un archivo, o al crear una **grabación** o **clip** de un stream. Los activos tienen un ID único y **ID de reproducción**; Livepeer maneja las URL de almacenamiento, transcodificación y reproducción.
+
+## Creación de activos
+
+- **Subir** - Usa el [API de carga de activos](https://livepeer.studio/docs/api-reference/asset/upload) (se recomienda TUS resumable) o [cargar mediante URL](https://livepeer.studio/docs/api-reference/asset/upload-via-url).[Cargar un activo](./upload-asset).
+- **Grabación** - Cuando la grabación está habilitada en un stream, la sesión se puede almacenar como un activo cuando finaliza el stream.
+- **Clip** - Los clips creados a partir de un livestream se almacenan como activos. Vea[Grabar un livestream](../livestream/clip-livestream).
+
+Webhooks: `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`.
+
+## Reproducción
+
+- Usa el **ID de reproducción** con el [Livepeer Player](../player) o el [API de información de reproducción](https://livepeer.studio/docs/api-reference/playback/get) para obtener URLs de HLS/MP4.
+- Los activos cortos pueden tener versiones MP4 para una rápida carga inicial; los activos más largos usan HLS. Las métricas de visualización están disponibles a través de la[API de visualización](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics).
+
+## Activos cifrados
+
+Puedes subir **video cifrado** (AES-CBC, clave cifrada con la clave pública de Livepeer) y controlar el acceso mediante [control de acceso](../access-control/overview). Consulte [activos cifrados](./encrypted-assets).
+
+## Guías
+
+- [Subir un activo](./upload-asset)
+- [Reproducir un activo](./playback-asset)
+- [Activos cifrados](./encrypted-assets)
+- [Vistas previas (VOD)](./thumbnails-vod)
+- [Transcodificar video](./transcode-video)

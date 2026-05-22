@@ -1,0 +1,64 @@
+---
+title: Transmitir en vivo desde el navegador
+description: >-
+  Transmitir en vivo desde el navegador utilizando WebRTC y el componente
+  Livepeer de transmisión o WHIP personalizado.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbGl2ZXN0cmVhbS1mcm9tLWJyb3dzZXIubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vbGl2ZXN0cmVhbS1mcm9tLWJyb3dzZXIiLCJzb3VyY2VIYXNoIjoiOGU2MWZjY2ZhYWMwZjhlOGFiZDQyNGI5NDZkZTdjNzRhMTljYmE2ZmE2ZTg2ODAwZjI5ZjBlYTgwMTVjOTUzNiIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyNTozOS40MDZaIn0= */}
+La transmisión en el navegador envía video en vivo desde el dispositivo del usuario a Livepeer a través de **WebRTC** (por ejemplo, WHIP), sin usar OBS. Está optimizado para baja latencia por defecto.
+
+## Flujo
+
+1. Crea un flujo a través de la API y obtén una **clave de transmisión**.
+2. Abra una conexión WebRTC para Livepeer ingest usando esa clave (se requiere STUN/TURN).
+3. Capture la cámara, el micrófono y/o la pantalla en el navegador y envíela a través de WebRTC.
+4. Los espectadores ven a través de la transmisión **ID de reproducción** en la [Livepeer Jugador](../player).
+
+## Usar el componente Broadcast
+
+Con `@livepeer/react`, use las primitivas Broadcast y la URL de ingestión de transmisión:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+import { getIngest } from "@livepeer/react/external";
+
+const streamKey = "your-stream-key";
+
+export function DemoBroadcast() {
+  return (
+    <Broadcast.Root ingestUrl={getIngest(streamKey)}>
+      <Broadcast.Container>
+        <Broadcast.Video title="Live stream" />
+        <Broadcast.Controls>
+          <Broadcast.EnabledTrigger />
+        </Broadcast.Controls>
+      </Broadcast.Container>
+    </Broadcast.Root>
+  );
+}
+```
+
+## Transmisión integrable
+
+```html
+<iframe
+  src="https://lvpr.tv/broadcast/STREAM_KEY"
+  allow="autoplay; camera; microphone; display-capture"
+  frameborder="0"
+></iframe>
+```
+
+Reemplazar "`STREAM_KEY` con su clave de transmisión.
+
+## WebRTC personalizado (WHIP)
+
+1. Enviar "`HEAD` a "`https://livepeer.studio/webrtc/{STREAM_KEY}` y siga las `Location` redirección para la URL de ingestión.
+2. Crear `RTCPeerConnection` con servidores ICE de ese host (STUN/TURN).
+3. Crear oferta SDP, reunir ICE, enviar la oferta a la URL de ingestión y establecer la respuesta como descripción remota.
+4. Agregar pistas de medios y enviar. El final de la transmisión se detecta cuando los paquetes dejan de llegar; no se requiere DELETE.
+
+<Warning>
+  STUN/TURN are required for in-browser broadcasting. The Broadcast component and lvpr.tv broadcast page use Livepeer's servers.
+</Warning>
+
+Ver [Reproducción](playback-livestream) y [Optimizar latencia](optimize-latency).

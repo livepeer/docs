@@ -1,0 +1,457 @@
+---
+title: Docker On-Chain Gateway Quickstart TAB VIEW
+description: Archived on-chain Docker quickstart tab for configuring a Livepeer gateway on Arbitrum.
+keywords:
+  - livepeer
+  - new
+  - gateways new
+  - get started
+  - views
+  - docker
+  - dockeronchaintab
+  - chain
+  - gateway
+  - quickstart
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{ /* Needs to be further destructured */}
+{/* Components only used in this page not the parent should be imported here */}
+
+
+{/* #### Quick Summary: Off-Chain vs On-Chain Gateway Differences
+
+| Aspect | Off-Chain Gateway | On-Chain Gateway |
+|--------|------------------|------------------|
+| **Ethereum** | No RPC needed | Requires `-ethUrl` and wallet |
+| **Network** | Default: offchain | Specify network (e.g., arbitrum-one-mainnet) |
+| **Payments** | No blockchain payments | Ticket-based micropayments |
+| **Verification** | Disabled by default | Enabled by default |
+ */}
+
+{/* #### Assumed (On-chain setup) */}
+{/* - You have ETH on Arbitrum L2 Network (or can get it from a faucet) */}
+
+{/* - You have an Arbitrum RPC URL (or can use a public one) */}
+
+
+<Tab title="On-Chain Gateway" icon="link">
+ This guide will set up a Livepeer Gateway on the [Arbitrum One Mainnet](https://arbitrum.io/).
+
+    <Accordion title="Looking for a 'testnet'?" icon="info-circle">
+ While Livepeer contracts are deployed to Arbitrum Testnet, there is currently no reliable Orchestrator services on this chain.
+
+        <Note>
+ If you would like to use the [Aribtum Testnet](#arbitrum-testnet) for testing, you will need to run your own Orchestrator node there to connect to.
+        </Note>
+
+ There are conversations underway to enable a public "testnet" in the future.
+
+ Follow & contribute to the discussion on the
+ <Icon icon="arrow-up-right" color="#2d9a67" /> [Discord](https://discord.gg/livepeer) and
+ <Icon icon="arrow-up-right" color="#2d9a67" /> [Forum](https://forum.livepeer.org)
+
+    </Accordion>
+    <GatewayOnChainWarning />
+    <Steps titleSize="h3">
+      <Step title="Install Gateway Software">
+ Pull the docker image from <Icon icon="arrow-up-right" color="#2d9a67" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
+        <CustomCodeBlock
+          {...DOCKER_CODE.install}
+          wrap
+        />
+
+      </Step>
+      <Step title="Configure Gateway">
+ <Badge color="blue">Video</Badge> {" "} <Badge color="purple">AI</Badge>
+
+ Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> gateway service.
+
+        <CustomCodeBlock
+          codeString={DOCKER_YML.onChain.dual}
+          language="yaml"
+          icon="docker"
+          filename="docker-compose.yml"
+          expandable={true}
+          wrap={false}
+        />
+
+ <Danger> Needs edit, better explanation & format </Danger>
+ *See flag details below:*
+        <AccordionGroup>
+          <ResponseFieldAccordion
+            title="Required Flags"
+            icon="file-circle-exclamation"
+            fields={CONFIG_FLAGS.onchain.required}
+          />
+          <ResponseFieldAccordion
+            title="Recommended Flags"
+            icon="file-circle-info"
+            fields={CONFIG_FLAGS.onchain.optional}
+          />
+          <ResponseFieldAccordion
+            title="Wallet, Pricing & Auth Flag Options"
+            icon="file-circle-info"
+            fields={CONFIG_FLAGS.onchain.optionalAdvanced}
+          />
+        </AccordionGroup>
+
+ *See Configuration File Examples below:*
+        <AccordionGroup>
+          <Accordion title="Transcoding Options Example" icon="brackets-curly">
+            <CustomCodeBlock
+                codeString={CONFIG_FILES.video.transcodingOptionsJson}
+                language="json"
+                icon="brackets-curly"
+                filename="Example transcodingOptions.json"
+            />
+          </Accordion>
+          <Accordion title="AI Capability Pricing Example" icon="brackets-curly">
+            <CustomCodeBlock
+                codeString={CONFIG_FILES.ai.aiPricingJson}
+                language="json"
+                icon="brackets-curly"
+                filename="Example aiPricing.json"
+            />
+          </Accordion>
+        </AccordionGroup>
+
+      </Step>
+      <Step title="Run Gateway">
+        <CustomCodeBlock
+          {...DOCKER_CODE.create}
+        />
+        <CustomCodeBlock
+          {...DOCKER_CODE.run}
+        />
+        <CustomCodeBlock
+          {...DOCKER_CODE.verify}
+        />
+        <CustomCodeBlock
+          {...DOCKER_CODE.verifyOnChainConfig}
+        />
+      </Step>
+      <Step title="Connect Gateway">
+ For on-chain mode, Orchestrator discovery happens automatically.
+
+        <CustomCodeBlock
+          {...BASH_CODE.checkAvailableOrchestrators}
+          preNote="Verify Orchestrator discovery:"
+        />
+
+        <Note>
+          - On-chain discovery requires ETH in your gateway account for transactions
+          - The gateway will show "No orchestrator specified; transcoding will not happen" if discovery fails
+        </Note>
+
+ The [Livepeer Explorer Orchestrator Performance Leaderboard](https://explorer.livepeer.org/leaderboard) can also show you a list of all available Orchestrators & their capabilities & services.
+      </Step>
+      <Step title="Test Gateway">
+        <Accordion title="Verify Configuration" icon="tools">
+ *Verify Ethereum connection
+ docker logs dual-gateway | grep -i "ethereum\|eth\|blockchain"
+
+ Check account address
+ curl http://localhost:5935/status | jq '.eth.accountAddr'
+        </Accordion>
+        <Accordion title="Basic Connectivity Tests" icon="wifi">
+ *Basic Connectivity Tests:*
+
+            <CustomCodeBlock
+                {...DOCKER_CODE.verifyEthConnection}
+            />
+
+ These tests verify the gateway is running and can discover orchestrators:
+                <CustomCodeBlock
+                {...BASH_CODE.checkStatus}
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.checkAvailableOrchestrators}
+                />
+            </Accordion>
+        <Accordion title="On-Chain Specific Tests" icon="chain">
+ *On-Chain Specific Tests:*
+
+ Before testing, ensure your on-chain gateway is properly configured.
+ The gateway must have an active Ethereum connection and valid account:
+                <CustomCodeBlock
+                {...BASH_CODE.onchain.checkAccountAddress}
+                />
+                <CustomCodeBlock
+                {...DOCKER_CODE.verifyEthConnection}
+                />
+            </Accordion>
+        <Accordion title="Payment Tests" icon="hand-holding-dollar">
+ *Payment Tests:*
+
+ For on-chain gateways, test the payment system:
+ {/* The payment system uses probabilistic micropayments with tickets. */}
+            <CustomCodeBlock
+                {...BASH_CODE.onchain.checkCurrentRound}
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.onchain.depositFunds}
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.onchain.checkDeposit}
+                />
+            </Accordion>
+        <Accordion title="Advanced On-Chain Tests" icon="ethereum">
+ *Advanced On-Chain Tests*
+
+ Test smart contract interactions:
+            <CustomCodeBlock
+                {...BASH_CODE.onchain.checkTicketParams}
+            />
+            <CustomCodeBlock
+                {...BASH_CODE.onchain.checkPriceInfo}
+            />
+            <CustomCodeBlock
+                {...BASH_CODE.onchain.checkWithdrawal}
+            />
+            </Accordion>
+        <Accordion title="Video Ingest Tests" icon="camera-movie">
+ *Video Tests:*
+ {/*
+ Video Transcoding Tests
+ Test both RTMP and HTTP ingest methods:
+                # RTMP stream (requires FFmpeg)
+ ffmpeg -re -i test-video.mp4 -c copy -f flv rtmp://localhost:1935/stream/test-key
+
+                # HTTP segment push
+ curl -X PUT http://localhost:8935/live/test/0.ts --data-binary @test-segment.ts
+
+                # Verify HLS output
+ curl http://localhost:8935/hls/test-key/index.m3u8 */}
+              <TestVideoDownload>
+                <DownloadButton
+                  label="test-video.mp4"
+                  downloadLink="https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/04_GATEWAYS/test-video.mp4"
+                />
+              </TestVideoDownload>
+                <CustomCodeBlock
+                {...BASH_CODE.testRTMPingest}
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.testHLS}
+                wrap
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.testHTTPingest}
+                />
+
+ {/* 7.
+ Test Stream Verification
+ Use the built-in test pattern for verification:
+
+                # Generate test pattern
+ ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30,format=yuv420p \
+ -c:v libx264 -b:v 1000k -f flv rtmp://localhost:1935/stream/test-key
+
+                # Monitor transcoding
+ curl http://localhost:8935/hls/test-key/index.m3u8 */}
+
+
+            </Accordion>
+        <Accordion title="AI Tests" icon="user-robot">
+ *AI Tests:*
+                <CustomCodeBlock
+                {...BASH_CODE.testHTTPingest}
+                />
+ *AI Capability Tests:*
+                <CustomCodeBlock
+                {...BASH_CODE.test.ai.textToImage}
+                />
+                <CustomCodeBlock
+                {...BASH_CODE.test.ai.LLM}
+                />
+            </Accordion>
+        <Accordion title="Expected Results" icon="check-circle">
+ **Expected Results**
+
+ Successful Test Indicators
+                - Status endpoint returns valid Ethereum address
+                - Orchestrators list shows pricing and ticket parameters
+                - Video streams generate HLS playlists
+                - AI endpoints return processed results
+                - Payment operations complete without errors
+
+ **Common Issues**
+
+                - No orchestrators found: Check `-orchAddr` configuration
+                - Payment errors: Verify ETH balance and gas settings
+                - AI failures: Ensure `-aiServiceRegistry` is set for on-chain AI
+                - Connection timeouts: Check firewall and network settings
+
+ **Notes**
+
+                - On-chain tests require ETH in the gateway account for transactions
+                - Test on a testnet first (e.g., arbitrum-one-goerli) before using mainnet
+                - Monitor gas costs during testing
+                - The test suite includes on-chain validation tests [test_args.sh](https://github.com/livepeer/go-livepeer/blob/master/test_args.sh)
+                - Use `-localVerify=false` to skip local verification if needed
+            </Accordion>
+      </Step>
+      <Step title="Monitor Gateway">
+ The `-monitor=true` flag in the docker-compose.yml already has basic monitoring enabled which exposes metrics in Prometheus format at `http://localhost:8935/metrics`.
+
+ Metrics collected include:
+          - Stream metrics (created, started, ended)
+          - Transcoding metrics (success rate, latency)
+          - Payment metrics (tickets sent, deposits)
+          - AI-specific metrics (attempts, orchestrators available)
+
+ *See More Metrics Options Below:*
+          <Accordion title="Prometheus Metrics" icon="monitor-waveform">
+
+ Access Prometheus metrics at:
+          ```bash
+          curl http://localhost:8935/metrics
+          ```
+
+ Key metrics include:
+          - `livepeer_stream_created_total` - Total streams created
+          - `livepeer_current_sessions_total` - Active transcoding sessions
+          - `livepeer_success_rate` - Transcoding success rate
+          - `livepeer_ai_live_attempts` - AI processing attempts
+          - `livepeer_gateway_deposit` - Current ETH deposit
+
+          </Accordion>
+          <Accordion title="CLI Monitoring Commands" icon="terminal">
+ *CLI Monitoring Commands*
+
+ Check gateway status:
+          ```bash
+          curl http://localhost:5935/status
+          ```
+
+ Monitor available orchestrators:
+          ```bash
+          curl http://localhost:5935/getOrchestrators
+          ```
+
+ See all CLI options:
+          <CustomCodeBlock
+            {...DOCKER_CODE.flags}
+          />
+
+          ```bash Run Livepeer CLI
+            livepeer_cli # livepeer_cli --host=localhost --http=5935
+          ```
+          ```bash Livepeer CLI Output
+          +-----------------------------------------------------------+
+          | Welcome to livepeer-cli, your Livepeer command line tool  |
+          +-----------------------------------------------------------+
+
+          What would you like to do? (default = stats)
+          1. Get node status
+          2. View protocol parameters
+          3. List registered orchestrators
+          4. Invoke "initialize round"
+          5. Invoke "bond"
+          ...
+          ```
+          </Accordion>
+          <Accordion title="AI-Specific Monitoring" icon="user-robot">
+ *AI-Specific Monitoring*
+
+ For AI workflows, the gateway sends detailed events including:
+          - Stream request events
+          - Orchestrator selection info
+          - Ingest metrics
+          - Error events
+
+          </Accordion>
+          <Accordion title="Enhanced Monitoring Options" icon="chart-line">
+ *Enhanced Monitoring Options*
+
+ Add to your Docker Compose for more monitoring:
+
+          ```yaml
+          # Enable per-stream metrics
+          - -metricsPerStream=true
+
+          # Expose client IPs in metrics
+          - -metricsClientIP=true
+
+          # Kafka integration (requires setup)
+          - -kafkaBootstrapServers=kafka:9092
+          - -kafkaUser=username
+          - -kafkaPassword=password
+          - -kafkaGatewayTopic=livepeer-gateway
+          ```
+          </Accordion>
+          <Accordion title="Log Monitoring" icon="file-lines">
+ *Log Monitoring*
+
+ Monitor logs in real-time:
+          ```bash
+          docker logs -f dual-gateway
+          ```
+
+ Look for key events:
+          - "Received live video AI request"
+          - "Orchestrator selected"
+          - "Transcoding completed"
+          - Payment processing events
+
+          </Accordion>
+      </Step>
+      <Step title="Gateway Tips">
+        <Expandable title="Connecting to Orchestrators">
+ The Gateway needs to connect to at least one orchestrator for services.
+
+ If you're running your own Orchestrator, you can use this by setting the `-orchAddr` flag.
+ For on-chain mode, orchestrator discovery happens automatically but you need to ensure your gateway has ETH for transactions.
+        </Expandable>
+
+        <Expandable title="See More Explorer Information">
+ The [Livepeer Explorer Orchestrator Performance Leaderboard](https://explorer.livepeer.org/leaderboard) can also show you a list of all available Orchestrators & their capabilities & services.
+ The Performance Leaderboard is provides real-time operational metrics that directly impact gateway performance, while the main Orchestrators page helps with understanding the economic landscape and potential delegation opportunities.
+        </Expandable>
+
+        <Expandable title="Automatic Orchestrator Discovery System">
+ When you start an on-chain gateway (`-network arbitrum-one-mainnet`), it automatically creates a `DBOrchestratorPoolCache` that polls the blockchain for registered Orchestrators.
+
+ Unlike off-chain mode where you specify `-orchAddr`, on-chain gateways:
+
+          - Discover all public orchestrators automatically
+          - Update the list periodically (every 25 minutes)
+          - Handle failures by trying alternative orchestrators
+
+
+ *Orchestrator Discovery Initialisation*
+ The discovery process queries the BondingManager smart contract to get all registered orchestrators with different validation rules
+ for different node types - transcoders require explicit orchestrator addresses while gateways can operate with or without them.
+
+
+ *The discovery system fetches:*
+
+          - All registered orchestrators from the BondingManager contract
+          - Their capabilities (video transcoding profiles, AI models)
+          - Pricing information for each capability
+          - Performance metrics and capacity
+
+ *Capability Matching*
+
+ When processing requests, the gateway:
+
+          - Queries discovered orchestrators for required capabilities discovery.go:160-174
+          - Filters by price limits (-maxPricePerUnit for video, -maxPricePerCapability for AI)
+          - Selects based on performance and availability
+
+ {/* 2. Blockchain Orchestrator Pool Query
+
+                   3. Error Handling and Validation */}
+
+        </Expandable>
+
+        <CustomCodeBlock
+          {...DOCKER_CODE.connect}
+        />
+      </Step>
+    </Steps>
+  </Tab>

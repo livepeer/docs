@@ -1,0 +1,311 @@
+---
+title: 'Checks Remediation Companion'
+sidebarTitle: Checks Remediation
+description: 'Maps every quality check to its best remediation path, distinguishing automated fixes from skill-guided and manual remediation.'
+pageType: reference
+pageVariant: compendium
+audience: community
+purpose: reference
+complexity: intermediate
+lifecycleStage: operate
+status: draft
+veracityStatus: verified
+keywords:
+  - quality checks remediation
+  - docs governance pipeline
+  - automated remediation
+  - component structure validation
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/*
+COMPANION PAGE to checks.mdx
+Maps every check (1.1-10.5) to its best remediation path.
+Source: checks.mdx in this same directory.
+Updated: 2026-04-09
+*/}
+
+# Checks Remediation Companion
+
+Companion to `checks.mdx`. For each quality check, this page identifies the best remediation path: what to run, what skill to invoke, what template to follow, or when human judgement is required.
+
+## Remediation Types
+
+| Type | Meaning | When to use |
+|---|---|---|
+| **auto** | CI script detects and/or fixes the violation | Run the script. If it has `--fix` or `--write`, it can self-heal. |
+| **skill** | AI skill invocation with guided execution | Invoke the skill manually. It loads the correct rules and guides the fix. |
+| **config** | Config file defines the rule; validators enforce it | Update the config source. Existing validators pick up the change. |
+| **template** | Gold-standard template or section block defines the correct pattern | Copy the template structure. Replace placeholder content. |
+| **manual** | Human judgement required, guided by a prompt or rubric | Follow the prompt. No script can make this decision. |
+
+Root-cause principle: the best remediation prevents the violation at authoring time, not just catches it after the fact. Where a skill exists that loads the correct rules before writing, that is preferred over a validator that catches mistakes after.
+
+---
+
+## 1. Frontmatter and Taxonomy
+
+Root cause: frontmatter violations happen because pages are authored without loading the canonical enum index, or because deprecated aliases are still in use from v1 migrations.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 1.1 | Required frontmatter fields | auto | `frontmatter-taxonomy.js` validates; manual fill for missing values | `tools/lib/docs/frontmatter-taxonomy.js` | Partial: detects missing, human fills |
+| 1.2 | pageType canonical schema | auto+config | Validator detects deprecated values; migration map in config | `tools/lib/docs/frontmatter-taxonomy.js` | Yes: normaliser maps deprecated to canonical |
+| 1.3 | pageVariant valid | auto | Same validator, same normaliser | `tools/lib/docs/frontmatter-taxonomy.js` | Yes |
+| 1.4 | purpose canonical set | auto+config | Validator + deprecated alias mapping | `tools/lib/docs/frontmatter-taxonomy.js` | Yes: normaliser maps aliases |
+| 1.5 | audience token set | auto | Validator detects invalid tokens | `tools/lib/docs/frontmatter-taxonomy.js` | Partial: detects, human picks correct token |
+| 1.6 | complexity value | auto | Validator detects missing/invalid | `tools/lib/docs/frontmatter-taxonomy.js` | Partial |
+| 1.7 | lifecycleStage value | auto | Validator detects missing/invalid | `tools/lib/docs/frontmatter-taxonomy.js` | Partial |
+| 1.8 | veracityStatus present | manual | Human determines verification state | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | No |
+| 1.9 | industry array valid | auto | Validator detects invalid entries | `tools/lib/docs/frontmatter-taxonomy.js` | Partial |
+| 1.10 | niche array valid | auto | Validator detects invalid entries | `tools/lib/docs/frontmatter-taxonomy.js` | Partial |
+| 1.11 | description well-formed | auto+skill | `check-description-quality.js` detects; `docs-copy` skill rewrites | `operations/scripts/validators/content/structure/check-description-quality.js` | Partial: detects, skill guides rewrite |
+| 1.12 | OG image block complete | template | Copy OG block from gold-standard template frontmatter | `snippets/templates/pages/gold-standard-templates/` | Yes: mechanical copy |
+| 1.13 | keywords quality | manual | Keyword research per content-pass prompt; audience-intent alignment | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | No |
+
+Recommended workflow: run `node operations/tests/unit/frontmatter-taxonomy.test.js` to detect all violations, then batch-fix using `normalise-frontmatter-keys.js` for casing and the taxonomy normaliser for deprecated values.
+
+---
+
+## 2. Voice and Copy
+
+Root cause: copy violations happen because content is written without loading the audience voice profile. Running validators catches symptoms (banned words), but invoking `docs-copy` with the correct persona before writing prevents them.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 2.1 | UK English | auto+skill | `check-grammar-en-gb.js` detects; `style-and-language-homogenizer-en-gb` remediates | `operations/scripts/validators/content/grammar/check-grammar-en-gb.js` | Yes: homogeniser auto-fixes |
+| 2.2 | Zero banned words | auto+config | `lint-copy.js` detects against `banned-words.txt` | `operations/scripts/validators/content/copy/lint-copy.js` | Partial: detects, human rewrites |
+| 2.3 | Zero banned phrases | auto+config | `lint-patterns.js` detects against `banned-phrases.txt` | `operations/scripts/validators/content/copy/lint-patterns.js` | Partial: detects, human rewrites |
+| 2.4 | Zero banned constructions | auto | `lint-patterns.js` detects structural patterns | `operations/scripts/validators/content/copy/lint-patterns.js` | Partial |
+| 2.5 | Opening order correct | skill | `docs-copy` skill (structure-rules sub-skill) | `ai-tools/ai-skills/docs-copy/skills/structure-rules.md` | No: editorial judgement |
+| 2.6 | Paragraph discipline | skill | `docs-copy` skill (structure-rules sub-skill) | `ai-tools/ai-skills/docs-copy/skills/structure-rules.md` | No |
+| 2.7 | Audience register correct | skill+auto | `docs-copy` persona-routing + `check-voice-register.js` | `operations/scripts/validators/content/copy/check-voice-register.js` | Partial: validator detects register drift |
+| 2.8 | Per-audience prohibited phrases | auto+skill | `check-voice-register.js` + `docs-copy` persona-routing | `operations/scripts/validators/content/copy/check-voice-register.js` | Partial |
+| 2.9 | No passive value statements | skill | `docs-copy` (value-prop-check sub-skill) | `ai-tools/ai-skills/docs-copy/skills/value-prop-check.md` | No |
+| 2.10 | No hedging openers | skill | `docs-copy` (copy-rules sub-skill) | `ai-tools/ai-skills/docs-copy/skills/copy-rules.md` | No |
+| 2.11 | Terminology locked | config+manual | `tools/config/quality/style-language-profile-en-gb.json` + TERMINOLOGY-COLLATE cross-reference | `workspace/plan/active/TERMINOLOGY-COLLATE/` | No: SME review |
+| 2.12 | No em-dashes | auto | Pre-commit hook enforcement (already active) | `operations/scripts/dispatch/governance/pre-tool-guard.js` | Yes: hook blocks em-dashes |
+| 2.13 | Entity-led voice | skill | `docs-copy` (copy-rules sub-skill) | `ai-tools/ai-skills/docs-copy/skills/copy-rules.md` | No |
+| 2.14 | No hedging verbs in value claims | skill | `docs-copy` (copy-rules sub-skill) | `ai-tools/ai-skills/docs-copy/skills/copy-rules.md` | No |
+| 2.15 | Description not self-referential | auto | `check-description-quality.js` detects "This page" patterns | `operations/scripts/validators/content/structure/check-description-quality.js` | Partial |
+| 2.16 | Deprecated terms absent | auto+config | `lint-copy.js` + `deprecated-terms.md` | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/deprecated-terms.md` | Partial: detects, human replaces |
+| 2.17 | Universal terms consistent | config | `universal-terms.md` defines canonical definitions | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/universal-terms.md` | No: cross-tab consistency review |
+| 2.18 | Spell check passes | auto | cspell against custom dictionary | `tools/config/quality/cspell.json` | Partial: `repair-spelling.js` fixes known patterns |
+| 2.19 | Terms match TERMINOLOGY-COLLATE | manual | Cross-reference against consolidated glossary | `workspace/plan/active/TERMINOLOGY-COLLATE/consolidated/` | No |
+| 2.20 | Per-tab terminology correct | manual | Cross-reference against per-tab glossary | `workspace/plan/active/TERMINOLOGY-COLLATE/per-tab/` | No |
+| 2.21 | First use defined or linked | manual | Content review pass | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | No |
+| 2.22 | Terminology lock respected | manual | Check against tab terminology lock file | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/` | No |
+
+Recommended workflow: run `lint-copy.js` + `check-grammar-en-gb.js` + `check-voice-register.js` for automated detection. For editorial fixes, invoke `/docs-copy` skill with the correct audience loaded.
+
+---
+
+## 3. Section Naming and Headings
+
+Root cause: weak headings come from writing headings before writing content. The section-naming rubric requires scoring each heading against 5 dimensions after the content is written, not before.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 3.1 | Heading scores 20/25+ | manual | Score against 5-dimension rubric in section-naming.md | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.2 | No banned heading terms | manual | Check against 3-tier list (banned/avoid/ok) in Frameworks.mdx S4.1 | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | No |
+| 3.3 | No literal contrast labels | manual | Name the governing concept, not "X vs Y" | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.4 | Domain-anchor rule | manual | Include domain noun when heading needs to be interpretable in isolation | `v2/_workspace/research/content-naming.md` | No |
+| 3.5 | Names concept, not examples | manual | "Hardware Architecture Tiers" not "NVIDIA vs AMD vs Intel" | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.6 | Title well-formed (1-3 words) | manual | Concept-derived, no banned forms | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.7 | Expert editorial choice | manual | Would a senior technical editor choose this heading? | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.8 | Per-pageType naming style | manual | Reference pages use literal naming; concept pages use governing-concept naming | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.9 | Per-audience register in headings | manual | Developer headings use specialised terms; delegator headings use finance register | `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md` | No |
+| 3.10 | Domain-anchor rule applied | manual | Same as 3.4, per content-naming.md research | `v2/_workspace/research/content-naming.md` | No |
+
+Recommended workflow: heading quality is entirely editorial. Use the naming rubric after content is written. Run as part of the content-pipeline-pass-a Phase 3 review. No automated tooling can replace the judgement here.
+
+---
+
+## 4. Page Structure and Content Architecture
+
+Root cause: structural problems come from skipping the pre-writing process (5 Whys, tier questions, H2 mapping). Pages that follow the page-authoring skill's 4-step process rarely have structural issues.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 4.1 | One purpose, one audience | skill | `content-pipeline-pass-a` Phase 2 (audience fit) | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | No |
+| 4.2 | Purpose statement test | skill | Same: Phase 2 | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | No |
+| 4.3 | PREV/NEXT adjacency | manual | Check against tab-map adjacency | `v2/{tab}/_workspace/tab-map.mdx` | No |
+| 4.4 | No dead ends | manual | Every page has Related Pages or Next Step CTA | `snippets/templates/blocks/related-pages-cards.mdx` | Partial: template provides pattern |
+| 4.5 | Prerequisites stated | template | Use prerequisites block from gold-standard library | `snippets/templates/pages/gold-standard/` | Yes: mechanical insertion |
+| 4.6 | Out-of-scope clear | manual | Content review pass | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | No |
+| 4.7 | Information type per section | config | Purpose-to-InfoType mapping in Frameworks.mdx S1.6 | `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | No: editorial mapping |
+| 4.8 | No content duplication | manual | Structure audit KEEP/MOVE/MERGE/SPLIT | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | No |
+| 4.9 | Section orientation page present | manual | Per-tab canonical review | `v2/{tab}/_workspace/canonical/review/05-section-structure.md` | No |
+| 4.10 | Cross-tab links at intersections | manual | Cross-tab journey validation | `workspace/plan/active/CONTENT-WRITING/decisions/cross-tab-journeys.md` | No |
+| 4.11 | Discord test (complete answer) | manual | Content review: can you link this ONE page and get a complete answer? | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | No |
+| 4.12 | Page size appropriate | auto | `docs-quality-and-freshness-audit.js` detects stubs under 2KB | `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | Partial: detects thin pages |
+| 4.13 | No TODO/REVIEW without tracking | auto | `lint-structure.js` scans for TODO/REVIEW markers | `operations/scripts/validators/content/structure/lint-structure.js` | Partial: detects, human resolves |
+| 4.14 | Flat layout where appropriate | manual | Structure audit methodology | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` | No |
+| 4.15 | Trade-offs present | manual | Content review pass | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` | No |
+| 4.16 | Content pass context block completable | skill | `content-pipeline-pass-a` validates all 15 fields | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` | No: requires pipeline state |
+
+Recommended workflow: use `page-authoring` skill's 4-step pre-writing process (5 Whys, tier questions, H2 mapping, self-check) before writing. Run `content-pipeline-pass-a` in REVIEW mode on existing pages.
+
+---
+
+## 5. Layout, Components and Template
+
+Root cause: layout violations have two distinct causes. Checks 5.1-5.16 (which components to use) are about template compliance and are config-driven. Checks 5.17-5.34 (how components are configured) are about prop governance and authoring discipline.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 5.1 | Correct template for pageType | auto+config | `component-layout-governance.js` + `component-layout-profile.json` | `operations/scripts/validators/components/library/component-layout-governance.js` | Partial: detects wrong template |
+| 5.2 | Required sections present | auto+config | Same validator, reads required_sections from profile | `tools/config/quality/component-layout-profile.json` | Partial: detects missing sections |
+| 5.3 | Only approved components | auto+config | Same validator, reads allowed_components from profile | `tools/config/quality/component-layout-profile.json` | Partial |
+| 5.4 | Avoided components absent | auto+config | Same validator, reads forbidden_patterns from profile | `tools/config/quality/component-layout-profile.json` | Partial |
+| 5.5 | InfoType to component mapping | template | `page-composition-framework.mdx` component mapping | `snippets/templates/pages/page-composition-framework.mdx` | Yes: follow the mapping |
+| 5.6 | MDX renders clean | auto | `validator-health-check-page-rendering.yml` CI workflow | `.github/workflows/validator-health-check-page-rendering.yml` | Yes: build catches errors |
+| 5.7 | No old-schema frontmatter | auto | `frontmatter-taxonomy.js` + normaliser | `tools/lib/docs/frontmatter-taxonomy.js` | Yes |
+| 5.8 | CSS custom properties only | auto | `check-component-css.js` + `check-component-props.js` (5.34) | `operations/scripts/validators/components/library/check-component-css.js` | Partial |
+| 5.9 | Generated file banners intact | auto | `enforce-generated-file-banners.js` | `operations/scripts/validators/content/structure/enforce-generated-file-banners.js` | Yes |
+| 5.10 | Component naming conventions | auto | `check-naming-conventions.js` + `check-mdx-component-scope.js` | `operations/scripts/validators/components/library/check-naming-conventions.js` | Partial |
+| 5.11 | Gold-standard template match | template+skill | Gold-standard templates + `content-pipeline-pass-b` (layout pass) | `snippets/templates/pages/gold-standard-templates/` | Yes: follow template |
+| 5.12 | Section blocks from library | template | 13 composable section blocks | `snippets/templates/pages/gold-standard/` | Yes: follow block pattern |
+| 5.13 | Section ordering matches pageType | template+config | `section-patterns.md` ordering rules | `snippets/templates/section-patterns.md` | Yes: follow ordering rules |
+| 5.14 | Multi-view layout rules | template | `page-composition-framework.mdx` multi-view section | `snippets/templates/pages/page-composition-framework.mdx` | Yes: follow dimension rules |
+| 5.15 | Data imports, not hardcoded | manual | Audit for hardcoded data that has a data file | `snippets/data/` | No: requires identifying data files |
+| 5.16 | Related Pages or Next Step CTA | auto+template | `check-page-endings.js` detects; template blocks provide pattern | `operations/scripts/validators/content/structure/check-page-endings.js` | Partial: detects missing, template guides fix |
+| 5.17 | Related Pages format correct | auto | `check-page-endings.js` (extended) validates Columns/Card/CustomCardTitle | `operations/scripts/validators/content/structure/check-page-endings.js` | Partial: detects wrong format |
+| 5.18 | Tab icon prop present | auto | `check-component-props.js` detects missing icon | `operations/scripts/validators/components/library/check-component-props.js` | Partial: detects, human picks icon from icon-map.jsx |
+| 5.19 | Accordion icon prop present | auto | Same validator | `operations/scripts/validators/components/library/check-component-props.js` | Partial |
+| 5.20 | Code block metadata present | auto | Same validator | `operations/scripts/validators/components/library/check-component-props.js` | Partial: detects, human adds context |
+| 5.21 | StyledSteps, not raw Steps | auto | `component-layout-governance.js` (extended) | `operations/scripts/validators/components/library/component-layout-governance.js` | Partial: detects, human wraps |
+| 5.22 | Navigation cards use CustomCardTitle | auto | `check-component-props.js` | `operations/scripts/validators/components/library/check-component-props.js` | Partial |
+| 5.23 | Tables use StyledTable | auto | `component-layout-governance.js` (extended) | `operations/scripts/validators/components/library/component-layout-governance.js` | Partial: detects raw tables |
+| 5.24 | Maximum 1-2 tables per page | auto+config | `component-layout-governance.js` reads `max_tables` from profile | `tools/config/quality/component-layout-profile.json` | Partial |
+| 5.25 | Maximum 1 major layout element | auto+config | `component-layout-governance.js` reads `max_major_layout_elements` | `tools/config/quality/component-layout-profile.json` | Partial |
+| 5.26 | CustomDivider placement rules | auto | `check-component-props.js` validates 5 placement rules | `operations/scripts/validators/components/library/check-component-props.js` | Partial: detects wrong placement |
+| 5.27 | Mermaid governed theme colours | auto+config | `check-component-props.js` diffs against `MermaidColours.jsx` palette | `snippets/components/config/MermaidColours.jsx` | Partial: detects ungoverned hex |
+| 5.28 | Import section ordering | auto | `check-component-props.js` checks comment headers and order | `operations/scripts/validators/components/library/check-component-props.js` | Partial |
+| 5.29 | Media/video TODO placeholders | manual | Content review: mark media gaps as `{/* TODO: [MEDIA] ... */}` | `ai-tools/ai-skills/page-authoring/SKILL.md` | No |
+| 5.30 | Fact-check flags in comments | auto | `lint-structure.js` scans for REVIEW markers; check 6.5 cross-ref | `operations/scripts/validators/content/structure/lint-structure.js` | Partial |
+| 5.31 | Decision-critical info visible | manual | No tabs/accordions for decision content | `ai-tools/ai-skills/page-authoring/SKILL.md` | No |
+| 5.32 | Reference tables at end | manual | Decision support first, reference tables last | `ai-tools/ai-skills/page-authoring/SKILL.md` | No |
+| 5.33 | Drafts in workspace | manual | Write to `_workspace/drafts/`, not live page | `ai-tools/ai-skills/page-authoring/SKILL.md` | No |
+| 5.34 | No inline styles or hardcoded hex | auto | `check-component-props.js` detects inline styles and hex values | `operations/scripts/validators/components/library/check-component-props.js` | Partial: detects, human refactors to CSS vars |
+
+Recommended workflow: run `component-layout-governance.js` + `check-component-props.js` for automated detection. Use `content-pipeline-pass-b` (layout pass) skill for guided remediation. Reference gold-standard templates and section blocks for correct patterns. Consult `icon-map.jsx` when adding icon props.
+
+---
+
+## 6. Veracity and Factual Accuracy
+
+Root cause: veracity failures come from writing without consulting authoritative sources, or from trusting AI-generated content without cross-checking. The veracity-pass prompt enforces source-grounded claims.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 6.1 | Every claim citable | manual | Veracity pass: flag each claim against source tier | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` | No |
+| 6.2 | Code/commands tested | manual | Execute every code block in correct environment | Live system testing | No |
+| 6.3 | No deprecated API usage | manual | Cross-reference against current go-livepeer, SDK docs | GitHub repos, API specs | No |
+| 6.4 | Numbers are real | manual | Source every number from T1/T2 sources | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | No |
+| 6.5 | REVIEW flags for unverified | auto+manual | `lint-structure.js` detects markers; human resolves claims | `operations/scripts/validators/content/structure/lint-structure.js` | Partial |
+| 6.6 | veracityStatus honest | manual | Weakest section determines page status | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | No |
+| 6.7 | Authoritative vs AI glossary | manual | Use `resources/glossary.mdx` (human-reviewed), not compendium | `v2/resources/glossary.mdx` | No |
+| 6.8 | Source staleness check | manual | Flag fast-changing sources (API responses, SDK versions) | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | No |
+| 6.9 | No open-ended research tasks | manual | Every residual item has a named source and next step | `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | No |
+| 6.10 | Source authority tiers respected | config | T1/T2/T3 framework in accuracy-sources.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/accuracy-sources.md` | No |
+| 6.11 | Glossary definitions match universal terms | manual | Cross-reference against universal-terms.md | `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/universal-terms.md` | No |
+| 6.12 | Glossary definitions verified against primary sources | manual | Cross-reference against TERMINOLOGY-COLLATE veracity sources | `workspace/plan/active/TERMINOLOGY-COLLATE/consolidated/veracity-sources.md` | No |
+
+Recommended workflow: run `content-pipeline-pass-a` Phase 7 (veracity) on every page before publishing. Use the veracity-library as the source lookup. No shortcuts exist for factual verification.
+
+---
+
+## 7. Navigation and Information Architecture
+
+Root cause: navigation violations come from pages being added without updating docs.json, or from structural changes that leave orphaned entries.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 7.1 | Page exists in docs.json | auto | `check-docs-path-sync.js` + `verify-all-pages.js` | `operations/scripts/validators/content/structure/check-docs-path-sync.js` | Partial: detects orphans |
+| 7.2 | Navigation matches file system | auto | Same validators | `operations/scripts/validators/content/structure/verify-all-pages.js` | Partial |
+| 7.3 | Tab entry portal routes to all sections | manual | Per-tab canonical review | `v2/{tab}/_workspace/canonical/review/05-section-structure.md` | No |
+| 7.4 | No structural orphans | auto | `verify-all-pages.js` detects unreachable pages | `operations/scripts/validators/content/structure/verify-all-pages.js` | Partial |
+| 7.5 | Audience journey complete | manual | Per-tab canonical review, path validation | `v2/{tab}/_workspace/canonical/review/07-path-validation.md` | No |
+| 7.6 | Cross-tab graduation paths | manual | Cross-tab journey definitions | `workspace/plan/active/CONTENT-WRITING/decisions/cross-tab-journeys.md` | No |
+| 7.7 | File in correct lane | auto | Folder governance validators | `docs-guide/policies/v2-folder-governance.mdx` | Partial |
+| 7.8 | File naming conventions | auto | `check-naming-conventions.js` | `operations/scripts/validators/components/library/check-naming-conventions.js` | Partial |
+| 7.9 | _workspace/ TTL compliance | auto | `audit-governance-scan-workspace-retention.yml` workflow | `.github/workflows/audit-governance-scan-workspace-retention.yml` | Partial: flags stale files |
+| 7.10 | No stubs in published nav | auto | `docs-quality-and-freshness-audit.js` detects pages under 2KB | `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | Partial: detects stubs |
+| 7.11 | Guides section serves secondary personas | manual | Content review per tab guides/ section | Per-tab canonical review | No |
+
+Recommended workflow: run `verify-all-pages.js` + `check-docs-path-sync.js` after any page move or rename. Use `/propagate` skill for comprehensive reference surface updates.
+
+---
+
+## 8. Links and Rendering
+
+Root cause: broken links come from file moves without reference propagation. The `/propagate` skill and `sync-docs-paths.js` prevent this at the source.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 8.1 | All internal links resolve | auto | `validator-health-check-broken-links.yml` CI workflow | `.github/workflows/validator-health-check-broken-links.yml` | Partial: detects broken links |
+| 8.2 | All external links live | auto | Same workflow | `.github/workflows/validator-health-check-broken-links.yml` | Partial |
+| 8.3 | All snippet imports resolve | auto | `check-mdx-component-scope.js` | `operations/scripts/validators/components/library/check-mdx-component-scope.js` | Partial |
+| 8.4 | All images load | auto | CI build validation | Mintlify build process | Yes: build fails on missing images |
+| 8.5 | Page renders without error | auto | `validator-health-check-page-rendering.yml` | `.github/workflows/validator-health-check-page-rendering.yml` | Yes: build catches render errors |
+| 8.6 | No TODO/TBD/Coming Soon in published | auto | `lint-structure.js` | `operations/scripts/validators/content/structure/lint-structure.js` | Partial: detects, human removes |
+
+Recommended workflow: CI catches most link and render issues automatically. Use `/propagate` after any file move to prevent broken references.
+
+---
+
+## 9. Process and Governance
+
+Root cause: process violations happen when pages skip the phase pipeline or when decisions are made in chat without being written to the decision registry. The pipeline is the fix.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 9.1 | Human sign-off recorded | manual | Process discipline: agent self-reporting does not count | `workspace/plan/active/_MY_PROCESS/` RUNBOOKs | No |
+| 9.2 | Decisions in registry | manual | Write to decision-registry.md with date and sign-off | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | No |
+| 9.3 | Gate prerequisites met | manual | Per-tab canonical review approved before content work | `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md` | No |
+| 9.4 | Phase ordering respected | manual | Follow _MY_PROCESS/ RUNBOOKs (00-08) | `workspace/plan/active/_MY_PROCESS/` | No |
+| 9.5 | Findings before fixes | skill | `docs-review-packet-generation` then `docs-review-fix-execution` | `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md` | No: process skill |
+| 9.6 | Feedback routed | manual | Route corrections through feedback-routing-map.md | `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md` | No |
+
+Recommended workflow: process checks are not automatable. They require discipline. Use `/thread` to anchor sessions, `/log` to record deliverables, `/close` to produce finalisation reports.
+
+---
+
+## 10. Content Completeness
+
+Root cause: completeness gaps come from building pages bottom-up (fixing what exists) instead of top-down (defining what should exist, then building it). The per-tab canonical review (01-07) defines what should exist.
+
+| Check | Name | Type | Best remediation | Resource path | Self-heal? |
+|---|---|---|---|---|---|
+| 10.1 | Every question has a page | manual | Cross-reference against per-tab jobs-to-be-done | `v2/{tab}/_workspace/canonical/review/03-jobs.md` | No |
+| 10.2 | Zero-to-hero journey complete | manual | Trace primary persona path from portal to final action | `v2/{tab}/_workspace/canonical/review/07-path-validation.md` | No |
+| 10.3 | All persona paths unblocked | manual | Every page exit state matches next page entry state | `v2/{tab}/_workspace/canonical/review/07-path-validation.md` | No |
+| 10.4 | Scope boundaries explicit | manual | Out-of-scope content directed to correct tab with links | First-principles sitemap | No |
+| 10.5 | Self-containment holds | manual+auto | Tab can be read without visiting another tab; `docs-quality-and-freshness-audit.js` detects gaps | `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | Partial |
+
+Recommended workflow: run per-tab canonical review (files 01-07) to define what should exist. Use `content-pipeline-tab-map` skill to generate the IA map. Fill gaps with `content-pipeline-pass-a` in WRITE mode.
+
+---
+
+## Automation Coverage Summary
+
+| Category | Total checks | Auto | Skill | Config | Template | Manual |
+|---|---|---|---|---|---|---|
+| 1. Frontmatter | 13 | 10 | 1 | 2 | 1 | 1 |
+| 2. Voice/Copy | 22 | 8 | 7 | 3 | 0 | 8 |
+| 3. Headings | 10 | 0 | 0 | 0 | 0 | 10 |
+| 4. Structure | 16 | 2 | 3 | 1 | 1 | 11 |
+| 5. Layout | 34 | 22 | 2 | 5 | 6 | 5 |
+| 6. Veracity | 12 | 1 | 0 | 1 | 0 | 11 |
+| 7. Navigation | 11 | 6 | 0 | 0 | 0 | 5 |
+| 8. Links | 6 | 6 | 0 | 0 | 0 | 0 |
+| 9. Process | 6 | 0 | 1 | 0 | 0 | 5 |
+| 10. Completeness | 5 | 1 | 0 | 0 | 0 | 4 |
+| **Total** | **135** | **56** | **14** | **12** | **8** | **60** |
+
+42% of checks are auto-detectable. 10% are skill-guided. 48% require human judgement, predominantly in headings, veracity, process, and completeness.

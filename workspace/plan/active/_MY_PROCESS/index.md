@@ -1,0 +1,606 @@
+# Copy, Content, Voice, Naming, and Style Index
+
+This is the root source index for copy, content, styling, naming, authoring, and review work under `_MY_PROCESS`.
+
+Use this file with:
+
+- `workspace/plan/active/_MY_PROCESS/canonical-content-copy-and-review-framework.md` for the collated operating framework
+- `workspace/plan/active/_MY_PROCESS/my-process.mdx` for the phase model and checkpoint flow
+
+## Scope
+
+This index inventories every Markdown and MDX file found in the source buckets most relevant to content creation and review:
+
+- `.claude/references/**`
+- `workspace/plan/active/CONTENT-WRITING/**`
+- `v2/orchestrators/_workspace/canonical/**`
+- `docs-guide/frameworks/**`
+- `docs-guide/policies/**`
+- `docs-guide/canonical/collation-data/Mintlify/**`
+
+## Source Buckets
+
+- `.claude/references` — 25 files
+- `workspace/plan/active/CONTENT-WRITING` — 275 files
+- `v2/orchestrators/_workspace/canonical` — 218 files
+- `docs-guide/frameworks` — 6 files
+- `docs-guide/policies` — 17 files
+- `docs-guide/canonical/collation-data/Mintlify` — 11 files
+
+## Full Inventory
+
+### `.claude/references`
+
+- `.claude/references/README.md`
+- `.claude/references/SOURCE-MAP.md`
+- `.claude/references/authoring/exemplars.md`
+- `.claude/references/components/exemplars.md`
+- `.claude/references/components/patterns.md`
+- `.claude/references/copy/best-practice.md`
+- `.claude/references/copy/exemplars.md`
+- `.claude/references/copy/patterns.md`
+- `.claude/references/data-patterns/exemplars.md`
+- `.claude/references/governance/exemplars.md`
+- `.claude/references/ia-and-naming/best-practice.md`
+- `.claude/references/ia-and-naming/exemplars.md`
+- `.claude/references/ia-and-naming/patterns.md`
+- `.claude/references/layout/best-practice.md`
+- `.claude/references/layout/exemplars.md`
+- `.claude/references/layout/patterns.md`
+- `.claude/references/pipelines/exemplars.md`
+- `.claude/references/plans/exemplars.md`
+- `.claude/references/prompts/concern-audit-methodology.md`
+- `.claude/references/prompts/exemplars.md`
+- `.claude/references/prompts/patterns.md`
+- `.claude/references/research/exemplars.md`
+- `.claude/references/scripts/exemplars.md`
+- `.claude/references/scripts/patterns.md`
+- `.claude/references/skills/exemplars.md`
+
+### `workspace/plan/active/CONTENT-WRITING`
+
+- `workspace/plan/active/CONTENT-WRITING/CONTENT/MASTER-AUDIENCE-SOURCES-CONTENT-GAP-REPORT.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/complexity.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/frontmatter-taxonomy-update.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/industry.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/information-type.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/pagePurpose.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/pageType.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/prompt-input-spec.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md`
+- `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Good prompt references/PHASE: PAGE CONTENT.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Good prompt references/docs-content-placement-prompt.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Good prompt references/section-naming.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/08a-ia-per-tab.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/TEMPLATE-tab-ia-map.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/community-tab-04-context-and-recalibration.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/community-tab-05-final-ia-and-pages.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/concepts-restructure.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/level-1-prompt-a.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/orchestrators-ia-map.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/derive-ia/restructure.mdx`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/01-page-type-definitions.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/10-prompt-input-spec.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/PHASE: PAGE CONTENT.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/docs-section-planning-playbook.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/plan.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/research/ai-coauthoring.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/research/content-naming.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/other/section-naming.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/outputs/_archive/orchestrator-tab-review-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/outputs/_archive/orchestrator-tab-review-v3.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/outputs/_archive/orchestrator-tab-review.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/outputs/tier-questions-all-pages.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/personas-and-journeys/community-tab-02-audience-and-purpose.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/personas-and-journeys/personas.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/previous-prompt-crevieonsolidated-w.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Previous Prompts Used/site-map/site-map.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/_archive/audience-design-collation-v0.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/_archive/audience-design-collation-v1.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/_archive/audience-design-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/_archive/audience-design-v3.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/_archive/audience-design-v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/audience-design-collation-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/audience-design-v5.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/collation-prompt-learnings-v1.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/pack-guide.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/phase-resources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/collated/canonical-about-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/input-pack/glossary-about.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/zero-context-ai-results/v4/chatgpt-v4-about-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/zero-context-ai-results/v4/claude-web-v4-about-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/about/zero-context-ai-results/v5/agent-v5-about-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/input-pack/glossary-community.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/zero-context-ai-results/v4/chatgpt-v4-community-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/community/zero-context-ai-results/v5/agent-v5-community-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/collated/canonical-developers-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/collated/collation-notes-developers.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/input-pack/glossary-developers.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/zero-context-ai-results/v4/chatgpt-v4-developers-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/zero-context-ai-results/v4/claude-webv4-developers-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/developers/zero-context-ai-results/v5/agent-v5-developers-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/collated/canonical-gateways-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/collated/collation-notes-gateways.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/input-pack/glossary-gateways.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/learnings/collation-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/validation-check.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/zero-context-ai-results/v4/chatgpt-v4-gateways-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/zero-context-ai-results/v4/claude-web-v4-gateways-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/zero-context-ai-results/v4/perplexity-TAB_ Gateways_TASK_ Execute the audience-design-br.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/gateways/zero-context-ai-results/v5/agent-v5-gateways-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/home/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/home/input-pack/glossary-home.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/home/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/home/zero-context-ai-results/v5/agent-v5-home-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/archived/outputs/lpt-claude.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/archived/outputs/tab-prompt-lp-token.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/canonical-lp-token-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/chat-gpt-collation-notes-delegators-lp-token.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/chatgpt-canonical-delegators-lp-token-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/claude-web-canonical-lpt-delegators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/collated/claude-web-collation-notes-lpt-delegators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/input-pack/glossary-lpt.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/learnings/collation-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/zero-context-ai-results/v4/chatgpt-v4-delegators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/zero-context-ai-results/v4/claude-web-v4-delegators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/lp-token/zero-context-ai-results/v5/agent-v5-lpt-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/canonical-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/chatgpt-canonical-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/chatgpt-collation-notes-orchestrators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/claude-canonical-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/claude-collation-notes-orchestrators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/_archive/collation-prompt-results/collation-notes-orchestrators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/collated/canonical-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/collated/collation-notes-orchestrators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/input-pack/glossary-orchestrators.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v1.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v3.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v4-deep-research.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v4.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/learnings/v5.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/validation-check.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v1/chagpt-v1.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v1/claude-sonnet-run-01.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v1/claude-v1-web.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v2/claude-sonnet-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v2/claude-webui.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v2/peplexity.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v2/v2-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v3/Perplexity_ Orchestrators_TASK_ Execute the audience-desi.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v3/v3-orchestrators-audience-design (1).md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v3/v3-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4-deep-research/chatgpt-deep-research-report.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4-deep-research/claude-v4-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4/CLAUDEWEB-v4-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4/PERPLEXITY-TAB_ Orchestrators_TASK_ Execute the audience-desi.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4/chatgpt-v4-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v4/v4-orchestrators-audience-design-agent.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/orchestrators/zero-context-ai-results/v5/agent-v5-orchestrators-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/resource-hub/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/resource-hub/input-pack/glossary-resources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/resource-hub/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/resource-hub/zero-context-ai-results/v5/agent-v5-resource-hub-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/solutions/input-pack/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/solutions/input-pack/glossary-solutions.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/solutions/input-pack/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/testing/Tabs/solutions/zero-context-ai-results/v5/agent-v5-solutions-audience-design.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/versions/audience-design-v2.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/1-audience-design/versions/audience-design-v3.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-content-scan/content-scan-learnings.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-content-scan/content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/pack-guide.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/phase-resources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/2-structure-audit/testing/orchestrators/orchestrators-tab-map.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/pack-guide.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/phase-resources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/pack-guide.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/4-layout-pass/phase-resources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/pack-guide.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/COLLATION-PLAN.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/MASTER-INDEX.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/existing-skills.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/frontmatter-current-state.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/ia-maps-and-templates.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/master-inventory.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/master-list.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/master-resource-review.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/page-templates.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/personas.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/prior-outputs.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/current-repo-resources/testing-outputs.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/previous-prompt-consolidated-review.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/active-prompts.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/ai-coauthoring-research.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/banned-copy.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/copy-governance.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/copy-skills.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/deprecated-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/docs-philosophy-authoring.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/frameworks-content-pipeline.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/naming-research.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/page-structure-rules.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/prior-prompt-architecture.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/style-language.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompt-guides-guards-resources/usefulness-tools.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/prompts-running-evaluation.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/accuracy-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/in-repo-glossaries.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/terminology-consolidated.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/terminology-per-tab.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/universal-terms.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/_research-and-consolidated-notes/reference-sources-quality-scored/veracity-sources.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/human-notes.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/PHASE: PAGE CONTENT.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/community-tab-prompt-consolidated.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/docs-tab-context-ia-prompt-general.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/level-1-tab-map.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/level-2-pass-a-content.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/deprecated/level-2-pass-b-layout.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/docs-review-prompt-tiers.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/prompt-do-dont-reference.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/section-naming.md`
+- `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/DEPENDENCY-TREE.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/PROJECT-MANAGEMENT-CANONICAL.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/ai-issues.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/ai-rules-guides.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/content-pipeline-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/framework-index-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/READ-EVERY-TIME/plan-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/Research/copy-skills-reference.md`
+- `workspace/plan/active/CONTENT-WRITING/Research/page-templates-survey.md`
+- `workspace/plan/active/CONTENT-WRITING/Research/prompt-research.md`
+- `workspace/plan/active/CONTENT-WRITING/Research/research.md`
+- `workspace/plan/active/CONTENT-WRITING/Tasks/draft-plan-pipeline.md`
+- `workspace/plan/active/CONTENT-WRITING/Tasks/handoff-resources-restructure.md`
+- `workspace/plan/active/CONTENT-WRITING/Tasks/page-type-migration.md`
+- `workspace/plan/active/CONTENT-WRITING/Testing/Site-Tabs/1-site-prompt.md`
+- `workspace/plan/active/CONTENT-WRITING/Testing/Site-Tabs/2-tab-prompt.md`
+- `workspace/plan/active/CONTENT-WRITING/Testing/Site-Tabs/Site/Outputs/1.1-gpt.md`
+- `workspace/plan/active/CONTENT-WRITING/Testing/Site-Tabs/Tabs/lp-token/_archive/lpt-claude.md`
+- `workspace/plan/active/CONTENT-WRITING/Testing/Site-Tabs/Tabs/lp-token/_archive/tab-prompt-lp-token.md`
+- `workspace/plan/active/CONTENT-WRITING/Workspace/collation.md`
+- `workspace/plan/active/CONTENT-WRITING/chat-session-summary.md`
+- `workspace/plan/active/CONTENT-WRITING/collated/about/README.md`
+- `workspace/plan/active/CONTENT-WRITING/collated/delegators/README.md`
+- `workspace/plan/active/CONTENT-WRITING/collated/developers/README.md`
+- `workspace/plan/active/CONTENT-WRITING/collated/gateways/README.md`
+- `workspace/plan/active/CONTENT-WRITING/collated/orchestrators/README.md`
+- `workspace/plan/active/CONTENT-WRITING/content-pipeline-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/about-content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/about-full-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/about-ia-prereq.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/about-research-pack.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/about-v1-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/delegators-content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/delegators-full-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/delegators-ia-prereq.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/delegators-research-pack.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/delegators-v1-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/developers-content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/developers-full-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/developers-ia-prereq.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/developers-research-pack.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/developers-v1-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/gateways-content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/gateways-full-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/gateways-ia-prereq.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/gateways-research-pack.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/gateways-v1-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-audience-doc.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-collated-status.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-content-scan.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-full-content.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-ia-mapping.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-ia-prereq.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-research-pack.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-tree-nav.md`
+- `workspace/plan/active/CONTENT-WRITING/context-packs/orchestrators-v1-content.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/cross-tab-journeys.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md`
+- `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md`
+- `workspace/plan/active/CONTENT-WRITING/dep-plan-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/design-canonical.mdx`
+- `workspace/plan/active/CONTENT-WRITING/framework-index-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/master-status.mdx`
+- `workspace/plan/active/CONTENT-WRITING/plan-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/prd-canonical.md`
+- `workspace/plan/active/CONTENT-WRITING/project-management.md`
+- `workspace/plan/active/CONTENT-WRITING/prompt-testing-protocol.md`
+
+### `v2/orchestrators/_workspace/canonical`
+
+- `v2/orchestrators/_workspace/canonical/Frameworks.mdx`
+- `v2/orchestrators/_workspace/canonical/IA.mdx`
+- `v2/orchestrators/_workspace/canonical/REVIEW-REGISTRY.md`
+- `v2/orchestrators/_workspace/canonical/check/ORCHESTRATORS-ROLLUP.md`
+- `v2/orchestrators/_workspace/canonical/check/checks-gap-content.md`
+- `v2/orchestrators/_workspace/canonical/check/checks-gap-layout.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/architecture-review.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/architecture.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/capabilities-review.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/capabilities.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/incentive-model-review.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/incentive-model.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/role-review.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/role.md`
+- `v2/orchestrators/_workspace/canonical/check/concepts/summary-index.mdx`
+- `v2/orchestrators/_workspace/canonical/check/concepts/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/decision-log.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/dep-guide-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/dep-guide.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/gateway-orchestrator-interface-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/gateway-orchestrator-interface.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/gateway-relationships-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/gateway-relationships.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/pool-operators-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/pool-operators.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/scale-operations-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/scale-operations.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/advanced-operations/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/ai-inference-operations-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/ai-inference-operations.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/audio-and-vision-pipelines-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/audio-and-vision-pipelines.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/diffusion-pipeline-setup-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/diffusion-pipeline-setup.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/llm-pipeline-setup-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/llm-pipeline-setup.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/model-demand-reference-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/model-demand-reference.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/model-hosting-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/model-hosting.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/realtime-ai-setup-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/realtime-ai-setup.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/video-transcoding-operations-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/video-transcoding-operations.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/workload-options-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/ai-and-job-workloads/workload-options.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/ai-model-management-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/ai-model-management.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/capacity-planning-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/capacity-planning.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/pricing-strategy-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/pricing-strategy.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/reward-call-tuning-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/reward-call-tuning.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/config-and-optimisation/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/dual-mode-configuration-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/dual-mode-configuration.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/join-a-pool-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/join-a-pool.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/new-join-a-pool-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/new-join-a-pool.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/orchestrator-transcoder-setup-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/orchestrator-transcoder-setup.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/setup-options-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/setup-options.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/siphon-setup-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/siphon-setup.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/deployment-details/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/explorer-operations-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/explorer-operations.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/metrics-and-alerting-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/metrics-and-alerting.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/operator-toolbox-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/operator-toolbox.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/troubleshooting-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/monitoring-and-tooling/troubleshooting.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/business-case-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/business-case.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/operator-impact-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/operator-impact.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/operator-rationale-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/operator-rationale.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/requirements-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/requirements.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/operator-considerations/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/payments-and-pricing/payment-receipts-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/payments-and-pricing/payment-receipts.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/payments-and-pricing/payments-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/payments-and-pricing/payments.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/payments-and-pricing/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/roadmap-and-funding/funding-and-support-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/roadmap-and-funding/funding-and-support.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/roadmap-and-funding/orchestrator-profiles-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/roadmap-and-funding/orchestrator-profiles.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/roadmap-and-funding/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/delegate-operations-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/delegate-operations.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/earning-model-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/earning-model.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/network-participation-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/network-participation.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/reward-mechanics-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/reward-mechanics.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/staking-and-rewards/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/add-ai-to-video-node-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/add-ai-to-video-node.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/ai-earning-quickstart-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/ai-earning-quickstart.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/byoc-cpu-smoke-test-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/byoc-cpu-smoke-test.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/byoc-cpu-tutorial-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/byoc-cpu-tutorial.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/full-ai-pipeline-tutorial-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/full-ai-pipeline-tutorial.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/realtime-ai-tutorial-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/realtime-ai-tutorial.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-byoc-cpu-pipeline-stub-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-byoc-cpu-pipeline-stub.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-go-production-stub-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-go-production-stub.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-offchain-transcoding-test-stub-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/tutorial-offchain-transcoding-test-stub.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/zero-to-first-reward-review.md`
+- `v2/orchestrators/_workspace/canonical/check/guides/tutorials/zero-to-first-reward.md`
+- `v2/orchestrators/_workspace/canonical/check/index-review.md`
+- `v2/orchestrators/_workspace/canonical/check/index.md`
+- `v2/orchestrators/_workspace/canonical/check/learnings.md`
+- `v2/orchestrators/_workspace/canonical/check/navigator-review.md`
+- `v2/orchestrators/_workspace/canonical/check/navigator.md`
+- `v2/orchestrators/_workspace/canonical/check/portal-review.md`
+- `v2/orchestrators/_workspace/canonical/check/portal.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/AI-prompt-start-review.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/AI-prompt-start.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/guide-review.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/guide.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/tutorial-review.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/tutorial.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/video-transcoding-review.md`
+- `v2/orchestrators/_workspace/canonical/check/quickstart/video-transcoding.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/compendium/glossary-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/compendium/glossary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/compendium/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/arbitrum-exchanges-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/arbitrum-exchanges.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/arbitrum-rpc-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/arbitrum-rpc.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/community-guides-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/community-guides.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/community-pools-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/community-pools.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/faq-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/faq.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/glossary-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/glossary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/gpu-support-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/gpu-support.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-guides-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-guides.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-help-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-help.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-payments-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/root/x-payments.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/cli-flags-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/cli-flags.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-changelog-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-changelog.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-contract-addresses-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-contract-addresses.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-support-status-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-support-status.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-troubleshooting-review.md`
+- `v2/orchestrators/_workspace/canonical/check/resources/technical/x-troubleshooting.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/configure-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/configure.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/connect-and-activate-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/connect-and-activate.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/guide-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/guide.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/r-monitor-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/r-monitor.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/rcs-requirements-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/rcs-requirements.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/rs-install-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/rs-install.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/s-guide-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/s-guide.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/summary.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/test-review.md`
+- `v2/orchestrators/_workspace/canonical/check/setup/test.md`
+- `v2/orchestrators/_workspace/canonical/checks.mdx`
+- `v2/orchestrators/_workspace/canonical/my-process.mdx`
+- `v2/orchestrators/_workspace/canonical/process.mdx`
+- `v2/orchestrators/_workspace/canonical/record-log.md`
+- `v2/orchestrators/_workspace/canonical/research/all-copy-content.mdx`
+- `v2/orchestrators/_workspace/canonical/research/audience-personas-orchestrators.mdx`
+- `v2/orchestrators/_workspace/canonical/research/per-page-needs.mdx`
+- `v2/orchestrators/_workspace/canonical/review/00-review-guide.md`
+- `v2/orchestrators/_workspace/canonical/review/01-arriving-question.md`
+- `v2/orchestrators/_workspace/canonical/review/02-personas.md`
+- `v2/orchestrators/_workspace/canonical/review/03-jobs.md`
+- `v2/orchestrators/_workspace/canonical/review/04-journey.md`
+- `v2/orchestrators/_workspace/canonical/review/05-section-structure.md`
+- `v2/orchestrators/_workspace/canonical/review/06-terminology.md`
+- `v2/orchestrators/_workspace/canonical/review/07-path-validation.md`
+- `v2/orchestrators/_workspace/canonical/review/CLAUDE-DRAFT.md`
+- `v2/orchestrators/_workspace/canonical/review/DRAFT-ANSWERS.md`
+- `v2/orchestrators/_workspace/canonical/review/SESSION-REVIEW.md`
+- `v2/orchestrators/_workspace/canonical/review/scorecard-draft.mdx`
+- `v2/orchestrators/_workspace/canonical/scripts/script-pipeline-index.mdx`
+- `v2/orchestrators/_workspace/canonical/scripts/script-plan.md`
+
+### `docs-guide/frameworks`
+
+- `docs-guide/frameworks/component-framework-canonical.mdx`
+- `docs-guide/frameworks/component-governance.mdx`
+- `docs-guide/frameworks/content-system.mdx`
+- `docs-guide/frameworks/page-composition-framework.mdx`
+- `docs-guide/frameworks/page-taxonomy-framework.mdx`
+- `docs-guide/frameworks/research-skill-workflow.mdx`
+
+### `docs-guide/policies`
+
+- `docs-guide/policies/agent-governance-framework.mdx`
+- `docs-guide/policies/audit-system-overview.mdx`
+- `docs-guide/policies/cleanup-quarantine-policy.mdx`
+- `docs-guide/policies/component-layout-decisions.mdx`
+- `docs-guide/policies/docs-guide-structure-policy.mdx`
+- `docs-guide/policies/generated-artifact-and-hook-governance.mdx`
+- `docs-guide/policies/governance-index.mdx`
+- `docs-guide/policies/infrastructure-principles.mdx`
+- `docs-guide/policies/ownerless-governance.mdx`
+- `docs-guide/policies/quality-gates.mdx`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+- `docs-guide/policies/script-governance.mdx`
+- `docs-guide/policies/skill-pipeline-map.mdx`
+- `docs-guide/policies/snippets-assets-policy.mdx`
+- `docs-guide/policies/source-of-truth-policy.mdx`
+- `docs-guide/policies/v2-folder-governance.mdx`
+- `docs-guide/policies/workspace-lifecycle-policy.mdx`
+
+### `docs-guide/canonical/collation-data/Mintlify`
+
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/operations/scripts/x-archive/dev-README.mdx`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/operations/scripts/x-archive/i18n-README.mdx`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/operations/scripts/x-archive/snippets-README.mdx`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/snippets/snippetsWiki/mintlify-behaviour.mdx`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/performance/css-audit-report.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/style-css-token-audit.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/thread-outputs/research/mintlify-constraints-reference.md`
+- `docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/thread-outputs/research/styles-gap-analysis.md`
+- `docs-guide/canonical/collation-data/Mintlify/index.md`
+- `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`
+
+## Notes
+
+- `workspace/plan/active/CONTENT-WRITING/Prompts/prompt-do-dont-reference.md` currently exists but is empty. Do not treat it as an active source of truth.
+- The highest-authority working synthesis is `workspace/plan/active/_MY_PROCESS/canonical-content-copy-and-review-framework.md`, not this inventory.
+- Regenerate this index from the source buckets when the underlying files change.

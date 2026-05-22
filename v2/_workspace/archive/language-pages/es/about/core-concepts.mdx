@@ -1,0 +1,128 @@
+---
+title: Livepeer Conceptos Clave
+sidebarTitle: Livepeer Conceptos Clave
+description: >-
+  Una introducción de alto nivel a los conceptos clave y la arquitectura de la
+  Livepeer Red de IA y Video en tiempo real
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - livepeer core concepts
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9jb3JlLWNvbmNlcHRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvY29yZS1jb25jZXB0cyIsInNvdXJjZUhhc2giOiJiNTVlZjBkMjdhZDk2MGQxMzNkMjY0YWFmYjUzNjdiZDM5YmM4MTRhM2Q1ZDlmOTMxYzIwYmI1MTUwZTIzYzY5IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDE2OjQ4OjAyLjYzNFoifQ== */}
+import Protocol from "/snippets/pages/01_ABOUT/concepts/protocol.mdx"
+import Network from "/snippets/pages/01_ABOUT/concepts/network.mdx"
+import Actors from "/snippets/pages/01_ABOUT/concepts/actors.mdx"
+
+### Visión general y separación
+
+Livepeer está diseñado como una red modular de video/IA anclada a un protocolo minimalista on‑chain. El protocolo gestiona activos e incentivos en Ethereum, mientras que la red off‑chain realiza el trabajo pesado de transcodificación y procesamiento de IA. Los documentos oficiales separan claramente estos dominios:
+
+Protocolo on‑chain – los contratos inteligentes mantienen depósitos ETH de emisores y orquestadores; crean y distribuyen tokens de staking LPT; emiten tickets de pago probabilísticos; hacen cumplir las reglas de staking, slashing y recompensas; y gestionan la gobernanza. El protocolo no transcodifica video ni ejecuta IA. Su función es coordinar pagos y mantener un estado sin confianza.
+
+Red off‑chain – los nodos orquestadores ejecutan el software Livepeer para realizar tareas de transcodificación y IA. Compiten en precio, calidad y latencia. Los trabajos y el enrutamiento de video/IA se realizan completamente off‑chain. Servicios como Livepeer Studio y pasarelas comunitarias se sitúan sobre esta capa.
+
+Puente – los emisores depositan ETH en el protocolo y envían tickets probabilísticos con cada segmento. Los orquestadores canjean los tickets ganadores on‑chain por tarifas ETH, mientras que el trabajo en sí se entrega off‑chain. LPT no se utiliza para pagar servicios; solo se usa para staking, delegación y gobernanza.
+
+Estos límites garantizan que el protocolo siga siendo ligero y resistente a la censura. Cualquier cambio propuesto debe respetar esta separación-el cómputo intensivo debe permanecer off‑chain, mientras que las reglas financieras y la gobernanza residen on‑chainU
+
+{/* <Frame> */}
+  <Tabs>
+    <Tab title="Overview">
+      <Overview />
+    </Tab>
+    <Tab title="Protocol">
+      <Protocol />
+    </Tab>
+    <Tab title="Network">
+      <Network />
+    </Tab>
+    <Tab title="Actors">
+      <Actors />
+    </Tab>
+
+  </Tabs>
+{/* </Frame> */}
+
+### Definiciones
+
+**Livepeer Protocolo**
+
+El protocolo es el conjunto de reglas + la lógica on-chain que gobierna:
+
+**Livepeer Red**
+
+La red es el sistema operativo real de máquinas que realizan trabajo:
+
+**Livepeer Actores**
+
+Un actor Livepeer es cualquier rol o entidad que participa en el protocolo o red Livepeer y realiza acciones definidas por el sistema.
+
+
+# Visión general
+
+Livepeer es una plataforma full-stack para transmisión de video y IA. El software de transmisión de video está respaldado por una red de actores que realizan el trabajo necesario para computar, transcodificar y orquestar trabajos de video e IA en la red Livepeer.
+
+El Protocolo Livepeer es el código subyacente que hace cumplir los mecanismos y reglas para garantizar la fiabilidad, cooperación y coordinación de estos actores descentralizados.
+
+# Conceptos clave
+
+## Livepeer Protocolo
+
+El protocolo es el conjunto de reglas + la lógica on-chain que gobierna:
+
+- staking
+- delegación
+- inflación y recompensas
+- selección de orquestadores
+- slashing
+- pagos probabilísticos
+- reglas de verificación
+
+La capa económica y de coordinación que hace cumplir el comportamiento correcto.
+
+## Livepeer Red
+
+La red es el sistema operativo real de máquinas que realizan trabajo:
+
+- Orquestadores (nodos GPU)
+- Transcodificadores / Trabajadores
+- Puertas de enlace
+- Emisores
+- Procesos de verificación
+- Enrutamiento de trabajos
+- Cómputo de IA y video en tiempo real
+
+Es la malla GPU descentralizada en vivo y operativa que ejecuta trabajos de video y IA.
+
+## Protocolo vs Red
+
+| Capa                 | Descripción                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Livepeer Protocolo** | Incentivos criptoeconómicos en cadena y coordinación; staking; pagos.        |
+| **Livepeer Red**  | Nodos fuera de cadena que realizan trabajo en tiempo real (transcodificación, inferencia, enrutamiento).  |
+| **Relación**      | La red _ejecuta_ el cómputo; el protocolo _gobierna, asegura y paga_ lo. |
+
+
+# En cadena vs fuera de cadena
+
+Livepeer protocolo = Arbitrum One (L2)
+Livepeer token (LPT) = Ethereum mainnet (L1)
+Livepeer red (GPU nodes + gateways) = capa de ejecución fuera de cadena
+
+# Livepeer Actores
+
+Un actor Livepeer es cualquier rol o entidad que participa en el protocolo Livepeer o la red y realiza acciones definidas por el sistema.
+En la arquitectura Livepeer, “actor” es una categoría formal utilizada para describir a los participantes con responsabilidades, incentivos e interacciones distintas.
+Los actores son fundamentales para describir cómo la red funciona de extremo a extremo desde una perspectiva de ingeniería de sistemas.
+
+El ecosistema de Livepeer incluye tanto a los actores del protocolo (roles en cadena) como a los actores de la comunidad (participantes de la red y constructores)
+
+<Note>INSERT LIVEPEER ACTOR DIAGRAM HERE \[THIS ONE LOOKS OLD (whitpaper)</Note>
+
+<Note>Actor diagram placeholder removed pending final approved asset.</Note>

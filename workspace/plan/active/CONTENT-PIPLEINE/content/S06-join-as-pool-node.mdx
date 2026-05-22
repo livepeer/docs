@@ -1,0 +1,234 @@
+---
+title: 'Join as a Pool Node'
+sidebarTitle: 'Pool Participation'
+description: 'Evaluate whether pool participation suits your hardware and capital situation, understand the architecture, and connect your GPU to an existing orchestrator pool.'
+pageType: guide
+audience: orchestrator
+purpose: orient
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - pool
+  - pool node
+  - GPU pool
+  - transcoding pool
+  - join a pool
+  - Titan Node
+lastVerified: '2026-03-23'
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+
+<Tip>
+  Pool participation is the lowest-barrier entry point for GPU owners who want to earn from the Livepeer network without managing on-chain operations, staking LPT, or running protocol infrastructure.
+</Tip>
+
+A pool is a single registered orchestrator node backed by multiple GPU contributors. The pool operator holds stake, handles reward calling, sets prices, and routes jobs. Pool nodes provide GPU compute and receive off-chain payouts for completed work.
+
+<Note>
+  Pools are community-run. Each pool operates independently with its own terms. Vet any pool before connecting hardware.
+</Note>
+
+<CustomDivider middleText="Pool vs Solo vs AI-First" />
+
+## Decision framework: pool, solo, or AI-first?
+
+The right path depends on three variables: available LPT, hardware profile, and operational appetite.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header>Pool node</TableCell>
+      <TableCell header>Solo orchestrator</TableCell>
+      <TableCell header>AI-first (solo, low stake)</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**LPT required**</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>Enough for active set (video)</TableCell>
+      <TableCell>Minimal (activation only)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**On-chain registration**</TableCell>
+      <TableCell>Pool operator handles</TableCell>
+      <TableCell>You handle</TableCell>
+      <TableCell>You handle</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Pricing control**</TableCell>
+      <TableCell>None -- pool operator sets</TableCell>
+      <TableCell>Full</TableCell>
+      <TableCell>Full</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Payouts**</TableCell>
+      <TableCell>Off-chain, via pool operator</TableCell>
+      <TableCell>On-chain (ETH fees + LPT rewards)</TableCell>
+      <TableCell>On-chain (ETH fees)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Operational complexity**</TableCell>
+      <TableCell>Low</TableCell>
+      <TableCell>Medium-high</TableCell>
+      <TableCell>Medium</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Trust requirement**</TableCell>
+      <TableCell>Pool operator</TableCell>
+      <TableCell>Yourself</TableCell>
+      <TableCell>Yourself</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Best for**</TableCell>
+      <TableCell>GPU owners wanting passive earnings without protocol management</TableCell>
+      <TableCell>Operators with stake, wanting full control</TableCell>
+      <TableCell>GPU owners with 24 GB VRAM, willing to manage a node but without LPT for the active set</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+**Key insight:** AI inference routing is capability-based, not stake-rank-based. Active set membership is not required for AI jobs. An operator with strong GPU hardware but limited LPT earns AI fees as a solo node without needing pool membership. The pool path is most relevant when the operator wants video transcoding income without acquiring LPT, or prefers a hands-off operational model.
+
+{/* VERIFY: Confirm that AI-only orchestrators can activate on-chain with minimal LPT (i.e. no minimum stake threshold beyond gas) at https://github.com/livepeer/go-livepeer */}
+
+<CustomDivider middleText="How Pools Work" />
+
+## Pool architecture
+
+From the network's perspective, there is one orchestrator with one stake offering pooled capacity. From a pool node's perspective, the GPU is one contributor behind that orchestrator.
+
+The pool operator handles:
+- Holding and managing stake
+- Setting prices and advertising capabilities
+- Receiving work from gateways
+- Routing segments to pool node GPUs for processing
+- Distributing payouts to pool members
+
+A pool node:
+- Runs a transcoding worker process (go-livepeer in transcoder mode, or the pool's own client)
+- Processes segments routed to the GPU
+- Receives off-chain payouts based on completed work
+
+<Warning>
+  There are no on-chain records of individual GPU contributions. Pool reputation and rewards depend entirely on the pool operator's performance and accounting.
+</Warning>
+
+<CustomDivider middleText="Find and Evaluate" />
+
+## Finding and evaluating a pool
+
+There is no canonical directory of pools. Discovery is off-chain and social.
+
+<CardGroup cols={2}>
+  <Card title="Titan Node Pool" icon="tower-cell" href="https://github.com/Titan-Node/Titan-Node-Pool">
+    Community-run video transcoding pool with a public dashboard and documented setup process.
+  </Card>
+  <Card title="Livepeer Discord" icon="comments" href="https://discord.gg/livepeer">
+    The `#orchestrators` channel is the active community channel for finding pools and connecting with operators.
+  </Card>
+</CardGroup>
+
+### Due diligence checklist
+
+Before connecting hardware, confirm:
+
+<AccordionGroup>
+  <Accordion title="Payout terms" icon="calculator">
+    How are earnings calculated? Common models include per-segment payment, proportional share of total pool work, or pool-token distribution. Confirm the payout asset (ETH, USDC, or other), frequency (weekly, monthly), and minimum threshold.
+  </Accordion>
+  <Accordion title="Worker requirements" icon="list-check">
+    Legitimate pools provide clear technical requirements: GPU type, minimum VRAM, operating system, and network bandwidth. A legitimate pool never asks for a keystore file or private key. **A request for a keystore or private key is a scam.**
+  </Accordion>
+  <Accordion title="Supported workloads" icon="microchip">
+    Confirm whether the pool handles video transcoding, AI inference, or both. As of early 2026, publicly documented pools primarily handle video transcoding. Check Discord for AI-focused pools.
+  </Accordion>
+  <Accordion title="Pool maintenance" icon="clock-rotate-left">
+    Check when the pool's GitHub repository was last updated. Check Discord presence and community activity. A pool with stale tooling often has weak gateway demand.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Connect" />
+
+## Connecting your GPU
+
+Pool operators each have their own worker client setup. Two common connection models:
+
+### Docker worker (recommended)
+
+Most pools provide a Docker image:
+
+```bash icon="terminal" filename="docker-pool-worker"
+# Clone the pool's repository (example: Titan Node)
+git clone https://github.com/Titan-Node/Titan-Node-Pool.git
+cd Titan-Node-Pool/docker
+docker compose up -d
+```
+
+The container connects to the pool operator's orchestrator, receives video segments, processes them with the local GPU, and reports back completed work.
+
+### go-livepeer transcoder mode
+
+Run go-livepeer directly in transcoder mode pointed at the pool operator's orchestrator address:
+
+```bash icon="terminal" filename="transcoder-mode"
+livepeer \
+    -transcoder \
+    -orchAddr <pool-orchestrator-address>:8935 \
+    -nvidia 0 \
+    -maxSessions 10
+```
+
+<Warning>
+  Pass `-transcoder` only when joining a pool. That keeps the machine in worker mode and leaves on-chain registration with the pool operator.
+</Warning>
+
+<CustomDivider middleText="Verify and Track" />
+
+## Verify work is arriving
+
+Once connected, transcoding activity should appear in worker logs within a few minutes during active routing windows:
+
+```text icon="terminal" filename="expected-worker-log"
+Received transcode request  segment=0 ...
+Transcoded segment          segment=0 ...
+```
+
+No activity after 10-15 minutes: verify the pool orchestrator endpoint address, confirm the GPU is visible (`nvidia-smi`), and ask in the pool's Discord channel. Quiet periods occur when network demand is low.
+
+## Track earnings
+
+Pool payouts are off-chain. Each pool uses its own tracking mechanism -- dashboards, Discord bots, or periodic statements. Keep a record of expected versus actual payouts.
+
+<CustomDivider />
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Do pools share LPT inflation rewards with workers?" icon="coins">
+    Transcoding fees are paid in ETH. LPT inflation rewards accrue to the staking orchestrator. Some pools share a portion of LPT rewards with workers -- ask the pool operator about their policy.
+  </Accordion>
+  <Accordion title="Are AI inference pools available?" icon="microchip">
+    AI inference requires capability registration tied to the orchestrator node. As of early 2026, publicly documented pools primarily handle video transcoding. Running AI inference and earning from it currently requires a solo orchestrator path, which does not require active-set-level LPT stake.
+  </Accordion>
+  <Accordion title="Multiple GPUs in a pool?" icon="server">
+    Pass multiple GPU IDs when starting the worker (e.g. `-nvidia 0,1,2`). The pool orchestrator sees the worker as a single endpoint with higher capacity.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Get Your Node Running" icon="server" href="/v2/orchestrators/setup/guide">
+    Full solo orchestrator setup for operators who decide against the pool path.
+  </Card>
+  <Card title="AI Pipeline Setup" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    AI-first solo path -- earn from AI inference without active-set-level LPT stake.
+  </Card>
+</CardGroup>

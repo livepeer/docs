@@ -1,0 +1,33 @@
+---
+title: 使用 JWT 的访问控制
+description: 使用签名的 JWT 限制播放，只有拥有有效令牌的观众才能观看。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FjY2Vzcy1jb250cm9sL2p3dC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYWNjZXNzLWNvbnRyb2wvand0Iiwic291cmNlSGFzaCI6ImU0MTYyMzk4Mjg5MzM5ZGIxNzI3NzQxY2VhZDk0NGZiMmY5ZDkxN2QxNGZkNjk1Yjk0MWUwMjlkY2Q0NjdkNGYiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MjA6MDguMTQzWiJ9 */}
+使用 **JWT** 访问控制，您可以将流或资产标记为受限制。观看者必须发送一个由 Studio **JWT** 签名的 **签名密钥**。您在后端验证用户后发出 JWT。
+
+## 1. 创建签名密钥
+
+在仪表板中或通过[签名密钥 API](https://livepeer.studio/docs/api-reference/signing-key/create)，创建签名密钥。存储**私钥** 在你的后端 (env) 中并使用 "**公钥** 在 Studio 中进行验证。
+
+## 2. 创建受限制的内容
+
+设置 "`playbackPolicy.type` 为 "`"jwt"`在创建流或资产时：
+
+```ts
+await livepeer.stream.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+await livepeer.asset.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+```
+
+## 3. 从您的 API 签名并返回一个 JWT
+
+在后端路由（例如`/api/sign-jwt`）中，验证用户，然后使用私钥签名一个 JWT。包含`playbackId`、过期时间和任何自定义声明。将令牌返回给客户端。使用`@livepeer/core/crypto` `signAccessJwt`或任何具有相同声明的 JWT 库 Livepeer 期望（参见[Livepeer Studio 文档](https://livepeer.studio/docs)）
+
+## 4. 将 JWT 传递给播放器
+
+```tsx
+<Player.Root src={src} jwt={jwt}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+**自定义播放器:** 将 JWT 作为 `Livepeer-Jwt` 请求头 发送给 WebRTC/HLS，或作为查询参数 `jwt` 在播放 URL 上。

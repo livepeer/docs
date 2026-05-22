@@ -248,16 +248,13 @@ export const TwitterTimeline = ({ className = '', style = {}, ...rest }) => {
  * @category integrators
  * @subcategory embeds
  * @status stable
- * @description Frames external source content with a scrollable container and source link.
- * @dataSource external source
+ * @description Fetches and renders external markdown with scrollable container and source link.
+ * @dataSource fetch(url)
   * @aiDiscoverability none
  * @breakingChangeRisk low
  * @lastMeaningfulChange 2026-04-09
- * @param {string} [sourceName] - Source name displayed in the component header.
- * @param {string} [sourceUrl] - Source URL used by the header link.
- * @param {string} [sourceLabel="View source"] - Label used by the header link.
- * @param {string} [repoName] - Legacy source name alias.
- * @param {string} [githubUrl] - Legacy source URL alias.
+ * @param {string} repoName - Repo name used by the component.
+ * @param {string} githubUrl - Github url used by the component.
  * @param {string} [maxHeight="1000px"] - Max height used by the component.
  * @param {string} [icon="github"] - Icon configuration used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
@@ -265,9 +262,6 @@ export const TwitterTimeline = ({ className = '', style = {}, ...rest }) => {
  * @param {object} [style={}] - Inline style overrides.
  */
 export const ExternalContent = ({
-  sourceName,
-  sourceUrl,
-  sourceLabel = "View source",
   repoName,
   githubUrl,
   maxHeight = "1000px",
@@ -277,9 +271,6 @@ export const ExternalContent = ({
   style = {},
   ...rest
 }) => {
-  const displayName = sourceName || repoName
-  const href = sourceUrl || githubUrl
-
   return (
     <div
       className={className}
@@ -306,23 +297,21 @@ export const ExternalContent = ({
             style={{ display: "flex", alignItems: "center", gap: "var(--lp-spacing-2)" }}
           >
             <Icon icon={icon} size={16} />
-            <strong>{displayName}</strong>
+            <strong>{repoName}</strong>
           </span>
-          {href && (
-            <a
-              href={href}
-              target="_blank" rel="noopener noreferrer"
-              style={{
-                color: "var(--lp-color-accent)",
-                fontSize: "0.875rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--lp-spacing-1)",
-              }}
-            >
-              {sourceLabel} <Icon icon="arrow-up-right-from-square" size={12} />
-            </a>
-          )}
+          <a
+            href={githubUrl}
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              color: "var(--lp-color-accent)",
+              fontSize: "0.875rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--lp-spacing-1)",
+            }}
+          >
+            View on GitHub <Icon icon="arrow-up-right-from-square" size={12} />
+          </a>
         </div>
         <div
           style={{
@@ -332,7 +321,7 @@ export const ExternalContent = ({
           }}
           role="region"
           tabIndex={0}
-          aria-label={displayName ? `Scrollable content for ${displayName}` : "Scrollable content"}
+          aria-label={repoName ? `Scrollable content for ${repoName}` : "Scrollable content"}
         >
           {children}
         </div>

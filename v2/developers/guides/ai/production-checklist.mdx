@@ -1,0 +1,137 @@
+---
+title: AI production checklist
+sidebarTitle: Production Checklist
+description: >-
+  Pre-launch checklist for Livepeer AI applications: gateway selection, authentication, error handling, cost estimation,
+  and monitoring.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer production
+  - AI application
+  - production checklist
+  - monitoring
+  - cost estimation
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+purpose: verify
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The free public gateway at `dream-gateway.livepeer.cloud` is for testing only. Production applications must use the Studio gateway.</Tip>
+</CenteredContainer>
+
+---
+
+<CustomDivider middleText="Gateway" />
+
+## Gateway selection
+
+| Environment | Gateway URL | When to use |
+|---|---|---|
+| Development / testing | `https://dream-gateway.livepeer.cloud` | Free, no API key required, unpredictable latency |
+| Production | `https://livepeer.studio/api/beta/generate` | Studio-managed, authenticated, SLA-backed |
+
+Switch before launch. The public gateway has no rate limits, no SLA, and no support. Do not ship to users on the public gateway.
+
+<CustomDivider middleText="Authentication" />
+
+## Authentication
+
+- [ ] API key stored in environment variables, never in source code
+- [ ] Backend API key used for server-side requests; CORS-enabled key for browser-side
+- [ ] Key rotation schedule set (90-day recommended)
+- [ ] `.env` files excluded from version control via `.gitignore`
+- [ ] Dependency scanning (e.g., Dependabot, Snyk) configured to detect accidental key exposure
+
+<CustomDivider middleText="Error Handling" />
+
+## Error handling
+
+- [ ] `401` handler: log and surface a configuration error -- do not retry; the key is wrong
+- [ ] `422` handler: log the full response body to identify the failing field; fix the request shape
+- [ ] `503` handler: retry with exponential backoff; cold model load is expected behaviour, not a failure
+- [ ] `429` handler: back off and retry; check rate limits in Studio dashboard
+- [ ] Global timeout set on all requests (recommended: 300 seconds for cold model scenarios)
+- [ ] SDK retry configuration enabled with exponential backoff (see SDK Integration Guide)
+
+<CustomDivider middleText="Model Selection" />
+
+## Model selection
+
+Choose warm models for latency-sensitive paths. Cold model load times range from 30 seconds to several minutes. Warm models respond immediately.
+
+| If you need... | Use warm model |
+|---|---|
+| Text to image | `SG161222/RealVisXL_V4.0_Lightning` |
+| Image to image | `timbrooks/instruct-pix2pix` |
+| Audio transcription | `openai/whisper-large-v3` |
+| LLM completion | `meta-llama/Meta-Llama-3.1-8B-Instruct` |
+
+Custom `model_id` values cold-start on every request until an orchestrator warms them. Test custom models under expected load before launch.
+
+<CustomDivider middleText="Cost Estimation" />
+
+## Cost estimation
+
+AI inference pricing is orchestrator-set. The current indicative rate for text-to-image is approximately $0.019 per megapixel of output.
+
+Illustrative example for text-to-image at 1024x1024:
+- 1024 x 1024 = 1,048,576 pixels = 1.05 megapixels
+- At $0.019/MP: approximately $0.020 per image
+- At 1,000 images/day: approximately $20/day
+
+Actual rates vary by orchestrator and pipeline. Check your Studio billing dashboard after the first week of production traffic to calibrate estimates against real costs.
+
+<CustomDivider middleText="Monitoring" />
+
+## Monitoring
+
+- [ ] Log HTTP status codes for all gateway requests
+- [ ] Track p50, p95, p99 latency per pipeline
+- [ ] Alert on sustained `503` rate above 5% (indicates warm model unavailability)
+- [ ] Alert on sustained `5xx` rate above 1% (indicates inference failures)
+- [ ] Monitor Studio billing dashboard weekly during ramp-up
+
+Livepeer does not provide an SDK-level metrics collector. Instrument at the HTTP client layer.
+
+<CustomDivider middleText="Launch Readiness" />
+
+## Launch readiness summary
+
+- [ ] Production gateway URL configured (`livepeer.studio/api/beta/generate`)
+- [ ] Backend API key in secrets manager, not in code
+- [ ] CORS-enabled key used for browser-side calls
+- [ ] Retry policy implemented with exponential backoff
+- [ ] All error types (`401`, `422`, `503`, `429`) handled
+- [ ] Warm models used for latency-sensitive paths
+- [ ] Cost projection completed and budget alert set in Studio
+- [ ] Status page subscribed: https://status.livepeer.studio
+- [ ] Incident response contact: Livepeer Discord `#builders` or support@livepeer.org
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="AI Authentication" icon="lock" href="/v2/developers/guides/ai/authentication">
+    API key types, CORS keys, and rotation strategy.
+  </Card>
+  <Card title="AI Troubleshooting" icon="triangle-exclamation" href="/v2/developers/guides/ai/troubleshooting">
+    Diagnose errors by status code.
+  </Card>
+  <Card title="SDK Integration Guide" icon="code" href="/v2/developers/build/sdk-gateway">
+    Retry configuration and error handling in TypeScript, Python, and Go.
+  </Card>
+</CardGroup>

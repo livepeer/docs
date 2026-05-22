@@ -1,0 +1,27 @@
+---
+title: 分析
+description: 通过 Livepeer API、Grafana 和 Timeplus 的观看人数和参与度指标。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2FuYWx5dGljcy9vdmVydmlldy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vYW5hbHl0aWNzL292ZXJ2aWV3Iiwic291cmNlSGFzaCI6IjFiMjk4MWY1ZmQxZDI0MGI3MjU1NTM5OWYzM2NlZTJhYmEwZGFiZDUzYmE3YzQ3NjhiODY0ZjNiMDc1OTc5OTMiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MjE6MjkuOTI4WiJ9 */}
+Livepeer Studio 提供**观看人数和参与度**数据，以便您测量播放次数、观看时间和播放质量。
+
+## 观看人数 API
+
+The [观看人数 API](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics)（以及相关端点）提供：
+
+- **实时观看人数** - 当前观看人数和错误率（需要 Player SDK 4.2.0+）。
+- **使用指标** - 观看次数（播放意图），观看分钟数。数据大约每5分钟刷新一次；新上传的内容可能需要长达一小时才能显示。
+- **性能指标** - 错误率、首次帧时间（TTFF）、缓冲比率、提前退出率。
+- **维度** - 按视频（播放ID、CID）、浏览器、设备、操作系统、地理区域、时区、时间段筛选。
+
+## 注册观看
+
+- **Livepeer 播放器** - 当您使用 [Livepeer 播放器](../player).
+- **自定义播放器** - 使用在 `addMediaMetrics` (或等效) 集成中描述的 [Livepeer Studio 文档](https://livepeer.studio/docs) 所以视图和质量事件会被报告。
+
+## 其他集成
+
+- **Grafana** - 使用观看人数/使用情况API来构建仪表板。参见[Livepeer Studio 文档](https://livepeer.studio/docs) 以获取示例。
+- **Timeplus** - 类似用于实时或历史分析的 API 使用。
+
+有关确切的端点路径和参数，请参阅 [观众人数 API 参考](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics) 和相关页面。

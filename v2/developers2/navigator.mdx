@@ -1,0 +1,246 @@
+---
+title: Find your build path
+sidebarTitle: Navigator
+description: >-
+  Choose your build track on Livepeer: AI inference, real-time video AI, video streaming, custom containers, or OSS
+  contribution.
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - developer path
+  - AI inference
+  - ComfyStream
+  - BYOC
+  - video streaming
+  - build path
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: navigation
+purpose: choose
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+{/*
+TO DO:
+Navigator must route the following personas:
+-> Solutions Integrators  -> looking for end products like Daydream, Studio, Streamplace, Embody
+-> AI Video Developers -> building custom AI video workflows, models, or applications
+-> Video Developers -> building streaming or transcoding applications
+-> Protocol Contributors -> building or improving the Livepeer protocol codebase
+-> Evaluators -> exploring Livepeer for potential use, but not yet building
+
+Developers Tab Main Persona:
+- AI Integrators
+- Building directly on the Livepeer Netwrok
+- Self Hosting
+- Pre-gateway application developer
+
+Items included on this page:
+- Naap, PymtHouse, ComfyStream, BYOC, AI Gateway API, Studio API, Protocol Contribution
+- Other activ repo's (sotryboard, livepeer-data-mcp, ai-runner, comfyui, etc) can be linked from the relevant paths, but not listed here to avoid overwhelm
+
+Needed
+- Decision tree to guide users to the right path
+- Comparison table of paths
+- Links to quickstarts and concept pages for each path
+- Clear descriptions of each path, tools, requirements, and use cases
+- Emphasis on AI video use cases, but also cover streaming/transcoding and protocol contribution
+
+*/}
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+# Developer Personas
+
+1. **Solutions Integrators**: Building end products like Daydream, Studio, Streamplace, Embody that integrate Livepeer's AI and video capabilities for specific use cases (e.g. live event production, interactive streaming, AI video editing).
+2. **AI / Agent Developers**: Building custom AI or realtime workflows, AI models, or applications directly
+3. **Video Developers**: Building streaming or transcoding applications.
+4. **Application Developers**: Building applications - running their own gateway or using a public gateway - that call AI inference or video APIs, but not building on the protocol directly.
+5. **Protocol Extenders??**: Building or improving the Livepeer protocol codebase (go-livepeer, ai-runner, comfystream, protocol contracts)
+
+<CenteredContainer preset="readable90">
+  <Tip>Livepeer has four distinct build paths. Each uses different tools, authentication, and infrastructure. Choosing the wrong path early costs time -- read the decision table first.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer supports AI inference, real-time AI video, video transcoding, custom containerised models, and protocol-level contribution. These paths share infrastructure but have different APIs, SDKs, and architectural requirements.
+
+<CustomDivider middleText="Choose Your Path" />
+
+## What are you building?
+
+<AccordionGroup>
+  <Accordion title="Call AI inference from my application" icon="bolt">
+
+    **Path: AI Gateway API via Studio**
+
+    You send REST requests to a Livepeer gateway and receive processed outputs. No GPU required. The Studio-managed gateway handles routing to the network.
+
+    Nine batch pipelines are available: text-to-image, image-to-image, image-to-video, image-to-text, audio-to-text, text-to-speech, upscale, segment-anything-2, and LLM.
+
+    ```bash
+    curl -X POST https://livepeer.studio/api/beta/generate/text-to-image \
+      -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"prompt": "a glowing neural network in a dark room", "model_id": "SG161222/RealVisXL_V4.0_Lightning"}'
+    ```
+
+    <LinkArrow href="/v2/developers/get-started/ai-quickstart" label="AI Quickstart -- first call in 10 minutes" />
+
+  </Accordion>
+
+  <Accordion title="Build real-time AI video (live webcam or stream effects)" icon="video">
+
+    **Path: ComfyStream**
+
+    ComfyStream applies ComfyUI workflows to live video streams at up to 25 FPS on an NVIDIA RTX 4090. Build your pipeline as a ComfyUI workflow JSON file; ComfyStream handles WebRTC transport and frame processing.
+
+    Requirements: NVIDIA GPU (RTX 3090 or better), ComfyUI, Python 3.12, CUDA 12.5+.
+
+    Supported models: StreamDiffusion, ControlNet, IPAdapter, FaceID, LoRA, Whisper (audio), Gemma (video understanding), SuperResolution.
+
+    <LinkArrow href="/v2/developers/get-started/comfystream-quickstart" label="ComfyStream Quickstart" />
+
+  </Accordion>
+
+  <Accordion title="Deploy a custom AI model or container" icon="box">
+
+    **Path: BYOC (Bring Your Own Container)**
+
+    Package your model in Docker, implement PyTrickle's `FrameProcessor` interface, and register the container as a worker on the Livepeer network. Your container receives and publishes live video frames over the trickle streaming protocol.
+
+    Requirements: Docker on Linux with NVIDIA GPU, Python model code (PyTorch recommended).
+
+    BYOC reached production-grade in Phase 4 (January 2026). Embody SPE and Streamplace run production BYOC workloads today.
+
+    <LinkArrow href="/v2/developers/build/byoc" label="BYOC Guide" />
+
+  </Accordion>
+
+  <Accordion title="Integrate video transcoding or streaming" icon="film">
+
+    **Path: Studio API -- Video**
+
+    The Studio REST API and SDKs manage the full lifecycle of livestreams and VOD assets: create streams, get ingest URLs, transcode assets, manage playback, and set access control.
+
+    SDKs: `npm install livepeer` / `pip install livepeer` / `go get github.com/livepeer/livepeer-go`
+
+    Free tier: 1,000 transcoding minutes per month. Growth: $100/month minimum.
+
+    <LinkArrow href="/v2/developers/get-started/transcoding-quickstart" label="Transcoding Quickstart" />
+
+  </Accordion>
+
+  <Accordion title="Contribute to the Livepeer protocol codebase" icon="code">
+
+    **Path: OSS Contribution**
+
+    Four primary repositories: go-livepeer (protocol node, Go), ai-runner (AI inference runtime, Python), ComfyStream (real-time AI video, Python), protocol (Solidity contracts).
+
+    Requirements: Go 1.21+ for go-livepeer; Python 3.12 for ComfyStream and PyTrickle; local testnet for integration testing.
+
+    <LinkArrow href="/v2/developers/get-started/contributor-quickstart" label="Contributor Quickstart" />
+
+  </Accordion>
+
+  <Accordion title="Evaluate Livepeer for my use case" icon="magnifying-glass">
+
+    **Path: Evaluation**
+
+    Start with the developer stack concept page for the three access layers, then the workload fit page to match your use case to a path.
+
+    Key questions:
+    - Batch vs real-time AI -- different APIs, latency, and infrastructure
+    - Studio-managed vs self-hosted gateway -- managed is simpler; self-hosted controls cost at scale
+    - Standard pipelines vs custom model -- BYOC for fully custom; gateway API for supported pipelines
+
+    <LinkArrow href="/v2/developers/concepts/developer-stack" label="Developer Stack" /> then <LinkArrow href="/v2/developers/build/workload-fit" label="Workload Fit" newline={false} />
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Path Comparison" />
+
+## Build path reference
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Intent</TableCell>
+      <TableCell header>Path</TableCell>
+      <TableCell header>SDK / tool</TableCell>
+      <TableCell header>Auth</TableCell>
+      <TableCell header>GPU required</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Batch AI inference**</TableCell>
+      <TableCell>AI Gateway API</TableCell>
+      <TableCell>`livepeer` npm/pip, `@livepeer/ai`, REST</TableCell>
+      <TableCell>Bearer token (Studio API key)</TableCell>
+      <TableCell>No</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Real-time AI video**</TableCell>
+      <TableCell>ComfyStream</TableCell>
+      <TableCell>ComfyUI + ComfyStream node</TableCell>
+      <TableCell>Gateway URL + API key</TableCell>
+      <TableCell>Yes (NVIDIA)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Custom AI model**</TableCell>
+      <TableCell>BYOC</TableCell>
+      <TableCell>PyTrickle, Docker, `@muxionlabs/byoc-sdk`</TableCell>
+      <TableCell>Orchestrator registration</TableCell>
+      <TableCell>Yes (NVIDIA)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Video streaming / transcoding**</TableCell>
+      <TableCell>Studio API - Video</TableCell>
+      <TableCell>`livepeer` npm/pip/go, `@livepeer/react`</TableCell>
+      <TableCell>Bearer token (Studio API key)</TableCell>
+      <TableCell>No</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Protocol contribution**</TableCell>
+      <TableCell>OSS / go-livepeer</TableCell>
+      <TableCell>Go, Python, local testnet</TableCell>
+      <TableCell>N/A</TableCell>
+      <TableCell>Optional</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Self-hosted gateway**</TableCell>
+      <TableCell>Gateways tab</TableCell>
+      <TableCell>go-livepeer, ETH deposit</TableCell>
+      <TableCell>On-chain / off-chain payment mode</TableCell>
+      <TableCell>No</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={3}>
+  <Card title="Concepts" icon="lightbulb" href="/v2/developers/concepts/developer-stack">
+    Understand the developer stack, AI pipelines, video infrastructure, and the OSS codebase.
+  </Card>
+  <Card title="Get Started" icon="fast-forward" href="/v2/developers/get-started/setup-paths">
+    Quickstarts for AI inference, ComfyStream, video transcoding, and OSS contribution.
+  </Card>
+  <Card title="Custom AI Workflows" icon="robot" href="/v2/developers/build/workload-fit">
+    Deep guides for BYOC, ComfyStream, SDK integration, and model support.
+  </Card>
+</CardGroup>

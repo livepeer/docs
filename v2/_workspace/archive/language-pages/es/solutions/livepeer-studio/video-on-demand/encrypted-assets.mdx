@@ -1,0 +1,19 @@
+---
+title: Activos cifrados
+description: Sube y reproduce videos cifrados con Livepeer Studio y controla el acceso.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC9lbmNyeXB0ZWQtYXNzZXRzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvc29sdXRpb25zL2xpdmVwZWVyLXN0dWRpby92aWRlby1vbi1kZW1hbmQvZW5jcnlwdGVkLWFzc2V0cyIsInNvdXJjZUhhc2giOiI0OGY1MWEwYmI1NTk1NzFmYzhlODYzMzBjMTQ2NTgxNmMzODk4MzFlNTBhY2NiYzQwNzNjOGI1OWE0YmE3MzM1IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE3OjM4OjA2LjEzOFoifQ== */}
+Livepeer Studio soporta**activos de video**encriptados: encripta el archivo con AES-CBC, encripta la clave con la clave pública de Livepeer, luego sube el archivo. La reproducción se puede restringir con[control de acceso](../access-control/overview).
+
+<Info>
+  Encryption uses AES-CBC (256-bit). Compatible with Web Crypto and protocols like Lit.
+</Info>
+
+## Flujo
+
+1. Genere una clave AES de 256 bits y cifre el video (IV aleatorio, relleno PKCS#7).
+2. Obtenga la clave pública de Livepeer desde`GET https://livepeer.studio/api/access-control/public-key` (con clave de API de portador).
+3. Cifre la clave simétrica con esa clave pública (formato SPKI en navegadores).
+4. Cree un activo con la clave cifrada (en base64) y cargue el archivo cifrado mediante la URL TUS devuelta.
+
+La reproducción está protegida por su política de reproducción (webhook o JWT). Solo los espectadores autorizados obtienen acceso. Para ver el código completo e integración con Lit, consulte el[Livepeer Studio docs](https://livepeer.studio/docs).

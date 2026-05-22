@@ -1,0 +1,69 @@
+---
+title: 播放直播流
+description: 通过 Livepeer 播放器或自定义 HLS/WebRTC 播放器在您的应用中播放直播流。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vcGxheWJhY2stbGl2ZXN0cmVhbS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9wbGF5YmFjay1saXZlc3RyZWFtIiwic291cmNlSGFzaCI6ImJkY2JiM2FjOTI4ZGRjNmI3NDdjYTkwZTk3ZjJmYjg0MmM5Y2VmZWVjMTgyNTQxZTRjODQxYjUwMGUyZmIyODUiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MzM6MTAuOTA5WiJ9 */}
+<Warning>
+  Prefer making API requests from your backend. Avoid CORS-enabled API keys; they are deprecated. Fetch playback info on the server and pass the source to the player.
+</Warning>
+
+## 使用 Livepeer 播放器（推荐）
+
+Livepeer 播放器 处理 WebRTC（低延迟）和 HLS 回退。在服务器上获取播放信息，然后将解析后的源传递给播放器：
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "YOUR_PLAYBACK_ID";
+
+// On the server (e.g. React Server Component or API route):
+export async function getPlaybackSource() {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function LiveStreamPlayer({ src }: { src: Src[] | null }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
+        <Player.Controls>
+          <Player.PlayPauseTrigger />
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+## 使用您自己的播放器
+
+1. **获取播放信息** 从 [播放信息 API](https://livepeer.studio/docs/api-reference/playback/get) with the `playbackId`.
+2. The response includes sources such as:
+   - **HLS** - `application/vnd.apple.mpegurl` URL (e.g. `https://livepeercdn.studio/hls/{playbackId}/index.m3u8`）
+   - **WebRTC** - 用于低延迟；使用支持 WebRTC/WHEP 的播放器。API 可能会返回一个 WebRTC 源；STUN/TURN 会在 SDP 响应中提供。
+3. 将选定的 URL（或 SDP）传递给支持 HLS 或 WebRTC 的播放器（例如 Video.js、HLS.js 或 WHEP 客户端）。
+
+<Info>
+  If the stream contains **B-frames**, WebRTC playback may not be available; playback will fall back to HLS. Instruct OBS users to use keyframe interval 1 and disable B-frames. See [Stream via OBS](stream-via-obs).
+</Info>
+
+## 可嵌入的播放器
+
+您可以使用 iframe 嵌入托管播放器：
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **低延迟** - 直播默认使用 WebRTC。使用`&lowLatency=false`来强制使用 HLS，或使用`&lowLatency=force`来强制使用 WebRTC。
+- **剪辑** - 添加`&clipLength=60`（最多120秒）以允许观众剪辑。
+- **其他** - `&muted=false`，`&autoplay=false`，`&loop=true`，`constant=true`（用于持续播放，例如音乐）。
+
+查看 [播放器和嵌入](../player) 以获取更多选项。

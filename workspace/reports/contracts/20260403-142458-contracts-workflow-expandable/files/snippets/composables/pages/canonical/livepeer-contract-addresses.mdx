@@ -1,0 +1,133 @@
+import { CustomDivider, InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { AccordionTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+
+import VerifyContractAddresses from '/snippets/composables/pages/canonical/verify-contract-addresses.mdx'
+import { DataWrap } from '/snippets/components/wrappers/data/workflows.jsx'
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+
+<Danger>
+ Ensure you are on the official `docs.livepeer.org/` site before using any address.
+ <br/><br/> **ALWAYS VERIFY ADDRESSES ON-CHAIN**
+ - [Livepeer Contracts Address Verifier Widget](#verifier-widget-verify-contract-address)
+ - [No-Trust Livepeer Contract Verification On-chain Steps](#No-Trust-On-chain-Address-Verification)
+ </Danger>
+
+<Tip>
+  Addresses on this page are automatically updated via a GitHub Action workflow `update-contract-addresses.yml`.
+
+  Current addresses are recovered from live controller reads, upstream deployment sources, commit-pinned code provenance, and
+  explorer verification.
+
+  **Last Verified:** <DataWrap value={contractAddresses.meta.lastVerified} />
+</Tip>
+
+<br/>
+<Columns cols={2}>
+  <Card
+    href="https://github.com/livepeer/protocol"
+    icon="github"
+    title={<>Livepeer Protocol Source <br/>  <Badge color="green"> Commit Pinned </Badge></>}
+    horizontal
+  />
+  <Card
+    href="https://arbiscan.io/accounts/label/livepeer"
+    icon="cubes"
+    title={<>Livepeer Contracts Arbiscan <br/>  <Badge color="green"> On-chain Verified </Badge></>}
+    horizontal
+  />
+</Columns>
+
+<CustomDivider />
+
+<VerifyContractAddresses />
+
+<CustomDivider />
+
+## Livepeer Contract Overview
+
+Livepeer protocol contracts are deployed on **Arbitrum One** (active) and **Ethereum Mainnet** (legacy bridge and governance).
+Proxy addresses are stable across upgrades; target addresses change when a new implementation is deployed via governance.
+
+<AccordionGroup>
+  <Accordion title={<AccordionTitle icon={<Icon icon="gear" color="var(--accent)" />} title="Core" description="Staking, payments, round progression, and service discovery" />}>
+    <InlineDivider margin="0" />
+    Core Contracts are the operational backbone of the protocol. Most use a [proxy/target](https://docs.openzeppelin.com/contracts/5.x/api/proxy#TransparentUpgradeableProxy) pattern where the proxy address is stable across governance upgrades.
+    - Controller
+    - BondingManager
+    - TicketBroker
+    - RoundsManager
+    - Minter
+    - ServiceRegistry
+    - AIServiceRegistry
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts#core-protocol-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="coins" color="var(--accent)" />} title="Token" description="The LPT ERC-20 token and bridge infrastructure" />}>
+    <InlineDivider margin="0" />
+    The [Livepeer Token (LPT)](/v2/about/livepeer-protocol/livepeer-token) secures the protocol and enables governance and
+    staking. Its main contract lives on the secure Ethereum L1 chain (genesis deployment) with a minter for Arbitrum L2 LPT.
+    - LivepeerToken
+    - BridgeMinter
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts#token-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="landmark" color="var(--accent)" />} title="Governance" description="On-chain voting, proposal execution, and treasury management" />}>
+    <InlineDivider margin="0" />
+    Governance Contracts power protocol upgrades via [LIPs](https://github.com/livepeer/LIPs) and a democratic [Governance Model](/v2/about/livepeer-protocol/governance-model), and fund the public good [Treasury](/v2/about/livepeer-protocol/treasury).
+    - Governor
+    - LivepeerGovernor
+    - Treasury
+    - BondingVotes
+    - MerkleSnapshot
+    - PollCreator
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts#governance-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="bridge" color="var(--accent)" />} title="Bridge" description="Cross-chain infrastructure connecting Ethereum Mainnet and Arbitrum One" />}>
+    <InlineDivider margin="0" />
+    Bridge Contracts provide LP Token transfers and data synchronisation between the Ethereum Mainnet and Arbitrum One.
+    L1Escrow holds all bridged LPT.
+    - L2LPTGateway
+    - L2LPTDataCache
+    - L1LPTGateway
+    - L1LPTDataCache
+    - L1Escrow
+    - L1Migrator
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts#bridge-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="wrench" color="var(--accent)" />} title="Utility" description="Libraries and helper contracts (genesis distribution, sorting, refunds)" />}>
+    <InlineDivider margin="0" />
+    Ethereum Mainnet only. Historical infrastructure from the original 2018 launch, which has been migrated to Arbitrum.
+    - GenesisManager
+    - MerkleMine
+    - MultiMerkleMine
+    - Refunder
+    - SortedDoublyLL
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="clock-rotate-left" color="var(--accent)" />} title="Migration" description="Historical Confluence upgrade contracts (2022), migration complete" />}>
+    <InlineDivider margin="0" />
+    Facilitated the migration of staked LPT from Ethereum Mainnet to Arbitrum One. No new migrations are possible.
+    L2Migrator still accepts `claimStake` from participants who have not yet claimed.
+    - L2Migrator
+    - DelegatorPool
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/livepeer-protocol/blockchain-contracts#migration-contracts"/>
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Contract Source Code
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Protocol" icon="github" href="https://github.com/livepeer/protocol/tree/delta/contracts" arrow>
+    Core protocol Solidity contracts (BondingManager, TicketBroker, RoundsManager, Controller, governance)
+  </Card>
+  <Card title="Arbitrum LPT Bridge" icon="github" href="https://github.com/livepeer/arbitrum-lpt-bridge/tree/main/contracts" arrow>
+    Token bridge contracts connecting Ethereum Mainnet and Arbitrum One
+  </Card>
+  <Card title="Contracts Proof Inputs" icon="github" href="https://github.com/livepeer" arrow>
+    Watched upstream repositories used for discovery, provenance resolution, and verification support
+  </Card>
+  <Card title="Livepeer on Arbiscan" icon="cubes" href="https://arbiscan.io/accounts/label/livepeer" arrow>
+    All labelled Livepeer contracts on Arbitrum One block explorer
+  </Card>
+</CardGroup>

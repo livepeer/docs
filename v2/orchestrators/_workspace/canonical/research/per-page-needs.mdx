@@ -1,0 +1,648 @@
+# Per-Page Content Needs
+
+What each page must deliver to its reader, derived from the canonical audience design (S1-S12 ideal sections, personas, jobs, journey stages). Organised by nav section group, in docs.json order.
+
+**Key**: Each page maps to an audience need. The task for each page is: what content must be present for the reader to arrive in one state and leave in the next?
+
+---
+
+## Start Here
+
+### portal.mdx - Portal
+- **Audience need**: "I just landed on this tab - orient me fast"
+- **Journey stage**: `discover`
+- **Entry state**: Arrived from Home, About, or search; may not know what an orchestrator is
+- **Exit state**: Understands the tab's scope; knows where to go next based on their situation
+- [ ] Hero framing that answers "what is this tab for?" in one sentence
+- [ ] Visual or link map to the three entry paths: evaluate first, jump to setup, explore AI workloads
+- [ ] Cross-tab inbound context for readers arriving from Delegators or About tabs
+
+### navigator.mdx - Navigator
+- **Audience need**: "Which path is mine?" (maps to S1 disambiguation)
+- **Journey stage**: `discover`
+- **Jobs served**: J2 (identify the right path)
+- **Entry state**: Has GPU hardware; does not yet know if they should go solo video, AI-focused, dual mode, or pool node
+- **Exit state**: Has identified which path applies and navigated to the correct starting point
+- [ ] Decision tree or interactive flow: hardware + capital + goals -> recommended path
+- [ ] Make visible that AI-only path does NOT require LPT stake (entry blocker resolution)
+- [ ] Make visible that pool node path does NOT require LPT stake
+- [ ] Route capital-constrained readers to pool or AI-first path before they hit the LPT wall
+- [ ] Link each path outcome to the correct next page (not just a section group - the specific page)
+
+---
+
+## Concepts
+
+### role.mdx - Role
+- **Audience need**: "What does an orchestrator actually do on this network?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1 (assess qualification and earning potential)
+- **Entry state**: Knows they have GPU hardware; vague on what Livepeer orchestrators do
+- **Exit state**: Can describe the orchestrator role (receive jobs from gateways, process compute, earn fees + rewards)
+- [ ] One-paragraph role definition using canonical terminology (orchestrator, gateway, service fee, inflation reward)
+- [ ] Distinguish orchestrator from gateway, delegator, and developer roles
+- [ ] Make clear this is a supply-side role - you provide compute, gateways send you work
+
+### capabilities.mdx - Capabilities
+- **Audience need**: "What can my node actually do - video, AI, or both?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1, J2
+- **Entry state**: Understands the role; does not know the workload types or their different requirements
+- **Exit state**: Knows the two workload types (video transcoding, AI inference) and that dual mode exists
+- [ ] Video transcoding: what it is, requires active set membership (stake-based routing)
+- [ ] AI inference: what it is, capability-based routing, does NOT require active set
+- [ ] Dual mode: both simultaneously, different routing for each
+- [ ] VRAM as the key hardware constraint for AI pipeline selection
+
+### architecture.mdx - Architecture
+- **Audience need**: "How does work actually reach me and how does the system fit together?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1 (maps to S3 - how work reaches you)
+- **Entry state**: Knows the role and workload types; does not understand routing, payments, or system topology
+- **Exit state**: Can describe stake-based routing (video) vs capability-based routing (AI), probabilistic micropayments, and the O-T split architecture
+- [ ] Two routing paths: stake weight for video, capability advertisement for AI
+- [ ] Gateway -> orchestrator -> worker flow
+- [ ] O-T split concept (orchestrator process vs worker process)
+- [ ] Probabilistic micropayments: tickets, TicketBroker, win probability (high-level)
+- [ ] Service URI: why reachability matters for receiving work
+
+### incentive-model.mdx - Incentive Model
+- **Audience need**: "How do I actually get paid - and how much could I earn?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1 (viability assessment - maps to S2 + S3)
+- **Entry state**: Understands the architecture; does not know the economics
+- **Exit state**: Can describe the two income streams, what reward cut/fee cut affect, and has a rough viability framework
+- [ ] Two income streams: ETH service fees (per job) + LPT inflation rewards (per round)
+- [ ] Reward cut and fee cut: what they are, who they affect, trade-off with delegation attractiveness
+- [ ] Reward call: active operational requirement, not passive - miss it and you forfeit that round
+- [ ] Active set economics: stake weight determines rank, rank determines video job share
+- [ ] AI economics: no stake requirement, pricing and capability determine job volume
+- [ ] Honest framing: what hardware + capital combination is needed for meaningful income
+
+---
+
+## Quickstart
+
+### guide.mdx - Overview
+- **Audience need**: "Can I test this before committing money or time?"
+- **Journey stage**: `setup` (smoke test)
+- **Entry state**: Interested but uncommitted; wants proof it works on their hardware
+- **Exit state**: Knows the quickstart scope (off-chain, no cost) and has started the test
+- [ ] Scope statement: what the quickstart proves and what it does NOT prove
+- [ ] No financial commitment framing (no staking, no ETH, no Arbitrum)
+- [ ] Time estimate for the full quickstart path
+- [ ] Prerequisites for off-chain testing only (GPU, Docker or binary, nothing else)
+
+### video-transcoding.mdx - Verify Your Hardware
+- **Audience need**: "Does my GPU actually work with Livepeer?"
+- **Journey stage**: `setup` (smoke test)
+- **Entry state**: Has go-livepeer available; has not run any test
+- **Exit state**: Has run an off-chain video transcoding test and confirmed GPU compatibility
+- [ ] Step-by-step off-chain transcoding test
+- [ ] Expected output and how to interpret pass/fail
+- [ ] What to do if it fails (GPU compatibility, driver issues -> link to gpu-support.mdx)
+
+### tutorial.mdx - Tutorial
+- **Audience need**: "Walk me through the quickest path to see this work"
+- **Journey stage**: `setup` (smoke test)
+- **Entry state**: Wants a guided path, not a reference
+- **Exit state**: Has completed a working smoke test (video or AI)
+- [ ] Guided walkthrough: install -> run off-chain test -> see result
+- [ ] Clear decision point: video test or AI test first
+- [ ] Success criteria: what "working" looks like
+
+### AI-prompt-start.mdx - AI Prompt: Orchestrator Setup
+- **Audience need**: "I already have a video node - how do I add AI?"
+- **Journey stage**: `build`
+- **Entry state**: Has a running go-livepeer transcoding node
+- **Exit state**: Has AI inference pipelines configured and tested
+- [ ] Hardware check for AI (VRAM requirements)
+- [ ] aiModels.json configuration walkthrough
+- [ ] Startup command changes for dual mode
+- [ ] Verification: first AI inference request processed
+
+---
+
+## Setup
+
+### guide.mdx - Setup Overview
+- **Audience need**: "What's the full setup process end to end?"
+- **Journey stage**: `setup`
+- **Jobs served**: J4 (follow complete setup sequence)
+- **Entry state**: Has decided to proceed (passed quickstart or evaluation); no production setup started
+- **Exit state**: Understands the full setup sequence and their position in it
+- [ ] Ordered step list: prerequisites -> install -> configure -> connect -> verify -> monitor
+- [ ] Which steps are path-dependent (video vs AI vs dual vs pool)
+- [ ] Time and cost expectations for the full setup
+
+### prepare.mdx - Prerequisites
+- **Audience need**: "What must I have ready before I install anything?" (maps to S4)
+- **Journey stage**: `setup`
+- **Jobs served**: J3 (complete prerequisites in right order)
+- **Entry state**: Has chosen a path; has not acquired tokens or confirmed hardware
+- **Exit state**: All blockers resolved - hardware confirmed, wallet funded, tokens acquired, network configured
+- [ ] Hardware requirements BY PATH (video vs AI vs dual - different VRAM needs)
+- [ ] LPT acquisition and staking (solo video path ONLY - make this explicit)
+- [ ] ETH for gas on Arbitrum (all on-chain paths)
+- [ ] Publicly reachable service URI / network configuration
+- [ ] Explicitly state: pool node operators do NOT need LPT
+- [ ] Explicitly state: AI-only operators do NOT need LPT for job routing
+
+### rs-install.mdx - Install
+- **Audience need**: "How do I get go-livepeer running on my machine?"
+- **Journey stage**: `setup`
+- **Jobs served**: J4
+- **Entry state**: Prerequisites confirmed; go-livepeer not installed
+- **Exit state**: go-livepeer binary or container running on the machine
+- [ ] Docker install (recommended path)
+- [ ] Pre-built binary install (alternative)
+- [ ] GPU passthrough configuration (Docker)
+- [ ] OS-specific notes (Linux primary, Windows/macOS secondary)
+
+### configure.mdx - Configure
+- **Audience need**: "What flags do I set for my specific path?" (maps to S5 + S7)
+- **Journey stage**: `setup`
+- **Jobs served**: J4, J5
+- **Entry state**: go-livepeer installed; no configuration set
+- **Exit state**: Node configured for their path with correct flags, pricing set
+- [ ] Path-specific flag sets: video-only, AI-only, dual mode
+- [ ] docker-compose templates per path
+- [ ] Pricing configuration (pricePerUnit / pixelsPerUnit) with benchmark guidance
+- [ ] GPU assignment flags
+- [ ] Networking flags (service URI, ports)
+- [ ] Reward cut and fee cut: what to set and WHY (operator perspective, not delegator perspective)
+
+### connect-and-activate.mdx - Connect
+- **Audience need**: "How do I get on-chain and start receiving work?"
+- **Journey stage**: `setup`
+- **Jobs served**: J3, J4
+- **Entry state**: Node configured and running locally; not registered on-chain
+- **Exit state**: Node registered on Arbitrum, stake bonded, service URI published
+- [ ] Wallet funding (ETH for gas)
+- [ ] LPT staking via BondingManager (solo video path)
+- [ ] Service URI registration via ServiceRegistry
+- [ ] Activation transaction
+- [ ] Reward call setup / automation
+
+### test.mdx - Verify
+- **Audience need**: "Is my node actually working end to end?" (maps to S9)
+- **Journey stage**: `setup`
+- **Jobs served**: J4
+- **Entry state**: Node registered and running; not confirmed receiving work
+- **Exit state**: Confirmed discoverable, priced correctly, receiving jobs, reward calls succeeding
+- [ ] Explorer check: is the node visible and active?
+- [ ] Video transcoding test: send a test job, confirm output
+- [ ] AI inference test: send a test request, confirm response
+- [ ] Performance score: is it tracking?
+- [ ] Pricing gate check: is the node priced within gateway MaxPrice thresholds?
+- [ ] Reward call check: is it succeeding each round?
+
+### r-monitor.mdx - Monitor
+- **Audience need**: "What should I watch day to day?" (maps to S10)
+- **Journey stage**: `operate`
+- **Jobs served**: J7
+- **Entry state**: Node verified and receiving work; no monitoring routine
+- **Exit state**: Has a monitoring routine covering key metrics and operational tasks
+- [ ] Key metrics to watch: session volume, performance score, reward call status, earnings
+- [ ] Alerting setup for reward call failures
+- [ ] Routine operational cadence: what to check daily, weekly
+- [ ] Software update awareness
+
+---
+
+## Operator Considerations
+
+### operator-rationale.mdx
+- **Audience need**: "Why would I run an orchestrator instead of just delegating?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1
+- **Entry state**: Aware Livepeer exists; weighing participate vs delegate vs skip
+- **Exit state**: Understands the value proposition of operating vs delegating
+- [ ] Direct comparison: operator earnings vs delegator earnings
+- [ ] What you gain beyond money: protocol influence, direct fee capture
+- [ ] Honest assessment: operational overhead, uptime requirements, gas costs
+
+### business-case.mdx - Business Case
+- **Audience need**: "What's the realistic economics?" (maps to S2 viability)
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1
+- **Entry state**: Interested in operating; has not modelled the costs and returns
+- **Exit state**: Has a go/no-go decision based on hardware cost, operational overhead, and expected income
+- [ ] Cost model: hardware, electricity, ETH gas, LPT acquisition
+- [ ] Revenue model: fee income by workload type, inflation rewards by stake position
+- [ ] Break-even framing: what stake + hardware combination reaches viability
+- [ ] Delegator-to-operator comparison (for Persona 5)
+
+### operator-impact.mdx - Operator Impact
+- **Audience need**: "What role do operators play in the network's health?"
+- **Journey stage**: `evaluate`
+- [ ] Network effect: more operators = more capacity = more gateway demand
+- [ ] Governance participation: voting weight from stake
+- [ ] Ecosystem contribution framing
+
+### requirements.mdx - Requirements
+- **Audience need**: "What's the minimum hardware and capital I need?"
+- **Journey stage**: `evaluate`
+- **Jobs served**: J1
+- **Entry state**: Considering participation; needs hard numbers
+- **Exit state**: Knows whether their hardware qualifies and what capital is needed
+- [ ] Hardware minimums by path (video, AI, dual)
+- [ ] VRAM requirements per AI pipeline type
+- [ ] LPT stake range for active set competitiveness (video path)
+- [ ] ETH budget for gas costs (monthly estimate)
+- [ ] Network requirements (bandwidth, static IP, ports)
+
+---
+
+## Deployment Details
+
+### setup-options.mdx - Setup Options
+- **Audience need**: "What are the different ways to deploy?" (maps to S1 disambiguation detail)
+- **Journey stage**: `evaluate` / `setup`
+- [ ] Solo orchestrator (standard go-livepeer)
+- [ ] Siphon (alternative installer)
+- [ ] Pool node (contribute GPU without protocol management)
+- [ ] O-T split (orchestrator + separate transcoder workers)
+- [ ] Decision criteria: when to use which option
+
+### siphon-setup.mdx - Siphon Setup
+- **Audience need**: "How do I set up using Siphon?"
+- **Journey stage**: `setup`
+- [ ] What Siphon is and when to use it vs standard go-livepeer
+- [ ] Step-by-step Siphon installation and configuration
+- [ ] Differences from standard setup flow
+
+### dual-mode-configuration.mdx - Dual Mode
+- **Audience need**: "How do I run video and AI on the same node?"
+- **Journey stage**: `build`
+- **Jobs served**: J6
+- [ ] Flag combination for dual mode
+- [ ] GPU allocation between video and AI workloads
+- [ ] VRAM management: warm models vs transcoding headroom
+- [ ] Performance trade-offs
+
+### orchestrator-transcoder-setup.mdx - O-T Split
+- **Audience need**: "How do I separate the orchestrator and transcoder processes?"
+- **Journey stage**: `build` / `operate`
+- [ ] When O-T split makes sense (scaling, multi-machine)
+- [ ] Architecture: orchestrator process handles protocol, worker handles compute
+- [ ] Configuration for both processes
+- [ ] Networking between orchestrator and transcoder
+
+### join-a-pool.mdx / new-join-a-pool.mdx - Join a Pool
+- **Audience need**: "I can't or don't want to stake solo - how do I contribute to a pool?" (maps to S6)
+- **Journey stage**: `evaluate` / `setup`
+- **Jobs served**: J2
+- **Entry state**: Identified as pool node candidate via navigator; no pool arrangement in place
+- **Exit state**: Decided whether pool participation suits them; if yes, knows how to proceed
+- [ ] What pool participation means (contribute compute, pool operator handles protocol)
+- [ ] How fees are split (off-chain arrangement with pool operator)
+- [ ] No LPT required for pool nodes (explicit)
+- [ ] How to find and evaluate pool operators (link to community-pools.mdx)
+- [ ] Connection architecture: how a pool node connects to the pool orchestrator
+- [ ] Honest framing: you depend on the pool operator for reward calling and fee distribution
+
+---
+
+## Workloads and AI
+
+### workload-options.mdx - Workload Options
+- **Audience need**: "What types of work can my node process?"
+- **Journey stage**: `evaluate` / `build`
+- [ ] Video transcoding overview (profiles, renditions)
+- [ ] AI inference overview (pipelines, models)
+- [ ] Routing differences: stake-based (video) vs capability-based (AI)
+- [ ] Hardware implications per workload type
+
+### video-transcoding-operations.mdx - Video Transcoding
+- **Audience need**: "How does video transcoding work in practice?"
+- **Journey stage**: `build` / `operate`
+- [ ] Transcoding pipeline: input -> renditions -> output
+- [ ] Session management and concurrent streams
+- [ ] NVENC/NVDEC session limits by GPU
+- [ ] Performance factors and how they affect routing
+
+### ai-inference-operations.mdx - AI Inference
+- **Audience need**: "How does AI inference work on Livepeer?" (maps to S8)
+- **Journey stage**: `build`
+- **Jobs served**: J6
+- [ ] AI runner subprocess architecture
+- [ ] Capability advertisement: how gateways discover your AI pipelines
+- [ ] Warm vs cold models: performance and VRAM trade-offs
+- [ ] aiModels.json schema overview (link to pipeline-specific pages for detail)
+
+### diffusion-pipeline-setup.mdx - Diffusion Setup
+- **Audience need**: "How do I set up image/video diffusion models?"
+- **Journey stage**: `build`
+- [ ] Supported diffusion pipelines and model IDs
+- [ ] VRAM requirements per model
+- [ ] aiModels.json configuration for diffusion
+- [ ] Verification: test request and expected output
+
+### llm-pipeline-setup.mdx - LLM Setup
+- **Audience need**: "How do I set up LLM inference?"
+- **Journey stage**: `build`
+- [ ] Supported LLM pipelines
+- [ ] VRAM requirements (typically higher)
+- [ ] Configuration specifics for LLM models
+- [ ] Verification
+
+### realtime-ai-setup.mdx - Cascade Setup
+- **Audience need**: "How do I set up realtime AI pipelines?"
+- **Journey stage**: `build`
+- [ ] What Cascade/realtime AI is
+- [ ] Pipeline configuration
+- [ ] Latency requirements and warm model importance
+- [ ] Verification
+
+### audio-and-vision-pipelines.mdx - Audio & Vision
+- **Audience need**: "How do I set up audio and vision AI pipelines?"
+- **Journey stage**: `build`
+- [ ] Available audio pipelines
+- [ ] Available vision pipelines
+- [ ] Configuration and VRAM requirements
+- [ ] Verification
+
+### model-demand-reference.mdx - Model Reference
+- **Audience need**: "Which models are in demand and worth hosting?"
+- **Journey stage**: `build` / `optimise`
+- **Jobs served**: J6 (pipeline selection)
+- [ ] Current demand by pipeline and model (with staleness warning)
+- [ ] VRAM requirements per model
+- [ ] Earning potential indicators per model type
+- [ ] How to check current demand (Explorer, gateway stats)
+
+### model-hosting.mdx - Model Hosting
+- **Audience need**: "How do I manage models on my GPU?"
+- **Journey stage**: `build` / `operate`
+- [ ] Model download and storage
+- [ ] Warm model management: loading, swapping, VRAM allocation
+- [ ] Cold start behaviour and impact on performance score
+- [ ] Multi-model strategies for different VRAM budgets
+
+---
+
+## Staking and Earning
+
+### earning-model.mdx - Earning Model
+- **Audience need**: "How do the two income streams work?"
+- **Journey stage**: `evaluate` / `operate`
+- [ ] ETH service fees: per-job, probabilistic micropayments, ticket redemption
+- [ ] LPT inflation rewards: per-round, requires active set + reward call
+- [ ] How stake position affects both streams
+- [ ] AI vs video earning differences
+
+### reward-mechanics.mdx - Reward Mechanics
+- **Audience need**: "How do reward calls, inflation, and rounds actually work?"
+- **Journey stage**: `operate`
+- [ ] Round cadence (~22 hours)
+- [ ] Reward call mechanics: when, how, what happens if you miss
+- [ ] Inflation distribution formula
+- [ ] Gas cost of reward calls on Arbitrum
+
+### payment-receipts.mdx - Payment Receipts
+- **Audience need**: "How do I track and verify my earnings?"
+- **Journey stage**: `operate`
+- [ ] Where to see earnings (Explorer, CLI)
+- [ ] Ticket redemption: when tickets convert to ETH
+- [ ] Reconciling on-chain vs off-chain earnings
+
+### payments.mdx - Payments
+- **Audience need**: "How does the payment system work technically?"
+- **Journey stage**: `operate`
+- [ ] Probabilistic micropayment mechanism
+- [ ] TicketBroker contract
+- [ ] Win probability and expected value
+- [ ] Deposit and penalty escrow
+
+### delegate-operations.mdx - Delegate Operations
+- **Audience need**: "How do I attract and manage delegators?"
+- **Journey stage**: `optimise`
+- [ ] Why delegation matters: stake weight -> active set rank -> more video work
+- [ ] Reward cut / fee cut as competitive levers
+- [ ] What delegators look for (from the operator's perspective)
+- [ ] Operational trust: consistent reward calls signal reliability
+
+### network-participation.mdx - Network Participation
+- **Audience need**: "What's my role in governance and network health?"
+- **Journey stage**: `operate`
+- [ ] Governance voting: weight, process, what votes affect
+- [ ] Treasury contribution rate and how it impacts earnings
+- [ ] Network health contribution
+
+---
+
+## Config and Optimisation
+
+### pricing-strategy.mdx - Pricing Strategy
+- **Audience need**: "What should I charge?" (maps to S7 + S11)
+- **Journey stage**: `setup` / `optimise`
+- **Jobs served**: J5 (not getting enough work), J7
+- [ ] pricePerUnit / pixelsPerUnit: what they control
+- [ ] Gateway MaxPrice gate: if you're above it, you get zero work from that gateway
+- [ ] How to find competitive price ranges
+- [ ] AI pricing: per-pipeline pricing strategy
+- [ ] When to adjust pricing (low job volume diagnosis)
+
+### capacity-planning.mdx - Capacity Planning
+- **Audience need**: "How do I allocate my GPU resources across workloads?"
+- **Journey stage**: `optimise`
+- [ ] VRAM allocation: warm models vs transcoding headroom
+- [ ] GPU assignment across video and AI
+- [ ] Scaling triggers: when to add hardware vs optimise configuration
+
+### ai-model-management.mdx - Model Management
+- **Audience need**: "How do I optimise my AI model configuration for earnings?"
+- **Journey stage**: `optimise`
+- [ ] Which models to warm vs cold based on demand
+- [ ] VRAM budgeting across models
+- [ ] Rotating models based on demand shifts
+- [ ] Monitoring model-level earnings
+
+### reward-call-tuning.mdx - Reward Tuning
+- **Audience need**: "How do I optimise my reward call strategy?"
+- **Journey stage**: `optimise`
+- [ ] Automation options for reward calling
+- [ ] Gas cost optimisation (timing, gas price)
+- [ ] When manual calling makes sense vs automation
+- [ ] Monitoring reward call success rate
+
+---
+
+## Monitoring and Tools
+
+### operator-toolbox.mdx - Operator Toolbox
+- **Audience need**: "What tools are available for managing my node?"
+- **Journey stage**: `operate`
+- [ ] CLI tools and commands
+- [ ] Third-party monitoring tools
+- [ ] Community-built dashboards and utilities
+- [ ] Grafana / Prometheus setup pointers
+
+### explorer-operations.mdx - Explorer Guide
+- **Audience need**: "How do I use Explorer to check my node's status?"
+- **Journey stage**: `operate`
+- [ ] Finding your node on Explorer
+- [ ] Key metrics visible on Explorer
+- [ ] Interpreting performance score, stake rank, earnings
+- [ ] Using Explorer for competitive analysis
+
+### metrics-and-alerting.mdx - Metrics & Alerting
+- **Audience need**: "How do I set up monitoring and alerts?"
+- **Journey stage**: `operate`
+- [ ] go-livepeer metrics endpoint
+- [ ] Key metrics to monitor
+- [ ] Alert triggers: reward call failure, performance drop, session errors
+- [ ] Integration with monitoring stacks
+
+### troubleshooting.mdx - Troubleshooting
+- **Audience need**: "Something broke - how do I fix it?" (maps to S12)
+- **Journey stage**: `troubleshoot`
+- **Jobs served**: J5
+- [ ] Diagnostic path 1: LOW WORK VOLUME (pricing gate, active set rank, capability advertisement, performance score)
+- [ ] Diagnostic path 2: OPERATIONAL ERRORS (reward call failures, ticket redemption issues, service URI unreachable)
+- [ ] Diagnostic path 3: PERFORMANCE DEGRADATION (GPU issues, VRAM pressure, cold start latency, network issues)
+- [ ] Each path: symptom -> likely cause -> specific fix
+
+---
+
+## Advanced Operations
+
+### gateway-relationships.mdx - Gateway Relationships
+- **Audience need**: "How does gateway selection actually work?"
+- **Journey stage**: `optimise`
+- [ ] Gateway selection logic: stake weight + performance score + price
+- [ ] MaxPrice behaviour: hard gate, not soft preference
+- [ ] How to be attractive to gateways
+
+### gateway-orchestrator-interface.mdx - Gateway Interface
+- **Audience need**: "What's the technical interface between gateways and orchestrators?"
+- **Journey stage**: `operate` / `optimise`
+- [ ] Protocol-level interface
+- [ ] Discovery and connection flow
+- [ ] Session negotiation
+
+### pool-operators.mdx - Pool Operators
+- **Audience need**: "How do I run a pool?" (advanced - for operators becoming pool operators)
+- **Journey stage**: `build` / `operate`
+- [ ] Pool architecture: orchestrator + connected workers
+- [ ] Fee distribution to pool members
+- [ ] Operational responsibilities as a pool operator
+- [ ] Stake management for the pool
+
+### scale-operations.mdx - Scale Operations
+- **Audience need**: "How do I scale beyond a single machine?"
+- **Journey stage**: `optimise`
+- [ ] Multi-machine O-T split deployment
+- [ ] Load balancing across workers
+- [ ] Monitoring at scale
+- [ ] When scaling makes economic sense
+
+---
+
+## Roadmap and Funding
+
+### funding-and-support.mdx - Funding & Support
+- **Audience need**: "Are there grants or programmes to help me get started?"
+- **Journey stage**: `evaluate` / `setup`
+- [ ] SPE grants programme
+- [ ] AI Video Startup Programme
+- [ ] Community resources and support channels
+
+### orchestrator-profiles.mdx - Operator Profiles
+- **Audience need**: "Who else is doing this and what have they built?"
+- **Journey stage**: `evaluate`
+- [ ] Active operator highlights
+- [ ] Different operator approaches (video-focused, AI-focused, pools)
+- [ ] Community contributions
+
+---
+
+## Tutorials
+
+### byoc-cpu-smoke-test.mdx - BYOC Smoke Test
+- [ ] Guided end-to-end test of BYOC CPU pipeline
+- [ ] Expected output and success criteria
+
+### zero-to-first-reward.mdx - Zero to Reward
+- [ ] Complete walkthrough: nothing -> first reward call received
+- [ ] Covers prerequisites, setup, activation, first round
+
+### ai-earning-quickstart.mdx - AI Quickstart
+- [ ] Fastest path to earning from AI inference
+- [ ] Minimal configuration, one pipeline, first job
+
+### add-ai-to-video-node.mdx - Add AI to Video
+- [ ] For existing video operators: add AI capability
+- [ ] aiModels.json addition to existing config
+- [ ] Verification of AI routing
+
+### full-ai-pipeline-tutorial.mdx - Full AI Pipeline
+- [ ] Complete AI pipeline setup: multiple models, warm/cold strategy
+- [ ] End-to-end from install to earning
+
+### realtime-ai-tutorial.mdx - Realtime AI
+- [ ] Cascade/realtime AI specific tutorial
+- [ ] Latency-sensitive configuration
+
+---
+
+## Resources
+
+### faq.mdx - FAQ
+- [ ] Top questions from Discord, forum, and support channels
+- [ ] Answers using canonical terminology
+- [ ] Links to relevant guide pages for deeper answers
+
+### glossary.mdx - Glossary
+- [ ] All canonical terms from the terminology lock
+- [ ] Consistent with the audience design definitions
+
+### community-guides.mdx - Community Guides
+- [ ] Curated external content (not duplicating docs)
+- [ ] Video walkthroughs, blog posts, community tutorials
+- [ ] Freshness dates on all links
+
+### community-pools.mdx - Community Pools
+- [ ] Active pool operators and how to contact them
+- [ ] What to evaluate before joining a pool
+- [ ] Fee split norms and expectations
+
+---
+
+## Technical Reference
+
+### cli-flags.mdx - CLI Flags
+- **On-demand need**: J7 (look up exact parameter)
+- [ ] Complete flag reference with defaults
+- [ ] Organised by function (networking, pricing, AI, staking)
+- [ ] gRPC field mapping
+- [ ] Version-tagged (flag names change between releases)
+
+### x-contract-addresses.mdx - Contract Addresses
+- [ ] BondingManager, TicketBroker, ServiceRegistry addresses on Arbitrum
+- [ ] Verification links to Arbiscan
+
+### gpu-support.mdx - GPU Support
+- [ ] NVIDIA GPU compatibility matrix
+- [ ] NVENC/NVDEC session limits by GPU model
+- [ ] Driver requirements and CUDA versions
+- [ ] Known issues per GPU generation
+
+### arbitrum-rpc.mdx - Arbitrum RPCs
+- [ ] RPC endpoint options and provider comparison
+- [ ] Rate limits and reliability notes
+- [ ] Configuration in go-livepeer
+
+### arbitrum-exchanges.mdx - Exchanges & Bridges
+- [ ] Where to buy ETH on Arbitrum (or bridge from L1)
+- [ ] Where to buy LPT on Arbitrum (or bridge)
+- [ ] DEX options
+
+---
+
+## Compendium
+
+### glossary.mdx - Glossary (Compendium)
+- [ ] Extended glossary with all operational terms
+- [ ] Cross-referenced with main glossary

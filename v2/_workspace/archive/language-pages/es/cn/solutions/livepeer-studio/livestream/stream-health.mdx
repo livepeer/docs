@@ -1,0 +1,37 @@
+---
+title: 流媒体健康状态
+description: 监控直播流健康状态：转码状态、实时状态、多流目标、输入速率和日志。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLWhlYWx0aC5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9zdHJlYW0taGVhbHRoIiwic291cmNlSGFzaCI6ImM4MWNkZTc5MWVlNjI4NjY2ODEwZmEzZjNjZTQ3YmM0NzQ5ODdhYjE4ZGEwYjM4M2E4NDVhOGEwMTY5ZjgzYjUiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MzU6MzAuNzAyWiJ9 */}
+在 Livepeer Studio 中，流健康状态可让您快速查看流是否正常工作以及可能存在问题的位置。
+
+## 全局健康状态
+
+- **健康** - 所有健康检查均处于良好状态。
+- **不健康** - 一个或多个检查表明存在问题。
+- **空闲** - 流尚未激活。
+
+## 健康检查
+
+- **转码** - 健康表示有多个转码后的配置文件可用于播放。不健康表示只有源文件可能可用；请检查日志和您的编码器设置（例如 OBS）。
+- **实时** - 表示转码是否比实时更快（低延迟）。不寻常的设置可能导致此状态不健康。
+- **多流传输** - 多流传输目标的状态：**空闲**（流或多流未激活），**等待中** (连接中), **在线** (已连接), **离线** (错误). 如果目标保持离线状态，请检查目标的摄入 URL/流密钥或目标服务。
+
+## 日志
+
+健康选项卡（或API）显示流的日志：例如，流已启动/停止，多流已连接/断开连接，以及**转码错误**（例如，不支持的像素格式）。使用这些信息来修复编码器或摄入配置。
+
+## 会话摄入速率
+
+的**会话摄入速率** 是 Livepeer 接收到的视频码率，大约每 10 秒更新一次。稳定的合理码率表明编码器和网络状况良好；低码率或不稳定的码率可能表明编码器设置或连接存在问题。
+
+## 在哪里查看健康状态
+
+- **仪表盘** - 在 "[Livepeer Studio 仪表盘](https://livepeer.studio/dashboard/streams)" 中打开流并使用 "**健康** 选项卡。您将看到活动会话的状态、检查、日志和摄入率图表。
+- **API** - 使用 [获取流](https://livepeer.studio/docs/api-reference/stream/get) 和 [获取会话](https://livepeer.studio/docs/api-reference/session/get)用于流和会话数据（例如`sourceSegmentsDuration`，会话长度）。详细的健康状况和指标可能通过 API 暴露；请查看最新的[API 参考](https://livepeer.studio/docs)以了解当前字段。
+
+## 故障排除
+
+- **转码状态异常** - 检查事件日志中的错误（例如不支持的输入格式）。调整 OBS 或您的编码器（分辨率、编解码器、关键帧间隔）并重新启动流。
+- **多流离线** - 验证目标的摄入 URL 和流密钥；修复多流目标并启动新会话。
+- **摄入速率低或波动** - 检查主播的上传速度和编码器比特率/关键帧设置。参见 [通过 OBS 流媒体](stream-via-obs) 和 [优化延迟](optimize-latency).

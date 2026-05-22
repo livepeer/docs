@@ -1,0 +1,92 @@
+---
+title: Contract Addresses
+sidebarTitle: Contract Addresses
+description: >-
+  Deployed Livepeer contract addresses on Arbitrum One and Ethereum mainnet — verified against Arbiscan.
+keywords:
+  - livepeer
+  - contract addresses
+  - BondingManager
+  - arbitrum
+  - LPT token
+  - deployed contracts
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: delegator
+purpose: reference
+status: current
+lastVerified: 2026-04-06
+---
+
+<Warning>
+  Always verify contract addresses against [Arbiscan](https://arbiscan.io/accounts/label/livepeer) before interacting with them. Do not copy addresses from secondary sources, community posts, or any source other than the canonical registry below. Phishing attacks routinely distribute fake contract addresses.
+</Warning>
+
+---
+
+## Canonical address source
+
+The authoritative address list for all deployed Livepeer contracts is:
+
+**[governor-scripts/updates/addresses.js](https://github.com/livepeer/governor-scripts/blob/master/updates/addresses.js)**
+
+Cross-reference every address from that file against the [Arbiscan Livepeer label page](https://arbiscan.io/accounts/label/livepeer) to confirm the contract is live and tagged.
+
+---
+
+## Arbitrum One — core protocol contracts
+
+These contracts govern staking, rewards, governance, and the LPT token on Arbitrum One (chain ID 42161).
+
+| Contract | Function |
+|---|---|
+| **BondingManager** | All bonding, delegation, stake accounting, unbonding, earnings claims, and reward distribution |
+| **Minter** | Mints new LPT each round during reward calls; holds accumulated ETH from fee redemptions |
+| **RoundsManager** | Tracks round numbers and coordinates round-based state transitions |
+| **LivepeerGovernor** | On-chain governance — proposal submission, voting, execution |
+| **BondingVotes** | ERC-5805 checkpoint contract; records stake snapshots for governance voting power |
+| **TimelockController** | Enforces the post-approval delay before proposal execution |
+| **LPT Token (Arbitrum)** | ERC-20 LPT contract on Arbitrum One — the token you bond |
+| **L2LPTGateway** | Canonical bridge contract for LPT between Arbitrum One and Ethereum mainnet |
+
+For exact deployed addresses: [Arbiscan Livepeer label](https://arbiscan.io/accounts/label/livepeer) → filter by Arbitrum One network.
+
+---
+
+## Ethereum mainnet — bridge contracts
+
+These contracts hold LPT in escrow during cross-chain bridging.
+
+| Contract | Function |
+|---|---|
+| **L1 Escrow** | Locks LPT on Ethereum mainnet when tokens are bridged to Arbitrum; releases on bridge-back |
+| **LPT Token (Ethereum)** | Original ERC-20 LPT on Ethereum mainnet |
+
+For exact deployed addresses: [Arbiscan Livepeer label](https://arbiscan.io/accounts/label/livepeer) → filter by Ethereum mainnet.
+
+---
+
+## Verify an interaction before signing
+
+Before signing any transaction that interacts with a Livepeer contract:
+
+1. Confirm the contract address in your wallet matches an address tagged `Livepeer` on Arbiscan
+2. Confirm the function name is one you expect (e.g. `bond`, `unbond`, `claimEarnings`, `vote`)
+3. If using the Livepeer Explorer, the Explorer calls only the canonical deployed contracts — the safest interface for non-technical users
+
+---
+
+## Related reference
+
+<CardGroup cols={2}>
+  <Card title="Protocol Parameters" icon="sliders" href="/v2/delegators/resources/reference/protocol-parameters" arrow>
+    Governance-controlled parameter values readable from these contracts.
+  </Card>
+  <Card title="Livepeer Protocol repo" icon="github" href="https://github.com/livepeer/protocol" arrow>
+    Source code for all contracts — `confluence` branch is the deployed version.
+  </Card>
+</CardGroup>

@@ -1,0 +1,268 @@
+[
+  {
+    "id": "ai-tools-registry",
+    "surface_globs": [
+      "ai-tools/registry/**",
+      "docs-guide/catalog/ai-tools.mdx",
+      "docs-guide/policies/source-of-truth-policy.mdx",
+      "docs-guide/policies/audit-system-overview.mdx",
+      "docs-guide/policies/skill-pipeline-map.mdx",
+      "tools/scripts/validate-ai-tools-registry.js",
+      "tests/unit/ai-tools-registry.test.js"
+    ],
+    "canonical_sources": [
+      "ai-tools/registry/ai-tools-registry.schema.json",
+      "ai-tools/registry/ai-tools-registry.json",
+      "docs-guide/policies/source-of-truth-policy.mdx"
+    ],
+    "derived_outputs": [
+      "ai-tools/registry/ai-tools-inventory.md"
+    ],
+    "validators": [
+      "tests/unit/ai-tools-registry.test.js"
+    ],
+    "repair_commands": [
+      "node tools/scripts/validate-ai-tools-registry.js --check --coverage",
+      "node tools/scripts/validate-ai-tools-registry.js --write-report"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "migrating",
+    "network_dependent": false,
+    "ownerless_ready": false
+  },
+  {
+    "id": "portable-skills",
+    "surface_globs": [
+      "ai-tools/ai-skills/templates/*.template.md",
+      "ai-tools/agent-packs/skills/**"
+    ],
+    "canonical_sources": [
+      "ai-tools/ai-skills/templates/*.template.md",
+      "ai-tools/ai-skills/skill-spec-contract.md",
+      "docs-guide/policies/source-of-truth-policy.mdx"
+    ],
+    "derived_outputs": [
+      "ai-tools/agent-packs/skills/**"
+    ],
+    "validators": [
+      "tests/unit/export-portable-skills.test.js",
+      "tests/unit/codex-skill-sync.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface portable-skills --write",
+      "node tools/scripts/export-portable-skills.js --write"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "autofix",
+    "network_dependent": false,
+    "ownerless_ready": true
+  },
+  {
+    "id": "docs-guide-generated",
+    "surface_globs": [
+      "docs-guide/catalog/*.mdx",
+      "tools/scripts/generate-docs-guide-*.js",
+      "tests/unit/docs-guide-sot.test.js"
+    ],
+    "canonical_sources": [
+      "docs-guide/overview.mdx",
+      "docs-guide/policies/source-of-truth-policy.mdx",
+      "tools/scripts/generate-docs-guide-indexes.js",
+      "tools/scripts/generate-docs-guide-pages-index.js",
+      "tools/scripts/generate-docs-guide-components-index.js",
+      "tests/unit/script-docs.test.js"
+    ],
+    "derived_outputs": [
+      "docs-guide/catalog/workflows-catalog.mdx",
+      "docs-guide/catalog/templates-catalog.mdx",
+      "docs-guide/catalog/pages-catalog.mdx",
+      "docs-guide/catalog/components-catalog.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "validators": [
+      "tests/unit/docs-guide-sot.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface docs-guide-generated --write",
+      "node tools/scripts/generate-docs-guide-indexes.js --write",
+      "node tools/scripts/generate-docs-guide-pages-index.js --write",
+      "node tools/scripts/generate-docs-guide-components-index.js --write",
+      "node tests/unit/script-docs.test.js --write --rebuild-indexes"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "autofix",
+    "network_dependent": false,
+    "ownerless_ready": true
+  },
+  {
+    "id": "ui-templates",
+    "surface_globs": [
+      "snippets/templates/**",
+      "v2/templates/**",
+      ".vscode/*.code-snippets",
+      "docs-guide/catalog/ui-templates.mdx"
+    ],
+    "canonical_sources": [
+      "snippets/templates/**",
+      "docs-guide/component-registry.json",
+      "tools/scripts/generate-ui-templates.js"
+    ],
+    "derived_outputs": [
+      "v2/templates/**",
+      ".vscode/templates.code-snippets",
+      ".vscode/components.code-snippets",
+      "docs-guide/catalog/ui-templates.mdx"
+    ],
+    "validators": [
+      "tests/unit/ui-template-generator.test.js",
+      "tests/unit/docs-guide-sot.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface ui-templates --write",
+      "node tools/scripts/generate-ui-templates.js --write"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "autofix",
+    "network_dependent": false,
+    "ownerless_ready": true
+  },
+  {
+    "id": "github-contributor-governance",
+    "surface_globs": [
+      "AGENTS.md",
+      ".github/copilot-instructions.md",
+      ".claude/CLAUDE.md",
+      ".cursor/rules/*.mdc",
+      ".windsurf/rules/*.md",
+      ".allowlist",
+      ".github/ISSUE_TEMPLATE/*.yml",
+      ".github/pull_request_template.md",
+      ".github/workflows/issue-auto-label.yml",
+      ".github/workflows/discord-issue-intake.yml",
+      ".github/workflows/openapi-reference-validation.yml",
+      ".github/workflows/docs-v2-issue-indexer.yml",
+      "README.md",
+      "contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md"
+    ],
+    "canonical_sources": [
+      "docs-guide/policies/ownerless-governance.mdx",
+      "docs-guide/policies/source-of-truth-policy.mdx",
+      "docs-guide/policies/infrastructure-principles.mdx"
+    ],
+    "derived_outputs": [],
+    "validators": [
+      "tests/unit/ownerless-governance.test.js"
+    ],
+    "repair_commands": [
+      "node tools/scripts/repair-ownerless-language.js --write"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "autofix",
+    "network_dependent": false,
+    "ownerless_ready": true
+  },
+  {
+    "id": "script-governance",
+    "surface_globs": [
+      ".githooks/**",
+      ".github/scripts/**",
+      "tests/**",
+      "tools/scripts/**",
+      "tools/lib/**",
+      "tools/config/**",
+      "tools/notion/**",
+      "tasks/scripts/**"
+    ],
+    "canonical_sources": [
+      "tools/lib/script-governance-config.js",
+      "tools/lib/script-header-utils.js",
+      "tests/unit/script-docs.test.js",
+      "tools/scripts/validators/governance/audit-script-inventory.js",
+      "tools/scripts/orchestrators/repair-governance.js"
+    ],
+    "derived_outputs": [
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "tests/script-index.md",
+      "tools/script-index.md",
+      "tools/lib/script-index.md",
+      "tasks/reports/script-classifications.json",
+      "tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json",
+      "tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md"
+    ],
+    "validators": [
+      "tests/unit/script-docs.test.js",
+      "tests/unit/ownerless-governance.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface script-governance --write --staged",
+      "lpd repair --surface script-governance --write --files <path[,path...]>",
+      "node tools/scripts/orchestrators/repair-governance.js --staged",
+      "node tools/scripts/orchestrators/repair-governance.js --files <path[,path...]>"
+    ],
+    "gate_layer": "pre-commit",
+    "rollout_state": "migrating",
+    "network_dependent": false,
+    "ownerless_ready": false
+  },
+  {
+    "id": "component-governance",
+    "surface_globs": [
+      "snippets/components/**",
+      "docs-guide/frameworks/component-framework.mdx",
+      "docs-guide/frameworks/component-governance.mdx",
+      "docs-guide/component-registry.json",
+      "v2/resources/documentation-guide/component-library/**"
+    ],
+    "canonical_sources": [
+      "snippets/components/**",
+      "tools/scripts/generate-component-registry.js",
+      "tools/scripts/generate-component-docs.js",
+      "tools/scripts/remediators/components/repair-component-metadata.js"
+    ],
+    "derived_outputs": [
+      "docs-guide/component-registry.json",
+      "v2/resources/documentation-guide/component-library/**"
+    ],
+    "validators": [
+      "tools/scripts/validators/components/check-component-docs.js",
+      "tests/unit/component-governance-generators.test.js",
+      "tests/unit/ownerless-governance.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface component-governance --write",
+      "node tools/scripts/remediators/components/repair-component-metadata.js --fix",
+      "node tools/scripts/generate-component-registry.js",
+      "node tools/scripts/generate-component-docs.js --fix"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "migrating",
+    "network_dependent": false,
+    "ownerless_ready": false
+  },
+  {
+    "id": "frontmatter-contract",
+    "surface_globs": [
+      "v2/**/*.mdx",
+      "docs-guide/**/*.mdx",
+      "tests/unit/quality.test.js",
+      "tools/lib/frontmatter-taxonomy.js"
+    ],
+    "canonical_sources": [
+      "tools/lib/frontmatter-taxonomy.js"
+    ],
+    "derived_outputs": [],
+    "validators": [
+      "tests/unit/frontmatter-taxonomy.test.js",
+      "tests/unit/quality.test.js"
+    ],
+    "repair_commands": [
+      "lpd repair --surface frontmatter-contract --files <path>",
+      "node tests/unit/quality.test.js --files <path>",
+      "node tests/unit/frontmatter-taxonomy.test.js"
+    ],
+    "gate_layer": "pr-changed",
+    "rollout_state": "advisory",
+    "network_dependent": false,
+    "ownerless_ready": false
+  }
+]

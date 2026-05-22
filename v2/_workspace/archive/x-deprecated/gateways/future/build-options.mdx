@@ -1,0 +1,153 @@
+---
+description: 1. Docker 2. Pre-built Binaries 3. Building from Source
+keywords:
+  - livepeer
+  - x archived
+  - x deprecated
+  - gateways
+  - future
+  - build options
+  - docker
+  - built
+  - binaries
+  - building
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+1. Docker
+2. Pre-built Binaries
+3. Building from Source
+
+
+## Downloading Pre-built Binaries (Recommended)
+
+### From GitHub Releases
+Binaries are built and uploaded for each release:
+```bash
+# Download the latest release for your platform
+wget https://github.com/livepeer/go-livepeer/releases/download/v0.5.32/livepeer-linux-amd64.tar.gz
+tar -xzf livepeer-linux-amd64.tar.gz
+```
+
+### From Docker Hub
+Pull the pre-built Docker image:
+```bash
+docker pull livepeer/go-livepeer:master
+# Or for a specific version
+docker pull livepeer/go-livepeer:v0.5.32
+```
+
+## When to Build From Source
+
+Only build from source if you need to:
+- Modify the code
+- Test unreleased features
+- Build for a specific configuration
+- Debug issues
+
+## Binary Release Process
+
+The CI/CD pipeline automatically builds binaries for:
+- Linux (amd64, arm64) [1](#63-0)
+- macOS (amd64, arm64) [2](#63-1)
+- Windows (amd64) [3](#63-2)
+
+These are uploaded to GitHub releases and Docker Hub with each tagged version [4](#63-3) .
+
+## Notes
+
+- Pre-built binaries include all dependencies and are ready to run
+- Docker images are built for linux/amd64 only [5](#63-4)
+- Source builds allow custom build tags: `BUILD_TAGS=mainnet,experimental make` [6](#63-5)
+- The master branch builds are compatible with mainnet contracts [7](#63-6)
+
+Wiki pages you might want to explore:
+- [Overview (livepeer/go-livepeer)](https://github.com/livepeer/wiki)
+- [Development (livepeer/go-livepeer)](https://github.com/livepeer/wiki)
+
+### Citations
+
+**File:** .github/workflows/build.yaml (L30-48)
+```yaml
+          - GOOS: linux
+            GOARCH: amd64
+            container: ubuntu:20.04
+            type: cpu
+
+          - GOOS: linux
+            GOARCH: arm64
+            container: ubuntu:20.04
+            type: cpu
+
+          - GOOS: linux
+            GOARCH: amd64
+            container: livepeerci/cuda:12.0.0-cudnn8-devel-ubuntu20.04
+            type: gpu
+
+          - GOOS: linux
+            GOARCH: arm64
+            container: livepeerci/cuda:12.0.0-cudnn8-devel-ubuntu20.04
+            type: gpu
+```
+
+**File:** .github/workflows/build.yaml (L50-54)
+```yaml
+          - GOOS: windows
+            GOARCH: amd64
+            container: ubuntu:22.04
+            type: cpu
+
+```
+
+**File:** .github/workflows/build.yaml (L149-154)
+```yaml
+      - name: Upload artifacts for cutting release
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts-${{ matrix.target.GOOS }}-${{ matrix.target.type }}-${{ matrix.target.GOARCH }}
+          path: releases/
+
+```
+
+**File:** .github/workflows/build.yaml (L161-169)
+```yaml
+        target:
+          - GOOS: darwin
+            GOARCH: amd64
+            runner: macos-14-large
+
+          - GOOS: darwin
+            GOARCH: arm64
+            runner: macos-14-xlarge
+
+```
+
+**File:** Makefile (L111-120)
+```text
+	GO111MODULE=on CGO_ENABLED=1 CC="$(cc)" CGO_CFLAGS="$(cgo_cflags)" CGO_LDFLAGS="$(cgo_ldflags) ${CGO_LDFLAGS}" go build -o $(GO_BUILD_DIR) -tags "$(BUILD_TAGS)" -ldflags="$(ldflags)" cmd/livepeer/*.go
+
+livepeer_cli:
+	GO111MODULE=on CGO_ENABLED=1 CC="$(cc)" CGO_CFLAGS="$(cgo_cflags)" CGO_LDFLAGS="$(cgo_ldflags) ${CGO_LDFLAGS}" go build -o $(GO_BUILD_DIR) -tags "$(BUILD_TAGS)" -ldflags="$(ldflags)" cmd/livepeer_cli/*.go
+
+livepeer_bench:
+	GO111MODULE=on CGO_ENABLED=1 CC="$(cc)" CGO_CFLAGS="$(cgo_cflags)" CGO_LDFLAGS="$(cgo_ldflags) ${CGO_LDFLAGS}" go build -o $(GO_BUILD_DIR) -ldflags="$(ldflags)" cmd/livepeer_bench/*.go
+
+livepeer_router:
+	GO111MODULE=on CGO_ENABLED=1 CC="$(cc)" CGO_CFLAGS="$(cgo_cflags)" CGO_LDFLAGS="$(cgo_ldflags) ${CGO_LDFLAGS}" go build -o $(GO_BUILD_DIR) -ldflags="$(ldflags)" cmd/livepeer_router/*.go
+```
+
+**File:** doc/releases.md (L7-14)
+```markdown
+#### master
+
+This branch is compatible with contracts on Rinkeby and mainnet. Code committed to this branch MUST NOT break contract compatibility on Rinkeby or mainnet.
+
+Releases are cut from this branch. All releases should have a tag of the form `vMAJOR.MINOR.PATCH`.
+
+Built in CI with `-tags mainnet` so resulting binaries can connect to private networks, Rinkeby and mainnet. Published to Docker Hub as `livepeer/go-livepeer:master` and e.g. `livepeer/go-livepeer:0.5.3`.
+
+```

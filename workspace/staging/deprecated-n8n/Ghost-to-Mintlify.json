@@ -1,0 +1,157 @@
+{
+  "name": "Ghost-to-Mintlify",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4ba480b5-a326-4d11-92f9-5432b6246edb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://livepeer-studio.ghost.io/ghost/api/content/posts/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "=key",
+              "value": "eaf54ba5c9d4ab35ce268663b0"
+            },
+            {
+              "name": "limit",
+              "value": "4"
+            },
+            {
+              "name": "include",
+              "value": "tags, authors"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "383d6d68-71ce-424b-82b8-c1ae57655488",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "function safeHTML(html) {\n  // Escape ONLY backticks\n  return (html || \"\").replace(/`/g, \"\\\\`\");\n}\n\nfunction formatDate(iso) {\n  return new Date(iso).toLocaleDateString(\"en-US\", {\n    month: \"short\",\n    day: \"numeric\",\n    year: \"numeric\"\n  });\n}\n\nconst posts = $json.posts.map(p => ({\n  title: p.title,\n  href: p.url,\n  author: p.primary_author?.name \n           ? `By ${p.primary_author.name}`\n           : \"By Livepeer Team\",\n\n  // SAFE VERSION — template literal inside code export\n  content: safeHTML(p.html),\n\n  datePosted: formatDate(p.published_at),\n  feature_image: p.feature_image,\n  excerpt: safeHTML(p.excerpt),\n  reading_time: p.reading_time,\n}));\n\n\nconst js = `export const ghostData = [\n${posts.map(post => `{\n  title: \\`${post.title}\\`,\n  href: \\`${post.href}\\`,\n  author: \\`${post.author}\\`,\n  content: \\`${post.content}\\`,\n  datePosted: \\`${post.datePosted}\\`,\n  img: \\`${post.feature_image || \"\"}\\`,\n  excerpt: \\`${post.excerpt}\\`,\n  readingTime: ${post.reading_time}\n}` ).join(\",\\n\")}\n];`;\n\nreturn [{ json: { js } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "8df60f75-86a6-4433-a76f-5da0c1711f4f",
+      "name": "Format Data For Mintlify",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "DeveloperAlly",
+          "mode": "list",
+          "cachedResultName": "DeveloperAlly",
+          "cachedResultUrl": "https://github.com/DeveloperAlly"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "livepeer-automations",
+          "mode": "list",
+          "cachedResultName": "livepeer-automations",
+          "cachedResultUrl": "https://github.com/DeveloperAlly/livepeer-automations"
+        },
+        "filePath": "data/ghostBlogData.jsx",
+        "fileContent": "={{ $json.js }}",
+        "commitMessage": "=Update Blog Data {{ $now.toISO() }}",
+        "additionalParameters": {
+          "branch": {
+            "branch": "main"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "12da7005-8b77-44f6-bb8d-1b3cf61b2db7",
+      "name": "Edit a file",
+      "webhookId": "3002edb1-3d17-44c0-be7d-e526f4aa14ad",
+      "credentials": {
+        "githubApi": {
+          "id": "jjy0epl4eqPHYqlG",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Format Data For Mintlify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data For Mintlify": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "541aa7a4-475b-40b4-8f0e-3ab5ebfe6b98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b77ce31e344450acd6ad20bd6cde79f46c1e07d55921483122bfba86e8350352"
+  },
+  "id": "5uLNIqPAxnTXwOnE",
+  "tags": []
+}

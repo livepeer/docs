@@ -1,0 +1,251 @@
+---
+title: Get AI to Setup the Gateway
+sidebarTitle: 'AI Prompt: Gateway Setup'
+description: >-
+  This page is a downloadable task list for your AI coding agent to follow to
+  set up your Livepeer Gateway for you - because who's got time for all that
+  manual work?!
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - quickstart
+  - get ai to setup the gateway
+  - setup
+  - gateway
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: quickstart
+audience: gateway-operator
+---
+{/*
+<div style={{ display: 'flex', justifyContent: 'center', margin: '0 auto', width: '80%', minWidth: 'fit-content' }}>
+ <Tip> Experimental </Tip>
+</div> */}
+
+<Warning>
+ Review every command the agent suggests before running it. Never share your ETH private key or keystore password with any AI agent or paste it into a prompt.
+</Warning>
+
+**Usage**
+
+1. Copy the full prompt from the block below.
+2. Paste it into your AI coding agent (Cursor, Claude Code, GitHub Copilot Workspace, etc.).
+3. Answer any clarifying questions the agent asks (OS, gateway mode, wallet address, etc.).
+4. Let the agent do the work - it will run commands, create config files, and verify each step.
+
+```markdown lines icon="robot" livepeer-gateway-setup-prompt.txt
+# LIVEPEER GATEWAY SETUP
+
+You are setting up a Livepeer Gateway node for me. Work through each stage in order,
+verify success before continuing, and fix errors before moving on.
+
+---
+
+## STAGE 0 - ASK ME FIRST
+
+Before doing anything, ask me:
+1. OS: Linux, macOS, or Windows?
+2. Gateway mode: off-chain (dev/test, no wallet needed) or on-chain (production, Arbitrum ETH required)?
+3. Gateway type: Video Only, AI Only, or Dual (AI + Video)?
+4. On-chain only: do you have an Arbitrum One wallet address? If not, I'll create one.
+5. On-chain only: do you have an Arbitrum RPC URL? If not, use https://arb1.arbitrum.io/rpc (free, rate-limited).
+
+Then follow the correct path below based on the answers.
+
+---
+
+## STAGE 1 - OS-SPECIFIC INSTALL
+
+### Linux (recommended for production - supports all gateway types)
+
+Download and install the pre-built binary:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz
+  sudo tar -zxvf livepeer-linux-amd64.tar.gz
+  sudo mv livepeer-linux-amd64/* /usr/local/bin/
+  livepeer -version
+
+Or use Docker (also fully supported on Linux):
+  docker pull livepeer/go-livepeer:master
+  docker volume create gateway-lpData
+
+### macOS (dev/local only - Video Only or off-chain only; Docker often fails on macOS)
+
+Use the binary instead of Docker:
+  # Intel:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-amd64.tar.gz
+  # Apple Silicon:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-arm64.tar.gz
+
+  tar -zxvf livepeer-darwin-*.tar.gz
+  sudo mv livepeer-darwin-*/* /usr/local/bin/
+
+Warn the user: macOS cannot run AI or Dual gateway types in production.
+AI and Dual modes require Linux. macOS is suitable for off-chain Video Only only.
+
+### Windows (run via WSL2 - Video Only or Docker-based)
+
+Native Windows binaries are not supported for production. Use WSL2:
+  # In PowerShell (Admin):
+  wsl --install
+  # Reboot, then enter WSL:
+  wsl
+
+Inside WSL2, follow the Linux binary steps above.
+
+For a Windows-native .bat launcher (Video Only, off-chain):
+  Create gateway.bat in the same directory as livepeer.exe:
+
+  Off-chain:
+    livepeer.exe -network=offchain -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -monitor=true -v=6
+    PAUSE
+
+  On-chain:
+    livepeer.exe -network=arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET_ADDRESS> -ethPassword=<PASSWORD>
+      -ethKeystorePath=<KEYSTORE_PATH> -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -maxPricePerUnit=300
+      -monitor=true -v=6
+    PAUSE
+
+  Store the ETH password in: C:\Users\<USERNAME>\.lpData\ethsecret.txt
+  Then use -ethPassword=C:\Users\<USERNAME>\.lpData\ethsecret.txt
+
+> The binary was previously called "Broadcaster". Always use -gateway, never -broadcaster.
+
+---
+
+## STAGE 2 - GATEWAY TYPE CONFIGURATION
+
+Use the correct config for the type chosen in Stage 0.
+For Docker, create a docker-compose.yml. For binary, run the equivalent flags directly.
+
+### VIDEO ONLY
+
+  Off-chain docker-compose.yml:
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -monitor=true -v=6
+
+  On-chain adds:
+      -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET> -ethKeystorePath=/root/.lpData/keystore
+      -ethPassword=<PASSWORD> -maxPricePerUnit=300 -blockPollingInterval=20
+
+  Data dir: /root/.lpData/offchain/ (off-chain) or /root/.lpData/arbitrum-one-mainnet/ (on-chain)
+
+### AI ONLY
+
+  Requires Linux. Create an aiModels.json:
+    [
+      { "pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "warm": true },
+      { "pipeline": "image-to-image", "model_id": "stabilityai/sd-turbo", "warm": false }
+    ]
+
+  Create a models/ directory: mkdir -p models
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<AI_ORCHESTRATOR_ADDRESS>
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -monitor=true -v=6
+
+  On-chain adds the same ETH flags as Video Only above.
+
+### DUAL (AI + VIDEO) - Linux only
+
+  Combines both. Needs aiModels.json and models/ directory (same as AI Only above).
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -livePaymentInterval=5s
+      -monitor=true -v=6
+
+  On-chain adds the same ETH flags as above.
+
+For all types, expose ports: 1935, 8935, 5935.
+SECURITY: never commit keystore files, aiModels.json with tokens, or password files to version control.
+
+---
+
+## STAGE 3 - WALLET SETUP (on-chain only)
+
+If no wallet exists, generate one by starting the gateway interactively:
+  docker run -it --rm -v gateway-lpData:/root/.lpData livepeer/go-livepeer:master \
+    -gateway -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+
+When prompted, set a strong password. Note the ETH address shown. CTRL+C to exit.
+Keystore location: /root/.lpData/arbitrum-one-mainnet/keystore/
+
+---
+
+## STAGE 4 - FUND (on-chain only)
+
+Send ETH on Arbitrum One to the gateway wallet.
+Minimum for testing: 0.1 ETH. Production: 0.5+ ETH.
+
+Set deposit and reserve via the Livepeer CLI:
+  docker run -it --network host livepeer/go-livepeer:master \
+    livepeer_cli --host=localhost --http=5935
+
+  Choose Option 11 - "deposit broadcasting funds":
+    Deposit: 0.065 ETH (testing minimum)
+    Reserve: 0.03 ETH (use 0.36 ETH for production)
+
+  Verify with Option 1 - "get node status".
+
+---
+
+## STAGE 5 - START & VERIFY
+
+  docker compose up -d
+  docker compose logs --tail=50
+
+Healthy log lines:
+  "LPMS Server listening on rtmp://0.0.0.0:1935"
+  "HTTP Server listening on http://0.0.0.0:8935"
+  "Unlocked ETH account" (on-chain only)
+
+Verify:
+  curl http://localhost:8935/status
+  curl http://localhost:8935/metrics | head
+  curl http://localhost:8935/getNetworkCapabilities  (on-chain)
+
+Video test: push RTMP with FFmpeg, confirm HLS at http://localhost:8935/stream/test.m3u8
+AI test: POST to http://localhost:8935/ai/text-to-image, confirm a response.
+
+---
+
+## DONE - REPORT BACK
+
+  - OS, gateway type, and mode used
+  - Wallet address (public key only - never the private key)
+  - Start/stop commands
+  - Any steps needing manual follow-up (funding, DNS, SSL)
+```

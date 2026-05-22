@@ -1,0 +1,130 @@
+---
+title: 'How Work Reaches You and How You Get Paid'
+description: 'How gateways route video and AI jobs to orchestrators, how probabilistic micropayments deliver ETH fees, and how LPT inflation rewards work — including why reward calls are an active requirement.'
+pageType: concept
+audience: orchestrator
+purpose: explain
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - routing
+  - payments
+  - probabilistic micropayments
+  - reward call
+  - active set
+  - AI inference routing
+  - stake weight
+  - service fees
+  - LPT rewards
+---
+
+Orchestrators earn from two income streams with fundamentally different mechanics. Understanding both — and how each type of work reaches you — is required before you configure pricing, set commission parameters, or decide how much stake to acquire.
+
+## Two income streams
+
+| Stream | Currency | Driven by | Frequency |
+| --- | --- | --- | --- |
+| **Service fees** | ETH | Gateways sending you jobs | Per job completed |
+| **Inflation rewards** | LPT | Protocol minting new tokens each round | Once per round (~22 hours) |
+
+These streams are independent. An operator running AI inference without active set membership earns ETH service fees but no LPT inflation rewards. A staked operator in the active set who receives no gateway traffic earns LPT rewards but no ETH fees.
+
+## How video transcoding work reaches you
+
+Video transcoding jobs are routed through **stake-weighted selection**. Gateways rank orchestrators by a combination of:
+
+- **Total bonded stake** (self-stake plus delegated stake) — higher stake means a larger share of routed segments
+- **Performance score** — composite of latency and job success rate
+- **Price** — orchestrators priced above the gateway's `maxPricePerUnit` receive no work from that gateway
+
+Active set membership is required. Only the top orchestrators by total bonded stake are eligible to receive video transcoding work in a given round. {/* VERIFY: active set size is governance-controlled — do not hard-code [explorer.livepeer.org] */}
+
+## How AI inference work reaches you
+
+AI inference routing works differently. **Active set membership is not required.**
+
+Gateways select AI orchestrators based on:
+
+1. **Capability match** — does the orchestrator support the requested pipeline and model?
+2. **Price** — is the orchestrator's price within the gateway's budget?
+3. **Model warmth** — warm models (pre-loaded in VRAM) win over cold models for latency-sensitive jobs
+4. **Stake weight** — a secondary factor, not the primary selection criterion
+
+An operator with a well-configured GPU, warm models, and competitive pricing receives AI inference jobs regardless of stake position. This is the primary reason the AI-focused path has a lower entry barrier than solo video transcoding.
+
+<Note>
+Capability advertisement is how gateways discover which AI pipelines an orchestrator supports. An orchestrator that configures models but does not advertise capabilities will not receive AI work. This is covered in the AI pipeline setup section.
+</Note>
+
+## How ETH service fees arrive: probabilistic micropayments
+
+Gateways pay orchestrators through **probabilistic micropayments (PM)**. Instead of settling every job on-chain, gateways send lightweight signed tickets. A fraction of these tickets are winners, each redeemable for a larger ETH payout on Arbitrum.
+
+The expected value across many tickets matches the intended payment total:
+
+```
+Win probability:       e.g. 1 in 1,000
+Winning face value:    e.g. 1,000 x the per-job fee
+Expected value:        1/1,000 x 1,000 x fee = fee per job
+```
+
+Winning tickets are submitted on-chain by the Redeemer component of go-livepeer. This happens automatically — keep the node running and maintain enough ETH for gas.
+
+A busy orchestrator typically redeems ETH in a few batched submissions per day. Balance changes appear in stepped increments when winning tickets are processed, and that pattern is expected behaviour.
+
+<Warning>
+A wallet without ETH on Arbitrum lets winning tickets expire before redemption. The loss sits entirely with the orchestrator. Monitor ETH balance and replenish when it falls below 0.005 ETH.
+</Warning>
+
+### Fee differences by workload
+
+| | Video transcoding | AI inference |
+| --- | --- | --- |
+| **Pricing unit** | Per segment (~2s of video) | Per pixel, per ms of audio, per token, or per frame |
+| **Fee level** | Low per segment (commoditised) | Higher per job (GPU-intensive) |
+| **Selection factor** | Stake weight + price | Capability + model warmth + price |
+
+## How LPT inflation rewards arrive
+
+Each round (~22 hours), the protocol mints new LPT and distributes it to active orchestrators proportional to their total bonded stake. Three conditions must all be true:
+
+1. The orchestrator is in the **active set** (top orchestrators by stake weight)
+2. The orchestrator successfully calls `Reward()` on-chain that round
+3. The orchestrator has LPT bonded (self-stake)
+
+**Reward calls are an active operational requirement, not a passive payout.** The orchestrator's node must submit a `Reward()` transaction each round to claim that round's allocation. There is no catch-up mechanism. A missed round permanently forfeits that allocation.
+
+By default, go-livepeer calls `Reward()` automatically at the start of each new round. The node must be running at that time, and the wallet must hold ETH on Arbitrum for gas.
+
+<Warning>
+A single missed `Reward()` call forfeits that round's entire LPT allocation. For a well-staked orchestrator, this represents a noticeable amount of LPT. Automate the reward call (the default) and monitor for failures.
+</Warning>
+
+### Treasury allocation
+
+As of LIP-89, 10% of each round's newly minted LPT goes to the Livepeer Treasury before distribution to orchestrators. The remaining 90% is distributed proportionally by stake.
+
+{/* VERIFY: LIP-89 treasury percentage is still 10% [github.com/livepeer/LIPs] */}
+
+## Commission parameters: reward cut and fee cut
+
+When you register as an orchestrator, you set two parameters that determine how earnings are split with delegators:
+
+- **Reward cut** — the percentage of LPT inflation rewards you keep. Delegators receive the rest, split by their stake proportion.
+- **Fee share** — the percentage of ETH service fees shared with delegators. You keep the remainder.
+
+These parameters directly affect how attractive your orchestrator is to delegators. Competitive settings attract more delegated stake, which increases your inflation share and video routing weight — a compounding dynamic.
+
+Commission rates are set via `livepeer_cli` or the Livepeer Explorer. Frequent changes damage delegator trust.
+
+## Summary: what determines your earnings
+
+| Factor | Affects ETH fees | Affects LPT rewards |
+| --- | --- | --- |
+| Total bonded stake | Video routing weight | Proportional share of round issuance |
+| Pricing | Gateway selection gate | No direct effect |
+| Performance score | Routing probability | No direct effect |
+| AI capability and model warmth | AI job selection | No direct effect |
+| Reward call reliability | No direct effect | Missed calls forfeit allocation |
+| Active set membership | Required for video work | Required for reward eligibility |

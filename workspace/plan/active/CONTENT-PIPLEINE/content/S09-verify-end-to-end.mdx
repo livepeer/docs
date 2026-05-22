@@ -1,0 +1,251 @@
+---
+title: 'Verify Your Node Is Working End to End'
+sidebarTitle: 'Verify End to End'
+description: 'Confirm your orchestrator is discoverable, correctly priced, and receiving work from gateways — covering active set membership, capability advertisement, performance score, and first job confirmation.'
+pageType: instruction
+audience: orchestrator
+purpose: verify
+status: draft
+keywords:
+  - livepeer
+  - orchestrator
+  - verify
+  - end to end
+  - active set
+  - performance score
+  - capability advertisement
+  - service URI
+  - first job
+  - Explorer
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/wrappers/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+
+<Tip>
+  A node passes end-to-end verification when it is discoverable by gateways, priced within their MaxPrice threshold, and has processed at least one job. Run every check that applies to your configured mode.
+</Tip>
+
+Setup and configuration are complete. This page confirms the node is visible to the network and receiving work through the full routing path.
+
+<CustomDivider middleText="Discoverability Checks" />
+
+## Active set membership (video and dual mode)
+
+Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search for your Ethereum address.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Field</TableCell>
+      <TableCell header>Expected</TableCell>
+      <TableCell header>If wrong</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Status</TableCell>
+      <TableCell>Active</TableCell>
+      <TableCell>Wait one full round (~22 hours). If still not Active, check your stake against the current 100th-place threshold.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Service URI</TableCell>
+      <TableCell>Matches `-serviceAddr` exactly</TableCell>
+      <TableCell>Update via `livepeer_cli` or restart with the correct `-serviceAddr`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Stake</TableCell>
+      <TableCell>Reflects your bonded LPT amount</TableCell>
+      <TableCell>Check Arbiscan for the bond transaction confirmation.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Reward cut / Fee cut</TableCell>
+      <TableCell>Match the values set during activation</TableCell>
+      <TableCell>Adjustable via `livepeer_cli` at any time.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* VERIFY: Active set size is governance-controlled. Do not hard-code "top 100" — check explorer.livepeer.org for current size. */}
+
+<Note>
+  AI-only operators do not need active set membership. AI inference routing is capability-based, not stake-rank-based. Skip this check if you are running AI pipelines without video transcoding.
+</Note>
+
+## Capability advertisement (AI and dual mode)
+
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Your configured pipelines should appear with the correct warm or cold status.
+
+Also query your node directly:
+
+```bash icon="terminal" filename="check-capabilities"
+curl http://localhost:7935/getNetworkCapabilities | jq
+```
+
+If your pipelines are missing from the registry after five minutes, check these causes in order:
+
+1. AI runner container not running — verify with `docker ps | grep ai-runner`
+2. `aiModels.json` has invalid syntax — validate with `jq . < aiModels.json`
+3. Model download still in progress — check logs for download progress messages
+
+<CustomDivider middleText="Pricing Checks" />
+
+## Confirm pricing is within gateway thresholds
+
+Gateways apply a hard MaxPrice gate. An orchestrator priced above a gateway's threshold receives no work from that gateway.
+
+```bash icon="terminal" filename="check-price"
+curl -s http://localhost:7935/status | jq '.PricePerUnit'
+```
+
+Compare your price against the current distribution on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Position in the lower half of active orchestrator prices when starting out.
+
+For AI pipelines, check per-pipeline pricing in your `aiModels.json` against market rates shown on [tools.livepeer.cloud](https://tools.livepeer.cloud).
+
+<CustomDivider middleText="Connectivity Checks" />
+
+## Service URI reachability
+
+Test from a different machine (not the same server):
+
+```bash icon="terminal" filename="port-check"
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+Any response — including a JSON error — confirms port 8935 is open and reachable. A connection timeout means gateways cannot route work to the node. Check firewall rules, NAT or port-forwarding configuration, and cloud security group settings.
+
+## Node process health
+
+Confirm the node is running and the CLI port is responding:
+
+```bash icon="terminal" filename="check-status"
+curl -s http://localhost:7935/status | python3 -m json.tool
+```
+
+Expected: a JSON response showing `nodeType`, `version`, ETH account address, and ETH balance.
+
+<CustomDivider middleText="Performance and Rewards" />
+
+## Performance score
+
+{/* VERIFY: Performance score formula (latency score x success rate) — confirm against go-livepeer source. */}
+
+Performance score is a composite metric (latency score multiplied by success rate) that gateways use alongside stake weight and price when selecting orchestrators. A low score reduces job routing probability.
+
+After receiving initial jobs, verify the score is tracking by checking Prometheus metrics:
+
+```bash icon="terminal" filename="check-metrics"
+curl -s http://localhost:7935/metrics | grep -i "score\|latency\|success"
+```
+
+Factors that degrade performance score:
+- High transcoding latency (GPU saturation or insufficient `-maxSessions` headroom)
+- Failed segments (GPU errors, VRAM pressure, codec incompatibility)
+- Service URI latency (network distance between node and gateways)
+
+## Reward call verification
+
+Reward calling distributes LPT inflation each round (~22 hours). Confirm automatic calling is enabled:
+
+```bash icon="terminal" filename="check-reward-config"
+docker compose config 2>/dev/null | grep -i "reward" || echo "Check startup flags for -reward=false"
+```
+
+The startup command should omit `-reward=false`. Its absence means automatic calling is enabled.
+
+After the first full round completes, verify on [Arbiscan](https://arbiscan.io) that a `reward()` transaction appeared from your orchestrator address. Check logs:
+
+```bash icon="terminal" filename="check-reward-log"
+grep -i "calling reward\|reward call" /var/log/livepeer/livepeer.log | tail -5
+```
+
+Missing reward calls after a round usually indicate one of three causes: the node was offline during round initialisation, the Arbitrum ETH balance is too low for gas, or `-reward=false` is set in the startup command.
+
+<CustomDivider middleText="First Job Confirmation" />
+
+## Confirm first job received
+
+For video transcoding, watch logs for job receipt:
+
+```bash icon="terminal" filename="check-video-job"
+grep -i "got segment\|transcode result" /var/log/livepeer/livepeer.log | tail -10
+```
+
+Expected output includes `Got segment` and `Transcode result OK`.
+
+For AI inference, watch for inference request processing:
+
+```bash icon="terminal" filename="check-ai-job"
+grep -i "RunAI request\|pipeline=" /var/log/livepeer/livepeer.log | tail -10
+```
+
+<Note>
+  Job volume depends on network demand, your pricing position, and your performance score. A new node with competitive pricing in the active set typically receives its first video job within 24 to 48 hours. AI jobs route by capability and price — first AI job timing depends on gateway demand for the pipelines you advertise.
+</Note>
+
+<Warning>
+  If no jobs arrive within 48 hours despite passing all checks above, the most common cause is port 8935 not reachable from the internet. Re-test from an external machine. The second cause is price above gateway caps — compare your price against active orchestrators on the Explorer. Third: for video, confirm you are in the active set; for AI, confirm your capabilities appear on tools.livepeer.cloud.
+</Warning>
+
+<CustomDivider middleText="Verification Checklist" />
+
+## Quick-reference checklist
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Check</TableCell>
+      <TableCell header>How to verify</TableCell>
+      <TableCell header>Mode</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Active set membership</TableCell>
+      <TableCell>Explorer shows Status: Active</TableCell>
+      <TableCell>Video, Dual</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>AI capabilities visible</TableCell>
+      <TableCell>tools.livepeer.cloud shows pipelines with warm/cold status</TableCell>
+      <TableCell>AI, Dual</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Service URI reachable</TableCell>
+      <TableCell>`curl -k https://IP:8935/status` from external machine returns response</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Price within range</TableCell>
+      <TableCell>Price is in lower half of active orchestrator distribution</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Reward calling active</TableCell>
+      <TableCell>`reward()` transaction visible on Arbiscan after one round</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Performance score tracking</TableCell>
+      <TableCell>Prometheus metrics show score and latency values</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>First job received</TableCell>
+      <TableCell>`Got segment` (video) or `RunAI request` (AI) in logs</TableCell>
+      <TableCell>All</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+<CardGroup cols={2}>
+  <Card title="Monitor and Operate" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting">
+    Set up monitoring, alerting, and operational routines now that the node is verified.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    Refine your pricing position to attract more work from gateways.
+  </Card>
+</CardGroup>

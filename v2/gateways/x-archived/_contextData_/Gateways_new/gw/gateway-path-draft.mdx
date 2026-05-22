@@ -1,0 +1,82 @@
+---
+title: 'Choose Your Gateway Path'
+description: 'Decision matrix for Livepeer gateway operators — AI gateway, video gateway, gateway-as-service, and SDK builder paths with ETH requirements and entry points.'
+sidebarTitle: 'Gateway Paths'
+keywords: ["livepeer", "gateway", "setup paths", "AI gateway", "video gateway", "off-chain", "gateway operator", "quickstart"]
+pageType: 'landing'
+audience: 'gateway'
+status: 'current'
+---
+
+Gateway operators on Livepeer run different setups depending on their use case. Choose the path that matches yours.
+
+---
+
+## Which path fits you?
+
+| Path | What you run | ETH required | Best for |
+|------|-------------|:---:|----------|
+| **AI gateway — off-chain** | go-livepeer, off-chain mode + remote signer | No | App developers, fastest onboarding, embedded gateways |
+| **Video gateway — on-chain** | go-livepeer with Arbitrum wallet | Yes | Live video transcoding, full PM control |
+| **Dual gateway** | go-livepeer — video + AI config | Yes | Operators serving both transcoding and AI workloads |
+| **Gateway-as-service** | go-livepeer + clearinghouse integration | Via clearinghouse | Providers running public gateways, NaaP builders |
+| **SDK / alternative gateway** | Python, browser, or mobile SDK + remote signer | Via remote signer | Non-Go gateway implementations |
+
+---
+
+<CardGroup cols={2}>
+  <Card title="AI Gateway — Off-Chain" icon="bolt" href="/v2/gateways/get-started/ai-gateway-quickstart">
+    **No ETH required.** Run go-livepeer in off-chain mode backed by a remote signer. The fastest path to serving AI inference jobs from your application.
+
+    Best for: app developers, embedded gateways, teams who want to avoid crypto custody.
+  </Card>
+  <Card title="Video Gateway — On-Chain" icon="video" href="/v2/gateways/get-started/gateway-setup">
+    **ETH required.** Run go-livepeer with an Arbitrum wallet and PM deposit. Route live video transcoding jobs from your application to the Livepeer network.
+
+    Best for: streaming platforms, decentralised video apps, cost-effective transcoding.
+  </Card>
+  <Card title="Dual Gateway" icon="sliders" href="/v2/gateways/get-started/gateway-setup">
+    **ETH required.** Run both video transcoding and AI inference from a single node. Start with the video gateway setup, then add AI configuration.
+
+    Best for: operators who need both transcoding and AI in one deployment.
+  </Card>
+  <Card title="Gateway-as-Service" icon="building" href="/v2/gateways/advanced/remote-signers">
+    **ETH via clearinghouse.** Run a public gateway that developers connect to and pay for, with a clearinghouse or remote signer handling payment operations.
+
+    Best for: infrastructure providers, NaaP builders, managed gateway services.
+  </Card>
+  <Card title="SDK / Alternative Gateway" icon="brackets-curly" href="/v2/gateways/advanced/remote-signers">
+    **ETH via remote signer.** Build a gateway in Python, browser, or mobile using the Livepeer SDK. The remote signer handles all Ethereum — your implementation stays lightweight.
+
+    Best for: developers building non-Go gateway implementations, direct-to-orchestrator clients.
+  </Card>
+</CardGroup>
+
+---
+
+<Accordion title="Not sure which path fits?">
+
+Work through these questions:
+
+**Are you building an application that needs AI inference (image generation, live video AI, LLM)?**
+→ Start with the **AI Gateway — Off-Chain** path. No ETH, fastest setup.
+
+**Are you routing live video transcoding jobs (RTMP ingest, multi-bitrate output)?**
+→ Start with the **Video Gateway — On-Chain** path.
+
+**Do you need both video transcoding and AI inference?**
+→ Start with **Video Gateway**, then follow the AI configuration steps to add AI workloads.
+
+**Do you want to run a gateway that other developers or applications pay to use?**
+→ **Gateway-as-Service** path. You will need either direct on-chain PM setup or a clearinghouse to handle payments from your users.
+
+**Are you building a gateway in a language other than Go (Python, JavaScript, mobile)?**
+→ **SDK / Alternative Gateway** path. Use the Livepeer Python gateway SDK or implement against the remote signer API. The remote signer handles all Ethereum so your implementation does not need to.
+
+**Still unsure?** Ask in [Discord #local-gateways](https://discord.gg/livepeer) or read the [Gateway Overview](/v2/gateways/concepts/overview) first.
+
+</Accordion>
+
+---
+
+Not sure what a gateway is or which type you need? Read the [Gateway Overview](/v2/gateways/concepts/overview) first.

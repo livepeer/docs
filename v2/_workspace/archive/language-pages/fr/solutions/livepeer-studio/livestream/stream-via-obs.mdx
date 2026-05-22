@@ -1,0 +1,36 @@
+---
+title: Diffuser via OBS
+description: >-
+  Configurez OBS Studio pour diffuser dans Livepeer Studio en utilisant RTMP et
+  la clé de diffusion.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vc3RyZWFtLXZpYS1vYnMiLCJzb3VyY2VIYXNoIjoiZTgzOGU5ZGY4NDkxM2I3NDFhNTE1ZWZhMjc2OGY5YzEzZDA5NjZlMmNjZmZjNGJiMjlhNGU1OTUyYzVjMDlhNiIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzoyOToxOS42MzJaIn0= */}
+[OBS Studio](https://obsproject.com/) est un choix courant pour la diffusion en direct vers Livepeer Studio. Configurez OBS avec votre clé de diffusion provenant d'une [diffusion créée](create-livestream).
+
+## Obtenir une clé de diffusion
+
+[Créer une diffusion en direct](create-livestream) et copier la **clé de diffusion**. Le diffuseur l'entre dans OBS.
+
+## Configurer OBS
+
+1. Dans OBS : **Paramètres → Diffusion**.
+2. Définir **Service** à **Afficher tout...** puis **Livepeer Studio**, ou **Personnalisé**.
+3. Pour **Personnalisé**: définir "**Serveur** à l'URL d'ingestion depuis le tableau de bord (par exemple "`rtmp://livepeer.studio/live`) et "**Clé de diffusion** à votre clé de diffusion.
+4. **Sortie** onglet : **Mode de sortie** = **Avancé**, **Intervalle de clé** = **1**.
+5. Enregistrer et **Démarrer la diffusion en direct**.
+
+<Info>
+  Use **Keyframe Interval: 1** and disable **B-frames** (`bframes=0` in x264 options) for best compatibility with WebRTC playback. See [Optimize latency](optimize-latency).
+</Info>
+
+## Lecture
+
+Les spectateurs utilisent le flux **ID de lecture** dans le [Livepeer Player](./playback-livestream) ou tout lecteur HLS/WebRTC.
+
+## Paramètres recommandés pour OBS
+
+**Faible latence :** Intervalle de cléframe 1, CRF 25 ou CBR, Profil High, `bframes=0`, résolution 720p ou 1080p.
+
+**Équilibré :** Intervalle de cléframe 2, CRF 25, pas d&apos;remplacement de cadre B.
+
+Voir[Optimiser la latence](optimize-latency) pour les profils complets.

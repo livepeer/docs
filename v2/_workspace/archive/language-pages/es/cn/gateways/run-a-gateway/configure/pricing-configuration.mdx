@@ -1,0 +1,385 @@
+---
+title: 定价配置
+description: 为 Livepeer 网关服务配置定价
+sidebarTitle: 定价配置
+icon: hand-holding-dollar
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - configure
+  - pricing configuration
+  - pricing
+  - configuration
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2NvbmZpZ3VyZS9wcmljaW5nLWNvbmZpZ3VyYXRpb24ubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2NvbmZpZ3VyZS9wcmljaW5nLWNvbmZpZ3VyYXRpb24iLCJzb3VyY2VIYXNoIjoiOTQxZDVlNWI2YTkzYjc0NWZjOTZjYzdjNzU0YmFjY2E5N2Q5ZGRiOWJhY2ExNzRiNWU0Nzg5ZjQ2YmVkZjM4MSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNDoxMzowNy40NTJaIn0= */}
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+
+<Danger> OK / complete - but needs edit & format </Danger>
+
+在 Livepeer 中，网关配置定价以控制成本和利润率。
+作为视频转码和 AI 服务的消费者，网关会设定他们愿意为处理工作支付给协调者的最高价格。
+
+## 定价概念
+
+#### 支付货币
+
+所有支付均以 <Badge color="green">ETH(wei)</Badge> - **不是** Livepeer 代币 (LPT)
+
+#### 定价模型
+
+<Warning> Format me.</Warning>
+
+1. <Badge color="blue">Video Transcoding</Badge>: 每个处理的视频片段
+
+- 单位: 处理的像素 (宽度 x 高度)
+- 计算: 处理的像素 × 每像素价格
+
+2. <Badge color="purple"> AI Processing</Badge>: 按功能/模型定价。{' '}
+
+- 单位：每功能/模型的价格
+- 计算方式：
+  - 按像素支付：计算方式为宽度 × 高度 × 输出数量
+  - 按请求支付：每次AI请求支付一次
+  - 直播视频支付：按时间段支付（可配置）
+
+{/* ### Setting Price Limits For Work Performed by Orchestrators */}
+
+## 定价配置标志
+
+#### 视频转码核心标志
+
+<Card>
+  <Badge color="blue">Video</Badge>
+  <ResponseField name="-maxPricePerUnit" type="int" default="0 (wei)">
+    Maximum price per pixelsPerUnit (in wei `integer` or a custom currency
+    format like 0.50USD or 0.02USD) for transcoding work
+    <Note>
+      {' '}
+      All pricing is in `wei` unless currency conversion is configured{' '}
+    </Note>
+  </ResponseField>
+  <ResponseField name="-pixelsPerUnit" type="int" default="1">
+    Number of pixels per pricing unit
+  </ResponseField>
+  <ResponseField name="-ignoreMaxPriceIfNeeded" type="boolean" default="false">
+    Allow exceeding max price if no suitable Orchestrator exists
+  </ResponseField>
+</Card>
+
+#### AI 处理核心标志
+
+<Card>
+  <Badge color="purple">AI</Badge> 
+  <ResponseField name="-maxPricePerCapability" type="string" default="none">
+  JSON list (or `path/to/ai-pricing.json` file) of maximum prices per AI capability/model
+
+      ```json icon="file" ExampleFormat.json
+      {
+        "capabilities_prices": [
+          {
+            "pipeline": "text-to-image",
+            "model_id": "stabilityai/sd-turbo",
+            "price_per_unit": 1000,
+            "pixels_per_unit": 1
+          }
+        ]
+      }
+      ```
+
+  </ResponseField>
+  <ResponseField name="-livePaymentInterval" type="duration" default="5s">
+    Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
+
+    {/*
+    Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
+    Payment Processor: It's passed to the LivePaymentProcessor which handles the timing of payment transactions live_payment_processor.go:33-42
+    Gateway-Orchestrator Communication: Specifically for "Gateway <> Orchestrator Payments for Live AI Video" as stated in the flag description.
+    You only need to configure this flag if:
+
+    You're running a gateway that processes Live AI Video streams
+    You need to customize the payment frequency (default is 5 seconds)
+    You're working with orchestrators that require payment processing for AI workloads
+
+    For standard offchain gateway operations without AI video processing, the default behavior is sufficient and you don't need to set this flag.
+    */}
+
+  </ResponseField>
+</Card>
+
+{/* ### Price Calculation
+
+The actual price calculation happens in the orchestrator's `priceInfo` function, which:
+
+1. Checks for fixed prices per manifest ID
+2. Gets base price from Orchestrator configuration
+3. For AI workloads, sums prices of individual capability/model pairs
+4. Applies auto-adjustment based on transaction costs if enabled */}
+
+## 费用支付计算与流程
+
+<Warning> Format me. Add diagram </Warning>
+
+网关根据工作负载类型通过不同的机制支付费用:
+
+_视频转码_
+
+- 按段支付: 每个视频段生成一个支付票证 -> [<Icon icon="github" /> segment_rpc.go:](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+- 费用计算：基于处理的像素数 × 每像素价格 -> [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+
+_AI 处理_
+
+- 按像素支付：计算方式为宽度 × 高度 × 输出数量 [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+- 实时视频：在流媒体期间使用基于时间间隔的付款[<Icon icon="github" />ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+_付款处理流程_
+
+1. 网关将带有片段/请求的付款发送到编排器[<Icon icon="github" />live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+2. 编排器验证付款并更新余额[<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+3. 费用将从网关的余额账户中扣除[<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+## 配置方法
+
+<Warning> Format me. </Warning>
+网关通过配置标志设置他们愿意支付的最高价格在
+`transcodingConfig.json` 或直接在 CLI 中。
+
+1. **命令行** 标志
+   ```bash
+     -maxPricePerUnit=1000 \
+     -pixelsPerUnit=1
+   ```
+2. **JSON 配置** 文件（纯文本键值格式）
+
+   对于 AI 功能，请使用带有模型特定定价的 JSON 文件
+
+3. **HTTP API** - 可在运行时使用以进行调整而无需重启
+   - /setBroadcastConfig: 设置通用定价
+   - /setMaxPriceForCapability: 设置 AI 模型定价
+4. **CLI 工具**
+
+   使用 livepeer_cli -> **选项 16**: "设置广播配置"
+
+## 协调器配置和价格信息（网关参考）
+
+为网关操作员提供的参考，说明协调器如何为服务配置定价和费用。
+
+#### 按网关定价（可由协调器设置）
+
+协调器可以使用以下内容为单个网关设置特定价格
+`-pricePerGateway` [<Icon icon="github" />starter.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go)
+
+```json
+{
+  "gateways": [
+    {
+      "ethaddress": "0x123...",
+      "priceperunit": 0.5,
+      "currency": "USD",
+      "pixelsperunit": 1000000000000
+    }
+  ]
+}
+```
+
+#### 价格计算
+
+<Warning> Repeated </Warning>
+
+实际的价格计算发生在协调器的 `priceInfo` 函数 [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+1. 检查每个清单ID的固定价格
+2. 从协调器配置中获取基础价格
+3. 对于AI工作负载，汇总单个功能/模型对的价格
+4. 如果启用，根据交易费用自动调整价格
+
+#### 动态价格调整
+
+协调者可以基于交易费用启用自动价格调整 - 这就是为什么需要设置 maxPricing 标志 -> [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+```go
+if !orch.node.AutoAdjustPrice {
+    return basePrice, nil
+}
+// Apply overhead multiplier based on tx costs
+overhead := big.NewRat(1, 1)
+if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
+    txCostMultiplier, err := orch.node.Recipient.TxCostMultiplier(sender)
+    if txCostMultiplier.Cmp(big.NewRat(0, 1)) > 0 {
+        overhead = overhead.Add(overhead, new(big.Rat).Inv(txCostMultiplier))
+    }
+}
+```
+
+## 网关定价配置标志的完整列表
+
+#### 视频转码定价标志
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerUnit',
+      Default: '0',
+      Purpose: 'Maximum price per pixelsPerUnit for transcoding',
+    },
+    {
+      Flag: '-pixelsPerUnit',
+      Default: '1',
+      Purpose: 'Number of pixels per pricing unit',
+    },
+    {
+      Flag: '-ignoreMaxPriceIfNeeded',
+      Default: 'false',
+      Purpose: 'Allow exceeding max price if no suitable orchestrator exists',
+    },
+    {
+      Flag: '-priceFeedAddr',
+      Default: 'Chainlink ETH/USD address',
+      Purpose: 'Price feed for currency conversion',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### AI 处理定价标志
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerCapability',
+      Default: '""',
+      Purpose: 'JSON list of prices per AI pipeline/model',
+    },
+    {
+      Flag: '-aiModels',
+      Default: '""',
+      Purpose: 'Model configurations with pricing info',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### 支付票证标志
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-ticketEV',
+      Default: '8000000000',
+      Purpose: 'Expected value for payment tickets',
+    },
+    {
+      Flag: '-maxFaceValue',
+      Default: '0',
+      Purpose: 'Maximum ticket face value in wei',
+    },
+    {
+      Flag: '-maxTicketEV',
+      Default: '3000000000000',
+      Purpose: 'Maximum acceptable expected value per ticket',
+    },
+    {
+      Flag: '-maxTotalEV',
+      Default: '20000000000000',
+      Purpose: 'Maximum acceptable expected value per payment',
+    },
+    {
+      Flag: '-depositMultiplier',
+      Default: '1',
+      Purpose: 'Deposit multiplier for ticket faceValue',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Gas & Transaction 标志（影响定价）
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    { Flag: '-minGasPrice', Default: '0', Purpose: 'Minimum gas price in wei' },
+    { Flag: '-maxGasPrice', Default: '0', Purpose: 'Maximum gas price in wei' },
+    { Flag: '-gasLimit', Default: '0', Purpose: 'Gas limit for transactions' },
+    {
+      Flag: '-txTimeout',
+      Default: '5m',
+      Purpose: 'Transaction timeout duration',
+    },
+    {
+      Flag: '-maxTxReplacements',
+      Default: '1',
+      Purpose: 'Max transaction replacements',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### 协调器特定定价（仅供参考）
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-pricePerUnit',
+      Default: '0',
+      Purpose: 'Price per pixelsPerUnit (orchestrator only)',
+    },
+    {
+      Flag: '-pricePerGateway',
+      Default: '""',
+      Purpose: 'Per-gateway pricing (orchestrator only)',
+    },
+    {
+      Flag: '-autoAdjustPrice',
+      Default: 'true',
+      Purpose: 'Auto-adjust prices based on gas costs',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### 备注
+
+- **网关标志** 控制您**支付**（最高价格）
+- **协调器标志** 控制您**费用**（实际价格）
+- AI 定价使用`maxPricePerCapability`JSON 结构进行每模型定价
+- 所有价格都可以以 wei 或带货币后缀的形式指定（例如“0.50USD”）
+- 默认的“0”值表示接受任何价格或使用系统默认值
+
+## 相关页面
+
+<Columns cols={2}>
+  <Card
+      title="Gateway Economics"
+      href="../../about/economics"
+      icon="hand-holding-dollar"
+      arrow
+      >
+      How gateways earn fees for services
+  </Card>
+
+  <Card 
+        title="Funding Your Gateway"
+        href="../requirements/on-chain%20setup/fund-gateway"
+        icon="coins"
+        arrow
+        >
+      How to fund your gateway.
+  </Card>
+</Columns>
+
+<Expandable title="old content">  
+OLD
+
+Gateways in Livepeer set prices and pay fees through a multi-layered system that includes
+price limits, per-gateway pricing, and payment processing for both video transcoding and AI workloads.
+
+Gateways use a probabilistic micropayment system where they generate payment tickets for work done.
+The system supports both traditional video transcoding (per segment) and AI processing (per pixel)
+with different pricing models but unified payment infrastructure.
+
+</Expandable>

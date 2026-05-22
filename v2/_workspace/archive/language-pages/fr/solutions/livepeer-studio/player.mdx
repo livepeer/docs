@@ -1,0 +1,39 @@
+---
+title: Joueur et intégration
+description: >-
+  Utilisez le composant Livepeer Player et le joueur intégrable lvpr.tv pour la
+  lecture.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3BsYXllci5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vcGxheWVyIiwic291cmNlSGFzaCI6IjMxYzdiYTJlZTI5ZDcxMGI4NmE4NjQ3ZTU5MDNhMDBkZWYxMGIxODc0MmIzYWZjYzBhMWIwYWYzZGQ4MWY5MTkiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTc6MTc6NTguMzYyWiJ9 */}
+Le **Livepeer Player** est un composant React (et un lecteur intégrable sur `lvpr.tv`) pour lire des flux et des ressources. Il prend en charge WebRTC (faible latence) et le fallback HLS/MP4, et signale les métriques d'audience lorsqu'il est utilisé avec l'API Studio.
+
+## React Player
+
+Depuis `@livepeer/react`, utilisez "`Player.Root`", "`Player.Video`", "`Player.Controls`", et d'autres primitives. Passez une "**src** (de `getSrc(playbackInfo)` du [API Info de lecture](https://livepeer.studio/docs/api-reference/playback/get)) ou une **playbackId** (avec un fournisseur). Le lecteur préfère WebRTC pour les flux en direct et MP4 pour les VOD courtes ; il passe à HLS en cas d'erreur ou lorsqu'WebRTC n'est pas disponible (par exemple, les images B dans le flux).
+
+- **Diffusion en direct :** [Diffuser un flux en direct](./livestream/playback-livestream)
+- **VOD :** [Diffuser un actif](./video-on-demand/playback-asset)
+- **Contrôle d'accès :** Pass `accessKey` ou `jwt` selon les besoins. Voir [Contrôle d'accès](access-control/overview).
+
+## Lecteur intégrable (iframe)
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **Diffusions en direct :** La valeur par défaut est WebRTC à faible latence. Utilisez `&lowLatency=false` pour HLS ou `&lowLatency=force` pour WebRTC uniquement. Utilisez `&clipLength=60` (maximum 120) pour le découpage. Utilisez `constant=true` pour une lecture constante (par exemple, de la musique).
+- **VOD :** Les options incluent `&muted=false`, `&autoplay=false`, `&loop=true`.
+
+## Miniatures
+
+- **VOD** - Les miniatures se trouvent dans les informations de lecture (WebVTT + images clés). Voir [Miniatures (VOD)](./video-on-demand/thumbnails-vod).
+- **Diffusion en direct** - Les informations de lecture incluent une URL de miniature PNG qui se met à jour avec la dernière image. Le lecteur peut l'utiliser comme afficheur de vidéo.
+
+## Métriques
+
+Le Livepeer Player signale l'engagement à Livepeer lorsqu'il est utilisé avec l'API Studio. Interroger[audience et analyse](./analytics/overview) via l'API ou les tableaux de bord.

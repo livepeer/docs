@@ -1,0 +1,28 @@
+---
+title: 上传一个资产
+description: 通过 TUS 可恢复上传或 PUT 将视频文件上传到 Livepeer Studio。
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL3ZpZGVvLW9uLWRlbWFuZC91cGxvYWQtYXNzZXQiLCJzb3VyY2VIYXNoIjoiNTkyZjZjZTNhYTA3MDY1NDZiNmQ4Y2E5MWIwZDNmOWRmNDIwZDJlYTE5MWZkNjUyZjQ4NmNlNDY1YjNkYjMyOSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNzo0MToxMy44MTdaIn0= */}
+通过 Livepeer Studio API 上传视频。**TUS 可恢复上传** 是推荐的；**PUT** 也受支持。
+
+<Info>
+  TUS supports resumable uploads and is recommended for all uploads, especially large files.
+</Info>
+
+## 使用 SDK 创建上传
+
+从您的后端创建一个资产以获取上传 URL（TUS 或 PUT）：
+
+```javascript
+const { data } = await livepeer.asset.create({ name: "my-video.mp4" });
+// data.tusUploadUrl for TUS client on frontend
+// data.asset has asset id
+```
+
+使用**TUS 上传 URL** 与前端的[TUS 客户端](https://github.com/TUS/TUS-js-client) 上传文件。处理完成后，使用该资产**播放ID** 以播放它。参见 [播放资产](./playback-asset) 和 [收听事件](../analytics/listen-to-events).
+
+## 下一步
+
+- [播放资产](./playback-asset)
+- [加密资产](encrypted-assets)
+- [缩略图（VOD）](./thumbnails-vod)

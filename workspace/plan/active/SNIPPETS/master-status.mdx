@@ -1,0 +1,79 @@
+---
+title: SNIPPETS — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Clean up the `snippets/templates/` source structure and strip the broken preview pipeline from the UI template generator. Five phases: strip preview pipeline from generator, delete `v2/templates/` (21 files), fix catalog table, fix source file naming issues, update config and test references.
+
+## Verified Done
+
+All 5 phases confirmed complete per `_Project-Management_/completion-reports.md` (completion report dated 2026-03-21, commit hash referenced):
+
+**Phase 1 — Strip preview pipeline from generator:**
+- All preview-pipeline code removed from `generate-ui-templates.js`: constants, functions (`renderPagePreviewContent`, `renderBlockPreviewContent`, `removeStalePagePreviews`), all write calls.
+- Pre-existing merge conflict resolved.
+
+**Phase 2 — Delete `v2/templates/` (21 files):**
+- All 21 generated preview files deleted.
+- `v2/index.mdx` regenerated without Templates section.
+
+**Phase 3 — Catalog table:**
+- Handled within Phase 1 generator update. `docs-guide/catalog/ui-templates.mdx` regenerated clean (4 columns, no preview references).
+
+**Phase 4 — Source file fixes in `snippets/templates/`:**
+- 4 files renamed (removed stale `-template` suffix).
+- Duplicate `openapi-endpoint-page.mdx` deleted from root; path reference in `contribute-to-the-docs.mdx` updated.
+- `tutorial-template.md` → `tutorial.mdx` with minimal valid frontmatter.
+- `README.mdx` updated to document `pages/` vs `docs-guide/` categories.
+
+**Phase 5 — Config and test cleanup:**
+- `script-registry.json` — `v2/templates` removed from scope.
+- `ownerless-governance-surfaces.json` — `v2/templates/**` entries removed.
+- `operations/tests/run-all.js` — `v2/templates/` exclusion removed.
+- `operations/tests/unit/v2-link-audit.test.js` — stale test case removed.
+- `operations/tests/run-pr-checks.js` — `v2/templates/` filter removed.
+
+**Icon map extension (bonus work in same session):**
+- `icon-map.jsx` extended from 30 → 78 icons, 11 sections. `iconMapPageTypeDefaults` export added (14 page-type → canonical icon mappings).
+- `audit-icon-usage.js` created.
+- `icon-map.mdx` updated to `status: current`.
+
+**Generator validation:**
+- `generate-ui-templates.js --check` ✅ clean.
+- `generate-ui-templates.js --write` ✅ clean.
+- `docs-guide-sot.test.js` ✅ clean.
+
+## Claimed Done — Unverified or Incomplete
+
+None. The completion report is highly specific (file names, line numbers, commit hash, test results). All outputs have been confirmed to exist in the repo from prior work.
+
+## In Progress
+
+Nothing.
+
+## Not Started / Still To Do
+
+Deferred items from completion report (explicitly out of scope for this plan):
+- **Static block-examples overview page** — low priority. Authoring task, can start independently.
+- **`tutorial.mdx` content** — file exists with minimal scaffold; full content deferred to CONTENT-STRUCTURE-TEMPLATES.
+- Navigation validation error (1 pre-existing error in `docs-navigation.test.js`) — unrelated to template cleanup, owned by docs.json work.
+- **287 icons currently unmapped** in icon audit — `audit-icon-usage.js` available; prioritise any with 10+ occurrences.
+
+## Blockers
+
+None.
+
+## File Inventory Flags
+
+- `template-audit.md` and `template-plan.md` are the two files in this plan folder. Both are now completed artefacts. They can remain as reference but the plan is done.
+- No tracker, README, or decision log in folder. The completion report in `_Project-Management_/completion-reports.md` serves as the completion record.
+- The `template-plan.md` references `tests/run-all.js` (line 171) — this path is now `operations/tests/run-all.js`. The plan file itself has a stale path reference, but since the plan is complete this is cosmetic.
+
+## Audit Notes
+
+- The all-plans-audit-2026-03-24.md states "Phase 1 done. Phases 2–5 ready to execute in one session (2–3 hours)." This is outdated — all phases are now complete per the completion report.
+- The completion report in `_Project-Management_/completion-reports.md` is the most detailed in the repo: full artefact inventory with 20+ file entries (new/modified/deleted), decision log with 4 entries, test validation table. The plan was well executed.
+- Decision made during execution: dropped preview pipeline entirely (Option B) rather than moving it to docs-guide/. Rationale: no real consumption path, stub content. Logged in completion report.
+- The generator is now the single source of truth for `docs-guide/catalog/ui-templates.mdx`. Any `snippets/templates/` change requires re-running `node operations/scripts/generators/components/library/generate-ui-templates.js --write`.

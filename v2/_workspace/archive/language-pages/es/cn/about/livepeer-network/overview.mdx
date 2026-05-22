@@ -1,0 +1,43 @@
+---
+title: Livepeer 网络概览
+sidebarTitle: 网络概览
+description: 对 Livepeer 网络及其组件的概述。
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - network overview
+  - network
+  - overview
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9saXZlcGVlci1uZXR3b3JrL292ZXJ2aWV3Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvYWJvdXQvbGl2ZXBlZXItbmV0d29yay9vdmVydmlldyIsInNvdXJjZUhhc2giOiIxNTk5ODQ5NmFmMGUzNGZkNGFhMzg2OTgyNGZjNTEyZTFkYTU0YTA1ODZlYmQ0OWQ3N2EyMTNlZDg2MDAwM2JlIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI2VDA2OjUyOjEzLjY5M1oifQ== */}
+Livepeer的核心协议定义了网络提供实时视频和 AI 计算服务的条件。网络是执行层。它是实际运行的机器系统，执行产品愿景的工作。
+- 网关（广播者）从应用或服务向网络提交作业（视频或 AI）
+- 编排节点（质押者）处理并计算工作，并 
+- 委托者质押代币以支持网络的治理和安全
+
+## 网络组件
+
+### 节点类型
+协议实现定义了多种节点角色（并非全部都是正式的网络参与者），它们协同执行协议以提供所需的网络功能。
+
+- **广播节点**：以 LivepeerServer 为中心，管理 rtmpConnections 和 BroadcastSessionsManager
+- **网关节点**：在广播功能之上添加 AISessionManager 和 AI HTTP 处理程序
+- **编排节点**：使用 orchestrator 结构体和 SegmentChans 进行作业分配，并使用 Recipient 进行支付
+- **转码节点**：RemoteTranscoderManager 通过 LocalTranscoder 协调本地或远程转码
+- **AI 工作节点**：RemoteAIWorkerManager 管理运行 AI 模型的 Docker 容器
+
+### 核心组件
+- LivepeerNode：网络中所有其他节点类型（网关/广播者、编排者、转码器）实现的接口节点
+- 媒体服务器（`LivpeerServer`）：LivepeerServer 管理媒体处理并提供 HTTP/RTMP 端点，提供 
+    - RTMP 输入用于直播流
+    - HTTP 推送用于视频片段
+    - HLS 播放端点
+    - 活动连接的管理
+- 广播会话管理器： 
+- 编排者
+- 转码器
+- AI 网关 
+- AI 工作者 
+
