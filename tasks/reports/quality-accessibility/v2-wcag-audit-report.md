@@ -1,7 +1,7 @@
 # V2 WCAG Accessibility Audit Report
 
-- Timestamp: 2026-05-22T03:26:30.217Z
-- Mode: staged
+- Timestamp: 2026-05-22T03:50:38.419Z
+- Mode: files
 - WCAG Profile: WCAG 2.2 AA
 - Fail Threshold: serious
 - Base URL: (none / static-only run)
@@ -10,10 +10,10 @@
 
 ## Summary
 
-- Files scanned: 13
+- Files scanned: 0
 - Browser target pages: 0
 - Browser-audited pages: 0
-- Static-only files: 13
+- Static-only files: 0
 - WCAG violations: 0
 - Best-practice violations (advisory): 0
 - Incomplete/manual-review results: 0
