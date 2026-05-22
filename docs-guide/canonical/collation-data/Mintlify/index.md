@@ -38,7 +38,6 @@ Scope:
 - `mintlify.mdx` — `docs-guide/contributing/mintlify.mdx`
 - `lpd-cli.mdx` — `docs-guide/tooling/lpd-cli.mdx`
 - `lpd-mdx-preview.mdx` — `docs-guide/tooling/lpd-mdx-preview.mdx`
-- `dev-tools.mdx` — `docs-guide/tooling/dev-tools.mdx`
 - `content-system.mdx` — `docs-guide/frameworks/content-system.mdx`
 - `component-governance.mdx` — `docs-guide/frameworks/component-governance.mdx`
 - `feature-map.mdx` — `docs-guide/features/feature-map.mdx`

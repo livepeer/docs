@@ -48,7 +48,7 @@ const VERSION = 'docs-index.v1';
 const REPO_ROOT = getRepoRoot();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-index.json');
-const REPORT_PATH = path.join(REPO_ROOT, 'tasks', 'reports', 'docs-index', 'missing-frontmatter.md');
+const REPORT_PATH = path.join(REPO_ROOT, 'workspace', 'reports', 'docs-index', 'missing-frontmatter.md');
 
 function readFileSafe(filePath) {
   try {

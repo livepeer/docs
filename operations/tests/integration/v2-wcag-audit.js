@@ -26,8 +26,8 @@ const REPO_ROOT = getRepoRoot();
 if (process.cwd() !== REPO_ROOT) {
   process.chdir(REPO_ROOT);
 }
-const DEFAULT_REPORT_MD = path.join(REPO_ROOT, 'tasks', 'reports', 'quality-accessibility', 'v2-wcag-audit-report.md');
-const DEFAULT_REPORT_JSON = path.join(REPO_ROOT, 'tasks', 'reports', 'quality-accessibility', 'v2-wcag-audit-report.json');
+const DEFAULT_REPORT_MD = path.join(REPO_ROOT, 'workspace', 'reports', 'quality-accessibility', 'v2-wcag-audit-report.md');
+const DEFAULT_REPORT_JSON = path.join(REPO_ROOT, 'workspace', 'reports', 'quality-accessibility', 'v2-wcag-audit-report.json');
 const DEFAULT_TIMEOUT_MS = 30000;
 const DEFAULT_WAIT_AFTER_NAV_MS = 2000;
 const WCAG_PROFILE = 'WCAG 2.2 AA';

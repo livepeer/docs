@@ -1,7 +1,7 @@
 ---
 title: Contributor Tools
 sidebarTitle: Contributor Tools
-description: Contributor-facing tools for setup, local preview, validation, hooks, editor support, scoped docs profiles, and governed page movement.
+description: "Contributor-facing tools for setup, local preview, validation, hooks, editor support, scoped docs profiles, and governed page movement."
 audience: developer
 pageType: overview
 purpose: overview
@@ -68,10 +68,35 @@ Do not report required tools as unavailable until checking version managers, rep
 | `.vscode/extensions.json` | Recommended local extensions. |
 | `.vscode/settings.json` | Workspace settings. |
 | `.vscode/tasks.json` | Repeatable editor tasks. |
+| `.vscode/mcp.json` | MCP server configuration for in-IDE agent access. |
 | `.vscode/components.code-snippets` | Component snippets. |
 | `.vscode/templates.code-snippets` | Template snippets. |
 | `.vscode/mdx.code-snippets` | MDX authoring helpers. |
+| `.vscode/mintlify.code-snippets` | Mintlify built-in component snippets. |
+| `.vscode/lp-components.code-snippets` | Legacy component aliases. |
 | `tools/editor-extensions/install.sh` | Installs local VS Code extensions and verifies packaged extension parity. |
+
+## VS Code Snippets
+
+Workspace snippets in `.vscode/*.code-snippets` are available to any contributor opening this repo. Five files cover the full authoring surface; all component-driven snippets are generator-emitted from `docs-guide/config/component-registry.json` via `operations/scripts/generators/components/library/generate-ui-templates.js`.
+
+| File | Snippets | Scope |
+| --- | --- | --- |
+| `.vscode/mdx.code-snippets` | 23 | Frontmatter blocks, page scaffolds, reusable MDX patterns |
+| `.vscode/mintlify.code-snippets` | 25 | Mintlify built-in components (`Card`, `Tabs`, `Steps`, `Accordion`, etc.) |
+| `.vscode/components.code-snippets` | 113 | Custom Livepeer components |
+| `.vscode/lp-components.code-snippets` | 125 | Legacy component aliases retained for backward compatibility |
+| `.vscode/templates.code-snippets` | 26 | Full page templates by page type |
+
+JSX tag snippets accept both bare names (`Card`) and opening-tag prefixes (`<Card`), so they expand cleanly when typed after an angle bracket. The frontmatter snippet auto-fills today's date for `lastVerified` and offers dropdowns for `audience`, `pageType`, `status`, and `purpose` aligned to the canonical enums.
+
+Regenerate after registry changes:
+
+```bash
+node operations/scripts/generators/components/library/generate-ui-templates.js --write
+```
+
+Counts above are verified against live snippet files. The earlier per-page reference at `docs-guide/tooling/dev-tools.mdx` is retired and redirects here.
 
 ## Contributor Safety Rules
 
@@ -94,7 +119,8 @@ Do not report required tools as unavailable until checking version managers, rep
 ## Related
 
 - `docs-guide/tooling/lpd-cli.mdx`
-- `docs-guide/tooling/dev-tools.mdx`
+- `docs-guide/tooling/lpd-mdx-preview.mdx`
 - `docs-guide/contributing/contributing.mdx`
 - `docs-guide/contributing/local-preview.mdx`
+- `docs-guide/contributing/git-hooks.mdx`
 - `.githooks/README.md`
