@@ -1,0 +1,22 @@
+# type: validator
+# concern: maintenance
+# pipeline: P3
+name: Check Docs Guide Catalogs
+
+on:
+  pull_request:
+    branches:
+      - docs-v2
+  push:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+
+jobs:
+  check-docs-guide-catalogs:
+    uses: ./.github/workflows/dispatch-maintenance-check-catalogs.yml
+    with:
+      mode: check-docs-guide-catalogs
+      run_frontmatter_check: ${{ github.event_name == 'pull_request' }}
+      base_ref: ${{ github.base_ref || '' }}
+    secrets: inherit

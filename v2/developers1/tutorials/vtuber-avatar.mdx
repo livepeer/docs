@@ -1,0 +1,173 @@
+---
+title: "Build a VTuber avatar pipeline"
+sidebarTitle: "VTuber avatar pipeline"
+description: >-
+  Transform a live webcam feed into a real-time AI avatar with ComfyStream and StreamDiffusion, running on a single high-end GPU host.
+keywords:
+  - VTuber
+  - ComfyStream
+  - StreamDiffusion
+  - livepeer AI
+  - real-time AI video
+  - tutorial
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-05-11
+complexity: intermediate
+lifecycleStage: discover
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>A live webcam feed transformed into an AI-generated avatar by a ComfyUI workflow running through ComfyStream and StreamDiffusion. Reader time: 60 to 90 minutes including environment setup.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The pipeline this tutorial builds is the inference layer that VTuber apps consume. It does not produce a rigged 3D model, a Live2D model, or face-tracking metadata. It produces a transformed video stream where each frame of the webcam feed has been run through a Stable Diffusion model conditioned on the input frame.
+
+<CustomDivider />
+
+## Prerequisites
+
+- An NVIDIA GPU with at least 24 GB of VRAM. RTX 4090 is the reference configuration. RTX 3090 works at lower frame rates.
+- Ubuntu 22.04 host with NVIDIA driver 545 or later and CUDA 12.5, **or** a RunPod account for the hosted path.
+- A USB webcam, or a virtual camera source.
+- A modern browser (Chrome or Firefox) for the ComfyStream UI preview.
+
+Two paths reach the same end state. Path A uses a RunPod template and skips local environment setup. Path B sets up ComfyStream on a local host.
+
+<CustomDivider />
+
+## Path A: RunPod Template
+
+The fastest route. RunPod provides a community template that boots ComfyStream with NVIDIA drivers, CUDA, and the ComfyUI dependencies preinstalled.
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Launch a pod" icon="rocket">
+    Sign in to `runpod.io`. Browse community templates and search for `comfystream`. Select a template maintained by `livepeer` or `daydreamapp`. Choose an RTX 4090 instance in the GPU pool. Deploy with default storage.
+  </StyledStep>
+
+  <StyledStep title="Open the UI" icon="window">
+    Once the pod state reaches Running, RunPod exposes HTTP ports on the pod's public URL. Open the ComfyStream port (default: 8189) and the ComfyUI port (default: 8188). The pod boots both services on first start; the first boot takes 2 to 5 minutes.
+  </StyledStep>
+
+  <StyledStep title="Verify" icon="check">
+    Load the ComfyUI URL. The interface should render with the StreamDiffusion node pack already installed. If nodes are missing, restart ComfyUI from the RunPod console.
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider />
+
+## Path B: Local Install
+
+For a self-hosted build, follow the ComfyStream repo's `README` for current install instructions. The high-level shape is:
+
+```bash icon="terminal"
+# System packages
+sudo apt-get install -y python3.10 python3.10-venv ffmpeg
+
+# ComfyUI
+git clone https://github.com/comfyanonymous/ComfyUI.git
+cd ComfyUI
+python3.10 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# ComfyStream and the Stream Pack
+cd custom_nodes
+git clone https://github.com/livepeer/comfystream.git
+git clone https://github.com/livepeer/ComfyUI-Stream-Pack.git
+cd comfystream && pip install -r requirements.txt
+cd ../ComfyUI-Stream-Pack && pip install -r requirements.txt
+```
+
+Start ComfyUI:
+
+```bash icon="terminal"
+cd ../..   # back to ComfyUI root
+python main.py --listen
+```
+
+The exact dependency set drifts. If install fails, follow `github.com/livepeer/comfystream` and `github.com/livepeer/ComfyUI-Stream-Pack` README files at HEAD.
+
+<CustomDivider />
+
+## Base Workflow
+
+ComfyStream extends ComfyUI with a real-time tensor channel: a `LoadTensor` node ingests frames from a webcam or RTMP source, and a `SaveTensor` node emits frames back out. Between them sits a StreamDiffusion sampler.
+
+The minimum graph is:
+
+1. **LoadTensor** -> reads webcam frames.
+2. **VAE Encode** -> encodes to latent space.
+3. **StreamDiffusionSampler** -> runs the diffusion step on the latent.
+4. **VAE Decode** -> decodes back to image space.
+5. **SaveTensor** -> writes frames to the output channel.
+
+Two parameters dominate latency and quality:
+
+- **`t_index_list`** (the timesteps the sampler runs). A short list (e.g. `[32, 45]`) is fast and produces less stylisation. A longer list produces more transformation but more latency.
+- **`use_tiny_vae`**. The TAESD tiny VAE is roughly 10x faster than the standard VAE with limited quality cost for real-time use. Default it on.
+
+Load the example workflow shipped with ComfyStream: in ComfyUI, click `Load` and select `custom_nodes/comfystream/workflows/base.json` (the filename in the repo at HEAD; check the path if it has moved).
+
+<CustomDivider />
+
+## First Run
+
+In the ComfyStream panel:
+
+1. Select your webcam as the input source.
+2. Set the diffusion prompt. Generic example: `oil painting style, masterpiece, intricate detail`. Avoid named characters.
+3. Click `Queue Prompt`. ComfyStream begins streaming.
+4. The output preview shows the transformed feed.
+
+Expected frame rates on the reference configuration (RTX 4090, TAESD on, short `t_index_list`, no TensorRT): 12 to 18 FPS at 512x512 input.
+
+<CustomDivider />
+
+## Performance Tuning
+
+Three changes most affect frame rate:
+
+**TensorRT engines.** Convert the StreamDiffusion model and TAESD to TensorRT for a 2x to 3x FPS gain on Ada-architecture GPUs. The conversion takes 10 to 30 minutes per engine and produces a `.engine` file the sampler picks up automatically. See <LinkArrow href="/v2/developers/build/streamdiffusion" label="StreamDiffusion reference" newline={false} /> for the conversion command and engine cache path.
+
+**Resolution.** Drop from 512x512 to 384x384 for roughly a 50% FPS increase on the same hardware.
+
+**Diffusion step count.** Reduce `t_index_list` length. Each step adds a full denoising pass per frame.
+
+<CustomDivider />
+
+## Next Steps
+
+**Add conditioning.** Pose and depth conditioning come from ControlNet nodes inside the same graph. Drop `OpenPose` or `Depth` preprocessors between `LoadTensor` and the sampler to drive the generation from body or face geometry instead of the raw pixel input.
+
+**Put the pipeline on the Livepeer Network.** Once the workflow works locally, package it as a BYOC container so other developers can dispatch jobs to it. See <LinkArrow href="/v2/developers/build/byoc" label="BYOC pipelines" newline={false} />.
+
+<CardGroup cols={2}>
+  <Card title="ComfyStream reference" icon="film" href="/v2/developers/build/comfystream">
+    Full node reference, tensor channel format, and supported model architectures.
+  </Card>
+  <Card title="StreamDiffusion reference" icon="bolt" href="/v2/developers/build/streamdiffusion">
+    Sampler parameters, TensorRT conversion, and the v2 sampler.
+  </Card>
+  <Card title="Real-time AI overview" icon="video" href="/v2/developers/concepts/real-time-ai">
+    Where ComfyStream sits in the Livepeer real-time AI stack.
+  </Card>
+  <Card title="BYOC" icon="box" href="/v2/developers/build/byoc">
+    Package the workflow as a network-runnable container.
+  </Card>
+</CardGroup>

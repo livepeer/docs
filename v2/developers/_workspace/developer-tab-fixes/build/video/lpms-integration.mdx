@@ -1,0 +1,183 @@
+---
+title: 'LPMS'
+sidebarTitle: 'LPMS'
+description: >-
+  Livepeer Media Server (LPMS): the embeddable Go library for RTMP ingest,
+  HLS output, and GPU-accelerated transcoding.
+keywords:
+  - livepeer
+  - LPMS
+  - media server
+  - RTMP
+  - HLS
+  - transcoding
+  - Go
+  - FFmpeg
+  - NVENC
+  - NVDEC
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>LPMS is the media server component embedded in go-livepeer. Use it in your own Go applications when you need RTMP-in, HLS-out transcoding without running the full protocol node.</Tip>
+</CenteredContainer>
+
+---
+
+LPMS (`livepeer/lpms`) is a Go library providing RTMP ingest, HLS output, and FFmpeg-backed transcoding. It is the core media handling layer inside go-livepeer's broadcaster node and is available independently for Go applications that need media server functionality.
+
+LPMS can run as a standalone binary for testing or be imported as a library into a larger Go application.
+
+<CustomDivider />
+
+## Building LPMS
+
+LPMS requires libavcodec (FFmpeg) and related libraries. The `install_ffmpeg.sh` script installs all dependencies to `~/compiled`:
+
+```bash
+git clone https://github.com/livepeer/lpms.git
+cd lpms
+bash install_ffmpeg.sh
+export PKG_CONFIG_PATH=~/compiled/lib/pkgconfig:$PKG_CONFIG_PATH
+go build ./...
+```
+
+For NVIDIA GPU support, a Pascal or later GPU and the NVIDIA CUDA toolkit are required. The build system detects GPU capability automatically when CUDA is on the path.
+
+<CustomDivider />
+
+## Default Endpoints
+
+The test LPMS server exposes:
+
+| Endpoint | Purpose |
+|---|---|
+| `rtmp://localhost:1935/stream/<id>` | RTMP ingest: push a stream here |
+| `http://localhost:7935/stream/<id>.m3u8` | HLS playback |
+| `http://localhost:7935/stream/<id>/<profile>.m3u8` | Specific rendition |
+
+Run the test server:
+
+```bash
+go build cmd/main.go
+./main
+```
+
+Push a test stream with FFmpeg:
+
+```bash
+ffmpeg -f avfoundation -framerate 30 -i "0:0" \
+  -c:v libx264 -tune zerolatency -b:v 900k \
+  -x264-params keyint=60:min-keyint=60 \
+  -c:a aac -ac 2 -ar 44100 \
+  -f flv rtmp://localhost:1935/stream/test
+```
+
+Play back from the HLS endpoint:
+
+```bash
+ffplay http://localhost:7935/stream/test.m3u8
+```
+
+<CustomDivider />
+
+## Embedding LPMS
+
+Import LPMS and configure `LPMSOpts`:
+
+```go
+package main
+
+import (
+    "github.com/livepeer/lpms/lpms"
+    "net/url"
+)
+
+func main() {
+    opts := lpms.LPMSOpts{
+        RtmpAddr: "127.0.0.1:1935",
+        HttpAddr: "127.0.0.1:7935",
+        WorkDir:  "/tmp/lpms",
+    }
+
+    server := lpms.New(&opts)
+
+    server.HandleRTMPPublish(
+        // getStreamID: extract stream ID from the ingest URL
+        func(url *url.URL) (string, error) {
+            return getStreamIDFromPath(url.Path), nil
+        },
+        // onPublish: called when RTMP stream begins
+        func(url *url.URL, rtmpStrm interface{}) error {
+            return nil
+        },
+        // onFinish: called when RTMP stream ends
+        func(url *url.URL, rtmpStrm interface{}) error {
+            return nil
+        },
+    )
+
+    server.HandleRTMPPlay(
+        func(ctx context.Context, reqPath string, dst interface{}) error {
+            streamID := getStreamIDFromPath(reqPath)
+            return server.GetRTMPStream(streamID, dst)
+        },
+    )
+
+    server.Start(context.Background())
+}
+```
+
+See `core/lpms.go` for the full `LPMSOpts` fields including segment duration, manifest window size, and GOP configuration.
+
+<CustomDivider />
+
+## GPU Transcoding
+
+LPMS exposes a GPU transcoding API using NVENC (encoding) and NVDEC (decoding) via FFmpeg's hardware acceleration path. Select the processing mode and GPU device at runtime:
+
+```go
+// Software transcoding
+err := transcoder.Transcode(
+    &TranscodeOptionsIn{Fname: "input.ts"},
+    []TranscodeOptions{{Oname: "output_720p.ts", Profile: P720p30fps16x9}},
+)
+
+// NVIDIA GPU device 0
+err := transcoder.Transcode(
+    &TranscodeOptionsIn{Fname: "input.ts", Accel: Nvidia, Device: "0"},
+    []TranscodeOptions{{Oname: "output_720p.ts", Profile: P720p30fps16x9}},
+)
+```
+
+The `cmd/transcoding/transcoding.go` sample program demonstrates GPU selection via CLI flags and is the reference implementation for testing NVIDIA processing in an LPMS environment.
+
+<Note>
+  LPMS is the media layer embedded in go-livepeer. For the full Livepeer protocol with orchestrator discovery, probabilistic micropayments, and network routing, run go-livepeer in broadcaster mode rather than using LPMS directly.
+</Note>
+
+<CustomDivider />
+
+LPMS is the media layer embedded in go-livepeer. For the full protocol with orchestrator discovery and payments, run go-livepeer in broadcaster mode rather than using LPMS directly.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding" arrow horizontal>
+    Segment submission API and transcoding profile configuration for the broadcaster gateway.
+  </Card>
+  <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>
+    Comparison of LPMS, broadcaster gateway, and managed SDK access paths.
+  </Card>
+</CardGroup>

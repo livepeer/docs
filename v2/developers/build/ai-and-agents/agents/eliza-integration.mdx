@@ -1,0 +1,110 @@
+---
+title: "Eliza integration"
+sidebarTitle: "Eliza Integration"
+description: >-
+  The Livepeer model provider plugin for the Eliza agent framework (ai16z).
+  Route Eliza's LLM inference through the Livepeer network's decentralised
+  GPU infrastructure.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - Eliza
+  - ai16z
+  - plugin-livepeer
+  - model provider
+  - agent framework
+  - decentralised inference
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Set `modelProvider: "livepeer"` in your Eliza character file and point `LIVEPEER_GATEWAY_URL` at a gateway. All Eliza inference routes through the Livepeer network.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+[Eliza](https://github.com/elizaos/eliza) is an open-source multi-agent framework from ai16z. It supports pluggable model providers: OpenAI, Anthropic, Google, and Livepeer. The Livepeer plugin (`plugin-livepeer`) routes all LLM inference through a Livepeer AI gateway, where requests execute on decentralised GPU infrastructure.
+
+The plugin was built by the Agent SPE (approved April 2025 with 30,000 LPT) as part of the first production AI agent pipeline on Livepeer.
+
+<CustomDivider />
+
+## Minimal setup
+
+```json
+{
+  "name": "MyAgent",
+  "modelProvider": "livepeer",
+  "settings": {
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct"
+  },
+  "clients": [],
+  "system": "You are a helpful AI assistant.",
+  "bio": ["AI assistant on decentralised compute"],
+  "lore": [],
+  "knowledge": [],
+  "topics": ["general"],
+  "adjectives": ["helpful"]
+}
+```
+
+```bash
+# .env
+LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud
+# API key optional for community gateway; required for production gateways
+# LIVEPEER_API_KEY=your-key
+```
+
+```bash
+pnpm start --characters="characters/my-agent.character.json"
+```
+
+The `modelProvider: "livepeer"` field tells Eliza to load the Livepeer plugin and route all `generate()` calls through `LIVEPEER_GATEWAY_URL`. The `model` field accepts any Ollama-compatible model ID supported by the Livepeer LLM pipeline.
+
+<CustomDivider />
+
+## Plugin architecture
+
+The Livepeer plugin implements Eliza's `IModelProvider` interface. When Eliza calls `provider.generate()`, the plugin:
+
+1. Formats the messages as an OpenAI-compatible chat completion request
+2. POSTs to `{LIVEPEER_GATEWAY_URL}/llm` with the model ID and messages
+3. Returns the response text to Eliza's agent loop
+
+The plugin does not modify Eliza's memory, knowledge, or action systems. It replaces only the inference backend. All other Eliza features (RAG, actions, evaluators, client connectors) work unchanged.
+
+<CustomDivider />
+
+## Supported models
+
+Any Ollama-compatible model on the Livepeer LLM pipeline works. Warm models respond immediately; cold models load on first request (30-90 seconds).
+
+| Model | Warm | VRAM |
+|---|---|---|
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | Yes | 8 GB |
+| `mistralai/Mistral-7B-Instruct-v0.3` | Check network | 8 GB |
+| `google/gemma-2-9b-it` | Check network | 10 GB |
+| `Qwen/Qwen2.5-7B-Instruct` | Check network | 8 GB |
+
+<CustomDivider />
+
+## Extending the agent
+
+**Client connectors:** Add `"slack"`, `"discord"`, or `"twitter"` to the `clients` array. Configure credentials in `.env`. The Livepeer inference backend works with all Eliza client connectors.
+
+**Knowledge and RAG:** Add entries to the `knowledge` array in the character file. Eliza's built-in vector store indexes them for retrieval-augmented generation.
+
+**Multi-agent:** Eliza supports running multiple agents in one process, each with different character files. Each agent can use a different `modelProvider` or the same Livepeer backend with different model IDs.
+
+<CustomDivider />
+
+The [AI agent on Livepeer tutorial](/v2/developers/build/tutorials/ai-agent-on-livepeer) walks through the complete setup from clone to running agent. The [Eliza Livepeer plugin tutorial](/v2/developers/build/tutorials/eliza-livepeer-plugin) covers the plugin architecture in depth.

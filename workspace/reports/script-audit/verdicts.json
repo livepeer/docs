@@ -1,0 +1,1522 @@
+{
+  "_meta": {
+    "description": "SME verdicts for Phase 1 script audit. Source of truth for keep/refactor/merge/archive decisions. Survives registry regeneration.",
+    "policy": "consolidation plan Phase 1 (soft-gliding-falcon.md)",
+    "approved_by": "Alison Haire (SME)",
+    "concerns_complete": [
+      "copy",
+      "brand",
+      "discoverability",
+      "maintenance",
+      "integrations",
+      "health",
+      "governance"
+    ],
+    "concerns_pending": [],
+    "phase_1_5_functional_audit": "All scripts flagged community_contribution_needed:true require functional audit (run + verify output) before Phase 2 architecture design. Wired scripts have CI proof; unwired ones do not.",
+    "phase3_pairs_to_wire": [
+      "audit-component-styles -> repair-component-styles (currently audit runs, remediator orphan)",
+      "audit-ai-discoverability -> repair-ai-discoverability (currently audit runs, remediator orphan)",
+      "check-voice-register -> remediate-voice-violations (brand concern; remediator orphan)",
+      "check-proper-nouns -> repair-term-capitalisation (brand concern; remediator orphan)",
+      "repair-relative-page-hrefs (legacy alias) -> review callers; archive if unused",
+      "check-workflow-headers vs check-workflow-governance (governance concern; dedupe)",
+      "generate-governance-map.js root vs /map/ version (governance concern; pick canonical)",
+      "generate-script-registry.js (governance concern; wire to sync-generated-files or governance-pipeline)"
+    ],
+    "phase3_new_workflows_to_add": [
+      "generator-governance-generate-script-registry.yml — mirror of generator-governance-generate-action-docs.yml but for operations/scripts/**. Triggers on push to docs-v2 when operations/scripts/** changes; runs generate-script-registry.js --write; auto-commits regenerated tools/config/registry/script-registry.json. Closes the self-documenting symmetry between actions and scripts."
+    ],
+    "phase2_blocker_d_gov_08": {
+      "decision": "D-GOV-08 (every folder is governed, no commit of files that do not belong)",
+      "rule": "Every folder hosting repo-influencing files needs the full 5-layer prevention chain (write-time hook, pre-commit, PR validator, post-merge repair, scheduled scan). Detection is fail-safe; prevention happens at layer 1.",
+      "phase2_requirement": "Dispatcher design must enumerate every governed folder and confirm its 5-layer chain is wired or scoped into Phase 3 before any dispatcher ships.",
+      "phase3_new_scripts": [
+        "operations/scripts/validators/governance/repo/check-folder-allowlist.js (PR layer 3)",
+        "operations/scripts/remediators/governance/repo/repair-folder-allowlist.js (post-merge layer 4)",
+        "operations/scripts/audits/governance/repo/audit-folder-allowlist.js (schedule layer 5)",
+        "extend operations/scripts/dispatch/governance/pre-tool-guard.js with folder-allowlist enforcement (layer 1)",
+        "extend .githooks/pre-commit with folder-allowlist enforcement (layer 2)"
+      ],
+      "phase3_new_allowlists": [
+        ".github/.allowlist (currently missing — root cause of recent drift)",
+        "ai-tools/.allowlist (needs audit)",
+        "docs-guide/.allowlist (needs audit)",
+        "tools/config/.allowlist (needs audit)",
+        "snippets/.allowlist (needs audit)",
+        "workspace/.allowlist (scope to be defined)"
+      ],
+      "phase3_surface_registrations": "Every governed folder must be registered in operations/governance/config/repo-governance-surfaces.json per D-ACT-10."
+    },
+    "notes": "Brand audit triggered creation of full WCAG pipeline (3 scripts + 3 workflows under health concern) before continuing. WCAG entries also recorded here for traceability.",
+    "phase_1_5_complete": true,
+    "phase_1_5_method": "Mixed: 2 scripts run-tested (both works); 28 scripts source-only audited due to hook constraints on execution.",
+    "phase_1_5_summary": "30 community-contribution scripts audited. 2 run-tested works. 22 source-coherent. 6 source-needs-context. Zero broken or unclear."
+  },
+  "verdicts": {
+    "operations/scripts/integrators/content/studio-docs-migration.js": {
+      "verdict": "archive",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "One-off Studio docs migration. No workflow caller. Job done. Malformed JSDoc."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/frontmatter.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Library module behind translation pipeline. Called via relative require from translate-docs.js (detector missed)."
+    },
+    "operations/scripts/integrators/copy/changelogs/generate-changelog.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Unified changelog generator. Active pipeline. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/showcase/project-showcase-sync.js": {
+      "verdict": "refactor",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Add --dry-run flag for D-GOV-07 compliance, then keep."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js": {
+      "verdict": "keep",
+      "concern": "copy",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to dispatch-copy-update-social-feeds.yml matrix. Has --dry-run."
+    },
+    "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js": {
+      "verdict": "refactor",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Malformed JSDoc (usage points to wrong path). Fix header; add proper flags."
+    },
+    "operations/scripts/validators/content/copy/check-voice-register.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time voice register check. Has --files."
+    },
+    "operations/scripts/validators/content/copy/lint-copy.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Banned word/phrase enforcement. Has --files."
+    },
+    "operations/scripts/validators/content/copy/lint-patterns.js": {
+      "verdict": "refactor",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Add --files retrofit (D-GOV-07)."
+    },
+    "operations/scripts/validators/content/grammar/check-grammar-en-gb.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "UK English grammar checker. Has --files. Active validator."
+    },
+    "operations/scripts/validators/content/grammar/check-proper-nouns.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Proper noun capitalisation check. Has --files. Pairs with repair-term-capitalisation."
+    },
+    "operations/scripts/remediators/content/copy/remediate-voice-violations.js": {
+      "verdict": "refactor",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to workflow (pairs with check-voice-register); add --verify + --files."
+    },
+    "operations/scripts/remediators/content/style/remediate-em-dashes.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Gold-standard remediator. Full --dry-run/--verify/--files."
+    },
+    "operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Gold-standard remediator. Full flags. PostToolUse hook integration."
+    },
+    "operations/scripts/remediators/content/style/remediate-us-spelling.js": {
+      "verdict": "keep",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Gold-standard remediator. Full flags."
+    },
+    "operations/scripts/remediators/content/style/repair-ownerless-language.js": {
+      "verdict": "refactor",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Uses --check instead of --dry-run (style mismatch with D-GOV-07). Align flag naming."
+    },
+    "operations/scripts/remediators/content/style/repair-term-capitalisation.js": {
+      "verdict": "refactor",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to workflow (pairs with check-proper-nouns). Full flags already present."
+    },
+    "operations/scripts/remediators/content/style/wcag-repair-common.js": {
+      "verdict": "archive",
+      "concern": "brand",
+      "approved_date": "2026-05-18",
+      "notes": "Archived 2026-05-18. Superseded by full WCAG pipeline under health concern: audits/content/health/audit-wcag.js + validators/content/health/check-wcag.js + remediators/content/health/repair-wcag.js. New file: x-archive-wcag-repair-common.js.archived"
+    },
+    "operations/scripts/validators/content/health/check-wcag.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "NEW: P3 PR validator. Wraps v2-wcag-audit engine in --no-fix mode. Has --files, --staged, --full, --fail-impact."
+    },
+    "operations/scripts/audits/content/health/audit-wcag.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "NEW: P5 scheduled scan. Writes report to workspace/reports/health/wcag/. Routes findings to health:wcag rolling issue."
+    },
+    "operations/scripts/remediators/content/health/repair-wcag.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "NEW: P6 self-heal remediator. Full --dry-run/--write/--verify/--files. Paired with check-wcag in remediation-verify-registry. Replaces wcag-repair-common.js."
+    },
+    "operations/scripts/generators/ai/llm/generate-llms-files.js": {
+      "verdict": "keep",
+      "concern": "discoverability",
+      "approved_date": "2026-05-18",
+      "notes": "Real discoverability: LLM index files. Wired to generator + validator workflows (validator uses --check)."
+    },
+    "operations/scripts/generators/content/seo/generate-ai-sitemap.js": {
+      "verdict": "keep",
+      "concern": "discoverability",
+      "approved_date": "2026-05-18",
+      "notes": "Real discoverability: AI sitemap. Wired to generator + validator workflows (validator uses --check)."
+    },
+    "operations/scripts/generators/content/seo/generate-og-images.js": {
+      "verdict": "keep",
+      "concern": "discoverability",
+      "approved_date": "2026-05-18",
+      "notes": "Real discoverability: OG images. Wired to generator workflow. Has --dry-run."
+    },
+    "operations/scripts/remediators/content/seo/generate-seo.js": {
+      "verdict": "keep",
+      "concern": "discoverability",
+      "approved_date": "2026-05-18",
+      "notes": "Real discoverability: SEO metadata generator. Wired to remediator workflow. Has --dry-run --verify."
+    },
+    "operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified by ai/ -> discoverability mapper. Real concern: governance (Codex PR enforcement). Phase 3: set @concern governance in header."
+    },
+    "operations/scripts/dispatch/ai/codex/codex-commit.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex commit helper). Phase 3: set @concern governance."
+    },
+    "operations/scripts/dispatch/ai/codex/create-codex-pr.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex PR creator). Already has full flags. Phase 3: set @concern governance."
+    },
+    "operations/scripts/dispatch/ai/codex/task-finalise.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex task completion enforcer). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/agents/cross-agent-packager.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (agent packaging). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/agents/export-portable-skills.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (portable skill export). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/agents/sync-codex-skills.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex skill sync). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/codex/lock-release.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex lock release). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/codex/task-cleanup.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex task cleanup). Phase 3: set @concern governance."
+    },
+    "operations/scripts/integrators/ai/codex/task-preflight.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex task setup). Phase 3: set @concern governance."
+    },
+    "operations/scripts/validators/ai/codex/check-no-ai-stash.sh": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (AI stash policy enforcer). Phase 3: set @concern governance + add --dry-run equivalent for D-GOV-07."
+    },
+    "operations/scripts/validators/ai/codex/validate-locks.js": {
+      "verdict": "refactor",
+      "concern": "discoverability",
+      "target_concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Misclassified. Real concern: governance (Codex lock validator). Phase 3: set @concern governance."
+    },
+    "operations/scripts/audits/components/documentation/audit-component-usage.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to audit-health-scan-content-quality."
+    },
+    "operations/scripts/audits/components/library/audit-ai-discoverability.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite. Pairs with repair-ai-discoverability (currently orphan)."
+    },
+    "operations/scripts/audits/components/library/audit-component-styles.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite. Pairs with repair-component-styles (currently orphan)."
+    },
+    "operations/scripts/audits/components/library/scan-component-imports.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to audit-health-scan-content-quality. Has --verify."
+    },
+    "operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Content-gap reconciliation tool. SME work to investigate and complete. Flagged as needs-community-contribution: scope, wire to workflow, validate usefulness.",
+      "functional_state": "works",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/reference/audit-glossary-gaps.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Glossary gap auditor. SME work to complete. Needs-community-contribution: investigate, wire to scheduled scan, surface findings as rolling issue.",
+      "functional_state": "works",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/reference/audit-icon-usage.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Icon usage auditor. SME work to complete. Needs-community-contribution: investigate, wire, validate against component governance.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/reference/terminology-search.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Terminology search tool. Has --dry-run. SME work to complete. Needs-community-contribution: wire to glossary pipeline, document CLI usage.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/content/catalogs/generate-docs-index.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to catalogs dispatcher + translations. Has --check."
+    },
+    "operations/scripts/generators/content/catalogs/generate-pages-index.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to catalogs dispatcher. Add --dry-run --check flags."
+    },
+    "operations/scripts/generators/components/documentation/generate-component-docs.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to catalogs dispatcher. Has --dry-run --check."
+    },
+    "operations/scripts/generators/components/library/generate-component-examples.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to catalogs dispatcher. Has --check."
+    },
+    "operations/scripts/generators/components/library/generate-component-index.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired. Full flags."
+    },
+    "operations/scripts/generators/components/library/generate-component-library.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired. Full flags."
+    },
+    "operations/scripts/generators/components/library/generate-component-registry.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to 3 workflows."
+    },
+    "operations/scripts/generators/components/library/generate-component-snippets.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire alongside generate-component-library in catalogs dispatcher."
+    },
+    "operations/scripts/generators/components/library/generate-ui-templates.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to catalogs dispatcher."
+    },
+    "operations/scripts/generators/content/reference/generate-api-docs.sh": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "API docs generator from OpenAPI. SME work to investigate current state. Needs-community-contribution: confirm OpenAPI pipeline still active, wire or archive.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/content/reference/generate-glossary-companions.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to generator + validator workflows. Has --dry-run --check."
+    },
+    "operations/scripts/generators/content/reference/generate-glossary.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire alongside generate-glossary-companions. Has --dry-run."
+    },
+    "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to contract-addresses + shadow pipelines."
+    },
+    "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to workflow. Empty @purpose tag — needs JSDoc header fix."
+    },
+    "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to workflow. Empty @purpose tag — needs JSDoc header fix."
+    },
+    "operations/scripts/integrators/maintenance/release/update-livepeer-release.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to social-feeds dispatcher (livepeer-release mode)."
+    },
+    "operations/scripts/remediators/components/library/repair-ai-discoverability.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to workflow (pairs with audit-ai-discoverability). Has --dry-run --verify."
+    },
+    "operations/scripts/remediators/components/library/repair-component-metadata.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to 2 workflows. Full flags."
+    },
+    "operations/scripts/remediators/components/library/repair-component-styles.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wire to workflow (pairs with audit-component-styles). Has --dry-run --verify."
+    },
+    "operations/scripts/validators/components/documentation/check-component-docs.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite."
+    },
+    "operations/scripts/validators/components/library/check-component-css.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite. Add --files retrofit for D-GOV-07."
+    },
+    "operations/scripts/validators/components/library/check-component-health.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to catalogs dispatcher. Has --check."
+    },
+    "operations/scripts/validators/components/library/check-component-props.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality scan."
+    },
+    "operations/scripts/validators/components/library/check-mdx-component-scope.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite. Has --files."
+    },
+    "operations/scripts/validators/components/library/check-naming-conventions.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality-suite. Has --files."
+    },
+    "operations/scripts/validators/components/library/component-layout-governance.js": {
+      "verdict": "refactor",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to content-quality scan. Add --files retrofit for D-GOV-07."
+    },
+    "operations/scripts/validators/components/library/validate-component-creation.js": {
+      "verdict": "keep",
+      "concern": "maintenance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to catalogs dispatcher. Full flags."
+    },
+    "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Local CLI equivalent (D-GOV-07) for dispatch-copy-update-social-feeds.yml. By-design local-runnable dispatcher."
+    },
+    "operations/scripts/integrators/content/data/contracts/pipeline.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline orchestrator. Consumed by maintenance/contracts/fetch-contract-addresses.js."
+    },
+    "operations/scripts/integrators/content/data/contracts/blockchain-page-spec.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module."
+    },
+    "operations/scripts/integrators/content/data/contracts/branch-watch.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module. Has --dry-run."
+    },
+    "operations/scripts/integrators/content/data/contracts/catalog-config.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module."
+    },
+    "operations/scripts/integrators/content/data/contracts/constants.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module."
+    },
+    "operations/scripts/integrators/content/data/contracts/incidents.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module. Has --dry-run."
+    },
+    "operations/scripts/integrators/content/data/contracts/solidity-parser.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module."
+    },
+    "operations/scripts/integrators/content/data/contracts/spec.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Contracts pipeline library module."
+    },
+    "operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to 3 validator workflows (content-quality-suite, broken-links, page-rendering)."
+    },
+    "operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh": {
+      "verdict": "archive",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Superseded by maintenance/data-feeds/fetch-exchanges-data.js (wired to integrator-maintenance-update-exchanges-data.yml). Archive shell version."
+    },
+    "operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh": {
+      "verdict": "archive",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Superseded by operations/tests/integration/openapi-reference-audit.js (used by validator-health-check-openapi-reference). Archive shell version."
+    },
+    "operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js": {
+      "verdict": "archive",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "ORPHAN. No caller. No clear use case. RSS-to-MDX import not in active pipeline."
+    },
+    "operations/scripts/integrators/content/language-translation/generate-localized-docs-json.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation entry point. Wired to integrator-copy-update-translations. Has --dry-run."
+    },
+    "operations/scripts/integrators/content/language-translation/translate-docs.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation entry point. Wired to integrator-copy-update-translations. Has --dry-run."
+    },
+    "operations/scripts/integrators/content/language-translation/validate-generated.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation validator. Wired to integrator-copy-update-translations."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/common.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/config.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/docs-json-localizer.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/docs-routes.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/mdx-parser.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/mdx-translate.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/path-utils.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/provenance.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/provider-mock.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module (mock provider)."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/provider-openrouter.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module (OpenRouter provider)."
+    },
+    "operations/scripts/integrators/content/language-translation/lib/providers.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "approved_date": "2026-05-18",
+      "notes": "Translation pipeline library module (provider factory)."
+    },
+    "operations/scripts/validators/content/language-translation/check-translation-freshness.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "ORPHAN. Important i18n staleness check. Needs-community-contribution: wire to scheduled scan + rolling issue.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/content/language-translation/test-mintlify-version-language-toggle.js": {
+      "verdict": "keep",
+      "concern": "integrations",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "ORPHAN. Mintlify language toggle validator. Needs-community-contribution: wire to PR validator or scheduled scan.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/health/page-links-audit.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Active link health audit. Wired to audit-health-scan-external-links.yml and page-integrity-dispatch."
+    },
+    "operations/scripts/audits/content/health/page-imports-audit.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Wired via page-integrity-dispatch (relative require). Detector missed."
+    },
+    "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Active freshness/TODO scanner. Wired to audit-health-scan-content-quality.yml."
+    },
+    "operations/scripts/dispatch/content/health/page-integrity-dispatch.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Master health orchestrator for page-integrity family. Wired to audit-health-scan-page-integrity.yml."
+    },
+    "operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Rolling-issue contract for page-integrity. Wired to audit-health-scan-page-integrity.yml."
+    },
+    "operations/scripts/validators/content/structure/check-anchor-usage.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time anchor link validator. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/check-description-quality.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time description quality validator. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/check-docs-path-sync.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time docs.json path-sync detector. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/check-double-headers.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time duplicate-heading validator. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/check-mdx-safe-markdown.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "MDX-safe markdown validator. Wired via hooks + run-pr-checks."
+    },
+    "operations/scripts/validators/content/structure/check-page-endings.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time page-ending validator. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/enforce-generated-file-banners.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Generated-file banner enforcer. Wired via tools/dev/remediation + sync-generated-files."
+    },
+    "operations/scripts/validators/content/structure/lint-structure.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Structural MDX linter. Wired to validator-health-check-page-structure.yml."
+    },
+    "operations/scripts/validators/content/structure/sweep-console-errors.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Render-gate baseline sweep. Wired via run-all, run-pr-checks, mdx-render-gate."
+    },
+    "operations/scripts/validators/content/structure/test-v2-pages.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "PR-time rendering gate. Wired to validator-health-check-page-rendering.yml."
+    },
+    "operations/scripts/remediators/content/repair/quarantine-manager.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Cleanup quarantine. Wired via repo-audit-orchestrator."
+    },
+    "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Auto-fix unsafe MDX patterns. Wired via hooks + auto-remediate."
+    },
+    "operations/scripts/remediators/content/repair/repair-page-imports.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Page-import remediator. Wired via page-integrity-dispatch."
+    },
+    "operations/scripts/remediators/content/repair/repair-page-links.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Page-link remediator. Wired via page-integrity-dispatch."
+    },
+    "operations/scripts/remediators/content/repair/repair-spelling.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "UK spelling auto-fix (cspell). Wired via hooks + auto-remediate."
+    },
+    "operations/scripts/remediators/content/repair/sync-docs-paths.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Page-move sync remediator. Wired via hooks (path-sync)."
+    },
+    "operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Mintlify consumer surface rewrites. Wired via sync-generated-files."
+    },
+    "operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js": {
+      "verdict": "refactor",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Legacy compat wrapper for repair-page-links. Phase 3: confirm no callers use the legacy name; archive if unused, otherwise keep as alias."
+    },
+    "operations/scripts/audits/content/quality/audit-copy-patterns.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Diagnostic copy-pattern reporter. Needs-community-contribution: wire to PR validator or scheduled scan.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/quality/audit-media-assets.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Media-asset diagnostic. Needs-community-contribution: wire to scheduled media-asset workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/quality/audit-v2-usefulness.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Experimental usefulness scorer. Needs-community-contribution: define scoring rubric and wire to review workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/veracity/docs-page-research.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Experimental fact-check research runner. Needs-community-contribution: pair with adjudication and wire to dispatcher.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/veracity/docs-research-adjudication.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Experimental adjudication ledger. Needs-community-contribution: pair with docs-page-research.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Experimental advisory PR integration for fact-check research. Needs-community-contribution: wire to PR workflow when research system matures.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/dispatch/content/veracity/docs-research-packet.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Research packet generator. Needs-community-contribution: define packet scope conventions and wire to review workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/dispatch/content/veracity/orchestrator-guides-research-review.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Wrapper around docs-research-packet for Orchestrators Guides scope. Needs-community-contribution: pattern for other tab scopes.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/content/structure/regression-bisect.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Diagnostic git-bisect tool with Puppeteer. Rarely used but valuable for regression hunts. Needs-community-contribution: documentation + example invocations.",
+      "functional_state": "source-needs-context",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/content/structure/sweep-delta-report.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Companion to sweep-console-errors for drift detection. Needs-community-contribution: wire to scheduled baseline-drift scan.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/content/veracity/docs-fact-registry.js": {
+      "verdict": "keep",
+      "concern": "health",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Experimental fact-registry validator. Needs-community-contribution: pair with research stack when ready.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/content/quality/audit-python.py": {
+      "verdict": "archive",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Python utility duplicating page-imports-audit + page-links-audit. No caller. Job superseded by JS equivalents."
+    },
+    "operations/scripts/remediators/content/repair/migrate-assets-to-branch.js": {
+      "verdict": "archive",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "One-off migration to docs-v2-assets. Job done (PR #851 merged)."
+    },
+    "operations/scripts/validators/content/structure/verify-all-pages.js": {
+      "verdict": "archive",
+      "concern": "health",
+      "approved_date": "2026-05-18",
+      "notes": "Component-library render check superseded by check-component-health + sweep-console-errors."
+    },
+    "operations/scripts/audits/governance/scripts/audit-script-categories.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Diagnostic script categoriser. Wired via repo-audit-orchestrator chain."
+    },
+    "operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Script footprint analyser. Wired via repo-audit-pipeline tests."
+    },
+    "operations/scripts/validators/governance/ai/check-companion-manifest.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Wired to validator-discoverability-check-companions.yml."
+    },
+    "operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Agent docs freshness check. Wired via tests + governance pipeline."
+    },
+    "operations/scripts/validators/governance/compliance/check-governance-markers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "GOVERNANCE.md marker validator. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/validators/governance/compliance/check-jsdoc-headers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "JSDoc header validator. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Mintlify canonical-sync validator. Wired to validator-copy-check-content-quality-suite.yml."
+    },
+    "operations/scripts/validators/governance/compliance/check-new-file-governance.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "New-file governance gate. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Repo governance sync validator. Wired to post-merge-sync + repair-pipelines."
+    },
+    "operations/scripts/validators/governance/compliance/check-root-governance-sync.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Root governance sync validator. Wired to post-merge-sync + repair-pipelines."
+    },
+    "operations/scripts/validators/governance/compliance/check-script-locations.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Script location validator. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "AI tools registry validator. Wired via tests; consider wiring to AI-tools dispatcher."
+    },
+    "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Codex task contract validator. Wired to validator-governance-check-codex-compliance.yml."
+    },
+    "operations/scripts/validators/governance/pr/audit-script-inventory.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Script inventory audit/regen. Wired via governance pipeline + repair-script-inventory."
+    },
+    "operations/scripts/validators/governance/pr/check-component-immutability.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Component immutability validator. Wired to validator-copy-check-content-quality-suite.yml."
+    },
+    "operations/scripts/validators/governance/pr/check-governance-approvals.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Governance approval policy validator. Wired via run-pr-checks + governance-approval-policy.test.js."
+    },
+    "operations/scripts/validators/governance/pr/check-workflow-governance.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Workflow governance validator. Wired to validator-governance-check-workflow-governance.yml."
+    },
+    "operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "docs-guide components catalog generator. Wired via sync-generated-files."
+    },
+    "operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "docs-guide workflow/template catalogs. Wired to dispatch-maintenance-check-catalogs.yml."
+    },
+    "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "docs-guide pages index. Wired to dispatch-maintenance-check-catalogs.yml."
+    },
+    "operations/scripts/generators/governance/map/generate-governance-map.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Canonical governance map generator. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/generators/governance/reports/generate-repo-governance-status.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Repo governance status generator. Wired to post-merge-sync + repair-pipelines."
+    },
+    "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Root governance artifact generator (.allowlist, root map). Wired to post-merge-sync + repair-pipelines."
+    },
+    "operations/scripts/generators/governance/scaffold/new-script.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Interactive scaffolding tool. Used via /create-script skill."
+    },
+    "operations/scripts/remediators/content/classification/add-framework-headers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Framework header inserter. Wired via repair-script-inventory chain."
+    },
+    "operations/scripts/remediators/content/classification/add-pagetype-mechanical.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "pageType frontmatter assigner. Wired via governance pipeline."
+    },
+    "operations/scripts/remediators/content/classification/assign-purpose-metadata.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Purpose/audience metadata assigner. Wired via run-pr-checks + governance pipeline."
+    },
+    "operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Workflow YAML governance header inserter. Wired via governance pipeline."
+    },
+    "operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Governance artifact repairer. Wired to validator-governance-check-governance-map.yml."
+    },
+    "operations/scripts/remediators/governance/scaffold/fix-usage-paths.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Usage-path JSDoc fixer. Wired via governance pipeline."
+    },
+    "operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "JSDoc header updater. Wired via governance pipeline."
+    },
+    "operations/scripts/remediators/governance/scripts/repair-script-inventory.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Script inventory repairer (--fix wrapper). Wired via governance pipeline."
+    },
+    "operations/scripts/integrators/governance/cleanup-local-dev-sessions.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Local dev session cleanup. Developer cron tool with tests; intentional local-only."
+    },
+    "operations/scripts/interfaces/governance/assign-reviewers.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Copilot reviewer auto-assign. Wired to interface-governance-assign-reviewers.yml."
+    },
+    "operations/scripts/interfaces/governance/issue-indexer.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Rolling docs-v2 issue index. Wired to interface-governance-index-issues.yml."
+    },
+    "operations/scripts/interfaces/governance/close-linked-issues.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Auto-close linked issues on PR merge. Wired to interface-governance-close-linked-issues.yml."
+    },
+    "operations/scripts/interfaces/governance/discord-issue-intake.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Discord -> GitHub issue intake. Wired to interface-governance-intake-discord-issues.yml."
+    },
+    "operations/scripts/interfaces/governance/notify-linked-issues.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Linked-issue notifier on PR open. Wired to interface-governance-close-linked-issues.yml."
+    },
+    "operations/scripts/interfaces/governance/issue-auto-label.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Issue form auto-labeller. Wired to interface-governance-label-issues.yml."
+    },
+    "operations/scripts/interfaces/governance/lib/load-labels.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Label taxonomy loader. Library module (relative require). Detector missed."
+    },
+    "operations/scripts/interfaces/governance/lib/rolling-issue.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Rolling-issue helper. Wired to 6 workflows."
+    },
+    "operations/scripts/dispatch/governance/blast-radius-scanner.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/completion-gate.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PreToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/edit-loop-guard.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/friction-logger.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code UserPromptSubmit hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/grep-loop-guard.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/headless-batch.sh": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Bulk headless batch CLI for prompt-driven tasks. Manual developer tool."
+    },
+    "operations/scripts/dispatch/governance/mdx-constraints-injector.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code UserPromptSubmit hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/mdx-frontmatter-sanitise.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/mdx-render-gate.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PreToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/mdx-render-verify.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/mdx-validate-hook.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/message-backup.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code UserPromptSubmit hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/move-detect-hook.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook (Bash). Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/phase-gate-hook.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/post-tool-verify.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUseFailure hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/pre-compact-checkpoint.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PreCompact hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/pre-tool-guard.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PreToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/read-logger.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/scope-checkpoint.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code PostToolUse hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/server-lifecycle.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "SessionStart hook + CLI. Wired via .claude/settings.json + /server command."
+    },
+    "operations/scripts/dispatch/governance/session-register.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Claude Code SessionStart hook. Wired via .claude/settings.json."
+    },
+    "operations/scripts/dispatch/governance/session-state.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Session state injector. Wired via .claude/settings.json SessionStart."
+    },
+    "operations/scripts/dispatch/governance/post-remediation-verify.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Per-file revert/verify orchestrator. Wired to remediator-brand + remediator-discoverability + remediation-verify-registry."
+    },
+    "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Master governance repair pipeline. Wired to post-merge-sync + repair-pipelines."
+    },
+    "operations/scripts/dispatch/governance/pipelines/sync-generated-files.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Generated-files sync orchestrator. Used via tests + pre-commit hook chain."
+    },
+    "operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Static-analysis dispatcher. Wired via repo-audit-pipeline tests + agent-pack flow."
+    },
+    "operations/scripts/validators/governance/compliance/check-workflow-headers.js": {
+      "verdict": "refactor",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Likely superseded by check-workflow-governance.js. Phase 3: confirm duplicate -> merge or archive."
+    },
+    "operations/scripts/generators/governance/generate-governance-map.js": {
+      "verdict": "refactor",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Duplicate of /map/generate-governance-map.js (newer 7K refactor, May 18). Phase 3: pick canonical version, archive the other."
+    },
+    "operations/scripts/generators/governance/catalogs/generate-script-registry.js": {
+      "verdict": "refactor",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "Critical script registry generator. Phase 3: wire to sync-generated-files or governance-pipeline."
+    },
+    "operations/scripts/audits/governance/repo/audit-tasks-folders.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Workspace structure auditor. Needs-community-contribution: wire to scheduled cleanup workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Cleanup matrix generator. Needs-community-contribution: wire to periodic v2 hygiene workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/governance/compliance/review-governance-repair-checklist.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Human-review checklist for dry-run repairs. Needs-community-contribution: wire to repair-pipelines as advisory.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/governance/pr/check-pr-template.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "PR template enforcer. Needs-community-contribution: wire to PR validator workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/governance/repo/validate-lpd-paths.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "lpd CLI path validator. Needs-community-contribution: wire to governance check workflow.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "AI skills index generator. Needs-community-contribution: wire to AI tools pipeline.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "AI-tools registry sync. Needs-community-contribution: wire to AI tools pipeline.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "AI-tools visual library generator. Needs-community-contribution: wire to AI tools dispatcher.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/governance/catalogs/generate-snippets-registry.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Snippets root registry generator. Needs-community-contribution: wire to snippets pipeline.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/generators/governance/reports/generate-ai-tools-inventory.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "AI tools inventory report. Needs-community-contribution: wire to scheduled AI tools scan.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/remediators/content/classification/normalise-frontmatter-keys.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Frontmatter key normaliser. Needs-community-contribution: wire to frontmatter governance batch utility.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/integrators/governance/pipelines/publish-v2-internal-reports.js": {
+      "verdict": "keep",
+      "concern": "governance",
+      "community_contribution_needed": true,
+      "approved_date": "2026-05-18",
+      "notes": "Internal report publisher. Needs-community-contribution: wire to scheduled report dispatch.",
+      "functional_state": "source-coherent",
+      "functional_audited": "2026-05-19"
+    },
+    "operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh": {
+      "verdict": "archive",
+      "concern": "governance",
+      "approved_date": "2026-05-18",
+      "notes": "One-off payment/orchestrator gate verifier. No caller, no current use."
+    }
+  }
+}

@@ -1,0 +1,302 @@
+---
+title: 'AI SDKs'
+sidebarTitle: 'AI SDKs'
+description: >-
+  Installation, initialisation, and method coverage for the @livepeer/ai
+  JavaScript SDK and livepeer-ai Python SDK.
+keywords:
+  - livepeer
+  - AI SDK
+  - '@livepeer/ai'
+  - livepeer-ai
+  - JavaScript SDK
+  - Python SDK
+  - TypeScript
+  - npm
+  - pip
+  - text-to-image
+  - image-to-image
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Both SDKs are generated from the ai-runner OpenAPI specification and mirror the same pipeline endpoint surface. Pin to a specific version; both are in alpha and may have breaking changes between releases.</Tip>
+</CenteredContainer>
+
+---
+
+Two official SDKs wrap the Livepeer AI gateway REST API: `@livepeer/ai` for JavaScript and TypeScript, and `livepeer-ai` for Python. Both are generated programmatically from the `ai-runner` OpenAPI specification and cover the same set of pipeline endpoints.
+
+<Note>
+  `@livepeer/ai` is in alpha. Pin your dependency to a specific version to avoid unintended breaking changes on update.
+</Note>
+
+<CustomDivider />
+
+## @livepeer/ai
+
+The JavaScript SDK supports Node.js, Bun, and browser runtimes. It requires `zod` as a peer dependency.
+
+**Installation:**
+
+```bash
+npm install @livepeer/ai zod
+# or
+yarn add @livepeer/ai zod
+# or
+pnpm add @livepeer/ai zod
+```
+
+**Initialisation:**
+
+```typescript
+import { Livepeer } from '@livepeer/ai';
+
+const livepeer = new Livepeer({
+  httpBearer: '<YOUR_GATEWAY_TOKEN>',
+});
+```
+
+For development against the public community gateway at `dream-gateway.livepeer.cloud`, no bearer token is required. Pass an empty string or omit the field for unauthenticated access.
+
+**Text-to-image example:**
+
+```typescript
+import { Livepeer } from '@livepeer/ai';
+
+const livepeer = new Livepeer({
+  httpBearer: '',
+});
+
+const result = await livepeer.generate.textToImage({
+  modelId: 'ByteDance/SDXL-Lightning',
+  prompt: 'A fox sitting on a moonlit rooftop',
+  width: 1024,
+  height: 1024,
+});
+
+console.log(result.imageResponse?.images?.[0]?.url);
+```
+
+**Error handling:**
+
+The SDK throws typed errors. `SDKValidationError` indicates the response did not match the expected schema. `HTTPError` covers gateway-level HTTP errors.
+
+```typescript
+import { Livepeer } from '@livepeer/ai';
+import { HTTPError, SDKValidationError } from '@livepeer/ai/models/errors';
+
+try {
+  const result = await livepeer.generate.textToImage({ ... });
+} catch (err) {
+  if (err instanceof SDKValidationError) {
+    console.error(err.pretty());
+  } else if (err instanceof HTTPError) {
+    console.error(err.statusCode, err.body);
+  }
+}
+```
+
+**Custom gateway URL:**
+
+```typescript
+const livepeer = new Livepeer({
+  serverURL: 'https://your-gateway.example.com',
+  httpBearer: '<YOUR_TOKEN>',
+});
+```
+
+<CustomDivider />
+
+## Livepeer AI
+
+The Python SDK supports Python 3.8 and later.
+
+**Installation:**
+
+```bash
+pip install livepeer-ai
+```
+
+**Initialisation:**
+
+```python
+from livepeer_ai import Livepeer
+
+client = Livepeer(
+    http_bearer='<YOUR_GATEWAY_TOKEN>',
+)
+```
+
+**Text-to-image example:**
+
+```python
+from livepeer_ai import Livepeer
+from livepeer_ai.models import components
+
+client = Livepeer(http_bearer='')
+
+result = client.generate.text_to_image(
+    components.TextToImageParams(
+        model_id='ByteDance/SDXL-Lightning',
+        prompt='A fox sitting on a moonlit rooftop',
+        width=1024,
+        height=1024,
+    )
+)
+
+print(result.image_response.images[0].url)
+```
+
+**Async usage:**
+
+The Python SDK exposes an async client for use in async applications:
+
+```python
+import asyncio
+from livepeer_ai import AsyncLivepeer
+from livepeer_ai.models import components
+
+async def main():
+    client = AsyncLivepeer(http_bearer='')
+    result = await client.generate.text_to_image(
+        components.TextToImageParams(
+            model_id='ByteDance/SDXL-Lightning',
+            prompt='A fox sitting on a moonlit rooftop',
+        )
+    )
+    print(result.image_response.images[0].url)
+
+asyncio.run(main())
+```
+
+<CustomDivider />
+
+## Pipeline Method Reference
+
+Both SDKs expose a `generate` namespace containing one method per pipeline type. The method names use camelCase in JavaScript and snake\_case in Python.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>JS method</TableCell>
+      <TableCell header>Python method</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image`</TableCell>
+      <TableCell>`generate.textToImage()`</TableCell>
+      <TableCell>`generate.text_to_image()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image`</TableCell>
+      <TableCell>`generate.imageToImage()`</TableCell>
+      <TableCell>`generate.image_to_image()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-video`</TableCell>
+      <TableCell>`generate.imageToVideo()`</TableCell>
+      <TableCell>`generate.image_to_video()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text`</TableCell>
+      <TableCell>`generate.imageToText()`</TableCell>
+      <TableCell>`generate.image_to_text()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>`generate.audioToText()`</TableCell>
+      <TableCell>`generate.audio_to_text()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`text-to-speech`</TableCell>
+      <TableCell>`generate.textToSpeech()`</TableCell>
+      <TableCell>`generate.text_to_speech()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`upscale`</TableCell>
+      <TableCell>`generate.upscale()`</TableCell>
+      <TableCell>`generate.upscale()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`segment-anything-2`</TableCell>
+      <TableCell>`generate.segmentAnything2()`</TableCell>
+      <TableCell>`generate.segment_anything2()`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`llm`</TableCell>
+      <TableCell>`generate.llm()`</TableCell>
+      <TableCell>`generate.llm()`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Repositories and Versioning
+
+Both SDKs are generated from the `ai-runner` OpenAPI spec and published independently:
+
+- JavaScript: `github.com/livepeer/livepeer-ai-js`: published to npm as `@livepeer/ai`
+- Python: `github.com/livepeer/livepeer-ai-python`: published to PyPI as `livepeer-ai`
+
+The deprecated `livepeer/livepeer-ai-sdks` repository contains older auto-generated SDKs and is no longer maintained.
+
+<CustomDivider />
+
+## Related Pages
+
+The AI SDKs wrap the gateway inference endpoints. For the full endpoint reference with request schemas and curl examples, see [AI pipelines](/v2/developers/build/ai-and-agents/ai-pipelines).
+
+<CardGroup cols={2}>
+  <Card
+    title="AI Pipelines"
+    icon="cpu"
+    href="/v2/developers/build/ai-and-agents/ai-pipelines"
+    arrow
+    horizontal
+  >
+    Endpoint shapes and curl examples for all nine pipeline types.
+  </Card>
+  <Card
+    title="AI Jobs Quickstart"
+    icon="bolt"
+    href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart"
+    arrow
+    horizontal
+  >
+    First API call in under ten minutes using curl or the SDK.
+  </Card>
+  <Card
+    title="AI API Reference"
+    icon="book"
+    href="/v2/developers/resources/reference/apis"
+    arrow
+    horizontal
+  >
+    Full OpenAPI-derived schema reference for all pipeline endpoints.
+  </Card>
+  <Card
+    title="Overview"
+    icon="grid"
+    href="/v2/developers/build/ai-and-agents/overview"
+    arrow
+    horizontal
+  >
+    Pipeline categories and access model overview.
+  </Card>
+</CardGroup>

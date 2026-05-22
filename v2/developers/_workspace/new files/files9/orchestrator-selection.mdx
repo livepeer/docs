@@ -1,0 +1,177 @@
+---
+title: 'Orchestrator Selection'
+sidebarTitle: 'Orchestrator Selection'
+description: >-
+  SelectionCursor and orchestrator_selector in livepeer-python-gateway: batch
+  parallel discovery, capability filtering, and ordered fallback.
+keywords:
+  - livepeer
+  - livepeer-python-gateway
+  - SelectionCursor
+  - orchestrator_selector
+  - discovery
+  - capability filtering
+  - NoOrchestratorAvailableError
+  - OrchestratorRejection
+  - batch selection
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>orchestrator_selector returns a SelectionCursor that batches GetOrchestratorInfo calls in parallel (5 at a time) and pops successes one at a time. start_lv2v uses this cursor internally to try fallback candidates without re-fetching the full list.</Tip>
+</CenteredContainer>
+
+---
+
+The `selection` module (`livepeer_gateway.selection`) provides `orchestrator_selector` and `SelectionCursor` for parallel batch orchestrator discovery with ordered fallback. `start_lv2v` calls `orchestrator_selector` internally; access these directly when building custom job types.
+
+<CustomDivider />
+
+## orchestrator_selector
+
+```python
+from livepeer_gateway.selection import orchestrator_selector
+
+cursor = orchestrator_selector(
+    orchestrators=["https://orch-1.example.com:8935", "https://orch-2.example.com:8935"],
+    signer_url="https://signer.example.com",
+    capabilities=capabilities,   # lp_rpc_pb2.Capabilities
+    use_tofu=True,
+)
+
+url, info = cursor.next()   # returns (str, OrchestratorInfo)
+```
+
+**Signature:**
+
+```python
+def orchestrator_selector(
+    orchestrators: Optional[Sequence[str] | str] = None,
+    *,
+    signer_url: Optional[str] = None,
+    signer_headers: Optional[dict[str, str]] = None,
+    discovery_url: Optional[str] = None,
+    discovery_headers: Optional[dict[str, str]] = None,
+    capabilities: Optional[lp_rpc_pb2.Capabilities] = None,
+    use_tofu: bool = True,
+) -> SelectionCursor
+```
+
+First resolves the orchestrator list via `discover_orchestrators` (which applies the discovery URL / signer fallback chain), then returns a `SelectionCursor` over the resolved list.
+
+Raises `NoOrchestratorAvailableError` immediately if the discovered list is empty.
+
+<CustomDivider />
+
+## SelectionCursor
+
+`SelectionCursor` is a stateful iterator over an ordered list of orchestrator URLs. It runs `GetOrchestratorInfo` calls in parallel batches of 5, caches successful responses in arrival order, and pops them one at a time on each `.next()` call.
+
+```python
+@dataclass
+class SelectionCursor:
+    def next(self) -> tuple[str, OrchestratorInfo]: ...
+    rejections: list[OrchestratorRejection]
+```
+
+### next()
+
+Returns `(url, OrchestratorInfo)` for the next available orchestrator. If the current batch cache is exhausted, fetches the next batch of up to 5 orchestrators in parallel before returning.
+
+Raises `NoOrchestratorAvailableError` when all candidates have been tried. The error includes the accumulated `rejections` list.
+
+**Batch behaviour:**
+- Batch size: 5 orchestrators per parallel fetch
+- Calls within a batch run concurrently via `ThreadPoolExecutor`
+- Successful responses are returned in completion order (first response ready = first returned)
+- Failed candidates are appended to `cursor.rejections` and skipped
+
+### rejections
+
+```python
+cursor.rejections  # list[OrchestratorRejection]
+```
+
+Accumulates `OrchestratorRejection(url=str, reason=str)` entries for every candidate that failed `GetOrchestratorInfo`. Useful for diagnosing why no orchestrator was selected.
+
+<CustomDivider />
+
+## Discovery Precedence
+
+`orchestrator_selector` calls `discover_orchestrators` to resolve the initial list. The precedence for building that list is:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Priority</TableCell>
+      <TableCell header>Source</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>1 (highest)</TableCell>
+      <TableCell>Explicit `orchestrators` list / token `orchestrators` field</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>2</TableCell>
+      <TableCell>Explicit `discovery_url`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>3</TableCell>
+      <TableCell>Signer-derived discovery endpoint (`{signer_url}/discover-orchestrators`)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The discovery endpoint accepts optional capability query parameters. For example, a signer-derived discovery URL for a specific model:
+
+```
+https://signer.example.com/discover-orchestrators?cap=streamdiffusion-sdxl-v2v
+```
+
+Pass this as `discovery_url` to filter to orchestrators that have the required capability warm.
+
+<CustomDivider />
+
+## Error Types
+
+```python
+from livepeer_gateway.errors import NoOrchestratorAvailableError, OrchestratorRejection
+
+try:
+    url, info = cursor.next()
+except NoOrchestratorAvailableError as e:
+    print(f"Failed: {e}")
+    for rejection in e.rejections:
+        print(f"  {rejection.url}: {rejection.reason}")
+```
+
+`NoOrchestratorAvailableError.rejections` lists all candidates tried and their failure reasons. Common reasons: connection refused, TLS error, unsupported capabilities, GetOrchestratorInfo gRPC failure.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Live Video Job" icon="video" href="/v2/developers/build/alt-gateways/live-video-job" arrow horizontal>
+    start_lv2v uses orchestrator_selector internally for selection and fallback.
+  </Card>
+  <Card title="Alt-Gateway Overview" icon="grid" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
+    livepeer-python-gateway architecture and the class map.
+  </Card>
+  <Card title="Orchestrator Selection and Pricing" icon="server" href="/v2/developers/guides/payments/orchestrator-selection-and-pricing" arrow horizontal>
+    Network-level orchestrator selection mechanics (stake-weighted, price filter).
+  </Card>
+</CardGroup>

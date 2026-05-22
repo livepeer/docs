@@ -1,0 +1,138 @@
+---
+title: "Remote Signer Integration"
+sidebarTitle: "Remote Signer"
+description: >-
+  How the remote signer separates Ethereum payment signing from media routing. Signing protocol, stateless design, security properties, integration patterns.
+keywords:
+  - livepeer
+  - remote-signer
+  - off-chain
+  - gateway
+  - probabilistic-micropayments
+  - signtic ket
+  - getorchinfosig
+  - clearinghouse
+  - go-livepeer
+pageType: concept
+audience: developer
+purpose: explain
+complexity: advanced
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>The remote signer holds the Ethereum key and handles all payment logic. The Gateway handles media. HTTP between them.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The remote signer architecture, introduced in go-livepeer PRs #3791 and #3822, separates a Gateway's two concerns. Media routing (receiving video, submitting segments to Orchestrators, returning transcoded output) stays in the Gateway. Ethereum payment operations (probabilistic micropayment bookkeeping, ticket generation, signing, ETH balance management) move to a remote signer service.
+
+Historically these were coupled inside the single go-livepeer process. After the split, the signer service holds the Ethereum key. The Gateway makes HTTP calls to the signer for each payment operation; the signer returns signed tickets and updated payment state.
+
+<CustomDivider middleText="Goals" />
+
+## Design Goals
+
+Three problems motivated the design.
+
+**Gateway diversity.** Before remote signing, implementing a Livepeer Gateway required deep knowledge of the probabilistic micropayment mechanism. The `livepeer-python-gateway` is the first non-Go Gateway implementation, enabled directly by this architecture. Any language that can speak HTTP can now host a Gateway.
+
+**Security posture.** In the monolithic design, the Ethereum signing key sat in the same process that handled untrusted media from users. A media-path exploit could compromise the key. Remote signing removes the key from the hot path.
+
+**Clearinghouses.** The remote signer design allows a third-party clearinghouse to operate the signer on behalf of multiple Gateways. Each Gateway operator pays the clearinghouse in a traditional currency; the clearinghouse settles with Orchestrators via Probabilistic Micropayments under the hood. Gateway operators no longer need to hold ETH or manage Arbitrum operations. The clearinghouse pattern has its own page in <LinkArrow href="/v2/developers/guides/payments/clearinghouse-pattern">Payments</LinkArrow>.
+
+<CustomDivider middleText="Protocol" />
+
+## Signing Protocol
+
+The signing protocol covers two operations: the `GetOrchestratorInfo` authentication signature, and per-job payment tickets.
+
+**GetOrchestratorInfo signature.** The Gateway sends a static signature with each `GetOrchestratorInfo` RPC to authenticate the request. Because this signature never changes while the key is in use, the signer returns it once on startup and the Gateway caches it.
+
+**Payment ticket signing.** For each probabilistic micropayment, the Gateway calls `signTicket` on the signer service:
+
+``` icon="terminal"
+Gateway  → Signer:        signTicket(signerState, ticketParams)
+Signer   → Gateway:       signedTicket, updatedSignerState
+Gateway  → Orchestrator:  pay(signedTicket)
+Orchestrator → Gateway:   updatedTicketParams
+Gateway  → Signer:        signTicket(updatedSignerState, updatedTicketParams)
+```
+
+The `signerState` carries the accumulated probabilistic micropayment session bookkeeping (elapsed time, balance tracking, nonce counters). The signer updates this state on each call and returns it alongside the signed ticket. The Gateway stores and forwards the state; it never interprets it.
+
+<CustomDivider middleText="Stateless Design" />
+
+## Stateless Signer Design
+
+The signer is intentionally stateless across calls. It does not persist session state between requests and does not require a shared database when running multiple instances. The client (Gateway) carries the state.
+
+On the first signing call of a session, the Gateway sends `signerState=null`; the signer creates a fresh state from the provided Orchestrator info. On each subsequent call, the Gateway sends the `signerState` returned from the previous call.
+
+Consequences:
+
+- **Horizontal scaling without coordination.** Multiple signer instances can run without coordination; any instance can handle any request, because the full session state arrives with every call
+- **Restart resilience.** Restarting the signer does not lose session state; the Gateway retains the last known state and resumes correctly
+- **State discipline matters.** Sending stale or null state after the first call leads to nonce repetition and invalid tickets. Gateway implementations must persist and forward state correctly
+
+<CustomDivider middleText="Scope" />
+
+## Current Scope
+
+Remote signing is implemented for live AI (`live-video-to-video`) only. Batch AI and transcoding workloads are not in scope for this initial implementation.
+
+Transcoding handles payments differently: tickets are signed with the segment hash, placing signing in the hot path. This is incompatible with the async remote signing model, and transcoding is considered a legacy workload with no active development against the signer split.
+
+The service registry (Orchestrator discovery via Arbitrum contract) is also not handled by the remote signer. Discovery is a separate concern; local Gateway clients use explicit Orchestrator URI lists or external discovery services. See <LinkArrow href="/v2/developers/build/alt-gateways/livepeer-python-gateway">Livepeer Python Gateway</LinkArrow> for the three off-chain discovery patterns.
+
+<CustomDivider middleText="Security" />
+
+## Security Properties
+
+**Hot key removal.** The Ethereum key is no longer co-located with media processing. An exploit from malicious video input cannot reach the signing key.
+
+**Reduced blast radius.** In the monolith, all Gateway instances share a single Ethereum key. With remote signing, Gateway instances do not hold the key at all. Compromise of a Gateway binary does not yield the key.
+
+**Guardrails over open signing.** The signer implements the probabilistic micropayment protocol with proper guardrails (balance checks, nonce tracking, fee limits) instead of blindly signing arbitrary payloads. This limits the damage from an exploited signer compared to a general signing endpoint.
+
+Remote signing does not provide signing key management or rotation. The signer service must be secured, backed up, and operated with the same care as any Ethereum hot wallet holding operational funds.
+
+<CustomDivider middleText="Operating" />
+
+## Operating a Signer
+
+The reference signer is `go-livepeer` in signer mode. The same binary that runs as a broadcaster, Orchestrator, or transcoder runs as a signer with the appropriate flags. For the canonical operator setup, follow the go-livepeer release notes on signer-mode configuration.
+
+For a clearinghouse deployment, the signer runs as a multi-tenant service: separate Ethereum keys per Gateway client, isolation between client state, billing in fiat or stablecoin. The clearinghouse model is documented separately; the protocol is the same.
+
+<CustomDivider middleText="Next Steps" />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Python Gateway" icon="code" href="/v2/developers/build/alt-gateways/livepeer-python-gateway">
+    The reference non-Go Gateway built on this architecture.
+  </Card>
+  <Card title="Per-Second Compute" icon="dollar-sign" href="/v2/developers/guides/payments/per-second-compute">
+    How LivePaymentSender state flows through the signing protocol.
+  </Card>
+  <Card title="Probabilistic Micropayments" icon="ticket" href="/v2/developers/guides/payments/probabilistic-micropayments">
+    The payment mechanism whose ticket generation the signer handles.
+  </Card>
+  <Card title="Clearinghouse Pattern" icon="bank" href="/v2/developers/guides/payments/clearinghouse-pattern">
+    Third-party signer operation on behalf of multiple Gateways.
+  </Card>
+</CardGroup>

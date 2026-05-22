@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs-guide/catalog/ai-companion-schema.json",
+  "title": "Livepeer AI Companion File",
+  "description": "Schema for static companion files that make client-side JSX component data accessible to AI agents and crawlers. Two variants: snapshot (live API data cached at build time) and props-extracted (data props lifted from MDX into a sidecar JSON).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/snapshotCompanion" },
+    { "$ref": "#/$defs/propsExtractedCompanion" }
+  ],
+
+  "$defs": {
+
+    "snapshotCompanion": {
+      "title": "Snapshot Companion",
+      "description": "Caches live API responses at build time. Used by components with @aiDiscoverability=snapshot (e.g. CoinGeckoExchanges). Contains a _meta block and one typed data array.",
+      "type": "object",
+      "required": ["_meta"],
+      "additionalProperties": true,
+      "properties": {
+        "_meta": {
+          "type": "object",
+          "required": ["type", "sourceComponent", "generatedAt"],
+          "additionalProperties": true,
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "snapshot",
+              "description": "Discriminator: identifies this as a snapshot companion."
+            },
+            "sourceComponent": {
+              "type": "string",
+              "description": "Name of the JSX component that consumes this file (e.g. CoinGeckoExchanges)."
+            },
+            "sourceUrl": {
+              "type": "string",
+              "description": "The external API URL that was snapshotted."
+            },
+            "coinId": {
+              "type": "string",
+              "description": "CoinGecko coin ID when sourceComponent is CoinGeckoExchanges (e.g. livepeer, arbitrum)."
+            },
+            "generatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO 8601 timestamp of when this snapshot was generated."
+            },
+            "note": {
+              "type": "string",
+              "description": "Human-readable provenance note."
+            }
+          }
+        },
+        "exchanges": {
+          "type": "array",
+          "description": "CoinGeckoExchanges data array. Each entry is one exchange listing.",
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "tradingPair"],
+            "properties": {
+              "name": { "type": "string" },
+              "url": { "type": "string" },
+              "tradingPair": { "type": "string" },
+              "trustScore": { "type": "string", "enum": ["green", "yellow", "red"] },
+              "type": { "type": "string", "enum": ["CEX", "DEX"] }
+            }
+          }
+        }
+      }
+    },
+
+    "propsExtractedCompanion": {
+      "title": "Props-Extracted Companion",
+      "description": "Lifts data props out of MDX component invocations into a sidecar JSON. Used by components with @aiDiscoverability=props-extracted (e.g. SearchTable, ShowcaseCards). The top-level key is named after the data shape (e.g. terms, cards).",
+      "type": "object",
+      "not": {
+        "required": ["_meta"]
+      },
+      "minProperties": 1,
+      "oneOf": [
+        { "$ref": "#/$defs/glossaryCompanion" },
+        { "$ref": "#/$defs/showcaseCardsCompanion" }
+      ]
+    },
+
+    "glossaryCompanion": {
+      "title": "Glossary Props-Extracted Companion",
+      "description": "Data sidecar for SearchTable used on glossary/compendium pages. Produced by generate-glossary-companions.js.",
+      "type": "object",
+      "required": ["terms"],
+      "additionalProperties": false,
+      "properties": {
+        "terms": {
+          "type": "array",
+          "description": "All glossary entries for this section.",
+          "items": {
+            "type": "object",
+            "required": ["term", "definition"],
+            "additionalProperties": true,
+            "properties": {
+              "term": {
+                "type": "string",
+                "description": "The term being defined."
+              },
+              "definition": {
+                "type": "string",
+                "description": "Plain-text definition. Single sentence preferred."
+              },
+              "category": {
+                "type": "string",
+                "description": "Dot-namespaced category tag (e.g. livepeer:protocol, ethereum:core)."
+              },
+              "tags": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Additional searchable tags."
+              },
+              "tabs": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Section tab identifiers this term appears in (used in consolidated glossary)."
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "showcaseCardsCompanion": {
+      "title": "ShowcaseCards Props-Extracted Companion",
+      "description": "Data sidecar for ShowcaseCards used on showcase / solutions pages. Key is 'items' matching the component prop name.",
+      "type": "object",
+      "required": ["items"],
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "All showcase card entries.",
+          "items": {
+            "type": "object",
+            "required": ["title"],
+            "additionalProperties": true,
+            "properties": {
+              "title": { "type": "string" },
+              "subtitle": { "type": "string" },
+              "description": { "type": "string" },
+              "href": { "type": "string" },
+              "mediaSrc": { "type": "string" },
+              "mediaType": { "type": "string", "enum": ["video", "image"] },
+              "logo": { "type": "string" },
+              "categoryTags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "productTags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "cta": { "type": "string" },
+              "links": {
+                "type": "array",
+                "items": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

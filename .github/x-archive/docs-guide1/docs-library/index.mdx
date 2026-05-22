@@ -1,0 +1,85 @@
+---
+title: Docs Library
+sidebarTitle: Docs Library
+description: >-
+  Complete reference for the Livepeer docs governance infrastructure. Pipeline
+  diagrams, script inventories, trigger chains, and gap analysis for every
+  governance concern.
+keywords:
+  - docs library
+  - governance infrastructure
+  - pipeline reference
+  - livepeer docs
+consumer: [human, agent]
+maintenance: hand-maintained
+status: active
+lastVerified: 2026-04-08
+owner: '@livepeer/docs-team'
+---
+
+# Docs Library
+
+> Complete reference for the governance infrastructure that keeps this repo self-documenting, self-validating, and self-repairing. Every script, workflow, config, and hook — what it does, when it runs, what it produces.
+
+<CustomDivider />
+
+## Infrastructure at a glance
+
+| Category | Count | Location |
+|----------|-------|----------|
+| Validators | 43 | `operations/scripts/validators/` |
+| Generators | 27 | `operations/scripts/generators/` |
+| Remediators | 21 | `operations/scripts/remediators/` |
+| Audits | 19 | `operations/scripts/audits/` |
+| Dispatch/Hooks | 34 | `operations/scripts/dispatch/` |
+| Automations | 13 core + 29 lib | `operations/scripts/integrators/` |
+| Workflows | 49 | `.github/workflows/` |
+| Governance Configs | 6 | `operations/governance/config/` |
+| Git Hooks | 13 | `.githooks/` |
+| **Total** | **265** | |
+
+<CustomDivider />
+
+## Pipelines by concern
+
+Each pipeline page documents the full chain: trigger, validators, generators, output, and consumer. Includes Mermaid diagrams and gap analysis.
+
+| Pipeline | Concern | Gate | Frequency | What it covers |
+|----------|---------|------|-----------|----------------|
+| [Content Quality](pipelines/content-quality) | copy, structure, grammar | P2 (hard gate) | Per PR | Validators, repair scripts, browser tests |
+| [Governance Compliance](pipelines/governance-compliance) | governance | P3 + weekly cron | Per PR + Monday 06:00 UTC | Markers, staleness, map generation |
+| [Component Health](pipelines/component-health) | components | P3 | Per PR | Registry, naming, CSS, immutability |
+| [Discoverability](pipelines/discoverability) | SEO, AEO, AI | P4 | Post-merge | llms.txt, sitemap-ai.xml, companions, docs-index |
+| [Data Integration](pipelines/data-integration) | external feeds | P5/P5-auto | Scheduled + on-demand | Social feeds, changelogs, contracts, releases |
+| [Copy and Brand](pipelines/copy-brand) | brand, voice | P3 (advisory) | Per PR | EN-GB, banned words, proper nouns, voice rules |
+
+<CustomDivider />
+
+## Script inventory by type
+
+| Type | Count | What they do |
+|------|-------|-------------|
+| `validators/` | 43 | Enforce rules with pass/fail gate. Read-only. Exit 0 or 1 |
+| `generators/` | 27 | Produce files from source-of-truth data |
+| `remediators/` | 21 | Bulk fix or repair existing files in place |
+| `audits/` | 19 | Read-only scan, measure, report |
+| `dispatch/` | 34 | Dispatch work to scripts or agents. Session hooks |
+| `automations/` | 13 | End-to-end pipelines: translation, data fetching, transforms |
+
+<CustomDivider />
+
+## Governance configs
+
+| Config | What it defines |
+|--------|----------------|
+| `repo-governance-surfaces.json` | All canonical governance manifests and approval checkpoints |
+| `root-governance.json` | Root-level placement matrix and forbidden artefacts |
+| `governance-approval-policy.json` | PR approval requirements (labels, evidence, rationale) |
+| `ownerless-governance-surfaces.json` | Autonomous surfaces with manifest sources and derived outputs |
+| `agent-write-governance.json` | AI agent write permissions by path class |
+
+<CustomDivider />
+
+## Gap report
+
+See `workspace/reports/governance/gap-report.mdx` for the full analysis of what is missing, broken, or advisory-only (17 gaps: 2 P0, 5 P1, 6 P2, 4 P3).

@@ -1,0 +1,34 @@
+# type: validator
+# concern: discoverability
+# pipeline: P3
+name: Verify AI Sitemap
+
+on:
+  push:
+    branches:
+      - docs-v2
+  pull_request:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  verify-ai-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Verify AI sitemap output
+        run: node operations/scripts/generators/content/seo/generate-ai-sitemap.js --check

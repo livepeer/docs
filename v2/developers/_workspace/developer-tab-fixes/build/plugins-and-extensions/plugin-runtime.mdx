@@ -1,0 +1,113 @@
+---
+title: "Plugin runtime"
+sidebarTitle: "Plugin Runtime"
+description: >-
+  NaaP plugin runtime: how plugins load, mount, and communicate inside the
+  shell. UMD loading, ShellContext injection, and the event bus.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - NaaP runtime
+  - UMD loading
+  - ShellContext
+  - event bus
+  - plugin lifecycle
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Plugins are UMD bundles loaded at runtime by the NaaP shell. The shell injects ShellContext on mount; the plugin uses it for auth, navigation, notifications, and inter-plugin communication.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The NaaP plugin runtime is the execution environment inside the shell application. Understanding the lifecycle helps when debugging mount failures, permission errors, or inter-plugin communication issues.
+
+<CustomDivider />
+
+## Plugin lifecycle
+
+1. **Registry lookup:** The shell reads the installed plugin list from the database
+2. **UMD fetch:** The shell fetches each plugin's UMD bundle from the registry CDN
+3. **Mount:** The shell calls the plugin's default export with a `ShellContext` object
+4. **Render:** The plugin renders its React components into the shell's content area
+5. **Unmount:** On navigation away, the shell calls the plugin's cleanup function
+
+```typescript
+// What the shell does internally (simplified)
+const module = await import(pluginBundleUrl);
+const plugin = module.default;
+
+// Mount with ShellContext
+plugin.mount(document.getElementById('plugin-root'), shellContext);
+
+// Later: unmount
+plugin.unmount();
+```
+
+<CustomDivider />
+
+## ShellContext services
+
+Every plugin receives the same `ShellContext` object on mount:
+
+| Service | Purpose |
+|---|---|
+| `auth` | Current user, roles, permissions, login/logout |
+| `navigate` | Client-side routing within the portal |
+| `eventBus` | Publish/subscribe for inter-plugin communication |
+| `theme` | Current theme (dark/light), colour tokens |
+| `notifications` | Toast notifications (success, error, info) |
+| `integrations` | AI, storage, and email service connectors |
+| `logger` | Structured logging with plugin context |
+| `permissions` | Permission checking for the current user |
+| `tenant` | Multi-tenant context (if enabled) |
+| `team` | Team context (if enabled) |
+
+Access these through the SDK hooks:
+
+```typescript
+import { useShell, useAuth, useEventBus } from '@naap/plugin-sdk';
+
+export function MyPlugin() {
+  const { navigate, notifications } = useShell();
+  const { user, hasPermission } = useAuth();
+  const eventBus = useEventBus();
+  
+  if (!hasPermission('network:read')) {
+    return <div>Permission denied</div>;
+  }
+  // ...
+}
+```
+
+<CustomDivider />
+
+## Inter-plugin communication
+
+Plugins communicate through the event bus, not by direct import. This keeps plugins decoupled:
+
+```typescript
+// Plugin A: publish an event
+eventBus.emit('capacity:updated', { gpu: 4, available: 2 });
+
+// Plugin B: subscribe to events
+eventBus.on('capacity:updated', (data) => {
+  console.log(`GPU available: ${data.available}/${data.gpu}`);
+});
+```
+
+Event names follow the pattern `{plugin-id}:{event-name}`. Subscribe to `*` to receive all events (useful for debugging).
+
+<CustomDivider />
+
+The [NaaP architecture](/v2/developers/build/plugins-and-extensions/naap-architecture) covers the micro-frontend design and request flow. The [building a plugin](/v2/developers/build/plugins-and-extensions/building-a-plugin) page covers the CLI and development workflow.

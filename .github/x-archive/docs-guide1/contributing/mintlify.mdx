@@ -1,0 +1,91 @@
+---
+title: 'Mintlify'
+sidebarTitle: Mintlify
+description: 'Repo-safe Mintlify usage in Livepeer Docs: official docs, local preview, import rules, styling defaults, and validation.'
+audience: developer
+pageType: concept
+purpose: reference
+status: current
+lastVerified: 2026-04-03
+keywords:
+  - livepeer
+  - mintlify
+  - docs authoring
+'og:image': /snippets/assets/media/og-images/fallback.png
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<CustomDivider style={{ margin: '-1rem 0 -1rem 0' }} />
+
+This is the routed Mintlify companion for Livepeer Docs. Use it for repo-specific behavior, workflow defaults, and the boundary between official Mintlify docs and Livepeer governance. For the internal canonical source used by agents and governance tooling, see `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`.
+
+## Source Order
+
+Use Mintlify information in this order:
+
+1. Official Mintlify docs for component APIs and platform features.
+2. Repo runtime and workflow surfaces: `docs.json`, `.mintignore`, `style.css`, `tools/lpd`, `tools/dev/*`, and `.githooks/*`.
+3. The internal canonical Mintlify guide for repo-safe authoring and agent instructions.
+
+## Official Docs
+
+- [Mintlify Docs](https://www.mintlify.com/docs)
+- [Mintlify Components](https://www.mintlify.com/docs/components)
+- [Reusable Snippets](https://www.mintlify.com/docs/create/reusable-snippets)
+- [docs.json Schema and Navigation](https://www.mintlify.com/docs/settings/navigation)
+- [Mintlify llms.txt](https://www.mintlify.com/docs/llms.txt)
+
+Use those pages for component catalogs and upstream product behavior. Do not mirror large copies of Mintlify’s docs in this repo.
+
+## Repo Rules
+
+- `docs.json` is the routing and navigation source of truth.
+- `.mintignore` controls repo-kept files that must not publish.
+- `style.css` is the governed theme and CSS variable surface.
+- `lpd dev` is the governed local preview entrypoint. Do not default to ad hoc Mintlify commands.
+- Author in `v2/**` unless the task explicitly targets legacy or internal surfaces.
+
+## Authoring
+
+- Do not import `React` or React hooks.
+- Do not import Mintlify platform globals such as `Card`, `Tabs`, `Accordion`, or `Steps`.
+- Use root-absolute imports for shared resources under `snippets/**`.
+- Relative imports are acceptable for tightly colocated route-local files.
+- Include file extensions in imports.
+- Keep data orchestration in the parent MDX when working with MDX-facing JSX.
+- Use arrow-function exports in JSX helpers and avoid file-scope constants that exported JSX depends on.
+
+## Styling
+
+- Use CSS custom properties from `style.css`.
+- Deprecated repo theme helper patterns must not be introduced.
+- Do not use inline styles in MDX pages.
+- In JSX, inline style objects are acceptable only for component-local or runtime-dynamic values that still use CSS variables.
+
+## Preview
+
+- First-time setup: `bash lpd setup --yes`
+- Health check: `lpd doctor`
+- Scoped preview:
+  - `lpd dev --scoped --scope-list`
+  - `lpd dev --scoped --scope-tab <Tab>`
+  - `lpd dev --scoped --scope-prefix <path>`
+
+Agent sessions must not use port `3333` through `lpd dev` and must not bind direct Mint preview to port `3000`.
+
+## Validate
+
+- `lpd test --staged`
+- `node operations/tests/unit/mdx.test.js --staged`
+- `node operations/tests/unit/style-guide.test.js --staged`
+- `node operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js --json`
+
+If runtime behavior and docs disagree, update the docs and the validator surfaces in the same change.
+
+## Related
+
+- [Local Preview](./local-preview)
+- [LPD CLI](../tooling/lpd-cli)
+- [Style Guide](/v2/resources/documentation-guide/copy-style/style-guide)
+- [Component Library](/v2/resources/documentation-guide/component-library/overview)

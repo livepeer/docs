@@ -1,0 +1,397 @@
+---
+title: "Chatbot with Livepeer LLM"
+sidebarTitle: "LLM Chatbot"
+description: >-
+  Build a streaming chatbot on the Livepeer LLM pipeline. Next.js Route Handler, SSE, OpenAI-compatible.
+keywords:
+  - livepeer
+  - llm
+  - chatbot
+  - tutorial
+  - nextjs
+  - streaming
+  - sse
+  - openai-compatible
+  - ollama
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>OpenAI-compatible chat completions, streamed via Server-Sent Events, on decentralised GPU. Fifteen minutes from `create-next-app` to streaming chat.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+By the end of this tutorial you'll have a Next.js 15 chatbot that takes user messages, streams responses from the Livepeer LLM pipeline token-by-token, and maintains conversation history. The LLM pipeline is OpenAI-compatible at the wire level: it accepts `messages` arrays, returns `choices[0].delta.content` chunks, and behaves like any other chat completions endpoint. The Orchestrator pool runs Ollama-backed inference on GPUs as small as 8 GB.
+
+This is the Persona 1 activation moment for text inference. The image generation tutorial proved the batch path; this one proves the streaming path. The wire format you'll handle here works against any OpenAI-compatible endpoint, which means swapping providers is a URL change.
+
+<CustomDivider />
+
+## Required Tools
+
+- Node.js 20 or later
+- `npm`, `pnpm`, or `yarn`
+- A code editor
+
+No API key needed for development. The community Gateway at `dream-gateway.livepeer.cloud` accepts unauthenticated POSTs to the LLM endpoint for experimentation.
+
+<CustomDivider />
+
+## Project Bootstrap
+
+<Steps>
+  <Step title="Create the project">
+    ```bash icon="terminal"
+    npx create-next-app@latest livepeer-chatbot \
+      --typescript \
+      --tailwind \
+      --app \
+      --src-dir \
+      --import-alias "@/*"
+    cd livepeer-chatbot
+    ```
+  </Step>
+
+  <Step title="Configure environment variables">
+    Save as `.env.local`:
+
+    ```bash icon="terminal"
+    LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud
+    LIVEPEER_LLM_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
+    ```
+
+    The warm model on the community Gateway is Llama 3.1 8B Instruct. Cold-start applies to any other model: 30 seconds to a few minutes for the first request while the Orchestrator loads the weights.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Streaming Route Handler
+
+Server actions can't stream responses cleanly. Route handlers can; the standard pattern for chat is a `POST /api/chat` handler that proxies the request to the LLM endpoint and pipes the SSE response back to the client.
+
+Save as `src/app/api/chat/route.ts`:
+
+```ts icon="terminal"
+import { NextRequest } from 'next/server';
+
+export const runtime = 'edge';
+
+const GATEWAY_URL = process.env.LIVEPEER_GATEWAY_URL!;
+const MODEL = process.env.LIVEPEER_LLM_MODEL!;
+
+interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export async function POST(req: NextRequest) {
+  const { messages } = (await req.json()) as { messages: Message[] };
+
+  const response = await fetch(`${GATEWAY_URL}/llm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: MODEL,
+      messages,
+      stream: true,
+    }),
+  });
+
+  if (!response.ok || !response.body) {
+    return new Response(`Gateway returned ${response.status}`, {
+      status: 502,
+    });
+  }
+
+  // Pipe the SSE stream straight through to the client.
+  return new Response(response.body, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    },
+  });
+}
+```
+
+Three things to notice. `export const runtime = 'edge'` runs the handler on Edge runtime, which keeps cold-start low and streams responses without buffering. The `stream: true` flag in the request body asks the LLM endpoint for Server-Sent Events instead of a single JSON response. The handler pipes the response body directly through; no SSE parsing on the server side, no JSON deserialisation. The browser parses the stream.
+
+<CustomDivider />
+
+## SSE Wire Format
+
+The LLM endpoint streams chunks in this shape:
+
+``` icon="terminal"
+data: {"choices":[{"delta":{"content":"Live","role":"assistant"},"finish_reason":null}]}
+
+data: {"choices":[{"delta":{"content":"peer","role":"assistant"},"finish_reason":null}]}
+
+data: {"choices":[{"delta":{"content":" is","role":"assistant"},"finish_reason":null}]}
+
+...
+
+data: {"choices":[{"delta":{"content":"","role":"assistant"},"finish_reason":"stop"}]}
+```
+
+Each `data:` line is one token (or a small group of tokens) wrapped in OpenAI's chat completions chunk shape. The final chunk has empty `content` and `finish_reason: "stop"`. The client concatenates the `content` fields as they arrive and renders them incrementally.
+
+<CustomDivider />
+
+## Chat UI Component
+
+The UI maintains a list of messages and appends to the last assistant message as tokens stream in.
+
+Save as `src/app/components/Chat.tsx`:
+
+```tsx icon="terminal"
+'use client';
+
+import { useState } from 'react';
+
+interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export function Chat() {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'system',
+      content: 'You are a helpful assistant. Keep responses concise.',
+    },
+  ]);
+  const [input, setInput] = useState('');
+  const [streaming, setStreaming] = useState(false);
+
+  async function sendMessage() {
+    if (!input.trim() || streaming) return;
+
+    const userMessage: Message = { role: 'user', content: input };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    setInput('');
+    setStreaming(true);
+
+    // Add an empty assistant message that we'll fill as tokens arrive.
+    setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
+
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: newMessages }),
+    });
+
+    if (!response.ok || !response.body) {
+      setStreaming(false);
+      return;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (!data) continue;
+
+        try {
+          const chunk = JSON.parse(data);
+          const token = chunk.choices?.[0]?.delta?.content ?? '';
+          const finished = chunk.choices?.[0]?.finish_reason === 'stop';
+
+          if (token) {
+            setMessages((prev) => {
+              const next = [...prev];
+              next[next.length - 1] = {
+                ...next[next.length - 1],
+                content: next[next.length - 1].content + token,
+              };
+              return next;
+            });
+          }
+
+          if (finished) break;
+        } catch {
+          // Skip malformed chunks
+        }
+      }
+    }
+
+    setStreaming(false);
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto p-4 space-y-4">
+      <div className="space-y-2 min-h-[400px]">
+        {messages
+          .filter((m) => m.role !== 'system')
+          .map((m, i) => (
+            <div
+              key={i}
+              className={`p-3 rounded ${
+                m.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'
+              }`}
+            >
+              <p className="text-xs text-gray-600 mb-1">{m.role}</p>
+              <p className="whitespace-pre-wrap">{m.content}</p>
+            </div>
+          ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+          placeholder="Ask anything"
+          disabled={streaming}
+          className="flex-1 border rounded p-2"
+        />
+        <button
+          onClick={sendMessage}
+          disabled={streaming}
+          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        >
+          {streaming ? 'Streaming…' : 'Send'}
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+The reader loop pulls bytes from the response stream, decodes them, and splits on newlines. The `buffer` handles the case where a chunk lands mid-line. For each complete `data:` line, the handler parses the JSON, extracts the token from `choices[0].delta.content`, and appends it to the last assistant message. The loop exits when `finish_reason: "stop"` arrives.
+
+<CustomDivider />
+
+## Page Composition
+
+Save as `src/app/page.tsx`:
+
+```tsx icon="terminal"
+import { Chat } from './components/Chat';
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-white">
+      <header className="border-b p-4">
+        <h1 className="text-xl font-bold">Livepeer LLM Chatbot</h1>
+        <p className="text-sm text-gray-600">
+          Streaming chat via the decentralised LLM pipeline.
+        </p>
+      </header>
+      <Chat />
+    </main>
+  );
+}
+```
+
+Run the dev server:
+
+```bash icon="terminal"
+npm run dev
+```
+
+Open `http://localhost:3000`. Type a message, hit Send, and tokens stream into the response bubble.
+
+<CustomDivider />
+
+## Model Selection
+
+The community Gateway routes any `model` value to whichever Orchestrator has the requested weights warm. Llama 3.1 8B Instruct is the default warm model on the network. Three other Ollama-compatible models are commonly available:
+
+| Model | VRAM | Notes |
+|---|---|---|
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 8 GB | Warm default, fastest first response |
+| `mistralai/Mistral-7B-Instruct-v0.3` | 8 GB | Strong instruction-following |
+| `google/gemma-2-9b-it` | 10 GB | Google's open instruction model |
+| `Qwen/Qwen2.5-7B-Instruct` | 8 GB | Strong on code and reasoning |
+
+Any Ollama-compatible model works. Cold-start (30 seconds to a few minutes) applies to models not currently loaded on any Orchestrator. For consistent latency in production, run your own Gateway with the target model pre-loaded; see <LinkArrow href="/v2/developers/build/ai-and-agents/model-support" label="Model Support" newline={false} />.
+
+<CustomDivider />
+
+## Production Considerations
+
+The community Gateway is shaped for experimentation. Production chat needs four changes.
+
+**Authentication.** Swap to a paid Gateway and add `Authorization: Bearer ${process.env.LIVEPEER_API_KEY}` to the fetch headers in the route handler.
+
+**Conversation persistence.** The current implementation holds messages in client state, which means refresh loses the conversation. Persist to a database keyed by user and session.
+
+**Token usage and rate limits.** The LLM pipeline charges per token of output. Add a per-user token budget enforced server-side, and a per-IP rate limit on the route handler.
+
+**Cold-start handling.** If the requested model is cold, the first response can take a few minutes. Add a warming request on app start that sends a one-token completion in the background, so by the time a user opens chat the model is ready.
+
+Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="Gateway returns 502 immediately">
+    The route handler couldn't reach the Gateway. Confirm `LIVEPEER_GATEWAY_URL` is set; the Edge runtime doesn't read variables from `.env.local` in production unless they're declared in `next.config.ts` or as Edge-runtime env vars.
+  </Accordion>
+  <Accordion title="Stream starts then stalls mid-response">
+    The Orchestrator timed out or the model unloaded. Retry the request; the network routes to a different Orchestrator on retry.
+  </Accordion>
+  <Accordion title="Tokens arrive in big chunks instead of streaming">
+    A proxy (Cloudflare, nginx, Vercel) is buffering. Confirm the `Cache-Control: no-cache` and `Content-Type: text/event-stream` headers are set on the response. For Cloudflare, disable response buffering on the route.
+  </Accordion>
+  <Accordion title="JSON.parse fails on some chunks">
+    Some chunks contain comments or empty lines. The handler skips empty lines and wraps parse in try/catch; if you see frequent parse errors, log the raw line to identify the format drift.
+  </Accordion>
+  <Accordion title="Cold model load takes minutes on first request">
+    Expected for non-warm models. Either use the warm default (`meta-llama/Meta-Llama-3.1-8B-Instruct`) or send a warming request on app start.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+You have a streaming chatbot on the Livepeer LLM pipeline. The same endpoint shape works for any Ollama-compatible model; switch the `model` field to try Mistral, Gemma, or Qwen variants.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Eliza Plugin Tutorial" icon="robot" href="/v2/developers/build/tutorials/eliza-livepeer-plugin">
+    Build a full agent with character files, RAG, and multi-agent swarms.
+  </Card>
+  <Card title="AI Pipelines" icon="layer-group" href="/v2/developers/build/ai-and-agents/ai-pipelines">
+    The other ten pipelines: image gen, audio, vision, segmentation.
+  </Card>
+  <Card title="Model Support" icon="cube" href="/v2/developers/build/ai-and-agents/model-support">
+    Warm models, VRAM requirements, custom model paths.
+  </Card>
+  <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
+    Rate limits, auth, observability, cold-start handling.
+  </Card>
+</CardGroup>

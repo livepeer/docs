@@ -1,0 +1,103 @@
+---
+title: "BYOC production"
+sidebarTitle: "Production"
+description: >-
+  Production requirements for BYOC containers: GPU memory profiling,
+  graceful shutdown, concurrent session handling, monitoring, and
+  orchestrator configuration.
+pageType: guide
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - BYOC production
+  - GPU profiling
+  - graceful shutdown
+  - concurrent sessions
+  - monitoring
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Test your container under concurrent session load before registering on mainnet. GPU OOM under load is the most common production failure mode for BYOC containers.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+A BYOC container that works locally may fail in production under concurrent sessions, GPU memory pressure, or ungraceful restarts. This page covers what to verify before registering on mainnet.
+
+<CustomDivider />
+
+## GPU memory profiling
+
+Profile your container under the expected concurrent session count:
+
+```bash
+# Monitor GPU memory during load test
+watch -n 1 nvidia-smi
+
+# Run multiple concurrent sessions against local orchestrator
+for i in $(seq 1 5); do
+  curl -X POST http://localhost:8935/live-video-to-video -d '{"model_id":"my-model"}' &
+done
+```
+
+Measure peak VRAM usage per session and multiply by expected concurrency. If peak exceeds your GPU's VRAM, either reduce per-session memory (smaller batch size, lower resolution) or limit the orchestrator's `maxSessions` configuration.
+
+<CustomDivider />
+
+## Graceful shutdown
+
+The orchestrator sends `SIGTERM` when stopping a container. Handle it:
+
+```python
+import signal
+import asyncio
+
+async def shutdown(server):
+    # Close active sessions
+    await server.close_all_sessions()
+    # Flush any buffered output
+    await server.flush()
+
+def handle_sigterm(signum, frame):
+    asyncio.get_event_loop().create_task(shutdown(server))
+
+signal.signal(signal.SIGTERM, handle_sigterm)
+```
+
+A container that does not handle `SIGTERM` is killed after a timeout (default 10 seconds). Active sessions receive no graceful close and may produce incomplete output.
+
+<CustomDivider />
+
+## Health check under load
+
+The `/health` endpoint must return `{"status": "ok"}` even under full GPU load. If health checks fail, the orchestrator stops advertising the capability and gateways route elsewhere.
+
+Common failure: the health check handler shares the GPU inference thread and blocks during heavy processing. Run health checks on a separate thread or async task.
+
+<CustomDivider />
+
+## Monitoring
+
+Expose Prometheus metrics from your container for the orchestrator's monitoring stack:
+
+| Metric | Description |
+|---|---|
+| `byoc_sessions_active` | Current concurrent sessions |
+| `byoc_frame_latency_ms` | Per-frame processing latency histogram |
+| `byoc_gpu_memory_bytes` | Current GPU memory usage |
+| `byoc_errors_total` | Processing errors by type |
+
+The orchestrator's Prometheus scraper picks up metrics from containers on the same Docker network.
+
+<CustomDivider />
+
+The [BYOC architecture](/v2/developers/build/compute/byoc/byoc-architecture) covers the container interface. The [production checklist](/v2/developers/guides/production-hardening-checklist) covers gateway-side production requirements.

@@ -1,0 +1,208 @@
+---
+title: 'PyTrickle'
+sidebarTitle: 'Overview'
+description: >-
+  PyTrickle is the Python SDK for building real-time video processing services
+  over the trickle protocol, using the FrameProcessor abstraction.
+keywords:
+  - livepeer
+  - PyTrickle
+  - trickle protocol
+  - real-time AI
+  - FrameProcessor
+  - StreamServer
+  - live video
+  - Python
+  - asyncio
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>PyTrickle handles stream ingestion, frame decoding, and video encoding. You implement one method: process_video_async. The SDK delivers frames as PyTorch tensors and encodes your output back into the stream.</Tip>
+</CenteredContainer>
+
+---
+
+PyTrickle (`livepeer/pytrickle`) is a Python package for building custom real-time video processing services over the trickle protocol. It sits one level below ComfyStream: where ComfyStream runs ComfyUI workflows, PyTrickle provides the `FrameProcessor` abstraction for arbitrary Python processing logic backed by asyncio.
+
+The package handles the trickle protocol connection, video decoding via FFmpeg, frame delivery as PyTorch tensors, and video encoding of processed output. A PyTrickle service exposes a `StreamServer` HTTP API that Livepeer orchestrators connect to when routing `live-video-to-video` jobs.
+
+<CustomDivider />
+
+## FrameProcessor
+
+`FrameProcessor` is the base class for all PyTrickle processing services. Subclass it and implement `process_video_async` to define how each frame is transformed.
+
+```python
+from pytrickle import FrameProcessor, StreamServer
+from pytrickle.frames import VideoFrame, AudioFrame
+from typing import Optional, List
+
+class MyProcessor(FrameProcessor):
+
+    async def initialize(self):
+        # Load AI models or initialise any resources here.
+        # Called once before the first frame arrives.
+        pass
+
+    async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]:
+        # frame.tensor is a PyTorch tensor: [H, W, C], float32, 0-1 range
+        tensor = frame.tensor.clone()
+        # Apply your model, filter, or transform here.
+        return frame.replace_tensor(tensor)
+
+    async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]:
+        # Return the frame unchanged or process it.
+        return [frame]
+
+    def update_params(self, params: dict):
+        # Called when the orchestrator sends a parameter update.
+        # Update instance variables to change behaviour at runtime.
+        pass
+```
+
+`VideoFrame.tensor` is a CPU PyTorch tensor in HWC format with float32 values in [0, 1]. `frame.replace_tensor(new_tensor)` creates a new `VideoFrame` with the updated pixel data while preserving frame metadata.
+
+## StreamServer
+
+`StreamServer` wraps a `FrameProcessor` and exposes the HTTP endpoint that orchestrators connect to:
+
+```python
+async def main():
+    processor = MyProcessor()
+    await processor.start()  # calls initialize()
+
+    app = StreamServer(
+        frame_processor=processor,
+        port=8000,
+        capability_name="my-processor",
+    )
+    await app.run_forever()
+
+import asyncio
+asyncio.run(main())
+```
+
+The `StreamServer` accepts trickle stream connections and runs the processor loop. The HTTP API includes endpoints for starting and stopping streams, querying status, and receiving parameter updates.
+
+<CustomDivider />
+
+## SDK Responsibilities
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Concern</TableCell>
+      <TableCell header>PyTrickle responsibility</TableCell>
+      <TableCell header>Developer responsibility</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Trickle protocol connection</TableCell>
+      <TableCell>Full: subscribe and publish segments</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Video decoding</TableCell>
+      <TableCell>Full: FFmpeg-backed decoder, tensor conversion</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Frame delivery</TableCell>
+      <TableCell>Full: async queue, backpressure, reconnect</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Frame processing</TableCell>
+      <TableCell>Calls `process_video_async` per frame</TableCell>
+      <TableCell>Implement processing logic</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Audio handling</TableCell>
+      <TableCell>Detects mono/stereo/multi-channel, auto-converts</TableCell>
+      <TableCell>Implement `process_audio_async` or pass through</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Video encoding</TableCell>
+      <TableCell>Full: encodes processed tensor back to stream</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Parameter updates</TableCell>
+      <TableCell>Receives and calls `update_params`</TableCell>
+      <TableCell>Implement `update_params`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Reconnection</TableCell>
+      <TableCell>Automatic on trickle subscriber disconnect</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Prerequisites
+
+- Python 3.8+
+- PyTorch (install separately; version must match your CUDA version)
+- FFmpeg available on PATH
+- `http-trickle` binary for local testing: `git clone https://github.com/livepeer/http-trickle.git && cd http-trickle && make build`
+
+<CustomDivider />
+
+## Related Pages
+
+Start with the [PyTrickle quickstart](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart) for a working service in under 20 minutes.
+
+<CardGroup cols={2}>
+  <Card
+    title="PyTrickle Quickstart"
+    icon="bolt"
+    href="/v2/developers/build/ai-and-agents/pytrickle/quickstart"
+    arrow
+    horizontal
+  >
+    Install PyTrickle, write a minimal FrameProcessor, and run it against a test stream.
+  </Card>
+  <Card
+    title="Frame Processor Reference"
+    icon="code"
+    href="/v2/developers/build/ai-and-agents/pytrickle/frame-processor"
+    arrow
+    horizontal
+  >
+    Full FrameProcessor API: VideoFrame, AudioFrame, update_params, and StreamServer options.
+  </Card>
+  <Card
+    title="Real-Time AI Overview"
+    icon="video"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/overview"
+    arrow
+    horizontal
+  >
+    Cascade architecture and how PyTrickle services fit into the Livepeer pipeline.
+  </Card>
+  <Card
+    title="ComfyStream Workflow Authoring"
+    icon="workflow"
+    href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring"
+    arrow
+    horizontal
+  >
+    ComfyUI-based alternative for real-time AI pipelines without custom Python code.
+  </Card>
+</CardGroup>

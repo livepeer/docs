@@ -1,0 +1,32 @@
+# type: validator
+# concern: governance
+# pipeline: P3
+name: Check Workflow Governance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check workflow governance compliance
+        run: node operations/scripts/validators/governance/pr/check-workflow-governance.js

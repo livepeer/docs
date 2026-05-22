@@ -1,0 +1,87 @@
+---
+title: "PyTrickle data channels"
+sidebarTitle: "Data Channels"
+description: >-
+  Read and write non-media data (text, JSON, binary) alongside video/audio
+  in PyTrickle real-time sessions.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - PyTrickle
+  - data channels
+  - TrickleSubscriber
+  - events_url
+  - non-media data
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Data channels use the same TrickleSubscriber as media channels but carry text, JSON, or binary payloads. Subscribe to job.events_url for pipeline data output.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+PyTrickle data channels extend real-time sessions with non-media output. A pipeline can produce video on the media channel and structured data (transcriptions, labels, metrics) on a data channel simultaneously.
+
+<CustomDivider />
+
+## Reading data channel output
+
+```python
+from pytrickle import TrickleSubscriber
+import json
+
+# Subscribe to the data output channel
+data_sub = TrickleSubscriber(url=job.events_url)
+
+async for segment in data_sub:
+    payload = json.loads(segment.data.decode('utf-8'))
+
+    if payload.get('type') == 'transcription':
+        print(f"[{payload['timestamp']:.1f}s] {payload['text']}")
+    elif payload.get('type') == 'detection':
+        for box in payload['boxes']:
+            print(f"  {box['label']}: ({box['x']}, {box['y']}, {box['w']}, {box['h']})")
+```
+
+The `events_url` is available on `LiveVideoToVideo` when the pipeline declares data output support. If the pipeline does not produce data output, `events_url` is None.
+
+<CustomDivider />
+
+## Writing data from a FrameProcessor
+
+Inside a BYOC container, write data channel output through the `StreamServer`'s data publish interface:
+
+```python
+from pytrickle import FrameProcessor, VideoFrame
+
+class TranscriptionPipeline(FrameProcessor):
+    async def process_frame(self, frame: VideoFrame) -> VideoFrame:
+        # Process video as normal
+        result = self.model(frame.data)
+
+        # Write transcription to data channel
+        await self.publish_data({
+            'type': 'transcription',
+            'text': result.text,
+            'timestamp': frame.pts_time,
+            'confidence': result.confidence,
+        })
+
+        return VideoFrame(data=result.video, pts=frame.pts)
+```
+
+Data channel segments are independent of media segments. They can be published at any rate and do not need to align with video frame boundaries.
+
+<CustomDivider />
+
+The [data channels concept](/v2/developers/guides/transport/trickle-protocol) page covers the trickle data channel architecture. The [FrameProcessor reference](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/frame-processor) covers the full processing API.

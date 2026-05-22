@@ -1,0 +1,88 @@
+# type: generator
+# concern: discoverability
+# pipeline: P4
+name: Generate OG Images
+
+on:
+  push:
+    branches:
+      - docs-v2
+    paths:
+      - 'docs.json'
+      - 'operations/scripts/config/og-image-policy.js'
+      - 'snippets/assets/logos/light.svg'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (validate only, no image generation)'
+        required: false
+        default: 'false'
+        type: boolean
+      only:
+        description: 'Generate specific image (e.g., en:home, fallback)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    name: Validate OG Image Config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: tools
+        run: npm ci
+
+      - name: Validate OG image config (dry run)
+        run: node operations/scripts/generators/content/seo/generate-og-images.js --dry-run
+
+  generate:
+    name: Generate OG Images
+    needs: validate
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run != 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Puppeteer Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('tools/package-lock.json') }}
+
+      - name: Install dependencies
+        working-directory: tools
+        run: npm ci
+
+      - name: Generate OG images
+        run: |
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            node operations/scripts/generators/content/seo/generate-og-images.js --only "${{ github.event.inputs.only }}"
+          else
+            node operations/scripts/generators/content/seo/generate-og-images.js
+          fi
+
+      - name: Create PR with generated images
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'chore(og): regenerate OG images'
+          title: 'chore(og): regenerate OG images'
+          body: 'Automated OG image regeneration triggered by config or nav change. Review before merging.'
+          branch: chore/regenerate-og-images
+          labels: discoverability, automated

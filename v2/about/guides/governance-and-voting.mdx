@@ -1,0 +1,150 @@
+---
+title: "Livepeer Governance and Voting"
+sidebarTitle: "Governance and Voting"
+description: >-
+  How Livepeer's on-chain governance works, what an LPT holder can vote on, and how to use the
+  voting power that comes with bonded stake. Covers the Livepeer Improvement Proposal lifecycle,
+  Governor contract mechanics, delegation pass-through, and how to override an orchestrator.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer governance
+  - voting
+  - lip
+  - livepeer improvement proposal
+  - governor contract
+  - delegation
+  - on-chain governance
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+purpose: learn
+audience: general
+lastVerified: "2026-05-06"
+---
+
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<Quote>
+Livepeer is governed by the people who hold and stake its token. Any holder with at least 100 LPT can submit a proposal. Any holder with bonded LPT can vote. The protocol enforces the outcome on-chain, automatically, without an intermediary.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## Why on-chain governance
+
+A protocol that secures money needs a way to change its own rules without breaking that security. Livepeer chose on-chain governance for three reasons.
+
+First, the participants who bear the risk of a change should have authority over the change. Bonded LPT is at stake against the protocol's behaviour. The same stake is the unit of voting weight. Influence and exposure are the same number.
+
+Second, an on-chain vote produces a single canonical outcome. There is no separate execution layer, no foundation that signs the upgrade, and no off-chain consensus that participants might disagree about. The Governor contract executes whatever passes.
+
+Third, governance becomes legible. Every vote is on Arbitrum. Every proposal is in the [LIPs repository](https://github.com/livepeer/LIPs). Every parameter change is traceable to a specific LIP and a specific block. There is no closed-door process to audit.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## What governance can change
+
+The protocol scopes governance to two domains: the protocol itself, and the treasury.
+
+<DynamicTableV2
+  headerList={["Domain", "Examples", "Executed by"]}
+  itemsList={[
+    { "Domain": "Protocol upgrades", "Examples": "Migration to a new chain (LIP-73), enabling partial unbonding (LIP-8), service registry (LIP-9)", "Executed by": "Governor contract calling protocol contract upgrade paths" },
+    { "Domain": "Parameter changes", "Examples": "Round length (LIP-83), inflation calculation (LIP-34, LIP-35, LIP-40), treasury contribution (LIP-92)", "Executed by": "Governor contract calling parameter setter functions" },
+    { "Domain": "Treasury allocations", "Examples": "Funding SPEs, public goods grants", "Executed by": "LivepeerGovernor contract releasing treasury balance" },
+    { "Domain": "Governance framework", "Examples": "Polling system (LIP-15), stake-weighted voting (LIP-69), governance mechanism (LIP-19), upgrade foundation (LIP-25)", "Executed by": "Governor contract calling governance contract upgrade paths" },
+  ]}
+/>
+
+The protocol does not give governance authority over private operator behaviour, off-chain network coordination, or the day-to-day operation of orchestrators and gateways. Governance acts on the on-chain rules and on the treasury balance. Everything else is the network's job.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## The Livepeer Improvement Proposal lifecycle
+
+Every protocol or treasury change passes through the same staged process. Skipping a stage is not an option - the on-chain rules require it.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Idea phase" icon="comment-dots">
+    A proposer raises an idea on the <LinkArrow label="Livepeer Forum" href="https://forum.livepeer.org/c/lips/18" newline={false} /> or in Discord. Most ideas are refined or abandoned at this stage. The forum is the primary venue for early feedback.
+  </StyledStep>
+  <StyledStep title="Draft phase" icon="comments">
+    The proposer drafts a Livepeer Improvement Proposal (LIP) - a structured document with a header preamble (number, title, author, type, status) and a full specification. The draft goes into the <LinkArrow label="LIPs repository" href="https://github.com/livepeer/LIPs" newline={false} /> as a pull request for editorial review.
+  </StyledStep>
+  <StyledStep title="Last call" icon="bell">
+    Once editors approve the draft, it enters a 10-day Last Call period. The community has a final opportunity to surface objections before the proposal moves to a vote.
+  </StyledStep>
+  <StyledStep title="On-chain submission" icon="arrow-up-right-from-square">
+    Anyone with at least 100 LPT can submit the LIP on-chain to the Governor contract. The 100 LPT is locked while the proposal is voted on, and is returned if the proposal passes. The threshold is large by design - it filters serious proposals from frivolous ones.
+  </StyledStep>
+  <StyledStep title="Voting period" icon="ballot">
+    A 30-round voting window opens (~3.75 days on Arbitrum). Eligible voters - orchestrators and the LPT bonded to them - cast votes on-chain. Anyone with at least 1 LPT bonded can vote.
+  </StyledStep>
+  <StyledStep title="Quorum and approval" icon="people-group">
+    A proposal passes only if at least 33% of all bonded LPT participates (quorum) and more than 50% of cast votes are For. Both thresholds must be met. Either alone is not sufficient.
+  </StyledStep>
+  <StyledStep title="Execution" icon="check-to-slot">
+    On a successful vote, the Governor contract executes the proposal automatically - changing a contract parameter, upgrading a contract implementation, or releasing treasury funds. There is no separate signer, no multisig, and no execution delay beyond the protocol-defined queueing period.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How voting power is calculated
+
+Voting power equals bonded LPT - including stake delegated to your orchestrator.
+
+If an orchestrator self-bonds 1,000 LPT and has 9,000 LPT delegated to it, the orchestrator's vote carries 10,000 LPT of weight by default. The orchestrator votes on behalf of all 10,000 unless individual delegators override.
+
+This default has two consequences. First, orchestrators function as elected representatives of their delegators on every proposal. Choosing an orchestrator is partly a choice of governance proxy. Second, delegators retain final authority over their own stake. On any specific proposal, a delegator can override their orchestrator's vote and have their delegated LPT counted separately.
+
+The override is per-proposal, not permanent. A delegator who overrides on one proposal returns to the default on the next.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## How to vote on a proposal
+
+The flow is the same whether you are voting on a protocol LIP or a treasury proposal.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Read the proposal" icon="book-open">
+    Locate the LIP in the <LinkArrow label="LIPs repository" href="https://github.com/livepeer/LIPs" newline={false} /> and the active proposal on <LinkArrow label="Livepeer Explorer" href="https://explorer.livepeer.org/voting" newline={false} />. The Explorer shows the on-chain proposal text, current vote tally, and the time remaining.
+  </StyledStep>
+  <StyledStep title="Check your voting power" icon="scale-balanced">
+    Connect your wallet on the Explorer. Your voting power is your bonded LPT. If you delegate, your power flows through your orchestrator unless you override.
+  </StyledStep>
+  <StyledStep title="Cast your vote" icon="check-to-slot">
+    Submit For, Against, or Abstain on-chain. The vote costs gas and is final once mined. Abstain counts toward quorum but not toward the For/Against majority.
+  </StyledStep>
+  <StyledStep title="Override your orchestrator if needed" icon="user-shield">
+    To override your orchestrator's vote, cast your own vote during the voting window. Your delegated stake is reassigned for that proposal only.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="vault" title="Governance and Treasury Reference" />} href="/v2/about/protocol/governance-and-treasury" horizontal arrow>
+    Canonical reference: governance functions, key LIPs, on-chain contracts.
+  </Card>
+  <Card title={<CustomCardTitle icon="bank" title="Treasury and Proposals" />} href="/v2/about/guides/treasury-and-proposals" horizontal arrow>
+    How treasury proposals differ, what gets funded, and how to submit one.
+  </Card>
+  <Card title={<CustomCardTitle icon="ballot-check" title="Livepeer Explorer" />} href="https://explorer.livepeer.org/voting" horizontal arrow>
+    Active proposals, on-chain votes, and historical governance outcomes.
+  </Card>
+  <Card title={<CustomCardTitle icon="github" title="LIPs Repository" />} href="https://github.com/livepeer/LIPs" horizontal arrow>
+    Every LIP, draft and final, with full specifications and discussion history.
+  </Card>
+</Columns>

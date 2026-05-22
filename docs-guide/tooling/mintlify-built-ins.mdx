@@ -1,0 +1,373 @@
+---
+title: "Mintlify Built-Ins"
+sidebarTitle: "Mintlify built-ins"
+description: "Reference for the Mintlify-native components, layout primitives, and platform features the Livepeer docs repo relies on. Pairs with the Livepeer custom component library."
+keywords:
+  - livepeer
+  - docs guide
+  - mintlify
+  - built-in components
+  - tree
+  - accordion
+  - tabs
+  - steps
+  - openapi
+  - chat assistant
+  - mcp
+authority: reference
+consumer: ["human", "agent"]
+maintenance: hand-maintained
+status: current
+lastVerified: "2026-05-19"
+owner: "@livepeer/docs-team"
+pageType: reference
+audience: developer
+purpose: reference
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': "Livepeer Docs Guide – Mintlify built-ins"
+---
+
+# Mintlify built-ins
+
+The Livepeer docs repo runs on [Mintlify](https://mintlify.com). Documentation contributors should know what's available out of the box before reaching for a [custom component](/v2/resources/documentation-guide/component-library/overview). This page catalogues every Mintlify-native component, layout primitive, and platform feature the repo uses (or could use), with usage notes, gotchas, and live counts as of 2026-05-19.
+
+<Note>
+**Constraints first.** Mintlify is an MDX renderer with platform-specific limits. Before you author or import anything, read the canonical Mintlify constraints reference: [`docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`](/docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices) (moves to `docs-guide/reference/external/mintlify/` per [D-DG-04](/docs-guide/decisions/docs-guide-structure)).
+
+Hard rules: no React or hook imports, no Mintlify global imports, root-absolute imports for shared resources, `.jsx`/`.mdx` file extensions on imports, double-quoted YAML frontmatter.
+</Note>
+
+<CustomDivider />
+
+## Layout primitives
+
+Components that structure the visual flow of a page.
+
+### `<Tree>` – folder and IA trees
+
+Renders a nested folder/file structure. Used 15+ times across the repo for IA visualisations, registry catalogs, and asset trees.
+
+**Shape (canonical in this repo):**
+
+```mdx icon="terminal"
+<Tree>
+  <Tree.Folder name="parent/">
+    <Tree.File name="child.mdx" />
+    <Tree.Folder name="nested/" defaultOpen>
+      <Tree.File name="deep.mdx" />
+    </Tree.Folder>
+  </Tree.Folder>
+</Tree>
+```
+
+Live example used on this page's parent overview: [the IA tree in `docs-guide/index`](/docs-guide/index#docs-structure---the-ia).
+
+<Tip>
+**Repo-specific gotcha.** The `<Tree>` component has two shapes in production: `<Tree.Folder>` / `<Tree.File>` (canonical, 14+ uses) and `<TreeNode>` (legacy, 1 use under `v2/orchestrators/_workspace/`). Use the `<Tree.Folder>` shape. The `<TreeNode>` form should not be propagated.
+</Tip>
+
+### `<Tabs>` and `<Tab>`
+
+Splits content by OS, payment mode, language, or any other axis. Heavy use across the repo (~456 occurrences).
+
+```mdx icon="terminal"
+<Tabs>
+  <Tab title="Docker">
+    Docker-specific instructions.
+  </Tab>
+  <Tab title="Linux">
+    Linux-specific instructions.
+  </Tab>
+  <Tab title="Windows">
+    Windows-specific instructions.
+  </Tab>
+</Tabs>
+```
+
+Used heavily in [Gateway setup pages](/v2/gateways/setup/verify/test) for OS-specific instructions.
+
+### `<Steps>` and `<Step>`
+
+Sequential procedures. Heavy use for quickstarts and tutorials.
+
+```mdx icon="terminal"
+<Steps>
+  <Step title="First action">
+    Description and code block.
+  </Step>
+  <Step title="Second action">
+    Description.
+  </Step>
+</Steps>
+```
+
+Used in the [Contributor Quickstart](/docs-guide/index#contributor-quickstart) at the top of the docs-guide overview.
+
+### `<CardGroup>` and `<Card>`
+
+Card grids for audience pickers, feature surfaces, related links. The repo uses Mintlify's `<CardGroup cols={N}>` with custom-styled child `<Card>` elements.
+
+```mdx icon="terminal"
+<CardGroup cols={3}>
+  <Card title="Contributors" icon="code-pull-request" href="/path">
+    Short description.
+  </Card>
+  <Card title="Agents" icon="robot" href="/path">
+    Short description.
+  </Card>
+</CardGroup>
+```
+
+Supported icon families: FontAwesome (`code`, `robot`, `link`), Lucide. See the [icon-map](/docs-guide/tooling/reference-maps/icon-map) for the curated set.
+
+### `<AccordionGroup>` and `<Accordion>`
+
+The heaviest layout component in the repo (4,000+ occurrences). Used for expandable reference, glossaries, troubleshooting, and grouped FAQs.
+
+```mdx icon="terminal"
+<AccordionGroup>
+  <Accordion title="Question or topic" icon="circle-question">
+    Body content, including nested components.
+  </Accordion>
+  <Accordion title="Another topic">
+    More content.
+  </Accordion>
+</AccordionGroup>
+```
+
+### `<Frame>`
+
+Wraps an image or screenshot in a styled frame with caption support.
+
+```mdx icon="terminal"
+<Frame caption="The Livepeer Explorer at first load">
+  <img src="/snippets/assets/media/explorer-home.png" alt="Livepeer Explorer" />
+</Frame>
+```
+
+### `<Update>`
+
+Changelog-style time-stamped entries. Used in the [Resources changelog](/v2/resources/changelog/changelog).
+
+```mdx icon="terminal"
+<Update label="2026-04-15" tags={["release"]}>
+  Released version 0.7.10 of go-livepeer with X, Y, Z.
+</Update>
+```
+
+<CustomDivider />
+
+## Callouts
+
+Inline coloured notice blocks.
+
+| Component | Purpose | Example |
+|---|---|---|
+| `<Note>` | Neutral aside, additional context | Used for "what this is" callouts |
+| `<Tip>` | Helpful suggestion, recommended approach | Quickstart hints |
+| `<Info>` | Informational detail, optional context | Side notes |
+| `<Warning>` | Caution; action could have unintended consequences | "Always test before submitting" |
+| `<Check>` | Checkmark / confirmation | Currently underused (1 occurrence – flag for adoption) |
+
+Usage example:
+
+```mdx icon="terminal"
+<Tip>
+The fastest path is `lpd dev --scoped`. Use a tab name; fuzzy match is supported.
+</Tip>
+
+<Warning>
+Never commit to `main` or directly to `docs-v2-dev`. Always create a feature branch.
+</Warning>
+```
+
+<CustomDivider />
+
+## Code primitives
+
+### `<CodeGroup>`
+
+Tabs across multi-language code samples. Heavy use in [Developer Quickstarts](/v2/developers/build/ai-and-agents/overview).
+
+````mdx icon="terminal"
+<CodeGroup>
+```bash JavaScript
+npm install @livepeer/ai-go
+```
+
+```bash Python
+pip install livepeer-ai
+```
+
+```bash Go
+go get github.com/livepeer/livepeer-ai-go
+```
+</CodeGroup>
+````
+
+### Inline code blocks
+
+Standard fenced code blocks support `icon="terminal"`, `lines`, `highlight`, and language identifiers.
+
+````mdx icon="terminal"
+```bash icon="terminal" lines highlight={2-3}
+bash lpd setup --yes
+lpd doctor
+lpd dev --scoped --scope-tab Developers
+```
+````
+
+### `<RequestExample>` and `<ResponseExample>`
+
+Paired request/response blocks for API documentation. Currently underused in the repo (most API ref pages use `<ResponseField>` only). Flagged for adoption – see [community-help](/docs-guide/contributing/community-help).
+
+<CustomDivider />
+
+## API reference primitives
+
+Used heavily in `v2/solutions/livepeer-studio/api-reference/` and related API ref trees.
+
+### `<OpenAPI>`
+
+Auto-renders an endpoint from an OpenAPI spec. The spec path is configured in the page's frontmatter via `openapi: METHOD /path`.
+
+```mdx icon="terminal"
+---
+openapi: GET /api/stream
+---
+<OpenAPI />
+```
+
+Used 288+ times across the API reference trees. Specs live at `api/`:
+
+- `api/openapi.yaml` – Studio API
+- `api/gateway.openapi.yaml` – Gateway API
+- `api/ai-worker.yaml` – AI Worker API
+- `api/cli-http.yaml` – go-livepeer CLI HTTP
+- `api/studio.yaml` – Studio (legacy)
+
+<Warning>
+The OpenAPI fetch pipeline currently only refreshes two of the five specs (AI Runner and AI Gateway). The other three were last touched 2026-03-18. See [community-help](/docs-guide/contributing/community-help#data-integrations) for the open opportunity.
+</Warning>
+
+### `<ParamField>`
+
+Documents a single request parameter (query, path, body, header).
+
+```mdx icon="terminal"
+<ParamField path="streamId" type="string" required>
+  The ID of the stream to fetch.
+</ParamField>
+```
+
+### `<ResponseField>`
+
+Documents a single response field. Heaviest use in API ref (~2,000 occurrences across the repo).
+
+```mdx icon="terminal"
+<ResponseField name="id" type="string">
+  Unique identifier for the stream.
+</ResponseField>
+```
+
+<CustomDivider />
+
+## Platform features (beyond components)
+
+Mintlify ships features that affect the whole site, configured via `docs.json` or platform-managed paths.
+
+### Chat assistant
+
+A reader-facing chat widget configured by [`.mintlify/Assistant.md`](https://github.com/livepeer/docs/blob/docs-v2/.mintlify/Assistant.md). Defines mission, source-of-truth order, IA routing map, high-risk topic guardrails, and fallback behaviour. Treat the file as the canonical contract for assistant behaviour – changes there propagate to the live site.
+
+### Hosted MCP endpoint
+
+A no-auth Model Context Protocol server at `docs.livepeer.org/mcp`. MCP-compatible clients (Claude, Cursor, ChatGPT, generic SSE clients) plug in and query Livepeer docs as freshness-stamped authoritative source.
+
+Documented tool: `search_livepeer_docs`. If Mintlify adds tools, the live MCP exposes them automatically – there is no in-repo configuration.
+
+### Search
+
+Semantic search powered by Mintlify's index. Page frontmatter `keywords` and structured headings contribute to discoverability.
+
+### Version selector
+
+Switches between `v2` (current) and `v1` (legacy) documentation. Both versions remain reachable; v1 is frozen.
+
+### Theme switcher
+
+Light/dark mode toggle. The repo's `--lp-*` design tokens provide both palettes. See the [styles engineering guide](/docs-guide/frameworks/styles-engineering-guide).
+
+### Sitemap and AI sitemap
+
+Mintlify auto-generates `sitemap.xml`. The repo additionally ships `sitemap-ai.xml` and `llms.txt` at root for LLM crawlers. See [AI features](/docs-guide/features/ai-features).
+
+### Redirects
+
+Configured in `docs.json` under the `redirects` block. Pre-commit hook validates redirect integrity (no orphans, no cycles).
+
+<CustomDivider />
+
+## Tooltip
+
+Hover tooltip for inline reference. Currently used only once in the repo (flagged for broader adoption where helpful).
+
+```mdx icon="terminal"
+<Tooltip tip="Livepeer Token – the protocol's native asset for staking and rewards">
+  LPT
+</Tooltip>
+```
+
+<CustomDivider />
+
+## Components NOT yet adopted
+
+A few Mintlify-native components remain unused (or barely used). Each is a potential adoption opportunity – see [community-help](/docs-guide/contributing/community-help#ui-system) for acceptance criteria.
+
+| Component | Status | Why it matters |
+|---|---|---|
+| `<Cards>` (Mintlify native) | Not used | The repo uses custom `<CardGroup>` instead. Evaluate whether the native pattern fits the custom design tokens. |
+| `<RequestExample>` / `<ResponseExample>` | Light use | API ref currently uses `<ResponseField>` only; paired examples would improve scannability. |
+| `<Check>` | 1 use | Underused as a checklist primitive. |
+| `<Tooltip>` | 1 use | Underused for inline glossary terms. |
+
+<CustomDivider />
+
+## Authoring constraints recap
+
+Before you commit MDX, every page must satisfy the Mintlify constraints:
+
+1. **No React or hook imports.** MDX components that ship from `snippets/components/` are plain JSX, not React components with hooks.
+2. **No Mintlify global imports.** Built-in components like `<Tabs>` and `<Tree>` are auto-registered; do not `import { Tabs }`.
+3. **Root-absolute imports.** When importing a snippet or composable: `import X from "/snippets/...mdx"`, not relative.
+4. **Include file extensions** on imports (`.jsx`, `.mdx`).
+5. **Double-quoted YAML frontmatter** to safely handle apostrophes and special characters.
+6. **Define risky constants inside the export body**, not at module top-level.
+7. **Use arrow function syntax** for any JSX expressions.
+
+Read the canonical reference: [`docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md`](/docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices).
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Livepeer custom components" icon="puzzle-piece" href="/v2/resources/documentation-guide/component-library/overview" arrow>
+    132 governed components across 6 categories (elements, wrappers, displays, scaffolding, integrators, config).
+  </Card>
+  <Card title="MDX preview extension" icon="file-code" href="/docs-guide/tooling/lpd-mdx-preview" arrow>
+    `lpd-mdx-preview` – render the full Livepeer component library in VS Code without running Mintlify.
+  </Card>
+  <Card title="Mintlify constraints" icon="triangle-exclamation" href="/docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices" arrow>
+    Platform constraints, source-order rules, import patterns, validation entrypoints.
+  </Card>
+  <Card title="UI system overview" icon="palette" href="/docs-guide/features/ui-system" arrow>
+    Components, templates, voice rules, style tokens, snippet system.
+  </Card>
+  <Card title="Mintlify official docs" icon="book" href="https://mintlify.com/docs" arrow>
+    External – the authoritative reference for built-ins and platform features.
+  </Card>
+  <Card title="Community help wanted" icon="hand-holding-heart" href="/docs-guide/contributing/community-help" arrow>
+    Open opportunities to adopt unused built-ins, expand reference coverage, or fix drift.
+  </Card>
+</CardGroup>

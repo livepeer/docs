@@ -1,0 +1,236 @@
+---
+title: "AI image generation app"
+sidebarTitle: "AI image generation app"
+description: >-
+  Build a Next.js app that generates images from text prompts using the Livepeer AI network. No GPU, no API key, no Studio account.
+keywords:
+  - livepeer AI
+  - text-to-image
+  - Next.js
+  - tutorial
+  - Stable Diffusion
+  - dream-gateway
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: 2026-05-11
+complexity: intermediate
+lifecycleStage: discover
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Working Next.js app that turns a text prompt into a generated image through the Livepeer Cloud Community Gateway. Reader time: 30 to 45 minutes. No GPU, no API key.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The finished app has three pieces: a Next.js page with a prompt field and an image panel, an internal API route that calls the `text-to-image` endpoint on `dream-gateway.livepeer.cloud`, and a render of the returned image URL. Total code: about 80 lines across two files.
+
+<CustomDivider />
+
+## Prerequisites
+
+- Node.js 20 or later, npm or pnpm
+- A text editor and a terminal
+- The public Livepeer Cloud Community Gateway at `https://dream-gateway.livepeer.cloud`, which accepts unauthenticated text-to-image requests and is intended for development use
+
+The community Gateway is free and rate-limited. For production traffic, run a self-hosted Gateway or use a hosted provider. See <LinkArrow href="/v2/developers/build/where-to-build" label="Where to build" newline={false} />.
+
+<CustomDivider />
+
+## Build the App
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+  <StyledStep title="Bootstrap the project" icon="rocket">
+    Create a new Next.js 14 app with TypeScript and the App Router:
+
+    ```bash icon="terminal"
+    npx create-next-app@latest livepeer-image-app \
+      --typescript --tailwind --app --src-dir --import-alias "@/*"
+    cd livepeer-image-app
+    ```
+
+    Accept the defaults at each prompt. The generator produces a working app shell.
+  </StyledStep>
+
+  <StyledStep title="Add a server-side API route" icon="server">
+    Create `src/app/api/generate/route.ts`:
+
+    ```ts icon="terminal"
+    import { NextRequest, NextResponse } from 'next/server';
+
+    const GATEWAY_URL = 'https://dream-gateway.livepeer.cloud/text-to-image';
+
+    export async function POST(req: NextRequest) {
+      const { prompt } = await req.json();
+
+      if (!prompt || typeof prompt !== 'string') {
+        return NextResponse.json(
+          { error: 'prompt is required' },
+          { status: 400 }
+        );
+      }
+
+      const upstream = await fetch(GATEWAY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          width: 1024,
+          height: 576,
+        }),
+      });
+
+      const body = await upstream.json();
+
+      if (!upstream.ok) {
+        return NextResponse.json(
+          { error: body },
+          { status: upstream.status }
+        );
+      }
+
+      return NextResponse.json(body);
+    }
+    ```
+
+    The route accepts a JSON body with `prompt`, forwards it to the Gateway, and returns the Gateway response. The Gateway returns an `images` array, each entry shaped `{ url, seed, nsfw }`.
+  </StyledStep>
+
+  <StyledStep title="Write the client UI" icon="window">
+    Replace `src/app/page.tsx` with:
+
+    ```tsx icon="terminal"
+    'use client';
+
+    import { useState } from 'react';
+
+    type GeneratedImage = { url: string; seed: number; nsfw: boolean };
+
+    export default function Home() {
+      const [prompt, setPrompt] = useState('');
+      const [image, setImage] = useState<GeneratedImage | null>(null);
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState<string | null>(null);
+
+      async function generate() {
+        setLoading(true);
+        setError(null);
+        setImage(null);
+        try {
+          const res = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            setError(JSON.stringify(data.error));
+            return;
+          }
+          setImage(data.images[0]);
+        } catch (e) {
+          setError(String(e));
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      return (
+        <main className="min-h-screen p-8 max-w-2xl mx-auto">
+          <h1 className="text-2xl font-semibold mb-4">Livepeer image generator</h1>
+          <textarea
+            className="w-full p-3 border rounded mb-3"
+            rows={3}
+            placeholder="a coffee shop at sunset"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+          <button
+            className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
+            onClick={generate}
+            disabled={loading || !prompt.trim()}
+          >
+            {loading ? 'Generating...' : 'Generate'}
+          </button>
+          {error && <pre className="mt-4 text-red-600 text-sm">{error}</pre>}
+          {image && (
+            <img
+              src={image.url}
+              alt="Generated"
+              className="mt-6 rounded border"
+            />
+          )}
+        </main>
+      );
+    }
+    ```
+
+    The UI sends the prompt to `/api/generate`, displays the returned image, and surfaces any error JSON inline.
+  </StyledStep>
+
+  <StyledStep title="Run the dev server" icon="play">
+    ```bash icon="terminal"
+    npm run dev
+    ```
+
+    Open `http://localhost:3000`. Type `a coffee shop at sunset` into the textarea and click Generate. The first request to a cold model takes around 30 to 60 seconds; subsequent requests on a warm model complete in under 10 seconds.
+
+    The response shape is:
+
+    ```json icon="terminal"
+    {
+      "images": [
+        {
+          "url": "https://...",
+          "seed": 4029105621,
+          "nsfw": false
+        }
+      ]
+    }
+    ```
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider />
+
+## Common Errors
+
+**HTTP 422, validation error.** The request body fails the Gateway's schema. Verify `prompt` is a non-empty string and that `width` and `height` are integers between 64 and 1024.
+
+**HTTP 500 with a body referencing model loading or capability.** No Orchestrator currently serves the requested model in a warm state, or the cold start exceeded the Gateway's timeout. Retry after 60 seconds, or specify a different `model_id`. The default model is `SG161222/RealVisXL_V4.0`. The `text-to-image` pipeline catalogue is in <LinkArrow href="/v2/developers/build/model-support" label="Model support" newline={false} />.
+
+**HTTP 429.** Rate limit reached on the community Gateway. The community Gateway is shared infrastructure; a self-hosted or hosted Gateway removes the limit. Sleep and retry, or move to a paid endpoint.
+
+**Network error in the browser console with no response body.** The upstream fetch failed. Check that the route is `POST` not `GET`, and that the Gateway URL is reachable from your network.
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="AI pipelines" icon="layer-group" href="/v2/developers/build/ai-pipelines">
+    Full catalogue of image, video, audio, and text pipelines the network supports.
+  </Card>
+  <Card title="SDKs" icon="cube" href="/v2/developers/resources/sdks">
+    JavaScript, Python, and Go SDKs that wrap the AI endpoints.
+  </Card>
+  <Card title="Choose a gateway" icon="route" href="/v2/developers/build/where-to-build">
+    When to use the community Gateway, a hosted Gateway, or a self-hosted Gateway.
+  </Card>
+  <Card title="Self-host a gateway" icon="server" href="/v2/gateways/quickstart/overview">
+    Run your own Gateway for production traffic, custom pricing, and Orchestrator selection.
+  </Card>
+</CardGroup>

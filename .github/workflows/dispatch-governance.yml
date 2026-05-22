@@ -1,0 +1,145 @@
+# type: dispatch
+# concern: governance
+# pipeline: composite (P3 + P5/P6 + manual + P4 post-merge)
+# dispatch-governance.yml — Action workflow for governance concern.
+name: Governance Pipeline
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - "operations/scripts/**"
+      - "docs-guide/**"
+      - "tools/config/**"
+      - "snippets/**"
+  push:
+    branches: [docs-v2]
+    paths:
+      - ".github/**"
+      - "operations/scripts/**"
+      - "docs-guide/**"
+      - "tools/config/**"
+      - "snippets/**"
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode"
+        type: choice
+        options: [pr, scheduled, manual, post-merge]
+        default: manual
+      dry_run:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dispatch-governance-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pr-check:
+    if: github.event_name == 'pull_request'
+    name: Governance · PR Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: governance PR meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/governance/dispatch-governance-check.js --staged
+
+  pipeline-tests:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    name: Governance · Pipeline Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: pipeline smoke test (all 66 dispatchers)
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/tests/integration/pipeline-smoke-test.js
+      - name: pipeline functional tests (synthetic-violation cycles)
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/tests/integration/pipeline-functional-tests.js
+
+  post-merge:
+    if: github.event_name == 'push'
+    name: Governance · Post-merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: governance post-merge meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: node operations/scripts/dispatch/governance/dispatch-governance-sync.js --write
+
+  scheduled:
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'scheduled')
+    name: Governance · Scheduled
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: governance scheduled meta
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/governance/dispatch-governance-scan.js $FLAGS
+
+  manual-repair:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'manual'
+    name: Governance · Manual Repair
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+      - name: governance manual repair
+        env:
+          NODE_PATH: tools/node_modules
+        run: |
+          FLAGS=""
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          node operations/scripts/dispatch/governance/dispatch-governance-repair.js $FLAGS

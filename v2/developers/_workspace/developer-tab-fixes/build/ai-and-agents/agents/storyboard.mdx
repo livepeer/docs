@@ -1,0 +1,188 @@
+---
+title: 'Storyboard'
+sidebarTitle: 'Storyboard'
+description: >-
+  Storyboard is an agent-powered creative platform built on Livepeer. Chat with
+  AI to generate, edit, animate, and live-stream media on an infinite canvas
+  using 40+ AI models.
+keywords:
+  - livepeer
+  - Storyboard
+  - creative AI
+  - '@livepeer/agent'
+  - '@livepeer/creative-kit'
+  - Daydream
+  - image generation
+  - video generation
+  - live stream
+  - agent
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Storyboard is the reference application for the @livepeer/agent and @livepeer/creative-kit packages. Its architecture is the canonical pattern for building creative AI apps on Livepeer.</Tip>
+</CenteredContainer>
+
+---
+
+Storyboard is a web application at `storyboard-rust.vercel.app` that lets users generate, edit, animate, and live-stream media through a conversational interface on an infinite canvas. It is built on two packages: `@livepeer/agent` (provider-agnostic agent runtime) and `@livepeer/creative-kit` (reusable framework for creative AI apps).
+
+Both packages are available for developers building their own creative applications on the same infrastructure.
+
+<CustomDivider />
+
+## Capabilities
+
+Storyboard exposes 40+ AI capabilities through a single conversation interface. Type a prompt and the agent plans, selects models, runs inference in parallel, and places results as draggable cards on the canvas:
+
+```
+"Create a 6-scene story about a brave knight, animate the best scene,
+ and start a live stream with cyberpunk style"
+```
+
+**Generation:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Category</TableCell>
+      <TableCell header>Models</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Image</TableCell>
+      <TableCell>flux-dev, flux-schnell, recraft-v4, gemini-image, seedream-5-lite</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Video (text-to-video)</TableCell>
+      <TableCell>veo-t2v, ltx-t2v, pixverse-t2v</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Video (image-to-video)</TableCell>
+      <TableCell>seedance-i2v, seedance-i2v-fast, veo-i2v, ltx-i2v, kling-i2v</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Text-to-speech</TableCell>
+      <TableCell>chatterbox-tts, gemini-tts, inworld-tts, grok-tts</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>3D</TableCell>
+      <TableCell>tripo-t3d, tripo-i3d, tripo-mv3d</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Editing</TableCell>
+      <TableCell>kontext-edit, flux-fill, bg-remove, topaz-upscale, talking-head</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+All models have automatic fallback chains: if a model rejects a request (content policy, size limit), the next sibling model tries automatically.
+
+**Slash commands (25+):** `/story` (6-scene illustrated story), `/film` (4-shot mini-film with camera directions), `/stream` (real-time LV2V with Scope pipeline), `/talk` (talking video with voice clone), `/analyze` (Gemini Vision style/character extraction), `/project` (manage and replay sessions), and more. Type `/help` in the app for the full list.
+
+<CustomDivider />
+
+## Three-Layer Architecture
+
+```
+Your Application
+  @livepeer/creative-kit        ArtifactStore · ChatPanel · InfiniteBoard
+  @livepeer/agent               AgentRunner · ToolRegistry · WorkingMemory
+
+Livepeer Infrastructure
+  SDK Service (sdk.daydream.monster)
+  BYOC Orchestrator (go-livepeer, 40 capabilities)
+  Scope Orchestrators (LV2V, real-time video)
+```
+
+**`@livepeer/agent` (Layer 0):** Provider-agnostic agent runtime. `AgentRunner` manages the LLM-to-tool loop. Swap LLM providers (Gemini, Claude, OpenAI, Livepeer) without changing application code. Includes working memory (800-token budget) and queryable session memory.
+
+**`@livepeer/creative-kit` (Layer 1):** Reusable framework for creative AI apps. `ArtifactStore` manages canvas state, `ProjectPipeline` handles batch generation, `CommandRouter` handles slash commands, `CapabilityResolver` manages model selection and fallback chains. Includes `InfiniteBoard`, `ChatPanel`, and `ArtifactCard` UI components.
+
+**Applications (Layer 2):** Storyboard itself, plus Creative Lab (an educational app for children aged 8-16 in `apps/creative-lab/`).
+
+<CustomDivider />
+
+## LLM Provider Configuration
+
+`@livepeer/agent` supports four LLM backends:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Provider</TableCell>
+      <TableCell header>API key required</TableCell>
+      <TableCell header>Routes through</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Gemini (default)</TableCell>
+      <TableCell>`GEMINI_API_KEY`</TableCell>
+      <TableCell>Google API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Claude</TableCell>
+      <TableCell>`ANTHROPIC_API_KEY`</TableCell>
+      <TableCell>Anthropic API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>OpenAI</TableCell>
+      <TableCell>`OPENAI_API_KEY`</TableCell>
+      <TableCell>OpenAI API directly</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Livepeer</TableCell>
+      <TableCell>`DAYDREAM_API_KEY` only</TableCell>
+      <TableCell>SDK Service; routes to Gemini/Claude/OpenAI via Livepeer infrastructure</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The Livepeer provider routes all LLM calls through Livepeer infrastructure with a single Daydream API key. Get one at `daydream.live`.
+
+<CustomDivider />
+
+## Building with the SDK
+
+The `@livepeer/agent` CLI is the fastest way to use Storyboard capabilities programmatically:
+
+```bash
+curl -fsSL https://storyboard.daydream.monster/install.sh | bash
+livepeer setup --api-key sk_live_xxx
+livepeer run flux-schnell --prompt "a mountain at dawn"
+```
+
+For library usage and MCP server mode, see <LinkArrow href="/v2/developers/build/ai-and-agents/agents/agent-sdk" label="Agent SDK" newline={false} />.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Agent SDK" icon="code" href="/v2/developers/build/ai-and-agents/agents/agent-sdk" arrow horizontal>
+    @livepeer/agent library API: AgentRunner, providers, ToolRegistry, and MCP server mode.
+  </Card>
+  <Card title="Agents Overview" icon="robot" href="/v2/developers/build/ai-and-agents/agents/overview" arrow horizontal>
+    Eliza integration, BYOC agent patterns, and Agent SPE context.
+  </Card>
+  <Card title="AI Pipelines" icon="cpu" href="/v2/developers/build/ai-and-agents/ai-pipelines" arrow horizontal>
+    The underlying inference endpoints Storyboard routes through.
+  </Card>
+  <Card title="Real-Time AI" icon="video" href="/v2/developers/build/ai-and-agents/realtime-ai/overview" arrow horizontal>
+    The Cascade/LV2V pipeline powering Storyboard's /stream command.
+  </Card>
+</CardGroup>
