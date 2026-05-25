@@ -1,0 +1,47 @@
+{
+  "sourceLanguage": "en",
+  "targetLanguages": ["es", "fr", "cn"],
+  "languageCodeMap": {
+    "zh-CN": "cn"
+  },
+  "sourceRoot": "v2",
+  "generatedRoot": "v2",
+  "generatedPathStyle": "v2_language_prefix",
+  "provider": {
+    "name": "openrouter",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "modelCandidates": [
+      "openai/gpt-oss-120b:free",
+      "openai/gpt-oss-20b:free",
+      "mistralai/mistral-small-3.1-24b-instruct:free",
+      "google/gemma-3-27b-it:free",
+      "meta-llama/llama-3.3-70b-instruct:free"
+    ],
+    "temperature": 0.1,
+    "maxRetriesPerRequest": 3,
+    "requestTimeoutMs": 60000
+  },
+  "translationRules": {
+    "translateFrontmatterKeys": ["title", "sidebarTitle", "description", "tag"],
+    "translateDocsJsonLabelKeys": ["tab", "anchor", "group"],
+    "translateKeywords": false,
+    "preserveBrandTerms": ["Livepeer", "LPT", "ETH", "Arbitrum", "Mintlify", "OpenRouter"],
+    "preserveRegexes": ["^v\\d+/.+", "^/snippets/", "^https?://", "^mailto:"]
+  },
+  "scopeDefaults": {
+    "defaultMode": "changed_since_ref",
+    "defaultBaseRef": "docs-v2",
+    "maxPagesPerRun": 50
+  },
+  "qualityGates": {
+    "failOnAnyTranslationError": true,
+    "allowDocsJsonFallbackToEnglish": true,
+    "requireLocalizedFileForRouteRewrite": true,
+    "blockMockProviderWrites": true,
+    "rejectMockArtifactsForRouteRewrite": true
+  },
+  "reporting": {
+    "warnRouteRewriteCoverageBelowPct": 80,
+    "warnOnMixedLanguageLocaleUi": true
+  }
+}

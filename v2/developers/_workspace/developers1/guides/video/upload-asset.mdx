@@ -1,0 +1,137 @@
+---
+title: Upload a video asset
+sidebarTitle: Upload Asset
+description: >-
+  Upload video files to Livepeer Studio for transcoding and VOD playback. Covers direct upload, URL-based import, and
+  tus resumable upload.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer upload
+  - video asset
+  - VOD
+  - tus upload
+  - transcoding
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: instruction
+purpose: build
+audience: developer
+status: current
+lastVerified: 2026-04-05T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Asset creation returns a tus upload endpoint for resumable uploads. For files over 200 MB, use tus -- it survives connection interruptions without restarting.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Uploading an asset transcodes the file to adaptive bitrate HLS and makes it available for VOD playback. The API supports direct upload, URL-based import, and resumable upload via the tus protocol.
+
+<CustomDivider />
+
+## Step 1 -- Create an asset and get upload URL
+
+```typescript icon="terminal"
+import { Livepeer } from 'livepeer';
+
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+const response = await client.asset.create({
+  name: 'product-demo.mp4',
+});
+
+const asset = response.asset;
+console.log('Asset ID:', asset.id);
+console.log('Upload URL (tus):', response.tusEndpoint);
+```
+
+## Step 2 -- Upload the file
+
+**Direct upload (small files &lt; 200 MB):**
+
+```typescript icon="terminal"
+const fs = require('fs');
+
+await fetch(response.uploadUrl, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'video/mp4' },
+  body: fs.readFileSync('./product-demo.mp4'),
+});
+```
+
+**Resumable upload with tus (recommended for large files):**
+
+```bash icon="terminal"
+npm install tus-js-client
+```
+
+```typescript icon="terminal"
+import * as tus from 'tus-js-client';
+
+const upload = new tus.Upload(file, {
+  endpoint: response.tusEndpoint,
+  uploadSize: file.size,
+  onError: (error) => console.error('Upload failed:', error),
+  onProgress: (bytesUploaded, bytesTotal) => {
+    console.log(`${((bytesUploaded / bytesTotal) * 100).toFixed(1)}% uploaded`);
+  },
+  onSuccess: () => console.log('Upload complete'),
+});
+
+upload.start();
+```
+
+**URL-based import:**
+
+```typescript icon="terminal"
+const response = await client.asset.create({
+  name: 'imported-video.mp4',
+  url: 'https://your-storage.com/video.mp4',
+});
+```
+
+<CustomDivider />
+
+## Step 3 -- Wait for transcoding
+
+Poll for status or use the `asset.ready` webhook:
+
+```typescript icon="terminal"
+// Poll approach
+let asset;
+do {
+  await new Promise(r => setTimeout(r, 5000)); // wait 5 seconds
+  const response = await client.asset.get(assetId);
+  asset = response.asset;
+} while (asset.status.phase === 'processing' || asset.status.phase === 'waiting');
+
+if (asset.status.phase === 'ready') {
+  const playbackUrl = `https://livepeercdn.studio/asset/hls/${asset.playbackId}/index.m3u8`;
+  console.log('Ready:', playbackUrl);
+} else {
+  console.error('Failed:', asset.status.error);
+}
+```
+
+Transcoding time varies by file size: a 10-minute HD file typically takes 2-3 minutes.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Playback" icon="play" href="/v2/developers/guides/video/playback">
+    Embed the playback URL after transcoding is complete.
+  </Card>
+  <Card title="Webhooks" icon="bell" href="/v2/developers/guides/video/webhooks">
+    Subscribe to `asset.ready` and `asset.failed` to avoid polling.
+  </Card>
+</CardGroup>
