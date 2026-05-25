@@ -44,7 +44,7 @@ The implementation backlog for moving the repo closer to the ownerless governanc
 
 **Evidence sources (live commands, 2026-05-23):**
 
-```bash
+```bash icon="terminal"
 find operations/scripts \( -name "*.js" -o -name "*.sh" -o -name "*.py" \) -not -path "*/x-archive/*" -not -path "*/archive/*" | wc -l   # 321
 ls .github/workflows/*.yml | wc -l                                                                                                     # 11
 find ai-tools/ai-skills -name SKILL.md | wc -l                                                                                         # 35
@@ -57,13 +57,13 @@ node operations/scripts/generators/governance/reports/generate-repo-governance-s
 
 Detailed evidence in `workspace/thread-outputs/repo-consolidation-deep/SLICE-*.md` files (10 slices, ~4,400 lines of file-level inventory).
 
----
+<CustomDivider />
 
 ## Executive findings – what's P0 and P1
 
 | Priority | Gap | Live evidence | Required outcome |
 | --- | --- | --- | --- |
-| **P0** | **Cron-is-dry-run-by-default bug** – every `dispatch-{concern}.yml` scheduled job runs in dry-run mode because cron physically cannot pass `inputs.dry_run = false` | `dispatch-maintenance.yml` schedules daily 05:00 UTC; data files in `snippets/data/contract-addresses/` last written 2026-05-04 (19 days stale); same root cause for `llms.txt` + `sitemap-ai.xml` 47 days stale | Invert FLAGS pattern in all 6 dispatch workflows OR add separate scheduled-write job. **Single fix unblocks 6+ data pipelines.** See [Automations § Known gaps](./automations.mdx#known-gaps). |
+| **P0 – FIXED 2026-05-25** | ~~Cron-is-dry-run-by-default bug~~ Fixed in commit `e42946cdf` on `docs-v2-dev-draft` (pending merge to `docs-v2`) | Inverted FLAGS pattern in all 6 `dispatch-{concern}.yml` scheduled jobs. Manual-repair jobs deliberately unchanged. Pre-fix: data files stale (contracts 19d, llms.txt/sitemap-ai.xml 47d) | Merge to `docs-v2`. Verify next scheduled cron writes (next 03:00–07:00 UTC window). See [Automations § Cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25) |
 | **P0** | Stale generated governance map | `generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` (~6 weeks behind) | Regenerate map; verify generated-artifact governance |
 | **P0** | OpenAPI specs 67 days stale | All 5 specs in `api/` mtime 2026-03-18; fetcher covers 2 of 5; no scheduled workflow | Expand `fetch-openapi-specs.sh` + schedule + gate via `openapi-reference-audit.js --full --strict` |
 | **P0** | `docs.json` default version is `v1`, not `v2` | `docs.json` `versions[].default = true` on v1; README + feature-map claim v2 is canonical | Confirm Mintlify dashboard override OR fix `docs.json`; visitors land on v1 by default otherwise |
@@ -72,10 +72,10 @@ Detailed evidence in `workspace/thread-outputs/repo-consolidation-deep/SLICE-*.m
 | **P1** | V2 non-publishable content not fully normalised | V2 cleanup matrix reports 307 rows: 235 `_workspace` targets + 72 `x-deprecated` targets; `gateways` carries 199 of 307 | Execute approved move waves; update `.mintignore` + file-selection helpers |
 | **P1** | Gateways canonical/ is BYTE-IDENTICAL to orchestrators canonical/ | `diff` returns 0 lines for `IA.mdx`, `Frameworks.mdx`, `process.mdx`, `ia-data.json`, `REVIEW-REGISTRY.md`. Gateways `REVIEW-REGISTRY.md` literally opens `# Orchestrators Tab Page Inventory` | Either produce gateways-specific canonical artefacts OR formally adopt orchestrators's as shared (with explicit declaration) |
 | **P1** | Three decision registries with no cross-index | `D-NAV-01` in CONTENT-WRITING/decisions; `D-ACT-01..10 + D-GOV-01..08` in `.github/workspace/decisions-log.mdx`; `D-DG-01..13` in `docs-guide/decisions/docs-guide-structure.md` | Wire CI check that all 3 reference the unified index at `docs-guide/decisions/registry.md` |
-| **P1** | `decisions-log.mdx` header dated 2026-03-31 but claims 18 decisions through D-GOV-08 (2026-05-22) | First 100 lines only show D-ACT-01..04; D-ACT-05..10 + all D-GOV-* entries not visible in first read | Verify entries 5-18 are in the log OR append them |
+| ~~P1~~ **RESOLVED 2026-05-25** | ~~decisions-log.mdx lags~~ All 18 decisions present, split across 2 files: `decisions-log.mdx` holds D-ACT-01..10 + D-GOV-07..08; `design/governance/design-overview.md` holds D-GOV-01..06 (locked 2026-04-04) | Verified by full grep across both files. Header date is the original 2026-03-31 lock date for D-ACT-01..03; later entries were appended in place |
 | **P1** | `.github/workflows/x-archive/` D-ACT-03 social-data consolidation incomplete | Target name `update-data-feeds.yml` doesn't exist in active set; 7 social-data workflows in `.archived` state | Verify the consolidation moved into `operations/scripts/dispatch/copy/` OR finish the migration |
 | **P1** | Validator path drift in `agent-governance-framework.mdx` | Lines 137 + 228 reference `validators/governance/check-agent-docs-freshness.js`; actual is `validators/governance/compliance/check-agent-docs-freshness.js`. `AGENTS.md` line 98 has the correct path | Fix the 2 framework page references |
-| **P1** | Contracts pipeline doc references empty `.github/scripts/` folder | `.github/scripts/fetch-contract-addresses.js` doesn't exist there; moved to `operations/scripts/integrators/maintenance/contracts/` | Update [contracts deep-dive in data-integrations.mdx](./data-integrations.mdx#contracts-pipeline-deep-dive) refs + retire orphan `contracts-pipeline.mdx` |
+| **P2** | Pre-refactor docs still reference old `.github/scripts/` paths | `.github/scripts/` is intentionally empty per D-ACT-06 (everything migrated to `operations/scripts/` 2026-04-04); contracts pipeline doc + a handful of other internal references not updated | Update path references in `contracts-pipeline.mdx`, then retire that page (covered by `data-integrations.mdx#contracts-pipeline-deep-dive`) |
 | **P1** | Large tracked reports + backup artefacts violate retention | Script footprint audit reports 24 findings: 4 medium + 20 low | Apply report retention policy; remove backup artefacts through governed deletion |
 | **P1** | 4-surface component count drift | Feature page 59 / public overview 117 / framework table 118 / registry 132 – no source agrees | Replace every hand-authored count with generator-emitted block from `component-registry.json` |
 | **P1** | 18 of 34 local SKILL.md files `status: draft` with empty test logs | Session-lifecycle backbone (`thread`, `research`, `design`, `build`, `iterate`, `close`) never validated in production | Promote one skill per week through 3-pass production validation |
@@ -86,7 +86,7 @@ Detailed evidence in `workspace/thread-outputs/repo-consolidation-deep/SLICE-*.m
 | **P2** | 5 archive naming variants across 11 tabs | `archive/`, `archived/`, `deprecated/`, `x-archived/`, `x-deprecated/` per SLICE-09 | Normalise to `x-archive/` per framework |
 | **P2** | Tool PATH discovery still fragile | Non-interactive shell needs Homebrew + NVM on PATH explicitly | Enhance `lpd doctor` output |
 
----
+<CustomDivider />
 
 ## Purge + remediation queue
 
@@ -95,10 +95,9 @@ Detailed evidence in `workspace/thread-outputs/repo-consolidation-deep/SLICE-*.m
 | Item | Current problem | Implementation | Validation |
 | --- | --- | --- | --- |
 | `docs-guide/repo-ops/config/repo-governance-map.mdx` | Stale generated output | `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write` | Rerun with `--check` |
-| Cron-is-dry-run pattern across 6 dispatchers | Cron cannot pass `dry_run: false`; scheduled run defaults to dry-run | Invert FLAGS: `FLAGS="--write --verify"; if [[ ... == "true" ]] then FLAGS=""` in `dispatch-{brand, copy, discoverability, governance, health, maintenance}.yml` | Validate by running one cron + confirming write occurs |
+| ~~Cron-is-dry-run pattern~~ **FIXED 2026-05-25** | Fixed in commit `e42946cdf` on `docs-v2-dev-draft` | Inverted FLAGS in all 6 `dispatch-{brand, copy, discoverability, governance, health, maintenance}.yml` scheduled jobs | Merge to `docs-v2`; verify next scheduled cron writes |
 | Validator path drift | `agent-governance-framework.mdx` lines 137 + 228 reference wrong path | Add `/compliance/` to both references | Run `check-agent-docs-freshness.js` from corrected path |
-| Stale path: `.github/scripts/fetch-contract-addresses.js` | Folder empty; script moved | Update all references in pipeline docs + contracts-pipeline.mdx | Grep for the old path repo-wide |
-| `decisions-log.mdx` header date | Says 2026-03-31; 18 decisions claimed through 2026-05-22 | Append D-ACT-05..10 + D-GOV-01..08 OR verify they're in the log past line 100 | Manual review |
+| Stale path references in old docs | Pre-refactor docs reference `.github/scripts/fetch-contract-addresses.js`; `.github/scripts/` is intentionally empty per D-ACT-06 | Update references in `contracts-pipeline.mdx` (then retire that page) | Grep for old path repo-wide; confirm zero stale refs |
 | Generated-artefact policy coverage | New surfaces don't automatically register in `generated-artifacts.json` | Add a CI check that flags any new generator script without a matching manifest entry | New validator script |
 | `docs-index.json` provenance drift | `generated` field says 2026-04-07; mtime 2026-05-18 | Fix generator to update its own `generated_at` field on every write | Regenerate; verify field matches mtime |
 | `codex/skills-manifest.json` provenance drift | `generated_at: 2026-03-22` but mtime 2026-04-08 | Same fix pattern as docs-index.json | Regenerate |
@@ -177,7 +176,7 @@ Script footprint audit: 4 medium + 20 low (no critical/high).
 | `update-blog-data.yml` orphan | Stays in `deprecated/` | Confirm if compatibility alias OR retire |
 | D-ACT-03 social-data consolidation incomplete | Target `update-data-feeds.yml` not in active set; 7 archived `.archived` files | Verify migrated into `operations/scripts/dispatch/copy/` OR finish |
 | 2 PR templates side-by-side | `pull_request_template.md` (active) + `pull-request-template-v2.md` (vestigial) | Delete the v2 file |
-| `.github/scripts/` empty | Contracts script moved to `operations/scripts/` | Delete the empty folder |
+| `.github/scripts/` intentionally empty | Per D-ACT-06: every `.github/scripts/` script migrated to `operations/scripts/` for governance reach. Folder kept for backward-compat path resolution only | No action – locked decision. Stale references to old paths in older docs should be updated, not the folder reinstated |
 | `.github/augment-instructions.md` at active path with archived-header | 206 lines, heaviest adapter | Move to `_retired/` or delete |
 | Cron-is-dry-run bug | See Executive findings P0 | See §1 |
 | Workflow catalog drift | Feature docs previously referenced old workflow names | Make workflow catalog the source for counts |
@@ -283,7 +282,7 @@ Per `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md`:
 
 The project pipeline is stalled. A tab is only "open" for the next phase when its gate is explicitly unlocked by human sign-off recorded in `decision-registry.md`. **Action:** human IA review + lock per tab to unblock downstream phases.
 
----
+<CustomDivider />
 
 ## Implementation plan (refreshed 2026-05-23)
 
@@ -358,7 +357,7 @@ The project pipeline is stalled. A tab is only "open" for the next phase when it
 
 **Exit criteria:** script footprint audit `@category` + `@domain` counts at 0; hook scripts pass the validator they enforce; workspace report bloat reduced; retention TTL enforced.
 
----
+<CustomDivider />
 
 ## Non-acceptance criteria
 
@@ -372,11 +371,11 @@ The following do not satisfy this gap analysis:
 - Running only a superficial command when repo tooling provides a deeper validator
 - Marking a fix done without verifying the prior failure mode no longer reproduces
 
----
+<CustomDivider />
 
 ## Next concrete commands
 
-```bash
+```bash icon="terminal"
 # Regenerate stale governance map
 PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write
 PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check
@@ -404,7 +403,7 @@ node operations/tests/integration/pipeline-functional-tests.js
 lpd test --staged
 ```
 
----
+<CustomDivider />
 
 ## Related
 

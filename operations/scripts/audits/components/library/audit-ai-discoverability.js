@@ -5,9 +5,9 @@
  * @concern     maintenance
  * @niche       component-registry
  * @purpose     Audit snippets/components/ JSX files for AI-discoverability compliance — every hook-using component must declare AI tags and ship a companion JSON snapshot so the AI tooling can introspect props/usage without re-parsing source
- * @description Scans .jsx files for React hook usage (useState, useEffect, useMemo, custom hooks). For each hook-using component, checks the JSDoc declares the AI-discoverability tags + a matching snapshot exists at snippets/data/snapshots/{Component}.json. Emits JSON (--json) or markdown (--md) report. Currently orphaned — not wired into dispatch-component-registry; tracked as follow-up.
+ * @description Scans .jsx files for React hook usage (useState, useEffect, useMemo, custom hooks). For each hook-using component, checks the JSDoc declares the AI-discoverability tags + a matching snapshot exists at snippets/data/snapshots/{Component}.json. Emits JSON (--json) or markdown (--md) report.
  * @mode        scan
- * @pipeline    manual — should be wired into dispatch-component-registry P3 detect list (follow-up)
+ * @pipeline    P3 (PR via dispatch-component-registry.js), manual via direct invocation
  * @scope       snippets/components/*.jsx, snippets/data/snapshots/*.json
  * @usage       node operations/scripts/audits/components/library/audit-ai-discoverability.js [--json] [--md] [--staged]
  * @policy      D-GOV-03 (paired with component-registry pipeline)

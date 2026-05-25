@@ -23,7 +23,8 @@ const ATOMICS = {
       'operations/scripts/validators/components/library/check-component-health.js',
       'operations/scripts/validators/components/library/check-component-css.js',
       'operations/scripts/validators/components/library/check-component-props.js',
-      'operations/scripts/validators/components/library/check-naming-conventions.js'
+      'operations/scripts/validators/components/library/check-naming-conventions.js',
+      'operations/scripts/audits/components/library/audit-ai-discoverability.js'
     ],
     generate: [
       'operations/scripts/generators/components/library/generate-component-registry.js'

@@ -36,7 +36,7 @@ The automation layer is the repo's operating system. The repo is ownerless and s
 
 This page documents what's live as of 2026-05-23. The canonical published framework is at [`docs-guide/frameworks/github-actions.mdx`](../frameworks/github-actions.mdx) (with the internal working spec at `.github/workspace/framework-canonical.md`).
 
----
+<CustomDivider />
 
 ## The 4-tier composable architecture (D-GOV-08, 2026-05-22)
 
@@ -51,7 +51,7 @@ A major refactor on 2026-05-22 consolidated **53 standalone workflows → 11 act
 
 The refactor locked **18 decisions** (D-ACT-01..10 + D-GOV-01..08) in [`.github/workspace/decisions-log.mdx`](https://github.com/livepeer/docs/blob/docs-v2-dev/.github/workspace/decisions-log.mdx).
 
----
+<CustomDivider />
 
 ## The 11 active workflows
 
@@ -87,7 +87,7 @@ Each follows an identical 4-mode shape per D-ACT-08 + D-GOV-08:
 
 All 5 interfaces are tagged `# pipeline: P7` in their header comment – distinct from the P2-P6 dispatcher taxonomy.
 
----
+<CustomDivider />
 
 ## Pipeline patterns (A–G)
 
@@ -104,7 +104,7 @@ Every pipeline follows one of these shapes. Source: `.github/workspace/framework
 
 The gold standard implementation is the contracts pipeline (Pattern A with shadow verification) – daily cron + verification-only shadow + bytecode auth against Arbitrum + Ethereum + health-check artefacts + incident issue creation + publish gate requiring `--check` rerun.
 
----
+<CustomDivider />
 
 ## Operations scripts taxonomy
 
@@ -131,7 +131,7 @@ The gold standard implementation is the contracts pipeline (Pattern A with shado
 
 **The previously documented "218 non-compliant scripts" figure (from gap-analysis.mdx as of 2026-05-14) is stale.** Actual non-compliance as of 2026-05-23 is ~45-50 scripts with retired tags – a 4× improvement from the documented baseline.
 
----
+<CustomDivider />
 
 ## Hook pipeline (`.githooks/`)
 
@@ -147,7 +147,7 @@ The gold standard implementation is the contracts pipeline (Pattern A with shado
 
 Bypass policy in `.githooks/BYPASS.md`. Pre-commit has an undocumented carve-out: allows deletion without `--trailer "allow-deletions=true"` if the blob hash matches a `v2/x-archived/` follow-up.
 
----
+<CustomDivider />
 
 ## Gate layers
 
@@ -159,7 +159,7 @@ Bypass policy in `.githooks/BYPASS.md`. Pre-commit has an undocumented carve-out
 | Scheduled CI | Broad freshness; links; page integrity; data refresh; advisory scans | Mutating source files without deterministic PR or repair path |
 | Manual dispatch | One-off migrations; approvals; repair waves; large data updates | Routine drift that should be covered by a gate |
 
----
+<CustomDivider />
 
 ## Ownerless automation contract
 
@@ -176,20 +176,35 @@ Each production automation must declare (per `docs-guide/policies/ownerless-gove
 
 8 surfaces are formally ownerless-ready today (per `operations/governance/config/ownerless-governance-surfaces.json`). 28 surfaces in the broader registry (`repo-governance-surfaces.json`) – 20 still advisory.
 
----
+<CustomDivider />
 
 ## Locked decisions (18)
 
-Full text in [`.github/workspace/decisions-log.mdx`](https://github.com/livepeer/docs/blob/docs-v2-dev/.github/workspace/decisions-log.mdx). Header dated 2026-03-31; `framework-canonical.md` Status line claims D-GOV-01..08 added 2026-05-22 but the log first 100 lines only show D-ACT-01..04. **2-month gap in the log unexplained.**
+10 D-ACT decisions + 8 D-GOV decisions, split across two logs by date:
+
+- **D-ACT-01..10 + D-GOV-07..08** in [`.github/workspace/decisions-log.mdx`](https://github.com/livepeer/docs/blob/docs-v2-dev/.github/workspace/decisions-log.mdx) (workflow architecture, taxonomy, dispatcher model; locked 2026-03-31 through 2026-05-22)
+- **D-GOV-01..06** in [`.github/workspace/design/governance/design-overview.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/.github/workspace/design/governance/design-overview.md) (governance principles; locked 2026-04-04)
 
 | ID | What it locks |
 | --- | --- |
 | D-ACT-01 | `interface` is a 7th type (issue/PR event handlers – not a subtype of `automation`) |
 | D-ACT-02 | `P5-auto` is a distinct pipeline tag from `P5` (scheduled writes vs scheduled read-only) |
-| D-ACT-03 | 7 social-data workflows consolidate into 1 matrix `update-data-feeds.yml` – but the target file is not in the active workflow set (verification pending) |
+| D-ACT-03 | 7 social-data workflows consolidate into 1 matrix `update-social-feeds.yml` |
 | D-ACT-04 | Workflow naming `type-concern-function-name.yml` with closed-enum 11 function verbs |
-| D-ACT-05..10 | (in log; not in first 100 lines – full enumeration requires complete log read) |
-| D-GOV-01..08 | The 4-tier composable architecture (Status: 2026-05-22) – full text not yet in log |
+| D-ACT-05 | Concern taxonomy expanded from 4 to 7 (`integrations`, `copy`, `maintenance`, `health`, `discoverability`, `governance`, `brand`) |
+| D-ACT-06 | Migrate `.github/scripts/` into `operations/scripts/` governance – `.github/scripts/` is **intentionally empty** as a result |
+| D-ACT-07 | Rename `automation` type to `integrator` (script + workflow side) |
+| D-ACT-08 | Workflows are dispatchers; type reflects the script. No inline logic in YAML |
+| D-ACT-09 | Pipeline output locations (per type/concern) |
+| D-ACT-10 | Unified governance registry replaces `ownerless-governance-surfaces.json` (single source of truth) |
+| D-GOV-01 | Governance is enforcement infrastructure, not content rules |
+| D-GOV-02 | Categories are enforcement layers, not surfaces (pre-commit, PR, post-merge, scheduled, self-heal, hooks, lifecycle) |
+| D-GOV-03 | Every detection must self-repair or escalate (auto-fix > PR > issue > block) |
+| D-GOV-04 | Tooling makes correct the default (templates, scaffolding, IDE snippets) |
+| D-GOV-05 | Advisory before hard gate (P3 first, promote to P2 after baseline clean) |
+| D-GOV-06 | Align script framework to actions framework (7 types, 7 concerns) |
+| D-GOV-07 | Every workflow dispatcher must have a local CLI equivalent |
+| D-GOV-08 | Every folder is governed. No commit of files that do not belong |
 
 **Pipeline tag taxonomy (8 tags):** P2 (PR required), P3 (PR advisory), P4 (post-merge), P5 (scheduled read-only), P5-auto (scheduled writes), P6 (self-heal), manual, event-driven.
 
@@ -197,15 +212,17 @@ Full text in [`.github/workspace/decisions-log.mdx`](https://github.com/livepeer
 
 **Type taxonomy (7):** `integrator`, `generator`, `validator`, `audit`, `remediator`, `dispatch`, `interface`.
 
----
+<CustomDivider />
 
 ## Known gaps
 
-### Cron-is-dry-run-by-default bug (P0, systemic)
+### Cron-is-dry-run-by-default bug – FIXED 2026-05-25
 
-Every `dispatch-{concern}.yml` scheduled job has this pattern:
+**Status:** Fixed in commit `e42946cdf` on `docs-v2-dev-draft`. Pending merge to `docs-v2`.
 
-```yaml
+Every `dispatch-{concern}.yml` scheduled job previously had this pattern:
+
+```yaml icon="terminal"
 - name: {concern} scheduled meta
   run: |
     FLAGS=""
@@ -213,15 +230,15 @@ Every `dispatch-{concern}.yml` scheduled job has this pattern:
     node operations/scripts/dispatch/.../dispatch-{concern}-update.js $FLAGS
 ```
 
-The `schedule` event does not pass `inputs.dry_run` – it's empty, never the literal string `"false"`. So `FLAGS` stays empty and the script runs with no `--write --verify`. **Cron physically cannot trigger the write mode.** Only `workflow_dispatch` with explicit `dry_run: false` actually writes.
+The `schedule` event did not pass `inputs.dry_run` – it was empty, never the literal string `"false"`. So `FLAGS` stayed empty and the script ran with no `--write --verify`. Cron physically could not trigger the write mode. Only `workflow_dispatch` with explicit `dry_run: false` actually wrote.
 
-**Net effect:** the entire daily/weekly cron schedule is check-only theatre. This is the root cause of:
+**Net effect (pre-fix):** the entire daily cron schedule was check-only theatre. Root cause of:
 
-- Contract addresses last written 2026-05-04 (19 days stale on 2026-05-23) despite `_health-checks.json` confirming the pipeline ran today
+- Contract addresses last written 2026-05-04 (19 days stale on 2026-05-23) despite `_health-checks.json` confirming the pipeline ran daily
 - `llms.txt` + `sitemap-ai.xml` 47 days stale (no manual dispatch with `dry_run: false`)
-- `generate-og-images.js` + `generate-seo.js` classified "manual-only" in 2026-03-30 P0 flag – they're CI-wired but cron defaults to dry-run
+- `generate-og-images.js` + `generate-seo.js` classified "manual-only" in 2026-03-30 P0 flag – they're CI-wired but cron defaulted to dry-run
 
-**Fix:** invert the FLAGS default in all 6 `dispatch-{concern}.yml` (`FLAGS="--write --verify"; if ... == "true" then FLAGS=""`) OR add a separate scheduled-write job. Single change to 6 files unblocks 6 stale pipelines.
+**Fix shipped:** inverted FLAGS default in all 6 `dispatch-{concern}.yml` (`FLAGS="--write --verify"; if ... == "true" then FLAGS=""`). Manual-repair jobs deliberately unchanged (safe-by-default for human-triggered repairs). Post-merge jobs unaffected (already hardcode `--write`).
 
 ### Archive sprawl
 
@@ -235,12 +252,10 @@ The script-framework declares one lane (`x-archive/`). Plus `operations/scripts/
 
 ### Path drift from pre-refactor docs
 
-- Contracts pipeline doc references `.github/scripts/fetch-contract-addresses.js`. **That folder is empty.** Script moved to `operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js`.
-- `agent-governance-framework.mdx` lines 137 + 228 reference `validators/governance/check-agent-docs-freshness.js`; **actual path is `validators/governance/compliance/check-agent-docs-freshness.js`** (missing `/compliance/` subfolder). `AGENTS.md` line 98 has the right path.
+`.github/scripts/` is **intentionally empty** per D-ACT-06 (migration locked 2026-04-04). Stale references in older docs need updating:
 
-### `decisions-log.mdx` lags the implementation
-
-Header dated 2026-03-31; only D-ACT-01..04 visible in the first 100 lines; `framework-canonical.md` Status line claims D-ACT-01..10 + D-GOV-01..08 (18 total) as of 2026-05-22. **Need to verify D-ACT-05..10 + all D-GOV-* entries are present in the log past line 100**, or append them.
+- Contracts pipeline doc references `.github/scripts/fetch-contract-addresses.js`. Current path: `operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js`.
+- `agent-governance-framework.mdx` lines 137 + 228 reference `validators/governance/check-agent-docs-freshness.js`; actual path is `validators/governance/compliance/check-agent-docs-freshness.js` (missing `/compliance/` subfolder). `AGENTS.md` line 98 has the right path.
 
 ### Published framework lags the 2026-05-22 refactor
 
@@ -265,7 +280,7 @@ Header dated 2026-03-31; only D-ACT-01..04 visible in the first 100 lines; `fram
 
 `framework-canonical.md` Status line says "Phase 4 consolidation shipped" but **Phase 6 (renames, inline-script extraction, consolidation) is explicitly noted as pending** per the 2026-04-08 component-governance row in CLAUDE.md.
 
----
+<CustomDivider />
 
 ## Related
 
