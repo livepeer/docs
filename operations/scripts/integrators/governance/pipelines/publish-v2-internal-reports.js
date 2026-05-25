@@ -4,7 +4,7 @@
  * @type        integrator
  * @concern     governance
  * @niche       pipelines
- * @purpose     
+ * @purpose     Fetch publishes v2 internal audit reports to configured output locations
  * @description Report publisher — publishes v2 internal audit reports to configured output locations
  * @mode        integrate
  * @pipeline    manual — not yet in pipeline

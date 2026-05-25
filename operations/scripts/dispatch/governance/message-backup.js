@@ -2,8 +2,8 @@
  * @script      message-backup
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the userPromptSubmit hook. If a message is longer than 200 chars, saves it to
  * @description UserPromptSubmit hook. If a message is longer than 200 chars, saves it to
  * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin → saves long messages → exits

@@ -84,8 +84,11 @@ jobs:
         env:
           NODE_PATH: tools/node_modules
         run: |
-          FLAGS=""
-          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          # Cron defaults to write; manual dispatch can opt into dry-run via inputs.dry_run=true.
+          # Cron triggers leave inputs.dry_run empty, so the previous default-to-dry-run pattern
+          # silently broke scheduled writes. See docs-guide/features/automations.mdx § cron-is-dry-run.
+          FLAGS="--write --verify"
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then FLAGS=""; fi
           node operations/scripts/dispatch/content/health/dispatch-health-scan.js $FLAGS
 
   manual-repair:

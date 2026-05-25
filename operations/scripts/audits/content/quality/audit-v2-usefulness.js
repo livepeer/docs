@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       quality
- * @purpose     
+ * @purpose     Audit scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
  * @description Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
  * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only

@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Repair regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues
  * @description Regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues
  * @mode        repair
  * @pipeline    manual, post-merge -> governance markers, frameworks -> GOVERNANCE_MAP_LATEST.json, framework frontmatter

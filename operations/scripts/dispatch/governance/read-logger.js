@@ -2,8 +2,8 @@
  * @script      read-logger
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the postToolUse hook on Read. Logs file paths to a session-scoped temp file.
  * @description PostToolUse hook on Read. Logs file paths to a session-scoped temp file.
  * @mode        dispatch
  * @pipeline    PostToolUse hook (Read) → reads stdin → appends file path to /tmp/claude-reads-{session}

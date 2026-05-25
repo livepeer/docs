@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       reconciliation
- * @purpose     
+ * @purpose     Audit content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
  * @description Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
  * @mode        scan
  * @pipeline    manual — not yet in pipeline

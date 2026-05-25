@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      og-image-policy
- * @type        config
- * @concern     
- * @niche       
- * @purpose     
- * @description OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata.
+ * @type        integrator
+ * @concern     discoverability
+ * @niche       og-images
+ * @purpose     Resolve a v2 MDX route to the correct OG preview image (section-branded if the route falls under a known section, fallback otherwise) — shared library used by generate-og-images, the SEO frontmatter remediator, and any validator that checks OG completeness
+ * @description Library module (not a CLI). Exports resolveOgImage(route) → { src, alt, section, isFallback } given a v2/ route. Reads section → image mapping from snippets/assets/media/og-images/manifest.json. Treated as @type integrator because it's the resolver bridge between the OG generation pipeline output and the consumer surfaces.
  * @mode        integrate
- * @pipeline    manual — library module imported by generators and validators
- * @scope       operations/scripts, snippets/assets/media/og-images, docs.json
- * @usage       node operations/scripts/config/og-image-policy.js [flags]
+ * @pipeline    library — imported by generators and validators in the og-images pipeline
+ * @scope       snippets/assets/media/og-images/manifest.json + docs.json
+ * @usage       require('operations/scripts/config/og-image-policy').resolveOgImage(route)
+ * @policy      D-GOV-08 (single resolver for OG image policy)
  */
 
 const fs = require("fs");

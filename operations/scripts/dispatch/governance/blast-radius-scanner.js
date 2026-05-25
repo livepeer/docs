@@ -2,8 +2,8 @@
  * @script      blast-radius-scanner
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. When a file in snippets/components/,
  * @description PostToolUse hook for Edit/Write. When a file in snippets/components/,
  * @mode        dispatch
  * @pipeline    PostToolUse hook → reads stdin → path check → grep consumers → emit list

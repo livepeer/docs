@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       documentation
- * @purpose     
+ * @purpose     Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @description Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @mode        generate
  * @pipeline    manual

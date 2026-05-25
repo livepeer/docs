@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned.
  * @description Validate the AI-tools registry contract and coverage so ownerless governance and AI subsystem inventory stay aligned.
  * @mode        check
  * @pipeline    manual -- bounded validator CLI

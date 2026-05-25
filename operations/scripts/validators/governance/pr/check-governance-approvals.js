@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       pr
- * @purpose     
+ * @purpose     Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence.
  * @description Validate governance-sensitive PR changes against the canonical approval policy, required labels, and PR-body evidence.
  * @mode        check
  * @pipeline    ci, pr-changed -> governance approval policy -> exit-code, stdout:violations

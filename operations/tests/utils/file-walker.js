@@ -263,9 +263,8 @@ function collectFiles(dir, pattern, fileList = []) {
     const stat = fs.statSync(filePath);
 
     if (stat.isDirectory()) {
-      // Skip non-publishable directories
-      const SKIP_DIRS = new Set(['node_modules', '_workspace', 'x-archived', '_archive', 'workspace', '.venv', '__pycache__', '.next']);
-      if (!file.startsWith('.') && !SKIP_DIRS.has(file)) {
+      // Skip node_modules and .git
+      if (!file.startsWith('.') && file !== 'node_modules') {
         collectFiles(filePath, pattern, fileList);
       }
     } else if (pattern.test(file)) {
@@ -356,7 +355,7 @@ function getStagedFiles(rootDir = null) {
   try {
     // Get repo root directory (where .git is)
     const repoRoot = resolveRepoRoot(rootDir);
-    
+
     const output = execSync('git diff --cached --name-only --diff-filter=ACMR', {
       encoding: 'utf8',
       cwd: repoRoot
@@ -398,7 +397,7 @@ function walkDocsContentFiles(dir, out = []) {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_workspace' || entry.name === 'x-archived' || entry.name === '_archive' || entry.name === 'workspace') continue;
+      if (entry.name === '.git' || entry.name === 'node_modules') continue;
       walkDocsContentFiles(fullPath, out);
     } else if (/\.(md|mdx)$/i.test(entry.name)) {
       out.push(fullPath);

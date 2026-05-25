@@ -1,88 +1,88 @@
 # Actions Library Summary
 
-> 49 workflows | 7 types | 6 concerns | P2–P7 pipeline tiers
-> Generated 2026-05-01 (consolidated 6 social feed wrappers into single matrix dispatcher)
+&gt; 11 workflows | 4-tier composable architecture | D-ACT-01..10 + D-GOV-01..08
+> Last refresh 2026-05-22 (Phase 4 consolidation complete — 53 → 11 active workflows)
 
----
+This summary is hand-curated. The full machine-generated index lives at [catalog-index.mdx](./catalog-index.mdx). Architecture reference: [Workflow and Pipeline Governance Framework](/docs-guide/frameworks/github-actions.mdx).
 
-## Validators (13) — PR checks
+<CustomDivider />
 
-| Pipeline | Workflow | Trigger | What it does |
+## 6 concern action workflows (one per concern)
+
+Each `dispatch-{concern}.yml` is the single entry point for its concern. Each has 3 jobs (PR check, scheduled monitor, manual repair) plus an optional post-merge job. The action calls meta dispatchers under `operations/scripts/dispatch/{content|governance}/{concern}/`. Triggers vary per concern based on what its pipelines need.
+
+| Workflow | Concern | Triggers | Routes to |
 |---|---|---|---|
-| **P2** | check-copy-standards | PR (v2/ paths) | Lint copy, grammar, proper nouns, patterns — **blocks merge** |
-| **P2** | content-quality-suite | PR + push | Browser tests + PR checks — **blocks merge** |
-| **P2** | codex-compliance | PR | Validates Codex task contracts on codex/* branches — **blocks merge** |
-| **P3** | check-ai-sitemap | PR + push | Verifies AI sitemap consistency — advisory |
-| **P3** | check-companions | PR + push | Verifies AI companion file consistency — advisory |
-| **P3** | check-llms-files | PR + push | Verifies llms.txt consistency — advisory |
-| **P3** | check-governance-map | PR + schedule | Checks governance markers and staleness — advisory |
-| **P3** | check-broken-links | PR | Mintlify broken link check — advisory |
-| **P3** | openapi-reference | PR + push + schedule | OpenAPI spec drift detection — advisory |
-| **P3** | page-rendering | PR + push | Full browser sweep across all v2 pages — advisory |
-| **P3** | page-structure | PR (v2/ paths) | 6 structure validators (headers, anchors, endings, etc.) — advisory |
-| **P3** | check-catalogs | PR + push | Docs guide catalog consistency — advisory |
-| **P3** | check-docs-index | PR + push | Docs index consistency — advisory |
+| `dispatch-health.yml` | health | PR + schedule + manual | `dispatch-health-check.js` (PR meta) → 6 pipelines: page-structure, page-rendering, page-integrity, wcag, content-quality, openapi-reference |
+| `dispatch-brand.yml` | brand | PR + schedule + manual | `dispatch-brand-check.js` (PR meta) → 7 pipelines: em-dashes, spelling, proper-nouns, voice-register, banned-words, style-tokens, grammar-en-gb |
+| `dispatch-copy.yml` | copy | PR + schedule + manual | `dispatch-copy-check.js` + `dispatch-copy-update.js` → 6 pipelines: canonical-sync, ownerless-language, social-feeds (matrix per source), changelogs, translations, showcase |
+| `dispatch-discoverability.yml` | discoverability | PR + push + schedule + manual | `dispatch-discoverability-check.js` + `dispatch-discoverability-generate.js` → 5 pipelines: ai-sitemap, companions, llms-files, og-images, seo-metadata |
+| `dispatch-maintenance.yml` | maintenance | PR + push + schedule + manual | `dispatch-maintenance-check.js` + `dispatch-maintenance-generate.js` + `dispatch-maintenance-update.js` → 10 pipelines: docs-index, catalogs, component-registry, sdk-clients, contract-addresses (×2), release-version, large-assets, config-flags, exchanges-data |
+| `dispatch-governance.yml` | governance | PR + push + schedule + manual | `dispatch-governance-check.js` + `dispatch-governance-scan.js` + `dispatch-governance-sync.js` + `dispatch-governance-generate.js` → 12 pipelines: folder-allowlist (NEW D-GOV-08), governance-map, workflow-governance, jsdoc-headers, new-file-governance, codex-compliance, script-locations, script-inventory, workspace-retention, pipelines, root-governance, action-docs, script-registry |
 
-## Generators (8) — post-merge auto-commit
+## 5 standalone governance interfaces (event-driven)
 
-| Pipeline | Workflow | Trigger | What it does |
+Kept standalone per framework — each has distinct secrets boundary or trigger pattern.
+
+| Workflow | Trigger | Function |
+|---|---|---|
+| `interface-governance-assign-reviewers.yml` | pull_request | Auto-assign Copilot reviewer to Codex PRs |
+| `interface-governance-close-linked-issues.yml` | pull_request closed | Close issues referenced in merged PRs |
+| `interface-governance-index-issues.yml` | issues + schedule + workflow_dispatch | Build/maintain rolling docs-v2 issue index |
+| `interface-governance-intake-discord-issues.yml` | repository_dispatch | Create GitHub issues from Discord bot reports |
+| `interface-governance-label-issues.yml` | issues opened/edited | Parse issue form, apply structured labels |
+
+<CustomDivider />
+
+## Inventory totals
+
+| Layer | Count |
+|---|---|
+| Tier 1: Action workflows | **11** (6 dispatch + 5 interface) |
+| Tier 2: Meta dispatchers | ~19 (under `operations/scripts/dispatch/`) |
+| Tier 3: Pipeline dispatchers | ~46 (one per niche) |
+| Tier 4: Atomic scripts | ~190 wired + 8 NEW Phase 4 remediators |
+
+| Workflow type | Count |
+|---|---|
+| dispatch | 6 |
+| interface | 5 |
+| **Total** | **11** |
+
+| Concern | Count |
+|---|---|
+| Governance | 5 (1 dispatch + 5 interface) |
+| Health, Brand, Copy, Discoverability, Maintenance | 1 each |
+| **Total** | **11** |
+
+<CustomDivider />
+
+## Consolidation achieved
+
+| Metric | Before Phase 4 | After Phase 4 | Change |
 |---|---|---|---|
-| **P4** | generate-ai-sitemap | push to docs-v2 | Regenerates `sitemap-ai.xml` |
-| **P4** | generate-companions | push (v2/ paths) | Regenerates AI companion manifest files |
-| **P4** | generate-llms-files | push to docs-v2 | Regenerates `llms.txt` and `llms-full.txt` |
-| **P4** | generate-og-images | push (v2/ paths) | Generates Open Graph images for new/changed pages |
-| **P4** | generate-action-docs | push (workflow paths) | Scans workflows, regenerates actions-audit.json + action pages |
-| **P4** | generate-catalogs | push (docs-guide/ paths) | Regenerates scripts-catalog, component-catalog |
-| **P4** | generate-component-registry | push (snippets/ paths) | Regenerates component registry JSON |
-| **P4** | generate-docs-index | push to docs-v2 | Regenerates docs-index.json |
-| **P4** | generate-sdk-clients | — | SDK client generation (trigger TBD) |
+| Active workflows | 53 | 11 | -42 (-79%) |
+| Archived workflows | 8 (`.github/workflows/x-archive/`) | 50 | +42 |
+| Workflows per concern | Up to 13 (maintenance) | 1 per concern + 5 interfaces | Linear scaling |
+| PR checks on a typical PR | up to 24 | up to 6 | -75% |
 
-## Integrators (6) — scheduled data feeds + auto-commit
+The framework's target was "approximately 10 dispatcher workflows." Final count is 6 dispatch + 5 interfaces = 11. Interfaces are exempt from consolidation per framework (event-driven, distinct secrets boundary, no detect-repair cycle to apply).
 
-| Pipeline | Workflow | Trigger | What it does |
-|---|---|---|---|
-| **P5-auto** | update-changelogs | cron + dispatch + manual | Fetches repo changelogs, commits MDX |
-| **P5-auto** | update-translations | manual only | Translates docs pages via OpenRouter |
-| **P5-auto** | update-contract-addresses | cron + dispatch + manual | Fetches on-chain contract data, commits JSON |
-| **P5-auto** | update-contract-addresses-shadow | cron + dispatch + manual | Shadow pipeline (test + verify before production) |
-| **P5-auto** | update-release-version | cron + dispatch + manual | Fetches latest go-livepeer release version |
-| **P5-auto** | update-large-assets | push + cron + manual | Syncs large assets to external storage |
-| **P5-auto** | project-showcase-sync | manual + dispatch | Syncs project showcase data |
+## Maintenance discipline
 
-> **Consolidated 2026-05-01:** 6 social feed wrappers (discord, forum, ghost-blog, github, rss-blog, youtube) merged into `dispatch-copy-update-social-feeds.yml` which now owns all per-feed cron schedules. Trigger via workflow_dispatch with `mode:` input or scheduled cron.
+- **Source of truth:** `actions-audit.json` (regenerated by `generator-governance-generate-action-docs.yml` on push to docs-v2 — currently folded into `dispatch-governance.yml`'s self-doc meta)
+- **Per-workflow MDX pages:** auto-regenerated by `generate-action-pages.js` after every audit JSON change
+- **This `summary.md`:** hand-curated, must be updated when adding/archiving/consolidating workflows
+- **`catalog-index.mdx`:** auto-generated index — do not edit directly
+- **Framework:** [`docs-guide/frameworks/github-actions.mdx`](/docs-guide/frameworks/github-actions.mdx) — locked decisions D-ACT-01..10, D-GOV-01..08, full 4-tier Tree
+- **Operator guide:** [`docs-guide/frameworks/dispatch-pipelines.mdx`](/docs-guide/frameworks/dispatch-pipelines.mdx) — how to run a pipeline locally, add a new one, mode contract reference
 
-## Auditors (5) — scheduled scans with rolling issues
+## D-GOV-08 prevention chain (active)
 
-| Pipeline | Workflow | Trigger | What it does |
-|---|---|---|---|
-| **P5** | scan-content-quality | cron + manual | Weekly content quality scan, rolling issue |
-| **P5** | scan-data-freshness | cron + manual | Daily feed freshness check, rolling issue (auto-close when fresh) |
-| **P5** | scan-external-links | cron + manual | Daily external link audit, rolling issue (auto-close when clean) |
-| **P5** | scan-page-integrity | cron + manual | Daily page integrity scan, rolling issue |
-| **P5** | scan-workspace-retention | cron + manual | Workspace TTL enforcement |
+Every governed folder declares a `.allowlist`. Six folders currently registered: `/`, `.github/`, `ai-tools/`, `docs-guide/`, `tools/config/`, `snippets/`, `workspace/`. Enforcement at layers 1-5:
 
-## Interfaces (5) — event-driven issue/PR lifecycle
-
-| Pipeline | Workflow | Trigger | What it does |
-|---|---|---|---|
-| **P7** | assign-reviewers | PR opened/reopened/labeled | Auto-assigns Copilot reviewer to Codex PRs |
-| **P7** | close-linked-issues | PR merged/opened | Closes issues referenced in merged PRs, notifies on PR open |
-| **P7** | index-issues | issue events + cron | Builds/updates rolling docs-v2 issue governance index |
-| **P7** | intake-discord-issues | repository_dispatch | Creates GitHub issues from Discord bot reports |
-| **P7** | label-issues | issue opened/edited | Parses issue form, applies structured labels + needs-info |
-
-## Dispatchers (3) — orchestrators for reusable workflows
-
-| Pipeline | Workflow | Trigger | What it does |
-|---|---|---|---|
-| **P4** | post-merge-sync | push to docs-v2 | Runs governance repair + root artifact generation post-merge |
-| **P4** | dispatch-copy-update-social-feeds | cron + workflow_call + manual | Matrix dispatcher: forum, ghost-blog, youtube, github, discord, rss-blog, livepeer-release. Per-feed cron schedules. |
-| **P4** | check-catalogs | workflow_call + manual | Reusable dispatcher called by catalog validators |
-
-## Remediators (3) — self-heal + auto-fix PRs
-
-| Pipeline | Workflow | Trigger | What it does |
-|---|---|---|---|
-| **P6** | repair-en-gb-style | manual | EN-GB style homogenisation across changed files, creates PR |
-| **P6** | repair-seo-metadata | manual | Refreshes SEO metadata (og:image, descriptions), creates PR |
-| **P6** | repair-pipelines | cron + manual | Weekly governance audit + repair, creates auto-fix PR |
+- **Layer 1 (write time):** `pre-tool-guard.js` blocks Edit/Write to disallowed paths before they land
+- **Layer 2 (commit time):** `.githooks/pre-commit` rejects unauthorised paths in staged diff
+- **Layer 3 (PR time):** `dispatch-governance.yml` PR job → `dispatch-folder-allowlist.js --mode pr`
+- **Layer 4 (post-merge):** `dispatch-governance.yml` post-merge job → `dispatch-folder-allowlist.js --mode post-merge` auto-archives drift via `git mv`
+- **Layer 5 (scheduled):** `dispatch-governance.yml` scheduled job → `dispatch-folder-allowlist.js --mode scheduled` last-resort drift scan with rolling issue

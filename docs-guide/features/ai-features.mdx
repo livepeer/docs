@@ -1,173 +1,273 @@
 ---
-title: AI Features
-sidebarTitle: AI Features
-description: "AI assistants, agent adapters, skills, and automated pipelines available in this docs repo."
+title: "AI Features"
+sidebarTitle: "AI Features"
+description: >-
+  AI-native distribution layer + governed agent runtime + skill system + agent
+  adapters. 34 local skills, 53 portable templates, 6 native adapters, MCP +
+  llms.txt + AI-enriched sitemap. Verified 2026-05-23.
+audience: developer
+pageType: overview
+purpose: orient
 status: current
-lastVerified: 2026-03-27
+lastVerified: 2026-05-23
 keywords:
   - livepeer
   - ai features
+  - ai agents
   - skills
-  - agents
-  - pipelines
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
+  - llms.txt
+  - mcp
+  - agent adapters
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+sourceDocs:
+  - AGENTS.md
+  - .claude/CLAUDE.md
+  - .mintlify/Assistant.md
+  - ai-tools/registry/ai-tools-registry.json
+  - ai-tools/registry/ai-tools-inventory.md
+  - docs-guide/policies/agent-governance-framework.mdx
+  - docs-guide/frameworks/ai-tools-governance.mdx
+  - docs-guide/tooling/ai-tools.mdx
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ai-tools.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-06-agent-adapters.md
 ---
 
 # AI Features
 
-This repo has AI capabilities at three levels: reader-facing assistants, contributor-facing agent tooling, and automated pipelines that keep content fresh without human intervention.
+This repo ships two AI products from one codebase.
 
-For governance and registry details, see [`docs-guide/tooling/ai-tools.mdx`](../tooling/ai-tools.mdx).
+**Outward-facing:** any MCP-compatible client (Claude, Cursor, Copilot, ChatGPT plugins) can query Livepeer documentation as freshness-stamped authoritative source instead of inferring from training data. Public surfaces are the hosted MCP endpoint, `llms.txt`, an AI-enriched sitemap, and the Mintlify chat assistant on the live site.
 
-## AI Assistants for Readers
+**Inward-facing:** every supported AI coding tool has a thin native adapter rooted in one `AGENTS.md` baseline. 34 canonical AI skills cover session lifecycle (`thread`, `pm`, `research`, `design`, `build`, `iterate`, `close`), content pipelines, repo audits, and governance creation. The same governance gates apply to humans and agents – adapters surface canonical truth for specific consumers but hold no authority of their own (per locked D-DG-11).
 
-### Mintlify AI Assistant
+The third strand – the **automation belt that keeps both honest** – is partially broken on 2026-05-23: `llms.txt` and `sitemap-ai.xml` are 47 days stale, root-caused by the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic) in the dispatch workflows. See [Known gaps](#known-gaps).
 
-Built into [docs.livepeer.org](https://docs.livepeer.org). Uses agentic RAG with tool-calling to answer questions from the published docs. No configuration required.
+---
 
-Conversation analytics are available in the Mintlify dashboard and surface unanswered questions as content gap signals.
+## Public AI surfaces
 
-### llms.txt
+| Surface | Where | What it serves | Status (2026-05-23) |
+| --- | --- | --- | --- |
+| `llms.txt` | repo root | LLM-readable site index per [llms.txt standard](https://llmstxt.org/) – 371 lines, 35 KB, 188 entries | Production. **47 days stale** (mtime 2026-04-15; `docs.json` last touched today). |
+| `sitemap-ai.xml` | repo root | AI-enriched sitemap with `ai:section` / `ai:wordCount` / `ai:lastVerified` / `ai:tags` per URL – 181 URLs, 71 KB | Production. **47 days stale**. Covers only 6 of 10 tabs; `developers`/`orchestrators`/`delegators`/`internal`/`ai-tools` entirely absent. |
+| `robots.txt` | repo root | AI crawler allowlist | Production. **Does not advertise `sitemap-ai.xml`** – only the Mintlify-generated `sitemap.xml`. Per SLICE-12, AI-enriched metadata is not crawler-discoverable. |
+| Hosted MCP | `docs.livepeer.org/mcp` | Public no-auth Model Context Protocol endpoint, hosted by Mintlify | Production. One tool documented (`search_livepeer_docs`); no live tool-list drift check. |
+| Mintlify chat assistant | live site widget | Reader-facing chat grounded on published docs | Production. Configured by [`.mintlify/Assistant.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/.mintlify/Assistant.md) (113 lines: mission + source-of-truth order + IA routing map + fallback behaviour + high-risk topic guardrails). |
+| `skill.md` (root) | advertised at `docs.livepeer.org/skill.md` | AI-readable summary of Livepeer's developer platform for direct agent injection | **Documented in `v2/resources/documentation-guide/ai-automations/ai-features.mdx`; the repo has no `skill.md` at root.** Either Mintlify generates from another input, or the doc is aspirational. Resolve or strike. |
+| `docs-index.json` | repo root | Structured docs index for AI consumption – 532 entries | Production. `generated` field says 2026-04-07 but mtime is 2026-05-18 – generator failed to update its own provenance field. |
 
-This repo governs `llms.txt` as a committed AI-first public root artifact. It is generated from the repo docs navigation by `operations/scripts/generators/ai/llm/generate-llms-files.js`. `llms-full.txt` is retired and not part of the active root contract.
+**Three AI artefacts publish three different counts:** `llms.txt` = 188 entries, `sitemap-ai.xml` = 181 URLs, `docs-index.json` = 532. Different pipelines, no reconciliation.
 
-### MCP Server
+---
 
-Mintlify provides an auto-syncing MCP server that lets Claude, Cursor, and Windsurf query the published docs in real time:
+## Agent adapters (6 + the cross-agent baseline)
 
-```bash icon="terminal"
-npx mcp add livepeer
-```
+All adapters point UP into `AGENTS.md` per locked [D-DG-11](../decisions/docs-guide-structure.md). Adapters surface canonical truth for specific consumers but hold no authority. Any rule stated only in an adapter file is invalid and must canonicalise into a T0–T3 source in `docs-guide/`.
 
-## Agent Adapters
+| Agent | Path(s) | Lines | Thin-adapter compliance |
+| --- | --- | ---: | --- |
+| **`AGENTS.md`** (root baseline) | `AGENTS.md` | 119 | Reference – every adapter points here. |
+| Claude Code | `.claude/CLAUDE.md`, `.claude/GOVERNANCE.md`, `.claude/settings.json`, `.claude/skills/` (12 SKILL.md pointers), `.claude/references/` (25 files, ~2,860 lines, 13 categories) | **326** | ⚠️ **2.74× AGENTS.md – material D-DG-11 violation**. CLAUDE.md grew via project-state inserts (e.g. "Repo Features Documentation Audit" row added 2026-05-22). Drift widening. |
+| Codex | `.codex/README.md`, `.codex/task-contract.yaml`, `.codex/GOVERNANCE.md` + `.github/AGENTS.md` (Codex extension, 153 lines) | 3 + 153 | `task-contract.yaml` `scope_in` covers 20 entries (most of repo) – branch isolation is nominal. `locks-shared/`, `skills/`, `scripts/` subdirs do not exist (assumed by brief). |
+| Cursor | `.cursor/rules/repo-governance.mdc`, `.cursor/rules/no-deletions.mdc` + `.cursor/GOVERNANCE.md` | 24 + 30 | Reference implementation for thin adapters. |
+| Windsurf | `.windsurf/rules/repo-governance.md` + `.windsurf/GOVERNANCE.md` | 13 | Reference implementation. |
+| Augment | `.augment/rules/` (3 files: `repo-governance.md`, `git-safety.md`, `no-deletions.md`) + `.augment/GOVERNANCE.md` | ~120 combined | Plus **phantom-retired duplicate** at `ai-tools/ai-rules/.augment/` (165 lines, 4 files) – at active path; invisible to freshness validator. |
+| GitHub Copilot | `.github/copilot-instructions.md` | 31 | Thin per D-DG-11. |
+| Mintlify chat | `.mintlify/Assistant.md` + `.mintlify/GOVERNANCE.md` | 113 | IA routing-map drifts against `docs.json` with no CI alignment check. |
+| **Retired (active path)** | `.github/augment-instructions.md` (206 lines, archived-header) | 206 | **Heaviest adapter** at active path with archived-header only. Directory-walking agents still read it. Cleanup required. |
 
-[`AGENTS.md`](../../AGENTS.md) is the baseline instruction set. Every AI agent reads it first, then loads its native adapter for tool-specific rules.
+**Validator:** `operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js` – proves every adapter exists, is non-empty, matches the approved set.
 
-| Agent | Adapter | Scope |
-|---|---|---|
-| Claude Code | `.claude/CLAUDE.md` | Full project context, session management, co-work skills |
-| Cursor | `.cursor/rules/repo-governance.mdc` + `no-deletions.mdc` | Governance rules, deletion guards |
-| Windsurf | `.windsurf/rules/repo-governance.md` | Governance rules |
-| GitHub Copilot | `.github/copilot-instructions.md` | Inline code suggestions |
-| Augment Code | `.augment/rules/` (3 files) | Governance, git safety, deletion guards |
-| Codex | `.github/AGENTS.md` | Task isolation, checkpoints, lock contracts |
+**Validator path drift:** [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx) lines 137 + 228 reference `operations/scripts/validators/governance/check-agent-docs-freshness.js` (missing `/compliance/` subfolder). `AGENTS.md` line 98 has the correct path. Cleanup required.
 
-### Codex Branch Contract
+---
 
-AI agent implementation branches use `codex/<issue-id>-<slug>` naming. These branches are hook-enforced with:
+## AI skills (34 local + 53 portable + 53 templates)
 
-- Task contract file: `.codex/task-contract.yaml`
-- Pre-push validation: contract + scope + non-fast-forward block
-- PR body generation: `node operations/scripts/dispatch/ai/codex/create-codex-pr.js --create`
+The skill catalogue covers session lifecycle, content pipelines, audits, governance creation, and agent packaging. Live counts (2026-05-23):
 
-Full policy: [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx)
+- **34 active local `SKILL.md`** under `ai-tools/ai-skills/<skill>/SKILL.md` (+ 1 archived in `x-archive/`)
+- **53 portable skill exports** under `ai-tools/agent-packs/skills/`
+- **53 templates** under `ai-tools/ai-skills/templates/*.template.md`
+- **9 entries** in `skill-catalog.json` (26% of 34 skills catalogued)
+- **1 entry** in `agent-packs/skills/manifest.json` (the `browser` skill) – 52 portable skills exist next to it unregistered
+- **317 entries** in `ai-tools-registry.json`
 
-## AI Skills
+### Skills by group (live, 2026-05-23)
 
-28 skills provide structured workflows for both humans and agents. Invoke with `/skill-name` in Claude Code or follow the SKILL.md instructions directly.
+| Group | Skills (verified present) |
+| --- | --- |
+| **Session lifecycle** | `thread`, `pm`, `research`, `design`, `build`, `iterate`, `dispatch`, `agent-brief`, `diagnose`, `close`, `propagate` |
+| **Content pipelines** | `page-authoring`, `content-pipeline-pass-a`, `content-pipeline-pass-b`, `content-pipeline-tab-map`, `docs-copy`, `source-content` |
+| **Audit & review** | `repo-audit-orchestrator`, `docs-coverage-and-route-integrity-audit`, `docs-quality-and-freshness-audit`, `rubric-static-review`, `docs-review-packet-generation`, `docs-review-fix-execution`, `script-footprint-and-usage-audit` |
+| **Governance creation** | `create-action`, `create-component`, `create-script`, `skill-docs`, `generated-mdx-banners-governance` |
+| **Component governance** | `component-layout-governance` |
+| **Style & language** | `style-and-language-homogenizer-en-gb` |
+| **Cleanup** | `cleanup-quarantine-manager` |
+| **Packaging & support** | `cross-agent-packager`, `browser`, `product-thinking` |
 
-### Co-work and Process (9 skills)
+**Maturity:** per SLICE-02, **18 of 34 local skills still carry `status: draft` with empty test logs** – including most of the session lifecycle backbone (`thread`, `research`, `design`, `build`, `iterate`, `close`). The primary scaffold has never been validated in production despite daily use.
 
-| Skill | Purpose |
-|---|---|
-| `/thread` | Session anchor, drift prevention, finalisation reports |
-| `/pm` | Project management, priorities, bottlenecks, risks |
-| `/research` | Agent-delegated investigation, synthesise and recommend |
-| `/design` | First-principles co-creation, architecture with test criteria |
-| `/build` | Agent-delegated execution against approved design |
-| `/iterate` | Review against criteria and best practice |
-| `/dispatch` | Parallel agent coordinator for batch work |
-| `/agent-brief` | Standard instruction template for spawned agents |
-| `/diagnose` | Systematic debugging, root-cause analysis |
+### Templates and portable skills
 
-### Content Pipeline (4 skills)
+- **53 `.template.md` files** at `ai-tools/ai-skills/templates/` – canonical authoring templates.
+- **53 portable `SKILL.md`** at `ai-tools/agent-packs/skills/` – generated exports for distribution to per-agent packs.
+- **15 portable wrappers are stale v1.0** pointing to local canonical bodies at v1.3/v1.4 – needs regeneration.
+- **38 portable-only skills have NO local canonical body** – referenced by dispatchers like `page-ship.mdx` but the dispatcher graph is partly fictional.
+- **Templates 32/37/38 each appear twice with different content;** 41/42 duplicate the content of 37/38 (renumbered without deleting originals).
 
-| Skill | Purpose |
-|---|---|
-| `content-pipeline-pass-a` | Content layer writing (audience, voice, veracity flags) |
-| `content-pipeline-pass-b` | Structure and layout pass |
-| `content-pipeline-tab-map` | Tab-level IA mapping |
-| `page-authoring` | Single-page authoring workflow |
+### Generators that keep the skill system honest
 
-### Audit and Governance (8 skills)
+| Generator | What it produces |
+| --- | --- |
+| `operations/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js` | Skill indexes; replaces hand-maintained counts |
+| `operations/scripts/integrators/ai/agents/cross-agent-packager.js` | Per-agent generated packs (codex/claude/cursor/windsurf) from canonical templates |
+| `operations/scripts/integrators/ai/codex/sync-codex-skills.js` | Lands managed skills in `~/.codex/skills` |
+| `operations/scripts/validators/governance/ai/validate-ai-tools-registry.js` | Validates `ai-tools-registry.json` schema + lane assignments |
+| `operations/scripts/validators/governance/ai/check-companion-manifest.js` | Verifies every skill's optional companion bundle (`references/`, `scripts/`, `assets/`) is declared before sync |
 
-| Skill | Purpose |
-|---|---|
-| `repo-audit-orchestrator` | Full repo audit coordination |
-| `docs-coverage-and-route-integrity-audit` | Navigation and routing coverage |
-| `docs-quality-and-freshness-audit` | Content quality and staleness |
-| `script-footprint-and-usage-audit` | Script usage analysis |
-| `component-layout-governance` | Component placement rules |
-| `generated-mdx-banners-governance` | Generated file banner integrity |
-| `cleanup-quarantine-manager` | Quarantine and cleanup workflows |
-| `cross-agent-packager` | Cross-agent context packaging |
+---
 
-### Review and Specialised (7 skills)
+## AI tools registry
 
-| Skill | Purpose |
-|---|---|
-| `docs-review-packet-generation` | Review packet assembly |
-| `docs-review-fix-execution` | Fix execution from review findings |
-| `rubric-static-review` | Rubric-based static content review |
-| `docs-copy` | Copy editing pass |
-| `style-and-language-homogenizer-en-gb` | UK English style enforcement |
-| `product-thinking` | Product-oriented analysis |
-| `skill-docs` | Skill documentation generation |
+`ai-tools/registry/ai-tools-registry.json` is the canonical 344 KB inventory of every `ai-tools/**` artefact. 317 entries. 7-lane model with lifecycle states.
 
-### Skill Chaining
+| Surface | What it is |
+| --- | --- |
+| `ai-tools/registry/ai-tools-registry.json` | Canonical inventory (317 entries) |
+| `ai-tools/registry/ai-tools-registry.schema.json` | Schema for the registry |
+| `ai-tools/registry/ai-tools-inventory.md` | Generated inventory report (mtime 2026-04-05 – older than registry; needs regen) |
+| `ai-tools/registry/dispatchers/*.mdx` | 6 dispatcher pages |
+| `ai-tools/registry/workflows/*.mdx` | ~50 workflow pages |
 
-Skills chain in a standard workflow: `/thread` (anchor) then `/pm` (plan) then `/research` (investigate) then `/design` (architect) then `/build` (execute) then `/iterate` (review).
+**Coverage gap:** 9 of 34 skills are in `skill-catalog.json` (26%); the rest are in the registry but absent from the catalogue. Two separate inventory systems (`skill-catalog.json` vs `ai-tools-registry.json`) with no automated cross-check.
 
-### Portable Templates
+---
 
-10 portable skill templates live in `ai-tools/ai-skills/templates/`. These can be synced to Codex or other environments:
+## ai-rules (`ai-tools/ai-rules/`)
 
-```bash icon="terminal"
-node operations/scripts/dispatch/ai/agents/sync-codex-skills.js
-# or: bash tools/lpd setup --yes (includes skill sync)
-```
+Pre-governance rule docs flagged for retirement by the governance framework:
 
-## AI-Powered Pipelines
+| File | State |
+| --- | --- |
+| `best-practices.md`, `HUMAN-OVERRIDE-POLICY.md`, `ROLLBACK-GUIDE.md` | Advisory-only |
+| `_retired/` (8 files) | Retired archive |
+| `.augment/` (4 files, 165 lines) | **Phantom-retired duplicate subtree at active path** – invisible to freshness validator. Should move to `_retired/` or canonical `.augment/rules/`. |
 
-### Glossary Companion Generation
+Two `AI_GUIDELINES.md` files give **contradictory `--no-verify` policy** – the `.augment/` shadow forbids it; the live + `_retired` versions allow it with metadata. Reconciliation required.
 
-Extracts glossary data from `SearchTable` components in MDX pages and writes companion JSON files for AI and crawler discoverability.
+---
 
-- Generator: `operations/scripts/generators/content/reference/generate-glossary-companions.js`
-- CI generate: `.github/workflows/generate-ai-companions.yml` (push to deploy branch)
-- CI check: `.github/workflows/check-ai-companions.yml` (PR gate)
+## AI governance contracts
 
-### Content Health Automation
+Documented in [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx) and [`docs-guide/frameworks/ai-tools-governance.mdx`](../frameworks/ai-tools-governance.mdx).
 
-Weekly scheduled workflow (`content-health.yml`) scans for stale pages, broken links, and content drift. Outputs reports to `workspace/reports/`.
+| Contract | What it enforces | Validator |
+| --- | --- | --- |
+| Agent baseline freshness | All AI adapters reflect the same core repo rules; thin-adapter compliance per D-DG-11 | [`check-agent-docs-freshness.js`](https://github.com/livepeer/docs/blob/docs-v2-dev/operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js) |
+| Codex task isolation | AI task branches declare scope + avoid overlapping or hidden work | `.codex/task-contract.yaml`, `operations/scripts/validators/ai/codex/validate-locks.js` |
+| Skill registry parity | Skills and generated agent packs remain synchronised | `ai-tools/registry/`, `generate-ai-skills-indexes.js`, `validate-ai-tools-registry.js` |
+| Companion manifest parity | Every skill's optional companion bundle is declared before sync | `operations/scripts/validators/governance/ai/check-companion-manifest.js` |
+| Public AI artefacts | AI-facing root files generated and validated from current nav/content | `lpd ai-sitemap --check`, llms-file validators |
 
-### Language Translation
+---
 
-Translation pipeline for multi-locale content. Frontmatter taxonomy validator at `tools/lib/docs/frontmatter-taxonomy.js` enforces valid locale values.
+## Contributor rules
 
-## Contributing AI Tools
+- Do not edit generated AI artefacts (`llms.txt`, `sitemap-ai.xml`, `docs-index.json`, generated skill catalogs, generated agent packs) by hand. Run the named generator.
+- Do not add a new skill without a `SKILL.md`, registry entry, and validation story.
+- Do not treat AI-generated reports as source of truth unless their generator and source inputs are named.
+- Do not bypass branch or deletion rules for AI work. The Codex task-contract scope is checked at preflight.
+- Native adapters must be thin per D-DG-11. New rules go in `AGENTS.md` or the relevant docs-guide policy – not adapter files.
 
-### Write a new skill
+---
 
-1. Copy a template from `ai-tools/ai-skills/templates/`
-2. Create `ai-tools/ai-skills/your-skill/SKILL.md`
-3. Follow the SKILL.md format: metadata block, when to use, steps, principles
-4. Register in `ai-tools/registry/ai-tools-registry.json`
-5. Run the validator: `node operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js --check`
+## Known gaps
 
-### Add rules
+### `llms.txt` + `sitemap-ai.xml` 47 days stale (P0) – root cause FIXED 2026-05-25
 
-Rules live in `ai-tools/ai-rules/`:
+Both root artefacts last regenerated 2026-04-15 vs `docs.json` last touched 2026-05-22. Root cause: the cron-is-dry-run bug in `dispatch-discoverability.yml` + 5 sibling dispatchers. **Fix shipped** in commit `e42946cdf` on `docs-v2-dev-draft` (inverted FLAGS in all 6 scheduled jobs). Pending merge to `docs-v2`, after which the next 04:00 UTC cron should regenerate both files. See [Cron-is-dry-run bug FIXED](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25).
 
-- `best-practices.md` - general AI agent best practices
-- `HUMAN-OVERRIDE-POLICY.md` - when humans can override AI safety rules
-- `ROLLBACK-GUIDE.md` - how to roll back AI-generated changes
-- `rules/` - granular rule files
+### Veracity pipeline now has dispatchers (was: Phase 6 blocker)
 
-### Agent packs
+Three new dispatchers under `operations/scripts/dispatch/content/veracity/` (May 2026) close the long-standing "veracity-pass DRAFT blocks Phase 6" gap: `docs-research-packet.js` (engine), `orchestrator-guides-research-review.js` (scope wrapper), `docs-page-research-pr-report.js` (advisory PR artefact, experimental, non-blocking). All manual-pipeline; not yet on cron. See [Automations § Recently shipped](./automations.mdx#recently-shipped-may-2026).
 
-Pre-packaged agent configurations in `ai-tools/agent-packs/` for Claude, Codex, Cursor, Windsurf, and portable skills. Generated from templates and registry data.
+### `skill.md` is documented but has no source
+
+`v2/resources/documentation-guide/ai-automations/ai-features.mdx` advertises `https://docs.livepeer.org/skill.md` as a published AI artefact. **The repo has no `skill.md` at root.** Either Mintlify generates from another input, or the doc is aspirational. Resolve or strike from the public page.
+
+### `docs-guide/tooling/ai-tools.mdx` skill/template counts are stale
+
+The page claims "42 templates" and "42 skills". Live is 53 templates and 34 local skills (53 portable). **Both numbers wrong.** Replace with generator-emitted blocks from `generate-ai-skills-indexes.js` + CI assertion on drift.
+
+### `.claude/CLAUDE.md` violates D-DG-11 thin-adapter rule
+
+326 lines vs `AGENTS.md` 119 lines (2.74×). Most of the bulk is a project-state table that belongs elsewhere. Trim to ≤200 lines; no policy duplicated from `AGENTS.md`.
+
+### 18 of 34 local skills are `status: draft` with empty test logs
+
+The entire session-lifecycle backbone (`thread`, `research`, `design`, `build`, `iterate`, `close`) has never been validated in production despite being the primary scaffold for AI-assisted work in this repo. Promote one at a time: pick a draft skill, run 3 production passes, record results, flip to `status: current`.
+
+### Local skills (34) vs portable skills (53) divergence is undocumented
+
+`agent-packs/skills/manifest.json` registers ONLY ONE skill (`browser`) while 53 portable SKILLs live next to it. 38 portable-only skills have no local canonical body – referenced by dispatchers but the graph is partly fictional. Reconcile or document why portable-only skills exist.
+
+### Template numbering drift
+
+Templates 32/37/38 each appear twice with different content; 41/42 duplicate the content of 37/38 (renumbered without deletion). Cleanup queue.
+
+### `docs-copy/` has both `reference/` and `references/`
+
+Two ref directories under `ai-tools/ai-skills/docs-copy/` (singular + plural) containing different files. Never reconciled. Pick one.
+
+### Validator path drift in `agent-governance-framework.mdx`
+
+Lines 137 + 228 reference `validators/governance/check-agent-docs-freshness.js`; actual path is `validators/governance/compliance/check-agent-docs-freshness.js`. `AGENTS.md` line 98 has the right path. Cleanup required.
+
+### `.github/augment-instructions.md` at active path with archived-header
+
+206 lines – the heaviest single adapter in the repo. Header says archived; path is active. Directory-walking agents still read it. Either move to `_retired/` or actually delete.
+
+### `ai-tools/ai-rules/.augment/` phantom-retired subtree
+
+165 lines, 4 files, at active path. Should be in `_retired/` per the governance framework. Currently invisible to the freshness validator.
+
+### `ai-tools/registry/ai-tools-inventory.md` lags the registry
+
+Inventory mtime 2026-04-05; registry mtime 2026-04-08 (later). Regenerate the inventory.
+
+### `codex/skills-manifest.json` provenance drift
+
+Claims `generated_at: 2026-03-22` but file mtime is 2026-04-08. Either manual edit OR generator bug (failed to update its own `generated_at` field, same pattern as `docs-index.json` SLICE-12 finding).
+
+### `robots.txt` doesn't advertise `sitemap-ai.xml`
+
+Only Mintlify's auto-generated `sitemap.xml` is listed. AI-enriched metadata in `sitemap-ai.xml` is undiscoverable by crawlers via robots.txt. Add the entry.
+
+### Three AI artefacts publish three different counts
+
+`llms.txt` = 188 entries, `sitemap-ai.xml` = 181 URLs, `docs-index.json` = 532. No automated reconciliation check. Either pick one source-of-truth or document why three.
+
+### Mintlify chat assistant has no `docs.json` alignment check
+
+`.mintlify/Assistant.md` carries an IA routing map that's hand-maintained against `docs.json`. No validator confirms they agree. Wire one or commit to manual sync on every `docs.json` change.
+
+---
+
+## Related
+
+- **[AI Tools Governance Framework](../frameworks/ai-tools-governance.mdx)** – architecture: 7-lane model, lifecycle states, skill/dispatcher/workflow taxonomy
+- **[Agent Governance Framework](../policies/agent-governance-framework.mdx)** – adapter rules + retired-legacy table + migration map
+- **[AI Tools Registry](../tooling/ai-tools.mdx)** – registry schema + per-skill detail (currently has stale counts – needs refresh per [Known gaps](#known-gaps))
+- **[Automations](./automations.mdx)** – the cron-is-dry-run bug + dispatch architecture that drives AI artefact regeneration
+- **[Content Writing Pipeline](../frameworks/content-writing.mdx)** + **[Checks Framework](../frameworks/checks-framework.mdx)** – how the content-pipeline skills (pass-a, pass-b, tab-map) operationalise per-page review
+- **[Ownerless Governance Policy](../policies/ownerless-governance.mdx)** – the 4-part contract for governed surfaces (4 of 5 unified surfaces formally ownerless-ready post-D-ACT-10; legacy 8-entry file superseded)
+- **`AGENTS.md`** (root) – cross-agent baseline (119 lines); every adapter points here
+- **`.mintlify/Assistant.md`** – the Mintlify chat assistant configuration
+- **`ai-tools/registry/ai-tools-registry.json`** – canonical 317-entry inventory
+- **`workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ai-tools.md`** – full 324-file ai-tools/ inventory with maturity per skill
+- **`workspace/thread-outputs/repo-consolidation-deep/SLICE-06-agent-adapters.md`** – full 49-file adapter inventory with thin-adapter compliance per adapter

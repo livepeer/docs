@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @mode        scan
  * @pipeline    manual — experimental research system

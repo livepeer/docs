@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @description Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @mode        check
  * @pipeline    manual — experimental research system

@@ -2,14 +2,15 @@
 /**
  * @script      repair-ownerless-language
  * @type        remediator
- * @concern     brand
- * @niche       style
- * @purpose     
- * @description Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.
+ * @concern     copy
+ * @niche       ownerless-language
+ * @purpose     Remove human-owner dependency from governed GitHub and contributor surfaces — rewrites references to "maintainers", "triage", "ownership" into ownerless equivalents per the ownerless-repo governance model
+ * @description Applies a closed list of deterministic 1:1 phrase rewrites (e.g. "Awaiting maintainer triage" → "Awaiting repository routing", "policy ownership" → "policy layering") to a fixed set of governed contributor surfaces. Reads no external rules — the phrase map is hard-coded for auditability. Pairs with dispatch-ownerless-language.js.
  * @mode        repair
- * @pipeline    manual
- * @scope       AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, docs-guide/contributing/agent-instructions.mdx, docs-guide
+ * @pipeline    P3 (PR via dispatch-ownerless-language.js), P6 (manual)
+ * @scope       AGENTS.md, .allowlist, .github/, .claude/, .cursor/, .windsurf/, README.md, docs-guide/ contributor surfaces
  * @usage       node operations/scripts/remediators/content/style/repair-ownerless-language.js [--check|--write] [--files a,b]
+ * @policy      D-GOV-03 (paired with dispatch-ownerless-language); ownerless-repo governance
  */
 
 const fs = require('fs');

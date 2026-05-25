@@ -2,15 +2,13 @@
 /**
  * @script      generate-component-library
  * @type        generator
- * @concern     components
- * @niche       library
- * @purpose     governance:documentation
- * @description Generates per-grouping LIBRARY.md files and a root LIBRARY.md index from
- *              component-registry.json and component-usage-map.json. Each entry includes
- *              component name, description, props, import path, usage example, and status badge.
+ * @concern     maintenance
+ * @niche       component-registry
+ * @purpose     Generate the long-form snippets/components/{category}/LIBRARY.md docs + a root LIBRARY.md index from component-registry.json — every component entry covers description, props, import path, usage example, and status badge so contributors don't have to read source to use a component
+ * @description Reads docs-guide/config/component-registry.json + the component-usage map. Renders LIBRARY.md per top-level grouping plus a root index. Paired with generate-component-index.js (INDEX.md = short table; LIBRARY.md = full docs). Manual-use — not in dispatch-component-registry pipeline yet; tracked as follow-up.
  * @mode        generate
- * @pipeline    manual, post-registry -> component-registry.json -> snippets/components/LIBRARY.md
- * @scope       snippets/components/
+ * @pipeline    manual — invoked after component-registry regen
+ * @scope       docs-guide/config/component-registry.json → snippets/components/{group}/LIBRARY.md + root LIBRARY.md
  * @usage       node operations/scripts/generators/components/library/generate-component-library.js [--dry-run] [--check] [--category elements]
  * @policy      R-R10
  */

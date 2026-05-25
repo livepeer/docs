@@ -2,8 +2,8 @@
  * @script      mdx-validate-hook
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the postToolUse hook for Edit/Write on .mdx files. Uses the shared
  * @description PostToolUse hook for Edit/Write on .mdx files. Uses the shared
  * @mode        dispatch
  * @pipeline    PostToolUse hook → reads stdin → checks if .mdx → hits server-manager → reports

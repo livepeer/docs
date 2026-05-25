@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates docs-guide workflow/template catalogs and optionally verifies freshness
  * @description Generates docs-guide workflow/template catalogs and optionally verifies freshness
  * @mode        generate
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)

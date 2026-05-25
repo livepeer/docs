@@ -25,6 +25,10 @@ lastVerified: 2026-03-12T00:00:00.000Z
 
 We love community feedback and contributions, and it's our mission to make it easy for everyone to contribute to these docs and provide feedback for us to make them even better!
 
+<Tip>
+**New contributor?** The fastest path is the [Docs Guide overview](/v2/resources/documentation-guide/index) – five steps from clone to first PR, plus the full IA tree and every feature mentioned. For the canonical, internal-maintainer flow with override trailers and governance approval labels, see [`docs-guide/contributing/contributing`](/v2/resources/documentation-guide/contributing/contributing).
+</Tip>
+
 ## Provide Feedback
 
 ### On Any Page
@@ -68,10 +72,6 @@ A feedback form is available for non-technical contributions. This allows you to
 - Report outdated information
 - Share use cases or examples
 
-<Warning>
-For detailed information about non-technical contribution workflows, see the [Non-Technical Contribution Proposal](#non-technical-contribution-proposal) section below.
-</Warning>
-
 ### Technical Contributions (Git & Markdown)
 
 If you're comfortable with Git and Markdown, you can contribute directly:
@@ -82,7 +82,7 @@ If you're comfortable with Git and Markdown, you can contribute directly:
 
 #### 1. Fork the Repository
 
-1. Navigate to [github.com/livepeer/docs](https://github.com/livepeer/docs)
+1. Navigate to [github.com/Livepeer/docs](https://github.com/livepeer/docs)
 2. Click the "Fork" button in the top right
 3. This creates your own copy of the repository
 
@@ -106,13 +106,13 @@ git remote -v
 #### 4. Create a Branch
 
 <Warning>
-**Important:** Always create a new branch for your changes. Never commit directly to `main` or `docs-v2-preview`.
+**Important:** Always create a new branch for your changes. Never commit directly to `main` or `docs-v2`.
 </Warning>
 
 ```bash icon="terminal"
 # Make sure you're on the latest version
-git checkout docs-v2-preview
-git pull upstream docs-v2-preview
+git checkout docs-v2
+git pull upstream docs-v2
 
 # Create a new branch with a descriptive name
 git checkout -b docs/fix-typo-quickstart-guide
@@ -127,23 +127,28 @@ git checkout -b docs/update-component-docs
 - Use descriptive names: `docs/fix-typo-quickstart-guide`
 - Use kebab-case (lowercase with hyphens)
 
-#### 5. Install Pre-commit Hooks
+#### 5. Run setup
 
-<Tip>
-Pre-commit hooks automatically check your code for style guide violations and syntax errors before you commit.
-</Tip>
+The repository ships a unified Bash CLI at `tools/lpd` that installs hooks, dependencies, and (optionally) puts itself on your `$PATH`. Use it instead of installing Mintlify or Node packages by hand.
 
 ```bash icon="terminal"
-# Install the pre-commit hook
-./.githooks/install.sh
+# One non-interactive command that installs git hooks, deps, and PATH integration
+bash lpd setup --yes
+
+# Confirm your environment is ready
+lpd doctor
 ```
 
-The pre-commit hook will:
-- Check for deprecated theme-helper usage
-- Warn about hardcoded hex colours
-- Validate MDX, JSON, and JavaScript syntax
-- Check for relative imports
-- Verify absolute import paths
+<Tip>
+Pre-commit hooks automatically run staged validators for MDX render, redirect integrity, allowlist guards, and the no-deletion rule before you commit – in under 60 seconds. They are installed automatically by `lpd setup`.
+</Tip>
+
+The pre-commit hook validates:
+- MDX render (catches broken JSX before commit)
+- `docs.json` redirect integrity
+- `.allowlist` and `v1/` protection
+- Codex branch isolation (only for `codex/*` branches)
+- Frontmatter completeness, voice (UK English, no em-dashes), style tokens, JSDoc headers
 
 #### 6. Make Your Changes
 
@@ -182,14 +187,14 @@ v2/
 </Warning>
 
 ```bash icon="terminal"
-# Install Mintlify CLI (if not already installed)
-npm i -g mintlify
+# Boot a scoped Mintlify preview (~2 seconds vs ~10 minutes cold)
+lpd dev --scoped --scope-tab <Tab>
 
-# Run the development server
-mint dev
+# Or full unscoped dev server
+lpd dev
 ```
 
-This starts a local server (usually at `http://localhost:3000`) where you can preview your changes.
+This starts a local server (usually at `http://localhost:3000`) where you can preview your changes. `lpd dev --scoped` filters `docs.json` to the named tab so Mintlify cold-starts in seconds against the 1,128-page nav. Tab names fuzzy-match (`Orch`, `Resource`, `Gate`).
 
 **What to check:**
 - ✅ Pages render correctly
@@ -212,7 +217,7 @@ git commit -m "docs: fix typo in quickstart guide"
 **Commit message conventions:**
 - Use prefixes: `docs:`, `fix:`, `feat:`, `chore:`
 - Be descriptive: "docs: add API authentication example"
-- Reference issues: "docs: update gateway setup (fixes #123)"
+- Reference issues: "docs: update Gateway setup (fixes #123)"
 
 **The pre-commit hook will run automatically** and may block your commit if there are style guide violations.
 
@@ -236,7 +241,7 @@ git push origin docs/your-branch-name
 
 #### 10. Create a Pull Request
 
-1. Navigate to [github.com/livepeer/docs](https://github.com/livepeer/docs)
+1. Navigate to [github.com/Livepeer/docs](https://github.com/livepeer/docs)
 2. You should see a banner suggesting to create a PR from your recent push
 3. Click "Compare & pull request"
 4. Fill out the PR template:
@@ -261,7 +266,7 @@ Brief description of changes
 Fixes #123
 
 ## Testing
-- Tested locally with `mint dev`
+- Tested locally with `lpd dev --scoped`
 - Checked light and dark modes
 - Verified all links work
 - No console errors
@@ -283,7 +288,7 @@ All PRs require at least one review from a maintainer. See [Review Process](#rev
 Once your PR is approved and merged:
 - Delete your branch locally: `git branch -d docs/your-branch-name`
 - Delete your branch on GitHub (option available after merge)
-- Update your fork: `git checkout docs-v2-preview && git pull upstream docs-v2-preview`
+- Update your fork: `git checkout docs-v2 && git pull upstream docs-v2`
 
 ## Development Setup
 
@@ -300,21 +305,28 @@ Once your PR is approved and merged:
 git clone https://github.com/livepeer/docs.git
 cd docs
 
-# Install Mintlify CLI globally
-npm i -g mintlify
+# One non-interactive command installs hooks, deps, and PATH integration
+bash lpd setup --yes
 
-# Install pre-commit hooks
-./.githooks/install.sh
+# Verify the environment is ready
+lpd doctor
 ```
+
+`lpd setup` installs the Mintlify CLI for you and registers the `.githooks/` pre-commit gates. You do not need to run `npm i -g mintlify` or `./.githooks/install.sh` separately.
 
 ### Running Locally
 
 ```bash icon="terminal"
-# Start development server
-mint dev
+# Boot a scoped preview against the 1,128-page nav (~2 seconds)
+lpd dev --scoped --scope-tab <Tab>
+
+# Or full unscoped dev server
+lpd dev
 
 # Server runs on http://localhost:3000 by default
 ```
+
+For the full `lpd` reference – every subcommand, every flag, repair flows, the script catalogue – see [the canonical lpd CLI page](/v2/resources/documentation-guide/tooling/lpd-cli).
 
 ### Project Structure
 
@@ -439,7 +451,7 @@ JSX tag snippets accept both bare component names such as `Card` and opening-tag
 ### Style Guide
 
 <Warning>
-**MANDATORY:** Read the [Style Guide](./style-guide) before making any changes!
+**MANDATORY:** Read the [Style Guide](/v2/resources/documentation-guide/copy-style/style-guide) before making any changes!
 </Warning>
 
 **Critical rules:**
@@ -451,7 +463,7 @@ JSX tag snippets accept both bare component names such as `Card` and opening-tag
 
 ### Component Usage
 
-- Use components from the [Component Library](./component-library/overview)
+- Use components from the [Component Library](/v2/resources/documentation-guide/component-library/overview)
 - Check component documentation before creating new components
 - Follow existing patterns and conventions
 
@@ -485,7 +497,7 @@ Before submitting a PR, ensure:
 
 ### Who Reviews What
 
-Documentation changes are reviewed by section owners. See [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS) for details.
+Documentation changes are reviewed by section owners. See [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2/.github/CODEOWNERS) for details.
 
 **General review assignments:**
 - **Developers section:** Developer relations team
@@ -611,7 +623,7 @@ v2/
   <Card title="Documentation Guide" icon="book-open" href="/v2/resources/documentation-guide" arrow>
  Learn how the documentation is structured and organised.
   </Card>
-  <Card title="CODEOWNERS" icon="users" href="https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS" arrow>
+  <Card title="CODEOWNERS" icon="users" href="https://github.com/livepeer/docs/blob/docs-v2/.github/CODEOWNERS" arrow>
  See who reviews changes to each section.
   </Card>
 </CardGroup>
@@ -653,118 +665,11 @@ Contributors are recognised and appreciated! Your contributions help make the Li
 
 If you have questions about contributing:
 
-- Check the [Documentation Guide](./documentation-guide) for structure and conventions
-- Review the [Style Guide](./style-guide) for styling guidelines
-- Check the [Component Library](./component-library/overview) for component usage
-- Review [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS) to see who reviews what
+- Check the [Documentation Guide](/v2/resources/documentation-guide/documentation-guide) for structure and conventions
+- Review the [Style Guide](/v2/resources/documentation-guide/copy-style/style-guide) for styling guidelines
+- Check the [Component Library](/v2/resources/documentation-guide/component-library/overview) for component usage
+- Review [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2/.github/CODEOWNERS) to see who reviews what
 - Open a GitHub issue or discussion
 - Ask in the Livepeer Discord community
 
-Thank you for helping improve the Livepeer documentation! 🎉
-
-<CustomDivider />
-
-## Non-Technical Contribution Proposal
-
-<Tip>
-proposed workflows for contributors who don't use Git, Markdown, or React. These are **proposals** and may not be fully implemented yet.
-</Tip>
-
-### Current Options
-
-1. **GitHub Web Editor** - Edit files directly in the browser
-2. **Feedback Forms** - Submit suggestions via forms
-3. **Issue Reporting** - Open GitHub issues with content suggestions
-
-### Proposed Workflows
-
-#### Option 1: Mintlify Web Editor Integration
-
-**Proposal:** Integrate Mintlify's web editor for direct page editing.
-
-**Workflow:**
-1. Click "Edit this page" button on any documentation page
-2. Opens Mintlify web editor (requires authentication)
-3. Make edits in visual or markdown mode
-4. Submit changes which create a GitHub PR automatically
-
-**Requirements:**
-- Mintlify web editor access
-- GitHub authentication
-- Automatic PR creation
-
-**Status:** ⚠️ Requires Mintlify configuration and GitHub integration
-
-#### Option 2: Form-Based Submission System
-
-**Proposal:** Create a form that converts submissions to GitHub issues or PRs.
-
-**Workflow:**
-1. User fills out form with:
-   - Page URL or section
-   - Type of change (typo, clarification, new content)
-   - Current text (if applicable)
-   - Proposed text
-   - Reason for change
-2. Form submission creates GitHub issue
-3. Maintainer reviews and either:
-   - Implements the change
-   - Converts to PR template for user
-   - Requests more information
-
-**Requirements:**
-- Form creation (Google Forms, Typeform, or custom)
-- GitHub API integration
-- Issue template automation
-
-**Status:** 📋 Proposal - requires implementation
-
-#### Option 3: "Edit This Page" Button with PR Template
-
-**Proposal:** Add "Edit this page" buttons that link to GitHub's web editor with pre-filled PR template.
-
-**Workflow:**
-1. Click "Edit this page" button
-2. Opens GitHub web editor for that file
-3. User makes changes
-4. GitHub prompts to create PR with template
-5. User fills out PR description
-6. PR is created for review
-
-**Requirements:**
-- Add "Edit this page" buttons to all pages
-- Create PR template
-- Link to GitHub web editor with correct branch
-
-**Status:** ✅ Partially implementable - can add buttons and PR template
-
-#### Option 4: External CMS Integration
-
-**Proposal:** Integrate with a headless CMS (e.g., Contentful, Strapi) for non-technical editing.
-
-**Workflow:**
-1. Non-technical users edit content in CMS
-2. CMS webhooks trigger GitHub Actions
-3. Changes are automatically committed and PR created
-4. Maintainer reviews PR
-
-**Requirements:**
-- CMS setup and configuration
-- GitHub Actions workflow
-- Content synchronization
-- Authentication and permissions
-
-**Status:** 📋 Long-term proposal - substantial infrastructure required
-
-### Recommended Implementation Order
-
-1. **Phase 1 (Quick Win):** Add "Edit this page" buttons linking to GitHub web editor
-2. **Phase 2 (Medium Effort):** Create form-based submission system with GitHub issue automation
-3. **Phase 3 (Long-term):** Evaluate Mintlify web editor integration or CMS solution
-
-### Feedback Welcome
-
-If you have ideas for making non-technical contributions easier, please:
-- Open a GitHub issue with your suggestion
-- Discuss in the Livepeer Discord
-- Contact the documentation team
+Thank you for helping improve the Livepeer documentation.

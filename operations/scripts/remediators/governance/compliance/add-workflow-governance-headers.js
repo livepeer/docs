@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Repair adds governance comment headers to GitHub Actions workflow YAML files based on their governed filename pattern
  * @description Adds governance comment headers to GitHub Actions workflow YAML files based on their governed filename pattern
  * @mode        repair
  * @pipeline    manual -> .github/workflows/*.yml -> edited workflow files

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Checks v2 page layouts against approved component contracts
  * @description Component layout governance validator — checks v2 page layouts against approved component contracts
  * @mode        check
  * @pipeline    manual

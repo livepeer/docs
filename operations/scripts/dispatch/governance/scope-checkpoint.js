@@ -2,8 +2,8 @@
  * @script      scope-checkpoint
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. Tracks total edit count per session.
  * @description PostToolUse hook for Edit/Write. Tracks total edit count per session.
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track edit count → inject scope check every 8 edits

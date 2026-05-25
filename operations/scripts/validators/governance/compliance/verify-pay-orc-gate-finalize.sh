@@ -3,7 +3,7 @@
 # @type        validator
 # @concern     governance
 # @niche       compliance
-# @purpose     
+# @purpose     Checks payment and orchestrator documentation gate conditions
 # @description Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions
 # @mode        check
 # @pipeline    manual — not yet in pipeline

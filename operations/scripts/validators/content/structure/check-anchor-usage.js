@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page
  * @description Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page
  * @mode        check
  * @pipeline    manual, ci

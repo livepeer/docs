@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            test-v2-pages
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             operations/scripts/validators/content/structure, docs.json, v2
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          P2, P3
- * @usage             node operations/scripts/validators/content/structure/test-v2-pages.js [flags]
+ * @script      test-v2-pages
  * @type        validator
- * @description test v2 pages
- * @mode        read-only
+ * @concern     health
+ * @niche       page-rendering
+ * @purpose     Validate v2 pages render correctly in the Mintlify dev server — launches Puppeteer against http://localhost:3000, navigates each v2/ route, captures console errors, network 404s, and rendering failures so broken pages don't ship
+ * @description Puppeteer-driven browser tester. Reads docs.json for the route list, navigates each in headless Chrome, waits for body content, checks for console errors / network failures / missing components. Used by dispatch-page-rendering.js as the rendering atomic. Also called directly by v2-wcag-audit.js (which loads each page then runs axe-core) and browser.test.js.
+ * @mode        check
+ * @pipeline    P3 (PR via dispatch-page-rendering.js — note: this dispatcher needs dev server, excluded from smoke tests)
+ * @scope       docs.json routes → http://localhost:3000/{route} → rendered DOM + console events
+ * @usage       node operations/scripts/validators/content/structure/test-v2-pages.js [--routes <comma-list>] [--full]
+ * @policy      D-GOV-03 (paired with the page-rendering pipeline)
  */
 
 /**
@@ -82,7 +81,7 @@ function extractPages(nav, pages = []) {
         }
       });
     }
-    
+
     // Recursively check all properties
     Object.values(nav).forEach(value => {
       if (typeof value === 'object' && value !== null) {
@@ -98,21 +97,21 @@ function extractPages(nav, pages = []) {
  */
 function getV2Pages() {
   const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  
+
   // Find v2 version
   const v2Version = docsJson.navigation?.versions?.find(v => v.version === 'v2');
   if (!v2Version) {
     throw new Error('v2 version not found in docs.json');
   }
-  
+
   // Extract all pages
   const allPages = extractPages(v2Version);
-  
+
   // Remove duplicates and filter out invalid pages
   const uniquePages = [...new Set(allPages)]
     .filter(page => page && page.trim() && page !== ' ')
     .map(page => page.replace(/\.mdx?$/, '')); // Remove .mdx extension if present
-  
+
   return uniquePages;
 }
 
@@ -124,12 +123,12 @@ function pageToUrl(pagePath) {
   let url = pagePath
     .replace(/^v2\/pages\//, 'v2/')
     .replace(/\.mdx?$/, '');
-  
+
   // Handle index pages (ending with /)
   if (url.endsWith('/')) {
     url = url.slice(0, -1);
   }
-  
+
   return `${BASE_URL}/${url}`;
 }
 
@@ -139,30 +138,30 @@ function pageToUrl(pagePath) {
 async function testPage(browser, pagePath) {
   const url = pageToUrl(pagePath);
   const page = await browser.newPage();
-  
+
   const errors = [];
   const warnings = [];
   const logs = [];
-  
+
   // Listen for console messages
   page.on('console', msg => {
     const type = msg.type();
     const text = msg.text();
-    
+
     if (type === 'error') {
       errors.push(text);
     } else if (type === 'warning') {
       warnings.push(text);
     }
-    
+
     logs.push({ type, text });
   });
-  
+
   // Listen for page errors
   page.on('pageerror', error => {
     errors.push(`Page Error: ${error.message}`);
   });
-  
+
   // Listen for request failures
   page.on('requestfailed', request => {
     const failure = request.failure();
@@ -172,17 +171,17 @@ async function testPage(browser, pagePath) {
       errors.push(`Request Failed: ${request.url()} - ${failure.errorText}`);
     }
   });
-  
+
   try {
     // Navigate to page with timeout
-    await page.goto(url, { 
-      waitUntil: 'networkidle2', 
-      timeout: TIMEOUT 
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: TIMEOUT
     });
-    
+
     // Wait a bit for any async rendering
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // In baseline mode, only count errors NOT in the baseline as failures
     const newErrors = USE_BASELINE
       ? errors.filter(e => !isBaselined(pagePath, e))
@@ -219,10 +218,10 @@ async function main() {
   console.log('🔍 Extracting v2 pages from docs.json...');
   const pages = getV2Pages();
   console.log(`📄 Found ${pages.length} pages to test\n`);
-  
+
   console.log(`🌐 Testing against: ${BASE_URL}`);
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
-  
+
   // Check if server is running
   try {
     const testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
@@ -237,24 +236,24 @@ async function main() {
     console.error(`   Start it with: mint dev`);
     process.exit(1);
   }
-  
+
   console.log('🚀 Starting browser tests...\n');
-  
+
   const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
-  
+
   const results = [];
   let passed = 0;
   let failed = 0;
-  
+
   for (let i = 0; i < pages.length; i++) {
     const pagePath = pages[i];
     const progress = `[${i + 1}/${pages.length}]`;
-    
+
     process.stdout.write(`${progress} Testing ${pagePath}... `);
-    
+
     const result = await testPage(browser, pagePath);
     results.push(result);
-    
+
     if (result.success) {
       console.log('✅');
       passed++;
@@ -263,9 +262,9 @@ async function main() {
       failed++;
     }
   }
-  
+
   await browser.close();
-  
+
   // Print summary
   console.log('\n' + '='.repeat(60));
   console.log('SUMMARY' + (USE_BASELINE ? ' (baseline diff mode)' : ''));
@@ -280,7 +279,7 @@ async function main() {
     console.log(`NEW errors (cause failure): ${totalNew}`);
   }
   console.log('');
-  
+
   // Print failed pages
   if (failed > 0) {
     console.log('❌ FAILED PAGES:');
@@ -302,7 +301,7 @@ async function main() {
         }
       });
   }
-  
+
   // Save detailed report
   const reportPath = path.join(REPO_ROOT, 'workspace/reports/page-audits/v2-page-test-report.json');
   fs.writeFileSync(reportPath, JSON.stringify({
@@ -313,9 +312,9 @@ async function main() {
     failed,
     results
   }, null, 2));
-  
+
   console.log(`\n📝 Detailed report saved to: ${reportPath}`);
-  
+
   // Exit with error code if any failures
   process.exit(failed > 0 ? 1 : 0);
 }

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Detects staged page moves that require docs.json or governed path reference rewrites.
  * @description Docs path sync validator — detects staged page moves that require docs.json or governed path reference rewrites.
  * @mode        check
  * @pipeline    manual

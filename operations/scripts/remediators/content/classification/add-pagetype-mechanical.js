@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     
+ * @purpose     Repair mechanically assigns pageType frontmatter to eligible v2 MDX pages.
  * @description Mechanically assigns pageType frontmatter to eligible v2 MDX pages.
  * @mode        repair
  * @pipeline    manual — deterministic metadata rollout utility for v2 docs

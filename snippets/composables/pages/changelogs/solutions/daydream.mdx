@@ -19,7 +19,7 @@ keywords:
 pageType: changelog
 purpose: changelog
 audience: builder
-lastVerified: 2026-05-11T00:00:00.000Z
+lastVerified: 2026-03-25T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -46,114 +46,65 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
-<Update label="Scope: v0.2.5" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.5", description: "This release focuses on LTX-2 improvements and a sweep of bug fixes and stability improvements." }} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
+<Update label="Scope: v0.2.5" tags={["Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.5", description: "This release focuses on Scope LTX-2 improvements and a sweep of bug fixes and stability improvements." }} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
   ## Scope: v0.2.5
 
   <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
 
-  #### New Features
-
-  - **LTX-2 improvements** – Skips CPU offload on high-VRAM GPUs for faster generation, and the first pipeline call now waits for stream-wired prompts so your intended prompt lands on the first frame.
-  - **Portable workflow exports** – Workflow exports now bundle referenced images, audio, and video so shared workflows work out of the box on import.
-  - **Inline pipeline error surfacing** – Pipeline failures appear as toasts and inline overlays on sinks and Video Output, with clearer fatal-error handling.
-
-  #### Updates
-
-  - **Local sinks while connected to cloud** – Syphon, NDI, and Spout sinks keep working when running in cloud mode, with cloud-rendered frames teed into local senders.
-  - **Connected parameter edges honored at session start** – Producer-node values flow into the initial session payload instead of being overwritten by stale defaults.
-
-  #### Bug Fixes
-
-  - **A/V desync after hold/resume** – Audio and video buffers are now flushed on pipeline discontinuity to prevent drift.
-  - **LoRA compatibility** – Incompatible LoRAs now fail fast with a typed error naming the mismatched layer, and the LoRA picker warns when a configured path is missing.
-  - **Workflow imports with embedded media** – Increased the trickle JSONL reader size so larger embedded-asset imports succeed.
+  * **Scope LTX-2 Improvements** — Skip CPU offload on high-VRAM GPUs (via the upstream [scope-ltx-2](https://github.com/daydreamlive/scope-ltx-2) bump), A/V buffers flushed on pipeline discontinuity to fix desync after hold/resume, and the first pipeline call now waits for stream-wired prompts so the desired prompt lands on generation #1 instead of #2.
+  * **Bug Fixes & Stability** — Workflow media bundling for portable exports, pipeline failures surfaced in the UI as toasts and inline overlays, fail-fast LoRA compatibility validation, local Syphon/NDI/Spout sinks restored when connected to cloud, connected param-edge values honored at session start, and trickle JSONL reader sizing for workflow imports with embedded media.
 
   <InlineDivider margin="1rem 0" />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.2.5" iconLeft="github" />
 </Update>
 
-<Update label="Scope: v0.2.4" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.4", description: "This release introduces the Node Abstraction, LTX-2 improvements, and a sweep of UX polish and bug fixes." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
+<Update label="Scope: v0.2.4" tags={["Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.4", description: "This release introduces the Node Abstraction, LTX-2 improvements, and a sweep of UX polish and bug fixes." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.4
 
   <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
 
-  #### New Features
-
-  - **Node Abstraction** – Ship any custom node for Scope as a plugin. Sample plugins include a YouTube input source and a local LLM Prompt Enhancer.
-  - **LTX-2 improvements** – Real-time pacing controls, roughly 18× faster model loading, faster prompt changes, and Ampere GPU compatibility.
-  - **Expanded OSC coverage** – Any node parameter can now be exposed via OSC with per-parameter opt-in.
-
-  #### Updates
-
-  - **Graph editor UX** – Edge unattach, quick-connect drag menu, in-node audio playback, a "?" cheat sheet, and install hints for unavailable integrations (NDI / Spout / Syphon).
-  - **Recording reliability** – Replaced media recorder, preserved incoming timestamps, added dedicated record-node queues, and tightened A/V start sync.
-
-  #### Bug Fixes
-
-  - **VACE reference propagation** – Fixed reference image handling in VACE pipelines.
-  - **Spout pixel format** – Resolved a pixel-format flip issue on Spout output.
-  - **LoRA error clarity** – Friendlier error message when loading LoRAs from Hugging Face `/blob/` URLs.
-  - **Workflow start** – Source-less workflows can now start cleanly.
+  * **Node Abstraction** — You can now ship any custom node for Scope as a plugin. Sample plugins included for a YouTube input source and a local LLM Prompt Enhancer.
+  * **LTX-2 improvements** — Real-time pacing controls, ~18× faster model loading, faster prompt changes, and Ampere GPU compatibility — see [scope-ltx-2](https://github.com/daydreamlive/scope-ltx-2) for full details.
+  * **Bug Fixes & UX Improvements** — Graph editor edge unattach / quick-connect, in-node audio playback, a "?" cheat sheet, install hints for unavailable integrations (NDI/Spout/Syphon), recording reliability, and many smaller fixes.
 
   <InlineDivider margin="1rem 0" />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.2.4" iconLeft="github" />
 </Update>
 
-<Update label="Scope: v0.2.3" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.3", description: "This release introduces Synced Audio + Video, the move to Livepeer Network as the default cloud backend, and Cloud Billing." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
+<Update label="Scope: v0.2.3" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.3", description: "This release introduces Synced Audio + Video, the move to Livepeer Network as the default cloud backend, and Cloud Bi..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.3
 
   <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
 
-  #### New Features
-
-  - **Synced audio + video** – Timestamps now ride with every video and audio packet end-to-end, with cumulative-drift pacing that keeps output steady over long runs.
-  - **Livepeer Network cloud default** – Cloud mode now runs on the Livepeer Network by default, with audio and multi-track support.
-  - **Cloud billing** – Credit-based billing with subscription management is now available for cloud users.
-
-  #### Updates
-
-  - **Graph mode redesign** – Refreshed visuals for the graph mode editor and a brighter background grid.
-
-  #### Bug Fixes
-
-  - **Headless recording** – Resolved recording issues in headless mode.
-  - **Safari stats** – Fixed sink statistics reporting on Safari.
-  - **Syphon reliability** – Addressed flip and reload bugs on Syphon sources.
-  - **macOS sink fullscreen** – Fixed fullscreen behavior on the macOS sink.
+  * **Synced Audio + Video** — PTS now rides with every video and audio packet end-to-end, with cumulative-drift pacing that keeps output steady over long runs.
+  * **Cloud switched to Livepeer Network** — Cloud mode now runs on the Livepeer Network by default, with audio and multi-track support.
+  * **Cloud Billing** — Credit-based billing with subscription management.
 
   <InlineDivider margin="1rem 0" />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.2.3" iconLeft="github" />
 </Update>
 
-<Update label="Scope: v0.2.2" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.2", description: "This release introduces Multi Source / Multi Sink graphs, an Audio In node, and a number of bug fixes across graph mode, cloud, and recording." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
+<Update label="Scope: v0.2.2" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.2", description: "This release introduces Multi Source / Multi Sink graphs, an Audio In node, and a number of bug fixes across graph mo..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.2
 
   <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
 
-  #### New Features
-
-  - **Multi source / multi sink** – Workflows can contain multiple source and sink nodes in a single graph. Each source routes to its own input track, each sink reports its own FPS and bitrate, and per-node recording captures each sink independently. Works in local, cloud, and headless modes.
-  - **Audio In node** – A new graph node for audio inputs. WAV, MP3, FLAC, and OGG files can be uploaded to the asset library, picked from a new audio media picker, and forwarded into pipelines.
-  - **Headless MPEG-TS streaming** – A new endpoint for streaming output in headless mode.
-  - **Keyboard shortcuts** – Added keyboard shortcuts and a fullscreen button on the Sink node.
-
-  #### Updates
-
-  - **External parameter sync** – OSC, REST, and MCP parameter updates now sync to graph mode, with persistent permission grants and string primitive auto-send.
-  - **LoRA controls in graph mode** – Added LoRA merge strategy view, integer handling, and prompt management.
-
-  #### Bug Fixes
-
-  - **Cloud connect** – Unified cloud connect flow and surfaced clearer connection errors.
-  - **Workflow refresh** – Workflow Builder pipelines refresh after cloud connect.
+  * **Multi Source / Multi Sink** — Workflows can now contain multiple source and sink nodes in a single graph. Each source routes to its own input track, each sink shows its own per-sink stats (FPS / bitrate), and per-node recording lets you capture each sink independently. Works in local, cloud, and headless modes.
+  * **Audio In Node** — A new graph node for audio inputs. WAV / MP3 / FLAC / OGG files can be uploaded to the asset library, picked from a new audio media picker, and forwarded into pipelines via an `audio` complex field.
+  * **Bug Fixes** — Many fixes around graph mode, cloud relay routing, NDI / Syphon sources, recording timestamps, and parameter sync.
 
   <InlineDivider margin="1rem 0" />
 
   <DoubleIconLink label="View release on GitHub" href="https://github.com/daydreamlive/scope/releases/tag/v0.2.2" iconLeft="github" />
 </Update>
+
+</LazyLoad>
+
+
+<LazyLoad height="600px">
 
 <Update label="Scope: v0.2.1" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.1", description: "This release upgrades the default starter workflow to LTX 2.3, adds new Workflow Builder features including a schedul..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.1
@@ -207,19 +158,19 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds audio output support for pipelines and fixes a VACE regression introduced in 0.1.8.
-    
+
     ## Highlights
-    
+
     * **Audio Out Support** – Pipelines can now return audio alongside video, streamed over WebRTC with a mute/unmute toggle in the frontend, and [#719](https://github.com/daydreamlive/scope/pull/719)
     * **Fix VACE Regression** – Fixed tempo sync modulation interfering with VACE noise scale, a regression introduced in 0.1.8
-    
+
     ## What's Changed
-    
+
     * Audio Support for Scope Rework
     * Fix: tempo sync modulation interfering with VACE noise scale
     * fix(pipeline_processor): idle backoff and prepared state for audio-only outputs
     * Flush audio buffer on prompt change for immediate TTS playback
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.8...v0.1.9
   </ScrollBox>
 
@@ -247,16 +198,16 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds beat-synced parameter modulation with Ableton Link and MIDI clock support, an MCP server for AI-assisted pipeline control, and DMX Art-Net input.
-    
+
     ## Highlights
-    
+
     * **Tempo Sync & Beat Modulation** – Lock pipelines to Ableton Link or MIDI clock. Quantize parameter changes to beat/bar boundaries, modulate parameters (noise scale, denoising steps, etc.) with waveforms synced to the beat, and automatically cycle prompts on beat or bar boundaries
     * **MCP Server** – AI assistants can now programmatically manage pipelines, control parameters, capture frames, and drive headless sessions via the Model Context Protocol
     * **DMX Art-Net Input** – Real-time DMX input with configurable channel-to-parameter mappings, import/export, and live SSE updates
     * **FPS Fix** – Removed FPS-based throttling from the input source receiver loop, fixing frame delivery stalls and improving streaming smoothness
-    
+
     ## What's Changed
-    
+
     * Tempo Sync Modulation
     * Add MCP server for AI-assisted pipeline control
     * DMX Art-Net input support
@@ -270,7 +221,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * Fix displaying new loading text
     * Prefix logs with connection ID by @mjh1
     * ci: speed up PR deploys by decoupling from standard image build
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.7...v0.1.8
   </ScrollBox>
 
@@ -302,13 +253,13 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds MIDI controller support for real-time parameter control, native Workflow export to daydream.live, WebRTC stability improvements, and performance optimisations.
-    
+
     ## Highlights
-    
+
     * **MIDI Controller Support** - Full WebMIDI integration with device discovery, mappable pipeline and plugin parameters, persistent profiles, and learning mode
-    
+
     ## What's Changed
-    
+
     * feat: MIDI support & MIDI mappable parameters by @gioelecerati and @jamesdawsonWD in https://github.com/daydreamlive/scope/pull/537
     * Add native Workflow export to daydream.live
     * Cache pipeline schemas and plugin list responses
@@ -320,7 +271,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * Optional logging of OSC messages
     * Account for not found error in fal app delete
     * Output app logs from e2e as a github artifact
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.6...v0.1.7
   </ScrollBox>
 
@@ -349,14 +300,14 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release ships Workflow Export/Import, adds OSC (Open Sound Control) support, Plugins in Cloud, Logs section, and numerous bug fixes.
-    
+
     ## Highlights
-    
+
     * **Shareable Workflows** - Export and import full pipeline configurations including LoRA manifests, timeline data, and dependency resolution
     * **OSC Support** - Control pipeline parameters via Open Sound Control
-    
+
     ## What's Changed
-    
+
     * On demand cloud plugins
     * Add cloud server log forwarding via WebSocket
     * Enable workflow Import/Export for remote inference
@@ -368,7 +319,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * WebRTC ICE server fix
     * Fix log panel not auto-scrolling to bottom
     * Add preview build workflow for Electron app
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.5...v0.1.6
   </ScrollBox>
 
@@ -397,7 +348,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds macOS desktop app support, Syphon input/output for macOS, LoRA support in cloud relay mode, plugin discovery, and updated app icons.
-    
+
     ## What's Changed
     * Add Electron App for Mac build by @leszko in #444
     * Add Syphon input and output support for macOS by @thomshutt in #531, #543, #544
@@ -406,7 +357,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * Plugin discovery in desktop app by @thomshutt in #499
     * Update app icons with new branding by @livepeer-tessa in #539
     * Add graceful shutdown to uvicorn.run by @leszko in #549
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.4...v0.1.5
   </ScrollBox>
 
@@ -555,7 +506,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release adds NDI output support with live preview, multiple pre/post-processors per pipeline, and plugin stability improvements.
-    
+
       ## What's Changed
       * feat: ndi output support & ndi live preview
       * Add multiple pre/post-processors
@@ -570,7 +521,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
       * Dual push Docker image to GHCR
       * Fal deploy github action
       * Fix LoRA cloud docs: paths, wget tip, trigger keywords
-    
+
       **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.3...v0.1.4
   </ScrollBox>
 
@@ -599,7 +550,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release contains fixes for NDI input source selection.
-    
+
     ## What's Changed
     * docs: update release process to reflect automated workflows
     * docs: NDI input
@@ -608,8 +559,8 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * fix: prevent cloud connection inputMode reset and drop async from input source routes
     * Better error reporting for websocket failures
     * Release v0.1.3 by @github-actions[bot] in https://github.com/daydreamlive/scope/pull/461
-    
-    
+
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.2...v0.1.3
   </ScrollBox>
 
@@ -639,17 +590,17 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This release introduces support for:
-    
+
     - NDI input sources (docs coming soon)
     - UI parameter controls for preprocessors and postprocessors
     - More flexible combination of different VACE techniques
-    
+
     Additional fixes for:
-    
+
     - Handling broken plugins that could prevent the server from starting
     - Stale UI in desktop app after an auto-update
     - Failure to run diffusion pipelines using SageAttention due to incompatible hardware
-    
+
     ## What's Changed
     * Prevalidate plugin entrypoints to check for broken plugins
     * Add pipeline throttling
@@ -665,11 +616,11 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * ci: add automated version bump and tag workflows
     * fix(ci): skip postinstall script when updating app lock file
     * Release v0.1.2 by @github-actions[bot] in https://github.com/daydreamlive/scope/pull/454
-    
+
     ## New Contributors
     * @gioelecerati made their first contribution in https://github.com/daydreamlive/scope/pull/439
     * @github-actions[bot] made their first contribution in https://github.com/daydreamlive/scope/pull/454
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.1...v0.1.2
   </ScrollBox>
 
@@ -697,7 +648,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
   <ScrollBox maxHeight="250px" showHint={true}>
     This releases includes fixes for disappearing plugins after a server restart with the desktop app under certain circumstances and a bug preventing Grey pipeline usage.
-    
+
     ## What's Changed
     * Update README
     * Cloud: Simplify recording download
@@ -705,7 +656,7 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
     * Refactor app.py to use cloud_proxy decorator
     * Fix grey pipeline missing return statement
     * Fix plugins lost after server restart in desktop app
-    
+
     **Full Changelog**: https://github.com/daydreamlive/scope/compare/v0.1.0...v0.1.1
   </ScrollBox>
 
@@ -1295,4 +1246,3 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 </Update>
 
 </LazyLoad>
-

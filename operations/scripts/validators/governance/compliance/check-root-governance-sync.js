@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest.
  * @description Validates that root-governance generated outputs, required documentation references, and public root artifact declarations stay aligned with the canonical manifest.
  * @mode        check
  * @pipeline    manual, ci

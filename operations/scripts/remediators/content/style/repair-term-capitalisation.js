@@ -3,13 +3,14 @@
  * @script      repair-term-capitalisation
  * @type        remediator
  * @concern     brand
- * @niche       style
- * @purpose     qa:content-quality
- * @description Enforces correct capitalisation of proper nouns (Livepeer, Orchestrator, Ethereum, etc.) in routable v2 MDX prose. Reads rules from tools/config/quality/term-capitalisation.json. Skips code, frontmatter, URLs, imports, JSX attributes.
+ * @niche       proper-nouns
+ * @purpose     Fix incorrect proper-noun capitalisation in v2 MDX prose (Livepeer, Orchestrator, Gateway, AI, Ethereum, LPT, etc.) per the canonical rule set at tools/config/quality/term-capitalisation.json — paired remediator for check-proper-nouns
+ * @description Reads rules from tools/config/quality/term-capitalisation.json. Scans content text for lowercase or wrong-case occurrences and rewrites them. Skips code blocks, frontmatter, URLs, import/export lines, JSX attribute values. --verify re-runs check-proper-nouns.js per file and reverts any regression. Pairs with dispatch-proper-nouns.js.
  * @mode        repair
- * @pipeline    manual — batch remediation utility, run with --dry-run first
+ * @pipeline    P6 (self-heal via dispatch-proper-nouns.js --mode scheduled), manual via --files
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/remediators/content/style/repair-term-capitalisation.js [--dry-run|--write] [--verify] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
  */
 
 'use strict';

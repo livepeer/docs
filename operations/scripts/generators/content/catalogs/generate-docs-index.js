@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
  * @description Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
  * @mode        generate
  * @pipeline    manual, P3, P6

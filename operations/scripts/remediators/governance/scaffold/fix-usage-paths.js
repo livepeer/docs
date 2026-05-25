@@ -4,12 +4,12 @@
  * @type        remediator
  * @concern     governance
  * @niche       scaffold
- * @purpose     
+ * @purpose     Repair fix usage paths
  * @description fix usage paths
  * @mode        repair
  * @pipeline    manual
  * @scope       operations/scripts/remediators/governance/scaffold
- * @usage       
+ * @usage
  */
 // Post-remediation verification support (D-GOV-03)
 const VERIFY_MODE = process.argv.includes('--verify');

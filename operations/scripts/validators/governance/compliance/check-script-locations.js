@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates all JS files are in governed locations per the script framework
  * @description Validates all JS files are in governed locations per the script framework
  * @mode        check
  * @pipeline    pr-changed -> all .js files -> exit-code, stdout:violations

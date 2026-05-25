@@ -3,13 +3,14 @@
  * @script      lint-patterns
  * @type        validator
  * @concern     brand
- * @niche       copy
- * @purpose     
- * @description Enforce Tier 2 copy pattern rules on MDX content files.
+ * @niche       voice-register
+ * @purpose     Detect Tier-2 copy pattern violations in v2 MDX content — hedging language, weakened value claims, conditional softeners, audience-mismatched phrasing per the voice rules
+ * @description Pairs with check-voice-register.js. Where check-voice-register detects prohibited phrases, lint-patterns detects structural pattern violations (e.g. unnecessary qualifiers, hedging openers, indirect constructions). Exit non-zero on any hit. Used by dispatch-voice-register.js as the secondary detector.
  * @mode        check
- * @pipeline    manual
- * @scope       staged, changed, v2-content, single-file
- * @usage       node operations/scripts/validators/content/copy/lint-patterns.js [file or glob] [flags]
+ * @pipeline    P3 (PR via dispatch-voice-register.js)
+ * @scope       v2/ MDX (staged, changed, --full, or single-file via --files)
+ * @usage       node operations/scripts/validators/content/copy/lint-patterns.js [--files <paths>|--staged|--full]
+ * @policy      D-GOV-03 (paired detector for voice-register concern)
  */
 
 'use strict';

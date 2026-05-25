@@ -2,8 +2,8 @@
  * @script      phase-gate-hook
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. Reads phase-gate.jsonl and emits unverified
  * @description PostToolUse hook for Edit/Write. Reads phase-gate.jsonl and emits unverified
  * @mode        dispatch
  * @pipeline    PostToolUse hook → reads phase-gate.jsonl → emits unverified checkpoints

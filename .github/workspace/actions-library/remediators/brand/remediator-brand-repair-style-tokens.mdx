@@ -6,13 +6,13 @@ pageType: reference
 purpose: reference
 audience: internal
 status: active
-lastVerified: '2026-04-01'
+lastVerified: '2026-05-22'
 keywords:
   - livepeer
   - github-actions
   - remediator
   - brand
-  - styles-governance
+  - remediator-brand-repair-style-tokens
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -25,7 +25,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 | **New name** | `remediator-brand-repair-style-tokens.yml` |
 | **Type** | `remediator` |
 | **Concern** | `brand` |
-| **Pipeline tag** | P6 (self-heal) |
+| **Pipeline tag** | undefined |
 | **Status** | active |
 
 <CustomDivider />
@@ -42,7 +42,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 
 ```mermaid
 graph LR
-    TRIGGER["schedule, workflow_dispatch"] --> WF["styles-governance"]
+    TRIGGER["schedule, workflow_dispatch"] --> WF["remediator-brand-repair-style-tokens"]
     WF --> OUTPUT["output"]
 ```
 
@@ -60,7 +60,8 @@ graph LR
 ## Dependencies
 
 **Scripts:**
-None (inline only)
+- `tools/scripts/validators/styles/audit-styles.js`
+- `tools/scripts/remediators/styles/remediate-styles.js`
 
 <CustomDivider />
 
@@ -77,5 +78,5 @@ None identified.
 |---|---|
 | **Permissions** | Declared |
 | **Concurrency** | No |
-| **Auto-commit** | Yes |
+| **Auto-commit** | No |
 | **Inline script** | No |

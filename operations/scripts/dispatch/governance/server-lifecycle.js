@@ -2,8 +2,8 @@
  * @script      server-lifecycle
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the sessionStart hook + CLI tool. Auto-starts the Mintlify dev server via
  * @description SessionStart hook + CLI tool. Auto-starts the Mintlify dev server via
  * @mode        dispatch
  * @pipeline    SessionStart hook → ensure server → write state | CLI → health|restart

@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      codex/task-finalize
+ * @script      task-finalise
  * @type        dispatch
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex task finaliser — enforces task completion requirements before closing
+ * @purpose     Enforce Codex task completion requirements before the agent closes a session — verifies the task-contract acceptance criteria are met, the lock is released, and post-task validators pass
+ * @description End-of-session gate for the Codex AI agent. Validates that .codex/task-contract.yaml acceptance criteria are checked, runs validate-locks, runs any registered post-task validators, runs lock-release. If any step fails, blocks the session close so the agent must address it.
  * @mode        dispatch
- * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       operations/scripts/codex, operations/scripts/validate-codex-task-contract.js, operations/scripts/verify-pay-orc-gate-finalize.sh
+ * @pipeline    manual — invoked by the Codex agent via ai-tools/agent-packs/codex/skills-manifest.json
+ * @scope       operations/scripts/dispatch/ai/codex, .codex/task-contract.yaml
  * @usage       node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const { spawnSync } = require('child_process');

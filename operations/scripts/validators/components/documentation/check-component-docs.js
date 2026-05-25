@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       documentation
- * @purpose     
+ * @purpose     Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.
  * @description Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.
  * @mode        check
  * @pipeline    manual, P3

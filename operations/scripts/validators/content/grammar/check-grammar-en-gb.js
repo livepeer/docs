@@ -4,12 +4,13 @@
  * @type        validator
  * @concern     brand
  * @niche       grammar
- * @purpose     
- * @description Deterministic UK English grammar checker for prose content with optional conservative autofix for safe rules.
+ * @purpose     Detect UK English grammar issues in v2 MDX prose — subject-verb agreement, article use, comma placement — with optional conservative autofix for the small set of unambiguous rules
+ * @description Deterministic UK English grammar checker for prose content. Reads rules from a closed enum (no LLM); applies only the rules with documented, unambiguous corrections. --fix performs the autofix for the safe subset. Skips code blocks, frontmatter, JSX comments, JSX attribute values, import/export lines. Exit non-zero if any violation detected.
  * @mode        check
- * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files/CI validator for English v2 docs and explicit content files
- * @scope       operations/scripts/validators/content, tools/script-index.md, operations/tests/cript-index.md, docs-guide/catalog/scripts-catalog.mdx, v2
- * @usage       node operations/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full|changed] [--file <path[,path...]>] [--fix] [--strict]
+ * @pipeline    P3 (PR via dispatch-grammar-en-gb.js), P6 (manual --fix)
+ * @scope       v2/ MDX (excluding _workspace, x-archived, x-deprecated, locale subtrees)
+ * @usage       node operations/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full|changed] [--files <path[,path...]>] [--fix] [--strict]
+ * @policy      D-GOV-03 (paired with style-and-language-homogenizer-en-gb)
  */
 
 const fs = require('fs');

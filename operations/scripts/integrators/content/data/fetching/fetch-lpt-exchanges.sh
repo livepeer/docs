@@ -2,13 +2,14 @@
 # @script      fetch-lpt-exchanges
 # @type        integrator
 # @concern     integrations
-# @niche       data
-# @purpose     
-# @description LPT exchange data fetcher — pulls exchange listing data for LPT token pages
+# @niche       exchanges-data
+# @purpose     Fetch the CoinGecko exchange listings for LPT (where to buy/trade Livepeer token) and append/update snippets/data/exchanges/lpt-exchanges.mdx — manual-use script run when listings change or contributors want to refresh the LPT exchange data
+# @description Hits CoinGecko's public exchanges-by-token endpoint for the LPT coin ID, transforms the response (exchange name, pair, volume, trust score) into an MDX table, appends or updates the table in snippets/data/exchanges/lpt-exchanges.mdx. Manual-use only — documented in docs-guide/tooling/lpd-cli.mdx as a contributor workflow.
 # @mode        integrate
-# @pipeline    manual — not yet in pipeline
-# @scope       operations/scripts/integrators/content/data/fetching
+# @pipeline    manual — invoked when LPT listing data needs refresh
+# @scope       CoinGecko exchanges API → snippets/data/exchanges/lpt-exchanges.mdx
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh [flags]
+# @policy      F-R1 (data freshness); public API only; no secrets in output
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
 # Usage: ./operations/scripts/snippets/fetch-lpt-exchanges.sh
 
@@ -70,9 +71,9 @@ for (const ticker of tickers) {
   const isStale = ticker.is_stale;
   const target = ticker.target;
   const volume = ticker.converted_volume?.usd || 0;
-  
+
   if (!exchangeName || isStale) continue;
-  
+
   if (!exchangeMap.has(exchangeId)) {
     exchangeMap.set(exchangeId, {
       name: exchangeName,
@@ -82,13 +83,13 @@ for (const ticker of tickers) {
       totalVolume: 0
     });
   }
-  
+
   const exchange = exchangeMap.get(exchangeId);
   if (!exchange.pairs.includes(target)) {
     exchange.pairs.push(target);
   }
   exchange.totalVolume += volume;
-  
+
   // Keep the best trust score
   if (trustScore === 'green' || (trustScore === 'yellow' && exchange.trustScore !== 'green')) {
     exchange.trustScore = trustScore;
@@ -141,15 +142,15 @@ let content = `
 
 sortedExchanges.forEach((exchange, index) => {
   const bgColor = index % 2 === 0 ? '#1a1a1a' : 'transparent';
-  const volumeFormatted = exchange.totalVolume >= 1000000 
+  const volumeFormatted = exchange.totalVolume >= 1000000
     ? `$${(exchange.totalVolume / 1000000).toFixed(2)}M`
-    : exchange.totalVolume >= 1000 
+    : exchange.totalVolume >= 1000
       ? `$${(exchange.totalVolume / 1000).toFixed(2)}K`
       : `$${exchange.totalVolume.toFixed(2)}`;
-  
+
   const pairsDisplay = exchange.pairs.slice(0, 5).join(', ') + (exchange.pairs.length > 5 ? '...' : '');
   const trustBadge = getTrustBadge(exchange.trustScore);
-  
+
   content += `    <tr style={{ borderBottom: '1px solid #333', backgroundColor: '${bgColor}' }}>
       <td style={{ padding: '10px 16px' }}><a href="${exchange.url || '#'}" target="_blank" style={{ color: '#2d9a67', fontWeight: '500' }}>${exchange.name}</a></td>
       <td style={{ padding: '10px 16px', fontFamily: 'monospace', fontSize: '0.85rem' }}>${pairsDisplay}</td>

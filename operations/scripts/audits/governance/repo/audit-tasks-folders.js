@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       repo
- * @purpose     
+ * @purpose     Checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @mode        scan
  * @pipeline    manual — not yet in pipeline

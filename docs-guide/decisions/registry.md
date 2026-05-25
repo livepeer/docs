@@ -2,7 +2,7 @@
 
 > Single lookup point for all decision registries across the repo.
 > Each registry stays in its own location. This file cross-references them all.
-> Last verified: 2026-05-04
+> Last verified: 2026-05-22
 
 <CustomDivider />
 
@@ -18,7 +18,7 @@
 | Script Governance | `workspace/plan/active/SCRIPT-GOVERNANCE/decision-log.md` | Script architecture decisions | Multiple |
 | OSS Ownerless Governance | `workspace/plan/active/OSS-OWNERLESS-REPO-GOVERNANCE/decisions/decision-log.md` | Ownerless contribution decisions | — |
 | GitHub Actions | `.github/workspace/decisions-log.mdx` | Workflow architecture (D-ACT-01 through D-ACT-10) | 10 locked |
-| Governance Design | `.github/workspace/design/governance/design-overview.md` | Governance infrastructure (D-GOV-01 through D-GOV-07) | 7 locked |
+| Governance Design | `.github/workspace/design/governance/design-overview.md` + `.github/workspace/decisions-log.mdx` | Governance infrastructure (D-GOV-01 through D-GOV-08; D-GOV-08 = every folder is governed, prevention at earliest layer) | 8 locked |
 | Ship-Content | `workspace/plan/active/SHIP-CONTENT/decisions.md` | Runtime execution decisions (D-01 through D-12) | — |
 
 <CustomDivider />

@@ -2,14 +2,15 @@
 /**
  * @script      check-codex-pr-overlap
  * @type        dispatch
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description PR enforcer — checks for conflicting codex PRs targeting the same files/branches
+ * @purpose     Detect conflicting Codex agent PRs that target overlapping files or branches — prevents two parallel Codex sessions from racing on the same scope before either lands
+ * @description Lists open codex/* PRs via gh CLI, extracts the changed-file set per PR, flags pairs whose changed-file sets intersect. Used by the Codex pre-task workflow to abort a session before it starts work on territory another agent already claimed.
  * @mode        dispatch
- * @pipeline    PR, Track B)
+ * @pipeline    P2 (Codex pre-task gate)
  * @scope       operations/scripts, .github/workflows, codex PR governance
  * @usage       node operations/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const { spawnSync } = require('child_process');

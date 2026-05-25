@@ -2,14 +2,15 @@
 /**
  * @script      cross-agent-packager
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       agents
- * @purpose     
- * @description Cross-agent packager — bundles audit reports and repo state into agent-consumable packages
+ * @purpose     Bundle audit reports + repo state + skill manifest into an agent-pack consumable by any supported AI agent (claude, codex, cursor, windsurf) so each agent gets equivalent context and skills regardless of host platform
+ * @description Reads the canonical skills catalog and execution manifest from ai-tools/ai-skills/, the latest audit reports from workspace/reports/, and the per-agent target rules. Produces a per-agent pack under ai-tools/agent-packs/{agent}/ (e.g. claude/CLAUDE.md, codex/skills-manifest.json, cursor/rules.md). Called by repo-audit-orchestrator.js when --agent-pack is set.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
- * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]
+ * @pipeline    manual via repo-audit-orchestrator — produces agent-portable packs after audit runs
+ * @scope       operations/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs/
+ * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack <name> --output-dir ai-tools/agent-packs
+ * @policy      Agent-portability standard (every supported agent gets equivalent context)
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');

@@ -3,7 +3,7 @@
  * @type        validator
  * @concern     governance
  * @niche       ai
- * @purpose     
+ * @purpose     check companion manifest
  * @description check companion manifest
  * @mode        check
  * @pipeline    manual

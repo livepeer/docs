@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
  * @description Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
  * @mode        generate
  * @pipeline    manual

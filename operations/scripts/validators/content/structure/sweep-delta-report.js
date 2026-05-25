@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,
  * @description Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,
  * @mode        check
  * @pipeline    manual — run on demand or on schedule to detect drift

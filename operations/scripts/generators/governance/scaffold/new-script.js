@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       scaffold
- * @purpose     tooling:dev-tools',
+ * @purpose     Generate ${params.summary}`,
  * @description ${params.summary}`,
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines',

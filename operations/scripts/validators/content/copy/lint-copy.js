@@ -3,13 +3,14 @@
  * @script      lint-copy
  * @type        validator
  * @concern     brand
- * @niche       copy
- * @purpose     
- * @description Enforce banned word and phrase rules on MDX content files.
+ * @niche       banned-words
+ * @purpose     Detect banned words and banned phrases in v2 MDX content per the canonical lists at tools/lib/copy-governance/banned-{words,phrases}.txt
+ * @description Reads the two canonical lists (10 banned words + 17 banned phrases from the CLAUDE.md voice rules) and scans v2 MDX for occurrences. Exit non-zero on any hit. No auto-fix — banned terms require manual rewrite via the rolling-issue model. Pairs with dispatch-banned-words.js.
  * @mode        check
- * @pipeline    manual
- * @scope       staged, changed, v2-content, single-file
- * @usage       node operations/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
+ * @pipeline    P3 (PR via dispatch-banned-words.js), P5 (scheduled scan)
+ * @scope       v2/ MDX (staged, changed, --full, or single-file via --files)
+ * @usage       node operations/scripts/validators/content/copy/lint-copy.js [--files <paths>|--staged|--full]
+ * @policy      D-GOV-03 (detect-only — rolling-issue is the response)
  */
 
 'use strict';

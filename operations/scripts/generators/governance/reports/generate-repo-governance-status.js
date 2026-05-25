@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       reports
- * @purpose     
+ * @purpose     Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
  * @description Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
  * @mode        generate
  * @pipeline    manual, pr-changed -> repo-governance registry -> governance map and status reports

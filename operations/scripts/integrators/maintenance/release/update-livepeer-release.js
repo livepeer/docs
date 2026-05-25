@@ -4,7 +4,7 @@
  * @type        integrator
  * @concern     maintenance
  * @niche       release
- * @purpose     qa:data-refresh
+ * @purpose     Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
  * @description Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
  * @mode        integrate
  * @pipeline    manual

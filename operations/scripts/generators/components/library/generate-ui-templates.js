@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Generates the UI template catalog and VS Code snippets from canonical template/component sources.
  * @description Generates the UI template catalog and VS Code snippets from canonical template/component sources.
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines

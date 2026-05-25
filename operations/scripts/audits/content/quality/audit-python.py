@@ -3,7 +3,7 @@
 # @type        audit
 # @concern     health
 # @niche       quality
-# @purpose     
+# @purpose     Validates routed docs files, snippet imports, and internal links, then writes page-audit reports
 # @description Python page audit utility — validates routed docs files, snippet imports, and internal links, then writes page-audit reports
 # @mode        scan
 # @pipeline    manual — not yet in pipeline
@@ -30,7 +30,7 @@ def extract_pages(nav, pages=None):
     """Recursively extract all page paths from navigation structure"""
     if pages is None:
         pages = []
-    
+
     if isinstance(nav, list):
         for item in nav:
             extract_pages(item, pages)
@@ -50,18 +50,18 @@ def get_v2_pages():
     """Get all v2 pages from docs.json"""
     with open(DOCS_JSON_PATH, 'r') as f:
         docs = json.load(f)
-    
+
     v2_version = next((v for v in docs['navigation']['versions'] if v['version'] == 'v2'), None)
     if not v2_version:
         raise ValueError('v2 version not found in docs.json')
-    
+
     all_pages = extract_pages(v2_version)
     unique_pages = list(set([
-        p.replace('.mdx', '').replace('.md', '') 
-        for p in all_pages 
+        p.replace('.mdx', '').replace('.md', '')
+        for p in all_pages
         if p and p.strip() and p != ' '
     ]))
-    
+
     return unique_pages
 
 def is_intentional_redirect(page_path):
@@ -81,7 +81,7 @@ def check_file_exists(page_path):
     for file_path in candidates:
         if file_path.exists():
             return {'exists': True, 'path': str(file_path)}
-    
+
     return {'exists': False, 'path': None}
 
 def check_mdx_errors(file_path):
@@ -90,7 +90,7 @@ def check_mdx_errors(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         # Check for broken imports
         import_pattern = r"import\s+{([^}]+)}\s+from\s+['\"]([^'\"]+)['\"]"
         for match in re.finditer(import_pattern, content):
@@ -106,7 +106,7 @@ def check_mdx_errors(file_path):
                         errors.append(f"Missing import: {import_path}")
     except Exception as e:
         errors.append(f"File read error: {str(e)}")
-    
+
     return errors
 
 def extract_links(file_path):
@@ -115,7 +115,7 @@ def extract_links(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         # Markdown links: [text](url)
         markdown_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
         for match in re.finditer(markdown_pattern, content):
@@ -124,7 +124,7 @@ def extract_links(file_path):
                 'url': match.group(2),
                 'type': 'markdown'
             })
-        
+
         # JSX links: <Link href="...">
         jsx_pattern = r'<Link[^>]+href=[\'"]([^\'"]+)[\'"]'
         for match in re.finditer(jsx_pattern, content):
@@ -133,7 +133,7 @@ def extract_links(file_path):
                 'url': match.group(1),
                 'type': 'jsx'
             })
-        
+
         # Anchor tags: <a href="...">
         anchor_pattern = r'<a[^>]+href=[\'"]([^\'"]+)[\'"]'
         for match in re.finditer(anchor_pattern, content):
@@ -144,17 +144,17 @@ def extract_links(file_path):
             })
     except Exception:
         pass
-    
+
     return links
 
 def check_link(link, current_page_path):
     """Check if link is broken"""
     url = link['url']
-    
+
     # Skip external links
     if url.startswith(('http://', 'https://', 'mailto:', '#')):
         return {'broken': False, 'reason': 'external_or_anchor'}
-    
+
     # Handle relative links
     if url.startswith('/'):
         # Absolute path from root
@@ -180,7 +180,7 @@ def check_link(link, current_page_path):
                 return {'broken': True, 'reason': 'file_not_found', 'expected': str(relative_path)}
         except ValueError:
             return {'broken': True, 'reason': 'path_outside_repo', 'expected': str(target_path)}
-    
+
     return {'broken': False, 'reason': 'valid'}
 
 # Main execution
@@ -241,9 +241,9 @@ for i, page_path in enumerate(pages, 1):
             f.write(f'Progress: {i}/{len(pages)} pages checked\n')
     progress = f'[{i}/{len(pages)}]'
     print(f'{progress} Checking {page_path}... ', end='', flush=True)
-    
+
     file_check = check_file_exists(page_path)
-    
+
     if not file_check['exists']:
         if is_intentional_redirect(page_path):
             print('⚠️  INTENTIONAL REDIRECT')
@@ -268,13 +268,13 @@ for i, page_path in enumerate(pages, 1):
         mdx_errors = check_mdx_errors(file_check['path'])
         links = extract_links(file_check['path'])
         broken_links = []
-        
+
         # Check each link
         for link in links:
             link_check = check_link(link, file_check['path'])
             if link_check['broken']:
                 broken_links.append({**link, **link_check})
-        
+
         audit_results['fileChecks'].append({
             'pagePath': page_path,
             'exists': True,
@@ -283,7 +283,7 @@ for i, page_path in enumerate(pages, 1):
             'links': len(links),
             'brokenLinks': len(broken_links)
         })
-        
+
         if mdx_errors:
             audit_results['mdxErrors'].append({
                 'pagePath': page_path,
@@ -291,7 +291,7 @@ for i, page_path in enumerate(pages, 1):
                 'errors': mdx_errors
             })
             audit_results['summary']['mdxErrors'] += len(mdx_errors)
-        
+
         if broken_links:
             audit_results['brokenLinks'].append({
                 'pagePath': page_path,

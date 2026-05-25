@@ -1,9 +1,18 @@
 # Consolidated Governance Architecture
 
-> Complete blueprint for ownerless, self-governing documentation repo.
+> **SUPERSEDED 2026-05-18.** This document targeted 47 workflows. The current target is approximately 10 dispatcher workflows.
+>
+> **Canonical framework:** [`docs-guide/frameworks/github-actions.mdx`](../../../../docs-guide/frameworks/github-actions.mdx)
+> **Current execution plan:** `/Users/alisonhaire/.claude/plans/soft-gliding-falcon.md` (active session)
+> **Locked decisions:** `.github/workspace/decisions-log.mdx`
+>
+> Kept here as design history. Do not implement from this document. Do not edit; if a constraint here is still relevant, restate it in the canonical framework with rationale.
+
+---
+
+> Original purpose (historical): Complete blueprint for ownerless, self-governing documentation repo.
 > Covers: workflows, scripts, hooks, policies, config, reports, design docs.
-> NOTHING gets implemented until approved.
-> Date: 2026-04-07 (updated with gap audit findings)
+> Date: 2026-04-07 (gap audit findings)
 
 <CustomDivider />
 
@@ -468,4 +477,3 @@ Each step: explain intent, wait for go, test, document.
 | 45 | v2-external-link-audit.yml | audit-health-scan-external-links.yml | audit | health | P5 |
 | 46 | verify-ai-sitemap.yml | validator-discoverability-check-ai-sitemap.yml | validator | discoverability | P3 |
 | 47 | verify-llms-files.yml | validator-discoverability-check-llms-files.yml | validator | discoverability | P3 |
-

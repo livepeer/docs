@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates that GitHub Actions workflow YAML files have governance comment headers
  * @description Validates that GitHub Actions workflow YAML files have governance comment headers
  * @mode        check
  * @pipeline    pr-changed -> .github/workflows/*.yml -> exit-code, stdout:violations

@@ -2,13 +2,14 @@
 # @script      fetch-openapi-specs
 # @type        integrator
 # @concern     integrations
-# @niche       data
-# @purpose     
-# @description OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages
+# @niche       openapi-specs
+# @purpose     Fetch the latest OpenAPI specs for Livepeer services (Studio API, Gateway API, etc.) and write them to api/ so Mintlify can regenerate the v2 API reference pages — note: known RFP gap, currently covers 2 of 5 target services
+# @description Iterates a config-mapped list of Livepeer service OpenAPI spec URLs, downloads each via curl, validates JSON/YAML parses, writes to api/{service}-openapi.{yaml,json}. Mintlify's reference-page generator picks them up. Manual-use; not yet wired into a scheduled or post-merge pipeline (tracked as RFP gap "OpenAPI fetcher 2/5").
 # @mode        integrate
-# @pipeline    manual — not yet in pipeline
-# @scope       operations/scripts/integrators/content/data/fetching
+# @pipeline    manual — invoked when API specs need refresh
+# @scope       Livepeer service OpenAPI endpoints → api/*.{yaml,json}
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh [flags]
+# @policy      F-R1 (data freshness); public endpoints only; no secrets in output
 # Pre-build script to fetch external OpenAPI specification files
 # Run this before building the docs to ensure API specs are up-to-date
 
@@ -65,4 +66,3 @@ echo "  Location: $OPENAPI_DIR"
 echo ""
 echo "Referenced specs:"
 ls -la "$OPENAPI_DIR"/*.yaml 2>/dev/null || echo "  No YAML files found"
-

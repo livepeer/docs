@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Dispatch the orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.
  * @description Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.
  * @mode        dispatch
  * @pipeline    manual, P6

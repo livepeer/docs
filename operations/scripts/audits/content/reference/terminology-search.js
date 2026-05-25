@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Audit searches glossary/terminology data for definitions
  * @description Terminology search — searches glossary/terminology data for definitions
  * @mode        scan
  * @pipeline    manual — not yet in pipeline

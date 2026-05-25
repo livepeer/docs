@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       pr
- * @purpose     
+ * @purpose     Detect flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
  * @description Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
  * @mode        check
  * @pipeline    manual

@@ -3,7 +3,7 @@
 # @type        generator
 # @concern     maintenance
 # @niche       reference
-# @purpose     
+# @purpose     Generates API reference pages from OpenAPI specs
 # @description API docs generator — generates API reference pages from OpenAPI specs
 # @mode        generate
 # @pipeline    manual — not yet in pipeline
@@ -94,13 +94,13 @@ for (const [pathUrl, methods] of Object.entries(spec.paths || {})) {
       const summary = details.summary || pathUrl;
       const description = details.description || '';
       const slug = slugify(pathUrl.replace(/\//g, '-'));
-      
+
       const endpoint = { pathUrl, method, summary, description, slug, tag };
       endpoints.push(endpoint);
-      
+
       if (!groups[tag]) groups[tag] = [];
       groups[tag].push(endpoint);
-      
+
       // Generate individual endpoint MDX file
       const mdxContent = `---
 openapi: ${method} ${pathUrl}
@@ -203,4 +203,3 @@ NODEJS_SCRIPT
 
 echo ""
 echo "Done! Check $OUTPUT_DIR for generated files."
-

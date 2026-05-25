@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      mdx-sanitise
- * @type        config
- * @concern     
- * @niche       
- * @purpose     
- * @description Shared sanitisation utilities for all scripts that write content consumed by MDX pages.
+ * @type        integrator
+ * @concern     copy
+ * @niche       social-feeds
+ * @purpose     Shared library — sanitise raw external content (Discord messages, forum posts, RSS items, GitHub release bodies, YouTube descriptions) into safe MDX/JSX-embeddable strings, escape curly braces, strip dangerous JSX-like patterns, normalise whitespace
+ * @description Library used by all 6 social-feed integrators (fetch-forum-data, fetch-discord-announcements, fetch-ghost-blog-data, fetch-rss-blog-data, fetch-github-discussions, fetch-github-releases, fetch-youtube-data) to safely embed external content in the generated *.jsx data modules. Exports sanitiseForMdx, escapeForJsx, stripDangerousPatterns.
  * @mode        integrate
- * @pipeline    external content -> sanitise -> safe MDX/JSX output
- * @scope       operations/scripts/config/, .github/scripts/
- * @usage       const { sanitiseForMdx, escapeForJsx } = require('../../operations/scripts/config/mdx-sanitise')
+ * @pipeline    library — imported by all social-feed integrators
+ * @scope       external content sources → safe MDX/JSX string output
+ * @usage       const { sanitiseForMdx, escapeForJsx } = require('operations/scripts/config/mdx-sanitise')
+ * @policy      D-GOV-08 (single sanitiser for all social-feed integrators)
  */
 
 "use strict";

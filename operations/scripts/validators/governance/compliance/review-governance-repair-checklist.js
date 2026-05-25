@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Generates a review checklist for dry-run governance repair proposals that require human approval before fix mode is applied.
  * @description Generates a review checklist for dry-run governance repair proposals that require human approval before fix mode is applied.
  * @mode        check
  * @pipeline    manual

@@ -2,8 +2,8 @@
  * @script      completion-gate
  * @type        dispatch
  * @concern     governance
- * @niche       
- * @purpose     
+ * @niche
+ * @purpose     Dispatch the preToolUse hook for Write/Edit. Detects writes to session-log.txt,
  * @description PreToolUse hook for Write/Edit. Detects writes to session-log.txt,
  * @mode        dispatch
  * @pipeline    PreToolUse hook → parse stdin → check completion artifact → read verify/loop state → allow or block

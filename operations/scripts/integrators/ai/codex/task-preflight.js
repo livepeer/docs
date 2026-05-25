@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      codex/task-preflight
+ * @script      task-preflight
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex task preflight — generates task setup files and validates preconditions
+ * @purpose     Set up a fresh Codex agent session — generates .codex/task-contract.yaml scaffold, acquires the local execution lock, validates preconditions (branch, repo state, prior locks), so the session starts from a clean known state
+ * @description Run before the Codex agent starts work. Creates the task-contract YAML with task ID, scope, acceptance criteria fields. Acquires a local execution lock at .codex/locks-local/{task-id}.lock to prevent parallel-session conflicts. Verifies branch is on codex/* prefix, no stash markers present, no other locks held.
  * @mode        integrate
- * @pipeline    manual — codex setup tool referenced by .githooks/pre-commit guidance, not auto-executed
- * @scope       operations/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
+ * @pipeline    manual — invoked at Codex session start
+ * @scope       operations/scripts/integrators/ai/codex, .codex/task-contract.yaml, .codex/locks-local/
  * @usage       node operations/scripts/integrators/ai/codex/task-preflight.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const fs = require('fs');

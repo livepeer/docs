@@ -3,7 +3,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
  * @description Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
  * @mode        check
  * @pipeline    manual — not yet in pipeline
@@ -36,11 +36,11 @@ async function verifyPage(paths, name) {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  
+
   const page = await browser.newPage();
   const errors = [];
   const warnings = [];
-  
+
   page.on('console', msg => {
     const text = msg.text();
     if (msg.type() === 'error') {
@@ -49,11 +49,11 @@ async function verifyPage(paths, name) {
       warnings.push(text);
     }
   });
-  
+
   page.on('pageerror', error => {
     errors.push(error.toString());
   });
-  
+
   try {
     console.log(`\n🔍 Verifying: ${name}`);
     const pathCandidates = Array.isArray(paths) ? paths : [paths];
@@ -116,7 +116,7 @@ async function verifyPage(paths, name) {
 
     console.log(`   ❌ PAGE NOT RENDERING`);
     return { success: false, errors: lastErrors };
-    
+
   } catch (error) {
     console.log(`   ❌ ERROR: ${error.message}`);
     return { success: false, errors: [error.message] };
@@ -128,19 +128,19 @@ async function verifyPage(paths, name) {
 
 async function main() {
   console.log('🔍 Verifying ALL component library pages in browser...\n');
-  
+
   const results = [];
   for (const pageSpec of PAGES) {
     const result = await verifyPage(pageSpec.paths, pageSpec.name);
     results.push({ ...pageSpec, ...result });
   }
-  
+
   console.log('\n📊 Summary:');
   const passed = results.filter(r => r.success).length;
   const failed = results.filter(r => !r.success).length;
   console.log(`   ✅ Passed: ${passed}/${PAGES.length}`);
   console.log(`   ❌ Failed: ${failed}/${PAGES.length}`);
-  
+
   if (failed > 0) {
     console.log('\n❌ Failed Pages:');
     results.filter(r => !r.success).forEach(r => {

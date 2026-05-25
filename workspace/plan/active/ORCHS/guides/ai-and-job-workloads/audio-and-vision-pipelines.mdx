@@ -43,7 +43,7 @@ Four non-diffusion, non-LLM pipelines are available on the Livepeer AI network: 
 
 Each pipeline has a different VRAM footprint and a different pricing unit. The entry below each section is the complete `aiModels.json` configuration required to enable it.
 
-<CustomDivider middleText="Pipeline Summaries" />
+<CustomDivider />
 
 ## Pipeline overview
 
@@ -84,14 +84,14 @@ Each pipeline has a different VRAM footprint and a different pricing unit. The e
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="audio-to-text" />
+<CustomDivider />
 
 ## audio-to-text (Whisper)
 
 `audio-to-text` transcribes audio to text with timestamps. The network-standard model is `openai/whisper-large-v3`, which most gateway operators request by default. Running a non-standard model means fewer jobs routed your way.
 
-**VRAM:** ~3 GB warm  
-**Pricing unit:** Per millisecond of audio input  
+**VRAM:** ~3 GB warm
+**Pricing unit:** Per millisecond of audio input
 **Competitive note:** Whisper is VRAM-efficient. A 12 GB or 24 GB card supports a warm Whisper deployment alongside a diffusion model when those workloads are split across available GPU headroom.
 
 ### aiModels.json entry
@@ -125,14 +125,14 @@ Verify registration:
 
 [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
 
-<CustomDivider middleText="text-to-speech" />
+<CustomDivider />
 
 ## text-to-speech
 
 `text-to-speech` synthesises natural speech from text input. Growing demand as AI video narration use cases expand on the network.
 
-**VRAM:** Varies by model  
-**Pricing unit:** Per character, or per millisecond of output audio (model-dependent)  
+**VRAM:** Varies by model
+**Pricing unit:** Per character, or per millisecond of output audio (model-dependent)
 **Model:** `suno/bark` is the documented baseline model for this pipeline.
 
 ### aiModels.json entry
@@ -151,14 +151,14 @@ Verify registration:
 
 After startup, verify the container is running and the pipeline appears registered at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under `text-to-speech`.
 
-<CustomDivider middleText="image-to-text" />
+<CustomDivider />
 
 ## image-to-text
 
 `image-to-text` generates text descriptions from images using a vision-language model. The low VRAM requirement makes this the most accessible AI pipeline for operators without high-end GPUs.
 
-**VRAM:** ~1–2 GB (BLIP large)  
-**Pricing unit:** Per input pixel  
+**VRAM:** ~1–2 GB (BLIP large)
+**Pricing unit:** Per input pixel
 **Entry point:** Runs on 4 GB GPUs. Operators below the 24 GB diffusion threshold still participate through `image-to-text` and `audio-to-text`.
 
 ### aiModels.json entry
@@ -182,14 +182,14 @@ docker logs image-to-text-container --tail 30
 
 Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for registration status.
 
-<CustomDivider middleText="segment-anything-2" />
+<CustomDivider />
 
 ## segment-anything-2
 
 `segment-anything-2` (SAM2) performs promptable segmentation — given an image or video frame and a point or bounding box prompt, it returns pixel masks for the identified object or region. The pipeline is compute-intensive and has lower competition than diffusion pipelines.
 
-**VRAM:** 12–24 GB depending on model variant  
-**Pricing unit:** Per input pixel  
+**VRAM:** 12–24 GB depending on model variant
+**Pricing unit:** Per input pixel
 **Model variants:** SAM2 has multiple size variants. `facebook/sam2-hiera-large` is the standard choice.
 
 ### aiModels.json entry
@@ -214,7 +214,7 @@ docker ps --filter name=livepeer-ai-runner
 
 Check registration at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under `segment-anything-2`.
 
-<CustomDivider middleText="Multi-Pipeline Configuration" />
+<CustomDivider />
 
 ## Running multiple pipelines
 

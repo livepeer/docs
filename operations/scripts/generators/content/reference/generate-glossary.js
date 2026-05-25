@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Generate produces glossary data file from terminology sources
  * @description Glossary generator — produces glossary data file from terminology sources
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
@@ -14,13 +14,13 @@
 
 /**
  * Glossary Generation Script
- * 
+ *
  * Scans all MDX pages in v1 & v2 for terminology that:
  * - May not be commonly recognized by laypeople
  * - Is Livepeer-specific
  * - Is domain-specific (video, blockchain/crypto, AI)
  * - Is used frequently in the docs
- * 
+ *
  * Outputs a JSON data file with:
  * - Term Name (full form with acronyms/abbreviations)
  * - Page(s) the term is used on
@@ -29,7 +29,7 @@
  * - Tags (for searchability)
  * - External Verification (link to external source)
  * - Context/Usage Notes
- * 
+ *
  * Usage: node generate-glossary.js [--dry-run]
  */
 
@@ -142,7 +142,7 @@ const TERM_PATTERNS = {
 function findMdxFiles(dir) {
   const files = [];
   if (!fs.existsSync(dir)) return files;
-  
+
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);

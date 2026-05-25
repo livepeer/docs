@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      codex/validate-locks
+ * @script      validate-locks
  * @type        validator
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex lock validator — checks for stale or conflicting lock files before push
+ * @purpose     Validate Codex execution-lock state before push — fails if a lock from a different task is present or a stale lock has outlived its owning session, preventing two agents from racing on overlapping scope
+ * @description Pre-push validator for Codex sessions. Checks .codex/locks-local/ for lock files, validates each lock's task ID matches the current branch's codex/* prefix, validates each lock's age is within session-lifetime threshold. Exits non-zero on stale or foreign locks. Called by .githooks/pre-push for codex/* branches.
  * @mode        check
- * @pipeline    commit), P2 (push)
- * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @pipeline    P1 (pre-commit), P2 (pre-push) for codex/* branches
+ * @scope       operations/scripts/validators/ai/codex, .codex/locks-local/, .codex/task-contract.yaml
  * @usage       node operations/scripts/validators/ai/codex/validate-locks.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const fs = require('fs');

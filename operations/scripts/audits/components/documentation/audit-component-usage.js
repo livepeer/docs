@@ -3,7 +3,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       documentation
- * @purpose     
+ * @purpose     Scans pages for component usage patterns and reports statistics
  * @description Component usage auditor — scans pages for component usage patterns and reports statistics
  * @mode        scan
  * @pipeline    manual

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
  * @description Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
  * @mode        check
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files

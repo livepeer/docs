@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @mode        scan
  * @pipeline    manual — experimental research system

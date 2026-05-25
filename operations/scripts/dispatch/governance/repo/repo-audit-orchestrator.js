@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       repo
- * @purpose     
+ * @purpose     Dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.
  * @description Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.
  * @mode        dispatch
  * @pipeline    manual

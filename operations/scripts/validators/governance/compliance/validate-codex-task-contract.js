@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates branch naming, task files, PR body, and issue state for codex branches
  * @description Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
  * @mode        check
  * @pipeline    commit), P2 (push), P3 (PR, Track B)

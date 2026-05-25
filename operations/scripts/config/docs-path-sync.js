@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
  * @script      docs-path-sync
- * @type        config
- * @concern     
- * @niche       
- * @purpose     
- * @description Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates.
+ * @type        integrator
+ * @concern     health
+ * @niche       page-integrity
+ * @purpose     Shared library — detect staged page moves/renames, plan deterministic route rewrites across docs.json + every linking surface (v2 MDX, snippets, catalog docs), apply the rewrite plan or report drift
+ * @description Library module imported by page-links-audit.js, precommit-staged-cache.js, and run-all.js. Exports planRewrites(stagedMoves), applyRewrites(plan), checkDrift() so page renames don't leave broken inbound links. Pairs with the page-integrity pipeline (dispatch-page-integrity.js indirectly via page-links-audit).
  * @mode        integrate
- * @pipeline    manual -- library module
- * @scope       full-repo
- * @usage       const sync = require('./docs-path-sync');
+ * @pipeline    library — imported by page-integrity pipeline atomics
+ * @scope       docs.json + v2/ MDX + snippets/ + catalogs that reference v2/ routes
+ * @usage       const sync = require('operations/scripts/config/docs-path-sync');
+ * @policy      D-GOV-08 (single source of truth for path-sync logic)
  */
 
 const fs = require('fs');

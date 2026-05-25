@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.
  * @description Preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.
  * @mode        repair
  * @pipeline    manual
