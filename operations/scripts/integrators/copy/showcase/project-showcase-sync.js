@@ -66,10 +66,15 @@ function log(msg, obj) {
 function assertEnv() {
   const missing = REQUIRED_ENVS.filter((key) => !process.env[key]);
   if (missing.length > 0) {
-    throw new Error(`Missing required env vars: ${missing.join(', ')}`);
+    // Multi-secret integrator: Google Sheets + GitHub + Discord. When ANY secret is missing
+    // (local dev without .env, or partial CI config), skip cleanly so the dispatcher pipeline
+    // stays green. Exit 0 — this is "not configured", not "broken".
+    console.log(`project-showcase-sync: SKIP — missing env vars: ${missing.join(', ')} (configure in CI or .env to enable)`);
+    process.exit(0);
   }
   if (!cfg.githubOwner || !cfg.githubRepo || !cfg.githubToken) {
-    throw new Error('Missing GitHub config: GITHUB_OWNER/GITHUB_REPO/GITHUB_TOKEN');
+    console.log('project-showcase-sync: SKIP — missing GitHub config: GITHUB_OWNER/GITHUB_REPO/GITHUB_TOKEN (configure to enable)');
+    process.exit(0);
   }
 }
 

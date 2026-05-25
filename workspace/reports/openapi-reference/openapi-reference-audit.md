@@ -1,6 +1,6 @@
 # OpenAPI Reference Audit
 
-Generated: 2026-05-22T06:36:31.411Z
+Generated: 2026-05-25T11:36:57.221Z
 Mode: full
 Strict: false
 Fix enabled: false
@@ -8,7 +8,7 @@ Write enabled: false
 
 ## Summary
 
-- Files analyzed: 1066
+- Files analyzed: 885
 - OpenAPI references: 158
 - Findings: 0
 - Files changed by autofix: 0
