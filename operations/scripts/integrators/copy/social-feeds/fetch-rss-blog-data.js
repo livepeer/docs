@@ -28,9 +28,10 @@ function fetchUrl(url) {
     const client = url.startsWith("https") ? https : http;
     client
       .get(url, { headers: { "User-Agent": "livepeer-docs-bot" } }, (res) => {
-        // Follow redirects
+        // Follow redirects — resolve relative locations (e.g. `/path`) against the request URL.
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          return fetchUrl(res.headers.location).then(resolve).catch(reject);
+          const next = new URL(res.headers.location, url).toString();
+          return fetchUrl(next).then(resolve).catch(reject);
         }
         let data = "";
         res.on("data", (chunk) => (data += chunk));

@@ -174,7 +174,7 @@ Each production automation must declare (per `docs-guide/policies/ownerless-gove
 | Output contract | Where reports, generated files, or PR comments are written |
 | Retention policy | Whether outputs are committed, archived, summarised, or purged |
 
-8 surfaces are formally ownerless-ready today (per `operations/governance/config/ownerless-governance-surfaces.json`). 28 surfaces in the broader registry (`repo-governance-surfaces.json`) – 20 still advisory.
+**Post-D-ACT-10 (2026-04-05):** the canonical registry is `operations/governance/config/repo-governance-surfaces.json` with **5 unified surfaces, 4 ownerless-ready, 1 advisory** (`github-workspace-governance`). The file's `bridge_mode` is `"retired"` and `legacy_bridge_inventory` is empty – migration complete. The legacy 8-entry `ownerless-governance-surfaces.json` remains on disk for reference but is superseded.
 
 <CustomDivider />
 
@@ -211,6 +211,26 @@ Each production automation must declare (per `docs-guide/policies/ownerless-gove
 **Concern taxonomy (7):** `integrations`, `copy`, `maintenance`, `health`, `discoverability`, `governance`, `brand`.
 
 **Type taxonomy (7):** `integrator`, `generator`, `validator`, `audit`, `remediator`, `dispatch`, `interface`.
+
+<CustomDivider />
+
+## Recently shipped (May 2026)
+
+### Veracity dispatcher tranche
+
+Three new dispatchers under `operations/scripts/dispatch/content/veracity/` (type `dispatch`, concern `health`, niche `veracity`) close the long-standing "veracity-pass DRAFT blocks Phase 6" gap noted in the Checks Framework:
+
+| Script | Pipeline | Purpose |
+| --- | --- | --- |
+| `docs-research-packet.js` | manual packet generator | Generic engine: derives nav/manifest/path scope, runs the research stack tranche-by-tranche, writes reusable packet reports + master rollup |
+| `orchestrator-guides-research-review.js` | manual wrapper | Delegates to `docs-research-packet.js` with live Orchestrators Guides nav scope and legacy output root |
+| `docs-page-research-pr-report.js` | manual, experimental advisory PR integration, non-blocking | Runs fact-check research runner on changed docs pages; emits PR artefact summarising claim families, contradictions, unresolved factual risk, propagation follow-up |
+
+These are manual-pipeline (not yet on cron); inputs/outputs registered under `workspace/research/claims/` + `workspace/reports/`. Unit-tested under `operations/tests/unit/`.
+
+### Local social-feed dispatcher
+
+`operations/scripts/dispatch/content/data/run-solutions-social-fetch.js` (type `dispatch`, concern `integrations`, niche `social-feeds`) mirrors `dispatch-social-feeds.yml` for local workstation use: loads `.env`, supports `--mode forum,youtube`, `--dry-run`, `--skip discord`. Iterates the 7 fetchers under `operations/scripts/integrators/copy/social-feeds/`. **Local-only, not in any GitHub Actions workflow** (a deliberate contributor tool, not a duplicate CI surface). Closes the gap where contributors couldn't fetch live forum/discord/blog/YouTube/GitHub data on their workstation before pushing snippets that depended on freshly-generated outputs.
 
 <CustomDivider />
 

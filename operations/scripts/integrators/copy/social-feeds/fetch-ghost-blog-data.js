@@ -28,8 +28,10 @@ function fetchUrl(url) {
     const client = url.startsWith("https") ? https : http;
     client
       .get(url, { headers: { "User-Agent": "livepeer-docs-bot" } }, (res) => {
+        // Follow redirects — resolve relative locations (e.g. `/path`) against the request URL.
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          return fetchUrl(res.headers.location).then(resolve).catch(reject);
+          const next = new URL(res.headers.location, url).toString();
+          return fetchUrl(next).then(resolve).catch(reject);
         }
         let data = "";
         res.on("data", (chunk) => (data += chunk));
@@ -105,7 +107,14 @@ async function main() {
   const items = parseRSS(xml).slice(0, LIMIT);
 
   if (items.length === 0) {
-    throw new Error("No items found in RSS feed");
+    // KNOWN GAP (2026-05-25): the Livepeer Ghost blog migrated from blog.livepeer.org to
+    // livepeer.org/blog (Next.js site) — the new site does not expose RSS. The fetch above
+    // follows redirects to a 404 HTML page, parseRSS finds 0 items.
+    // Skip cleanly (exit 0) so the dispatcher doesn't fail; preserve the existing
+    // snippets/data/social-feeds/ghostBlogData.jsx (consumed by Home → Trending page).
+    // TODO: find new RSS endpoint OR replace with a scraper for livepeer.org/blog.
+    console.log(`fetch-ghost-blog-data: SKIP — source returned 0 items (Ghost blog migrated; existing data preserved)`);
+    process.exit(0);
   }
   console.log(`Parsed ${items.length} posts`);
 

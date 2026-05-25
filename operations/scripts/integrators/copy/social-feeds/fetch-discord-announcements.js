@@ -210,9 +210,11 @@ function writeJSX(exportName, announcements, outPath) {
 
 async function main() {
   if (!DISCORD_BOT_TOKEN) {
-    throw new Error(
-      "DISCORD_BOT_TOKEN environment variable is not set."
-    );
+    // Discord API requires a bot token (no anonymous access). When the secret is missing
+    // (local dev without .env, or a CI run where the secret isn't configured), skip cleanly
+    // so the rest of the social-feeds pipeline runs. Exits 0 — this is "not configured", not "broken".
+    console.log("fetch-discord-announcements: SKIP — DISCORD_BOT_TOKEN env var not set (configure in CI or .env to enable)");
+    process.exit(0);
   }
 
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));

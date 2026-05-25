@@ -24,6 +24,7 @@ const ATOMICS = {
       'operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js',
       'operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js',
       'operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js',
+      'operations/scripts/integrators/copy/social-feeds/fetch-luma-events.js',
       'operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js',
       'operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js'
     ]

@@ -11,8 +11,8 @@ keywords:
 consumer: [human, agent]
 maintenance: hand-maintained
 status: active
-version: "2.1"
-lastVerified: 2026-05-19
+version: "2.2"
+lastVerified: 2026-05-25
 sourceDoc: ".github/workspace/framework-canonical.md"
 ---
 
@@ -69,16 +69,18 @@ Every workflow YAML is a dispatcher. Workflows handle trigger, environment, perm
 
 The type prefix in the filename identifies what the script does, not what the workflow does.
 
+**Tier 1 workflow classes:** the 6 `dispatch-{concern}.yml` files are the concern dispatchers (the "actions" in this framework's terminology – one per concern). The 5 `interface-governance-*.yml` files (`assign-reviewers`, `close-linked-issues`, `index-issues`, `intake-discord-issues`, `label-issues`) wrap `interface` type scripts that react to issue/PR/webhook events; they are tagged `# pipeline: P7` distinct from the P2–P6 dispatcher taxonomy. Both classes live in `.github/workflows/` for an active total of **11 workflows**.
+
 ### Four-tier composable dispatch architecture
 
 The repo orchestrates work through four tiers. Every script at every tier is independently runnable via `node` with `--dry-run`. A developer can call any pipeline, any meta-bundle, or any atomic directly without going through CI.
 
-| Tier | What it is | Count | Composability |
+| Tier | What it is | Count (live 2026-05-25) | Composability |
 |---|---|---|---|
-| 1. Action | Thin workflow YAML files in `.github/workflows/`. Fires on event, calls a meta dispatcher (or pipeline directly). | 6 (one per concern) | Triggered by GitHub events only – not runnable locally. |
-| 2. Meta dispatcher | Optional script that bundles related pipelines into a higher-level entry point (for example: "all health PR pipelines"). | About 20 (3 per concern average) | `node dispatch-{concern}-{verb}.js --dry-run` |
-| 3. Pipeline dispatcher | Owns one full detect-repair-verify-escalate cycle for one niche. Accepts `--mode pr\|scheduled\|manual`. | About 48 (one per niche) | `node dispatch-{niche}.js --mode pr --dry-run` |
-| 4. Atomic script | Single-purpose, type-pure (validator, audit, remediator, generator, integrator, or interface). | About 190 wired | `node {type}-{thing}.js --files {paths}` |
+| 1. Action | Thin workflow YAML files in `.github/workflows/`. Fires on event, calls a meta dispatcher (or pipeline directly). | **6** dispatch-{concern} actions + **5** interface-governance workflows = **11 active** | Triggered by GitHub events only – not runnable locally. |
+| 2. Meta dispatcher | Optional script that bundles related pipelines into a higher-level entry point (for example: "all health PR pipelines"). | ~20 (3 per concern average) | `node dispatch-{concern}-{verb}.js --dry-run` |
+| 3. Pipeline dispatcher | Owns one full detect-repair-verify-escalate cycle for one niche. Accepts `--mode pr\|scheduled\|manual`. | ~80 (one per niche; tier 2 + tier 3 = 100 dispatch scripts total) | `node dispatch-{niche}.js --mode pr --dry-run` |
+| 4. Atomic script | Single-purpose, type-pure (validator, audit, remediator, generator, integrator, or interface). | **230** wired | `node {type}-{thing}.js --files {paths}` |
 
 **Naming rules:**
 

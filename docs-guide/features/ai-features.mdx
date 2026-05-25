@@ -188,9 +188,13 @@ Documented in [`docs-guide/policies/agent-governance-framework.mdx`](../policies
 
 ## Known gaps
 
-### `llms.txt` + `sitemap-ai.xml` 47 days stale (P0)
+### `llms.txt` + `sitemap-ai.xml` 47 days stale (P0) – root cause FIXED 2026-05-25
 
-Both root artefacts last regenerated 2026-04-15 vs `docs.json` last touched 2026-05-22. Root cause: the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic) in `dispatch-discoverability.yml` – cron triggers daily 04:00 UTC but cannot set `dry_run: false`, so the scheduled run is check-only. Only `workflow_dispatch` with explicit `dry_run: false` writes. **Fix:** invert the FLAGS pattern, or add a separate scheduled-write job. Single fix to one workflow file.
+Both root artefacts last regenerated 2026-04-15 vs `docs.json` last touched 2026-05-22. Root cause: the cron-is-dry-run bug in `dispatch-discoverability.yml` + 5 sibling dispatchers. **Fix shipped** in commit `e42946cdf` on `docs-v2-dev-draft` (inverted FLAGS in all 6 scheduled jobs). Pending merge to `docs-v2`, after which the next 04:00 UTC cron should regenerate both files. See [Cron-is-dry-run bug FIXED](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25).
+
+### Veracity pipeline now has dispatchers (was: Phase 6 blocker)
+
+Three new dispatchers under `operations/scripts/dispatch/content/veracity/` (May 2026) close the long-standing "veracity-pass DRAFT blocks Phase 6" gap: `docs-research-packet.js` (engine), `orchestrator-guides-research-review.js` (scope wrapper), `docs-page-research-pr-report.js` (advisory PR artefact, experimental, non-blocking). All manual-pipeline; not yet on cron. See [Automations § Recently shipped](./automations.mdx#recently-shipped-may-2026).
 
 ### `skill.md` is documented but has no source
 
@@ -261,7 +265,7 @@ Only Mintlify's auto-generated `sitemap.xml` is listed. AI-enriched metadata in 
 - **[AI Tools Registry](../tooling/ai-tools.mdx)** – registry schema + per-skill detail (currently has stale counts – needs refresh per [Known gaps](#known-gaps))
 - **[Automations](./automations.mdx)** – the cron-is-dry-run bug + dispatch architecture that drives AI artefact regeneration
 - **[Content Writing Pipeline](../frameworks/content-writing.mdx)** + **[Checks Framework](../frameworks/checks-framework.mdx)** – how the content-pipeline skills (pass-a, pass-b, tab-map) operationalise per-page review
-- **[Ownerless Governance Policy](../policies/ownerless-governance.mdx)** – the 4-part contract for governed surfaces (8 of 28 surfaces formally ownerless-ready)
+- **[Ownerless Governance Policy](../policies/ownerless-governance.mdx)** – the 4-part contract for governed surfaces (4 of 5 unified surfaces formally ownerless-ready post-D-ACT-10; legacy 8-entry file superseded)
 - **`AGENTS.md`** (root) – cross-agent baseline (119 lines); every adapter points here
 - **`.mintlify/Assistant.md`** – the Mintlify chat assistant configuration
 - **`ai-tools/registry/ai-tools-registry.json`** – canonical 317-entry inventory

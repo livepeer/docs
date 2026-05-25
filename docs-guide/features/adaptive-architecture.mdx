@@ -3,9 +3,9 @@ title: "Adaptive Architecture"
 sidebarTitle: "Adaptive Architecture"
 description: >-
   The repo's self-remediation model. Five-stage control loop (detect, explain,
-  repair, verify, record), four-part ownerless contract per surface, 8 of 28
-  surfaces formally ownerless-ready, 49 validators + 37 remediators + 31
-  generators + 25 audits. Verified 2026-05-23.
+  repair, verify, record), four-part ownerless contract per surface, 4 of 5
+  unified surfaces formally ownerless-ready post-D-ACT-10, 49 validators + 37
+  remediators + 31 generators + 25 audits. Verified 2026-05-25.
 audience: developer
 pageType: overview
 purpose: orient
@@ -39,7 +39,7 @@ sourceDocs:
 
 The repo's self-remediation model. **Every governed surface declares a four-part contract – canonical source · deterministic validator · exact repair command · single gate layer.** When any of those four is missing, the surface stays in `advisory` state until the contract is complete. Once complete, an OSS contributor (or an AI agent acting on their behalf) can correct routine drift without privileged context or staff approval.
 
-**The novelty is not validators or hooks individually** – most large repos have those. The novelty is the manifest-driven five-stage control loop and the explicit retirement of "human-only context" as a dependency. **8 surfaces are formally ownerless-ready today; 28 in the wider registry; 20 still advisory.**
+**The novelty is not validators or hooks individually** – most large repos have those. The novelty is the manifest-driven five-stage control loop and the explicit retirement of "human-only context" as a dependency. Post-[D-ACT-10](./automations.mdx#locked-decisions-18): **4 of 5 unified surfaces are formally ownerless-ready** in the canonical `repo-governance-surfaces.json` (bridge_mode `"retired"`); 1 advisory (`github-workspace-governance`). Legacy 8-entry `ownerless-governance-surfaces.json` superseded but kept on disk for reference.
 
 **Honest framing:** the model is **"ownerless for routine drift" – not "ownerless for policy authorship or destructive operations."** Policy decisions stay human. Routine drift becomes contract.
 
@@ -96,12 +96,12 @@ docs-guide/repo-ops/config/repo-governance-map.mdx is stale.
 
 ---
 
-## Surface inventory (live, 2026-05-23)
+## Surface inventory (live, 2026-05-25)
 
 | Manifest | Path | Entries | Purpose |
 | --- | --- | --- | --- |
-| **Ownerless surfaces** | `operations/governance/config/ownerless-governance-surfaces.json` | **8** | Surfaces under the full four-part contract; `gate_layer` + `rollout_state` declared per entry |
-| **Repo governance surfaces** | `operations/governance/config/repo-governance-surfaces.json` | **28** | Broader inventory; 8 formally ownerless-ready + 20 still advisory |
+| **Repo governance surfaces** (canonical post-[D-ACT-10](./automations.mdx#locked-decisions-18)) | `operations/governance/config/repo-governance-surfaces.json` | **5 unified surfaces** (4 ownerless-ready + 1 advisory: `github-workspace-governance`) | Single canonical registry; `bridge_mode: "retired"`, `legacy_bridge_inventory` empty (migration complete) |
+| **Ownerless surfaces** (legacy / superseded) | `operations/governance/config/ownerless-governance-surfaces.json` | **8** | Pre-D-ACT-10 inventory; kept on disk for reference. Authoritative reads should use `repo-governance-surfaces.json` |
 | **Generated artefacts** | `operations/governance/config/generated-artifacts.json` | **29** | Every committed-derived file with class + commit-policy + hook-policy + ci-policy + delta-strategy |
 | **Root governance** | `operations/governance/config/root-governance.json` | 35 root entries | Prevents root sprawl; generates `.allowlist` |
 | **Approval policy** | `operations/governance/config/governance-approval-policy.json` | per-surface label rules | Defines PR evidence labels + approval sections for governance-sensitive changes |
@@ -113,7 +113,7 @@ docs-guide/repo-ops/config/repo-governance-map.mdx is stale.
 
 | Mechanism | Path | Purpose |
 | --- | --- | --- |
-| Ownerless surface manifest | `operations/governance/config/ownerless-governance-surfaces.json` | Machine-readable contract: validators, repair commands, gate layer, rollout state |
+| Unified governance registry (canonical post-D-ACT-10) | `operations/governance/config/repo-governance-surfaces.json` | Machine-readable contract per surface: validators, repair commands, gate layer, rollout state. Legacy `ownerless-governance-surfaces.json` superseded |
 | Root governance | `operations/governance/config/root-governance.json` + `.allowlist` (generated) | Prevents root sprawl; pre-commit reads `.allowlist` to refuse new root entries |
 | Generated artefact governance | `operations/governance/config/generated-artifacts.json` | Three classes (`committed_authoritative`, `committed_derived_scoped`, `ephemeral_local`), three commit policies, three hook policies, three CI policies, four delta strategies |
 | Approval policy | `operations/governance/config/governance-approval-policy.json` | PR evidence labels (`approval:governance-schema`, `approval:cleanup`, etc.) |
@@ -237,7 +237,7 @@ The four-part contract is real and enforced for the 8 surfaces in `ownerless-gov
 
 ### The stale governance map is self-detected but not auto-repaired (P1)
 
-`generate-repo-governance-status.js --check` on 2026-05-23 prints `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` The map last regenerated 2026-04-07T13:18:37.118Z – about 6 weeks behind. **The system flags itself; nothing auto-runs the repair.** The check runs at the right cadence; the publish gate doesn't. Same root cause as the contracts pipeline 19-day staleness – the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic).
+`generate-repo-governance-status.js --check` on 2026-05-23 prints `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` The map last regenerated 2026-04-07T13:18:37.118Z – about 6 weeks behind. **The system flags itself; nothing auto-runs the repair.** The check runs at the right cadence; the publish gate doesn't. Same root cause as the contracts pipeline 19-day staleness – the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25) (fix shipped 2026-05-25 in commit `e42946cdf` on `docs-v2-dev-draft`; pending merge to `docs-v2` after which the next scheduled run should regenerate the map).
 
 ### 307-row v2 cleanup matrix is recommendation-only (P1)
 

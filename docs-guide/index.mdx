@@ -31,9 +31,9 @@ purpose: orient
 
 # Docs Guide
 
-Livepeer Docs is a **self-remediating, ownerless documentation operating system** built on Mintlify. Three product layers run on top of the publishing platform: a self-governing repo (11 workflows + 321 scripts + 8 of 28 ownerless-ready surfaces); an AI-native distribution layer (`llms.txt`, hosted MCP, 6 native agent adapters, 34 skills); and a contributor toolchain (`lpd` CLI + scoped Mintlify preview + 4 in-repo VS Code extensions + 312 governed snippets).
+Livepeer Docs is a **self-remediating, ownerless documentation operating system** built on Mintlify. Three product layers run on top of the publishing platform: a self-governing repo (11 workflows + 321 scripts + 4 of 5 unified ownerless-ready surfaces post-D-ACT-10); an AI-native distribution layer (`llms.txt`, hosted MCP, 6 native agent adapters, 34 skills); and a contributor toolchain (`lpd` CLI + scoped Mintlify preview + 4 in-repo VS Code extensions + 312 governed snippets).
 
-This page is the orient surface. Every claim, count, and contract on this page traces to a canonical doc one click away. **Live counts verified 2026-05-23.** Honest framing: **"ownerless"** covers routine drift, not policy authorship or destructive operations. **8 of 28** surfaces formally ownerless-ready today.
+This page is the orient surface. Every claim, count, and contract on this page traces to a canonical doc one click away. **Live counts verified 2026-05-25.** Honest framing: **"ownerless"** covers routine drift, not policy authorship or destructive operations. **4 of 5 unified governance surfaces formally ownerless-ready today** (1 advisory: `github-workspace-governance`); legacy 8-entry `ownerless-governance-surfaces.json` superseded per [D-ACT-10](./features/automations.mdx#locked-decisions-18).
 
 ---
 
@@ -179,7 +179,7 @@ Published authoring and style standards in `docs-guide/standards/`.
 
 The honest snapshot. Full backlog with P0/P1/P2 priorities + file paths + acceptance criteria at [Gap Analysis](./features/gap-analysis.mdx).
 
-- **P0 cron-is-dry-run bug.** Every `dispatch-{concern}.yml` scheduled job runs in dry-run mode because cron physically cannot pass `inputs.dry_run = false`. Root cause of `llms.txt` + `sitemap-ai.xml` 47-day staleness, contracts data 19-day staleness despite daily cron, "manual-only" OG/SEO generators.
+- **~~P0 cron-is-dry-run bug.~~ FIXED 2026-05-25** in commit `e42946cdf` on `docs-v2-dev-draft` (pending merge to `docs-v2`). Inverted FLAGS default in all 6 `dispatch-{concern}.yml` scheduled jobs. Was the root cause of `llms.txt` + `sitemap-ai.xml` 47-day staleness, contracts data 19-day staleness, and "manual-only" classification of OG/SEO generators.
 - **P0 OpenAPI specs 67 days stale.** All 5 specs in `api/` last touched 2026-03-18; fetcher covers 2 of 5; no scheduled workflow.
 - **P0 `docs.json` default version is v1, not v2.** Visitors land on v1 by default unless Mintlify dashboard overrides.
 - **P0 Stale governance map.** Self-detected by `generate-repo-governance-status.js --check` – system flags itself; nothing auto-repairs.
