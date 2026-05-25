@@ -177,16 +177,28 @@ Published authoring and style standards in `docs-guide/standards/`.
 
 ## What's stale today
 
-The honest snapshot. Full backlog with P0/P1/P2 priorities + file paths + acceptance criteria at [Gap Analysis](./features/gap-analysis.mdx).
+The honest snapshot. Full backlog with P0/P1/P2 priorities + file paths + acceptance criteria at [Gap Analysis](./features/gap-analysis.mdx). **Last refreshed 2026-05-25 after the consolidation pass – see [Gap Analysis § Resolved 2026-05-25](./features/gap-analysis.mdx#resolved-2026-05-25-consolidation-pass) for the items just closed.**
 
-- **~~P0 cron-is-dry-run bug.~~ FIXED 2026-05-25** in commit `e42946cdf` on `docs-v2-dev-draft` (pending merge to `docs-v2`). Inverted FLAGS default in all 6 `dispatch-{concern}.yml` scheduled jobs. Was the root cause of `llms.txt` + `sitemap-ai.xml` 47-day staleness, contracts data 19-day staleness, and "manual-only" classification of OG/SEO generators.
+**Open:**
+
 - **P0 OpenAPI specs 67 days stale.** All 5 specs in `api/` last touched 2026-03-18; fetcher covers 2 of 5; no scheduled workflow.
 - **P0 `docs.json` default version is v1, not v2.** Visitors land on v1 by default unless Mintlify dashboard overrides.
-- **P0 Stale governance map.** Self-detected by `generate-repo-governance-status.js --check` – system flags itself; nothing auto-repairs.
+- **P0 Stale governance map.** Self-detected by `generate-repo-governance-status.js --check`. The cron-is-dry-run fix (shipped 2026-05-25) should trigger regeneration on the next scheduled run after merge to `docs-v2`. Verify after merge.
 - **P1 Gateways `_workspace/canonical/` is byte-identical to orchestrators's.** Gateways imports the IA wholesale; `REVIEW-REGISTRY.md` literally opens `# Orchestrators Tab Page Inventory`.
 - **P1 0 of 5 content tabs has IA Approved.** Project pipeline stalled at Phase 2 across the entire docs estate.
-- **P1 Script JSDoc compliance MUCH better than documented.** Prior baseline said "218 non-compliant"; live 2026-05-23: only 45 scripts use retired `@category` + 4 use retired `@domain`. 4× improvement; refresh the gap-analysis figure.
 - **P1 4-surface component count drift.** Feature page 59 / public overview 117 / framework table 118 / registry 132 – no source agrees. Generator-source every count.
+- **P1 307-row v2 cleanup matrix needs execution** (235 `_workspace` candidates + 72 `x-deprecated` candidates; `gateways` carries 199 of 307).
+- **P1 18 of 35 local skills in `status: draft` with empty test logs.** Session-lifecycle backbone (`thread`, `research`, `design`, `build`, `iterate`, `close`) never validated in production.
+
+**Recently closed 2026-05-25** (full detail in [Gap Analysis § Resolved](./features/gap-analysis.mdx#resolved-2026-05-25-consolidation-pass)):
+
+- P0 cron-is-dry-run bug – fixed in commit `e42946cdf`, pending merge to `docs-v2`
+- P1 decisions-log "lags" false flag – verified all 18 decisions present, split across 2 files
+- P1 `.github/scripts/` "empty=gap" framing – clarified as locked decision D-ACT-06
+- P1 ownerless framing refresh post-D-ACT-10 – corrected "8 of 28" to live "4 of 5 unified surfaces" across 6 pages
+- P3 frameworks/github-actions.mdx synced to v2.2
+- P4 documented 3 new veracity dispatchers + local social-feed dispatcher
+- Frontmatter compliance: all 16 frameworks + 17 policies brought to canonical (pageType/audience/purpose/status/lastVerified) – 0 blocking lint errors across both folders
 
 ---
 

@@ -4,12 +4,12 @@ sidebarTitle: "Data Integrations"
 description: >-
   External data feeds, OpenAPI specs, on-chain contract data, release globals,
   social feeds, glossary, and reference maps. 11 integration families. Contracts
-  pipeline is gold-standard; OpenAPI is the weakest link. Verified 2026-05-23.
+  pipeline is gold-standard; OpenAPI is the weakest link. Verified 2026-05-25.
 audience: developer
-pageType: overview
+pageType: reference
 purpose: orient
 status: current
-lastVerified: 2026-05-23
+lastVerified: 2026-05-25
 keywords:
   - livepeer
   - data integrations
@@ -37,7 +37,7 @@ Anywhere a number, address, release tag, configuration flag, or forum post would
 
 The pattern repeats for every data family: fetch script under `operations/scripts/integrators/` → transform → deterministic output under `snippets/data/<family>/` → validator → scheduled workflow → MDX consumer importing the dataset.
 
-**The crisis on 2026-05-23:** **every Pattern A integrator that depends on cron writes is currently broken** because of the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic) in the dispatch workflows. The contracts pipeline ran today (`_health-checks.json` mtime 2026-05-22) but **the data files were last written 2026-05-04 – 19 days stale**. Same root cause for `llms.txt` + `sitemap-ai.xml` 47-day staleness. Fix one workflow file, unblock 6+ data families.
+**Pre-fix state (2026-05-23) – now resolved 2026-05-25:** every Pattern A integrator that depends on cron writes had been silently broken by the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25) in the dispatch workflows. The contracts pipeline ran daily (`_health-checks.json` mtime 2026-05-22) but the data files had not been written since 2026-05-04 (19 days stale at the time of audit). Same root cause for `llms.txt` + `sitemap-ai.xml` 47-day staleness. Fix shipped in commit `e42946cdf` on `docs-v2-dev-draft`; the next scheduled cron after merge to `docs-v2` should unblock all 6 affected data families.
 
 ---
 
@@ -111,7 +111,7 @@ flowchart TD
 
 `snippets/data/contract-addresses/_health-checks.json` reports `FAIL` entries on 2026-05-22. **These are branch-watch state changes (new dependabot branches appearing, old branches disappearing from `go-livepeer`) – NOT pipeline failures.** The pipeline ran correctly, detected upstream branch inventory changes, flagged them per design. The 18 "FAIL" entries on 2026-05-22 are 6 new dependabot branches + 12 disappeared/renamed branches. This is the pipeline working as designed.
 
-**BUT:** the data files in `snippets/data/contract-addresses/` were last written **2026-05-04** (19 days stale). The verification check ran today; the publish gate hasn't fired in 19 days. Root cause is the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic) – `dispatch-maintenance.yml` scheduled job runs with empty `FLAGS=""` because cron cannot pass `inputs.dry_run = false`, so the script runs in dry-run by default. **The post-merge job DOES write** (`--write` is hardcoded there), but it only fires on push to `docs-v2` touching `snippets/components/` or `snippets/data/` or `docs.json` – not on changes to the upstream protocol repos.
+**Pre-fix note (2026-05-23 audit, resolved 2026-05-25):** the data files in `snippets/data/contract-addresses/` had not been written since **2026-05-04** (19 days stale at audit time). The verification check ran daily; the publish gate had not fired in 19 days. Root cause was the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25) – `dispatch-maintenance.yml` scheduled job ran with empty `FLAGS=""` because cron cannot pass `inputs.dry_run = false`, so the script ran in dry-run by default. Fix shipped 2026-05-25 in commit `e42946cdf` on `docs-v2-dev-draft`. The post-merge job DOES write (`--write` hardcoded) but only fires on push to `docs-v2` touching `snippets/components/`, `snippets/data/`, or `docs.json` – not on changes to upstream protocol repos. The scheduled job now writes as well.
 
 ---
 
@@ -217,7 +217,7 @@ All 6 active feeds refreshed together on 2026-04-14 – they share a workflow ru
 
 ### Contracts publish gate stale 19 days
 
-`_health-checks.json` runs daily; data files last written 2026-05-04. Root cause is the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-p0-systemic). **Fix:** invert the FLAGS pattern in `dispatch-maintenance.yml` scheduled job.
+`_health-checks.json` runs daily; data files last written 2026-05-04 at audit time. Root cause was the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25). **Fix shipped 2026-05-25** in commit `e42946cdf` on `docs-v2-dev-draft` – inverted FLAGS pattern in `dispatch-maintenance.yml` scheduled job (and 5 sibling dispatchers).
 
 ### Glossary generator not wired
 
@@ -271,7 +271,7 @@ The forum-feed output is the largest single JSX file in `snippets/data/`. Consid
 
 ## Related
 
-- **[Automations](./automations.mdx)** – the dispatch architecture + the cron-is-dry-run bug that breaks every cron-driven integrator
+- **[Automations](./automations.mdx)** – the dispatch architecture + the cron-is-dry-run bug (fixed 2026-05-25 in commit `e42946cdf`; was the root cause of every cron-driven integrator stalling)
 - **[Source-of-Truth Policy](../policies/source-of-truth-policy.mdx)** – canonical boundaries: code/tests = runtime; this docs-guide section = repo features; v2/ = public docs; generators = read-only outputs
 - **[Solutions secrets policy](../repo-ops/secrets/solutions-secrets.mdx)** – where secrets live + the SOLUTIONS-SOCIAL-DATA `.env` lifecycle
 - **[Script Framework](../frameworks/script-framework.mdx)** – 11-tag JSDoc spec for integrator scripts
