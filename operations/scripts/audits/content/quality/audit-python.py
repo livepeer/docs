@@ -3,7 +3,7 @@
 # @type        audit
 # @concern     health
 # @niche       quality
-# @purpose     
+# @purpose     Validates routed docs files, snippet imports, and internal links, then writes page-audit reports
 # @description Python page audit utility — validates routed docs files, snippet imports, and internal links, then writes page-audit reports
 # @mode        scan
 # @pipeline    manual — not yet in pipeline

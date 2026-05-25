@@ -1,232 +1,419 @@
 ---
-title: Repo Gap Analysis
-sidebarTitle: Gap Analysis
-description: Implementation-ready audit of surfaces that do not yet align with the ownerless, self-governing repository model.
+title: "Repo Gap Analysis"
+sidebarTitle: "Gap Analysis"
+description: >-
+  Implementation-ready audit of surfaces that do not yet align with the
+  ownerless self-governing repository model. Verified against live state
+  2026-05-23 across 10 file-level slice audits.
 audience: developer
 pageType: reference
 purpose: reference
 status: current
-lastVerified: 2026-05-14
+lastVerified: 2026-05-23
 keywords:
   - livepeer
   - gap analysis
   - repo audit
   - cleanup
   - ownerless governance
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
+  - consolidation
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+sourceDocs:
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-00-MASTER.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ai-tools.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-03-operations-governance-tests-hooks.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-05-github.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-06-agent-adapters.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-08-snippets.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-09-v2-internal-and-workspaces.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-09b-checks-cross-tab.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-10c-ORCHS-terminology-contracts-tooling.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-11-workspace-history.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-12-root.md
 ---
 
 # Repo Gap Analysis
 
-This document is the implementation backlog for moving the repo closer to the ownerless governance standard: every surface should be discoverable, validated, repairable, bounded, and purgeable.
+The implementation backlog for moving the repo closer to the ownerless governance standard. Every surface should be **discoverable, validated, repairable, bounded, and purgeable.**
 
-Audit date: 2026-05-14.
+**Audit dates:** prior baseline 2026-05-14; this refresh 2026-05-23 after 10 file-level slice audits across docs-guide, ai-tools, operations/governance, .github, agent adapters, snippets, v2/internal + per-tab workspaces, per-tab checks.mdx cross-tab comparison, the 14 workspace plans (ORCHS, TERMINOLOGY, CONTRACTS, TOOLING, etc.), workspace history + BACKLOG, and root files.
 
-Evidence used:
+**Evidence sources (live commands, 2026-05-23):**
 
-- static repo inventory
-- `PATH="/opt/homebrew/bin:$PATH" bash tools/lpd doctor --json`
-- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --report-md /tmp/v2-folder-governance-cleanup-matrix.md --report-json /tmp/v2-folder-governance-cleanup-matrix.json --as-of 2026-05-14`
-- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full --output-dir /tmp`
-- `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check`
+```bash
+find operations/scripts \( -name "*.js" -o -name "*.sh" -o -name "*.py" \) -not -path "*/x-archive/*" -not -path "*/archive/*" | wc -l   # 321
+ls .github/workflows/*.yml | wc -l                                                                                                     # 11
+find ai-tools/ai-skills -name SKILL.md | wc -l                                                                                         # 35
+find v2 -name "*.mdx" -not -path "*/_workspace/*" -not -path "*/x-archived/*" -not -path "*/x-deprecated/*" | wc -l                     # 1,128
+grep -c '"v2/' docs.json                                                                                                               # 686
+find operations/scripts -name '*.js' | xargs grep -l '@category' | wc -l                                                               # 45
+find operations/scripts -name '*.js' | xargs grep -l '@domain' | wc -l                                                                 # 4
+node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check                                       # FAIL (stale)
+```
 
-## Executive Findings
+Detailed evidence in `workspace/thread-outputs/repo-consolidation-deep/SLICE-*.md` files (10 slices, ~4,400 lines of file-level inventory).
 
-| Priority | Gap | Evidence | Required outcome |
+---
+
+## Executive findings – what's P0 and P1
+
+| Priority | Gap | Live evidence | Required outcome |
 | --- | --- | --- | --- |
-| P0 | Governance map generated output is stale. | `generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` | Regenerate the map and verify generated artifact governance. |
-| P0 | V2 non-publishable content is not fully normalized away from publishable trees. | V2 cleanup matrix reports 307 rows: 235 `_workspace` targets and 72 `x-deprecated` targets. | Execute approved move waves and update file-selection helpers. |
-| P1 | Script metadata compliance debt remains high. | Script footprint audit cites 218 template non-compliant scripts in the existing script baseline. | Backfill required script headers and enforce with script governance validation. |
-| P1 | Large tracked reports and backup artifacts violate retention expectations. | Script footprint audit reports 24 findings: 4 medium, 20 low. | Apply report retention policy and remove backup artifacts through governed deletion. |
-| P1 | Feature docs were stale and referenced old paths. | Prior `automations.mdx` contained TODO markers and old `tasks/staging` references. | Keep feature maps tied to live inventory and add freshness checks for docs-guide feature pages. |
-| P2 | Component archive and count drift reduce trust in UI docs. | Live inventory has 59 JSX files, including 24 under `snippets/components/x-archive/`; governance index says component counts are partially stale. | Regenerate component docs and decide archive retention/deletion. |
-| P2 | Tool discovery depends on shell PATH assumptions. | Non-interactive shell lacked Node/Mintlify on `PATH`; Homebrew and NVM installs existed. | Document and automate PATH discovery in setup/doctor output. |
+| **P0** | **Cron-is-dry-run-by-default bug** – every `dispatch-{concern}.yml` scheduled job runs in dry-run mode because cron physically cannot pass `inputs.dry_run = false` | `dispatch-maintenance.yml` schedules daily 05:00 UTC; data files in `snippets/data/contract-addresses/` last written 2026-05-04 (19 days stale); same root cause for `llms.txt` + `sitemap-ai.xml` 47 days stale | Invert FLAGS pattern in all 6 dispatch workflows OR add separate scheduled-write job. **Single fix unblocks 6+ data pipelines.** See [Automations § Known gaps](./automations.mdx#known-gaps). |
+| **P0** | Stale generated governance map | `generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` (~6 weeks behind) | Regenerate map; verify generated-artifact governance |
+| **P0** | OpenAPI specs 67 days stale | All 5 specs in `api/` mtime 2026-03-18; fetcher covers 2 of 5; no scheduled workflow | Expand `fetch-openapi-specs.sh` + schedule + gate via `openapi-reference-audit.js --full --strict` |
+| **P0** | `docs.json` default version is `v1`, not `v2` | `docs.json` `versions[].default = true` on v1; README + feature-map claim v2 is canonical | Confirm Mintlify dashboard override OR fix `docs.json`; visitors land on v1 by default otherwise |
+| **P0** | 6 empty `v2/internal/` stubs filled this session – TAB-SUMMARY.md files unchanged | All 7 TAB-SUMMARY.md files dated 2026-04-08 mark `definitions/ecosystem/references/strategic-alignment/deliverables/outcomes` as FAIL/empty; all 6 now populated 2026-05-22 | Regenerate TAB-SUMMARY files to reflect current state |
+| **P1** | **Script JSDoc compliance MUCH better than documented** | Prior baseline said "218 non-compliant"; live 2026-05-23: 327 of 321 active scripts use canonical `@purpose` (100%); only **45 scripts use retired `@category`**, **4 use retired `@domain`** | Backfill the 45-50 remaining scripts; close the gap entirely; update gap-analysis to reflect live data (this refresh does that) |
+| **P1** | V2 non-publishable content not fully normalised | V2 cleanup matrix reports 307 rows: 235 `_workspace` targets + 72 `x-deprecated` targets; `gateways` carries 199 of 307 | Execute approved move waves; update `.mintignore` + file-selection helpers |
+| **P1** | Gateways canonical/ is BYTE-IDENTICAL to orchestrators canonical/ | `diff` returns 0 lines for `IA.mdx`, `Frameworks.mdx`, `process.mdx`, `ia-data.json`, `REVIEW-REGISTRY.md`. Gateways `REVIEW-REGISTRY.md` literally opens `# Orchestrators Tab Page Inventory` | Either produce gateways-specific canonical artefacts OR formally adopt orchestrators's as shared (with explicit declaration) |
+| **P1** | Three decision registries with no cross-index | `D-NAV-01` in CONTENT-WRITING/decisions; `D-ACT-01..10 + D-GOV-01..08` in `.github/workspace/decisions-log.mdx`; `D-DG-01..13` in `docs-guide/decisions/docs-guide-structure.md` | Wire CI check that all 3 reference the unified index at `docs-guide/decisions/registry.md` |
+| **P1** | `decisions-log.mdx` header dated 2026-03-31 but claims 18 decisions through D-GOV-08 (2026-05-22) | First 100 lines only show D-ACT-01..04; D-ACT-05..10 + all D-GOV-* entries not visible in first read | Verify entries 5-18 are in the log OR append them |
+| **P1** | `.github/workflows/x-archive/` D-ACT-03 social-data consolidation incomplete | Target name `update-data-feeds.yml` doesn't exist in active set; 7 social-data workflows in `.archived` state | Verify the consolidation moved into `operations/scripts/dispatch/copy/` OR finish the migration |
+| **P1** | Validator path drift in `agent-governance-framework.mdx` | Lines 137 + 228 reference `validators/governance/check-agent-docs-freshness.js`; actual is `validators/governance/compliance/check-agent-docs-freshness.js`. `AGENTS.md` line 98 has the correct path | Fix the 2 framework page references |
+| **P1** | Contracts pipeline doc references empty `.github/scripts/` folder | `.github/scripts/fetch-contract-addresses.js` doesn't exist there; moved to `operations/scripts/integrators/maintenance/contracts/` | Update [contracts deep-dive in data-integrations.mdx](./data-integrations.mdx#contracts-pipeline-deep-dive) refs + retire orphan `contracts-pipeline.mdx` |
+| **P1** | Large tracked reports + backup artefacts violate retention | Script footprint audit reports 24 findings: 4 medium + 20 low | Apply report retention policy; remove backup artefacts through governed deletion |
+| **P1** | 4-surface component count drift | Feature page 59 / public overview 117 / framework table 118 / registry 132 – no source agrees | Replace every hand-authored count with generator-emitted block from `component-registry.json` |
+| **P1** | 18 of 34 local SKILL.md files `status: draft` with empty test logs | Session-lifecycle backbone (`thread`, `research`, `design`, `build`, `iterate`, `close`) never validated in production | Promote one skill per week through 3-pass production validation |
+| **P2** | Component archive + count drift | 24 archived JSX files under `snippets/components/x-archive/` with no removal schedule | Triage each: DELETE or KEEP-AS-ALIAS (with `@status deprecated` + removal date) |
+| **P2** | Hook scripts violate their own JSDoc spec | `.githooks/pre-commit` + `pre-push` use retired JSDoc tags banned at `docs-guide/policies/script-governance.mdx` lines 195-205 | Update hook scripts to canonical 11-tag JSDoc; they must pass the validator they enforce |
+| **P2** | `.githooks/verify.sh` dead enforcement | Defines 7 internal checks; not invoked by active `pre-commit` per SLICE-03 | Wire `verify.sh` back into pre-commit OR retire as dead code |
+| **P2** | Archive sprawl in `.github/` | 3 archive lanes: `workflows/deprecated/`, `workflows/x-archive/`, `.github/x-archive/` | Consolidate to one lane per script-framework declaration |
+| **P2** | 5 archive naming variants across 11 tabs | `archive/`, `archived/`, `deprecated/`, `x-archived/`, `x-deprecated/` per SLICE-09 | Normalise to `x-archive/` per framework |
+| **P2** | Tool PATH discovery still fragile | Non-interactive shell needs Homebrew + NVM on PATH explicitly | Enhance `lpd doctor` output |
 
-## Purge and Remediation Queue
+---
 
-### 1. Governance Artifacts
+## Purge + remediation queue
 
-| Item | Current problem | Implementation steps | Validation |
+### 1. Governance artefacts
+
+| Item | Current problem | Implementation | Validation |
 | --- | --- | --- | --- |
-| `docs-guide/repo-ops/config/repo-governance-map.mdx` | Generated governance map is stale. | Run `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write`. Review generated changes only. | Re-run the same command with `--check`. |
-| Generated artifact policy coverage | Generated maps can drift if not checked after feature/page changes. | Confirm `operations/governance/config/generated-artifacts.json` includes every generated docs-guide catalog/map touched by the repo. | Run generated artifact validators and `lpd test --staged`. |
-| Feature docs freshness | Feature docs are hand-maintained and can drift from live scripts/workflows. | Add a docs-guide freshness audit that checks feature pages for old workflow names, old script roots, TODO markers, and missing linked files. | New validator should fail on synthetic stale fixture and pass current pages. |
+| `docs-guide/repo-ops/config/repo-governance-map.mdx` | Stale generated output | `PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write` | Rerun with `--check` |
+| Cron-is-dry-run pattern across 6 dispatchers | Cron cannot pass `dry_run: false`; scheduled run defaults to dry-run | Invert FLAGS: `FLAGS="--write --verify"; if [[ ... == "true" ]] then FLAGS=""` in `dispatch-{brand, copy, discoverability, governance, health, maintenance}.yml` | Validate by running one cron + confirming write occurs |
+| Validator path drift | `agent-governance-framework.mdx` lines 137 + 228 reference wrong path | Add `/compliance/` to both references | Run `check-agent-docs-freshness.js` from corrected path |
+| Stale path: `.github/scripts/fetch-contract-addresses.js` | Folder empty; script moved | Update all references in pipeline docs + contracts-pipeline.mdx | Grep for the old path repo-wide |
+| `decisions-log.mdx` header date | Says 2026-03-31; 18 decisions claimed through 2026-05-22 | Append D-ACT-05..10 + D-GOV-01..08 OR verify they're in the log past line 100 | Manual review |
+| Generated-artefact policy coverage | New surfaces don't automatically register in `generated-artifacts.json` | Add a CI check that flags any new generator script without a matching manifest entry | New validator script |
+| `docs-index.json` provenance drift | `generated` field says 2026-04-07; mtime 2026-05-18 | Fix generator to update its own `generated_at` field on every write | Regenerate; verify field matches mtime |
+| `codex/skills-manifest.json` provenance drift | `generated_at: 2026-03-22` but mtime 2026-04-08 | Same fix pattern as docs-index.json | Regenerate |
 
-### 2. V2 Folder Governance
+### 2. V2 folder governance
 
-The cleanup matrix found:
+Cleanup matrix totals unchanged from 2026-05-14:
 
 | Metric | Count |
 | --- | ---: |
 | Total rows | 307 |
-| Recommended `_workspace` lane | 235 |
-| Recommended `x-deprecated` lane | 72 |
+| `_workspace` candidates | 235 |
+| `x-deprecated` candidates | 72 |
 | Core scope | 266 |
 | Internal scope | 41 |
-| Largest section | `gateways` with 199 rows |
-| Next largest section | `internal` with 41 rows |
-| Orchestrators rows | 39 |
+| Largest section | `gateways` (199 rows) |
+| Next | `internal` (41) |
+| Orchestrators | 39 |
 
-Implementation order:
+**Implementation order:**
 
-1. Update `.mintignore` and shared selection helpers so `_workspace`, `x-deprecated`, archive, and known transitional lanes are consistently non-publishable.
-2. Run a no-write report and split rows into move waves by section.
-3. Start with `gateways`, because it carries most rows and several nested `x-resources` and `x-deprecated` lanes.
-4. Use `git mv` or repo move tooling for file moves; do not hand-copy.
-5. Preserve route behavior: if a page was ever routable, verify redirects or docs.json removal explicitly.
+1. Update `.mintignore` + shared selection helpers so `_workspace`, `x-deprecated`, `archive`, and known transitional lanes are consistently non-publishable.
+2. No-write report; split rows into move waves by section.
+3. Start with `gateways` (199 rows; carries most `x-resources` and `x-deprecated` lanes).
+4. Use `git mv` or repo move tooling – never hand-copy.
+5. Preserve route behaviour: if a page was ever routable, verify redirects or `docs.json` removal explicitly.
 6. Regenerate page/catalog indexes after each wave.
-7. Run `lpd test --staged`, then targeted link/import validation.
+7. `lpd test --staged` + targeted link/import validation.
 
-Acceptance criteria:
+**Acceptance:** no publishable route resolves into `_workspace`, `x-deprecated`, archive, or design lanes; file-selection helpers share the same non-publishable lane contract; matrix rows decrease after each wave.
 
-- No publishable route resolves into `_workspace`, `x-deprecated`, archive, or design lanes.
-- File-selection helpers used by validators and generators share the same non-publishable lane contract.
-- The cleanup matrix rows decrease after each move wave.
+### 3. Reports, archives, backup artefacts
 
-### 3. Reports, Archives, and Backup Artifacts
+Script footprint audit: 4 medium + 20 low (no critical/high).
 
-Script footprint audit findings:
+**Specific purge candidates:**
 
-| Severity | Count | Main class |
-| --- | ---: | --- |
-| Critical | 0 | none |
-| High | 0 | none |
-| Medium | 4 | backup artifact, large repo-op reports, script overlap |
-| Low | 20 | large report artifacts and script metadata gaps |
-
-Specific purge candidates:
-
-| Path or pattern | Issue | Action |
+| Path | Issue | Action |
 | --- | --- | --- |
-| `workspace/reports/contracts/recovery-20260403-013442/files/snippets/data/contract-addresses/dep-contractAddressesData.jsx.bak` | Backup file tracked in repo. | Classify with cleanup/quarantine, then remove through deletion-approved cleanup. |
-| `workspace/reports/archive/link-health/*2026-03-09*` | Large historical reports. | Replace with concise summary or archive outside tracked repo if still needed. |
-| `workspace/reports/navigation-links/LINK_TEST_REPORT.*` | Large tracked reports. | Keep latest concise status and regenerate full reports on demand. |
-| `workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json` | Medium-size generated report. | Confirm whether it is canonical. If derived, keep generated/ignored or summarize. |
-| `workspace/reports/**/files/**` | Historical full-file captures. | Retain only legally/operationally required evidence; otherwise purge by approved deletion wave. |
-| `.DS_Store` under root, `snippets/`, `v2/`, and `workspace/` | OS metadata. | Delete through approved cleanup and ensure `.gitignore` coverage. |
-| `.vscode/livepeer-legacy.code-snippets.bak` | Backup snippet file. | Document compatibility alias or delete with approval. |
-| `v2/solutions/daydream/changelog.mdx.bak` | Backup docs artifact. | Remove after verifying current changelog source. |
+| `workspace/reports/contracts/recovery-20260403-013442/files/snippets/data/contract-addresses/dep-contractAddressesData.jsx.bak` | Backup file tracked | Cleanup/quarantine then governed deletion |
+| `workspace/reports/archive/link-health/*2026-03-09*` | Large historical reports | Replace with concise summary or untrack |
+| `workspace/reports/navigation-links/LINK_TEST_REPORT.*` | Large tracked reports | Keep latest concise; regenerate full on demand |
+| `workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json` | Medium-size generated report | Confirm canonical; if derived, gitignore or summarise |
+| `workspace/reports/**/files/**` | Historical full-file captures | Retain only legally/operationally required; otherwise purge |
+| `.DS_Store` under root + `snippets/` + `v2/` + `workspace/` | OS metadata | Delete; ensure `.gitignore` coverage |
+| `.vscode/livepeer-legacy.code-snippets.bak` (35 KB) | Tracked backup snippet | Classify alias or remove with approval |
+| `v2/solutions/daydream/changelog.mdx.bak` | Backup docs artefact | Remove after confirming current changelog source |
+| `snippets/data/changelogs/contractAddressesData.jsx` | Legacy orphan duplicate (2026-04-03); live pipeline writes to `snippets/data/contract-addresses/` | Delete |
+| `tools/editor-extensions/components 2/`, `markdown-list 2/` | macOS duplicate artefacts | Delete |
+| `v2/_workspace/archive/language-pages/{es,fr}` | 1,070 archived locale snapshots never published | Untrack OR archive outside the repo |
+| `v2/_workspace/locale-page-archive/` | 24 more locale files | Untrack OR archive |
+| 7+ `.zip` files in `_workspace/` (developers, developers1, orchestrators) | Binaries committed in content trees | Untrack |
+| 20 byte-identical `audit-tasks-folders--*-audit.md` files in `v2/internal/reports/repo-ops/` | Duplicate aliases | Keep canonical; delete aliases |
+| 2 placeholder snapshots: `snippets/data/snapshots/CoinGeckoExchanges.json`, `SolidityEmbed.json` | 178-byte / 170-byte stubs | Wire into fetchers OR delete |
 
-### 4. Scripts and Tooling
+### 4. Scripts and tooling
 
-| Gap | Evidence | Implementation steps |
+| Gap | Evidence | Implementation |
 | --- | --- | --- |
-| Script header compliance | Existing baseline reports 218 template non-compliant scripts. | Run the governance header remediator on a bounded scope, review semantic correctness, then enforce in stages. |
-| Script overlap | Existing baseline reports 1 exact overlap cluster. | Inspect overlap cluster in `workspace/reports/repo-ops/SCRIPT_AUDIT.json`, choose canonical script, convert old path to documented compatibility alias or governed deletion. |
-| Archive sprawl | `operations/scripts/archive/` and `operations/scripts/x-archive/` contain retained legacy files. | Split into compatibility shims, historical evidence, fixtures, and deletion candidates. |
-| Tool index drift | `tools/script-index.md` contains paths that look older than live taxonomy. | Regenerate script indexes using the canonical generator and verify. |
-| PATH discovery | `node` and Mintlify were installed but hidden from non-interactive shell PATH. | Enhance `lpd doctor` to print discovered common install paths when commands are hidden. |
+| Retired JSDoc tags | 45 scripts use `@category`; 4 use `@domain` (live 2026-05-23) | Run `repair-script-inventory.js` on bounded scope; review; enforce in stages |
+| Hook scripts violate own JSDoc | `.githooks/pre-commit` + `pre-push` use retired tags | Update to canonical 11-tag schema; hooks must pass the validator they enforce |
+| Hook script-index broken | `.githooks/script-index.md` only catalogues 3 of 7 hook scripts | Fix generator filter |
+| `pre-commit-no-deletions` unwired | Dead code per its own JSDoc (`@pipeline manual – not yet in pipeline`) | Wire in OR retire |
+| `verify.sh` dead enforcement | Defines 7 checks; not invoked by pre-commit | Wire in OR retire |
+| `post-commit.disabled` no JSDoc header | Just `# LIVEPEER_NOTION_LOCAL_SYNC_HOOK` | Document re-enable condition OR remove |
+| `tools/script-index.md` legacy paths | Per `lpd-cli.mdx` self-note: "Pre-2026-03-21 layout" | Regenerate from `lpd scripts list --json` |
+| `agent-write-governance.json` `bridge_mode: "staged"` | Migration incomplete; `repo-governance-surfaces.json` already on `"retired"` | Complete migration |
+| Archive sprawl in `operations/scripts/` | Both `archive/` and `x-archive/` exist | Consolidate to one lane per script-framework |
+| PATH discovery | Non-interactive shell lacks Homebrew + NVM on PATH | Enhance `lpd doctor` output |
 
 ### 5. GitHub Actions
 
-| Gap | Evidence | Implementation steps |
+| Gap | Evidence | Implementation |
 | --- | --- | --- |
-| Deprecated workflow remains tracked | `.github/workflows/deprecated/update-blog-data.yml` exists. | Confirm if a compatibility workflow is still referenced. If not, schedule deletion-approved retirement. |
-| Workflow docs can drift | Feature docs previously referenced old workflow names. | Make workflow catalog the source for counts and cross-link feature docs to generated catalog. |
-| Governance-sensitive workflow changes need explicit evidence | Policy requires approval labels and PR body section for governance-sensitive workflow PRs. | Add PR checklist text that points to `operations/governance/config/governance-approval-policy.json`. |
+| 3 archive lanes in `.github/` | `workflows/deprecated/` (1 file) + `workflows/x-archive/` (61 files) + `.github/x-archive/` (contents not enumerated) | Consolidate to `workflows/x-archive/` |
+| `update-blog-data.yml` orphan | Stays in `deprecated/` | Confirm if compatibility alias OR retire |
+| D-ACT-03 social-data consolidation incomplete | Target `update-data-feeds.yml` not in active set; 7 archived `.archived` files | Verify migrated into `operations/scripts/dispatch/copy/` OR finish |
+| 2 PR templates side-by-side | `pull_request_template.md` (active) + `pull-request-template-v2.md` (vestigial) | Delete the v2 file |
+| `.github/scripts/` empty | Contracts script moved to `operations/scripts/` | Delete the empty folder |
+| `.github/augment-instructions.md` at active path with archived-header | 206 lines, heaviest adapter | Move to `_retired/` or delete |
+| Cron-is-dry-run bug | See Executive findings P0 | See §1 |
+| Workflow catalog drift | Feature docs previously referenced old workflow names | Make workflow catalog the source for counts |
+| `framework-canonical.md` vs published `docs-guide/frameworks/github-actions.mdx` | Internal working spec ahead by 2 months | Sync published version to match 2026-05-22 refactor |
+| Pattern D "Act" stage missing for cron scans | Health + brand opens PRs on manual repair; daily scheduled runs write only to step summaries | Add audit→issue automation to scheduled `-scan.js` dispatchers |
 
-### 6. Components, Templates, and UI
+### 6. Components, templates, UI
 
-| Gap | Evidence | Implementation steps |
+| Gap | Evidence | Implementation |
 | --- | --- | --- |
-| Component archive not resolved | 24 JSX files under `snippets/components/x-archive/`. | Classify each as active alias, migration evidence, or deletion candidate. |
-| Component count drift | Governance index warns framework counts are aspirational/stale. | Regenerate component docs and update framework count claims from generated inventory. |
-| OS metadata in snippets | `.DS_Store` files exist across snippets subtrees. | Delete with approval and ensure ignore coverage. |
-| Template docs are generated but feature docs were hand-maintained | `ui-system.mdx` had a generated block while surrounding context could drift. | Keep generated template inventory in catalog; keep feature page as architectural map only. |
+| Component archive unresolved | 24 JSX files under `snippets/components/x-archive/` | Triage: DELETE or KEEP-AS-ALIAS |
+| 4-surface component count drift | Feature page 59 / public overview 117 / framework table 118 / registry 132 | Replace hand-authored counts with generator-emitted blocks |
+| Wrapper-vs-display category mismatch | 6 components tagged `category: wrappers` but live under `displays/...` (AccordionGroupList, BasicList, CardCarousel, DisplayCard, DynamicTable, +1) | Either move files OR update `@type` in JSDoc |
+| Registry generator bug | `snippets-registry.mdx` lines 868-878 mis-label all `displays/*` as "wrappers subtree" | Fix generator label logic |
+| All 8 Tier-1 composables in `composables/pages/unclassified/` | Composables tree violates own classification rule | Move to classified subdir per `snippets/guide.mdx` Rule #2 |
+| Data files in composables tree | 662 KB `contractAddressesData.jsx` + 3 other data files parked under `composables/` | Move to `snippets/data/` per Rule #1 |
+| 4 byte-identical template duplicate pairs | `source-of-truth`, `glossary-consolidated`, `glossary-tab`, `openapi-endpoint-page` | Delete duplicates; fix catalog generator dedupe |
+| 11 `.DS_Store` files in `snippets/` | OS metadata | Delete + ensure `.gitignore` coverage |
+| `.vscode/livepeer-legacy.code-snippets.bak` (35 KB) tracked | Replaced by `lp-components.code-snippets` + `templates.code-snippets` | Delete |
+| `components.code-snippets` (113) + `lp-components.code-snippets` (125) overlap | Two generated snippet files | Declare scope-split OR merge to one |
+| Catalog freshness drift | `templates-catalog.mdx` + `ui-templates.mdx` last regen 2026-04-03 (50 days stale) | Add CI workflow that regenerates on `snippets/templates/` + `snippets/components/` change |
+| `components-catalog.mdx` embeds raw data block | Author noted `{/* should not be here. */}` | Move data to JSON companion file |
+| `--lp-color-text-muted` borderline WCAG AA | Contrast ratio 4.2:1 (below 4.5:1 AA threshold) | Darken default or document per-use exemption |
+| Public style-guide leads with deprecated `--accent` aliases | Engineering guide marks them deprecated | Update public guide to canonical `--lp-*` |
 
-### 7. Content and IA
+### 7. Per-tab content + IA
 
-| Gap | Evidence | Implementation steps |
+| Gap | Evidence | Implementation |
 | --- | --- | --- |
-| Duplicate developer trees | `v2/developers/`, `v2/developers1/`, and `v2/developers2/` all exist; docs.json references active v2 routes. | Produce an IA migration plan before moving or deleting. Validate docs.json, redirects, and link imports. |
-| Large workspaces mixed into content sections | Many section `_workspace`, `_design`, canonical, reviews, archive, and deprecated folders exist. | Normalize to approved lanes and apply TTL rules from `workspace-lifecycle-policy.mdx`. |
-| Legacy v1 remains large but frozen | `v1/` contains 350 files in static inventory. | Keep frozen guardrails; only edit by explicit legacy request. |
-| Internal reports are routable in some places | `v2/internal/` includes reports and RFP routes. | Confirm intended nav scope and ensure internal reports do not leak stale operational claims. |
+| Duplicate developer trees | `v2/developers/`, `v2/developers1/`, `v2/developers2/` all exist | Produce IA migration plan first; then execute moves with redirect validation |
+| Gateways canonical = orchestrators canonical | Byte-identical `IA.mdx`, `Frameworks.mdx`, `process.mdx`, `ia-data.json`, `REVIEW-REGISTRY.md` | Produce gateways-specific OR formally adopt orchestrators's as shared (declared as such) |
+| `v2/developers/_workspace/` has NO canonical/ directory | Only "active" tab without one; uses ad-hoc `developer-tab-fixes/` mirror | Produce canonical/ OR document why ad-hoc structure is permanent |
+| orchestrators + gateways `checks.mdx` violate own rules | No frontmatter (fails own Cat 1.1); em-dashes throughout (fails own Cat 2.12) | Add frontmatter; run em-dash remediator on both files |
+| gateways `checks.mdx` has no Cat 10 | Completeness gate undefined for the tab | Add Cat 10 (Content Completeness) section |
+| Bash-block policy contradicts across tabs | Delegators bans bash blocks; orch/gw/about/dev1 permit | Declare site-wide policy in [Checks Framework](../frameworks/checks-framework.mdx) |
+| Frameworks.mdx §1.3 persona enumeration "Pending definition" yet per-tab checks invoke persona rules | Site-wide framework lags per-tab application | Lock persona enumeration; refresh Frameworks.mdx |
+| Frameworks.mdx §1.6 InfoType is "Draft" yet Cat 4.7 treats as blocking | Draft framework field is treated as production gate | Promote §1.6 from Draft OR remove Cat 4.7 dependency |
+| Tab gate status board contradicts itself | All 5 tabs have `IA Approved ⬜` but 3 have `Content Scan Done ✅` – out of order | Gate-ordering enforcement OR refresh table |
+| `Delegators/LPT v2 path confirmed: v2/lpt/`; live tree HAS `v2/delegators/` | tab-status.md says `v2/lpt/` is canonical; that path doesn't exist | Update tab-status.md to reality |
+| Large workspaces mixed into content sections | Many section `_workspace`, `_design`, canonical, reviews, archive, deprecated folders | Normalise per `workspace-lifecycle-policy.mdx` TTL rules |
+| Internal reports routable in some places | `v2/internal/` includes 36 audit dump files routable from nav | Confirm intended nav scope; collapse audit dumps to single index + retention |
+| Tab maps absent at canonical location | Per-page review pipeline Phase 0 requires `v2/{tab}/_workspace/tab-map.mdx`; none exist | Move/symlink ORCHS map from `workspace/plan/active/CONTENTI-PIPLEINE/03-tab-map.md`; produce for other 4 tabs |
+| 55 status:draft files repo-wide | 37 in orchestrators (`plans/`, `canonical/check/`, `x-archived/`) | Triage: complete or retire |
+| EVERY workspace file has mtime exactly 2026-05-18 | Single batch operation makes mtime unreliable as staleness signal | Use `lastVerified` frontmatter + content date as staleness signal |
 
-## Implementation Plan
+### 8. v2/internal + RFP
 
-### Phase 1: Stabilize Governance Signals
+| Gap | Evidence | Implementation |
+| --- | --- | --- |
+| `v2/internal/rfp/report.mdx` StyledTable self-contradictory | 2026-02-21 status grades unchanged; Part 13 §13.3 (this session) re-grades 5 rows | Update the StyledTable to match Part 13 grades |
+| 3 sibling internal pages cite 3 different script counts | `aims.mdx` 58; `governance-pipeline.mdx` 214; `report.md §13.1` 320 | Reconcile to live (321) |
+| `governance.mdx` section-owners table uses v1 `v2/pages/01_about/` numbered paths | That IA was removed | Refresh paths |
+| `ally-notes.mdx` duplicates own content twice (lines 24-101 ≈ 103-180) | Self-duplication | Deduplicate |
+| `personas.mdx` missing 3 of 4 personas | Only Developer has body; Gateway Operator, Orchestrator, Delegator are heading-only stubs | Complete |
+| All 7 TAB-SUMMARY.md files dated 2026-04-08 | Mark 6 internal pages as FAIL/empty; all 6 populated 2026-05-22 | Regenerate TAB-SUMMARY files |
 
-1. Regenerate stale governance map.
-2. Regenerate docs-guide catalogs if new feature pages are accepted.
-3. Add or update feature-page freshness checks for TODOs, missing links, and moved script roots.
-4. Run staged validation.
+### 9. AI features + skills
 
-Exit criteria:
+| Gap | Evidence | Implementation |
+| --- | --- | --- |
+| `llms.txt` + `sitemap-ai.xml` 47 days stale | Root cause: cron-dry-run | Fix cron-dry-run (Executive P0) |
+| `sitemap-ai.xml` only 6 of 10 tabs | developers/orchestrators/delegators/internal/ai-tools entirely absent | Expand fetcher scope |
+| 3 AI artefact counts disagree | llms.txt 188 / sitemap-ai.xml 181 / docs-index.json 532 | Pick one source-of-truth OR document why three |
+| `robots.txt` doesn't advertise `sitemap-ai.xml` | Only Mintlify auto-sitemap listed | Add the entry |
+| `skill.md` aspirational | Documented at `docs.livepeer.org/skill.md`; no repo source | Implement generator OR strike from public docs |
+| `.claude/CLAUDE.md` 2.74× AGENTS.md (326 vs 119 lines) | D-DG-11 thin-adapter violation | Trim to ≤200 lines; no policy duplicated from AGENTS.md |
+| 18 of 34 SKILL.md `status: draft` | Session-lifecycle backbone never validated in production | Promote 1 per week through 3-pass validation |
+| 38 portable-only skills have no local canonical | Dispatchers reference them; the graph is partly fictional | Reconcile or document why |
+| `agent-packs/skills/manifest.json` registers 1 of 53 portable skills | Only `browser` registered | Audit + update manifest |
+| `docs-copy/` has both `reference/` and `references/` | Two ref directories with different files | Reconcile to one |
+| 15 portable wrappers stale v1.0 | Local canonical bodies at v1.3/v1.4 | Regenerate cross-agent-packager exports |
+| Templates 32/37/38 appear twice with different content | 41/42 duplicate 37/38 (renumbered without deletion) | Cleanup |
+| `ai-tools/registry/ai-tools-inventory.md` lags registry | Inventory mtime 2026-04-05; registry mtime 2026-04-08 | Regenerate inventory |
+| `ai-tools/ai-rules/.augment/` phantom-retired subtree (165 lines) | At active path; invisible to freshness validator | Move to `_retired/` |
+| Two `AI_GUIDELINES.md` files give contradictory `--no-verify` policy | `.augment/` shadow forbids; live + `_retired` allow with metadata | Reconcile |
+| `docs-guide/tooling/ai-tools.mdx` claims 42 templates + 42 skills | Live: 53 templates + 34 local + 53 portable | Replace with generator-emitted block |
+| `skill-catalog.json` covers 9 of 34 skills (26%) | Two separate inventory systems with no cross-check | Add CI cross-check |
 
-- Governance map check passes.
-- Feature docs have no TODO markers or old root references.
-- Catalogs reflect new feature pages.
+### 10. Workspace plans
 
-### Phase 2: Normalize Non-Publishable V2 Lanes
+| Gap | Evidence | Implementation |
+| --- | --- | --- |
+| 3 decision registries with no cross-index | D-NAV-01 + D-ACT-01..10 + D-GOV-01..08 + D-DG-01..13 | Wire CI cross-index check |
+| CONTENT-WRITING/READ-EVERY-TIME `collated/` symlinks structurally broken | Non-audience-design symlinks point to `context-packs/` which doesn't exist | Fix or remove symlinks |
+| Two parallel orchestrator content tracks (ORCHS vs ORCHESTRATOR-CONTENT-WRITING) | No canonical decision between them | Pick one; archive the other |
+| ORCHS IA has 10 sections; ORCHESTRATOR-CONTENT-WRITING/MASTER-STATE.md has 12 (S1-S12) | Same tab, two locked IAs | Reconcile |
+| Pool worker (deprecated) still in CLAUDE.md domain terms | TERMINOLOGY-COLLATE locked it as Pool node | Update CLAUDE.md |
+| Fee cut direction unresolved across 3 sources | SHIP-CONTENT V-01 vs MASTER-STATE.md vs TERMINOLOGY-COLLATE | Lock in decision-registry |
+| CONTRACTS authority paradox | DEPRECATED/ files cited as design-doc authority in REQUIREMENTS.mdx | Resolve |
+| 26 files in `ORCHS/x-deprecated/` marked `status: current` or `published` | Lifecycle violation | Status field correction OR file moves |
+| CANONICAL-TRUTH-GUIDES marked DELETE but contains active work | Conflict between meta-decision and content | Resolve |
+| Folder name issues | `ORCHESTRATOR-CONTENT-WRITING` houses Gateways; `CONTRACTS-CHANGELOG-PIPELINE` header drift; `SCRIPT WORKFLOW AUDIT` has literal space; `CONTENTI-PIPLEINE` misspelled | Rename folders per `naming-conventions.mdx` |
+| Per-tab glossary term-count drift (+3 to +10) | glossary-index.md vs per-tab files | Reconcile |
+| Gateways scan claims 275 pages (anomaly) | Live count differs | Re-run scan |
 
-1. Update ignore and selection helpers.
-2. Execute the v2 cleanup matrix by section, starting with `gateways`.
-3. Validate route, link, and import behavior after each wave.
-4. Record completed move waves in a report.
+### 11. Tab gates stuck at Phase 2
 
-Exit criteria:
+Per `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md`:
 
-- Cleanup matrix rows are materially reduced.
-- No routed page resolves into non-publishable lanes.
+- **0 of 5 tabs has `IA Approved`** – all ⬜
+- 3 of 5 tabs have `Content Scan Done` ✅ (Gateways, About, Delegators)
+- 0 of 5 tabs have advanced past Phase 2
 
-### Phase 3: Purge Retention Violations
+The project pipeline is stalled. A tab is only "open" for the next phase when its gate is explicitly unlocked by human sign-off recorded in `decision-registry.md`. **Action:** human IA review + lock per tab to unblock downstream phases.
 
-1. Classify backup files, `.DS_Store`, and large report artifacts.
-2. Replace full historical reports with concise summaries where possible.
-3. Use deletion-approved commits for tracked removals.
-4. Add or verify ignore coverage.
+---
 
-Exit criteria:
+## Implementation plan (refreshed 2026-05-23)
 
-- Script footprint audit no longer reports backup artifacts.
-- Large tracked reports are either justified or removed.
+### Phase 1: Stop the bleed (P0)
 
-### Phase 4: Repair Script and Workflow Governance
+1. **Fix the cron-is-dry-run bug.** Single edit across 6 `dispatch-{concern}.yml` files. Unblocks contracts, llms.txt, sitemap-ai.xml, OG-images, SEO, glossary regeneration.
+2. **Regenerate stale governance map.** Run the generator + commit.
+3. **Wire OpenAPI fetcher** to all 5 specs + schedule + validation gate.
+4. **Fix `docs.json` default version** (v1 → v2 OR confirm Mintlify dashboard override).
+5. **Refresh stale RFP/internal claims** – sibling pages cite 3 different script counts.
+6. **Regenerate TAB-SUMMARY.md files** to reflect populated internal stubs.
 
-1. Backfill script headers in bounded batches.
-2. Resolve script overlap cluster.
-3. Retire or document deprecated workflow.
-4. Regenerate script and workflow catalogs.
+**Exit criteria:** governance map `--check` passes; data-pipeline staleness drops to ≤1 day; AI artefacts regenerate on every `docs.json` change; visitors land on v2 by default.
 
-Exit criteria:
+### Phase 2: Repair the contracts (P1)
 
-- Script template non-compliance count trends to zero.
-- Workflow catalog and live workflows agree.
+1. Add `/compliance/` to `agent-governance-framework.mdx` validator path references.
+2. Update contracts pipeline doc to reference current script location.
+3. Wire CI cross-index check across the 3 decision registries.
+4. Append D-ACT-05..10 + D-GOV-01..08 entries to `decisions-log.mdx`.
+5. Update `framework-canonical.md` published version to match 2026-05-22 refactor.
+6. Verify D-ACT-03 social-data consolidation completion (target: `update-data-feeds.yml` exists or scripts under `dispatch/copy/`).
 
-### Phase 5: Consolidate UI and IA Debt
+**Exit criteria:** zero stale path references; published frameworks match live state; CI catches future drift.
 
-1. Classify archived components.
-2. Regenerate component catalogs and docs.
-3. Produce a dedicated developers/developers1/developers2 IA migration plan.
-4. Execute only approved IA changes with docs.json and redirect validation.
+### Phase 3: Normalise non-publishable lanes (P1)
 
-Exit criteria:
+1. Update `.mintignore` + selection helpers.
+2. Execute v2 cleanup matrix by section, starting with `gateways` (199 of 307 rows).
+3. Validate route + link + import behaviour after each wave.
+4. Record waves in a report under `workspace/reports/repo-ops/`.
 
-- Component counts are generated and trustworthy.
-- Duplicate developer trees have an approved migration path.
+**Exit criteria:** cleanup matrix decreases; no routed page in non-publishable lanes; archive naming normalised to `x-archive/`.
 
-## Non-Acceptance Criteria
+### Phase 4: Resolve per-tab canonical contradictions (P1)
+
+1. Decide gateways canonical: produce gateways-specific OR formally adopt orchestrators's as shared (declared).
+2. Add Cat 10 to gateways `checks.mdx`.
+3. Add frontmatter + run em-dash remediator on orchestrators + gateways `checks.mdx`.
+4. Lock bash-block policy site-wide.
+5. Lock persona enumeration in `Frameworks.mdx §1.3`.
+6. Promote `Frameworks.mdx §1.6` InfoType from Draft.
+7. Move/symlink ORCHS tab map to canonical location; produce for other 4 tabs.
+
+**Exit criteria:** per-tab canonical artefacts agree on shared spec; no `checks.mdx` violates its own Cat 1.1 or 2.12; Phase 0 pre-flight passes for at least 1 tab.
+
+### Phase 5: Component + skill backlog (P1)
+
+1. Replace hand-authored component count tables with generator-emitted blocks (4 surfaces).
+2. Fix `snippets-registry.mdx` lines 868-878 wrapper/displays label bug.
+3. Move 6 wrapper-tagged components OR update their `@type` JSDoc.
+4. Triage 24 archived JSX components (DELETE or KEEP-AS-ALIAS).
+5. Move all 8 Tier-1 composables out of `composables/pages/unclassified/`.
+6. Move 4 data files out of `composables/`.
+7. Delete 4 byte-identical template duplicate pairs.
+8. Promote 1 draft SKILL.md per week through 3-pass validation (18 in queue).
+9. Reconcile portable vs local skill divergence (34 vs 53; 38 portable-only with no local).
+10. Trim `.claude/CLAUDE.md` to ≤200 lines.
+
+**Exit criteria:** every count generator-sourced; 0 wrapper-tagged components in displays/; 0 draft skills in production use; thin-adapter compliance per D-DG-11.
+
+### Phase 6: Backfill + retention (P1/P2)
+
+1. Backfill the 45 retired-`@category` + 4 retired-`@domain` scripts.
+2. Update `.githooks/pre-commit` + `pre-push` JSDoc to canonical 11-tag.
+3. Wire `.githooks/verify.sh` back into pre-commit OR retire.
+4. Apply report retention policy.
+5. Delete 13-file cleanup queue (`.DS_Store`, `.bak`, `.legacy-duplicate.json`, etc.).
+6. Untrack 1,070 archived locale snapshots + 7+ committed `.zip` files.
+7. Delete 20 byte-identical audit alias files.
+8. Implement `tasks-retention.yml` workflow for `_workspace/` TTL enforcement.
+
+**Exit criteria:** script footprint audit `@category` + `@domain` counts at 0; hook scripts pass the validator they enforce; workspace report bloat reduced; retention TTL enforced.
+
+---
+
+## Non-acceptance criteria
 
 The following do not satisfy this gap analysis:
 
-- Adding ignore rules without moving, validating, or documenting the underlying source of drift.
-- Deleting files without dependency checks and required deletion approval.
-- Hand-editing generated outputs without fixing the generator or canonical source.
-- Leaving old docs paths as undocumented compatibility aliases.
-- Treating workspace reports as permanent source of truth.
-- Running only a superficial command when repo tooling provides a deeper validator.
+- Adding ignore rules without moving, validating, or documenting the underlying source of drift
+- Deleting files without dependency checks and required deletion approval
+- Hand-editing generated outputs without fixing the generator or canonical source
+- Leaving old docs paths as undocumented compatibility aliases
+- Treating workspace reports as permanent source of truth
+- Running only a superficial command when repo tooling provides a deeper validator
+- Marking a fix done without verifying the prior failure mode no longer reproduces
 
-## Next Concrete Commands
+---
+
+## Next concrete commands
 
 ```bash
+# Regenerate stale governance map
 PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write
 PATH="/opt/homebrew/bin:$PATH" node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check
-PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js --report-md workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md --report-json workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json --as-of 2026-05-14
-PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full --output-dir workspace/reports/repo-ops
+
+# Refresh v2 folder cleanup matrix
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js \
+  --report-md workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md \
+  --report-json workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json \
+  --as-of 2026-05-23
+
+# Refresh script footprint audit (verifies 45 @category + 4 @domain figures)
+PATH="/opt/homebrew/bin:$PATH" node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js \
+  --scope full --output-dir workspace/reports/repo-ops
+
+# Live JSDoc compliance spot-check
+find operations/scripts -name '*.js' | xargs grep -l '@category' | wc -l  # retired tag count
+find operations/scripts -name '*.js' | xargs grep -l '@domain' | wc -l    # retired tag count
+find operations/scripts -name '*.js' | xargs grep -l '@purpose' | wc -l   # canonical tag count
+
+# Confirm pipeline tests pass
+node operations/tests/integration/pipeline-smoke-test.js
+node operations/tests/integration/pipeline-functional-tests.js
+
+# Validate staged work
 lpd test --staged
 ```
+
+---
+
+## Related
+
+- **[Adaptive Architecture](./adaptive-architecture.mdx)** – the model this gap analysis remediates against
+- **[Automations](./automations.mdx)** – the cron-dry-run bug that gates Phase 1
+- **[Feature Map](./feature-map.mdx)** – the canonical inventory cross-link
+- **[Ownerless Governance Policy](../policies/ownerless-governance.mdx)** – the 4-part contract that defines "complete"
+- **[Workspace Lifecycle Policy](../policies/workspace-lifecycle-policy.mdx)** – TTL rules + `tasks-retention.yml` target
+- **[Cleanup + Quarantine Policy](../policies/cleanup-quarantine-policy.mdx)** – deletion-discipline contract
+- **`workspace/plan/future/BACKLOG/master-tasks.md`** – BL-001..BL-046 with priorities + status + dates
+- **`workspace/thread-outputs/repo-consolidation-deep/`** – 10 file-level slice audits (~4,400 lines of evidence)
+- **`workspace/thread-outputs/repo-consolidation-deep/SLICE-00-MASTER.md`** – master consolidation map (input to this gap analysis)

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.
  * @description Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.
  * @mode        check
  * @pipeline    manual

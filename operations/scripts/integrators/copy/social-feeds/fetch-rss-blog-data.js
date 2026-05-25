@@ -3,13 +3,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches product RSS feeds from config and writes per-solution blog data modules under snippets/data/social-feed-solutions/.
+ * @purpose     Fetch per-solution RSS blog feeds (daydream, embody, streamplace, etc. — each product has its own blog or Substack) and emit per-solution JSX modules used to render the product-specific blog feed on each overview page
+ * @description Reads solution → RSS URL mapping from config, parses each feed (title, link, pubDate, excerpt, author), transforms into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/blogData.jsx. Distinct from fetch-ghost-blog-data which handles only the main Livepeer Ghost blog.
  * @mode        integrate
- * @pipeline    config → RSS feed → snippets/data/social-feed-solutions/{product}/blogData.jsx
- * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       Per-solution RSS feeds (read-only) → snippets/data/social-feed-solutions/{product}/
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness)
  */
 const https = require("https");
 const http = require("http");

@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     
+ * @purpose     Repair inserts or extends framework headers on all repo scripts from classification data.
  * @description Inserts or extends framework headers on all repo scripts from classification data.
  * @mode        repair
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines

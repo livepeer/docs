@@ -3,13 +3,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
+ * @purpose     Fetch the Livepeer YouTube channel video metadata (title, thumbnail, publish date, view count, duration) and emit a JSX module the Community pages render as the latest-videos feed
+ * @description Reads channel ID + API key from env, hits YouTube Data API v3 for the channel's uploads playlist, transforms entries into a sorted JSX export. Writes to snippets/data/social-feeds/youtubeData.jsx. Requires YOUTUBE_API_KEY.
  * @mode        integrate
- * @pipeline    manual
- * @scope       .github/scripts
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       YouTube Data API v3 (read-only) → snippets/data/social-feeds/youtubeData.jsx
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); no secrets in output
  */
 const https = require("https");
 const fs = require("fs");

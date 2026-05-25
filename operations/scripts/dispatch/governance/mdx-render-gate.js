@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the preToolUse hook for Write/Edit. Reads the verification state written by
  * @description PreToolUse hook for Write/Edit. Reads the verification state written by
  * @mode        dispatch
  * @pipeline    PreToolUse hook → read state → allow or block

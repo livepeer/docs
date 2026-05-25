@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       reports
- * @purpose     
+ * @purpose     Audit inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @mode        scan
  * @pipeline    manual

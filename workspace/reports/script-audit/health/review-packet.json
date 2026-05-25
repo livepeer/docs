@@ -1,0 +1,1234 @@
+[
+  {
+    "path": "operations/scripts/validators/content/veracity/docs-fact-registry.js",
+    "name": "docs-fact-registry.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "veracity",
+    "purpose": "Validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.",
+    "description": "Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.",
+    "scope": "operations/scripts, workspace/research/claims operations/tests/unit/docs-fact-registry.test.js",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/veracity/docs-research-packet.js",
+      "docs-guide/tooling/ai-tools.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/research-skill-workflow.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-anchor-usage.js",
+    "name": "check-anchor-usage.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page",
+    "description": "Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page",
+    "scope": "v2-content",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/structure/repair-anchor-usage.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-description-quality.js",
+    "name": "check-description-quality.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse",
+    "description": "Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse",
+    "scope": "operations/scripts/validators/content, v2",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/structure/repair-description-quality.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-docs-path-sync.js",
+    "name": "check-docs-path-sync.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Detects staged page moves that require docs.json or governed path reference rewrites.",
+    "description": "Docs path sync validator — detects staged page moves that require docs.json or governed path reference rewrites.",
+    "scope": "staged",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/feature-map.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/content-writing.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-double-headers.js",
+    "name": "check-double-headers.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.",
+    "description": "Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.",
+    "scope": "v2-content",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-mdx-safe-markdown.js",
+    "name": "check-mdx-safe-markdown.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns.",
+    "description": "Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns.",
+    "scope": "full-repo",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/check-page-endings.js",
+    "name": "check-page-endings.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Validates that English v2 MDX pages end with an approved navigational or closing element",
+    "description": "Validates that English v2 MDX pages end with an approved navigational or closing element",
+    "scope": "operations/scripts/validators/content, v2",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/enforce-generated-file-banners.js",
+    "name": "enforce-generated-file-banners.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Validates \"do not edit\" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js.",
+    "description": "Validates \"do not edit\" banners and i18n parity on generated MDX files. Generator dispatch split to sync-generated-files.js.",
+    "scope": "docs-guide/catalog, v2",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/pipelines/sync-generated-files.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/source-of-truth-policy.mdx",
+      "docs-guide/source-of-truth-guide.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/lint-structure.js",
+    "name": "lint-structure.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Enforce structural rules on MDX content files.",
+    "description": "Enforce structural rules on MDX content files.",
+    "scope": "staged, changed, v2-content, single-file",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/structure/repair-lint-structure.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/feature-map.mdx",
+      "docs-guide/decisions/docs-guide-structure.md",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/regression-bisect.js",
+    "name": "regression-bisect.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Uses git bisect with an automated Puppeteer test to binary-search",
+    "description": "Uses git bisect with an automated Puppeteer test to binary-search",
+    "scope": "single route",
+    "reads": [
+      "operations/tests/baselines/console-baseline.json",
+      ".githooks/server-manager.js"
+    ],
+    "writes": [],
+    "callers": [],
+    "flags": [
+      "orphan-no-caller"
+    ]
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/sweep-console-errors.js",
+    "name": "sweep-console-errors.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Visits every v2 route registered in docs.json, captures HTTP status,",
+    "description": "Visits every v2 route registered in docs.json, captures HTTP status,",
+    "scope": "operations/tests/baselines/console-baseline.json",
+    "reads": [
+      "operations/tests/baselines/console-baseline.json",
+      ".githooks/server-manager.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/validators/content/structure/regression-bisect.js",
+      "operations/scripts/validators/content/structure/sweep-delta-report.js",
+      ".claude/CLAUDE.md"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/sweep-delta-report.js",
+    "name": "sweep-delta-report.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,",
+    "description": "Runs a full-site (or targeted) Puppeteer sweep, loads the existing baseline,",
+    "scope": "operations/tests/baselines/console-baseline.json",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/validators/content/structure/sweep-console-errors.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/test-v2-pages.js",
+    "name": "test-v2-pages.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "page-rendering",
+    "purpose": "Validate v2 pages render correctly in the Mintlify dev server — launches Puppeteer against http://localhost:3000, navigates each v2/ route, captures console errors, network 404s, and rendering failures so broken pages don't ship",
+    "description": "Puppeteer-driven browser tester. Reads docs.json for the route list, navigates each in headless Chrome, waits for body content, checks for console errors / network failures / missing components. Used by dispatch-page-rendering.js as the rendering atomic. Also called directly by v2-wcag-audit.js (which loads each page then runs axe-core) and browser.test.js.",
+    "scope": "docs.json routes → http://localhost:3000/{route} → rendered DOM + console events",
+    "reads": [
+      "operations/tests/baselines/console-baseline.json"
+    ],
+    "writes": [
+      "workspace/reports/page-audits/v2-page-test-report.json"
+    ],
+    "callers": [
+      ".github/workflows/README-test-v2-pages.md",
+      "operations/scripts/dispatch/content/health/dispatch-page-rendering.js",
+      "operations/scripts/README-test-v2-pages.md",
+      "operations/scripts/validators/content/structure/sweep-console-errors.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/03_Component-Governance-Framework/03_Component-Framework/04_Component-Technical-Framework/index.md",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/structure/verify-all-pages.js",
+    "name": "verify-all-pages.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "structure",
+    "purpose": "Loads component-library routes in a headless browser and fails on render, console, or 404 issues.",
+    "description": "Loads component-library routes in a headless browser and fails on render, console, or 404 issues.",
+    "scope": "single-domain",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/archive/legacy/verify-all-pages.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/health/check-broken-links.js",
+    "name": "check-broken-links.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "page-rendering",
+    "purpose": "First-party broken-link check (replaces Mintlify integration for advisory PR checks)",
+    "description": "Delegates to page-links-audit.js which already implements the canonical link health check across v2 pages. This script provides the canonical entry point so dispatchers can call check-broken-links by stable name.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "operations/scripts/audits/content/health/page-links-audit.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-rendering.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/health/check-wcag.js",
+    "name": "check-wcag.js",
+    "concern": "health",
+    "type": "validator",
+    "niche": "wcag",
+    "purpose": "WCAG accessibility validation for changed v2 MDX pages",
+    "description": "PR-time advisory validator. Wraps the WCAG audit engine in --no-fix mode and reports blocking findings (impact level configurable). Exits non-zero if blocking violations are found.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "operations/tests/integration/v2-wcag-audit.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-wcag.js",
+      "operations/scripts/remediators/content/health/repair-wcag.js",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/structure/repair-anchor-usage.js",
+    "name": "repair-anchor-usage.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "structure",
+    "purpose": "Repair broken in-page anchor links by recomputing heading slugs and fuzzy-matching anchor text",
+    "description": "Pairs with check-anchor-usage.js. For each broken anchor link [text](#slug), reads the target page's H1-H6 headings, computes their slugs, and if a unique fuzzy match exists (>= 0.8 similarity), rewrites the anchor. Ambiguous matches stay flagged for human review.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/structure/repair-description-quality.js",
+    "name": "repair-description-quality.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "structure",
+    "purpose": "Repair v2 frontmatter description quality (trim boilerplate openings, normalise length)",
+    "description": "Pairs with check-description-quality.js. Trims boilerplate openings (\"This page describes\", \"This document covers\", \"Learn how to\"), normalises trailing punctuation, flags too-short (<80) and too-long (>160) descriptions for human review.",
+    "scope": "v2 MDX frontmatter",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/structure/repair-lint-structure.js",
+    "name": "repair-lint-structure.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "structure",
+    "purpose": "Repair structural lint findings (trailing whitespace, missing trailing newline, doubled blank lines)",
+    "description": "Pairs with lint-structure.js. Applies deterministic whitespace + spacing fixes only. Anything requiring judgment (heading-level reorganisation) stays flagged for human review.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/migrate-assets-to-branch.js",
+    "name": "migrate-assets-to-branch.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.",
+    "description": "Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.",
+    "scope": "full-repo",
+    "reads": [
+      "operations/tests"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/quarantine-manager.js",
+    "name": "quarantine-manager.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Classifies files for quarantine (default) or applies quarantine moves (--apply)",
+    "description": "Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)",
+    "scope": "operations/scripts, workspace/reports/repo-ops, workspace/quarantine",
+    "reads": [
+      "workspace/quarantine/repo-audit",
+      "operations/scripts",
+      "operations/tests",
+      "workspace"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/cleanup-quarantine-policy.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js",
+    "name": "repair-mdx-safe-markdown.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.",
+    "description": "Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.",
+    "scope": "full-repo",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/repair-page-imports.js",
+    "name": "repair-page-imports.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.",
+    "description": "Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.",
+    "scope": "operations/scripts, operations/reports/health/page-imports",
+    "reads": [
+      "operations/reports/health/page-imports"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/repair-page-links.js",
+    "name": "repair-page-links.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.",
+    "description": "Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.",
+    "scope": "v2 publishable docs pages, operations/reports/health/page-links",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/health/repair-broken-links.js",
+      "operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/repair-relative-page-hrefs.js",
+    "name": "repair-relative-page-hrefs.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.",
+    "description": "Preserve the legacy relative-href repair command while the canonical implementation lives under repair-page-links.js.",
+    "scope": "operations/scripts/remediators/content/repair, operations/reports/health/page-links",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/repair-spelling.js",
+    "name": "repair-spelling.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.",
+    "description": "Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.",
+    "scope": "v2-content",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-spelling.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/sync-docs-paths.js",
+    "name": "sync-docs-paths.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Applies deterministic docs.json and governed reference rewrites for moved docs pages.",
+    "description": "Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages.",
+    "scope": "staged",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js",
+    "name": "sync-mintlify-canonical-consumers.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "repair",
+    "purpose": "Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.",
+    "description": "Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.",
+    "scope": "docs-guide/canonical/collation-data/Mintlify, docs-guide/contributing, AGENTS.md, .github, .claude, ai-tools, snippets, workspace/plan/active",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/mintlify-canonical-sync.js",
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/copy/dispatch-canonical-sync.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/quality/repair-content-quality.js",
+    "name": "repair-content-quality.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "quality",
+    "purpose": "Repair deterministic content quality findings (orphan TODO markers, missing trailing newlines on changelogs)",
+    "description": "Pairs with docs-quality-and-freshness-audit. Removes orphan single-line TODO/FIXME comments at end of file. Anything that requires judgment (thin pages, stale content) escalates via rolling-issue.",
+    "scope": "v2 MDX pages",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-content-quality.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/health/repair-broken-links.js",
+    "name": "repair-broken-links.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "page-rendering",
+    "purpose": "Repair broken internal links by recomputing canonical paths from docs.json",
+    "description": "Pairs with check-broken-links. Reads page-links-audit findings, attempts canonical path rewrites for internal v2/ links that match a moved/renamed page registered in docs.json. External link repairs (redirect resolution) are not in scope here.",
+    "scope": "v2 MDX pages (internal links only)",
+    "reads": [
+      "operations/scripts/remediators/content/repair/repair-page-links.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-rendering.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/health/repair-openapi-reference.js",
+    "name": "repair-openapi-reference.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "openapi-reference",
+    "purpose": "Regenerate OpenAPI reference docs from canonical spec source, open PR on drift",
+    "description": "Pairs with openapi-reference-audit. On detected drift between live API spec and committed reference docs, invokes generate-api-docs.sh against each tracked spec to regenerate the v2 API reference pages. PR is opened by the workflow layer after successful regen.",
+    "scope": "v2/gateways/.../api-reference/, ai/worker/api/openapi.yaml",
+    "reads": [
+      "operations/scripts/generators/content/reference/generate-api-docs.sh"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-openapi-reference.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/health/repair-wcag.js",
+    "name": "repair-wcag.js",
+    "concern": "health",
+    "type": "remediator",
+    "niche": "wcag",
+    "purpose": "Apply deterministic WCAG accessibility fixes to v2 MDX pages",
+    "description": "Pattern E remediator. Wraps the WCAG audit engine's --fix mode to apply safe accessibility autofixes (heading hierarchy, alt text, contrast tokens). Supports --dry-run preview, --verify per-file revert on regression, and --files scoping. Paired with check-wcag in remediation-verify-registry.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "operations/tests/integration/v2-wcag-audit.js",
+      "workspace/reports/health/wcag",
+      "operations/scripts/validators/content/health/check-wcag.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-wcag.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js",
+    "name": "docs-page-research-pr-report.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "veracity",
+    "purpose": "Runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.",
+    "description": "Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.",
+    "scope": "operations/scripts, workspace/research/claims, workspace/reports/repo-ops operations/tests/unit/docs-page-research-pr-report.test.js",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/veracity/docs-research-packet.js",
+      "operations/scripts/dispatch/ai/codex/create-codex-pr.js",
+      "docs-guide/tooling/ai-tools.mdx",
+      "docs-guide/tooling/research-review-packet-plan-template.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/research-skill-workflow.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/veracity/docs-research-packet.js",
+    "name": "docs-research-packet.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "veracity",
+    "purpose": "Dispatch the derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.",
+    "description": "Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.",
+    "scope": "operations/scripts, workspace/reports, tools/config/scoped-navigation, workspace/research operations/tests/unit/docs-research-packet.test.js operations/tests/unit/orchestrator-guides-research-review.test.js",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/ai-tools.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/research-skill-workflow.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/veracity/orchestrator-guides-research-review.js",
+    "name": "orchestrator-guides-research-review.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "veracity",
+    "purpose": "Dispatch the delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.",
+    "description": "Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.",
+    "scope": "operations/scripts, workspace/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, workspace/research operations/tests/unit/orchestrator-guides-research-review.test.js",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-content-quality.js",
+    "name": "dispatch-content-quality.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "content-quality",
+    "purpose": "Pipeline dispatcher for content quality (TODO/TBD markers, thin pages, stale content) — full lifecycle",
+    "description": "Mode-driven orchestrator over docs-quality-and-freshness-audit.js. PR mode runs audit on staged with advisory comment. Scheduled mode runs full audit, applies deterministic fixes via repair-content-quality (Phase 3.X), escalates residual via rolling-issue.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js",
+      "operations/scripts/remediators/content/quality/repair-content-quality.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/remediators/content/quality/repair-content-quality.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+    "name": "dispatch-health-check.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "PR-time meta dispatcher: bundles all health pipelines in --mode pr",
+    "description": "Runs every health pipeline dispatcher with --mode pr in sequence. Aggregates exit codes. Used by dispatch-health.yml on pull_request events.",
+    "scope": "all health pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-health.yml",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+    "name": "dispatch-health-repair.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "Manual meta dispatcher: bundles health pipelines in --mode manual (repair only)",
+    "description": "Runs repair-only mode across health pipelines that support remediation. Opens PR with verified fixes.",
+    "scope": "all health pipelines with remediators",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-health.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+    "name": "dispatch-health-scan.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "Scheduled meta dispatcher: bundles all health pipelines in --mode scheduled",
+    "description": "Runs every health pipeline with --mode scheduled. Full audit + repair (if --write) + verify + rolling issue routing.",
+    "scope": "all health pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-health.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-openapi-reference.js",
+    "name": "dispatch-openapi-reference.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "openapi-reference",
+    "purpose": "Pipeline dispatcher for OpenAPI reference drift (full lifecycle)",
+    "description": "Wraps the existing OpenAPI audit + reference regen flow. PR mode: drift check only. Scheduled: full audit + open PR if drift. Manual: regenerate reference docs from canonical spec.",
+    "scope": "v2/api-reference, openapi specs",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/tests/integration/openapi-reference-audit.js",
+      "operations/scripts/remediators/content/health/repair-openapi-reference.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/remediators/content/health/repair-openapi-reference.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+    "name": "dispatch-page-integrity.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "page-integrity",
+    "purpose": "Pipeline dispatcher for page-integrity (links + imports + MDX safety) — full lifecycle",
+    "description": "Mode-driven orchestrator wrapping the existing page-integrity-dispatch.js chain. --mode pr runs audits on staged + previews repairs. --mode scheduled runs full audit + repair --verify + rolling issue for residual. --mode manual runs repairs only. Replaces direct workflow calls to page-integrity-dispatch.js with the canonical pipeline contract.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/audits/content/health/page-links-audit.js",
+      "operations/scripts/audits/content/health/page-imports-audit.js",
+      "operations/scripts/remediators/content/repair/repair-page-links.js",
+      "operations/scripts/remediators/content/repair/repair-page-imports.js",
+      "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js",
+      "operations/scripts/dispatch/content/health/page-integrity-dispatch.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/docs-path-sync.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-rendering.js",
+    "name": "dispatch-page-rendering.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "page-rendering",
+    "purpose": "Pipeline dispatcher for page rendering (Puppeteer sweep + broken-link check) — full lifecycle",
+    "description": "Mode-driven orchestrator over test-v2-pages.js and check-broken-links.js. Render errors typically need human review, so the cycle is: detect (Puppeteer + link check) → repair (broken-link replacements where deterministic) → escalate via rolling-issue.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/structure/test-v2-pages.js",
+      "operations/scripts/validators/content/health/check-broken-links.js",
+      "operations/scripts/remediators/content/health/repair-broken-links.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/remediators/content/health/repair-broken-links.js",
+      "operations/scripts/validators/content/health/check-broken-links.js",
+      "operations/scripts/validators/content/structure/test-v2-pages.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+    "name": "dispatch-page-structure.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "page-structure",
+    "purpose": "Pipeline dispatcher for page structure (headers, anchors, descriptions, endings, MDX safety) — full lifecycle",
+    "description": "Mode-driven orchestrator over the 8 structure validators and their paired remediators. PR mode runs validators in --staged and posts advisory. Scheduled mode runs validators repo-wide, applies safe repairs, escalates residual via rolling-issue. Manual mode runs only remediators with --verify.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js",
+      "operations/scripts/remediators/content/repair/sync-docs-paths.js",
+      "operations/scripts/remediators/content/structure/repair-anchor-usage.js",
+      "operations/scripts/remediators/content/structure/repair-description-quality.js",
+      "operations/scripts/remediators/content/structure/repair-lint-structure.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/remediators/content/structure/repair-description-quality.js",
+      "operations/scripts/remediators/content/structure/repair-anchor-usage.js",
+      "operations/scripts/remediators/content/structure/repair-lint-structure.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-wcag.js",
+    "name": "dispatch-wcag.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "wcag",
+    "purpose": "Pipeline dispatcher for WCAG accessibility (full lifecycle)",
+    "description": "Mode-driven pipeline orchestrator. --mode pr runs check-wcag (validator) and posts advisory. --mode scheduled runs audit-wcag (engine full scan) + repair-wcag (--write --verify) + rolling issue for residual. --mode manual runs repair-wcag with --verify against staged or specified files. Independently runnable locally.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/health/check-wcag.js",
+      "operations/scripts/audits/content/health/audit-wcag.js",
+      "operations/scripts/remediators/content/health/repair-wcag.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/page-integrity-dispatch.js",
+    "name": "page-integrity-dispatch.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "health",
+    "purpose": "Dispatch the orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.",
+    "description": "Orchestrate the page-integrity family from canonical operations scripts so audit, repair, rerun, and report publication share one stable workflow contract.",
+    "scope": "operations/scripts, operations/reports/health/page-integrity, .github/workflows",
+    "reads": [
+      "operations/reports/health/page-integrity"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js",
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/page-integrity-rolling-issue.js",
+    "name": "page-integrity-rolling-issue.js",
+    "concern": "health",
+    "type": "dispatch",
+    "niche": "health",
+    "purpose": "Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.",
+    "description": "Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.",
+    "scope": "operations/scripts, .github/workflows, operations/tests/unit",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/script-index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/config/docs-path-sync.js",
+    "name": "docs-path-sync.js",
+    "concern": "health",
+    "type": "integrator",
+    "niche": "page-integrity",
+    "purpose": "Shared library — detect staged page moves/renames, plan deterministic route rewrites across docs.json + every linking surface (v2 MDX, snippets, catalog docs), apply the rewrite plan or report drift",
+    "description": "Library module imported by page-links-audit.js, precommit-staged-cache.js, and run-all.js. Exports planRewrites(stagedMoves), applyRewrites(plan), checkDrift() so page renames don't leave broken inbound links. Pairs with the page-integrity pipeline (dispatch-page-integrity.js indirectly via page-links-audit).",
+    "scope": "docs.json + v2/ MDX + snippets/ + catalogs that reference v2/ routes",
+    "reads": [
+      "v1",
+      "v2/pages",
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/validators/content/structure/check-docs-path-sync.js",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/feature-map.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/content-writing.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/frameworks/script-framework.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/veracity/docs-page-research.js",
+    "name": "docs-page-research.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "veracity",
+    "purpose": "Extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.",
+    "description": "Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.",
+    "scope": "operations/scripts, workspace/research/claims operations/tests/unit/docs-page-research.test.js, workspace/reports/repo-ops",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/veracity/docs-research-packet.js",
+      "operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js",
+      "docs-guide/tooling/ai-tools.mdx",
+      "docs-guide/tooling/research-review-packet-plan-template.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/research-skill-workflow.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/veracity/docs-research-adjudication.js",
+    "name": "docs-research-adjudication.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "veracity",
+    "purpose": "Validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.",
+    "description": "Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.",
+    "scope": "operations/scripts, workspace/research operations/tests/unit/docs-research-adjudication.test.js, workspace/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/veracity/docs-research-packet.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/research-skill-workflow.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/quality/audit-copy-patterns.js",
+    "name": "audit-copy-patterns.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "quality",
+    "purpose": "Audit aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.",
+    "description": "Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.",
+    "scope": "single-domain, v2-content, generated-output",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/quality/audit-media-assets.js",
+    "name": "audit-media-assets.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "quality",
+    "purpose": "Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.",
+    "description": "Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.",
+    "scope": "operations/scripts, workspace/reports/media-audit",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/quality/audit-python.py",
+    "name": "audit-python.py",
+    "concern": "health",
+    "type": "audit",
+    "niche": "quality",
+    "purpose": "Validates routed docs files, snippet imports, and internal links, then writes page-audit reports",
+    "description": "Python page audit utility — validates routed docs files, snippet imports, and internal links, then writes page-audit reports",
+    "scope": "docs.json, v2, snippets, workspace/reports/page-audits",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/governance/repo/audit-tasks-folders.js",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/quality/audit-v2-usefulness.js",
+    "name": "audit-v2-usefulness.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "quality",
+    "purpose": "Audit scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification",
+    "description": "Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification",
+    "scope": "operations/scripts, v2, workspace/reports, tools/config",
+    "reads": [
+      "workspace/reports/quality-accessibility/docs-usefulness/latest"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/02_Design-Specification/07_Implementation-Considerations/02_14.-Brand-&-Copy/index.md"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js",
+    "name": "docs-quality-and-freshness-audit.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "quality",
+    "purpose": "Checks for TODO/TBD/Coming Soon markers, thin pages, stale content",
+    "description": "Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content",
+    "scope": "operations/scripts, v2, workspace/reports/quality-accessibility",
+    "reads": [
+      "workspace/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json",
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-content-quality.js",
+      "operations/scripts/remediators/content/repair/quarantine-manager.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/skill-pipeline-map.mdx",
+      "docs-guide/_workspace/02_Design-Specification/07_Implementation-Considerations/02_14.-Brand-&-Copy/index.md",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/content-writing.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/health/audit-wcag.js",
+    "name": "audit-wcag.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "wcag",
+    "purpose": "Scheduled WCAG accessibility scan across all v2 pages",
+    "description": "Pattern D scan-report-act. Runs the WCAG audit engine in --no-fix --full mode, writes report to workspace/reports/health/wcag/, and emits a structured JSON summary on stdout so the workflow can route findings (rolling issue create/update/close).",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "operations/tests/integration/v2-wcag-audit.js",
+      "workspace/reports/health/wcag"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-wcag.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/health/page-imports-audit.js",
+    "name": "page-imports-audit.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "health",
+    "purpose": "Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.",
+    "description": "Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.",
+    "scope": "operations/scripts, operations/reports/health/page-imports, v2 page import graph",
+    "reads": [
+      "operations/reports/health/page-imports",
+      "snippets/composables/pages/shared",
+      "operations/scripts/automations/content/data/fetching/fetch-external-docs.sh"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/health/page-links-audit.js",
+    "name": "page-links-audit.js",
+    "concern": "health",
+    "type": "audit",
+    "niche": "health",
+    "purpose": "Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.",
+    "description": "Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.",
+    "scope": "operations/scripts, operations/reports/health/page-links, v2 docs page surfaces",
+    "reads": [
+      "v2/pages",
+      "v2",
+      "operations/reports/health/page-links"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/docs-path-sync.js",
+      "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+      "operations/scripts/validators/content/health/check-broken-links.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  }
+]

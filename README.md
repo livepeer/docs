@@ -4,9 +4,9 @@ Source repository for [docs.livepeer.org](https://docs.livepeer.org). Built on [
 
 > **Looking for the full overview?** Read the canonical docs-as-infrastructure page at **[docs.livepeer.org/docs-guide](https://docs.livepeer.org/docs-guide)** (mirrored at [`docs-guide/index.mdx`](docs-guide/index.mdx)). It covers the philosophy, the IA tree, every feature, the contributor quickstart, ownerless governance, and the community-help index in one place.
 
-This is more than a docs site — it is a **self-remediating, ownerless documentation operating system**. The repo ships its own component library, 35 portable AI skills, 59 governed GitHub workflows, 341 typed scripts, six native agent adapters, an AI-first distribution surface (`llms.txt`, AI-enriched sitemap, hosted MCP), 13 frameworks, 18 policies, 5 standards, a 13-decision registry, a `lpd` CLI that wraps the whole contributor lifecycle, and a self-documenting governance spine. Drift is detected, named, and either auto-repaired or filed as backlog.
+This is more than a docs site — it is a **self-remediating, ownerless documentation operating system**. The repo ships its own component library, 34 local AI skills (53 portable templates), 11 active GitHub workflows (post-2026-05-22 4-tier composable refactor), 321 typed scripts, six native agent adapters, an AI-first distribution surface (`llms.txt`, AI-enriched sitemap, hosted MCP), 13 frameworks, 18 policies, 5 standards, **32 locked decisions across 3 registries** (D-NAV-01, D-ACT-01..10 + D-GOV-01..08, D-DG-01..13), a `lpd` CLI that wraps the whole contributor lifecycle, and a self-documenting governance spine. Drift is detected, named, and either auto-repaired or filed as backlog.
 
-Counts below are live as of 2026-05-19.
+Counts below are live as of 2026-05-23.
 
 ## Features
 
@@ -14,12 +14,12 @@ Counts below are live as of 2026-05-19.
 |---|---|
 | **Multi-tab IA (10 tabs)** | Audience-anchored content split across Home, About, Developers, Gateways, Orchestrators, Delegators, Community, Solutions, Resources, Internal. Each tab has its own navigation. |
 | **Canonical wrapper pattern** | Canonical content lives once at `snippets/composables/pages/canonical/*.mdx`. Audience tabs and the Resource HUB list thin wrapper MDX files that import and render the canonical. Edit once, propagate everywhere. |
-| **Self-remediating pipeline** | 49 validators detect drift, 29 remediators repair it, 30 generators rebuild derived artefacts, 21 audits surface the rest as backlog. Five-stage control loop: detect → explain → repair → verify → record. |
-| **Ownerless governance contract** | Every governed surface declares a canonical source, a deterministic validator, an exact repair command, and a single gate layer. 8 surfaces formally ownerless-ready; 28 in the broader registry. |
-| **Decisions registry** | 13+ locked architectural decisions (`D-DG-01..13`, plus per-domain logs). Every "why" has a machine-readable answer at `docs-guide/decisions/`. |
-| **AI distribution surface** | [`llms.txt`](llms.txt), [`sitemap-ai.xml`](sitemap-ai.xml), hosted MCP at `docs.livepeer.org/mcp`, Mintlify chat assistant configured by [`.mintlify/Assistant.md`](.mintlify/Assistant.md), per-page AI companion JSON. |
-| **6 native agent adapters** | Claude (`.claude/`), Cursor (`.cursor/`), Windsurf (`.windsurf/`), Augment (`.augment/`), Codex (`.codex/`), GitHub Copilot (`.github/copilot-instructions.md`). All root in the single [`AGENTS.md`](AGENTS.md) baseline. |
-| **35 portable AI skills** | Reusable workflows (thread, pm, research, design, build, iterate, close, propagate, audit-orchestrator) under `ai-tools/ai-skills/`. Distributed to every agent via the cross-agent packager. |
+| **Self-remediating pipeline** | 55 validators detect drift, 37 remediators repair it, 31 generators rebuild derived artefacts, 25 audits surface the rest as backlog. 102 dispatchers + 8 interfaces complete the 4-tier composable architecture (D-GOV-08). Five-stage control loop: detect → explain → repair → verify → record. |
+| **Ownerless governance contract** | Every governed surface declares a canonical source, a deterministic validator, an exact repair command, and a single gate layer. 8 surfaces formally ownerless-ready; 28 in the broader registry. **Honest framing: "ownerless" covers routine drift, not policy authorship or destructive operations.** |
+| **Three decision registries** | 32 locked decisions across `D-DG-01..13` (docs-guide structure), `D-ACT-01..10 + D-GOV-01..08` (workflow governance), and `D-NAV-01` (content nav). Cross-indexed at `docs-guide/decisions/registry.md`. |
+| **AI distribution surface** | [`llms.txt`](llms.txt) (188 entries), [`sitemap-ai.xml`](sitemap-ai.xml) (181 URLs, 6 of 10 tabs), hosted MCP at `docs.livepeer.org/mcp`, Mintlify chat assistant configured by [`.mintlify/Assistant.md`](.mintlify/Assistant.md), `docs-index.json` (532 entries), per-page AI companion JSON. |
+| **6 native agent adapters** | Claude (`.claude/`), Cursor (`.cursor/`), Windsurf (`.windsurf/`), Augment (`.augment/`), Codex (`.codex/`), GitHub Copilot (`.github/copilot-instructions.md`). All root in the single [`AGENTS.md`](AGENTS.md) baseline (119 lines) per locked D-DG-11. |
+| **34 local + 53 portable AI skills** | Reusable workflows (thread, pm, research, design, build, iterate, close, propagate, audit-orchestrator) under `ai-tools/ai-skills/`. 53 portable templates exported to every agent via the cross-agent packager. 9 of 34 catalogued in `skill-catalog.json`. |
 | **Generated content pipelines** | Contract addresses, OpenAPI references, SDK references, changelogs, glossary, social feeds, exchange data, showcase. All generated by scripts under `operations/scripts/generators/` and `operations/scripts/integrators/` from canonical data sources. |
 | **Contracts pipeline (gold-standard)** | Daily cron + shadow workflow. Bytecode-verified against Arbitrum One and Ethereum Mainnet. Health-check artefacts, automated incident issues, publish gate requiring both `--write` success and a follow-up `--check` rerun. |
 | **Styles governance** | `--lp-*` CSS tokens, pre-commit enforcement, `--verify` regression check. Fleet-wide remediation cut violations from 3,986 to 0 on non-mermaid code. |
@@ -63,18 +63,18 @@ External contributors fork the repo, branch from `docs-v2`, and PR back against 
 ```
 v2/                  1,128 published MDX pages (active docs) across 10 tabs
 v1/                  279 frozen legacy pages
-snippets/            132-component governed library, 40 templates, composables, data, assets
-operations/scripts/  341 JS/SH/Py scripts (validators, generators, integrators, remediators, audits, dispatch, interfaces)
-operations/tests/    integration + unit + render-verify harnesses
-.github/workflows/   59 governed dispatchers on a 7-prefix taxonomy
-ai-tools/            35 AI skills + cross-agent packer + agent-packs
+snippets/            132 component registry exports (35 active + 24 archived JSX files), 37 templates, 8 Tier-1 composables, data, assets
+operations/scripts/  321 active JS/SH/Py scripts + 38 archived (102 dispatch, 58 integrators, 55 validators, 37 remediators, 31 generators, 25 audits, 8 interfaces)
+operations/tests/    integration + unit + render-verify harnesses + pipeline-smoke-test (66/66 dispatchers passing)
+.github/workflows/   11 active dispatchers (6 dispatch-{concern}.yml + 5 interface-governance-*) post-2026-05-22 4-tier refactor; 61 archived in workflows/x-archive/
+ai-tools/            34 local SKILL.md + 53 portable templates + cross-agent packager + agent-packs
 tools/               lpd CLI, scoped preview, 4 VS Code extensions, shared JS libs
-api/                 5 OpenAPI specs (Studio, Gateway, AI Worker, AI Runner, CLI)
+api/                 5 OpenAPI specs (Studio, Gateway, AI Worker, AI Runner, CLI) — currently 67 days stale; fetcher covers 2 of 5
 docs-guide/          The docs-as-infrastructure spine: index, standards, frameworks, policies, decisions, contributing, reference, catalogs
-docs.json            Mintlify navigation and routing config (source of truth, hand-edited)
-AGENTS.md            Cross-agent baseline; every native adapter points here
-llms.txt             AI-first root artefact for LLM crawlers and assistants
-sitemap-ai.xml       AI-enriched sitemap with per-URL freshness and tags
+docs.json            Mintlify navigation and routing config (source of truth, hand-edited) — 686 v2 routes + 475 redirects
+AGENTS.md            Cross-agent baseline (119 lines); every native adapter points here per D-DG-11
+llms.txt             AI-first root artefact for LLM crawlers and assistants (188 entries)
+sitemap-ai.xml       AI-enriched sitemap with per-URL freshness and tags (181 URLs)
 .mintlify/           Mintlify chat assistant configuration
 ```
 
@@ -179,10 +179,10 @@ The full opportunity index lives at [`docs-guide/contributing/community-help.mdx
 
 1. **Wire `llms.txt` + `sitemap-ai.xml` regen to CI** — P0, single highest-impact AI freshness fix.
 2. **Cherry-pick contract-addresses workflow to `docs-v2`** — P0, open since 2026-03-31.
-3. **Repair 218 non-compliant JSDoc script headers** — excellent first PR, run `repair-script-inventory.js`.
-4. **Promote an advisory surface to ownerless-ready** — the most repeatable contribution path; 20 candidates available.
-5. **Execute the gateways v2 cleanup move-wave** — 199 documented recommendations in the cleanup matrix.
-6. **Extend the style framework** — design-token expansion, additional theme variants, Mermaid colour rationalisation.
+3. **Fix the cron-is-dry-run-by-default bug** — P0 systemic. Every `dispatch-{concern}.yml` scheduled job runs in dry-run because cron physically cannot pass `inputs.dry_run = false`. Single fix to 6 workflow files unblocks 6 stale data pipelines (contracts 19-day staleness, llms.txt + sitemap-ai.xml 47-day staleness, OG-images, SEO).
+4. **Backfill the 45 retired-`@category` + 4 retired-`@domain` JSDoc script headers** — excellent first PR. Live as of 2026-05-23 (much smaller than the previously-documented "218" figure; JSDoc compliance is now ~100% on `@purpose`). Run `repair-script-inventory.js`.
+5. **Promote an advisory surface to ownerless-ready** — the most repeatable contribution path; 20 candidates available in `repo-governance-surfaces.json`.
+6. **Execute the gateways v2 cleanup move-wave** — 199 of 307 documented recommendations in the cleanup matrix.
 
 ## Licence
 

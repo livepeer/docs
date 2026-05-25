@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-styles-docs
- * @category          generator
- * @purpose           qa:style-governance
- * @scope             tools/scripts/validators/styles,tools/scripts/remediators/styles,style.css
- * @owner             docs
- * @needs             R-STYLE-GOV
- * @purpose-statement Reads remediator patterns, audit categories, and style.css tokens to generate documentation tables. Ensures docs stay in sync with code.
- * @pipeline          P5 (scheduled), P6 (on-demand)
- * @dualmode          --check (verify docs match source) | --write (update docs)
- * @usage             node tools/scripts/generators/styles/generate-styles-docs.js --check
+ * @script      generate-styles-docs
+ * @type        generator
+ * @concern     brand
+ * @niche       style-tokens
+ * @purpose     Generate style-governance documentation tables from validator categories, remediator patterns, and style.css tokens — keeps the styles-engineering-guide framework doc in sync with the audit-styles and remediate-styles source of truth
+ * @description Parses tools/scripts/validators/styles/audit-styles.js (audit category list), tools/scripts/remediators/styles/remediate-styles.js (token migration map + repair patterns), and style.css (--lp-* design tokens) to produce documentation tables. --check fails if docs are stale; --write regenerates them. Writes a manifest at workspace/reports/styles/styles-docs-manifest.json. Not yet in the canonical dispatch-style-tokens.js pipeline — see workspace/reports/script-audit/brand/ for migration plan.
+ * @mode        generate
+ * @pipeline    P5 (scheduled), P6 (on-demand) — currently invoked via styles-engineering-guide.mdx
+ * @scope       tools/scripts/validators/styles/, tools/scripts/remediators/styles/, style.css, docs-guide/frameworks/styles-engineering-guide.mdx
+ * @usage       node tools/scripts/generators/styles/generate-styles-docs.js [--check|--write]
+ * @policy      D-GOV-03 (drift detection via --check); D-ACT-06 (note: currently outside operations/ — migration tracked)
  */
 
 const fs = require('fs');

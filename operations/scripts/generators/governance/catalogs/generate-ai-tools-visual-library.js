@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates the canonical AI-tools visual library for GitHub workflows and dispatcher actions, plus staged audit outputs.
  * @description Generates the canonical AI-tools visual library for GitHub workflows and dispatcher actions, plus staged audit outputs.
  * @mode        generate
  * @pipeline    manual

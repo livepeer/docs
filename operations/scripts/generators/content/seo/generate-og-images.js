@@ -3,13 +3,14 @@
  * @script      generate-og-images
  * @type        generator
  * @concern     discoverability
- * @niche       seo
- * @purpose     
- * @description Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews.
+ * @niche       og-images
+ * @purpose     Generate Open Graph preview images for v2 pages — per-section branded images (Gateways, Orchestrators, Developers, About, Delegators, Community) plus a fallback Livepeer-branded image — written to snippets/assets/media/og-images/ and referenced via the og-image-policy resolver
+ * @description Uses Puppeteer to render section-templated images at the OG canonical 1200x630 size with title/section overlay. Reads section labels and brand tokens from config, writes PNGs to snippets/assets/media/og-images/ plus a manifest JSON mapping route → image. Pairs with og-image-policy.js (the resolver consumers use) and dispatch-og-images.js.
  * @mode        generate
- * @pipeline    manual — run when OG assets, section labels, or branding change
- * @scope       operations/scripts, snippets/assets/media/og-images
+ * @pipeline    P4 (post-merge regen via dispatch-og-images.js), manual via --only when OG assets / section labels change
+ * @scope       Puppeteer + brand config → snippets/assets/media/og-images/*.png + manifest.json
  * @usage       node operations/scripts/generators/content/seo/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]
+ * @policy      D-GOV-03 (paired with og-image-policy resolver)
  */
 
 const fs = require("fs");

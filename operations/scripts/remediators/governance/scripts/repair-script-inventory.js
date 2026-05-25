@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       scripts
- * @purpose     
+ * @purpose     Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
  * @description Repairs script headers and classification data. Thin wrapper that runs audit-script-inventory with --fix. Split from audit-script-inventory.js.
  * @mode        repair
  * @pipeline    manual

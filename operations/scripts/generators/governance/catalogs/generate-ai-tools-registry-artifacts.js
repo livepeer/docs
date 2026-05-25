@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate keep ai-tools/registry/ai-tools-registry.json aligned with live skill/template/export files so ownerless governance coverage stays complete.
  * @description Keep ai-tools/registry/ai-tools-registry.json aligned with live skill/template/export files so ownerless governance coverage stays complete.
  * @mode        generate
  * @pipeline    manual -- bounded registry sync

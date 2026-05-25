@@ -2,14 +2,15 @@
 /**
  * @script      export-portable-skills
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       agents
- * @purpose     
- * @description Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
+ * @purpose     Copy canonical template skills from ai-tools/ai-skills/templates/ into per-agent pack folders (claude, codex, cursor, windsurf) so every agent ships with the same canonical skill set — detects drift via --check
+ * @description Reads the template-skill catalog, projects each into the per-agent pack format (e.g. CLAUDE.md fragment, codex skill manifest entry, cursor rules entry). --check validates the per-agent packs match the templates; --write regenerates them. Used by cross-agent-packager and runnable standalone.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js operations/tests/unit/export-portable-skills.test.js
+ * @pipeline    manual — invoked when canonical skill templates change
+ * @scope       ai-tools/ai-skills/templates/ → ai-tools/agent-packs/{agent}/
  * @usage       node operations/scripts/integrators/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @policy      Agent-portability standard
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');

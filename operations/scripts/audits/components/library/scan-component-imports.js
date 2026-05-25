@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.
  * @description Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.
  * @mode        scan
  * @pipeline    manual, P6, manual

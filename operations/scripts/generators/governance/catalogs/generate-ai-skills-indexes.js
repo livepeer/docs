@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate * @mode read-only
  * @description * @mode        read-only
  * @mode        generate
  * @pipeline    manual, ci

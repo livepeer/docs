@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            fetch-exchanges-data
- * @type              integrator
- * @concern           maintenance
- * @niche             data-feeds
- * @scope             operations/scripts/integrators/maintenance/data-feeds
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches LPT exchange tickers from CoinGecko API, classifies CEX/DEX, writes structured JSX data for SearchTable consumption.
- * @pipeline          P5-auto (scheduled, weekly)
- * @dualmode          --dry-run (fetch + preview, no write) | default (fetch + write)
- * @usage             node operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js [--dry-run]
+ * @script      fetch-exchanges-data
+ * @type        integrator
+ * @concern     maintenance
+ * @niche       exchanges-data
+ * @purpose     Fetch LPT exchange tickers from the CoinGecko API, classify each as CEX or DEX, emit structured JSX data the v2 exchanges reference page renders via SearchTable — note: distinct from fetch-lpt-exchanges.sh which writes MDX directly
+ * @description Scheduled-weekly integrator. Hits CoinGecko's tickers-by-coin endpoint for LPT, classifies each ticker by exchange type (centralised vs decentralised) using a known-exchange config, writes snippets/data/exchanges/exchangesData.jsx. Pairs with dispatch-exchanges-data.js.
+ * @mode        integrate
+ * @pipeline    P5-auto (scheduled, weekly via dispatch-exchanges-data.js)
+ * @scope       CoinGecko API → snippets/data/exchanges/exchangesData.jsx
+ * @usage       node operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js [--dry-run]
+ * @policy      F-R1 (data freshness); public API only; no secrets in output
  */
 
 const https = require('https');

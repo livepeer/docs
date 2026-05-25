@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes.
  * @description Mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes.
  * @mode        dispatch
  * @pipeline    PreToolUse hook → reads stdin tool input → decision (allow/block/warn)

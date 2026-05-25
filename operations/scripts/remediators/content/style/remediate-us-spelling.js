@@ -3,13 +3,14 @@
  * @script      remediate-us-spelling
  * @type        remediator
  * @concern     brand
- * @niche       style
- * @purpose     qa:content-quality
- * @description Converts between US and UK English spellings in routable v2 MDX content text only. Default direction: US to UK (en-GB). Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values.
+ * @niche       spelling
+ * @purpose     Convert US English spellings to UK English (en-GB) in v2 MDX content per the CLAUDE.md voice rule "UK English (-ise, -our, -re)" — reads rules from tools/config/quality/language-rules.json
+ * @description Default direction: US → UK. Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values. --verify re-runs the spelling check after write and reverts any file that still has US forms. Pairs with dispatch-spelling.js.
  * @mode        repair
- * @pipeline    manual — batch remediation utility, run with --dry-run first
+ * @pipeline    P6 (self-heal via dispatch-spelling.js --mode scheduled), manual via --files
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--language en-gb|en-us] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
  */
 
 'use strict';

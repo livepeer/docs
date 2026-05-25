@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
  * @description Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
  * @mode        repair
  * @pipeline    manual

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Enforce structural rules on MDX content files.
  * @description Enforce structural rules on MDX content files.
  * @mode        check
  * @pipeline    manual

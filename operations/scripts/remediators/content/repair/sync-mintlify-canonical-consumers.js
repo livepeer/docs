@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.
  * @description Repair registered Mintlify consumer surfaces by applying exact path rewrites from the canonical sync registry without broad repo-wide content mutation.
  * @mode        repair
  * @pipeline    manual

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Validates component files against component governance styling rules.
  * @description Validates component files against component governance styling rules.
  * @mode        check
  * @pipeline    manual → component .jsx files → exit-code, stdout:violations; --fix → component .jsx files → CSS token replacements, P3

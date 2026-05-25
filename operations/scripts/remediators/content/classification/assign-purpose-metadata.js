@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     
+ * @purpose     Repair fills purpose and audience frontmatter for routable v2 pages
  * @description Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages
  * @mode        repair
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines

@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       scripts
- * @purpose     
+ * @purpose     Audit analyses script file sizes, dependencies, and usage patterns across the repo
  * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
  * @mode        scan
  * @pipeline    manual — not yet in pipeline

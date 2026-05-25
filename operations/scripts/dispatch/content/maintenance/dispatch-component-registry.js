@@ -21,8 +21,8 @@ const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(RE
 const ATOMICS = {
     detect: [
       'operations/scripts/validators/components/library/check-component-health.js',
-      'operations/scripts/validators/components/library/check-component-imports.js',
       'operations/scripts/validators/components/library/check-component-css.js',
+      'operations/scripts/validators/components/library/check-component-props.js',
       'operations/scripts/validators/components/library/check-naming-conventions.js'
     ],
     generate: [

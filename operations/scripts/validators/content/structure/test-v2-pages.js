@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            test-v2-pages
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             operations/scripts/validators/content/structure, docs.json, v2
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          P2, P3
- * @usage             node operations/scripts/validators/content/structure/test-v2-pages.js [flags]
+ * @script      test-v2-pages
  * @type        validator
- * @description test v2 pages
- * @mode        read-only
+ * @concern     health
+ * @niche       page-rendering
+ * @purpose     Validate v2 pages render correctly in the Mintlify dev server — launches Puppeteer against http://localhost:3000, navigates each v2/ route, captures console errors, network 404s, and rendering failures so broken pages don't ship
+ * @description Puppeteer-driven browser tester. Reads docs.json for the route list, navigates each in headless Chrome, waits for body content, checks for console errors / network failures / missing components. Used by dispatch-page-rendering.js as the rendering atomic. Also called directly by v2-wcag-audit.js (which loads each page then runs axe-core) and browser.test.js.
+ * @mode        check
+ * @pipeline    P3 (PR via dispatch-page-rendering.js — note: this dispatcher needs dev server, excluded from smoke tests)
+ * @scope       docs.json routes → http://localhost:3000/{route} → rendered DOM + console events
+ * @usage       node operations/scripts/validators/content/structure/test-v2-pages.js [--routes <comma-list>] [--full]
+ * @policy      D-GOV-03 (paired with the page-rendering pipeline)
  */
 
 /**

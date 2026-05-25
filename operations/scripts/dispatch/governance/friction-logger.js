@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the userPromptSubmit hook. Scans user messages for frustration indicators
  * @description UserPromptSubmit hook. Scans user messages for frustration indicators
  * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin → pattern match → append to friction log

@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       reports
- * @purpose     
+ * @purpose     Generates the AI tools inventory report from the registry. Split from validate-ai-tools-registry.js.
  * @description Generates the AI tools inventory report from the registry. Split from validate-ai-tools-registry.js.
  * @mode        generate
  * @pipeline    manual

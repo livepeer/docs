@@ -3,14 +3,14 @@
  * @script      audit-ai-discoverability
  * @type        audit
  * @concern     maintenance
- * @niche       library
- * @purpose     qa:component-quality
- * @description Audit JSX components for AI discoverability compliance: missing tags on hook-using components, missing companion JSON files.
+ * @niche       component-registry
+ * @purpose     Audit snippets/components/ JSX files for AI-discoverability compliance — every hook-using component must declare AI tags and ship a companion JSON snapshot so the AI tooling can introspect props/usage without re-parsing source
+ * @description Scans .jsx files for React hook usage (useState, useEffect, useMemo, custom hooks). For each hook-using component, checks the JSDoc declares the AI-discoverability tags + a matching snapshot exists at snippets/data/snapshots/{Component}.json. Emits JSON (--json) or markdown (--md) report. Currently orphaned — not wired into dispatch-component-registry; tracked as follow-up.
  * @mode        scan
- * @pipeline    manual > snippets/components (all .jsx) > stdout:report
- * @scope       snippets/components, snippets/data/snapshots
+ * @pipeline    manual — should be wired into dispatch-component-registry P3 detect list (follow-up)
+ * @scope       snippets/components/*.jsx, snippets/data/snapshots/*.json
  * @usage       node operations/scripts/audits/components/library/audit-ai-discoverability.js [--json] [--md] [--staged]
- * @policy      —
+ * @policy      D-GOV-03 (paired with component-registry pipeline)
  */
 'use strict';
 

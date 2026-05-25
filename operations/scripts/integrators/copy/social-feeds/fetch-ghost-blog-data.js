@@ -3,13 +3,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches Livepeer blog posts via public RSS feed and writes the shared social feed module under snippets/data/social-feeds/.
+ * @purpose     Fetch Livepeer blog posts from the Ghost blog public RSS feed and emit a JSX module the Community pages render as the live blog feed
+ * @description Reads RSS XML from the public Livepeer Ghost blog endpoint, parses entries (title, link, pubDate, excerpt, author), writes a sorted JSX export to snippets/data/social-feeds/ghostBlogData.jsx. No auth required.
  * @mode        integrate
- * @pipeline    RSS feed → snippets/data/social-feeds/ghostBlogData.jsx
- * @scope       .github/scripts, snippets/data/social-feeds/
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       Livepeer Ghost RSS feed (read-only) → snippets/data/social-feeds/ghostBlogData.jsx
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness)
  */
 const https = require("https");
 const http = require("http");

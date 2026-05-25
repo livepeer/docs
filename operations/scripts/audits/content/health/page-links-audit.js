@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
  * @description Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
  * @mode        scan
  * @pipeline    manual, P6

@@ -1,674 +1,262 @@
 ---
 title: "Docs Guide"
 sidebarTitle: "Docs Guide"
-description: "The complete overview of Livepeer Docs as infrastructure – a self-remediating, ownerless documentation operating system. Read this first to understand what this repo is, what features it ships, and how to contribute."
-keywords: ["livepeer", "docs guide", "documentation as infrastructure", "ownerless governance", "AI-first docs", "source of truth", "contributor guide", "frameworks", "policies", "decisions"]
+description: >-
+  Orient page for Livepeer Docs as infrastructure. Audience picker, 9 feature
+  domains, 32 locked decisions across 3 registries, and pointers to the
+  canonical frameworks + policies + standards. Verified 2026-05-23.
+keywords:
+  ["livepeer", "docs guide", "documentation as infrastructure", "ownerless governance", "AI-first docs", "contributor guide", "frameworks", "policies", "decisions"]
 authority: reference
 consumer: ["human", "agent", "automation"]
 maintenance: hand-maintained
 status: current
-lastVerified: "2026-05-19"
+lastVerified: "2026-05-23"
 owner: "@livepeer/docs-team"
-decisionIds: [D-DG-01, D-DG-02, D-DG-06]
-pageType: overview
+decisionIds: [D-DG-01, D-DG-02, D-DG-06, D-DG-11]
+pageType: navigation
 audience: developer
 purpose: orient
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': "Livepeer Docs Guide – docs-as-infrastructure overview"
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs Guide – docs-as-infrastructure overview"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
 ---
 
 {/* AGENT-BEACON
-     Start with: this page (the audience picker + decision rules below).
-     Authority precedence: T0 decisions > T1 policies > T2 frameworks > T3 standards > T4 contributing > T5 reference.
-     Voice and copy: docs-guide/standards/voice-and-copy.mdx.
-     Frontmatter contract: docs-guide/standards/frontmatter.mdx.
-     Folder rules: docs-guide/policies/docs-guide-structure-policy.mdx.
-     This page is the overview index. Click through to the named tier file for the binding rule. */}
+     Start here for orientation only. This page routes – it does not duplicate policy text.
+     Authority precedence per D-DG-11: T0 decisions > T1 policies > T2 frameworks > T3 standards > T4 contributing > T5 reference.
+     For binding rules, click through to the named tier file. */}
 
 # Docs Guide
 
-Livepeer Docs is a **self-remediating, ownerless documentation operating system**. 1,128 published MDX pages stay fresh through 59 GitHub workflows, 341 typed scripts, and 35 portable AI skills. Ten audience tabs render from canonical sources via a zero-duplication wrapper pattern. The whole repo is legible to humans, AI agents, and automation, governed by a four-part contract, and contributable without staff context.
+Livepeer Docs is a **self-remediating, ownerless documentation operating system** built on Mintlify. Three product layers run on top of the publishing platform: a self-governing repo (11 workflows + 321 scripts + 8 of 28 ownerless-ready surfaces); an AI-native distribution layer (`llms.txt`, hosted MCP, 6 native agent adapters, 34 skills); and a contributor toolchain (`lpd` CLI + scoped Mintlify preview + 4 in-repo VS Code extensions + 312 governed snippets).
 
-<Note>
-**What this is.** A docs platform that builds and validates itself.
-- **AI-native** – `llms.txt`, an AI sitemap, a hosted MCP endpoint, six native agent adapters, a Mintlify chat assistant.
-- **Self-remediating** – validators detect drift; remediators repair it; generators rebuild derived artefacts; audits surface the rest as backlog.
-- **Ownerless by contract** – every governed surface declares a canonical source, a deterministic validator, an exact repair command, and a single gate layer.
-- **Contributor-friendly** – one `lpd` CLI wraps setup, scoped preview, staged tests, repair, and governed page moves.
-</Note>
+This page is the orient surface. Every claim, count, and contract on this page traces to a canonical doc one click away. **Live counts verified 2026-05-23.** Honest framing: **"ownerless"** covers routine drift, not policy authorship or destructive operations. **8 of 28** surfaces formally ownerless-ready today.
 
-<CustomDivider />
+---
 
 ## Pick your path
 
-<CardGroup cols={3}>
-  <Card title="I am a contributor" href="/docs-guide/contributing/contributing">
-    Onboarding, local preview, git hooks, and procedures. Start at contributing, then jump to the framework for the surface you are editing.
-  </Card>
-  <Card title="I am an AI agent" href="/docs-guide/contributing/agent-instructions">
-    Agent governance and adapter contract. Then read the decision rules below for the kind of file you are touching.
-  </Card>
-  <Card title="I am reviewing a PR" href="/docs-guide/policies/quality-gates">
-    Quality gates, governance approval, and Required Reading. The PR template auto-fills citations from changed paths.
-  </Card>
-</CardGroup>
-
-<CustomDivider />
-
-## Contributor quickstart
-
-<Tip>
-Five steps from clone to first PR. The correct workflow is the easiest workflow – every step routes through `lpd`, which installs the hooks, validators, and scoped preview that match what CI runs.
-</Tip>
-
-<Steps>
-  <Step title="Clone and switch to the production branch">
-    ```bash icon="terminal"
-    git clone https://github.com/livepeer/docs.git
-    cd docs
-    git checkout docs-v2
-    ```
-    `docs-v2` is the production branch that deploys to `docs.livepeer.org`. `docs-v2-dev` is the internal working branch for in-flight work. Public contributors branch from and PR against `docs-v2`.
-  </Step>
-  <Step title="Run setup">
-    ```bash icon="terminal"
-    bash lpd setup --yes
-    ```
-    Installs git hooks, dependencies, and optionally puts the CLI on your `$PATH`. Non-interactive when `--yes` is set.
-  </Step>
-  <Step title="Confirm your environment">
-    ```bash icon="terminal"
-    lpd doctor
-    ```
-    Reports Node/PATH/Mintlify/Puppeteer/hooks status. Fails fast if anything is missing.
-  </Step>
-  <Step title="Boot a scoped preview">
-    ```bash icon="terminal"
-    lpd dev --scoped --scope-tab Developers
-    ```
-    A filtered Mintlify dev server against a 1,128-page nav boots in ~2 seconds instead of ~10 minutes. Pick any tab name, prefix, or fuzzy match (`Orch`, `Resources`, `Gate`, etc.).
-  </Step>
-  <Step title="Edit, validate, commit, PR">
-    ```bash icon="terminal"
-    # create a feature branch from docs-v2
-    git checkout -b docs/<descriptive-slug>
-
-    # edit your MDX or JSX file
-    lpd test --staged      # same checks CI runs, but only on your changes
-    git commit -m "<scope>: <change>"
-    git push origin docs/<descriptive-slug>
-    gh pr create --base docs-v2
-    ```
-    Pre-commit hooks run MDX render checks, allowlist guards, redirect integrity, and no-deletion enforcement in under 60 seconds. PR CI re-runs the blocking checks against changed files.
-  </Step>
-</Steps>
-
-For the complete contributor flow with branching conventions, override trailers, governance approval labels, and the canonical PR template, read [contributing/contributing.mdx](/docs-guide/contributing/contributing).
-
-<CustomDivider />
-
-## Docs philosophy
-
-Three operating principles shape every decision in this repo. They are the answer to *why* a docs site needs 59 workflows, an `AGENTS.md`, and a four-part ownerless contract.
-
-<AccordionGroup>
-  <Accordion title="Documentation Is Infrastructure" icon="screwdriver-wrench">
-    Docs are not editorial output. They are infrastructure: maintained under load, degrading without active governance, requiring testing, automation, and versioning. The Stack Overflow podcast *Your Docs Are Your Infrastructure* (Fabrizio Ferri-Benedetti, November 2024) reframed how this engagement was scoped.
-
-    Operationally that means the 59-workflow CI suite, 341 governed scripts, `lpd` CLI, component library, content pipeline, and `docs-guide/` governance system are all part of the deliverable. They are the scaffolding that makes every page reliable, maintainable, and improvable by anyone – not just by maintainers who built it.
-
-    **Locked by:** [Infrastructure principles](/docs-guide/policies/infrastructure-principles) · [Source-of-truth policy](/docs-guide/policies/source-of-truth-policy).
-  </Accordion>
-  <Accordion title="AI Is the New Search" icon="brain-circuit">
-    For over a decade, SEO drove documentation discoverability. That paradigm is being displaced. LLMs index, summarise, and recommend infrastructure products at scale. Developers begin research in ChatGPT, Claude, Perplexity, or Gemini before they hit Google. Docs are being read, evaluated, and cited by machines before they reach humans.
-
-    The implication is structural, not cosmetic. Semantic headings, stable canonical URLs, machine-readable frontmatter, OpenAPI integration, and an [`llms.txt`](https://docs.livepeer.org/llms.txt) at repo root are the new minimum-viable distribution layer. Answer Engine Optimisation (AEO) is the evolution of SEO for this era. This repo builds Livepeer's AEO layer from first principles.
-
-    **Surfaces:** `/llms.txt`, `/sitemap-ai.xml`, hosted MCP at `docs.livepeer.org/mcp`, the Mintlify chat assistant configured by `.mintlify/Assistant.md`.
-  </Accordion>
-  <Accordion title="Agents Are the New Users" icon="robot">
-    AI agents query documentation to generate code, answer support tickets, configure infrastructure, and build integrations without human intervention. Agents need docs that are not merely readable but executable – with explicit preconditions, invariants, verification steps, and failure modes.
-
-    Six native adapters (Claude, Cursor, Windsurf, Augment, Codex, Copilot) all root in a single [`AGENTS.md`](https://github.com/livepeer/docs/blob/docs-v2/AGENTS.md) baseline. The [`Get AI to set up the gateway`](/v2/gateways/quickstart/AI-prompt) page is a direct instantiation: a doc written for AI agent consumption, not human browsing. Agents run the same validators humans run, with no escalation path.
-
-    **Surfaces:** `AGENTS.md`, native adapters in `.claude/`, `.cursor/`, `.windsurf/`, `.augment/`, `.codex/`, `.github/`, the 35-skill catalogue at `ai-tools/ai-skills/`, and per-page AI companion JSON.
-  </Accordion>
-</AccordionGroup>
-
-<CustomDivider />
-
-## Docs personas
-
-Every page in this repo is designed for one of four readers. Each gets a different entry point and a different default surface.
-
-<CardGroup cols={2}>
-  <Card title="Reader" icon="book-open" href="/v2/home/test">
-    Lands on `docs.livepeer.org`. Searches, asks the chat assistant, or downloads `llms.txt` to feed an LLM. Never needs to know that 35 AI skills exist – but benefits from them every time the contracts page is fresh, the changelog is current, and the API reference matches the spec.
-  </Card>
+<CardGroup cols={4}>
   <Card title="Contributor" icon="code-pull-request" href="/docs-guide/contributing/contributing">
-    Opens an issue using one of nine templates, edits a page, runs `lpd dev`, submits a PR. The PR template auto-fills with Required Reading per changed-path globs. Pre-commit hooks catch drift in seconds. No maintainer review needed for routine drift.
-  </Card>
-  <Card title="Maintainer" icon="user-gear" href="/docs-guide/policies/ownerless-governance">
-    Owns a governed surface (component library, scripts, contracts pipeline, AI skills…). Authors policy in `policies/`, registers validators in `operations/governance/config/`, and watches the decisions registry. Routine drift is handled by the contract – humans handle policy authorship and destructive operations.
+    Onboarding, local preview, git hooks. Start in `contributing/`, then jump to the framework for the surface you are editing.
   </Card>
   <Card title="AI agent" icon="robot" href="/docs-guide/contributing/agent-instructions">
-    Reads `AGENTS.md`, follows the native adapter for its IDE, runs the same gates humans run. The `task-contract.yaml` declares scope-in/scope-out; lock files prevent overlap. The cross-agent packager distributes the same 35 skills to every agent.
+    Agent governance + adapter contract. Then read the [Decision rules](#decision-rules-before-doing-x) for the kind of file you are touching.
+  </Card>
+  <Card title="PR reviewer" icon="circle-check" href="/docs-guide/policies/quality-gates">
+    Quality gates + governance approval + Required Reading. The PR template auto-fills citations from changed paths.
+  </Card>
+  <Card title="Maintainer" icon="user-gear" href="/docs-guide/policies/ownerless-governance">
+    The 4-part ownerless contract + promotion ladder. Eight surfaces in production; twenty more advisory.
   </Card>
 </CardGroup>
 
-<CustomDivider />
+---
 
-## Docs structure – the IA
+## What this repo ships (9 feature domains)
 
-The repo is a layered system. Public docs sit on top; the governance spine, contributor toolchain, and AI runtime sit underneath. Generated artefacts flow downward from canonical sources.
+| Domain | Canonical page | What it covers |
+| --- | --- | --- |
+| AI features | [AI Features](./features/ai-features.mdx) | `llms.txt`, hosted MCP, Mintlify chat assistant, 6 native agent adapters, 34 local skills + 53 portable templates, AI registry |
+| UI system | [UI System](./features/ui-system.mdx) | 132 component registry exports, 37 templates, 8 Tier-1 composables, design tokens, 312 VS Code snippets |
+| Automations | [Automations](./features/automations.mdx) | 11 active workflows (post-2026-05-22 4-tier refactor), 321 scripts, hook pipeline, 18 locked D-ACT + D-GOV decisions |
+| Data integrations | [Data Integrations](./features/data-integrations.mdx) | 11 integration families: contracts gold-standard, OpenAPI, releases, exchanges, social feeds, glossary, reference maps |
+| Adaptive architecture | [Adaptive Architecture](./features/adaptive-architecture.mdx) | 4-part ownerless contract, 5-stage control loop, 49 validators + 37 remediators + 31 generators + 25 audits |
+| Contributor tools | [Contributor Tools](./features/contributor-tools.mdx) | `lpd` CLI (13 subcommands + 5 group shorthands), 4 in-repo VS Code extensions, scoped preview, `.githooks/` |
+| Content writing pipeline | [Content Writing](./frameworks/content-writing.mdx) | 9-stage project pipeline + page taxonomy + voice rules; 0 of 5 tabs has IA Approved |
+| Checks framework | [Checks Framework](./frameworks/checks-framework.mdx) | 11-phase per-page review + 9 universal check categories + per-pageType + per-tab variation |
+| Gap analysis | [Gap Analysis](./features/gap-analysis.mdx) | Implementation-ready backlog with P0/P1/P2 priorities, file paths, acceptance criteria |
 
-<Tree>
-  <Tree.Folder name="v2/" defaultOpen>
-    <Tree.File name="home/" />
-    <Tree.File name="about/" />
-    <Tree.File name="developers/" />
-    <Tree.File name="gateways/" />
-    <Tree.File name="orchestrators/" />
-    <Tree.File name="delegators/" />
-    <Tree.File name="community/" />
-    <Tree.File name="solutions/" />
-    <Tree.Folder name="resources/">
-      <Tree.Folder name="documentation-guide/">
-        <Tree.File name="index.mdx – public mirror of this overview" />
-        <Tree.File name="component-library/ – 132 governed components" />
-        <Tree.File name="copy-style/ – voice and authoring rules" />
-        <Tree.File name="ai-automations/ – public AI surfaces" />
-        <Tree.File name="tooling/ – lpd, snippets, extensions" />
-        <Tree.File name="contributing/ – onboarding" />
-        <Tree.File name="reference/ – Mintlify built-ins" />
-        <Tree.File name="community-help.mdx – open opportunities" />
-      </Tree.Folder>
-      <Tree.File name="references/ – contract addresses, network data" />
-      <Tree.File name="changelog/" />
-      <Tree.File name="glossary.mdx" />
-      <Tree.File name="help-center.mdx" />
-      <Tree.File name="portal.mdx" />
-    </Tree.Folder>
-    <Tree.File name="internal/ – RFP, philosophy, personas (internal)" />
-  </Tree.Folder>
-  <Tree.Folder name="docs-guide/" defaultOpen>
-    <Tree.File name="standards/ – T3: voice, frontmatter, naming, authoring" />
-    <Tree.File name="frameworks/ – T2: components, content, scripts, github-actions" />
-    <Tree.File name="policies/ – T1: ownerless, quality-gates, source-of-truth" />
-    <Tree.File name="decisions/ – T0: D-DG-01..D-DG-13 + per-domain logs" />
-    <Tree.Folder name="features/ – T5 reference (migrating to reference/features/ per D-DG-03)">
-      <Tree.File name="feature-map.mdx" />
-      <Tree.File name="ai-features.mdx" />
-      <Tree.File name="ui-system.mdx" />
-      <Tree.File name="automations.mdx" />
-      <Tree.File name="data-integrations.mdx" />
-      <Tree.File name="adaptive-architecture.mdx" />
-      <Tree.File name="contributor-tools.mdx" />
-      <Tree.File name="gap-analysis.mdx" />
-    </Tree.Folder>
-    <Tree.File name="catalog/ – generated only, never hand-edit" />
-    <Tree.File name="contributing/ – T4: contributor procedures" />
-    <Tree.File name="tooling/ – lpd-cli, mdx-preview, ai-tools" />
-    <Tree.File name="repo-ops/ – governance maps, config, secrets" />
-    <Tree.File name="docs-library/ – pipeline diagrams" />
-    <Tree.File name="_workspace/ – TTL-governed drafts + archive" />
-  </Tree.Folder>
-  <Tree.Folder name="snippets/">
-    <Tree.File name="components/ – 132 governed JSX exports (6 categories)" />
-    <Tree.File name="templates/ – 40 page + block scaffolds" />
-    <Tree.File name="composables/ – canonical wrapper pattern (zero-duplication)" />
-    <Tree.File name="data/ – generated/fetched feeds (contracts, exchanges, social)" />
-    <Tree.File name="assets/ – media, OG images, logos" />
-  </Tree.Folder>
-  <Tree.Folder name="operations/">
-    <Tree.File name="scripts/ – 341 typed (validator/generator/integrator/remediator/audit/dispatch/interface)" />
-    <Tree.File name="tests/ – integration + unit + render-verify" />
-    <Tree.File name="governance/config/ – ownerless manifest, generated-artifacts, root-allowlist" />
-  </Tree.Folder>
-  <Tree.Folder name="tools/">
-    <Tree.File name="lpd – unified CLI (13 subcommands + 5 group shorthands)" />
-    <Tree.File name="dev/ – scoped preview, MDX helpers" />
-    <Tree.File name="editor-extensions/ – 4 VS Code .vsix packages" />
-    <Tree.File name="lib/ – shared JS modules" />
-  </Tree.Folder>
-  <Tree.Folder name="ai-tools/">
-    <Tree.File name="ai-skills/ – 35 portable skills (thread, pm, research, design, build, iterate, close…)" />
-    <Tree.File name="registry/ – ai-tools-registry.json + 7-lane model" />
-    <Tree.File name="agent-packs/ – per-agent generated packs (codex/claude/cursor/windsurf)" />
-  </Tree.Folder>
-  <Tree.Folder name=".github/">
-    <Tree.File name="workflows/ – 59 dispatchers on a 7-prefix taxonomy" />
-    <Tree.File name="AGENTS.md – Codex adapter extension" />
-    <Tree.File name="copilot-instructions.md" />
-    <Tree.File name="ISSUE_TEMPLATE/ – 9 templates + 1 PR template" />
-  </Tree.Folder>
-  <Tree.Folder name="(adapter roots – agent-native paths)">
-    <Tree.File name="AGENTS.md – cross-agent baseline" />
-    <Tree.File name=".claude/CLAUDE.md" />
-    <Tree.File name=".codex/" />
-    <Tree.File name=".cursor/rules/" />
-    <Tree.File name=".windsurf/rules/" />
-    <Tree.File name=".augment/rules/" />
-    <Tree.File name=".mintlify/Assistant.md" />
-  </Tree.Folder>
-  <Tree.Folder name="(public AI artefacts)">
-    <Tree.File name="llms.txt – LLM-readable site map (35 KB)" />
-    <Tree.File name="sitemap-ai.xml – AI-enriched sitemap (181 URLs)" />
-    <Tree.File name="robots.txt – explicit AI crawler allowlist" />
-  </Tree.Folder>
-</Tree>
+Cross-domain spine: [Feature Map](./features/feature-map.mdx) – system layers (navigation, content, components, data, operations, governance, AI agent, content writing) with canonical sources + derived outputs + primary gates per layer.
 
-<CustomDivider />
+---
 
-## Major features
+## The three locked-decision registries
 
-The repo ships nine product layers. Each links to a deep-dive feature page. Counts below are live as of 2026-05-19.
+The repo carries **32 locked structural decisions** across three ID-prefixed registries. The unified index at [`decisions/registry.md`](./decisions/registry.md) cross-references all three.
 
-### AI features
+| Registry | Lives at | Count | Coverage |
+| --- | --- | ---: | --- |
+| Docs-guide structure | [`decisions/docs-guide-structure.md`](./decisions/docs-guide-structure.md) | **13** (D-DG-01..13) | IA migration; standards/frameworks/policies/decisions/contributing tiers; thin-adapter rule (D-DG-11) |
+| GitHub Actions + governance | `.github/workspace/decisions-log.mdx` | **18** (D-ACT-01..10 + D-GOV-01..08) | Workflow architecture, 4-tier composable, taxonomy, pipeline tags, dispatcher model |
+| Content writing | `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` | **1** (D-NAV-01) | Cross-tab navigation pattern for multi-path tabs |
 
-**What it delivers.** Two AI products from one codebase. *Outward-facing:* the hosted MCP endpoint, the chat assistant, `llms.txt`, and the AI-enriched sitemap – any MCP-compatible client can query Livepeer docs as freshness-stamped authoritative source. *Inward-facing:* a governed agent runtime where every supported coding tool has a thin native adapter rooted in one cross-agent baseline, with 35 portable skills covering session lifecycle, content pipelines, audits, and governance creation.
+**The rule:** decisions made in chat that are not written to a registry do not exist. Phases may not consume a decision that is not in its registry.
 
-| Surface | Where | Purpose |
-|---|---|---|
-| `/llms.txt` | repo root | LLM-readable site index, 35 KB, generated from `docs.json` |
-| `/sitemap-ai.xml` | repo root | AI-enriched sitemap, 181 URLs, with `ai:wordCount`, `ai:lastVerified`, `ai:tags` |
-| Hosted MCP | `docs.livepeer.org/mcp` | Public, no-auth Model Context Protocol endpoint |
-| Mintlify chat assistant | `.mintlify/Assistant.md` | Reader-facing assistant with IA routing and high-risk guardrails |
-| `AGENTS.md` | repo root | Cross-agent baseline; every adapter points here |
-| Native adapters | `.claude/`, `.cursor/`, `.windsurf/`, `.augment/`, `.codex/`, `.github/copilot-instructions.md` | Six agent-recognised paths, thin pointers per D-DG-11 |
-| AI skills | `ai-tools/ai-skills/` | 35 portable workflows (thread, pm, research, design, build, iterate, close, propagate, audit-orchestrator…) |
-| Cross-agent packager | `operations/scripts/integrators/ai/agents/cross-agent-packager.js` | Generates per-agent skill packs from canonical templates |
+---
 
-Deep dive: [AI features](/docs-guide/features/ai-features).
+## Two interlocking pipelines
 
-<Tip>
-**Community help wanted.** Wire `llms.txt` and `sitemap-ai.xml` regeneration into CI on `docs.json` changes – single highest-impact freshness fix. See [community-help](/docs-guide/contributing/community-help) for the acceptance criteria.
-</Tip>
+The page-authoring + checks system is two pipelines that interlock at three points:
 
-### UX and UI system
+| Pipeline | Scope | Phases | Source |
+| --- | --- | --- | --- |
+| **Project pipeline** | A whole tab (or section) – from "audience defined" to "all pages drafted" | 9 stages, each with a human gate | [Content Writing Pipeline](./frameworks/content-writing.mdx); canonical at `workspace/plan/active/_MY_PROCESS/my-process.mdx` |
+| **Per-page review pipeline** | A single page – from "drafted" to "approved for publication" | 11 phases (Phase 0..10) + 9 universal Cat 1-9 + per-pageType + per-tab variation | [Checks Framework](./frameworks/checks-framework.mdx); canonical at `workspace/plan/active/master-checks.mdx` (882 lines) |
 
-**What it delivers.** A governed authoring surface on top of Mintlify. 35 active JSX components + 24 archived (132 named registry exports across six categories: elements, wrappers, displays, scaffolding, integrators, config). 40 page and block templates. 312 VS Code snippets that auto-expand frontmatter pickers, page scaffolds, and component blocks. A `--lp-*` design-token system with light/dark fidelity. Pre-commit pipelines enforce voice (UK English, banned words, no em dashes), style tokens, JSDoc compliance, and zero `outline: none` drift. The fleet-wide style remediation cut violations from 3,986 to 0 on non-mermaid code.
+The two interlock at project-pipeline Stage 7 (Phases 0-6 of per-page review), Stage 8 (Phase 7), and Stage 9 (Phase 10). **As of 2026-05-23, 0 of 5 tabs has IA Approved** (gate 1) – the project pipeline is stalled across the entire docs estate.
 
-| Surface | Where | Purpose |
-|---|---|---|
-| Component library | `snippets/components/` | 132 registry exports, 7-tag JSDoc, auto-generated catalog |
-| Templates | `snippets/templates/` | 40 copy-ready page + block scaffolds (overview, how-to, tutorial, reference, FAQ, troubleshooting, portal, landing-frame, OpenAPI-endpoint, multi-view-setup) |
-| Composables | `snippets/composables/` | Portable MDX section blocks + canonical-wrapper transclusion |
-| Style tokens | `style.css` | `--lp-*` namespace, theme-token-driven, WCAG focus-visible |
-| Voice and copy | [`standards/voice-and-copy.mdx`](/docs-guide/standards/voice-and-copy) | UK English, banned words/phrases, per-audience register, domain terms |
-| Authoring standard | [`standards/authoring-standard.mdx`](/docs-guide/standards/authoring-standard) | Quality bar + publication gate |
-| Page taxonomy | [`frameworks/page-taxonomy-framework.mdx`](/docs-guide/frameworks/page-taxonomy-framework) | Locked enumeration of pageTypes, audience tokens, purposes |
-| VS Code snippets | `.vscode/*.code-snippets` | 312 snippets generated from `component-registry.json` |
+---
 
-Deep dive: [UI system](/docs-guide/features/ui-system).
-
-<Tip>
-**Community help wanted.** The style framework is flagged for community contributions in `docs-guide/notes.mdx`. Specific opportunities include design-token expansion, additional theme variants, and Mermaid colour rationalisation.
-</Tip>
-
-### GitHub Actions and automations
-
-**What it delivers.** The repo's operating system. 59 workflows on a strict 7-prefix taxonomy (`validator-`, `generator-`, `integrator-`, `remediator-`, `audit-`, `dispatch-`, `interface-`). 341 typed scripts under `operations/scripts/`. Every script declares type/concern/niche via an 11-tag JSDoc header. Five-tier gate model: pre-commit (local, ≤60s budget), pre-push (Codex contract), PR CI (blocking, changed-file scope), scheduled CI (broad sweeps), manual dispatch (repair waves). Workflow YAML files are dispatchers only – business logic lives in the typed scripts.
-
-| Workflow type | Count | What they do |
-|---|---|---|
-| `validator-*` | 15 | Blocking pass/fail gates: links, render, structure, copy, AI sitemap, llms.txt, OpenAPI, docs-index, catalogs, codex compliance, governance map, workflow governance |
-| `generator-*` | 9 | Rebuild derived artefacts: AI sitemap, AI companions, llms files, action docs, component registry, docs-index, OG images, catalogs, SDK clients |
-| `integrator-*` | 9 | Pull external data: changelogs, showcase, translations, config flags, contract addresses (live + shadow), exchanges, releases |
-| `remediator-*` | 6 | Deterministic auto-repair: EN-GB style, frontmatter, em-dashes, style tokens, SEO metadata |
-| `audit-*` | 6 | Read-only scans: workspace retention, content quality, freshness, links, page integrity |
-| `dispatch-*` | 3 | Manual orchestrators: social-feeds, post-merge sync, catalog checks |
-| `interface-*` | 5 | Event-driven: Discord intake, GitHub issues/PRs/labels/reviewers |
-
-Deep dive: [Automations](/docs-guide/features/automations).
-
-<Tip>
-**Community help wanted.** Repair the 218 non-compliant JSDoc script headers via `repair-script-inventory.js` – excellent first PR. Workflow file: `operations/scripts/remediators/governance/`.
-</Tip>
-
-### Data integrations
-
-**What it delivers.** No author hand-types an address, a release tag, an exchange listing, or a forum post. Every external data point flows through a deterministic pipeline: fetch script under `operations/scripts/integrators/`, transform layer, validated output under `snippets/data/<family>/`, scheduled workflow, MDX consumer importing the dataset. The gold-standard example is the contracts pipeline – daily cron, shadow workflow for verification-only runs, bytecode verification against Arbitrum One and Ethereum Mainnet, health-check artefacts, automated incident issue creation, and a publish gate that requires both successful generation and a follow-up `--check` rerun.
-
-| Family | Source | Output | Schedule |
-|---|---|---|---|
-| Contract addresses | Arbitrum + Ethereum bytecode + governor-scripts manifest | `snippets/data/contract-addresses/*` | Daily cron + shadow check-only |
-| Release version | `livepeer/go-livepeer` GitHub Releases | `snippets/data/globals/latestRelease.jsx` | Scheduled |
-| Configuration flags | `go-livepeer` source | `snippets/data/gateways/configuration-flags.jsx` | Scheduled |
-| Exchange data | CoinGecko API | `snippets/data/exchanges/exchangesData.jsx` | Scheduled |
-| Social feeds | Discourse forum, Ghost blog, GitHub, Discord, RSS, YouTube, Luma | `snippets/data/social-feeds/*` | Scheduled |
-| Showcase | Google Sheets submission → Discord review | `snippets/data/showcase-feed/*` | Poll or dispatch |
-| OpenAPI specs | upstream API spec repos | `api/*.yaml` and `api/*.json` | Manual (community help wanted) |
-| Glossary | full v1+v2 MDX corpus | generated badges + reference maps | Manual (community help wanted) |
-
-Deep dive: [Data integrations](/docs-guide/features/data-integrations).
-
-<Tip>
-**Community help wanted.** Expand `fetch-openapi-specs.sh` to cover all five specs and schedule it – currently only AI Runner + AI Gateway are fetched, and the script is not in CI. See [community-help](/docs-guide/contributing/community-help).
-</Tip>
-
-### Adaptive architecture (the flagship)
-
-**What it delivers.** The repo's self-remediation model. Every governed surface declares a four-part contract – canonical source · deterministic validator · exact repair command · single gate layer. When any of those four is missing, the surface stays `advisory` until the contract is complete. Once complete, an OSS contributor – or an AI agent acting on their behalf – can correct routine drift without privileged context. The five-stage control loop runs continuously: **detect** via validators, **explain** via policy documents and printed remediation messages, **repair** via remediators or `lpd repair`, **verify** by re-running the validator, **record** into reports, catalogues, and the decisions registry.
-
-| Capability | Count | Where |
-|---|---|---|
-| Validators | 49 | `operations/scripts/validators/` |
-| Remediators | 29 | `operations/scripts/remediators/` |
-| Generators | 30 | `operations/scripts/generators/` |
-| Audits (read-only) | 21 | `operations/scripts/audits/` |
-| Generated artefacts (registered) | 29 | `operations/governance/config/generated-artifacts.json` |
-| Ownerless-ready surfaces | 8 | `operations/governance/config/ownerless-governance-surfaces.json` |
-| Surfaces in broader registry | 28 | `operations/governance/config/repo-governance-surfaces.json` |
-
-Deep dive: [Adaptive architecture](/docs-guide/features/adaptive-architecture).
-
-<Note>
-**Honest caveat.** The model is "ownerless for routine drift" – not "ownerless for policy authorship or destructive operations." Eight surfaces are formally contracted today; 20 more are advisory. Promoting one of those to ownerless-ready is the most repeatable contribution path in this repo.
-</Note>
-
-### Contributor tools
-
-**What it delivers.** A new contributor – human or agent – does not learn private maintainer knowledge to ship a high-quality change. `bash lpd setup --yes` installs hooks, dependencies, optionally CLI on PATH, and the Codex planner skill in one non-interactive step. `lpd doctor` confirms the environment. `lpd dev --scoped --scope-tab <Tab>` boots a filtered Mintlify preview against the 1,128-page nav in ~2 seconds instead of ~10 minutes. `lpd test --staged` runs the same checks CI runs. `lpd move-page` does governed file moves with reference rewrites so renames don't leave broken links.
-
-| Tool | What it does |
-|---|---|
-| [`lpd` CLI](/docs-guide/tooling/lpd-cli) | 13 subcommands + 5 group shorthands. Setup, doctor, dev, test, ci, repair, hooks, move-page, ai-sitemap, scripts |
-| [`.githooks/`](/docs-guide/contributing/git-hooks) | 5 hard gates: MDX render, `docs.json` integrity, no-deletion, allowlist/v1 protection, Codex branch isolation |
-| [Scoped preview](/docs-guide/contributing/local-preview) | `tools/dev/preview/` – fuzzy tab matching, alternate config loaders, dry-run launcher |
-| MDX preview extension | `tools/editor-extensions/lpd-mdx-preview/` – Cmd+Shift+V renders the full component library as styled HTML, debounced live update, theme detection |
-| Companion VS Code extensions | `authoring-tools`, `components` (registry-driven picker), `markdown-list` |
-| `.vscode/` workspace | extensions.json recommendations, settings, tasks, MCP config, 312 snippets |
-| `tools/lib/` | Shared JS modules: ai, bootstrap, copy-governance, docs, docs-usefulness, governance |
-
-Deep dive: [Contributor tools](/docs-guide/features/contributor-tools).
-
-### Mintlify out-of-the-box
-
-**What it delivers.** The repo runs on Mintlify and leans on the platform's native components heavily. Documentation contributors should know what's available before reaching for a custom component.
-
-| Component | Usage in repo | Purpose |
-|---|---|---|
-| `<Accordion>` + `<AccordionGroup>` | Heaviest use | Expandable reference content |
-| `<Tabs>` + `<Tab>` | Heavy | Per-OS instructions, payment-mode splits |
-| `<Tree>` + `<Tree.Folder>` + `<Tree.File>` | 15+ active uses | Folder trees, IA visualisations (this page) |
-| `<Steps>` + `<Step>` | Heavy | Sequential procedures (the quickstart above) |
-| `<CardGroup>` + `<Card>` | Heavy | Audience pickers, feature grids |
-| `<CodeGroup>` | Heavy | Multi-language code samples |
-| `<Tip>` `<Note>` `<Warning>` `<Info>` `<Check>` | Heavy / moderate / light | Callouts |
-| `<Frame>` | Moderate | Image and screenshot framing |
-| `<Update>` | Changelog pages | Time-stamped update entries |
-| `<OpenAPI>` | 288 uses | Auto-render endpoints from spec |
-| `<ParamField>` `<ResponseField>` `<RequestExample>` `<ResponseExample>` | Heavy in API ref | API reference primitives |
-
-Platform features beyond components: the chat assistant (configured by `.mintlify/Assistant.md`), the hosted MCP endpoint, search, version selector, theme switcher, redirects, and sitemap-ai.xml support. Constraints: no React/hook imports in MDX, no Mintlify global imports, root-absolute imports for shared resources, file extensions on JSX imports.
-
-Public reference: [Mintlify built-ins](/docs-guide/tooling/mintlify-built-ins).
-
-### Cool pages to highlight
-
-Examples of what this docs-as-infrastructure pattern produces.
-
-<CardGroup cols={2}>
-  <Card title="Blockchain contracts" icon="link" href="/v2/resources/references/contract-addresses">
-    Daily bytecode-verified contract addresses across Arbitrum One and Ethereum Mainnet. Source: `snippets/data/contract-addresses/`. Pipeline gold-standard with shadow verification.
-  </Card>
-  <Card title="Project showcase" icon="rocket" href="/v2/community/showcase">
-    Community-submitted projects flowing through Google Sheets → Discord review → live page. Source: `snippets/data/showcase-feed/`.
-  </Card>
-  <Card title="Get AI to set up the gateway" icon="robot" href="/v2/gateways/quickstart/AI-prompt">
-    A page written for AI agent consumption, not human browsing. Direct instantiation of "Agents Are the New Users".
-  </Card>
-  <Card title="Glossary" icon="book" href="/v2/resources/glossary">
-    Auto-generated from v1+v2 MDX corpus. Categorised by web3, video, AI, Livepeer protocol.
-  </Card>
-  <Card title="Gateways setup (Verify / Monitor / Connect)" icon="server" href="/v2/gateways/setup/verify/test">
-    Multi-OS view pattern (Docker / Linux / Windows tabs) with health checks, end-to-end tests, on-chain verification.
-  </Card>
-  <Card title="Help centre" icon="circle-question" href="/v2/resources/help-center">
-    The collated entry point for support across audiences – single canonical aggregation.
-  </Card>
-</CardGroup>
-
-<CustomDivider />
-
-## Ownerless repo management
-
-How the repo intends to be ownerless in practice. The pieces below are wired today; gaps are surfaced as community-help opportunities.
-
-<Steps>
-  <Step title="Open an issue using a template">
-    `.github/ISSUE_TEMPLATE/` ships nine templates: bug report, docs page issue, feature request, content request, tooling/CI issue, question/clarification, plus config, docs-review, and feature-internal. Each template auto-applies the correct `area:*` and `priority:*` labels.
-  </Step>
-  <Step title="Required Reading auto-fills in the PR template">
-    The pull-request template includes a `## Required Reading` section that gets auto-populated by `check-canonical-citation.js` from changed-path globs in `operations/governance/config/required-citations.json`. Merge is blocked until the contributor ticks the listed framework. Locked by [D-DG-12](/docs-guide/decisions/docs-guide-structure).
-  </Step>
-  <Step title="Reviewers and Copilot auto-assign">
-    `interface-*` workflows assign reviewers based on `area:*` labels and CODEOWNERS. Copilot is auto-assigned to governance-tagged issues for first-pass repair.
-  </Step>
-  <Step title="Discord intake becomes a governed issue">
-    A repository_dispatch pipeline (`interface-copy-intake-discord-issues.yml`) routes community questions from Discord into the issue queue with the right labels and references.
-  </Step>
-  <Step title="Decisions get IDs, not lore">
-    Every architectural decision lives in [`docs-guide/decisions/`](/docs-guide/decisions/registry) with an ID grammar `D-{SCOPE}-{NN}`. The master registry indexes all per-domain logs. "Decisions made in chat that aren't written here don't exist" is enforced by convention.
-  </Step>
-</Steps>
-
-<CustomDivider />
-
-## Authority tiers
-
-Files in `docs-guide/` follow a six-tier precedence model. When two governance docs disagree, the higher tier wins. Every file declares its tier in the `authority:` frontmatter field.
-
-| Tier | Folder | What it holds | Example |
-|------|--------|---------------|---------|
-| T0 | `decisions/` | Locked precedent with IDs and supersession chains | [D-DG-01..13: docs-guide structure](/docs-guide/decisions/docs-guide-structure) |
-| T1 | `policies/` | Enforced rules; each policy declares consumers and a validator | [Source-of-truth policy](/docs-guide/policies/source-of-truth-policy) |
-| T2 | `frameworks/` | Subject models, taxonomies, lifecycles | [Component framework](/docs-guide/frameworks/component-framework-canonical) |
-| T3 | `standards/` | Rules about form (voice, frontmatter, naming) | [Voice and copy](/docs-guide/standards/voice-and-copy) |
-| T4 | `contributing/` | Procedures (how to do work) | [Contributing](/docs-guide/contributing/contributing) |
-| T5 | `reference/`, `catalog/` | Look-up only, never normative | [Feature map](/docs-guide/features/feature-map) (under `features/` today; moves to `reference/features/` per D-DG-03) |
-
-Adapter files (`AGENTS.md`, `.claude/CLAUDE.md`, `.github/AGENTS.md`, `.cursor/rules/`, `.windsurf/rules/`, `.augment/rules/`) point UP into `docs-guide/`. They surface canonical truth for specific consumers but hold no authority. Any rule stated only in an adapter file is invalid and must canonicalise into a T0–T3 source. Locked by [D-DG-11](/docs-guide/decisions/docs-guide-structure).
-
-<CustomDivider />
-
-## Source-of-truth model
-
-Where each kind of truth lives. Read [the policy](/docs-guide/policies/source-of-truth-policy) for the full boundaries.
-
-| Surface | Source of truth |
-|---------|----------------|
-| Runtime behaviour | Code and tests under `operations/`, `snippets/`, `tools/` |
-| Repo features and operations navigation | This `docs-guide/` section |
-| Public docs UX and content | Mintlify pages under `v2/` |
-| Generated catalogs and indexes | Generator scripts under `operations/scripts/generators/`; outputs are read-only |
-| Decisions registries | `docs-guide/decisions/` (master index) plus per-domain logs cross-referenced from it |
-| Glossary | `operations/scripts/generators/content/data/glossary-terms.json` is the corpus; both internal (`reference/internal-glossary.mdx`) and public (`v2/resources/glossary.mdx`) glossaries derive from it |
-
-<CustomDivider />
-
-## Governed surfaces
-
-Thirteen major areas of this repo are governed. Each has a canonical framework, a root path, and a freshness status. The full live count is auto-generated at [repo-governance-map](/docs-guide/repo-ops/config/repo-governance-map).
-
-| # | Area | Root path | Framework | Status |
-|---|------|-----------|-----------|--------|
-| 1 | Components | `snippets/components/` | [Component framework](/docs-guide/frameworks/component-framework-canonical) | Current |
-| 2 | Scripts | `operations/scripts/` | [Script framework](/docs-guide/frameworks/script-framework) | Current |
-| 3 | AI tools and skills | `ai-tools/ai-skills/` | [AI tools framework](/docs-guide/frameworks/ai-tools-governance) | Current |
-| 4 | Repo structure | Root folders | [Repo structure](/docs-guide/frameworks/repo-structure) | Current (LOCKED) |
-| 5 | Content writing | `v2/` | [Content writing](/docs-guide/frameworks/content-writing) | Active |
-| 6 | Documentation | `docs-guide/` | [Doc item model](/docs-guide/frameworks/doc-item-model) | Locked |
-| 7 | Snippets root governance | `snippets/` | `snippets/guide.mdx` | Current |
-| 8 | Mintlify platform constraints | Platform-wide | [Mintlify repo best practices](/docs-guide/reference/external/mintlify/mintlify-repo-best-practices) | Current |
-| 9 | File placement | Cross-cutting | [File placement](/docs-guide/frameworks/file-placement) | Current |
-| 10 | GitHub Actions | `.github/workflows/` | [GitHub Actions framework](/docs-guide/frameworks/github-actions) | Current |
-| 11 | Styles governance | `style.css`, `v2/**/*.mdx`, `snippets/components/**/*.jsx` | [Styles engineering guide](/docs-guide/frameworks/styles-engineering-guide) | Current |
-| 12 | Site configuration | `docs.json` | Hand-maintained; pre-commit redirect-integrity gate | Current |
-| 13 | Web contracts | `robots.txt`, `llms.txt`, `sitemap-ai.xml`, `humans.txt` | Hand-maintained AI-crawler allowlist + generated AI artefacts | Current |
-
-Run `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check` to verify all folders are governed and no frameworks are stale.
-
-<CustomDivider />
-
-## Decision rules – read before doing X
+## Decision rules – before doing X
 
 Before writing or moving any governed file, read the listed documents.
 
 ### Before writing a component
 
-1. [Component framework](/docs-guide/frameworks/component-framework-canonical) – category taxonomy, 7-tag JSDoc header
-2. [File placement](/docs-guide/frameworks/file-placement) – folder placement rules
-3. [Mintlify best practices](/docs-guide/reference/external/mintlify/mintlify-repo-best-practices) – platform constraints
+1. [Component framework](./frameworks/component-framework-canonical.mdx) – 6-category taxonomy + 7-tag JSDoc
+2. [File placement](./frameworks/file-placement.mdx) – folder placement rules
+3. [Mintlify constraints](./contributing/mintlify.mdx) – platform restrictions
 
 ### Before writing a script
 
-1. [Script framework](/docs-guide/frameworks/script-framework) – type, concern, niche taxonomy; 11-tag JSDoc header
-2. [File placement](/docs-guide/frameworks/file-placement) – folder placement rules
+1. [Script framework](./frameworks/script-framework.mdx) – type/concern/niche taxonomy + 11-tag JSDoc
+2. [File placement](./frameworks/file-placement.mdx)
+3. [Script governance policy](./policies/script-governance.mdx) – retired-tag list (lines 195-205)
 
 ### Before writing a docs page
 
-1. [Content writing pipeline](/docs-guide/frameworks/content-writing) – pipeline phases, page taxonomy
-2. [Voice and copy](/docs-guide/standards/voice-and-copy) – per-audience voice rules
-3. [Frontmatter spec](/docs-guide/standards/frontmatter) – required frontmatter fields
-4. [Mintlify best practices](/docs-guide/reference/external/mintlify/mintlify-repo-best-practices) – platform constraints
+1. [Content Writing Pipeline](./frameworks/content-writing.mdx) – page taxonomy + voice rules + the 9-stage project pipeline
+2. [Checks Framework](./frameworks/checks-framework.mdx) – the 11-phase per-page review pipeline + Cat 1-9
+3. [Voice and copy standards](./standards/voice-and-copy.mdx) – banned words, UK English, per-audience extensions, heading rules
+4. [Frontmatter spec](./standards/frontmatter.mdx) – required minimum
 
 ### Before writing a workflow
 
-1. [GitHub Actions framework](/docs-guide/frameworks/github-actions) – type, concern taxonomy; naming convention; pipeline tags
-2. `.github/workspace/decisions-log.mdx` – locked decisions D-ACT-01 through D-ACT-10
+1. [GitHub Actions framework](./frameworks/github-actions.mdx) – type/concern taxonomy + naming convention + pipeline tags
+2. `.github/workspace/decisions-log.mdx` – D-ACT-01..10 + D-GOV-01..08 (18 locked decisions)
 3. `operations/governance/config/governance-approval-policy.json` – required approval labels
 
 ### Before moving files
 
-1. [Repo structure](/docs-guide/frameworks/repo-structure) – root folder structure (LOCKED)
-2. [File placement](/docs-guide/frameworks/file-placement) – component and script placement
-3. [Docs guide structure policy](/docs-guide/policies/docs-guide-structure-policy) – docs-guide folder rules
+1. [Repo structure](./frameworks/repo-structure.mdx) – root folder structure (LOCKED)
+2. [File placement](./frameworks/file-placement.mdx)
+3. [Docs-guide structure policy](./policies/docs-guide-structure-policy.mdx)
 4. Run the `/propagate` skill for any file with more than five incoming references
 
 ### Before adding or changing a decision
 
-1. [Decisions registry](/docs-guide/decisions/registry) – master index of all decision logs
-2. [Docs guide structure decision log](/docs-guide/decisions/docs-guide-structure) – example of the locked format
+1. [Decisions registry](./decisions/registry.md) – unified index of all 32 locked decisions
+2. [Docs-guide structure decision log](./decisions/docs-guide-structure.md) – example of the locked format
 3. ID grammar: `D-{SCOPE}-{NN}` where SCOPE is one of NAV, ACT, GOV, SCRIPT, OWN, CONTENT, ORCH, GW, DG, GLOS
 
-<CustomDivider />
+---
+
+## Canonical source map
+
+Every governed surface in this repo declares **canonical source · validator · repair path · single gate layer** (the 4-part ownerless contract). Full enumeration at [`policies/governance-index.mdx`](./policies/governance-index.mdx).
+
+| Surface | Source of truth | Authority tier |
+| --- | --- | --- |
+| Runtime behaviour | Code and tests under `operations/`, `snippets/`, `tools/` | runtime |
+| Repo features + governance | This `docs-guide/` tree | T0..T5 (per D-DG-11) |
+| Public docs UX + content | Mintlify pages under `v2/` | runtime |
+| Generated catalogs + indexes | Generator scripts under `operations/scripts/generators/`; outputs are read-only | derived |
+| Decision registries | `docs-guide/decisions/registry.md` (unified) + 2 per-domain registries (see above) | T0 |
+| Glossary | `operations/scripts/generators/content/data/glossary-terms.json` (corpus); internal + public glossaries derive from it | derived |
+
+Per locked D-DG-11: **adapter files point UP into docs-guide.** Any rule stated only in an adapter is invalid and must canonicalise into a T0–T3 source. The 6 native adapters (`AGENTS.md`, `.claude/CLAUDE.md`, `.cursor/rules/`, `.windsurf/rules/`, `.augment/rules/`, `.github/AGENTS.md`, `.github/copilot-instructions.md`, `.mintlify/Assistant.md`) surface canonical truth for specific consumers but hold no authority of their own.
+
+---
 
 ## Standards index
 
 Published authoring and style standards in `docs-guide/standards/`.
 
 | Standard | What it covers |
-|----------|---------------|
-| [Authoring standard](/docs-guide/standards/authoring-standard) | Page composition, structure, headings, sections |
-| [Voice and copy](/docs-guide/standards/voice-and-copy) | Per-audience voice, banned words and phrases, UK English, brand voice |
-| [Naming conventions](/docs-guide/standards/naming-conventions) | File, folder, component, script, workflow naming |
-| [Frontmatter spec](/docs-guide/standards/frontmatter) | Required and optional frontmatter fields per authority tier |
+| --- | --- |
+| [Authoring standard](./standards/authoring-standard.mdx) | Page composition, structure, headings, sections |
+| [Voice and copy](./standards/voice-and-copy.mdx) | Per-audience voice, banned words/phrases, UK English, heading rules, brand voice |
+| [Naming conventions](./standards/naming-conventions.mdx) | File, folder, component, script, workflow naming |
+| [Frontmatter spec](./standards/frontmatter.mdx) | Required and optional frontmatter fields per authority tier |
 
-<CustomDivider />
+---
 
-## Community help wanted
+## What's stale today
 
-Eighty-plus opportunities are open across all six feature domains. The top six by leverage:
+The honest snapshot. Full backlog with P0/P1/P2 priorities + file paths + acceptance criteria at [Gap Analysis](./features/gap-analysis.mdx).
 
-<CardGroup cols={2}>
-  <Card title="Wire llms.txt + sitemap-ai.xml regen to CI" icon="robot">
-    P0 – single highest-impact AI freshness fix. Both artefacts currently regenerate manually; needs a post-merge workflow on `docs.json` and `v2/**/*.mdx` changes.
-  </Card>
-  <Card title="Cherry-pick contract-addresses workflow to docs-v2" icon="link">
-    P0 – open since 2026-03-31. The workflow exists only on `docs-v2-dev` so GitHub Actions has never indexed it.
-  </Card>
-  <Card title="Repair 218 non-compliant JSDoc script headers" icon="hammer">
-    P1 – mechanical, well-bounded, immediately measurable. Run `repair-script-inventory.js` in dry-run, review, then write. Excellent first PR.
-  </Card>
-  <Card title="Promote an advisory surface to ownerless-ready" icon="shield-check">
-    P1 – the most repeatable contribution path. Draft a validator + remediator + repair-command triple, file with `approval:governance-schema` label.
-  </Card>
-  <Card title="Execute the gateways v2 cleanup move-wave" icon="folder-tree">
-    P1 – 199 documented recommendations in the cleanup matrix. Each is a `git mv` with redirect validation. Massive yield.
-  </Card>
-  <Card title="Extend the style framework" icon="palette">
-    P1 – design-token expansion, additional theme variants, Mermaid colour rationalisation. Flagged in `docs-guide/notes.mdx`.
-  </Card>
-</CardGroup>
+- **P0 cron-is-dry-run bug.** Every `dispatch-{concern}.yml` scheduled job runs in dry-run mode because cron physically cannot pass `inputs.dry_run = false`. Root cause of `llms.txt` + `sitemap-ai.xml` 47-day staleness, contracts data 19-day staleness despite daily cron, "manual-only" OG/SEO generators.
+- **P0 OpenAPI specs 67 days stale.** All 5 specs in `api/` last touched 2026-03-18; fetcher covers 2 of 5; no scheduled workflow.
+- **P0 `docs.json` default version is v1, not v2.** Visitors land on v1 by default unless Mintlify dashboard overrides.
+- **P0 Stale governance map.** Self-detected by `generate-repo-governance-status.js --check` – system flags itself; nothing auto-repairs.
+- **P1 Gateways `_workspace/canonical/` is byte-identical to orchestrators's.** Gateways imports the IA wholesale; `REVIEW-REGISTRY.md` literally opens `# Orchestrators Tab Page Inventory`.
+- **P1 0 of 5 content tabs has IA Approved.** Project pipeline stalled at Phase 2 across the entire docs estate.
+- **P1 Script JSDoc compliance MUCH better than documented.** Prior baseline said "218 non-compliant"; live 2026-05-23: only 45 scripts use retired `@category` + 4 use retired `@domain`. 4× improvement; refresh the gap-analysis figure.
+- **P1 4-surface component count drift.** Feature page 59 / public overview 117 / framework table 118 / registry 132 – no source agrees. Generator-source every count.
 
-Full index: [community-help](/docs-guide/contributing/community-help).
-
-<CustomDivider />
-
-## Did you mean
-
-Common misroutes. If you landed here looking for one of these, follow the pointer.
-
-| You wanted | Go to |
-|------------|-------|
-| Public protocol or product docs | [`v2/`](/v2/home/test) (under `docs.livepeer.org` nav) |
-| Component source code | `snippets/components/` |
-| Script source code | `operations/scripts/` |
-| AI skills source | `ai-tools/ai-skills/` |
-| Public glossary | [v2/resources/glossary](/v2/resources/glossary) |
-| Internal contributor or agent terminology | [Internal glossary](/docs-guide/reference/internal-glossary) |
-| In-flight working specs and plans | `workspace/plan/active/` |
-| Archived working specs | `workspace/plan/archive/` |
-| Mintlify platform notes | [Mintlify best practices](/docs-guide/reference/external/mintlify/mintlify-repo-best-practices) |
-| Generated catalogs | `docs-guide/catalog/` (do not edit; regenerated from source) |
-| Configuration registries | `operations/governance/config/` |
-| The RFP report (internal) | `v2/internal/rfp/report` |
-
-<CustomDivider />
+---
 
 ## Update rules
 
-1. Update manual docs when behaviour, process, canonical boundaries, or architecture changes. Bump `lastVerified` on save.
-2. Regenerate generated catalogs when scripts, workflows, or templates change:
+1. **Update manual docs** when behaviour, process, canonical boundaries, or architecture changes. Bump `lastVerified` on save.
+2. **Regenerate generated catalogs** when scripts, workflows, or templates change:
    - `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write`
-   - `node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write`
-   - `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write`
    - `node operations/scripts/generators/components/library/generate-ui-templates.js --write`
-   - `node operations/tests/unit/script-docs.test.js --write --rebuild-indexes`
-   - `node operations/scripts/validators/content/structure/enforce-generated-file-banners.js --check`
-3. Re-run the docs audit pipeline when docs, scripts, reports, or routing paths change:
-   - `node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full`
-   - `node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all`
-4. Keep `README.md` high-level. Link to canonical docs-guide pages for deep detail.
-5. Keep generator scripts, generated outputs, and downstream consumers in sync whenever a catalog path or title changes. Use the `/propagate` skill on any move or rename of a file with more than five incoming references.
+   - `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write`
+3. **Run `/propagate`** on any file move or rename with more than five incoming references.
+4. **Keep README high-level.** Link to canonical docs-guide pages for detail.
 
-<CustomDivider />
+---
 
-## Related and deep dives
+## Quickstart
 
-<CardGroup cols={3}>
-  <Card title="AI features" href="/docs-guide/features/ai-features" />
-  <Card title="UI system" href="/docs-guide/features/ui-system" />
-  <Card title="Automations" href="/docs-guide/features/automations" />
-  <Card title="Data integrations" href="/docs-guide/features/data-integrations" />
-  <Card title="Adaptive architecture" href="/docs-guide/features/adaptive-architecture" />
-  <Card title="Contributor tools" href="/docs-guide/features/contributor-tools" />
-  <Card title="Feature map" href="/docs-guide/features/feature-map" />
-  <Card title="Gap analysis" href="/docs-guide/features/gap-analysis" />
-  <Card title="Decisions registry" href="/docs-guide/decisions/registry" />
-  <Card title="Contributing" href="/docs-guide/contributing/contributing" />
-  <Card title="Local preview" href="/docs-guide/contributing/local-preview" />
-  <Card title="Git hooks" href="/docs-guide/contributing/git-hooks" />
-  <Card title="Agent instructions" href="/docs-guide/contributing/agent-instructions" />
-  <Card title="Mintlify constraints" href="/docs-guide/contributing/mintlify" />
-  <Card title="LPD CLI" href="/docs-guide/tooling/lpd-cli" />
-  <Card title="LPD MDX preview" href="/docs-guide/tooling/lpd-mdx-preview" />
-  <Card title="AI tools registry" href="/docs-guide/tooling/ai-tools" />
-  <Card title="Docs library (pipelines)" href="/docs-guide/docs-library/index" />
-  <Card title="Mintlify built-ins" href="/docs-guide/tooling/mintlify-built-ins" />
-  <Card title="Community help wanted" href="/docs-guide/contributing/community-help" />
-  <Card title="RFP report (internal)" href="/v2/internal/rfp/report" />
-</CardGroup>
+Five steps from clone to first PR:
 
-<CustomDivider />
+<Steps>
+  <Step title="Clone + switch to the production branch">
+    ```bash
+    git clone https://github.com/livepeer/docs.git
+    cd docs
+    git checkout docs-v2
+    ```
+    Public contributors branch from and PR against `docs-v2`. Internal in-flight work lives on `docs-v2-dev`.
+  </Step>
+  <Step title="Run setup">
+    ```bash
+    bash lpd setup --yes
+    ```
+    Installs git hooks, dependencies, optionally puts the CLI on `$PATH`. Non-interactive when `--yes` is set.
+  </Step>
+  <Step title="Confirm your environment">
+    ```bash
+    lpd doctor
+    ```
+    Reports Node / PATH / Mintlify / Puppeteer / hooks status. Fails fast if anything is missing.
+  </Step>
+  <Step title="Boot a scoped preview">
+    ```bash
+    lpd dev --scoped --scope-tab Developers
+    ```
+    Filtered Mintlify dev server against a 1,128-page nav boots in ~2 seconds instead of ~10 minutes.
+  </Step>
+  <Step title="Edit, validate, commit, PR">
+    ```bash
+    git checkout -b docs/<descriptive-slug>
+    # edit your MDX or JSX file
+    lpd test --staged
+    git commit -m "<scope>: <change>"
+    git push origin docs/<descriptive-slug>
+    gh pr create --base docs-v2
+    ```
+    Pre-commit hooks run MDX render checks, allowlist guards, redirect integrity, and no-deletion enforcement in ≤60 seconds. PR CI re-runs blocking checks against changed files.
+  </Step>
+</Steps>
+
+Full contributor flow with branching conventions, override trailers, governance approval labels, and the canonical PR template: [contributing/contributing.mdx](./contributing/contributing.mdx).
+
+---
 
 ## Related
 
-- Root orientation: [`README.md`](/README)
-- Public docs guide: [`v2/resources/documentation-guide/`](/v2/resources/documentation-guide)
-- Contributor procedures: [`docs-guide/contributing/`](/docs-guide/contributing/contributing)
-- Test matrices and CI behaviour: `operations/tests/README.md`
-- Approved redesign plan: `~/.claude/plans/hmm-so-there-needs-tender-valley.md`
-- Public-overview implementation plan: `~/.claude/plans/ok-i-want-a-rippling-metcalfe.md` (this page)
+- [Feature Map](./features/feature-map.mdx) – full inventory snapshot + system map
+- [Gap Analysis](./features/gap-analysis.mdx) – actionable backlog with P0/P1/P2 priorities
+- [Decisions Registry](./decisions/registry.md) – unified index of all 32 locked decisions
+- [Governance Index](./policies/governance-index.mdx) – every governed surface with canonical framework, root path, status
+- [Source-of-Truth Policy](./policies/source-of-truth-policy.mdx) – canonical boundaries per surface
+- [Community Help](./contributing/community-help.mdx) – 80+ specific OSS opportunities with file paths + acceptance criteria
+- [README](/README) – root orientation
+- Public docs guide for site visitors: `v2/resources/documentation-guide/`

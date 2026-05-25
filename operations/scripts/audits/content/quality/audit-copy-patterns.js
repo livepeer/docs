@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       quality
- * @purpose     
+ * @purpose     Audit aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.
  * @description Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.
  * @mode        scan
  * @pipeline    manual

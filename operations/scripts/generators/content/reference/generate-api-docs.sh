@@ -3,7 +3,7 @@
 # @type        generator
 # @concern     maintenance
 # @niche       reference
-# @purpose     
+# @purpose     Generates API reference pages from OpenAPI specs
 # @description API docs generator — generates API reference pages from OpenAPI specs
 # @mode        generate
 # @pipeline    manual — not yet in pipeline

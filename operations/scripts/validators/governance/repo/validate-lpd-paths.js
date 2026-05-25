@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       repo
- * @purpose     
+ * @purpose     Validates that every script path referenced in `lpd` exists on disk. Parses the lpd bash CLI for node and script_path invocations and checks each file against the filesystem. Exits non-zero if any path is missing.
  * @description Validates that every script path referenced in `lpd` exists on disk. Parses the lpd bash CLI for node and script_path invocations and checks each file against the filesystem. Exits non-zero if any path is missing.
  * @mode        check
  * @pipeline    manual, ci

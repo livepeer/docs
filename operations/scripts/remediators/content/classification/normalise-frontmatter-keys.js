@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     qa:content-quality
+ * @purpose     Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages.
  * @description Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages.
  * @mode        repair
  * @pipeline    manual — batch remediation utility, run with --dry-run first

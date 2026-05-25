@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       pipelines
- * @purpose     
+ * @purpose     Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
  * @description Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
  * @mode        dispatch
  * @pipeline    manual, P6, manual, manual

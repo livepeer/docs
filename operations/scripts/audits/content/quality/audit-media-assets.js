@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       quality
- * @purpose     
+ * @purpose     Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
  * @description Audits repo media assets, references, ignore leakage, and externalized asset branch inventory.
  * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only

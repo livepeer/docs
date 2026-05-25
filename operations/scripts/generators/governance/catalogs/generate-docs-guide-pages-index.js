@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates the docs-guide pages catalog
  * @description Generates the docs-guide pages catalog
  * @mode        generate
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)

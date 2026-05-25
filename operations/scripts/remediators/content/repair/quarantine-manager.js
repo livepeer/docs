@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Classifies files for quarantine (default) or applies quarantine moves (--apply)
  * @description Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
  * @mode        repair
  * @pipeline    manual

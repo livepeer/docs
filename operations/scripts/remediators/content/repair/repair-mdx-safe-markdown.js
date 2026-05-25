@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
  * @description Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
  * @mode        repair
  * @pipeline    manual

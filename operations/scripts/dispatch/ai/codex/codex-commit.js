@@ -2,14 +2,15 @@
 /**
  * @script      codex-commit
  * @type        dispatch
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex commit helper — audits codex branch state and generates compliant commit messages
+ * @purpose     Audit the current Codex agent's branch state and generate a compliant commit message that follows the repo's commit-message conventions and Codex task-isolation standard
+ * @description Invoked by the Codex AI agent at end-of-task. Inspects staged changes, validates branch is on codex/* prefix, checks for AI stash markers, generates a commit message that includes the task ID and follows the repo's `<type>(<scope>): <subject>` convention. Pairs with the Codex skills-manifest entry for end-of-task commits.
  * @mode        dispatch
- * @pipeline    manual — not yet in pipeline
+ * @pipeline    manual — invoked by the Codex agent via ai-tools/agent-packs/codex/skills-manifest.json
  * @scope       operations/scripts, .githooks, ai-tools/ai-rules
  * @usage       node operations/scripts/dispatch/ai/codex/codex-commit.js [flags]
+ * @policy      Codex task-isolation standard (ai-tools/ai-skills/templates/31-codex-task-isolation-standard.template.md)
  */
 
 const { spawnSync } = require('child_process')

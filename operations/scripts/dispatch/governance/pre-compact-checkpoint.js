@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the fires before Claude Code compacts context in long sessions. Reads the
  * @description Fires before Claude Code compacts context in long sessions. Reads the
  * @mode        dispatch
  * @pipeline    PreCompact hook → reads critical files → builds state summary → injects via systemMessage

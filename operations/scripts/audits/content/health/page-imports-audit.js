@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @description Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @mode        scan
  * @pipeline    manual

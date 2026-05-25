@@ -3,13 +3,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       changelogs
- * @purpose     infrastructure:data-feeds
- * @description Unified changelog generator for all changelog targets (solutions, contracts, resources).
+ * @purpose     Generate changelog MDX pages for every Livepeer solution (daydream, embody, streamplace, livepeer-studio), the contract repo, and the resources/changelog index by fetching GitHub Releases / Git tags and rendering Mintlify-format MDX
+ * @description Unified changelog generator driven by config key (CHANGELOG_KEY env var). Fetches releases from GitHub/GitLab REST API, optionally enhances entries via an LLM call, optionally verifies on-chain (for the contracts changelog), renders to v2/solutions/{product}/changelog.mdx or v2/resources/changelog/{section}.mdx. Pairs with dispatch-changelogs.js.
  * @mode        integrate
- * @pipeline    config → GitHub/GitLab REST API → [LLM optional] → [on-chain verify optional] → changelog.mdx
- * @scope       .github/scripts, v2/solutions/, v2/resources/changelog/
- * @usage       CHANGELOG_KEY=contracts node .github/scripts/generate-changelog.js [--dry-run] [--enhance] [--contract]
- * @policy      Public repos only. GITHUB_TOKEN optional (rate limits). No secrets in output.
+ * @pipeline    P3 (PR check via dispatch-changelogs.js), P5 (scheduled) via dispatch-changelogs.js
+ * @scope       config → GitHub/GitLab REST API → v2/solutions/{product}/changelog.mdx, v2/resources/changelog/{section}.mdx
+ * @usage       CHANGELOG_KEY=contracts node operations/scripts/integrators/copy/changelogs/generate-changelog.js [--dry-run] [--enhance] [--contract]
+ * @policy      F-R1 (data freshness); public repos only; GITHUB_TOKEN optional (rate limits); no secrets in output
  */
 
 const https = require("https");

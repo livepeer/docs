@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse
  * @description Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse
  * @mode        check
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only

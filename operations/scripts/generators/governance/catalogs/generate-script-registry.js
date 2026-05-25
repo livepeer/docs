@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
  * @description Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
  * @mode        generate
  * @pipeline    manual

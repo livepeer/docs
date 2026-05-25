@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            remediate-styles
- * @category          remediator
- * @purpose           qa:style-governance
- * @scope             v2-content,snippets-components
- * @owner             docs
- * @needs             R-STYLE-GOV
- * @purpose-statement Auto-remediates deterministic style violations: legacy tokens → --lp-*, outline removal, mermaid init standardisation. Conservative — only fixes patterns with known-safe replacements.
- * @pipeline          P6 (on-demand via workflow or manual)
- * @dualmode          --dry-run (show proposed fixes) | --write (apply fixes)
- * @usage             node tools/scripts/remediators/styles/remediate-styles.js --dry-run
+ * @script      remediate-styles
+ * @type        remediator
+ * @concern     brand
+ * @niche       style-tokens
+ * @purpose     Auto-remediate deterministic style violations across v2 MDX and snippets/components JSX — legacy token migration to --lp-* design tokens, outline removal repairs, mermaid init standardisation, conservative known-safe replacements only
+ * @description Pairs with tools/scripts/validators/styles/audit-styles.js. Applies token migration (e.g. var(--accent) → var(--lp-color-accent)), removes anti-pattern outline overrides, standardises mermaid init blocks. Skips frontmatter, code blocks, and JSX comments. Not yet in the canonical dispatch-style-tokens.js pipeline — see workspace/reports/script-audit/brand/ for migration plan.
+ * @mode        repair
+ * @pipeline    P6 (on-demand via workflow or manual) — currently invoked via styles-engineering-guide.mdx
+ * @scope       v2/ MDX, snippets/components/*.jsx
+ * @usage       node tools/scripts/remediators/styles/remediate-styles.js [--dry-run|--write]
+ * @policy      D-GOV-03 (detect-repair-verify); D-ACT-06 (note: currently outside operations/ — migration tracked)
  */
 
 const fs = require('fs');

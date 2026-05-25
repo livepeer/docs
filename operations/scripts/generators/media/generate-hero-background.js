@@ -3,14 +3,15 @@
 /**
  * @script      generate-hero-background
  * @type        generator
- * @concern     
- * @niche       media
- * @purpose     content:media-generation
- * @description generate hero background
+ * @concern     brand
+ * @niche       hero-assets
+ * @purpose     Generate the hero background image asset used by the v2 home page hero component — produces the branded gradient/pattern PNG backing the headline graphic, run when brand colours or hero layout change
+ * @description Generates the hero background PNG used at v2/index. Reads brand colour tokens from style.css, renders the gradient/pattern via Canvas or Puppeteer, writes to snippets/assets/media/hero/. Manual-use script — not in any dispatcher; run by hand when the brand updates.
  * @mode        generate
- * @pipeline    manual
- * @scope       operations/scripts/generators/media
+ * @pipeline    manual — invoked on brand or hero-layout changes
+ * @scope       brand tokens (style.css) → snippets/assets/media/hero/
  * @usage       node operations/scripts/generators/media/generate-hero-background.js
+ * @policy      manual-only (no automated pipeline — rare regeneration)
  */
 
 /**
