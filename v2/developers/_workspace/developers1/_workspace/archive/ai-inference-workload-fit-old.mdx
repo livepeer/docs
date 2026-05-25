@@ -1,9 +1,9 @@
 ---
-title: 'Is My AI Workload a Good Fit for Livepeer?'
-sidebarTitle: 'Workload Fit'
-description: 'Decision framework for evaluating whether your AI workload belongs on Livepeer. Includes decision tree, capability matrix, gateway vs orchestrator responsibilities, and anti-patterns.'
+title: "Is My AI Workload a Good Fit for Livepeer?"
+sidebarTitle: "Workload Fit"
+description: "Decision framework for evaluating whether your AI workload belongs on Livepeer. Includes decision tree, capability matrix, gateway vs orchestrator responsibilities, and anti-patterns."
 keywords: ["livepeer", "ai workload", "inference", "streaming", "real-time", "batch", "fit", "comfystream", "byoc", "decision"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:"image: \"/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg\""
 ---
 
 import { PreviewCallout } from '/snippets/components/elements/callouts/Callouts.jsx'
@@ -167,11 +167,11 @@ Flags, triggers, overlays
 
 <Accordion title="File-to-file and batch workloads: doable vs sensible">
 
-Livepeer will not block file-based or batch workloads. The protocol is general at the container level — anything that can run in a container can run on a Livepeer orchestrator. But Livepeer's economics, routing, and reliability are tuned for streaming inference, not batch conversion.
+Livepeer will not block file-based or batch workloads. The protocol is general at the container level – anything that can run in a container can run on a Livepeer orchestrator. But Livepeer's economics, routing, and reliability are tuned for streaming inference, not batch conversion.
 
 **The precise rule:**
 
-> File-to-file is usually a bad fit — unless the conversion is actually streaming inference in disguise. Livepeer cares about **execution shape**, not inputs.
+> File-to-file is usually a bad fit – unless the conversion is actually streaming inference in disguise. Livepeer cares about **execution shape**, not inputs.
 
 **Your examples, explicitly:**
 
@@ -179,13 +179,13 @@ Livepeer will not block file-based or batch workloads. The protocol is general a
 Doable. Bad idea. CPU-bound, no inference, long-running batch job, wastes GPU slots, will be deprioritised by gateways. Technically works. Economically irrational.
 
 **English → other language (translation)**
-- File-to-file (text in → text out): batch job, latency-tolerant — weak Livepeer fit.
-- Live translation (speech or captions): audio arrives incrementally, translation emitted incrementally, latency matters — excellent Livepeer fit.
+- File-to-file (text in → text out): batch job, latency-tolerant – weak Livepeer fit.
+- Live translation (speech or captions): audio arrives incrementally, translation emitted incrementally, latency matters – excellent Livepeer fit.
 Same model, different execution shape.
 
 **MP3 → text transcription**
 - Upload MP3 → wait → download transcript: marginal. Works, but batch infra is cheaper and gateways gain little from routing it.
-- Streamed transcription (even from an MP3): chunk audio, emit tokens continuously, treat it like live audio — strong fit.
+- Streamed transcription (even from an MP3): chunk audio, emit tokens continuously, treat it like live audio – strong fit.
 
 **Reframe your mental model:**
 
@@ -201,7 +201,7 @@ Start thinking: "batch execution vs stream execution."
 
 **The real constraint:**
 
-Livepeer's bottleneck is GPU opportunity cost, not capability. If a job occupies a GPU for a long time without benefiting from low latency, it will lose out to workloads that do. This is by design — gateways will naturally route away from poor-fit workloads.
+Livepeer's bottleneck is GPU opportunity cost, not capability. If a job occupies a GPU for a long time without benefiting from low latency, it will lose out to workloads that do. This is by design – gateways will naturally route away from poor-fit workloads.
 
 **Safe summary:**
 
@@ -215,12 +215,12 @@ Many batch and file-based AI workloads are technically runnable on Livepeer. How
 
 <CardGroup cols={3}>
   <Card title="AI Pipelines" icon="diagram-project" href="../ai-pipelines/overview">
- ComfyStream and BYOC — how to build and deploy inference pipelines.
+ ComfyStream and BYOC – how to build and deploy inference pipelines.
   </Card>
   <Card title="BYOC" icon="box" href="../ai-pipelines/byoc">
  Bring your own container: run custom models on the network.
   </Card>
   <Card title="Model support" icon="microchip-ai" href="../ai-pipelines/model-support">
- Full compatibility matrix — which model families run on Livepeer.
+ Full compatibility matrix – which model families run on Livepeer.
   </Card>
 </CardGroup>

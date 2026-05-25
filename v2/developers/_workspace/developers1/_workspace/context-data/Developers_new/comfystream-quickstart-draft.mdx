@@ -1,11 +1,11 @@
 ---
-title: 'Quickstart: ComfyStream on Livepeer'
-description: 'Get a ComfyStream instance running and connected to the Livepeer network in a single session — covering Docker, RunPod, and local install paths.'
-sidebarTitle: 'ComfyStream'
+title: "Quickstart: ComfyStream on Livepeer"
+description: "Get a ComfyStream instance running and connected to the Livepeer network in a single session – covering Docker, RunPod, and local install paths."
+sidebarTitle: "ComfyStream"
 keywords: ["comfystream", "livepeer", "real-time AI", "live video", "quickstart", "ComfyUI", "vtuber", "cascade", "docker", "runpod"]
-pageType: 'tutorial'
-audience: 'developer'
-status: 'draft'
+pageType: "tutorial"
+audience: "developer"
+status: "draft"
 ---
 
 [//]: # (REVIEW: OQ-D1 unresolved. This draft treats ComfyStream as primarily a standalone tool (no Livepeer account required for the core tutorial\). The Livepeer connection is covered in a separate section as the next step. Confirm with Peter/Rick before publishing whether this framing is correct, or whether a specific Livepeer network onboarding flow should be mandatory.)
@@ -51,8 +51,8 @@ ComfyStream requires an NVIDIA GPU. Windows and macOS are not supported for the 
         Once the pod status shows **Running**, click **Connect** to open the pod's exposed ports.
 
         ComfyStream exposes two ports:
-        - `8188` — ComfyUI interface
-        - `8889` — ComfyStream WebRTC server
+        - `8188` – ComfyUI interface
+        - `8889` – ComfyStream WebRTC server
         [//]: # (REVIEW: Confirm exact ports from docs.comfystream.org or docker-compose.yml in the repo. These are based on standard ComfyUI port + common ComfyStream server port.)
       </Step>
 
@@ -83,7 +83,7 @@ ComfyStream requires an NVIDIA GPU. Windows and macOS are not supported for the 
         ```
 
         For full installation options including volume mounts and workspace configuration, see the [ComfyStream install docs](https://docs.comfystream.org/technical/get-started/install).
-        [//]: # (REVIEW: Confirm exact docker run flags from docs.comfystream.org / docker-compose.yml. The above is a minimal illustration only — actual flags may differ (workspace path, model path mounts\).)
+        [//]: # (REVIEW: Confirm exact docker run flags from docs.comfystream.org / docker-compose.yml. The above is a minimal illustration only – actual flags may differ (workspace path, model path mounts\).)
       </Step>
 
       <Step title="Open ports for WebRTC (remote server only)">
@@ -147,7 +147,7 @@ ComfyStream uses ComfyUI workflow JSON files. The repository includes several st
   <Step title="Open the workflow panel">
     In the ComfyStream UI, click the workflow selector and choose a workflow file.
 
-    For your first run, use the StreamDiffusion SD 1.5 workflow — it is the lightest and fastest to compile.
+    For your first run, use the StreamDiffusion SD 1.5 workflow – it is the lightest and fastest to compile.
     [//]: # (REVIEW: Confirm the recommended starter workflow filename from the repo's workflows/ directory. Likely something like `streamdiffusion_sd15.json`.)
   </Step>
 
@@ -168,7 +168,7 @@ ComfyStream uses ComfyUI workflow JSON files. The repository includes several st
 
 Once compilation completes, the ComfyStream UI will show your webcam feed with the AI effect applied in near-real-time.
 
-**Expected result:** Your webcam input appears transformed by the workflow — style transfer, depth-mapped effects, or other visual processing depending on the workflow you loaded.
+**Expected result:** Your webcam input appears transformed by the workflow – style transfer, depth-mapped effects, or other visual processing depending on the workflow you loaded.
 
 If you see only the raw webcam feed without transformation, check:
 - GPU VRAM is not exhausted (check `nvidia-smi`)
@@ -183,7 +183,7 @@ Want to see what a running pipeline looks like before setting up? The [Building 
 
 ## Connect to the Livepeer Network
 
-Running ComfyStream locally gets you a working real-time AI pipeline. To deploy that pipeline on the Livepeer network — making it accessible to other applications or earning compute fees — there are two paths:
+Running ComfyStream locally gets you a working real-time AI pipeline. To deploy that pipeline on the Livepeer network – making it accessible to other applications or earning compute fees – there are two paths:
 
 | Path | What it does | When to use |
 |------|-------------|-------------|
@@ -192,9 +192,9 @@ Running ComfyStream locally gets you a working real-time AI pipeline. To deploy 
 
 For the Daydream API, request access at [daydream.live](https://daydream.live).
 
-For the BYOC path, the integration layer is [PyTrickle](https://github.com/livepeer/pytrickle) — a Python package that enables ComfyStream to register as a Livepeer AI worker. See the [BYOC documentation](/v2/developers/build/byoc) for setup steps.
+For the BYOC path, the integration layer is [PyTrickle](https://github.com/livepeer/pytrickle) – a Python package that enables ComfyStream to register as a Livepeer AI worker. See the [BYOC documentation](/v2/developers/build/byoc) for setup steps.
 
-[//]: # (REVIEW: OQ-D1 — confirm whether this two-path framing is correct with Peter/Rick. Also confirm whether the Livepeer community gateway (free endpoint\) can serve as a simple test target for new developers before going full BYOC. If so, add a step here showing that connection.)
+[//]: # (REVIEW: OQ-D1 – confirm whether this two-path framing is correct with Peter/Rick. Also confirm whether the Livepeer community gateway (free endpoint\) can serve as a simple test target for new developers before going full BYOC. If so, add a step here showing that connection.)
 
 <CustomDivider />
 
@@ -202,11 +202,11 @@ For the BYOC path, the integration layer is [PyTrickle](https://github.com/livep
 
 ComfyStream supports the following pipeline types in production (Phase 4, January 2026):
 
-- **StreamDiffusion** — real-time style transfer and image-to-image on live video
-- **StreamDiffusion V2** — second-generation diffusion pipeline, supports video-to-video and image-to-image
-- **SuperResolution** — real-time video upscaling
-- **AudioTranscription + SRT** — real-time captions embedded in video output
-- **Text data-channel output** — structured text output (e.g. transcription) alongside video
+- **StreamDiffusion** – real-time style transfer and image-to-image on live video
+- **StreamDiffusion V2** – second-generation diffusion pipeline, supports video-to-video and image-to-image
+- **SuperResolution** – real-time video upscaling
+- **AudioTranscription + SRT** – real-time captions embedded in video output
+- **Text data-channel output** – structured text output (e.g. transcription) alongside video
 
 <CustomDivider />
 
@@ -224,4 +224,4 @@ ComfyStream supports the following pipeline types in production (Phase 4, Januar
   </Card>
 </CardGroup>
 
-[//]: # (REVIEW: build/comfystream and build/byoc hrefs — confirm these paths exist or will exist before publication.)
+[//]: # (REVIEW: build/comfystream and build/byoc hrefs – confirm these paths exist or will exist before publication.)
