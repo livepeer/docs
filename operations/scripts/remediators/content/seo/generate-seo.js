@@ -3,13 +3,14 @@
  * @script      generate-seo
  * @type        remediator
  * @concern     discoverability
- * @niche       seo
- * @purpose     
- * @description SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis
+ * @niche       seo-metadata
+ * @purpose     Repair v2 MDX frontmatter SEO completeness — derives title (from H1 if missing), description (from first paragraph if missing or boilerplate), and keywords (from headings + key terms) when those fields are blank, stale, or below quality threshold
+ * @description Content-analysis-based SEO frontmatter generator. Reads each v2 .mdx file, parses frontmatter, and for missing/low-quality title/description/keywords writes a derived value into a frontmatter patch. --dry-run shows proposed patches; --write applies them and runs --verify to re-check. Pairs with dispatch-seo-metadata.js.
  * @mode        repair
- * @pipeline    on-demand, SEO refresh)
- * @scope       operations/scripts
- * @usage       node operations/scripts/generators/content/seo/generate-seo.js [flags]
+ * @pipeline    P3 (PR advisory via dispatch-seo-metadata.js), P6 (scheduled SEO refresh) — note: full-repo scan is slow (>180s), so it sits behind dispatch-seo-metadata which is excluded from smoke tests
+ * @scope       v2/ MDX (frontmatter only — body content untouched)
+ * @usage       node operations/scripts/remediators/content/seo/generate-seo.js [--dry-run|--write] [--verify] [--files <paths>]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
  */
 /**
  * SEO Generator for Livepeer Documentation

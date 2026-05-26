@@ -3,7 +3,7 @@
  * @type        generator
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Reads GOVERNANCE.md markers from every root folder and produces a governance map report
  * @description Reads GOVERNANCE.md markers from every root folder and produces a governance map report
  * @mode        generate
  * @pipeline    manual -> GOVERNANCE.md markers, docs-guide/frameworks/*.mdx -> GOVERNANCE_MAP_LATEST.json, repo-governance-map.mdx

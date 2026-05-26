@@ -1,6 +1,173 @@
 ---
-audience: community
-complexity: intermediate
+title: "lpd CLI"
+sidebarTitle: "lpd CLI"
+description: "Unified Bash CLI for setup, scoped Mintlify preview, staged tests, hooks, governed page moves, and repair. The correct workflow is the easiest workflow."
+keywords:
+  - livepeer
+  - documentation guide
+  - lpd
+  - cli
+  - tooling
+  - contributor
+  - scoped preview
+  - hooks
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': "Livepeer Docs – lpd CLI quickstart"
+audience: everyone
+pageType: reference
+purpose: reference
+status: current
+lastVerified: "2026-05-19"
 lifecycleStage: discover
+complexity: beginner
 ---
 
+The `lpd` CLI is the single entry point for contributing to these docs. One Bash script (`tools/lpd`) wraps setup, environment checks, scoped Mintlify preview, staged tests, governed file moves, repair flows, and access to the 341 scripts under `operations/scripts/`. You do not need to install Mintlify or Node packages by hand.
+
+<Note>
+This page is the public quickstart. For the full reference – every subcommand, every flag, JSON envelopes, and the script catalogue – see the canonical reference at [docs-guide/tooling/lpd-cli](/docs-guide/tooling/lpd-cli).
+</Note>
+
+## Five-minute quickstart
+
+<Steps>
+  <Step title="Install and verify">
+    ```bash icon="terminal"
+    bash lpd setup --yes      # installs hooks, deps, optionally adds lpd to your $PATH
+    lpd doctor                # confirms Node, Mintlify, Puppeteer, hooks, PATH
+    ```
+  </Step>
+  <Step title="Boot a scoped Mintlify preview">
+    ```bash icon="terminal"
+    lpd dev --scoped --scope-tab Developers
+    ```
+    A filtered dev server against the 1,128-page nav boots in ~2 seconds instead of ~10 minutes for a cold full build. Tab names fuzzy-match (`Orch`, `Resource`, `Gate`).
+  </Step>
+  <Step title="Run the same checks CI runs">
+    ```bash icon="terminal"
+    lpd test --staged     # only your changes
+    lpd ci --skip-browser # full PR CI suite, skip Puppeteer (faster)
+    ```
+  </Step>
+  <Step title="Move pages without breaking links">
+    ```bash icon="terminal"
+    lpd move-page v2/from/path.mdx v2/to/path.mdx
+    ```
+    Rewrites every incoming reference, updates `docs.json`, regenerates affected catalogue.
+  </Step>
+  <Step title="Repair drift">
+    ```bash icon="terminal"
+    lpd repair --surface <id> --staged
+    ```
+    Runs the deterministic remediator for a governed surface against staged files. Surfaces are listed in [`operations/governance/config/ownerless-governance-surfaces.json`](https://github.com/livepeer/docs/blob/docs-v2/operations/governance/config/ownerless-governance-surfaces.json).
+  </Step>
+</Steps>
+
+## Subcommand summary
+
+`lpd` ships 13 subcommands plus 5 group shorthands.
+
+| Command | What it does |
+|---|---|
+| `lpd help` | Print the full subcommand list with one-line descriptions |
+| `lpd info` | Resolve repo root, branch, environment summary |
+| `lpd version` | Print the CLI version |
+| `lpd setup` | Install hooks, deps, optional PATH install |
+| `lpd doctor` | Verify environment – Node, Mintlify, Puppeteer, hooks, PATH |
+| `lpd dev` (alias: `lpd mint`) | Boot Mintlify dev server, scoped or full |
+| `lpd test` | Run validators (staged, full, or specific scopes) |
+| `lpd ci` | Full PR CI suite, locally |
+| `lpd repair` | Run a remediator for a governed surface |
+| `lpd move-page` | Governed file move with reference rewrites |
+| `lpd ai-sitemap` | Regenerate `sitemap-ai.xml` |
+| `lpd hooks` | Manage git hooks (install, status, verify) |
+| `lpd scripts` | Discover and run any of 341 governed scripts |
+
+**Group shorthands** route into `operations/scripts/` subtrees: `lpd tools`, `lpd tests`, `lpd v2`, `lpd workspace`, `lpd hooks`.
+
+## Common workflows
+
+<Tabs>
+  <Tab title="Edit a page">
+    ```bash icon="terminal"
+    bash lpd setup --yes
+    lpd dev --scoped --scope-tab <your-tab>
+    # edit MDX
+    lpd test --staged
+    git commit -m "docs: <change>"
+    ```
+    The pre-commit hook runs MDX render checks, allowlist guards, redirect integrity, and no-deletion enforcement in under 60 seconds.
+  </Tab>
+  <Tab title="Add a component">
+    ```bash icon="terminal"
+    lpd dev --scoped --scope-tab <tab>     # render check
+    lpd test --staged                       # 7-tag JSDoc validation
+    node operations/scripts/generators/components/library/generate-component-registry.js --write
+    lpd test --staged
+    ```
+    Read [`docs-guide/frameworks/component-framework-canonical`](/docs-guide/frameworks/component-framework-canonical) before authoring.
+  </Tab>
+  <Tab title="Add a script">
+    ```bash icon="terminal"
+    # author with 11-tag JSDoc header (see frameworks/script-framework)
+    lpd test --staged       # runs script-docs.test.js
+    node operations/tests/unit/script-docs.test.js --rebuild-indexes --write
+    lpd scripts list --group v2
+    ```
+    Read [`docs-guide/frameworks/script-framework`](/docs-guide/frameworks/script-framework) before authoring.
+  </Tab>
+  <Tab title="Move or rename pages">
+    ```bash icon="terminal"
+    lpd move-page v2/old/path.mdx v2/new/path.mdx
+    lpd test --staged
+    ```
+    `move-page` rewrites every incoming reference, updates `docs.json`, and regenerates affected catalogue. For files with more than five incoming references, run the `/propagate` skill afterwards to audit cross-surface references (sitemap-ai.xml, llms.txt, etc.).
+  </Tab>
+</Tabs>
+
+## Scoped preview – why it matters
+
+Mintlify cold-starts the full 1,128-page docs-v2 in roughly ten minutes. `lpd dev --scoped --scope-tab <Tab>` boots a filtered profile in ~2 seconds.
+
+```bash icon="terminal"
+# scope by tab name
+lpd dev --scoped --scope-tab Gateways
+
+# scope by route prefix
+lpd dev --scoped --scope-prefix /v2/resources/
+
+# discover available scopes
+lpd dev --scope-list
+
+# interactive picker
+lpd dev --scope-interactive
+```
+
+Alternate config loaders (`docs-orch-work.json`, `docs-gate-work.json`) drive themed scoped builds for cross-tab pipeline work.
+
+## Repair flows
+
+```bash icon="terminal"
+lpd repair --surface component-governance --write --staged
+lpd repair --surface em-dashes --write
+lpd repair --surface us-spelling --write --language en-gb
+```
+
+Available surfaces live in [`operations/governance/config/ownerless-governance-surfaces.json`](https://github.com/livepeer/docs/blob/docs-v2/operations/governance/config/ownerless-governance-surfaces.json). Each declares its validator, remediator, repair command, and gate layer.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Canonical CLI reference" icon="terminal" href="/docs-guide/tooling/lpd-cli" arrow>
+    Every subcommand, every flag, JSON envelopes, error codes, and the full script catalogue.
+  </Card>
+  <Card title="Contribute to the docs" icon="code-pull-request" href="/v2/resources/documentation-guide/contributing/contribute-to-the-docs" arrow>
+    End-to-end contributor flow from fork to merged PR.
+  </Card>
+  <Card title="MDX preview extension" icon="file-code" href="/docs-guide/tooling/lpd-mdx-preview" arrow>
+    `lpd-mdx-preview` VS Code extension – render the full component library without running Mintlify.
+  </Card>
+  <Card title="Docs Guide overview" icon="book-open" href="/docs-guide/index" arrow>
+    The complete docs-as-infrastructure overview with the IA tree, all features, and governance contracts.
+  </Card>
+</CardGroup>

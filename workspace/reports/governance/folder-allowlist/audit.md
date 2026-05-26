@@ -1,6 +1,6 @@
 # Folder-allowlist audit
 
-Generated 2026-05-22
+Generated 2026-05-25
 
 **Total drift entries: 0**
 
@@ -37,4 +37,9 @@ Generated 2026-05-22
 ## workspace
 
 - Permitted: 12
+- Drift: 0
+
+## v2
+
+- Permitted: 14
 - Drift: 0

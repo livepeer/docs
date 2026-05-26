@@ -4,12 +4,13 @@
  * @type        audit
  * @concern     brand
  * @niche       style
- * @purpose     
- * @description EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
+ * @purpose     Detect and optionally fix US English spellings, style guide violations, and formatting inconsistencies across v2 content per the tools/config/quality/style-language-profile-en-gb.json profile
+ * @description EN-GB style homogeniser. Reads the style-language profile for word/phrase rules, scans v2 MDX for US spellings and style guide violations, supports --check (report) and --fix (apply known-safe replacements). Skips frontmatter, code blocks, inline code, and JSX attribute values.
  * @mode        scan
- * @pipeline    on-demand, repair)
- * @scope       operations/scripts, v2, tools/config/quality/style-language-profile-en-gb.json
- * @usage       node operations/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]
+ * @pipeline    P3 (PR), P6 (manual repair) — called by dispatch-grammar-en-gb.js
+ * @scope       v2/ MDX (excluding _workspace, x-archived, x-deprecated, locale subtrees)
+ * @usage       node operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js [--check|--fix] [--scope changed|full] [--files <paths>]
+ * @policy      D-GOV-03 (paired with check-grammar-en-gb validator)
  */
 
 const fs = require('fs');

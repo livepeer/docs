@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Applies deterministic docs.json and governed reference rewrites for moved docs pages.
  * @description Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages.
  * @mode        repair
  * @pipeline    manual

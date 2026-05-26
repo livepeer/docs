@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the postToolUse hook for Edit/Write on v2 .mdx files. Launches Puppeteer,
  * @description PostToolUse hook for Edit/Write on v2 .mdx files. Launches Puppeteer,
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → check if v2 MDX → ensure server → Puppeteer → compare baseline → write state

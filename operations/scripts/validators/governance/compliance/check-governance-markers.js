@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates GOVERNANCE.md presence in all required folders and checks link integrity
  * @description Validates GOVERNANCE.md presence in all required folders and checks link integrity
  * @mode        check
  * @pipeline    pr-changed -> all GOVERNANCE.md markers -> exit-code, stdout:violations

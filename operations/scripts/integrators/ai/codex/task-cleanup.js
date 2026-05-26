@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      codex/task-cleanup
+ * @script      task-cleanup
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex task cleanup utility — reports and prunes merged clean worktrees plus stale local codex branches after merge
+ * @purpose     Reclaim disk and local state after Codex task PRs merge — prunes merged worktrees, deletes stale local codex/* branches, removes orphaned lock files, so the next session starts clean
+ * @description Lists local git worktrees and branches matching codex/*, cross-references against merged PRs via gh CLI, removes worktrees whose branch is merged, removes stale .codex/locks-local/*.lock files whose task PR has merged. Reports what it would prune in dry-run mode.
  * @mode        integrate
- * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node operations/scripts/integrators/ai/codex/task-cleanup.js [flags]
+ * @pipeline    manual — invoked after Codex PRs merge
+ * @scope       operations/scripts/integrators/ai/codex, .codex/locks-local/, git worktrees
+ * @usage       node operations/scripts/integrators/ai/codex/task-cleanup.js [--dry-run] [--write]
+ * @policy      Codex task-isolation standard
  */
 
 const fs = require('fs');

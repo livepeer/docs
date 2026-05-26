@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Visits every v2 route registered in docs.json, captures HTTP status,
  * @description Visits every v2 route registered in docs.json, captures HTTP status,
  * @mode        check
  * @pipeline    manual — run once to generate baseline, re-run to update after verified fixes

@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Dispatch the delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.
  * @description Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.
  * @mode        dispatch
  * @pipeline    manual — packet generator compatibility wrapper

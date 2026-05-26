@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Extracts SearchTable itemsList data from glossary MDX pages
  * @description Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages
  * @mode        generate
  * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual

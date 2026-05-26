@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       pr
- * @purpose     
+ * @purpose     Audit the governed script corpus and regenerate the canonical script inventory outputs from current headers and filesystem state.
  * @description Audit the governed script corpus and regenerate the canonical script inventory outputs from current headers and filesystem state.
  * @mode        check
  * @pipeline    commit), manual

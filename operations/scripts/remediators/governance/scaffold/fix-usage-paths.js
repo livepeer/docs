@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       scaffold
- * @purpose     
+ * @purpose     Repair fix usage paths
  * @description fix usage paths
  * @mode        repair
  * @pipeline    manual

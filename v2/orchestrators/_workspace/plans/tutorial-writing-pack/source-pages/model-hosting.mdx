@@ -39,7 +39,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 Model hosting covers how AI models reach your GPU: where they come from, how they download, where they are stored, and how to verify they are loaded and serving correctly. Warm/cold strategy and runtime model selection are covered in <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" label="AI Model Management" newline={false} />.
 
-<CustomDivider middleText="Model Sources" />
+<CustomDivider />
 
 ## Model sources
 
@@ -77,7 +77,7 @@ Common use cases for external containers:
 
 External containers must expose a `/health` endpoint returning HTTP 200. Load the model inside the container before the AI worker starts. A failed health check at startup causes the entry to be skipped.
 
-<CustomDivider middleText="Download Mechanics" />
+<CustomDivider />
 
 ## Download mechanics
 
@@ -169,7 +169,7 @@ Plan for NVMe storage on the model directory — loading weights from spinning d
   When using Docker-out-of-Docker, the `-aiModelsDir` path must point to the **host machine**. Docker uses that path to mount model files into spawned AI Runner containers, so a host path keeps the mount target resolvable.
 </Note>
 
-<CustomDivider middleText="Gated Models" />
+<CustomDivider />
 
 ## Gated model access
 
@@ -205,7 +205,7 @@ The `token` field provides the bearer token for authenticating with HuggingFace 
   Keep `aiModels.json` files containing HuggingFace tokens out of version control. Treat the token as a credential. Store `aiModels.json` outside public repositories or use environment variable substitution.
 </Warning>
 
-<CustomDivider middleText="Verified Models" />
+<CustomDivider />
 
 ## Livepeer verified model list
 
@@ -213,7 +213,7 @@ In practice, gateways route the models and pipeline combinations they recognise,
 
 Configuring a model outside the verified list in `aiModels.json` is permitted, but gateways route no traffic to it.
 
-<CustomDivider middleText="Verifying Load" />
+<CustomDivider />
 
 ## Verifying model load
 

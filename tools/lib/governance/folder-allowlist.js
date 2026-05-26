@@ -69,6 +69,7 @@ function findGovernedFolders(repoRoot) {
     'tools/config',
     'snippets',
     'workspace',
+    'v2',
   ];
   return candidates
     .map((rel) => ({ rel, abs: path.join(repoRoot, rel) }))

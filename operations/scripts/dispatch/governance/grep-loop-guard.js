@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Tracks consecutive Grep calls that return no results. At 3 in a row,
  * @description Tracks consecutive Grep calls that return no results. At 3 in a row,
  * @mode        dispatch
  * @pipeline    PostToolUse hook → reads stdin tool result → tracks empty Greps → warns at 3

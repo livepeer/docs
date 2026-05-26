@@ -163,7 +163,7 @@ function runTests() {
                   tabs: [
                     {
                       tab: 'Test',
-                      pages: ['v2/about/protocol/blockchain-contracts', 'v2/resources/redirect']
+                      pages: ['v2/about/protocol/blockchain-contracts', 'v2/resources/missing-test-route']
                     }
                   ]
                 }
@@ -175,7 +175,7 @@ function runTests() {
     );
 
     assert.strictEqual(findings.length, 1);
-    assert(findings[0].message.includes('v2/resources/redirect'));
+    assert(findings[0].message.includes('v2/resources/missing-test-route'));
   });
 
   return {

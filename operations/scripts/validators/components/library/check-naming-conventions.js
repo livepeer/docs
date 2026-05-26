@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @description Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @mode        check
  * @pipeline    manual

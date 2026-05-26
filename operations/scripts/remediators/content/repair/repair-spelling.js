@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.
  * @description Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.
  * @mode        repair
  * @pipeline    manual

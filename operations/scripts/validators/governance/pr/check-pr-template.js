@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       pr
- * @purpose     
+ * @purpose     Enforces that PR descriptions include required change and rationale sections before merge
  * @description Enforces that PR descriptions include required change and rationale sections before merge
  * @mode        check
  * @pipeline    ci

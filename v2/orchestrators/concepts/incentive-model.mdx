@@ -54,11 +54,11 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<CenteredContainer style={{ width: '90%' }}>
-  <Tip>Orchestrators earn from two independent sources: ETH service fees for processing jobs, and LPT inflation rewards for protocol participation. Both require active set membership. Earnings from fees depend on workload volume; earnings from rewards depend on total stake and the reward cut configuration.</Tip>
+<CenteredContainer width="90%">
+  <Tip>Orchestrators earn from two independent sources: ETH service fees for processing jobs, and LPT inflation rewards for protocol participation. Both require Active Set membership. Earnings from fees depend on workload volume; earnings from rewards depend on total stake and the Reward Cut configuration.</Tip>
 </CenteredContainer>
 
-<CustomDivider middleText="Revenue Streams" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Two Revenue Streams
 
@@ -106,12 +106,12 @@ flowchart LR
       <TableCell>LPT</TableCell>
       <TableCell>Protocol inflation (new LPT minted per round)</TableCell>
       <TableCell>Once per round (~22 hours) via reward call</TableCell>
-      <TableCell>Total bonded stake (self-stake + delegated); reward cut setting</TableCell>
+      <TableCell>Total bonded stake (self-stake + delegated); Reward Cut setting</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Service Fees" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Service Fees (ETH)
 
@@ -160,24 +160,24 @@ market price - use `livepeer_cli` to survey current rates before setting your ow
 
 ### Fee distribution
 
-The Orchestrator's **fee cut** determines what share of collected fees goes to the Orchestrator versus
+The Orchestrator's **Fee Cut** determines what share of collected fees goes to the Orchestrator versus
 the shared fee pool distributed to Delegators.
 
-```
+``` icon="terminal"
 Total fee ticket value = Orchestrator fee cut + Delegator fee pool
 ```
 
-For example, at a fee cut of 5%: the Orchestrator keeps 5% of ticket value; 95% goes to the fee pool
+For example, at a Fee Cut of 5%: the Orchestrator keeps 5% of ticket value; 95% goes to the fee pool
 distributed proportionally among Delegators.
 
 {/* REVIEW: Confirm fee cut mechanics - does 5% go to Orchestrator and 95% to delegator pool, or is it expressed as percentage Delegators receive? Check BondingManager contract */}
 
-<CustomDivider middleText="Inflation Rewards" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Inflation Rewards (LPT)
 
-The Livepeer protocol mints new LPT each round to incentivise participation. Orchestrators in the
-active set earn a share of this inflation proportional to their total bonded stake.
+The Livepeer Protocol mints new LPT each round to incentivise participation. Orchestrators in the
+Active Set earn a share of this inflation proportional to their total bonded stake.
 
 ### The reward call
 
@@ -190,20 +190,20 @@ this automatically. See <LinkArrow href="/v2/orchestrators/guides/staking-and-re
 
 ### Reward distribution
 
-The Orchestrator's **reward cut** determines what share of the round's LPT goes to the Orchestrator
+The Orchestrator's **Reward Cut** determines what share of the round's LPT goes to the Orchestrator
 versus Delegators:
 
-```
+``` icon="terminal"
 Total round reward = Orchestrator reward cut + Delegator reward pool
 ```
 
-A reward cut of 25% means the Orchestrator keeps 25% of the LPT earned; 75% is distributed to
+A Reward Cut of 25% means the Orchestrator keeps 25% of the LPT earned; 75% is distributed to
 Delegators in proportion to their bonded stake.
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
-      <TableCell header>Reward cut setting</TableCell>
+      <TableCell header>Reward Cut setting</TableCell>
       <TableCell header>Orchestrator keeps</TableCell>
       <TableCell header>Delegators receive</TableCell>
       <TableCell header>Implication</TableCell>
@@ -220,7 +220,7 @@ Delegators in proportion to their bonded stake.
       <TableCell>25%</TableCell>
       <TableCell>25%</TableCell>
       <TableCell>75%</TableCell>
-      <TableCell>Common production setting; balances operator return with delegator appeal</TableCell>
+      <TableCell>Common production setting; balances operator return with Delegator appeal</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>100%</TableCell>
@@ -231,16 +231,16 @@ Delegators in proportion to their bonded stake.
   </tbody>
 </StyledTable>
 
-### Active set requirement
+### Active Set requirement
 
 Only the top 100 Orchestrators by total bonded stake (self-stake + delegated stake) are in the
-**active set** in any given round. Only active set members receive inflation rewards and can receive
-Gateway jobs. Stake below the threshold for active set membership means no earnings from either stream.
+**Active Set** in any given round. Only Active Set members receive inflation rewards and can receive
+Gateway jobs. Stake below the threshold for Active Set membership means no earnings from either stream.
 
-The active set threshold varies with network participation. Monitor your rank on the
-[Livepeer Explorer](https://explorer.livepeer.org) to ensure you remain in the active set.
+The Active Set threshold varies with network participation. Monitor your rank on the
+[Livepeer Explorer](https://explorer.livepeer.org) to ensure you remain in the Active Set.
 
-<CustomDivider middleText="Cost Structure" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Orchestrator Costs
 
@@ -280,7 +280,7 @@ Unlike Gateways, Orchestrators do not pay for the jobs they process - they are p
 is infrastructure and staking, not service fees.
 </Note>
 
-<CustomDivider middleText="Full Payment Flow" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Payment Flow End-to-End
 
@@ -300,7 +300,7 @@ flowchart LR
     classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
-<CustomDivider middleText="Why Operate?" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Operator Models
 
@@ -345,7 +345,7 @@ Orchestrators operate for different reasons. The earnings model looks different 
     An Orchestrator that holds substantial self-stake but operates at low capacity or joins a pool
     earns primarily from inflation rewards rather than service fees.
 
-    High reward cut retains more LPT per round. Low reward cut attracts more delegated stake, which
+    High Reward Cut retains more LPT per round. Low Reward Cut attracts more delegated stake, which
     increases the Orchestrator's share of the total round reward.
 
     This model is most relevant for large LPT holders evaluating whether to self-operate versus
@@ -353,7 +353,7 @@ Orchestrators operate for different reasons. The earnings model looks different 
   </Accordion>
 </AccordionGroup>
 
-<CustomDivider middleText="Pricing Configuration" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Configuring Prices
 
@@ -361,7 +361,7 @@ Orchestrators set three categories of pricing parameter at startup or via `livep
 
 ### Base price
 
-```bash
+```bash icon="terminal"
 # Price per pixel per second for video transcoding
 -pricePerUnit=1000
 
@@ -371,14 +371,14 @@ Orchestrators set three categories of pricing parameter at startup or via `livep
 
 ### AI capability pricing
 
-```bash
+```bash icon="terminal"
 # Per-pipeline, per-model AI pricing (JSON file path)
 -pricePerCapability=/path/to/ai-prices.json
 ```
 
 Example `ai-prices.json`:
 
-```json
+```json icon="terminal"
 {
   "capabilities_prices": [
     {
@@ -399,7 +399,7 @@ Example `ai-prices.json`:
 
 ### Per-Gateway pricing
 
-```bash
+```bash icon="terminal"
 # Set a different price for a specific Gateway address
 -pricePerGateway='{"0xGatewayAddress": 800}'
 ```
@@ -409,17 +409,17 @@ independently of the base network price.
 
 See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} /> for competitive pricing guidance and current network rate benchmarks.
 
-<CustomDivider middleText="Delegator Relationship" style={{margin: "0 0 -1rem 0"}} />
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
 ## Attracting Delegators
 
-Delegated stake increases an Orchestrator's share of inflation rewards and improves its active set
+Delegated stake increases an Orchestrator's share of inflation rewards and improves its Active Set
 ranking. Attracting and retaining Delegators is therefore an economic lever for Orchestrators.
 
 Delegators evaluate Orchestrators on:
 
-- **Reward cut** - lower reward cut means more LPT to Delegators per round
-- **Fee cut** - lower fee cut means more ETH to Delegators from service fees
+- **Reward Cut** - lower Reward Cut means more LPT to Delegators per round
+- **Fee Cut** - lower Fee Cut means more ETH to Delegators from service fees
 - **Reliability** - missed reward calls mean Delegators receive no rewards for that round
 - **Reputation** - track record of uptime, performance, and community engagement
 - **Stake already committed** - larger self-stake signals greater operator commitment

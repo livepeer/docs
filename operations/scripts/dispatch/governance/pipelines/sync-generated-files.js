@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       pipelines
- * @purpose     
+ * @purpose     Dispatches generator scripts to sync generated catalog/index files, then validates banners.
  * @description Dispatches generator scripts to sync generated catalog/index files, then validates banners.
  * @mode        dispatch
  * @pipeline    manual | pre-commit --staged

@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes.
  * @description Mechanically enforces co-work rules before tool execution. Blocks destructive git, public posts, and unconfirmed writes.
  * @mode        dispatch
  * @pipeline    PreToolUse hook → reads stdin tool input → decision (allow/block/warn)
@@ -193,6 +193,46 @@ stdin.on('end', () => {
           }
         }
       } catch (_) { /* allowlist missing or unreadable — allow through */ }
+    }
+
+    // --- NESTED FOLDER ALLOWLIST: enforce .allowlist on every governed folder (D-GOV-08 layer 1) ---
+    if ((toolName === 'Write' || toolName === 'Edit') && toolInput.file_path) {
+      const fp = toolInput.file_path;
+      const repoRoot = path.resolve(__dirname, '../../../..');
+      try {
+        const rel = path.relative(repoRoot, fp);
+        if (rel && !rel.startsWith('..') && !rel.startsWith('/')) {
+          // Walk up the path looking for governed folders with .allowlist files
+          const parts = rel.split(path.sep);
+          for (let depth = 1; depth < parts.length; depth += 1) {
+            const folderRel = parts.slice(0, depth).join(path.sep);
+            const folderAbs = path.join(repoRoot, folderRel);
+            const allowlistPath = path.join(folderAbs, '.allowlist');
+            if (!fs.existsSync(allowlistPath)) continue;
+            // This folder has an allowlist — check the next path segment
+            const nextSegment = parts[depth];
+            if (!nextSegment) continue;
+            // The .allowlist file itself must always be editable — it is the source of truth
+            // for the governance rule that governs it. Skip the check for the allowlist file.
+            if (nextSegment === '.allowlist' && depth === parts.length - 1) continue;
+            const allowlist = fs.readFileSync(allowlistPath, 'utf8')
+              .split('\n').map(l => l.replace(/#.*$/, '').trim()).filter(l => l.length > 0);
+            const matches = allowlist.some((entry) => {
+              if (entry === nextSegment) return true;
+              if (entry === nextSegment + '/') return true;
+              if (entry.endsWith('/') && entry.slice(0, -1) === nextSegment) return true;
+              return false;
+            });
+            if (!matches) {
+              console.log(JSON.stringify({
+                decision: 'block',
+                reason: `BLOCKED: "${nextSegment}" not permitted under ${folderRel}/. Per D-GOV-08, every governed folder declares a closed allowlist. Permitted entries: ${allowlist.slice(0, 8).join(', ')}${allowlist.length > 8 ? ', ...' : ''}. To extend the allowlist, edit ${folderRel}/.allowlist with rationale.`
+              }));
+              process.exit(2);
+            }
+          }
+        }
+      } catch (_) { /* lib unavailable — allow through */ }
     }
 
     // --- NEW FILE GOVERNANCE GUIDANCE ---

@@ -9,7 +9,21 @@ status: current
 lastVerified: "2026-03-17T00:00:00.000Z"
 ---
 import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
-import { gatewayConfigurationFlagRows } from '/snippets/data/gateways/configuration-flags.jsx'
+import { gatewayConfigurationFlagSections } from '/snippets/data/gateways/configuration-flags.jsx'
+
+export const gatewayConfigurationFlagRows = gatewayConfigurationFlagSections.flatMap(
+  ({ title, rows }) => [
+    {
+      Flag: title,
+      __separator: true,
+    },
+    ...rows.map((row) => ({
+      Flag: row.flag,
+      Type: row.type,
+      Description: row.description,
+    })),
+  ]
+);
 
 <Note>
  This reference is manually maintained. For the most current flags, see the

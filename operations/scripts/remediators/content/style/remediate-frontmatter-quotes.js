@@ -3,13 +3,14 @@
  * @script      remediate-frontmatter-quotes
  * @type        remediator
  * @concern     brand
- * @niche       style
- * @purpose     qa:content-quality
- * @description Standardises MDX frontmatter scalar string values to double quotes. Decodes YAML single-quoted strings (including ''-escaped apostrophes) and re-encodes them as double-quoted strings, escaping internal double quotes and backslashes. Skips multi-line block scalars (| or >), explicit YAML tags, sequences, and mappings.
+ * @niche       frontmatter-quotes
+ * @purpose     Standardise MDX frontmatter scalar string values to double-quoted form per the CLAUDE.md MDX convention "always use double-quoted YAML frontmatter to safely handle apostrophes and em-dashes"
+ * @description Decodes YAML single-quoted strings (including ''-escaped apostrophes) and re-encodes them as double-quoted strings, escaping internal double quotes and backslashes. Skips multi-line block scalars (| or >), explicit YAML tags, sequences, and mappings. Wired into the PostToolUse:Edit|Write hook so every MDX edit is normalised automatically.
  * @mode        repair
- * @pipeline    PostToolUse:Edit|Write hook + remediator-brand-repair-frontmatter-quotes.yml workflow
+ * @pipeline    P2 (write-time hook via mdx-frontmatter-sanitise.js), P6 (batch repair)
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js [--dry-run|--write] [--verify] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (write-time prevention layer)
  *
  *   Examples:
  *     description: 'Foo''s bar'   → description: "Foo's bar"

@@ -1,0 +1,569 @@
+[
+  {
+    "path": "operations/scripts/validators/content/grammar/check-grammar-en-gb.js",
+    "name": "check-grammar-en-gb.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "grammar",
+    "purpose": "Detect UK English grammar issues in v2 MDX prose — subject-verb agreement, article use, comma placement — with optional conservative autofix for the small set of unambiguous rules",
+    "description": "Deterministic UK English grammar checker for prose content. Reads rules from a closed enum (no LLM); applies only the rules with documented, unambiguous corrections. --fix performs the autofix for the safe subset. Skips code blocks, frontmatter, JSX comments, JSX attribute values, import/export lines. Exit non-zero if any violation detected.",
+    "scope": "v2/ MDX (excluding _workspace, x-archived, x-deprecated, locale subtrees)",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-grammar-en-gb.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/grammar/check-proper-nouns.js",
+    "name": "check-proper-nouns.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "grammar",
+    "purpose": "Detect incorrect proper-noun capitalisation in v2 MDX prose (Livepeer, Orchestrator, Gateway, AI, Ethereum, etc.) while skipping code, frontmatter, URLs, and path-like tokens",
+    "description": "Reads canonical proper-noun rules from operations/tests/config/spell-dict.json. Scans prose for lowercase or wrong-case occurrences of governed proper nouns. Exit non-zero if any violation. Paired with repair-term-capitalisation.js for auto-fix.",
+    "scope": "v2/ MDX (excluding code blocks, frontmatter, URLs, path-like identifiers)",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-proper-nouns.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/copy/check-voice-register.js",
+    "name": "check-voice-register.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "copy",
+    "purpose": "content:voice-compliance",
+    "description": "Checks MDX pages with audience frontmatter for prohibited phrases from the wrong voice register",
+    "scope": "v2/",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-voice-register.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/remediators/content/style/remediate-voice-violations.js",
+      "operations/scripts/validators/content/copy/lint-patterns.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/copy/lint-copy.js",
+    "name": "lint-copy.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "banned-words",
+    "purpose": "Detect banned words and banned phrases in v2 MDX content per the canonical lists at tools/lib/copy-governance/banned-{words,phrases}.txt",
+    "description": "Reads the two canonical lists (10 banned words + 17 banned phrases from the CLAUDE.md voice rules) and scans v2 MDX for occurrences. Exit non-zero on any hit. No auto-fix — banned terms require manual rewrite via the rolling-issue model. Pairs with dispatch-banned-words.js.",
+    "scope": "v2/ MDX (staged, changed, --full, or single-file via --files)",
+    "reads": [
+      "tools/lib/copy-governance"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-banned-words.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/script-governance.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/content/copy/lint-patterns.js",
+    "name": "lint-patterns.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "voice-register",
+    "purpose": "Detect Tier-2 copy pattern violations in v2 MDX content — hedging language, weakened value claims, conditional softeners, audience-mismatched phrasing per the voice rules",
+    "description": "Pairs with check-voice-register.js. Where check-voice-register detects prohibited phrases, lint-patterns detects structural pattern violations (e.g. unnecessary qualifiers, hedging openers, indirect constructions). Exit non-zero on any hit. Used by dispatch-voice-register.js as the secondary detector.",
+    "scope": "v2/ MDX (staged, changed, --full, or single-file via --files)",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-voice-register.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/style/remediate-em-dashes.js",
+    "name": "remediate-em-dashes.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "em-dashes",
+    "purpose": "Replace em-dashes (U+2014) with en-dashes (U+2013) in v2 MDX content and user-facing frontmatter fields per the CLAUDE.md voice rule \"no em dashes\" — paired remediator for the em-dashes brand pipeline",
+    "description": "Scans content text and user-facing frontmatter keys (title, sidebarTitle, description) for U+2014. Skips other frontmatter keys, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values. --verify re-runs detection after write and reverts any file that still contains an em-dash. Pairs with dispatch-em-dashes.js.",
+    "scope": "v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-em-dashes.js",
+      ".claude/CLAUDE.md",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/style/remediate-frontmatter-quotes.js",
+    "name": "remediate-frontmatter-quotes.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "frontmatter-quotes",
+    "purpose": "Standardise MDX frontmatter scalar string values to double-quoted form per the CLAUDE.md MDX convention \"always use double-quoted YAML frontmatter to safely handle apostrophes and em-dashes\"",
+    "description": "Decodes YAML single-quoted strings (including ''-escaped apostrophes) and re-encodes them as double-quoted strings, escaping internal double quotes and backslashes. Skips multi-line block scalars (| or >), explicit YAML tags, sequences, and mappings. Wired into the PostToolUse:Edit|Write hook so every MDX edit is normalised automatically.",
+    "scope": "v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/governance/mdx-frontmatter-sanitise.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/style/remediate-us-spelling.js",
+    "name": "remediate-us-spelling.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "spelling",
+    "purpose": "Convert US English spellings to UK English (en-GB) in v2 MDX content per the CLAUDE.md voice rule \"UK English (-ise, -our, -re)\" — reads rules from tools/config/quality/language-rules.json",
+    "description": "Default direction: US → UK. Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values. --verify re-runs the spelling check after write and reverts any file that still has US forms. Pairs with dispatch-spelling.js.",
+    "scope": "v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)",
+    "reads": [
+      "v2",
+      "tools/config/quality/language-rules.json"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-spelling.js",
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+      ".claude/CLAUDE.md"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/style/remediate-voice-violations.js",
+    "name": "remediate-voice-violations.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "voice-register",
+    "purpose": "Apply deterministic voice-register fixes to v2 MDX pages",
+    "description": "Pairs with check-voice-register.js. Applies safe deterministic rewrites only — universal phrase replacements plus audience-keyed deletions (orchestrator, gateway, developer). Skips code blocks, frontmatter, and JSX comments. Ambiguous cases stay flagged for human review via rolling-issue. Supports --dry-run preview and --verify (re-runs check after fix, reverts regressions per file).",
+    "scope": "v2 MDX pages with audience frontmatter",
+    "reads": [
+      "v2",
+      "operations/scripts/validators/content/copy/check-voice-register.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-voice-register.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+    "name": "repair-term-capitalisation.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "proper-nouns",
+    "purpose": "Fix incorrect proper-noun capitalisation in v2 MDX prose (Livepeer, Orchestrator, Gateway, AI, Ethereum, LPT, etc.) per the canonical rule set at tools/config/quality/term-capitalisation.json — paired remediator for check-proper-nouns",
+    "description": "Reads rules from tools/config/quality/term-capitalisation.json. Scans content text for lowercase or wrong-case occurrences and rewrites them. Skips code blocks, frontmatter, URLs, import/export lines, JSX attribute values. --verify re-runs check-proper-nouns.js per file and reverts any regression. Pairs with dispatch-proper-nouns.js.",
+    "scope": "v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)",
+    "reads": [
+      "v2",
+      "tools/config/quality/term-capitalisation.json"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-proper-nouns.js",
+      "operations/scripts/validators/content/grammar/check-proper-nouns.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/media/generate-hero-background.js",
+    "name": "generate-hero-background.js",
+    "concern": "brand",
+    "type": "generator",
+    "niche": "hero-assets",
+    "purpose": "Generate the hero background image asset used by the v2 home page hero component — produces the branded gradient/pattern PNG backing the headline graphic, run when brand colours or hero layout change",
+    "description": "Generates the hero background PNG used at v2/index. Reads brand colour tokens from style.css, renders the gradient/pattern via Canvas or Puppeteer, writes to snippets/assets/media/hero/. Manual-use script — not in any dispatcher; run by hand when the brand updates.",
+    "scope": "brand tokens (style.css) → snippets/assets/media/hero/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/generators/media/generate-hero-image.js",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/media/generate-hero-image.js",
+    "name": "generate-hero-image.js",
+    "concern": "brand",
+    "type": "generator",
+    "niche": "hero-assets",
+    "purpose": "Generate the hero foreground image (headline graphic, illustrations, product mockups) layered on top of the hero background — manual-use script run when brand assets or hero copy change",
+    "description": "Generates the hero foreground PNG/SVG used at v2/index. Reads brand assets + hero copy from config, renders via Puppeteer or Canvas, writes to snippets/assets/media/hero/. Pairs with generate-hero-background.js. Manual-use only — not wired to any dispatcher.",
+    "scope": "brand assets + hero copy → snippets/assets/media/hero/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-banned-words.js",
+    "name": "dispatch-banned-words.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "banned-words",
+    "purpose": "Pipeline dispatcher for banned-word and banned-phrase detection",
+    "description": "Reads canonical lists from tools/lib/copy-governance/banned-{words,phrases}.txt via lint-copy.js. PR: detect + advisory. Scheduled: rolling-issue. Banned terms require manual rewrite (no auto-repair) — the rolling-issue model is the response.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/copy/lint-copy.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/validators/content/copy/lint-copy.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+    "name": "dispatch-brand-check.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "PR-time meta dispatcher: bundles all brand pipelines in --mode pr",
+    "description": "Runs every brand pipeline with --mode pr. Aggregates exit codes.",
+    "scope": "all brand pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-brand.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+    "name": "dispatch-brand-repair.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "Manual meta dispatcher: brand pipelines in --mode manual (repair only)",
+    "description": "Repair-only mode with --verify, opens PR with fixes.",
+    "scope": "brand pipelines with remediators",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-brand.yml",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+    "name": "dispatch-brand-scan.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "Scheduled meta dispatcher: brand pipelines in --mode scheduled",
+    "description": "Full audit + repair (--write) + verify + rolling-issue.",
+    "scope": "brand pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-brand.yml",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-em-dashes.js",
+    "name": "dispatch-em-dashes.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "em-dashes",
+    "purpose": "Pipeline dispatcher for em-dash detection and removal in v2 docs",
+    "description": "Detects em-dashes in v2 MDX and replaces with sentence-appropriate punctuation. PR: detect + advisory. Scheduled: scan + repair + verify + rolling-issue. Manual: repair-only with --verify.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/remediators/content/style/remediate-em-dashes.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/remediators/content/style/remediate-em-dashes.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-grammar-en-gb.js",
+    "name": "dispatch-grammar-en-gb.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "grammar-en-gb",
+    "purpose": "Pipeline dispatcher for UK English grammar enforcement on v2 docs (full lifecycle)",
+    "description": "Detects UK English grammar issues (subject-verb agreement, article use, comma placement) and applies safe deterministic fixes via the EN-GB homogeniser. PR: detect + advisory. Scheduled: scan + repair + verify. Manual: repair-only.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/grammar/check-grammar-en-gb.js",
+      "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/validators/content/grammar/check-grammar-en-gb.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-proper-nouns.js",
+    "name": "dispatch-proper-nouns.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "proper-nouns",
+    "purpose": "Pipeline dispatcher for proper-noun capitalisation (Livepeer, AI, Gateway, Orchestrator, etc.)",
+    "description": "Detects lowercase/wrong-case proper nouns and corrects. PR: detect + advisory. Scheduled: scan + repair + verify. Manual: repair-only.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/grammar/check-proper-nouns.js",
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+      "operations/scripts/validators/content/grammar/check-proper-nouns.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-spelling.js",
+    "name": "dispatch-spelling.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "spelling",
+    "purpose": "Pipeline dispatcher for UK spelling enforcement on v2 docs",
+    "description": "Detects US spellings and corrects to UK forms. PR: detect + advisory. Scheduled: scan + repair + verify. Manual: repair-only with --verify.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/remediators/content/style/remediate-us-spelling.js",
+      "operations/scripts/remediators/content/repair/repair-spelling.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/remediators/content/style/remediate-us-spelling.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-style-tokens.js",
+    "name": "dispatch-style-tokens.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "style-tokens",
+    "purpose": "Pipeline dispatcher for component style-token consistency (no hardcoded colours/spacing)",
+    "description": "Detects style tokens not from the brand system. Scheduled: audit + repair (Phase 3.X wire). Manual: repair-only.",
+    "scope": "snippets/components/**",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/audits/components/library/audit-component-styles.js",
+      "operations/scripts/remediators/components/library/repair-component-styles.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "tools/scripts/remediators/styles/remediate-styles.js",
+      "tools/scripts/validators/styles/audit-styles.js",
+      "tools/scripts/generators/styles/generate-styles-docs.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-voice-register.js",
+    "name": "dispatch-voice-register.js",
+    "concern": "brand",
+    "type": "dispatch",
+    "niche": "voice-register",
+    "purpose": "Pipeline dispatcher for voice register: assertive voice, no hedging, per-audience phrasing",
+    "description": "Detects voice violations (hedging, conditionals, weakened value, per-audience prohibited phrases) and applies safe deterministic fixes. PR: detect + advisory. Scheduled: scan + repair + verify. Manual: repair-only with --verify.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/content/copy/check-voice-register.js",
+      "operations/scripts/validators/content/copy/lint-patterns.js",
+      "operations/scripts/remediators/content/style/remediate-voice-violations.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/remediators/content/style/remediate-voice-violations.js",
+      "operations/scripts/validators/content/copy/lint-patterns.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js",
+    "name": "style-and-language-homogenizer-en-gb.js",
+    "concern": "brand",
+    "type": "audit",
+    "niche": "style",
+    "purpose": "Detect and optionally fix US English spellings, style guide violations, and formatting inconsistencies across v2 content per the tools/config/quality/style-language-profile-en-gb.json profile",
+    "description": "EN-GB style homogeniser. Reads the style-language profile for word/phrase rules, scans v2 MDX for US spellings and style guide violations, supports --check (report) and --fix (apply known-safe replacements). Skips frontmatter, code blocks, inline code, and JSX attribute values.",
+    "scope": "v2/ MDX (excluding _workspace, x-archived, x-deprecated, locale subtrees)",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-grammar-en-gb.js",
+      "operations/scripts/remediators/content/repair/quarantine-manager.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/ui-system.mdx",
+      "docs-guide/policies/skill-pipeline-map.mdx",
+      "docs-guide/_workspace/02_Design-Specification/05_Brand,-Copy,-Style/01_09-Brand-&-Copy-Guide/index.md",
+      "docs-guide/_workspace/02_Design-Specification/07_Implementation-Considerations/02_14.-Brand-&-Copy/index.md",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/content-writing.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "tools/scripts/validators/styles/audit-styles.js",
+    "name": "audit-styles.js",
+    "concern": "brand",
+    "type": "validator",
+    "niche": "style-tokens",
+    "purpose": "Scan v2 MDX and snippets/components JSX for style-governance violations (inline styles, hardcoded hex/spacing, legacy tokens, mermaid hardcoded inits, focus removal) — broader coverage than the canonical components-only audit",
+    "description": "Single audit covering both content (v2 MDX) and components (snippets/components/*.jsx). Reports six violation categories with file/line evidence and JSON output. Pairs with tools/scripts/remediators/styles/remediate-styles.js. Not yet in the dispatch-style-tokens.js canonical pipeline — see workspace/reports/script-audit/brand/review-packet.md for migration plan.",
+    "scope": "v2/ MDX, snippets/components/*.jsx",
+    "reads": [
+      "workspace/reports/styles",
+      "v2",
+      "snippets/components"
+    ],
+    "writes": [],
+    "callers": [
+      "tools/scripts/remediators/styles/remediate-styles.js",
+      "tools/scripts/generators/styles/generate-styles-docs.js",
+      "docs-guide/frameworks/styles-engineering-guide.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "tools/scripts/remediators/styles/remediate-styles.js",
+    "name": "remediate-styles.js",
+    "concern": "brand",
+    "type": "remediator",
+    "niche": "style-tokens",
+    "purpose": "Auto-remediate deterministic style violations across v2 MDX and snippets/components JSX — legacy token migration to --lp-* design tokens, outline removal repairs, mermaid init standardisation, conservative known-safe replacements only",
+    "description": "Pairs with tools/scripts/validators/styles/audit-styles.js. Applies token migration (e.g. var(--accent) → var(--lp-color-accent)), removes anti-pattern outline overrides, standardises mermaid init blocks. Skips frontmatter, code blocks, and JSX comments. Not yet in the canonical dispatch-style-tokens.js pipeline — see workspace/reports/script-audit/brand/ for migration plan.",
+    "scope": "v2/ MDX, snippets/components/*.jsx",
+    "reads": [
+      "snippets/components",
+      "v2",
+      "tools/scripts/validators/styles/audit-styles.js"
+    ],
+    "writes": [],
+    "callers": [
+      "tools/scripts/validators/styles/audit-styles.js",
+      "tools/scripts/generators/styles/generate-styles-docs.js",
+      "docs-guide/frameworks/styles-engineering-guide.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "tools/scripts/generators/styles/generate-styles-docs.js",
+    "name": "generate-styles-docs.js",
+    "concern": "brand",
+    "type": "generator",
+    "niche": "style-tokens",
+    "purpose": "Generate style-governance documentation tables from validator categories, remediator patterns, and style.css tokens — keeps the styles-engineering-guide framework doc in sync with the audit-styles and remediate-styles source of truth",
+    "description": "Parses tools/scripts/validators/styles/audit-styles.js (audit category list), tools/scripts/remediators/styles/remediate-styles.js (token migration map + repair patterns), and style.css (--lp-* design tokens) to produce documentation tables. --check fails if docs are stale; --write regenerates them. Writes a manifest at workspace/reports/styles/styles-docs-manifest.json. Not yet in the canonical dispatch-style-tokens.js pipeline — see workspace/reports/script-audit/brand/ for migration plan.",
+    "scope": "tools/scripts/validators/styles/, tools/scripts/remediators/styles/, style.css, docs-guide/frameworks/styles-engineering-guide.mdx",
+    "reads": [
+      "workspace/reports/styles/styles-docs-manifest.json",
+      "tools/scripts/validators/styles/audit-styles.js",
+      "tools/scripts/remediators/styles/remediate-styles.js"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/frameworks/styles-engineering-guide.mdx"
+    ],
+    "flags": []
+  }
+]

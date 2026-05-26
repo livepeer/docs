@@ -1,14 +1,19 @@
-# Workflow and Pipeline Governance Framework
+# Workflow and Pipeline Governance Framework (internal working spec)
 
-> **DEPRECATED as canonical location.** The published summary lives at `docs-guide/frameworks/github-actions.mdx`. This file remains as the full working specification. Edits here must be synced to the published version.
+> **This file is the internal working specification. The canonical published framework is the source of truth.**
+>
+> **Canonical published framework:** [`docs-guide/frameworks/github-actions.mdx`](../../docs-guide/frameworks/github-actions.mdx) — read that first.
+> **Operator guide:** [`docs-guide/frameworks/dispatch-pipelines.mdx`](../../docs-guide/frameworks/dispatch-pipelines.mdx) — how to run pipelines locally, mode contract reference.
+>
+> This file holds deeper pattern detail (pipeline shapes A-G, scan-to-act routing tables, generate/verify pair register). Edits here must be synced to the published doc.
+>
+> **Status (2026-05-22):** Phase 4 consolidation shipped. 4-tier composable architecture active. 53 → 11 workflows (6 dispatch + 5 interface). D-GOV-08 prevention chain wired layers 1-5. Smoke test 66/66 passing.
+>
+&gt; 18 decisions locked: D-ACT-01..10 and D-GOV-01..08. See `.github/workspace/decisions-log.mdx`.
+> Archived product capabilities context: `.github/workspace/phase2/locked-pipelines.md`.
+> Archived pipeline design context: `.github/workspace/phase2/pipeline-design/`.
 
-> Canonical reference for the Livepeer Docs workflow and pipeline architecture.
-> Status: CONFIRMED. 8 decisions locked (D-ACT-01 through D-ACT-08).
-> Decisions log: `.github/workspace/decisions-log.mdx`
-> Archived product capabilities context: `.github/workspace/phase2/locked-pipelines.md`
-> Archived pipeline design context: `.github/workspace/phase2/pipeline-design/`
-
----
+<CustomDivider />
 
 ## 1. Purpose
 
@@ -23,7 +28,7 @@ This repo is ownerless and self-governed. It must self-repair and self-document 
 5. **Document itself** - catalogs, indexes, registries auto-regenerate
 6. **Govern itself** - rules enforced, issues managed, drift self-healed
 
----
+<CustomDivider />
 
 ## 2. Pipeline Architecture (D-ACT-08)
 
@@ -134,7 +139,7 @@ Pattern D scanners must route findings, not just report them. The routing table 
 | External dependency | Create GitHub issue    | Broken external link                   |
 | Stale data          | Re-dispatch integrator | Freshness monitor triggers feed update |
 
----
+<CustomDivider />
 
 ## 3. Taxonomy
 
@@ -181,7 +186,7 @@ Classify when a workflow runs and what authority it has.
 | **manual**       | workflow_dispatch only       | Human-triggered          | 4     |
 | **event-driven** | repository_dispatch / issues | External event           | 3     |
 
----
+<CustomDivider />
 
 ## 4. Required Standards
 
@@ -259,12 +264,12 @@ Every workflow file MUST have:
 | ---------------------------- | -------------------------------------- | -------------------------------------------- |
 | `--dry-run` support          | All workflows with `workflow_dispatch` | Input with default `false`                   |
 | Generate/verify pairs        | All generators (P4)                    | Matching P3 validator workflow               |
-| No inline scripts > 50 lines | All workflows                          | Extract to `operations/scripts/`             |
+| No inline scripts &gt; 50 lines | All workflows                          | Extract to `operations/scripts/`             |
 | Config-driven                | All data-fetch workflows               | Read from `product-social-config.json`       |
 | No hardcoded URLs            | All scripts                            | Config or env var                            |
 | Scan-to-act response         | All P5 scanners                        | Findings route to fix, issue, or re-dispatch |
 
----
+<CustomDivider />
 
 ## 5. Dispatcher Layers
 
@@ -278,7 +283,7 @@ Pipelines run across three dispatcher layers, all serving the same product needs
 
 Scripts are shared across layers. A validator script can be called by a GitHub Action on PR AND by a pre-commit hook locally AND manually via CLI.
 
----
+<CustomDivider />
 
 ## 6. Current State and Gaps
 
@@ -299,7 +304,7 @@ Scripts are shared across layers. A validator script can be called by a GitHub A
 
 28 items across 4 tiers. See `.github/workspace/phase2/pipeline-design/design.mdx` for full impact/effort matrix.
 
----
+<CustomDivider />
 
 ## 7. Self-Documentation Pipeline
 
@@ -328,7 +333,7 @@ Adding a new workflow:
 3. Run `node .github/workspace/generate-action-pages.js`
 4. The catalog index auto-renders from the audit data
 
----
+<CustomDivider />
 
 ## 8. Enforcement Tiers
 
@@ -340,7 +345,7 @@ Adding a new workflow:
 | **Scan-to-act** | P5 workflows scan, route findings to response   | Auto-fix, issue, or re-dispatch |
 | **Advisory**    | Manual workflows for human-triggered operations | Step summary + artifact         |
 
----
+<CustomDivider />
 
 ## 9. Decisions
 
@@ -357,7 +362,7 @@ Adding a new workflow:
 | D-ACT-07 | `automation` renamed to `integrator`            | Names what it does, not what it is generically             |
 | D-ACT-08 | Workflows are dispatchers, type reflects script | Architectural separation enabling script extraction        |
 
----
+<CustomDivider />
 
 ## Sources
 

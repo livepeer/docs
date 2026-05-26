@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       scripts
- * @purpose     
+ * @purpose     Audit analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
  * @description Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
  * @mode        scan
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only

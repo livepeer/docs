@@ -1,110 +1,311 @@
 ---
 title: "UI System"
 sidebarTitle: "UI System"
-description: "Internal map of the UI authoring system: components, templates, and generated snippets."
+description: >-
+  Component library, templates, composables, design tokens, and authoring
+  contracts that produce a governed authoring surface on top of Mintlify.
+  132 registry exports + 37 templates + 8 composables + 312 VS Code snippets +
+  styles pipeline. Verified 2026-05-23.
 audience: developer
 pageType: overview
-purpose: overview
+purpose: orient
 status: current
-lastVerified: 2026-03-12
+lastVerified: 2026-05-23
 keywords:
   - livepeer
   - ui system
-  - templates
   - components
-  - snippets
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
+  - templates
+  - composables
+  - design tokens
+  - vscode snippets
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+sourceDocs:
+  - docs-guide/frameworks/component-framework-canonical.mdx
+  - docs-guide/frameworks/component-governance.mdx
+  - docs-guide/frameworks/styles-engineering-guide.mdx
+  - docs-guide/config/component-registry.json
+  - snippets/guide.mdx
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-08-snippets.md
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ui-system-audit.md
 ---
 
 # UI System
 
-This page tracks the internal UI authoring system for contributors and agents. It covers the governed component inventory, canonical template sources, and the generated VS Code snippets used to assemble new documentation pages.
+A governed authoring surface on top of Mintlify. Contributors get a typed component library, copy-ready page templates, portable composables, a `--lp-*` design-token system with light/dark fidelity, and editor snippet expansion for every component and template. **The presentation layer is held together by four governance spines – components, styles, content/voice, page composition – each with its own framework, validator, and repair command.**
 
-## Components
+The net effect: fast authoring with consistent rendering, dark/light theme fidelity, WCAG-compliant focus behaviour, and zero hardcoded colour drift. The fleet-wide style remediation in early 2026 cut non-mermaid styling violations from **3,986 to 0**.
 
-- Governed JSX components live in `snippets/components/`.
-- The generated component inventory lives in `docs-guide/catalog/components-catalog.mdx`.
-- Component snippets are generated from `docs-guide/config/component-registry.json`.
+---
+
+## UI surfaces (live, 2026-05-23)
+
+| Surface | Where | Purpose | Canonical governance |
+| --- | --- | --- | --- |
+| Component library | `snippets/components/` | 132 registry exports across 35 active JSX files + 24 archived files (59 file count) | [`component-framework-canonical.mdx`](../frameworks/component-framework-canonical.mdx) |
+| Templates | `snippets/templates/` | 37 page + block + docs-guide templates across 14 sub-lanes | `snippets/guide.mdx` + [`docs-guide/catalog/ui-templates.mdx`](../catalog/ui-templates.mdx) |
+| Composables | `snippets/composables/` | 8 Tier-1 portable composables + 73 per-tab MDX fragments under `pages/` | `snippets/guide.mdx` + content/component governance |
+| VS Code snippets | `.vscode/*.code-snippets` (5 files) | 312 snippets: 23 frontmatter + 25 Mintlify built-ins + 113 + 125 custom + 26 templates | Generated from `component-registry.json` via `generate-ui-templates.js` |
+| Design tokens | `style.css` (664 lines) | Global Mintlify CSS, `--lp-*` namespace with light/dark pairs, theme overrides, utility layer | [`styles-engineering-guide.mdx`](../frameworks/styles-engineering-guide.mdx) |
+| Assets | `snippets/assets/` | 236 files (~101.5 MB): logos, media, diagrams, OG images | [`snippets-assets-policy.mdx`](../policies/snippets-assets-policy.mdx) |
+| Data | `snippets/data/` | 13 sub-folders + 4 root files (contracts, releases, exchanges, social feeds, showcase, etc.) | Per-family integrator scripts; see [Data Integrations](./data-integrations.mdx) |
+
+---
+
+## Component library
+
+### Count by category (live filesystem + registry, 2026-05-23)
+
+| Category | Live `.jsx` files | Registry exports | Folder |
+| --- | ---: | ---: | --- |
+| `elements/` | 10 | 27+ | Buttons, links, icons, callouts, dividers, spacing primitives |
+| `wrappers/` | 3 | 30+ | Cards, tables, containers, accordions, lists |
+| `displays/` | 10 | 17–20 | Code blocks, video, diagrams, response fields, quotes |
+| `scaffolding/` | 3 | 20 | Page-level layouts, heroes, frame-mode headings, portals |
+| `integrators/` | 8 | 18–20 | Blog feeds, CoinGecko, GitHub releases, social feeds |
+| `config/` | 1 | 1 | Shared UI config (MermaidColours) |
+| `x-archive/` | 24 | n/a | Archived components retained for review or compatibility |
+
+**Counts above must be regenerated from `docs-guide/config/component-registry.json` – they will drift unless wired to a generator.** See [Known gaps](#known-gaps) for the 4-surface count drift (the most-flagged UI bug across audits).
+
+### Component framework rules
+
+- **6-category folder taxonomy** with first-match-wins decision tree
+- **7-tag JSDoc header standard**: `@component` · `@type` · `@subniche` · `@status` · `@description` · `@accepts` · `@dataSource`/`@aiDiscoverability` (conditional)
+- **Pre-commit JSDoc validator** + auto-regenerated `component-registry.json`
+- **Defensive rendering rule:** a component crash kills the entire page render – null-guards are mandatory
+- **Lifecycle states** (in `@status`): `stable`, `experimental`, `deprecated`, `broken`, `placeholder`
+- **Public-facing component-library tab** at `v2/resources/documentation-guide/component-library/` with per-category landing pages – generated by `generate-component-docs.js`
+- **VS Code snippet expansion** for every registry export
+
+### Validators + generators
+
+| Script | Purpose |
+| --- | --- |
+| `operations/scripts/validators/components/library/component-layout-governance.js` | Validates page composition against per-pageType component contracts |
+| `operations/scripts/generators/components/library/generate-ui-templates.js` | Regenerates `components-catalog.mdx`, `templates-catalog.mdx`, `ui-templates.mdx`, the 5 `.code-snippets` files, and the public component-library/ tab |
+| `operations/scripts/generators/components/library/generate-component-docs.js` | Public component-library tab regeneration |
+
+---
 
 ## Templates
 
-The section below is generated from the canonical `snippets/templates/**` source tree.
+37 templates across 14 sub-lanes under `snippets/templates/`:
 
-[//]: # (AUTO-GENERATED:UI-TEMPLATES:START)
+| Family | Examples |
+| --- | --- |
+| Page templates | overview, how-to, tutorial, reference, FAQ, troubleshooting, portal, landing-frame, OpenAPI-endpoint, multi-view-setup |
+| Block templates | comparison matrix, comparison table, related-pages cards, related-pages CTA |
+| Docs-guide templates | feature map, framework page, policy page, tooling reference page, script catalog, component catalog |
+
+Each template is exposed via:
+
+- `snippets/templates/pages/<name>.mdx` (source)
+- `.vscode/templates.code-snippets` (snippet prefix; e.g. `lp-overview`, `lp-howto`, `lp-tutorial`)
+- [`docs-guide/catalog/ui-templates.mdx`](../catalog/ui-templates.mdx) (generated catalogue with `<Tree>` view)
+- [`docs-guide/catalog/templates-catalog.mdx`](../catalog/templates-catalog.mdx) (generated alternate index)
+
+[//]: # "AUTO-GENERATED:UI-TEMPLATES:START"
+
 <Note>
-**Generated section**: This section is synchronized by `operations/scripts/generators/components/library/generate-ui-templates.js`. Do not edit the generated block by hand. <br/>
+**Generated section.** This section is synchronised by `operations/scripts/generators/components/library/generate-ui-templates.js`. Do not edit the generated block by hand.
+
+Run `node operations/scripts/generators/components/library/generate-ui-templates.js --write` to refresh from `snippets/templates/**`.
 </Note>
 
-### Overview
+[//]: # "AUTO-GENERATED:UI-TEMPLATES:END"
 
-- Canonical page templates live in `snippets/templates/pages/**` and generate one direct preview route each.
-- Canonical block templates live in `snippets/templates/blocks/**` and render together on `/templates/blocks/block-examples`.
-- Generated authoring snippets live in `.vscode/templates.code-snippets` and `.vscode/components.code-snippets`.
+---
 
-### Source Tree
+## Composables
 
-<Tree>
-  <Tree.Folder name="snippets/templates" defaultOpen>
-    <Tree.Folder name="blocks">
-      <Tree.File name="comparison-matrix.mdx" />
-      <Tree.File name="comparison-table.mdx" />
-      <Tree.File name="related-pages-cards.mdx" />
-      <Tree.File name="related-pages-cta.mdx" />
-    </Tree.Folder>
-    <Tree.Folder name="pages">
-      <Tree.Folder name="landing-and-navigation">
-        <Tree.File name="navigation-page.mdx" />
-        <Tree.File name="portal-page.mdx" />
-      </Tree.Folder>
-      <Tree.Folder name="reference-and-api">
-        <Tree.File name="openapi-endpoint-page.mdx" />
-      </Tree.Folder>
-      <Tree.Folder name="setup-and-code-layouts">
-        <Tree.File name="multi-view-page.mdx" />
-      </Tree.Folder>
-      <Tree.File name="faq-page.mdx" />
-      <Tree.File name="how-to-page.mdx" />
-      <Tree.File name="landing-frame-page.mdx" />
-      <Tree.File name="overview-page.mdx" />
-      <Tree.File name="reference-page.mdx" />
-      <Tree.File name="troubleshooting-page.mdx" />
-      <Tree.File name="tutorial-page.mdx" />
-    </Tree.Folder>
-  </Tree.Folder>
-</Tree>
+| Tier | Where | What |
+| --- | --- | --- |
+| **Tier 1** (8 governed section blocks at root) | `snippets/composables/` | `related-resources-section`, `steps-section`, `prerequisites-section`, `accordion-faq`, `accordion-glossary`, `accordion-troubleshooting`, `overview-intro`, `validation-section` |
+| **Per-tab fragments** | `snippets/composables/pages/<tab>/*.mdx` | 73 files: about, gateways, gpu, home, internal, shared, unclassified, plus standalone (`ecosystem.mdx`, `media-kit.mdx`, `roadmap.mdx`, `showcase.mdx`, `trending-topics.mdx`) |
 
-### Page Templates
+**Composable lifecycle rule:** promote local MDX content to a composable only when a second consumer appears. Premature composable extraction creates governance debt.
 
-| Template | Source | Preview | Snippet Prefix | Description |
-| --- | --- | --- | --- | --- |
-| FAQ Page Template | `snippets/templates/pages/faq-page.mdx` | [view](/templates/pages/faq-page-template) | `template-faq-page` | Copy-ready FAQ page scaffold with canonical frontmatter and AccordionGroup structure. |
-| How-To Page Template | `snippets/templates/pages/how-to-page.mdx` | [view](/templates/pages/how-to-page-template) | `lp-howto` | Task-oriented page scaffold with prerequisites, steps, validation, and a next-step CTA. |
-| Navigation Page Template | `snippets/templates/pages/landing-and-navigation/navigation-page.mdx` | [view](/templates/pages/landing-and-navigation/navigation-page-template) | `template-navigation-page` | Copy-ready navigation page scaffold with route cards for readers who need a section map. |
-| Portal Page Template | `snippets/templates/pages/landing-and-navigation/portal-page.mdx` | [view](/templates/pages/landing-and-navigation/portal-page-template) | `template-portal-page` | Copy-ready portal landing page scaffold with frame-mode hero content and mission cards. |
-| Landing Frame Page Template | `snippets/templates/pages/landing-frame-page.mdx` | [view](/templates/pages/landing-frame-page-template) | `lp-landing-frame` | Frame-mode landing page scaffold with hero content, start-here cards, and key-path cards. |
-| Overview Page Template | `snippets/templates/pages/overview-page.mdx` | [view](/templates/pages/overview-page-template) | `lp-overview` | Reusable overview page scaffold with an overview section, key ideas, and related links. |
-| OpenAPI Endpoint Template | `snippets/templates/pages/reference-and-api/openapi-endpoint-page.mdx` | [view](/templates/pages/reference-and-api/openapi-endpoint-page-template) | `template-openapi-endpoint-page` | Copy-ready OpenAPI endpoint page scaffold with canonical reference frontmatter. |
-| Reference Page Template | `snippets/templates/pages/reference-page.mdx` | [view](/templates/pages/reference-page-template) | `lp-reference` | Lookup-oriented reference scaffold with inputs, outputs, and a concrete example. |
-| Multi-View Setup Template | `snippets/templates/pages/setup-and-code-layouts/multi-view-page.mdx` | [view](/templates/pages/setup-and-code-layouts/multi-view-page-template) | `template-multi-view-page` | Copy-ready scaffold for setup guides that switch between platform or environment views and include nested mode tabs, code blocks, reference cards, and validation steps. |
-| Troubleshooting Page Template | `snippets/templates/pages/troubleshooting-page.mdx` | [view](/templates/pages/troubleshooting-page-template) | `template-troubleshooting-page` | Copy-ready troubleshooting page scaffold with Symptom, Cause, Fix, and Verify sections. |
-| Tutorial Page Template | `snippets/templates/pages/tutorial-page.mdx` | [view](/templates/pages/tutorial-page-template) | `lp-tutorial` | End-to-end tutorial scaffold with goals, prerequisites, steps, and follow-up links. |
+### Composables governance violations (live, 2026-05-23)
 
-### Block Templates
+- **All 8 Tier-1 composables sit in `composables/pages/unclassified/`** – the composables tree itself violates classification rules
+- **`snippets/composables/showcase-data.json` is a data file in a components tree** – violates `snippets/guide.mdx` Rule #1
+- **`snippets/composables/pages/gateways/` is registered but empty**
+- **662 KB `contractAddressesData.jsx` is parked under `composables/`** – should live under `snippets/data/contract-addresses/`
 
-| Template | Source | Preview | Snippet Prefix | Description |
-| --- | --- | --- | --- | --- |
-| Comparison Matrix Template | `snippets/templates/blocks/comparison-matrix.mdx` | [block examples](/templates/blocks/block-examples) | `template-comparison-matrix` | Reusable comparison and decision matrix for product or architecture choice pages. |
-| Comparison Table Block | `snippets/templates/blocks/comparison-table.mdx` | [block examples](/templates/blocks/block-examples) | `template-comparison-table` | Reusable comparison table block for choosing between options, workflows, or deployment paths. |
-| Related Pages Cards Block | `snippets/templates/blocks/related-pages-cards.mdx` | [block examples](/templates/blocks/block-examples) | `template-related-pages` | Reusable related-pages card group for end-of-page CTA sections. |
-| Related Pages CTA Template | `snippets/templates/blocks/related-pages-cta.mdx` | [block examples](/templates/blocks/block-examples) | `template-related-pages-cta` | Reusable related-pages block template for routing readers to the next two pages. |
-[//]: # (AUTO-GENERATED:UI-TEMPLATES:END)
+---
 
-## Snippets
+## Design tokens + style governance
 
-- Generic MDX helpers remain in `.vscode/mdx.code-snippets`.
-- Page/block template snippets are generated into `.vscode/templates.code-snippets`.
-- Component tag snippets are generated into `.vscode/components.code-snippets`.
+| Surface | What it governs |
+| --- | --- |
+| `style.css` (664 lines) | Global Mintlify CSS; `--lp-*` namespace with light/dark pairs; legacy aliases (`--accent`, `--text`) mapped to canonical tokens; 3-layer hierarchy (Mintlify theme → style.css → component styles); WCAG focus-visible enforcement |
+| [`styles-engineering-guide.mdx`](../frameworks/styles-engineering-guide.mdx) | Canonical style rules; 10 sections; pixel-spacing + brand tokens; design-token contract |
+| `operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js` | UK English + style consistency audit; 6 categories + 14 auto-fix capabilities + `--verify` regression check |
+| `dispatch-brand.yml` | Weekly brand sweep (cron Mon 06:30 UTC); manual repair opens a PR via `peter-evans/create-pull-request@v7` |
+
+**Baseline metric:** style violations went from **3,986 → 0 non-mermaid** during the 2026-04 styles governance push. 68 mermaid dark-mode variants accepted (not yet automated).
+
+**Known token drift:** the public `style-guide.mdx` at `v2/resources/documentation-guide/copy-style/style-guide.mdx` still leads with deprecated `--accent` aliases – the engineering guide marks them deprecated but the public guide hasn't been updated. `--lp-color-text-muted` flagged as borderline WCAG AA (4.2:1 on white) – needs darker default or documented exemption.
+
+---
+
+## VS Code snippets (312)
+
+5 files generated from `component-registry.json` + the canonical taxonomy:
+
+| File | Count | Scope |
+| --- | ---: | --- |
+| `.vscode/mdx.code-snippets` | 23 | Frontmatter blocks (with `audience`/`pageType`/`status`/`purpose` dropdowns + auto-filled `lastVerified` date); page scaffolds; reusable MDX patterns |
+| `.vscode/mintlify.code-snippets` | 25 | Mintlify built-ins (`Card`, `Tabs`, `Steps`, `Accordion`, etc.) |
+| `.vscode/components.code-snippets` | 113 | Custom Livepeer components |
+| `.vscode/lp-components.code-snippets` | 125 | Legacy component aliases retained for backward compatibility |
+| `.vscode/templates.code-snippets` | 26 | Full page templates by pageType + pageVariant |
+
+JSX tag snippets accept both bare names (`Card`) and opening-tag prefixes (`<Card`), so they expand cleanly when typed after an angle bracket.
+
+**Regenerate after registry changes:**
+
+```bash
+node operations/scripts/generators/components/library/generate-ui-templates.js --write
+```
+
+---
+
+## Authoring workflow
+
+1. **Check existing components first.** Search `snippets/components/` and [`docs-guide/catalog/components-catalog.mdx`](../catalog/components-catalog.mdx) before creating UI. Most needs are covered.
+2. **Start from a template.** If a page-type template exists at `snippets/templates/pages/`, use the VS Code snippet (e.g. `lp-overview`, `lp-howto`) or copy the file.
+3. **New component? Check the framework.** Follow `component-framework-canonical.mdx` – category placement, 7-tag JSDoc, lifecycle state, defensive null-guards.
+4. **Keep data out of components.** Components import data; they don't embed it. Integrator components are the exception, marked by `@type integrator` + `@dataSource`.
+5. **Run staged validation before PR:** `lpd test --staged` + `node operations/scripts/validators/components/library/component-layout-governance.js --staged`.
+
+---
+
+## Authoring contracts (canonical sources)
+
+| Contract | Where it lives | Enforced by |
+| --- | --- | --- |
+| Component classification + JSDoc + lifecycle | [`component-framework-canonical.mdx`](../frameworks/component-framework-canonical.mdx) | Pre-commit JSDoc validator + auto-regenerated registry |
+| Component governance (duplicate authority – see [Known gaps](#known-gaps)) | [`component-governance.mdx`](../frameworks/component-governance.mdx) | (retiring per D-DG-08) |
+| Page taxonomy (pageType, audience, purpose enums) | [`docs-guide/frameworks/content-writing.mdx`](../frameworks/content-writing.mdx) | Per-page review pipeline Cat 1 |
+| Page composition (template + section structure) | [`docs-guide/frameworks/checks-framework.mdx`](../frameworks/checks-framework.mdx#phase-7--layout--component-check-cat-5) (consolidated 2026-05-23; prior `page-composition-framework.mdx` retired) | Per-page review pipeline Cat 5 |
+| Voice + copy + heading rules | [`docs-guide/standards/voice-and-copy.mdx`](../standards/voice-and-copy.mdx) | Cat 2, Cat 3 of per-page review |
+| Authoring standard | [`docs-guide/standards/authoring-standard.mdx`](../standards/authoring-standard.mdx) | Quality bar at publication gate |
+| Frontmatter spec | [`docs-guide/standards/frontmatter.mdx`](../standards/frontmatter.mdx) | Cat 1 |
+| Naming conventions | [`docs-guide/standards/naming-conventions.mdx`](../standards/naming-conventions.mdx) | Pre-commit naming check |
+| Snippets root governance | `snippets/guide.mdx` | Snippets taxonomy rules (data vs components vs composables vs assets) |
+| Mintlify platform constraints | `docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md` | Per-page review Cat 5 + render gate |
+
+---
+
+## Known gaps
+
+### 4-surface component count drift
+
+| Surface | Claim | What it counts |
+| --- | ---: | --- |
+| `docs-guide/features/ui-system.mdx` (this page, prior version) | 59 | JSX file count (35 active + 24 archive) |
+| `docs-guide/frameworks/component-framework-canonical.mdx` count table | 118 | Hand-authored count |
+| `v2/resources/documentation-guide/component-library/overview.mdx` | 117 | Public-facing export count |
+| `docs-guide/config/component-registry.json` | **132** | Generator-produced export count (the truth) |
+
+**Reality:** 132 named registry exports across 35 active JSX files + 24 archived = 59 files. Both numbers are correct for different scopes; no surface declares which scope it uses.
+
+**Fix:** replace every hand-authored count with a generator-emitted block sourced from `component-registry.json`. Add a CI assertion that fails when any `.mdx` contains a literal count diverging from the registry. Same fix applies to `ui-system.mdx`, `component-framework-canonical.mdx`, and the public component-library overview.
+
+### Wrapper-vs-display category/folder mismatch
+
+Six components are tagged `category: wrappers` in the registry but live under `snippets/components/displays/...`:
+
+- AccordionGroupList, BasicList, CardCarousel, DisplayCard, DynamicTable
+
+(plus one or two more flagged in SLICE-02.) Either move the files to `snippets/components/wrappers/` OR update `@type` in their JSDoc to `displays`. Then rerun pre-commit registry generation.
+
+### Registry generator bug
+
+Per SLICE-08: `snippets/snippets-registry.mdx` lines 868-878 mis-label all `displays/*` subfolders as "wrappers subtree". The wrapper-vs-display drift above traces back to this generator bug.
+
+### Template duplicates
+
+4 byte-identical template pairs:
+
+- `source-of-truth` × 2
+- `glossary-consolidated` × 2
+- `glossary-tab` × 2
+- `openapi-endpoint-page` × 2
+
+Plus singular/plural example MDX drift. The catalog generator does not deduplicate.
+
+### Composables in `unclassified/`
+
+All 8 Tier-1 composables sit in `composables/pages/unclassified/` – flagrant governance violation in the composables tree itself. Move to a classified subdir per `snippets/guide.mdx` Rule #2.
+
+### Data files in composables tree
+
+662 KB `contractAddressesData.jsx` parked under `composables/`. Plus 3 other data files. Violates `snippets/guide.mdx` Rule #1 (data files belong under `snippets/data/`).
+
+### `page-taxonomy-framework.mdx` and `page-composition-framework.mdx` are scratch notes
+
+Both sit under `docs-guide/frameworks/` but are not real frameworks:
+
+- `page-composition-framework.mdx` is a literal MDX template scaffold with placeholder description "Describe page-structure-template"
+- `page-taxonomy-framework.mdx` has no frontmatter and contains typo'd field labels (`Decription:`)
+
+Per the canonical content-writing.mdx + this page, both should be rewritten as real frameworks (sourcing from `v2/orchestrators/_workspace/canonical/Frameworks.mdx`) or moved to `_workspace/`.
+
+### `component-governance.mdx` is a duplicate authority
+
+Per locked D-DG-08, `docs-guide/frameworks/component-governance.mdx` is retired in favour of `component-framework-canonical.mdx`. The file still exists at the active path. Cleanup: propagate refs, add redirects, queue governed deletion.
+
+### Public style-guide leads with deprecated aliases
+
+`v2/resources/documentation-guide/copy-style/style-guide.mdx` references `--accent` aliases as primary tokens. The engineering guide marks them deprecated. Refresh the public surface or document the alias rule explicitly.
+
+### `--lp-color-text-muted` borderline WCAG AA
+
+Contrast ratio 4.2:1 on white – below the 4.5:1 AA threshold for body text. Either darken the default or document a per-use exemption.
+
+### Cleanup queue (13 files)
+
+- 11 `.DS_Store` files across `snippets/` subdirectories
+- 1 `.legacy-duplicate.json` file
+- 1 zero-byte template file
+
+All flagged in SLICE-08 inventory; purge via the governed deletion path.
+
+### Catalog freshness drift
+
+`docs-guide/catalog/templates-catalog.mdx` + `ui-templates.mdx` last regenerated 2026-04-03 – 50 days stale. `components-catalog.mdx` embeds raw `componentTableData` export with the comment `{/* should not be here. */}` – author noted the data block doesn't belong inline. No CI workflow forces regeneration on snippets/templates/ or snippets/components/ change.
+
+### 24 archived components have no removal schedule
+
+`snippets/components/x-archive/` holds 24 archived JSX files. No documented schedule for delete vs keep-as-compatibility-alias. Triage each: DELETE or KEEP-AS-ALIAS (with `@status deprecated` + removal date).
+
+### `.vscode/livepeer-legacy.code-snippets.bak` still tracked
+
+35 KB backup file. Replaced by `lp-components.code-snippets` + `templates.code-snippets`. Purge candidate.
+
+### `components.code-snippets` (113) + `lp-components.code-snippets` (125) overlap
+
+Both generated from `component-registry.json`. Maintaining two snippet files with overlapping prefixes is governance debt. Either declare a scope-split (e.g. `lp-*` = legacy aliases) or merge to one.
+
+---
+
+## Related
+
+- **[Component Framework Canonical](../frameworks/component-framework-canonical.mdx)** – 6-category taxonomy + 7-tag JSDoc + decision tree + lifecycle states
+- **[Styles Engineering Guide](../frameworks/styles-engineering-guide.mdx)** – `--lp-*` design tokens + theme contract + 3,986→0 metric history
+- **[Component Governance Policy](../policies/component-layout-decisions.mdx)** – locked component decisions
+- **[Snippets / Assets Policy](../policies/snippets-assets-policy.mdx)** – what goes under `snippets/` and what doesn't
+- **[Content Writing Pipeline](../frameworks/content-writing.mdx)** – page taxonomy (the source for pageType + audience + purpose enums)
+- **[Checks Framework](../frameworks/checks-framework.mdx)** – Cat 5 (Layout + Components) + per-pageType specific checks
+- **[Components Catalog](../catalog/components-catalog.mdx)** – generated component listing
+- **[UI Templates](../catalog/ui-templates.mdx)** – generated template inventory with `<Tree>` view
+- **`snippets/guide.mdx`** – snippets root governance (data vs components vs composables vs assets)
+- **`docs-guide/config/component-registry.json`** – the source of truth for component counts
+- **`workspace/thread-outputs/repo-consolidation-deep/SLICE-08-snippets.md`** – full snippets-tree inventory (410 lines)

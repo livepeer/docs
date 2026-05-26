@@ -3,14 +3,14 @@
  * @script      run-solutions-social-fetch
  * @type        dispatch
  * @concern     integrations
- * @niche       data
- * @purpose     infrastructure:data-feeds
- * @description Local dispatcher for all social-feed integrators. Loads .env, runs selected fetchers with --dry-run support. Mirrors dispatch-copy-update-social-feeds.yml for local testing and upgrades.
+ * @niche       social-feeds
+ * @purpose     Local-only dispatcher for the 7 social-feed integrators — loads .env, lets contributors fetch live forum/discord/blog/youtube/github data on their workstation with --dry-run, --mode filtering, and --skip support before pushing changes that depend on freshly-generated snippets/data/social-feeds outputs
+ * @description Mirrors what dispatch-social-feeds.yml does in CI but with .env support, selective --mode (e.g. only forum+youtube), and --skip flag for offline-only fetchers. Iterates the configured fetchers under operations/scripts/integrators/copy/social-feeds/, runs each, captures success/failure summary. Local-use only — not in any GitHub Actions workflow.
  * @mode        dispatch
- * @pipeline    manual → .env + product-social-config.json → operations/scripts/integrators/copy/social-feeds/fetch-*.js → snippets/data/social-feeds/*.jsx + snippets/data/social-feed-solutions/{product}/*.jsx
- * @scope       operations/scripts/integrators/copy/social-feeds/, snippets/data/social-feeds/, snippets/data/social-feed-solutions/
+ * @pipeline    manual (local dev) — distinct from dispatch-social-feeds.yml which runs in CI
+ * @scope       operations/scripts/integrators/copy/social-feeds/ → snippets/data/social-feeds/, snippets/data/social-feed-solutions/
  * @usage       node operations/scripts/dispatch/content/data/run-solutions-social-fetch.js [--mode forum,youtube] [--dry-run] [--env path/to/.env] [--skip discord]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); local-only contributor tool
  */
 
 const { execSync } = require("child_process");

@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the postToolUse hook on Bash. Detects mv/git mv commands targeting v2/ paths,
  * @description PostToolUse hook on Bash. Detects mv/git mv commands targeting v2/ paths,
  * @mode        dispatch
  * @pipeline    PostToolUse hook (Bash) -> parse command -> store moves -> dry-run -> systemMessage

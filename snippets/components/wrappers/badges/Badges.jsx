@@ -67,6 +67,7 @@ export const BadgeWrapper = ({
  * @param {string} [iconColor] - Colour applied to all icons. Defaults to currentColor if omitted.
  * @param {number} [size=12] - Icon size in px.
  * @param {string} [gap="var(--lp-spacing-3)"] - Gap between items.
+ * @param {string} [margin="0.25rem 0 0.5rem"] - Margin around the icon badge row.
  * @param {object} [style={}] - Inline style overrides for the wrapper.
  * @param {string} [className=""] - CSS class name.
  *
@@ -80,6 +81,7 @@ export const IconBadgeWrapper = ({
   iconColor,
   size = 14,
   gap = "var(--lp-spacing-3)",
+  margin = '0.25rem 0 0.5rem',
   style = {},
   className = '',
   ...rest
@@ -89,7 +91,7 @@ export const IconBadgeWrapper = ({
     flexWrap: 'wrap',
     alignItems: 'center',
     gap,
-    margin: '0.25rem 0 0.5rem',
+    margin,
   }
 
   const tagStyle = {

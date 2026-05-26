@@ -3,13 +3,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches latest topics from Livepeer Forum API with category metadata, writes multiple sorted exports to snippets/data/social-feeds/forumData.jsx
+ * @purpose     Fetch the latest Livepeer Forum topics via Discourse API and emit sorted exports (newest, most-replied, most-viewed) used by Community pages to render the live forum feed
+ * @description Polls the public Livepeer Forum Discourse API, extracts topic title, slug, category, reply count, view count, and last-activity timestamp. Writes multiple sorted JSX exports to snippets/data/social-feeds/forumData.jsx. Consumed by the social-feeds composable on Community pages. Supports --dry-run.
  * @mode        integrate
- * @pipeline    manual
- * @scope       operations/scripts/integrators/copy/social-feeds
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       Livepeer Forum API (read-only) → snippets/data/social-feeds/forumData.jsx
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness)
  */
 const https = require("https");
 const fs = require("fs");

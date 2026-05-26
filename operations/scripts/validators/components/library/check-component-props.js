@@ -3,13 +3,14 @@
  * @script      check-component-props
  * @type        validator
  * @concern     maintenance
- * @niche       library
- * @purpose     qa:repo-health
- * @description Component prop governance validator. Checks Tab/Accordion icon props, code block metadata, Card CustomCardTitle usage, inline styles, CustomDivider placement, Mermaid colour governance, and import ordering across v2 MDX pages (checks 5.18-5.20, 5.22, 5.26-5.28, 5.34).
+ * @niche       component-registry
+ * @purpose     Validate v2 MDX usage of Mintlify components — Tab/Accordion icon props, code block metadata, Card CustomCardTitle pattern, inline-style anti-patterns, CustomDivider placement, Mermaid colour governance, import-order convention — so component usage stays consistent across all docs
+ * @description Enforces the prop-governance checks documented as 5.18-5.20, 5.22, 5.26-5.28, 5.34 in the canonical-data deps files. Reads v2/ MDX, applies the prop-pattern rules, emits violations with file:line evidence. JSON or Markdown report. Wired into dispatch-component-registry.js PR detect list.
  * @mode        check
- * @pipeline    manual
- * @scope       v2/ (all MDX files)
+ * @pipeline    P3 (PR via dispatch-component-registry.js)
+ * @scope       v2/ MDX (all routable pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/validators/components/library/check-component-props.js [--scope=full|changed] [--json] [--md] [--help]
+ * @policy      D-GOV-03 (component-registry pipeline detector)
  */
 
 'use strict';

@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates components-catalog.mdx in docs-guide/catalog/ from component-registry.json and component-usage-map.json.
  * @description Generates components-catalog.mdx in docs-guide/catalog/ from component-registry.json and component-usage-map.json.
  * @mode        generate
  * @pipeline    commit — auto-regenerated when components staged)

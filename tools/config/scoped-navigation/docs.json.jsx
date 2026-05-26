@@ -43,7 +43,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -111,7 +111,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -368,7 +368,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -448,7 +448,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -686,7 +686,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -816,7 +816,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -883,7 +883,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -948,7 +948,7 @@ const docsJsonFr = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -969,7 +969,7 @@ const docsJsonFr = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/portal'],
             },
             {
               group: 'Documentation Guide',
@@ -1065,7 +1065,7 @@ const docsJsonFr = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1180,7 +1180,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1248,7 +1248,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1515,7 +1515,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1595,7 +1595,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1840,7 +1840,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -1970,7 +1970,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2037,7 +2037,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2102,7 +2102,7 @@ const docsJsonCn = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2123,7 +2123,7 @@ const docsJsonCn = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/portal'],
             },
             {
               group: 'Documentation Guide',
@@ -2219,7 +2219,7 @@ const docsJsonCn = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2340,7 +2340,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2408,7 +2408,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2487,7 +2487,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2724,7 +2724,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2854,7 +2854,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2921,7 +2921,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -2986,7 +2986,7 @@ const docsJsonEs = {
         {
           anchor: 'Resource HUB',
           icon: 'books',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',
@@ -3007,7 +3007,7 @@ const docsJsonEs = {
             {
               group: 'Home',
               icon: 'house',
-              pages: ['v2/resources/redirect'],
+              pages: ['v2/resources/portal'],
             },
             {
               group: 'Documentation Guide',
@@ -3103,7 +3103,7 @@ const docsJsonEs = {
         {
           anchor: 'Help Center',
           icon: 'comments-question-check',
-          pages: ['v2/resources/redirect'],
+          pages: ['v2/resources/portal'],
         },
         {
           anchor: ' ',

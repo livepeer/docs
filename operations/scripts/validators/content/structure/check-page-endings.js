@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Validates that English v2 MDX pages end with an approved navigational or closing element
  * @description Validates that English v2 MDX pages end with an approved navigational or closing element
  * @mode        check
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → TODO comment appended, ci

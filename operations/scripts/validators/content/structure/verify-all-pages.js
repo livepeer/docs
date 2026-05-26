@@ -3,7 +3,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
  * @description Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
  * @mode        check
  * @pipeline    manual — not yet in pipeline

@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Scans v2 and docs-guide MDX pages for icon prop
  * @description Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop
  * @mode        scan
  * @pipeline    manual | post-PR | cron

@@ -2,13 +2,14 @@
 # @script      fetch-lpt-exchanges
 # @type        integrator
 # @concern     integrations
-# @niche       data
-# @purpose     
-# @description LPT exchange data fetcher — pulls exchange listing data for LPT token pages
+# @niche       exchanges-data
+# @purpose     Fetch the CoinGecko exchange listings for LPT (where to buy/trade Livepeer token) and append/update snippets/data/exchanges/lpt-exchanges.mdx — manual-use script run when listings change or contributors want to refresh the LPT exchange data
+# @description Hits CoinGecko's public exchanges-by-token endpoint for the LPT coin ID, transforms the response (exchange name, pair, volume, trust score) into an MDX table, appends or updates the table in snippets/data/exchanges/lpt-exchanges.mdx. Manual-use only — documented in docs-guide/tooling/lpd-cli.mdx as a contributor workflow.
 # @mode        integrate
-# @pipeline    manual — not yet in pipeline
-# @scope       operations/scripts/integrators/content/data/fetching
+# @pipeline    manual — invoked when LPT listing data needs refresh
+# @scope       CoinGecko exchanges API → snippets/data/exchanges/lpt-exchanges.mdx
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh [flags]
+# @policy      F-R1 (data freshness); public API only; no secrets in output
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
 # Usage: ./operations/scripts/snippets/fetch-lpt-exchanges.sh
 

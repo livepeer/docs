@@ -43,7 +43,7 @@ This tutorial sets up a working `live-video-to-video` pipeline using the Cascade
 - The `live-video-to-video` pipeline registers at `tools.livepeer.cloud/ai/network-capabilities`
 - A test stream sends successfully and the transformed output is visible
 
-<CustomDivider middleText="Realtime vs Batch" />
+<CustomDivider />
 
 ## How realtime AI differs from batch
 
@@ -86,7 +86,7 @@ This tutorial sets up a working `live-video-to-video` pipeline using the Cascade
 
 At 30 fps, the frame budget is 33 ms. The pipeline must receive, process, and emit each frame within that window. StreamDiffusion's architecture is purpose-built for this: stream batching, residual CFG, and stochastic similarity filtering combine to achieve 30+ fps on an RTX 4090.
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -133,7 +133,7 @@ At 30 fps, the frame budget is 33 ms. The pipeline must receive, process, and em
   GPUs below 24 GB VRAM (RTX 3080 10 GB, RTX 3060 12 GB) are typically insufficient for live-video inference at acceptable frame rates. StreamDiffusion's stream batch buffers, model weights, and ControlNet adapters combined exhaust available VRAM on these cards.
 </Warning>
 
-<CustomDivider middleText="Step 1: Verify GPU" />
+<CustomDivider />
 
 ## Step 1: Verify GPU and Docker access
 
@@ -151,7 +151,7 @@ docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
 
 The GPU table should appear inside the container output. Re-install the NVIDIA Container Toolkit until this command succeeds.
 
-<CustomDivider middleText="Step 2: Pull Live Runner" />
+<CustomDivider />
 
 ## Step 2: Pull the live-base AI runner image
 
@@ -178,7 +178,7 @@ docker run --gpus all --rm livepeer/ai-runner:live-base \
 
 Expected: `CUDA available: True, GPU: NVIDIA GeForce RTX 4090`
 
-<CustomDivider middleText="Step 3: Download Pipeline Models" />
+<CustomDivider />
 
 ## Step 3: Download ComfyStream model weights
 
@@ -206,7 +206,7 @@ Verify the download:
 ls -lh ~/.lpData/models/ | head -20
 ```
 
-<CustomDivider middleText="Step 4: Configure aiModels.json" />
+<CustomDivider />
 
 ## Step 4: Configure aiModels.json for live pipeline
 
@@ -229,7 +229,7 @@ EOF
 
 `price_per_unit` for the live pipeline is charged per frame, unlike batch pipelines that charge per pixel or per millisecond. Set a value at or below the current gateway caps in `-maxPricePerCapability` for `live-video-to-video`. Check current rates at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
 
-<CustomDivider middleText="Step 5: Start the Orchestrator" />
+<CustomDivider />
 
 ## Step 5: Start go-livepeer with live AI flags
 
@@ -278,7 +278,7 @@ docker ps | grep livepeer
 
 Two containers should be running: `livepeer-orchestrator` and the AI runner container for the live pipeline.
 
-<CustomDivider middleText="Step 6: Configure the Gateway" />
+<CustomDivider />
 
 ## Step 6: Set up the gateway for live routing
 
@@ -316,7 +316,7 @@ RTMP server listening on :1935
   For a production gateway routing live AI jobs on-chain, configure `-maxPricePerCapability` with a cap for `live-video-to-video`. The gateway routes only to orchestrators priced at or below this cap, regardless of hardware capability.
 </Note>
 
-<CustomDivider middleText="Step 7: Send a Live Stream" />
+<CustomDivider />
 
 ## Step 7: Send a test stream
 
@@ -354,7 +354,7 @@ Processing frame 1
 ...
 ```
 
-<CustomDivider middleText="Step 8: Verify Output" />
+<CustomDivider />
 
 ## Step 8: Verify the transformed output
 
@@ -387,7 +387,7 @@ Monitor frame processing times in the orchestrator logs. At 30 fps, each frame s
 docker logs livepeer-orchestrator 2>&1 | grep -i "frame.*ms\|latency\|processing time" | tail -20
 ```
 
-<CustomDivider middleText="Troubleshooting" />
+<CustomDivider />
 
 ## Troubleshooting
 
@@ -410,7 +410,7 @@ docker run --gpus all --rm livepeer/ai-runner:live-base \
 
 This command should return `True`. Any other result means CUDA is unavailable inside the container, so re-install the NVIDIA Container Toolkit.
 
-<CustomDivider middleText="What Just Happened" />
+<CustomDivider />
 
 ## What happened
 

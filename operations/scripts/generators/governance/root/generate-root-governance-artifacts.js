@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       root
- * @purpose     
+ * @purpose     Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
  * @description Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
  * @mode        generate
  * @pipeline    manual, P3

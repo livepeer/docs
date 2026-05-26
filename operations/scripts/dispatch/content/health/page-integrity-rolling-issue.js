@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.
  * @description Provide a stable rolling-issue contract for page-integrity dispatch runs so unresolved link and import failures stay visible in GitHub automation.
  * @mode        dispatch
  * @pipeline    manual -- library module

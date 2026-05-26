@@ -16,7 +16,7 @@
 const STATUS_VARIANTS = {
   'coming-soon': {
     icon: 'cauldron',
-    color: 'var(--lp-color-callout-coming-soon)',
+    color: '#ef1a73',
     title: (type) =>
       type === 'page'
         ? 'This page is still cooking... Expect big things soon!'
@@ -24,7 +24,7 @@ const STATUS_VARIANTS = {
   },
   preview: {
     icon: 'tools',
-    color: 'var(--lp-color-callout-review)',
+    color: '#b636dd',
     title: () => 'Page is under construction.',
   },
 };
@@ -158,12 +158,22 @@ export const IconCallout = ({
 }) => {
   const resolvedColor = color || 'var(--lp-color-accent)';
   const resolvedTextColor = textColor || resolvedColor;
+  const resolvedIconColor = /^#[0-9a-f]{6}$/i.test(resolvedColor)
+    ? resolvedColor
+    : '#3cb540';
 
   const hexToRgba = (hex, alpha) => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  const colorWithAlpha = (value, alpha) => {
+    if (/^#[0-9a-f]{6}$/i.test(value)) {
+      return hexToRgba(value, alpha);
+    }
+
+    return `color-mix(in srgb, ${value} ${Math.round(alpha * 100)}%, transparent)`;
   };
 
   return (
@@ -177,8 +187,8 @@ export const IconCallout = ({
         padding: '16px 20px',
         ...(showArrow && { paddingRight: '48px' }),
         borderRadius: '16px',
-        border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
-        backgroundColor: hexToRgba(resolvedColor, 0.1),
+        border: `1px solid ${colorWithAlpha(resolvedColor, 0.2)}`,
+        backgroundColor: colorWithAlpha(resolvedColor, 0.1),
         marginTop: '16px',
         marginBottom: '16px',
         overflow: 'hidden',
@@ -187,7 +197,7 @@ export const IconCallout = ({
       {...rest}
     >
       <div style={{ marginTop: '2px', width: iconSize, flexShrink: 0 }}>
-        <Icon icon={icon} size={iconSize} color={resolvedColor} />
+        <Icon icon={icon} size={iconSize} color={resolvedIconColor} />
       </div>
       <div
         style={{
@@ -208,7 +218,7 @@ export const IconCallout = ({
             opacity: 0.6,
           }}
         >
-          <Icon icon={arrowIcon} size={arrowSize} color={resolvedColor} />
+          <Icon icon={arrowIcon} size={arrowSize} color={resolvedIconColor} />
         </div>
       )}
     </div>
@@ -235,7 +245,7 @@ export const IconCallout = ({
  */
 export const ReviewCallout = ({ className = '', style = {}, ...rest }) => {
   return (
-    <Callout icon="help" color="var(--lp-color-callout-review)" className={className} style={style} {...rest}>
+    <Callout icon="help" color="#b636dd" className={className} style={style} {...rest}>
       <div style={{ fontSize: '1.0rem' }}>
         Technical Review Needed! <br />
         Get in touch if you can help

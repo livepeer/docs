@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       map
- * @purpose     
+ * @purpose     Walks all GOVERNANCE.md markers, validates links, detects staleness, and generates the governance map
  * @description Walks all GOVERNANCE.md markers, validates links, detects staleness, and generates the governance map
  * @mode        generate
  * @pipeline    manual, P4 -> GOVERNANCE.md markers, docs-guide/frameworks/*.mdx -> GOVERNANCE_MAP_LATEST.json

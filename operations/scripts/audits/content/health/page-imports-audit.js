@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @description Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @mode        scan
  * @pipeline    manual
@@ -349,14 +349,48 @@ function ensureExternalDocs(findings, warnings) {
   }
 }
 
+function maskFencedCode(content) {
+  const lines = String(content || '').split(/(\n)/);
+  let inFence = false;
+  let fenceToken = '';
+  let fenceLength = 0;
+
+  return lines
+    .map((segment) => {
+      if (segment === '\n') return segment;
+
+      const fenceMatch = segment.match(/^\s*(`{3,}|~{3,})/);
+      if (fenceMatch) {
+        const token = fenceMatch[1][0];
+        const length = fenceMatch[1].length;
+        if (!inFence) {
+          inFence = true;
+          fenceToken = token;
+          fenceLength = length;
+          return ' '.repeat(segment.length);
+        }
+        if (token === fenceToken && length >= fenceLength) {
+          inFence = false;
+          fenceToken = '';
+          fenceLength = 0;
+          return ' '.repeat(segment.length);
+        }
+      }
+
+      return inFence ? ' '.repeat(segment.length) : segment;
+    })
+    .join('');
+}
+
 function extractImports(content) {
   const imports = [];
+  const scanContent = maskFencedCode(content);
 
   function collect(regex, kind, mapper) {
     let match;
     regex.lastIndex = 0;
-    while ((match = regex.exec(content)) !== null) {
-      const position = positionForIndex(content, match.index);
+    while ((match = regex.exec(scanContent)) !== null) {
+      const position = positionForIndex(scanContent, match.index);
       imports.push({
         kind,
         line: position.line,

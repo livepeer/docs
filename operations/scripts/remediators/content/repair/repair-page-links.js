@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.
  * @description Repair deterministic page-link path issues from canonical operations scripts while leaving ambiguous targets unchanged for review.
  * @mode        repair
  * @pipeline    manual

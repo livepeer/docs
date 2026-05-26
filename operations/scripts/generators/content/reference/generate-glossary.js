@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Generate produces glossary data file from terminology sources
  * @description Glossary generator — produces glossary data file from terminology sources
  * @mode        generate
  * @pipeline    manual — not yet in pipeline

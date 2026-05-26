@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
  * @description PostToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track per-file edits → warn at 3 → flag block at 5

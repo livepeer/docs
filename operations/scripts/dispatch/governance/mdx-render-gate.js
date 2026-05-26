@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the preToolUse hook for Write/Edit. Reads the verification state written by
  * @description PreToolUse hook for Write/Edit. Reads the verification state written by
  * @mode        dispatch
  * @pipeline    PreToolUse hook → read state → allow or block
@@ -139,9 +139,9 @@ const ERROR_TO_REMEDIATOR = [
   },
   {
     pattern: /accessibility|wcag|aria|alt.*text|contrast/i,
-    script: 'operations/scripts/remediators/content/style/wcag-repair-common.js',
+    script: 'operations/scripts/remediators/content/health/repair-wcag.js',
     label: 'WCAG accessibility repair',
-    usage: 'node operations/scripts/remediators/content/style/wcag-repair-common.js --files <file> (add --verify for post-repair validation)'
+    usage: 'node operations/scripts/remediators/content/health/repair-wcag.js --files <file> --write --verify'
   },
   {
     pattern: /seo|og:image|meta.*description|open.*graph/i,

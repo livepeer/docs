@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Uses git bisect with an automated Puppeteer test to binary-search
  * @description Uses git bisect with an automated Puppeteer test to binary-search
  * @mode        check
  * @pipeline    manual diagnostic tool

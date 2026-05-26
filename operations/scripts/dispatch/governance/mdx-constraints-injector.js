@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the userPromptSubmit hook. Keyword-matches the user message for MDX/component/page
  * @description UserPromptSubmit hook. Keyword-matches the user message for MDX/component/page
  * @mode        dispatch
  * @pipeline    UserPromptSubmit hook → reads stdin user message → keyword match → inject constraints

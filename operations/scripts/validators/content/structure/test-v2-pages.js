@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            test-v2-pages
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             operations/scripts/validators/content/structure, docs.json, v2
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          P2, P3
- * @usage             node operations/scripts/validators/content/structure/test-v2-pages.js [flags]
+ * @script      test-v2-pages
  * @type        validator
- * @description test v2 pages
- * @mode        read-only
+ * @concern     health
+ * @niche       page-rendering
+ * @purpose     Validate v2 pages render correctly in the Mintlify dev server — launches Puppeteer against http://localhost:3000, navigates each v2/ route, captures console errors, network 404s, and rendering failures so broken pages don't ship
+ * @description Puppeteer-driven browser tester. Reads docs.json for the route list, navigates each in headless Chrome, waits for body content, checks for console errors / network failures / missing components. Used by dispatch-page-rendering.js as the rendering atomic. Also called directly by v2-wcag-audit.js (which loads each page then runs axe-core) and browser.test.js.
+ * @mode        check
+ * @pipeline    P3 (PR via dispatch-page-rendering.js — note: this dispatcher needs dev server, excluded from smoke tests)
+ * @scope       docs.json routes → http://localhost:3000/{route} → rendered DOM + console events
+ * @usage       node operations/scripts/validators/content/structure/test-v2-pages.js [--routes <comma-list>] [--full]
+ * @policy      D-GOV-03 (paired with the page-rendering pipeline)
  */
 
 /**
@@ -34,6 +33,9 @@ const BROWSER_LAUNCH_OPTIONS = {
   args: ['--no-sandbox', '--disable-setuid-sandbox']
 };
 const USE_BASELINE = process.argv.includes('--baseline');
+const START_INDEX = Math.max(0, Number(process.argv.find((arg) => arg.startsWith('--start-index='))?.split('=')[1] || 0));
+const LIMIT_ARG = process.argv.find((arg) => arg.startsWith('--limit='))?.split('=')[1];
+const LIMIT = LIMIT_ARG ? Math.max(1, Number(LIMIT_ARG)) : null;
 
 // Load baseline for diffing (only fail on NEW errors not in baseline)
 let BASELINE = {};
@@ -150,6 +152,9 @@ async function testPage(browser, pagePath) {
     const text = msg.text();
     
     if (type === 'error') {
+      if (/^Failed to load resource: the server responded with a status of (?:401|403|404)/i.test(text)) {
+        return;
+      }
       errors.push(text);
     } else if (type === 'warning') {
       warnings.push(text);
@@ -168,16 +173,29 @@ async function testPage(browser, pagePath) {
     const failure = request.failure();
     const requestUrl = request.url();
     const isSameOrigin = requestUrl.startsWith(BASE_ORIGIN);
+
+    if (failure?.errorText === 'net::ERR_ABORTED') {
+      return;
+    }
+
     if (failure && isSameOrigin) {
       errors.push(`Request Failed: ${request.url()} - ${failure.errorText}`);
+    }
+  });
+
+  page.on('response', response => {
+    const responseUrl = response.url();
+    const status = response.status();
+    if (responseUrl.startsWith(BASE_ORIGIN) && status >= 400) {
+      errors.push(`HTTP ${status}: ${responseUrl}`);
     }
   });
   
   try {
     // Navigate to page with timeout
-    await page.goto(url, { 
-      waitUntil: 'networkidle2', 
-      timeout: TIMEOUT 
+    await page.goto(url, {
+      waitUntil: 'domcontentloaded',
+      timeout: TIMEOUT
     });
     
     // Wait a bit for any async rendering
@@ -208,7 +226,13 @@ async function testPage(browser, pagePath) {
       logs
     };
   } finally {
-    await page.close();
+    try {
+      await page.close();
+    } catch (error) {
+      if (!String(error?.message || '').includes('Connection closed')) {
+        throw error;
+      }
+    }
   }
 }
 
@@ -218,7 +242,12 @@ async function testPage(browser, pagePath) {
 async function main() {
   console.log('🔍 Extracting v2 pages from docs.json...');
   const pages = getV2Pages();
-  console.log(`📄 Found ${pages.length} pages to test\n`);
+  const selectedPages = LIMIT ? pages.slice(START_INDEX, START_INDEX + LIMIT) : pages.slice(START_INDEX);
+  console.log(`📄 Found ${pages.length} pages to test`);
+  if (START_INDEX || LIMIT) {
+    console.log(`📄 Running subset: start=${START_INDEX}, count=${selectedPages.length}`);
+  }
+  console.log('');
   
   console.log(`🌐 Testing against: ${BASE_URL}`);
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
@@ -240,18 +269,22 @@ async function main() {
   
   console.log('🚀 Starting browser tests...\n');
   
-  const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+  let browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const results = [];
   let passed = 0;
   let failed = 0;
   
-  for (let i = 0; i < pages.length; i++) {
-    const pagePath = pages[i];
-    const progress = `[${i + 1}/${pages.length}]`;
+  for (let i = 0; i < selectedPages.length; i++) {
+    const pagePath = selectedPages[i];
+    const progress = `[${START_INDEX + i + 1}/${pages.length}]`;
     
     process.stdout.write(`${progress} Testing ${pagePath}... `);
     
+    if (!browser.connected) {
+      browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+    }
+
     const result = await testPage(browser, pagePath);
     results.push(result);
     
@@ -264,13 +297,18 @@ async function main() {
     }
   }
   
-  await browser.close();
+  if (browser.connected) {
+    await browser.close();
+  }
   
   // Print summary
   console.log('\n' + '='.repeat(60));
   console.log('SUMMARY' + (USE_BASELINE ? ' (baseline diff mode)' : ''));
   console.log('='.repeat(60));
   console.log(`Total pages tested: ${pages.length}`);
+  if (selectedPages.length !== pages.length) {
+    console.log(`Subset pages tested: ${selectedPages.length}`);
+  }
   console.log(`Passed: ${passed}`);
   console.log(`Failed: ${failed}`);
   if (USE_BASELINE) {

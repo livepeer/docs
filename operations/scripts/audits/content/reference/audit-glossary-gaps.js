@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Scans v2 MDX pages for terminology candidates not
  * @description Glossary gap auditor — scans v2 MDX pages for terminology candidates not
  * @mode        scan
  * @pipeline    manual | post-PR | cron

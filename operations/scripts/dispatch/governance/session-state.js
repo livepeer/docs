@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Reads ALL active plans and live project state. Run at session start.
  * @description Reads ALL active plans and live project state. Run at session start.
  * @mode        dispatch
  * @pipeline    manual

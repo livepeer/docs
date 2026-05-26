@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.
  * @description Repair only proven-safe page import failures from canonical operations scripts while leaving ambiguous import issues unchanged for review.
  * @mode        repair
  * @pipeline    manual

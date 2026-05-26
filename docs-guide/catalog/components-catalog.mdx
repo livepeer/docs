@@ -1,12 +1,12 @@
 ---
-title: "Components Catalog"
-sidebarTitle: "Components Catalog"
-description: "Generated catalog of all governed component exports."
+title: 'Components Catalog'
+sidebarTitle: 'Components Catalog'
+description: 'Generated catalog of all governed component exports.'
 pageType: overview
 consumer: [human, agent]
 maintenance: generated
 status: active
-generator: "operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js"
+generator: 'operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js'
 keywords: ['livepeer', 'components catalog', 'registry', 'usage map', 'inventory']
 ---
 
@@ -18,298 +18,65 @@ Run when: Component governance metadata, registry output, or usage-map output ch
 Run command: node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix
 */}
 
-import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx"
-import { SearchTable } from "/snippets/components/displays/tables/Tables.jsx"
-import { DynamicTable } from "/snippets/components/displays/tables/Tables.jsx"
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`. <br/>
+**Purpose**: Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json. <br/>
+**Run when**: Component governance metadata, registry output, or usage-map output changes. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix`. <br/>
+</Note>
 
-{/* should not be here.  */}
-export const componentTableData = [
-  { Name: 'MermaidColours', Category: 'config', Status: 'stable', File: 'snippets/components/config/MermaidColours.jsx' },
-  { Name: 'CardVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'CodeComponent', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
-  { Name: 'CodeSection', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
-  { Name: 'ComplexCodeBlock', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
-  { Name: 'CustomCodeBlock', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/code/Code.jsx' },
-  { Name: 'CustomResponseField', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
-  { Name: 'FrameQuote', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/quotes/Quote.jsx' },
-  { Name: 'LinkedInEmbed', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'Quote', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/quotes/Quote.jsx' },
-  { Name: 'ResponseFieldAccordion', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
-  { Name: 'ResponseFieldExpandable', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
-  { Name: 'ResponseFieldGroup', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
-  { Name: 'ScrollableDiagram', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/diagrams/ScrollableDiagram.jsx' },
-  { Name: 'ShowcaseVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'TitledVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'ValueResponseField', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/response-fields/ResponseField.jsx' },
-  { Name: 'Video', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'YouTubeVideo', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'YouTubeVideoData', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'YouTubeVideoDownload', Category: 'displays', Status: 'stable', File: 'snippets/components/displays/video/Video.jsx' },
-  { Name: 'AccordionTitleWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
-  { Name: 'BlinkingIcon', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'BlinkingTerminal', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'CardTitleTextWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
-  { Name: 'ComingSoonCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
-  { Name: 'CopyText', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
-  { Name: 'CustomCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'CustomCardTitle', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/CustomCardTitle.jsx' },
-  { Name: 'CustomDivider', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/spacing/Divider.jsx' },
-  { Name: 'DoubleIconLink', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'DownloadButton', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/buttons/Buttons.jsx' },
-  { Name: 'FocusableScrollRegions', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/a11y/A11y.jsx' },
-  { Name: 'GotoCard', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'GotoLink', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'Image', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/images/Image.jsx' },
-  { Name: 'LinkArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'LinkImage', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/images/Image.jsx' },
-  { Name: 'LivepeerIcon', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/icons/Icons.jsx' },
-  { Name: 'LivepeerSVG', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/icons/Icons.jsx' },
-  { Name: 'MathBlock', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/math/Math.jsx' },
-  { Name: 'MathInline', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/math/Math.jsx' },
-  { Name: 'PreviewCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
-  { Name: 'ReviewCallout', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/callouts/PreviewCallouts.jsx' },
-  { Name: 'SocialLinks', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/social/SocialLinks.jsx' },
-  { Name: 'Spacer', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/spacing/Spacer.jsx' },
-  { Name: 'Subtitle', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/text/Text.jsx' },
-  { Name: 'TipWithArrow', Category: 'elements', Status: 'stable', File: 'snippets/components/elements/links/Links.jsx' },
-  { Name: 'BlogCard', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'BlogDataLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'CardBlogDataLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'CardColumnsPostLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'CardInCardLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'CoinGeckoExchanges', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/feeds/Coingecko.jsx' },
-  { Name: 'ColumnsBlogCardLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'DiscordAnnouncements', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'ExternalContent', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
-  { Name: 'ForumLatestLayout', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'LatestVersion', Category: 'integrators', Status: 'experimental', File: 'snippets/components/integrators/feeds/Release.jsx' },
-  { Name: 'LumaEvents', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'MarkdownEmbed', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
-  { Name: 'PdfEmbed', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
-  { Name: 'PostCard', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/blog/BlogCards.jsx' },
-  { Name: 'ShowcaseCards', Category: 'integrators', Status: 'experimental', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'TwitterTimeline', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/embeds/DataEmbed.jsx' },
-  { Name: 'YouTubeVideoData', Category: 'integrators', Status: 'stable', File: 'snippets/components/integrators/video-data/VideoData.jsx' },
-  { Name: 'Divider', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H1', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H2', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H3', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H4', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H5', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'H6', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'HeroContentContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'HeroImageBackgroundComponent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'HeroOverviewContent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'HeroSectionContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'LogoHeroContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'P', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'PageHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/frame-mode/FrameMode.jsx' },
-  { Name: 'PortalCardsHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'PortalContentContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'PortalHeroContent', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'PortalSectionHeader', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'RefCardContainer', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/portals/Portals.jsx' },
-  { Name: 'Starfield', Category: 'scaffolding', Status: 'stable', File: 'snippets/components/scaffolding/heroes/StarfieldCanvas.jsx' },
-  { Name: 'AccordionGroupList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/accordions/Accordions.jsx' },
-  { Name: 'AccordionLayout', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/accordions/Accordions.jsx' },
-  { Name: 'BasicList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'BorderedBox', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
-  { Name: 'CardCarousel', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/grids/Grids.jsx' },
-  { Name: 'CenteredContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
-  { Name: 'DisplayCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'DynamicTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/tables/Tables.jsx' },
-  { Name: 'FlexContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
-  { Name: 'FullWidthContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Containers.jsx' },
-  { Name: 'GridContainer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
-  { Name: 'IconList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'InlineImageCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'InteractiveCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'InteractiveCards', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'ListSteps', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'QuadGrid', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/grids/Grids.jsx' },
-  { Name: 'ScrollBox', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/ScrollBox.jsx' },
-  { Name: 'SearchTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/tables/Tables.jsx' },
-  { Name: 'ShowcaseCards', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-  { Name: 'Spacer', Category: 'wrappers', Status: 'stable', File: 'snippets/components/wrappers/containers/Layout.jsx' },
-  { Name: 'StepLinkList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'StepList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'StyledStep', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'StyledSteps', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'StyledTable', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/tables/Tables.jsx' },
-  { Name: 'TableCell', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/tables/Tables.jsx' },
-  { Name: 'TableRow', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/tables/Tables.jsx' },
-  { Name: 'UpdateLinkList', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'UpdateList', Category: 'wrappers', Status: 'planned', File: 'snippets/components/displays/steps/Steps.jsx' },
-  { Name: 'WidthCard', Category: 'wrappers', Status: 'stable', File: 'snippets/components/displays/cards/Cards.jsx' },
-];
+The governed component library currently exposes **132** named export(s).
 
-<Tip>
-This file is an auto-generated index catalog for all available Livepeer Custom Components <br/>
-</Tip>
-<Danger> Do not manually edit this file </Danger>
-
-<Expandable title="Script Generation Details">
-**Generation Script**
-- This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`.
-
-**Purpose**
-- Generated inventory of governed component exports from docs-guide/config/component-registry.json and docs-guide/config/component-usage-map.json.
-
-**Run when**
-- Component governance metadata, registry output, or usage-map output changes. <br/>
-
-**Important**
-- Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --fix`.
-
-## Script Pipeline
-
-```mermaid
-flowchart TD
-    SRC["📄 snippets/components/**/*.jsx\nJSDoc headers — source of truth"]
-
-    SRC -->|git commit| PC["pre-commit\nhard gates only\nMDX syntax · docs.json integrity · deletion guard"]
-
-    SRC -->|push → main, jsx paths changed| WF1["🔄 generate-component-registry.yml"]
-    WF1 --> RS1["generate-component-registry.js"]
-    RS1 --> REG["component-registry.json\ncomponent-registry-schema.json\nauto-committed to main"]
-
-    REG -->|auto-commit triggers push → main| WF2["🔄 generate-docs-guide-catalogs.yml"]
-    WF2 --> RS2["generate-component-docs.js"]
-    RS2 --> V2["v2/ component doc pages\npublished to docs"]
-
-    SRC -->|PR → docs-v2 or main| WF3["✅ check-docs-guide-catalogs.yml — PR gate"]
-    WF3 --> CHK["registry --validate-only\ncheck-component-health.js\ngenerate-component-examples.js --check"]
-
-    REG -. "⚠️ manual only — no CI trigger\nnode ...generate-docs-guide-components-index.js --fix" .-> CAT["📋 components-catalog.mdx\nthis file"]
-```
-
-</Expandable>
-
-<CustomDivider />
-
-## Component Tree
-
-<Tree>
-  <Tree.Folder name="snippets/components" defaultOpen>
-    <Tree.Folder name="elements">
-      <Tree.File name="a11y/A11y.jsx" />
-      <Tree.File name="buttons/Buttons.jsx" />
-      <Tree.File name="callouts/PreviewCallouts.jsx" />
-      <Tree.File name="links/Links.jsx" />
-      <Tree.File name="spacing/Divider.jsx" />
-      <Tree.File name="text/CustomCardTitle.jsx" />
-      <Tree.File name="text/Text.jsx" />
-    </Tree.Folder>
-    <Tree.Folder name="wrappers">
-      <Tree.File name="cards/Cards.jsx" />
-      <Tree.File name="containers/Containers.jsx" />
-      <Tree.File name="grids/Grids.jsx" />
-      <Tree.File name="tabs/Tabs.jsx" />
-    </Tree.Folder>
-    <Tree.Folder name="displays">
-      <Tree.File name="badges/Badges.jsx" />
-      <Tree.File name="quotes/Quote.jsx" />
-      <Tree.File name="stats/Stats.jsx" />
-      <Tree.File name="tables/Tables.jsx" />
-      <Tree.File name="video/Video.jsx" />
-    </Tree.Folder>
-    <Tree.Folder name="scaffolding">
-      <Tree.File name="embeds/DataEmbed.jsx" />
-      <Tree.File name="images/Image.jsx" />
-      <Tree.File name="layouts/Layouts.jsx" />
-      <Tree.File name="navigation/Navigation.jsx" />
-    </Tree.Folder>
-    <Tree.Folder name="integrators">
-      <Tree.File name="embeds/Embeds.jsx" />
-      <Tree.File name="forms/Forms.jsx" />
-      <Tree.File name="social/Social.jsx" />
-    </Tree.Folder>
-    <Tree.Folder name="config">
-      <Tree.File name="theme/Theme.jsx" />
-    </Tree.Folder>
-  </Tree.Folder>
-</Tree>
-
-{/* ## Component Framework - SHOULD LINK TO THE PAGE THAT HAS THIS
-
-Categorisation:
-
-<Expandable title="JsDocs Headers">
-Jsdocs Template Here with definition and use of each "tag"
--> separate to generic jsdocs items
--> our custom extension
-
-<Expandable />
-
-## Component Tooling */}
-{/* Tooling available for components */}
-
-## Component Summary
-
-The governed component library currently exposes **121** named export(s).
+## Summary
 
 | Category | Exports | 🟢 Stable | 🧪 Experimental | 🟠 Deprecated | 🔴 Broken | ⬜ Placeholder | Unused |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Elements](#elements) | 30 | 27 | 0 | 3 | 0 | 0 | 2 |
-| [Wrappers](#wrappers) | 31 | 28 | 0 | 0 | 3 | 0 | 5 |
-| [Displays](#displays) | 20 | 20 | 0 | 0 | 0 | 0 | 1 |
-| [Scaffolding](#scaffolding) | 20 | 20 | 0 | 0 | 0 | 0 | 4 |
-| [Integrators](#integrators) | 19 | 16 | 2 | 1 | 0 | 0 | 2 |
+| [Elements](#elements) | 32 | 28 | 0 | 4 | 0 | 0 | 7 |
+| [Wrappers](#wrappers) | 10 | 10 | 0 | 0 | 0 | 0 | 4 |
+| [Displays](#displays) | 49 | 39 | 2 | 4 | 1 | 0 | 10 |
+| [Scaffolding](#scaffolding) | 21 | 20 | 0 | 1 | 0 | 0 | 7 |
+| [Integrators](#integrators) | 19 | 18 | 1 | 0 | 0 | 0 | 4 |
 | [Config](#config) | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
-| **Total** | **121** | **112** | **2** | **4** | **3** | **0** | **15** |
+| **Total** | **132** | **116** | **3** | **9** | **1** | **0** | **33** |
 
-# Components: Searchable
-
-<SearchTable
-  TableComponent={DynamicTable}
-  headerList={['Name', 'Category', 'Status', 'File']}
-  itemsList={componentTableData}
-  searchColumns={['Name', 'Category', 'Status']}
-  categoryColumn="Category"
-  monospaceColumns={['File']}
-  searchPlaceholder="Search by name or category..."
-/>
-
-# Components by Type
-
-<BorderedBox style={{width: "fit-content"}}>
-**Status Key** <br/>
-🟢 stable <br/>
-🧪 experimental <br/>
-🟠 deprecated <br/>
-🔴 broken <br/>
-⬜ placeholder <br/>
-</BorderedBox>
+**Status:** 🟢 stable · 🧪 experimental · 🟠 deprecated · 🔴 broken · ⬜ placeholder
 
 ## Elements
 
 <AccordionGroup>
 
-<Accordion title="🟢 AccordionTitleWithArrow">
+<Accordion title="🟢 AccordionTitle">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Accordion header text with trailing arrow icon.</ResponseField>
+<ResponseField name="description" type="string">Accordion title with icon, name, and optional description subtitle. Wraps CustomCardTitle with an italic description line underneath.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/elements/text/Text.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 AddressLinks">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Copyable contract address with blockchain explorer and GitHub links.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟠 BasicBtn">
-<ResponseField name="status" type="string">`deprecated`</ResponseField>
-<ResponseField name="description" type="string">Empty placeholder button stub – non-functional.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/buttons/Buttons.jsx`</ResponseField>
+<Accordion title="🟢 ArbitrumIcon">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Arbitrum logo rendered identically to Mintlify FA icons using mask-image technique.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 ArbitrumSVG">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Inline Arbitrum logo as SVG with currentColor fill.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 BlinkingIcon">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Animated icon with pulsing opacity. Respects prefers-reduced-motion.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 BlinkingTerminal">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -320,10 +87,10 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 ComingSoonCallout">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Banner indicating a feature or page is coming soon, with links to related resources.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/callouts/PreviewCallouts.jsx`</ResponseField>
+<Accordion title="🟠 ComingSoonCallout">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Banner indicating a feature or page is coming soon. Deprecated wrapper around StatusCallout.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -334,24 +101,24 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 CustomCallout">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Styled callout box with icon, custom colour, and child content.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
+<Accordion title="🟠 CustomCallout">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Styled callout box. Deprecated alias for IconCallout.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 CustomCardTitle">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Card title row with icon and text, using flexbox alignment.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/text/CustomCardTitle.jsx`</ResponseField>
+<ResponseField name="description" type="string">Title row with icon and text, using flexbox alignment. Accepts Font Awesome strings or React components as icon. Variant prop controls styling context.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/text/Text.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 CustomDivider">
+<Accordion title="🟢 DataWrap">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Themed horizontal divider with optional centre text and Livepeer logo accents.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/spacing/Divider.jsx`</ResponseField>
+<ResponseField name="description" type="string">Transparent wrapper that renders a data value inline. Used to surface pipeline-generated values (e.g. lastVerified dates) in MDX without additional markup.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/text/DataWrap.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -369,10 +136,17 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 ExternalLinkButton">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Icon button that opens an external link in a new tab. Bordered with rounded corners, hover colour transition.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/buttons/Buttons.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 FocusableScrollRegions">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Makes scroll regions keyboard-focusable by adding tabindex to matching selectors.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/a11y/A11y.jsx`</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/a11y/FocusableScrollRegion.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -390,10 +164,24 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 IconCallout">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Styled callout box with icon, custom colour, and optional corner arrow indicator.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 Image">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Framed image with optional caption and full-width toggle.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/elements/images/Image.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 InlineDivider">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Lightweight horizontal rule with controllable margin, padding, colour, and opacity. Use inside accordions, steps, or anywhere markdown `---` gives no spacing control.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/spacing/Divider.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -404,32 +192,18 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 LinkIcon">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Wraps a Mintlify Icon in an anchor tag. Strips default Mintlify link styling (border-bottom).</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 LinkImage">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Clickable framed image that opens a URL in a new tab.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/elements/images/Image.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 LivepeerIcon">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Theme-aware Livepeer icon with CSS custom property colour adaptation.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟠 LivepeerIconFlipped">
-<ResponseField name="status" type="string">`deprecated`</ResponseField>
-<ResponseField name="description" type="string">Horizontally flipped legacy Livepeer icon.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟠 LivepeerIconOld">
-<ResponseField name="status" type="string">`deprecated`</ResponseField>
-<ResponseField name="description" type="string">Legacy Livepeer icon using light-only SVG path.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/icons/Icons.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 LivepeerSVG">
@@ -453,51 +227,127 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 PreviewCallout">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Banner indicating content is in preview/draft state with feedback links.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/callouts/PreviewCallouts.jsx`</ResponseField>
+<Accordion title="🟠 PreviewCallout">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Banner indicating content is in preview state. Deprecated wrapper around StatusCallout.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 ReviewCallout">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Banner indicating content is under review with status links.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/callouts/PreviewCallouts.jsx`</ResponseField>
+<ResponseField name="description" type="string">Banner indicating content is under technical review.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
 <ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 SocialLinks">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Row of icon-only social media links with tooltips and aria-labels.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/social/SocialLinks.jsx`</ResponseField>
-<ResponseField name="usage" type="string">unused</ResponseField>
+<ResponseField name="description" type="string">Row of icon-only social media links with tooltips and aria-labels. Pass a links array to customise per product; omit for Livepeer defaults.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 Spacer">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Empty spacer div with configurable size and direction.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/spacing/Spacer.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/spacing/Divider.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 Subtitle">
+<Accordion title="🟢 StatusCallout">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Styled subtitle text with configurable colour, size, and alignment.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/text/Text.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="description" type="string">Banner indicating page/feature status (coming soon or preview) with feedback links.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 TipWithArrow">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Callout box with tip icon and corner arrow indicator.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/elements/links/Links.jsx`</ResponseField>
+<Accordion title="🟠 TipWithArrow">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Callout with arrow. Deprecated wrapper around IconCallout.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/elements/callouts/Callouts.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 </AccordionGroup>
 
 ## Wrappers
+
+<AccordionGroup>
+
+<Accordion title="🟢 BadgeRow">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Unified badge row with variant prop. "text" renders Badge elements from a badges array. "icon" renders icon+label tags from an items array.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/badges/Badges.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 BadgeWrapper">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Flex row wrapper for Badge elements. Pass a `badges` array of {color, label} objects for auto-rendering, or use children for manual JSX.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/badges/Badges.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 BorderedBox">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Bordered container with configurable radius and background.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CalloutWrapper">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Wraps Mintlify callout types (Tip, Info, Warning, Note, Check) with a styled header and description.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CenteredContainer">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Horizontally centred container with configurable max-width.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 FlexContainer">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Flexbox container with configurable direction, gap, and alignment.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 FullWidthContainer">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Full-viewport-width container that breaks out of parent padding.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 GridContainer">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">CSS Grid container with configurable columns and gap.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 IconBadgeWrapper">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Flex row wrapper for icon+label tag items. Pass an `items` array of {icon, label} objects. Icons are uncoloured by default — pass `iconColor` to override.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/badges/Badges.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 ScrollBox">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Scrollable container with max-height, overflow hint, and accessible region role.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Layout.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+</AccordionGroup>
+
+## Displays
 
 <AccordionGroup>
 
@@ -515,17 +365,10 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🔴 BasicList">
-<ResponseField name="status" type="string">`broken`</ResponseField>
-<ResponseField name="description" type="string">Non-functional stub – returns empty fragment.</ResponseField>
+<Accordion title="BasicList">
+<ResponseField name="status" type="string">`planned`</ResponseField>
+<ResponseField name="description" type="string">Planned list component — not yet implemented.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/steps/Steps.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 BorderedBox">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Bordered container with configurable radius and background.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -536,10 +379,45 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 CenteredContainer">
+<Accordion title="🟢 CardVideo">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Horizontally centred container with configurable max-width.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="description" type="string">YouTube embed inside a Card wrapper with aspect-ratio iframe.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CodeComponent">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Simple code block with title and language syntax highlighting.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CodeSection">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Expandable code section with title header.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 ComplexCodeBlock">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Code block with both pre-note and post-note sections.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CustomCodeBlock">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Code block with optional pre/post notes and expandable wrapper.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 CustomResponseField">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Custom-styled API response field with configurable margin.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -557,30 +435,30 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 FlexContainer">
+<Accordion title="🧪 DynamicTableV2">
+<ResponseField name="status" type="string">`experimental`</ResponseField>
+<ResponseField name="description" type="string">Renders structured data as a scrollable table with separator rows and intrinsic-width support for fit-to-content columns.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/tables/Tables.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 FrameQuote">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Flexbox container with configurable direction, gap, and alignment.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Layout.jsx`</ResponseField>
+<ResponseField name="description" type="string">Framed blockquote with optional author, source link, and image.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/quotes/Quote.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 FullWidthContainer">
+<Accordion title="🟢 FunctionField">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Full-viewport-width container that breaks out of parent padding.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Containers.jsx`</ResponseField>
+<ResponseField name="description" type="string">Solidity function signature field with typed parameter pairs and optional return type.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 GridContainer">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">CSS Grid container with configurable columns and gap.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Layout.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🔴 IconList">
-<ResponseField name="status" type="string">`broken`</ResponseField>
-<ResponseField name="description" type="string">Non-functional stub – returns empty fragment.</ResponseField>
+<Accordion title="IconList">
+<ResponseField name="status" type="string">`planned`</ResponseField>
+<ResponseField name="description" type="string">Planned icon list component — not yet implemented.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/steps/Steps.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
@@ -606,6 +484,13 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 LinkedInEmbed">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">LinkedIn post embed via responsive iframe with compact layout.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 ListSteps">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Renders an array of step items inside Mintlify Steps component.</ResponseField>
@@ -620,18 +505,53 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 ScrollBox">
+<Accordion title="🟢 Quote">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Scrollable container with max-height, overflow hint, and accessible region role.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/ScrollBox.jsx`</ResponseField>
+<ResponseField name="description" type="string">Styled blockquote with accent border and centred italic text.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/quotes/Quote.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟠 ResponseFieldAccordion">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Accordion-style response field with collapsible detail section.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟠 ResponseFieldExpandable">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Expandable response field that reveals nested content on click.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 ResponseFieldGroup">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Container for grouping multiple response fields with consistent spacing.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 ScrollableDiagram">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Pannable diagram container with deterministic preset zoom controls rendered without client-side React state.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/diagrams/ScrollableDiagram.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 SearchTable">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Filterable table wrapper with search input and category dropdown.</ResponseField>
+<ResponseField name="description" type="string">Generic filterable table wrapper with search input, category dropdown(s), and optional separators.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/tables/Tables.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🧪 SearchTableV2">
+<ResponseField name="status" type="string">`experimental`</ResponseField>
+<ResponseField name="description" type="string">Generic filterable table wrapper with intrinsic-width sizing for badge, icon, and primary text columns.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/tables/Tables.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 ShowcaseCards">
@@ -641,10 +561,24 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 Spacer">
+<Accordion title="🟠 ShowcaseVideo">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Full-width video with negative-margin breakout and rounded frame.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 SolutionCard">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Spacer element with configurable size.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/wrappers/containers/Layout.jsx`</ResponseField>
+<ResponseField name="description" type="string">Card body for Solutions Portal product cards. Accepts pre-rendered JSX slots for badges, infra tags, and social links. ScrollBox is passed as a component prop for blurb rendering.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/cards/Cards.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 SolutionItem">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Renders a solution entry with link, icon badges, and description. Designed for solution listing pages.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/cards/Cards.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -664,7 +598,7 @@ The governed component library currently exposes **121** named export(s).
 
 <Accordion title="🟢 StyledStep">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Single step with configurable icon, size, and colour.</ResponseField>
+<ResponseField name="description" type="string">Single step with configurable icon, size, and per-step colour overrides. When iconColor or titleColor is set, injects a scoped CSS override that takes precedence over the parent StyledSteps colours for this step only. When neither is set, behaves identically to a plain Step pass-through.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/steps/Steps.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
@@ -697,6 +631,13 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 TitledVideo">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 UpdateLinkList">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Renders update items as linked entries inside Mintlify Update component.</ResponseField>
@@ -704,128 +645,10 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🔴 UpdateList">
-<ResponseField name="status" type="string">`broken`</ResponseField>
-<ResponseField name="description" type="string">Non-functional – ignores props, renders hardcoded static content.</ResponseField>
+<Accordion title="UpdateList">
+<ResponseField name="status" type="string">`planned`</ResponseField>
+<ResponseField name="description" type="string">Planned update list component — not yet implemented.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/steps/Steps.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 WidthCard">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Width-constrained card wrapper with configurable percentage width.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/cards/Cards.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-</AccordionGroup>
-
-## Displays
-
-<AccordionGroup>
-
-<Accordion title="🟢 CardVideo">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">YouTube embed inside a Card wrapper with aspect-ratio iframe.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 CodeComponent">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Simple code block with title and language syntax highlighting.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 CodeSection">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Expandable code section with title header.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ComplexCodeBlock">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Code block with both pre-note and post-note sections.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 CustomCodeBlock">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Code block with optional pre/post notes and expandable wrapper.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/code/Code.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 CustomResponseField">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Custom-styled API response field with configurable margin.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 FrameQuote">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Framed blockquote with optional author, source link, and image.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/quotes/Quote.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 LinkedInEmbed">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">LinkedIn post embed via responsive iframe with compact layout.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 Quote">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Styled blockquote with accent border and centred italic text.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/quotes/Quote.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ResponseFieldAccordion">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Accordion-style response field with collapsible detail section.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ResponseFieldExpandable">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Expandable response field that reveals nested content on click.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ResponseFieldGroup">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Container for grouping multiple response fields with consistent spacing.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/response-fields/ResponseField.jsx`</ResponseField>
-<ResponseField name="usage" type="string">unused</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ScrollableDiagram">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Pannable, zoomable diagram container with zoom controls and accessible buttons.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/diagrams/ScrollableDiagram.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 ShowcaseVideo">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Full-width video with negative-margin breakout and rounded frame.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 TitledVideo">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Auto-playing video with title/subtitle overlay. Respects prefers-reduced-motion.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -843,6 +666,13 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
+<Accordion title="🟢 WidthCard">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Width-constrained card wrapper with configurable percentage width.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/displays/cards/Cards.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
 <Accordion title="🟢 YouTubeVideo">
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">YouTube embed via responsive iframe with aspect-ratio preservation.</ResponseField>
@@ -850,16 +680,16 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 YouTubeVideoData">
-<ResponseField name="status" type="string">`stable`</ResponseField>
+<Accordion title="🟠 YouTubeVideoData">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
 <ResponseField name="description" type="string">Renders a columned grid of YouTubeVideo embeds from an items array.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟢 YouTubeVideoDownload">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">YouTube embed with download hint text below.</ResponseField>
+<Accordion title="🔴 YouTubeVideoDownload">
+<ResponseField name="status" type="string">`broken`</ResponseField>
+<ResponseField name="description" type="string">YouTube embed with download hint text below (BROKEN — render content commented out).</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/displays/video/Video.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
@@ -870,9 +700,16 @@ The governed component library currently exposes **121** named export(s).
 
 <AccordionGroup>
 
-<Accordion title="🟢 Divider">
+<Accordion title="🟠 Divider">
+<ResponseField name="status" type="string">`deprecated`</ResponseField>
+<ResponseField name="description" type="string">Deprecated alias for FrameModeDivider. Maintained for backwards compatibility.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/scaffolding/frame-mode/FrameMode.jsx`</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 FrameModeDivider">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Horizontal rule divider for frame-mode pages.</ResponseField>
+<ResponseField name="description" type="string">Horizontal rule divider for frame-mode pages. Distinct from elements/spacing/Divider.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/scaffolding/frame-mode/FrameMode.jsx`</ResponseField>
 <ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
@@ -937,7 +774,7 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Hero content layout with title, icon, subtitle, and CTA slots.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/scaffolding/portals/Portals.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 HeroSectionContainer">
@@ -1000,7 +837,7 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Container for reference cards with configurable column count.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/scaffolding/portals/Portals.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 Starfield">
@@ -1027,7 +864,7 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">Single-column BlogCard stack.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/integrators/blog/BlogCards.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 CardBlogDataLayout">
@@ -1048,7 +885,7 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="status" type="string">`stable`</ResponseField>
 <ResponseField name="description" type="string">PostCards rendered inside Card wrappers.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/integrators/blog/BlogCards.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 CoinGeckoExchanges">
@@ -1072,18 +909,11 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🟠 EmbedMarkdown">
-<ResponseField name="status" type="string">`deprecated`</ResponseField>
-<ResponseField name="description" type="string">Alias for MarkdownEmbed – use MarkdownEmbed instead.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/integrators/embeds/DataEmbed.jsx`</ResponseField>
-<ResponseField name="usage" type="string">unused</ResponseField>
-</Accordion>
-
 <Accordion title="🟢 ExternalContent">
 <ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Fetches and renders external markdown with scrollable container and source link.</ResponseField>
+<ResponseField name="description" type="string">Frames external source content with a scrollable container and source link.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/integrators/embeds/DataEmbed.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 ForumLatestLayout">
@@ -1097,7 +927,7 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="status" type="string">`experimental`</ResponseField>
 <ResponseField name="description" type="string">Displays the latest release version string from automation data.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/integrators/feeds/Release.jsx`</ResponseField>
-<ResponseField name="usage" type="string">in use</ResponseField>
+<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 LumaEvents">
@@ -1105,13 +935,6 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="description" type="string">Upcoming/past event cards from Luma calendar data.</ResponseField>
 <ResponseField name="file" type="string">`/snippets/components/integrators/blog/BlogCards.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
-</Accordion>
-
-<Accordion title="🟢 MarkdownEmbed">
-<ResponseField name="status" type="string">`stable`</ResponseField>
-<ResponseField name="description" type="string">Fetches and renders remote markdown content.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/integrators/embeds/DataEmbed.jsx`</ResponseField>
-<ResponseField name="usage" type="string">unused</ResponseField>
 </Accordion>
 
 <Accordion title="🟢 PdfEmbed">
@@ -1128,10 +951,24 @@ The governed component library currently exposes **121** named export(s).
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
-<Accordion title="🧪 ShowcaseCards">
-<ResponseField name="status" type="string">`experimental`</ResponseField>
-<ResponseField name="description" type="string">Paginated project showcase with search, filtering, and media cards.</ResponseField>
-<ResponseField name="file" type="string">`/snippets/components/displays/cards/Cards.jsx`</ResponseField>
+<Accordion title="🟢 RssBlogCard">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Blog card for RSS feed data. Matches BlogCard visual quality with icon title, metadata row, scrollable plain text excerpt, and scroll hint. Use for non-Ghost blog sources (Daydream, Streamplace, etc.).</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/integrators/blog/BlogCards.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 RssBlogCardLayout">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Multi-column RssBlogCard layout. Use for RSS blog data (non-Ghost sources).</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/integrators/blog/BlogCards.jsx`</ResponseField>
+<ResponseField name="usage" type="string">in use</ResponseField>
+</Accordion>
+
+<Accordion title="🟢 SolidityEmbed">
+<ResponseField name="status" type="string">`stable`</ResponseField>
+<ResponseField name="description" type="string">Fetches and renders a remote Solidity file with syntax highlighting inside a styled container. Lazy-loaded.</ResponseField>
+<ResponseField name="file" type="string">`/snippets/components/integrators/embeds/DataEmbed.jsx`</ResponseField>
 <ResponseField name="usage" type="string">in use</ResponseField>
 </Accordion>
 
@@ -1164,29 +1001,53 @@ The governed component library currently exposes **121** named export(s).
 
 </AccordionGroup>
 
-## Audit
-<Accordion title="⚠️ Audit — 18 items">
+<Accordion title="⚠️ Audit — 44 items">
 
 | Component | Category | Status | Note |
 | --- | --- | --- | --- |
-| BasicBtn | `elements` | `deprecated` | Non-functional stub – do not use. |
-| LivepeerIconFlipped | `elements` | `deprecated` | Replaced by `LivepeerIcon` |
-| LivepeerIconOld | `elements` | `deprecated` | Replaced by `LivepeerIcon` |
-| EmbedMarkdown | `integrators` | `deprecated` | Replaced by `MarkdownEmbed` |
+| ResponseFieldAccordion | `displays` | `deprecated` | Replaced by `ResponseFieldGroup` |
+| ResponseFieldExpandable | `displays` | `deprecated` | Replaced by `ResponseFieldGroup` |
+| ShowcaseVideo | `displays` | `deprecated` | Replaced by `TitledVideo` |
+| YouTubeVideoData | `displays` | `deprecated` | Duplicate — canonical version is in integrators/video-data/VideoData.jsx. |
+| ComingSoonCallout | `elements` | `deprecated` | Replaced by `StatusCallout` |
+| CustomCallout | `elements` | `deprecated` | Replaced by `IconCallout` |
+| PreviewCallout | `elements` | `deprecated` | Replaced by `StatusCallout` |
+| TipWithArrow | `elements` | `deprecated` | Replaced by `IconCallout` |
+| Divider | `scaffolding` | `deprecated` | Replaced by `FrameModeDivider` |
 | MermaidColours | `config` | `stable` | Not imported in any page |
+| AccordionGroupList | `displays` | `stable` | Not imported in any page |
+| CardCarousel | `displays` | `stable` | Not imported in any page |
+| CodeComponent | `displays` | `stable` | Not imported in any page |
+| DynamicTableV2 | `displays` | `experimental` | Not imported in any page |
+| InteractiveCard | `displays` | `stable` | Not imported in any page |
+| InteractiveCards | `displays` | `stable` | Not imported in any page |
+| LinkedInEmbed | `displays` | `stable` | Not imported in any page |
+| ListSteps | `displays` | `stable` | Not imported in any page |
 | ResponseFieldGroup | `displays` | `stable` | Not imported in any page |
+| SearchTableV2 | `displays` | `experimental` | Not imported in any page |
+| AccordionTitle | `elements` | `stable` | Not imported in any page |
+| ExternalLinkButton | `elements` | `stable` | Not imported in any page |
+| IconCallout | `elements` | `stable` | Not imported in any page |
+| LinkImage | `elements` | `stable` | Not imported in any page |
 | ReviewCallout | `elements` | `stable` | Not imported in any page |
-| SocialLinks | `elements` | `stable` | Not imported in any page |
-| MarkdownEmbed | `integrators` | `stable` | Not imported in any page |
-| Divider | `scaffolding` | `stable` | Not imported in any page |
+| Spacer | `elements` | `stable` | Not imported in any page |
+| StatusCallout | `elements` | `stable` | Not imported in any page |
+| BlogDataLayout | `integrators` | `stable` | Not imported in any page |
+| CardInCardLayout | `integrators` | `stable` | Not imported in any page |
+| ContractVerifier | `integrators` | `unknown` | Not imported in any page |
+| ExternalContent | `integrators` | `stable` | Not imported in any page |
+| HistoricalContractTable | `integrators` | `unknown` | Not imported in any page |
+| LatestVersion | `integrators` | `experimental` | Not imported in any page |
+| FrameModeDivider | `scaffolding` | `stable` | Not imported in any page |
 | H4 | `scaffolding` | `stable` | Not imported in any page |
 | H6 | `scaffolding` | `stable` | Not imported in any page |
+| HeroOverviewContent | `scaffolding` | `stable` | Not imported in any page |
 | PageHeader | `scaffolding` | `stable` | Not imported in any page |
-| AccordionGroupList | `wrappers` | `stable` | Not imported in any page |
-| CardCarousel | `wrappers` | `stable` | Not imported in any page |
-| InteractiveCard | `wrappers` | `stable` | Not imported in any page |
-| InteractiveCards | `wrappers` | `stable` | Not imported in any page |
-| ListSteps | `wrappers` | `stable` | Not imported in any page |
+| RefCardContainer | `scaffolding` | `stable` | Not imported in any page |
+| BadgeRow | `wrappers` | `stable` | Not imported in any page |
+| CalloutWrapper | `wrappers` | `stable` | Not imported in any page |
+| FullWidthContainer | `wrappers` | `stable` | Not imported in any page |
+| GridContainer | `wrappers` | `stable` | Not imported in any page |
+| GridContainer | `wrappers` | `stable` | Not imported in any page |
 
 </Accordion>
-

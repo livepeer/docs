@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the sessionStart hook that registers this session in a shared registry file.
  * @description SessionStart hook that registers this session in a shared registry file.
  * @mode        dispatch
  * @pipeline    SessionStart hook / PostToolUse hook → writes to /tmp/claude-session-registry

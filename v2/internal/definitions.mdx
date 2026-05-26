@@ -1,29 +1,57 @@
 ---
-title: General Livepeer Definitions
-sidebarTitle: Definitions
-description: Protocol Network Product Ecosystem
+title: "General Livepeer Definitions"
+sidebarTitle: "Definitions"
+description: "Internal terminology reference. Defines Protocol, Network, Product, and Ecosystem as used across these docs, and points to the public glossary for the full term list."
 keywords:
   - livepeer
   - internal
   - definitions
-  - general
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-complexity: intermediate
-lifecycleStage: discover
+  - protocol
+  - network
+  - product
+  - ecosystem
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+audience: "internal"
+complexity: "intermediate"
+lifecycleStage: "discover"
+pageType: "reference"
+purpose: "reference"
+lastVerified: "2026-05-22"
 ---
 
+This page defines four Livepeer concepts that the documentation treats as distinct surfaces. The full glossary of LPT, Orchestrator, Gateway, Delegator, Reward Cut, Active Set, Probabilistic Micropayments, and other domain terms lives in the public [Resources glossary](/v2/resources/glossary).
 
+## Livepeer at four scales
 
+### Protocol
 
-## Livepeer General Definitions
+The on-chain governance, staking, fee, and reward rules that bind operator behaviour. Lives in the Arbitrum smart contract set sourced from `livepeer/protocol`. Drives bonding, delegation, the Active Set, Reward Cut, Fee Cut, ticket redemption, and round transitions. The docs surface that explains this is `v2/about/protocol/` plus the canonical contract registry at `v2/resources/references/contract-addresses`.
 
-Protocol
-Network
-Product
-Ecosystem
+### Network
 
-## Livepeer Documentation Definitions
+The off-chain compute network of Orchestrators, transcoder pool workers, Gateway operators, and AI workers that delivers video and AI jobs against the on-chain rules. The Network is what users pay for and what operators get rewarded for. Documented under `v2/orchestrators/`, `v2/gateways/`, and `v2/developers/build/`.
+
+### Product
+
+Anything a user, builder, or operator buys, integrates, or runs. Includes Livepeer Studio (managed Gateway + API), Livepeer Cloud / SPE products, Daydream, Streamplace, and self-hosted Gateways. Product surfaces sit under `v2/solutions/` and link out to vendor sites where appropriate. The documentation does not own product roadmaps; it documents how to use, integrate, and operate products that exist today.
+
+### Ecosystem
+
+The wider set of operators, builders, infrastructure providers, community contributors, and integrations that depend on Livepeer or build on top of it. Includes the AI SPE, Cloud SPE, MistServer / Frameworks SPE, ComfyStream contributors, Live Pioneers, and Orchestrator operator community. Mapped in detail in [Ecosystem](/v2/internal/ecosystem).
+
+## Livepeer Documentation definitions
+
+The repository itself is the documented surface. Four operating concepts apply specifically to the docs:
+
+| Term | Definition |
+| --- | --- |
+| Canonical source | The single file the repo treats as authoritative for a surface. Defined per surface in `docs-guide/policies/source-of-truth-policy.mdx`. |
+| Generated artefact | A file produced by a generator script from a canonical source. Never hand-edited. Manifest at `operations/governance/config/generated-artifacts.json`. |
+| Governed surface | A surface that has a canonical source, a deterministic validator, an exact repair command, and a single gate layer. Defined in `docs-guide/policies/ownerless-governance.mdx`. |
+| Ownerless contract | The four-part contract above. Routine drift on a contracted surface is repairable by any contributor or agent without staff context. |
+
+For the full domain-term list (LPT, Orchestrator, Gateway, Delegator, Active Set, Reward Cut, Fee Cut, Probabilistic Micropayments, on-chain, off-chain, dual, pool worker, NaaP) use the public glossary at [`v2/resources/glossary`](/v2/resources/glossary).

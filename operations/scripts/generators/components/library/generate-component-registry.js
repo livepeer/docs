@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Parses JSDoc from all component exports and produces component-registry.json.
  * @description Parses JSDoc from all component exports and produces component-registry.json.
  * @mode        generate
  * @pipeline    manual, P3, P5, P6, manual, manual

@@ -727,7 +727,7 @@ function checkImportPaths(files, stagedOnly = false) {
       }
       
       // Check for relative imports to snippets
-      if (importPath.includes('snippets') && !importPath.startsWith('/snippets')) {
+      if ((importPath === 'snippets' || importPath.includes('/snippets/')) && !importPath.startsWith('/snippets')) {
         errors.push({
           file,
           rule: 'Absolute import paths',

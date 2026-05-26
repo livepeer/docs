@@ -4,7 +4,7 @@
  * @type        integrator
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Fetch preserves Mint on port 3333 and terminates stale Playwright plus non-3333 Mint session trees
  * @description Local dev session cleanup — preserves Mint on port 3333 and terminates stale Playwright plus non-3333 Mint session trees
  * @mode        integrate
  * @pipeline    manual — local developer automation, with optional user cron installation

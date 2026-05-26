@@ -80,6 +80,7 @@ export const MermaidColours = {
 // NOTE: DO NOT USE OUTSIDE MERMAID - use style.css colours.
 // This file centralizes literal theme colors for Mermaid diagrams because Mermaid
 // does not support CSS custom properties such as var(--...).
+// Mermaid requires literal colour values and does not support CSS custom properties.
 
 /* Colors Used In this repo
 3CB540 - Jade Green
