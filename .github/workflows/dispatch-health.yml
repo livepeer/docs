@@ -57,8 +57,8 @@ jobs:
         run: cd tools && npm ci
       - name: Stage PR files for scoped checks
         run: |
-          git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" |
-            xargs -r git add --
+          git diff --name-only -z --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" |
+            xargs -0 -r git add --
       - name: Run health PR meta dispatcher
         env:
           NODE_PATH: tools/node_modules
