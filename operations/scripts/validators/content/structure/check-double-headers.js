@@ -15,6 +15,8 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+bootstrapRepoNodePaths(__dirname);
 const matter = require('gray-matter');
 const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../../../../../operations/tests/utils/file-walker');
 const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');

@@ -16,6 +16,8 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+bootstrapRepoNodePaths(__dirname);
 const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
@@ -154,15 +156,8 @@ function resolveTargetFiles(explicitFiles) {
 
 function splitFrontmatter(raw) {
   const normalized = String(raw || '');
-  if (!normalized.startsWith('---')) {
-    return {
-      prefix: '',
-      body: normalized,
-      bodyStartOffset: 0
-    };
-  }
-
-  const match = normalized.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
+  // Tolerate leading whitespace/blank lines before frontmatter (Mintlify and gray-matter do).
+  const match = normalized.match(/^\s*---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
   if (!match) {
     return {
       prefix: '',

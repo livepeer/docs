@@ -156,7 +156,13 @@ function applyReplacements(content) {
   }
 
   // Capitalise sentences that now start with lowercase after a deleted prefix.
-  out = out.replace(/(\.\s+)([a-z])/g, (m, prefix, letter) => prefix + letter.toUpperCase());
+  // Skip protected zones (frontmatter, code blocks, JSX comments) — without this guard,
+  // a description ending in "." followed by a lowercase frontmatter key (e.g. "keywords:")
+  // would have the key capitalised, corrupting YAML.
+  out = out.replace(/(\.\s+)([a-z])/g, (m, prefix, letter, offset) => {
+    if (typeof offset === 'number' && isProtectedZone(out, offset)) return m;
+    return prefix + letter.toUpperCase();
+  });
 
   return { content: out, changes };
 }
